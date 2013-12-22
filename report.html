@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>AWS Scout2 Report</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="inc-bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="inc-bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="theme.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script src="inc-jquery/jquery-1.10.2.min.js"></script>
+
+    <!-- Handlebars -->
+    <script src="inc-handlebars/handlebars-v1.1.2.js"></script>
+
+
+    <script>
+
+        <!-- Generic load function -->
+        function load_aws_from_json(list, keyword, cols) {
+            var id1 = '#' + keyword + '-list-template';
+            var id2 = keyword + 's-list';
+            var tmp = Handlebars.compile($(id1).html());
+            var what = keyword + 's';
+            document.getElementById(id2).innerHTML = tmp({tabId: 'lol', items: list});
+            if (cols >= 2) {
+                var id3 = '#' + keyword + '-detail-template';
+                var id4 = keyword + 's-details';
+                var tmp = Handlebars.compile($(id3).html());
+                document.getElementById(id4).innerHTML = tmp({tabId: 'lol', items: list});
+            }
+        }
+
+        <!-- Load EC2 data -->
+        $.getJSON('aws_ec2_security_groups.json', function(data) {
+            load_aws_from_json(data.security_groups, 'ec2-security_group', 2);
+        });
+        $.getJSON('aws_ec2_instances.json', function(data) {
+            load_aws_from_json(data.instances, 'ec2-instance', 2);
+        });
+
+        <!-- Load IAM data -->
+        $.getJSON('aws_iam_users.json', function(data) {
+            load_aws_from_json(data.list_users_response.list_users_result.users, 'iam-user', 2);
+        });
+        $.getJSON('aws_iam_groups.json', function(data) {
+            load_aws_from_json(data.list_groups_response.list_groups_result.groups, 'iam-group', 2);
+        });
+        $.getJSON('aws_iam_roles.json', function(data) {
+            load_aws_from_json(data.list_roles_response.list_roles_result.roles, 'iam-role', 2);
+        });
+        $.getJSON('aws_iam_permissions.json', function(data) {
+            load_aws_from_json(data.permissions, 'iam-permission', 1);
+        });
+
+        // TODO: Hide all by default
+
+        <!-- Display functions -->
+        function hideAll() {
+            $("[id$='-row']").hide();
+            $("[id*='-details-']").hide();
+        }
+        function showRow(keyword) {
+            id = "#" + keyword + "s-row";
+            $(id).show();
+        }
+        function showRowWithDetails(keyword) {
+            showRow(keyword);
+            showAll(keyword);
+        }
+        function showAll(keyword) {
+            $("[id*='" + keyword + "-details']").show();
+        }
+        function toggleDetails(keyword, item) {
+            var id = '#' + keyword + '-' + item;
+            $(id).toggle();
+        }
+        function updateNavbar(active) {
+            $('[id^="navbar-item-"]').removeClass('active');
+            $('#navbar-item-'+active).addClass('active');
+        }
+
+        <!-- Navigation functions -->
+        function browseTo(keyword, id) {
+            hideAll();
+            showRow(keyword);
+            var html_id = "[id=\"" + keyword + "-details-" + id + "\"]";
+            $(html_id).show();
+        }
+        function list_generic(keyword) {
+            updateNavbar(keyword);
+            hideAll();
+            showRowWithDetails(keyword);
+        }
+
+        <!-- Handlebars helpers -->
+        Handlebars.registerHelper("decodeURIComponent", function(blob) {
+            var test = decodeURIComponent(blob);
+            test = test.replace(/ /g, '&nbsp;');
+            test = test.replace(/\n/g, '<br />');
+            return test;
+        });
+        Handlebars.registerHelper("has_profiles?", function(logins) {
+            if(typeof logins != 'undefined' && logins != '') {
+                return 'Yes';
+            } else {
+                return 'No';
+            }
+        });
+        Handlebars.registerHelper('has_access_keys?', function(access_keys) {
+            if (typeof access_keys != 'undefined' && access_keys != '') {
+                return access_keys.length;
+            } else {
+                return 0;
+            }
+        });
+        Handlebars.registerHelper('has_mfa?', function(mfa_devices) {
+            if (typeof mfa_devices != 'undefined' && mfa_devices != '') {
+                return 'Yes';
+            } else {
+                return 'No';
+            }
+        });
+        Handlebars.registerHelper('format_grant', function(grants) {
+            if (grants.match(/.*\(.*\)/)) {
+                return 'EC2 Group: ' + grants;
+            } else {
+                return 'Source IP: ' + grants;
+            }
+        });
+        Handlebars.registerHelper('list_permissions', function(permissions) {
+            var r = '';
+            if (typeof permissions != 'undefined' && permissions != '') {
+                r += parse_entities('group', permissions.groups);
+                r += parse_entities('role', permissions.roles);
+                r += parse_entities('user', permissions.users);
+            }
+            return r;
+        });
+        var gc = {}; gc['group'] = 0; gc['role'] = 0; gc['user'] = 0;
+        function parse_entities(keyword, permissions) {
+            var p = '';
+            var r = '';
+            for (i in permissions) {
+                p += format_entity(keyword, permissions[i].name, permissions[i].policy_name, gc[keyword]++);
+            }
+            if (p != '') {
+                r = '<p>' + keyword.charAt(0).toUpperCase() + keyword.slice(1) + 's:</p><ul>' + p + '</ul>';
+            }
+            return r;
+        }
+        function format_entity(keyword, name, policy_name, c) {
+            var r = '';
+            r += "<li>" + name + " [<a href=\"javascript:toggleDetails('" + keyword + "'," + c + ")\">Details</a>]";
+            r += "<div class=\"row\" style=\"display:none\" id=\"" + keyword + "-" + c + "\">" + policy_name + "</div></li>";
+            return r;
+        }
+        Handlebars.registerHelper('list_group_instances', function(running, stopped) {
+            var rc = count_instances(running);
+            var sc = count_instances(stopped);
+            var r = '';
+            r += format_instances(running, rc, 'Running');
+            r += format_instances(stopped, sc, 'Stopped');
+            return r;
+        });
+        function count_instances(instances) {
+            if (typeof instances != 'undefined' && instances != '') {
+                return instances.length;
+            } else {
+                return 0;
+            }
+        }
+        function format_instances(instances, count, title) {
+            var r = '';
+            r += '<ul><li class="list-group-item-text">' + title + ': ' + count + '</li>';
+            if (count > 0) {
+                r += '<ul>';
+                for (i in instances) {
+                    r += '<li class="list-group-item-text"><a href="javascript:browseTo(\'ec2-instance\',\'' + instances[i] + '\')">' + instances[i] + '</a></li>';
+                }            
+                r += '</ul>';
+            }
+            r += '</ul>';
+            return r;
+        }
+
+        <!-- Debug -->
+        Handlebars.registerHelper('helpme', function(permission) {
+            return xinspect(permission);
+        });
+        function xinspect(o,i){
+            if (typeof i == 'undefined') i='';
+            if (i.length > 50) return '[MAX ITERATIONS]';
+            var r=[];
+            for(var p in o){
+                var t=typeof o[p];
+                r.push(i+'"'+p+'" ('+t+') => '+(t=='object' ? 'object:'+xinspect(o[p],i+'  ') : o[p]+''));
+            }
+            return r.join(i+'\n');
+        }
+
+    </script>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header" id='testloic'>
+          <a class="navbar-brand" href="report.html">AWS Scout</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="dropdown">
+              <a href="javascript:show_ec2()" class="dropdown-toggle" data-toggle="dropdown">EC2<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="javascript:list_generic('ec2-instance')">Instances</a></li>
+                <li><a href="javascript:list_generic('ec2-security_group')">Security Groups</a></li>
+              </ul>
+            <li class="dropdown">
+              <a href="javascript:show_iam()" class="dropdown-toggle" data-toggle="dropdown">IAM<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="javascript:list_generic('iam-group')">Groups</a></li>
+                <li><a href="javascript:list_generic('iam-permission')">Permissions</a></li>
+                <li><a href="javascript:list_generic('iam-role')">Roles</a></li>
+                <li><a href="javascript:list_generic('iam-user')">Users</a></li>
+                <li><a href="javascript:void()">Password policy</a></li>
+                <li class="divider"></li>
+                <li><a href="">Best practice violations</a></li>
+              </ul>
+            </li>
+            <li id="navbar-item-ec2"><a href="javascript:show_s3()">S3</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Action</a></li>
+                <li><a href="#">Another action</a></li>
+                <li><a href="#">Something else here</a></li>
+                <li class="divider"></li>
+                <li class="dropdown-header">Nav header</li>
+                <li><a href="#">Separated link</a></li>
+                <li><a href="#">One more separated link</a></li>
+              </ul>
+            </li>
+          </ul>
+          </div>
+        </div><!--/.nav-collapse -->
+      </div>
+
+    </div>
+
+    <div class="container theme-showcase" id="container-user">
+     
+      <div class="page-header">
+      </div>
+
+      <!-- Template for EC2 instances -->
+      <div class="row" id="ec2-instances-row">
+        <div class="col-sm-4">
+          <ul class="list-group" id="ec2-instances-list">
+            <script id="ec2-instance-list-template" type="text/x-handlebars-template">
+            <li class="list-group-item"><a href="javascript:showAll('ec2-instance')">Show all</a></li>
+            {{#each items}}
+              <li class="list-group-item">
+                <a href="javascript:browseTo('ec2-instance','{{{id}}}')">{{{id}}}</a>
+              </li>
+            {{/each}}
+            </script>
+          </ul>
+        </div>
+        <div class="col-sm-8" id="ec2-instances-details">
+          <script id="ec2-instance-detail-template" type="text/x-handlebars-template">
+          {{#each items}}
+          <div class="list-group" id="ec2-instance-details-{{{id}}}">
+            <div class="list-group-item active">
+              <h4 class="list-group-item-heading">{{{id}}}</h4>
+            </div>
+            <div class="list-group-item">
+              <h4>Information</h4>
+              <ul>
+                <li class="list-group-item-text">Region: {{{region}}}</li>
+                <li class="list-group-item-text">Reservation ID: {{{reservation_id}}}</li>
+                <li class="list-group-item-text">Access Key name: {{{key_name}}}</li>
+                <li class="list-group-item-text">State: {{{state}}}</li>
+                <li class="list-group-item-text">Up since: {{{launch_time}}}</li>
+              </ul>
+            </div>
+            <div class="list-group-item">
+              <h4>Network</h4>
+              <ul>
+                <li class="list-grou-item-text">Public IP: {{{ip_address}}}</li>
+                <li class="list-grou-item-text">Public DNS: {{{public_dns_name}}}</li>
+                <li class="list-grou-item-text">Private IP: {{{private_ip_address}}}</li>
+                <li class="list-grou-item-text">Private DNS: {{{private_dns_name}}}</li>
+              </ul>
+            </div>
+          </div>
+          {{/each}}
+          </script>
+        </div><!-- /.col-sm-8 -->
+      </div><!-- /.row -->
+
+      <!-- Template for EC2 security groups -->
+      <div class="row" id="ec2-security_groups-row">
+        <div class="col-sm-4">
+          <ul class="list-group" id="ec2-security_groups-list">
+            <script id="ec2-security_group-list-template" type="text/x-handlebars-template">
+            <li class="list-group-item"><a href="javascript:showAll('ec2-security_group')">Show all</a></li>
+            {{#each items}}
+              <li class="list-group-item">
+                <a href="javascript:browseTo('ec2-security_group','{{{id}}}')">{{{name}}}</a>
+              </li>
+            {{/each}}
+            </script>
+          </ul>
+        </div>
+        <div class="col-sm-8" id="ec2-security_groups-details">
+          <script id="ec2-security_group-detail-template" type="text/x-handlebars-template">
+          {{#each items}}
+          <div class="list-group" id="ec2-security_group-details-{{{id}}}">
+            <div class="list-group-item active">
+              <h4 class="list-group-item-heading">{{{name}}} ({{{id}}})</h4>
+              <p class="list-group-item-text">{{{description}}}</p>
+            </div>
+            <div class="list-group-item">
+              <h4 class="list-group-item-heading">Rules</h4>
+              <ul>
+              {{# each protocols}}
+                <li class="list-group-item-text">{{{name}}}</li>
+                  <ul>
+                  {{# each rules}}
+                    <li class="list-group-item-text">Ports: {{{ports}}}</li>
+                    <ul>
+                    {{# each grants}}
+                      <li class="list-group-item-text">{{{format_grant this}}}</li>
+                    {{/each}}
+                    </ul>
+                  {{/each}}
+                </ul>
+              {{/each}}
+              </ul>
+            </div>
+            <div class="list-group-item">
+              <h4 class="list-group-item-heading">Instances</h4>
+              {{{list_group_instances running-instances stopped-instances}}}
+            </div>
+          </div>
+          {{/each}}
+          </script>
+        </div><!-- /.col-sm-8 -->
+      </div><!-- /.row -->
+
+      <!-- Template for IAM groups -->
+      <div class="row" id="iam-groups-row">
+        <div class="col-sm-4">
+          <ul class="list-group" id="iam-groups-list">
+            <script id="iam-group-list-template" type="text/x-handlebars-template">
+            <li class="list-group-item"><a href="javascript:showAll('iam-group')">Show all</a></li>
+            {{#each items}}
+              <li class="list-group-item">
+                <a href="javascript:browseTo('iam-group','{{{group_id}}}')">{{{group_name}}}</a>
+              </li>
+            {{/each}}
+            </script>
+          </ul>
+        </div>
+        <div class="col-sm-8" id="iam-groups-details">
+          <script id="iam-group-detail-template" type="text/x-handlebars-template">
+          {{#each items}}
+          <div class="list-group" id="iam-group-details-{{{group_id}}}">
+            <div class="list-group-item active">
+              <h4 class="list-group-item-heading">{{group_name}}</h4>
+              <p class="list-group-item-text"> * Group created on {{create_date}}</p>
+            </div>
+            <div class="list-group-item">
+              <h4 class="list-group-item-heading">Members</h4>
+              <ul>
+              {{#each users}}
+                <li class="list-group-item-text"><a href="javascript:browseTo('iam-user','{{{this}}}')">{{{this}}}</a></li>
+              {{/each}}
+              </ul>
+            </div>
+            <div class="list-group-item">
+              <h4 class="list-group-item-heading">Group Policies</h4>
+              <ul>
+              {{#each policies}}
+                <li class="list-group-item-text">
+                {{{policy_name}}} [<a href="javascript:toggleDetails('iam-group_policy_details','{{{policy_name}}}')">Details</a>]
+                <p class="list-group-item-text" id="iam-group_policy_details-{{{policy_name}}}" style="display:none">{{{decodeURIComponent policy_document}}}</p>
+                </li>
+              {{/each}}
+              </ul>
+            </div>
+          </div>
+          {{/each}}
+          </script>
+        </div><!-- /.col-sm-8 -->
+      </div><!-- /.row -->
+
+      <!-- Template for IAM permissions -->
+      <div class="row" id="iam-permissions-row">
+        <div id="iam-permissions-list"></div>
+          <script id="iam-permission-list-template" type="text/x-handlebars-template">
+          <div class="row list-group-item active">
+            <div class="col-sm-4"><h4>Permission</h4></div>
+            <div class="col-sm-4"><h4>Allow</h4></div>
+            <div class="col-sm-4"><h4>Deny</h4></div>
+          </div>
+          {{#each items}}
+            <div class="row list-group-item" id="iam-permission-details-{{{@key}}}">
+              <div class="col-sm-4">{{{@key}}}</div>
+              <div class="col-sm-4">{{{list_permissions Allow}}}</div>
+              <div class="col-sm-4">{{{list_permissions Deny}}}</div>
+            </div>
+          {{/each}}
+          </script>
+      </div><!-- /.row -->
+
+      <!-- Template for IAM roles -->
+      <div class="row" id="iam-roles-row">
+        <div class="col-sm-3">
+          <ul class="list-group" id="iam-roles-list">
+            <script id="iam-role-list-template" type="text/x-handlebars-template">
+            <li class="list-group-item"><a href="javascript:showAll('iam-role')">Show all</a></li>
+            {{#each items}}
+              <li class="list-group-item">
+                <a href="javascript:browseTo('iam-role','{{{role_id}}}')">{{{role_name}}}</a>
+              </li>
+            {{/each}}
+            </script>
+          </ul>
+        </div>
+        <div class="col-sm-8" id="iam-roles-details">
+          <script id="iam-role-detail-template" type="text/x-handlebars-template">
+          {{#each items}}
+          <div class="list-group" id="iam-role-details-{{{role_id}}}">
+            <div class="list-group-item active">
+              <h4 class="list-group-item-heading">{{{role_name}}}</h4>
+            </div>
+            <div class="list-group-item">
+              <h4 class="list-group-item-heading">Information</h4>
+              <ul>
+                <li class="list-group-item-text"> Role created on {{{create_date}}}</li>
+              </ul>
+            </div>
+            <div class="list-group-item">
+              <h4 class="list-group-item-heading">Role Policies</h4>
+              <div>
+              <ul>
+              {{#each policies}}
+                <li class="list-group-item-text">
+                {{{policy_name}}} [<a href="javascript:toggleDetails('iam-role_policy_details','{{{policy_name}}}')">Details</a>]
+                <p class="list-group-item-text" id="iam-role_policy_details-{{{policy_name}}}" style="display:none">{{{decodeURIComponent policy_document}}}</p>
+                </li>
+              {{/each}}
+              </ul>
+              </div>
+            </div>
+          </div>
+          {{/each}}
+          </script>
+        </div><!-- /.col-sm-8 -->
+      </div><!-- /.row -->
+
+      <!-- Template for IAM users -->
+      <div class="row" id="iam-users-row">
+        <div class="col-sm-4">
+          <ul class="list-group" id="iam-users-list">
+            <script id="iam-user-list-template" type="text/x-handlebars-template">
+            <li class="list-group-item"><a href="javascript:showAll('iam-user')">Show all</a></li>
+            {{#each items}}
+              <li class="list-group-item">
+                <a href="javascript:browseTo('iam-user','{{{user_name}}}')">{{{user_name}}}</a>
+              </li>
+            {{/each}}
+            </script>
+          </ul>
+        </div>
+        <div class="col-sm-8" id="iam-users-details">
+          <script id="iam-user-detail-template" type="text/x-handlebars-template">
+          {{#each items}}
+          <div class="list-group" id="iam-user-details-{{{user_name}}}">
+            <div class="list-group-item active">
+              <h4 class="list-group-item-heading">{{{user_name}}}</h4>
+              <p class="list-group-item-text"> * Account created on {{{create_date}}}</p>
+            </div>
+            <div class="list-group-item">
+              <h4 class="list-group-item-heading">Authentication methods</h4>
+              <p class="list-group-item-text">Password enabled: {{{has_profiles? logins}}}</p>
+              <ul></ul>
+              <p class="list-group-item-text">Multi-Factor enabled: {{{has_mfa? mfa_devices}}}</p>
+              <ul>
+              {{#each mfa_devices}}
+                <li class="list-group-item-text"> Serial number: {{{serial_number}}}</li>
+              {{/each}}
+              </ul>
+              <p class="list-group-item-text">Access Keys: {{{has_access_keys? access_keys}}}</p>
+              <ul>
+              {{#each access_keys}}
+                <li class="list-group-item-text"> {{{access_key_id}}}, {{{status}}}, created on {{{create_date}}}</li>
+              {{/each}}
+              </ul>
+            </div>
+            <div class="list-group-item">
+              <h4 class="list-group-item-heading">Groups</h4>
+              <ul>
+              {{#each groups}}
+                <li class="list-group-item-text"><a href="javascript:browseTo('iam-group','{{{group_id}}}')">{{{group_name}}}</a></li>
+              {{/each}}
+              </ul>
+            </div>
+            <div class="list-group-item">
+              <h4 class="list-group-item-heading">User Policies</h4>
+              <div>
+              <ul>
+              {{#each policies}}
+                <li class="list-group-item-text">
+                {{{policy_name}}} [<a href="javascript:toggleDetails('iam-user_policy_details','{{{policy_name}}}')">Details</a>]
+                <p class="list-group-item-text" id="iam-user_policy_details-{{{policy_name}}}" style="display:none">{{{decodeURIComponent policy_document}}}</p>
+                </li>
+              {{/each}}
+              </ul>
+              </div>
+            </div>
+          </div>
+          {{/each}}
+          </script>
+        </div><!-- /.col-sm-8 -->
+      </div><!-- /.row -->
+
+    </div> <!-- /container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="inc-bootstrap/js/bootstrap.min.js"></script>
+  </body>
+</html>
