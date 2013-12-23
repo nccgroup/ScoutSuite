@@ -19,13 +19,16 @@ Python (https://aws.amazon.com/sdkforpython).
 
 ## Usage
 
+To run Scout2, run the following command:
+
+    $ python Scout2.py
+
+This will generate a number of .json files that contain AWS configuration data.
+To review the configuration, open the report.html file your browser.
+
 The following command will provide the list of available command line options:
 
     $ python Scout2.py -h
-
-### Sample command line:
-
-    $ python Scout2.py
 
 ## License
 
