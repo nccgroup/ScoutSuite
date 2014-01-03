@@ -6,10 +6,11 @@ import boto.ec2
 
 # Other imports
 import argparse
-import ast
 import json
 import os
+import re
 import urllib
+import urllib2
 import uuid
 
 # Set two environment variables as required by Boto
@@ -20,6 +21,25 @@ import uuid
 ########################################
 ##### Misc functions
 ########################################
+
+def fetch_creds_from_instance_metadata():
+    base_url = 'http://169.254.169.254/latest/meta-data/iam/security-credentials'
+    try:
+        iam_role = urllib2.urlopen(base_url).read()
+        credentials = json.loads(urllib2.urlopen(base_url + '/' + iam_role).read())
+        return credentials['AccessKeyId'], credentials['SecretAccessKey']
+    except Exception, e:
+        print 'Failed to fetch credentials. Make sure that this EC2 instance has an IAM role (%s)' % e
+        return None, None
+
+def fetch_creds_from_csv(filename):
+    key_id = None
+    secret = None
+    with open(filename, 'rt') as csvfile:
+        for i, line in enumerate(csvfile):
+            if i == 1:
+                username, key_id, secret = line.split(',')
+    return key_id, secret
 
 def manage_dictionary(dictionary, key, init):
     if not str(key) in dictionary:
@@ -210,15 +230,30 @@ def get_s3_buckets(s3):
 
 def main(args):
 
-    # Verify environment
-    if 'AWS_ACCESS_KEY_ID' not in os.environ or 'AWS_SECRET_ACCESS_KEY' not in os.environ:
+    key_id = None
+    secret = None
+
+    # Fetch credentials from the EC2 instance's metadata
+    if args.fetch_creds_from_instance_metadata:
+        key_id, secret = fetch_iam_role_credentials()
+
+    # Fetch credentials from CSV
+    if args.fetch_creds_from_csv is not None:
+        key_id, secret = fetch_creds_from_csv(args.fetch_creds_from_csv[0])
+
+    # Fetch credentials from environment
+    if 'AWS_ACCESS_KEY_ID' in os.environ and 'AWS_SECRET_ACCESS_KEY' in os.environ:
+        key_id = os.environ["AWS_ACCESS_KEY_ID"]
+        secret = os.environ["AWS_SECRET_ACCESS_KEY"] = secret
+
+    if key_id is None or secret is None:
         print 'Error: you need to set your AWS credentials as environment variables to use Scout2.'
         return -1
 
     ##### IAM
     if args.fetch_iam:
         try:
-            iam = boto.connect_iam()
+            iam = boto.connect_iam(key_id, secret)
             permissions = {}
             print 'Fetching IAM users data...'
             users, permissions = get_users_info(iam, permissions)
@@ -242,11 +277,11 @@ def main(args):
       security_groups['security_groups'] = []
       instances = {}
       instances['instances'] = []
+      ec2_connection = boto.connect_ec2(key_id, secret)
       for region in boto.ec2.regions():
           if region.name != 'us-gov-west-1' or args.fetch_ec2_gov:
             try:
                 print 'Fetching EC2 data for region %s' % region.name
-                ec2_connection = boto.ec2.connect_to_region(region.name)
                 security_groups['security_groups'] += get_security_groups_info(ec2_connection, region.name)
                 instances['instances'] += get_instances_info(ec2_connection, region.name)
             except Exception, e:
@@ -283,6 +318,17 @@ parser.add_argument('--force',
                     default=False,
                     action='store_true',
                     help='overwrite existing json files')
+parser.add_argument('--role-credentials',
+                    dest='fetch_creds_from_instance_metadata',
+                    default=False,
+                    action='store_true',
+                    help='fetch credentials for this EC2 instance')
+parser.add_argument('--credentials',
+                    dest='fetch_creds_from_csv',
+                    default=None,
+                    nargs='+',
+                    help='credentials file')
+
 args = parser.parse_args()
 
 if __name__ == '__main__':
