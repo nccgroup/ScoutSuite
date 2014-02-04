@@ -41,9 +41,12 @@ def fetch_creds_from_csv(filename):
                 username, key_id, secret = line.split(',')
     return key_id, secret
 
-def manage_dictionary(dictionary, key, init):
+def manage_dictionary(dictionary, key, init, callback=None):
     if not str(key) in dictionary:
         dictionary[str(key)] = init
+        manage_dictionary(dictionary, key, init)
+        if callback:
+            callback(dictionary[key])
     return dictionary
 
 def save_to_file(blob, keyword, force_write):
@@ -142,11 +145,6 @@ def get_group_users(iam, group_name):
         users.append(user.user_name)
     return users
 
-def manage_dictionary(dictionary, key, init):
-    if not str(key) in dictionary:
-        dictionary[str(key)] = init
-    return dictionary
-
 def get_permissions(policy_document, permissions, keyword, name, policy_name):
     document = json.loads(urllib.unquote(policy_document).decode('utf-8'))
     for statement in document['Statement']:
@@ -214,14 +212,72 @@ def get_users_info(iam, permissions):
 ##### S3 functions
 ########################################
 
+def init_s3_permissions(grant):
+    grant['read'] = False
+    grant['write'] = False
+    grant['acp_read'] = False
+    grant['acp_write'] = False
+    return grant
+
+def set_s3_permission(grant, name):
+    if name == 'READ' or name == 'FULL_CONTROL':
+        grant['read'] = True
+    if name == 'WRITE' or name == 'FULL_CONTROL':
+        grant['write'] = True
+    if name == 'ACP_READ' or name == 'FULL_CONTROL':
+        grant['acp_read'] = True
+    if name == 'ACP_WRITE' or name == 'FULL_CONTROL':
+        grant['acp_write'] = True
+
+def s3_group_to_string(uri):
+    if uri == 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers':
+        return 'Authenticated users'
+    elif uri == 'http://acs.amazonaws.com/groups/global/AllUsers':
+        return 'All users'
+    elif uri == 'http://acs.amazonaws.com/groups/s3/LogDelivery':
+        return 'Log delivery'
+    else:
+        return uri
+
+def get_s3_bucket_versioning(bucket):
+    r = bucket.get_versioning_status()
+    if 'Versioning' in r:
+        return r['Versioning']
+    else:
+        return 'Disabled'
+
+def get_s3_bucket_logging(bucket):
+    r = bucket.get_logging_status()
+    if r.target is not None:
+        return r.target + '/' + r.prefix
+    else:
+        return 'Disabled'
+
 # List all available buckets
 def get_s3_buckets(s3):
+    s3_buckets = []
     buckets = s3.get_all_buckets()
     for b in buckets:
-        print b.name
+        bucket = {}
+        bucket['name'] = b.name
         acp = b.get_acl()
+        bucket['grants'] = {}
         for grant in acp.acl.grants:
-            print grant.permission, grant.display_name, grant.email_address, grant.id
+            grantee_name = 'Unknown'
+            if grant.type == 'Group':
+                grantee_name = s3_group_to_string(grant.uri)
+                grant.uri.rsplit('/',1)[0]
+            elif grant.type == 'CanonicalUser':
+                grantee_name = grant.display_name
+            manage_dictionary(bucket['grants'], grantee_name, {}, init_s3_permissions)
+            set_s3_permission(bucket['grants'][grantee_name], grant.permission)
+            bucket['grants'][grantee_name]['email'] = grant.email_address
+        bucket['creation_date'] = b.creation_date
+        bucket['region'] = b.get_location()
+        bucket['logging'] = get_s3_bucket_logging(b)
+        bucket['versioning'] = get_s3_bucket_versioning(b)
+        s3_buckets.append(bucket)
+    return s3_buckets
 
 
 ########################################
@@ -291,7 +347,13 @@ def main(args):
       save_to_file(instances, 'EC2 instances', args.force_write)
 
     ##### S3
-    # Placeholder
+    if args.fetch_s3:
+        s3_buckets = {}
+        s3_buckets['buckets'] = []
+        s3_connection = boto.connect_s3(key_id, secret)
+        print 'Fetching S3 buckets data...'
+        s3_buckets['buckets'] = get_s3_buckets(s3_connection)
+        save_to_file(s3_buckets, 'S3 buckets', args.force_write)
 
 
 ########################################
@@ -308,6 +370,11 @@ parser.add_argument('--no_ec2',
                     default=True,
                     action='store_false',
                     help='don\'t fetch the EC2 configuration')
+parser.add_argument('--no_s3',
+                    dest='fetch_s3',
+                    default='True',
+                    action='store_false',
+                    help='don\'t fetch the S3 configuration')
 parser.add_argument('--gov',
                     dest='fetch_ec2_gov',
                     default=False,

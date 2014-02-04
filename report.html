@@ -69,6 +69,11 @@
             load_aws_from_json(data.permissions, 'iam-permission', 1);
         });
 
+        <!-- Load S3 data -->
+        $.getJSON('aws_s3_buckets.json', function(data) {
+            load_aws_from_json(data.buckets, 's3-bucket', 2);
+        });
+
         // TODO: Hide all by default
 
         <!-- Display functions -->
@@ -193,12 +198,25 @@
                 r += '<ul>';
                 for (i in instances) {
                     r += '<li class="list-group-item-text"><a href="javascript:browseTo(\'ec2-instance\',\'' + instances[i] + '\')">' + instances[i] + '</a></li>';
-                }            
+                }
                 r += '</ul>';
             }
             r += '</ul>';
             return r;
         }
+        Handlebars.registerHelper('list_s3_permissions', function(grantee_name, grants) {
+            var r = '';
+            r += '<tr><td>' + grantee_name + '</td>';
+            r += '<td class="text-center"><input type="checkbox" ' + ((grants.read == true) ? 'checked' : '') + '></td>';
+            r += '<td class="text-center"><input type="checkbox" ' + ((grants.write == true) ? 'checked' : '') + '></td>';
+            r += '<td class="text-center"><input type="checkbox" ' + ((grants.acp_read == true) ? 'checked' : '') + '></td>';
+            r += '<td class="text-center"><input type="checkbox" ' + ((grants.acp_write == true) ? 'checked' : '') + '></td>';
+            r += '</tr>';
+            return r;
+        });
+        Handlebars.registerHelper('has_logging?', function(logging) {
+            return logging;
+        });
 
         <!-- Debug -->
         Handlebars.registerHelper('helpme', function(permission) {
@@ -247,7 +265,12 @@
                 <li><a href="">Best practice violations</a></li>
               </ul>
             </li>
-            <li id="navbar-item-ec2"><a href="javascript:show_s3()">S3</a></li>
+            <li class="dropdown">
+              <a href="javascript:show_s3()" class="dropdown-toggle" data-toggle="dropdown">S3<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="javascript:list_generic('s3-bucket')">Buckets</a></li>
+              </ul>
+            </li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
               <ul class="dropdown-menu">
@@ -268,7 +291,7 @@
     </div>
 
     <div class="container theme-showcase" id="container-user">
-     
+
       <div class="page-header">
       </div>
 
@@ -387,8 +410,8 @@
           {{#each items}}
           <div class="list-group" id="iam-group-details-{{{group_id}}}">
             <div class="list-group-item active">
-              <h4 class="list-group-item-heading">{{group_name}}</h4>
-              <p class="list-group-item-text"> * Group created on {{create_date}}</p>
+              <h4 class="list-group-item-heading">{{{group_name}}}</h4>
+              <p class="list-group-item-text"> * Group created on {{{create_date}}}</p>
             </div>
             <div class="list-group-item">
               <h4 class="list-group-item-heading">Members</h4>
@@ -539,6 +562,56 @@
               {{/each}}
               </ul>
               </div>
+            </div>
+          </div>
+          {{/each}}
+          </script>
+        </div><!-- /.col-sm-8 -->
+      </div><!-- /.row -->
+
+      <!-- Template for S3 buckets -->
+      <div class="row" id="s3-buckets-row">
+        <div class="col-sm-4">
+          <ul class="list-group" id="s3-buckets-list">
+            <script id="s3-bucket-list-template" type="text/x-handlebars-template">
+            <li class="list-group-item"><a href="javascript:showAll('s3-bucket')">Show all</a></li>
+            {{#each items}}
+              <li class="list-group-item">
+                <a href="javascript:browseTo('s3-bucket','{{{name}}}')">{{{name}}}</a>
+              </li>
+            {{/each}}
+            </script>
+          </ul>
+        </div>
+        <div class="col-sm-8" id="s3-buckets-details">
+          <script id="s3-bucket-detail-template" type="text/x-handlebars-template">
+          {{#each items}}
+          <div class="list-group" id="s3-bucket-details-{{{name}}}">
+            <div class="list-group-item active">
+              <h4 class="list-group-item-heading">{{{name}}}</h4>
+            </div>
+            <div class="list-group-item">
+              <h4 class="list-group-item-heading">Information</h4>
+              <ul>
+              <li class="list-group-item-text">Creation date: {{{creation_date}}}</li>
+              <li class="list-group-item-text">Region: {{{region}}}</li>
+              <li class="list-group-item-text">Logging: {{{has_logging? logging}}}</li>
+              <li class="list-group-item-text">Versioning: {{{versioning}}}</li>
+            </div>
+            <div class="list-group-item">
+              <h4 class="list-group-item-heading">Permissions</h4>
+              <table class="table-striped" width="100%" >
+                <tr>
+                  <td></td>
+                  <td class="text-center">Read access</td>
+                  <td class="text-center">Write access</td>
+                  <td class="text-center">Read ACP</td>
+                  <td class="text-center">Write ACP</td>
+                </tr>
+              {{#each grants}}
+                {{{list_s3_permissions @key this}}}
+              {{/each}}
+              </table>
             </div>
           </div>
           {{/each}}
