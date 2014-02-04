@@ -43,7 +43,9 @@ def manage_dictionary(dictionary, key, init, callback=None):
 
 def save_to_file(blob, keyword, force_write):
     print 'Saving ' + keyword + ' data...'
-    filename = 'aws_' + keyword.lower().replace(' ','_') + '.json'
+    if not os.path.exists('json'):
+        os.makedirs('json')
+    filename = 'json/aws_' + keyword.lower().replace(' ','_') + '.json'
     if not os.path.isfile(filename) or force_write:
         with open(filename, 'wt') as f:
             print 'Success: saved data to ' + filename

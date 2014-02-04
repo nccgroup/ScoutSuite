@@ -37,3 +37,7 @@ nosetests.xml
 
 # In case people do a `git add .` ...
 *.csv
+
+# Data folder and files
+json
+*.json

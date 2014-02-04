@@ -9,6 +9,13 @@
 
     <title>AWS Scout2 Report</title>
 
+    <!-- custom style inline for now -->
+    <style>
+    .item-margin {
+        margin-left: 25px;
+    }
+    </style>
+
     <!-- Bootstrap core CSS -->
     <link href="inc-bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap theme -->
@@ -38,39 +45,42 @@
             var id2 = keyword + 's-list';
             var tmp = Handlebars.compile($(id1).html());
             var what = keyword + 's';
-            document.getElementById(id2).innerHTML = tmp({tabId: 'lol', items: list});
+            document.getElementById(id2).innerHTML = tmp({items: list});
             if (cols >= 2) {
                 var id3 = '#' + keyword + '-detail-template';
                 var id4 = keyword + 's-details';
                 var tmp = Handlebars.compile($(id3).html());
-                document.getElementById(id4).innerHTML = tmp({tabId: 'lol', items: list});
+                document.getElementById(id4).innerHTML = tmp({items: list});
             }
         }
 
         <!-- Load EC2 data -->
-        $.getJSON('aws_ec2_security_groups.json', function(data) {
+        $.getJSON('json/aws_ec2_security_groups.json', function(data) {
             load_aws_from_json(data.security_groups, 'ec2-security_group', 2);
         });
-        $.getJSON('aws_ec2_instances.json', function(data) {
+        $.getJSON('json/aws_ec2_instances.json', function(data) {
             load_aws_from_json(data.instances, 'ec2-instance', 2);
         });
 
         <!-- Load IAM data -->
-        $.getJSON('aws_iam_users.json', function(data) {
+        $.getJSON('json/aws_iam_users.json', function(data) {
             load_aws_from_json(data.list_users_response.list_users_result.users, 'iam-user', 2);
         });
-        $.getJSON('aws_iam_groups.json', function(data) {
+        $.getJSON('json/aws_iam_groups.json', function(data) {
             load_aws_from_json(data.list_groups_response.list_groups_result.groups, 'iam-group', 2);
         });
-        $.getJSON('aws_iam_roles.json', function(data) {
+        $.getJSON('json/aws_iam_roles.json', function(data) {
             load_aws_from_json(data.list_roles_response.list_roles_result.roles, 'iam-role', 2);
         });
-        $.getJSON('aws_iam_permissions.json', function(data) {
+        $.getJSON('json/aws_iam_permissions.json', function(data) {
             load_aws_from_json(data.permissions, 'iam-permission', 1);
+        });
+        $.getJSON('json/aws_iam_bpv.json', function(data) {
+            load_aws_from_json(data.violations, 'iam-bpv', 1);
         });
 
         <!-- Load S3 data -->
-        $.getJSON('aws_s3_buckets.json', function(data) {
+        $.getJSON('json/aws_s3_buckets.json', function(data) {
             load_aws_from_json(data.buckets, 's3-bucket', 2);
         });
 
@@ -207,10 +217,10 @@
         Handlebars.registerHelper('list_s3_permissions', function(grantee_name, grants) {
             var r = '';
             r += '<tr><td>' + grantee_name + '</td>';
-            r += '<td class="text-center"><input type="checkbox" ' + ((grants.read == true) ? 'checked' : '') + '></td>';
-            r += '<td class="text-center"><input type="checkbox" ' + ((grants.write == true) ? 'checked' : '') + '></td>';
-            r += '<td class="text-center"><input type="checkbox" ' + ((grants.acp_read == true) ? 'checked' : '') + '></td>';
-            r += '<td class="text-center"><input type="checkbox" ' + ((grants.acp_write == true) ? 'checked' : '') + '></td>';
+            r += '<td class="text-center"><i class="' + ((grants.read == true) ? 'glyphicon glyphicon-ok' : '') +'"></i></td>';
+            r += '<td class="text-center"><i class="' + ((grants.write == true) ? 'glyphicon glyphicon-ok' : '') +'"></i></td>';
+            r += '<td class="text-center"><i class="' + ((grants.acp_read == true) ? 'glyphicon glyphicon-ok' : '') +'"></i></td>';
+            r += '<td class="text-center"><i class="' + ((grants.acp_write == true) ? 'glyphicon glyphicon-ok' : '') +'"></i></td>';
             r += '</tr>';
             return r;
         });
@@ -255,14 +265,19 @@
               </ul>
             <li class="dropdown">
               <a href="javascript:show_iam()" class="dropdown-toggle" data-toggle="dropdown">IAM<b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="javascript:list_generic('iam-group')">Groups</a></li>
-                <li><a href="javascript:list_generic('iam-permission')">Permissions</a></li>
-                <li><a href="javascript:list_generic('iam-role')">Roles</a></li>
-                <li><a href="javascript:list_generic('iam-user')">Users</a></li>
-                <li><a href="javascript:void()">Password policy</a></li>
-                <li class="divider"></li>
-                <li><a href="">Best practice violations</a></li>
+              <ul class="dropdown-menu" id="iam-bpvs-list">
+                <script id="iam-bpv-list-template" type="text/x-handlebars-template">
+                  <li><a href="javascript:list_generic('iam-group')">Groups</a></li>
+                  <li><a href="javascript:list_generic('iam-permission')">Permissions</a></li>
+                  <li><a href="javascript:list_generic('iam-role')">Roles</a></li>
+                  <li><a href="javascript:list_generic('iam-user')">Users</a></li>
+                  <li><a href="javascript:void()">Password policy</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">Security risks</li>
+                  {{#each items}}
+                    <li><a href="#">{{{name}}}</a><li>
+                  {{/each}}
+                </script>
               </ul>
             </li>
             <li class="dropdown">
@@ -272,11 +287,11 @@
               </ul>
             </li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Help<b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
+                <li><a href="#">About AWS Scout2</a></li>
+                <li><a href="#">Security findings</a></li>
+                <li><a href="#">Related documentation</a></li>
                 <li class="divider"></li>
                 <li class="dropdown-header">Nav header</li>
                 <li><a href="#">Separated link</a></li>
@@ -592,11 +607,10 @@
             </div>
             <div class="list-group-item">
               <h4 class="list-group-item-heading">Information</h4>
-              <ul>
-              <li class="list-group-item-text">Creation date: {{{creation_date}}}</li>
-              <li class="list-group-item-text">Region: {{{region}}}</li>
-              <li class="list-group-item-text">Logging: {{{has_logging? logging}}}</li>
-              <li class="list-group-item-text">Versioning: {{{versioning}}}</li>
+              <div class="list-group-item-text item-margin">Creation date: <span class="label label-danger">{{{creation_date}}}</span></div>
+              <div class="list-group-item-text item-margin">Region: {{{region}}}</div>
+              <div class="list-group-item-text item-margin">Logging: {{{has_logging? logging}}}</div>
+              <div class="list-group-item-text item-margin">Versioning: {{{versioning}}}</div>
             </div>
             <div class="list-group-item">
               <h4 class="list-group-item-heading">Permissions</h4>
