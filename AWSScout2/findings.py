@@ -36,19 +36,22 @@ iam_finding_dictionary['violations'].append(Finding(
     'Lack of key rotation',
     'danger',
     'users',
-    Finding.checkAccessKeys
+    Finding.checkAccessKeys,
+    'access-key'
 ))
 iam_finding_dictionary['violations'].append(Finding(
     'Lack of MFA',
     'danger',
     'users',
-    Finding.lacksMFA
+    Finding.lacksMFA,
+    'mfa-enabled'
 ))
 iam_finding_dictionary['violations'].append(Finding(
     'Password and keys enabled.',
     'warning',
     'users',
-    Finding.passwordAndKeyEnabled
+    Finding.passwordAndKeyEnabled,
+    'password-and-key-enabled'
 ))
 
 

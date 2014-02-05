@@ -6,11 +6,12 @@ import json
 
 class Finding():
 
-    def __init__(self, description, level, entity, callback):
+    def __init__(self, description, level, entity, callback, idprefix):
         self.description = description
         self.level = level
         self.entity = entity
         self.callback = callback
+        self.idprefix = idprefix
         self.items = []
 
     def checkAccessKeys(self, obj):

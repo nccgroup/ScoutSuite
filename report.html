@@ -14,6 +14,15 @@
     .item-margin {
         margin-left: 25px;
     }
+    .finding-danger {
+        color:  red;
+    }
+    .finding-warning {
+        color: orange;
+    }
+    .finding-hidden {
+        display: none;
+    }
     </style>
 
     <!-- Bootstrap core CSS -->
@@ -54,6 +63,20 @@
             }
         }
 
+        <!-- Generic highlight finding function -->
+        function highlight_violations(violations) {
+            for (i in violations) {
+                var idprefix = '#' + violations[i]['idprefix'] + '-';
+                for (j in violations[i]['items']) {
+                    var id = idprefix + violations[i]['items'][j];
+                    var style = "finding-" + violations[i]['level'];
+                    //alert(id + ' :: ' + style);
+                    $(id).addClass(style);
+                    $(id).show();
+                }
+            }
+        }
+
         <!-- Load EC2 data -->
         $.getJSON('json/aws_ec2_security_groups.json', function(data) {
             load_aws_from_json(data.security_groups, 'ec2-security_group', 2);
@@ -77,6 +100,7 @@
         });
         $.getJSON('json/aws_iam_violations.json', function(data) {
             load_aws_from_json(data.violations, 'iam-violation', 1);
+            highlight_violations(data.violations);
         });
 
         <!-- Load S3 data -->
@@ -544,7 +568,7 @@
               <h4 class="list-group-item-heading">Authentication methods</h4>
               <p class="list-group-item-text">Password enabled: {{{has_profiles? logins}}}</p>
               <ul></ul>
-              <p class="list-group-item-text">Multi-Factor enabled: {{{has_mfa? mfa_devices}}}</p>
+              <p class="list-group-item-text">Multi-Factor enabled: <span id="mfa-enabled-{{{user_name}}}">{{{has_mfa? mfa_devices}}}</span></p>
               <ul>
               {{#each mfa_devices}}
                 <li class="list-group-item-text"> Serial number: {{{serial_number}}}</li>
@@ -553,10 +577,12 @@
               <p class="list-group-item-text">Access Keys: {{{has_access_keys? access_keys}}}</p>
               <ul>
               {{#each access_keys}}
-                <li class="list-group-item-text"> {{{access_key_id}}}, {{{status}}}, created on {{{create_date}}}</li>
+                <li class="list-group-item-text"><span id="access-key-{{{access_key_id}}}"> {{{access_key_id}}}, {{{status}}}, created on {{{create_date}}}</span></li>
               {{/each}}
               </ul>
+              <p class="list-group-item-text"><span class="finding-hidden" id="password-and-key-enabled-{{{user_name}}}"><i class="glyphicon glyphicon-warning-sign"></i> Review need for password-based and key-based authentication</span></p>
             </div>
+
             <div class="list-group-item">
               <h4 class="list-group-item-heading">Groups</h4>
               <ul>
@@ -607,7 +633,7 @@
             </div>
             <div class="list-group-item">
               <h4 class="list-group-item-heading">Information</h4>
-              <div class="list-group-item-text item-margin">Creation date: <span class="label label-danger">{{{creation_date}}}</span></div>
+              <div class="list-group-item-text item-margin">Creation date: {{{creation_date}}}</div>
               <div class="list-group-item-text item-margin">Region: {{{region}}}</div>
               <div class="list-group-item-text item-margin">Logging: {{{has_logging? logging}}}</div>
               <div class="list-group-item-text item-margin">Versioning: {{{versioning}}}</div>
