@@ -10,21 +10,34 @@ from AWSScout2.finding_dictionary import FindingDictionary
 ########################################
 ec2_finding_dictionary = FindingDictionary()
 ec2_finding_dictionary['violations'] = []
-ec2_finding_dictionary['violations'].append(Finding(
-    'SSH open to Internet',
-    'security_groups',
-    Finding.checkInternetAccessiblePort,
-    ('tcp','22'),
-    '',
-    'danger',
-))
-#finding_dictionary['ec2'] = FindingDictionary()
-#finding_dictionary['ec2'].append({
-#    'SSH open to Internet'
-#})
-#finding_dictionary['ec2'].append({
-#    'RDP open to Internet'
-#})
-#finding_dictionary['ec2'].append({
-#    'Use of plaintext protocols #23 #21..'
-#})
+
+# Ports that should not be accessible to public IP addresses
+rc_ports = [
+    ['SSH open to Internet', ('tcp', '22')],
+    ['RDP open to Internet', ('tcp', '3389')],
+]
+for port in rc_ports:
+    ec2_finding_dictionary['violations'].append(Finding(
+        port[0],
+        'security_groups',
+        Finding.checkInternetAccessiblePort,
+        port[1],
+        '',
+        'danger',
+    ))
+
+
+# Plaintext protocols
+plaintext_ports = [
+    ['FTP', ('tcp', '21')],
+    ['Telnet', ('tcp', '23')],
+]
+for port in plaintext_ports:
+    ec2_finding_dictionary['violations'].append(Finding(
+        port[0],
+        'security_groups',
+        Finding.checkOpenPort,
+        port[1],
+        '',
+        'danger',
+    ))

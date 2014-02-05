@@ -422,7 +422,7 @@
                 <li class="list-group-item-text">{{{name}}}</li>
                   <ul>
                   {{# each rules}}
-                    <li class="list-group-item-text">Ports: {{{ports}}}</li>
+                    <li class="list-group-item-text">Ports: <span id="{{{../../id}}}-{{{../name}}}-{{{ports}}}">{{{ports}}}</span></li>
                     <ul>
                     {{# each grants}}
                       <li class="list-group-item-text"><span id="{{{../../../id}}}-{{{../../name}}}-{{{../ports}}}-{{{this}}}">{{{format_grant this}}}</span></li>

@@ -58,7 +58,16 @@ class Finding():
             for rule in obj['protocols'][protocol]['rules']:
                 for grant in rule['grants']:
                     if grant == '0.0.0.0/0' and self.portInRange(port, rule['ports']):
-                        self.items.append(obj['id'] + '-' + protocol.upper() + '-' + port + '-0.0.0.0/0')
+                        self.items.append(obj['id'] + '-' + protocol.upper() + '-' + port + '-' + grant)
+
+    def checkOpenPort(self, obj):
+        protocol = self.callback_args[0][0].lower()
+        port = self.callback_args[0][1]
+        if protocol in obj['protocols']:
+            for rule in obj['protocols'][protocol]['rules']:
+                for grant in rule['grants']:
+                    if self.portInRange(port, rule['ports']):
+                        self.items.append(obj['id'] + '-' + protocol.upper() + '-' + port)
 
     def portInRange(self, port, ports):
         result = self.re_port_range.match(ports)
