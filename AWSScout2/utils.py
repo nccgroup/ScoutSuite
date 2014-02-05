@@ -11,8 +11,14 @@ import urllib2
 
 
 ########################################
-##### Misc functions
+##### Common functions
 ########################################
+
+def analyze_config(finding_dictionary, config, keyword):
+    for finding in finding_dictionary['violations']:
+        for entity in config[finding.entity]:
+            finding.callback(finding, entity)
+    save_json_to_file(finding_dictionary.to_JSON(), keyword, True)
 
 def fetch_creds_from_instance_metadata():
     base_url = 'http://169.254.169.254/latest/meta-data/iam/security-credentials'
