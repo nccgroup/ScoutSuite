@@ -2,16 +2,17 @@
 
 import datetime
 import dateutil.parser
-import json
 
 class Finding():
 
-    def __init__(self, description, level, entity, callback, idprefix):
+    def __init__(self, description, entity, callback, callback_args, idprefix, level):
         self.description = description
         self.level = level
         self.entity = entity
         self.callback = callback
+        self.callback_args = callback_args,
         self.idprefix = idprefix
+        self.level = level
         self.items = []
 
     def checkAccessKeys(self, obj):
@@ -45,3 +46,6 @@ class Finding():
             return True
         else:
             return False
+
+    def checkInternetAccessiblePort(self, obj):
+       return True

@@ -2,7 +2,7 @@
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
-from AWSScout2.findings import *
+from AWSScout2.findings_iam import *
 
 # Import other third-party packages
 import json

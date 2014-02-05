@@ -6,9 +6,9 @@ import boto.ec2
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
-from AWSScout2.ec2_utils import *
-from AWSScout2.iam_utils import *
-from AWSScout2.s3_utils import *
+from AWSScout2.utils_ec2 import *
+from AWSScout2.utils_iam import *
+from AWSScout2.utils_s3 import *
 
 # Import other third-party packages
 import argparse
