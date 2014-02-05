@@ -2,6 +2,7 @@
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
+from AWSScout2.findings import *
 
 # Import other third-party packages
 import json
@@ -11,6 +12,14 @@ import urllib
 ########################################
 ##### IAM functions
 ########################################
+
+def analyze_iam_config(groups, permissions, roles, users):
+    print 'Analyzing IAM data...'
+    iam_config = {"groups": groups, "permissions": permissions, "roles": roles, "users": users['list_users_response']['list_users_result']['users']}
+    for finding in iam_finding_dictionary['violations']:
+        for entity in iam_config[finding.entity]:
+            finding.callback(finding, entity)
+    save_json_to_file(iam_finding_dictionary.to_JSON(), 'IAM violations', True)
 
 def get_groups_info(iam, permissions):
     groups = iam.get_all_groups()

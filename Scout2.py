@@ -62,6 +62,7 @@ def main(args):
             p = {}
             p['permissions'] = permissions
             save_to_file(p, 'IAM permissions', args.force_write)
+            analyze_iam_config(groups, permissions, roles, users)
         except Exception, e:
             print 'Exception:\n %s' % e
             pass

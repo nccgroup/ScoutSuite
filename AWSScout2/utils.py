@@ -41,7 +41,10 @@ def manage_dictionary(dictionary, key, init, callback=None):
             callback(dictionary[key])
     return dictionary
 
-def save_to_file(blob, keyword, force_write):
+def save_json_to_file(json_blob, keyword, force_write):
+    save_to_file(json_blob, keyword, force_write, False)
+
+def save_to_file(blob, keyword, force_write, raw=True):
     print 'Saving ' + keyword + ' data...'
     if not os.path.exists('json'):
         os.makedirs('json')
@@ -49,6 +52,9 @@ def save_to_file(blob, keyword, force_write):
     if not os.path.isfile(filename) or force_write:
         with open(filename, 'wt') as f:
             print 'Success: saved data to ' + filename
-            print >>f, json.dumps(blob, indent=4, separators=(',', ': '), sort_keys=True)
+            if raw:
+                print >>f, json.dumps(blob, indent=4, separators=(',', ': '), sort_keys=True)
+            else:
+                print >>f, blob
     else:
         print 'Error: ' + filename + ' already exists.'

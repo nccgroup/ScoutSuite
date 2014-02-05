@@ -75,8 +75,8 @@
         $.getJSON('json/aws_iam_permissions.json', function(data) {
             load_aws_from_json(data.permissions, 'iam-permission', 1);
         });
-        $.getJSON('json/aws_iam_bpv.json', function(data) {
-            load_aws_from_json(data.violations, 'iam-bpv', 1);
+        $.getJSON('json/aws_iam_violations.json', function(data) {
+            load_aws_from_json(data.violations, 'iam-violation', 1);
         });
 
         <!-- Load S3 data -->
@@ -265,8 +265,8 @@
               </ul>
             <li class="dropdown">
               <a href="javascript:show_iam()" class="dropdown-toggle" data-toggle="dropdown">IAM<b class="caret"></b></a>
-              <ul class="dropdown-menu" id="iam-bpvs-list">
-                <script id="iam-bpv-list-template" type="text/x-handlebars-template">
+              <ul class="dropdown-menu" id="iam-violations-list">
+                <script id="iam-violation-list-template" type="text/x-handlebars-template">
                   <li><a href="javascript:list_generic('iam-group')">Groups</a></li>
                   <li><a href="javascript:list_generic('iam-permission')">Permissions</a></li>
                   <li><a href="javascript:list_generic('iam-role')">Roles</a></li>
@@ -275,7 +275,7 @@
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
-                    <li><a href="#">{{{name}}}</a><li>
+                    <li><a href="#">{{{description}}}</a><li>
                   {{/each}}
                 </script>
               </ul>
