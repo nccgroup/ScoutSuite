@@ -27,7 +27,7 @@ iam_finding_dictionary['violations'].append(Finding(
     'danger',
 ))
 iam_finding_dictionary['violations'].append(Finding(
-    'Password and keys enabled.',
+    'Password and keys enabled',
     'users',
     Finding.passwordAndKeyEnabled,
     None,

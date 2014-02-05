@@ -29,8 +29,8 @@ for port in rc_ports:
 
 # Plaintext protocols
 plaintext_ports = [
-    ['FTP', ('tcp', '21')],
-    ['Telnet', ('tcp', '23')],
+    ['FTP (plaintext)', ('tcp', '21')],
+    ['Telnet (plaintext)', ('tcp', '23')],
 ]
 for port in plaintext_ports:
     ec2_finding_dictionary['violations'].append(Finding(
