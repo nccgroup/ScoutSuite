@@ -66,13 +66,15 @@
         <!-- Generic highlight finding function -->
         function highlight_violations(violations) {
             for (i in violations) {
-                var idprefix = '#' + violations[i]['idprefix'] + '-';
+                var idprefix = '';
+                if ( violations[i]['idprefix'] != '') {
+                    var idprefix = violations[i]['idprefix'] + '-';
+                }
                 for (j in violations[i]['items']) {
                     var id = idprefix + violations[i]['items'][j];
                     var style = "finding-" + violations[i]['level'];
-                    //alert(id + ' :: ' + style);
-                    $(id).addClass(style);
-                    $(id).show();
+                    $('[id$="' + id + '"]').addClass(style);
+                    $('[id$="' + id + '"]').show();
                 }
             }
         }
@@ -83,6 +85,10 @@
         });
         $.getJSON('json/aws_ec2_instances.json', function(data) {
             load_aws_from_json(data.instances, 'ec2-instance', 2);
+        });
+        $.getJSON('json/aws_ec2_violations.json', function(data) {
+            load_aws_from_json(data.violations, 'ec2-violation', 1);
+            highlight_violations(data.violations);
         });
 
         <!-- Load IAM data -->
@@ -283,9 +289,16 @@
           <ul class="nav navbar-nav">
             <li class="dropdown">
               <a href="javascript:show_ec2()" class="dropdown-toggle" data-toggle="dropdown">EC2<b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="javascript:list_generic('ec2-instance')">Instances</a></li>
-                <li><a href="javascript:list_generic('ec2-security_group')">Security Groups</a></li>
+              <ul class="dropdown-menu" id="ec2-violations-list">
+                <script id="ec2-violation-list-template" type="text/x-handlebars-template">
+                  <li><a href="javascript:list_generic('ec2-instance')">Instances</a></li>
+                  <li><a href="javascript:list_generic('ec2-security_group')">Security Groups</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">Security risks</li>
+                  {{#each items}}
+                    <li><a href="#">{{{description}}}</a><li>
+                  {{/each}}
+                </script>
               </ul>
             <li class="dropdown">
               <a href="javascript:show_iam()" class="dropdown-toggle" data-toggle="dropdown">IAM<b class="caret"></b></a>
@@ -412,7 +425,7 @@
                     <li class="list-group-item-text">Ports: {{{ports}}}</li>
                     <ul>
                     {{# each grants}}
-                      <li class="list-group-item-text">{{{format_grant this}}}</li>
+                      <li class="list-group-item-text"><span id="{{{../../../id}}}-{{{../../name}}}-{{{../ports}}}-{{{this}}}">{{{format_grant this}}}</span></li>
                     {{/each}}
                     </ul>
                   {{/each}}

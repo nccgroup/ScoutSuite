@@ -2,8 +2,12 @@
 
 import datetime
 import dateutil.parser
+import re
 
 class Finding():
+
+    re_port_range = re.compile(r'(\d+)\-(\d+)')
+    re_single_port = re.compile(r'(\d+)')
 
     def __init__(self, description, entity, callback, callback_args, idprefix, level):
         self.description = description
@@ -48,4 +52,23 @@ class Finding():
             return False
 
     def checkInternetAccessiblePort(self, obj):
-       return True
+        protocol = self.callback_args[0][0].lower()
+        port = self.callback_args[0][1]
+        if protocol in obj['protocols']:
+            for rule in obj['protocols'][protocol]['rules']:
+                for grant in rule['grants']:
+                    if grant == '0.0.0.0/0' and self.portInRange(port, rule['ports']):
+                        self.items.append(obj['id'] + '-' + protocol.upper() + '-' + port + '-0.0.0.0/0')
+
+    def portInRange(self, port, ports):
+        result = self.re_port_range.match(ports)
+        if result:
+            p1 = int(result.group(1))
+            p2 = int(result.group(2))
+            if int(port) in range(int(result.group(1)), int(result.group(2))):
+                return True
+        else:
+            result = self.re_single_port.match(ports)
+            if result and port == result.group(1):
+                return True
+        return False

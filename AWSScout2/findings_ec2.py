@@ -12,10 +12,10 @@ ec2_finding_dictionary = FindingDictionary()
 ec2_finding_dictionary['violations'] = []
 ec2_finding_dictionary['violations'].append(Finding(
     'SSH open to Internet',
-    'groups',
+    'security_groups',
     Finding.checkInternetAccessiblePort,
-    '22',
-    'internet-accessible-port',
+    ('tcp','22'),
+    '',
     'danger',
 ))
 #finding_dictionary['ec2'] = FindingDictionary()

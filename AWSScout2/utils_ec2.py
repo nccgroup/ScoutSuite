@@ -2,11 +2,19 @@
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
+from AWSScout2.findings_ec2 import *
 
 
 ########################################
 ##### EC2 functions
 ########################################
+
+def analyze_ec2_config(instances, security_groups):
+    ec2_config = {"instances": instances['instances'], "security_groups": security_groups['security_groups']}
+    for finding in ec2_finding_dictionary['violations']:
+        for entity in ec2_config[finding.entity]:
+            finding.callback(finding, entity)
+    save_json_to_file(ec2_finding_dictionary.to_JSON(), 'EC2 violations', True)
 
 def get_security_groups_info(ec2, region):
     groups = ec2.get_all_security_groups()
