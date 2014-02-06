@@ -355,7 +355,7 @@
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
-                    <li><a href="#">{{{description}}}</a><li>
+                    <li><a href="javascript:list_findings('{{{keyword_prefix}}}','{{{entity}}}','{{{name}}}')">{{{description}}}</a><li>
                   {{/each}}
                 </script>
               </ul>
@@ -368,7 +368,7 @@
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
-                    <li><a href="#">{{{description}}}</a></li>
+                    <li><a href="javascript:list_findings('{{{keyword_prefix}}}','{{{entity}}}','{{{name}}}')">{{{description}}}</a><li>
                   {{/each}}
                 </script>
               </ul>
