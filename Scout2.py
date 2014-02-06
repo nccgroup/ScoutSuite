@@ -73,8 +73,8 @@ def main(args):
       security_groups['security_groups'] = []
       instances = {}
       instances['instances'] = []
-      ec2_connection = boto.connect_ec2(key_id, secret)
       for region in boto.ec2.regions():
+          ec2_connection = boto.ec2.connect_to_region(region.name, aws_access_key_id = key_id, aws_secret_access_key = secret)
           if region.name != 'us-gov-west-1' or args.fetch_ec2_gov:
             try:
                 print 'Fetching EC2 data for region %s' % region.name
