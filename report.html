@@ -500,7 +500,7 @@
             <script id="iam-group-list-template" type="text/x-handlebars-template">
             <li class="list-group-item"><a href="javascript:showAll('iam-group')">Show all</a></li>
             {{#each items}}
-              <li class="list-group-item">
+              <li class="list-group-item" id="iam-group-list-{{{group_id}}}">
                 <a href="javascript:browseTo('iam-group','{{{group_id}}}')">{{{group_name}}}</a>
               </li>
             {{/each}}
@@ -566,7 +566,7 @@
             <script id="iam-role-list-template" type="text/x-handlebars-template">
             <li class="list-group-item"><a href="javascript:showAll('iam-role')">Show all</a></li>
             {{#each items}}
-              <li class="list-group-item">
+              <li class="list-group-item" id="iam-role-list-{{{role_id}}}">
                 <a href="javascript:browseTo('iam-role','{{{role_id}}}')">{{{role_name}}}</a>
               </li>
             {{/each}}
@@ -612,7 +612,7 @@
             <script id="iam-user-list-template" type="text/x-handlebars-template">
             <li class="list-group-item"><a href="javascript:showAll('iam-user')">Show all</a></li>
             {{#each items}}
-              <li class="list-group-item">
+              <li class="list-group-item" id="iam-uesr-list-{{{user_name}}}">
                 <a href="javascript:browseTo('iam-user','{{{user_name}}}')">{{{user_name}}}</a>
               </li>
             {{/each}}
@@ -680,7 +680,7 @@
             <script id="s3-bucket-list-template" type="text/x-handlebars-template">
             <li class="list-group-item"><a href="javascript:showAll('s3-bucket')">Show all</a></li>
             {{#each items}}
-              <li class="list-group-item">
+              <li class="list-group-item" id="s3-bucket-list-{{{name}}}">
                 <a href="javascript:browseTo('s3-bucket','{{{name}}}')">{{{name}}}</a>
               </li>
             {{/each}}
