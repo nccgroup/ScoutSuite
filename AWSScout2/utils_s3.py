@@ -2,17 +2,23 @@
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
+from AWSScout2.findings_s3 import *
 
 
 ########################################
 ##### S3 functions
 ########################################
 
+def analyze_s3_config(buckets):
+    print 'Analyzing S3 data...'
+    s3_config = {"buckets": buckets['buckets']}
+    analyze_config(s3_finding_dictionary, s3_config, 'S3 violations')
+
 def init_s3_permissions(grant):
     grant['read'] = False
     grant['write'] = False
-    grant['acp_read'] = False
-    grant['acp_write'] = False
+    grant['read_acp'] = False
+    grant['write_acp'] = False
     return grant
 
 def set_s3_permission(grant, name):
@@ -20,10 +26,10 @@ def set_s3_permission(grant, name):
         grant['read'] = True
     if name == 'WRITE' or name == 'FULL_CONTROL':
         grant['write'] = True
-    if name == 'ACP_READ' or name == 'FULL_CONTROL':
-        grant['acp_read'] = True
-    if name == 'ACP_WRITE' or name == 'FULL_CONTROL':
-        grant['acp_write'] = True
+    if name == 'READ_ACP' or name == 'FULL_CONTROL':
+        grant['read_acp'] = True
+    if name == 'WRITE_ACP' or name == 'FULL_CONTROL':
+        grant['write_acp'] = True
 
 def s3_group_to_string(uri):
     if uri == 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers':

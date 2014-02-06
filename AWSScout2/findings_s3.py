@@ -13,8 +13,16 @@ s3_finding_dictionary['violations'] = []
 s3_finding_dictionary['violations'].append(Finding(
     'Bucket world-writable',
     'buckets',
+    Finding.checkWorldWritableBucket,
     None,
+    '',
+    'danger'
+))
+s3_finding_dictionary['violations'].append(Finding(
+    'Bucket world-readable',
+    'buckets',
+    Finding.checkWorldReadableBucket,
     None,
-    'internet-accessible-port',
+    '',
     'warning'
 ))
