@@ -98,7 +98,7 @@
 
         <!-- Load IAM data -->
         $.getJSON('json/aws_iam_users.json', function(data) {
-            load_aws_from_json(data.list_users_response.list_users_result.users, 'iam-user', 2);
+            load_aws_from_json(data, 'iam-user', 2);
         });
         $.getJSON('json/aws_iam_groups.json', function(data) {
             load_aws_from_json(data.list_groups_response.list_groups_result.groups, 'iam-group', 2);

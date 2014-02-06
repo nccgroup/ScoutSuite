@@ -15,7 +15,7 @@ import urllib
 
 def analyze_iam_config(groups, permissions, roles, users):
     print 'Analyzing IAM data...'
-    iam_config = {"groups": groups, "permissions": permissions, "roles": roles, "users": users['list_users_response']['list_users_result']['users']}
+    iam_config = {"groups": groups, "permissions": permissions, "roles": roles, "users": users}
     analyze_config(iam_finding_dictionary, iam_config, 'IAM violations')
 
 def get_groups_info(iam, permissions):
@@ -77,8 +77,16 @@ def get_roles_info(iam, permissions):
     return roles, permissions
 
 def get_users_info(iam, permissions):
-    users = iam.get_all_users()
-    for user in users.list_users_response.list_users_result.users:
+    marker_value = None
+    users = []
+    while True:
+        response = iam.get_all_users(marker = marker_value)
+        users = users + response.list_users_response.list_users_result.users
+        marker_value = response.list_users_response.list_users_result.marker if response.list_users_response.list_users_result.is_truncated != 'false' else None
+        if marker_value is None:
+            break
+    print 'Received %s usernames, fetching data... (this may take a while)' % str(len(users))
+    for user in users:
         user['policies'], permissions = get_policies(iam, permissions, 'user', user.user_name)
         groups = iam.get_groups_for_user(user['user_name'])
         user['groups'] = groups.list_groups_for_user_response.list_groups_for_user_result.groups
