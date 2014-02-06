@@ -19,6 +19,7 @@ class Finding():
         self.idprefix = idprefix
         self.level = level
         self.items = []
+        self.macro_items = []
 
     def checkAccessKeys(self, obj):
         for access_key in obj['access_keys']:
@@ -59,6 +60,7 @@ class Finding():
                 for grant in rule['grants']:
                     if grant == '0.0.0.0/0' and self.portInRange(port, rule['ports']):
                         self.items.append(obj['id'] + '-' + protocol.upper() + '-' + port + '-' + grant)
+                        self.macro_items.append(obj['id'])
 
     def checkOpenPort(self, obj):
         protocol = self.callback_args[0][0].lower()
