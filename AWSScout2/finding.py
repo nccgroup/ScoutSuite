@@ -51,16 +51,3 @@ class Finding():
             return True
         else:
             return False
-
-    def checkWorldWritableBucket(self, obj):
-        for grant in obj['grants']:
-            if 'All users' in grant:
-                if obj['grants']['All users']['write']:
-                    self.items.append('s3-bucket-write-' + grant + '-' + obj['name'])
-                if obj['grants']['All users']['write_acp']:
-                    self.items.append('s3-bucket-write_acp-' + grant + '-' + obj['name'])
-
-    def checkWorldReadableBucket(self, obj):
-        for grant in obj['grants']:
-            if 'All users' in grant and obj['grants']['All users']['read']:
-                self.items.append('s3-bucket-read-' + grant + '-' + obj['name'])
