@@ -154,6 +154,7 @@
             showAll(keyword);
         }
         function showAll(keyword) {
+            $("[id*='" + keyword + "-list']").show();
             $("[id*='" + keyword + "-details']").show();
         }
         function toggleDetails(keyword, item) {
