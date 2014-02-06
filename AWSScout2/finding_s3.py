@@ -2,10 +2,6 @@
 
 from AWSScout2.finding import *
 
-import datetime
-import dateutil.parser
-import re
-
 class S3Finding(Finding):
 
     def __init__(self, description, name, entity, callback, callback_args, idprefix, level):

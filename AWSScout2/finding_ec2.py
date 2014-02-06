@@ -2,11 +2,12 @@
 
 from AWSScout2.finding import *
 
-import datetime
-import dateutil.parser
 import re
 
 class Ec2Finding(Finding):
+
+    re_port_range = re.compile(r'(\d+)\-(\d+)')
+    re_single_port = re.compile(r'(\d+)')
 
     def __init__(self, description, name, entity, callback, callback_args, idprefix, level):
         self.keyword_prefix = 'ec2'
