@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 # Import AWS Scout2 finding-related classes
-from AWSScout2.finding import Finding
-from AWSScout2.finding_dictionary import FindingDictionary
+from AWSScout2.finding_ec2 import *
+from AWSScout2.finding_dictionary import *
 
 
 ########################################
@@ -13,15 +13,16 @@ ec2_finding_dictionary['violations'] = []
 
 # Ports that should not be accessible to public IP addresses
 rc_ports = [
-    ['SSH open to Internet', ('tcp', '22')],
-    ['RDP open to Internet', ('tcp', '3389')],
+    ['SSH open to Internet', 'ssh-port-public', ('tcp', '22')],
+    ['RDP open to Internet', 'rdp-port-public', ('tcp', '3389')],
 ]
 for port in rc_ports:
-    ec2_finding_dictionary['violations'].append(Finding(
+    ec2_finding_dictionary['violations'].append(Ec2Finding(
         port[0],
-        'security_groups',
-        Finding.checkInternetAccessiblePort,
         port[1],
+        'security_group',
+        Ec2Finding.checkInternetAccessiblePort,
+        port[2],
         '',
         'danger',
     ))
@@ -29,15 +30,16 @@ for port in rc_ports:
 
 # Plaintext protocols
 plaintext_ports = [
-    ['FTP (plaintext)', ('tcp', '21')],
-    ['Telnet (plaintext)', ('tcp', '23')],
+    ['FTP (plaintext)', 'ftp', ('tcp', '21')],
+    ['Telnet (plaintext)', 'telnet', ('tcp', '23')],
 ]
 for port in plaintext_ports:
-    ec2_finding_dictionary['violations'].append(Finding(
+    ec2_finding_dictionary['violations'].append(Ec2Finding(
         port[0],
-        'security_groups',
-        Finding.checkOpenPort,
         port[1],
+        'security_group',
+        Ec2Finding.checkOpenPort,
+        port[2],
         '',
         'danger',
     ))

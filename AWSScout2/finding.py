@@ -9,8 +9,9 @@ class Finding():
     re_port_range = re.compile(r'(\d+)\-(\d+)')
     re_single_port = re.compile(r'(\d+)')
 
-    def __init__(self, description, entity, callback, callback_args, idprefix, level):
+    def __init__(self, description, name, entity, callback, callback_args, idprefix, level):
         self.description = description
+        self.name = name
         self.level = level
         self.entity = entity
         self.callback = callback

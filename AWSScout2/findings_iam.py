@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 # Import AWS Scout2 finding-related classes
-from AWSScout2.finding import Finding
-from AWSScout2.finding_dictionary import FindingDictionary
+from AWSScout2.finding_iam import *
+from AWSScout2.finding_dictionary import *
 
 
 ########################################
@@ -10,26 +10,29 @@ from AWSScout2.finding_dictionary import FindingDictionary
 ########################################
 iam_finding_dictionary = FindingDictionary()
 iam_finding_dictionary['violations'] = []
-iam_finding_dictionary['violations'].append(Finding(
+iam_finding_dictionary['violations'].append(IamFinding(
     'Lack of key rotation',
-    'users',
-    Finding.checkAccessKeys,
+    'rotation',
+    'user',
+    IamFinding.checkAccessKeys,
     None,
     'access-key',
     'danger',
 ))
-iam_finding_dictionary['violations'].append(Finding(
+iam_finding_dictionary['violations'].append(IamFinding(
     'Lack of MFA',
-    'users',
-    Finding.lacksMFA,
+    'mfa',
+    'user',
+    IamFinding.lacksMFA,
     None,
     'mfa-enabled',
     'danger',
 ))
-iam_finding_dictionary['violations'].append(Finding(
+iam_finding_dictionary['violations'].append(IamFinding(
     'Password and keys enabled',
-    'users',
-    Finding.passwordAndKeyEnabled,
+    'password-and-key',
+    'user',
+    IamFinding.passwordAndKeyEnabled,
     None,
     'password-and-key-enabled',
     'warning',

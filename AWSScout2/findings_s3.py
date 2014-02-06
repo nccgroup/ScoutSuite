@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
 # Import AWS Scout2 finding-related classes
-from AWSScout2.finding import Finding
-from AWSScout2.finding_dictionary import FindingDictionary
+from AWSScout2.finding_s3 import *
+from AWSScout2.finding_dictionary import *
 
 
 ########################################
@@ -10,18 +10,20 @@ from AWSScout2.finding_dictionary import FindingDictionary
 ########################################
 s3_finding_dictionary = FindingDictionary()
 s3_finding_dictionary['violations'] = []
-s3_finding_dictionary['violations'].append(Finding(
+s3_finding_dictionary['violations'].append(S3Finding(
     'Bucket world-writable',
-    'buckets',
-    Finding.checkWorldWritableBucket,
+    'bucket-write',
+    'bucket',
+    S3Finding.checkWorldWritableBucket,
     None,
     '',
     'danger'
 ))
-s3_finding_dictionary['violations'].append(Finding(
+s3_finding_dictionary['violations'].append(S3Finding(
     'Bucket world-readable',
-    'buckets',
-    Finding.checkWorldReadableBucket,
+    'bucket-read',
+    'bucket',
+    S3Finding.checkWorldReadableBucket,
     None,
     '',
     'warning'
