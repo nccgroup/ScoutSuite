@@ -85,15 +85,17 @@ def main(args):
                 pass
       save_to_file(security_groups, 'EC2 security groups', args.force_write)
       save_to_file(instances, 'EC2 instances', args.force_write)
+      analyze_ec2_config(instances, security_groups)
 
     ##### S3
     if args.fetch_s3:
-        s3_buckets = {}
-        s3_buckets['buckets'] = []
+        buckets = {}
+        buckets['buckets'] = []
         s3_connection = boto.connect_s3(key_id, secret)
         print 'Fetching S3 buckets data...'
-        s3_buckets['buckets'] = get_s3_buckets(s3_connection)
-        save_to_file(s3_buckets, 'S3 buckets', args.force_write)
+        buckets['buckets'] = get_s3_buckets(s3_connection)
+        save_to_file(buckets, 'S3 buckets', args.force_write)
+        analyze_s3_config(buckets)
 
 
 ########################################
