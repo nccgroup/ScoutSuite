@@ -300,6 +300,13 @@
         Handlebars.registerHelper('has_logging?', function(logging) {
             return logging;
         });
+        Handlebars.registerHelper('format_finding_menu', function(finding) {
+            r = '<li>';
+            r += '<a href="javascript:list_findings(\'' + finding['keyword_prefix'] + '\',\'' + finding['entity'] + '\',\'' + finding['name'] + '\')">';
+            r += finding['description'] + ' (' + finding['macro_items'].length + ')';
+            r += '</a></li>';
+            return r;
+        });
 
         <!-- Debug -->
         Handlebars.registerHelper('helpme', function(permission) {
@@ -339,7 +346,7 @@
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
-                    <li><a href="javascript:list_findings('{{{keyword_prefix}}}','{{{entity}}}','{{{name}}}')">{{{description}}}</a><li>
+                    <li>{{{format_finding_menu this}}}
                   {{/each}}
                 </script>
               </ul>
@@ -355,7 +362,7 @@
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
-                    <li><a href="javascript:list_findings('{{{keyword_prefix}}}','{{{entity}}}','{{{name}}}')">{{{description}}}</a><li>
+                    <li>{{{format_finding_menu this}}}
                   {{/each}}
                 </script>
               </ul>
@@ -368,7 +375,7 @@
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
-                    <li><a href="javascript:list_findings('{{{keyword_prefix}}}','{{{entity}}}','{{{name}}}')">{{{description}}}</a><li>
+                    <li>{{{format_finding_menu this}}}
                   {{/each}}
                 </script>
               </ul>
