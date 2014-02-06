@@ -21,6 +21,7 @@ class IamFinding(Finding):
         key_age = (today - key_creation_date).days
         if (key_age > max_age):
             self.items.append(obj['access_key_id'])
+            self.macro_items.append(obj['user_name'])
             return True
         else:
             return False
@@ -31,6 +32,7 @@ class IamFinding(Finding):
     def lacksMFA(self, obj):
         if len(obj['mfa_devices']) == 0 and 'logins' in obj:
             self.items.append(obj['user_name'])
+            self.macro_items.append(obj['user_name'])
             return True
         else:
             return False
@@ -38,6 +40,7 @@ class IamFinding(Finding):
     def passwordAndKeyEnabled(self, obj):
         if len(obj['access_keys']) > 0 and 'logins' in obj:
             self.items.append(obj['user_name'])
+            self.macro_items.append(obj['user_name'])
             return True
         else:
             return False

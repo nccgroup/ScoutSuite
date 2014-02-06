@@ -13,6 +13,7 @@ class S3Finding(Finding):
             if 'All users' in grant:
                 if obj['grants']['All users']['write']:
                     self.items.append('s3-bucket-write-' + grant + '-' + obj['name'])
+                    self.macro_items.append(obj['name'])
                 if obj['grants']['All users']['write_acp']:
                     self.items.append('s3-bucket-write_acp-' + grant + '-' + obj['name'])
                     self.macro_items.append(obj['name'])
