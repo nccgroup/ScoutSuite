@@ -35,8 +35,7 @@ class Finding():
             return False
 
     def isOlderThan90Days(self, obj):
-        # FIXME: changed for dev purposes
-        return self.isOlderThan(obj, 45)
+        return self.isOlderThan(obj, 90)
 
     def lacksMFA(self, obj):
         if len(obj['mfa_devices']) == 0 and 'logins' in obj:
