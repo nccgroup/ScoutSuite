@@ -39,7 +39,7 @@ def main(args):
     # Fetch credentials from environment
     if 'AWS_ACCESS_KEY_ID' in os.environ and 'AWS_SECRET_ACCESS_KEY' in os.environ:
         key_id = os.environ["AWS_ACCESS_KEY_ID"]
-        secret = os.environ["AWS_SECRET_ACCESS_KEY"] = secret
+        secret = os.environ["AWS_SECRET_ACCESS_KEY"]
 
     if key_id is None or secret is None:
         print 'Error: you need to set your AWS credentials as environment variables to use Scout2.'
