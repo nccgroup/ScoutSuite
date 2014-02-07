@@ -101,10 +101,10 @@
             load_aws_from_json(data, 'iam-user', 2);
         });
         $.getJSON('json/aws_iam_groups.json', function(data) {
-            load_aws_from_json(data.list_groups_response.list_groups_result.groups, 'iam-group', 2);
+            load_aws_from_json(data, 'iam-group', 2);
         });
         $.getJSON('json/aws_iam_roles.json', function(data) {
-            load_aws_from_json(data.list_roles_response.list_roles_result.roles, 'iam-role', 2);
+            load_aws_from_json(data, 'iam-role', 2);
         });
         $.getJSON('json/aws_iam_permissions.json', function(data) {
             load_aws_from_json(data.permissions, 'iam-permission', 1);

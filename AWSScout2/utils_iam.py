@@ -19,8 +19,8 @@ def analyze_iam_config(groups, permissions, roles, users):
     analyze_config(iam_finding_dictionary, iam_config, 'IAM violations')
 
 def get_groups_info(iam, permissions):
-    groups = iam.get_all_groups()
-    for group in groups.list_groups_response.list_groups_result.groups:
+    groups = handle_truncated_responses(iam.get_all_groups, ['list_groups_response', 'list_groups_result'], 'groups')
+    for group in groups:
         group['users'] = get_group_users(iam, group.group_name);
         group['policies'], permissions = get_policies(iam, permissions, 'group', group.group_name)
     return groups, permissions
@@ -71,21 +71,13 @@ def get_policies(iam, permissions, keyword, name):
 
 
 def get_roles_info(iam, permissions):
-    roles = iam.list_roles()
-    for role in roles.list_roles_response.list_roles_result.roles:
+    roles = handle_truncated_responses(iam.list_roles, ['list_roles_response', 'list_roles_result'], 'roles')
+    for role in roles:
         role['policies'], permissions = get_policies(iam, permissions, 'role', role.role_name)
     return roles, permissions
 
 def get_users_info(iam, permissions):
-    marker_value = None
-    users = []
-    while True:
-        response = iam.get_all_users(marker = marker_value)
-        users = users + response.list_users_response.list_users_result.users
-        marker_value = response.list_users_response.list_users_result.marker if response.list_users_response.list_users_result.is_truncated != 'false' else None
-        if marker_value is None:
-            break
-    print 'Received %s usernames, fetching data... (this may take a while)' % str(len(users))
+    users = handle_truncated_responses(iam.get_all_users, ['list_users_response', 'list_users_result'], 'users')
     for user in users:
         user['policies'], permissions = get_policies(iam, permissions, 'user', user.user_name)
         groups = iam.get_groups_for_user(user['user_name'])
@@ -101,3 +93,17 @@ def get_users_info(iam, permissions):
         user['mfa_devices'] = mfa_devices.list_mfa_devices_response.list_mfa_devices_result.mfa_devices
 
     return users, permissions
+
+def handle_truncated_responses(callback, result_path, items_name):
+    marker_value = None
+    items = []
+    while True:
+        result = callback(marker = marker_value)
+        for key in result_path:
+            result = result[key]
+        marker_value = result['marker'] if result['is_truncated'] != 'false' else None
+        items = items + result[items_name]
+        if marker_value is None:
+            break
+    print 'Received %s %s, fetching data... (this may take a while)' % (str(len(items)), items_name)
+    return items
