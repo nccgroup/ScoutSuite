@@ -15,6 +15,8 @@ ec2_finding_dictionary['violations'] = []
 rc_ports = [
     ['SSH open to Internet', 'ssh-port-public', ('tcp', '22')],
     ['RDP open to Internet', 'rdp-port-public', ('tcp', '3389')],
+    ['MySQL open to Internet', 'mysql-port-public', ('tcp', '3306')],
+    ['Ms SQL open to Internet', 'mssql-port-public', ('tcp', '1433')],
 ]
 for port in rc_ports:
     ec2_finding_dictionary['violations'].append(Ec2Finding(
@@ -22,7 +24,7 @@ for port in rc_ports:
         port[1],
         'security_group',
         Ec2Finding.checkInternetAccessiblePort,
-        port[2],
+        ['blacklist', port[2]],
         '',
         'danger',
     ))
@@ -43,3 +45,17 @@ for port in plaintext_ports:
         '',
         'danger',
     ))
+
+# Publicly accessible ports
+wl_ports = ['80', '443']
+for rcp in rc_ports:
+    wl_ports.append(rcp[2][1])
+ec2_finding_dictionary['violations'].append(Ec2Finding(
+    'Ports open to Internet',
+    'public-ports',
+    'security_group',
+    Ec2Finding.checkInternetAccessiblePort,
+    ['whitelist', ('tcp', wl_ports)],
+    '',
+    'warning',
+))

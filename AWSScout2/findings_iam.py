@@ -15,9 +15,18 @@ iam_finding_dictionary['violations'].append(IamFinding(
     'rotation',
     'user',
     IamFinding.checkAccessKeys,
-    None,
+    'Active',
     'access-key',
     'danger',
+))
+iam_finding_dictionary['violations'].append(IamFinding(
+    'Lack of key rotation',
+    'rotation',
+    'user',
+    IamFinding.checkAccessKeys,
+    'Inactive',
+    'access-key',
+    'warning',
 ))
 iam_finding_dictionary['violations'].append(IamFinding(
     'Lack of MFA',
