@@ -81,5 +81,5 @@ def get_s3_buckets(s3):
         bucket['logging'] = get_s3_bucket_logging(b)
         bucket['versioning'] = get_s3_bucket_versioning(b)
         s3_buckets.append(bucket)
-    close_status()
+    close_status(count, total)
     return s3_buckets

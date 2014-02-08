@@ -67,13 +67,20 @@ def save_to_file(blob, keyword, force_write, raw=True):
         print 'Error: ' + filename + ' already exists.'
 
 def init_status(items):
-    return 0, len(items)
+    if items:
+        return 0, len(items)
+    else:
+        return 0, None
 
 def update_status(current, total):
     current = current + 1
-    sys.stdout.write("\r %d/%d" % (current, total))
+    if total:
+        sys.stdout.write("\r %d/%d" % (current, total))
+    else:
+        sys.stdout.write("\r %d" % current)
     sys.stdout.flush()
     return current
 
-def close_status():
-    sys.stdout.write('\n')
+def close_status(current, total):
+    if total and total != 0:
+        sys.stdout.write('\n')

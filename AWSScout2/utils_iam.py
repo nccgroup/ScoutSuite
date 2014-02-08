@@ -25,7 +25,7 @@ def get_groups_info(iam, permissions):
         count = update_status(count, total)
         group['users'] = get_group_users(iam, group.group_name);
         group['policies'], permissions = get_policies(iam, permissions, 'group', group.group_name)
-    close_status()
+    close_status(count, total)
     return groups, permissions
 
 def get_group_users(iam, group_name):
@@ -79,7 +79,7 @@ def get_roles_info(iam, permissions):
     for role in roles:
         count = update_status(count, total)
         role['policies'], permissions = get_policies(iam, permissions, 'role', role.role_name)
-    close_status()
+    close_status(count, total)
     return roles, permissions
 
 def get_users_info(iam, permissions):
@@ -99,7 +99,7 @@ def get_users_info(iam, permissions):
         user['access_keys'] = access_keys.list_access_keys_response.list_access_keys_result.access_key_metadata
         mfa_devices = iam.get_all_mfa_devices(user['user_name'])
         user['mfa_devices'] = mfa_devices.list_mfa_devices_response.list_mfa_devices_result.mfa_devices
-    close_status()
+    close_status(count, total)
     return users, permissions
 
 def handle_truncated_responses(callback, result_path, items_name):
@@ -113,5 +113,5 @@ def handle_truncated_responses(callback, result_path, items_name):
         items = items + result[items_name]
         if marker_value is None:
             break
-    sys.stdout.write('Received %s %s, fetching data... (this may take a while)\n' % (str(len(items)), items_name))
+    sys.stdout.write('Received %s %s, fetching data...\n' % (str(len(items)), items_name))
     return items

@@ -17,7 +17,9 @@ def analyze_ec2_config(instances, security_groups):
 def get_security_groups_info(ec2, region):
     groups = ec2.get_all_security_groups()
     security_groups = []
+    count, total = init_status(groups)
     for group in groups:
+        count = update_status(count, total)
         security_group = {}
         security_group['name'] = group.name
         security_group['id'] = group.id
@@ -54,16 +56,19 @@ def get_security_groups_info(ec2, region):
                 security_group['stopped-instances'].append(i.id)
         # Append the new security group to the return list
         security_groups.append(security_group)
+    close_status(count, total)
     return security_groups
 
 def get_instances_info(ec2, region):
     results = []
     reservations = ec2.get_all_reservations()
+    count, total = init_status(None)
     for reservation in reservations:
         groups = []
         for g in reservation.groups:
             groups.append(g.name)
         for i in reservation.instances:
+            count = update_status(count, total)
             instance = {}
             instance['reservation_id'] = reservation.id
             instance['groups'] = groups
@@ -74,4 +79,5 @@ def get_instances_info(ec2, region):
             # FIXME ... see why it's not working when added in the list above
             instance['state'] = i.state
             results.append(instance)
+    close_status(count, total)
     return results
