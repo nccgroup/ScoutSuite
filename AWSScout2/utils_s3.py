@@ -59,7 +59,9 @@ def get_s3_bucket_logging(bucket):
 def get_s3_buckets(s3):
     s3_buckets = []
     buckets = s3.get_all_buckets()
+    count, total = init_status(buckets)
     for b in buckets:
+        count = update_status(count, total)
         bucket = {}
         bucket['name'] = b.name
         acp = b.get_acl()
@@ -79,4 +81,5 @@ def get_s3_buckets(s3):
         bucket['logging'] = get_s3_bucket_logging(b)
         bucket['versioning'] = get_s3_bucket_versioning(b)
         s3_buckets.append(bucket)
+    close_status()
     return s3_buckets
