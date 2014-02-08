@@ -14,15 +14,18 @@ import urllib
 ########################################
 
 def analyze_iam_config(groups, permissions, roles, users):
-    print 'Analyzing IAM data...'
+    sys.stdout.write('Analyzing IAM data...\n')
     iam_config = {"groups": groups, "permissions": permissions, "roles": roles, "users": users}
     analyze_config(iam_finding_dictionary, iam_config, 'IAM violations')
 
 def get_groups_info(iam, permissions):
     groups = handle_truncated_responses(iam.get_all_groups, ['list_groups_response', 'list_groups_result'], 'groups')
+    count, total = init_status(groups)
     for group in groups:
+        count = update_status(count, total)
         group['users'] = get_group_users(iam, group.group_name);
         group['policies'], permissions = get_policies(iam, permissions, 'group', group.group_name)
+    close_status()
     return groups, permissions
 
 def get_group_users(iam, group_name):
@@ -72,13 +75,18 @@ def get_policies(iam, permissions, keyword, name):
 
 def get_roles_info(iam, permissions):
     roles = handle_truncated_responses(iam.list_roles, ['list_roles_response', 'list_roles_result'], 'roles')
+    count, total = init_status(roles)
     for role in roles:
+        count = update_status(count, total)
         role['policies'], permissions = get_policies(iam, permissions, 'role', role.role_name)
+    close_status()
     return roles, permissions
 
 def get_users_info(iam, permissions):
     users = handle_truncated_responses(iam.get_all_users, ['list_users_response', 'list_users_result'], 'users')
+    count, total = init_status(users)
     for user in users:
+        count = update_status(count, total)
         user['policies'], permissions = get_policies(iam, permissions, 'user', user.user_name)
         groups = iam.get_groups_for_user(user['user_name'])
         user['groups'] = groups.list_groups_for_user_response.list_groups_for_user_result.groups
@@ -91,7 +99,7 @@ def get_users_info(iam, permissions):
         user['access_keys'] = access_keys.list_access_keys_response.list_access_keys_result.access_key_metadata
         mfa_devices = iam.get_all_mfa_devices(user['user_name'])
         user['mfa_devices'] = mfa_devices.list_mfa_devices_response.list_mfa_devices_result.mfa_devices
-
+    close_status()
     return users, permissions
 
 def handle_truncated_responses(callback, result_path, items_name):
@@ -105,5 +113,5 @@ def handle_truncated_responses(callback, result_path, items_name):
         items = items + result[items_name]
         if marker_value is None:
             break
-    print 'Received %s %s, fetching data... (this may take a while)' % (str(len(items)), items_name)
+    sys.stdout.write('Received %s %s, fetching data... (this may take a while)\n' % (str(len(items)), items_name))
     return items

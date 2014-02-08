@@ -7,6 +7,7 @@ import boto.ec2
 # Import other third-party packages
 import json
 import os
+import sys
 import urllib2
 
 
@@ -64,3 +65,15 @@ def save_to_file(blob, keyword, force_write, raw=True):
                 print >>f, blob
     else:
         print 'Error: ' + filename + ' already exists.'
+
+def init_status(items):
+    return 0, len(items)
+
+def update_status(current, total):
+    current = current + 1
+    sys.stdout.write("\r %d/%d" % (current, total))
+    sys.stdout.flush()
+    return current
+
+def close_status():
+    sys.stdout.write('\n')
