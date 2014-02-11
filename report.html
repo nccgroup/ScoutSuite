@@ -302,11 +302,11 @@
         }
         Handlebars.registerHelper('list_s3_permissions', function(bucket_name, grantee_name, grants) {
             var r = '';
-            r += '<tr><td>' + grantee_name + '</td>';
-            r += '<td class="text-center"><span id="s3-bucket-read-' + grantee_name + '-' + bucket_name + '"><i class="' + ((grants.read == true) ? 'glyphicon glyphicon-ok' : '') +'"></i></span></td>';
-            r += '<td class="text-center"><span id="s3-bucket-write-' + grantee_name + '-' + bucket_name + '"><i class="' + ((grants.write == true) ? 'glyphicon glyphicon-ok' : '') +'"></i></span></td>';
-            r += '<td class="text-center"><span id="s3-bucket-read_acp-' + grantee_name + '-' + bucket_name + '"><i class="' + ((grants.read_acp == true) ? 'glyphicon glyphicon-ok' : '') +'"></i></span></td>';
-            r += '<td class="text-center"><span id="s3-bucket-write_acp-' + grantee_name + '-' + bucket_name + '"><i class="' + ((grants.write_acp == true) ? 'glyphicon glyphicon-ok' : '') +'"></i></span></td>';
+            r += '<tr><td width="20%">' + grantee_name + '</td>';
+            r += '<td width="20%" class="text-center"><span id="s3-bucket-read-' + grantee_name + '-' + bucket_name + '"><i class="' + ((grants.read == true) ? 'glyphicon glyphicon-ok' : '') +'"></i></span></td>';
+            r += '<td width="20%" class="text-center"><span id="s3-bucket-write-' + grantee_name + '-' + bucket_name + '"><i class="' + ((grants.write == true) ? 'glyphicon glyphicon-ok' : '') +'"></i></span></td>';
+            r += '<td width="20%" class="text-center"><span id="s3-bucket-read_acp-' + grantee_name + '-' + bucket_name + '"><i class="' + ((grants.read_acp == true) ? 'glyphicon glyphicon-ok' : '') +'"></i></span></td>';
+            r += '<td width="20%" class="text-center"><span id="s3-bucket-write_acp-' + grantee_name + '-' + bucket_name + '"><i class="' + ((grants.write_acp == true) ? 'glyphicon glyphicon-ok' : '') +'"></i></span></td>';
             r += '</tr>';
             return r;
         });
@@ -725,11 +725,11 @@
               <h4 class="list-group-item-heading">Permissions</h4>
               <table class="table-striped" width="100%" >
                 <tr>
-                  <td></td>
-                  <td class="text-center">Read access</td>
-                  <td class="text-center">Write access</td>
-                  <td class="text-center">Read ACP</td>
-                  <td class="text-center">Write ACP</td>
+                  <td width="20%"></td>
+                  <td width="20%" class="text-center">Read access</td>
+                  <td width="20%" class="text-center">Write access</td>
+                  <td width="20%" class="text-center">Read ACP</td>
+                  <td width="20%" class="text-center">Write ACP</td>
                 </tr>
               {{#each grants}}
                 {{{list_s3_permissions ../name @key this}}}
