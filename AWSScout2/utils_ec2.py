@@ -9,10 +9,10 @@ from AWSScout2.findings_ec2 import *
 ##### EC2 functions
 ########################################
 
-def analyze_ec2_config(instances, security_groups):
+def analyze_ec2_config(instances, security_groups, force_write):
     print 'Analyzing EC2 data...'
     ec2_config = {"instances": instances['instances'], "security_groups": security_groups['security_groups']}
-    analyze_config(ec2_finding_dictionary, ec2_config, 'EC2 violations')
+    analyze_config(ec2_finding_dictionary, ec2_config, 'EC2 violations', force_write)
 
 def get_security_groups_info(ec2, region):
     groups = ec2.get_all_security_groups()

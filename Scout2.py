@@ -42,7 +42,7 @@ def main(args):
         key_id = os.environ["AWS_ACCESS_KEY_ID"]
         secret = os.environ["AWS_SECRET_ACCESS_KEY"]
 
-    if key_id is None or secret is None:
+    if not args.fetch_local and (key_id is None or secret is None):
         print 'Error: you need to set your AWS credentials as environment variables to use Scout2.'
         return -1
 
@@ -53,56 +53,73 @@ def main(args):
     ##### IAM
     if args.fetch_iam:
         try:
-            iam = boto.connect_iam(aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
-            permissions = {}
-            print 'Fetching IAM users data...'
-            users, permissions = get_users_info(iam, permissions)
-            save_to_file(users, 'IAM users', args.force_write)
-            print 'Fetching IAM groups data...'
-            groups, permissions = get_groups_info(iam, permissions)
-            save_to_file(groups, 'IAM groups', args.force_write)
-            print 'Fetching IAM roles data...'
-            roles, permissions = get_roles_info(iam, permissions)
-            save_to_file(roles, 'IAM roles', args.force_write)
-            p = {}
-            p['permissions'] = permissions
-            save_to_file(p, 'IAM permissions', args.force_write)
-            analyze_iam_config(groups, permissions, roles, users)
+            if not args.fetch_local:
+                iam = boto.connect_iam(aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
+                permissions = {}
+                print 'Fetching IAM users data...'
+                users, permissions = get_users_info(iam, permissions)
+                save_to_file(users, 'IAM users', args.force_write)
+                print 'Fetching IAM groups data...'
+                groups, permissions = get_groups_info(iam, permissions)
+                save_to_file(groups, 'IAM groups', args.force_write)
+                print 'Fetching IAM roles data...'
+                roles, permissions = get_roles_info(iam, permissions)
+                save_to_file(roles, 'IAM roles', args.force_write)
+                p = {}
+                p['permissions'] = permissions
+                save_to_file(p, 'IAM permissions', args.force_write)
+            else:
+                groups = load_from_json('iam','groups')
+                permissions = load_from_json('iam','permissions')
+                roles = load_from_json('iam','roles')
+                users = load_from_json('iam','users')
+            analyze_iam_config(groups, permissions, roles, users, args.force_write)
         except Exception, e:
             print 'Exception:\n %s' % e
             pass
 
     ##### EC2
     if args.fetch_ec2:
-      security_groups = {}
-      security_groups['security_groups'] = []
-      instances = {}
-      instances['instances'] = []
-      for region in boto.ec2.regions():
-          ec2_connection = boto.ec2.connect_to_region(region.name, aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
-          if region.name != 'us-gov-west-1' or args.fetch_ec2_gov:
-            try:
-                print 'Fetching EC2 data for region %s' % region.name
-                print 'Fetching EC2 security groups data...'
-                security_groups['security_groups'] += get_security_groups_info(ec2_connection, region.name)
-                print 'Fetching EC2 instances data...'
-                instances['instances'] += get_instances_info(ec2_connection, region.name)
-            except Exception, e:
-                print 'Exception: \n %s' % e
-                pass
-      save_to_file(security_groups, 'EC2 security groups', args.force_write)
-      save_to_file(instances, 'EC2 instances', args.force_write)
-      analyze_ec2_config(instances, security_groups)
+        security_groups = {}
+        security_groups['security_groups'] = []
+        instances = {}
+        instances['instances'] = []
+        try:
+            if not args.fetch_local:
+                for region in boto.ec2.regions():
+                    ec2_connection = boto.ec2.connect_to_region(region.name, aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
+                    if region.name != 'us-gov-west-1' or args.fetch_ec2_gov:
+                        print 'Fetching EC2 data for region %s' % region.name
+                        print 'Fetching EC2 security groups data...'
+                        security_groups['security_groups'] += get_security_groups_info(ec2_connection, region.name)
+                        print 'Fetching EC2 instances data...'
+                        instances['instances'] += get_instances_info(ec2_connection, region.name)
+                save_to_file(security_groups, 'EC2 security groups', args.force_write)
+                save_to_file(instances, 'EC2 instances', args.force_write)
+            else:
+                instances = load_from_json('ec2', 'instances')
+                security_groups = load_from_json('ec2', 'security_groups')
+            analyze_ec2_config(instances, security_groups, args.force_write)
+        except Exception, e:
+            print 'Exception: \n %s' % e
+            pass
 
     ##### S3
     if args.fetch_s3:
         buckets = {}
         buckets['buckets'] = []
-        s3_connection = boto.connect_s3(aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
-        print 'Fetching S3 buckets data...'
-        buckets['buckets'] = get_s3_buckets(s3_connection)
-        save_to_file(buckets, 'S3 buckets', args.force_write)
-        analyze_s3_config(buckets)
+        try:
+            if not args.fetch_local:
+                s3_connection = boto.connect_s3(aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
+                print 'Fetching S3 buckets data...'
+                buckets['buckets'] = get_s3_buckets(s3_connection)
+                save_to_file(buckets, 'S3 buckets', args.force_write)
+            else:
+                buckets = load_from_json('s3', 'buckets')
+            analyze_s3_config(buckets, args.force_write)
+        except Exception, e:
+            print 'Exception: \n %s' % e
+            pass
 
 
 ########################################
@@ -154,6 +171,11 @@ parser.add_argument('--mfa_code',
                     default=None,
                     nargs='+',
                     help='MFA code')
+parser.add_argument('--local',
+                    dest='fetch_local',
+                    default=False,
+                    action='store_true',
+                    help='Use local data previously fetched to feed the analyzer')
 
 args = parser.parse_args()
 

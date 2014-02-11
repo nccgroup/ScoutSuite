@@ -9,10 +9,10 @@ from AWSScout2.findings_s3 import *
 ##### S3 functions
 ########################################
 
-def analyze_s3_config(buckets):
+def analyze_s3_config(buckets, force_write):
     print 'Analyzing S3 data...'
     s3_config = {"buckets": buckets['buckets']}
-    analyze_config(s3_finding_dictionary, s3_config, 'S3 violations')
+    analyze_config(s3_finding_dictionary, s3_config, 'S3 violations', force_write)
 
 def init_s3_permissions(grant):
     grant['read'] = False

@@ -13,10 +13,10 @@ import urllib
 ##### IAM functions
 ########################################
 
-def analyze_iam_config(groups, permissions, roles, users):
+def analyze_iam_config(groups, permissions, roles, users, force_write):
     sys.stdout.write('Analyzing IAM data...\n')
     iam_config = {"groups": groups, "permissions": permissions, "roles": roles, "users": users}
-    analyze_config(iam_finding_dictionary, iam_config, 'IAM violations')
+    analyze_config(iam_finding_dictionary, iam_config, 'IAM violations', force_write)
 
 def get_groups_info(iam, permissions):
     groups = handle_truncated_responses(iam.get_all_groups, ['list_groups_response', 'list_groups_result'], 'groups')

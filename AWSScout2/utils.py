@@ -15,11 +15,11 @@ import urllib2
 ##### Common functions
 ########################################
 
-def analyze_config(finding_dictionary, config, keyword):
+def analyze_config(finding_dictionary, config, keyword, force_write):
     for finding in finding_dictionary['violations']:
         for entity in config[finding.entity + 's']:
             finding.callback(finding, entity)
-    save_json_to_file(finding_dictionary.to_JSON(), keyword, True)
+    save_json_to_file(finding_dictionary.to_JSON(), keyword, force_write)
 
 def fetch_creds_from_instance_metadata():
     base_url = 'http://169.254.169.254/latest/meta-data/iam/security-credentials'
@@ -51,6 +51,11 @@ def fetch_sts_credentials(key_id, secret, mfa_serial, mfa_code):
     # For now, don't set the duration and use default 12hours
     sts_response = sts_connection.get_session_token(mfa_serial_number = mfa_serial[0], mfa_token = mfa_code[0])
     return sts_response.access_key, sts_response.secret_key, sts_response.session_token
+
+def load_from_json(keyword, var):
+    filename = 'json/aws_' + keyword + '_' + var + '.json'
+    with open(filename) as f:
+        return json.load(f)
 
 def manage_dictionary(dictionary, key, init, callback=None):
     if not str(key) in dictionary:
