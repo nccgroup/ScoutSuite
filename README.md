@@ -13,7 +13,10 @@ surface automatically.
 
 To install Scout2, simply clone this repository.
 
-You will need to install Boto, Amazon's AWS SDK for Python (https://aws.amazon.com/sdkforpython).
+The following is a list of required python modules that may not be installed on your system:
+
+* Boto, Amazon's AWS SDK for Python (https://aws.amazon.com/sdkforpython)
+* Dateutil (https://pypi.python.org/pypi/python-dateutil)
 
 ## Requirements
 
