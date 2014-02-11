@@ -320,6 +320,31 @@
             r += '</a></li>';
             return r;
         });
+        Handlebars.registerHelper('format_users', function(users) {
+            var len = users.length;
+            if (len == 0) {
+                return '';
+            }
+            len = len % 3;
+            r = '<table width="100%" class="table">';
+            for (u in users) {
+                if (u%3 == 0) {
+                    r += '<tr>';
+                }
+                r += '<td width="33%" style="padding-left: 10px; text-align: center;"><a href="javascript:browseTo(\'iam-user\', \'' + users[u] + '\')">' + users[u] + '</td>';
+                if (u%3 == 2) {
+                    r += '</tr>';
+                }
+            }
+            if (len != 0) {
+                for (i = len; i <3; i++) {
+                    r += '<td width="33%" style="padding-left: 10px; text-align: center;"></td>';
+                }
+                r += '</tr>';
+            }
+            r += '</table>';
+            return r;
+        });
 
         <!-- Debug -->
         Handlebars.registerHelper('helpme', function(permission) {
@@ -535,13 +560,9 @@
               <h4 class="list-group-item-heading">{{{group_name}}}</h4>
               <p class="list-group-item-text"> * Group created on {{{create_date}}}</p>
             </div>
-            <div class="list-group-item">
+            <div class="list-group-item" style="padding-bottom: 0 !important;">
               <h4 class="list-group-item-heading">Members</h4>
-              <ul>
-              {{#each users}}
-                <li class="list-group-item-text"><a href="javascript:browseTo('iam-user','{{{this}}}')">{{{this}}}</a></li>
-              {{/each}}
-              </ul>
+              {{{format_users users}}}
             </div>
             <div class="list-group-item">
               <h4 class="list-group-item-heading">Group Policies</h4>
