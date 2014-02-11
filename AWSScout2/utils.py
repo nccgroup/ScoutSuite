@@ -38,7 +38,19 @@ def fetch_creds_from_csv(filename):
         for i, line in enumerate(csvfile):
             if i == 1:
                 username, key_id, secret = line.split(',')
-    return key_id, secret
+    return key_id.rstrip(), secret.rstrip()
+
+def fetch_sts_credentials(key_id, secret, mfa_serial, mfa_code):
+    if not mfa_serial or len(mfa_serial) < 1:
+        print 'Error, you need to provide your MFA device\'s serial number.'
+        return None, None, None
+    if not mfa_code or len(mfa_code) < 1:
+        print 'Error, you need to provide the code displayed by your MFA device.'
+        return None, None, None
+    sts_connection = boto.connect_sts(key_id, secret)
+    # For now, don't set the duration and use default 12hours
+    sts_response = sts_connection.get_session_token(mfa_serial_number = mfa_serial[0], mfa_token = mfa_code[0])
+    return sts_response.access_key, sts_response.secret_key, sts_response.session_token
 
 def manage_dictionary(dictionary, key, init, callback=None):
     if not str(key) in dictionary:

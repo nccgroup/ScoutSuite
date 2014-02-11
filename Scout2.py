@@ -27,6 +27,7 @@ def main(args):
 
     key_id = None
     secret = None
+    session_token = None
 
     # Fetch credentials from the EC2 instance's metadata
     if args.fetch_creds_from_instance_metadata:
@@ -37,7 +38,7 @@ def main(args):
         key_id, secret = fetch_creds_from_csv(args.fetch_creds_from_csv[0])
 
     # Fetch credentials from environment
-    if 'AWS_ACCESS_KEY_ID' in os.environ and 'AWS_SECRET_ACCESS_KEY' in os.environ:
+    if key_id is None and secret is None and 'AWS_ACCESS_KEY_ID' in os.environ and 'AWS_SECRET_ACCESS_KEY' in os.environ:
         key_id = os.environ["AWS_ACCESS_KEY_ID"]
         secret = os.environ["AWS_SECRET_ACCESS_KEY"]
 
@@ -45,10 +46,14 @@ def main(args):
         print 'Error: you need to set your AWS credentials as environment variables to use Scout2.'
         return -1
 
+    # Fetch STS credentials
+    if args.mfa_code or args.mfa_serial:
+        key_id, secret, session_token = fetch_sts_credentials(key_id, secret, args.mfa_serial, args.mfa_code)
+
     ##### IAM
     if args.fetch_iam:
         try:
-            iam = boto.connect_iam(key_id, secret)
+            iam = boto.connect_iam(aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
             permissions = {}
             print 'Fetching IAM users data...'
             users, permissions = get_users_info(iam, permissions)
@@ -74,7 +79,7 @@ def main(args):
       instances = {}
       instances['instances'] = []
       for region in boto.ec2.regions():
-          ec2_connection = boto.ec2.connect_to_region(region.name, aws_access_key_id = key_id, aws_secret_access_key = secret)
+          ec2_connection = boto.ec2.connect_to_region(region.name, aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
           if region.name != 'us-gov-west-1' or args.fetch_ec2_gov:
             try:
                 print 'Fetching EC2 data for region %s' % region.name
@@ -93,7 +98,7 @@ def main(args):
     if args.fetch_s3:
         buckets = {}
         buckets['buckets'] = []
-        s3_connection = boto.connect_s3(key_id, secret)
+        s3_connection = boto.connect_s3(aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
         print 'Fetching S3 buckets data...'
         buckets['buckets'] = get_s3_buckets(s3_connection)
         save_to_file(buckets, 'S3 buckets', args.force_write)
@@ -139,6 +144,16 @@ parser.add_argument('--credentials',
                     default=None,
                     nargs='+',
                     help='credentials file')
+parser.add_argument('--mfa_serial',
+                    dest='mfa_serial',
+                    default=None,
+                    nargs='+',
+                    help='MFA device\'s serial number')
+parser.add_argument('--mfa_code',
+                    dest='mfa_code',
+                    default=None,
+                    nargs='+',
+                    help='MFA code')
 
 args = parser.parse_args()
 
