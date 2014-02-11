@@ -43,7 +43,7 @@ def main(args):
         secret = os.environ["AWS_SECRET_ACCESS_KEY"]
 
     if not args.fetch_local and (key_id is None or secret is None):
-        print 'Error: you need to set your AWS credentials as environment variables to use Scout2.'
+        print 'Error: could not find AWS credentials. Use the --help option for more information.'
         return -1
 
     # Fetch STS credentials
