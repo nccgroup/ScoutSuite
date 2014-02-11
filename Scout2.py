@@ -87,13 +87,17 @@ def main(args):
         try:
             if not args.fetch_local:
                 for region in boto.ec2.regions():
-                    ec2_connection = boto.ec2.connect_to_region(region.name, aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
-                    if region.name != 'us-gov-west-1' or args.fetch_ec2_gov:
-                        print 'Fetching EC2 data for region %s' % region.name
-                        print 'Fetching EC2 security groups data...'
-                        security_groups['security_groups'] += get_security_groups_info(ec2_connection, region.name)
-                        print 'Fetching EC2 instances data...'
-                        instances['instances'] += get_instances_info(ec2_connection, region.name)
+                    try:
+                        ec2_connection = boto.ec2.connect_to_region(region.name, aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
+                        if region.name != 'us-gov-west-1' or args.fetch_ec2_gov:
+                            print 'Fetching EC2 data for region %s' % region.name
+                            print 'Fetching EC2 security groups data...'
+                            security_groups['security_groups'] += get_security_groups_info(ec2_connection, region.name)
+                            print 'Fetching EC2 instances data...'
+                            instances['instances'] += get_instances_info(ec2_connection, region.name)
+                    catch Exception, e:
+                        print 'Exception: Failed to fetch EC2 data for region %s\n %s' % (region.name, e)
+                        pass
                 save_to_file(security_groups, 'EC2 security groups', args.force_write)
                 save_to_file(instances, 'EC2 instances', args.force_write)
             else:
