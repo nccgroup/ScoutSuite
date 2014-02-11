@@ -23,6 +23,9 @@
     .finding-hidden {
         display: none;
     }
+    ul.no-bullet {
+        list-style-type: none;
+    }
     </style>
 
     <!-- Bootstrap core CSS -->
@@ -166,8 +169,14 @@
             $('#navbar-item-'+active).addClass('active');
         }
         function toggleVisibility(id) {
-            // Todo update image too, or something..
-            $(id).toggle();
+            id1 = '#' + id;
+            $(id1).toggle()
+            id2 = '#bullet-' + id;
+            if ($(id1).is(":visible")) {
+                $(id2).html('<i class="glyphicon glyphicon-collapse-down"></i>');
+            } else {
+                $(id2).html('<i class="glyphicon glyphicon-expand"></i>');
+            }
         }
 
         <!-- Navigation functions -->
@@ -273,16 +282,20 @@
         }
         function format_instances(group_id, instances, count, title) {
             var r = '';
-            r += '<ul><li>' + title + ': ' + count;
+            r += '<ul class="no-bullet">';
             if (count > 0) {
-                r += ' <a href="javascript:toggleVisibility(\'#ec2-instances-' + group_id + '-' + title +'\')"><i class="glyphicon glyphicon-expand"></i></a>';
+                r += '<li>';
+                r += '<a href="javascript:toggleVisibility(\'ec2-instances-' + group_id + '-' + title +'\')">';
+                r += '<span id="bullet-ec2-instances-' + group_id + '-' + title + '">';
+                r += '<i class="glyphicon glyphicon-expand"></i></span></a> ';
+                r += title + ': ' + count;
                 r += '</li><div id="ec2-instances-' + group_id + '-' + title +'"><ul>';
                 for (i in instances) {
                     r += '<li class="list-group-item-text"><a href="javascript:browseTo(\'ec2-instance\',\'' + instances[i] + '\')">' + instances[i] + '</a></li>';
                 }
                 r += '</ul></div>';
             } else {
-                r += '</li>';
+                r += '<li>' + title + ': ' + count + '</li>';
             }
             r += '</ul>';
             return r;
