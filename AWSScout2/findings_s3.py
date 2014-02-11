@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 # Import AWS Scout2 finding-related classes
 from AWSScout2.finding_s3 import *

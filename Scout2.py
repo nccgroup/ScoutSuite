@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 # Import the Amazon SDK
 import boto
@@ -95,7 +95,7 @@ def main(args):
                             security_groups['security_groups'] += get_security_groups_info(ec2_connection, region.name)
                             print 'Fetching EC2 instances data...'
                             instances['instances'] += get_instances_info(ec2_connection, region.name)
-                    catch Exception, e:
+                    except Exception, e:
                         print 'Exception: Failed to fetch EC2 data for region %s\n %s' % (region.name, e)
                         pass
                 save_to_file(security_groups, 'EC2 security groups', args.force_write)
