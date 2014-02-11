@@ -143,8 +143,8 @@
             hideRowItems(keyword);
         }
         function showItem(keyword, id) {
-            var id1 = '#' + keyword + '-list-' + id;
-            var id2 = '#' + keyword + '-details-' + id;
+            var id1 = '[id="' + keyword + '-list-' + id + '"]';
+            var id2 = '[id="' + keyword + '-details-' + id+ '"]';
             $(id1).show();
             $(id2).show();
         }
