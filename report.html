@@ -202,6 +202,7 @@
             for (item in  violations_array[violation_id]) {
                 showItem(keyword, violations_array[violation_id][item]);
             }
+            window.scrollTo(0,0);
         }
 
         <!-- Handlebars helpers -->
@@ -315,10 +316,13 @@
             return logging;
         });
         Handlebars.registerHelper('format_finding_menu', function(finding) {
-            r = '<li>';
-            r += '<a href="javascript:list_findings(\'' + finding['keyword_prefix'] + '\',\'' + finding['entity'] + '\',\'' + finding['name'] + '\')">';
-            r += finding['description'] + ' (' + finding['macro_items'].length + ')';
-            r += '</a></li>';
+            r = '';
+            if (finding['macro_items'].length != 0) {
+                r += '<li>';
+                r += '<a href="javascript:list_findings(\'' + finding['keyword_prefix'] + '\',\'' + finding['entity'] + '\',\'' + finding['name'] + '\')">';
+                r += finding['description'] + ' (' + finding['macro_items'].length + ')';
+                r += '</a></li>';
+            }
             return r;
         });
         Handlebars.registerHelper('format_users', function(users) {
@@ -385,7 +389,7 @@
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
-                    <li>{{{format_finding_menu this}}}
+                    {{{format_finding_menu this}}}
                   {{/each}}
                 </script>
               </ul>
@@ -401,7 +405,7 @@
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
-                    <li>{{{format_finding_menu this}}}
+                    {{{format_finding_menu this}}}
                   {{/each}}
                 </script>
               </ul>
@@ -414,7 +418,7 @@
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
-                    <li>{{{format_finding_menu this}}}
+                    {{{format_finding_menu this}}}
                   {{/each}}
                 </script>
               </ul>
