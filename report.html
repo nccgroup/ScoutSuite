@@ -79,7 +79,7 @@
                 if ( violations[i]['idprefix'] != '') {
                     var idprefix = violations[i]['idprefix'] + '-';
                 }
-                var vkey = violations[i]['keyword_prefix'] + '-' + violations[i]['entity'] + '-' + violations[i]['name'];
+                var vkey = violations[i]['keyword_prefix'] + '-' + violations[i]['entity'].split('.').pop() + '-' + violations[i]['name'];
                 violations_array[vkey] = new Array();
                 for (j in violations[i]['items']) {
                     var id = idprefix + violations[i]['items'][j];
@@ -323,7 +323,7 @@
             r = '';
             if (finding['macro_items'].length != 0) {
                 r += '<li>';
-                r += '<a href="javascript:list_findings(\'' + finding['keyword_prefix'] + '\',\'' + finding['entity'] + '\',\'' + finding['name'] + '\')">';
+                r += '<a href="javascript:list_findings(\'' + finding['keyword_prefix'] + '\',\'' + finding['entity'].split('.').pop() + '\',\'' + finding['name'] + '\')">';
                 r += finding['description'] + ' (' + finding['macro_items'].length + ')';
                 r += '</a></li>';
             }
@@ -517,8 +517,8 @@
             </ul>
             {{#each items}}
             <ul class="list-group">
-              <li class="list-group-item active"><a style="color: black" href="javascript:toggleVisibility('ec2-region-list-{{@key}}')">{{@key}}</a></li>
               <div id="ec2-region-list-{{@key}}">
+              <li class="list-group-item active"><a style="color: black" href="javascript:toggleVisibility('ec2-region-list-{{@key}}')">{{@key}}</a></li>
                 {{#each this}}
                   <li class="list-group-item" id="ec2-vpc-list-{{@key}}">{{@key}}
                     {{#each this}}

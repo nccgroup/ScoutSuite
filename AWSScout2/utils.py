@@ -21,6 +21,15 @@ def analyze_config(finding_dictionary, config, keyword, force_write):
             finding.callback(finding, entity)
     save_json_to_file(finding_dictionary.to_JSON(), keyword, force_write)
 
+# Temporaryly create a _new function
+# TODO modify the data structure of all other components to be dictionaries
+def analyze_config_new(finding_dictionary, config, keyword, force_write):
+    for finding in finding_dictionary['violations']:
+        entity_path = finding.entity.split('.')
+        entity_depth = len(entity_path)
+        iterate_through_dictionary(config[entity_path[-1] + 's'], finding, entity_depth)
+    save_json_to_file(finding_dictionary.to_JSON(), keyword, force_write)
+
 def fetch_creds_from_instance_metadata():
     base_url = 'http://169.254.169.254/latest/meta-data/iam/security-credentials'
     try:
@@ -51,6 +60,13 @@ def fetch_sts_credentials(key_id, secret, mfa_serial, mfa_code):
     # For now, don't set the duration and use default 12hours
     sts_response = sts_connection.get_session_token(mfa_serial_number = mfa_serial[0], mfa_token = mfa_code[0])
     return sts_response.access_key, sts_response.secret_key, sts_response.session_token
+
+def iterate_through_dictionary(dictionary, finding, depth):
+    if depth == 0:
+        finding.callback(finding, dictionary)
+    else:
+        for key in dictionary:
+            iterate_through_dictionary(dictionary[key], finding, depth -1)
 
 def load_from_json(keyword, var):
     filename = 'json/aws_' + keyword + '_' + var + '.json'

@@ -22,7 +22,7 @@ for port in rc_ports:
     ec2_finding_dictionary['violations'].append(Ec2Finding(
         port[0],
         port[1],
-        'security_group',
+        'region.vpc.security_group',
         Ec2Finding.checkInternetAccessiblePort,
         ['blacklist', port[2]],
         '',
@@ -39,7 +39,7 @@ for port in plaintext_ports:
     ec2_finding_dictionary['violations'].append(Ec2Finding(
         port[0],
         port[1],
-        'security_group',
+        'region.vpc.security_group',
         Ec2Finding.checkOpenPort,
         port[2],
         '',
@@ -53,7 +53,7 @@ for rcp in rc_ports:
 ec2_finding_dictionary['violations'].append(Ec2Finding(
     'Ports open to Internet',
     'public-ports',
-    'security_group',
+    'region.vpc.security_group',
     Ec2Finding.checkInternetAccessiblePort,
     ['whitelist', ('tcp', wl_ports)],
     '',
