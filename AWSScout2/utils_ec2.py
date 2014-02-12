@@ -16,9 +16,11 @@ def analyze_ec2_config(instances, security_groups, force_write):
 
 def get_security_groups_info(ec2, region):
     groups = ec2.get_all_security_groups()
-    security_groups = []
+    security_groups = {}
     count, total = init_status(groups)
     for group in groups:
+        manage_dictionary(security_groups, group.vpc_id, {})
+        manage_dictionary(security_groups[group.vpc_id], group.name, {})
         count = update_status(count, total)
         security_group = {}
         security_group['name'] = group.name
@@ -55,7 +57,7 @@ def get_security_groups_info(ec2, region):
             else:
                 security_group['stopped-instances'].append(i.id)
         # Append the new security group to the return list
-        security_groups.append(security_group)
+        security_groups[group.vpc_id][group.name] = security_group
     close_status(count, total)
     return security_groups
 

@@ -81,7 +81,6 @@ def main(args):
     ##### EC2
     if args.fetch_ec2:
         security_groups = {}
-        security_groups['security_groups'] = []
         instances = {}
         instances['instances'] = []
         try:
@@ -92,7 +91,8 @@ def main(args):
                         if region.name != 'us-gov-west-1' or args.fetch_ec2_gov:
                             print 'Fetching EC2 data for region %s' % region.name
                             print 'Fetching EC2 security groups data...'
-                            security_groups['security_groups'] += get_security_groups_info(ec2_connection, region.name)
+                            manage_dictionary(security_groups, region.name, {})
+                            security_groups[region.name].update(get_security_groups_info(ec2_connection, region.name))
                             print 'Fetching EC2 instances data...'
                             instances['instances'] += get_instances_info(ec2_connection, region.name)
                     except Exception, e:

@@ -26,6 +26,10 @@
     ul.no-bullet {
         list-style-type: none;
     }
+    .list-sub-element {
+        border: 0 !important;
+        padding-left: 25px;
+    }
     </style>
 
     <!-- Bootstrap core CSS -->
@@ -89,7 +93,7 @@
 
         <!-- Load EC2 data -->
         $.getJSON('json/aws_ec2_security_groups.json', function(data) {
-            load_aws_from_json(data.security_groups, 'ec2-security_group', 2);
+            load_aws_from_json(data, 'ec2-security_group', 2);
         });
         $.getJSON('json/aws_ec2_instances.json', function(data) {
             load_aws_from_json(data.instances, 'ec2-instance', 2);
@@ -350,6 +354,17 @@
             r += '</table>';
             return r;
         });
+        Handlebars.registerHelper('count_sg', function(regions) {
+            var sgc = 0;
+            for (r in regions) {
+                for (vpc in regions[r]) {
+                    for (sg in regions[r][vpc]) {
+                        sgc = sgc +1;
+                    }
+                }
+            }
+            return sgc;
+        });
 
         <!-- Debug -->
         Handlebars.registerHelper('helpme', function(permission) {
@@ -452,7 +467,7 @@
         <div class="col-sm-4">
           <ul class="list-group" id="ec2-instances-list">
             <script id="ec2-instance-list-template" type="text/x-handlebars-template">
-            <li class="list-group-item"><a href="javascript:showAll('ec2-instance')">Show all ({{items.length}})</a></li>
+            <li class="list-group-item"><a href="javascript:showAll('ec2-instance')">Show all <span class="badge pull-right">{{items.length}}</span></a></li>
             {{#each items}}
               <li class="list-group-item">
                 <a href="javascript:browseTo('ec2-instance','{{{id}}}')">{{{id}}}</a>
@@ -495,49 +510,64 @@
 
       <!-- Template for EC2 security groups -->
       <div class="row" id="ec2-security_groups-row">
-        <div class="col-sm-4">
-          <ul class="list-group" id="ec2-security_groups-list">
-            <script id="ec2-security_group-list-template" type="text/x-handlebars-template">
-            <li class="list-group-item"><a href="javascript:showAll('ec2-security_group')">Show all ({{items.length}})</a></li>
+        <div class="col-sm-4" id="ec2-security_groups-list">
+          <script id="ec2-security_group-list-template" type="text/x-handlebars-template">
+            <ul class="list-group">
+              <li class="list-group-item"><a href="javascript:showAll('ec2-security_group')">Show all security groups<span class="badge pull-right">{{count_sg items}}</span></a></li>
+            </ul>
             {{#each items}}
-              <li class="list-group-item" id="ec2-security_group-list-{{{id}}}">
-                <a href="javascript:browseTo('ec2-security_group','{{{id}}}')">{{{name}}}</a>
-              </li>
+            <ul class="list-group">
+              <li class="list-group-item active"><a style="color: black" href="javascript:toggleVisibility('ec2-region-list-{{@key}}')">{{@key}}</a></li>
+              <div id="ec2-region-list-{{@key}}">
+                {{#each this}}
+                  <li class="list-group-item" id="ec2-vpc-list-{{@key}}">{{@key}}
+                    {{#each this}}
+                      <div class="list-group-item list-sub-element" id="ec2-security_group-list-{{@key}}">
+                        <a href="javascript:browseTo('ec2-security_group','{{id}}')">{{@key}}</a>
+                      </div>
+                    {{/each}}
+                  </li>
+                {{/each}}
+              </div>
+            </ul>
             {{/each}}
-            </script>
-          </ul>
+          </script>
         </div>
         <div class="col-sm-8" id="ec2-security_groups-details">
           <script id="ec2-security_group-detail-template" type="text/x-handlebars-template">
           {{#each items}}
-          <div class="list-group" id="ec2-security_group-details-{{{id}}}">
-            <div class="list-group-item active">
-              <h4 class="list-group-item-heading">{{{name}}} ({{{id}}})</h4>
-              <p class="list-group-item-text">{{{description}}}</p>
-            </div>
-            <div class="list-group-item">
-              <h4 class="list-group-item-heading">Rules</h4>
-              <ul>
-              {{# each protocols}}
-                <li class="list-group-item-text">{{{name}}}</li>
-                  <ul>
-                  {{# each rules}}
-                    <li class="list-group-item-text">Ports: <span id="{{{../../id}}}-{{{../name}}}-{{{ports}}}">{{{ports}}}</span></li>
+            {{#each this}}
+              {{#each this}}
+                <div class="list-group" id="ec2-security_group-details-{{{id}}}">
+                  <div class="list-group-item active">
+                    <h4 class="list-group-item-heading">{{@key}} {{{name}}} ({{{id}}})</h4>
+                    <p class="list-group-item-text">{{{description}}}</p>
+                  </div>
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Rules</h4>
                     <ul>
-                    {{# each grants}}
-                      <li class="list-group-item-text"><span id="{{{../../../id}}}-{{{../../name}}}-{{{../ports}}}-{{{this}}}">{{{format_grant this}}}</span></li>
+                    {{# each protocols}}
+                      <li class="list-group-item-text">{{{name}}}</li>
+                      <ul>
+                      {{# each rules}}
+                        <li class="list-group-item-text">Ports: <span id="{{{../../id}}}-{{{../name}}}-{{{ports}}}">{{{ports}}}</span></li>
+                        <ul>
+                        {{# each grants}}
+                          <li class="list-group-item-text"><span id="{{{../../../id}}}-{{{../../name}}}-{{{../ports}}}-{{{this}}}">{{{format_grant this}}}</span></li>
+                        {{/each}}
+                        </ul>
+                      {{/each}}
+                      </ul>
                     {{/each}}
                     </ul>
-                  {{/each}}
-                </ul>
+                  </div>
+                  <div class="list-group-item">
+                    <h4 class="list-group-item-heading">Instances</h4>
+                    {{{list_group_instances id running-instances stopped-instances}}}
+                  </div>
+                </div>
               {{/each}}
-              </ul>
-            </div>
-            <div class="list-group-item">
-              <h4 class="list-group-item-heading">Instances</h4>
-              {{{list_group_instances id running-instances stopped-instances}}}
-            </div>
-          </div>
+            {{/each}}
           {{/each}}
           </script>
         </div><!-- /.col-sm-8 -->
@@ -548,7 +578,7 @@
         <div class="col-sm-4">
           <ul class="list-group" id="iam-groups-list">
             <script id="iam-group-list-template" type="text/x-handlebars-template">
-            <li class="list-group-item"><a href="javascript:showAll('iam-group')">Show all ({{items.length}})</a></li>
+            <li class="list-group-item"><a href="javascript:showAll('iam-group')">Show all <span class="badge pull-right">{{items.length}}</span></a></li>
             {{#each items}}
               <li class="list-group-item" id="iam-group-list-{{{group_id}}}">
                 <a href="javascript:browseTo('iam-group','{{{group_id}}}')">{{{group_name}}}</a>
@@ -610,7 +640,7 @@
         <div class="col-sm-3">
           <ul class="list-group" id="iam-roles-list">
             <script id="iam-role-list-template" type="text/x-handlebars-template">
-            <li class="list-group-item"><a href="javascript:showAll('iam-role')">Show all ({{items.length}})</a></li>
+            <li class="list-group-item"><a href="javascript:showAll('iam-role')">Show all <span class="badge pull-right">{{items.length}}</span></a></li>
             {{#each items}}
               <li class="list-group-item" id="iam-role-list-{{{role_id}}}">
                 <a href="javascript:browseTo('iam-role','{{{role_id}}}')">{{{role_name}}}</a>
@@ -656,7 +686,7 @@
         <div class="col-sm-4">
           <ul class="list-group" id="iam-users-list">
             <script id="iam-user-list-template" type="text/x-handlebars-template">
-            <li class="list-group-item"><a href="javascript:showAll('iam-user')">Show all ({{items.length}})</a></li>
+            <li class="list-group-item"><a href="javascript:showAll('iam-user')">Show all <span class="badge pull-right">{{items.length}}</span></a></li>
             {{#each items}}
               <li class="list-group-item" id="iam-user-list-{{{user_name}}}">
                 <a href="javascript:browseTo('iam-user','{{{user_name}}}')">{{{user_name}}}</a>
@@ -724,7 +754,7 @@
         <div class="col-sm-4">
           <ul class="list-group" id="s3-buckets-list">
             <script id="s3-bucket-list-template" type="text/x-handlebars-template">
-            <li class="list-group-item"><a href="javascript:showAll('s3-bucket')">Show all ({{items.length}})</a></li>
+            <li class="list-group-item"><a href="javascript:showAll('s3-bucket')">Show all <span class="badge pull-right">{{items.length}}</span></a></li>
             {{#each items}}
               <li class="list-group-item" id="s3-bucket-list-{{{name}}}">
                 <a href="javascript:browseTo('s3-bucket','{{{name}}}')">{{{name}}}</a>
