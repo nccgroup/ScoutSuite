@@ -74,9 +74,9 @@ def get_security_groups_info(ec2, region):
     security_groups = {}
     count, total = init_status(groups)
     for group in groups:
-      if group.vpc_id:
-        manage_dictionary(security_groups, group.vpc_id, {})
-        manage_dictionary(security_groups[group.vpc_id], group.name, {})
+        vpc_id = group.vpc_id if group.vpc_id else 'no-vpc'
+        manage_dictionary(security_groups, vpc_id, {})
+        manage_dictionary(security_groups[vpc_id], group.name, {})
         count = update_status(count, total)
         security_group = {}
         security_group['name'] = group.name
@@ -113,6 +113,6 @@ def get_security_groups_info(ec2, region):
             else:
                 security_group['stopped-instances'].append(i.id)
         # Append the new security group to the return list
-        security_groups[group.vpc_id][group.name] = security_group
+        security_groups[vpc_id][group.name] = security_group
     close_status(count, total)
     return security_groups
