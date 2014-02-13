@@ -115,5 +115,5 @@ def update_status(current, total):
     return current
 
 def close_status(current, total):
-    if total and total != 0 or current != 0:
+    if current != 0:
         sys.stdout.write('\n')

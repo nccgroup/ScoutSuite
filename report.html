@@ -98,6 +98,9 @@
         $.getJSON('json/aws_ec2_instances.json', function(data) {
             load_aws_from_json(data, 'ec2-instance', 2);
         });
+        $.getJSON('json/aws_ec2_network_acls.json', function(data) {
+            load_aws_from_json(data, 'ec2-network_acl', 2)
+        });
         $.getJSON('json/aws_ec2_violations.json', function(data) {
             load_aws_from_json(data.violations, 'ec2-violation', 1);
             highlight_violations(data.violations);
@@ -128,11 +131,6 @@
         $.getJSON('json/aws_s3_violations.json', function(data) {
             load_aws_from_json(data.violations, 's3-violation', 1);
             highlight_violations(data.violations);
-        });
-
-        <!-- Load VPC data -->
-        $.getJSON('json/aws_vpc_network_acls.json', function(data) {
-            load_aws_from_json(data, 'vpc-network_acl', 2)
         });
 
         // TODO: Hide all by default
@@ -449,6 +447,7 @@
               <ul class="dropdown-menu" id="ec2-violations-list">
                 <script id="ec2-violation-list-template" type="text/x-handlebars-template">
                   <li><a href="javascript:list_generic('ec2-instance')">Instances</a></li>
+                  <li><a href="javascript:list_generic('ec2-network_acl')">Network ACLs</a></li>
                   <li><a href="javascript:list_generic('ec2-security_group')">Security Groups</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
@@ -485,12 +484,6 @@
                     {{{format_finding_menu this}}}
                   {{/each}}
                 </script>
-              </ul>
-            </li>
-            <li class="dropdown">
-              <a href="javascript:show_vpc()" class="dropdown-toggle" data-toggle="dropdown">VPC<b class="caret"></b></a>
-              <ul class="dropdown-menu" id="vpc-violations-list">
-                  <li><a href="javascript:list_generic('vpc-network_acl')">Network ACLs</a></li>
               </ul>
             </li>
             <li class="dropdown">
@@ -558,6 +551,51 @@
               </ul>
             </div>
           </div>
+          {{/each}}
+          </script>
+        </div><!-- /.col-sm-8 -->
+      </div><!-- /.row -->
+
+      <!-- Template for EC2 network acls -->
+      <div class="row" id="ec2-network_acls-row">
+        <div class="col-sm-4" id="ec2-network_acls-list">
+          <script id="ec2-network_acl-list-template" type="text/x-handlebars-template">
+            <ul class="list-group">
+              <li class="list-group-item"><a href="javascript:showAll('ec2-network_acl')">Show all <span class="badge pull-right">{{count_acl items}}</span></a></li>
+            </ul>
+            {{#each items}}
+            <ul class="list-group">
+              <li class="list-group-item active"><a style="color: black" href="javascript:toggleVisibility('ec2-region-list-{{@key}}')">{{@key}}</a></li>
+              <div id="ec2-region-list-{{@key}}">
+                {{#each this}}
+                  <li class="list-group-item" id="ec2-vpc-list-{{@key}}"><a href="javascript:browseTo('ec2-network_acl','{{@key}}')">{{@key}}</a> ({{cidr_block}})</li>
+                {{/each}}
+              </div>
+            </ul>
+            {{/each}}
+          </script>
+        </div>
+        <div class="col-sm-8" id="ec2-network_acls-details">
+          <script id="ec2-network_acl-detail-template" type="text/x-handlebars-template">
+          {{#each items}}
+            {{#each this}}
+            <div class="list-group" id="ec2-network_acl-details-{{@key}}">
+              <div class="list-group-item active">
+                <h4 class="list-group-item-heading">Virtual Private Cloud {{@key}}</h4>
+              </div>
+              {{#each network_acls}}
+                <div class="list-group-item">
+                  <h4 class="list-group-item-heading">Inbound rules</h4>
+                  {{{format_network_acls inbound_network_acls 'Source'}}}
+                </div>
+                <div class="list-group-item">
+                  <h4 class="list-group-item-heading">Outbound rules</h4>
+                  {{{format_network_acls outbound_network_acls 'Destination'}}}
+                </div>
+              {{/each}}
+              </div>
+            </div>
+            {{/each}}
           {{/each}}
           </script>
         </div><!-- /.col-sm-8 -->
@@ -846,51 +884,6 @@
               </table>
             </div>
           </div>
-          {{/each}}
-          </script>
-        </div><!-- /.col-sm-8 -->
-      </div><!-- /.row -->
-
-      <!-- Template for VPC network acls -->
-      <div class="row" id="vpc-network_acls-row">
-        <div class="col-sm-4" id="vpc-network_acls-list">
-          <script id="vpc-network_acl-list-template" type="text/x-handlebars-template">
-            <ul class="list-group">
-              <li class="list-group-item"><a href="javascript:showAll('vpc-network_acl')">Show all <span class="badge pull-right">{{count_acl items}}</span></a></li>
-            </ul>
-            {{#each items}}
-            <ul class="list-group">
-              <li class="list-group-item active"><a style="color: black" href="javascript:toggleVisibility('vpc-region-list-{{@key}}')">{{@key}}</a></li>
-              <div id="vpc-region-list-{{@key}}">
-                {{#each this}}
-                  <li class="list-group-item" id="vpc-vpc-list-{{@key}}"><a href="javascript:browseTo('vpc-network_acl','{{@key}}')">{{@key}}</a> ({{cidr_block}})</li>
-                {{/each}}
-              </div>
-            </ul>
-            {{/each}}
-          </script>
-        </div>
-        <div class="col-sm-8" id="vpc-network_acls-details">
-          <script id="vpc-network_acl-detail-template" type="text/x-handlebars-template">
-          {{#each items}}
-            {{#each this}}
-            <div class="list-group" id="vpc-network_acl-details-{{@key}}">
-              <div class="list-group-item active">
-                <h4 class="list-group-item-heading">Virtual Private Cloud {{@key}}</h4>
-              </div>
-              {{#each network_acls}}
-                <div class="list-group-item">
-                  <h4 class="list-group-item-heading">Inbound rules</h4>
-                  {{{format_network_acls inbound_network_acls 'Source'}}}
-                </div>
-                <div class="list-group-item">
-                  <h4 class="list-group-item-heading">Outbound rules</h4>
-                  {{{format_network_acls outbound_network_acls 'Destination'}}}
-                </div>
-              {{/each}}
-              </div>
-            </div>
-            {{/each}}
           {{/each}}
           </script>
         </div><!-- /.col-sm-8 -->

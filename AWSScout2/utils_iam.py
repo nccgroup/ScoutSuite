@@ -113,5 +113,4 @@ def handle_truncated_responses(callback, result_path, items_name):
         items = items + result[items_name]
         if marker_value is None:
             break
-    sys.stdout.write('Received %s %s, fetching data...\n' % (str(len(items)), items_name))
     return items
