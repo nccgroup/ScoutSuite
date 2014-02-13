@@ -96,7 +96,7 @@
             load_aws_from_json(data, 'ec2-security_group', 2);
         });
         $.getJSON('json/aws_ec2_instances.json', function(data) {
-            load_aws_from_json(data.instances, 'ec2-instance', 2);
+            load_aws_from_json(data, 'ec2-instance', 2);
         });
         $.getJSON('json/aws_ec2_violations.json', function(data) {
             load_aws_from_json(data.violations, 'ec2-violation', 1);
@@ -359,6 +359,13 @@
             r += '</table>';
             return r;
         });
+        Handlebars.registerHelper('count', function(items) {
+            var c = 0;
+            for (i in items) {
+                c = c + 1;
+            }
+            return c;
+        });
         Handlebars.registerHelper('count_sg', function(regions) {
             var sgc = 0;
             for (r in regions) {
@@ -508,10 +515,10 @@
         <div class="col-sm-4">
           <ul class="list-group" id="ec2-instances-list">
             <script id="ec2-instance-list-template" type="text/x-handlebars-template">
-            <li class="list-group-item"><a href="javascript:showAll('ec2-instance')">Show all <span class="badge pull-right">{{items.length}}</span></a></li>
+            <li class="list-group-item"><a href="javascript:showAll('ec2-instance')">Show all <span class="badge pull-right">{{count items}}</span></a></li>
             {{#each items}}
               <li class="list-group-item">
-                <a href="javascript:browseTo('ec2-instance','{{{id}}}')">{{{id}}}</a>
+                <a href="javascript:browseTo('ec2-instance','{{@key}}')">{{@key}}</a>
               </li>
             {{/each}}
             </script>

@@ -11,7 +11,7 @@ from AWSScout2.findings_ec2 import *
 
 def analyze_ec2_config(instances, security_groups, force_write):
     print 'Analyzing EC2 data...'
-    ec2_config = {"instances": instances['instances'], "security_groups": security_groups}
+    ec2_config = {"instances": instances, "security_groups": security_groups}
     analyze_config_new(ec2_finding_dictionary, ec2_config, 'EC2 violations', force_write)
 
 def get_security_groups_info(ec2, region):
@@ -62,7 +62,7 @@ def get_security_groups_info(ec2, region):
     return security_groups
 
 def get_instances_info(ec2, region):
-    results = []
+    instances = {}
     reservations = ec2.get_all_reservations()
     count, total = init_status(None)
     for reservation in reservations:
@@ -71,15 +71,14 @@ def get_instances_info(ec2, region):
             groups.append(g.name)
         for i in reservation.instances:
             count = update_status(count, total)
-            instance = {}
-            instance['reservation_id'] = reservation.id
-            instance['groups'] = groups
-            instance['region'] = region
+            manage_dictionary(instances, i.id, {})
+            instances[i.id]['reservation_id'] = reservation.id
+            instances[i.id]['groups'] = groups
+            instances[i.id]['region'] = region
             # Get instance variables (see http://boto.readthedocs.org/en/latest/ref/ec2.html#module-boto.ec2.instance to see what else is available)
             for key in ['id', 'public_dns_name', 'private_dns_name', 'key_name', 'launch_time', 'private_ip_address', 'ip_address']:
-                instance[key] = i.__dict__[key]
+                instances[i.id][key] = i.__dict__[key]
             # FIXME ... see why it's not working when added in the list above
-            instance['state'] = i.state
-            results.append(instance)
+            instances[i.id]['state'] = i.state
     close_status(count, total)
-    return results
+    return instances

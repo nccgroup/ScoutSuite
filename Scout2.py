@@ -84,7 +84,6 @@ def main(args):
     if args.fetch_ec2:
         security_groups = {}
         instances = {}
-        instances['instances'] = []
         try:
             if not args.fetch_local:
                 for region in boto.ec2.regions():
@@ -95,7 +94,7 @@ def main(args):
                             manage_dictionary(security_groups, region.name, {})
                             security_groups[region.name].update(get_security_groups_info(ec2_connection, region.name))
                             print 'Fetching EC2 instances data for region %s...' % region.name
-                            instances['instances'] += get_instances_info(ec2_connection, region.name)
+                            instances.update(get_instances_info(ec2_connection, region.name))
                     except Exception, e:
                         print 'Exception: Failed to fetch EC2 data for region %s\n %s' % (region.name, e)
                         pass
