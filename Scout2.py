@@ -3,12 +3,14 @@
 # Import the Amazon SDK
 import boto
 import boto.ec2
+import boto.vpc
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
 from AWSScout2.utils_ec2 import *
 from AWSScout2.utils_iam import *
 from AWSScout2.utils_s3 import *
+from AWSScout2.utils_vpc import *
 
 # Import other third-party packages
 import argparse
@@ -89,11 +91,10 @@ def main(args):
                     try:
                         ec2_connection = boto.ec2.connect_to_region(region.name, aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
                         if region.name != 'us-gov-west-1' or args.fetch_ec2_gov:
-                            print 'Fetching EC2 data for region %s' % region.name
-                            print 'Fetching EC2 security groups data...'
+                            print 'Fetching EC2 security groups data for region %s...' % region.name
                             manage_dictionary(security_groups, region.name, {})
                             security_groups[region.name].update(get_security_groups_info(ec2_connection, region.name))
-                            print 'Fetching EC2 instances data...'
+                            print 'Fetching EC2 instances data for region %s...' % region.name
                             instances['instances'] += get_instances_info(ec2_connection, region.name)
                     except Exception, e:
                         print 'Exception: Failed to fetch EC2 data for region %s\n %s' % (region.name, e)
@@ -125,6 +126,27 @@ def main(args):
             print 'Exception: \n %s' % e
             pass
 
+    ##### VPC
+    if args.fetch_vpc:
+        vpcs = {}
+        try:
+            if not args.fetch_local:
+                for region in boto.ec2.regions():
+                    if region.name != 'us-gov-west-1' or args.fetch_ec2_gov:
+                        try:
+                            manage_dictionary(vpcs, region.name, {})
+                            vpc_connection = boto.vpc.connect_to_region(aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token, region_name = region.name)
+                            print 'Fetching network ACLs data for region %s...' % region.name
+                            vpcs[region.name].update(get_vpc_info(vpc_connection))
+                        except Exception, e:
+                            print 'Exception: \n %s' % e
+                            pass
+                save_to_file(vpcs, 'VPC network ACLs', args.force_write)
+        except Exception, e:
+            print 'Exception: \n %s' % e
+            pass
+
+
 
 ########################################
 ##### Argument parser
@@ -145,6 +167,11 @@ parser.add_argument('--no_s3',
                     default='True',
                     action='store_false',
                     help='don\'t fetch the S3 configuration')
+parser.add_argument('--no_vpc',
+                    dest='fetch_vpc',
+                    default='True',
+                    action='store_false',
+                    help='don\'t fetch the VPC configuration')
 parser.add_argument('--gov',
                     dest='fetch_ec2_gov',
                     default=False,

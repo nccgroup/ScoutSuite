@@ -130,6 +130,11 @@
             highlight_violations(data.violations);
         });
 
+        <!-- Load VPC data -->
+        $.getJSON('json/aws_vpc_network_acls.json', function(data) {
+            load_aws_from_json(data, 'vpc-network_acl', 2)
+        });
+
         // TODO: Hide all by default
 
         <!-- Display functions -->
@@ -365,6 +370,36 @@
             }
             return sgc;
         });
+        Handlebars.registerHelper('count_acl', function(regions) {
+            var aclc = 0;
+            for (r in regions) {
+                for (vpc in regions[r]) {
+                    for (acl in regions[r][vpc]['network_acls']) {
+                        aclc = aclc +1;
+                    }
+                }
+            }
+            return aclc;
+        });
+        Handlebars.registerHelper('format_network_acls', function (acls, direction) {
+            r = '<table class="table-striped" width="100%">';
+            r += '<tr><td width="20%" class="text-center">Rule number</td>';
+            r += '<td width="20%" class="text-center">Port</td>';
+            r += '<td width="20%" class="text-center">Protocol</td>';
+            r += '<td width="20%" class="text-center">' + direction + '</td>';
+            r += '<td width="20%" class="text-center">Action</td></tr>';
+            for (a in acls) {
+                r += '<tr>';
+                r += '<td width="20%" class="text-center">' + acls[a]['rule_number'] + '</td>';
+                r += '<td width="20%" class="text-center">' + acls[a]['port_range'] + '</td>';
+                r += '<td width="20%" class="text-center">' + acls[a]['protocol'] + '</td>';
+                r += '<td width="20%" class="text-center">' + acls[a]['cidr_block'] + '</td>';
+                r += '<td width="20%" class="text-center">' + acls[a]['rule_action'] + '</td>';
+                r += '</tr>';
+            }
+            r += '</table>';
+            return r;
+        });
 
         <!-- Debug -->
         Handlebars.registerHelper('helpme', function(permission) {
@@ -436,6 +471,12 @@
                     {{{format_finding_menu this}}}
                   {{/each}}
                 </script>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="javascript:show_vpc()" class="dropdown-toggle" data-toggle="dropdown">VPC<b class="caret"></b></a>
+              <ul class="dropdown-menu" id="vpc-violations-list">
+                  <li><a href="javascript:list_generic('vpc-network_acl')">Network ACLs</a></li>
               </ul>
             </li>
             <li class="dropdown">
@@ -517,8 +558,8 @@
             </ul>
             {{#each items}}
             <ul class="list-group">
-              <div id="ec2-region-list-{{@key}}">
               <li class="list-group-item active"><a style="color: black" href="javascript:toggleVisibility('ec2-region-list-{{@key}}')">{{@key}}</a></li>
+              <div id="ec2-region-list-{{@key}}">
                 {{#each this}}
                   <li class="list-group-item" id="ec2-vpc-list-{{@key}}">{{@key}}
                     {{#each this}}
@@ -793,6 +834,51 @@
               </table>
             </div>
           </div>
+          {{/each}}
+          </script>
+        </div><!-- /.col-sm-8 -->
+      </div><!-- /.row -->
+
+      <!-- Template for VPC network acls -->
+      <div class="row" id="vpc-network_acls-row">
+        <div class="col-sm-4" id="vpc-network_acls-list">
+          <script id="vpc-network_acl-list-template" type="text/x-handlebars-template">
+            <ul class="list-group">
+              <li class="list-group-item"><a href="javascript:showAll('vpc-network_acl')">Show all <span class="badge pull-right">{{count_acl items}}</span></a></li>
+            </ul>
+            {{#each items}}
+            <ul class="list-group">
+              <li class="list-group-item active"><a style="color: black" href="javascript:toggleVisibility('vpc-region-list-{{@key}}')">{{@key}}</a></li>
+              <div id="vpc-region-list-{{@key}}">
+                {{#each this}}
+                  <li class="list-group-item" id="vpc-vpc-list-{{@key}}"><a href="javascript:browseTo('vpc-network_acl','{{@key}}')">{{@key}}</a> ({{cidr_block}})</li>
+                {{/each}}
+              </div>
+            </ul>
+            {{/each}}
+          </script>
+        </div>
+        <div class="col-sm-8" id="vpc-network_acls-details">
+          <script id="vpc-network_acl-detail-template" type="text/x-handlebars-template">
+          {{#each items}}
+            {{#each this}}
+            <div class="list-group" id="vpc-network_acl-details-{{@key}}">
+              <div class="list-group-item active">
+                <h4 class="list-group-item-heading">Virtual Private Cloud {{@key}}</h4>
+              </div>
+              {{#each network_acls}}
+                <div class="list-group-item">
+                  <h4 class="list-group-item-heading">Inbound rules</h4>
+                  {{{format_network_acls inbound_network_acls 'Source'}}}
+                </div>
+                <div class="list-group-item">
+                  <h4 class="list-group-item-heading">Outbound rules</h4>
+                  {{{format_network_acls outbound_network_acls 'Destination'}}}
+                </div>
+              {{/each}}
+              </div>
+            </div>
+            {{/each}}
           {{/each}}
           </script>
         </div><!-- /.col-sm-8 -->
