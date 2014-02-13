@@ -11,8 +11,8 @@ from AWSScout2.findings_s3 import *
 
 def analyze_s3_config(buckets, force_write):
     print 'Analyzing S3 data...'
-    s3_config = {"buckets": buckets['buckets']}
-    analyze_config(s3_finding_dictionary, s3_config, 'S3 violations', force_write)
+    s3_config = {"buckets": buckets}
+    analyze_config_new(s3_finding_dictionary, s3_config, 'S3 violations', force_write)
 
 def init_s3_permissions(grant):
     grant['read'] = False
@@ -57,13 +57,12 @@ def get_s3_bucket_logging(bucket):
 
 # List all available buckets
 def get_s3_buckets(s3):
-    s3_buckets = []
+    s3_buckets = {}
     buckets = s3.get_all_buckets()
     count, total = init_status(buckets)
     for b in buckets:
         count = update_status(count, total)
         bucket = {}
-        bucket['name'] = b.name
         acp = b.get_acl()
         bucket['grants'] = {}
         for grant in acp.acl.grants:
@@ -80,6 +79,6 @@ def get_s3_buckets(s3):
         bucket['region'] = b.get_location()
         bucket['logging'] = get_s3_bucket_logging(b)
         bucket['versioning'] = get_s3_bucket_versioning(b)
-        s3_buckets.append(bucket)
+        s3_buckets[b.name] = bucket
     close_status(count, total)
     return s3_buckets

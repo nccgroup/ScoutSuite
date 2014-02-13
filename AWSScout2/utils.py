@@ -27,7 +27,7 @@ def analyze_config_new(finding_dictionary, config, keyword, force_write):
     for finding in finding_dictionary['violations']:
         entity_path = finding.entity.split('.')
         entity_depth = len(entity_path)
-        iterate_through_dictionary(config[entity_path[-1] + 's'], finding, entity_depth)
+        iterate_through_dictionary(config[entity_path[-1] + 's'], finding, None, entity_depth)
     save_json_to_file(finding_dictionary.to_JSON(), keyword, force_write)
 
 def fetch_creds_from_instance_metadata():
@@ -61,12 +61,12 @@ def fetch_sts_credentials(key_id, secret, mfa_serial, mfa_code):
     sts_response = sts_connection.get_session_token(mfa_serial_number = mfa_serial[0], mfa_token = mfa_code[0])
     return sts_response.access_key, sts_response.secret_key, sts_response.session_token
 
-def iterate_through_dictionary(dictionary, finding, depth):
+def iterate_through_dictionary(dictionary, finding, key, depth):
     if depth == 0:
-        finding.callback(finding, dictionary)
+        finding.callback(finding, key, dictionary)
     else:
         for key in dictionary:
-            iterate_through_dictionary(dictionary[key], finding, depth -1)
+            iterate_through_dictionary(dictionary[key], finding, key, depth -1)
 
 def load_from_json(keyword, var):
     filename = 'json/aws_' + keyword + '_' + var + '.json'

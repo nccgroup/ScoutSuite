@@ -13,7 +13,7 @@ class Ec2Finding(Finding):
         self.keyword_prefix = 'ec2'
         Finding.__init__(self, description, name, entity, callback, callback_args, idprefix, level)
 
-    def checkInternetAccessiblePort(self, obj):
+    def checkInternetAccessiblePort(self, key, obj):
         protocol = self.callback_args[0][1][0].lower()
         method = self.callback_args[0][0]
         port = self.callback_args[0][1][1]
@@ -29,7 +29,7 @@ class Ec2Finding(Finding):
                                 self.items.append(obj['id'] + '-' + protocol.upper() + '-' + rule['ports'] + '-' + grant)
                                 self.macro_items.append(obj['id'])
 
-    def checkOpenPort(self, obj):
+    def checkOpenPort(self, key, obj):
         protocol = self.callback_args[0][0].lower()
         port = self.callback_args[0][1]
         if protocol in obj['protocols']:

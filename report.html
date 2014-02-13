@@ -123,7 +123,7 @@
 
         <!-- Load S3 data -->
         $.getJSON('json/aws_s3_buckets.json', function(data) {
-            load_aws_from_json(data.buckets, 's3-bucket', 2);
+            load_aws_from_json(data, 's3-bucket', 2);
         });
         $.getJSON('json/aws_s3_violations.json', function(data) {
             load_aws_from_json(data.violations, 's3-violation', 1);
@@ -311,7 +311,14 @@
             r += '</ul>';
             return r;
         }
-        Handlebars.registerHelper('list_s3_permissions', function(bucket_name, grantee_name, grants) {
+        Handlebars.registerHelper('format_grants', function(bucket_name, grants) {
+            r = '';
+            for (g in grants) {
+                r += list_s3_permissions(bucket_name, g, grants[g]);
+            }
+            return r;
+        });
+        function list_s3_permissions(bucket_name, grantee_name, grants) {
             var r = '';
             r += '<tr><td width="20%">' + grantee_name + '</td>';
             r += '<td width="20%" class="text-center"><span id="s3-bucket-read-' + grantee_name + '-' + bucket_name + '"><i class="' + ((grants.read == true) ? 'glyphicon glyphicon-ok' : '') +'"></i></span></td>';
@@ -320,7 +327,7 @@
             r += '<td width="20%" class="text-center"><span id="s3-bucket-write_acp-' + grantee_name + '-' + bucket_name + '"><i class="' + ((grants.write_acp == true) ? 'glyphicon glyphicon-ok' : '') +'"></i></span></td>';
             r += '</tr>';
             return r;
-        });
+        }
         Handlebars.registerHelper('has_logging?', function(logging) {
             return logging;
         });
@@ -432,7 +439,7 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
-          <a class="navbar-brand" href="report.html">AWS Scout</a>
+          <span class="navbar-brand">AWS Scout</span>
         </div>
         <div class="navbar-collapse collapse">
           <div class="navbar-collapse collapse">
@@ -804,8 +811,8 @@
             <script id="s3-bucket-list-template" type="text/x-handlebars-template">
             <li class="list-group-item"><a href="javascript:showAll('s3-bucket')">Show all <span class="badge pull-right">{{items.length}}</span></a></li>
             {{#each items}}
-              <li class="list-group-item" id="s3-bucket-list-{{{name}}}">
-                <a href="javascript:browseTo('s3-bucket','{{{name}}}')">{{{name}}}</a>
+              <li class="list-group-item" id="s3-bucket-list-{{@key}}">
+                <a href="javascript:browseTo('s3-bucket','{{@key}}')">{{@key}}</a>
               </li>
             {{/each}}
             </script>
@@ -814,9 +821,9 @@
         <div class="col-sm-8" id="s3-buckets-details">
           <script id="s3-bucket-detail-template" type="text/x-handlebars-template">
           {{#each items}}
-          <div class="list-group" id="s3-bucket-details-{{{name}}}">
+          <div class="list-group" id="s3-bucket-details-{{@key}}">
             <div class="list-group-item active">
-              <h4 class="list-group-item-heading">{{{name}}}</h4>
+              <h4 class="list-group-item-heading">{{@key}}</h4>
             </div>
             <div class="list-group-item">
               <h4 class="list-group-item-heading">Information</h4>
@@ -835,9 +842,7 @@
                   <td width="20%" class="text-center">Read ACP</td>
                   <td width="20%" class="text-center">Write ACP</td>
                 </tr>
-              {{#each grants}}
-                {{{list_s3_permissions ../name @key this}}}
-              {{/each}}
+                {{{format_grants @key grants}}}
               </table>
             </div>
           </div>

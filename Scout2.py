@@ -53,11 +53,14 @@ def main(args):
         key_id, secret, session_token = fetch_sts_credentials(key_id, secret, args.mfa_serial, args.mfa_code)
 
     ##### IAM
+    groups = {}
+    permissions = {}
+    roles = {}
+    users = {}
     if args.fetch_iam:
         try:
             if not args.fetch_local:
                 iam = boto.connect_iam(aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
-                permissions = {}
                 print 'Fetching IAM users data...'
                 users, permissions = get_users_info(iam, permissions)
                 save_to_file(users, 'IAM users', args.force_write)
@@ -75,15 +78,16 @@ def main(args):
                 permissions = load_from_json('iam','permissions')
                 roles = load_from_json('iam','roles')
                 users = load_from_json('iam','users')
-            analyze_iam_config(groups, permissions, roles, users, args.force_write)
         except Exception, e:
             print 'Exception:\n %s' % e
             pass
+    analyze_iam_config(groups, permissions, roles, users, args.force_write)
+
 
     ##### EC2
+    security_groups = {}
+    instances = {}
     if args.fetch_ec2:
-        security_groups = {}
-        instances = {}
         try:
             if not args.fetch_local:
                 for region in boto.ec2.regions():
@@ -103,31 +107,31 @@ def main(args):
             else:
                 instances = load_from_json('ec2', 'instances')
                 security_groups = load_from_json('ec2', 'security_groups')
-            analyze_ec2_config(instances, security_groups, args.force_write)
         except Exception, e:
             print 'Exception: \n %s' % e
             pass
+    analyze_ec2_config(instances, security_groups, args.force_write)
+
 
     ##### S3
+    buckets = {}
     if args.fetch_s3:
-        buckets = {}
-        buckets['buckets'] = []
         try:
             if not args.fetch_local:
                 s3_connection = boto.connect_s3(aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
                 print 'Fetching S3 buckets data...'
-                buckets['buckets'] = get_s3_buckets(s3_connection)
+                buckets.update(get_s3_buckets(s3_connection))
                 save_to_file(buckets, 'S3 buckets', args.force_write)
             else:
                 buckets = load_from_json('s3', 'buckets')
-            analyze_s3_config(buckets, args.force_write)
         except Exception, e:
             print 'Exception: \n %s' % e
             pass
+    analyze_s3_config(buckets, args.force_write)
 
     ##### VPC
+    vpcs = {}
     if args.fetch_vpc:
-        vpcs = {}
         try:
             if not args.fetch_local:
                 for region in boto.ec2.regions():
@@ -144,7 +148,6 @@ def main(args):
         except Exception, e:
             print 'Exception: \n %s' % e
             pass
-
 
 
 ########################################
