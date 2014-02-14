@@ -319,3 +319,6 @@ Handlebars.registerHelper('ifPasswordAndKey', function(logins, access_keys, bloc
         return block.inverse(this);
     }
 });
+Handlebars.registerHelper('make_title', function(title) {
+    return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase());
+});

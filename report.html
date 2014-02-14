@@ -336,16 +336,45 @@
       <div class="row" id="iam_permissions-row">
         <div id="iam_permissions-list"></div>
           <script id="iam_permission-list-template" type="text/x-handlebars-template">
-          <div class="row list-group-item active">
-            <div class="col-sm-4"><h4>Permission</h4></div>
-            <div class="col-sm-4"><h4>Allow</h4></div>
-            <div class="col-sm-4"><h4>Deny</h4></div>
-          </div>
           {{#each items}}
-            <div class="row list-group-item" id="iam_permission-details-{{{@key}}}">
-              <div class="col-sm-4">{{{@key}}}</div>
-              <div class="col-sm-4">{{{list_permissions Allow}}}</div>
-              <div class="col-sm-4">{{{list_permissions Deny}}}</div>
+            <div class="list-group">
+              <div class="row list-group-item active">
+                <div class="col-sm-4"><h4>{{@key}} Permission</h4></div>
+                <div class="col-sm-8"><h4>Details</h4></div>
+              </div>
+              {{#each this}}
+                <div class="row list-group-item" id="iam_permission-details-{{{@key}}}">
+                  <div class="col-sm-4">{{@key}}:</div>
+                  <div class="col-sm-8">
+                    {{#each this}}
+                      <div class="list-group-item-text">{{make_title @key}}:</div>
+                      <ul>
+                      {{#each this}}
+                        {{#if Allow}}
+                          <li class="list-group-item-text">Allow {{@key}}</li>
+                          <ul class="no-bullet">
+                          {{#each Allow}}
+                            <li class="list-group-item-text">{{this}}</li>
+                          {{/each}}
+                          </ul>
+                        {{/if}}
+                        {{#if Deny}}
+                          <li class="list-group-item-text">Deny {{@key}}</li>
+                          <ul class="no-bullet">
+                          {{#each Deny}}
+                            <li class="list-group-item-text">{{this}}</li>
+                          {{/each}}
+                          </ul>
+                        {{/if}}
+                      {{/each}}
+                      </ul>
+                    {{/each}}
+                  </div>
+                  <!--
+                  <div class="col-sm-4">{{{list_permissions Deny}}}</div>
+                  -->
+                </div>
+              {{/each}}
             </div>
           {{/each}}
           </script>

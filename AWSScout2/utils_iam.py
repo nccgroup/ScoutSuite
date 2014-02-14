@@ -38,19 +38,39 @@ def get_group_users(iam, group_name):
     return users
 
 def get_permissions(policy_document, permissions, keyword, name, policy_name):
+    manage_dictionary(permissions, 'Action', {})
+    manage_dictionary(permissions, 'NotAction', {})
     document = json.loads(urllib.unquote(policy_document).decode('utf-8'))
     for statement in document['Statement']:
-        if 'Effect' and 'Action' in statement:
-            effect = str(statement['Effect'])
-            for action in statement['Action']:
-                permissions = manage_dictionary(permissions, action, {})
-                permissions[action] = manage_dictionary(permissions[action], effect, {})
-                permissions[action][effect] = manage_dictionary(permissions[action][effect], keyword, [])
-                entry = {}
-                entry['name'] = name
-                entry['policy_name'] = policy_name
-                permissions[action][effect][keyword].append(entry)
+        effect = str(statement['Effect'])
+        action_string = 'Action' if 'Action' in statement else 'NotAction'
+        parse_actions(permissions[action_string], statement[action_string], statement['Resource'], effect, keyword, name, policy_name)
     return permissions
+
+def parse_actions(permissions, actions, resources, effect, keyword, name, policy_name):
+    if type(actions) == list:
+        for action in actions:
+            parse_action(permissions, action, resources, effect, keyword, name, policy_name)
+    else:
+        parse_action(permissions, actions, resources, effect, keyword, name, policy_name)
+
+def parse_action(permissions, action, resources, effect, keyword, name, policy_name):
+    manage_dictionary(permissions, action, {})
+#    manage_dictionary(permissions[action], effect, {})
+    parse_resources(permissions[action], resources, effect, keyword, name, policy_name)
+
+def parse_resources(permission, resources, effect, keyword, name, policy_name):
+    if type(resources) == list:
+        for resource in resources:
+            parse_resource(permission, resource, effect, keyword, name, policy_name)
+    else:
+        parse_resource(permission, resources, effect, keyword, name, policy_name)
+
+def parse_resource(permission, resource, effect, keyword, name, policy_name):
+    manage_dictionary(permission, keyword, {})
+    manage_dictionary(permission[keyword], name, {})
+    manage_dictionary(permission[keyword][name], effect, [])
+    permission[keyword][name][effect].append(resource)
 
 def get_policies(iam, permissions, keyword, name):
     fetched_policies = []
