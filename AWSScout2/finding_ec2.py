@@ -22,11 +22,11 @@ class Ec2Finding(Finding):
                 for grant in rule['grants']:
                     if grant == '0.0.0.0/0':
                         if method == 'blacklist' and self.portInRange(port, rule['ports']):
-                            self.items.append(obj['id'] + '-' + protocol.upper() + '-' + port + '-' + grant)
+                            self.items.append(obj['id'])
                             self.macro_items.append(obj['id'])
                         elif method == 'whitelist':
                             if rule['ports'] not in port:
-                                self.items.append(obj['id'] + '-' + protocol.upper() + '-' + rule['ports'] + '-' + grant)
+                                self.items.append(obj['id'])
                                 self.macro_items.append(obj['id'])
 
     def checkOpenPort(self, key, obj):
@@ -36,7 +36,7 @@ class Ec2Finding(Finding):
             for rule in obj['protocols'][protocol]['rules']:
                 for grant in rule['grants']:
                     if self.portInRange(port, rule['ports']):
-                        self.items.append(obj['id'] + '-' + protocol.upper() + '-' + port)
+                        self.items.append(obj['id'])
                         self.macro_items.append(obj['id'])
 
     def portInRange(self, port, ports):

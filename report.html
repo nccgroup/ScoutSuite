@@ -83,11 +83,6 @@
                 for (j in violations[i]['items']) {
                     var id = vkey + '-' + violations[i]['items'][j];
                     var style = "finding-" + violations[i]['level'];
-
-                    if (idprefix == 'iam_user-sActive-key-no-rotation') {
-                        alert(vkey + ' : ' + id);
-                    }
-
                     $('[id$="' + id + '"]').addClass(style);
                     $('[id$="' + id + '"]').show();
                     violations_array[vkey].push(violations[i]['macro_items'][j]);
@@ -204,9 +199,9 @@
         });
         Handlebars.registerHelper('format_grant', function(grants) {
             if (grants.match(/.*\(.*\)/)) {
-                return 'EC2 Group: ' + grants;
+                return 'EC2 Group: ';
             } else {
-                return 'Source IP: ' + grants;
+                return 'Source IP: ';
             }
         });
         Handlebars.registerHelper('list_permissions', function(permissions) {
@@ -613,10 +608,10 @@
                       <li class="list-group-item-text">{{{name}}}</li>
                       <ul>
                       {{# each rules}}
-                        <li class="list-group-item-text">Ports: <span id="{{{../../id}}}-{{{../name}}}-{{{ports}}}">{{{ports}}}</span></li>
+                        <li class="list-group-item-text">Ports: <span id="ec2_security_group-{{../name}}-{{ports}}-{{../../id}}">{{ports}}</span></li>
                         <ul>
                         {{# each grants}}
-                          <li class="list-group-item-text"><span id="{{{../../../id}}}-{{{../../name}}}-{{{../ports}}}-{{{this}}}">{{{format_grant this}}}</span></li>
+                          <li class="list-group-item-text">{{format_grant this}}<span id="ec2_security_group-{{../../name}}-{{../ports}}-{{this}}-{{../../../id}}">{{this}}</span></li>
                         {{/each}}
                         </ul>
                       {{/each}}
