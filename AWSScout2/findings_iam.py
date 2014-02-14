@@ -14,7 +14,6 @@ iam_finding_dictionary['Active-key-no-rotation'] = IamFinding(
     'user',
     IamFinding.checkAccessKeys,
     'Active',
-    '',
     'danger',
 )
 iam_finding_dictionary['Inactive-key-no-rotation'] = IamFinding(
@@ -22,7 +21,6 @@ iam_finding_dictionary['Inactive-key-no-rotation'] = IamFinding(
     'user',
     IamFinding.checkAccessKeys,
     'Inactive',
-    '',
     'warning',
 )
 iam_finding_dictionary['no-mfa'] = IamFinding(
@@ -30,7 +28,6 @@ iam_finding_dictionary['no-mfa'] = IamFinding(
     'user',
     IamFinding.lacksMFA,
     None,
-    '',
     'danger',
 )
 iam_finding_dictionary['password-and-key'] = IamFinding(
@@ -38,6 +35,5 @@ iam_finding_dictionary['password-and-key'] = IamFinding(
     'user',
     IamFinding.passwordAndKeyEnabled,
     None,
-    '',
     'warning',
 )

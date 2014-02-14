@@ -14,7 +14,6 @@ s3_finding_dictionary['world-write'] = S3Finding(
     'bucket',
     S3Finding.checkWorldWritableBucket,
     None,
-    '',
     'danger'
 )
 s3_finding_dictionary['world-write_acp'] = S3Finding(
@@ -22,7 +21,6 @@ s3_finding_dictionary['world-write_acp'] = S3Finding(
     'bucket',
     S3Finding.checkWorldWritableBucketPerms,
     None,
-    '',
     'danger'
 )
 s3_finding_dictionary['world-read'] = S3Finding(
@@ -30,6 +28,5 @@ s3_finding_dictionary['world-read'] = S3Finding(
     'bucket',
     S3Finding.checkWorldReadableBucket,
     None,
-    '',
     'warning'
 )

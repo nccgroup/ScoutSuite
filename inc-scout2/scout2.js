@@ -17,11 +17,7 @@ function load_aws_config_from_json(list, keyword, cols) {
 // Generic highlight finding function
 function highlight_violations(violations) {
     for (i in violations) {
-        var idprefix = violations[i]['keyword_prefix'] + '_' + violations[i]['entity'].split('.').pop();
-        if (violations[i]['idprefix'] != '') {
-            var idprefix = idprefix + '-' + violations[i]['idprefix'];
-        }
-        var vkey = idprefix + '-' + i;
+        var vkey = violations[i]['keyword_prefix'] + '_' + violations[i]['entity'].split('.').pop() + '-' + i;
         violations_array[vkey] = new Array();
         for (j in violations[i]['items']) {
             var id = vkey + '-' + violations[i]['items'][j];

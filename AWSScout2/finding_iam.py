@@ -7,9 +7,9 @@ import dateutil.parser
 
 class IamFinding(Finding):
 
-    def __init__(self, description, entity, callback, callback_args, idprefix, level):
+    def __init__(self, description, entity, callback, callback_args, level):
         self.keyword_prefix = 'iam'
-        Finding.__init__(self, description, entity, callback, callback_args, idprefix, level)
+        Finding.__init__(self, description, entity, callback, callback_args, level)
 
     def checkAccessKeys(self, key, obj):
         for access_key in obj['access_keys']:

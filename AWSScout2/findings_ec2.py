@@ -25,7 +25,6 @@ for port in rc_ports:
         'region.vpc.security_group',
         Ec2Finding.checkInternetAccessiblePort,
         ['blacklist', port[1]],
-        '',
         'danger',
     )
 
@@ -42,7 +41,6 @@ for port in plaintext_ports:
         'region.vpc.security_group',
         Ec2Finding.checkOpenPort,
         port[1],
-        '',
         'danger',
     )
 
@@ -56,6 +54,5 @@ ec2_finding_dictionary['public-ports'] = Ec2Finding(
     'region.vpc.security_group',
     Ec2Finding.checkInternetAccessiblePort,
     ['whitelist', ('tcp', wl_ports)],
-    '',
     'warning',
 )

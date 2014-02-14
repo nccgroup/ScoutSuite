@@ -4,9 +4,9 @@ from AWSScout2.finding import *
 
 class S3Finding(Finding):
 
-    def __init__(self, description, entity, callback, callback_args, idprefix, level):
+    def __init__(self, description, entity, callback, callback_args, level):
         self.keyword_prefix = 's3'
-        Finding.__init__(self, description, entity, callback, callback_args, idprefix, level)
+        Finding.__init__(self, description, entity, callback, callback_args, level)
 
     def checkWorldWritableBucket(self, key, obj):
         for grant in obj['grants']:
