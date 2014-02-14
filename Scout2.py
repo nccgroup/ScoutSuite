@@ -70,9 +70,7 @@ def main(args):
                 print 'Fetching IAM roles data...'
                 roles, permissions = get_roles_info(iam, permissions)
                 save_to_file(roles, 'IAM roles', args.force_write)
-                p = {}
-                p['permissions'] = permissions
-                save_to_file(p, 'IAM permissions', args.force_write)
+                save_to_file(permissions, 'IAM permissions', args.force_write, columns_in_report = 1)
             else:
                 groups = load_from_json('iam','groups')
                 permissions = load_from_json('iam','permissions')

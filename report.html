@@ -58,11 +58,10 @@
         var violations_array = new Array();
 
         <!-- Generic load function -->
-        function load_aws_from_json(list, keyword, cols) {
+        function load_aws_config_from_json(list, keyword, cols) {
             var id1 = '#' + keyword + '-list-template';
             var id2 = keyword + 's-list';
             var tmp = Handlebars.compile($(id1).html());
-            var what = keyword + 's';
             document.getElementById(id2).innerHTML = tmp({items: list});
             if (cols >= 2) {
                 var id3 = '#' + keyword + '-detail-template';
@@ -75,63 +74,26 @@
         <!-- Generic highlight finding function -->
         function highlight_violations(violations) {
             for (i in violations) {
-                var idprefix = '';
-                if ( violations[i]['idprefix'] != '') {
-                    var idprefix = violations[i]['idprefix'] + '-';
+                var idprefix = violations[i]['keyword_prefix'] + '_' + violations[i]['entity'].split('.').pop();
+                if (violations[i]['idprefix'] != '') {
+                    var idprefix = idprefix + '-' + violations[i]['idprefix'];
                 }
-                var vkey = violations[i]['keyword_prefix'] + '-' + violations[i]['entity'].split('.').pop() + '-' + violations[i]['name'];
+                var vkey = idprefix + '-' + i;
                 violations_array[vkey] = new Array();
                 for (j in violations[i]['items']) {
-                    var id = idprefix + violations[i]['items'][j];
+                    var id = vkey + '-' + violations[i]['items'][j];
                     var style = "finding-" + violations[i]['level'];
+
+                    if (idprefix == 'iam_user-sActive-key-no-rotation') {
+                        alert(vkey + ' : ' + id);
+                    }
+
                     $('[id$="' + id + '"]').addClass(style);
                     $('[id$="' + id + '"]').show();
                     violations_array[vkey].push(violations[i]['macro_items'][j]);
                 }
             }
         }
-
-        <!-- Load EC2 data -->
-        $.getJSON('json/aws_ec2_security_groups.json', function(data) {
-            load_aws_from_json(data, 'ec2-security_group', 2);
-        });
-        $.getJSON('json/aws_ec2_instances.json', function(data) {
-            load_aws_from_json(data, 'ec2-instance', 2);
-        });
-        $.getJSON('json/aws_ec2_network_acls.json', function(data) {
-            load_aws_from_json(data, 'ec2-network_acl', 2)
-        });
-        $.getJSON('json/aws_ec2_violations.json', function(data) {
-            load_aws_from_json(data.violations, 'ec2-violation', 1);
-            highlight_violations(data.violations);
-        });
-
-        <!-- Load IAM data -->
-        $.getJSON('json/aws_iam_users.json', function(data) {
-            load_aws_from_json(data, 'iam-user', 2);
-        });
-        $.getJSON('json/aws_iam_groups.json', function(data) {
-            load_aws_from_json(data, 'iam-group', 2);
-        });
-        $.getJSON('json/aws_iam_roles.json', function(data) {
-            load_aws_from_json(data, 'iam-role', 2);
-        });
-        $.getJSON('json/aws_iam_permissions.json', function(data) {
-            load_aws_from_json(data.permissions, 'iam-permission', 1);
-        });
-        $.getJSON('json/aws_iam_violations.json', function(data) {
-            load_aws_from_json(data.violations, 'iam-violation', 1);
-            highlight_violations(data.violations);
-        });
-
-        <!-- Load S3 data -->
-        $.getJSON('json/aws_s3_buckets.json', function(data) {
-            load_aws_from_json(data, 's3-bucket', 2);
-        });
-        $.getJSON('json/aws_s3_violations.json', function(data) {
-            load_aws_from_json(data.violations, 's3-violation', 1);
-            highlight_violations(data.violations);
-        });
 
         // TODO: Hide all by default
 
@@ -201,7 +163,7 @@
             window.scrollTo(0,0);
         }
         function list_findings(keyword_prefix, keyword, finding) {
-            keyword = keyword_prefix + '-' + keyword;
+            keyword = keyword_prefix + '_' + keyword;
             updateNavbar(keyword);
             hideAll();
             showEmptyRow(keyword);
@@ -233,11 +195,11 @@
                 return 0;
             }
         });
-        Handlebars.registerHelper('has_mfa?', function(mfa_devices) {
+        Handlebars.registerHelper('has_mfa?', function(mfa_devices, user_name) {
             if (typeof mfa_devices != 'undefined' && mfa_devices != '') {
                 return 'Yes';
             } else {
-                return 'No';
+                return '<span id="iam_user-no-mfa-' + user_name + '">No</span>';
             }
         });
         Handlebars.registerHelper('format_grant', function(grants) {
@@ -294,13 +256,13 @@
             r += '<ul class="no-bullet">';
             if (count > 0) {
                 r += '<li>';
-                r += '<a href="javascript:toggleVisibility(\'ec2-instances-' + group_id + '-' + title +'\')">';
-                r += '<span id="bullet-ec2-instances-' + group_id + '-' + title + '">';
+                r += '<a href="javascript:toggleVisibility(\'ec2_instances-' + group_id + '-' + title +'\')">';
+                r += '<span id="bullet-ec2_instances-' + group_id + '-' + title + '">';
                 r += '<i class="glyphicon glyphicon-expand"></i></span></a> ';
                 r += title + ': ' + count;
-                r += '</li><div id="ec2-instances-' + group_id + '-' + title +'"><ul>';
+                r += '</li><div id="ec2_instances-' + group_id + '-' + title +'"><ul>';
                 for (i in instances) {
-                    r += '<li class="list-group-item-text"><a href="javascript:browseTo(\'ec2-instance\',\'' + instances[i] + '\')">' + instances[i] + '</a></li>';
+                    r += '<li class="list-group-item-text"><a href="javascript:browseTo(\'ec2_instance\',\'' + instances[i] + '\')">' + instances[i] + '</a></li>';
                 }
                 r += '</ul></div>';
             } else {
@@ -319,21 +281,28 @@
         function list_s3_permissions(bucket_name, grantee_name, grants) {
             var r = '';
             r += '<tr><td width="20%">' + grantee_name + '</td>';
-            r += '<td width="20%" class="text-center"><span id="s3-bucket-read-' + grantee_name + '-' + bucket_name + '"><i class="' + ((grants.read == true) ? 'glyphicon glyphicon-ok' : '') +'"></i></span></td>';
-            r += '<td width="20%" class="text-center"><span id="s3-bucket-write-' + grantee_name + '-' + bucket_name + '"><i class="' + ((grants.write == true) ? 'glyphicon glyphicon-ok' : '') +'"></i></span></td>';
-            r += '<td width="20%" class="text-center"><span id="s3-bucket-read_acp-' + grantee_name + '-' + bucket_name + '"><i class="' + ((grants.read_acp == true) ? 'glyphicon glyphicon-ok' : '') +'"></i></span></td>';
-            r += '<td width="20%" class="text-center"><span id="s3-bucket-write_acp-' + grantee_name + '-' + bucket_name + '"><i class="' + ((grants.write_acp == true) ? 'glyphicon glyphicon-ok' : '') +'"></i></span></td>';
+            for (grant in grants) {
+                r += '<td width="20%" class="text-center">' + format_s3_grant(bucket_name, grantee_name, grant, grants[grant]) + '</td>';
+            }
             r += '</tr>';
             return r;
+        }
+        function format_s3_grant(bucket_name, grantee_name, grant, value) {
+            var icon = '<i class="' + ((value == true) ? 'glyphicon glyphicon-ok' : '') +'"></i>';
+            if (grantee_name == 'All users') {
+                return '<span id="s3_bucket-world-' + grant + '-' + bucket_name + '">' + icon + '</span>';
+            } else {
+                return icon;
+            }
         }
         Handlebars.registerHelper('has_logging?', function(logging) {
             return logging;
         });
-        Handlebars.registerHelper('format_finding_menu', function(finding) {
+        Handlebars.registerHelper('format_finding_menu', function(key, finding) {
             r = '';
             if (finding['macro_items'].length != 0) {
                 r += '<li>';
-                r += '<a href="javascript:list_findings(\'' + finding['keyword_prefix'] + '\',\'' + finding['entity'].split('.').pop() + '\',\'' + finding['name'] + '\')">';
+                r += '<a href="javascript:list_findings(\'' + finding['keyword_prefix'] + '\',\'' + finding['entity'].split('.').pop() + '\',\'' + key + '\')">';
                 r += finding['description'] + ' (' + finding['macro_items'].length + ')';
                 r += '</a></li>';
             }
@@ -350,7 +319,7 @@
                 if (u%3 == 0) {
                     r += '<tr>';
                 }
-                r += '<td width="33%" style="padding-left: 10px; text-align: center;"><a href="javascript:browseTo(\'iam-user\', \'' + users[u] + '\')">' + users[u] + '</td>';
+                r += '<td width="33%" style="padding-left: 10px; text-align: center;"><a href="javascript:browseTo(\'iam_user\', \'' + users[u] + '\')">' + users[u] + '</td>';
                 if (u%3 == 2) {
                     r += '</tr>';
                 }
@@ -429,6 +398,7 @@
         }
 
     </script>
+
   </head>
 
   <body>
@@ -444,44 +414,44 @@
           <ul class="nav navbar-nav">
             <li class="dropdown">
               <a href="javascript:show_ec2()" class="dropdown-toggle" data-toggle="dropdown">EC2<b class="caret"></b></a>
-              <ul class="dropdown-menu" id="ec2-violations-list">
-                <script id="ec2-violation-list-template" type="text/x-handlebars-template">
-                  <li><a href="javascript:list_generic('ec2-instance')">Instances</a></li>
-                  <li><a href="javascript:list_generic('ec2-network_acl')">Network ACLs</a></li>
-                  <li><a href="javascript:list_generic('ec2-security_group')">Security Groups</a></li>
+              <ul class="dropdown-menu" id="ec2_violations-list">
+                <script id="ec2_violation-list-template" type="text/x-handlebars-template">
+                  <li><a href="javascript:list_generic('ec2_instance')">Instances</a></li>
+                  <li><a href="javascript:list_generic('ec2_network_acl')">Network ACLs</a></li>
+                  <li><a href="javascript:list_generic('ec2_security_group')">Security Groups</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
-                    {{{format_finding_menu this}}}
+                    {{{format_finding_menu @key this}}}
                   {{/each}}
                 </script>
               </ul>
             <li class="dropdown">
               <a href="javascript:show_iam()" class="dropdown-toggle" data-toggle="dropdown">IAM<b class="caret"></b></a>
-              <ul class="dropdown-menu" id="iam-violations-list">
-                <script id="iam-violation-list-template" type="text/x-handlebars-template">
-                  <li><a href="javascript:list_generic('iam-group')">Groups</a></li>
-                  <li><a href="javascript:list_generic('iam-permission')">Permissions</a></li>
-                  <li><a href="javascript:list_generic('iam-role')">Roles</a></li>
-                  <li><a href="javascript:list_generic('iam-user')">Users</a></li>
-                  <li><a href="javascript:void()">Password policy</a></li>
+              <ul class="dropdown-menu" id="iam_violations-list">
+                <script id="iam_violation-list-template" type="text/x-handlebars-template">
+                  <li><a href="javascript:list_generic('iam_group')">Groups</a></li>
+                  <li><a href="javascript:list_generic('iam_permission')">Permissions</a></li>
+                  <li><a href="javascript:list_generic('iam_role')">Roles</a></li>
+                  <li><a href="javascript:list_generic('iam_user')">Users</a></li>
+                  <li><a href="#">Password policy</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
-                    {{{format_finding_menu this}}}
+                    {{{format_finding_menu @key this}}}
                   {{/each}}
                 </script>
               </ul>
             </li>
             <li class="dropdown">
               <a href="javascript:show_s3()" class="dropdown-toggle" data-toggle="dropdown">S3<b class="caret"></b></a>
-              <ul class="dropdown-menu" id="s3-violations-list">
-                <script id="s3-violation-list-template" type="text/x-handlebars-template">
-                  <li><a href="javascript:list_generic('s3-bucket')">Buckets</a></li>
+              <ul class="dropdown-menu" id="s3_violations-list">
+                <script id="s3_violation-list-template" type="text/x-handlebars-template">
+                  <li><a href="javascript:list_generic('s3_bucket')">Buckets</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
-                    {{{format_finding_menu this}}}
+                    {{{format_finding_menu @key this}}}
                   {{/each}}
                 </script>
               </ul>
@@ -511,23 +481,23 @@
       </div>
 
       <!-- Template for EC2 instances -->
-      <div class="row" id="ec2-instances-row">
+      <div class="row" id="ec2_instances-row">
         <div class="col-sm-4">
-          <ul class="list-group" id="ec2-instances-list">
-            <script id="ec2-instance-list-template" type="text/x-handlebars-template">
-            <li class="list-group-item"><a href="javascript:showAll('ec2-instance')">Show all <span class="badge pull-right">{{count items}}</span></a></li>
+          <ul class="list-group" id="ec2_instances-list">
+            <script id="ec2_instance-list-template" type="text/x-handlebars-template">
+            <li class="list-group-item"><a href="javascript:showAll('ec2_instance')">Show all <span class="badge pull-right">{{count items}}</span></a></li>
             {{#each items}}
               <li class="list-group-item">
-                <a href="javascript:browseTo('ec2-instance','{{@key}}')">{{@key}}</a>
+                <a href="javascript:browseTo('ec2_instance','{{@key}}')">{{@key}}</a>
               </li>
             {{/each}}
             </script>
           </ul>
         </div>
-        <div class="col-sm-8" id="ec2-instances-details">
-          <script id="ec2-instance-detail-template" type="text/x-handlebars-template">
+        <div class="col-sm-8" id="ec2_instances-details">
+          <script id="ec2_instance-detail-template" type="text/x-handlebars-template">
           {{#each items}}
-          <div class="list-group" id="ec2-instance-details-{{{id}}}">
+          <div class="list-group" id="ec2_instance-details-{{{id}}}">
             <div class="list-group-item active">
               <h4 class="list-group-item-heading">{{{id}}}</h4>
             </div>
@@ -557,29 +527,29 @@
       </div><!-- /.row -->
 
       <!-- Template for EC2 network acls -->
-      <div class="row" id="ec2-network_acls-row">
-        <div class="col-sm-4" id="ec2-network_acls-list">
-          <script id="ec2-network_acl-list-template" type="text/x-handlebars-template">
+      <div class="row" id="ec2_network_acls-row">
+        <div class="col-sm-4" id="ec2_network_acls-list">
+          <script id="ec2_network_acl-list-template" type="text/x-handlebars-template">
             <ul class="list-group">
-              <li class="list-group-item"><a href="javascript:showAll('ec2-network_acl')">Show all <span class="badge pull-right">{{count_acl items}}</span></a></li>
+              <li class="list-group-item"><a href="javascript:showAll('ec2_network_acl')">Show all <span class="badge pull-right">{{count_acl items}}</span></a></li>
             </ul>
             {{#each items}}
             <ul class="list-group">
-              <li class="list-group-item active"><a style="color: black" href="javascript:toggleVisibility('ec2-region-list-{{@key}}')">{{@key}}</a></li>
-              <div id="ec2-region-list-{{@key}}">
+              <li class="list-group-item active"><a style="color: black" href="javascript:toggleVisibility('ec2_region-list-{{@key}}')">{{@key}}</a></li>
+              <div id="ec2_region-list-{{@key}}">
                 {{#each this}}
-                  <li class="list-group-item" id="ec2-vpc-list-{{@key}}"><a href="javascript:browseTo('ec2-network_acl','{{@key}}')">{{@key}}</a> ({{cidr_block}})</li>
+                  <li class="list-group-item" id="ec2_vpc-list-{{@key}}"><a href="javascript:browseTo('ec2_network_acl','{{@key}}')">{{@key}}</a> ({{cidr_block}})</li>
                 {{/each}}
               </div>
             </ul>
             {{/each}}
           </script>
         </div>
-        <div class="col-sm-8" id="ec2-network_acls-details">
-          <script id="ec2-network_acl-detail-template" type="text/x-handlebars-template">
+        <div class="col-sm-8" id="ec2_network_acls-details">
+          <script id="ec2_network_acl-detail-template" type="text/x-handlebars-template">
           {{#each items}}
             {{#each this}}
-            <div class="list-group" id="ec2-network_acl-details-{{@key}}">
+            <div class="list-group" id="ec2_network_acl-details-{{@key}}">
               <div class="list-group-item active">
                 <h4 class="list-group-item-heading">Virtual Private Cloud {{@key}}</h4>
               </div>
@@ -602,21 +572,21 @@
       </div><!-- /.row -->
 
       <!-- Template for EC2 security groups -->
-      <div class="row" id="ec2-security_groups-row">
-        <div class="col-sm-4" id="ec2-security_groups-list">
-          <script id="ec2-security_group-list-template" type="text/x-handlebars-template">
+      <div class="row" id="ec2_security_groups-row">
+        <div class="col-sm-4" id="ec2_security_groups-list">
+          <script id="ec2_security_group-list-template" type="text/x-handlebars-template">
             <ul class="list-group">
-              <li class="list-group-item"><a href="javascript:showAll('ec2-security_group')">Show all security groups<span class="badge pull-right">{{count_sg items}}</span></a></li>
+              <li class="list-group-item"><a href="javascript:showAll('ec2_security_group')">Show all security groups<span class="badge pull-right">{{count_sg items}}</span></a></li>
             </ul>
             {{#each items}}
             <ul class="list-group">
-              <li class="list-group-item active"><a style="color: black" href="javascript:toggleVisibility('ec2-region-list-{{@key}}')">{{@key}}</a></li>
-              <div id="ec2-region-list-{{@key}}">
+              <li class="list-group-item active"><a style="color: black" href="javascript:toggleVisibility('ec2_region-list-{{@key}}')">{{@key}}</a></li>
+              <div id="ec2_region-list-{{@key}}">
                 {{#each this}}
-                  <li class="list-group-item" id="ec2-vpc-list-{{@key}}">{{@key}}
+                  <li class="list-group-item" id="ec2_vpc-list-{{@key}}">{{@key}}
                     {{#each this}}
-                      <div class="list-group-item list-sub-element" id="ec2-security_group-list-{{@key}}">
-                        <a href="javascript:browseTo('ec2-security_group','{{id}}')">{{@key}}</a>
+                      <div class="list-group-item list-sub-element" id="ec2_security_group-list-{{@key}}">
+                        <a href="javascript:browseTo('ec2_security_group','{{id}}')">{{@key}}</a>
                       </div>
                     {{/each}}
                   </li>
@@ -626,12 +596,12 @@
             {{/each}}
           </script>
         </div>
-        <div class="col-sm-8" id="ec2-security_groups-details">
-          <script id="ec2-security_group-detail-template" type="text/x-handlebars-template">
+        <div class="col-sm-8" id="ec2_security_groups-details">
+          <script id="ec2_security_group-detail-template" type="text/x-handlebars-template">
           {{#each items}}
             {{#each this}}
               {{#each this}}
-                <div class="list-group" id="ec2-security_group-details-{{{id}}}">
+                <div class="list-group" id="ec2_security_group-details-{{{id}}}">
                   <div class="list-group-item active">
                     <h4 class="list-group-item-heading">{{@key}} {{{name}}} ({{{id}}})</h4>
                     <p class="list-group-item-text">{{{description}}}</p>
@@ -667,23 +637,23 @@
       </div><!-- /.row -->
 
       <!-- Template for IAM groups -->
-      <div class="row" id="iam-groups-row">
+      <div class="row" id="iam_groups-row">
         <div class="col-sm-4">
-          <ul class="list-group" id="iam-groups-list">
-            <script id="iam-group-list-template" type="text/x-handlebars-template">
-            <li class="list-group-item"><a href="javascript:showAll('iam-group')">Show all <span class="badge pull-right">{{items.length}}</span></a></li>
+          <ul class="list-group" id="iam_groups-list">
+            <script id="iam_group-list-template" type="text/x-handlebars-template">
+            <li class="list-group-item"><a href="javascript:showAll('iam_group')">Show all <span class="badge pull-right">{{items.length}}</span></a></li>
             {{#each items}}
-              <li class="list-group-item" id="iam-group-list-{{{group_id}}}">
-                <a href="javascript:browseTo('iam-group','{{{group_id}}}')">{{{group_name}}}</a>
+              <li class="list-group-item" id="iam_group-list-{{{group_id}}}">
+                <a href="javascript:browseTo('iam_group','{{{group_id}}}')">{{{group_name}}}</a>
               </li>
             {{/each}}
             </script>
           </ul>
         </div>
-        <div class="col-sm-8" id="iam-groups-details">
-          <script id="iam-group-detail-template" type="text/x-handlebars-template">
+        <div class="col-sm-8" id="iam_groups-details">
+          <script id="iam_group-detail-template" type="text/x-handlebars-template">
           {{#each items}}
-          <div class="list-group" id="iam-group-details-{{{group_id}}}">
+          <div class="list-group" id="iam_group-details-{{{group_id}}}">
             <div class="list-group-item active">
               <h4 class="list-group-item-heading">{{{group_name}}}</h4>
               <p class="list-group-item-text"> * Group created on {{{create_date}}}</p>
@@ -697,8 +667,8 @@
               <ul>
               {{#each policies}}
                 <li class="list-group-item-text">
-                {{{policy_name}}} [<a href="javascript:toggleDetails('iam-group_policy_details','{{{policy_name}}}')">Details</a>]
-                <p class="list-group-item-text" id="iam-group_policy_details-{{{policy_name}}}" style="display:none">{{{decodeURIComponent policy_document}}}</p>
+                {{{policy_name}}} [<a href="javascript:toggleDetails('iam_group_policy_details','{{{policy_name}}}')">Details</a>]
+                <p class="list-group-item-text" id="iam_group_policy_details-{{{policy_name}}}" style="display:none">{{{decodeURIComponent policy_document}}}</p>
                 </li>
               {{/each}}
               </ul>
@@ -710,16 +680,16 @@
       </div><!-- /.row -->
 
       <!-- Template for IAM permissions -->
-      <div class="row" id="iam-permissions-row">
-        <div id="iam-permissions-list"></div>
-          <script id="iam-permission-list-template" type="text/x-handlebars-template">
+      <div class="row" id="iam_permissions-row">
+        <div id="iam_permissions-list"></div>
+          <script id="iam_permission-list-template" type="text/x-handlebars-template">
           <div class="row list-group-item active">
             <div class="col-sm-4"><h4>Permission</h4></div>
             <div class="col-sm-4"><h4>Allow</h4></div>
             <div class="col-sm-4"><h4>Deny</h4></div>
           </div>
           {{#each items}}
-            <div class="row list-group-item" id="iam-permission-details-{{{@key}}}">
+            <div class="row list-group-item" id="iam_permission-details-{{{@key}}}">
               <div class="col-sm-4">{{{@key}}}</div>
               <div class="col-sm-4">{{{list_permissions Allow}}}</div>
               <div class="col-sm-4">{{{list_permissions Deny}}}</div>
@@ -729,23 +699,23 @@
       </div><!-- /.row -->
 
       <!-- Template for IAM roles -->
-      <div class="row" id="iam-roles-row">
+      <div class="row" id="iam_roles-row">
         <div class="col-sm-3">
-          <ul class="list-group" id="iam-roles-list">
-            <script id="iam-role-list-template" type="text/x-handlebars-template">
-            <li class="list-group-item"><a href="javascript:showAll('iam-role')">Show all <span class="badge pull-right">{{items.length}}</span></a></li>
+          <ul class="list-group" id="iam_roles-list">
+            <script id="iam_role-list-template" type="text/x-handlebars-template">
+            <li class="list-group-item"><a href="javascript:showAll('iam_role')">Show all <span class="badge pull-right">{{items.length}}</span></a></li>
             {{#each items}}
-              <li class="list-group-item" id="iam-role-list-{{{role_id}}}">
-                <a href="javascript:browseTo('iam-role','{{{role_id}}}')">{{{role_name}}}</a>
+              <li class="list-group-item" id="iam_role-list-{{{role_id}}}">
+                <a href="javascript:browseTo('iam_role','{{{role_id}}}')">{{{role_name}}}</a>
               </li>
             {{/each}}
             </script>
           </ul>
         </div>
-        <div class="col-sm-8" id="iam-roles-details">
-          <script id="iam-role-detail-template" type="text/x-handlebars-template">
+        <div class="col-sm-8" id="iam_roles-details">
+          <script id="iam_role-detail-template" type="text/x-handlebars-template">
           {{#each items}}
-          <div class="list-group" id="iam-role-details-{{{role_id}}}">
+          <div class="list-group" id="iam_role-details-{{{role_id}}}">
             <div class="list-group-item active">
               <h4 class="list-group-item-heading">{{{role_name}}}</h4>
             </div>
@@ -761,8 +731,8 @@
               <ul>
               {{#each policies}}
                 <li class="list-group-item-text">
-                {{{policy_name}}} [<a href="javascript:toggleDetails('iam-role_policy_details','{{{policy_name}}}')">Details</a>]
-                <p class="list-group-item-text" id="iam-role_policy_details-{{{policy_name}}}" style="display:none">{{{decodeURIComponent policy_document}}}</p>
+                {{{policy_name}}} [<a href="javascript:toggleDetails('iam_role_policy_details','{{{policy_name}}}')">Details</a>]
+                <p class="list-group-item-text" id="iam_role_policy_details-{{{policy_name}}}" style="display:none">{{{decodeURIComponent policy_document}}}</p>
                 </li>
               {{/each}}
               </ul>
@@ -775,23 +745,23 @@
       </div><!-- /.row -->
 
       <!-- Template for IAM users -->
-      <div class="row" id="iam-users-row">
+      <div class="row" id="iam_users-row">
         <div class="col-sm-4">
-          <ul class="list-group" id="iam-users-list">
-            <script id="iam-user-list-template" type="text/x-handlebars-template">
-            <li class="list-group-item"><a href="javascript:showAll('iam-user')">Show all <span class="badge pull-right">{{items.length}}</span></a></li>
+          <ul class="list-group" id="iam_users-list">
+            <script id="iam_user-list-template" type="text/x-handlebars-template">
+            <li class="list-group-item"><a href="javascript:showAll('iam_user')">Show all <span class="badge pull-right">{{items.length}}</span></a></li>
             {{#each items}}
-              <li class="list-group-item" id="iam-user-list-{{{user_name}}}">
-                <a href="javascript:browseTo('iam-user','{{{user_name}}}')">{{{user_name}}}</a>
+              <li class="list-group-item" id="iam_user-list-{{{user_name}}}">
+                <a href="javascript:browseTo('iam_user','{{{user_name}}}')">{{{user_name}}}</a>
               </li>
             {{/each}}
             </script>
           </ul>
         </div>
-        <div class="col-sm-8" id="iam-users-details">
-          <script id="iam-user-detail-template" type="text/x-handlebars-template">
+        <div class="col-sm-8" id="iam_users-details">
+          <script id="iam_user-detail-template" type="text/x-handlebars-template">
           {{#each items}}
-          <div class="list-group" id="iam-user-details-{{{user_name}}}">
+          <div class="list-group" id="iam_user-details-{{{user_name}}}">
             <div class="list-group-item active">
               <h4 class="list-group-item-heading">{{{user_name}}}</h4>
               <p class="list-group-item-text"> * Account created on {{{create_date}}}</p>
@@ -800,7 +770,7 @@
               <h4 class="list-group-item-heading">Authentication methods</h4>
               <p class="list-group-item-text">Password enabled: {{{has_profiles? logins}}}</p>
               <ul></ul>
-              <p class="list-group-item-text">Multi-Factor enabled: <span id="mfa-enabled-{{{user_name}}}">{{{has_mfa? mfa_devices}}}</span></p>
+              <p class="list-group-item-text">Multi-Factor enabled: {{{has_mfa? mfa_devices user_name}}}</p>
               <ul>
               {{#each mfa_devices}}
                 <li class="list-group-item-text"> Serial number: {{{serial_number}}}</li>
@@ -809,17 +779,17 @@
               <p class="list-group-item-text">Access Keys: {{{has_access_keys? access_keys}}}</p>
               <ul>
               {{#each access_keys}}
-                <li class="list-group-item-text"><span id="access-key-{{{access_key_id}}}"> {{{access_key_id}}}, {{{status}}}, created on {{{create_date}}}</span></li>
+                <li class="list-group-item-text"><span id="iam_users-access_{{{status}}}-key-no-rotation-{{{access_key_id}}}"> {{{access_key_id}}}, {{{status}}}, created on {{{create_date}}}</span></li>
               {{/each}}
               </ul>
-              <p class="list-group-item-text"><span class="finding-hidden" id="password-and-key-enabled-{{{user_name}}}"><i class="glyphicon glyphicon-warning-sign"></i> Review the need for password-based and key-based authentication</span></p>
+              <p class="list-group-item-text"><span class="finding-hidden" id="iam_user-password-and-key-{{{user_name}}}"><i class="glyphicon glyphicon-warning-sign"></i> Review the need for password-based and key-based authentication</span></p>
             </div>
 
             <div class="list-group-item">
               <h4 class="list-group-item-heading">Groups</h4>
               <ul>
               {{#each groups}}
-                <li class="list-group-item-text"><a href="javascript:browseTo('iam-group','{{{group_id}}}')">{{{group_name}}}</a></li>
+                <li class="list-group-item-text"><a href="javascript:browseTo('iam_group','{{{group_id}}}')">{{{group_name}}}</a></li>
               {{/each}}
               </ul>
             </div>
@@ -829,8 +799,8 @@
               <ul>
               {{#each policies}}
                 <li class="list-group-item-text">
-                {{{policy_name}}} [<a href="javascript:toggleDetails('iam-user_policy_details','{{{policy_name}}}')">Details</a>]
-                <p class="list-group-item-text" id="iam-user_policy_details-{{{policy_name}}}" style="display:none">{{{decodeURIComponent policy_document}}}</p>
+                {{{policy_name}}} [<a href="javascript:toggleDetails('iam_user_policy_details','{{{policy_name}}}')">Details</a>]
+                <p class="list-group-item-text" id="iam_user_policy_details-{{policy_name}}" style="display:none">{{{decodeURIComponent policy_document}}}</p>
                 </li>
               {{/each}}
               </ul>
@@ -843,23 +813,23 @@
       </div><!-- /.row -->
 
       <!-- Template for S3 buckets -->
-      <div class="row" id="s3-buckets-row">
+      <div class="row" id="s3_buckets-row">
         <div class="col-sm-4">
-          <ul class="list-group" id="s3-buckets-list">
-            <script id="s3-bucket-list-template" type="text/x-handlebars-template">
-            <li class="list-group-item"><a href="javascript:showAll('s3-bucket')">Show all <span class="badge pull-right">{{items.length}}</span></a></li>
+          <ul class="list-group" id="s3_buckets-list">
+            <script id="s3_bucket-list-template" type="text/x-handlebars-template">
+            <li class="list-group-item"><a href="javascript:showAll('s3_bucket')">Show all <span class="badge pull-right">{{items.length}}</span></a></li>
             {{#each items}}
-              <li class="list-group-item" id="s3-bucket-list-{{@key}}">
-                <a href="javascript:browseTo('s3-bucket','{{@key}}')">{{@key}}</a>
+              <li class="list-group-item" id="s3_bucket-list-{{@key}}">
+                <a href="javascript:browseTo('s3_bucket','{{@key}}')">{{@key}}</a>
               </li>
             {{/each}}
             </script>
           </ul>
         </div>
-        <div class="col-sm-8" id="s3-buckets-details">
-          <script id="s3-bucket-detail-template" type="text/x-handlebars-template">
+        <div class="col-sm-8" id="s3_buckets-details">
+          <script id="s3_bucket-detail-template" type="text/x-handlebars-template">
           {{#each items}}
-          <div class="list-group" id="s3-bucket-details-{{@key}}">
+          <div class="list-group" id="s3_bucket-details-{{@key}}">
             <div class="list-group-item active">
               <h4 class="list-group-item-heading">{{@key}}</h4>
             </div>
@@ -891,9 +861,27 @@
 
     </div> <!-- /container -->
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- Load EC2 data -->
+    <script src="json/aws_ec2_security_groups.js"></script>
+    <script src="json/aws_ec2_instances.js"></script>
+    <script src="json/aws_ec2_network_acls.js"></script>
+    <script src="json/aws_ec2_violations.js"></script>
+
+    <!-- Load IAM data -->
+    <script src="json/aws_iam_groups.js"></script>
+    <script src="json/aws_iam_permissions.js"></script>
+    <script src="json/aws_iam_roles.js"></script>
+    <script src="json/aws_iam_users.js"></script>
+    <script src="json/aws_iam_violations.js"></script>
+
+    <!-- Load S3 data -->
+    <script src="json/aws_s3_buckets.js"></script>
+    <script src="json/aws_s3_violations.js"></script>
+
+    <!-- Violations -->
+
+    <!-- Bootstrap core JavaScript, placed at the end of the document so the pages load faster -->
     <script src="inc-bootstrap/js/bootstrap.min.js"></script>
+
   </body>
 </html>

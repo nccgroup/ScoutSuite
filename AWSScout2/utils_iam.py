@@ -19,14 +19,16 @@ def analyze_iam_config(groups, permissions, roles, users, force_write):
     analyze_config(iam_finding_dictionary, iam_config, 'IAM violations', force_write)
 
 def get_groups_info(iam, permissions):
+    groups_info = {}
     groups = handle_truncated_responses(iam.get_all_groups, ['list_groups_response', 'list_groups_result'], 'groups')
     count, total = init_status(groups)
     for group in groups:
         count = update_status(count, total)
         group['users'] = get_group_users(iam, group.group_name);
         group['policies'], permissions = get_policies(iam, permissions, 'group', group.group_name)
+        groups_info[group.group_name] = group
     close_status(count, total)
-    return groups, permissions
+    return groups_info, permissions
 
 def get_group_users(iam, group_name):
     users = []
@@ -74,15 +76,18 @@ def get_policies(iam, permissions, keyword, name):
 
 
 def get_roles_info(iam, permissions):
+    roles_info = {}
     roles = handle_truncated_responses(iam.list_roles, ['list_roles_response', 'list_roles_result'], 'roles')
     count, total = init_status(roles)
     for role in roles:
         count = update_status(count, total)
         role['policies'], permissions = get_policies(iam, permissions, 'role', role.role_name)
+        roles_info[role.role_name] = role
     close_status(count, total)
-    return roles, permissions
+    return roles_info, permissions
 
 def get_users_info(iam, permissions):
+    users_info = {}
     users = handle_truncated_responses(iam.get_all_users, ['list_users_response', 'list_users_result'], 'users')
     count, total = init_status(users)
     for user in users:
@@ -99,8 +104,9 @@ def get_users_info(iam, permissions):
         user['access_keys'] = access_keys.list_access_keys_response.list_access_keys_result.access_key_metadata
         mfa_devices = iam.get_all_mfa_devices(user['user_name'])
         user['mfa_devices'] = mfa_devices.list_mfa_devices_response.list_mfa_devices_result.mfa_devices
+        users_info[user['user_name']] = user
     close_status(count, total)
-    return users, permissions
+    return users_info, permissions
 
 def handle_truncated_responses(callback, result_path, items_name):
     marker_value = None

@@ -12,7 +12,7 @@ from AWSScout2.findings_s3 import *
 def analyze_s3_config(buckets, force_write):
     print 'Analyzing S3 data...'
     s3_config = {"buckets": buckets}
-    analyze_config_new(s3_finding_dictionary, s3_config, 'S3 violations', force_write)
+    analyze_config(s3_finding_dictionary, s3_config, 'S3 violations', force_write)
 
 def init_s3_permissions(grant):
     grant['read'] = False
@@ -74,7 +74,6 @@ def get_s3_buckets(s3):
                 grantee_name = grant.display_name
             manage_dictionary(bucket['grants'], grantee_name, {}, init_s3_permissions)
             set_s3_permission(bucket['grants'][grantee_name], grant.permission)
-            bucket['grants'][grantee_name]['email'] = grant.email_address
         bucket['creation_date'] = b.creation_date
         bucket['region'] = b.get_location()
         bucket['logging'] = get_s3_bucket_logging(b)

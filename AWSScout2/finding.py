@@ -2,9 +2,8 @@
 
 class Finding():
 
-    def __init__(self, description, name, entity, callback, callback_args, idprefix, level):
+    def __init__(self, description, entity, callback, callback_args, idprefix, level):
         self.description = description
-        self.name = name
         self.level = level
         self.entity = entity
         self.callback = callback

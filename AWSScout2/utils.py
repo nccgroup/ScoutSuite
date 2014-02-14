@@ -2,7 +2,6 @@
 
 # Import the Amazon SDK
 import boto
-import boto.ec2
 
 # Import other third-party packages
 import json
@@ -12,23 +11,41 @@ import urllib2
 
 
 ########################################
-##### Common functions
+# Common functions
+########################################
+
+def manage_dictionary(dictionary, key, init, callback=None):
+    if not str(key) in dictionary:
+        dictionary[str(key)] = init
+        manage_dictionary(dictionary, key, init)
+        if callback:
+            callback(dictionary[key])
+    return dictionary
+
+
+########################################
+# Violations search functions
 ########################################
 
 def analyze_config(finding_dictionary, config, keyword, force_write):
-    for finding in finding_dictionary['violations']:
-        for entity in config[finding.entity + 's']:
-            finding.callback(finding, entity)
-    save_json_to_file(finding_dictionary.to_JSON(), keyword, force_write)
-
-# Temporaryly create a _new function
-# TODO modify the data structure of all other components to be dictionaries
-def analyze_config_new(finding_dictionary, config, keyword, force_write):
-    for finding in finding_dictionary['violations']:
+    for key in finding_dictionary:
+        finding = finding_dictionary[key]
         entity_path = finding.entity.split('.')
         entity_depth = len(entity_path)
         iterate_through_dictionary(config[entity_path[-1] + 's'], finding, None, entity_depth)
-    save_json_to_file(finding_dictionary.to_JSON(), keyword, force_write)
+    save_violations_to_file(finding_dictionary.to_JSON(), keyword, force_write)
+
+def iterate_through_dictionary(dictionary, finding, key, depth):
+    if depth == 0:
+        finding.callback(finding, key, dictionary)
+    else:
+        for key in dictionary:
+            iterate_through_dictionary(dictionary[key], finding, key, depth -1)
+
+
+########################################
+# AWS Credentials read functions
+########################################
 
 def fetch_creds_from_instance_metadata():
     base_url = 'http://169.254.169.254/latest/meta-data/iam/security-credentials'
@@ -61,43 +78,52 @@ def fetch_sts_credentials(key_id, secret, mfa_serial, mfa_code):
     sts_response = sts_connection.get_session_token(mfa_serial_number = mfa_serial[0], mfa_token = mfa_code[0])
     return sts_response.access_key, sts_response.secret_key, sts_response.session_token
 
-def iterate_through_dictionary(dictionary, finding, key, depth):
-    if depth == 0:
-        finding.callback(finding, key, dictionary)
-    else:
-        for key in dictionary:
-            iterate_through_dictionary(dictionary[key], finding, key, depth -1)
+
+########################################
+# File read/write functions
+########################################
 
 def load_from_json(keyword, var):
-    filename = 'json/aws_' + keyword + '_' + var + '.json'
+    filename = 'json/aws_' + keyword + '_' + var + '.js'
     with open(filename) as f:
-        return json.load(f)
+        json_payload = f.readlines()
+        json_payload.pop(0)
+        json_payload.pop()
+        json_payload = ''.join(json_payload)
+        return json.loads(json_payload)
 
-def manage_dictionary(dictionary, key, init, callback=None):
-    if not str(key) in dictionary:
-        dictionary[str(key)] = init
-        manage_dictionary(dictionary, key, init)
-        if callback:
-            callback(dictionary[key])
-    return dictionary
-
-def save_json_to_file(json_blob, keyword, force_write):
-    save_to_file(json_blob, keyword, force_write, False)
-
-def save_to_file(blob, keyword, force_write, raw=True):
+def open_file(keyword, force_write):
+    out_dir = 'json'
     print 'Saving ' + keyword + ' data...'
-    if not os.path.exists('json'):
-        os.makedirs('json')
-    filename = 'json/aws_' + keyword.lower().replace(' ','_') + '.json'
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
+    filename = out_dir + '/aws_' + keyword.lower().replace(' ','_') + '.js'
     if not os.path.isfile(filename) or force_write:
-        with open(filename, 'wt') as f:
-            print 'Success: saved data to ' + filename
-            if raw:
-                print >>f, json.dumps(blob, indent=4, separators=(',', ': '), sort_keys=True)
-            else:
-                print >>f, blob
+        return open(filename, 'wt')
     else:
         print 'Error: ' + filename + ' already exists.'
+        return None
+
+def save_to_file(blob, keyword, force_write, columns_in_report=2, raw=True):
+    with open_file(keyword, force_write) as f:
+        keyword = write_data_to_file(f, blob, keyword, force_write, columns_in_report, raw)
+
+def save_violations_to_file(json_blob, keyword, force_write):
+    with open_file(keyword, force_write) as f:
+        keyword = write_data_to_file(f, json_blob, keyword, force_write, 1, False)
+        print >>f, 'highlight_violations(%s_data);' % (keyword)
+
+def write_data_to_file(f, blob, keyword, force_write, columns_in_report, raw):
+    keyword = keyword.lower().replace(' ','_')[:-1]
+    print >>f, keyword + '_data ='
+    print >>f, '%s' % json.dumps(blob, indent=4, separators=(',', ': '), sort_keys=True) if raw else blob
+    print >>f, 'load_aws_config_from_json(%s_data, \'%s\', %d);' % (keyword, keyword, columns_in_report)
+    return keyword
+
+
+########################################
+# Status update functions
+########################################
 
 def init_status(items):
     if items:

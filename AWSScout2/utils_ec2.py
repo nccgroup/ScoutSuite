@@ -13,7 +13,7 @@ from AWSScout2.protocols_dict import *
 def analyze_ec2_config(instances, security_groups, network_acls, force_write):
     print 'Analyzing EC2 data...'
     ec2_config = {"instances": instances, "security_groups": security_groups, "network_acls": network_acls}
-    analyze_config_new(ec2_finding_dictionary, ec2_config, 'EC2 violations', force_write)
+    analyze_config(ec2_finding_dictionary, ec2_config, 'EC2 violations', force_write)
 
 def get_instances_info(ec2, region):
     instances = {}
