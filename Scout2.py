@@ -16,10 +16,6 @@ import argparse
 import os
 import traceback
 
-# Set two environment variables as required by Boto
-#os.environ["AWS_ACCESS_KEY_ID"] = 'XXXXX'
-#os.environ["AWS_SECRET_ACCESS_KEY"] = 'XXXXX'
-
 
 ########################################
 ##### Main
