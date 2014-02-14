@@ -93,7 +93,8 @@ def main(args):
                     try:
                         ec2_connection = boto.ec2.connect_to_region(region.name, aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
                         vpc_connection = boto.vpc.connect_to_region(aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token, region_name = region.name)
-                        if region.name != 'us-gov-west-1' or args.fetch_ec2_gov:
+                        # h4ck -- skip china north region as it hangs when requesting instances (https://github.com/boto/boto/issues/2083)
+                        if (region.name != 'us-gov-west-1' or args.fetch_ec2_gov) and (region.name != 'cn-north-1'):
                             print 'Fetching EC2 security groups data for region %s...' % region.name
                             manage_dictionary(security_groups, region.name, {})
                             security_groups[region.name].update(get_security_groups_info(ec2_connection, region.name))
