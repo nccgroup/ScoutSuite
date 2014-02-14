@@ -83,8 +83,10 @@ def fetch_sts_credentials(key_id, secret, mfa_serial, mfa_code):
 # File read/write functions
 ########################################
 
+AWSCONFIG_DIR = 'inc-awsconfig'
+
 def load_from_json(keyword, var):
-    filename = 'json/aws_' + keyword + '_' + var + '.js'
+    filename = AWSCONFIG_DIR + '/aws_' + keyword + '_' + var + '.js'
     with open(filename) as f:
         json_payload = f.readlines()
         json_payload.pop(0)
@@ -93,7 +95,7 @@ def load_from_json(keyword, var):
         return json.loads(json_payload)
 
 def open_file(keyword, force_write):
-    out_dir = 'json'
+    out_dir = AWSCONFIG_DIR
     print 'Saving ' + keyword + ' data...'
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
