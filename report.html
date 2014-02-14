@@ -20,9 +20,6 @@
     .finding-warning {
         color: orange;
     }
-    .finding-hidden {
-        display: none;
-    }
     ul.no-bullet {
         list-style-type: none;
     }
@@ -84,7 +81,6 @@
                     var id = vkey + '-' + violations[i]['items'][j];
                     var style = "finding-" + violations[i]['level'];
                     $('[id$="' + id + '"]').addClass(style);
-                    $('[id$="' + id + '"]').show();
                     violations_array[vkey].push(violations[i]['macro_items'][j]);
                 }
             }
@@ -375,6 +371,13 @@
             }
             r += '</table>';
             return r;
+        });
+        Handlebars.registerHelper('ifPasswordAndKey', function(logins, access_keys, block) {
+            if ((typeof logins != 'undefined' && logins != '') && (typeof access_keys != 'undefined' && access_keys != '')) {
+                return block.fn(this);
+            } else {
+                return block.inverse(this);
+            }
         });
 
         <!-- Debug -->
@@ -774,12 +777,15 @@
               <p class="list-group-item-text">Access Keys: {{{has_access_keys? access_keys}}}</p>
               <ul>
               {{#each access_keys}}
-                <li class="list-group-item-text"><span id="iam_users-access_{{{status}}}-key-no-rotation-{{{access_key_id}}}"> {{{access_key_id}}}, {{{status}}}, created on {{{create_date}}}</span></li>
+                <li class="list-group-item-text"><span id="iam_user-{{status}}-key-no-rotation-{{access_key_id}}">{{access_key_id}}, {{status}}, created on {{create_date}}</span></li>
               {{/each}}
               </ul>
-              <p class="list-group-item-text"><span class="finding-hidden" id="iam_user-password-and-key-{{{user_name}}}"><i class="glyphicon glyphicon-warning-sign"></i> Review the need for password-based and key-based authentication</span></p>
+              {{#ifPasswordAndKey logins access_keys}}
+                <p class="list-group-item-text">
+                <span id="iam_user-password-and-key-{{{user_name}}}"><i class="glyphicon glyphicon-warning-sign"></i> Review the need for password-based and key-based authentication</span>
+                </p>
+              {{/ifPasswordAndKey}}
             </div>
-
             <div class="list-group-item">
               <h4 class="list-group-item-heading">Groups</h4>
               <ul>
