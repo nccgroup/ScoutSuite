@@ -87,7 +87,6 @@
                   <li><a href="javascript:list_generic('iam_permission')">Permissions</a></li>
                   <li><a href="javascript:list_generic('iam_role')">Roles</a></li>
                   <li><a href="javascript:list_generic('iam_user')">Users</a></li>
-                  <li><a href="#">Password policy</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
@@ -112,9 +111,7 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Help<b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="#">About AWS Scout2</a></li>
-                <li><a href="#">Security findings</a></li>
-                <li><a href="#">Related documentation</a></li>
+                <li><a href="javascript:about()">About AWS Scout2</a></li>
               </ul>
             </li>
           </ul>
@@ -127,6 +124,12 @@
     <div class="container theme-showcase" id="container-user">
 
       <div class="page-header">
+      </div>
+
+      <div class="row" id="please_wait-row">
+        <div class="col-sm-12">
+          Please wait, loading AWS configuration data takes a while and may cause your browser to be unresponsive.
+        </div>
       </div>
 
       <!-- Template for EC2 instances -->
@@ -540,6 +543,27 @@
         </div><!-- /.col-sm-8 -->
       </div><!-- /.row -->
 
+      <div class="row" id="about-row">
+        <div class="list-group">
+          <div class="row list-group-item active">
+            About
+          </div>
+          <div class="row list-group-item">
+            <p>&nbsp;</p>
+            <p>AWS Scout2 is an open-source security tool release by <a href="https://www.isecpartners.com" target="_blank">iSEC Partners</a>.</p>
+            <p>&nbsp;</p>
+            <p>Use the top navigation bar to review the configuration of the
+            supported AWS services. For more information about Scout2, please
+            check out the project's page on Github:
+            <a href="https://github.com/iSECPartners/Scout2">https://github.com/iSECPartners/Scout2</a>.
+            The AWS documentation is available at
+            <a href="https://aws.amazon.com/documentation">https://aws.amazon.com/documentation</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+
     </div> <!-- /container -->
 
     <!-- Load EC2 data -->
@@ -559,10 +583,11 @@
     <script src="inc-awsconfig/aws_s3_buckets.js"></script>
     <script src="inc-awsconfig/aws_s3_violations.js"></script>
 
-    <!-- Violations -->
-
     <!-- Bootstrap core JavaScript, placed at the end of the document so the pages load faster -->
     <script src="inc-bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Hide the please wait message -->
+    <script>$('#please_wait-row').hide();</script>
 
   </body>
 </html>

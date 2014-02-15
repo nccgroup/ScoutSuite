@@ -80,6 +80,10 @@ function toggleVisibility(id) {
 }
 
 // Browsing functions
+function about() {
+    hideAll();
+    $('#about-row').show();
+}
 function browseTo(keyword, id) {
     hideAll();
     showRow(keyword);
