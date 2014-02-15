@@ -9,7 +9,7 @@ manual inspection and highlights high-risk areas automatically. Rather than
 pouring through dozens of pages on the web, Scout2 supplies a clear view of the
 attack surface automatically.
 
-** Note: ** Scout2 is still under development. It is currently usable, but a
+**Note:** Scout2 is still under development. It is currently usable, but a
 number of features may change. As such, please bear with us as we find time to
 work on the tool. Feel free to report a bug with details, request a new feature,
 or send a pull request.
