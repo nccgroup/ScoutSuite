@@ -1,0 +1,33 @@
+{
+    "_ARG_1_-_ARG_2_-0.0.0.0/0": {
+        "description": "_ARG_0_",
+        "entity": "region.vpc.security_group",
+        "callback": "checkInternetAccessiblePort",
+        "callback_args": ["blacklist", "_ARG_1_", "_ARG_2_"],
+        "targets": [
+            ["SSH open to Internet", "TCP", "22"],
+            ["RDP open to Internet", "TCP", "3389"],
+            ["MsSQL Open to Internet", "TCP", "1433"],
+            ["MySQL Open to Internet", "TCP", "3306"]
+        ],
+        "level": "danger"
+    },
+    "_ARG_1_-_ARG_2_": {
+        "description": "_ARG_0_",
+        "entity": "region.vpc.security_group",
+        "callback": "checkOpenPort",
+        "callback_args": ["_ARG_1_", "_ARG_2_"],
+        "targets": [
+            ["FTP (plaintext)", "TCP", "21"],
+            ["Telnet (plaintext)", "TCP", "23"]
+        ],
+        "level": "danger"
+    },
+    "public-ports": {
+        "description": "Non-HTTP ports open to Internet",
+        "entity": "region.vpc.security_group",
+        "callback": "checkInternetAccessiblePort",
+        "callback_args": ["whitelist", ["HTTP(S)", "TCP", ["80", "443", "22", "3389", "1433", "3306"]]],
+        "level": "warning"
+    }
+}

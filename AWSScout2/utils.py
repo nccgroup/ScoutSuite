@@ -85,6 +85,10 @@ def fetch_sts_credentials(key_id, secret, mfa_serial, mfa_code):
 
 AWSCONFIG_DIR = 'inc-awsconfig'
 
+def load_findings(filename):
+    with open(filename) as f:
+        return json.load(f)
+
 def load_from_json(keyword, var):
     filename = AWSCONFIG_DIR + '/aws_' + keyword + '_' + var + '.js'
     with open(filename) as f:

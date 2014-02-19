@@ -1,0 +1,23 @@
+{
+    "world-write": {
+        "description": "Bucket world-writable",
+        "entity": "bucket",
+        "callback": "checkWorldWritableBucket",
+        "callback_args": "",
+        "level": "danger"
+    },
+    "world-write_acp": {
+        "description": "Bucket's permissions world-writable",
+        "entity": "bucket",
+        "callback": "checkWorldWritableBucketPerms",
+        "callback_args": "",
+        "level": "danger"
+    },
+    "world-read": {
+        "description": "Bucket world-readable",
+        "entity": "bucket",
+        "callback": "checkWorldReadableBucket",
+        "callback_args": "",
+        "level": "warning"
+    }
+}

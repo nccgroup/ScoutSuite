@@ -50,8 +50,8 @@ To run Scout2 when MFA-Protected API Access is configured, run the following com
 
 Scout2 will generate a number of JavaScript files that contain AWS configuration
 data stored as JSON payloads. Scout2 will also generate additional JavaScript
-files that contain potential security flaws and best practices violations will.
-To review the configuration, simply open the report.html file in your browser.
+files that contain potential security flaws and best practices violations. To
+review the configuration, simply open the report.html file in your browser.
 
 ## Advanced documentation
 

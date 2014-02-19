@@ -2,7 +2,7 @@
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
-from AWSScout2.findings_ec2 import *
+from AWSScout2.findings import *
 from AWSScout2.protocols_dict import *
 
 

@@ -2,7 +2,7 @@
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
-from AWSScout2.findings_s3 import *
+from AWSScout2.findings import *
 
 
 ########################################

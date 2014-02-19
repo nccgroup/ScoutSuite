@@ -14,9 +14,13 @@ class Ec2Finding(Finding):
         Finding.__init__(self, description, entity, callback, callback_args, level)
 
     def checkInternetAccessiblePort(self, key, obj):
-        protocol = self.callback_args[0][1][0].lower()
         method = self.callback_args[0][0]
-        port = self.callback_args[0][1][1]
+        if method == 'whitelist':
+            protocol = self.callback_args[0][1][1].lower()
+            port = self.callback_args[0][1][2]
+        else:
+            protocol = self.callback_args[0][1].lower()
+            port = self.callback_args[0][2]
         if protocol in obj['protocols']:
             for rule in obj['protocols'][protocol]['rules']:
                 for grant in rule['grants']:
