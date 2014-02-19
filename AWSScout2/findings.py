@@ -56,7 +56,6 @@ def set_argument_values(string, target):
         res = re.match(r'(_ARG_(\w+)_)', w)
         if res:
             i = int(res.groups()[1])
-            print "%s => %s" % (res.groups()[0] , target[i])
             string = string.replace(res.groups()[0], target[i])
     return string
 
