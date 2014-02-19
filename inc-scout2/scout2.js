@@ -65,8 +65,9 @@ function toggleDetails(keyword, item) {
     $(id).toggle();
 }
 function updateNavbar(active) {
-    $('[id^="navbar-item-"]').removeClass('active');
-    $('#navbar-item-'+active).addClass('active');
+    prefix = active.split('_')[0];
+    $('[id*="_dropdown"]').removeClass('active-dropdown');
+    $('#' + prefix + '_dropdown').addClass('active-dropdown');
 }
 function toggleVisibility(id) {
     id1 = '#' + id;

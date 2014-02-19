@@ -27,6 +27,9 @@
         border: 0 !important;
         padding-left: 25px;
     }
+    .active-dropdown {
+        color: #428bca;
+    }
     </style>
 
     <!-- Bootstrap core CSS -->
@@ -66,7 +69,7 @@
           <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="dropdown">
-              <a href="javascript:show_ec2()" class="dropdown-toggle" data-toggle="dropdown">EC2<b class="caret"></b></a>
+              <a href="javascript:show_ec2()" class="dropdown-toggle" data-toggle="dropdown"><span id="ec2_dropdown">EC2</span><b class="caret"></b></a>
               <ul class="dropdown-menu" id="ec2_violations-list">
                 <script id="ec2_violation-list-template" type="text/x-handlebars-template">
                   <li><a href="javascript:list_generic('ec2_instance')">Instances</a></li>
@@ -80,7 +83,7 @@
                 </script>
               </ul>
             <li class="dropdown">
-              <a href="javascript:show_iam()" class="dropdown-toggle" data-toggle="dropdown">IAM<b class="caret"></b></a>
+              <a href="javascript:show_iam()" class="dropdown-toggle" data-toggle="dropdown"><span id="iam_dropdown">IAM</span><b class="caret"></b></a>
               <ul class="dropdown-menu" id="iam_violations-list">
                 <script id="iam_violation-list-template" type="text/x-handlebars-template">
                   <li><a href="javascript:list_generic('iam_group')">Groups</a></li>
@@ -96,7 +99,7 @@
               </ul>
             </li>
             <li class="dropdown">
-              <a href="javascript:show_s3()" class="dropdown-toggle" data-toggle="dropdown">S3<b class="caret"></b></a>
+              <a href="javascript:show_s3()" class="dropdown-toggle" data-toggle="dropdown"><span id="s3_dropdown">S3</span><b class="caret"></b></a>
               <ul class="dropdown-menu" id="s3_violations-list">
                 <script id="s3_violation-list-template" type="text/x-handlebars-template">
                   <li><a href="javascript:list_generic('s3_bucket')">Buckets</a></li>
