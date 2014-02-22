@@ -131,21 +131,27 @@ def write_data_to_file(f, blob, keyword, force_write, columns_in_report, raw):
 # Status update functions
 ########################################
 
-def init_status(items):
+def init_status(items, keyword=None):
+    count = 0
+    total = 0
     if items:
-        return 0, len(items)
-    else:
-        return 0, None
+        total = len(items)
+    update_status(0, total, keyword)
+    return count, total
 
-def update_status(current, total):
-    current = current + 1
-    if total:
-        sys.stdout.write("\r %d/%d" % (current, total))
+def update_status(current, total, keyword=None):
+    if keyword:
+        keyword = keyword + ':'
     else:
-        sys.stdout.write("\r %d" % current)
+        keyword = ''
+    if total != 0:
+        sys.stdout.write("\r%s %d/%d" % (keyword , current, total))
+    else:
+        sys.stdout.write("\r%s %d" % (keyword, current))
     sys.stdout.flush()
-    return current
+    #lol TODO h4ck REMOVEME
+    return current + 1
 
-def close_status(current, total):
-    if current != 0:
-        sys.stdout.write('\n')
+def close_status(current, total, keyword=None):
+    update_status(current, total, keyword)
+    sys.stdout.write('\n')
