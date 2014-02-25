@@ -33,6 +33,20 @@ class Ec2Finding(Finding):
                                 self.items.append(obj['id'])
                                 self.macro_items.append(obj['id'])
 
+    def checkFirstRule(self, key, unsorted_rules):
+        sorted_rules = sorted(unsorted_rules, key=lambda k: k['rule_number'])
+        first_rule = sorted_rules[0]
+        if first_rule['port_range'] == '1-65535' and first_rule['cidr_block'] == '0.0.0.0/0':
+                self.items.append(key)
+
+    def checkNetworkACLs(self, key, obj):
+        if 'network_acls' in obj:
+            field_name = self.callback_args[0] + '_network_acls'
+            for acl in obj['network_acls']:
+                self.checkFirstRule(key, obj['network_acls'][acl][field_name])
+        else:
+            self.items.append(key)
+
     def checkOpenPort(self, key, obj):
         protocol = self.callback_args[0][0].lower()
         port = self.callback_args[0][1]

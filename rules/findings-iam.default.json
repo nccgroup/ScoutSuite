@@ -1,28 +1,28 @@
 {
     "Active-key-no-rotation": {
         "description": "Lack of key rotation",
-        "entity": "user",
+        "entity": "users",
         "callback": "checkAccessKeys",
         "callback_args": "Active",
         "level": "danger"
     },
     "Inactive-key-no-rotation": {
         "description": "Lack of key rotation",
-        "entity": "user",
+        "entity": "users",
         "callback": "checkAccessKeys",
         "callback_args": "Inactive",
         "level": "warning"
     },
     "no-mfa": {
         "description": "Lack of MFA",
-        "entity": "user",
+        "entity": "users",
         "callback": "lacksMFA",
         "callback_args": "",
         "level": "danger"
     },
     "password-and-key": {
         "description": "Password and keys enabled",
-        "entity": "user",
+        "entity": "users",
         "callback": "passwordAndKeyEnabled",
         "callback_args": "",
         "level": "warning"

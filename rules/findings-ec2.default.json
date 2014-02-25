@@ -1,7 +1,7 @@
 {
     "_ARG_1_-_ARG_2_-0.0.0.0/0": {
         "description": "_ARG_0_",
-        "entity": "region.vpc.security_group",
+        "entity": "regions.vpcs.security_groups",
         "callback": "checkInternetAccessiblePort",
         "callback_args": ["blacklist", "_ARG_1_", "_ARG_2_"],
         "targets": [
@@ -14,7 +14,7 @@
     },
     "_ARG_1_-_ARG_2_": {
         "description": "_ARG_0_",
-        "entity": "region.vpc.security_group",
+        "entity": "regions.vpcs.security_groups",
         "callback": "checkOpenPort",
         "callback_args": ["_ARG_1_", "_ARG_2_"],
         "targets": [
@@ -25,9 +25,24 @@
     },
     "public-ports": {
         "description": "Non-HTTP ports open to Internet",
-        "entity": "region.vpc.security_group",
+        "entity": "regions.vpcs.security_groups",
         "callback": "checkInternetAccessiblePort",
         "callback_args": ["whitelist", ["HTTP(S)", "TCP", ["80", "443", "22", "3389", "1433", "3306"]]],
         "level": "warning"
+    },
+    "lack-of-inbound-network-acls": {
+        "description": "Lack of network ACLs (Inbound)",
+        "entity": "regions.vpcs",
+        "callback": "checkNetworkACLs",
+        "callback_args": "inbound",
+        "level": "warning"
+    },
+    "lack-of-outbound-network-acls": {
+        "description": "Lack of network ACLs (Outbound)",
+        "entity": "regions.vpcs",
+        "callback": "checkNetworkACLs",
+        "callback_args": "outbound",
+        "level": "warning"
     }
+
 }

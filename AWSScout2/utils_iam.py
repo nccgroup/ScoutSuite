@@ -13,22 +13,19 @@ import urllib
 ##### IAM functions
 ########################################
 
-def analyze_iam_config(groups, permissions, roles, users, force_write):
+def analyze_iam_config(iam_info, force_write):
     sys.stdout.write('Analyzing IAM data...\n')
-    iam_config = {"groups": groups, "permissions": permissions, "roles": roles, "users": users}
-    analyze_config(iam_finding_dictionary, iam_config, 'IAM violations', force_write)
+    analyze_config(iam_finding_dictionary, iam_info, 'IAM', force_write)
 
-def get_groups_info(iam, permissions):
-    groups_info = {}
-    groups = handle_truncated_responses(iam.get_all_groups, ['list_groups_response', 'list_groups_result'], 'groups')
+def get_groups_info(iam_connection, iam_info):
+    groups = handle_truncated_responses(iam_connection.get_all_groups, ['list_groups_response', 'list_groups_result'], 'groups')
     count, total = init_status(groups)
     for group in groups:
+        group['users'] = get_group_users(iam_connection, group.group_name);
+        group['policies'] = get_policies(iam_connection, iam_info, 'group', group.group_name)
+        iam_info['groups'][group.group_name] = group
         count = update_status(count, total)
-        group['users'] = get_group_users(iam, group.group_name);
-        group['policies'], permissions = get_policies(iam, permissions, 'group', group.group_name)
-        groups_info[group.group_name] = group
     close_status(count, total)
-    return groups_info, permissions
 
 def get_group_users(iam, group_name):
     users = []
@@ -36,6 +33,21 @@ def get_group_users(iam, group_name):
     for user in fetched_users:
         users.append(user.user_name)
     return users
+
+def get_iam_info(key_id, secret, session_token):
+    iam_info = {}
+    manage_dictionary(iam_info, 'groups', {})
+    manage_dictionary(iam_info, 'permissions', {})
+    manage_dictionary(iam_info, 'roles', {})
+    manage_dictionary(iam_info, 'users', {})
+    iam_connection = boto.connect_iam(aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
+    print 'Fetching IAM users data...'
+    get_users_info(iam_connection, iam_info)
+    print 'Fetching IAM groups data...'
+    get_groups_info(iam_connection, iam_info)
+    print 'Fetching IAM roles data...'
+    get_roles_info(iam_connection, iam_info)
+    return iam_info
 
 def get_permissions(policy_document, permissions, keyword, name, policy_name):
     manage_dictionary(permissions, 'Action', {})
@@ -45,7 +57,6 @@ def get_permissions(policy_document, permissions, keyword, name, policy_name):
         effect = str(statement['Effect'])
         action_string = 'Action' if 'Action' in statement else 'NotAction'
         parse_actions(permissions[action_string], statement[action_string], statement['Resource'], effect, keyword, name, policy_name)
-    return permissions
 
 def parse_actions(permissions, actions, resources, effect, keyword, name, policy_name):
     if type(actions) == list:
@@ -56,7 +67,6 @@ def parse_actions(permissions, actions, resources, effect, keyword, name, policy
 
 def parse_action(permissions, action, resources, effect, keyword, name, policy_name):
     manage_dictionary(permissions, action, {})
-#    manage_dictionary(permissions[action], effect, {})
     parse_resources(permissions[action], resources, effect, keyword, name, policy_name)
 
 def parse_resources(permission, resources, effect, keyword, name, policy_name):
@@ -72,18 +82,18 @@ def parse_resource(permission, resource, effect, keyword, name, policy_name):
     manage_dictionary(permission[keyword][name], effect, [])
     permission[keyword][name][effect].append(resource)
 
-def get_policies(iam, permissions, keyword, name):
+def get_policies(iam_connection, iam_info, keyword, name):
     fetched_policies = []
     if keyword == 'role':
-        m1 = getattr(iam, 'list_role_policies', None)
+        m1 = getattr(iam_connection, 'list_role_policies', None)
     else:
-        m1 = getattr(iam, 'get_all_' + keyword + '_policies', None)
+        m1 = getattr(iam_connection, 'get_all_' + keyword + '_policies', None)
     if m1:
         policy_names = m1(name)
     else:
-        return fetched_policies, permissions
+        print 'Unknown error' # fetched_policies, permissions
     policy_names = policy_names['list_' + keyword + '_policies_response']['list_' + keyword + '_policies_result']['policy_names']
-    get_policy_method = getattr(iam, 'get_' + keyword + '_policy')
+    get_policy_method = getattr(iam_connection, 'get_' + keyword + '_policy')
     for policy_name in policy_names:
         r = get_policy_method(name, policy_name)
         r = r['get_'+keyword+'_policy_response']['get_'+keyword+'_policy_result']
@@ -91,42 +101,39 @@ def get_policies(iam, permissions, keyword, name):
         pdetails['policy_name'] = policy_name
         pdetails['policy_document'] = r.policy_document
         fetched_policies.append(pdetails)
-        permissions = get_permissions(pdetails['policy_document'], permissions, keyword + 's', name, pdetails['policy_name'])
-    return fetched_policies, permissions
+        get_permissions(pdetails['policy_document'], iam_info['permissions'], keyword + 's', name, pdetails['policy_name'])
+    return fetched_policies
 
 
-def get_roles_info(iam, permissions):
-    roles_info = {}
-    roles = handle_truncated_responses(iam.list_roles, ['list_roles_response', 'list_roles_result'], 'roles')
+def get_roles_info(iam_connection, iam_info):
+    roles = handle_truncated_responses(iam_connection.list_roles, ['list_roles_response', 'list_roles_result'], 'roles')
     count, total = init_status(roles)
     for role in roles:
+        role['policies'] = get_policies(iam_connection, iam_info, 'role', role.role_name)
+        iam_info['roles'][role.role_name] = role
         count = update_status(count, total)
-        role['policies'], permissions = get_policies(iam, permissions, 'role', role.role_name)
-        roles_info[role.role_name] = role
     close_status(count, total)
-    return roles_info, permissions
 
-def get_users_info(iam, permissions):
-    users_info = {}
-    users = handle_truncated_responses(iam.get_all_users, ['list_users_response', 'list_users_result'], 'users')
+def get_users_info(iam_connection, iam_info):
+    users = handle_truncated_responses(iam_connection.get_all_users, ['list_users_response', 'list_users_result'], 'users')
     count, total = init_status(users)
     for user in users:
-        count = update_status(count, total)
-        user['policies'], permissions = get_policies(iam, permissions, 'user', user.user_name)
-        groups = iam.get_groups_for_user(user['user_name'])
+        user['policies'] = get_policies(iam_connection, iam_info, 'user', user.user_name)
+        groups = iam_connection.get_groups_for_user(user['user_name'])
         user['groups'] = groups.list_groups_for_user_response.list_groups_for_user_result.groups
         try:
-            logins = iam.get_login_profiles(user['user_name'])
+            logins = iam_connection.get_login_profiles(user['user_name'])
             user['logins'] = logins.get_login_profile_response.get_login_profile_result.login_profile
         except Exception, e:
             pass
-        access_keys = iam.get_all_access_keys(user['user_name'])
+        access_keys = iam_connection.get_all_access_keys(user['user_name'])
         user['access_keys'] = access_keys.list_access_keys_response.list_access_keys_result.access_key_metadata
-        mfa_devices = iam.get_all_mfa_devices(user['user_name'])
+        mfa_devices = iam_connection.get_all_mfa_devices(user['user_name'])
         user['mfa_devices'] = mfa_devices.list_mfa_devices_response.list_mfa_devices_result.mfa_devices
-        users_info[user['user_name']] = user
+        user['user_name']
+        iam_info['users'][user['user_name']] = user
+        count = update_status(count, total)
     close_status(count, total)
-    return users_info, permissions
 
 def handle_truncated_responses(callback, result_path, items_name):
     marker_value = None

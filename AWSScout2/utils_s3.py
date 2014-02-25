@@ -9,10 +9,9 @@ from AWSScout2.findings import *
 ##### S3 functions
 ########################################
 
-def analyze_s3_config(buckets, force_write):
+def analyze_s3_config(s3_info, force_write):
     print 'Analyzing S3 data...'
-    s3_config = {"buckets": buckets}
-    analyze_config(s3_finding_dictionary, s3_config, 'S3 violations', force_write)
+    analyze_config(s3_finding_dictionary, s3_info, 'S3', force_write)
 
 def init_s3_permissions(grant):
     grant['read'] = False
@@ -56,12 +55,11 @@ def get_s3_bucket_logging(bucket):
         return 'Disabled'
 
 # List all available buckets
-def get_s3_buckets(s3):
-    s3_buckets = {}
-    buckets = s3.get_all_buckets()
+def get_s3_buckets(s3_connection, s3_info):
+    manage_dictionary(s3_info, 'buckets', {})
+    buckets = s3_connection.get_all_buckets()
     count, total = init_status(buckets)
     for b in buckets:
-        count = update_status(count, total)
         bucket = {}
         acp = b.get_acl()
         bucket['grants'] = {}
@@ -78,6 +76,13 @@ def get_s3_buckets(s3):
         bucket['region'] = b.get_location()
         bucket['logging'] = get_s3_bucket_logging(b)
         bucket['versioning'] = get_s3_bucket_versioning(b)
-        s3_buckets[b.name] = bucket
+        s3_info['buckets'][b.name] = bucket
+        count = update_status(count, total)
     close_status(count, total)
-    return s3_buckets
+
+def get_s3_info(key_id, secret, session_token):
+    s3_info = {}
+    s3_connection = boto.connect_s3(aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
+    print 'Fetching S3 buckets data...'
+    get_s3_buckets(s3_connection, s3_info)
+    return s3_info

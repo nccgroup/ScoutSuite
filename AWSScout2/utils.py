@@ -4,9 +4,11 @@
 import boto
 
 # Import other third-party packages
+import copy
 import json
 import os
 import sys
+import traceback
 import urllib2
 
 
@@ -22,25 +24,43 @@ def manage_dictionary(dictionary, key, init, callback=None):
             callback(dictionary[key])
     return dictionary
 
+class Scout2Encoder(json.JSONEncoder):
+    def default(self, o):
+        return o.__dict__
+
 
 ########################################
 # Violations search functions
 ########################################
 
 def analyze_config(finding_dictionary, config, keyword, force_write):
-    for key in finding_dictionary:
-        finding = finding_dictionary[key]
-        entity_path = finding.entity.split('.')
-        entity_depth = len(entity_path)
-        iterate_through_dictionary(config[entity_path[-1] + 's'], finding, None, entity_depth)
-    save_violations_to_file(finding_dictionary.to_JSON(), keyword, force_write)
+    try:
+        for key in finding_dictionary:
+            finding = finding_dictionary[key]
+            entity_path = finding.entity.split('.')
+            process_finding(config, finding)
+        config['violations'] = finding_dictionary
+    except:
+        print 'Exception:\n %s' % traceback.format_exc()
+        pass
+    save_config_to_file(config, keyword, force_write)
 
-def iterate_through_dictionary(dictionary, finding, key, depth):
-    if depth == 0:
-        finding.callback(finding, key, dictionary)
+def process_entities(config, finding, entity_path):
+    if len(entity_path) == 1:
+        entities = entity_path.pop(0)
+        if entities in config:
+            for key in config[entities]:
+                finding.callback(finding, key, config[entities][key])
+    elif len(entity_path) != 0:
+        entities = entity_path.pop(0)
+        for key in config[entities]:
+            process_entities(config[entities][key], finding, copy.deepcopy(entity_path))
     else:
-        for key in dictionary:
-            iterate_through_dictionary(dictionary[key], finding, key, depth -1)
+        print 'Unknown error'
+
+def process_finding(config, finding):
+    entity_path = finding.entity.split('.')
+    process_entities(config, finding, entity_path)
 
 
 ########################################
@@ -85,16 +105,25 @@ def fetch_sts_credentials(key_id, secret, mfa_serial, mfa_code):
 
 AWSCONFIG_DIR = 'inc-awsconfig'
 
+def load_info_from_json(aws_service):
+    filename = AWSCONFIG_DIR + '/' + aws_service + '_config.js'
+    with open(filename) as f:
+        json_payload = f.readlines()
+        json_payload.pop(0)
+#        json_payload.pop()
+        json_payload = ''.join(json_payload)
+        return json.loads(json_payload)
+
 def load_findings(filename):
     with open(filename) as f:
         return json.load(f)
 
 def load_from_json(keyword, var):
-    filename = AWSCONFIG_DIR + '/aws_' + keyword + '_' + var + '.js'
+    filename = AWSCONFIG_DIR + '/' + keyword + '_config.js'
     with open(filename) as f:
         json_payload = f.readlines()
         json_payload.pop(0)
-        json_payload.pop()
+#        json_payload.pop()
         json_payload = ''.join(json_payload)
         return json.loads(json_payload)
 
@@ -103,7 +132,7 @@ def open_file(keyword, force_write):
     print 'Saving ' + keyword + ' data...'
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
-    filename = out_dir + '/aws_' + keyword.lower().replace(' ','_') + '.js'
+    filename = out_dir + '/' + keyword.lower().replace(' ','_') + '_config.js'
     if not os.path.isfile(filename) or force_write:
         return open(filename, 'wt')
     else:
@@ -112,18 +141,18 @@ def open_file(keyword, force_write):
 
 def save_to_file(blob, keyword, force_write, columns_in_report=2, raw=True):
     with open_file(keyword, force_write) as f:
-        keyword = write_data_to_file(f, blob, keyword, force_write, columns_in_report, raw)
+        keyword = write_data_to_file(f, blob, keyword, force_write, columns_in_report)
 
-def save_violations_to_file(json_blob, keyword, force_write):
+def save_config_to_file(blob, keyword, force_write):
     with open_file(keyword, force_write) as f:
-        keyword = write_data_to_file(f, json_blob, keyword, force_write, 1, False)
-        print >>f, 'highlight_violations(%s_data);' % (keyword)
+        keyword = write_data_to_file(f, blob, keyword, force_write, 1)
+#        print >>f, 'highlight_violations(%s_data);' % (keyword)
 
-def write_data_to_file(f, blob, keyword, force_write, columns_in_report, raw):
-    keyword = keyword.lower().replace(' ','_')[:-1]
-    print >>f, keyword + '_data ='
-    print >>f, '%s' % json.dumps(blob, indent=4, separators=(',', ': '), sort_keys=True) if raw else blob
-    print >>f, 'load_aws_config_from_json(%s_data, \'%s\', %d);' % (keyword, keyword, columns_in_report)
+def write_data_to_file(f, blob, keyword, force_write, columns_in_report):
+    keyword = keyword.lower().replace(' ','_') # [:-1]
+    print >>f, keyword + '_info ='
+    print >>f, '%s' % json.dumps(blob, indent=4, separators=(',', ': '), sort_keys=True, cls=Scout2Encoder)
+#    print >>f, 'load_aws_config_from_json(%s_data, \'%s\', %d);' % (keyword, keyword, columns_in_report)
     return keyword
 
 

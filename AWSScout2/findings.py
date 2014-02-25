@@ -4,7 +4,6 @@
 from AWSScout2.finding_ec2 import *
 from AWSScout2.finding_iam import *
 from AWSScout2.finding_s3 import *
-from AWSScout2.finding_dictionary import *
 from AWSScout2.utils import *
 
 import copy
@@ -14,9 +13,9 @@ import re
 ########################################
 # Finding dictionaries
 ########################################
-iam_finding_dictionary = FindingDictionary()
-ec2_finding_dictionary = FindingDictionary()
-s3_finding_dictionary = FindingDictionary()
+iam_finding_dictionary = {}
+ec2_finding_dictionary = {}
+s3_finding_dictionary = {}
 
 
 ########################################

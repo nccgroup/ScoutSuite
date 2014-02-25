@@ -49,87 +49,34 @@ def main(args):
         key_id, secret, session_token = fetch_sts_credentials(key_id, secret, args.mfa_serial, args.mfa_code)
 
     ##### IAM
-    groups = {}
-    permissions = {}
-    roles = {}
-    users = {}
     if args.fetch_iam:
-        try:
-            if not args.fetch_local:
-                iam = boto.connect_iam(aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
-                print 'Fetching IAM users data...'
-                users, permissions = get_users_info(iam, permissions)
-                save_to_file(users, 'IAM users', args.force_write)
-                print 'Fetching IAM groups data...'
-                groups, permissions = get_groups_info(iam, permissions)
-                save_to_file(groups, 'IAM groups', args.force_write)
-                print 'Fetching IAM roles data...'
-                roles, permissions = get_roles_info(iam, permissions)
-                save_to_file(roles, 'IAM roles', args.force_write)
-                save_to_file(permissions, 'IAM permissions', args.force_write, columns_in_report = 1)
-            else:
-                groups = load_from_json('iam','groups')
-                permissions = load_from_json('iam','permissions')
-                roles = load_from_json('iam','roles')
-                users = load_from_json('iam','users')
-        except Exception, e:
-            print 'Exception:\n %s' % traceback.format_exc()
-            pass
-    analyze_iam_config(groups, permissions, roles, users, args.force_write)
-
+        # Fetch data from AWS or an existing local file
+        if not args.fetch_local:
+            iam_info = get_iam_info(key_id, secret, session_token)
+        else:
+            iam_info = load_info_from_json('iam')
+        # Analyze the EC2 config and save data to a local file
+        analyze_iam_config(iam_info, args.force_write)
 
     ##### EC2
-    instances = {}
-    security_groups = {}
-    network_acls = {}
     if args.fetch_ec2:
-        try:
-            if not args.fetch_local:
-                for region in boto.ec2.regions():
-                    try:
-                        ec2_connection = boto.ec2.connect_to_region(region.name, aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
-                        vpc_connection = boto.vpc.connect_to_region(aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token, region_name = region.name)
-                        # h4ck -- skip china north region as it hangs when requesting instances (https://github.com/boto/boto/issues/2083)
-                        if (region.name != 'us-gov-west-1' or args.fetch_ec2_gov) and (region.name != 'cn-north-1'):
-                            print 'Fetching EC2 security groups data for region %s...' % region.name
-                            manage_dictionary(security_groups, region.name, {})
-                            security_groups[region.name].update(get_security_groups_info(ec2_connection, region.name))
-                            print 'Fetching EC2 network ACLs data for region %s...' % region.name
-                            manage_dictionary(network_acls, region.name, {})
-                            network_acls[region.name].update(get_network_acls_info(vpc_connection))
-                            print 'Fetching EC2 instances data for region %s...' % region.name
-                            instances.update(get_instances_info(ec2_connection, region.name))
-                    except Exception, e:
-                        print 'Exception: Failed to fetch EC2 data for region %s\n %s' % (region.name, traceback.format_exc())
-                        pass
-                save_to_file(instances, 'EC2 instances', args.force_write)
-                save_to_file(security_groups, 'EC2 security groups', args.force_write)
-                save_to_file(network_acls, 'EC2 network ACLs', args.force_write)
-
-            else:
-                instances = load_from_json('ec2', 'instances')
-                security_groups = load_from_json('ec2', 'security_groups')
-        except Exception, e:
-            print 'Exception: \n %s' % traceback.format_exc()
-            pass
-    analyze_ec2_config(instances, security_groups, network_acls, args.force_write)
+        # Fetch data from AWS or an existing local file
+        if not args.fetch_local:
+            ec2_info = get_ec2_info(key_id, secret, session_token, args.fetch_ec2_gov)
+        else:
+            ec2_info = load_info_from_json('ec2')
+        # Analyze the EC2 config and save data to a local file
+        analyze_ec2_config(ec2_info, args.force_write)
 
 
     ##### S3
-    buckets = {}
     if args.fetch_s3:
-        try:
-            if not args.fetch_local:
-                s3_connection = boto.connect_s3(aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
-                print 'Fetching S3 buckets data...'
-                buckets.update(get_s3_buckets(s3_connection))
-                save_to_file(buckets, 'S3 buckets', args.force_write)
-            else:
-                buckets = load_from_json('s3', 'buckets')
-        except Exception, e:
-            print 'Exception: \n %s' % traceback.format_exc()
-            pass
-    analyze_s3_config(buckets, args.force_write)
+        if not args.fetch_local:
+            s3_info = get_s3_info(key_id, secret, session_token)
+        else:
+            s3_info = load_info_from_json('s3')
+        # Analyze the S3 config and save data to a local file
+        analyze_s3_config(s3_info, args.force_write)
 
 
 ########################################
