@@ -61,4 +61,4 @@ The following command will provide the list of available command line options:
 
 ## License
 
-GPLv2: See LICENSE.txt.
+GPLv2: See LICENSE.
