@@ -72,10 +72,14 @@ def get_s3_buckets(s3_connection, s3_info):
                 grantee_name = grant.display_name
             manage_dictionary(bucket['grants'], grantee_name, {}, init_s3_permissions)
             set_s3_permission(bucket['grants'][grantee_name], grant.permission)
+            # h4ck : data redundancy because I can't call ../@key in Handlebars
+            bucket['grants'][grantee_name]['name'] = grantee_name
         bucket['creation_date'] = b.creation_date
         bucket['region'] = b.get_location()
         bucket['logging'] = get_s3_bucket_logging(b)
         bucket['versioning'] = get_s3_bucket_versioning(b)
+        # h4ck : data redundancy because I can't call ../@key in Handlebars
+        bucket['name'] = b.name
         s3_info['buckets'][b.name] = bucket
         count = update_status(count, total)
     close_status(count, total)

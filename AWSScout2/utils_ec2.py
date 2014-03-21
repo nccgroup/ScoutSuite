@@ -23,14 +23,16 @@ def get_ec2_info(key_id, secret, session_token, fetch_ec2_gov):
     ec2_info = {}
     ec2_info['regions'] = {}
     for region in boto.ec2.regions():
-        manage_dictionary(ec2_info['regions'], region.name, {})
-        manage_dictionary(ec2_info['regions'][region.name], 'vpcs', {})
         try:
             # h4ck -- skip china north region as it hangs when requesting instances (https://github.com/boto/boto/issues/2083)
             if (region.name != 'us-gov-west-1' or fetch_ec2_gov) and (region.name != 'cn-north-1'):
+                manage_dictionary(ec2_info['regions'], region.name, {})
+                # h4ck : data redundancy because I can't call ../@key in Handlebars
+                ec2_info['regions'][region.name]['name'] = region.name
                 ec2_connection = boto.ec2.connect_to_region(region.name, aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
                 vpc_connection = boto.vpc.connect_to_region(region.name, aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
                 print 'Fetching EC2 data for region %s...' % region.name
+                manage_dictionary(ec2_info['regions'][region.name], 'vpcs', {})
                 get_vpc_info(vpc_connection, ec2_info['regions'][region.name]['vpcs'])
                 get_security_groups_info(ec2_connection, ec2_info['regions'][region.name]['vpcs'])
                 get_instances_info(ec2_connection, ec2_info['regions'][region.name]['vpcs'])

@@ -15,7 +15,7 @@ function load_aws_config_from_json(list, keyword, cols) {
 }
 
 // Generic highlight finding function
-function highlight_violations(violations) {
+function highlight_violations(violations, keyword) {
     for (i in violations) {
         var vkey = violations[i]['keyword_prefix'] + '_' + violations[i]['entity'].split('.').pop() + '-' + i;
         violations_array[vkey] = new Array();
@@ -26,6 +26,7 @@ function highlight_violations(violations) {
             violations_array[vkey].push(violations[i]['macro_items'][j]);
         }
     }
+    load_aws_config_from_json(violations, keyword + '_violation', 1);
 }
 
 // Display functions
@@ -98,14 +99,12 @@ function list_generic(keyword) {
     showRowWithDetails(keyword);
     window.scrollTo(0,0);
 }
-function list_findings(keyword_prefix, keyword, finding) {
-    keyword = keyword_prefix + '_' + keyword;
+function list_findings(keyword, violations, finding) {
     updateNavbar(keyword);
     hideAll();
     showEmptyRow(keyword);
-    var violation_id = keyword + '-' + finding;
-    for (item in  violations_array[violation_id]) {
-        showItem(keyword, violations_array[violation_id][item]);
+    for (item in  violations[finding]['macro_items']) {
+        showItem(keyword, violations[finding]['macro_items'][item]);
     }
     window.scrollTo(0,0);
 }
@@ -135,7 +134,7 @@ Handlebars.registerHelper('has_mfa?', function(mfa_devices, user_name) {
     if (typeof mfa_devices != 'undefined' && mfa_devices != '') {
         return 'Yes';
     } else {
-        return '<span id="iam_user-no-mfa-' + user_name + '">No</span>';
+        return 'No';
     }
 });
 Handlebars.registerHelper('format_grant', function(grants) {
@@ -207,38 +206,20 @@ function format_instances(group_id, instances, count, title) {
     r += '</ul>';
     return r;
 }
-Handlebars.registerHelper('format_grants', function(bucket_name, grants) {
-    r = '';
-    for (g in grants) {
-        r += list_s3_permissions(bucket_name, g, grants[g]);
-    }
-    return r;
+Handlebars.registerHelper('s3_grant_2_icon', function(value) {
+    return '<i class="' + ((value == true) ? 'glyphicon glyphicon-ok' : '') +'"></i>';
 });
-function list_s3_permissions(bucket_name, grantee_name, grants) {
-    var r = '';
-    r += '<tr><td width="20%">' + grantee_name + '</td>';
-    for (grant in grants) {
-        r += '<td width="20%" class="text-center">' + format_s3_grant(bucket_name, grantee_name, grant, grants[grant]) + '</td>';
-    }
-    r += '</tr>';
-    return r;
-}
-function format_s3_grant(bucket_name, grantee_name, grant, value) {
-    var icon = '<i class="' + ((value == true) ? 'glyphicon glyphicon-ok' : '') +'"></i>';
-    if (grantee_name == 'All users') {
-        return '<span id="s3_bucket-world-' + grant + '-' + bucket_name + '">' + icon + '</span>';
-    } else {
-        return icon;
-    }
-}
 Handlebars.registerHelper('has_logging?', function(logging) {
     return logging;
 });
 Handlebars.registerHelper('format_finding_menu', function(key, finding) {
     r = '';
     if (finding['macro_items'].length != 0) {
+        var config = finding['keyword_prefix'] + '_info';
+        var entity = finding['entity'].split('.').pop();
+        var keyword = finding['keyword_prefix'] + '_' + entity.substring(0, entity.length -1);
         r += '<li>';
-        r += '<a href="javascript:list_findings(\'' + finding['keyword_prefix'] + '\',\'' + finding['entity'].split('.').pop() + '\',\'' + key + '\')">';
+        r += '<a href="javascript:list_findings(\'' + keyword + '\',' + config + '[\'violations\'], \'' + key + '\')">';
         r += finding['description'] + ' (' + finding['macro_items'].length + ')';
         r += '</a></li>';
     }
