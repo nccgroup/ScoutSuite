@@ -12,19 +12,16 @@ class S3Finding(Finding):
         for grant in obj['grants']:
             if 'All users' in grant:
                 if obj['grants']['All users']['write']:
-                    self.items.append(key)
-                    self.macro_items.append(key)
+                    self.addItem(key, key)
 
     def checkWorldWritableBucketPerms(self, key, obj):
         for grant in obj['grants']:
             if 'All users' in grant:
                 if obj['grants']['All users']['write_acp']:
-                    self.items.append(key)
-                    self.macro_items.append(key)
+                    self.addItem(key, key)
 
 
     def checkWorldReadableBucket(self, key, obj):
         for grant in obj['grants']:
             if 'All users' in grant and obj['grants']['All users']['read']:
-                self.items.append(key)
-                self.macro_items.append(key)
+                self.addItem(key, key)

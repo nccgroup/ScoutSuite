@@ -11,3 +11,7 @@ class Finding():
         self.level = level
         self.items = []
         self.macro_items = []
+
+    def addItem(self, item, macro_item):
+        self.items.append(item);
+        self.macro_items.append(macro_item);

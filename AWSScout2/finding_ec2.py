@@ -26,18 +26,16 @@ class Ec2Finding(Finding):
                 for grant in rule['grants']:
                     if grant == '0.0.0.0/0':
                         if method == 'blacklist' and self.portInRange(port, rule['ports']):
-                            self.items.append(obj['id'])
-                            self.macro_items.append(obj['id'])
+                            self.addItem(obj['id'], obj['id'])
                         elif method == 'whitelist':
                             if rule['ports'] not in port:
-                                self.items.append(obj['id'])
-                                self.macro_items.append(obj['id'])
+                                self.addItem(obj['id'], obj['id'])
 
     def checkFirstRule(self, key, unsorted_rules):
         sorted_rules = sorted(unsorted_rules, key=lambda k: k['rule_number'])
         first_rule = sorted_rules[0]
         if first_rule['port_range'] == '1-65535' and first_rule['cidr_block'] == '0.0.0.0/0':
-                self.items.append(key)
+            self.addItem(key, key)
 
     def checkNetworkACLs(self, key, obj):
         if 'network_acls' in obj:
@@ -45,7 +43,7 @@ class Ec2Finding(Finding):
             for acl in obj['network_acls']:
                 self.checkFirstRule(key, obj['network_acls'][acl][field_name])
         else:
-            self.items.append(key)
+            self.addItem(key, key)
 
     def checkOpenPort(self, key, obj):
         protocol = self.callback_args[0][0].lower()
@@ -54,8 +52,7 @@ class Ec2Finding(Finding):
             for rule in obj['protocols'][protocol]['rules']:
                 for grant in rule['grants']:
                     if self.portInRange(port, rule['ports']):
-                        self.items.append(obj['id'])
-                        self.macro_items.append(obj['id'])
+                        self.addItem(obj['id'], obj['id'])
 
     def portInRange(self, port, ports):
         result = self.re_port_range.match(ports)
