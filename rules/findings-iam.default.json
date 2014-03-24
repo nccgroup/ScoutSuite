@@ -26,5 +26,12 @@
         "callback": "passwordAndKeyEnabled",
         "callback_args": "",
         "level": "warning"
+    },
+    "user-policy": {
+        "description": "User policies",
+        "entity": "users",
+        "callback": "hasUserPolicy",
+        "callback_args": "",
+        "level": "warning"
     }
 }

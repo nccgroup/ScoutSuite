@@ -43,3 +43,7 @@ class IamFinding(Finding):
             return True
         else:
             return False
+
+    def hasUserPolicy(self, key, obj):
+        if len(obj['policies']) > 0:
+            self.addItem(obj['user_name'], obj['user_name'])

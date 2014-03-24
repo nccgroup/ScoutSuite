@@ -15,10 +15,10 @@
         margin-left: 25px;
     }
     .finding-danger {
-        color:  red;
+        color:  red !important;
     }
     .finding-warning {
-        color: orange;
+        color: orange !important;
     }
     ul.no-bullet {
         list-style-type: none;
@@ -527,7 +527,7 @@
               </ul>
             </div>
             <div class="list-group-item">
-              <h4 class="list-group-item-heading">User Policies <spcan class="badge pull-right">{{count policies}}</span></h4>
+              <h4 class="list-group-item-heading">User Policies <span class="badge pull-right" id="iam_users-user-policy-{{user_name}}">{{count policies}}</span></h4>
               {{#each policies}}
                 <hr>
                 <div class="accordion item-margin">
