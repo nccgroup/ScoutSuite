@@ -86,6 +86,14 @@ function toggleVisibility(id) {
 function showEC2InstanceDetails(keyword, region, vpc, id) {
     var data = ec2_info['regions'][region]['vpcs'][vpc]['instances'][id];
     $('#overlay-details').html(single_ec2_instance_template(data));
+    showPopup();
+}
+function showIAMUser(username) {
+    var data = iam_info['users'][username];
+    $('#overlay-details').html(single_iam_user_template(data));
+    showPopup();
+}
+function showPopup() {
     $("#overlay-background").show();
     $("#overlay-details").show();
 }
@@ -201,31 +209,6 @@ Handlebars.registerHelper('format_finding_menu', function(key, finding) {
         r += finding['description'] + ' (' + finding['macro_items'].length + ')';
         r += '</a></li>';
     }
-    return r;
-});
-Handlebars.registerHelper('format_users', function(users) {
-    var len = users.length;
-    if (len == 0) {
-        return '';
-    }
-    len = len % 3;
-    r = '<table width="100%" class="table">';
-    for (u in users) {
-        if (u%3 == 0) {
-            r += '<tr>';
-        }
-        r += '<td width="33%" style="padding-left: 10px; text-align: center;"><a href="javascript:browseTo(\'iam_user\', \'' + users[u] + '\')">' + users[u] + '</td>';
-        if (u%3 == 2) {
-            r += '</tr>';
-        }
-    }
-    if (len != 0) {
-        for (i = len; i <3; i++) {
-            r += '<td width="33%" style="padding-left: 10px; text-align: center;"></td>';
-        }
-        r += '</tr>';
-    }
-    r += '</table>';
     return r;
 });
 Handlebars.registerHelper('count', function(items) {
