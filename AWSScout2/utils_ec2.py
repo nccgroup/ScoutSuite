@@ -81,6 +81,8 @@ def get_vpc_info(vpc_connection, vpc_info):
     count, total = init_status(vpcs, 'VPC')
     for vpc in vpcs:
         manage_dictionary(vpc_info, vpc.id, {})
+        # h4ck : data redundancy because I can't call ../@key in Handlebars
+        vpc_info[vpc.id]['id'] = vpc.id
         vpc_info[vpc.id]['state'] = vpc.state
         vpc_info[vpc.id]['is_default'] = vpc.is_default
         vpc_info[vpc.id]['cidr_block'] = vpc.cidr_block
@@ -101,6 +103,8 @@ def get_security_groups_info(ec2_connection, vpc_info):
     for group in groups:
         vpc_id = group.vpc_id if group.vpc_id else 'no-vpc'
         manage_dictionary(vpc_info, vpc_id, {})
+        # h4ck : data redundancy because I can't call ../@key in Handlebars
+        vpc_info[vpc_id]['id'] = vpc_id
         manage_dictionary(vpc_info[vpc_id], 'security_groups', {})
         manage_dictionary(vpc_info[vpc_id]['security_groups'], group.name, {})
         security_group = {}

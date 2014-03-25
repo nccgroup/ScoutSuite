@@ -30,6 +30,32 @@
     .active-dropdown {
         color: #428bca;
     }
+
+    .overlay-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: black;
+        z-index: 1337;
+        opacity: 0.5;
+        display: none;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        background-color: white;
+        z-index: 7331;
+        overflow: auto;
+        margin-left: -200px;
+        margin-top: -200px;
+        display: none;
+        border-radius: 5px;
+    }
+
     </style>
 
     <!-- Bootstrap core CSS -->
@@ -50,7 +76,7 @@
     <script src="inc-jquery/jquery-1.10.2.min.js"></script>
 
     <!-- Handlebars -->
-    <script src="inc-handlebars/handlebars-v1.3.0.js"></script>
+    <script src="inc-handlebars/handlebars-v2.0.0-alpha.2.js"></script>
 
     <!-- Scout2 -->
     <script src="inc-scout2/scout2.js"></script>
@@ -58,6 +84,73 @@
   </head>
 
   <body>
+
+    <!-- Partials -->
+    <script id="single_ec2_instance-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> ec2_instance}}
+    </script>
+    <script>
+        var single_ec2_instance_template = Handlebars.compile($("#single_ec2_instance-template").html());
+    </script>
+
+    <script id="ec2_security_group-instance_list-partial" type="text/x-handlebars-template">
+        {{#if instances}}
+            <div class="accordion">
+                <h5 class="list-group-item-heading item-margin accordion-heading">{{status}}
+                    <a class="accordion-toggle" data-toggle="collapse" href="#ec2_security_group-{{group}}-instance_list-{{status}}">
+                        <span class="badge pull-right btn-success">{{instances.length}}</span>
+                    </a>
+                </h5>
+                <div id="ec2_security_group-{{group}}-instance_list-{{status}}" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        <ul class="no-bullet">
+                        {{#each instances}}
+                            <li class="list-group-item-text"><a href="javascript:showEC2InstanceDetails('ec2_instance','{{../region}}','{{../vpc}}','{{this}}')">{{this}}</a></li>
+                        {{/each}}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {{else}}
+            <h5 class="list-group-item-heading item-margin accordion-heading">{{status}}
+                <span class="badge pull-right">{{instances.length}}</span>
+            </h5>
+        {{/if}}
+    </script>
+    <script>
+        Handlebars.registerPartial("ec2_security_group-instance_list", $("#ec2_security_group-instance_list-partial").html());
+    </script>
+
+    <script id="ec2_instance-partial" type="text/x-handlebars-template">
+      <div class="list-group" id="ec2_instance-details-{{id}}">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{id}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4>Information</h4>
+          <ul>
+            <li class="list-group-item-text">Region: {{region}}</li>
+            <li class="list-group-item-text">Reservation ID: {{reservation_id}}</li>
+            <li class="list-group-item-text">Access Key name: {{key_name}}</li>
+            <li class="list-group-item-text">State: {{state}}</li>
+            <li class="list-group-item-text">Up since: {{launch_time}}</li>
+          </ul>
+        </div>
+        <div class="list-group-item">
+          <h4>Network</h4>
+          <ul>
+            <li class="list-grou-item-text">Public IP: {{ip_address}}</li>
+            <li class="list-grou-item-text">Public DNS: {{public_dns_name}}</li>
+            <li class="list-grou-item-text">Private IP: {{private_ip_address}}</li>
+            <li class="list-grou-item-text">Private DNS: {{private_dns_name}}</li>
+          </ul>
+        </div>
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("ec2_instance", $("#ec2_instance-partial").html());
+    </script>
 
     <!-- Fixed navbar -->
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -107,7 +200,7 @@
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
                     {{{format_finding_menu @key this}}}
-                  {{/each}}                  
+                  {{/each}}
                 </script>
               </ul>
             </li>
@@ -129,11 +222,9 @@
       <div class="page-header">
       </div>
 
-      <div class="row" id="please_wait-row">
-        <div class="col-sm-12">
-          Please wait, loading AWS configuration data takes a while and may cause your browser to be unresponsive.
-        </div>
-      </div>
+      <!-- Overlay divs used to show entity details in pop up -->
+      <div id="overlay-background" class="overlay-bg"></div>
+      <div id="overlay-details" class="overlay"></div>
 
       <!-- Template for EC2 security groups -->
       <div class="row" id="ec2_security_groups-row">
@@ -194,7 +285,8 @@
                   </div>
                   <div class="list-group-item">
                     <h4 class="list-group-item-heading">Instances</h4>
-                    {{{list_group_instances id running-instances stopped-instances}}}
+                    {{> ec2_security_group-instance_list instances=running-instances status='Running' region=../../name vpc=../id group=id}}
+                    {{> ec2_security_group-instance_list instances=stopped-instances status='Stopped' region=../../name vpc=../id group=id}}
                   </div>
                 </div>
               {{/each}}
@@ -286,30 +378,7 @@
           {{#each items}}
             {{#each vpcs}}
               {{#each instances}}
-                <div class="list-group" id="ec2_instance-details-{{id}}">
-                  <div class="list-group-item active">
-                    <h4 class="list-group-item-heading">{{id}}</h4>
-                  </div>
-                  <div class="list-group-item">
-                    <h4>Information</h4>
-                    <ul>
-                      <li class="list-group-item-text">Region: {{region}}</li>
-                      <li class="list-group-item-text">Reservation ID: {{reservation_id}}</li>
-                      <li class="list-group-item-text">Access Key name: {{key_name}}</li>
-                      <li class="list-group-item-text">State: {{state}}</li>
-                      <li class="list-group-item-text">Up since: {{launch_time}}</li>
-                    </ul>
-                  </div>
-                  <div class="list-group-item">
-                    <h4>Network</h4>
-                    <ul>
-                      <li class="list-grou-item-text">Public IP: {{ip_address}}</li>
-                      <li class="list-grou-item-text">Public DNS: {{public_dns_name}}</li>
-                      <li class="list-grou-item-text">Private IP: {{private_ip_address}}</li>
-                      <li class="list-grou-item-text">Private DNS: {{private_dns_name}}</li>
-                    </ul>
-                  </div>
-                </div>
+                {{> ec2_instance}}
               {{/each}}
             {{/each}}
           {{/each}}
@@ -500,7 +569,7 @@
               <h4 class="list-group-item-heading">Authentication methods</h4>
               <p class="list-group-item-text item-margin">Password enabled: {{has_profiles? logins}}</p>
               <ul></ul>
-              <p class="list-group-item-text item-margin">Multi-Factor enabled: <span id="iam_users-no-mfa-{{user_name}}">{{has_mfa? mfa_devices user_name}}</span></p>
+              <p class="list-group-item-text item-margin">Multi-Factor enabled: <span id="iam_users-no-mfa-{{user_name}}">{{has_mfa? mfa_devices}}</span></p>
               <ul class="item-margin">
               {{#each mfa_devices}}
                 <li class="list-group-item-text"> Serial number: {{serial_number}}</li>
@@ -636,6 +705,7 @@
     <!-- Load EC2 data -->
     <script src="inc-awsconfig/ec2_config.js"></script>
     <script>
+        Handlebars.registerPartial("ec2_instance", $("#ec2_instance-partial").html());
         load_aws_config_from_json(ec2_info['regions'], 'ec2_security_group', 2);
         load_aws_config_from_json(ec2_info['regions'], 'ec2_network_acl', 2);
         load_aws_config_from_json(ec2_info['regions'], 'ec2_instance', 2);

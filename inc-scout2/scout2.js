@@ -80,6 +80,16 @@ function toggleVisibility(id) {
         $(id2).html('<i class="glyphicon glyphicon-expand"></i>');
     }
 }
+function showEC2InstanceDetails(keyword, region, vpc, id) {
+    var data = ec2_info['regions'][region]['vpcs'][vpc]['instances'][id];
+    $('#overlay-details').html(single_ec2_instance_template(data));
+    $("#overlay-background").show();
+    $("#overlay-details").show();
+}
+function hidePopup() {
+    $("#overlay-background").hide();
+    $("#overlay-details").hide();
+}
 
 // Browsing functions
 function about() {
@@ -130,7 +140,7 @@ Handlebars.registerHelper('has_access_keys?', function(access_keys) {
         return 0;
     }
 });
-Handlebars.registerHelper('has_mfa?', function(mfa_devices, user_name) {
+Handlebars.registerHelper('has_mfa?', function(mfa_devices) {
     if (typeof mfa_devices != 'undefined' && mfa_devices != '') {
         return 'Yes';
     } else {
@@ -169,41 +179,6 @@ function format_entity(keyword, name, policy_name, c) {
     var r = '';
     r += "<li>" + name + " [<a href=\"javascript:toggleDetails('" + keyword + "'," + c + ")\">Details</a>]";
     r += "<div class=\"row\" style=\"display:none\" id=\"" + keyword + "-" + c + "\">" + policy_name + "</div></li>";
-    return r;
-}
-Handlebars.registerHelper('list_group_instances', function(group_id, running, stopped) {
-    var rc = count_instances(running);
-    var sc = count_instances(stopped);
-    var r = '';
-    r += format_instances(group_id, running, rc, 'Running');
-    r += format_instances(group_id, stopped, sc, 'Stopped');
-    return r;
-});
-function count_instances(instances) {
-    if (typeof instances != 'undefined' && instances != '') {
-        return instances.length;
-    } else {
-        return 0;
-    }
-}
-function format_instances(group_id, instances, count, title) {
-    var r = '';
-    r += '<ul class="no-bullet">';
-    if (count > 0) {
-        r += '<li>';
-        r += '<a href="javascript:toggleVisibility(\'ec2_instances-' + group_id + '-' + title +'\')">';
-        r += '<span id="bullet-ec2_instances-' + group_id + '-' + title + '">';
-        r += '<i class="glyphicon glyphicon-expand"></i></span></a> ';
-        r += title + ': ' + count;
-        r += '</li><div id="ec2_instances-' + group_id + '-' + title +'"><ul>';
-        for (i in instances) {
-            r += '<li class="list-group-item-text"><a href="javascript:browseTo(\'ec2_instance\',\'' + instances[i] + '\')">' + instances[i] + '</a></li>';
-        }
-        r += '</ul></div>';
-    } else {
-        r += '<li>' + title + ': ' + count + '</li>';
-    }
-    r += '</ul>';
     return r;
 }
 Handlebars.registerHelper('s3_grant_2_icon', function(value) {
