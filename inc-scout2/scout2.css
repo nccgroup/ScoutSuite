@@ -1,0 +1,46 @@
+.item-margin {
+    margin-left: 25px;
+}
+
+.finding-danger {
+    color:  red !important;
+}
+.finding-warning {
+    color: orange !important;
+}
+
+ul.no-bullet {
+    list-style-type: none;
+}
+.list-sub-element {
+    border: 0 !important;
+    padding-left: 25px;
+}
+
+.active-dropdown {
+    color: #428bca;
+}
+
+.overlay-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    z-index: 1337;
+    opacity: 0.5;
+    display: none;
+}
+.overlay {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    background-color: white;
+    z-index: 7331;
+    overflow: auto;
+    margin-left: -200px;
+    margin-top: -200px;
+    display: none;
+    border-radius: 5px;
+}

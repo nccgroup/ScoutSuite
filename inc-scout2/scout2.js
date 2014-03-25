@@ -21,8 +21,11 @@ function highlight_violations(violations, keyword) {
         violations_array[vkey] = new Array();
         for (j in violations[i]['items']) {
             var id = vkey + '-' + violations[i]['items'][j];
-            var style = "finding-" + violations[i]['level'];
-            $('[id$="' + id + '"]').addClass(style);
+            if ($('[id$="' + id + '"]').hasClass("badge")) {
+                $('[id$="' + id + '"]').addClass('btn-' + violations[i]['level']);
+            } else {
+                $('[id$="' + id + '"]').addClass('finding-' + violations[i]['level']);
+            }
             violations_array[vkey].push(violations[i]['macro_items'][j]);
         }
     }

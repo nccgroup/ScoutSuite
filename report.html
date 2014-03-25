@@ -9,62 +9,10 @@
 
     <title>AWS Scout2 Report</title>
 
-    <!-- custom style inline for now -->
-    <style>
-    .item-margin {
-        margin-left: 25px;
-    }
-    .finding-danger {
-        color:  red !important;
-    }
-    .finding-warning {
-        color: orange !important;
-    }
-    ul.no-bullet {
-        list-style-type: none;
-    }
-    .list-sub-element {
-        border: 0 !important;
-        padding-left: 25px;
-    }
-    .active-dropdown {
-        color: #428bca;
-    }
-
-    .overlay-bg {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: black;
-        z-index: 1337;
-        opacity: 0.5;
-        display: none;
-    }
-
-    .overlay {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        background-color: white;
-        z-index: 7331;
-        overflow: auto;
-        margin-left: -200px;
-        margin-top: -200px;
-        display: none;
-        border-radius: 5px;
-    }
-
-    </style>
-
     <!-- Bootstrap core CSS -->
     <link href="inc-bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap theme -->
     <link href="inc-bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="theme.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -80,6 +28,7 @@
 
     <!-- Scout2 -->
     <script src="inc-scout2/scout2.js"></script>
+    <link href="inc-scout2/scout2.css" rel="stylesheet">
 
   </head>
 
@@ -150,6 +99,68 @@
     </script>
     <script>
       Handlebars.registerPartial("ec2_instance", $("#ec2_instance-partial").html());
+    </script>
+
+    <script id="iam_user-partial" type="text/x-handlebars-template">
+      <div class="list-group" id="iam_user-details-{{user_name}}">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{user_name}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text item-margin">Creation date: {{create_date}}</div>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Authentication methods</h4>
+          <p class="list-group-item-text item-margin">Password enabled: {{has_profiles? logins}}</p>
+          <ul></ul>
+          <p class="list-group-item-text item-margin">Multi-Factor enabled: <span id="iam_users-no-mfa-{{user_name}}">{{has_mfa? mfa_devices}}</span></p>
+          <ul class="item-margin">
+          {{#each mfa_devices}}
+            <li class="list-group-item-text"> Serial number: {{serial_number}}</li>
+          {{/each}}
+          </ul>
+          <p class="list-group-item-text item-margin">Access Keys: {{{has_access_keys? access_keys}}}</p>
+          <ul class="item-margin">
+          {{#each access_keys}}
+            <li class="list-group-item-text"><span id="iam_users-{{status}}-key-no-rotation-{{access_key_id}}">{{access_key_id}}, {{status}}, created on {{create_date}}</span></li>
+          {{/each}}
+          </ul>
+          {{#ifPasswordAndKey logins access_keys}}
+            <p class="list-group-item-text item-margin">
+            <span id="iam_users-password-and-key-{{user_name}}"><i class="glyphicon glyphicon-warning-sign"></i> Review the need for password-based and key-based authentication</span>
+            </p>
+          {{/ifPasswordAndKey}}
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Groups</h4>
+          <ul>
+          {{#each groups}}
+            <li class="list-group-item-text"><a href="javascript:browseTo('iam_group','{{group_id}}')">{{group_name}}</a></li>
+          {{/each}}
+          </ul>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">User Policies <span class="badge pull-right" id="iam_users-user-policy-{{user_name}}">{{count policies}}</span></h4>
+          {{#each policies}}
+            <hr>
+            <div class="accordion item-margin">
+              <h5 class="list-group-item-heading accordion-heading">{{policy_name}}
+                <a class="accordion-toggle" data-toggle="collapse" href="#iam_user_policy_details-{{../user_name}}-{{policy_name}}"><span class="badge pull-right">Details</span></a>
+              </h5>
+              <div id="iam_user_policy_details-{{../user_name}}-{{policy_name}}" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  {{{decodeURIComponent policy_document}}}
+                </div>
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </script>
+    </script>
+    <script>
+      Handlebars.registerPartial("iam_user", $("#iam_user-partial").html());
     </script>
 
     <!-- Fixed navbar -->
@@ -557,61 +568,7 @@
         <div class="col-sm-8" id="iam_users-details">
           <script id="iam_user-detail-template" type="text/x-handlebars-template">
           {{#each items}}
-          <div class="list-group" id="iam_user-details-{{user_name}}">
-            <div class="list-group-item active">
-              <h4 class="list-group-item-heading">{{user_name}}</h4>
-            </div>
-            <div class="list-group-item">
-              <h4 class="list-group-item-heading">Information</h4>
-              <div class="list-group-item-text item-margin">Creation date: {{create_date}}</div>
-            </div>
-            <div class="list-group-item">
-              <h4 class="list-group-item-heading">Authentication methods</h4>
-              <p class="list-group-item-text item-margin">Password enabled: {{has_profiles? logins}}</p>
-              <ul></ul>
-              <p class="list-group-item-text item-margin">Multi-Factor enabled: <span id="iam_users-no-mfa-{{user_name}}">{{has_mfa? mfa_devices}}</span></p>
-              <ul class="item-margin">
-              {{#each mfa_devices}}
-                <li class="list-group-item-text"> Serial number: {{serial_number}}</li>
-              {{/each}}
-              </ul>
-              <p class="list-group-item-text item-margin">Access Keys: {{{has_access_keys? access_keys}}}</p>
-              <ul class="item-margin">
-              {{#each access_keys}}
-                <li class="list-group-item-text"><span id="iam_users-{{status}}-key-no-rotation-{{access_key_id}}">{{access_key_id}}, {{status}}, created on {{create_date}}</span></li>
-              {{/each}}
-              </ul>
-              {{#ifPasswordAndKey logins access_keys}}
-                <p class="list-group-item-text item-margin">
-                <span id="iam_users-password-and-key-{{user_name}}"><i class="glyphicon glyphicon-warning-sign"></i> Review the need for password-based and key-based authentication</span>
-                </p>
-              {{/ifPasswordAndKey}}
-            </div>
-            <div class="list-group-item">
-              <h4 class="list-group-item-heading">Groups</h4>
-              <ul>
-              {{#each groups}}
-                <li class="list-group-item-text"><a href="javascript:browseTo('iam_group','{{group_id}}')">{{group_name}}</a></li>
-              {{/each}}
-              </ul>
-            </div>
-            <div class="list-group-item">
-              <h4 class="list-group-item-heading">User Policies <span class="badge pull-right" id="iam_users-user-policy-{{user_name}}">{{count policies}}</span></h4>
-              {{#each policies}}
-                <hr>
-                <div class="accordion item-margin">
-                  <h5 class="list-group-item-heading accordion-heading">{{policy_name}}
-                    <a class="accordion-toggle" data-toggle="collapse" href="#iam_user_policy_details-{{../user_name}}-{{policy_name}}"><span class="badge pull-right">Details</span></a>
-                  </h5>
-                  <div id="iam_user_policy_details-{{../user_name}}-{{policy_name}}" class="accordion-body collapse">
-                    <div class="accordion-inner">
-                      {{{decodeURIComponent policy_document}}}
-                    </div>
-                  </div>
-                </div>
-              {{/each}}
-            </div>
-          </div>
+            {{> iam_user}}
           {{/each}}
           </script>
         </div><!-- /.col-sm-8 -->
