@@ -101,6 +101,62 @@
       Handlebars.registerPartial("ec2_instance", $("#ec2_instance-partial").html());
     </script>
 
+    <!-- IAM group partial -->
+    <script id="iam_group-partial" type="text/x-handlebars-template">
+      <div class="list-group" id="iam_group-details-{{group_id}}">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{group_name}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text item-margin">Creation date: {{create_date}}</div>
+        </div>
+        <div class="list-group-item" style="padding-bottom: 0 !important;">
+          <div class="accordion">
+            <h4 class="list-group-item-heading accordion-heading">Members
+              {{#if users}}
+                <a class="accordion-toggle" data-toggle="collapse" href="#iam_group-{{group_id}}"><span class="badge pull-right btn-info">{{users.length}}</span></a>
+              {{else}}
+                <span class="badge pull-right">{{users.length}}</span>
+              {{/if}}
+            </h4>
+            <div id="iam_group-{{group_id}}" class="accordion-body collapse">
+              <div class="accordion-inner">
+                <ul class="no-bullet">
+                  {{#each users}}
+                    <li><a href="javascript:showIAMUser('{{this}}')">{{this}}</a></li>
+                  {{/each}}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="list-group-item">
+          {{#if policies}}
+            <h4 class="list-group-item-heading">Group Policies <spcan class="badge pull-right btn-info">{{count policies}}</span></h4>
+          {{else}}
+            <h4 class="list-group-item-heading">Group Policies <spcan class="badge pull-right">{{count policies}}</span></h4>
+          {{/if}}
+          {{#each policies}}
+            <hr>
+            <div class="accordion item-margin">
+              <h5 class="list-group-item-heading accordion-heading">{{policy_name}}
+                <a class="accordion-toggle" data-toggle="collapse" href="#iam_group_policy_details-{{../group_id}}-{{policy_name}}"><span class="badge pull-right btn-info">Details</span></a>
+              </h5>
+              <div id="iam_group_policy_details-{{../group_id}}-{{policy_name}}" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  {{{decodeURIComponent policy_document}}}
+                </div>
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("iam_group", $("#iam_group-partial").html());
+    </script>
+
     <!-- IAM User partial -->
     <script id="iam_user-partial" type="text/x-handlebars-template">
       <div class="list-group" id="iam_user-details-{{user_name}}">
@@ -137,7 +193,7 @@
           <h4 class="list-group-item-heading">Groups</h4>
           <ul>
           {{#each groups}}
-            <li class="list-group-item-text"><a href="javascript:browseTo('iam_group','{{group_id}}')">{{group_name}}</a></li>
+            <li class="list-group-item-text"><a href="javascript:showIAMGroup('{{group_name}}')">{{group_name}}</a></li>
           {{/each}}
           </ul>
         </div>
@@ -170,6 +226,15 @@
     </script>
     <script>
         var single_iam_user_template = Handlebars.compile($("#single_iam_user-template").html());
+    </script>
+
+    <!-- Single IAM group template -->
+    <script id="single_iam_group-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> iam_group}}
+    </script>
+    <script>
+        var single_iam_group_template = Handlebars.compile($("#single_iam_group-template").html());
     </script>
 
     <!-- Fixed navbar -->
@@ -244,7 +309,7 @@
 
       <!-- Overlay divs used to show entity details in pop up -->
       <div id="overlay-background" class="overlay-bg"></div>
-      <div id="overlay-details" class="overlay"></div>
+      <div id="overlay-details" class="overlay col-sm-6"></div>
 
       <!-- Template for EC2 security groups -->
       <div class="row" id="ec2_security_groups-row">
@@ -423,55 +488,7 @@
         <div class="col-sm-8" id="iam_groups-details">
           <script id="iam_group-detail-template" type="text/x-handlebars-template">
           {{#each items}}
-          <div class="list-group" id="iam_group-details-{{group_id}}">
-            <div class="list-group-item active">
-              <h4 class="list-group-item-heading">{{group_name}}</h4>
-            </div>
-            <div class="list-group-item">
-              <h4 class="list-group-item-heading">Information</h4>
-              <div class="list-group-item-text item-margin">Creation date: {{create_date}}</div>
-            </div>
-            <div class="list-group-item" style="padding-bottom: 0 !important;">
-              <div class="accordion">
-                <h4 class="list-group-item-heading accordion-heading">Members
-                  {{#if users}}
-                    <a class="accordion-toggle" data-toggle="collapse" href="#iam_group-{{group_id}}"><span class="badge pull-right btn-info">{{users.length}}</span></a>
-                  {{else}}
-                    <span class="badge pull-right">{{users.length}}</span>
-                  {{/if}}
-                </h4>
-                <div id="iam_group-{{group_id}}" class="accordion-body collapse">
-                  <div class="accordion-inner">
-                    <ul class="no-bullet">
-                      {{#each users}}
-                        <li><a href="javascript:showIAMUser('{{this}}')">{{this}}</a></li>
-                      {{/each}}
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="list-group-item">
-              {{#if policies}}
-                <h4 class="list-group-item-heading">Group Policies <spcan class="badge pull-right btn-info">{{count policies}}</span></h4>
-              {{else}}
-                <h4 class="list-group-item-heading">Group Policies <spcan class="badge pull-right">{{count policies}}</span></h4>
-              {{/if}}
-              {{#each policies}}
-                <hr>
-                <div class="accordion item-margin">
-                  <h5 class="list-group-item-heading accordion-heading">{{policy_name}}
-                    <a class="accordion-toggle" data-toggle="collapse" href="#iam_group_policy_details-{{../group_id}}-{{policy_name}}"><span class="badge pull-right btn-info">Details</span></a>
-                  </h5>
-                  <div id="iam_group_policy_details-{{../group_id}}-{{policy_name}}" class="accordion-body collapse">
-                    <div class="accordion-inner">
-                      {{{decodeURIComponent policy_document}}}
-                    </div>
-                  </div>
-                </div>
-              {{/each}}
-            </div>
-          </div>
+            {{> iam_group}}
           {{/each}}
           </script>
         </div><!-- /.col-sm-8 -->

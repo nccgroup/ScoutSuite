@@ -88,6 +88,11 @@ function showEC2InstanceDetails(keyword, region, vpc, id) {
     $('#overlay-details').html(single_ec2_instance_template(data));
     showPopup();
 }
+function showIAMGroup(group_id) {
+    var data = iam_info['groups'][group_id];
+    $('#overlay-details').html(single_iam_group_template(data));
+    showPopup();
+}
 function showIAMUser(username) {
     var data = iam_info['users'][username];
     $('#overlay-details').html(single_iam_user_template(data));
