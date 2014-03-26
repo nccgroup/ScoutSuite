@@ -528,7 +528,7 @@
                       <ul>
                       {{#each this}}
                         {{#if Allow}}
-                          <li class="list-group-item-text">Allow {{@key}}</li>
+                          <li class="list-group-item-text">Allow <a href="javascript:{{entity_details_callback ../../type}}('{{@key}}')">{{@key}}</a></li>
                           <ul class="no-bullet">
                           {{#each Allow}}
                             <li class="list-group-item-text">{{this}}</li>

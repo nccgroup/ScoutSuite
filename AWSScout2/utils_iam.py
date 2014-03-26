@@ -78,6 +78,8 @@ def parse_resources(permission, resources, effect, keyword, name, policy_name):
 
 def parse_resource(permission, resource, effect, keyword, name, policy_name):
     manage_dictionary(permission, keyword, {})
+    # h4ck : data redundancy because I can't call ../@key in Handlebars
+    permission[keyword]['type'] = keyword
     manage_dictionary(permission[keyword], name, {})
     manage_dictionary(permission[keyword][name], effect, [])
     permission[keyword][name][effect].append(resource)

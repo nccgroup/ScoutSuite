@@ -259,3 +259,12 @@ Handlebars.registerHelper('ifPasswordAndKey', function(logins, access_keys, bloc
 Handlebars.registerHelper('make_title', function(title) {
     return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase());
 });
+Handlebars.registerHelper('entity_details_callback', function(type) {
+    if (type == 'roles') {
+        return 'showIAMRole';
+    } else if (type == 'groups') {
+        return 'showIAMGroup';
+    } else if (type == 'users') {
+        return 'showIAMUser';
+    }
+});
