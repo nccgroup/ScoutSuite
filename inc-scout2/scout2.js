@@ -93,8 +93,13 @@ function showIAMGroup(group_id) {
     $('#overlay-details').html(single_iam_group_template(data));
     showPopup();
 }
-function showIAMUser(username) {
-    var data = iam_info['users'][username];
+function showIAMRole(role_name) {
+    var data = iam_info['roles'][role_name];
+    $('#overlay-details').html(single_iam_role_template(data));
+    showPopup();
+}
+function showIAMUser(user_name) {
+    var data = iam_info['users'][user_name];
     $('#overlay-details').html(single_iam_user_template(data));
     showPopup();
 }

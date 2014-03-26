@@ -34,7 +34,7 @@
 
   <body>
 
-    <!-- Partials -->
+    <!-- Finding menu item partial -->
     <script id="finding_menu_item-partial" type="text/x-handlebars-template">
       {{#if macro_items}}
         <li><a href="javascript:list_findings('{{finding_entity keyword_prefix entity}}', {{keyword_prefix}}_info['violations'], '{{@key}}')">
@@ -46,14 +46,7 @@
         Handlebars.registerPartial("finding_menu_item", $("#finding_menu_item-partial").html());
     </script>
 
-    <script id="single_ec2_instance-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> ec2_instance}}
-    </script>
-    <script>
-        var single_ec2_instance_template = Handlebars.compile($("#single_ec2_instance-template").html());
-    </script>
-
+    <!-- EC2 security group partial -->
     <script id="ec2_security_group-instance_list-partial" type="text/x-handlebars-template">
         {{#if instances}}
             <div class="accordion">
@@ -82,6 +75,7 @@
         Handlebars.registerPartial("ec2_security_group-instance_list", $("#ec2_security_group-instance_list-partial").html());
     </script>
 
+    <!-- EC2 instance partial -->
     <script id="ec2_instance-partial" type="text/x-handlebars-template">
       <div class="list-group" id="ec2_instance-details-{{id}}">
         <div class="list-group-item active">
@@ -168,7 +162,39 @@
       Handlebars.registerPartial("iam_group", $("#iam_group-partial").html());
     </script>
 
-    <!-- IAM User partial -->
+    <!-- IAM role partial -->
+    <script id="iam_role-partial" type="text/x-handlebars-template">
+      <div class="list-group" id="iam_role-details-{{role_id}}">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{role_name}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text item-margin">Creation date: {{create_date}}</div>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Role Policies</h4>
+          {{#each policies}}
+            <hr>
+            <div class="accordion item-margin">
+              <h5 class="list-group-item-heading accordion-heading">{{policy_name}}
+                <a class="accordion-toggle" data-toggle="collapse" href="#iam_role_policy_details-{{../role_name}}-{{policy_name}}"><span class="badge pull-right btn-info">Details</span></a>
+              </h5>
+              <div id="iam_role_policy_details-{{../role_name}}-{{policy_name}}" class="accordion-body collapse">
+                <div class="accordion-inner">
+                  {{{decodeURIComponent policy_document}}}
+                </div>
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("iam_role", $("#iam_role-partial").html());
+    </script>
+
+    <!-- IAM user partial -->
     <script id="iam_user-partial" type="text/x-handlebars-template">
       <div class="list-group" id="iam_user-details-{{user_name}}">
         <div class="list-group-item active">
@@ -230,13 +256,13 @@
       Handlebars.registerPartial("iam_user", $("#iam_user-partial").html());
     </script>
 
-    <!-- Single IAM user template -->
-    <script id="single_iam_user-template" type="text/x-handlebars-template">
+    <!-- Single EC2 instance template -->
+    <script id="single_ec2_instance-template" type="text/x-handlebars-template">
         <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> iam_user}}
+        {{> ec2_instance}}
     </script>
     <script>
-        var single_iam_user_template = Handlebars.compile($("#single_iam_user-template").html());
+        var single_ec2_instance_template = Handlebars.compile($("#single_ec2_instance-template").html());
     </script>
 
     <!-- Single IAM group template -->
@@ -246,6 +272,24 @@
     </script>
     <script>
         var single_iam_group_template = Handlebars.compile($("#single_iam_group-template").html());
+    </script>
+
+    <!-- Single IAM role template -->
+    <script id="single_iam_role-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> iam_role}}
+    </script>
+    <script>
+        var single_iam_role_template = Handlebars.compile($("#single_iam_role-template").html());
+    </script>
+
+    <!-- Single IAM user template -->
+    <script id="single_iam_user-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> iam_user}}
+    </script>
+    <script>
+        var single_iam_user_template = Handlebars.compile($("#single_iam_user-template").html());
     </script>
 
     <!-- Fixed navbar -->
@@ -574,31 +618,7 @@
         <div class="col-sm-8" id="iam_roles-details">
           <script id="iam_role-detail-template" type="text/x-handlebars-template">
           {{#each items}}
-          <div class="list-group" id="iam_role-details-{{role_id}}">
-            <div class="list-group-item active">
-              <h4 class="list-group-item-heading">{{role_name}}</h4>
-            </div>
-            <div class="list-group-item">
-              <h4 class="list-group-item-heading">Information</h4>
-              <div class="list-group-item-text item-margin">Creation date: {{create_date}}</div>
-            </div>
-            <div class="list-group-item">
-              <h4 class="list-group-item-heading">Role Policies</h4>
-              {{#each policies}}
-                <hr>
-                <div class="accordion item-margin">
-                  <h5 class="list-group-item-heading accordion-heading">{{policy_name}}
-                    <a class="accordion-toggle" data-toggle="collapse" href="#iam_role_policy_details-{{../role_name}}-{{policy_name}}"><span class="badge pull-right btn-info">Details</span></a>
-                  </h5>
-                  <div id="iam_role_policy_details-{{../role_name}}-{{policy_name}}" class="accordion-body collapse">
-                    <div class="accordion-inner">
-                      {{{decodeURIComponent policy_document}}}
-                    </div>
-                  </div>
-                </div>
-              {{/each}}
-            </div>
-          </div>
+            {{> iam_role}}
           {{/each}}
           </script>
         </div><!-- /.col-sm-8 -->
