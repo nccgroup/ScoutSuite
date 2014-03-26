@@ -223,28 +223,22 @@ Handlebars.registerHelper('count', function(items) {
     }
     return c;
 });
-Handlebars.registerHelper('count_sg', function(regions) {
-    var sgc = 0;
-    for (r in regions) {
-        for (vpc in regions[r]) {
-            for (sg in regions[r][vpc]) {
-                sgc = sgc +1;
-            }
-        }
-    }
-    return sgc;
+Handlebars.registerHelper('count_ec2', function(path) {
+    var entities = path.split('.');
+    return recursive_count(ec2_info, entities);
 });
-Handlebars.registerHelper('count_acl', function(regions) {
-    var aclc = 0;
-    for (r in regions) {
-        for (vpc in regions[r]) {
-            for (acl in regions[r][vpc]['network_acls']) {
-                aclc = aclc +1;
-            }
+var recursive_count = function(input, entities) {
+    var count = 0;
+    if (entities.length > 0) {
+        var entity = entities.shift();
+        for (i in input[entity]) {
+            count = count + recursive_count(input[entity][i], eval(uneval(entities)));
         }
+    } else {
+        count = count + 1;
     }
-    return aclc;
-});
+    return count;
+}
 Handlebars.registerHelper('format_network_acls', function (acls, direction) {
     r = '<table class="table-striped" width="100%">';
     r += '<tr><td width="20%" class="text-center">Rule number</td>';
