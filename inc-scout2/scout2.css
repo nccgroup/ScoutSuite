@@ -34,7 +34,7 @@ ul.no-bullet {
 }
 .overlay {
     position: fixed;
-    top: 25%;
+    top: 40%;
     left: 40%;
     background-color: white;
     z-index: 7331;
