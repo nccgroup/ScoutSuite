@@ -178,7 +178,6 @@ def update_status(current, total, keyword=None):
     else:
         sys.stdout.write("\r%s %d" % (keyword, current))
     sys.stdout.flush()
-    #lol TODO h4ck REMOVEME
     return current + 1
 
 def close_status(current, total, keyword=None):
