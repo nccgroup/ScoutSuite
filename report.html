@@ -35,6 +35,17 @@
   <body>
 
     <!-- Partials -->
+    <script id="finding_menu_item-partial" type="text/x-handlebars-template">
+      {{#if macro_items}}
+        <li><a href="javascript:list_findings('{{finding_entity keyword_prefix entity}}', {{keyword_prefix}}_info['violations'], '{{@key}}')">
+          {{description}} ({{macro_items.length}})
+        </a></li>
+      {{/if}}
+    </script>
+    <script>
+        Handlebars.registerPartial("finding_menu_item", $("#finding_menu_item-partial").html());
+    </script>
+
     <script id="single_ec2_instance-template" type="text/x-handlebars-template">
         <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
         {{> ec2_instance}}
@@ -256,7 +267,11 @@
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
-                    {{{format_finding_menu @key this}}}
+                    {{#if macro_items}}
+                      <li><a href="javascript:list_findings('{{finding_entity keyword_prefix entity}}', {{keyword_prefix}}_info['violations'], '{{@key}}')">
+                        {{description}} ({{macro_items.length}})
+                      </a></li>
+                    {{/if}}
                   {{/each}}
                 </script>
               </ul>
@@ -271,7 +286,7 @@
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
-                    {{{format_finding_menu @key this}}}
+                    {{> finding_menu_item}}
                   {{/each}}
                 </script>
               </ul>
@@ -284,7 +299,7 @@
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
-                    {{{format_finding_menu @key this}}}
+                    {{> finding_menu_item}}
                   {{/each}}
                 </script>
               </ul>

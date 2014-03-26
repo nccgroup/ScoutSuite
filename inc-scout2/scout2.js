@@ -203,18 +203,9 @@ Handlebars.registerHelper('s3_grant_2_icon', function(value) {
 Handlebars.registerHelper('has_logging?', function(logging) {
     return logging;
 });
-Handlebars.registerHelper('format_finding_menu', function(key, finding) {
-    r = '';
-    if (finding['macro_items'].length != 0) {
-        var config = finding['keyword_prefix'] + '_info';
-        var entity = finding['entity'].split('.').pop();
-        var keyword = finding['keyword_prefix'] + '_' + entity.substring(0, entity.length -1);
-        r += '<li>';
-        r += '<a href="javascript:list_findings(\'' + keyword + '\',' + config + '[\'violations\'], \'' + key + '\')">';
-        r += finding['description'] + ' (' + finding['macro_items'].length + ')';
-        r += '</a></li>';
-    }
-    return r;
+Handlebars.registerHelper('finding_entity', function(prefix, entity) {
+    entity = entity.split('.').pop();
+    return prefix + '_' + entity.substring(0, entity.length - 1);
 });
 Handlebars.registerHelper('count', function(items) {
     var c = 0;
