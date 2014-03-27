@@ -79,6 +79,12 @@ def main(args):
         analyze_s3_config(s3_info, args.force_write)
 
 
+    ##### Analyzis that requires multiple configuration
+    if args.fetch_ec2 and args.fetch_iam:
+        match_instances_and_roles(ec2_info, iam_info)
+        save_config_to_file(iam_info, 'iam', args.force_write)
+
+
 ########################################
 ##### Argument parser
 ########################################

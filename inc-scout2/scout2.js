@@ -83,7 +83,19 @@ function toggleVisibility(id) {
         $(id2).html('<i class="glyphicon glyphicon-expand"></i>');
     }
 }
-function showEC2InstanceDetails(keyword, region, vpc, id) {
+function findAndShowEC2InstanceDetails(id) {
+    for (r in ec2_info['regions']) {
+        for (v in ec2_info['regions'][r]['vpcs']) {
+            for (i in ec2_info['regions'][r]['vpcs'][v]['instances']) {
+                if (i == id) {
+                    showEC2InstanceDetails(r, v, i);
+                    return;
+                }
+            }
+        }
+    }
+}
+function showEC2InstanceDetails(region, vpc, id) {
     var data = ec2_info['regions'][region]['vpcs'][vpc]['instances'][id];
     $('#overlay-details').html(single_ec2_instance_template(data));
     showPopup();
@@ -222,6 +234,15 @@ Handlebars.registerHelper('count', function(items) {
 Handlebars.registerHelper('count_ec2', function(path) {
     var entities = path.split('.');
     return recursive_count(ec2_info, entities);
+});
+Handlebars.registerHelper('count_role_instances', function(instance_profiles) {
+    var c = 0;
+    for (ip in instance_profiles) {
+        for (i in instance_profiles[ip]['instances']) {
+            c = c + 1;
+        }
+    }
+    return c;
 });
 var recursive_count = function(input, entities) {
     var count = 0;

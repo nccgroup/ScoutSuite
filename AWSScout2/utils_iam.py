@@ -18,7 +18,7 @@ def analyze_iam_config(iam_info, force_write):
     analyze_config(iam_finding_dictionary, iam_info, 'IAM', force_write)
 
 def get_groups_info(iam_connection, iam_info):
-    groups = handle_truncated_responses(iam_connection.get_all_groups, ['list_groups_response', 'list_groups_result'], 'groups')
+    groups = handle_truncated_responses(iam_connection.get_all_groups, None, ['list_groups_response', 'list_groups_result'], 'groups')
     count, total = init_status(groups)
     for group in groups:
         group['users'] = get_group_users(iam_connection, group.group_name);
@@ -108,16 +108,22 @@ def get_policies(iam_connection, iam_info, keyword, name):
 
 
 def get_roles_info(iam_connection, iam_info):
-    roles = handle_truncated_responses(iam_connection.list_roles, ['list_roles_response', 'list_roles_result'], 'roles')
+    roles = handle_truncated_responses(iam_connection.list_roles, None, ['list_roles_response', 'list_roles_result'], 'roles')
     count, total = init_status(roles)
     for role in roles:
         role['policies'] = get_policies(iam_connection, iam_info, 'role', role.role_name)
         iam_info['roles'][role.role_name] = role
         count = update_status(count, total)
+        profiles = handle_truncated_responses(iam_connection.list_instance_profiles_for_role, role.role_name, ['list_instance_profiles_for_role_response', 'list_instance_profiles_for_role_result'], 'instance_profiles')
+        manage_dictionary(role, 'instance_profiles', {})
+        for profile in profiles:
+            manage_dictionary(role['instance_profiles'], profile['arn'], {})
+            role['instance_profiles'][profile['arn']]['id'] = profile['instance_profile_id']
+            role['instance_profiles'][profile['arn']]['name'] = profile['instance_profile_name']
     close_status(count, total)
 
 def get_users_info(iam_connection, iam_info):
-    users = handle_truncated_responses(iam_connection.get_all_users, ['list_users_response', 'list_users_result'], 'users')
+    users = handle_truncated_responses(iam_connection.get_all_users, None, ['list_users_response', 'list_users_result'], 'users')
     count, total = init_status(users)
     for user in users:
         user['policies'] = get_policies(iam_connection, iam_info, 'user', user.user_name)
@@ -137,11 +143,14 @@ def get_users_info(iam_connection, iam_info):
         count = update_status(count, total)
     close_status(count, total)
 
-def handle_truncated_responses(callback, result_path, items_name):
+def handle_truncated_responses(callback, callback_args, result_path, items_name):
     marker_value = None
     items = []
     while True:
-        result = callback(marker = marker_value)
+        if callback_args:
+            result = callback(callback_args, marker = marker_value)
+        else:
+            result = callback(marker = marker_value)
         for key in result_path:
             result = result[key]
         marker_value = result['marker'] if result['is_truncated'] != 'false' else None

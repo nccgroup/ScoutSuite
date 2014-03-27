@@ -56,6 +56,7 @@ def get_instances_info(ec2, vpc_info):
                 vpc_info[vpc_id]['instances'][i.id][key] = i.__dict__[key]
             # FIXME ... see why it's not working when added in the list above
             vpc_info[vpc_id]['instances'][i.id]['state'] = i.state
+            vpc_info[vpc_id]['instances'][i.id]['profile_arn'] = i.instance_profile['arn'] if i.instance_profile else ''
             manage_dictionary(vpc_info[vpc_id]['instances'][i.id], 'security_groups', [])
             for sg in i.groups:
                 vpc_info[vpc_id]['instances'][i.id]['security_groups'].append(sg.id)
@@ -93,6 +94,7 @@ def get_vpc_info(vpc_connection, vpc_info):
             vpc_info[vpc.id]['network_acls'][acl.id]['default'] = acl.default
             vpc_info[vpc.id]['network_acls'][acl.id]['inbound_network_acls'] = get_network_acl_entries(acl.network_acl_entries, "true")
             vpc_info[vpc.id]['network_acls'][acl.id]['outbound_network_acls'] = get_network_acl_entries(acl.network_acl_entries, "false")
+        manage_dictionary(vpc_info[vpc.id], 'instances', {})
         count = update_status(count, total, 'VPC')
     close_status(count, total, 'VPC')
     return vpc_info

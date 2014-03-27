@@ -45,6 +45,20 @@ def analyze_config(finding_dictionary, config, keyword, force_write):
         pass
     save_config_to_file(config, keyword, force_write)
 
+def match_instances_and_roles(ec2_config, iam_config):
+    role_instances = {}
+    for r in ec2_config['regions']:
+        for v in ec2_config['regions'][r]['vpcs']:
+            for i in ec2_config['regions'][r]['vpcs'][v]['instances']:
+                arn = ec2_config['regions'][r]['vpcs'][v]['instances'][i]['profile_arn']
+                if arn:
+                    manage_dictionary(role_instances, arn, [])
+                    role_instances[arn].append(i)
+    for role in iam_config['roles']:
+        for arn in iam_config['roles'][role]['instance_profiles']:
+            if arn in role_instances:
+                iam_config['roles'][role]['instance_profiles'][arn]['instances'] = role_instances[arn]
+
 def process_entities(config, finding, entity_path):
     if len(entity_path) == 1:
         entities = entity_path.pop(0)
