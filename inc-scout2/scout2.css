@@ -36,6 +36,7 @@ ul.no-bullet {
     position: fixed;
     top: 40%;
     left: 40%;
+    max-height: 80%;
     background-color: white;
     z-index: 7331;
     overflow: auto;
