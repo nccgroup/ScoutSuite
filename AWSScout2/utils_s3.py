@@ -60,28 +60,31 @@ def get_s3_buckets(s3_connection, s3_info):
     buckets = s3_connection.get_all_buckets()
     count, total = init_status(buckets)
     for b in buckets:
-        bucket = {}
-        acp = b.get_acl()
-        bucket['grants'] = {}
-        for grant in acp.acl.grants:
-            grantee_name = 'Unknown'
-            if grant.type == 'Group':
-                grantee_name = s3_group_to_string(grant.uri)
-                grant.uri.rsplit('/',1)[0]
-            elif grant.type == 'CanonicalUser':
-                grantee_name = grant.display_name
-            manage_dictionary(bucket['grants'], grantee_name, {}, init_s3_permissions)
-            set_s3_permission(bucket['grants'][grantee_name], grant.permission)
+        try:
+            bucket = {}
+            acp = b.get_acl()
+            bucket['grants'] = {}
+            for grant in acp.acl.grants:
+                grantee_name = 'Unknown'
+                if grant.type == 'Group':
+                    grantee_name = s3_group_to_string(grant.uri)
+                    grant.uri.rsplit('/',1)[0]
+                elif grant.type == 'CanonicalUser':
+                    grantee_name = grant.display_name
+                manage_dictionary(bucket['grants'], grantee_name, {}, init_s3_permissions)
+                set_s3_permission(bucket['grants'][grantee_name], grant.permission)
+                # h4ck : data redundancy because I can't call ../@key in Handlebars
+                bucket['grants'][grantee_name]['name'] = grantee_name
+            bucket['creation_date'] = b.creation_date
+            bucket['region'] = b.get_location()
+            bucket['logging'] = get_s3_bucket_logging(b)
+            bucket['versioning'] = get_s3_bucket_versioning(b)
             # h4ck : data redundancy because I can't call ../@key in Handlebars
-            bucket['grants'][grantee_name]['name'] = grantee_name
-        bucket['creation_date'] = b.creation_date
-        bucket['region'] = b.get_location()
-        bucket['logging'] = get_s3_bucket_logging(b)
-        bucket['versioning'] = get_s3_bucket_versioning(b)
-        # h4ck : data redundancy because I can't call ../@key in Handlebars
-        bucket['name'] = b.name
-        s3_info['buckets'][b.name] = bucket
-        count = update_status(count, total)
+            bucket['name'] = b.name
+            s3_info['buckets'][b.name] = bucket
+            count = update_status(count, total)
+        except Exception, e:
+            print e
     close_status(count, total)
 
 def get_s3_info(key_id, secret, session_token):
