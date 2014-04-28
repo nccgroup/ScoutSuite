@@ -55,8 +55,9 @@ def main(args):
             iam_info = get_iam_info(key_id, secret, session_token)
         else:
             iam_info = load_info_from_json('iam')
-        # Analyze the EC2 config and save data to a local file
-        analyze_iam_config(iam_info, args.force_write)
+        # Analyze the IAM config and save data to a local file
+        if not args.fetch_ec2:
+            analyze_iam_config(iam_info, args.force_write)
 
     ##### EC2
     if args.fetch_ec2:
@@ -82,7 +83,7 @@ def main(args):
     ##### Analyzis that requires multiple configuration
     if args.fetch_ec2 and args.fetch_iam:
         match_instances_and_roles(ec2_info, iam_info)
-        save_config_to_file(iam_info, 'iam', args.force_write)
+        analyze_iam_config(iam_info, args.force_write)
 
 
 ########################################
