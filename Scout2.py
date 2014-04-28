@@ -54,7 +54,7 @@ def main(args):
         if not args.fetch_local:
             iam_info = get_iam_info(key_id, secret, session_token)
         else:
-            iam_info = load_info_from_json('iam')
+            iam_info = load_info_from_json('iam', args.environment_name)
         # Analyze the IAM config and save data to a local file
         if not args.fetch_ec2:
             analyze_iam_config(iam_info, args.force_write)
@@ -65,7 +65,7 @@ def main(args):
         if not args.fetch_local:
             ec2_info = get_ec2_info(key_id, secret, session_token, args.fetch_ec2_gov)
         else:
-            ec2_info = load_info_from_json('ec2')
+            ec2_info = load_info_from_json('ec2', args.environment_name)
         # Analyze the EC2 config and save data to a local file
         analyze_ec2_config(ec2_info, args.force_write)
 
@@ -75,7 +75,7 @@ def main(args):
         if not args.fetch_local:
             s3_info = get_s3_info(key_id, secret, session_token)
         else:
-            s3_info = load_info_from_json('s3')
+            s3_info = load_info_from_json('s3', args.environment_name)
         # Analyze the S3 config and save data to a local file
         analyze_s3_config(s3_info, args.force_write)
 
@@ -84,6 +84,11 @@ def main(args):
     if args.fetch_ec2 and args.fetch_iam:
         match_instances_and_roles(ec2_info, iam_info)
         analyze_iam_config(iam_info, args.force_write)
+
+
+    ##### Rename data based on environment's name
+    if args.environment_name:
+        create_new_scout_report(args.environment_name, args.force_write)
 
 
 ########################################
@@ -140,6 +145,11 @@ parser.add_argument('--local',
                     default=False,
                     action='store_true',
                     help='Use local data previously fetched to feed the analyzer')
+parser.add_argument('--env',
+                    dest='environment_name',
+                    default=None,
+                    nargs='+',
+                    help='Environment name. Used to create multiple reports')
 
 args = parser.parse_args()
 

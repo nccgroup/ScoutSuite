@@ -4,9 +4,11 @@
 import boto
 
 # Import other third-party packages
+from distutils import dir_util
 import copy
 import json
 import os
+import shutil
 import sys
 import traceback
 import urllib2
@@ -119,24 +121,34 @@ def fetch_sts_credentials(key_id, secret, mfa_serial, mfa_code):
 ########################################
 
 AWSCONFIG_DIR = 'inc-awsconfig'
+REPORT_TITLE  = 'AWS Scout2 Report'
 
-def prompt_4_overwrite(filename):
-    while True:
-        sys.stdout.write('File already exists. Do you want to overwrite it (yes/no)? ')
-        choice = raw_input().lower()
-        if choice == 'yes' or choice == 'y':
-            return True
-        elif choice == 'no' or choice == 'n':
-            return False
-        else:
-            print '\'%s\' is not a valid answer. Enter \'yes\' or \'no\'.'
+def create_new_scout_report(environment_name, force_write):
+    new_dir = AWSCONFIG_DIR + '-' + environment_name[0]
+    new_file = 'report-' + environment_name[0] + '.html'
+    print 'Creating %s ...' % new_file
+    if prompt_4_overwrite(new_dir, force_write):
+        if not os.path.exists(new_dir):
+            os.makedirs(new_dir)
+        dir_util.copy_tree(AWSCONFIG_DIR, new_dir, update = force_write)
+        shutil.rmtree(AWSCONFIG_DIR)
+        if os.path.exists(new_file):
+            os.remove(new_file)
+        with open('report.html') as f:
+            with open(new_file, 'wt') as nf:
+                for line in f:
+                    newline = line.replace(REPORT_TITLE, REPORT_TITLE + ' [' + environment_name[0] + ']')
+                    newline = newline.replace(AWSCONFIG_DIR, new_dir)
+                    nf.write(newline)
 
-def load_info_from_json(aws_service):
-    filename = AWSCONFIG_DIR + '/' + aws_service + '_config.js'
+def load_info_from_json(aws_service, environment_name):
+    filename = AWSCONFIG_DIR
+    if environment_name:
+        filename = filename + '-' + environment_name[0]
+    filename = filename + '/' + aws_service + '_config.js'
     with open(filename) as f:
         json_payload = f.readlines()
         json_payload.pop(0)
-#        json_payload.pop()
         json_payload = ''.join(json_payload)
         return json.loads(json_payload)
 
@@ -149,7 +161,6 @@ def load_from_json(keyword, var):
     with open(filename) as f:
         json_payload = f.readlines()
         json_payload.pop(0)
-#        json_payload.pop()
         json_payload = ''.join(json_payload)
         return json.loads(json_payload)
 
@@ -159,12 +170,24 @@ def open_file(keyword, force_write):
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
     filename = out_dir + '/' + keyword.lower().replace(' ','_') + '_config.js'
-    if not os.path.isfile(filename) or force_write:
-        return open(filename, 'wt')
-    elif prompt_4_overwrite(filename):
+    if prompt_4_overwrite(filename, force_write):
        return open(filename, 'wt')
     else:
         return None
+
+def prompt_4_overwrite(filename, force_write):
+    # Do not prompt if the file exists or force_write is set
+    if not os.path.exists(filename) or force_write:
+        return True
+    while True:
+        sys.stdout.write('File already exists. Do you want to overwrite it (yes/no)? ')
+        choice = raw_input().lower()
+        if choice == 'yes' or choice == 'y':
+            return True
+        elif choice == 'no' or choice == 'n':
+            return False
+        else:
+            print '\'%s\' is not a valid answer. Enter \'yes\' or \'no\'.'
 
 def save_to_file(blob, keyword, force_write, columns_in_report=2, raw=True):
     try:
