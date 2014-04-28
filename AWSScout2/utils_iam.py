@@ -56,33 +56,35 @@ def get_permissions(policy_document, permissions, keyword, name, policy_name):
     for statement in document['Statement']:
         effect = str(statement['Effect'])
         action_string = 'Action' if 'Action' in statement else 'NotAction'
-        parse_actions(permissions[action_string], statement[action_string], statement['Resource'], effect, keyword, name, policy_name)
+        resource_string = 'Resource' if 'Resource' in statement else 'NotResource'
+        parse_actions(permissions[action_string], statement[action_string], resource_string, statement[resource_string], effect, keyword, name, policy_name)
 
-def parse_actions(permissions, actions, resources, effect, keyword, name, policy_name):
+def parse_actions(permissions, actions, resource_string, resources, effect, keyword, name, policy_name):
     if type(actions) == list:
         for action in actions:
-            parse_action(permissions, action, resources, effect, keyword, name, policy_name)
+            parse_action(permissions, action, resource_string, resources, effect, keyword, name, policy_name)
     else:
-        parse_action(permissions, actions, resources, effect, keyword, name, policy_name)
+        parse_action(permissions, actions, resource_string, resources, effect, keyword, name, policy_name)
 
-def parse_action(permissions, action, resources, effect, keyword, name, policy_name):
+def parse_action(permissions, action, resource_string, resources, effect, keyword, name, policy_name):
     manage_dictionary(permissions, action, {})
-    parse_resources(permissions[action], resources, effect, keyword, name, policy_name)
+    parse_resources(permissions[action], resource_string, resources, effect, keyword, name, policy_name)
 
-def parse_resources(permission, resources, effect, keyword, name, policy_name):
+def parse_resources(permission, resource_string, resources, effect, keyword, name, policy_name):
     if type(resources) == list:
         for resource in resources:
-            parse_resource(permission, resource, effect, keyword, name, policy_name)
+            parse_resource(permission, resource_string, resource, effect, keyword, name, policy_name)
     else:
-        parse_resource(permission, resources, effect, keyword, name, policy_name)
+        parse_resource(permission, resource_string, resources, effect, keyword, name, policy_name)
 
-def parse_resource(permission, resource, effect, keyword, name, policy_name):
+def parse_resource(permission, resource_string, resource, effect, keyword, name, policy_name):
     manage_dictionary(permission, keyword, {})
     # h4ck : data redundancy because I can't call ../@key in Handlebars
     permission[keyword]['type'] = keyword
     manage_dictionary(permission[keyword], name, {})
-    manage_dictionary(permission[keyword][name], effect, [])
-    permission[keyword][name][effect].append(resource)
+    manage_dictionary(permission[keyword][name], effect, {})
+    manage_dictionary(permission[keyword][name][effect], resource_string, [])
+    permission[keyword][name][effect][resource_string].append(resource)
 
 def get_policies(iam_connection, iam_info, keyword, name):
     fetched_policies = []
@@ -93,7 +95,7 @@ def get_policies(iam_connection, iam_info, keyword, name):
     if m1:
         policy_names = m1(name)
     else:
-        print 'Unknown error' # fetched_policies, permissions
+        print 'Unknown error'
     policy_names = policy_names['list_' + keyword + '_policies_response']['list_' + keyword + '_policies_result']['policy_names']
     get_policy_method = getattr(iam_connection, 'get_' + keyword + '_policy')
     for policy_name in policy_names:
@@ -105,7 +107,6 @@ def get_policies(iam_connection, iam_info, keyword, name):
         fetched_policies.append(pdetails)
         get_permissions(pdetails['policy_document'], iam_info['permissions'], keyword + 's', name, pdetails['policy_name'])
     return fetched_policies
-
 
 def get_roles_info(iam_connection, iam_info):
     roles = handle_truncated_responses(iam_connection.list_roles, None, ['list_roles_response', 'list_roles_result'], 'roles')

@@ -106,6 +106,29 @@
       Handlebars.registerPartial("ec2_instance", $("#ec2_instance-partial").html());
     </script>
 
+    <!-- IAM permission resources partial -->
+    <script id="iam_resources-partial" type=="text/x-handlebars-template">
+          {{#if Resource}}
+            <li>Resources:</li>
+            <ul class="no-bullet">
+              {{#each Resource}}
+                <li class="list-group-item-text">{{this}}</li>
+              {{/each}}
+            </ul>
+          {{/if}}
+         {{#if NotResource}}
+           <li>NotResources:</li>
+            <ul class="no-bullet">
+              {{#each NotResource}}
+                <li class="list-group-item-text">{{this}}</li>
+              {{/each}}
+            </ul>
+          {{/if}}
+    </script>
+    <script>
+      Handlebars.registerPartial("iam_resources", $("#iam_resources-partial").html());
+    </script>
+
     <!-- IAM group partial -->
     <script id="iam_group-partial" type="text/x-handlebars-template">
       <div class="list-group" id="iam_group-details-{{group_id}}">
@@ -590,28 +613,21 @@
                       <ul>
                       {{#each this}}
                         {{#if Allow}}
-                          <li class="list-group-item-text">Allow <a href="javascript:{{entity_details_callback ../../type}}('{{@key}}')">{{@key}}</a></li>
-                          <ul class="no-bullet">
-                          {{#each Allow}}
-                            <li class="list-group-item-text">{{this}}</li>
-                          {{/each}}
+                          <li class="list-group-item-text">Allow: <a href="javascript:{{entity_details_callback ../../type}}('{{@key}}')">{{@key}}</a></li>
+                          <ul>
+                            {{> iam_resources Allow}}
                           </ul>
                         {{/if}}
                         {{#if Deny}}
-                          <li class="list-group-item-text">Deny {{@key}}</li>
-                          <ul class="no-bullet">
-                          {{#each Deny}}
-                            <li class="list-group-item-text">{{this}}</li>
-                          {{/each}}
+                          <li class="list-group-item-text">Deny: <a href="javascript:{{entity_details_callback ../../type}}('{{@key}}')">{{@key}}</a></li>
+                          <ul>
+                            {{> iam_resources Deny}}
                           </ul>
                         {{/if}}
                       {{/each}}
                       </ul>
                     {{/each}}
                   </div>
-                  <!--
-                  <div class="col-sm-4">{{{list_permissions Deny}}}</div>
-                  -->
                 </div>
               {{/each}}
             </div>
