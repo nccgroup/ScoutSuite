@@ -120,6 +120,17 @@ def fetch_sts_credentials(key_id, secret, mfa_serial, mfa_code):
 
 AWSCONFIG_DIR = 'inc-awsconfig'
 
+def prompt_4_overwrite(filename):
+    while True:
+        sys.stdout.write('File already exists. Do you want to overwrite it (yes/no)? ')
+        choice = raw_input().lower()
+        if choice == 'yes' or choice == 'y':
+            return True
+        elif choice == 'no' or choice == 'n':
+            return False
+        else:
+            print '\'%s\' is not a valid answer. Enter \'yes\' or \'no\'.'
+
 def load_info_from_json(aws_service):
     filename = AWSCONFIG_DIR + '/' + aws_service + '_config.js'
     with open(filename) as f:
@@ -150,18 +161,25 @@ def open_file(keyword, force_write):
     filename = out_dir + '/' + keyword.lower().replace(' ','_') + '_config.js'
     if not os.path.isfile(filename) or force_write:
         return open(filename, 'wt')
+    elif prompt_4_overwrite(filename):
+       return open(filename, 'wt')
     else:
-        print 'Error: ' + filename + ' already exists.'
         return None
 
 def save_to_file(blob, keyword, force_write, columns_in_report=2, raw=True):
-    with open_file(keyword, force_write) as f:
-        keyword = write_data_to_file(f, blob, keyword, force_write, columns_in_report)
+    try:
+        with open_file(keyword, force_write) as f:
+            keyword = write_data_to_file(f, blob, keyword, force_write, columns_in_report)
+    except:
+        pass
 
 def save_config_to_file(blob, keyword, force_write):
-    with open_file(keyword, force_write) as f:
-        keyword = write_data_to_file(f, blob, keyword, force_write, 1)
+    try:
+        with open_file(keyword, force_write) as f:
+            keyword = write_data_to_file(f, blob, keyword, force_write, 1)
 #        print >>f, 'highlight_violations(%s_data);' % (keyword)
+    except:
+        pass
 
 def write_data_to_file(f, blob, keyword, force_write, columns_in_report):
     keyword = keyword.lower().replace(' ','_') # [:-1]
