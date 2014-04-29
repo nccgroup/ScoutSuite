@@ -25,6 +25,6 @@
         "entity": "buckets",
         "callback": "checkLogging",
         "callback_args": "",
-        "level": "danger"
+        "level": "warning"
     }
 }
