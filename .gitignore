@@ -39,4 +39,5 @@ nosetests.xml
 *.csv
 
 # Data folder and files
-inc-awsconfig
+inc-awsconfig*
+report-*
