@@ -19,5 +19,12 @@
         "callback": "checkWorldReadableBucket",
         "callback_args": "",
         "level": "warning"
+    },
+    "logging-disabled": {
+        "description": "Logging disabled",
+        "entity": "buckets",
+        "callback": "checkLogging",
+        "callback_args": "",
+        "level": "danger"
     }
 }

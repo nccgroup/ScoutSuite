@@ -25,3 +25,7 @@ class S3Finding(Finding):
         for grant in obj['grants']:
             if 'All users' in grant and obj['grants']['All users']['read']:
                 self.addItem(key, key)
+
+    def checkLogging(self, key, obj):
+        if obj['logging'] == 'Disabled':
+            self.addItem(key, key)
