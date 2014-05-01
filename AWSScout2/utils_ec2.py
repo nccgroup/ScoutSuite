@@ -7,7 +7,6 @@ from AWSScout2.protocols_dict import *
 
 
 # Import other third-party packages
-from pprint import pprint
 import traceback
 
 

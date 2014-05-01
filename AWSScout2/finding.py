@@ -15,3 +15,7 @@ class Finding():
     def addItem(self, item, macro_item):
         self.items.append(item);
         self.macro_items.append(macro_item);
+
+    def removeItem(self, item, macro_item):
+        self.items.remove(item)
+        self.macro_items.remove(macro_item)

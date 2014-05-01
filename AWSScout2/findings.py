@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 
 # Import AWS Scout2 finding-related classes
+from AWSScout2.finding_cloudtrail import *
 from AWSScout2.finding_ec2 import *
 from AWSScout2.finding_iam import *
 from AWSScout2.finding_s3 import *
@@ -13,6 +14,7 @@ import re
 ########################################
 # Finding dictionaries
 ########################################
+cloudtrail_finding_dictionary = {}
 iam_finding_dictionary = {}
 ec2_finding_dictionary = {}
 s3_finding_dictionary = {}
@@ -65,6 +67,8 @@ def get_finding_variables(keyword):
         return iam_finding_dictionary, IamFinding
     elif keyword == 's3':
         return s3_finding_dictionary, S3Finding
+    elif keyword == 'cloudtrail':
+        return cloudtrail_finding_dictionary, CloudTrailFinding
     else:
         return None, None
 
@@ -72,6 +76,7 @@ def get_finding_variables(keyword):
 ########################################
 # Load findings from JSON config files
 ########################################
+load_default_findings('cloudtrail')
 load_default_findings('ec2')
 load_default_findings('iam')
 load_default_findings('s3')

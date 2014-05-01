@@ -231,9 +231,26 @@ Handlebars.registerHelper('count', function(items) {
     }
     return c;
 });
-Handlebars.registerHelper('count_ec2', function(path) {
+Handlebars.registerHelper('count_in', function(service, path) {
     var entities = path.split('.');
-    return recursive_count(ec2_info, entities);
+    if (service == 'ec2') {
+        var input = ec2_info;
+    } else if(service == 'cloudtrail') {
+        var input = cloudtrail_info;
+    } else {
+        return 0;
+    }
+    return recursive_count(input, entities);
+});
+Handlebars.registerHelper('count_ec2_in_region', function(region, path) {
+    var count = 0;
+    var entities = path.split('.');
+    for (r in ec2_info['regions']) {
+        if (r == region) {
+            return recursive_count(ec2_info['regions'][r], entities);
+        }
+    }
+    return count;
 });
 Handlebars.registerHelper('count_role_instances', function(instance_profiles) {
     var c = 0;

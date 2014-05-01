@@ -47,6 +47,13 @@ def analyze_config(finding_dictionary, config, keyword, force_write):
         pass
     save_config_to_file(config, keyword, force_write)
 
+def has_instances(ec2_region):
+    count = 0
+    for v in ec2_region['vpcs']:
+        if 'instances' in ec2_region['vpcs'][v]:
+            count = count + len(ec2_region['vpcs'][v]['instances'])
+    return False if count == 0 else True
+
 def match_instances_and_roles(ec2_config, iam_config):
     role_instances = {}
     for r in ec2_config['regions']:
@@ -79,6 +86,12 @@ def process_finding(config, finding):
     entity_path = finding.entity.split('.')
     process_entities(config, finding, entity_path)
 
+def refine_cloudtrail(cloudtrail_config, ec2_config):
+    for v in cloudtrail_config['violations']: # ['Service disabled']:
+        if v == 'Service disabled':
+            for r in cloudtrail_config['violations'][v].items:
+                if not has_instances(ec2_config['regions'][r]):
+                    cloudtrail_config['violations'][v].removeItem(r, r)
 
 ########################################
 # AWS Credentials read functions

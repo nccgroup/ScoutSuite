@@ -1,0 +1,9 @@
+{
+    "Service disabled": {
+        "description": "CloudTrail disabled",
+        "entity": "regions",
+        "callback": "checkLoggingIsEnabled",
+        "callback_args": "",
+        "level": "danger"
+    }
+}

@@ -46,6 +46,29 @@
         Handlebars.registerPartial("finding_menu_item", $("#finding_menu_item-partial").html());
     </script>
 
+    <!-- CloudTrail trail partial -->
+    <script id="cloudtrail_region-partial" type="text/x-handlebars-template">
+        <div class="list-group" id="cloudtrail_region-details-{{Name}}">
+            <div class="list-group-item active">
+                <h4 class="list-group-item-heading">{{Name}}</h4>
+            </div>
+            <div class="list-group-item">
+            <h4>Information</h4>
+                <ul>
+                    <li class="list-group-item-text">Region: {{../name}} {{../../name}} {{../../../name}}</li>
+                    <li class="list-group-item-text">Enabled: {{IsLogging}}</li>
+                    <li class="list-group-item-text">Enabled since: {{StartLoggingTime}}</li>
+                    <li class="list-group-item-text">Stopped since: {{StopLoggingTime}}</li>
+                    <li class="list-group-item-text">Include global services: {{IncludeGlobalServiceEvents}}</li>
+                    <li class="list-group-item-text">Destination S3 bucket name: {{S3KeyPrefix}} {{S3BucketName}}</li>
+                </ul>
+            </div>
+        </div>
+    </script>
+    <script>
+        Handlebars.registerPartial("cloudtrail_region", $("#cloudtrail_region-partial").html());
+    </script>
+
     <!-- EC2 security group partial -->
     <script id="ec2_security_group-instance_list-partial" type="text/x-handlebars-template">
         {{#if instances}}
@@ -343,6 +366,19 @@
           <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="dropdown">
+              <a href="javascript:show_cloudtrail()" class="dropdown-toggle" data-toggle="dropdown"><span id="cloudtrail_dropdown">CloudTrail</span><b class="caret"></b></a>
+              <ul class="dropdown-menu" id="cloudtrail_violations-list">
+                <script id="cloudtrail_violation-list-template" type="text/x-handlebars-template">
+                  <li><a href="javascript:list_generic('cloudtrail_region')">Trails</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">Security risks</li>
+                  {{#each items}}
+                    {{> finding_menu_item}}
+                  {{/each}}
+                </script>
+              </ul>
+            </li>
+            <li class="dropdown">
               <a href="javascript:show_ec2()" class="dropdown-toggle" data-toggle="dropdown"><span id="ec2_dropdown">EC2</span><b class="caret"></b></a>
               <ul class="dropdown-menu" id="ec2_violations-list">
                 <script id="ec2_violation-list-template" type="text/x-handlebars-template">
@@ -360,6 +396,7 @@
                   {{/each}}
                 </script>
               </ul>
+            </li>
             <li class="dropdown">
               <a href="javascript:show_iam()" class="dropdown-toggle" data-toggle="dropdown"><span id="iam_dropdown">IAM</span><b class="caret"></b></a>
               <ul class="dropdown-menu" id="iam_violations-list">
@@ -411,12 +448,48 @@
       <div id="overlay-background" class="overlay-bg"></div>
       <div id="overlay-details" class="overlay col-sm-6"></div>
 
+      <!-- Template for CloudTrail -->
+      <div class="row" id="cloudtrail_regions-row">
+        <div class="col-sm-4" id="cloudtrail_regions-list">
+          <script id="cloudtrail_region-list-template" type="text/x-handlebars-template">
+            <ul class="list-group">
+              <li class="list-group-item"><a href="javascript:showAll('cloudtrail_region')">Show all<span class="badge pull-right">{{count_in 'cloudtrail' 'regions'}}</span></a></li>
+            </ul>
+            {{#each items}}
+              <ul class="list-group">
+                <li class="list-group-item active">
+                  {{@key}} <span class="badge pull-right">{{count_ec2_in_region @key "vpcs.instances"}} instances </span>
+                </li>
+                {{#each trails}}
+                  <div class="list-group-item list-sub-element">
+                    <a href="javascript:browseTo('cloudtrail_region', '{{@key}}')">{{@key}}</a>
+                  </div>
+                {{else}}
+                  <div class="list-group-item list-sub-element">
+                    <span id="cloudtrail_regions-Service disabled-{{@key}}">CloudTrail disabled</span>
+                  </div>
+                {{/each}}
+              </ul>
+            {{/each}}
+          </script>
+        </div>
+        <div class="col-sm-8" id="cloudtrail_regions-details">
+          <script id="cloudtrail_region-detail-template" type="text/x-handlebars-template">
+          {{#each items}}
+            {{#each trails}}
+              {{> cloudtrail_region}}
+            {{/each}}
+          {{/each}}
+          </script>
+        </div><!-- /.col-sm-8 -->
+      </div><!-- /.row -->
+
       <!-- Template for EC2 security groups -->
       <div class="row" id="ec2_security_groups-row">
         <div class="col-sm-4" id="ec2_security_groups-list">
           <script id="ec2_security_group-list-template" type="text/x-handlebars-template">
             <ul class="list-group">
-              <li class="list-group-item"><a href="javascript:showAll('ec2_security_group')">Show all<span class="badge pull-right">{{count_ec2 "regions.vpcs.security_groups"}}</span></a></li>
+              <li class="list-group-item"><a href="javascript:showAll('ec2_security_group')">Show all<span class="badge pull-right">{{count_in "ec2" "regions.vpcs.security_groups"}}</span></a></li>
             </ul>
             {{#each items}}
              {{#if vpcs}}
@@ -486,7 +559,7 @@
         <div class="col-sm-4" id="ec2_network_acls-list">
           <script id="ec2_network_acl-list-template" type="text/x-handlebars-template">
             <ul class="list-group">
-              <li class="list-group-item"><a href="javascript:showAll('ec2_network_acl')">Show all<span class="badge pull-right">{{count_ec2 "regions.vpcs.network_acls"}}</span></a></li>
+              <li class="list-group-item"><a href="javascript:showAll('ec2_network_acl')">Show all<span class="badge pull-right">{{count_in "ec2" "regions.vpcs.network_acls"}}</span></a></li>
             </ul>
             {{#each items}}
              {{#if vpcs}}
@@ -538,7 +611,7 @@
         <div class="col-sm-4" id="ec2_instances-list">
           <script id="ec2_instance-list-template" type="text/x-handlebars-template">
             <ul class="list-group">
-              <li class="list-group-item"><a href="javascript:showAll('ec2_instance')">Show all<span class="badge pull-right">{{count_ec2 "regions.vpcs.instances"}}</span></a></li>
+              <li class="list-group-item"><a href="javascript:showAll('ec2_instance')">Show all<span class="badge pull-right">{{count_in "ec2" "regions.vpcs.instances"}}</span></a></li>
             </ul>
             {{#each items}}
              {{#if vpcs}}
@@ -769,8 +842,19 @@
 
     </div> <!-- /container -->
 
-    <!-- Load EC2 data -->
+    <!-- Include all AWS services configs -->
+    <script src="inc-awsconfig/cloudtrail_config.js"></script>
     <script src="inc-awsconfig/ec2_config.js"></script>
+    <script src="inc-awsconfig/iam_config.js"></script>
+    <script src="inc-awsconfig/s3_config.js"></script>
+
+    <!-- Load CloudTrail data -->
+    <script>
+        load_aws_config_from_json(cloudtrail_info['regions'], 'cloudtrail_region', 2);
+        highlight_violations(cloudtrail_info['violations'], 'cloudtrail');
+    </script>
+
+    <!-- Load EC2 data -->
     <script>
         Handlebars.registerPartial("ec2_instance", $("#ec2_instance-partial").html());
         load_aws_config_from_json(ec2_info['regions'], 'ec2_security_group', 2);
@@ -780,7 +864,6 @@
     </script>
 
     <!-- Load IAM data -->
-    <script src="inc-awsconfig/iam_config.js"></script>
     <script>
         load_aws_config_from_json(iam_info['groups'], 'iam_group', 2);
         load_aws_config_from_json(iam_info['permissions'], 'iam_permission', 1);
@@ -790,7 +873,6 @@
     </script>
 
     <!-- Load S3 data -->
-    <script src="inc-awsconfig/s3_config.js"></script>
     <script>
         load_aws_config_from_json(s3_info['buckets'], 's3_bucket', 2);
         highlight_violations(s3_info['violations'], 's3');

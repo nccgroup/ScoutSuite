@@ -7,6 +7,7 @@ import boto.vpc
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
+from AWSScout2.utils_cloudtrail import *
 from AWSScout2.utils_ec2 import *
 from AWSScout2.utils_iam import *
 from AWSScout2.utils_s3 import *
@@ -48,6 +49,16 @@ def main(args):
     if args.mfa_code or args.mfa_serial:
         key_id, secret, session_token = fetch_sts_credentials(key_id, secret, args.mfa_serial, args.mfa_code)
 
+    ##### CloudTrail
+    if args.fetch_cloudtrail:
+        # Fetch data from AWS or an existing local file
+        if not args.fetch_local:
+            cloudtrail_info = get_cloudtrail_info(key_id, secret, session_token)
+        else:
+            cloudtrail_info = load_info_from_json('cloudtrail', args.environment_name)
+        # Analyze the CloudTrail config and save data to a local file
+        analyze_cloudtrail_config(cloudtrail_info, args.force_write)
+
     ##### IAM
     if args.fetch_iam:
         # Fetch data from AWS or an existing local file
@@ -84,6 +95,9 @@ def main(args):
     if args.fetch_ec2 and args.fetch_iam:
         match_instances_and_roles(ec2_info, iam_info)
         analyze_iam_config(iam_info, args.force_write)
+    if args.fetch_cloudtrail and args.fetch_ec2:
+        refine_cloudtrail(cloudtrail_info, ec2_info)
+        save_config_to_file(cloudtrail_info, 'cloudtrail', args.force_write)
 
 
     ##### Rename data based on environment's name
@@ -110,6 +124,11 @@ parser.add_argument('--no_s3',
                     default='True',
                     action='store_false',
                     help='don\'t fetch the S3 configuration')
+parser.add_argument('--no_cloudtrail',
+                    dest='fetch_cloudtrail',
+                    default='True',
+                    action='store_false',
+                    help='don\'t fetch the CloudTrail configuration')
 parser.add_argument('--gov',
                     dest='fetch_ec2_gov',
                     default=False,
