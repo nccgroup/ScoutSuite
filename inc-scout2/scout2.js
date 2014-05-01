@@ -266,7 +266,7 @@ var recursive_count = function(input, entities) {
     if (entities.length > 0) {
         var entity = entities.shift();
         for (i in input[entity]) {
-            count = count + recursive_count(input[entity][i], eval(uneval(entities)));
+            count = count + recursive_count(input[entity][i], eval(JSON.stringify(entities)));
         }
     } else {
         count = count + 1;
