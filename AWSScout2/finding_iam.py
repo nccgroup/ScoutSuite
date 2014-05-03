@@ -32,18 +32,18 @@ class IamFinding(Finding):
 
     def lacksMFA(self, key, obj):
         if len(obj['mfa_devices']) == 0 and 'logins' in obj:
-            self.addItem(obj['user_name'], obj['user_name'])
+            self.addItem(obj['user_name'])
             return True
         else:
             return False
 
     def passwordAndKeyEnabled(self, key, obj):
         if len(obj['access_keys']) > 0 and 'logins' in obj:
-            self.addItem(obj['user_name'], obj['user_name'])
+            self.addItem(obj['user_name'])
             return True
         else:
             return False
 
     def hasUserPolicy(self, key, obj):
         if len(obj['policies']) > 0:
-            self.addItem(obj['user_name'], obj['user_name'])
+            self.addItem(obj['user_name'])

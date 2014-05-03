@@ -43,6 +43,12 @@
         "callback": "checkNetworkACLs",
         "callback_args": "outbound",
         "level": "warning"
+    },
+    "old-ssl-policy": {
+        "description": "Use of custom/obsolete SSL policy",
+        "entity": "regions.elbs",
+        "callback": "checkElbSslPolicy",
+        "callback_args": "",
+        "level": "warning"
     }
-
 }

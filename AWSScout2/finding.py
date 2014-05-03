@@ -12,10 +12,15 @@ class Finding():
         self.items = []
         self.macro_items = []
 
-    def addItem(self, item, macro_item):
+    def addItem(self, item, macro_item = None):
         self.items.append(item);
-        self.macro_items.append(macro_item);
+        if macro_item:
+            self.macro_items.append(macro_item);
 
-    def removeItem(self, item, macro_item):
-        self.items.remove(item)
-        self.macro_items.remove(macro_item)
+    def removeItem(self, item, macro_item = None):
+        try:
+            self.items.remove(item)
+            if macro_item:
+                self.macro_items.remove(macro_item)
+        except:
+            pass

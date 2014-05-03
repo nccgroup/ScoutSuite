@@ -36,9 +36,9 @@
 
     <!-- Finding menu item partial -->
     <script id="finding_menu_item-partial" type="text/x-handlebars-template">
-      {{#if macro_items}}
+      {{#if items}}
         <li><a href="javascript:list_findings('{{finding_entity keyword_prefix entity}}', {{keyword_prefix}}_info['violations'], '{{@key}}')">
-          {{description}} ({{macro_items.length}})
+          {{description}} ({{items.length}})
         </a></li>
       {{/if}}
     </script>
@@ -94,7 +94,11 @@
           {{#each listeners}}
             <li class="list-group-item-text">
               {{load_balancer_port}} ({{protocol}}) <i class="glyphicon glyphicon-arrow-right"></i> {{instance_port}} ({{instance_protocol}})
-              {{#if ssl_certificate_id}} : {{policy_names}} {{/if}}
+              {{#if ssl_certificate_id}} :
+                {{#each policy_names}}
+                  <span id="ec2_elbs-old-ssl-policy-{{../../../name}}-{{this}}">{{this}}</span>
+                {{/each}}
+              {{/if}}
             </li>
           {{/each}}
           </ul>
@@ -432,11 +436,7 @@
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
-                    {{#if macro_items}}
-                      <li><a href="javascript:list_findings('{{finding_entity keyword_prefix entity}}', {{keyword_prefix}}_info['violations'], '{{@key}}')">
-                        {{description}} ({{macro_items.length}})
-                      </a></li>
-                    {{/if}}
+                    {{> finding_menu_item}}
                   {{/each}}
                 </script>
               </ul>

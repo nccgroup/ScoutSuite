@@ -12,7 +12,6 @@ class CloudTrailFinding(Finding):
         if obj['trails']:
             for trail in obj['trails']:
                 if not obj['trails'][trail]['IsLogging']:
-                    self.addItem(key, key)
-                print trail
+                    self.addItem(key)
         else:
-            self.addItem(key, key)
+            self.addItem(key)

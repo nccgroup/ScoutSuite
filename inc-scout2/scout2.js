@@ -17,16 +17,28 @@ function load_aws_config_from_json(list, keyword, cols) {
 // Generic highlight finding function
 function highlight_violations(violations, keyword) {
     for (i in violations) {
+        var read_macro_items = false;
         var vkey = violations[i]['keyword_prefix'] + '_' + violations[i]['entity'].split('.').pop() + '-' + i;
         violations_array[vkey] = new Array();
+        if (violations[i]['macro_items'].length == violations[i]['items'].length ) {
+            read_macro_items = true;
+        }
         for (j in violations[i]['items']) {
-            var id = vkey + '-' + violations[i]['items'][j];
+            var id = vkey;
+            if (read_macro_items) {
+                id = id + '-' + violations[i]['macro_items'][j];
+            }
+            id = id + '-' + violations[i]['items'][j];
             if ($('[id$="' + id + '"]').hasClass("badge")) {
                 $('[id$="' + id + '"]').addClass('btn-' + violations[i]['level']);
             } else {
                 $('[id$="' + id + '"]').addClass('finding-' + violations[i]['level']);
             }
-            violations_array[vkey].push(violations[i]['macro_items'][j]);
+            if (read_macro_items) {
+                violations_array[vkey].push(violations[i]['macro_items'][j]);
+            } else {
+                violations_array[vkey].push(violations[i]['items'][j]);
+            }
         }
     }
     load_aws_config_from_json(violations, keyword + '_violation', 1);
@@ -146,8 +158,13 @@ function list_findings(keyword, violations, finding) {
     updateNavbar(keyword);
     hideAll();
     showEmptyRow(keyword);
-    for (item in  violations[finding]['macro_items']) {
-        showItem(keyword, violations[finding]['macro_items'][item]);
+    if (violations[finding]['macro_items'].length == violations[finding]['items'].length ) {
+        items = violations[finding]['macro_items'];
+    } else {
+        items = violations[finding]['items'];
+    }
+    for (item in items) {
+        showItem(keyword, items[item]);
     }
     window.scrollTo(0,0);
 }
