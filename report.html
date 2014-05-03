@@ -69,6 +69,49 @@
         Handlebars.registerPartial("cloudtrail_region", $("#cloudtrail_region-partial").html());
     </script>
 
+    <!-- EC2 ELB partial -->
+    <script id="ec2_elb-partial" type="text/x-handlebars-template">
+      <div class="list-group" id="ec2_elb-details-{{name}}">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4>Network</h4>
+          <ul>
+            <li class="list-group-item-text">VPC: {{vpc_id}}</li>
+            <li class="list-group-item-text">DNS: {{dns_name}}</li>
+            <li class="list-group-item-text">Availability zones:</li>
+            <ul>
+              {{#each availability_zones}}
+                <li class="list-group-item-text">{{this}}</li>
+              {{/each}}
+            </ul>
+          </ul>
+        </div>
+        <div class="list-group-item">
+          <h4>Listeners</h4>
+          <ul>
+          {{#each listeners}}
+            <li class="list-group-item-text">
+              {{load_balancer_port}} ({{protocol}}) <i class="glyphicon glyphicon-arrow-right"></i> {{instance_port}} ({{instance_protocol}})
+              {{#if ssl_certificate_id}} : {{policy_names}} {{/if}}
+            </li>
+          {{/each}}
+          </ul>
+        </div>
+        <div class="list-group-item">
+          <h4>Destination</h4>
+          <ul>
+            <li class="list-group-item-text">Security groups:  <span class="badge pull-right btn-info">{{count security_groups}}</span></li>
+            <li class="list-group-item-text">Instances: <span class="badge pull-right btn-info">{{count instances}}</span></li>
+            <li class="list-group-item-text">Subnets: <span class="badge pull-right btn-info">{{count subnets}}</span></li>
+        </div>
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("ec2_elb", $("#ec2_elb-partial").html());
+    </script>
+
     <!-- EC2 security group partial -->
     <script id="ec2_security_group-instance_list-partial" type="text/x-handlebars-template">
         {{#if instances}}
@@ -184,9 +227,9 @@
         </div>
         <div class="list-group-item">
           {{#if policies}}
-            <h4 class="list-group-item-heading">Group Policies <spcan class="badge pull-right btn-info">{{count policies}}</span></h4>
+            <h4 class="list-group-item-heading">Group Policies <span class="badge pull-right btn-info">{{count policies}}</span></h4>
           {{else}}
-            <h4 class="list-group-item-heading">Group Policies <spcan class="badge pull-right">{{count policies}}</span></h4>
+            <h4 class="list-group-item-heading">Group Policies <span class="badge pull-right">{{count policies}}</span></h4>
           {{/if}}
           {{#each policies}}
             <hr>
@@ -382,6 +425,7 @@
               <a href="javascript:show_ec2()" class="dropdown-toggle" data-toggle="dropdown"><span id="ec2_dropdown">EC2</span><b class="caret"></b></a>
               <ul class="dropdown-menu" id="ec2_violations-list">
                 <script id="ec2_violation-list-template" type="text/x-handlebars-template">
+                  <li><a href="javascript:list_generic('ec2_elb')">ELBs</a></li>
                   <li><a href="javascript:list_generic('ec2_instance')">Instances</a></li>
                   <li><a href="javascript:list_generic('ec2_network_acl')">Network ACLs</a></li>
                   <li><a href="javascript:list_generic('ec2_security_group')">Security Groups</a></li>
@@ -478,6 +522,37 @@
           {{#each items}}
             {{#each trails}}
               {{> cloudtrail_region}}
+            {{/each}}
+          {{/each}}
+          </script>
+        </div><!-- /.col-sm-8 -->
+      </div><!-- /.row -->
+
+      <!-- Template for EC2 ELBs -->
+      <div class="row" id="ec2_elbs-row">
+        <div class="col-sm-4" id="ec2_elbs-list">
+          <script id="ec2_elb-list-template" type="text/x-handlebars-template">
+            <ul class="list-group">
+              <li class="list-group-item"><a href="javascript:showAll('ec2_elb')">Show all<span class="badge pull-right">{{count_in "ec2" "regions.elbs"}}</span></a></li>
+            </ul>
+            {{#each items}}
+             {{#if elbs}}
+              <ul class="list-group">
+                <li class="list-group-item active">{{@key}}</li>
+                {{#each elbs}}
+                  <div class="list-group-item list-sub-element" id="ec2_elb-list-{{@key}}"><a href="javascript:browseTo('ec2_elb', '{{@key}}')">{{@key}}</a></div>
+                {{/each}}
+              </ul>
+             {{/if}}
+            {{/each}}
+            </script>
+          </ul>
+        </div>
+        <div class="col-sm-8" id="ec2_elbs-details">
+          <script id="ec2_elb-detail-template" type="text/x-handlebars-template">
+          {{#each items}}
+            {{#each elbs}}
+              {{> ec2_elb}}
             {{/each}}
           {{/each}}
           </script>
@@ -856,7 +931,7 @@
 
     <!-- Load EC2 data -->
     <script>
-        Handlebars.registerPartial("ec2_instance", $("#ec2_instance-partial").html());
+        load_aws_config_from_json(ec2_info['regions'], 'ec2_elb', 2);
         load_aws_config_from_json(ec2_info['regions'], 'ec2_security_group', 2);
         load_aws_config_from_json(ec2_info['regions'], 'ec2_network_acl', 2);
         load_aws_config_from_json(ec2_info['regions'], 'ec2_instance', 2);
