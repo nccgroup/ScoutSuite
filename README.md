@@ -3,7 +3,7 @@ AWS Scout2
 
 ## Description
 
-Scout2 is a security tool that lets AWS administrators asses their environment's
+Scout2 is a security tool that lets AWS administrators assess their environment's
 security posture. Using the AWS API, Scout2 gathers configuration data for
 manual inspection and highlights high-risk areas automatically. Rather than
 pouring through dozens of pages on the web, Scout2 supplies a clear view of the
