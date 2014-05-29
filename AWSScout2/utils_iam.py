@@ -53,7 +53,13 @@ def get_permissions(policy_document, permissions, keyword, name, policy_name):
     manage_dictionary(permissions, 'Action', {})
     manage_dictionary(permissions, 'NotAction', {})
     document = json.loads(urllib.unquote(policy_document).decode('utf-8'))
-    for statement in document['Statement']:
+    if type(document['Statement']) != list:
+        parse_statement(policy_document, permissions, keyword, name, policy_name, document['Statement'])
+    else:
+        for statement in document['Statement']:
+            parse_statement(policy_document, permissions, keyword, name, policy_name, statement)
+
+def parse_statement(policy_document, permissions, keyword, name, policy_name, statement):
         effect = str(statement['Effect'])
         action_string = 'Action' if 'Action' in statement else 'NotAction'
         resource_string = 'Resource' if 'Resource' in statement else 'NotResource'
