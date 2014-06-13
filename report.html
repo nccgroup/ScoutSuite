@@ -328,7 +328,7 @@
           <p class="list-group-item-text item-margin">Access Keys: {{has_access_keys? access_keys}}</p>
           <ul class="item-margin">
           {{#each access_keys}}
-            <li class="list-group-item-text"><span id="iam_users-{{status}}-key-no-rotation-{{access_key_id}}">{{access_key_id}}, {{status}}, created on {{create_date}}</span></li>
+            <li class="list-group-item-text"><span id="iam_users-{{status}}-key-no-rotation-{{../user_name}}-{{access_key_id}}">{{access_key_id}}, {{status}}, created on {{create_date}}</span></li>
           {{/each}}
           </ul>
           {{#ifPasswordAndKey logins access_keys}}
