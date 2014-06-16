@@ -21,6 +21,7 @@ def get_cloudtrail_info(key_id, secret, session_token):
     for region in cloudtrail.regions():
         print 'Fetching CloudTrail data for region %s...' % region.name
         manage_dictionary(cloudtrail_info['regions'], region.name, {})
+        cloudtrail_info['regions'][region.name]['name'] = region.name
         manage_dictionary(cloudtrail_info['regions'][region.name], 'trails', {})
         cloudtrail_connection = cloudtrail.connect_to_region(region.name, aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
         trails = cloudtrail_connection.describe_trails()

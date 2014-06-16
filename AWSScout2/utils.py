@@ -87,11 +87,10 @@ def process_finding(config, finding):
     process_entities(config, finding, entity_path)
 
 def refine_cloudtrail(cloudtrail_config, ec2_config):
-    for v in cloudtrail_config['violations']: # ['Service disabled']:
-        if v == 'Service disabled':
-            for r in cloudtrail_config['violations'][v].items:
-                if not has_instances(ec2_config['regions'][r]):
-                    cloudtrail_config['violations'][v].removeItem(r, r)
+    inactive_regions = [r for r in cloudtrail_config['violations']['Service disabled'].items]
+    for r in inactive_regions:
+        cloudtrail_config['violations']['Service disabled'].removeItem(r)
+
 
 ########################################
 # AWS Credentials read functions

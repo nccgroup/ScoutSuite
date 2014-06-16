@@ -48,25 +48,30 @@
 
     <!-- CloudTrail trail partial -->
     <script id="cloudtrail_region-partial" type="text/x-handlebars-template">
-        <div class="list-group" id="cloudtrail_region-details-{{Name}}">
-            <div class="list-group-item active">
-                <h4 class="list-group-item-heading">{{Name}}</h4>
-            </div>
-            <div class="list-group-item">
-            <h4>Information</h4>
-                <ul>
-                    <li class="list-group-item-text">Region: {{../name}} {{../../name}} {{../../../name}}</li>
-                    <li class="list-group-item-text">Enabled: {{IsLogging}}</li>
-                    <li class="list-group-item-text">Enabled since: {{StartLoggingTime}}</li>
-                    <li class="list-group-item-text">Stopped since: {{StopLoggingTime}}</li>
-                    <li class="list-group-item-text">Include global services: {{IncludeGlobalServiceEvents}}</li>
-                    <li class="list-group-item-text">Destination S3 bucket name: {{S3KeyPrefix}} {{S3BucketName}}</li>
-                </ul>
-            </div>
+      <div class="list-group" id="cloudtrail_region-details-{{Name}}">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
+        <div class="list-group-item">
+        <h4>Information</h4>
+          <ul>
+            {{#each trails}}
+               <li class="list-group-item-text">Name: {{Name}}</li>
+               <li class="list-group-item-text">Enabled: {{IsLogging}}</li>
+               <li class="list-group-item-text">Enabled since: {{StartLoggingTime}}</li>
+               <li class="list-group-item-text">Stopped since: {{StopLoggingTime}}</li>
+               <li class="list-group-item-text">Include global services: {{IncludeGlobalServiceEvents}}</li>
+               <li class="list-group-item-text">Destination S3 bucket name: {{S3KeyPrefix}} {{S3BucketName}}</li>
+            {{else}}
+               <li class="list-group-item-text">CloudTrail disabled</li>
+            {{/each}}
+             <li class="list-group-item-text">EC2 instances: {{count_ec2_in_region name "vpcs.instances"}}
+          </ul>
+        </div>
+      </div>
     </script>
     <script>
-        Handlebars.registerPartial("cloudtrail_region", $("#cloudtrail_region-partial").html());
+      Handlebars.registerPartial("cloudtrail_region", $("#cloudtrail_region-partial").html());
     </script>
 
     <!-- EC2 ELB partial -->
@@ -162,33 +167,32 @@
     <script>
         Handlebars.registerPartial("ec2_security_group", $("#ec2_security_group-partial").html());
     </script>
-
     <script id="ec2_security_group-instance_list-partial" type="text/x-handlebars-template">
-        {{#if instances}}
-            <div class="accordion">
-                <h5 class="list-group-item-heading item-margin accordion-heading">{{status}}
-                    <a class="accordion-toggle" data-toggle="collapse" href="#ec2_security_group-{{group}}-instance_list-{{status}}">
-                        <span class="badge pull-right btn-info">{{instances.length}}</span>
-                    </a>
-                </h5>
-                <div id="ec2_security_group-{{group}}-instance_list-{{status}}" class="accordion-body collapse">
-                    <div class="accordion-inner">
-                        <ul class="no-bullet">
-                        {{#each instances}}
-                            <li class="list-group-item-text"><a href="javascript:showEC2Instance('{{../region}}','{{../vpc}}','{{this}}')">{{this}}</a></li>
-                        {{/each}}
-                        </ul>
-                    </div>
-                </div>
+      {{#if instances}}
+        <div class="accordion">
+          <h5 class="list-group-item-heading item-margin accordion-heading">{{status}}
+            <a class="accordion-toggle" data-toggle="collapse" href="#ec2_security_group-{{group}}-instance_list-{{status}}">
+              <span class="badge pull-right btn-info">{{instances.length}}</span>
+            </a>
+          </h5>
+          <div id="ec2_security_group-{{group}}-instance_list-{{status}}" class="accordion-body collapse">
+            <div class="accordion-inner">
+              <ul class="no-bullet">
+              {{#each instances}}
+                <li class="list-group-item-text"><a href="javascript:showEC2Instance('{{../region}}','{{../vpc}}','{{this}}')">{{this}}</a></li>
+              {{/each}}
+              </ul>
             </div>
-        {{else}}
-            <h5 class="list-group-item-heading item-margin accordion-heading">{{status}}
-                <span class="badge pull-right">{{instances.length}}</span>
-            </h5>
-        {{/if}}
+          </div>
+        </div>
+      {{else}}
+        <h5 class="list-group-item-heading item-margin accordion-heading">{{status}}
+          <span class="badge pull-right">{{instances.length}}</span>
+        </h5>
+      {{/if}}
     </script>
     <script>
-        Handlebars.registerPartial("ec2_security_group-instance_list", $("#ec2_security_group-instance_list-partial").html());
+      Handlebars.registerPartial("ec2_security_group-instance_list", $("#ec2_security_group-instance_list-partial").html());
     </script>
 
     <!-- EC2 instance partial -->
@@ -575,9 +579,7 @@
         <div class="col-sm-8" id="cloudtrail_regions-details">
           <script id="cloudtrail_region-detail-template" type="text/x-handlebars-template">
           {{#each items}}
-            {{#each trails}}
-              {{> cloudtrail_region}}
-            {{/each}}
+            {{> cloudtrail_region}}
           {{/each}}
           </script>
         </div><!-- /.col-sm-8 -->
