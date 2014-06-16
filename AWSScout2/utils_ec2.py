@@ -171,13 +171,15 @@ def parse_security_group(group):
         protocols[rule.ip_protocol] = manage_dictionary(protocols[rule.ip_protocol], 'rules', [])
         protocols[rule.ip_protocol]['name'] = rule.ip_protocol.upper()
         acl = {}
-        acl['grants'] = []
+        acl['grants'] = {}
         # Save grants, values are either a CIDR or an EC2 security group
         for grant in rule.grants:
             if grant.cidr_ip:
-                acl['grants'].append(grant.cidr_ip)
+                manage_dictionary(acl['grants'], 'cidrs', [])
+                acl['grants']['cidrs'].append(grant.cidr_ip)
             else:
-                acl['grants'].append('%s (%s)' % (grant.name, grant.groupId))
+                manage_dictionary(acl['grants'], 'security_groups', [])
+                acl['grants']['security_groups'].append(grant.groupId) # '%s (%s)' % (grant.name, grant.groupId))
         # Save the port (single port or range)
         if rule.from_port == rule.to_port:
             acl['ports'] = rule.from_port

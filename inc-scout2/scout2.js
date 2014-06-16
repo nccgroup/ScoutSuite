@@ -112,6 +112,11 @@ function showEC2InstanceDetails(region, vpc, id) {
     $('#overlay-details').html(single_ec2_instance_template(data));
     showPopup();
 }
+function showEC2SecurityGroup(region, vpc, id) {
+    var data = ec2_info['regions'][region]['vpcs'][vpc]['security_groups'][id];
+    $('#overlay-details').html(single_ec2_security_group_template(data));
+    showPopup();
+}
 function showIAMGroup(group_id) {
     var data = iam_info['groups'][group_id];
     $('#overlay-details').html(single_iam_group_template(data));
@@ -195,13 +200,6 @@ Handlebars.registerHelper('has_mfa?', function(mfa_devices) {
         return 'Yes';
     } else {
         return 'No';
-    }
-});
-Handlebars.registerHelper('format_grant', function(grants) {
-    if (grants.match(/.*\(.*\)/)) {
-        return 'EC2 Group: ';
-    } else {
-        return 'Source IP: ';
     }
 });
 Handlebars.registerHelper('list_permissions', function(permissions) {

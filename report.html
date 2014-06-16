@@ -607,8 +607,15 @@
                       {{# each rules}}
                         <li class="list-group-item-text">Ports: <span id="ec2_security_groups-{{../name}}-{{ports}}-{{../../id}}">{{ports}}</span></li>
                         <ul>
-                        {{# each grants}}
-                          <li class="list-group-item-text">{{format_grant this}}<span id="ec2_security_groups-{{../../name}}-{{../ports}}-{{this}}-{{../../../id}}">{{this}}</span></li>
+                        {{# each grants/cidrs}}
+                          <li class="list-group-item-text">IP: <span id="ec2_security_groups-{{../../name}}-{{../ports}}-{{this}}-{{../../../id}}">{{this}}</span></li>
+                        {{/each}}
+                        {{# each grants/security_groups}}
+                          <li class="list-group-item-text"> EC2 group:
+                            <span id="ec2_security_groups-{{../../name}}-{{../ports}}-{{this}}-{{../../../id}}">
+                              <a href="javascript:showEC2SecurityGroup('{{../../../../../name}}', '{{../../../../id}}', '{{this}}')">{{this}}</a>
+                            </span>
+                          </li>
                         {{/each}}
                         </ul>
                       {{/each}}
