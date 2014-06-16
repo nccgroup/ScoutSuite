@@ -95,19 +95,24 @@ function toggleVisibility(id) {
         $(id2).html('<i class="glyphicon glyphicon-expand"></i>');
     }
 }
-function findAndShowEC2InstanceDetails(id) {
+function findAndShowEC2Object(entity, id) {
     for (r in ec2_info['regions']) {
         for (v in ec2_info['regions'][r]['vpcs']) {
-            for (i in ec2_info['regions'][r]['vpcs'][v]['instances']) {
-                if (i == id) {
-                    showEC2InstanceDetails(r, v, i);
+            for (object_id in ec2_info['regions'][r]['vpcs'][v][entity]) {
+                if (object_id == id) {
+                    if (entity == 'instances') {
+                        showEC2Instance(r, v, object_id);
+                    }
+                    else if (entity == 'security_groups') {
+                        showEC2SecurityGroup(r, v, object_id);
+                    }
                     return;
                 }
             }
         }
     }
 }
-function showEC2InstanceDetails(region, vpc, id) {
+function showEC2Instance(region, vpc, id) {
     var data = ec2_info['regions'][region]['vpcs'][vpc]['instances'][id];
     $('#overlay-details').html(single_ec2_instance_template(data));
     showPopup();

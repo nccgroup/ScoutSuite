@@ -152,9 +152,9 @@ def get_security_groups_info(ec2_connection, vpc_info):
         # h4ck : data redundancy because I can't call ../@key in Handlebars
         vpc_info[vpc_id]['id'] = vpc_id
         manage_dictionary(vpc_info[vpc_id], 'security_groups', {})
-        manage_dictionary(vpc_info[vpc_id]['security_groups'], group.name, {})
+        manage_dictionary(vpc_info[vpc_id]['security_groups'], group.id, {})
         # Append the new security group to the return list
-        vpc_info[vpc_id]['security_groups'][group.name] = parse_security_group(group)
+        vpc_info[vpc_id]['security_groups'][group.id] = parse_security_group(group)
         count = update_status(count, total, 'Security groups')
     close_status(count, total, 'Security groups')
 

@@ -22,6 +22,7 @@ The following is a list of required python modules that may not be installed on
 your system:
 
 * Boto, Amazon's AWS SDK for Python (https://aws.amazon.com/sdkforpython)
+ * Version 2.27 and up
 * Dateutil (https://pypi.python.org/pypi/python-dateutil)
 
 ## Requirements
