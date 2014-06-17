@@ -95,22 +95,46 @@ function toggleVisibility(id) {
         $(id2).html('<i class="glyphicon glyphicon-expand"></i>');
     }
 }
-function findAndShowEC2Object(entity, id) {
-    for (r in ec2_info['regions']) {
-        for (v in ec2_info['regions'][r]['vpcs']) {
-            for (object_id in ec2_info['regions'][r]['vpcs'][v][entity]) {
-                if (object_id == id) {
-                    if (entity == 'instances') {
-                        showEC2Instance(r, v, object_id);
-                    }
-                    else if (entity == 'security_groups') {
-                        showEC2SecurityGroup(r, v, object_id);
-                    }
-                    return;
+function findEC2Object(ec2_data, entities, id) {
+    if (entities.length > 0) {
+        var entity = entities.shift();
+        var recurse = entities.length;
+        for (i in ec2_data[entity]) {
+            if (recurse) {
+                var object = findEC2Object(ec2_data[entity][i], eval(JSON.stringify(entities)), id);
+                if (object) {
+                    return object;
                 }
+            } else if(i == id) {
+                return ec2_data[entity][i];
             }
         }
     }
+    return '';
+}
+
+function findEC2ObjectAttribute(ec2_info, path, id, attribute) {
+    var entities = path.split('.');
+    var object = findEC2Object(ec2_info, entities, id);
+    if (object[attribute]) {
+        return object[attribute];
+    }
+    return '';
+}
+function findAndShowEC2Object(path, id) {
+    entities = path.split('.');
+    var object = findEC2Object(ec2_info, entities, id);
+    var etype = entities.pop();
+    if (etype == 'instances') {
+        $('#overlay-details').html(single_ec2_instance_template(object));
+    } else if(etype == 'security_groups') {
+        $('#overlay-details').html(single_ec2_security_group_template(object));
+    }
+    showPopup();
+}
+function showEC2Instance2(data) {
+    $('#overlay-details').html(single_ec2_instance_template(data));
+    showPopup();
 }
 function showEC2Instance(region, vpc, id) {
     var data = ec2_info['regions'][region]['vpcs'][vpc]['instances'][id];
@@ -293,6 +317,9 @@ var recursive_count = function(input, entities) {
     }
     return count;
 }
+Handlebars.registerHelper('find_ec2_object_attribute', function(path, id, attribute ) {
+    return findEC2ObjectAttribute(ec2_info, path, id, attribute);
+});
 Handlebars.registerHelper('format_network_acls', function (acls, direction) {
     r = '<table class="table-striped" width="100%">';
     r += '<tr><td width="20%" class="text-center">Rule number</td>';

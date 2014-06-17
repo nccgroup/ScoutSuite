@@ -145,9 +145,9 @@
                 <li class="list-group-item-text">IP: <span id="ec2_security_groups-{{../../name}}-{{../ports}}-{{this}}-{{../../../id}}">{{this}}</span></li>
               {{/each}}
               {{# each grants/security_groups}}
-                <li class="list-group-item-text"> EC2 group:
+                <li class="list-group-item-text"> EC2 security group:
                   <span id="ec2_security_groups-{{../../name}}-{{../ports}}-{{this}}-{{../../../id}}">
-                    <a href="javascript:findAndShowEC2Object('security_groups', '{{this}}')">{{this}}</a>
+                    <a href="javascript:findAndShowEC2Object('regions.vpcs.security_groups', '{{this}}')"> {{find_ec2_object_attribute "regions.vpcs.security_groups" this "name"}} {({{this}})</a>
                   </span>
                 </li>
               {{/each}}
@@ -325,7 +325,7 @@
                 <ul class="no-bullet">
                   {{#each instance_profiles}}
                     {{#each instances}}
-                      <li><a href="javascript:findAndShowEC2Object('instances', '{{this}}')">{{this}}</a></li>
+                      <li><a href="javascript:findAndShowEC2Object('regions.vpcs.instances', '{{this}}')">{{this}}</a></li>
                     {{/each}}
                   {{/each}}
                 </ul>
