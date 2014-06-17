@@ -381,11 +381,16 @@
             <li class="list-group-item-text"><span id="iam_users-{{status}}-key-no-rotation-{{../user_name}}-{{access_key_id}}">{{access_key_id}}, {{status}}, created on {{create_date}}</span></li>
           {{/each}}
           </ul>
-          {{#ifPasswordAndKey logins access_keys}}
-            <p class="list-group-item-text item-margin">
-            <span id="iam_users-password-and-key-{{user_name}}"><i class="glyphicon glyphicon-warning-sign"></i> Review the need for password-based and key-based authentication</span>
-            </p>
-          {{/ifPasswordAndKey}}
+          <p class="list-group-item-text item-margin">
+            <span id="iam_users-multiple-active-keys-{{user_name}}" class="finding-hidden">
+              <i class="glyphicon glyphicon-warning-sign"></i> Review the need for multiple active access keys
+            </span>
+          </p>
+          <p class="list-group-item-text item-margin">
+            <span id="iam_users-password-and-key-{{user_name}}" class="finding-hidden">
+              <i class="glyphicon glyphicon-warning-sign"></i> Review the need for password-based and key-based authentication
+            </span>
+          </p>
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Groups</h4>

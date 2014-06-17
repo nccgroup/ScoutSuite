@@ -33,5 +33,12 @@
         "callback": "hasUserPolicy",
         "callback_args": "",
         "level": "warning"
+    },
+    "multiple-active-keys": {
+        "description": "Multiple active keys for single user",
+        "entity": "users",
+        "callback": "hasMoreThan",
+        "callback_args": [ "1", "access_keys" ],
+        "level": "warning"
     }
 }

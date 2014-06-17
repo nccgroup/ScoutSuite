@@ -24,3 +24,9 @@ class Finding():
                 self.macro_items.remove(macro_item)
         except:
             pass
+
+    def hasMoreThan(self, key, obj):
+        limit = self.callback_args[0][0]
+        attribute = self.callback_args[0][1]
+        if len(obj[attribute]) > int(limit):
+            self.addItem(key)

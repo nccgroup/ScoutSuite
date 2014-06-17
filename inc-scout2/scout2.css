@@ -2,11 +2,16 @@
     margin-left: 25px;
 }
 
+.finding-hidden {
+    display: none;
+}
 .finding-danger {
     color:  red !important;
+    display: inline !important;
 }
 .finding-warning {
     color: orange !important;
+    display: inline !important;
 }
 
 ul.no-bullet {

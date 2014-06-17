@@ -344,13 +344,6 @@ Handlebars.registerHelper('format_network_acls', function (acls, direction) {
     r += '</table>';
     return r;
 });
-Handlebars.registerHelper('ifPasswordAndKey', function(logins, access_keys, block) {
-    if ((typeof logins != 'undefined' && logins != '') && (typeof access_keys != 'undefined' && access_keys != '')) {
-        return block.fn(this);
-    } else {
-        return block.inverse(this);
-    }
-});
 Handlebars.registerHelper('make_title', function(title) {
     return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase());
 });
