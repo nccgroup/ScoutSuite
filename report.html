@@ -56,12 +56,12 @@
         <h4>Information</h4>
           <ul>
             {{#each trails}}
-               <li class="list-group-item-text">Name: {{Name}}</li>
-               <li class="list-group-item-text">Enabled: {{IsLogging}}</li>
-               <li class="list-group-item-text">Enabled since: {{StartLoggingTime}}</li>
-               <li class="list-group-item-text">Stopped since: {{StopLoggingTime}}</li>
-               <li class="list-group-item-text">Include global services: {{IncludeGlobalServiceEvents}}</li>
-               <li class="list-group-item-text">Destination S3 bucket name: {{S3KeyPrefix}} {{S3BucketName}}</li>
+              <li class="list-group-item-text">Name: {{Name}}</li>
+              <li class="list-group-item-text">Enabled: {{IsLogging}}</li>
+              <li class="list-group-item-text">Enabled since: {{StartLoggingTime}}</li>
+              <li class="list-group-item-text">Stopped since: {{StopLoggingTime}}</li>
+              <li class="list-group-item-text">Include global services: {{IncludeGlobalServiceEvents}}</li>
+              <li class="list-group-item-text">Destination S3 bucket name: {{S3KeyPrefix}} <a href="javascript:showS3Bucket('{{S3BucketName}}')">{{S3BucketName}}</a></li>
             {{else}}
                <li class="list-group-item-text">CloudTrail disabled</li>
             {{/each}}
@@ -417,6 +417,61 @@
       Handlebars.registerPartial("iam_user", $("#iam_user-partial").html());
     </script>
 
+    <!-- S3 bucket partial -->
+    <script id="s3_bucket-partial" type="text/x-handlebars-template">
+      <div class="list-group" id="s3_bucket-details-{{name}}">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text item-margin">Creation date: {{creation_date}}</div>
+          <div class="list-group-item-text item-margin">Logging: <span id="s3_buckets-logging-disabled-{{name}}">{{has_logging? logging}}</span></div>
+          <div class="list-group-item-text item-margin">Versioning: {{versioning}}</div>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Permissions</h4>
+          <table class="table-striped" width="100%" >
+            <tr>
+              <td width="20%"></td>
+              <td width="20%" class="text-center">Read access</td>
+              <td width="20%" class="text-center">Read permissions</td>
+              <td width="20%" class="text-center">Write access</td>
+              <td width="20%" class="text-center">Write permissions</td>
+            </tr>
+            {{#each grants}}
+            <tr>
+              <td width="20%">{{@key}}</td>
+              <td width="20%" class="text-center">
+                <span id="s3_buckets-{{name}}-read-{{../name}}">{{{s3_grant_2_icon this.read}}}</td></span>
+              </td>
+              <td width="20%" class="text-center">
+                <span id="s3_buckets-{{name}}-read_acp-{{../name}}">{{{s3_grant_2_icon this.read_acp}}}</td></span>
+              </td>
+              <td width="20%" class="text-center">
+                <span id="s3_buckets-{{name}}-write-{{../name}}">{{{s3_grant_2_icon this.write}}}</td></span>
+              </td>
+              <td width="20%" class="text-center">
+                <span id="s3_buckets-{{name}}-write_acp-{{../name}}">{{{s3_grant_2_icon this.write_acp}}}</td></span>
+              </td>
+            </tr>
+            {{/each}}
+          </table>
+        </div>
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("s3_bucket", $("#s3_bucket-partial").html());
+    </script>
+
+    <!-- Close popup button -->
+    <script id="close_button-template" type="text/x-handlebars-template">
+      <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+    </script>
+    <script>
+      var close_button_template = Handlebars.compile($("#close_button-template").html());
+    </script>
+
     <!-- Single EC2 instance template -->
     <script id="single_ec2_instance-template" type="text/x-handlebars-template">
         <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
@@ -460,6 +515,15 @@
     </script>
     <script>
         var single_iam_user_template = Handlebars.compile($("#single_iam_user-template").html());
+    </script>
+
+    <!-- Single S3 bucket template -->
+    <script id="single_s3_bucket-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> s3_bucket}}
+    </script>
+    <script>
+        var single_s3_bucket_template = Handlebars.compile($("#single_s3_bucket-template").html());
     </script>
 
     <!-- Fixed navbar -->
@@ -871,46 +935,7 @@
         <div class="col-sm-8" id="s3_buckets-details">
           <script id="s3_bucket-detail-template" type="text/x-handlebars-template">
           {{#each items}}
-          <div class="list-group" id="s3_bucket-details-{{@key}}">
-            <div class="list-group-item active">
-              <h4 class="list-group-item-heading">{{@key}}</h4>
-            </div>
-            <div class="list-group-item">
-              <h4 class="list-group-item-heading">Information</h4>
-              <div class="list-group-item-text item-margin">Creation date: {{creation_date}}</div>
-              <div class="list-group-item-text item-margin">Logging: <span id="s3_buckets-logging-disabled-{{name}}">{{has_logging? logging}}</span></div>
-              <div class="list-group-item-text item-margin">Versioning: {{versioning}}</div>
-            </div>
-            <div class="list-group-item">
-              <h4 class="list-group-item-heading">Permissions</h4>
-              <table class="table-striped" width="100%" >
-                <tr>
-                  <td width="20%"></td>
-                  <td width="20%" class="text-center">Read access</td>
-                  <td width="20%" class="text-center">Read permissions</td>
-                  <td width="20%" class="text-center">Write access</td>
-                  <td width="20%" class="text-center">Write permissions</td>
-                </tr>
-                {{#each grants}}
-                <tr>
-                  <td width="20%">{{@key}}</td>
-                  <td width="20%" class="text-center">
-                    <span id="s3_buckets-{{name}}-read-{{../name}}">{{{s3_grant_2_icon this.read}}}</td></span>
-                  </td>
-                  <td width="20%" class="text-center">
-                    <span id="s3_buckets-{{name}}-read_acp-{{../name}}">{{{s3_grant_2_icon this.read_acp}}}</td></span>
-                  </td>
-                  <td width="20%" class="text-center">
-                    <span id="s3_buckets-{{name}}-write-{{../name}}">{{{s3_grant_2_icon this.write}}}</td></span>
-                  </td>
-                  <td width="20%" class="text-center">
-                    <span id="s3_buckets-{{name}}-write_acp-{{../name}}">{{{s3_grant_2_icon this.write_acp}}}</td></span>
-                  </td>
-                </tr>
-                {{/each}}
-              </table>
-            </div>
-          </div>
+            {{> s3_bucket}}
           {{/each}}
           </script>
         </div><!-- /.col-sm-8 -->

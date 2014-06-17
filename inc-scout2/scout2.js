@@ -161,6 +161,11 @@ function showIAMUser(user_name) {
     $('#overlay-details').html(single_iam_user_template(data));
     showPopup();
 }
+function showS3Bucket(bucket_name) {
+    var data = s3_info['buckets'][bucket_name];
+    $('#overlay-details').html(single_s3_bucket_template(data));
+    showPopup();
+}
 function showPopup() {
     $("#overlay-background").show();
     $("#overlay-details").show();
