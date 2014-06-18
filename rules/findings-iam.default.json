@@ -38,7 +38,7 @@
         "description": "Multiple active keys for single user",
         "entity": "users",
         "callback": "hasMoreThan",
-        "callback_args": [ "1", "access_keys" ],
+        "callback_args": [ "1", "access_keys", "status", "Active" ],
         "level": "warning"
     }
 }
