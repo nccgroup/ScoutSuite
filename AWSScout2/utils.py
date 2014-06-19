@@ -109,11 +109,19 @@ def fetch_creds_from_instance_metadata():
 def fetch_creds_from_csv(filename):
     key_id = None
     secret = None
+    mfa_serial = None
     with open(filename, 'rt') as csvfile:
         for i, line in enumerate(csvfile):
             if i == 1:
-                username, key_id, secret = line.split(',')
-    return key_id.rstrip(), secret.rstrip()
+                try:
+                    username, key_id, secret = line.split(',')
+                except:
+                    try:
+                        username, key_id, secret, mfa_serial = line.split(',')
+                        mfa_serial = mfa_serial.rstrip()
+                    except:
+                        print 'Error, the CSV file is not properly formatted'
+    return key_id.rstrip(), secret.rstrip(), mfa_serial
 
 def fetch_sts_credentials(key_id, secret, mfa_serial, mfa_code):
     if not mfa_serial or len(mfa_serial) < 1:
@@ -124,7 +132,7 @@ def fetch_sts_credentials(key_id, secret, mfa_serial, mfa_code):
         return None, None, None
     sts_connection = boto.connect_sts(key_id, secret)
     # For now, don't set the duration and use default 12hours
-    sts_response = sts_connection.get_session_token(mfa_serial_number = mfa_serial[0], mfa_token = mfa_code[0])
+    sts_response = sts_connection.get_session_token(mfa_serial_number = mfa_serial, mfa_token = mfa_code[0])
     return sts_response.access_key, sts_response.secret_key, sts_response.session_token
 
 

@@ -26,6 +26,7 @@ def main(args):
 
     key_id = None
     secret = None
+    mfa_serial = None
     session_token = None
 
     # Fetch credentials from the EC2 instance's metadata
@@ -34,7 +35,7 @@ def main(args):
 
     # Fetch credentials from CSV
     if args.fetch_creds_from_csv is not None:
-        key_id, secret = fetch_creds_from_csv(args.fetch_creds_from_csv[0])
+        key_id, secret, mfa_serial = fetch_creds_from_csv(args.fetch_creds_from_csv[0])
 
     # Fetch credentials from environment
     if key_id is None and secret is None and 'AWS_ACCESS_KEY_ID' in os.environ and 'AWS_SECRET_ACCESS_KEY' in os.environ:
@@ -46,8 +47,10 @@ def main(args):
         return -1
 
     # Fetch STS credentials
-    if args.mfa_code or args.mfa_serial:
-        key_id, secret, session_token = fetch_sts_credentials(key_id, secret, args.mfa_serial, args.mfa_code)
+    if args.mfa_serial:
+        mfa_serial = args.mfa_serial[0]
+    if args.mfa_code:
+        key_id, secret, session_token = fetch_sts_credentials(key_id, secret, mfa_serial, args.mfa_code)
 
     ##### CloudTrail
     if args.fetch_cloudtrail:
