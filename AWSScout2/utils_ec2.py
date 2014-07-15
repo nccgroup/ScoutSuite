@@ -96,7 +96,7 @@ def get_instances_info(ec2, vpc_info):
             manage_dictionary(vpc_info[vpc_id]['instances'], i.id, {})
             vpc_info[vpc_id]['instances'][i.id]['reservation_id'] = reservation.id
             # Get instance variables (see http://boto.readthedocs.org/en/latest/ref/ec2.html#module-boto.ec2.instance to see what else is available)
-            for key in ['id', 'public_dns_name', 'private_dns_name', 'key_name', 'launch_time', 'private_ip_address', 'ip_address']:
+            for key in ['id', 'public_dns_name', 'private_dns_name', 'key_name', 'launch_time', 'private_ip_address', 'ip_address', 'instance_type']:
                 vpc_info[vpc_id]['instances'][i.id][key] = i.__dict__[key]
             # FIXME ... see why it's not working when added in the list above
             vpc_info[vpc_id]['instances'][i.id]['state'] = i.state
