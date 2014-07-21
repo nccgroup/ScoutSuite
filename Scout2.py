@@ -29,6 +29,10 @@ def main(args):
     mfa_serial = None
     session_token = None
 
+    # Check the version of boto
+    if not check_boto_version():
+        return
+
     # Fetch credentials from the EC2 instance's metadata
     if args.fetch_creds_from_instance_metadata:
         key_id, secret = fetch_iam_role_credentials()
