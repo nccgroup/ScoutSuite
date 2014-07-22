@@ -50,5 +50,13 @@
         "callback": "checkElbSslPolicy",
         "callback_args": "",
         "level": "warning"
+    },
+    "unscannable-instance-types": {
+        "description": "Unscannable instance types exist",
+        "entity": "regions.vpcs.instances",
+        "callback": "checkUnscannableInstanceTypes",
+        "callback_args": "",
+        "level": "warning",
+        "rule_metadata_unscannable_types": ["t1.micro", "m1.small"]
     }
 }
