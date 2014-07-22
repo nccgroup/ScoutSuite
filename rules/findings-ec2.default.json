@@ -55,7 +55,8 @@
         "description": "Unscannable instance types exist",
         "entity": "regions.vpcs.instances",
         "callback": "checkUnscannableInstanceTypes",
-        "callback_args": ["t1.micro", "m1.small"],
-        "level": "warning"
+        "callback_args": "",
+        "level": "warning",
+        "rule_metadata_unscannable_types": ["t1.micro", "m1.small"]
     }
 }
