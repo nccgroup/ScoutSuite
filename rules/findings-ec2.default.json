@@ -34,29 +34,21 @@
         "description": "Lack of network ACLs (Inbound)",
         "entity": "regions.vpcs",
         "callback": "checkNetworkACLs",
-        "callback_args": "inbound",
+        "callback_args": ["inbound"],
         "level": "warning"
     },
     "lack-of-outbound-network-acls": {
         "description": "Lack of network ACLs (Outbound)",
         "entity": "regions.vpcs",
         "callback": "checkNetworkACLs",
-        "callback_args": "outbound",
+        "callback_args": ["outbound"],
         "level": "warning"
     },
     "old-ssl-policy": {
         "description": "Use of custom/obsolete SSL policy",
         "entity": "regions.elbs",
         "callback": "checkElbSslPolicy",
-        "callback_args": "",
+        "callback_args": [],
         "level": "warning"
-    },
-    "unscannable-instance-types": {
-        "description": "Unscannable instance types exist",
-        "entity": "regions.vpcs.instances",
-        "callback": "checkUnscannableInstanceTypes",
-        "callback_args": "",
-        "level": "warning",
-        "rule_metadata_unscannable_types": ["t1.micro", "m1.small"]
     }
 }

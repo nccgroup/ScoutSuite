@@ -4,6 +4,9 @@
         "entity": "regions",
         "callback": "checkLoggingIsEnabled",
         "callback_args": "",
-        "level": "danger"
+        "level": "danger",
+        "questions": [
+            "Would you like to report regions where CloudTrail is not enabled?"
+        ]
     }
 }

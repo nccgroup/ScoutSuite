@@ -7,14 +7,20 @@ import dateutil.parser
 
 class IamFinding(Finding):
 
-    def __init__(self, description, entity, callback, callback_args, level):
+    def __init__(self, description, entity, callback, callback_args, level, questions):
         self.keyword_prefix = 'iam'
-        Finding.__init__(self, description, entity, callback, callback_args, level)
+        Finding.__init__(self, description, entity, callback, callback_args, level, questions)
 
     def checkAccessKeys(self, key, obj):
         for access_key in obj['access_keys']:
             status = self.callback_args[0]
             self.isOlderThan90Days(key, access_key, status)
+
+    def belongsToGroup(self, key, obj):
+        for group in obj['groups']:
+            if group['group_name'] == self.callback_args[0]:
+                return
+        self.addItem(obj['user_name'])
 
     def isOlderThan(self, key, obj, max_age, status):
         today = datetime.datetime.today()

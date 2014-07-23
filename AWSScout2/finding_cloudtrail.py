@@ -4,9 +4,9 @@ from AWSScout2.finding import *
 
 class CloudTrailFinding(Finding):
 
-    def __init__(self, description, entity, callback, callback_args, level):
+    def __init__(self, description, entity, callback, callback_args, level, questions):
         self.keyword_prefix = 'cloudtrail'
-        Finding.__init__(self, description, entity, callback, callback_args, level)
+        Finding.__init__(self, description, entity, callback, callback_args, level, questions)
 
     def checkLoggingIsEnabled(self, key, obj):
         if obj['trails']:

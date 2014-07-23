@@ -9,9 +9,9 @@ class Ec2Finding(Finding):
     re_port_range = re.compile(r'(\d+)\-(\d+)')
     re_single_port = re.compile(r'(\d+)')
 
-    def __init__(self, description, entity, callback, callback_args, level):
+    def __init__(self, description, entity, callback, callback_args, level, questions):
         self.keyword_prefix = 'ec2'
-        Finding.__init__(self, description, entity, callback, callback_args, level)
+        Finding.__init__(self, description, entity, callback, callback_args, level, questions)
 
     def checkInternetAccessiblePort(self, key, obj):
         method = self.callback_args[0][0]

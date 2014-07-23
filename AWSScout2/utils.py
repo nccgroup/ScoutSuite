@@ -17,6 +17,12 @@ import urllib2
 
 
 ########################################
+# Globals
+########################################
+supported_services = {'cloudtrail', 'ec2', 'iam', 's3'}
+
+
+########################################
 # Common functions
 ########################################
 
@@ -91,8 +97,9 @@ def process_entities(config, finding, entity_path):
     if len(entity_path) == 1:
         entities = entity_path.pop(0)
         if entities in config:
+            callback = getattr(finding, finding.callback)
             for key in config[entities]:
-                finding.callback(finding, key, config[entities][key])
+                callback(key, config[entities][key])
     elif len(entity_path) != 0:
         entities = entity_path.pop(0)
         for key in config[entities]:
@@ -190,10 +197,6 @@ def load_info_from_json(aws_service, environment_name):
         json_payload = ''.join(json_payload)
         return json.loads(json_payload)
 
-def load_findings(filename):
-    with open(filename) as f:
-        return json.load(f)
-
 def load_from_json(keyword, var):
     filename = AWSCONFIG_DIR + '/' + keyword + '_config.js'
     with open(filename) as f:
@@ -213,41 +216,49 @@ def open_file(keyword, force_write):
     else:
         return None
 
-def prompt_4_overwrite(filename, force_write):
-    # Do not prompt if the file exists or force_write is set
-    if not os.path.exists(filename) or force_write:
-        return True
+def prompt_4_yes_no(question):
     while True:
-        sys.stdout.write('File already exists. Do you want to overwrite it (yes/no)? ')
+        sys.stdout.write(question + ' (y/n)? ')
         choice = raw_input().lower()
         if choice == 'yes' or choice == 'y':
             return True
         elif choice == 'no' or choice == 'n':
             return False
         else:
-            print '\'%s\' is not a valid answer. Enter \'yes\' or \'no\'.'
+            print '\'%s\' is not a valid answer. Enter \'yes\'(y) or \'no\'(n).' % choice
 
-def save_to_file(blob, keyword, force_write, columns_in_report=2, raw=True):
+def prompt_4_overwrite(filename, force_write):
+    # Do not prompt if the file does not exist or force_write is set
+    if not os.path.exists(filename) or force_write:
+        return True
+    return prompt_4_yes_no('File already exists. Do you want to overwrite it')
+
+def prompt_4_value(question):
+    while True:
+        sys.stdout.write(question + ' ')
+        choice = raw_input()
+        if prompt_4_yes_no('You entered "' + choice + '". Is that correct'):
+            return choice
+
+def save_blob_to_file(filename, blob, force_write):
     try:
-        with open_file(keyword, force_write) as f:
-            keyword = write_data_to_file(f, blob, keyword, force_write, columns_in_report)
+        if prompt_4_overwrite(filename, force_write):
+            with open(filename, 'wt') as f:
+                write_data_to_file(f, blob, force_write)
     except:
         pass
 
 def save_config_to_file(blob, keyword, force_write):
     try:
         with open_file(keyword, force_write) as f:
-            keyword = write_data_to_file(f, blob, keyword, force_write, 1)
-#        print >>f, 'highlight_violations(%s_data);' % (keyword)
+            keyword = keyword.lower().replace(' ','_')
+            print >>f, keyword + '_info ='
+            keyword = write_data_to_file(f, blob, force_write)
     except:
         pass
 
-def write_data_to_file(f, blob, keyword, force_write, columns_in_report):
-    keyword = keyword.lower().replace(' ','_') # [:-1]
-    print >>f, keyword + '_info ='
+def write_data_to_file(f, blob, force_write):
     print >>f, '%s' % json.dumps(blob, indent=4, separators=(',', ': '), sort_keys=True, cls=Scout2Encoder)
-#    print >>f, 'load_aws_config_from_json(%s_data, \'%s\', %d);' % (keyword, keyword, columns_in_report)
-    return keyword
 
 
 ########################################

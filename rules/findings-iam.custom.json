@@ -1,0 +1,13 @@
+{
+    "not-in-global-iam-group": {
+        "description": "Users do not belong to global IAM group",
+        "entity": "users",
+        "callback": "belongsToGroup",
+        "callback_args": [],
+        "level": "danger",
+        "questions": [
+            "Would you like to ensure that all IAM users belong to a given IAM group?",
+            "Enter the name of the IAM group:"
+        ]
+    }
+}

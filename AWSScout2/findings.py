@@ -24,27 +24,73 @@ s3_finding_dictionary = {}
 # Common functions
 ########################################
 
-def load_default_findings(keyword):
-    finding_dictionary, finding_class = get_finding_variables(keyword)
-    filename = 'rules/findings-' + keyword + '.default.json'
-    findings = load_findings(filename)
+def load_findings(service, ruleset_name, customize = False):
+
+    # Load rules from JSON file
+    try:
+        if type(ruleset_name) == list:
+            ruleset_name = ruleset_name[0]
+        filename = 'rules/findings-' + service + '.' + ruleset_name + '.json'
+        with open(filename) as f:
+            findings = json.load(f)
+    except Exception, e:
+        print 'Error: the ruleset name entered (%s) does not match an existing configuration.' % ruleset_name
+        return
+
+    # Special case
+    if ruleset_name == 'custom':
+        customize = True
+
+    # Parse and customize rules
     for f in findings:
+        questions = findings[f]['questions'] if 'questions' in findings[f] else []
         if 'targets' in findings[f]:
             for t in findings[f]['targets']:
                 name = set_argument_values(f, t)
-                finding_dictionary[name] = finding_class(
-                    set_argument_values(findings[f]['description'], t),
-                    set_argument_values(findings[f]['entity'], t),
-                    getattr(finding_class, findings[f]['callback']),
-                    set_arguments(findings[f]['callback_args'], t),
-                    set_argument_values(findings[f]['level'], t))
+                new_questions = []
+                for q in questions:
+                    new_questions.append(set_argument_values(q, t))
+                description = set_argument_values(findings[f]['description'], t)
+                entity = set_argument_values(findings[f]['entity'], t)
+                callback = findings[f]['callback']
+                callback_args = set_arguments(findings[f]['callback_args'], t)
+                level = set_argument_values(findings[f]['level'], t)
+
+                new_finding(service, customize, name,
+                    description,
+                    entity,
+                    callback,
+                    callback_args,
+                    level,
+                    new_questions)
+
         else:
-            finding_dictionary[f] = finding_class(
+            new_finding(service, customize, f,
                 findings[f]['description'],
                 findings[f]['entity'],
-                getattr(finding_class, findings[f]['callback']),
+                findings[f]['callback'],
                 findings[f]['callback_args'],
-                findings[f]['level'])
+                findings[f]['level'],
+                questions)
+
+def new_finding(service, customize, key, description, entity, callback_name, callback_args, level, questions):
+
+    # Based on the service name, determine the finding dictionary and class
+    finding_dictionary, finding_class = get_finding_variables(service)
+
+    # If this is a custom rule, prompt users for answers
+    if customize and questions and len(questions):
+        print ''
+        activate_rule_question = questions.pop(0)
+        if prompt_4_yes_no(activate_rule_question):
+            for q in questions:
+                answer = prompt_4_value(q)
+                callback_args.append(answer)
+        else:
+            return
+
+    # Save the rule in the finding dictionary
+    finding_dictionary[key] = finding_class(description, entity, callback_name, callback_args, level, questions)
 
 def set_arguments(arg_names, t):
     real_args = []
@@ -53,11 +99,10 @@ def set_arguments(arg_names, t):
     return real_args
 
 def set_argument_values(string, target):
-    for w in string.split('-'):
-        res = re.match(r'(_ARG_(\w+)_)', w)
-        if res:
-            i = int(res.groups()[1])
-            string = string.replace(res.groups()[0], target[i])
+    args = re.findall(r'(_ARG_(\w+)_)', string)
+    for arg in args:
+        index = int(arg[1])
+        string = string.replace(arg[0], target[index])
     return string
 
 def get_finding_variables(keyword):
@@ -71,12 +116,3 @@ def get_finding_variables(keyword):
         return cloudtrail_finding_dictionary, CloudTrailFinding
     else:
         return None, None
-
-
-########################################
-# Load findings from JSON config files
-########################################
-load_default_findings('cloudtrail')
-load_default_findings('ec2')
-load_default_findings('iam')
-load_default_findings('s3')

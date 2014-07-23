@@ -56,6 +56,10 @@ def main(args):
     if args.mfa_code:
         key_id, secret, session_token = fetch_sts_credentials(key_id, secret, mfa_serial, args.mfa_code)
 
+    # Load findings from JSON config files
+    for service in supported_services:
+        load_findings(service, args.ruleset_name)
+
     ##### CloudTrail
     if args.fetch_cloudtrail:
         # Fetch data from AWS or an existing local file
@@ -176,6 +180,11 @@ parser.add_argument('--env',
                     default=None,
                     nargs='+',
                     help='Environment name. Used to create multiple reports')
+parser.add_argument('--ruleset_name',
+                    dest='ruleset_name',
+                    default='default',
+                    nargs='+',
+                    help='Customized set of rules')
 
 args = parser.parse_args()
 
