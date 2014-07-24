@@ -109,6 +109,7 @@ def get_policies(iam_connection, iam_info, keyword, name):
     for policy_name in policy_names:
         r = get_policy_method(name, policy_name)
         r = r['get_'+keyword+'_policy_response']['get_'+keyword+'_policy_result']
+        manage_dictionary(fetched_policies, policy_name, {})
         fetched_policies[policy_name]['policy_document'] = r.policy_document
         get_permissions(r.policy_document, iam_info['permissions'], keyword + 's', name, policy_name)
     return fetched_policies
