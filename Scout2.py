@@ -29,9 +29,16 @@ def main(args):
     mfa_serial = None
     session_token = None
 
+    # Create the list of services to analyze
+    services = build_services_list(args.services, args.skipped_services)
+    if not len(services):
+        print 'Error: list of Amazon Web Services to be analyzed is empty.'
+        return
+
     # Check the version of boto
     if not args.fetch_local and not check_boto_version():
         return
+
 
     # Fetch credentials from the EC2 instance's metadata
     if args.fetch_creds_from_instance_metadata:
@@ -57,11 +64,11 @@ def main(args):
         key_id, secret, session_token = fetch_sts_credentials(key_id, secret, mfa_serial, args.mfa_code)
 
     # Load findings from JSON config files
-    for service in supported_services:
+    for service in services:
         load_findings(service, args.ruleset_name)
 
     ##### CloudTrail
-    if args.fetch_cloudtrail:
+    if 'cloudtrail' in services:
         # Fetch data from AWS or an existing local file
         if not args.fetch_local:
             cloudtrail_info = get_cloudtrail_info(key_id, secret, session_token)
@@ -71,18 +78,18 @@ def main(args):
         analyze_cloudtrail_config(cloudtrail_info, args.force_write)
 
     ##### IAM
-    if args.fetch_iam:
+    if 'iam' in services:
         # Fetch data from AWS or an existing local file
         if not args.fetch_local:
             iam_info = get_iam_info(key_id, secret, session_token)
         else:
             iam_info = load_info_from_json('iam', args.environment_name)
         # Analyze the IAM config and save data to a local file
-        if not args.fetch_ec2:
+        if 'ec2' not in services:
             analyze_iam_config(iam_info, args.force_write)
 
     ##### EC2
-    if args.fetch_ec2:
+    if 'ec2' in services:
         # Fetch data from AWS or an existing local file
         if not args.fetch_local:
             ec2_info = get_ec2_info(key_id, secret, session_token, args.fetch_ec2_gov)
@@ -93,7 +100,7 @@ def main(args):
 
 
     ##### S3
-    if args.fetch_s3:
+    if 's3' in services:
         if not args.fetch_local:
             s3_info = get_s3_info(key_id, secret, session_token)
         else:
@@ -103,10 +110,10 @@ def main(args):
 
 
     ##### Analyzis that requires multiple configuration
-    if args.fetch_ec2 and args.fetch_iam:
+    if 'ec2' in services and 'iam' in services:
         match_instances_and_roles(ec2_info, iam_info)
         analyze_iam_config(iam_info, args.force_write)
-    if args.fetch_cloudtrail and args.fetch_ec2:
+    if 'cloudtrial' in services and 'ec2' in services:
         refine_cloudtrail(cloudtrail_info, ec2_info)
         save_config_to_file(cloudtrail_info, 'cloudtrail', args.force_write)
 
@@ -120,26 +127,6 @@ def main(args):
 ##### Argument parser
 ########################################
 parser = argparse.ArgumentParser()
-parser.add_argument('--no_iam',
-                    dest='fetch_iam',
-                    default=True,
-                    action='store_false',
-                    help='don\'t fetch the IAM configuration')
-parser.add_argument('--no_ec2',
-                    dest='fetch_ec2',
-                    default=True,
-                    action='store_false',
-                    help='don\'t fetch the EC2 configuration')
-parser.add_argument('--no_s3',
-                    dest='fetch_s3',
-                    default='True',
-                    action='store_false',
-                    help='don\'t fetch the S3 configuration')
-parser.add_argument('--no_cloudtrail',
-                    dest='fetch_cloudtrail',
-                    default='True',
-                    action='store_false',
-                    help='don\'t fetch the CloudTrail configuration')
 parser.add_argument('--gov',
                     dest='fetch_ec2_gov',
                     default=False,
@@ -185,6 +172,16 @@ parser.add_argument('--ruleset_name',
                     default='default',
                     nargs='+',
                     help='Customized set of rules')
+parser.add_argument('--services',
+                    dest='services',
+                    default=supported_services,
+                    nargs='+',
+                    help='Name of services you want to analyze')
+parser.add_argument('--skip',
+                    dest='skipped_services',
+                    default=[],
+                    nargs='+',
+                    help='Name of services you want to ignore')
 
 args = parser.parse_args()
 

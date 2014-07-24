@@ -19,12 +19,20 @@ import urllib2
 ########################################
 # Globals
 ########################################
-supported_services = {'cloudtrail', 'ec2', 'iam', 's3'}
+supported_services = ['cloudtrail', 'ec2', 'iam', 's3']
 
 
 ########################################
 # Common functions
 ########################################
+
+def build_services_list(services, skipped_services):
+
+    enabled_services = []
+    for s in services:
+        if s in supported_services and s not in skipped_services:
+            enabled_services.append(s)
+    return enabled_services
 
 def check_boto_version():
     latest_boto_version = 0
