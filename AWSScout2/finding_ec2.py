@@ -19,7 +19,7 @@ class Ec2Finding(Finding):
             protocol = self.callback_args[1][1].lower()
             port = self.callback_args[1][2]
         else:
-            protocol = self.callback_args[1]
+            protocol = self.callback_args[1].lower()
             port = self.callback_args[2]
         if protocol in obj['protocols']:
             for rule in obj['protocols'][protocol]['rules']:
