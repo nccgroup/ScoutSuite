@@ -35,9 +35,10 @@ def build_services_list(services, skipped_services):
     return enabled_services
 
 def check_boto_version():
+    min_boto_version = '2.31.1'
     latest_boto_version = 0
-    if boto.Version < '2.27.0':
-        print 'Error: the version of boto installed on this system (%s) is too old. Boto version 2.27.0 or newer is required.' % boto.Version
+    if boto.Version < min_boto_version:
+        print 'Error: the version of boto installed on this system (%s) is too old. Boto version %s or newer is required.' % (boto.Version, min_boto_version)
         return False
     else:
         # Warn users who have not the latest version of boto installed

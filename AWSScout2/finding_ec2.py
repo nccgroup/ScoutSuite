@@ -14,19 +14,20 @@ class Ec2Finding(Finding):
         Finding.__init__(self, description, entity, callback, callback_args, level, questions)
 
     def checkInternetAccessiblePort(self, key, obj):
-        method = self.callback_args[0][0]
+        method = self.callback_args[0]
         if method == 'whitelist':
-            protocol = self.callback_args[0][1][1].lower()
-            port = self.callback_args[0][1][2]
+            protocol = self.callback_args[1][1].lower()
+            port = self.callback_args[1][2]
         else:
-            protocol = self.callback_args[0][1].lower()
-            port = self.callback_args[0][2]
+            protocol = self.callback_args[1]
+            port = self.callback_args[2]
         if protocol in obj['protocols']:
             for rule in obj['protocols'][protocol]['rules']:
-                for grant in rule['grants']:
-                    if grant == '0.0.0.0/0':
-                        if method == 'blacklist' and self.portInRange(port, rule['ports']):
-                            self.addItem(obj['id'])
+                if 'cidrs' in rule['grants']:
+                    for cidr in rule['grants']['cidrs']:
+                        if cidr == '0.0.0.0/0':
+                            if method == 'blacklist' and self.portInRange(port, rule['ports']):
+                                self.addItem(obj['id'])
                         elif method == 'whitelist':
                             if rule['ports'] not in port:
                                 self.addItem(obj['id'])
@@ -52,8 +53,8 @@ class Ec2Finding(Finding):
                 self.addItem(key)
 
     def checkOpenPort(self, key, obj):
-        protocol = self.callback_args[0][0].lower()
-        port = self.callback_args[0][1]
+        protocol = self.callback_args[0].lower()
+        port = self.callback_args[1]
         if protocol in obj['protocols']:
             for rule in obj['protocols'][protocol]['rules']:
                 for grant in rule['grants']:
