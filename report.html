@@ -217,39 +217,16 @@
         <div class="list-group-item">
           <h4>Network</h4>
           <ul>
-            <li class="list-grou-item-text">Public IP: {{ip_address}}</li>
-            <li class="list-grou-item-text">Public DNS: {{public_dns_name}}</li>
-            <li class="list-grou-item-text">Private IP: {{private_ip_address}}</li>
-            <li class="list-grou-item-text">Private DNS: {{private_dns_name}}</li>
+            <li class="list-group-item-text">Public IP: {{ip_address}}</li>
+            <li class="list-group-item-text">Public DNS: {{public_dns_name}}</li>
+            <li class="list-group-item-text">Private IP: {{private_ip_address}}</li>
+            <li class="list-group-item-text">Private DNS: {{private_dns_name}}</li>
           </ul>
         </div>
       </div>
     </script>
     <script>
       Handlebars.registerPartial("ec2_instance", $("#ec2_instance-partial").html());
-    </script>
-
-    <!-- IAM permission resources partial -->
-    <script id="iam_resources-partial" type=="text/x-handlebars-template">
-          {{#if Resource}}
-            <li>Resources:</li>
-            <ul class="no-bullet">
-              {{#each Resource}}
-                <li class="list-group-item-text">{{this}}</li>
-              {{/each}}
-            </ul>
-          {{/if}}
-         {{#if NotResource}}
-           <li>NotResources:</li>
-            <ul class="no-bullet">
-              {{#each NotResource}}
-                <li class="list-group-item-text">{{this}}</li>
-              {{/each}}
-            </ul>
-          {{/if}}
-    </script>
-    <script>
-      Handlebars.registerPartial("iam_resources", $("#iam_resources-partial").html());
     </script>
 
     <!-- IAM group partial -->
@@ -289,23 +266,35 @@
             <h4 class="list-group-item-heading">Group Policies <span class="badge pull-right">{{count policies}}</span></h4>
           {{/if}}
           {{#each policies}}
-            <hr>
-            <div class="accordion item-margin">
-              <h5 class="list-group-item-heading accordion-heading">{{policy_name}}
-                <a class="accordion-toggle" data-toggle="collapse" href="#iam_group_policy_details-{{../group_id}}-{{policy_name}}"><span class="badge pull-right btn-info">Details</span></a>
-              </h5>
-              <div id="iam_group_policy_details-{{../group_id}}-{{policy_name}}" class="accordion-body collapse">
-                <div class="accordion-inner">
-                  {{{decodeURIComponent policy_document}}}
-                </div>
-              </div>
-            </div>
+            {{> iam_policy iam_entity_type = 'group' iam_entity_name = ../group_name}}
           {{/each}}
         </div>
       </div>
     </script>
     <script>
       Handlebars.registerPartial("iam_group", $("#iam_group-partial").html());
+    </script>
+
+    <!-- IAM policy partial -->
+    <script id="iam_policy-partial" type="text/x-handlebars-template">
+      <hr>
+      <div>
+        <div class="accordion item-margin">
+          <h5 class="list-group-item-heading accordion-heading">{{@key}}{{policy_name}}
+            <a class="accordion-toggle" data-toggle="collapse" href="#iam_{{iam_entity_type}}_policy_details-{{iam_entity_name}}-{{policy_name}}">
+              <span class="badge pull-right btn-info">Details</span>
+            </a>
+          </h5>
+          <div id="iam_{{iam_entity_type}}_policy_details-{{iam_entity_name}}-{{policy_name}}" class="accordion-body collapse">
+            <div class="accordion-inner">
+              {{{decodeURIComponent policy_document}}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("iam_policy", $("#iam_policy-partial").html());
     </script>
 
     <!-- IAM role partial -->
@@ -339,17 +328,7 @@
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Role Policies</h4>
           {{#each policies}}
-            <hr>
-            <div class="accordion item-margin">
-              <h5 class="list-group-item-heading accordion-heading">{{policy_name}}
-                <a class="accordion-toggle" data-toggle="collapse" href="#iam_role_policy_details-{{../role_name}}-{{policy_name}}"><span class="badge pull-right btn-info">Details</span></a>
-              </h5>
-              <div id="iam_role_policy_details-{{../role_name}}-{{policy_name}}" class="accordion-body collapse">
-                <div class="accordion-inner">
-                  {{{decodeURIComponent policy_document}}}
-                </div>
-              </div>
-            </div>
+            {{> iam_policy iam_entity_type = 'role' iam_entity_name = ../role_name}}
           {{/each}}
         </div>
       </div>
@@ -411,17 +390,7 @@
         <div class="list-group-item">
           <h4 class="list-group-item-heading">User Policies <span class="badge pull-right" id="iam_users-user-policy-{{user_name}}">{{count policies}}</span></h4>
           {{#each policies}}
-            <hr>
-            <div class="accordion item-margin">
-              <h5 class="list-group-item-heading accordion-heading">{{policy_name}}
-                <a class="accordion-toggle" data-toggle="collapse" href="#iam_user_policy_details-{{../user_name}}-{{policy_name}}"><span class="badge pull-right btn-info">Details</span></a>
-              </h5>
-              <div id="iam_user_policy_details-{{../user_name}}-{{policy_name}}" class="accordion-body collapse">
-                <div class="accordion-inner">
-                  {{{decodeURIComponent policy_document}}}
-                </div>
-              </div>
-            </div>
+            {{> iam_policy iam_entity_type = 'user' iam_entity_name = ../user_name}}
           {{/each}}
         </div>
       </div>
@@ -510,6 +479,16 @@
     </script>
     <script>
         var single_iam_group_template = Handlebars.compile($("#single_iam_group-template").html());
+    </script>
+
+    <!-- Single IAM policy template -->
+    <script id="single_iam_policy-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> iam_policy}}
+        <hr>
+    </script>
+    <script>
+        var single_iam_policy_template = Handlebars.compile($("#single_iam_policy-template").html());
     </script>
 
     <!-- Single IAM role template -->
@@ -859,22 +838,42 @@
                   <div class="col-sm-4">{{@key}}:</div>
                   <div class="col-sm-8">
                     {{#each this}}
+                      {{addMember 'type' @key}}
                       <div class="list-group-item-text">{{make_title @key}}:</div>
                       <ul>
-                      {{#each this}}
-                        {{#if Allow}}
-                          <li class="list-group-item-text">Allow: <a href="javascript:{{entity_details_callback ../../type}}('{{@key}}')">{{@key}}</a></li>
-                          <ul>
-                            {{> iam_resources Allow}}
-                          </ul>
-                        {{/if}}
-                        {{#if Deny}}
-                          <li class="list-group-item-text">Deny: <a href="javascript:{{entity_details_callback ../../type}}('{{@key}}')">{{@key}}</a></li>
-                          <ul>
-                            {{> iam_resources Deny}}
-                          </ul>
-                        {{/if}}
-                      {{/each}}
+                        {{#each this}}
+                          {{#ifShow @key 'type'}}
+                            <li class="list-group-item-text">{{make_title @key}}:</li>
+                            <ul>
+                              {{#each this}}
+                                {{addMember 'name' @key}}
+                                <li class="list-group-item-text"><a href="javascript:{{entity_details_callback ../../../type}}('{{@key}}')">{{@key}}</a></li>
+                                <ul>
+                                  {{#each this}}
+                                    {{#ifShow @key 'name'}}
+                                      <li class="list-group-item-text">{{make_title @key}}s</li>
+                                      <ul class="no-bullet">
+                                        {{#each this}}
+                                          {{addMember 'Resource' @key}}
+                                          {{#each Policies}}
+                                            <li>
+                                              {{../Resource}} granted in <a href="javascript:showIAMPolicy('{{../../../../../../../type}}', '{{../../../../name}}', '{{@key}}')">{{@key}}</a>
+                                              {{#if condition}}
+                                                <ul class="no-bullet">
+                                                  <li class="list-group-item-text">Condition: {{condition}}</li>
+                                                </ul>
+                                              {{/if}}
+                                            </li>
+                                          {{/each}}
+                                        {{/each}}
+                                      </ul>
+                                    {{/ifShow}}
+                                  {{/each}}
+                                </ul>
+                              {{/each}}
+                            </ul>
+                          {{/ifShow}}
+                        {{/each}}
                       </ul>
                     {{/each}}
                   </div>

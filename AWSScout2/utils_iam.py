@@ -63,37 +63,39 @@ def parse_statement(policy_document, permissions, keyword, name, policy_name, st
         effect = str(statement['Effect'])
         action_string = 'Action' if 'Action' in statement else 'NotAction'
         resource_string = 'Resource' if 'Resource' in statement else 'NotResource'
-        parse_actions(permissions[action_string], statement[action_string], resource_string, statement[resource_string], effect, keyword, name, policy_name)
+        condition = statement['Condition'] if 'Condition' in statement else None
+        parse_actions(permissions[action_string], statement[action_string], resource_string, statement[resource_string], effect, keyword, name, policy_name, condition)
 
-def parse_actions(permissions, actions, resource_string, resources, effect, keyword, name, policy_name):
+def parse_actions(permissions, actions, resource_string, resources, effect, keyword, name, policy_name, condition):
     if type(actions) == list:
         for action in actions:
-            parse_action(permissions, action, resource_string, resources, effect, keyword, name, policy_name)
+            parse_action(permissions, action, resource_string, resources, effect, keyword, name, policy_name, condition)
     else:
-        parse_action(permissions, actions, resource_string, resources, effect, keyword, name, policy_name)
+        parse_action(permissions, actions, resource_string, resources, effect, keyword, name, policy_name, condition)
 
-def parse_action(permissions, action, resource_string, resources, effect, keyword, name, policy_name):
+def parse_action(permissions, action, resource_string, resources, effect, keyword, name, policy_name, condition):
     manage_dictionary(permissions, action, {})
-    parse_resources(permissions[action], resource_string, resources, effect, keyword, name, policy_name)
+    parse_resources(permissions[action], resource_string, resources, effect, keyword, name, policy_name, condition)
 
-def parse_resources(permission, resource_string, resources, effect, keyword, name, policy_name):
+def parse_resources(permission, resource_string, resources, effect, keyword, name, policy_name, condition):
     if type(resources) == list:
         for resource in resources:
-            parse_resource(permission, resource_string, resource, effect, keyword, name, policy_name)
+            parse_resource(permission, resource_string, resource, effect, keyword, name, policy_name, condition)
     else:
-        parse_resource(permission, resource_string, resources, effect, keyword, name, policy_name)
+        parse_resource(permission, resource_string, resources, effect, keyword, name, policy_name, condition)
 
-def parse_resource(permission, resource_string, resource, effect, keyword, name, policy_name):
+def parse_resource(permission, resource_string, resource, effect, keyword, name, policy_name, condition):
     manage_dictionary(permission, keyword, {})
-    # h4ck : data redundancy because I can't call ../@key in Handlebars
-    permission[keyword]['type'] = keyword
-    manage_dictionary(permission[keyword], name, {})
-    manage_dictionary(permission[keyword][name], effect, {})
-    manage_dictionary(permission[keyword][name][effect], resource_string, [])
-    permission[keyword][name][effect][resource_string].append(resource)
+    manage_dictionary(permission[keyword], effect, {})
+    manage_dictionary(permission[keyword][effect], name, {})
+    manage_dictionary(permission[keyword][effect][name], resource_string, {})
+    manage_dictionary(permission[keyword][effect][name][resource_string], resource, {})
+    manage_dictionary(permission[keyword][effect][name][resource_string][resource], 'Policies', {})
+    manage_dictionary(permission[keyword][effect][name][resource_string][resource]['Policies'], policy_name, {})
+    permission[keyword][effect][name][resource_string][resource]['Policies'][policy_name]['condition'] = condition
 
 def get_policies(iam_connection, iam_info, keyword, name):
-    fetched_policies = []
+    fetched_policies = {}
     if keyword == 'role':
         m1 = getattr(iam_connection, 'list_role_policies', None)
     else:
@@ -107,11 +109,8 @@ def get_policies(iam_connection, iam_info, keyword, name):
     for policy_name in policy_names:
         r = get_policy_method(name, policy_name)
         r = r['get_'+keyword+'_policy_response']['get_'+keyword+'_policy_result']
-        pdetails = {}
-        pdetails['policy_name'] = policy_name
-        pdetails['policy_document'] = r.policy_document
-        fetched_policies.append(pdetails)
-        get_permissions(pdetails['policy_document'], iam_info['permissions'], keyword + 's', name, pdetails['policy_name'])
+        fetched_policies[policy_name]['policy_document'] = r.policy_document
+        get_permissions(r.policy_document, iam_info['permissions'], keyword + 's', name, policy_name)
     return fetched_policies
 
 def get_roles_info(iam_connection, iam_info):

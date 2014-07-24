@@ -151,6 +151,16 @@ function showIAMGroup(group_id) {
     $('#overlay-details').html(single_iam_group_template(data));
     showPopup();
 }
+function showIAMPolicy(iam_entity_type, iam_entity_name, policy_name) {
+    var data = iam_info[iam_entity_type][iam_entity_name]['policies'][policy_name];
+    data['iam_entity_type'] = iam_entity_type;
+    data['iam_entity_name'] = iam_entity_name;
+    data['policy_name'] = policy_name
+    $('#overlay-details').html(single_iam_policy_template(data));
+    showPopup();
+    var id = '#iam_' + iam_entity_type + '_policy_details-' + iam_entity_name + '-' + policy_name;
+    $(id).toggle();
+}
 function showIAMRole(role_name) {
     var data = iam_info['roles'][role_name];
     $('#overlay-details').html(single_iam_role_template(data));
@@ -355,4 +365,12 @@ Handlebars.registerHelper('entity_details_callback', function(type) {
     } else if (type == 'users') {
         return 'showIAMUser';
     }
+});
+Handlebars.registerHelper('addMember', function(member_name, value) {
+    this[member_name] = value;
+});
+Handlebars.registerHelper('ifShow', function(v1, v2, options) {
+  if(v1 !== v2) {
+    return options.fn(this);
+  }
 });

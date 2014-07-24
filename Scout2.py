@@ -30,7 +30,7 @@ def main(args):
     session_token = None
 
     # Check the version of boto
-    if not check_boto_version():
+    if not args.fetch_local and not check_boto_version():
         return
 
     # Fetch credentials from the EC2 instance's metadata
