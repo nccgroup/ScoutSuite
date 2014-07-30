@@ -242,11 +242,18 @@ def prompt_4_overwrite(filename, force_write):
         return True
     return prompt_4_yes_no('File already exists. Do you want to overwrite it')
 
-def prompt_4_value(question):
+def prompt_4_value(question, choices = None):
+    if choices:
+        question = question + ' (' + '/'.join(choices) + '):'
     while True:
         sys.stdout.write(question + ' ')
         choice = raw_input()
-        if prompt_4_yes_no('You entered "' + choice + '". Is that correct'):
+        if choices:
+            if choice in choices:
+                return choice
+            else:
+                print 'Invalid value.'
+        elif prompt_4_yes_no('You entered "' + choice + '". Is that correct'):
             return choice
 
 def save_blob_to_file(filename, blob, force_write):

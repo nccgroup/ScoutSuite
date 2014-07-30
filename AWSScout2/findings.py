@@ -19,10 +19,15 @@ iam_finding_dictionary = {}
 ec2_finding_dictionary = {}
 s3_finding_dictionary = {}
 
+finding_levels = ['danger', 'warning']
 
 ########################################
 # Common functions
 ########################################
+
+def change_level(level):
+    if prompt_4_yes_no('Would you like to change the default level (%s)' % level):
+        return prompt_4_value('Enter the level', finding_levels)
 
 def load_findings(service, ruleset_name, customize = False):
 
@@ -86,6 +91,7 @@ def new_finding(service, customize, key, description, entity, callback_name, cal
             for q in questions:
                 answer = prompt_4_value(q)
                 callback_args.append(answer)
+            level = change_level(level)
         else:
             return
 
