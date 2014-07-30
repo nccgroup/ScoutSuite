@@ -52,14 +52,17 @@ def load_findings(service, ruleset_name, customize = False):
         if 'targets' in findings[f]:
             for t in findings[f]['targets']:
                 name = set_argument_values(f, t)
-                new_questions = []
-                for q in questions:
-                    new_questions.append(set_argument_values(q, t))
                 description = set_argument_values(findings[f]['description'], t)
                 entity = set_argument_values(findings[f]['entity'], t)
                 callback = findings[f]['callback']
                 callback_args = set_arguments(findings[f]['callback_args'], t)
                 level = set_argument_values(findings[f]['level'], t)
+                new_questions = []
+                for q in questions:
+                    if type(q) == list:
+                        new_questions.append([set_argument_values(q[0], t)] + q[1:])
+                    else:
+                        new_questions.append(set_argument_values(q, t))
 
                 new_finding(service, customize, name,
                     description,
@@ -86,10 +89,15 @@ def new_finding(service, customize, key, description, entity, callback_name, cal
     # If this is a custom rule, prompt users for answers
     if customize and questions and len(questions):
         print ''
-        activate_rule_question = questions.pop(0)
+        activate_rule_question = set_description(questions.pop(0), description)
         if prompt_4_yes_no(activate_rule_question):
             for q in questions:
-                answer = prompt_4_value(q)
+                if type(q) == list:
+                    choices = q[1:][0]
+                    q = q[0]
+                else:
+                    choices = None
+                answer = prompt_4_value(q, choices)
                 callback_args.append(answer)
             level = change_level(level)
         else:
@@ -109,6 +117,16 @@ def set_argument_values(string, target):
     for arg in args:
         index = int(arg[1])
         string = string.replace(arg[0], target[index])
+    return string
+
+def set_description(string, description):
+    attributes = re.findall(r'(_(\w+)_)', string)
+    for attribute in attributes:
+        name = attribute[1].lower()
+        if name == 'description':
+            string = string.replace(attribute[0], description)
+        else:
+            print 'The field %s is not supported yet for injection in the questions'
     return string
 
 def get_finding_variables(keyword):

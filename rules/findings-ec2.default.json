@@ -1,61 +1,87 @@
 {
     "_ARG_1_-_ARG_2_-0.0.0.0/0": {
-        "description": "_ARG_0_",
+        "description": "_ARG_0_ port open to Internet",
         "entity": "regions.vpcs.security_groups",
         "callback": "checkInternetAccessiblePort",
         "callback_args": ["blacklist", "_ARG_1_", "_ARG_2_"],
         "targets": [
-            ["SSH open to Internet", "TCP", "22"],
-            ["RDP open to Internet", "TCP", "3389"],
-            ["MsSQL Open to Internet", "TCP", "1433"],
-            ["MySQL Open to Internet", "TCP", "3306"]
+            ["SSH", "TCP", "22"],
+            ["RDP", "TCP", "3389"],
+            ["MsSQL", "TCP", "1433"],
+            ["MySQL", "TCP", "3306"],
+            ["MongoDB", "TCP", "27017"],
+            ["PostgreSQL", "TCP", "5432"],
+            ["Oracle DB", "TCP", "1521"]
         ],
-        "level": "danger"
+        "level": "danger",
+        "questions": [
+            "Report _DESCRIPTION_"
+        ]
     },
-    "_ARG_1_-_ARG_2_": {
-        "description": "_ARG_0_",
+    "_ARG_2_-_ARG_3_": {
+        "description": "_ARG_0_ port open (_ARG_1_)",
         "entity": "regions.vpcs.security_groups",
         "callback": "checkOpenPort",
-        "callback_args": ["_ARG_1_", "_ARG_2_"],
+        "callback_args": ["_ARG_2_", "_ARG_3_"],
         "targets": [
-            ["FTP (plaintext)", "TCP", "21"],
-            ["Telnet (plaintext)", "TCP", "23"]
+            ["FTP", "plaintext", "TCP", "21"],
+            ["Telnet", "plaintext", "TCP", "23"]
         ],
-        "level": "danger"
+        "level": "danger",
+        "questions": [
+            "Report _DESCRIPTION_",
+            ["Include search in port ranges", ["y", "yes", "n", "no"]]
+        ]
     },
     "public-ports": {
         "description": "Non-HTTP ports open to Internet",
         "entity": "regions.vpcs.security_groups",
         "callback": "checkInternetAccessiblePort",
         "callback_args": ["whitelist", ["HTTP(S)", "TCP", ["80", "443", "22", "3389", "1433", "3306"]]],
-        "level": "warning"
+        "level": "warning",
+        "questions": [
+            "Report _DESCRIPTION_"
+        ]
+
     },
     "ports-range": {
         "description": "Use of port ranges",
         "entity": "regions.vpcs.security_groups",
         "callback": "checkSinglePortOnly",
         "callback_args": [],
-        "level": "warning"
+        "level": "warning",
+        "questions": [
+            "Warn against security groups that open port ranges"
+        ]
     },
     "lack-of-inbound-network-acls": {
         "description": "Lack of network ACLs (Inbound)",
         "entity": "regions.vpcs",
         "callback": "checkNetworkACLs",
         "callback_args": ["inbound"],
-        "level": "warning"
+        "level": "warning",
+        "questions": [
+            "Warn against the lack of inbound network access controls lists"
+        ]
     },
     "lack-of-outbound-network-acls": {
         "description": "Lack of network ACLs (Outbound)",
         "entity": "regions.vpcs",
         "callback": "checkNetworkACLs",
         "callback_args": ["outbound"],
-        "level": "warning"
+        "level": "warning",
+        "questions": [
+            "Warn against the lack of outbound network access controls lists"
+        ]
     },
     "old-ssl-policy": {
         "description": "Use of custom/obsolete SSL policy",
         "entity": "regions.elbs",
         "callback": "checkElbSslPolicy",
         "callback_args": [],
-        "level": "warning"
+        "level": "warning",
+        "questions": [
+            "Report custom and obsolete SSL policies"
+        ]
     }
 }

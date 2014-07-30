@@ -64,7 +64,10 @@ class Ec2Finding(Finding):
         if protocol in obj['protocols']:
             for rule in obj['protocols'][protocol]['rules']:
                 for grant in rule['grants']:
-                    if self.portInRange(port, rule['ports']):
+                    if len(self.callback_args) > 2 and self.callback_args[2] != 'no' and self.callback_args[2] != 'n':
+                        if self.portInRange(port, rule['ports']):
+                            self.addItem(obj['id'])
+                    elif port == rule['ports']:
                         self.addItem(obj['id'])
 
     def portInRange(self, port, ports):

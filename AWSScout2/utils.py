@@ -244,9 +244,9 @@ def prompt_4_overwrite(filename, force_write):
 
 def prompt_4_value(question, choices = None):
     if choices:
-        question = question + ' (' + '/'.join(choices) + '):'
+        question = question + ' (' + '/'.join(choices) + ')'
     while True:
-        sys.stdout.write(question + ' ')
+        sys.stdout.write(question + '? ')
         choice = raw_input()
         if choices:
             if choice in choices:
