@@ -39,7 +39,6 @@ def main(args):
     if not args.fetch_local and not check_boto_version():
         return
 
-
     # Fetch credentials from the EC2 instance's metadata
     if args.fetch_creds_from_instance_metadata:
         key_id, secret = fetch_iam_role_credentials()

@@ -22,7 +22,7 @@ The following is a list of required python modules that may not be installed on
 your system:
 
 * Boto, Amazon's AWS SDK for Python (https://aws.amazon.com/sdkforpython)
- * Version 2.27 and up
+ * Version 2.31.1 and up
 * Dateutil (https://pypi.python.org/pypi/python-dateutil)
 * Requests (https://github.com/kennethreitz/requests)
 
@@ -54,6 +54,19 @@ Scout2 will generate a number of JavaScript files that contain AWS configuration
 data stored as JSON payloads. Scout2 will also generate additional JavaScript
 files that contain potential security flaws and best practices violations. To
 review the configuration, simply open the report.html file in your browser.
+
+## Format of the CSV file that contains credentials
+
+AWS allows users to download access keys in a CSV file. If you downloaded the
+file from the AWS web console, this should just work. If you were handed
+credentials outside of a CSV file, the expected format is as follow:
+
+    User Name,Access Key Id,Secret Access Key (,MFA Serial)
+    FooBar,XXXXXXXXXXXXXXXXXXX,XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX (,arn:aws:iam::XXXXXXXXXXXX:mfa/f00b4r)
+
+**Note:** The fourth value is not standard, but supported for convenience if you
+have enabled MFA-protected API access and want to avoid entering your MFA serial
+everytime you run Scout2.
 
 ## Advanced documentation
 
