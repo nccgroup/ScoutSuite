@@ -14,7 +14,11 @@ class IamFinding(Finding):
     def checkAccessKeys(self, key, obj):
         for access_key in obj['access_keys']:
             status = self.callback_args[0]
-            self.isOlderThan90Days(key, access_key, status)
+            if len(self.callback_args) > 1:
+                max_age = int(self.callback_args[1])
+            else:
+                max_age = 90
+            self.isOlderThan(key, access_key, max_age, status)
 
     def belongsToGroup(self, key, obj):
         for group in obj['groups']:
@@ -32,9 +36,6 @@ class IamFinding(Finding):
             return True
         else:
             return False
-
-    def isOlderThan90Days(self, key, obj, status):
-        return self.isOlderThan(key, obj, 90, status)
 
     def lacksMFA(self, key, obj):
         if len(obj['mfa_devices']) == 0 and 'logins' in obj:

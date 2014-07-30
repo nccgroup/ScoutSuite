@@ -4,6 +4,7 @@
 import boto
 
 # Import other third-party packages
+import argparse
 from distutils import dir_util
 import copy
 import json
@@ -20,6 +21,34 @@ import urllib2
 # Globals
 ########################################
 supported_services = ['cloudtrail', 'ec2', 'iam', 's3']
+
+
+########################################
+# Common parameters
+########################################
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument('--force',
+                    dest='force_write',
+                    default=False,
+                    action='store_true',
+                    help='overwrite existing json files')
+parser.add_argument('--ruleset_name',
+                    dest='ruleset_name',
+                    default='default',
+                    nargs='+',
+                    help='Customized set of rules')
+parser.add_argument('--services',
+                    dest='services',
+                    default=supported_services,
+                    nargs='+',
+                    help='Name of services you want to analyze')
+parser.add_argument('--skip',
+                    dest='skipped_services',
+                    default=[],
+                    nargs='+',
+                    help='Name of services you want to ignore')
 
 
 ########################################
@@ -242,7 +271,7 @@ def prompt_4_overwrite(filename, force_write):
         return True
     return prompt_4_yes_no('File already exists. Do you want to overwrite it')
 
-def prompt_4_value(question, choices = None):
+def prompt_4_value(question, choices = None, default = None):
     if choices:
         question = question + ' (' + '/'.join(choices) + ')'
     while True:
@@ -253,6 +282,11 @@ def prompt_4_value(question, choices = None):
                 return choice
             else:
                 print 'Invalid value.'
+        elif not choice and default:
+            if prompt_4_yes_no('Use the default value (' + default + ')'):
+                return default
+        elif not choice:
+            print 'You cannot leave this parameter empty.'
         elif prompt_4_yes_no('You entered "' + choice + '". Is that correct'):
             return choice
 

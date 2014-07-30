@@ -27,7 +27,9 @@ finding_levels = ['danger', 'warning']
 
 def change_level(level):
     if prompt_4_yes_no('Would you like to change the default level (%s)' % level):
-        return prompt_4_value('Enter the level', finding_levels)
+        return prompt_4_value('Enter the level', finding_levels, level)
+    else:
+        return level
 
 def load_findings(service, ruleset_name, customize = False):
 
@@ -91,13 +93,18 @@ def new_finding(service, customize, key, description, entity, callback_name, cal
         print ''
         activate_rule_question = set_description(questions.pop(0), description)
         if prompt_4_yes_no(activate_rule_question):
-            for q in questions:
-                if type(q) == list:
-                    choices = q[1:][0]
-                    q = q[0]
+            for question in questions:
+                if type(question) == list:
+                    if len(question) == 2:
+                        q, choices = question
+                        default = None
+                    elif len(question) == 3:
+                        q, choices, default = question
                 else:
+                    q = question
                     choices = None
-                answer = prompt_4_value(q, choices)
+                    default = None
+                answer = prompt_4_value(q, choices, default)
                 callback_args.append(answer)
             level = change_level(level)
         else:

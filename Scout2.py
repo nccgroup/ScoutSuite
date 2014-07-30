@@ -13,7 +13,6 @@ from AWSScout2.utils_iam import *
 from AWSScout2.utils_s3 import *
 
 # Import other third-party packages
-import argparse
 import os
 import traceback
 
@@ -125,17 +124,12 @@ def main(args):
 ########################################
 ##### Argument parser
 ########################################
-parser = argparse.ArgumentParser()
+
 parser.add_argument('--gov',
                     dest='fetch_ec2_gov',
                     default=False,
                     action='store_true',
                     help='fetch the EC2 configuration from the us-gov-west-1 region')
-parser.add_argument('--force',
-                    dest='force_write',
-                    default=False,
-                    action='store_true',
-                    help='overwrite existing json files')
 parser.add_argument('--role-credentials',
                     dest='fetch_creds_from_instance_metadata',
                     default=False,
@@ -166,21 +160,6 @@ parser.add_argument('--env',
                     default=None,
                     nargs='+',
                     help='Environment name. Used to create multiple reports')
-parser.add_argument('--ruleset_name',
-                    dest='ruleset_name',
-                    default='default',
-                    nargs='+',
-                    help='Customized set of rules')
-parser.add_argument('--services',
-                    dest='services',
-                    default=supported_services,
-                    nargs='+',
-                    help='Name of services you want to analyze')
-parser.add_argument('--skip',
-                    dest='skipped_services',
-                    default=[],
-                    nargs='+',
-                    help='Name of services you want to ignore')
 
 args = parser.parse_args()
 
