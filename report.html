@@ -139,7 +139,13 @@
             <li class="list-group-item-text">{{name}}</li>
             <ul>
             {{# each rules}}
-              <li class="list-group-item-text">Ports: <span id="ec2_security_groups-{{../name}}-{{ports}}-{{../../id}}">{{ports}}</span></li>
+              <li class="list-group-item-text">Ports:
+                <span id="ec2_security_groups-{{../name}}-{{ports}}-{{../../id}}">
+                  <span id="ec2_security_groups-ports-range-{{../../id}}-{{ports}}">
+                    {{ports}}
+                  </span>
+                </span>
+              </li>
               <ul>
               {{# each grants/cidrs}}
                 <li class="list-group-item-text">IP: <span id="ec2_security_groups-{{../../name}}-{{../ports}}-{{this}}-{{../../../id}}">{{this}}</span></li>
@@ -147,7 +153,7 @@
               {{# each grants/security_groups}}
                 <li class="list-group-item-text"> EC2 security group:
                   <span id="ec2_security_groups-{{../../name}}-{{../ports}}-{{this}}-{{../../../id}}">
-                    <a href="javascript:findAndShowEC2Object('regions.vpcs.security_groups', '{{this}}')"> {{find_ec2_object_attribute "regions.vpcs.security_groups" this "name"}} {({{this}})</a>
+                    <a href="javascript:findAndShowEC2Object('regions.vpcs.security_groups', '{{this}}')"> {{find_ec2_object_attribute "regions.vpcs.security_groups" this "name"}} ({{this}})</a>
                   </span>
                 </li>
               {{/each}}

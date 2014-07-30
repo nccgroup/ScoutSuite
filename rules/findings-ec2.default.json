@@ -30,6 +30,13 @@
         "callback_args": ["whitelist", ["HTTP(S)", "TCP", ["80", "443", "22", "3389", "1433", "3306"]]],
         "level": "warning"
     },
+    "ports-range": {
+        "description": "Use of port ranges",
+        "entity": "regions.vpcs.security_groups",
+        "callback": "checkSinglePortOnly",
+        "callback_args": [],
+        "level": "warning"
+    },
     "lack-of-inbound-network-acls": {
         "description": "Lack of network ACLs (Inbound)",
         "entity": "regions.vpcs",

@@ -46,6 +46,12 @@ class Ec2Finding(Finding):
         else:
             self.addItem(key)
 
+    def checkSinglePortOnly(self, key, obj):
+        for protocol in obj['protocols']:
+            for rule in obj['protocols'][protocol]['rules']:
+                if self.re_port_range.match(str(rule['ports'])):
+                    self.addItem(rule['ports'], obj['id'])
+
     def checkUnscannableInstanceTypes(self, key, obj):
         if 'instance_type' in obj and self.callback_args:
             instance_type = obj['instance_type']
