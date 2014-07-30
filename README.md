@@ -62,7 +62,7 @@ file from the AWS web console, this should just work. If you were handed
 credentials outside of a CSV file, the expected format is as follow:
 
     User Name,Access Key Id,Secret Access Key (,MFA Serial)
-    FooBar,XXXXXXXXXXXXXXXXXXX,XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX (,arn:aws:iam::XXXXXXXXXXXX:mfa/f00b4r)
+    f00b4r,YOUR_ACCESS_KEY_ID,YOUR_ACCESS_KEY_SECRET (,arn:aws:iam::YOUR_AWS_ACCOUNT:mfa/f00b4r)
 
 **Note:** The fourth value is not standard, but supported for convenience if you
 have enabled MFA-protected API access and want to avoid entering your MFA serial
