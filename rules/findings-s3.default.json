@@ -4,27 +4,39 @@
         "entity": "buckets",
         "callback": "checkWorldWritableBucket",
         "callback_args": [],
-        "level": "danger"
+        "level": "danger",
+        "questions": [
+            "Report S3 buckets that are world-writable"
+        ]
     },
     "All users-write_acp": {
         "description": "Bucket's permissions world-writable",
         "entity": "buckets",
         "callback": "checkWorldWritableBucketPerms",
         "callback_args": [],
-        "level": "danger"
+        "level": "danger",
+        "questions": [
+            "Report S3 buckets whose permissions are world-writable"
+        ]
     },
     "All users-read": {
         "description": "Bucket world-readable",
         "entity": "buckets",
         "callback": "checkWorldReadableBucket",
         "callback_args": [],
-        "level": "warning"
+        "level": "warning",
+        "questions": [
+            "Report S3 buckets that are world-readable"
+        ]
     },
     "logging-disabled": {
         "description": "Logging disabled",
         "entity": "buckets",
         "callback": "checkLogging",
         "callback_args": [],
-        "level": "warning"
+        "level": "warning",
+        "questions": [
+            "Report S3 buckets that lack logging"
+        ]
     }
 }
