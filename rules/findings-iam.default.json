@@ -11,7 +11,7 @@
         "level": "_ARG_1_",
         "questions": [
             "Report _ARG_0_ access keys that have not been rotated",
-            [ "What is the rotation period (in days) your policy requires (90 by default)", "", "90"]
+            [ "What is the rotation period (in days) your policy requires (90 by default)", [], "90"]
         ]
     },
     "no-mfa": {

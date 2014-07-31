@@ -272,6 +272,8 @@ def prompt_4_overwrite(filename, force_write):
     return prompt_4_yes_no('File already exists. Do you want to overwrite it')
 
 def prompt_4_value(question, choices = None, default = None):
+    if choices and len(choices) == 1 and choices[0] == 'yes_no':
+        return prompt_4_yes_no(question)
     if choices:
         question = question + ' (' + '/'.join(choices) + ')'
     while True:

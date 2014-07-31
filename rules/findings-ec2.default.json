@@ -30,7 +30,7 @@
         "level": "danger",
         "questions": [
             "Report _DESCRIPTION_",
-            ["Include search in port ranges", ["y", "yes", "n", "no"]]
+            ["Include search in port ranges", ["yes_no"]]
         ]
     },
     "public-ports": {
