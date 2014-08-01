@@ -29,3 +29,7 @@ class S3Finding(Finding):
     def checkLogging(self, key, obj):
         if obj['logging'] == 'Disabled':
             self.addItem(key)
+
+    def checkWebhosting(self, key, obj):
+        if obj['web_hosting'] == 'Enabled':
+            self.addItem(key)

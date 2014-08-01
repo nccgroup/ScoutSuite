@@ -1,2 +1,12 @@
 {
+    "static_website_hosting_enabled": {
+        "description": "Static website hosting enabled",
+        "entity": "buckets",
+        "callback": "checkWebhosting",
+        "callback_args": [],
+        "level": "warning",
+        "questions": [
+            "Warn against S3 buckets that have static website hosting enabled"
+        ]
+    }
 }

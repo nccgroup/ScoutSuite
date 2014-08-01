@@ -54,6 +54,14 @@ def get_s3_bucket_logging(bucket):
     else:
         return 'Disabled'
 
+def get_s3_bucket_webhosting(bucket):
+    try:
+        if bucket.get_website_configuration():
+            return 'Enabled'
+    except:
+        pass
+    return 'Disabled'
+
 # List all available buckets
 def get_s3_buckets(s3_connection, s3_info):
     manage_dictionary(s3_info, 'buckets', {})
@@ -79,6 +87,7 @@ def get_s3_buckets(s3_connection, s3_info):
             bucket['region'] = b.get_location()
             bucket['logging'] = get_s3_bucket_logging(b)
             bucket['versioning'] = get_s3_bucket_versioning(b)
+            bucket['web_hosting'] = get_s3_bucket_webhosting(b)
             # h4ck : data redundancy because I can't call ../@key in Handlebars
             bucket['name'] = b.name
             s3_info['buckets'][b.name] = bucket
