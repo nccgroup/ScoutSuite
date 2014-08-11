@@ -11,6 +11,11 @@ from AWSScout2.findings import *
 
 def main(args):
 
+    # Check arguments
+    if args.ruleset_name == 'default':
+        print 'Error, you need to provide a name for your custom ruleset.'
+        return
+
     # Create the list of services to customize
     services = build_services_list(args.services, args.skipped_services)
     if not len(services):
