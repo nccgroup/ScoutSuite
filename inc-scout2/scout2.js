@@ -219,11 +219,16 @@ function list_findings(keyword, violations, finding) {
 }
 
 // Handlebars helpers
-Handlebars.registerHelper("decodeURIComponent", function(blob) {
-    var test = decodeURIComponent(blob);
-    test = test.replace(/ /g, '&nbsp;');
-    test = test.replace(/\n/g, '<br />');
-    return test;
+Handlebars.registerHelper('displayPolicy', function(blob, decodeURI) {
+    var policy = '';
+    if (decodeURI) {
+         policy = decodeURIComponent(blob);
+    } else {
+        policy = JSON.stringify(eval("(" + blob + ")"), null, 2);
+    }
+    policy = policy.replace(/ /g, '&nbsp;');
+    policy = policy.replace(/\n/g, '<br />');
+    return policy;
 });
 Handlebars.registerHelper("has_profiles?", function(logins) {
     if(typeof logins != 'undefined' && logins != '') {

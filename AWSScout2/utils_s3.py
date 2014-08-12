@@ -88,6 +88,12 @@ def get_s3_buckets(s3_connection, s3_info):
             bucket['logging'] = get_s3_bucket_logging(b)
             bucket['versioning'] = get_s3_bucket_versioning(b)
             bucket['web_hosting'] = get_s3_bucket_webhosting(b)
+            # Get bucket's policy
+            try:
+                bucket['policy'] = b.get_policy()
+            except Exception, e:
+                # The bucket policy does not exist
+                pass
             # h4ck : data redundancy because I can't call ../@key in Handlebars
             bucket['name'] = b.name
             s3_info['buckets'][b.name] = bucket

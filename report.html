@@ -293,7 +293,7 @@
           </h5>
           <div id="iam_{{iam_entity_type}}_policy_details-{{iam_entity_name}}-{{policy_name}}" class="accordion-body collapse">
             <div class="accordion-inner">
-              {{{decodeURIComponent policy_document}}}
+              {{{displayPolicy policy_document 1}}}
             </div>
           </div>
         </div>
@@ -447,6 +447,22 @@
             {{/each}}
           </table>
         </div>
+        {{#if policy}}
+          <div class="list-group-item">
+            <div class="accordion">
+              <h4 class="list-group-item-heading accordion-heading">Policy
+                <a class="accordion-toggle" data-toggle="collapse" href="#s3_bucket_policy_details-{{@key}}">
+                  <span class="badge pull-right btn-info">Details</span>
+                </a>
+              </h4>
+              <div id="s3_bucket_policy_details-{{@key}}" class="accordion-body item-margin">
+                <div class="accordion-inner">
+                  {{{displayPolicy policy 0}}}
+                </div>
+              </div>
+            </div>
+          </div>
+        {{/if}}
       </div>
     </script>
     <script>
