@@ -38,3 +38,10 @@ class Finding():
         found_objects = [o for o in obj[attribute] if o[condition_attr] == condition_val]
         if len(found_objects) > int(limit):
             self.addItem(key)
+
+    # arg0: object attribute to check
+    def isNotNull(self, key, obj):
+        attribute = self.callback_args[0]
+        if attribute in obj:
+            if obj[attribute]:
+                self.addItem(key)

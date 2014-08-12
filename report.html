@@ -229,6 +229,22 @@
             <li class="list-group-item-text">Private DNS: {{private_dns_name}}</li>
           </ul>
         </div>
+        <div class="list-group-item" style="padding-bottom: 0 !important;">
+          <div class="accordion">
+            <h4 class="list-group-item-heading accordion-heading">Security groups
+              <a class="accordion-toggle" data-toggle="collapse" href="#ec2_instance-{{id}}-security_groups"><span class="badge pull-right btn-info">{{security_groups.length}}</span></a>
+            </h4>
+            <div id="ec2_instance-{{id}}-security_groups" class="accordion-body collapse">
+              <div class="accordion-inner">
+                <ul class="no-bullet">
+                  {{#each security_groups}}
+                    <li><a href="javascript:findAndShowEC2Object('regions.vpcs.security_groups', '{{this}}')">{{this}}</a></li>
+                  {{/each}}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </script>
     <script>
