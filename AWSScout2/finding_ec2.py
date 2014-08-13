@@ -39,12 +39,13 @@ class Ec2Finding(Finding):
             self.addItem(key)
 
     def checkNetworkACLs(self, key, obj):
-        if 'network_acls' in obj:
-            field_name = self.callback_args[0] + '_network_acls'
-            for acl in obj['network_acls']:
-                self.checkFirstRule(key, obj['network_acls'][acl][field_name])
-        else:
-            self.addItem(key)
+        if obj['id'] != 'no-vpc':
+            if 'network_acls' in obj:
+                field_name = self.callback_args[0] + '_network_acls'
+                for acl in obj['network_acls']:
+                    self.checkFirstRule(key, obj['network_acls'][acl][field_name])
+            else:
+                self.addItem(key)
 
     def checkSinglePortOnly(self, key, obj):
         for protocol in obj['protocols']:
