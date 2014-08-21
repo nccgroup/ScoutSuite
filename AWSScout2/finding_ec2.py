@@ -55,7 +55,7 @@ class Ec2Finding(Finding):
     def checkUnscannableInstanceTypes(self, key, obj):
         if 'instance_type' in obj and self.callback_args:
             instance_type = obj['instance_type']
-            if instance_type in self.callback_args[0]:
+            if instance_type in self.callback_args:
                 self.addItem(key)
 
     def checkOpenPort(self, key, obj):
