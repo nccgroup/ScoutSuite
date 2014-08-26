@@ -1,6 +1,7 @@
 #!/usr/bin/env python2
 
 # Import the Amazon SDK
+import boto
 from boto import cloudtrail
 
 # Import AWS Scout2 tools

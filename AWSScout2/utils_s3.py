@@ -1,5 +1,8 @@
 #!/usr/bin/env python2
 
+# Import the Amazon SDK
+import boto
+
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
 from AWSScout2.findings import *

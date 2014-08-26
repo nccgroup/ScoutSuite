@@ -1,0 +1,12 @@
+{
+    "rds-publicly-accessible": {
+        "description": "RDS database open to Internet",
+        "entity": "regions.security_groups",
+        "callback": "checkInternetAccessible",
+        "callback_args": [],
+        "level": "danger",
+        "questions": [
+            "Report _DESCRIPTION_"
+        ]
+    }
+}

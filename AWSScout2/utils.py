@@ -20,7 +20,7 @@ import urllib2
 ########################################
 # Globals
 ########################################
-supported_services = ['cloudtrail', 'ec2', 'iam', 's3']
+supported_services = ['cloudtrail', 'ec2', 'iam', 'rds', 's3']
 
 
 ########################################
@@ -54,6 +54,17 @@ parser.add_argument('--skip',
 ########################################
 # Common functions
 ########################################
+
+def build_region_list(regions, aws_info, fetch_gov):
+    region_list = []
+    for region in regions:
+        # h4ck -- skip china north region as it hangs when requesting instances (https://github.com/boto/boto/issues/2083)
+        if (region.name != 'us-gov-west-1' or fetch_gov) and (region.name != 'cn-north-1'):
+            region_list.append(region.name)
+            manage_dictionary(aws_info['regions'], region.name, {})
+            # h4ck : data redundancy because I can't call ../@key in Handlebars
+            aws_info['regions'][region.name]['name'] = region.name
+    return region_list
 
 def build_services_list(services, skipped_services):
 
@@ -305,7 +316,7 @@ def save_config_to_file(blob, keyword, force_write):
         with open_file(keyword, force_write) as f:
             keyword = keyword.lower().replace(' ','_')
             print >>f, keyword + '_info ='
-            keyword = write_data_to_file(f, blob, force_write)
+            write_data_to_file(f, blob, force_write)
     except:
         pass
 

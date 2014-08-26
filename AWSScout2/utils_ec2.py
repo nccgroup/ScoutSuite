@@ -1,13 +1,15 @@
 #!/usr/bin/env python2
 
 # Import the Amazon SDK
+import boto
+from boto import ec2
+from boto import vpc
 from boto.ec2 import elb
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
 from AWSScout2.findings import *
 from AWSScout2.protocols_dict import *
-
 
 # Import other third-party packages
 import traceback
@@ -20,17 +22,6 @@ import traceback
 def analyze_ec2_config(ec2_info, force_write):
     print 'Analyzing EC2 data...'
     analyze_config(ec2_finding_dictionary, ec2_info, 'EC2', force_write)
-
-def build_region_list(regions, ec2_info, fetch_ec2_gov):
-    region_list = []
-    for region in regions:
-        # h4ck -- skip china north region as it hangs when requesting instances (https://github.com/boto/boto/issues/2083)
-        if (region.name != 'us-gov-west-1' or fetch_ec2_gov) and (region.name != 'cn-north-1'):
-            region_list.append(region.name)
-            manage_dictionary(ec2_info['regions'], region.name, {})
-            # h4ck : data redundancy because I can't call ../@key in Handlebars
-            ec2_info['regions'][region.name]['name'] = region.name
-    return region_list
 
 def get_ec2_info(key_id, secret, session_token, fetch_ec2_gov):
     ec2_info = {}
@@ -163,6 +154,7 @@ def parse_security_group(group):
     security_group['name'] = group.name
     security_group['id'] = group.id
     security_group['description'] = group.description
+    security_group['owner_id'] = group.owner_id
     security_group = manage_dictionary(security_group, 'running-instances', [])
     security_group = manage_dictionary(security_group, 'stopped-instances', [])
     protocols = {}

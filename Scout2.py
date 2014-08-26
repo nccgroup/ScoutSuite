@@ -1,15 +1,11 @@
 #!/usr/bin/env python2
 
-# Import the Amazon SDK
-import boto
-import boto.ec2
-import boto.vpc
-
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
 from AWSScout2.utils_cloudtrail import *
 from AWSScout2.utils_ec2 import *
 from AWSScout2.utils_iam import *
+from AWSScout2.utils_rds import *
 from AWSScout2.utils_s3 import *
 
 # Import other third-party packages
@@ -90,12 +86,19 @@ def main(args):
     if 'ec2' in services:
         # Fetch data from AWS or an existing local file
         if not args.fetch_local:
-            ec2_info = get_ec2_info(key_id, secret, session_token, args.fetch_ec2_gov)
+            ec2_info = get_ec2_info(key_id, secret, session_token, args.fetch_gov)
         else:
             ec2_info = load_info_from_json('ec2', args.environment_name)
         # Analyze the EC2 config and save data to a local file
         analyze_ec2_config(ec2_info, args.force_write)
 
+    ##### RDS
+    if 'rds' in services:
+        if not args.fetch_local:
+            rds_info = get_rds_info(key_id, secret, session_token, args.fetch_gov)
+        else:
+            rds_info = load_info_from_json('rds', args.environment_name)
+        analyze_rds_config(rds_info, args.force_write)
 
     ##### S3
     if 's3' in services:
@@ -126,7 +129,7 @@ def main(args):
 ########################################
 
 parser.add_argument('--gov',
-                    dest='fetch_ec2_gov',
+                    dest='fetch_gov',
                     default=False,
                     action='store_true',
                     help='fetch the EC2 configuration from the us-gov-west-1 region')

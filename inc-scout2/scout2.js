@@ -112,7 +112,32 @@ function findEC2Object(ec2_data, entities, id) {
     }
     return '';
 }
-
+function findEC2ObjectByAttr(ec2_data, entities, attributes) {
+    if (entities.length > 0) {
+        var entity = entities.shift();
+        var recurse = entities.length;
+        for (i in ec2_data[entity]) {
+            if (recurse) {
+                var object = findEC2ObjectByAttr(ec2_data[entity][i], eval(JSON.stringify(entities)), attributes);
+                if (object) {
+                    return object;
+                }
+            } else {
+                var found = true;
+                for (attr in attributes) {
+                    // h4ck :: EC2 security groups in RDS are lowercased...
+                    if (ec2_data[entity][i][attr].toLowerCase() != attributes[attr].toLowerCase()) {
+                        found = false;
+                    }
+                }
+                if (found) {
+                    return ec2_data[entity][i];
+                }
+            }
+        }
+    }
+    return '';
+}
 function findEC2ObjectAttribute(ec2_info, path, id, attribute) {
     var entities = path.split('.');
     var object = findEC2Object(ec2_info, entities, id);
@@ -128,6 +153,15 @@ function findAndShowEC2Object(path, id) {
     if (etype == 'instances') {
         $('#overlay-details').html(single_ec2_instance_template(object));
     } else if(etype == 'security_groups') {
+        $('#overlay-details').html(single_ec2_security_group_template(object));
+    }
+    showPopup();
+}
+function findAndShowEC2ObjectByAttr(path, attributes) {
+    entities = path.split('.');
+    var object = findEC2ObjectByAttr(ec2_info, entities, attributes);
+    var etype = entities.pop();
+    if (etype == 'security_groups') {
         $('#overlay-details').html(single_ec2_security_group_template(object));
     }
     showPopup();

@@ -4,6 +4,7 @@
 from AWSScout2.finding_cloudtrail import *
 from AWSScout2.finding_ec2 import *
 from AWSScout2.finding_iam import *
+from AWSScout2.finding_rds import *
 from AWSScout2.finding_s3 import *
 from AWSScout2.utils import *
 
@@ -17,6 +18,7 @@ import re
 cloudtrail_finding_dictionary = {}
 iam_finding_dictionary = {}
 ec2_finding_dictionary = {}
+rds_finding_dictionary = {}
 s3_finding_dictionary = {}
 
 finding_levels = ['danger', 'warning']
@@ -145,5 +147,7 @@ def get_finding_variables(keyword):
         return s3_finding_dictionary, S3Finding
     elif keyword == 'cloudtrail':
         return cloudtrail_finding_dictionary, CloudTrailFinding
+    elif keyword == 'rds':
+        return rds_finding_dictionary, RdsFinding
     else:
         return None, None

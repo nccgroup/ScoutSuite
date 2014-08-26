@@ -421,6 +421,38 @@
       Handlebars.registerPartial("iam_user", $("#iam_user-partial").html());
     </script>
 
+    <!-- RDS security group partials -->
+    <script id="rds_security_group-partial" type="text/x-handlebars-template">
+      <div class="list-group" id="rds_security_group-details-{{id}}">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text item-margin">Description: {{description}}</div>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Authorizations</h4>
+          <ul>
+            {{#each ec2_groups.owners}}
+              {{#each groups}}
+                <li class="list-group-item-text">
+                  EC2 security group:
+                  <a href="javascript:findAndShowEC2ObjectByAttr('regions.vpcs.security_groups', {'name': '{{this}}', 'owner_id': '{{@key}}'})">{{this}} @ {{@key}}</a>
+                </li>
+              {{/each}}
+            {{/each}}
+            {{#each ip_ranges}}
+              <li class="list-group-item-text">IP: {{this}}</li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+    </script>
+    <script>
+        Handlebars.registerPartial("rds_security_group", $("#rds_security_group-partial").html());
+    </script>
+
     <!-- S3 bucket partial -->
     <script id="s3_bucket-partial" type="text/x-handlebars-template">
       <div class="list-group" id="s3_bucket-details-{{name}}">
@@ -603,6 +635,19 @@
                   <li><a href="javascript:list_generic('iam_permission')">Permissions</a></li>
                   <li><a href="javascript:list_generic('iam_role')">Roles</a></li>
                   <li><a href="javascript:list_generic('iam_user')">Users</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">Security risks</li>
+                  {{#each items}}
+                    {{> finding_menu_item}}
+                  {{/each}}
+                </script>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a href="javascript:show_rds()" class="dropdown-toggle" data-toggle="dropdown"><span id="rds_dropdown">RDS</span><b class="caret"></b></a>
+              <ul class="dropdown-menu" id="rds_violations-list">
+                <script id="rds_violation-list-template" type="text/x-handlebars-template">
+                  <li><a href="javascript:list_generic('rds_security_group')">Security Groups</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
@@ -969,6 +1014,36 @@
         </div><!-- /.col-sm-8 -->
       </div><!-- /.row -->
 
+      <!-- Template for RDS security groups -->
+      <div class="row" id="rds_security_groups-row">
+        <div class="col-sm-4" id="rds_security_groups-list">
+          <script id="rds_security_group-list-template" type="text/x-handlebars-template">
+            <ul class="list-group">
+              <li class="list-group-item"><a href="javascript:showAll('rds_security_group')">Show all<span class="badge pull-right">{{count_in "rds" "regions.security_groups"}}</span></a></li>
+            </ul>
+            {{#each items}}
+              <ul class="list-group">
+                <li class="list-group-item active">{{@key}}</li>
+                {{#each security_groups}}
+                  <div class="list-group-item list-sub-element">
+                    <div class="list-group-item-text list-sub-element" id="ec2_security_group-list-{{id}}"><a href="javascript:browseTo('ec2_security_group', '{{id}}')">{{name}}</a></div>
+                  </div>
+                {{/each}}
+              </ul>
+            {{/each}}
+          </script>
+        </div>
+        <div class="col-sm-8" id="rds_security_groups-details">
+          <script id="rds_security_group-detail-template" type="text/x-handlebars-template">
+            {{#each items}}
+              {{#each security_groups}}
+                {{> rds_security_group region=../../name }}
+              {{/each}}
+            {{/each}}
+          </script>
+        </div><!-- /.col-sm-8 -->
+      </div><!-- /.row -->
+
       <!-- Template for S3 buckets -->
       <div class="row" id="s3_buckets-row">
         <div class="col-sm-4">
@@ -1022,6 +1097,7 @@
     <script src="inc-awsconfig/cloudtrail_config.js"></script>
     <script src="inc-awsconfig/ec2_config.js"></script>
     <script src="inc-awsconfig/iam_config.js"></script>
+    <script src="inc-awsconfig/rds_config.js"></script>
     <script src="inc-awsconfig/s3_config.js"></script>
 
     <!-- Load CloudTrail data -->
@@ -1046,6 +1122,12 @@
         load_aws_config_from_json(iam_info['roles'], 'iam_role', 2);
         load_aws_config_from_json(iam_info['users'], 'iam_user', 2);
         highlight_violations(iam_info['violations'], 'iam');
+    </script>
+
+    <!-- Load RDS data -->
+    <script>
+      load_aws_config_from_json(rds_info['regions'], 'rds_security_group', 2);
+      highlight_violations(rds_info['violations'], 'rds');
     </script>
 
     <!-- Load S3 data -->
