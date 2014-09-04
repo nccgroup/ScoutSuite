@@ -38,5 +38,25 @@
         "questions": [
             "Report S3 buckets that lack logging"
         ]
+    },
+    "unencrypted-s3-objects": {
+        "description": "Unencrypted S3 objects",
+        "entity": "buckets",
+        "callback": "checkEncryption",
+        "callback_args": [],
+        "level": "danger",
+        "questions": [
+            "Flag S3 objects that are not encrypted at rest"
+        ]
+    },
+    "object-perms-mismatch-bucket-perms": {
+        "description": "Object permissions don't match bucket's",
+        "entity": "buckets",
+        "callback": "checkObjectsPermissions",
+        "callback_args": [],
+        "level": "warning",
+        "questions": [
+            "Flag S3 objects whose permissions do not match their bucket's permissions"
+        ]
     }
 }

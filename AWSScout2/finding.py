@@ -21,6 +21,7 @@ class Finding():
     def removeItem(self, item, macro_item = None):
         try:
             self.items.remove(item)
+            # TODO there's probably a bug here, should find the index and remove the corresponding entry in the list (not by value, as the same value might appear multiple times)
             if macro_item:
                 self.macro_items.remove(macro_item)
         except:

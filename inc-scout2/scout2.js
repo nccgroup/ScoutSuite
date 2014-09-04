@@ -210,6 +210,12 @@ function showS3Bucket(bucket_name) {
     $('#overlay-details').html(single_s3_bucket_template(data));
     showPopup();
 }
+function showS3Object(bucket_name, object_name) {
+    var data = s3_info['buckets'][bucket_name]['keys'][object_name];
+    data['name'] = object_name;
+    $('#overlay-details').html(single_s3_object_template(data));
+    showPopup();
+}
 function showPopup() {
     $("#overlay-background").show();
     $("#overlay-details").show();
@@ -242,7 +248,15 @@ function list_findings(keyword, violations, finding) {
     hideAll();
     showEmptyRow(keyword);
     if (violations[finding]['macro_items'].length == violations[finding]['items'].length ) {
-        items = violations[finding]['macro_items'];
+        items = [];
+        dict  = {};
+        for (mi in violations[finding]['macro_items']) {
+            if (dict.hasOwnProperty(violations[finding]['macro_items'][mi])) {
+                continue;
+            }
+            items.push(violations[finding]['macro_items'][mi]);
+            dict[violations[finding]['macro_items'][mi]] = 1;
+        }
     } else {
         items = violations[finding]['items'];
     }
@@ -314,6 +328,13 @@ function format_entity(keyword, name, policy_name, c) {
 }
 Handlebars.registerHelper('s3_grant_2_icon', function(value) {
     return '<i class="' + ((value == true) ? 'glyphicon glyphicon-ok' : '') +'"></i>';
+});
+Handlebars.registerHelper('good_bad_icon', function(violation, item) {
+    if (s3_info['violations'][violation]['items'].indexOf(item) > -1) {
+        return '<i class="glyphicon glyphicon-remove"></i>';
+    } else {
+        return '<i class="glyphicon glyphicon-ok"></i>';
+    }
 });
 Handlebars.registerHelper('has_logging?', function(logging) {
     return logging;

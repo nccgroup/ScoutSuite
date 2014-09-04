@@ -33,3 +33,21 @@ class S3Finding(Finding):
     def checkWebhosting(self, key, obj):
         if obj['web_hosting'] == 'Enabled':
             self.addItem(key)
+
+    def checkEncryption(self, key, obj):
+        if 'keys' in obj:
+            for k in obj['keys']:
+                if 'encrypted' in obj['keys'][k] and not obj['keys'][k]['encrypted']:
+                    # Folders cant' be encrypted
+                    if not k.endswith('/'):
+                        self.addItem(k, key)
+                    else:
+                        obj['keys'][k]['encrypted'] = 'N/A'
+
+    def checkObjectsPermissions(self, key, obj):
+        if 'keys' in obj:
+            bucket_grants = obj['grants']
+            for k in obj['keys']:
+                object_grants = obj['keys'][k]['grants']
+                if cmp(bucket_grants, object_grants) != 0:
+                    self.addItem(k, key)

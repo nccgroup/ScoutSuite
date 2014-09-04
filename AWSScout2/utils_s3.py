@@ -43,6 +43,26 @@ def s3_group_to_string(uri):
     else:
         return uri
 
+def get_s3_acls(bucket, key_name = None):
+    grants = {}
+    if key_name:
+        acp = bucket.get_acl(key_name)
+    else:
+        acp = bucket.get_acl()
+    for grant in acp.acl.grants:
+        grantee_name = 'Unknown'
+        if grant.type == 'Group':
+            grantee_name = s3_group_to_string(grant.uri)
+            grant.uri.rsplit('/',1)[0]
+        elif grant.type == 'CanonicalUser':
+            grantee_name = grant.display_name
+        manage_dictionary(grants, grantee_name, {}, init_s3_permissions)
+        set_s3_permission(grants[grantee_name], grant.permission)
+        # h4ck : data redundancy because I can't call ../@key in Handlebars
+        grants[grantee_name]['name'] = grantee_name
+    return grants
+
+
 def get_s3_bucket_versioning(bucket):
     r = bucket.get_versioning_status()
     if 'Versioning' in r:
@@ -66,26 +86,14 @@ def get_s3_bucket_webhosting(bucket):
     return 'Disabled'
 
 # List all available buckets
-def get_s3_buckets(s3_connection, s3_info):
+def get_s3_buckets(s3_connection, s3_info, check_encryption, check_acls):
     manage_dictionary(s3_info, 'buckets', {})
     buckets = s3_connection.get_all_buckets()
     count, total = init_status(buckets)
     for b in buckets:
         try:
             bucket = {}
-            acp = b.get_acl()
-            bucket['grants'] = {}
-            for grant in acp.acl.grants:
-                grantee_name = 'Unknown'
-                if grant.type == 'Group':
-                    grantee_name = s3_group_to_string(grant.uri)
-                    grant.uri.rsplit('/',1)[0]
-                elif grant.type == 'CanonicalUser':
-                    grantee_name = grant.display_name
-                manage_dictionary(bucket['grants'], grantee_name, {}, init_s3_permissions)
-                set_s3_permission(bucket['grants'][grantee_name], grant.permission)
-                # h4ck : data redundancy because I can't call ../@key in Handlebars
-                bucket['grants'][grantee_name]['name'] = grantee_name
+            bucket['grants'] = get_s3_acls(b)
             bucket['creation_date'] = b.creation_date
             bucket['region'] = b.get_location()
             bucket['logging'] = get_s3_bucket_logging(b)
@@ -99,15 +107,29 @@ def get_s3_buckets(s3_connection, s3_info):
                 pass
             # h4ck : data redundancy because I can't call ../@key in Handlebars
             bucket['name'] = b.name
+            # If requested, iterate through keys to get encryption and permissions
+            if type(check_encryption) == list and (b.name in check_encryption or not len(check_encryption)) or type(check_acls) == list and (b.name in check_acls or not len(check_acls)):
+                bucket['keys'] = {}
+                keys = b.list()
+                for k in keys:
+                    k = b.get_key(k.name)
+                    manage_dictionary(bucket['keys'], k.name, {})
+                    if type(check_encryption) == list and (b.name in check_encryption or not len(check_encryption)):
+                        # The encryption configuration is only accessible via an HTTP header, only returned when requesting one object at a time...
+                        k = b.get_key(k.name)
+                        bucket['keys'][k.name]['encrypted'] = k.encrypted
+                        bucket['keys'][k.name]['storage_class'] = k.storage_class
+                    if type(check_acls) == list and (b.name in check_acls or not len(check_acls)):
+                        bucket['keys'][k.name]['grants'] = get_s3_acls(b, k.name)
             s3_info['buckets'][b.name] = bucket
             count = update_status(count, total)
         except Exception, e:
             print e
     close_status(count, total)
 
-def get_s3_info(key_id, secret, session_token):
+def get_s3_info(key_id, secret, session_token, check_encryption, check_acls):
     s3_info = {}
     s3_connection = boto.connect_s3(aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
     print 'Fetching S3 buckets data...'
-    get_s3_buckets(s3_connection, s3_info)
+    get_s3_buckets(s3_connection, s3_info, check_encryption, check_acls)
     return s3_info

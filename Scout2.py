@@ -103,7 +103,7 @@ def main(args):
     ##### S3
     if 's3' in services:
         if not args.fetch_local:
-            s3_info = get_s3_info(key_id, secret, session_token)
+            s3_info = get_s3_info(key_id, secret, session_token, args.check_s3_encryption, args.check_s3_acls)
         else:
             s3_info = load_info_from_json('s3', args.environment_name)
         # Analyze the S3 config and save data to a local file
@@ -163,6 +163,16 @@ parser.add_argument('--env',
                     default=None,
                     nargs='+',
                     help='Environment name. Used to create multiple reports')
+parser.add_argument('--check_s3_encryption',
+                    dest='check_s3_encryption',
+                    default=None,
+                    nargs='*',
+                    help='List of S3 buckets to iterate through; pulls server-side encryption settings for each object in bucket (Slow)')
+parser.add_argument('--check_s3_acls',
+                    dest='check_s3_acls',
+                    default=None,
+                    nargs='*',
+                    help='List of S3 buckets to iterate through; pulls permissions for each object in bucket (Slow)')
 
 args = parser.parse_args()
 

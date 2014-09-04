@@ -412,7 +412,7 @@
         <div class="list-group-item">
           <h4 class="list-group-item-heading">User Policies <span class="badge pull-right" id="iam_users-user-policy-{{user_name}}">{{count policies}}</span></h4>
           {{#each policies}}
-            {{> iam_policy iam_entity_type = 'user' iam_entity_name = ../user_name}}
+            {{> iam_policy iam_entity_type = 'user' iam_entity_name = ../user_name policy_name = @key}}
           {{/each}}
         </div>
       </div>
@@ -503,9 +503,46 @@
                   <span class="badge pull-right btn-info">Details</span>
                 </a>
               </h4>
-              <div id="s3_bucket_policy_details-{{@key}}" class="accordion-body item-margin">
+              <div id="s3_bucket_policy_details-{{@key}}" class="accordion-body item-margin collapse">
                 <div class="accordion-inner">
                   {{{displayPolicy policy 0}}}
+                </div>
+              </div>
+            </div>
+          </div>
+        {{/if}}
+        {{#if keys}}
+          <div class="list-group-item">
+            <div class="accordion">
+              <h4 class="list-group-item-heading accordion-heading">Keys
+                <a class="accordion-toggle" data-toggle="collapse" href="#s3_bucket_keys-{{@key}}">
+                  <span class="badge pull-right btn-info">{{count keys}}<span>
+                </a>
+              </h4>
+              <div id="s3_bucket_keys-{{@key}}" class="accordion-body item-margin collapse">
+                <div class="accordion-inner">
+                  <table class="table-striped" width="100%" >
+                    <tr>
+                      <td width="80%">Name</td>
+                      <td width="10%" class="text-center">Encrypted</td>
+                      <td width="10%" class="text-center">Perms</td>
+                    </tr>
+                    {{#each keys}}
+                    <tr>
+                      <td width="80%"><a href="javascript:showS3Object('{{../name}}', '{{@key}}')">{{@key}}</a></td>
+                      <td width="10%" class="text-center">
+                        <span id="s3_buckets-unencrypted-s3-objects-{{../name}}-{{@key}}">
+                          {{{good_bad_icon "unencrypted-s3-objects" @key}}}
+                        </span>
+                      </td>
+                      <td width="10%" class="text-center">
+                        <span id="s3_buckets-object-perms-mismatch-bucket-perms-{{../name}}-{{@key}}">
+                          {{{good_bad_icon "object-perms-mismatch-bucket-perms" @key}}}
+                        </span>
+                      </td>
+                    </tr>
+                    {{/each}}
+                  </table>
                 </div>
               </div>
             </div>
@@ -516,6 +553,57 @@
     <script>
       Handlebars.registerPartial("s3_bucket", $("#s3_bucket-partial").html());
     </script>
+
+    <!-- S3 object partial -->
+    <script id="s3_object-partial" type="text/x-handlebars-template">
+      <div class="list-group" id="s3_object-details-{{name}}">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-gorup-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text">
+            <ul class="no-bullet">
+              <li>Server-side encryption: {{encrypted}}</li>
+              <li>Permissions match bucket's: {{{good_bad_icon "unencrypted-s3-objects" @key}}}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Permissions</h4>
+          <table class="table-striped" width="100%" >
+            <tr>
+              <td width="20%"></td>
+              <td width="20%" class="text-center">Read access</td>
+              <td width="20%" class="text-center">Read permissions</td>
+              <td width="20%" class="text-center">Write access</td>
+              <td width="20%" class="text-center">Write permissions</td>
+            </tr>
+            {{#each grants}}
+              <tr>
+                <td width="20%">{{@key}}</td>
+                <td width="20%" class="text-center">
+                  <span id="s3_buckets-{{name}}-read-{{../name}}">{{{s3_grant_2_icon this.read}}}</td></span>
+                </td>
+                <td width="20%" class="text-center">
+                  <span id="s3_buckets-{{name}}-read_acp-{{../name}}">{{{s3_grant_2_icon this.read_acp}}}</td></span>
+                </td>
+                <td width="20%" class="text-center">
+                  <span id="s3_buckets-{{name}}-write-{{../name}}">{{{s3_grant_2_icon this.write}}}</td></span>
+                </td>
+                <td width="20%" class="text-center">
+                  <span id="s3_buckets-{{name}}-write_acp-{{../name}}">{{{s3_grant_2_icon this.write_acp}}}</td></span>
+                </td>
+              </tr>
+            {{/each}}
+          </table>
+        </div>
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("s3_object", $("#s3_object-partial").html());
+    </script>
+
 
     <!-- Close popup button -->
     <script id="close_button-template" type="text/x-handlebars-template">
@@ -587,6 +675,15 @@
     </script>
     <script>
         var single_s3_bucket_template = Handlebars.compile($("#single_s3_bucket-template").html());
+    </script>
+
+    <!-- Single S3 object template -->
+    <script id="single_s3_object-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> s3_object}}
+    </script>
+    <script>
+      var single_s3_object_template = Handlebars.compile($("#single_s3_object-template").html());
     </script>
 
     <!-- Fixed navbar -->
