@@ -1,3 +1,7 @@
+# virtualenv 
+env/
+venv/
+
 *.py[cod]
 
 # C extensions

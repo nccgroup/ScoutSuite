@@ -16,15 +16,13 @@ or send a pull request.
 
 ## Installation
 
-To install Scout2, simply clone this repository.
+To install Scout2:
 
-The following is a list of required python modules that may not be installed on
-your system:
-
-* Boto, Amazon's AWS SDK for Python (https://aws.amazon.com/sdkforpython)
- * Version 2.31.1 and up
-* Dateutil (https://pypi.python.org/pypi/python-dateutil)
-* Requests (https://github.com/kennethreitz/requests)
+	# simply clone this repository.
+	$ git clone git@github.com:iSECPartners/Scout2.git
+	
+	# install required packages:
+	$ pip install -r requirements.txt
 
 ## Requirements
 
