@@ -288,7 +288,7 @@
             <h4 class="list-group-item-heading">Group Policies <span class="badge pull-right">{{count policies}}</span></h4>
           {{/if}}
           {{#each policies}}
-            {{> iam_policy iam_entity_type = 'group' iam_entity_name = ../group_name}}
+            {{> iam_policy iam_entity_type = 'group' iam_entity_name = ../group_name policy_name = @key}}
           {{/each}}
         </div>
       </div>
@@ -302,7 +302,7 @@
       <hr>
       <div>
         <div class="accordion item-margin">
-          <h5 class="list-group-item-heading accordion-heading">{{@key}}{{policy_name}}
+          <h5 class="list-group-item-heading accordion-heading">{{policy_name}}
             <a class="accordion-toggle" data-toggle="collapse" href="#iam_{{iam_entity_type}}_policy_details-{{iam_entity_name}}-{{policy_name}}">
               <span class="badge pull-right btn-info">Details</span>
             </a>
@@ -350,7 +350,7 @@
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Role Policies</h4>
           {{#each policies}}
-            {{> iam_policy iam_entity_type = 'role' iam_entity_name = ../role_name}}
+            {{> iam_policy iam_entity_type = 'role' iam_entity_name = ../role_name policy_name = @key}}
           {{/each}}
         </div>
       </div>
