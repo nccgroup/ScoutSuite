@@ -2,6 +2,8 @@
 
 from AWSScout2.finding import *
 
+import json
+import netaddr
 import re
 
 class Ec2Finding(Finding):
@@ -12,6 +14,12 @@ class Ec2Finding(Finding):
     def __init__(self, description, entity, callback, callback_args, level, questions):
         self.keyword_prefix = 'ec2'
         Finding.__init__(self, description, entity, callback, callback_args, level, questions)
+        if callback == 'checkNonEIPwhitelisted':
+            public_range = []
+            for region in self.callback_args[0]:
+                for cidr in self.callback_args[0][region]:
+                    public_range.append(cidr)
+            self.callback_args = public_range
 
     def checkInternetAccessiblePort(self, key, obj):
         method = self.callback_args[0]
@@ -46,6 +54,18 @@ class Ec2Finding(Finding):
                     self.checkFirstRule(key, obj['network_acls'][acl][field_name])
             else:
                 self.addItem(key)
+
+    def checkNonEIPwhitelisted(self, key, obj):
+        for protocol in obj['protocols']:
+            for rule in obj['protocols'][protocol]['rules']:
+                if 'cidrs' in rule['grants']:
+                    for cidr in rule['grants']['cidrs']:
+                        authorized_cidr = netaddr.IPNetwork(cidr)
+                        for ec2_cidr in self.callback_args:
+                            ec2_cidr = netaddr.IPNetwork(ec2_cidr)
+                            if authorized_cidr in ec2_cidr:
+                                # Add all EC2 public IPs, check if we have an EIP is performed later
+                                self.addItem(cidr, obj['id'])
 
     def checkSinglePortOnly(self, key, obj):
         for protocol in obj['protocols']:

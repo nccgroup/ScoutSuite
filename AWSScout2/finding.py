@@ -20,11 +20,12 @@ class Finding():
 
     def removeItem(self, item, macro_item = None):
         try:
-            self.items.remove(item)
-            # TODO there's probably a bug here, should find the index and remove the corresponding entry in the list (not by value, as the same value might appear multiple times)
+            target = self.items.index(item)
+            del self.items[target]
             if macro_item:
-                self.macro_items.remove(macro_item)
-        except:
+                del self.macro_items[target]
+        except Exception, e:
+            print e
             pass
 
     # arg0: limit

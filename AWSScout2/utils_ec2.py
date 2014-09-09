@@ -22,6 +22,26 @@ import traceback
 def analyze_ec2_config(ec2_info, force_write):
     print 'Analyzing EC2 data...'
     analyze_config(ec2_finding_dictionary, ec2_info, 'EC2', force_write)
+    # Custom EC2 analysis
+    check_for_elastic_ip(ec2_info)
+    save_config_to_file(ec2_info, 'EC2', force_write)
+
+def check_for_elastic_ip(ec2_info):
+    # Build a list of all elatic IP in the account
+    elastic_ips = []
+    for region in ec2_info['regions']:
+        if 'elastic_ips' in ec2_info['regions'][region]:
+            for eip in ec2_info['regions'][region]['elastic_ips']:
+                elastic_ips.append(eip)
+    # Whitelisting of EC2 public IP is ok if we have an EIP
+    violation = ec2_info['violations']['non-elastic-ec2-public-ip-whitelisted']
+    items = ec2_info['violations']['non-elastic-ec2-public-ip-whitelisted'].items
+    for item in items:
+        ip = netaddr.IPNetwork(item)
+        for eip in elastic_ips:
+            eip = netaddr.IPNetwork(eip)
+            if ip in eip:
+                ec2_info['violations']['non-elastic-ec2-public-ip-whitelisted'].removeItem(item, True)
 
 def get_ec2_info(key_id, secret, session_token, fetch_ec2_gov):
     ec2_info = {}
