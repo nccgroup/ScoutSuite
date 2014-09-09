@@ -197,6 +197,22 @@ def fetch_creds_from_csv(filename):
                         print 'Error, the CSV file is not properly formatted'
     return key_id.rstrip(), secret.rstrip(), mfa_serial
 
+def fetch_creds_from_aws_cli_config():
+    key_id = None
+    secret = None
+    token = None
+    home_folder = os.path.expanduser('~/.aws')
+    config_file = home_folder + '/config'
+    with open(config_file, 'rt') as config:
+        for line in config:
+            if re.match(r'aws_access_key_id', line):
+                key_id = line.split('=')[1].replace(' ', '').rstrip()
+            elif re.match(r'aws_secret_access_key', line):
+                secret = line.split('=')[1].replace(' ', '').rstrip()
+            elif re.match(r'aws_session_token', line):
+                token = line.split('=')[1].replace(' ', '').rstrip()
+    return key_id, secret, token
+
 def fetch_sts_credentials(key_id, secret, mfa_serial, mfa_code):
     if not mfa_serial or len(mfa_serial) < 1:
         print 'Error, you need to provide your MFA device\'s serial number.'

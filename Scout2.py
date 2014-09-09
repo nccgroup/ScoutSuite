@@ -38,6 +38,10 @@ def main(args):
     if args.fetch_creds_from_instance_metadata:
         key_id, secret = fetch_iam_role_credentials()
 
+    # Fetch credentials from AWS config
+    if args.fetch_creds_from_aws_cli_config is not None:
+        key_id, secret, session_token = fetch_creds_from_aws_cli_config()
+
     # Fetch credentials from CSV
     if args.fetch_creds_from_csv is not None:
         key_id, secret, mfa_serial = fetch_creds_from_csv(args.fetch_creds_from_csv[0])
@@ -133,16 +137,21 @@ parser.add_argument('--gov',
                     default=False,
                     action='store_true',
                     help='fetch the EC2 configuration from the us-gov-west-1 region')
-parser.add_argument('--role-credentials',
+parser.add_argument('--role_credentials',
                     dest='fetch_creds_from_instance_metadata',
                     default=False,
                     action='store_true',
                     help='fetch credentials for this EC2 instance')
-parser.add_argument('--credentials',
+parser.add_argument('--aws_cli_credentials',
+                    dest='fetch_creds_from_aws_cli_config',
+                    default=False,
+                    action='store_true',
+                    help='fetch credentials from the AWS CLI configuration file')
+parser.add_argument('--csv_credentials',
                     dest='fetch_creds_from_csv',
                     default=None,
                     nargs='+',
-                    help='credentials file')
+                    help='fetch credentials from a CSV file')
 parser.add_argument('--mfa_serial',
                     dest='mfa_serial',
                     default=None,
@@ -157,22 +166,22 @@ parser.add_argument('--local',
                     dest='fetch_local',
                     default=False,
                     action='store_true',
-                    help='Use local data previously fetched to feed the analyzer')
+                    help='use local data previously fetched to feed the analyzer')
 parser.add_argument('--env',
                     dest='environment_name',
                     default=None,
                     nargs='+',
-                    help='Environment name. Used to create multiple reports')
+                    help='AWS environment name (used to create multiple reports)')
 parser.add_argument('--check_s3_encryption',
                     dest='check_s3_encryption',
                     default=None,
                     nargs='*',
-                    help='List of S3 buckets to iterate through; pulls server-side encryption settings for each object in bucket (Slow)')
+                    help='list of S3 buckets to iterate through; pulls server-side encryption settings for each object in bucket (Slow)')
 parser.add_argument('--check_s3_acls',
                     dest='check_s3_acls',
                     default=None,
                     nargs='*',
-                    help='List of S3 buckets to iterate through; pulls permissions for each object in bucket (Slow)')
+                    help='list of S3 buckets to iterate through; pulls permissions for each object in bucket (Slow)')
 
 args = parser.parse_args()
 
