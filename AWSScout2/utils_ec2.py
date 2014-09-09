@@ -44,6 +44,7 @@ def get_ec2_info(key_id, secret, session_token, fetch_ec2_gov):
                 manage_dictionary(ec2_info['regions'][region], 'vpcs', {})
                 get_security_groups_info(ec2_connection, ec2_info['regions'][region]['vpcs'])
                 get_instances_info(ec2_connection, ec2_info['regions'][region]['vpcs'])
+                get_elastic_ip_info(ec2_connection, ec2_info['regions'][region])
             # ELB
             if region in elb_regions:
                 elb_connection = boto.ec2.elb.connect_to_region(region, aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
@@ -52,6 +53,16 @@ def get_ec2_info(key_id, secret, session_token, fetch_ec2_gov):
             print 'Exception:\n %s' % traceback.format_exc()
             pass
     return ec2_info
+
+def get_elastic_ip_info(ec2_connection, region_info):
+    eips = ec2_connection.get_all_addresses()
+    if len(eips):
+        manage_dictionary(region_info, 'elastic_ips', {})
+        for eip in eips:
+            ip = eip.public_ip
+            manage_dictionary(region_info['elastic_ips'], ip, {})
+            for key in ['instance_id', 'domain', 'allocation_id', 'association_id', 'network_interface_id', 'network_interface_owner_id', 'private_ip_address']:
+                region_info['elastic_ips'][ip][key] = eip.__dict__[key]
 
 def get_elb_info(elb_connection, region_info):
     load_balancers = elb_connection.get_all_load_balancers()
