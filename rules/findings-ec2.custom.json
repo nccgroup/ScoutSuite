@@ -3,7 +3,7 @@
         "description": "Unscannable instance types exist",
         "entity": "regions.vpcs.instances",
         "callback": "checkUnscannableInstanceTypes",
-        "callback_args": ["t1.micro", "m1.small"],
+        "callback_args": ["instance_type", ["t1.micro", "m1.small"]],
         "level": "warning",
         "questions": [
             "Would you like to report EC2 instances that may not be scanned based on Amazon's terms of service"

@@ -1,5 +1,7 @@
 #!/usr/bin/env python2
 
+import dateutil.parser
+
 class Finding():
 
     def __init__(self, description, entity, callback, callback_args, level, questions):
@@ -47,3 +49,30 @@ class Finding():
         if attribute in obj:
             if obj[attribute]:
                 self.addItem(key)
+
+    # arg0: object attribute to check (date)
+    # arg1: date to compare with
+    def wasCreatedBefore(self, key, obj):
+        creation_date = dateutil.parser.parse(obj[self.callback_args[0]]).replace(tzinfo=None)
+        expiration_date = dateutil.parser.parse(self.callback_args[1]).replace(tzinfo=None)
+        age = (creation_date - expiration_date).days
+        if (age < 0):
+            return True
+        else:
+            return False
+
+    # arg0: object attribute to check (instance type/class)
+    # arg1:
+    def checkUnscannableInstanceTypes(self, key, obj):
+        if self.callback_args[0] in obj and len(self.callback_args) > 1:
+            instance_type = obj[self.callback_args[0]]
+            if instance_type in self.callback_args[1]:
+                self.addItem(key)
+
+    # arg0: object attribute to check (number)
+    # arg1: threshold
+    def isLessThan(self, key, obj):
+        value = int(obj[self.callback_args[0]])
+        threshold = int(self.callback_args[1])
+        if value < threshold:
+             self.addItem(key)

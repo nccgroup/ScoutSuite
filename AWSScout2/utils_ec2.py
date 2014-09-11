@@ -34,9 +34,7 @@ def check_for_elastic_ip(ec2_info):
             for eip in ec2_info['regions'][region]['elastic_ips']:
                 elastic_ips.append(eip)
     # Whitelisting of EC2 public IP is ok if we have an EIP
-    violation = ec2_info['violations']['non-elastic-ec2-public-ip-whitelisted']
-    items = ec2_info['violations']['non-elastic-ec2-public-ip-whitelisted'].items
-    for item in items:
+    for item in ec2_info['violations']['non-elastic-ec2-public-ip-whitelisted'].items:
         ip = netaddr.IPNetwork(item)
         for eip in elastic_ips:
             eip = netaddr.IPNetwork(eip)

@@ -421,6 +421,43 @@
       Handlebars.registerPartial("iam_user", $("#iam_user-partial").html());
     </script>
 
+    <!-- RDS instance partial -->
+    <script id="rds_instance-partial" type="text/x-handlebars-template">
+      <div class="list-group" id="rds_instance-details-{{id}}">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{id}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4>Information</h4>
+          <ul>
+            <li class="list-group-item-text">Region: {{region}}</li>
+            <li class="list-group-item-text">Engine: {{engine}}</li>
+            <li class="list-group-item-text">Status: {{status}}</li>
+            <li class="list-group-item-text">Auto Minor Version Upgrade: <span id="rds_instances-no-minor-auto-upgrade-{{id}}">{{#if auto_minor_version_upgrade}} Yes {{else}} No {{/if}}</span></li>
+            <li class="list-group-item-text">Multi Availability Zones: <span id="rds_instances-single-az-{{id}}">{{#if multi_az}} Yes {{else}} No {{/if}}</span></li>
+            <li class="list-group-item-text">Instance Class: <span id="rds_instances-unscannable-instance-types-{{id}}"> {{instance_class}}<span></li>
+            <li class="list-group-item-text">Created on: <span id="rds_instances-postgres-invalid-ssl-cert-{{id}}">{{create_time}}</span></li>
+            <li class="list-group-item-tex">Backup retention period in days:
+            <span id="rds_instances-backup-disabled-{{id}}">
+            <span id="rds_instances-short-backup-retention-period-{{id}}">
+              {{backup_retention_period}}
+            </span>
+            </span>
+          </ul>
+        </div>
+        <div class="list-group-item">
+          <h4>Network</h4>
+          <ul>
+            <li class="list-group-item-text">Endpoint: {{endpoint}}</li>
+            <li class="list-group-item-text">Publicly accessible: ???</li>
+          </ul>
+        </div>
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("rds_instance", $("#rds_instance-partial").html());
+    </script>
+
     <!-- RDS security group partials -->
     <script id="rds_security_group-partial" type="text/x-handlebars-template">
       <div class="list-group" id="rds_security_group-details-{{id}}">
@@ -744,6 +781,7 @@
               <a href="javascript:show_rds()" class="dropdown-toggle" data-toggle="dropdown"><span id="rds_dropdown">RDS</span><b class="caret"></b></a>
               <ul class="dropdown-menu" id="rds_violations-list">
                 <script id="rds_violation-list-template" type="text/x-handlebars-template">
+                  <li><a href="javascript:list_generic('rds_instance')">Instances</a></li>
                   <li><a href="javascript:list_generic('rds_security_group')">Security Groups</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
@@ -1111,6 +1149,36 @@
         </div><!-- /.col-sm-8 -->
       </div><!-- /.row -->
 
+      <!-- Template for RDS instances -->
+      <div class="row" id="rds_instances-row">
+        <div class="col-sm-4" id="rds_instances-list">
+          <script id="rds_instance-list-template" type="text/x-handlebars-template">
+            <ul class="list-group">
+              <li class="list-group-item"><a href="javascript:showAll('rds_instance')">Show all<span class="badge pull-right">{{count_in "rds" "regions.instances"}}</span></a></li>
+            </ul>
+            {{#each items}}
+              <ul class="list-group">
+                <li class="list-group-item active">{{@key}}</li>
+                {{#each instances}}
+                  <div class="list-group-item list-sub-element">
+                    <div class="list-group-item-text list-sub-element" id="ec2_instance-list-{{id}}"><a href="javascript:browseTo('rds_instance', '{{id}}')">{{@key}}</a></div>
+                  </div>
+                {{/each}}
+              </ul>
+            {{/each}}
+          </script>
+        </div>
+        <div class="col-sm-8" id="rds_instances-details">
+          <script id="rds_instance-detail-template" type="text/x-handlebars-template">
+            {{#each items}}
+              {{#each instances}}
+                {{> rds_instance region=../name }}
+              {{/each}}
+            {{/each}}
+          </script>
+        </div><!-- /.col-sm-8 -->
+      </div><!-- /.row -->
+
       <!-- Template for RDS security groups -->
       <div class="row" id="rds_security_groups-row">
         <div class="col-sm-4" id="rds_security_groups-list">
@@ -1224,6 +1292,7 @@
     <!-- Load RDS data -->
     <script>
       load_aws_config_from_json(rds_info['regions'], 'rds_security_group', 2);
+      load_aws_config_from_json(rds_info['regions'], 'rds_instance', 2);
       highlight_violations(rds_info['violations'], 'rds');
     </script>
 

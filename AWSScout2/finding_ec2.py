@@ -15,11 +15,14 @@ class Ec2Finding(Finding):
         self.keyword_prefix = 'ec2'
         Finding.__init__(self, description, entity, callback, callback_args, level, questions)
         if callback == 'checkNonEIPwhitelisted':
-            public_range = []
-            for region in self.callback_args[0]:
-                for cidr in self.callback_args[0][region]:
-                    public_range.append(cidr)
-            self.callback_args = public_range
+            # When using a custom ruleset, regions are already parsed
+            if type(self.callback_args[0]) == dict:
+                public_range = []
+                for region in self.callback_args[0]:
+                    print region
+                    for cidr in self.callback_args[0][region]:
+                        public_range.append(cidr)
+                self.callback_args = public_range
 
     def checkInternetAccessiblePort(self, key, obj):
         method = self.callback_args[0]
@@ -72,12 +75,6 @@ class Ec2Finding(Finding):
             for rule in obj['protocols'][protocol]['rules']:
                 if self.re_port_range.match(str(rule['ports'])):
                     self.addItem(rule['ports'], obj['id'])
-
-    def checkUnscannableInstanceTypes(self, key, obj):
-        if 'instance_type' in obj and self.callback_args:
-            instance_type = obj['instance_type']
-            if instance_type in self.callback_args:
-                self.addItem(key)
 
     def checkOpenPort(self, key, obj):
         protocol = self.callback_args[0].lower()
