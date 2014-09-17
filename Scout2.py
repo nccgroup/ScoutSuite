@@ -39,7 +39,7 @@ def main(args):
         key_id, secret = fetch_iam_role_credentials()
 
     # Fetch credentials from AWS config
-    if args.fetch_creds_from_aws_cli_config is not None:
+    if args.fetch_creds_from_aws_cli_config:
         key_id, secret, session_token = fetch_creds_from_aws_cli_config()
 
     # Fetch credentials from CSV
