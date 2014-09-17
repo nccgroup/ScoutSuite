@@ -1,3 +1,4 @@
 boto>=2.31.1
 requests>=2.4.0
 python-dateutil>=2.2
+netaddr>=0.7.11
