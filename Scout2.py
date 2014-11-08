@@ -118,7 +118,7 @@ def main(args):
     if 'ec2' in services and 'iam' in services:
         match_instances_and_roles(ec2_info, iam_info)
         analyze_iam_config(iam_info, args.force_write)
-    if 'cloudtrial' in services and 'ec2' in services:
+    if 'cloudtrail' in services and 'ec2' in services:
         refine_cloudtrail(cloudtrail_info, ec2_info)
         save_config_to_file(cloudtrail_info, 'cloudtrail', args.force_write)
 
