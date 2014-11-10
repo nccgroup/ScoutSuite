@@ -17,6 +17,8 @@ class CloudTrailFinding(Finding):
             self.addItem(key)
 
     def checkGlobalServicesLoggingIsEnabled(self, key, obj):
+        # h4ck: update the entity to fix the JS in the report
+        self.entity = 'regions'
         enabledRegions = self.getGlobalServicesLoggingRegions(obj)
         if len(enabledRegions) < 1:
             for r in obj['regions']:
@@ -24,6 +26,9 @@ class CloudTrailFinding(Finding):
                     self.addItem(r)
 
     def checkGlobalServicesLoggingIsNotDuplicated(self, key, obj):
+        # h4ck: update the entity to fix the JS in the report
+        self.entity = 'regions'
+        # Do the analysis
         enabledRegions = self.getGlobalServicesLoggingRegions(obj)
         if len(enabledRegions) > 1:
             for r in enabledRegions:
