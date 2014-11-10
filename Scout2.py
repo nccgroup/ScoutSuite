@@ -61,9 +61,15 @@ def main(args):
     if args.mfa_code:
         key_id, secret, session_token = fetch_sts_credentials(key_id, secret, mfa_serial, args.mfa_code)
 
+    # Search for an existing ruleset if the environment is set
+    if args.environment_name and args.ruleset_name == 'default':
+        ruleset_name = search_ruleset(args.environment_name[0])
+    else:
+        ruleset_name = args.ruleset_name
+
     # Load findings from JSON config files
     for service in services:
-        load_findings(service, args.ruleset_name)
+        load_findings(service, ruleset_name)
 
     ##### CloudTrail
     if 'cloudtrail' in services:
