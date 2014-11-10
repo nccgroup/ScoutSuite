@@ -145,10 +145,17 @@ def match_instances_and_roles(ec2_config, iam_config):
 def process_entities(config, finding, entity_path):
     if len(entity_path) == 1:
         entities = entity_path.pop(0)
-        if entities in config:
-            callback = getattr(finding, finding.callback)
-            for key in config[entities]:
-                callback(key, config[entities][key])
+        if entities in config or entities == '':
+            if finding.callback:
+                callback = getattr(finding, finding.callback)
+                if entities in config:
+                    for key in config[entities]:
+                        callback(key, config[entities][key])
+                else:
+                    # Special case when performing a check that requires access to the whole config, leave entities empty
+                    callback('foo', config)
+            else:
+                return
     elif len(entity_path) != 0:
         entities = entity_path.pop(0)
         for key in config[entities]:

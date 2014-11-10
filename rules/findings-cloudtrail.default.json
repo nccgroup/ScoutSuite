@@ -6,7 +6,17 @@
         "callback_args": "",
         "level": "danger",
         "questions": [
-            "Would you like to report regions where CloudTrail is not enabled?"
+            "Would you like to report regions where CloudTrail is not enabled"
+        ]
+    },
+    "no-global-services": {
+        "description": "Lack of logging for Global Services",
+        "entity": "",
+        "callback": "checkGlobalServicesLoggingIsEnabled",
+        "callback_args": "",
+        "level": "danger",
+        "questions": [
+            "Would you like to report the lack of Global Services logging (e.g. IAM, STS, ...)"
         ]
     }
 }

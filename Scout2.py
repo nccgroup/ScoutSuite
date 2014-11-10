@@ -113,7 +113,6 @@ def main(args):
         # Analyze the S3 config and save data to a local file
         analyze_s3_config(s3_info, args.force_write)
 
-
     ##### Analyzis that requires multiple configuration
     if 'ec2' in services and 'iam' in services:
         match_instances_and_roles(ec2_info, iam_info)
@@ -121,7 +120,6 @@ def main(args):
     if 'cloudtrail' in services and 'ec2' in services:
         refine_cloudtrail(cloudtrail_info, ec2_info)
         save_config_to_file(cloudtrail_info, 'cloudtrail', args.force_write)
-
 
     ##### Rename data based on environment's name
     if args.environment_name:
