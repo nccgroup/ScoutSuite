@@ -60,7 +60,11 @@
               <li class="list-group-item-text">Enabled: {{IsLogging}}</li>
               <li class="list-group-item-text">Enabled since: {{StartLoggingTime}}</li>
               <li class="list-group-item-text">Stopped since: {{StopLoggingTime}}</li>
-              <li class="list-group-item-text">Include global services: <span id="cloudtrail_-no-global-services-{{../name}}">{{#if IncludeGlobalServiceEvents}}True{{else}}False{{/if}}</span></li>
+              <li class="list-group-item-text">Include global services:
+                <span id="cloudtrail_-global-services-duplicated-{{../name}}"><span id="cloudtrail_-no-global-services-{{../name}}">
+                  {{#if IncludeGlobalServiceEvents}}True{{else}}False{{/if}}
+                </span></span>
+              </li>
               <li class="list-group-item-text">Destination S3 bucket name: {{S3KeyPrefix}} <a href="javascript:showS3Bucket('{{S3BucketName}}')">{{S3BucketName}}</a></li>
             {{else}}
                <li class="list-group-item-text">CloudTrail disabled</li>

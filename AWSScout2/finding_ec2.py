@@ -19,7 +19,6 @@ class Ec2Finding(Finding):
             if type(self.callback_args[0]) == dict:
                 public_range = []
                 for region in self.callback_args[0]:
-                    print region
                     for cidr in self.callback_args[0][region]:
                         public_range.append(cidr)
                 self.callback_args = public_range
