@@ -124,6 +124,10 @@ def get_instances_info(ec2, vpc_info):
             manage_dictionary(vpc_info[vpc_id]['instances'][i.id], 'security_groups', [])
             for sg in i.groups:
                 vpc_info[vpc_id]['instances'][i.id]['security_groups'].append(sg.id)
+            # Network interfaces
+            vpc_info[vpc_id]['instances'][i.id]['interfaces'] = []
+            for interface in i.interfaces:
+                vpc_info[vpc_id]['instances'][i.id]['interfaces'].append(interface.id)
             count = update_status(count, total, 'Instances')
     close_status(count, total, 'Instances')
 
