@@ -55,6 +55,10 @@ def main(args):
         print 'Error: could not find AWS credentials. Use the --help option for more information.'
         return -1
 
+    # If local analysis, overwrite results
+    if args.fetch_local:
+        args.force_write = True
+
     # Fetch STS credentials
     if args.mfa_serial:
         mfa_serial = args.mfa_serial[0]
