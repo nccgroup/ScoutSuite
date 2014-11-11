@@ -1015,7 +1015,7 @@
           {{#each items}}
             {{#each vpcs}}
               {{#each instances}}
-                {{> ec2_instance}}
+                {{> ec2_instance region=../../name}}
               {{/each}}
             {{/each}}
           {{/each}}
