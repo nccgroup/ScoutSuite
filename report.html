@@ -78,6 +78,20 @@
       Handlebars.registerPartial("cloudtrail_region", $("#cloudtrail_region-partial").html());
     </script>
 
+    <!-- EC2 attack surface item -->
+    <script id="ec2_ip_grant-partial" type="text/x-handlebars-template">
+      <li class="list-group-item-text">{{@key}}</li>
+        <ul>
+        {{#each cidrs}}
+          <span class="ec2_attack_surface_item"><li class="list-group-item-text">{{this}}</li></span>
+        {{/each}}
+        </ul>
+      </li>
+    </script>
+    <script>
+        Handlebars.registerPartial("ec2_ip_grant", $("#ec2_ip_grant-partial").html());
+    </script>
+
     <!-- EC2 ELB partial -->
     <script id="ec2_elb-partial" type="text/x-handlebars-template">
       <div class="list-group" id="ec2_elb-details-{{name}}">
@@ -757,6 +771,7 @@
                   <li><a href="javascript:list_generic('ec2_instance')">Instances</a></li>
                   <li><a href="javascript:list_generic('ec2_network_acl')">Network ACLs</a></li>
                   <li><a href="javascript:list_generic('ec2_security_group')">Security Groups</a></li>
+                  <li><a href="javascript:list_generic('ec2_attack_surface')">External Attack Surface</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
@@ -863,6 +878,38 @@
           </script>
         </div><!-- /.col-sm-8 -->
       </div><!-- /.row -->
+
+      <!-- Template for network attack surface -->
+      <div class="row" id="ec2_attack_surfaces-row">
+        <div id="ec2_attack_surfaces-list">
+          <script id="ec2_attack_surface-list-template" type="text/x-handlebars-template">
+            <div class="list-group">
+              <div class="row list-group-item active">
+                <div class="col-sm-4"><h4>Public IP address</h4></div>
+                <div class="col-sm-4"><h4>Open ports</h4></div>
+                <div class="col-sm-4 pull-right"><h4><form>Filter by external IP:</h4> <input type="text" id="ec2_attack_surface_item_filter" onkeyup="filter_items('span', 'ec2_attack_surface_item')"></form></div>
+              </div>
+              {{#each items}}
+                <div class="row list-group-item">
+                  <div class="col-sm-4">{{@key}}</div>
+                  <div class="col-sm-8">
+                    <ul>
+                    {{#each protocols ip = @key}}
+                      <li class="list-group-item-text">{{@key}}</li>
+                      <ul>
+                      {{#each this}}
+                        {{> ec2_ip_grant}}
+                      {{/each}}
+                      </ul>
+                    {{/each}}
+                    </ul>
+                  </div>
+                </div>
+              {{/each}}
+            </div>
+          </script>
+        </div>
+      </div>
 
       <!-- Template for EC2 ELBs -->
       <div class="row" id="ec2_elbs-row">
@@ -1281,6 +1328,7 @@
         load_aws_config_from_json(ec2_info['regions'], 'ec2_security_group', 2);
         load_aws_config_from_json(ec2_info['regions'], 'ec2_network_acl', 2);
         load_aws_config_from_json(ec2_info['regions'], 'ec2_instance', 2);
+        load_aws_config_from_json(ec2_info['attack_surface'], 'ec2_attack_surface', 1);
         highlight_violations(ec2_info['violations'], 'ec2');
     </script>
 

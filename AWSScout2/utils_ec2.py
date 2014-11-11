@@ -25,6 +25,7 @@ def analyze_ec2_config(ec2_info, force_write):
     # Custom EC2 analysis
     check_for_elastic_ip(ec2_info)
     link_elastic_ips(ec2_info)
+    list_network_attack_surface(ec2_info)
     save_config_to_file(ec2_info, 'EC2', force_write)
 
 def check_for_elastic_ip(ec2_info):
@@ -57,6 +58,34 @@ def link_elastic_ips(ec2_info):
                                     ec2_info['regions'][r]['vpcs'][v]['instances'][i]['ip_address'] = eip
                                 elif ec2_info['regions'][r]['vpcs'][v]['instances'][i]['ip_address'] != eip:
                                     print 'Warning: public IP address exists (%s) for an instance associated with an elastic IP (%s)' % (ec2_info['regions'][r]['vpcs'][v]['instances'][i]['ip_address'], eip)
+
+#
+# List the publicly available IPs/Ports
+#
+def list_network_attack_surface(ec2_info):
+    ec2_info['attack_surface'] = {}
+    for r in ec2_info['regions']:
+        for v in ec2_info['regions'][r]['vpcs']:
+            if 'instances' in ec2_info['regions'][r]['vpcs'][v]:
+                for i in ec2_info['regions'][r]['vpcs'][v]['instances']:
+                    instance = ec2_info['regions'][r]['vpcs'][v]['instances'][i]
+                    if instance['ip_address']:
+                        ec2_info['attack_surface'][instance['ip_address']] = {}
+                        ec2_info['attack_surface'][instance['ip_address']]['protocols'] = {}
+                        for sgid in instance['security_groups']:
+                            sg = ec2_info['regions'][r]['vpcs'][v]['security_groups'][sgid]
+                            for p in sg['protocols']:
+                                for ru in sg['protocols'][p]['rules']:
+                                    port = ru['ports']
+                                    if 'cidrs' in ru['grants'] and port:
+                                        manage_dictionary(ec2_info['attack_surface'][instance['ip_address']]['protocols'], p, {})
+                                        manage_dictionary(ec2_info['attack_surface'][instance['ip_address']]['protocols'][p], port, {})
+                                        manage_dictionary(ec2_info['attack_surface'][instance['ip_address']]['protocols'][p][port], 'cidrs', [])
+                                        for cidr in ru['grants']['cidrs']:
+                                            ec2_info['attack_surface'][instance['ip_address']]['protocols'][p][port]['cidrs'].append(cidr)
+                                    elif not port:
+                                        print instance['ip_address']
+                                        print ru
 
 
 ########################################
@@ -214,9 +243,12 @@ def parse_security_group(group):
     security_group = manage_dictionary(security_group, 'stopped-instances', [])
     protocols = {}
     for rule in group.rules:
-        protocols = manage_dictionary(protocols, rule.ip_protocol, {})
-        protocols[rule.ip_protocol] = manage_dictionary(protocols[rule.ip_protocol], 'rules', [])
-        protocols[rule.ip_protocol]['name'] = rule.ip_protocol.upper()
+        ip_protocol = rule.ip_protocol.upper()
+        if ip_protocol == '-1':
+            ip_protocol = 'ALL'
+        protocols = manage_dictionary(protocols, ip_protocol, {})
+        protocols[ip_protocol] = manage_dictionary(protocols[ip_protocol], 'rules', [])
+        protocols[ip_protocol]['name'] = ip_protocol
         acl = {}
         acl['grants'] = {}
         # Save grants, values are either a CIDR or an EC2 security group
@@ -228,12 +260,17 @@ def parse_security_group(group):
                 manage_dictionary(acl['grants'], 'security_groups', [])
                 acl['grants']['security_groups'].append(grant.groupId) # '%s (%s)' % (grant.name, grant.groupId))
         # Save the port (single port or range)
-        if rule.from_port == rule.to_port:
-            acl['ports'] = rule.from_port
+        if ip_protocol == 'ICMP':
+            acl['ports'] = 'N/A'
+        elif rule.from_port == rule.to_port:
+            if not rule.from_port:
+                acl['ports'] = 'All'
+            else:
+                acl['ports'] = rule.from_port
         else:
             acl['ports'] = '%s-%s' % (rule.from_port, rule.to_port)
         # Save the new rule
-        protocols[rule.ip_protocol]['rules'].append(acl)
+        protocols[ip_protocol]['rules'].append(acl)
     # Save all the rules, sorted by protocol
     security_group['protocols'] = protocols
     # Save all instances associated with this group

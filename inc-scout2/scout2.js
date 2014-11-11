@@ -224,6 +224,11 @@ function hidePopup() {
     $("#overlay-background").hide();
     $("#overlay-details").hide();
 }
+function filter_items(element_type, element_class) {
+    var value = $("#" + element_class + "_filter").val();
+    $(element_type + "." + element_class + ":not(:contains(" + value + "))").hide();
+    $(element_type + "." + element_class + ":contains(" + value + ")").show();
+}
 
 // Browsing functions
 function about() {
