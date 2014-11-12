@@ -443,3 +443,6 @@ Handlebars.registerHelper('ifShow', function(v1, v2, options) {
     return options.fn(this);
   }
 });
+Handlebars.registerHelper('fixBucketName', function(bucket_name) {
+    return bucket_name.replace(/\./g, '-');
+});
