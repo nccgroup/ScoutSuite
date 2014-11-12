@@ -182,10 +182,10 @@ def fetch_creds_from_instance_metadata():
     try:
         iam_role = urllib2.urlopen(base_url).read()
         credentials = json.loads(urllib2.urlopen(base_url + '/' + iam_role).read())
-        return credentials['AccessKeyId'], credentials['SecretAccessKey']
+        return credentials['AccessKeyId'], credentials['SecretAccessKey'], credentials['Token']
     except Exception, e:
         print 'Failed to fetch credentials. Make sure that this EC2 instance has an IAM role (%s)' % e
-        return None, None
+        return None, None, None
 
 def fetch_creds_from_csv(filename):
     key_id = None

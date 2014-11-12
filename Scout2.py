@@ -36,7 +36,7 @@ def main(args):
 
     # Fetch credentials from the EC2 instance's metadata
     if args.fetch_creds_from_instance_metadata:
-        key_id, secret = fetch_creds_from_instance_metadata()
+        key_id, secret, session_token = fetch_creds_from_instance_metadata()
 
     # Fetch credentials from AWS config
     if args.fetch_creds_from_aws_cli_config:
