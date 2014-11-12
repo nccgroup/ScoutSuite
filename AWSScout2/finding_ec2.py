@@ -26,10 +26,10 @@ class Ec2Finding(Finding):
     def checkInternetAccessiblePort(self, key, obj):
         method = self.callback_args[0]
         if method == 'whitelist':
-            protocol = self.callback_args[1][1].lower()
+            protocol = self.callback_args[1][1]
             port = self.callback_args[1][2]
         else:
-            protocol = self.callback_args[1].lower()
+            protocol = self.callback_args[1]
             port = self.callback_args[2]
         if protocol in obj['protocols']:
             for rule in obj['protocols'][protocol]['rules']:
@@ -76,7 +76,7 @@ class Ec2Finding(Finding):
                     self.addItem(rule['ports'], obj['id'])
 
     def checkOpenPort(self, key, obj):
-        protocol = self.callback_args[0].lower()
+        protocol = self.callback_args[0]
         port = self.callback_args[1]
         if protocol in obj['protocols']:
             for rule in obj['protocols'][protocol]['rules']:
