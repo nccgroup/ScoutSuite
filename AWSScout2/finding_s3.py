@@ -1,5 +1,7 @@
 #!/usr/bin/env python2
 
+import json
+
 from AWSScout2.finding import *
 
 class S3Finding(Finding):
@@ -55,3 +57,27 @@ class S3Finding(Finding):
     def checkStaticWebsiteHosting(self, key, obj):
         if obj['web_hosting'] == 'Enabled':
             self.addItem(key)
+
+    def checkIPOnlyCondition(self, key, obj):
+        if 'policy' in obj:
+            policy = json.loads(obj['policy'])
+            statements = self.getList(policy, 'Statement')
+            for s in statements:
+                conditions = self.getList(s, 'Condition')
+                for c in conditions:
+                    # If only IP address based condition
+                    if s['Effect'] == 'Deny' and len(conditions) == 1 and 'NotIpAddress' in c:
+                        self.addItem(key)
+                    elif s['Effect'] == 'Allow' and len(conditions) == 1 and 'IpAddress' in c:
+                        self.addItem(key)
+
+
+    def getList(self, obj, list_name):
+        l = []
+        if list_name in obj:
+            res = obj[list_name]
+            if type(res) != list:
+                l.append(res)
+            else:
+                l = res
+        return l
