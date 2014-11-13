@@ -58,5 +58,15 @@
         "questions": [
             "Flag S3 objects whose permissions do not match their bucket's permissions"
         ]
+    },
+    "static-website-enabled": {
+        "description": "Static website hosting enabled",
+        "entity": "buckets",
+        "callback": "checkStaticWebsiteHosting",
+        "callback_args": [],
+        "level": "warning",
+        "questions": [
+            "Warn against S3 buckets with static website hosting enabled"
+        ]
     }
 }

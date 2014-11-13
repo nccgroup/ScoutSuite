@@ -51,3 +51,7 @@ class S3Finding(Finding):
                 object_grants = obj['keys'][k]['grants']
                 if cmp(bucket_grants, object_grants) != 0:
                     self.addItem(k, key)
+
+    def checkStaticWebsiteHosting(self, key, obj):
+        if obj['web_hosting'] == 'Enabled':
+            self.addItem(key)
