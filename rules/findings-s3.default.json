@@ -78,5 +78,23 @@
         "questions": [
             "Report S3 buckets whose policy allow access based on IP address"
         ]
+    },
+    "world-open-policy-_ARG_0_": {
+        "description": "Internet accessible bucket (_ARG_0_ policy)",
+        "entity": "buckets",
+        "callback": "checkOpenPolicy",
+        "callback_args": ["_ARG_1_"],
+        "level": "danger",
+        "targets": [
+            ["delete", "s3:DeleteObject"],
+            ["get", "s3:GetObject"],
+            ["list", "s3:ListBucket"],
+            ["put", "s3:PutObject"],
+            ["all", "s3:*"]
+        ],
+        "level": "danger",
+        "questions": [
+            "Report S3 buckets whose policy allows _ARG_0_ operations from the Internet"
+        ]
     }
 }

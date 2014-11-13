@@ -10,6 +10,11 @@ class S3Finding(Finding):
         self.keyword_prefix = 's3'
         Finding.__init__(self, description, entity, callback, callback_args, level, questions)
 
+
+########################################
+##### Finding callbacks
+########################################
+
     def checkWorldWritableBucket(self, key, obj):
         for grant in obj['grants']:
             if 'All users' in grant:
@@ -64,13 +69,39 @@ class S3Finding(Finding):
             statements = self.getList(policy, 'Statement')
             for s in statements:
                 conditions = self.getList(s, 'Condition')
-                for c in conditions:
+                if len(conditions) == 1:
+                    c = conditions[0]
                     # If only IP address based condition
-                    if s['Effect'] == 'Deny' and len(conditions) == 1 and 'NotIpAddress' in c:
+                    if s['Effect'] == 'Deny' and 'NotIpAddress' in c:
                         self.addItem(key)
-                    elif s['Effect'] == 'Allow' and len(conditions) == 1 and 'IpAddress' in c:
+                    elif s['Effect'] == 'Allow' and 'IpAddress' in c:
                         self.addItem(key)
 
+    def checkOpenPolicy(self, key, obj):
+        open_policy = False
+        deny_condition = False
+        if 'policy' in obj:
+            policy = json.loads(obj['policy'])
+            statements = self.getList(policy, 'Statement')
+            for s in statements:
+                conditions = self.getList(s, 'Condition')
+                if len(conditions) == 0 and s['Effect'] == 'Allow':
+                    principals = self.getList(s, 'Principal')
+                    for p in principals:
+                        if 'AWS' in p and p['AWS'] == '*':
+                            actions = self.getList(s, 'Action')
+                            for a in actions:
+                                if a == self.callback_args[0]:
+                                    open_policy = True
+                elif s['Effect'] == 'Deny':
+                    deny_condition = True
+        if not deny_condition and open_policy:
+            self.addItem(key)
+
+
+########################################
+##### Helpers
+########################################
 
     def getList(self, obj, list_name):
         l = []
