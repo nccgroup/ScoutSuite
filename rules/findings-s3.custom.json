@@ -6,7 +6,17 @@
         "callback_args": [],
         "level": "warning",
         "questions": [
-            "Warn against S3 buckets that have static website hosting enabled"
+            "Report S3 buckets that have static website hosting enabled"
+        ]
+    },
+    "versioning-disabled": {
+        "description": "Versioning disabled",
+        "entity": "buckets",
+        "callback": "checkVersioning",
+        "callback_args": [],
+        "level": "warning",
+        "questions": [
+            "Report S3 buckets that lack versioning"
         ]
     }
 }
