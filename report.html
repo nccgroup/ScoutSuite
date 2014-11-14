@@ -166,7 +166,12 @@
               </li>
               <ul>
               {{# each grants/cidrs}}
-                <li class="list-group-item-text">IP: <span id="ec2_security_groups-{{../../name}}-{{../ports}}-{{this}}-{{../../../id}}">{{this}}</span></li>
+                <li class="list-group-item-text">IP:
+                  <span id="ec2_security_groups-non-elastic-ec2-public-ip-whitelisted-{{../../../id}}-{{this}}">
+                  <span id="ec2_security_groups-{{../../name}}-{{../ports}}-{{this}}-{{../../../id}}">
+                    {{this}}
+                  </span></span>
+                </li>
               {{/each}}
               {{# each grants/security_groups}}
                 <li class="list-group-item-text"> EC2 security group:
