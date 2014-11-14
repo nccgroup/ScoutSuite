@@ -28,6 +28,10 @@ def analyze_ec2_config(ec2_info, force_write):
     list_network_attack_surface(ec2_info)
     save_config_to_file(ec2_info, 'EC2', force_write)
 
+
+#
+# Check that the whitelisted EC2 IP addresses are not static IPs
+#
 def check_for_elastic_ip(ec2_info):
     # Build a list of all elatic IP in the account
     elastic_ips = []
@@ -35,13 +39,22 @@ def check_for_elastic_ip(ec2_info):
         if 'elastic_ips' in ec2_info['regions'][region]:
             for eip in ec2_info['regions'][region]['elastic_ips']:
                 elastic_ips.append(eip)
-    # Whitelisting of EC2 public IP is ok if we have an EIP
-    for item in ec2_info['violations']['non-elastic-ec2-public-ip-whitelisted'].items:
+    new_items = []
+    new_macro_items = []
+    for i, item in enumerate(ec2_info['violations']['non-elastic-ec2-public-ip-whitelisted'].items):
         ip = netaddr.IPNetwork(item)
+        found = False
         for eip in elastic_ips:
             eip = netaddr.IPNetwork(eip)
             if ip in eip:
-                ec2_info['violations']['non-elastic-ec2-public-ip-whitelisted'].removeItem(item, True)
+                found = True
+                break
+        if not found:
+            new_items.append(ec2_info['violations']['non-elastic-ec2-public-ip-whitelisted'].items[i])
+            new_macro_items.append(ec2_info['violations']['non-elastic-ec2-public-ip-whitelisted'].macro_items[i])
+    ec2_info['violations']['non-elastic-ec2-public-ip-whitelisted'].items = new_items
+    ec2_info['violations']['non-elastic-ec2-public-ip-whitelisted'].macro_items = new_macro_items
+
 
 #
 # Link EIP with instances

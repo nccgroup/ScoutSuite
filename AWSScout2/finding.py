@@ -20,6 +20,10 @@ class Finding():
         if macro_item:
             self.macro_items.append(macro_item);
 
+    #
+    # Call to that function when iterating over items or macro_items will create
+    # invalid results.
+    #
     def removeItem(self, item, macro_item = None):
         try:
             target = self.items.index(item)
