@@ -483,7 +483,7 @@
 
     <!-- RDS security group partials -->
     <script id="rds_security_group-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="rds_security_group-details-{{id}}">
+      <div class="list-group" id="rds_security_group-details-{{name}}">
         <div class="list-group-item active">
           <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
@@ -1217,7 +1217,7 @@
                 <li class="list-group-item active">{{@key}}</li>
                 {{#each instances}}
                   <div class="list-group-item list-sub-element">
-                    <div class="list-group-item-text list-sub-element" id="ec2_instance-list-{{id}}"><a href="javascript:browseTo('rds_instance', '{{id}}')">{{@key}}</a></div>
+                    <div class="list-group-item-text list-sub-element" id="rds_instance-list-{{@key}}"><a href="javascript:browseTo('rds_instance', '{{@key}}')">{{@key}}</a></div>
                   </div>
                 {{/each}}
               </ul>
@@ -1228,7 +1228,7 @@
           <script id="rds_instance-detail-template" type="text/x-handlebars-template">
             {{#each items}}
               {{#each instances}}
-                {{> rds_instance region=../name }}
+                {{> rds_instance region=../name}}
               {{/each}}
             {{/each}}
           </script>
@@ -1247,7 +1247,7 @@
                 <li class="list-group-item active">{{@key}}</li>
                 {{#each security_groups}}
                   <div class="list-group-item list-sub-element">
-                    <div class="list-group-item-text list-sub-element" id="ec2_security_group-list-{{id}}"><a href="javascript:browseTo('ec2_security_group', '{{id}}')">{{name}}</a></div>
+                    <div class="list-group-item-text list-sub-element" id="rds_security_group-list-{{name}}"><a href="javascript:browseTo('rds_security_group', '{{name}}')">{{name}}</a></div>
                   </div>
                 {{/each}}
               </ul>

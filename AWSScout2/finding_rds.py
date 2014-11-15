@@ -11,7 +11,7 @@ class RdsFinding(Finding):
     def checkInternetAccessible(self, key, obj):
         for ip_range in obj['ip_ranges']:
             if ip_range == '0.0.0.0/0':
-                self.addItem(obj['id'])
+                self.addItem(obj['name'])
 
     def checkMultiAZ(self, key, obj):
         if not obj['multi_az']:
