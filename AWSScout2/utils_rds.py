@@ -30,7 +30,6 @@ def check_for_duplicate(rds_info):
         if 'backup-disabled' in rds_info['violations']:
             for instance_id in rds_info['violations']['backup-disabled'].items:
                 rds_info['violations']['short-backup-retention-period'].removeItem(instance_id)
-                print instance_id
 
 def get_rds_info(key_id, secret, session_token, fetch_gov):
     rds_info = {}
