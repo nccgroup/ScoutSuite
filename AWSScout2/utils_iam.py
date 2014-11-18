@@ -8,6 +8,7 @@ from AWSScout2.utils import *
 from AWSScout2.findings import *
 
 # Import other third-party packages
+import base64
 import json
 import urllib
 
@@ -44,12 +45,19 @@ def get_iam_info(key_id, secret, session_token):
     manage_dictionary(iam_info, 'roles', {})
     manage_dictionary(iam_info, 'users', {})
     iam_connection = boto.connect_iam(aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
+    # Generate the report early so that download doesn't fail with "ReportInProgress".
+    try:
+        iam_connection.generate_credential_report()
+    except Exception, e:
+        pass
     print 'Fetching IAM users data...'
     get_users_info(iam_connection, iam_info)
     print 'Fetching IAM groups data...'
     get_groups_info(iam_connection, iam_info)
     print 'Fetching IAM roles data...'
     get_roles_info(iam_connection, iam_info)
+    print 'Fetching IAM credential report...'
+    get_credential_report(iam_connection, iam_info)
     return iam_info
 
 def get_permissions(policy_document, permissions, keyword, name, policy_name):
@@ -131,6 +139,23 @@ def get_roles_info(iam_connection, iam_info):
             role['instance_profiles'][profile['arn']]['id'] = profile['instance_profile_id']
             role['instance_profiles'][profile['arn']]['name'] = profile['instance_profile_name']
     close_status(count, total)
+
+def get_credential_report(iam_connection, iam_info):
+    iam_report = {}
+    try:
+        report = iam_connection.get_credential_report()
+        report = base64.b64decode(report['get_credential_report_response']['get_credential_report_result']['content'])
+        lines = report.split('\n')
+        keys = lines[0].split(',')
+        for line in lines[1:]:
+            values = line.split(',')
+            manage_dictionary(iam_report, values[0], {})
+            for key, value in zip(keys, values):
+                iam_report[values[0]][key] = value
+        iam_info['credential_report'] = iam_report
+    except Exception, e:
+        print 'Failed to generate/download a credential report.'
+        print e
 
 def get_users_info(iam_connection, iam_info):
     users = handle_truncated_responses(iam_connection.get_all_users, None, ['list_users_response', 'list_users_result'], 'users')
