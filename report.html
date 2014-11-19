@@ -759,6 +759,7 @@
               <a href="javascript:show_cloudtrail()" class="dropdown-toggle" data-toggle="dropdown"><span id="cloudtrail_dropdown">CloudTrail</span><b class="caret"></b></a>
               <ul class="dropdown-menu" id="cloudtrail_violations-list">
                 <script id="cloudtrail_violation-list-template" type="text/x-handlebars-template">
+                   <li class="dropdown-header">CloudTrail config</li>
                   <li><a href="javascript:list_generic('cloudtrail_region')">Trails</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
@@ -772,10 +773,13 @@
               <a href="javascript:show_ec2()" class="dropdown-toggle" data-toggle="dropdown"><span id="ec2_dropdown">EC2</span><b class="caret"></b></a>
               <ul class="dropdown-menu" id="ec2_violations-list">
                 <script id="ec2_violation-list-template" type="text/x-handlebars-template">
+                  <li class="dropdown-header">EC2 config</li>
                   <li><a href="javascript:list_generic('ec2_elb')">ELBs</a></li>
                   <li><a href="javascript:list_generic('ec2_instance')">Instances</a></li>
                   <li><a href="javascript:list_generic('ec2_network_acl')">Network ACLs</a></li>
                   <li><a href="javascript:list_generic('ec2_security_group')">Security Groups</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">Summaries</li>
                   <li><a href="javascript:list_generic('ec2_attack_surface')">External Attack Surface</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
@@ -789,14 +793,14 @@
               <a href="javascript:show_iam()" class="dropdown-toggle" data-toggle="dropdown"><span id="iam_dropdown">IAM</span><b class="caret"></b></a>
               <ul class="dropdown-menu" id="iam_violations-list">
                 <script id="iam_violation-list-template" type="text/x-handlebars-template">
-                  <li class="dropdown-header">IAM entities</li>
+                  <li class="dropdown-header">IAM config</li>
                   <li><a href="javascript:list_generic('iam_group')">Groups</a></li>
                   <li><a href="javascript:list_generic('iam_role')">Roles</a></li>
+                  <li><a href="javascript:list_generic('iam_credential_report')">Root account</a></li>
                   <li><a href="javascript:list_generic('iam_user')">Users</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Summaries</li>
                   <li><a href="javascript:list_generic('iam_permission')">Permissions</a></li>
-                  <li><a href="javascript:list_generic('iam_credential_report')">Root account</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
@@ -809,6 +813,7 @@
               <a href="javascript:show_rds()" class="dropdown-toggle" data-toggle="dropdown"><span id="rds_dropdown">RDS</span><b class="caret"></b></a>
               <ul class="dropdown-menu" id="rds_violations-list">
                 <script id="rds_violation-list-template" type="text/x-handlebars-template">
+                  <li class="dropdown-header">RDS config</li>
                   <li><a href="javascript:list_generic('rds_instance')">Instances</a></li>
                   <li><a href="javascript:list_generic('rds_security_group')">Security Groups</a></li>
                   <li class="divider"></li>
@@ -823,6 +828,7 @@
               <a href="javascript:show_s3()" class="dropdown-toggle" data-toggle="dropdown"><span id="s3_dropdown">S3</span><b class="caret"></b></a>
               <ul class="dropdown-menu" id="s3_violations-list">
                 <script id="s3_violation-list-template" type="text/x-handlebars-template">
+                  <li class="dropdown-header">S3 config</li>
                   <li><a href="javascript:list_generic('s3_bucket')">Buckets</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
