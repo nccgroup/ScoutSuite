@@ -73,7 +73,9 @@ class Ec2Finding(Finding):
         for protocol in obj['protocols']:
             for rule in obj['protocols'][protocol]['rules']:
                 if self.re_port_range.match(str(rule['ports'])):
-                    self.addItem(rule['ports'], obj['id'])
+                    # Exception: don't flag if the port range is due to AWS' default config that opens all ports to self
+                    if not ('security_groups' in rule['grants'] and len(rule['grants']['security_groups']) == 1 and rule['grants']['security_groups'][0] == obj['id']):
+                        self.addItem(rule['ports'], obj['id'])
 
     def checkOpenPort(self, key, obj):
         protocol = self.callback_args[0]
