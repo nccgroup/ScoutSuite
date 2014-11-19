@@ -53,5 +53,15 @@
         "questions": [
             "Warn against IAM users who have two active access keys"
         ]
+    },
+    "active-root-account": {
+        "description": "Root account used recently",
+        "entity": "credential_report",
+        "callback": "recentlyUsed",
+        "callback_args": [],
+        "level": "danger",
+        "questions": [
+            "Report recent web logins with the root account credentials"
+        ]
     }
 }

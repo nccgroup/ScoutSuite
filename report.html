@@ -789,10 +789,14 @@
               <a href="javascript:show_iam()" class="dropdown-toggle" data-toggle="dropdown"><span id="iam_dropdown">IAM</span><b class="caret"></b></a>
               <ul class="dropdown-menu" id="iam_violations-list">
                 <script id="iam_violation-list-template" type="text/x-handlebars-template">
+                  <li class="dropdown-header">IAM entities</li>
                   <li><a href="javascript:list_generic('iam_group')">Groups</a></li>
-                  <li><a href="javascript:list_generic('iam_permission')">Permissions</a></li>
                   <li><a href="javascript:list_generic('iam_role')">Roles</a></li>
                   <li><a href="javascript:list_generic('iam_user')">Users</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">Summaries</li>
+                  <li><a href="javascript:list_generic('iam_permission')">Permissions</a></li>
+                  <li><a href="javascript:list_generic('iam_credential_report')">Root account</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
@@ -1159,6 +1163,27 @@
           </script>
       </div><!-- /.row -->
 
+      <!-- Template for IAM root account overview -->
+      <div class="row" id="iam_credential_reports-row">
+        <div id="iam_credential_reports-list"></div>
+          <script id="iam_credential_report-list-template" type="text/x-handlebars-template">
+            <div class="list-group" id="iam_credential_report-details-">
+              <div class="list-group-item active">
+                <h4 class="list-group-item-heading">AWS root account</h4>
+              </div>
+              <div class="list-group-item">
+                <div class="list-group-item-text item-margin">Creation date: {{items.user_creation_time}}</div>
+                <div class="list-group-item-text item-margin">Password last used: <span id="iam_credential_report-active-root-account-">{{items.password_last_used}}</span></div>
+                <div class="list-group-item-text item-margin">MFA enabled: {{items.mfa_active}}</div>
+                <div class="list-group-item-text item-margin">Access key 1 active: {{items.access_key_1_active}} </div>
+                <div class="list-group-item-text item-margin">Access key 2 active: {{items.access_key_2_active}} </div>
+                <div class="list-group-item-text item-margin">Signing cert 1 active: {{items.cert_1_active}}</div>
+                <div class="list-group-item-text item-margin">Signing cert 2 active: {{items.cert_2_active}}</div>
+              </div>
+            </div>
+          </script>
+      </div><!-- /.row -->
+
       <!-- Template for IAM roles -->
       <div class="row" id="iam_roles-row">
         <div class="col-sm-3">
@@ -1343,6 +1368,7 @@
         load_aws_config_from_json(iam_info['permissions'], 'iam_permission', 1);
         load_aws_config_from_json(iam_info['roles'], 'iam_role', 2);
         load_aws_config_from_json(iam_info['users'], 'iam_user', 2);
+        load_aws_config_from_json(iam_info['credential_report']['<root_account>'], 'iam_credential_report', 1)
         highlight_violations(iam_info['violations'], 'iam');
     </script>
 

@@ -54,3 +54,12 @@ class IamFinding(Finding):
     def hasUserPolicy(self, key, obj):
         if len(obj['policies']) > 0:
             self.addItem(obj['user_name'])
+
+    def recentlyUsed(self, key, obj):
+        max_age = 15
+        if obj['user'] == '<root_account>':
+            today = datetime.datetime.today()
+            last_used_date = dateutil.parser.parse(obj['password_last_used']).replace(tzinfo=None)
+            age = (today - last_used_date).days
+            if (age < max_age):
+                self.addItem("")

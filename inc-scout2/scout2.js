@@ -346,7 +346,12 @@ Handlebars.registerHelper('has_logging?', function(logging) {
 });
 Handlebars.registerHelper('finding_entity', function(prefix, entity) {
     entity = entity.split('.').pop();
-    return prefix + '_' + entity.substring(0, entity.length - 1);
+    elength = entity.length;
+    if (entity.substring(elength - 1, elength) == 's') {
+        return prefix + '_' + entity.substring(0, elength - 1);
+    } else {
+        return prefix + '_' + entity;
+    }
 });
 Handlebars.registerHelper('count', function(items) {
     var c = 0;
