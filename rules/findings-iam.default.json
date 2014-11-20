@@ -54,7 +54,7 @@
             "Warn against IAM users who have two active access keys"
         ]
     },
-    "active-root-account": {
+    "root-active-password": {
         "description": "Root account used recently",
         "entity": "credential_report",
         "callback": "recentlyUsed",
@@ -62,6 +62,26 @@
         "level": "danger",
         "questions": [
             "Report recent web logins with the root account credentials"
+        ]
+    },
+    "root-no-mfa": {
+        "description": "Lack of MFA (root account)",
+        "entity": "credential_report",
+        "callback": "lacksMFA",
+        "callback_args": [],
+        "level": "danger",
+        "questions": [
+            "Report the lack of MFA for the root account"
+        ]
+    },
+    "root-active-key": {
+        "description": "Root account has active keys",
+        "entity": "credential_report",
+        "callback": "hasActiveKeys",
+        "callback_args": [],
+        "level": "danger",
+        "questions": [
+            "Report active access keys for the root account"
         ]
     }
 }
