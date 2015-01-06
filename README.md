@@ -20,7 +20,7 @@ To install Scout2:
 
 	# simply clone this repository.
 	$ git clone git@github.com:iSECPartners/Scout2.git
-	
+
 	# install required packages:
 	$ pip install -r requirements.txt
 
@@ -30,28 +30,29 @@ To run Scout2, you will need valid AWS credentials (Access Key). The role, or
 user account, associated with this Access Key needs to have read access on all
 resources within:
 
-* Identity and Access Management (IAM)
+* Cloudtrail
 * Elastic Compute Cloud (EC2)
+* Identity and Access Management (IAM)
+* Relational Database Service (RDS)
 * Simple Storage Service (S3)
 
 ## Usage
+
+To run Scout2 from  a computer already configured to use the AWS CLI or Boto, or
+from an EC2 instance within an appropriate role, run the following command:
+
+    $ python Scout2.py
 
 To run Scout2 using an access key downloaded from AWS, run the following command:
 
     $ python Scout2.py --credentials <CREDENTIALS.CSV>
 
-To run Scout2 from an EC2 instance within an appropriate IAM Role, run the following command:
+To run Scout2 when MFA-Protected API Access is configured, add the following
+parameters to your command:
 
-    $ python Scout2.py --role-credentials
+    --mfa_serial <ARN_MFA_SERIAL_NUMBER> --mfa_code <MFA CODE>
 
-To run Scout2 when MFA-Protected API Access is configured, run the following command:
-
-    $ python Scout2.py --credentials <CREDENTIALS.CSV> --mfa_serial <ARN_MFA_SERIAL_NUMBER> --mfa_code <MFA CODE>
-
-Scout2 will generate a number of JavaScript files that contain AWS configuration
-data stored as JSON payloads. Scout2 will also generate additional JavaScript
-files that contain potential security flaws and best practices violations. To
-review the configuration, simply open the report.html file in your browser.
+To view the report, simply open report.html in your browser.
 
 ## Format of the CSV file that contains credentials
 

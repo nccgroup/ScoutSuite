@@ -34,23 +34,14 @@ def main(args):
     if not args.fetch_local and not check_boto_version():
         return
 
-    # Fetch credentials from the EC2 instance's metadata
-    if args.fetch_creds_from_instance_metadata:
-        key_id, secret, session_token = fetch_creds_from_instance_metadata()
-
-    # Fetch credentials from AWS config
-    if args.fetch_creds_from_aws_cli_config:
-        key_id, secret, session_token = fetch_creds_from_aws_cli_config()
-
-    # Fetch credentials from CSV
-    if args.fetch_creds_from_csv is not None:
+    # Fetch credentials
+    if args.fetch_creds_from_csv:
         key_id, secret, mfa_serial = fetch_creds_from_csv(args.fetch_creds_from_csv[0])
+    else:
+        # Check for boto config, EC2 instance metadata, and environment variables
+        key_id, secret, session_token = fetch_creds_from_system()
 
-    # Fetch credentials from environment
-    if key_id is None and secret is None and 'AWS_ACCESS_KEY_ID' in os.environ and 'AWS_SECRET_ACCESS_KEY' in os.environ:
-        key_id = os.environ["AWS_ACCESS_KEY_ID"]
-        secret = os.environ["AWS_SECRET_ACCESS_KEY"]
-
+    # Check that credentials, if required, are available
     if not args.fetch_local and (key_id is None or secret is None):
         print 'Error: could not find AWS credentials. Use the --help option for more information.'
         return -1
@@ -173,17 +164,7 @@ parser.add_argument('--gov',
                     default=False,
                     action='store_true',
                     help='fetch the EC2 configuration from the us-gov-west-1 region')
-parser.add_argument('--role_credentials',
-                    dest='fetch_creds_from_instance_metadata',
-                    default=False,
-                    action='store_true',
-                    help='fetch credentials for this EC2 instance')
-parser.add_argument('--aws_cli_credentials',
-                    dest='fetch_creds_from_aws_cli_config',
-                    default=False,
-                    action='store_true',
-                    help='fetch credentials from the AWS CLI configuration file')
-parser.add_argument('--csv_credentials',
+parser.add_argument('--credentials',
                     dest='fetch_creds_from_csv',
                     default=None,
                     nargs='+',
@@ -218,6 +199,7 @@ parser.add_argument('--check_s3_acls',
                     default=None,
                     nargs='*',
                     help='list of S3 buckets to iterate through; pulls permissions for each object in bucket (Slow)')
+
 
 args = parser.parse_args()
 

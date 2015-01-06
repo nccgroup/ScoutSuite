@@ -177,6 +177,9 @@ def refine_cloudtrail(cloudtrail_config, ec2_config):
 # AWS Credentials read functions
 ########################################
 
+aws_config_file = os.path.join(os.path.join(os.path.expanduser('~'),'.aws'), 'config')
+boto_config_file = os.path.join(os.path.join(os.path.expanduser('~'), '.aws'), 'credentials')
+
 def fetch_creds_from_instance_metadata():
     base_url = 'http://169.254.169.254/latest/meta-data/iam/security-credentials'
     try:
@@ -204,21 +207,44 @@ def fetch_creds_from_csv(filename):
                         print 'Error, the CSV file is not properly formatted'
     return key_id.rstrip(), secret.rstrip(), mfa_serial
 
-def fetch_creds_from_aws_cli_config():
+def fetch_creds_from_aws_cli_config(config_file):
     key_id = None
     secret = None
-    token = None
-    home_folder = os.path.expanduser('~/.aws')
-    config_file = home_folder + '/config'
+    session_token = None
     with open(config_file, 'rt') as config:
         for line in config:
             if re.match(r'aws_access_key_id', line):
-                key_id = line.split('=')[1].replace(' ', '').rstrip()
+                key_id = line.split(' ')[2]
             elif re.match(r'aws_secret_access_key', line):
-                secret = line.split('=')[1].replace(' ', '').rstrip()
+                secret = line.split(' ')[2]
             elif re.match(r'aws_session_token', line):
-                token = line.split('=')[1].replace(' ', '').rstrip()
-    return key_id, secret, token
+                session_token = line.split(' ')[2]
+    return key_id, secret, session_token
+
+def fetch_creds_from_system():
+    key_id = None
+    secret = None
+    session_token = None
+    # Check environment variables
+    if 'AWS_ACCESS_KEY_ID' in os.environ and 'AWS_SECRET_ACCESS_KEY' in os.environ:
+        key_id = os.environ['AWS_ACCESS_KEY_ID']
+        secret = os.environ['AWS_SECRET_ACCESS_KEY']
+        if 'AWS_SESSION_TOKEN' in os.environ:
+            session_token = os.environ['AWS_SESSION_TOKEN']
+    # Search for a Boto config file
+    elif os.path.isfile(boto_config_file):
+        key_id, secret, session_token = fetch_creds_from_aws_cli_config(boto_config_file)
+    # Search for an AWS CLI config file
+    elif os.path.isfile(aws_config_file):
+        print 'Found an AWS CLI configuration file at %s' % aws_config_file
+        if prompt_4_yes_no('Would you like to use the credentials from this file?'):
+            key_id, secret, session_token = fetch_creds_from_aws_cli_config(aws_config_file)
+    # Search for EC2 instance metadata
+    else:
+        metadata = boto.utils.get_instance_metadata(timeout=1, num_retries=1)
+        if metadata:
+            key_id, secret, session_token = fetch_creds_from_instance_metadata()
+    return key_id.rstrip(), secret.rstrip(), session_token.rstrip()
 
 def fetch_sts_credentials(key_id, secret, mfa_serial, mfa_code):
     if not mfa_serial or len(mfa_serial) < 1:
