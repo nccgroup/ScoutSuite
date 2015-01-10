@@ -37,7 +37,7 @@ def main(args):
     # Fetch credentials
     if args.fetch_creds_from_csv:
         key_id, secret, mfa_serial = fetch_creds_from_csv(args.fetch_creds_from_csv[0])
-    else:
+    elif not args.fetch_local:
         # Check for boto config, EC2 instance metadata, and environment variables
         key_id, secret, session_token = fetch_creds_from_system()
 
