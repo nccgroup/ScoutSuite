@@ -1374,7 +1374,9 @@
         load_aws_config_from_json(iam_info['permissions'], 'iam_permission', 1);
         load_aws_config_from_json(iam_info['roles'], 'iam_role', 2);
         load_aws_config_from_json(iam_info['users'], 'iam_user', 2);
-        load_aws_config_from_json(iam_info['credential_report']['<root_account>'], 'iam_credential_report', 1)
+        if ('credential_report' in iam_info) {
+            load_aws_config_from_json(iam_info['credential_report']['<root_account>'], 'iam_credential_report', 1);
+        }
         highlight_violations(iam_info['violations'], 'iam');
     </script>
 
