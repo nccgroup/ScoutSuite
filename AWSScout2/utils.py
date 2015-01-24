@@ -244,7 +244,9 @@ def fetch_creds_from_system():
         metadata = boto.utils.get_instance_metadata(timeout=1, num_retries=1)
         if metadata:
             key_id, secret, session_token = fetch_creds_from_instance_metadata()
-    return key_id.rstrip(), secret.rstrip(), session_token.rstrip()
+    if session_token:
+        session_token = session_token.rstrip()
+    return key_id.rstrip(), secret.rstrip(), session_token
 
 def fetch_sts_credentials(key_id, secret, mfa_serial, mfa_code):
     if not mfa_serial or len(mfa_serial) < 1:
