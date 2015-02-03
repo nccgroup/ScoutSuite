@@ -106,7 +106,7 @@ class Ec2Finding(Finding):
         for l in obj['listeners']:
             if l == '443':
                 for pn in obj['listeners'][l]['policy_names']:
-                    if pn == 'ELBSecurityPolicy-2014-01':
+                    if pn == 'ELBSecurityPolicy-2014-10':
                         return
                     else:
                         self.addItem(pn, obj['name'])
