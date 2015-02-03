@@ -207,21 +207,28 @@ def fetch_creds_from_csv(filename):
                         print 'Error, the CSV file is not properly formatted'
     return key_id.rstrip(), secret.rstrip(), mfa_serial
 
-def fetch_creds_from_aws_cli_config(config_file):
+def fetch_creds_from_aws_cli_config(config_file, profile_name):
     key_id = None
     secret = None
     session_token = None
+    re_new_profile = re.compile(r'\[\w+\]')
+    re_use_profile = re.compile(r'\[%s\]' % profile_name)
     with open(config_file, 'rt') as config:
         for line in config:
-            if re.match(r'aws_access_key_id', line):
-                key_id = line.split(' ')[2]
-            elif re.match(r'aws_secret_access_key', line):
-                secret = line.split(' ')[2]
-            elif re.match(r'aws_session_token', line):
-                session_token = line.split(' ')[2]
+            if re_use_profile.match(line):
+                profile_found = True
+            elif re_new_profile.match(line):
+                profile_found = False
+            if profile_found:
+                if re.match(r'aws_access_key_id', line):
+                    key_id = line.split(' ')[2]
+                elif re.match(r'aws_secret_access_key', line):
+                    secret = line.split(' ')[2]
+                elif re.match(r'aws_session_token', line):
+                    session_token = line.split(' ')[2]
     return key_id, secret, session_token
 
-def fetch_creds_from_system():
+def fetch_creds_from_system(profile_name):
     key_id = None
     secret = None
     session_token = None
@@ -233,12 +240,12 @@ def fetch_creds_from_system():
             session_token = os.environ['AWS_SESSION_TOKEN']
     # Search for a Boto config file
     elif os.path.isfile(boto_config_file):
-        key_id, secret, session_token = fetch_creds_from_aws_cli_config(boto_config_file)
+        key_id, secret, session_token = fetch_creds_from_aws_cli_config(boto_config_file, profile_name)
     # Search for an AWS CLI config file
     elif os.path.isfile(aws_config_file):
         print 'Found an AWS CLI configuration file at %s' % aws_config_file
         if prompt_4_yes_no('Would you like to use the credentials from this file?'):
-            key_id, secret, session_token = fetch_creds_from_aws_cli_config(aws_config_file)
+            key_id, secret, session_token = fetch_creds_from_aws_cli_config(aws_config_file, profile_name)
     # Search for EC2 instance metadata
     else:
         metadata = boto.utils.get_instance_metadata(timeout=1, num_retries=1)
@@ -269,8 +276,8 @@ AWSCONFIG_DIR = 'inc-awsconfig'
 REPORT_TITLE  = 'AWS Scout2 Report'
 
 def create_new_scout_report(environment_name, force_write):
-    new_dir = AWSCONFIG_DIR + '-' + environment_name[0]
-    new_file = 'report-' + environment_name[0] + '.html'
+    new_dir = AWSCONFIG_DIR + '-' + environment_name
+    new_file = 'report-' + environment_name + '.html'
     print 'Creating %s ...' % new_file
     if prompt_4_overwrite(new_dir, force_write):
         if not os.path.exists(new_dir):
@@ -282,14 +289,14 @@ def create_new_scout_report(environment_name, force_write):
         with open('report.html') as f:
             with open(new_file, 'wt') as nf:
                 for line in f:
-                    newline = line.replace(REPORT_TITLE, REPORT_TITLE + ' [' + environment_name[0] + ']')
+                    newline = line.replace(REPORT_TITLE, REPORT_TITLE + ' [' + environment_name + ']')
                     newline = newline.replace(AWSCONFIG_DIR, new_dir)
                     nf.write(newline)
 
 def load_info_from_json(aws_service, environment_name):
     filename = AWSCONFIG_DIR
     if environment_name:
-        filename = filename + '-' + environment_name[0]
+        filename = filename + '-' + environment_name
     filename = filename + '/' + aws_service + '_config.js'
     with open(filename) as f:
         json_payload = f.readlines()
