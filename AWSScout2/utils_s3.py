@@ -7,7 +7,6 @@ import boto
 from AWSScout2.utils import *
 from AWSScout2.findings import *
 
-
 ########################################
 ##### S3 functions
 ########################################
@@ -62,7 +61,6 @@ def get_s3_acls(bucket, key_name = None):
         grants[grantee_name]['name'] = grantee_name
     return grants
 
-
 def get_s3_bucket_versioning(bucket):
     r = bucket.get_versioning_status()
     if 'Versioning' in r:
@@ -86,12 +84,16 @@ def get_s3_bucket_webhosting(bucket):
     return 'Disabled'
 
 # List all available buckets
-def get_s3_buckets(s3_connection, s3_info, check_encryption, check_acls):
+def get_s3_buckets(s3_connection, s3_info, check_encryption, check_acls, checked_buckets, skipped_buckets):
     manage_dictionary(s3_info, 'buckets', {})
     buckets = s3_connection.get_all_buckets()
     count, total = init_status(buckets)
     for b in buckets:
         try:
+            # Abort if bucket is not of interest
+            if (b.name in skipped_buckets) or (len(checked_buckets) and b.name not in checked_buckets):
+                continue
+            # Get general bucket configuration
             bucket = {}
             bucket['grants'] = get_s3_acls(b)
             bucket['creation_date'] = b.creation_date
@@ -107,29 +109,34 @@ def get_s3_buckets(s3_connection, s3_info, check_encryption, check_acls):
                 pass
             # h4ck : data redundancy because I can't call ../@key in Handlebars
             bucket['name'] = b.name
-            # If requested, iterate through keys to get encryption and permissions
-            if type(check_encryption) == list and (b.name in check_encryption or not len(check_encryption)) or type(check_acls) == list and (b.name in check_acls or not len(check_acls)):
-                bucket['keys'] = {}
-                keys = b.list()
-                for k in keys:
-                    k = b.get_key(k.name)
-                    manage_dictionary(bucket['keys'], k.name, {})
-                    if type(check_encryption) == list and (b.name in check_encryption or not len(check_encryption)):
-                        # The encryption configuration is only accessible via an HTTP header, only returned when requesting one object at a time...
-                        k = b.get_key(k.name)
-                        bucket['keys'][k.name]['encrypted'] = k.encrypted
-                        bucket['keys'][k.name]['storage_class'] = k.storage_class
-                    if type(check_acls) == list and (b.name in check_acls or not len(check_acls)):
-                        bucket['keys'][k.name]['grants'] = get_s3_acls(b, k.name)
+            # If requested, get key properties
+            if check_encryption or check_acls:
+                get_s3_bucket_keys(b, bucket, check_encryption, check_acls)
             s3_info['buckets'][b.name] = bucket
             count = update_status(count, total)
         except Exception, e:
             print e
     close_status(count, total)
 
-def get_s3_info(key_id, secret, session_token, check_encryption, check_acls):
-    s3_info = {}
+# Get key-specific information (server-side encryption, acls, etc...)
+def get_s3_bucket_keys(b, bucket, check_encryption, check_acls):
+    bucket['keys'] = {}
+    keys = b.list()
+    for k in keys:
+        manage_dictionary(bucket['keys'], k.name, {})
+        try:
+            if check_encryption:
+                # The encryption configuration is only accessible via an HTTP header, only returned when requesting one object at a time...
+                k = b.get_key(k.name)
+                bucket['keys'][k.name]['encrypted'] = k.encrypted
+                bucket['keys'][k.name]['storage_class'] = k.storage_class
+            if check_acls:
+                bucket['keys'][k.name]['grants'] = get_s3_acls(b, k.name)
+        except Exception, e:
+            continue
+
+def get_s3_info(key_id, secret, session_token, s3_info, check_encryption, check_acls, checked_buckets, skipped_buckets):
     s3_connection = boto.connect_s3(aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
     print 'Fetching S3 buckets data...'
-    get_s3_buckets(s3_connection, s3_info, check_encryption, check_acls)
+    get_s3_buckets(s3_connection, s3_info, check_encryption, check_acls, checked_buckets, skipped_buckets)
     return s3_info

@@ -132,7 +132,13 @@ def main(args):
     if 's3' in services:
         try:
             if not args.fetch_local:
-                s3_info = get_s3_info(key_id, secret, session_token, args.check_s3_encryption, args.check_s3_acls)
+                # If working on a subset of buckets, attempt to load an existing configuration dump to complete it
+                if args.buckets or args.skipped_buckets:
+                    try:
+                        s3_info = load_info_from_json('s3', environment_name)
+                    except Exception, e:
+                        s3_info = {}
+                get_s3_info(key_id, secret, session_token, s3_info, args.check_s3_encryption, args.check_s3_acls, args.buckets, args.skipped_buckets)
             else:
                 s3_info = load_info_from_json('s3', environment_name)
             # Analyze the S3 config and save data to a local file
@@ -203,15 +209,24 @@ parser.add_argument('--env',
                     help='AWS environment name (used to create multiple reports)')
 parser.add_argument('--check_s3_encryption',
                     dest='check_s3_encryption',
-                    default=None,
-                    nargs='*',
-                    help='list of S3 buckets to iterate through; pulls server-side encryption settings for each object in bucket (Slow)')
+                    default=False,
+                    action='store_true',
+                    help='Pulls server-side encryption settings for each object in bucket (Slow)')
 parser.add_argument('--check_s3_acls',
                     dest='check_s3_acls',
-                    default=None,
-                    nargs='*',
-                    help='list of S3 buckets to iterate through; pulls permissions for each object in bucket (Slow)')
-
+                    default=False,
+                    action='store_true',
+                    help='Pulls permissions for each object in bucket (Slow)')
+parser.add_argument('--skip_buckets',
+                    dest='skipped_buckets',
+                    default=[],
+                    nargs='+',
+                    help='Name of S3 buckets to skip when checking object properties')
+parser.add_argument('--buckets',
+                    dest='buckets',
+                    default=[],
+                    nargs='+',
+                    help='Name of buckets to iterate through when checking object properties')
 
 args = parser.parse_args()
 
