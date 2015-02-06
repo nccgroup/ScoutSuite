@@ -75,10 +75,26 @@ function showRowWithDetails(keyword) {
 function showAll(keyword) {
     $("[id*='" + keyword + "-list']").show();
     $("[id*='" + keyword + "-details']").show();
+    $("[id*='" + keyword + "-filter-']").removeClass('glyphicon-check');
+    $("[id*='" + keyword + "-filter-']").addClass('glyphicon-unchecked');
 }
 function toggleDetails(keyword, item) {
     var id = '#' + keyword + '-' + item;
     $(id).toggle();
+}
+function toggleItem(keyword, item) {
+    $("[id='" + keyword + "-list-" + item + "']").toggle()
+    $("[id*='" + keyword + "-details-" + item + "']").toggle();
+}
+
+function conditionalToggleItem(keyword, item, action) {
+    var id = '#' + keyword + '-details-' + item;
+    var visible = $(id).is(':visible');
+    if (visible) {
+        toggleItem(keyword, item);
+    } else if (!visible && (action == 'uncheck')) {
+        toggleItem(keyword, item);
+    }
 }
 function updateNavbar(active) {
     prefix = active.split('_')[0];
@@ -93,6 +109,19 @@ function toggleVisibility(id) {
         $(id2).html('<i class="glyphicon glyphicon-collapse-down"></i>');
     } else {
         $(id2).html('<i class="glyphicon glyphicon-expand"></i>');
+    }
+}
+function iterateEC2ObjectsAndCall(ec2_data, entities, callback, action) {
+    if (entities.length > 0) {
+        var entity = entities.shift();
+        var recurse = entities.length;
+        for (i in ec2_data[entity]) {
+            if (recurse) {
+                iterateEC2ObjectsAndCall(ec2_data[entity][i], eval(JSON.stringify(entities)), callback, action);
+            } else {
+                callback(ec2_data[entity][i], action);
+            }
+        }
     }
 }
 function findEC2Object(ec2_data, entities, id) {
@@ -228,6 +257,38 @@ function filter_items(element_type, element_class) {
     var value = $("#" + element_class + "_filter").val();
     $(element_type + "." + element_class + ":not(:contains(" + value + "))").hide();
     $(element_type + "." + element_class + ":contains(" + value + ")").show();
+}
+function toggle_filter(filter_name, path, callback) {
+    var entities = path.split('.');
+    var checkbox = $("#" + filter_name);
+    var action = '';
+    if (checkbox.hasClass("glyphicon-check")) {
+        checkbox.removeClass("glyphicon-check");
+        checkbox.addClass("glyphicon-unchecked");
+        action = 'uncheck';
+    } else {
+        checkbox.removeClass("glyphicon-unchecked");
+        checkbox.addClass("glyphicon-check");
+        action = 'check'
+    }
+    iterateEC2ObjectsAndCall(ec2_info, entities, callback, action);
+}
+
+// Filter callback functions
+function unused_ec2_security_groups_callback(object, action) {
+    if (object['running-instances'].length == 0) {
+        conditionalToggleItem("ec2_security_group", object.id, action);
+    }
+}
+function no_cidr_granted_ec2_security_groups_callback(object, action) {
+    for (p in object['protocols']) {
+        for (r in object['protocols'][p]['rules']) {
+            if ( 'cidrs' in object['protocols'][p]['rules'][r]['grants']) {
+                return
+            }
+        }
+    }
+    conditionalToggleItem("ec2_security_group", object.id);
 }
 
 // Browsing functions

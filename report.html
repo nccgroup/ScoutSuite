@@ -963,6 +963,24 @@
           <script id="ec2_security_group-list-template" type="text/x-handlebars-template">
             <ul class="list-group">
               <li class="list-group-item"><a href="javascript:showAll('ec2_security_group')">Show all<span class="badge pull-right">{{count_in "ec2" "regions.vpcs.security_groups"}}</span></a></li>
+              <li class="list-group-item">
+                <div class="accordion">
+                  <a class="accordion-toggle" data-toggle="collapse" href="#ec2_security_group-filter_list">Show filters</a>
+                  <div id="ec2_security_group-filter_list" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                    <div class="list-group-item-text list-sub-element">
+                      <a href="javascript:toggle_filter('ec2_security_group-filter-unused', 'regions.vpcs.security_groups', unused_ec2_security_groups_callback)">
+                        <i id="ec2_security_group-filter-unused" class="glyphicon glyphicon-unchecked""></i> Hide unused security groups
+                      </a/>
+                    </div>
+                    <div class="list-group-item-text list-sub-element">
+                      <a href="javascript:toggle_filter('ec2_security_group-filter-no_cidr_granted', 'regions.vpcs.security_groups', no_cidr_granted_ec2_security_groups_callback)">
+                        <i id="ec2_security_group-filter-no_cidr_granted" class="glyphicon glyphicon-unchecked""></i> Hide security groups that do not grant CIDRs
+                      </a/>
+                    </div>
+                  </div>
+                </div>
+              </li>
             </ul>
             {{#each items}}
              {{#if vpcs}}
@@ -972,7 +990,7 @@
                   <div class="list-group-item list-sub-element">
                   {{@key}}
                   {{#each security_groups}}
-                    <div class="list-group-item-text list-sub-element" id="ec2_security_group-list-{{id}}"><a href="javascript:browseTo('ec2_security_group', '{{id}}')">{{name}}</a></div>
+                    <div class="list-group-item-text list-sub-element" id="security_group-list-{{id}}"><a href="javascript:browseTo('ec2_security_group', '{{id}}')">{{name}}</a></div>
                   {{/each}}
                   </div>
                 {{/each}}
@@ -1370,6 +1388,7 @@
 
     <!-- Load IAM data -->
     <script>
+/*
         load_aws_config_from_json(iam_info['groups'], 'iam_group', 2);
         load_aws_config_from_json(iam_info['permissions'], 'iam_permission', 1);
         load_aws_config_from_json(iam_info['roles'], 'iam_role', 2);
@@ -1378,19 +1397,20 @@
             load_aws_config_from_json(iam_info['credential_report']['<root_account>'], 'iam_credential_report', 1);
         }
         highlight_violations(iam_info['violations'], 'iam');
+*/        
     </script>
 
     <!-- Load RDS data -->
     <script>
-      load_aws_config_from_json(rds_info['regions'], 'rds_security_group', 2);
-      load_aws_config_from_json(rds_info['regions'], 'rds_instance', 2);
-      highlight_violations(rds_info['violations'], 'rds');
+//      load_aws_config_from_json(rds_info['regions'], 'rds_security_group', 2);
+//      load_aws_config_from_json(rds_info['regions'], 'rds_instance', 2);
+//      highlight_violations(rds_info['violations'], 'rds');
     </script>
 
     <!-- Load S3 data -->
     <script>
-        load_aws_config_from_json(s3_info['buckets'], 's3_bucket', 2);
-        highlight_violations(s3_info['violations'], 's3');
+//        load_aws_config_from_json(s3_info['buckets'], 's3_bucket', 2);
+//        highlight_violations(s3_info['violations'], 's3');
     </script>
 
     <!-- Bootstrap core JavaScript, placed at the end of the document so the pages load faster -->
