@@ -5,6 +5,7 @@ import boto
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
+from AWSScout2.filters import *
 from AWSScout2.findings import *
 
 # Import other third-party packages
@@ -19,7 +20,7 @@ import urllib
 
 def analyze_iam_config(iam_info, force_write):
     sys.stdout.write('Analyzing IAM data...\n')
-    analyze_config(iam_finding_dictionary, iam_info, 'IAM', force_write)
+    analyze_config(iam_finding_dictionary, iam_filter_dictionary, iam_info, 'IAM', force_write)
 
 def get_groups_info(iam_connection, iam_info):
     groups = handle_truncated_responses(iam_connection.get_all_groups, None, ['list_groups_response', 'list_groups_result'], 'groups')

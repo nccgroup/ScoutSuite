@@ -1,0 +1,20 @@
+{
+    "NoRunningInstances": {
+        "description": "Hide groups that have no running instance",
+        "entity": "regions.vpcs.security_groups",
+        "callback": "hasNoRunningInstances",
+        "callback_args": []
+    },
+    "NoCIDRsGrants": {
+        "description": "Hide groups that do not open ports to CIDRs",
+        "entity": "regions.vpcs.security_groups",
+        "callback": "HasNoCIDRsGrants",
+        "callback_args": []
+    },
+    "AllPortsOpen": {
+        "description": "Hide groups that do not open all ports (1-65535)",
+        "entity": "regions.vpcs.security_groups",
+        "callback": "DoesNotOpenAllPorts",
+        "callback_args": []
+    }
+}

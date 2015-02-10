@@ -44,10 +44,19 @@ function highlight_violations(violations, keyword) {
     load_aws_config_from_json(violations, keyword + '_violation', 1);
 }
 
+// Generic list filters
+function load_filters_from_json(list) {
+    var id1 = '#filter-list-template';
+    var id2 = '#filters-list';
+    var compiler = Handlebars.compile($(id1).html());
+    $(id2).append(compiler({items: list}));
+}
+
 // Display functions
 function hideAll() {
     $("[id$='-row']").hide();
     $("[id*='-details-']").hide();
+    $("[id*='-filter-']").hide();
 }
 function hideRowItems(keyword) {
     $("[id*='" + keyword + "-list']").hide();
@@ -64,6 +73,12 @@ function showItem(keyword, id) {
     $(id1).show();
     $(id2).show();
 }
+function hideItem(keyword, id) {
+    var id1 = '[id="' + keyword + '-list-' + id + '"]';
+    var id2 = '[id="' + keyword + '-details-' + id+ '"]';
+    $(id1).hide();
+    $(id2).hide();
+}
 function showRow(keyword) {
     id = "#" + keyword + "s-row";
     $(id).show();
@@ -75,27 +90,15 @@ function showRowWithDetails(keyword) {
 function showAll(keyword) {
     $("[id*='" + keyword + "-list']").show();
     $("[id*='" + keyword + "-details']").show();
-    $("[id*='" + keyword + "-filter-']").removeClass('glyphicon-check');
-    $("[id*='" + keyword + "-filter-']").addClass('glyphicon-unchecked');
+    $("[id*='" + keyword + "-filter']").show();
+    $("[id*='" + keyword + "-filtericon']").removeClass('glyphicon-check');
+    $("[id*='" + keyword + "-filtericon']").addClass('glyphicon-unchecked');
 }
 function toggleDetails(keyword, item) {
     var id = '#' + keyword + '-' + item;
     $(id).toggle();
 }
-function toggleItem(keyword, item) {
-    $("[id='" + keyword + "-list-" + item + "']").toggle()
-    $("[id*='" + keyword + "-details-" + item + "']").toggle();
-}
 
-function conditionalToggleItem(keyword, item, action) {
-    var id = '#' + keyword + '-details-' + item;
-    var visible = $(id).is(':visible');
-    if (visible) {
-        toggleItem(keyword, item);
-    } else if (!visible && (action == 'uncheck')) {
-        toggleItem(keyword, item);
-    }
-}
 function updateNavbar(active) {
     prefix = active.split('_')[0];
     $('[id*="_dropdown"]').removeClass('active-dropdown');
@@ -111,15 +114,15 @@ function toggleVisibility(id) {
         $(id2).html('<i class="glyphicon glyphicon-expand"></i>');
     }
 }
-function iterateEC2ObjectsAndCall(ec2_data, entities, callback, action) {
+function iterateEC2ObjectsAndCall(data, entities, callback, callback_args) {
     if (entities.length > 0) {
         var entity = entities.shift();
         var recurse = entities.length;
-        for (i in ec2_data[entity]) {
+        for (i in data[entity]) {
             if (recurse) {
-                iterateEC2ObjectsAndCall(ec2_data[entity][i], eval(JSON.stringify(entities)), callback, action);
+                iterateEC2ObjectsAndCall(data[entity][i], eval(JSON.stringify(entities)), callback, callback_args);
             } else {
-                callback(ec2_data[entity][i], action);
+                callback(data[entity][i], callback_args);
             }
         }
     }
@@ -253,42 +256,43 @@ function hidePopup() {
     $("#overlay-background").hide();
     $("#overlay-details").hide();
 }
-function filter_items(element_type, element_class) {
-    var value = $("#" + element_class + "_filter").val();
-    $(element_type + "." + element_class + ":not(:contains(" + value + "))").hide();
-    $(element_type + "." + element_class + ":contains(" + value + ")").show();
-}
-function toggle_filter(filter_name, path, callback) {
-    var entities = path.split('.');
-    var checkbox = $("#" + filter_name);
+
+// Generic toggle filter function
+function toggle_filter(data, filter_name) {
+    var filter = data['filters'][filter_name];
+    var entities = filter['entity'].split('.');
+    var checkbox = $("#" + finding_entity(filter['keyword_prefix'], filter['entity']) + '-filtericon-' + filter_name);
     var action = '';
     if (checkbox.hasClass("glyphicon-check")) {
         checkbox.removeClass("glyphicon-check");
         checkbox.addClass("glyphicon-unchecked");
-        action = 'uncheck';
+        filter['enabled'] = false; // = 'uncheck';
     } else {
         checkbox.removeClass("glyphicon-unchecked");
         checkbox.addClass("glyphicon-check");
-        action = 'check'
+        filter['enabled'] = true; // action = 'check'
     }
-    iterateEC2ObjectsAndCall(ec2_info, entities, callback, action);
+    action = 'lol';
+    // Iterate through the objects and update visibility
+    iterateEC2ObjectsAndCall(data, entities, toggle_filter_callback, data['filters']);
 }
 
-// Filter callback functions
-function unused_ec2_security_groups_callback(object, action) {
-    if (object['running-instances'].length == 0) {
-        conditionalToggleItem("ec2_security_group", object.id, action);
-    }
-}
-function no_cidr_granted_ec2_security_groups_callback(object, action) {
-    for (p in object['protocols']) {
-        for (r in object['protocols'][p]['rules']) {
-            if ( 'cidrs' in object['protocols'][p]['rules'][r]['grants']) {
-                return
+// Generic toggle filter callback
+function toggle_filter_callback(object, filters) {
+    var must_hide = false;
+    // Go through each active filter
+    for (f in filters) {
+        if (filters[f]['enabled']) {
+            if ($.inArray(object['id'], filters[f]['items']) > -1) {
+                must_hide = true;
             }
         }
     }
-    conditionalToggleItem("ec2_security_group", object.id);
+    if (must_hide) {
+        hideItem(finding_entity(filters[f]['keyword_prefix'], filters[f]['entity']), object['id']);
+    } else {
+        showItem(finding_entity(filters[f]['keyword_prefix'], filters[f]['entity']), object['id']);
+    }
 }
 
 // Browsing functions
@@ -406,6 +410,9 @@ Handlebars.registerHelper('has_logging?', function(logging) {
     return logging;
 });
 Handlebars.registerHelper('finding_entity', function(prefix, entity) {
+    return finding_entity(prefix, entity);
+});
+function finding_entity(prefix, entity) {
     entity = entity.split('.').pop();
     elength = entity.length;
     if (entity.substring(elength - 1, elength) == 's') {
@@ -413,7 +420,7 @@ Handlebars.registerHelper('finding_entity', function(prefix, entity) {
     } else {
         return prefix + '_' + entity;
     }
-});
+}
 Handlebars.registerHelper('count', function(items) {
     var c = 0;
     for (i in items) {

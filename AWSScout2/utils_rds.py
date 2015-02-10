@@ -6,6 +6,7 @@ from boto.rds import *
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
+from AWSScout2.filters import *
 from AWSScout2.findings import *
 from AWSScout2.protocols_dict import *
 
@@ -19,7 +20,7 @@ import traceback
 
 def analyze_rds_config(rds_info, force_write):
     print 'Analyzing RDS data...'
-    analyze_config(rds_finding_dictionary, rds_info, 'RDS', force_write)
+    analyze_config(rds_finding_dictionary, rds_filter_dictionary, rds_info, 'RDS', force_write)
     # Custom RDS analysis
     check_for_duplicate(rds_info)
     save_config_to_file(rds_info, 'RDS', force_write)

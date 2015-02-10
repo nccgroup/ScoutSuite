@@ -8,6 +8,7 @@ from boto.ec2 import elb
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
+from AWSScout2.filters import *
 from AWSScout2.findings import *
 from AWSScout2.protocols_dict import *
 
@@ -21,7 +22,7 @@ import traceback
 
 def analyze_ec2_config(ec2_info, force_write):
     print 'Analyzing EC2 data...'
-    analyze_config(ec2_finding_dictionary, ec2_info, 'EC2', force_write)
+    analyze_config(ec2_finding_dictionary, ec2_filter_dictionary, ec2_info, 'EC2', force_write)
     # Custom EC2 analysis
     check_for_elastic_ip(ec2_info)
     link_elastic_ips(ec2_info)

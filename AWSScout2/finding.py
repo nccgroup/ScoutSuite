@@ -1,38 +1,18 @@
 #!/usr/bin/env python2
 
+# Import AWS Scout2 tools
+from AWSScout2.filter import *
+
+# Import other third-party packages
 import dateutil.parser
 
-class Finding():
+class Finding(Filter):
 
     def __init__(self, description, entity, callback, callback_args, level, questions):
-        self.description = description
-        self.level = level
-        self.entity = entity
-        self.callback = callback
-        self.callback_args = callback_args
         self.level = level
         self.questions = questions
-        self.items = []
         self.macro_items = []
-
-    def addItem(self, item, macro_item = None):
-        self.items.append(item);
-        if macro_item:
-            self.macro_items.append(macro_item);
-
-    #
-    # Call to that function when iterating over items or macro_items will create
-    # invalid results.
-    #
-    def removeItem(self, item, macro_item = None):
-        try:
-            target = self.items.index(item)
-            del self.items[target]
-            if macro_item:
-                del self.macro_items[target]
-        except Exception, e:
-            print e
-            pass
+        super(Finding, self).__init__(description, entity, callback, callback_args)
 
     # arg0: limit
     # arg1: object attribute to count

@@ -5,6 +5,7 @@ import boto
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
+from AWSScout2.filters import *
 from AWSScout2.findings import *
 
 ########################################
@@ -13,7 +14,7 @@ from AWSScout2.findings import *
 
 def analyze_s3_config(s3_info, force_write):
     print 'Analyzing S3 data...'
-    analyze_config(s3_finding_dictionary, s3_info, 'S3', force_write)
+    analyze_config(s3_finding_dictionary, s3_filter_dictionary, s3_info, 'S3', force_write)
 
 def init_s3_permissions(grant):
     grant['read'] = False

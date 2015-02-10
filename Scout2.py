@@ -1,6 +1,8 @@
 #!/usr/bin/env python2
 
 # Import AWS Scout2 tools
+from AWSScout2.filters import *
+from AWSScout2.findings import *
 from AWSScout2.utils import *
 from AWSScout2.utils_cloudtrail import *
 from AWSScout2.utils_ec2 import *
@@ -72,6 +74,7 @@ def main(args):
     # Load findings from JSON config files
     for service in services:
         load_findings(service, ruleset_name)
+        load_filters(service)
 
     ##### CloudTrail
     if 'cloudtrail' in services:

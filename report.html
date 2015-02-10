@@ -838,6 +838,18 @@
                 </script>
               </ul>
             </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filters<b class="caret"></b></a>
+              <ul class="dropdown-menu" id="filters-list">
+                <script id="filter-list-template" type="text/x-handlebars-template">
+                  {{#each items}}
+                    <li id="{{finding_entity keyword_prefix entity}}-filter-{{@key}}"><a href="javascript:toggle_filter({{keyword_prefix}}_info, '{{@key}}')"><i id="{{finding_entity keyword_prefix entity}}-filtericon-{{@key}}" class="glyphicon glyphicon-unchecked""></i> {{description}} ({{items.length}})</a></li>
+                  {{/each}}
+                </script>
+              </ul>
+            </li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Help<b class="caret"></b></a>
               <ul class="dropdown-menu">
@@ -963,24 +975,6 @@
           <script id="ec2_security_group-list-template" type="text/x-handlebars-template">
             <ul class="list-group">
               <li class="list-group-item"><a href="javascript:showAll('ec2_security_group')">Show all<span class="badge pull-right">{{count_in "ec2" "regions.vpcs.security_groups"}}</span></a></li>
-              <li class="list-group-item">
-                <div class="accordion">
-                  <a class="accordion-toggle" data-toggle="collapse" href="#ec2_security_group-filter_list">Show filters</a>
-                  <div id="ec2_security_group-filter_list" class="accordion-body collapse">
-                    <div class="accordion-inner">
-                    <div class="list-group-item-text list-sub-element">
-                      <a href="javascript:toggle_filter('ec2_security_group-filter-unused', 'regions.vpcs.security_groups', unused_ec2_security_groups_callback)">
-                        <i id="ec2_security_group-filter-unused" class="glyphicon glyphicon-unchecked""></i> Hide unused security groups
-                      </a/>
-                    </div>
-                    <div class="list-group-item-text list-sub-element">
-                      <a href="javascript:toggle_filter('ec2_security_group-filter-no_cidr_granted', 'regions.vpcs.security_groups', no_cidr_granted_ec2_security_groups_callback)">
-                        <i id="ec2_security_group-filter-no_cidr_granted" class="glyphicon glyphicon-unchecked""></i> Hide security groups that do not grant CIDRs
-                      </a/>
-                    </div>
-                  </div>
-                </div>
-              </li>
             </ul>
             {{#each items}}
              {{#if vpcs}}
@@ -1384,11 +1378,11 @@
         load_aws_config_from_json(ec2_info['regions'], 'ec2_instance', 2);
         load_aws_config_from_json(ec2_info['attack_surface'], 'ec2_attack_surface', 1);
         highlight_violations(ec2_info['violations'], 'ec2');
+        load_filters_from_json(ec2_info['filters']);
     </script>
 
     <!-- Load IAM data -->
     <script>
-/*
         load_aws_config_from_json(iam_info['groups'], 'iam_group', 2);
         load_aws_config_from_json(iam_info['permissions'], 'iam_permission', 1);
         load_aws_config_from_json(iam_info['roles'], 'iam_role', 2);
@@ -1397,20 +1391,20 @@
             load_aws_config_from_json(iam_info['credential_report']['<root_account>'], 'iam_credential_report', 1);
         }
         highlight_violations(iam_info['violations'], 'iam');
-*/        
+        load_filters_from_json(iam_info['filters']);
     </script>
 
     <!-- Load RDS data -->
     <script>
-//      load_aws_config_from_json(rds_info['regions'], 'rds_security_group', 2);
-//      load_aws_config_from_json(rds_info['regions'], 'rds_instance', 2);
-//      highlight_violations(rds_info['violations'], 'rds');
+      load_aws_config_from_json(rds_info['regions'], 'rds_security_group', 2);
+      load_aws_config_from_json(rds_info['regions'], 'rds_instance', 2);
+      highlight_violations(rds_info['violations'], 'rds');
     </script>
 
     <!-- Load S3 data -->
     <script>
-//        load_aws_config_from_json(s3_info['buckets'], 's3_bucket', 2);
-//        highlight_violations(s3_info['violations'], 's3');
+        load_aws_config_from_json(s3_info['buckets'], 's3_bucket', 2);
+        highlight_violations(s3_info['violations'], 's3');
     </script>
 
     <!-- Bootstrap core JavaScript, placed at the end of the document so the pages load faster -->

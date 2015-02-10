@@ -108,7 +108,18 @@ class Scout2Encoder(json.JSONEncoder):
 # Violations search functions
 ########################################
 
-def analyze_config(finding_dictionary, config, keyword, force_write):
+def analyze_config(finding_dictionary, filter_dictionary, config, keyword, force_write):
+    # Filters
+    try:
+        for key in filter_dictionary:
+            f = filter_dictionary[key]
+            entity_path = f.entity.split('.')
+            process_finding(config, f)
+        config['filters'] = filter_dictionary
+    except:
+        print 'Exception:\n %s' % traceback.format_exc()
+        pass
+    # Violations
     try:
         for key in finding_dictionary:
             finding = finding_dictionary[key]

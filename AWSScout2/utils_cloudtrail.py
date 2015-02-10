@@ -5,8 +5,9 @@ import boto
 from boto import cloudtrail
 
 # Import AWS Scout2 tools
-from utils import *
-from findings import *
+from AWSScout2.utils import *
+from AWSScout2.filters import *
+from AWSScout2.findings import *
 
 
 ########################################
@@ -14,7 +15,7 @@ from findings import *
 ########################################
 
 def analyze_cloudtrail_config(cloudtrail_info, force_write):
-    analyze_config(cloudtrail_finding_dictionary, cloudtrail_info, 'CloudTrail', force_write)
+    analyze_config(cloudtrail_finding_dictionary, cloudtrail_filter_dictionary, cloudtrail_info, 'CloudTrail', force_write)
 
 def get_cloudtrail_info(key_id, secret, session_token):
     cloudtrail_info = {}
