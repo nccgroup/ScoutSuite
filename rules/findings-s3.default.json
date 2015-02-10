@@ -1,32 +1,20 @@
 {
-    "All users-write": {
-        "description": "Bucket world-writable",
+    "_ARG_0_-_ARG_1_": {
+        "description": "_ARG_2_",
         "entity": "buckets",
-        "callback": "checkWorldWritableBucket",
-        "callback_args": [],
-        "level": "danger",
+        "callback": "checkBucketACLs",
+        "callback_args": [ "_ARG_0_", "_ARG_1_" ],
+        "level": "_ARG_3_",
+        "targets": [
+            ["All users", "write", "Bucket world-writable", "danger"],
+            ["All users", "write_acp", "Bucket's permissions world-writable", "danger"],
+            ["All users", "read", "Bucket world-readable", "warning"],
+            ["Authenticated users", "write", "Bucket world-writable", "danger"],
+            ["Authenticated users", "write_acp", "Bucket's permissions world-writable", "danger"],
+            ["Authenticated users", "read", "Bucket world-readable", "warning"]
+        ],
         "questions": [
-            "Report S3 buckets that are world-writable"
-        ]
-    },
-    "All users-write_acp": {
-        "description": "Bucket's permissions world-writable",
-        "entity": "buckets",
-        "callback": "checkWorldWritableBucketPerms",
-        "callback_args": [],
-        "level": "danger",
-        "questions": [
-            "Report S3 buckets whose permissions are world-writable"
-        ]
-    },
-    "All users-read": {
-        "description": "Bucket world-readable",
-        "entity": "buckets",
-        "callback": "checkWorldReadableBucket",
-        "callback_args": [],
-        "level": "warning",
-        "questions": [
-            "Report S3 buckets that are world-readable"
+            "Report _DESCRIPTION_"
         ]
     },
     "logging-disabled": {

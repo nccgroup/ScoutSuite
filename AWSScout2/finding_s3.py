@@ -15,22 +15,35 @@ class S3Finding(Finding):
 ##### Finding callbacks
 ########################################
 
+    def checkBucketACLs(self, key, obj):
+        grantee = self.callback_args[0]
+        grant = self.callback_args[1]
+        if grant == 'write':
+            self.checkWorldWritableBucket(key, obj)
+        elif grant == 'write_acp':
+            self.checkWorldWritableBucketPerms(key, obj)
+        elif grant == 'read':
+            self.checkWorldReadableBucket(key, obj)
+
     def checkWorldWritableBucket(self, key, obj):
+        grantee = self.callback_args[0]
         for grant in obj['grants']:
-            if 'All users' in grant:
-                if obj['grants']['All users']['write']:
+            if grantee in grant:
+                if obj['grants'][grantee]['write']:
                     self.addItem(key)
 
     def checkWorldWritableBucketPerms(self, key, obj):
+        grantee = self.callback_args[0]
         for grant in obj['grants']:
-            if 'All users' in grant:
-                if obj['grants']['All users']['write_acp']:
+            if grantee in grant:
+                if obj['grants'][grantee]['write_acp']:
                     self.addItem(key)
 
 
     def checkWorldReadableBucket(self, key, obj):
+        grantee = self.callback_args[0]
         for grant in obj['grants']:
-            if 'All users' in grant and obj['grants']['All users']['read']:
+            if grantee in grant and obj['grants'][grantee]['read']:
                 self.addItem(key)
 
     def checkLogging(self, key, obj):
