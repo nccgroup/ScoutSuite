@@ -99,6 +99,17 @@ def manage_dictionary(dictionary, key, init, callback=None):
             callback(dictionary[key])
     return dictionary
 
+def printException(e):
+    global verbose_exceptions
+    if verbose_exceptions:
+        print traceback.format_exc()
+    else:
+        print e
+
+def configPrintException(enable):
+    global verbose_exceptions
+    verbose_exceptions = enable
+
 class Scout2Encoder(json.JSONEncoder):
     def default(self, o):
         return o.__dict__
@@ -116,8 +127,8 @@ def analyze_config(finding_dictionary, filter_dictionary, config, keyword, force
             entity_path = f.entity.split('.')
             process_finding(config, f)
         config['filters'] = filter_dictionary
-    except:
-        print 'Exception:\n %s' % traceback.format_exc()
+    except Exception, e:
+        printException(e)
         pass
     # Violations
     try:
@@ -126,8 +137,8 @@ def analyze_config(finding_dictionary, filter_dictionary, config, keyword, force
             entity_path = finding.entity.split('.')
             process_finding(config, finding)
         config['violations'] = finding_dictionary
-    except:
-        print 'Exception:\n %s' % traceback.format_exc()
+    except Exception, e:
+        printException(e)
         pass
     save_config_to_file(config, keyword, force_write)
 
@@ -288,6 +299,8 @@ REPORT_TITLE  = 'AWS Scout2 Report'
 
 def create_new_scout_report(environment_name, force_write):
     new_dir = AWSCONFIG_DIR + '-' + environment_name
+    if not os.path.exists(AWSCONFIG_DIR):
+        return
     new_file = 'report-' + environment_name + '.html'
     print 'Creating %s ...' % new_file
     if prompt_4_overwrite(new_dir, force_write):

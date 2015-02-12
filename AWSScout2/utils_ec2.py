@@ -12,9 +12,6 @@ from AWSScout2.filters import *
 from AWSScout2.findings import *
 from AWSScout2.protocols_dict import *
 
-# Import other third-party packages
-import traceback
-
 
 ########################################
 ##### EC2 analysis functions
@@ -133,7 +130,7 @@ def get_ec2_info(key_id, secret, session_token, fetch_ec2_gov):
                 elb_connection = boto.ec2.elb.connect_to_region(region, aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
                 get_elb_info(elb_connection, ec2_info['regions'][region])
         except Exception, e:
-            print 'Exception:\n %s' % traceback.format_exc()
+            printException(e)
             pass
     return ec2_info
 

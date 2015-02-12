@@ -10,9 +10,6 @@ from AWSScout2.filters import *
 from AWSScout2.findings import *
 from AWSScout2.protocols_dict import *
 
-# Import other third-party packages
-import traceback
-
 
 ########################################
 ##### RDS functions
@@ -44,7 +41,7 @@ def get_rds_info(key_id, secret, session_token, fetch_gov):
             get_instances_info(rds_connection, rds_info['regions'][region])
 
         except Exception, e:
-            print 'Exception:\n %s' % traceback.format_exc()
+            printException(e)
             pass
     return rds_info
 

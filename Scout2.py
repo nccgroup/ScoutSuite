@@ -12,7 +12,6 @@ from AWSScout2.utils_s3 import *
 
 # Import other third-party packages
 import os
-import traceback
 
 
 ########################################
@@ -25,6 +24,9 @@ def main(args):
     secret = None
     mfa_serial = None
     session_token = None
+
+    # Configure the debug level
+    configPrintException(args.debug)
 
     # Create the list of services to analyze
     services = build_services_list(args.services, args.skipped_services)
@@ -88,7 +90,7 @@ def main(args):
             analyze_cloudtrail_config(cloudtrail_info, args.force_write)
         except Exception, e:
             print 'Error: could not fetch and/or analyze CloudTrail configuration'
-            print e
+            printException(e, args.debug)
 
     ##### IAM
     if 'iam' in services:
@@ -103,7 +105,7 @@ def main(args):
                 analyze_iam_config(iam_info, args.force_write)
         except Exception, e:
             print 'Error: could not fetch and/or analyze IAM configuration'
-            print e
+            printException(e, args.debug)
 
     ##### EC2
     if 'ec2' in services:
@@ -117,7 +119,7 @@ def main(args):
             analyze_ec2_config(ec2_info, args.force_write)
         except Exception, e:
             print 'Error: could not fetch and/or analyze EC2 configuration'
-            print e
+            printException(e, args.debug)
 
     ##### RDS
     if 'rds' in services:
@@ -129,7 +131,7 @@ def main(args):
             analyze_rds_config(rds_info, args.force_write)
         except Exception, e:
             print 'Error: could not fetch and/or analyze RDS configuration'
-            print e
+            printException(e, args.debug)
 
     ##### S3
     if 's3' in services:
@@ -140,7 +142,9 @@ def main(args):
                     try:
                         s3_info = load_info_from_json('s3', environment_name)
                     except Exception, e:
-                        s3_info = {}
+                        pass
+                else:
+                    s3_info = {}
                 get_s3_info(key_id, secret, session_token, s3_info, args.check_s3_encryption, args.check_s3_acls, args.buckets, args.skipped_buckets)
             else:
                 s3_info = load_info_from_json('s3', environment_name)
@@ -148,7 +152,7 @@ def main(args):
             analyze_s3_config(s3_info, args.force_write)
         except Exception, e:
             print 'Error: could not fetch and/or analyze S3 configuration'
-            print e
+            printException(e)
 
     ##### Analyzis that requires multiple configuration
     if 'ec2' in services and 'iam' in services:
@@ -157,14 +161,14 @@ def main(args):
             analyze_iam_config(iam_info, args.force_write)
         except Exception, e:
             print 'Error: EC2 or IAM configuration is missing'
-            print e
+            printException(e, args.debug)
     if 'cloudtrail' in services and 'ec2' in services:
         try:
             refine_cloudtrail(cloudtrail_info, ec2_info)
             save_config_to_file(cloudtrail_info, 'cloudtrail', args.force_write)
         except Exception, e:
             print 'Error: CloudTrail or EC2 configuration is missing'
-            print e
+            printException(e, args.debug)
 
     ##### Rename data based on environment's name
     if environment_name:
@@ -230,6 +234,11 @@ parser.add_argument('--buckets',
                     default=[],
                     nargs='+',
                     help='Name of buckets to iterate through when checking object properties')
+parser.add_argument('--debug',
+                    dest='debug',
+                    default=False,
+                    action='store_true',
+                    help='Print the stack trace when exception occurs')
 
 args = parser.parse_args()
 
