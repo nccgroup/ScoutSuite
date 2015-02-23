@@ -222,8 +222,8 @@ def get_vpc_info(vpc_connection, vpc_info):
         for acl in acls:
             manage_dictionary(vpc_info[vpc.id]['network_acls'], acl.id, {})
             vpc_info[vpc.id]['network_acls'][acl.id]['default'] = acl.default
-            vpc_info[vpc.id]['network_acls'][acl.id]['inbound_network_acls'] = get_network_acl_entries(acl.network_acl_entries, "true")
-            vpc_info[vpc.id]['network_acls'][acl.id]['outbound_network_acls'] = get_network_acl_entries(acl.network_acl_entries, "false")
+            vpc_info[vpc.id]['network_acls'][acl.id]['inbound_network_acls'] = get_network_acl_entries(acl.network_acl_entries, "false")
+            vpc_info[vpc.id]['network_acls'][acl.id]['outbound_network_acls'] = get_network_acl_entries(acl.network_acl_entries, "true")
         manage_dictionary(vpc_info[vpc.id], 'instances', {})
         count = update_status(count, total, 'VPC')
     close_status(count, total, 'VPC')
