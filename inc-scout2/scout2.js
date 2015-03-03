@@ -1,3 +1,4 @@
+var loaded_config_array = new Array();
 var violations_array = new Array();
 
 // Generic load JSON function
@@ -292,6 +293,54 @@ function toggle_filter_callback(object, filters) {
         hideItem(finding_entity(filters[f]['keyword_prefix'], filters[f]['entity']), object['id']);
     } else {
         showItem(finding_entity(filters[f]['keyword_prefix'], filters[f]['entity']), object['id']);
+    }
+}
+
+// Contents loading
+function load_config(keyword) {
+    if (!(keyword in loaded_config_array)) {
+        hideAll();
+        $('[id="please_wait-row"]').show();
+        setTimeout(function(){
+            if (keyword == 'cloudtrail') {
+                load_aws_config_from_json(cloudtrail_info['regions'], 'cloudtrail_region', 2);
+                highlight_violations(cloudtrail_info['violations'], 'cloudtrail');
+            }
+            else if (keyword == 'ec2') {
+                load_aws_config_from_json(ec2_info['regions'], 'ec2_elb', 2);
+                load_aws_config_from_json(ec2_info['regions'], 'ec2_security_group', 2);
+                load_aws_config_from_json(ec2_info['regions'], 'ec2_network_acl', 2);
+                load_aws_config_from_json(ec2_info['regions'], 'ec2_instance', 2);
+                load_aws_config_from_json(ec2_info['attack_surface'], 'ec2_attack_surface', 1);
+                highlight_violations(ec2_info['violations'], 'ec2');
+                load_filters_from_json(ec2_info['filters']);
+            }
+            else if (keyword == 'iam') {
+                load_aws_config_from_json(iam_info['groups'], 'iam_group', 2);
+                load_aws_config_from_json(iam_info['permissions'], 'iam_permission', 1);
+                load_aws_config_from_json(iam_info['roles'], 'iam_role', 2);
+                load_aws_config_from_json(iam_info['users'], 'iam_user', 2);
+                if ('credential_report' in iam_info) {
+                    load_aws_config_from_json(iam_info['credential_report']['<root_account>'], 'iam_credential_report', 1);
+                }
+                highlight_violations(iam_info['violations'], 'iam');
+                load_filters_from_json(iam_info['filters']);
+            }
+            else if (keyword == 'rds') {
+                load_aws_config_from_json(rds_info['regions'], 'rds_security_group', 2);
+                load_aws_config_from_json(rds_info['regions'], 'rds_instance', 2);
+                highlight_violations(rds_info['violations'], 'rds');
+            }
+            else if (keyword == 's3') {
+                load_aws_config_from_json(s3_info['buckets'], 's3_bucket', 2);
+                highlight_violations(s3_info['violations'], 's3');
+            }
+            $('[id="' + keyword + '_load_button"]').hide();
+            $('[id="please_wait-row"]').hide();
+            loaded_config_array.push(keyword);
+            // TODO: Show dashboard for service
+            // showAll(keyword + '_dashboard');
+        }, 50);
     }
 }
 

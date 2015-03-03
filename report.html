@@ -758,8 +758,10 @@
             <li class="dropdown">
               <a href="javascript:show_cloudtrail()" class="dropdown-toggle" data-toggle="dropdown"><span id="cloudtrail_dropdown">CloudTrail</span><b class="caret"></b></a>
               <ul class="dropdown-menu" id="cloudtrail_violations-list">
+                <li class="dropdown-header">CloudTrail config</li>
+                <li id="cloudtrail_load_button"><a href="javascript:load_config('cloudtrail')">Load</a></li>
                 <script id="cloudtrail_violation-list-template" type="text/x-handlebars-template">
-                   <li class="dropdown-header">CloudTrail config</li>
+                  <li class="dropdown-header">CloudTrail config</li>
                   <li><a href="javascript:list_generic('cloudtrail_region')">Trails</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
@@ -772,6 +774,8 @@
             <li class="dropdown">
               <a href="javascript:show_ec2()" class="dropdown-toggle" data-toggle="dropdown"><span id="ec2_dropdown">EC2</span><b class="caret"></b></a>
               <ul class="dropdown-menu" id="ec2_violations-list">
+                <li class="dropdown-header">EC2 config</li>
+                <li id="ec2_load_button"><a href="javascript:load_config('ec2')">Load</a></li>
                 <script id="ec2_violation-list-template" type="text/x-handlebars-template">
                   <li class="dropdown-header">EC2 config</li>
                   <li><a href="javascript:list_generic('ec2_elb')">ELBs</a></li>
@@ -792,6 +796,8 @@
             <li class="dropdown">
               <a href="javascript:show_iam()" class="dropdown-toggle" data-toggle="dropdown"><span id="iam_dropdown">IAM</span><b class="caret"></b></a>
               <ul class="dropdown-menu" id="iam_violations-list">
+                <li class="dropdown-header">IAM config</li>
+                <li id="iam_load_button"><a href="javascript:load_config('iam')">Load</a></li>
                 <script id="iam_violation-list-template" type="text/x-handlebars-template">
                   <li class="dropdown-header">IAM config</li>
                   <li><a href="javascript:list_generic('iam_group')">Groups</a></li>
@@ -812,6 +818,8 @@
             <li class="dropdown">
               <a href="javascript:show_rds()" class="dropdown-toggle" data-toggle="dropdown"><span id="rds_dropdown">RDS</span><b class="caret"></b></a>
               <ul class="dropdown-menu" id="rds_violations-list">
+                <li class="dropdown-header">RDS config</li>
+                <li id="rds_load_button"><a href="javascript:load_config('rds')">Load</a></li>
                 <script id="rds_violation-list-template" type="text/x-handlebars-template">
                   <li class="dropdown-header">RDS config</li>
                   <li><a href="javascript:list_generic('rds_instance')">Instances</a></li>
@@ -825,8 +833,10 @@
               </ul>
             </li>
             <li class="dropdown">
-              <a href="javascript:show_s3()" class="dropdown-toggle" data-toggle="dropdown"><span id="s3_dropdown">S3</span><b class="caret"></b></a>
+              <a hreaf="javascript:show_s3()" class="dropdown-toggle" data-toggle="dropdown"><span id="s3_dropdown">S3</span><b class="caret"></b></a>
               <ul class="dropdown-menu" id="s3_violations-list">
+                <li class="dropdown-header">S3 config</li>
+                <li><a href="javascript:load_config('s3')">Load</a></li>
                 <script id="s3_violation-list-template" type="text/x-handlebars-template">
                   <li class="dropdown-header">S3 config</li>
                   <li><a href="javascript:list_generic('s3_bucket')">Buckets</a></li>
@@ -1354,6 +1364,19 @@
         </div>
       </div>
 
+      <div class="row" id="please_wait-row">
+        <div class="list-group">
+          <div class="row list-group-item active">
+            Please wait
+          </div>
+          <div class="row list-group-item">
+            <p>&nbsp;</p>
+            <p>Loading data, this may take a while...</p>
+            <p>&nbsp;</p>
+          </div>
+        </div>
+      </div>
+
 
     </div> <!-- /container -->
 
@@ -1363,49 +1386,6 @@
     <script src="inc-awsconfig/iam_config.js"></script>
     <script src="inc-awsconfig/rds_config.js"></script>
     <script src="inc-awsconfig/s3_config.js"></script>
-
-    <!-- Load CloudTrail data -->
-    <script>
-        load_aws_config_from_json(cloudtrail_info['regions'], 'cloudtrail_region', 2);
-        highlight_violations(cloudtrail_info['violations'], 'cloudtrail');
-    </script>
-
-    <!-- Load EC2 data -->
-    <script>
-        load_aws_config_from_json(ec2_info['regions'], 'ec2_elb', 2);
-        load_aws_config_from_json(ec2_info['regions'], 'ec2_security_group', 2);
-        load_aws_config_from_json(ec2_info['regions'], 'ec2_network_acl', 2);
-        load_aws_config_from_json(ec2_info['regions'], 'ec2_instance', 2);
-        load_aws_config_from_json(ec2_info['attack_surface'], 'ec2_attack_surface', 1);
-        highlight_violations(ec2_info['violations'], 'ec2');
-        load_filters_from_json(ec2_info['filters']);
-    </script>
-
-    <!-- Load IAM data -->
-    <script>
-        load_aws_config_from_json(iam_info['groups'], 'iam_group', 2);
-        load_aws_config_from_json(iam_info['permissions'], 'iam_permission', 1);
-        load_aws_config_from_json(iam_info['roles'], 'iam_role', 2);
-        load_aws_config_from_json(iam_info['users'], 'iam_user', 2);
-        if ('credential_report' in iam_info) {
-            load_aws_config_from_json(iam_info['credential_report']['<root_account>'], 'iam_credential_report', 1);
-        }
-        highlight_violations(iam_info['violations'], 'iam');
-        load_filters_from_json(iam_info['filters']);
-    </script>
-
-    <!-- Load RDS data -->
-    <script>
-      load_aws_config_from_json(rds_info['regions'], 'rds_security_group', 2);
-      load_aws_config_from_json(rds_info['regions'], 'rds_instance', 2);
-      highlight_violations(rds_info['violations'], 'rds');
-    </script>
-
-    <!-- Load S3 data -->
-    <script>
-        load_aws_config_from_json(s3_info['buckets'], 's3_bucket', 2);
-        highlight_violations(s3_info['violations'], 's3');
-    </script>
 
     <!-- Bootstrap core JavaScript, placed at the end of the document so the pages load faster -->
     <script src="inc-bootstrap/js/bootstrap.min.js"></script>
