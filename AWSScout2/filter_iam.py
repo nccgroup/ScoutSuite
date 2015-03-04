@@ -11,4 +11,4 @@ class IamFilter(Filter):
 
     def HasNoMembers(self, key, obj):
         if len(obj['users']) == 0:
-            self.addItem(obj['group_id'])
+            self.addItem(obj['id'])

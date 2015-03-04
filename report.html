@@ -276,7 +276,7 @@
 
     <!-- IAM group partial -->
     <script id="iam_group-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="iam_group-details-{{group_id}}">
+      <div class="list-group" id="iam_group-details-{{id}}">
         <div class="list-group-item active">
           <h4 class="list-group-item-heading">{{group_name}}</h4>
         </div>
@@ -288,12 +288,12 @@
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Members
               {{#if users}}
-                <a class="accordion-toggle" data-toggle="collapse" href="#iam_group-{{group_id}}"><span class="badge pull-right btn-info">{{users.length}}</span></a>
+                <a class="accordion-toggle" data-toggle="collapse" href="#iam_group-{{id}}"><span class="badge pull-right btn-info">{{users.length}}</span></a>
               {{else}}
                 <span class="badge pull-right">{{users.length}}</span>
               {{/if}}
             </h4>
-            <div id="iam_group-{{group_id}}" class="accordion-body collapse">
+            <div id="iam_group-{{id}}" class="accordion-body collapse">
               <div class="accordion-inner">
                 <ul class="no-bullet">
                   {{#each users}}
@@ -306,9 +306,9 @@
         </div>
         <div class="list-group-item">
           {{#if policies}}
-            <h4 class="list-group-item-heading">Group Policies <span class="badge pull-right btn-info">{{count policies}}</span></h4>
+            <h4 class="list-group-item-heading">Inline Policies <span class="badge pull-right btn-info">{{count policies}}</span></h4>
           {{else}}
-            <h4 class="list-group-item-heading">Group Policies <span class="badge pull-right">{{count policies}}</span></h4>
+            <h4 class="list-group-item-heading">Inline Policies <span class="badge pull-right">{{count policies}}</span></h4>
           {{/if}}
           {{#each policies}}
             {{> iam_policy iam_entity_type = 'group' iam_entity_name = ../group_name policy_name = @key}}
@@ -433,7 +433,7 @@
           </ul>
         </div>
         <div class="list-group-item">
-          <h4 class="list-group-item-heading">User Policies <span class="badge pull-right" id="iam_users-user-policy-{{user_name}}">{{count policies}}</span></h4>
+          <h4 class="list-group-item-heading">Inline Policies <span class="badge pull-right" id="iam_users-user-policy-{{user_name}}">{{count policies}}</span></h4>
           {{#each policies}}
             {{> iam_policy iam_entity_type = 'user' iam_entity_name = ../user_name policy_name = @key}}
           {{/each}}
@@ -1114,8 +1114,8 @@
             <script id="iam_group-list-template" type="text/x-handlebars-template">
             <li class="list-group-item"><a href="javascript:showAll('iam_group')">Show all <span class="badge pull-right">{{count items}}</span></a></li>
             {{#each items}}
-              <li class="list-group-item" id="iam_group-list-{{group_id}}">
-                <a href="javascript:browseTo('iam_group','{{group_id}}')">{{group_name}}</a>
+              <li class="list-group-item" id="iam_group-list-{{id}}">
+                <a href="javascript:browseTo('iam_group','{{id}}')">{{group_name}}</a>
               </li>
             {{/each}}
             </script>

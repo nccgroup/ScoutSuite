@@ -28,6 +28,7 @@ def get_groups_info(iam_connection, iam_info):
     for group in groups:
         group['users'] = get_group_users(iam_connection, group.group_name);
         group['policies'] = get_policies(iam_connection, iam_info, 'group', group.group_name)
+        group['id'] = group.pop('group_id', None)
         iam_info['groups'][group.group_name] = group
         count = update_status(count, total)
     close_status(count, total)
