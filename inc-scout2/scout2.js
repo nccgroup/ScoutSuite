@@ -273,7 +273,6 @@ function toggle_filter(data, filter_name) {
         checkbox.addClass("glyphicon-check");
         filter['enabled'] = true; // action = 'check'
     }
-    action = 'lol';
     // Iterate through the objects and update visibility
     iterateEC2ObjectsAndCall(data, entities, toggle_filter_callback, data['filters']);
 }
