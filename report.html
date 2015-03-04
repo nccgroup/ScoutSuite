@@ -150,42 +150,8 @@
           <div class="list-group-item-text item-margin">Description: {{description}}</div>
           <div class="list-group-item-text item-margin">ID: {{id}}</div>
         </div>
-        <div class="list-group-item">
-          <h4 class="list-group-item-heading">Rules</h4>
-          <ul>
-          {{# each protocols}}
-            <li class="list-group-item-text">{{name}}</li>
-            <ul>
-            {{# each rules}}
-              <li class="list-group-item-text">Ports:
-                <span id="ec2_security_groups-{{../name}}-{{ports}}-{{../../id}}">
-                  <span id="ec2_security_groups-ports-range-{{../../id}}-{{ports}}">
-                    {{ports}}
-                  </span>
-                </span>
-              </li>
-              <ul>
-              {{# each grants/cidrs}}
-                <li class="list-group-item-text">IP:
-                  <span id="ec2_security_groups-non-elastic-ec2-public-ip-whitelisted-{{../../../id}}-{{this}}">
-                  <span id="ec2_security_groups-{{../../name}}-{{../ports}}-{{this}}-{{../../../id}}">
-                    {{this}}
-                  </span></span>
-                </li>
-              {{/each}}
-              {{# each grants/security_groups}}
-                <li class="list-group-item-text"> EC2 security group:
-                  <span id="ec2_security_groups-{{../../name}}-{{../ports}}-{{this}}-{{../../../id}}">
-                    <a href="javascript:findAndShowEC2Object('regions.vpcs.security_groups', '{{this}}')"> {{find_ec2_object_attribute "regions.vpcs.security_groups" this "name"}} ({{this}})</a>
-                  </span>
-                </li>
-              {{/each}}
-              </ul>
-            {{/each}}
-            </ul>
-          {{/each}}
-          </ul>
-        </div>
+        {{> ec2_security_group-rule_list direction='Ingress' protocols=rules_ingress}}
+        {{> ec2_security_group-rule_list direction='Egress' protocols=rules_egress}}
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Instances</h4>
           {{> ec2_security_group-instance_list instances=running-instances status='Running' region=region vpc=vpc group=id}}
@@ -196,6 +162,7 @@
     <script>
         Handlebars.registerPartial("ec2_security_group", $("#ec2_security_group-partial").html());
     </script>
+    <!-- EC2 security group instances partial -->
     <script id="ec2_security_group-instance_list-partial" type="text/x-handlebars-template">
       {{#if instances}}
         <div class="accordion">
@@ -223,6 +190,49 @@
     <script>
       Handlebars.registerPartial("ec2_security_group-instance_list", $("#ec2_security_group-instance_list-partial").html());
     </script>
+    <!-- EC2 security group rules partial -->
+    <script id="ec2_security_group-rule_list-partial" type="text/x-handlebars-template">
+      <div class="list-group-item">
+        <h4 class="list-group-item-heading">{{direction}} Rules</h4>
+        <ul>
+        {{# each protocols}}
+          <li class="list-group-item-text">{{name}}</li>
+          <ul>
+          {{# each rules}}
+            <li class="list-group-item-text">Ports:
+              <span id="ec2_security_groups-{{../name}}-{{ports}}-{{../../id}}">
+                <span id="ec2_security_groups-ports-range-{{../../id}}-{{ports}}">
+                  {{ports}}
+                </span>
+              </span>
+            </li>
+            <ul>
+            {{# each grants/cidrs}}
+              <li class="list-group-item-text">IP:
+                <span id="ec2_security_groups-non-elastic-ec2-public-ip-whitelisted-{{../../../id}}-{{this}}">
+                <span id="ec2_security_groups-{{../../name}}-{{../ports}}-{{this}}-{{../../../id}}">
+                  {{this}}
+                </span></span>
+              </li>
+            {{/each}}
+            {{# each grants/security_groups}}
+              <li class="list-group-item-text"> EC2 security group:
+                <span id="ec2_security_groups-{{../../name}}-{{../ports}}-{{this}}-{{../../../id}}">
+                  <a href="javascript:findAndShowEC2Object('regions.vpcs.security_groups', '{{this}}')"> {{find_ec2_object_attribute "regions.vpcs.security_groups" this "name"}} ({{this}})</a>
+                </span>
+              </li>
+            {{/each}}
+            </ul>
+          {{/each}}
+          </ul>
+        {{/each}}
+        </ul>
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("ec2_security_group-rule_list", $("#ec2_security_group-rule_list-partial").html());
+    </script>
+
 
     <!-- EC2 instance partial -->
     <script id="ec2_instance-partial" type="text/x-handlebars-template">

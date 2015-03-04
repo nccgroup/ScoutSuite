@@ -85,8 +85,8 @@ def list_network_attack_surface(ec2_info):
                         ec2_info['attack_surface'][instance['ip_address']]['protocols'] = {}
                         for sgid in instance['security_groups']:
                             sg = ec2_info['regions'][r]['vpcs'][v]['security_groups'][sgid]
-                            for p in sg['protocols']:
-                                for ru in sg['protocols'][p]['rules']:
+                            for p in sg['rules_ingress']:
+                                for ru in sg['rules_ingress'][p]['rules']:
                                     port = ru['ports']
                                     if 'cidrs' in ru['grants'] and port:
                                         manage_dictionary(ec2_info['attack_surface'][instance['ip_address']]['protocols'], p, {})
@@ -252,8 +252,19 @@ def parse_security_group(group):
     security_group['owner_id'] = group.owner_id
     security_group = manage_dictionary(security_group, 'running-instances', [])
     security_group = manage_dictionary(security_group, 'stopped-instances', [])
+    security_group['rules_ingress'] = parse_security_group_rules(group.rules)
+    security_group['rules_egress'] = parse_security_group_rules(group.rules_egress)
+    # Save all instances associated with this group
+    for i in group.instances():
+        if i.state == 'running':
+            security_group['running-instances'].append(i.id)
+        else:
+            security_group['stopped-instances'].append(i.id)
+    return security_group
+
+def parse_security_group_rules(rules):
     protocols = {}
-    for rule in group.rules:
+    for rule in rules:
         ip_protocol = rule.ip_protocol.upper()
         if ip_protocol == '-1':
             ip_protocol = 'ALL'
@@ -282,12 +293,4 @@ def parse_security_group(group):
             acl['ports'] = '%s-%s' % (rule.from_port, rule.to_port)
         # Save the new rule
         protocols[ip_protocol]['rules'].append(acl)
-    # Save all the rules, sorted by protocol
-    security_group['protocols'] = protocols
-    # Save all instances associated with this group
-    for i in group.instances():
-        if i.state == 'running':
-            security_group['running-instances'].append(i.id)
-        else:
-            security_group['stopped-instances'].append(i.id)
-    return security_group
+    return protocols

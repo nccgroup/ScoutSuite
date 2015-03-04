@@ -90,7 +90,7 @@ def main(args):
             analyze_cloudtrail_config(cloudtrail_info, args.force_write)
         except Exception, e:
             print 'Error: could not fetch and/or analyze CloudTrail configuration'
-            printException(e, args.debug)
+            printException(e)
 
     ##### IAM
     if 'iam' in services:
@@ -105,7 +105,7 @@ def main(args):
                 analyze_iam_config(iam_info, args.force_write)
         except Exception, e:
             print 'Error: could not fetch and/or analyze IAM configuration'
-            printException(e, args.debug)
+            printException(e)
 
     ##### EC2
     if 'ec2' in services:
@@ -119,7 +119,7 @@ def main(args):
             analyze_ec2_config(ec2_info, args.force_write)
         except Exception, e:
             print 'Error: could not fetch and/or analyze EC2 configuration'
-            printException(e, args.debug)
+            printException(e)
 
     ##### RDS
     if 'rds' in services:
@@ -131,7 +131,7 @@ def main(args):
             analyze_rds_config(rds_info, args.force_write)
         except Exception, e:
             print 'Error: could not fetch and/or analyze RDS configuration'
-            printException(e, args.debug)
+            printException(e)
 
     ##### S3
     if 's3' in services:
@@ -161,14 +161,14 @@ def main(args):
             analyze_iam_config(iam_info, args.force_write)
         except Exception, e:
             print 'Error: EC2 or IAM configuration is missing'
-            printException(e, args.debug)
+            printException(e)
     if 'cloudtrail' in services and 'ec2' in services:
         try:
             refine_cloudtrail(cloudtrail_info, ec2_info)
             save_config_to_file(cloudtrail_info, 'cloudtrail', args.force_write)
         except Exception, e:
             print 'Error: CloudTrail or EC2 configuration is missing'
-            printException(e, args.debug)
+            printException(e)
 
     ##### Rename data based on environment's name
     if environment_name:

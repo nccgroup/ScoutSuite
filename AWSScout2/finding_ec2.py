@@ -31,8 +31,8 @@ class Ec2Finding(Finding):
         else:
             protocol = self.callback_args[1]
             port = self.callback_args[2]
-        if protocol in obj['protocols']:
-            for rule in obj['protocols'][protocol]['rules']:
+        if protocol in obj['rules_ingress']:
+            for rule in obj['rules_ingress'][protocol]['rules']:
                 if 'cidrs' in rule['grants']:
                     for cidr in rule['grants']['cidrs']:
                         if cidr == '0.0.0.0/0':
@@ -58,8 +58,8 @@ class Ec2Finding(Finding):
                 self.addItem(key)
 
     def checkNonEIPwhitelisted(self, key, obj):
-        for protocol in obj['protocols']:
-            for rule in obj['protocols'][protocol]['rules']:
+        for protocol in obj['rules_ingress']:
+            for rule in obj['rules_ingress'][protocol]['rules']:
                 if 'cidrs' in rule['grants']:
                     for cidr in rule['grants']['cidrs']:
                         authorized_cidr = netaddr.IPNetwork(cidr)
@@ -70,8 +70,8 @@ class Ec2Finding(Finding):
                                 self.addItem(cidr, obj['id'])
 
     def checkSinglePortOnly(self, key, obj):
-        for protocol in obj['protocols']:
-            for rule in obj['protocols'][protocol]['rules']:
+        for protocol in obj['rules_ingress']:
+            for rule in obj['rules_ingress'][protocol]['rules']:
                 if self.re_port_range.match(str(rule['ports'])):
                     # Exception: don't flag if the port range is due to AWS' default config that opens all ports to self
                     if not ('security_groups' in rule['grants'] and len(rule['grants']['security_groups']) == 1 and rule['grants']['security_groups'][0] == obj['id']):
@@ -80,8 +80,8 @@ class Ec2Finding(Finding):
     def checkOpenPort(self, key, obj):
         protocol = self.callback_args[0]
         port = self.callback_args[1]
-        if protocol in obj['protocols']:
-            for rule in obj['protocols'][protocol]['rules']:
+        if protocol in obj['rules_ingress']:
+            for rule in obj['rules_ingress'][protocol]['rules']:
                 for grant in rule['grants']:
                     if len(self.callback_args) > 2 and self.callback_args[2] != 'no' and self.callback_args[2] != 'n':
                         if self.portInRange(port, rule['ports']):

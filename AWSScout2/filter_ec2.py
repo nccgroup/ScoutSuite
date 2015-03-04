@@ -14,19 +14,19 @@ class Ec2Filter(Filter):
             self.addItem(obj['id'])
 
     def HasNoCIDRsGrants(self, key, obj):
-        if not len(obj['protocols']):
+        if not len(obj['rules_ingress']):
             self.addItem(obj['id'])
             return
-        for protocol in obj['protocols']:
-            for rule in obj['protocols'][protocol]['rules']:
+        for protocol in obj['rules_ingress']:
+            for rule in obj['rules_ingress'][protocol]['rules']:
                 if not 'cidrs' in rule['grants']:
                     self.addItem(obj['id'])
 
     def DoesNotOpenAllPorts(self, key, obj):
-        if not len(obj['protocols']):
+        if not len(obj['rules_ingress']):
             self.addItem(obj['id']);
             return
-        for protocol in obj['protocols']:
-            for rule in obj['protocols'][protocol]['rules']:
+        for protocol in obj['rules_ingress']:
+            for rule in obj['rules_ingress'][protocol]['rules']:
                 if rule['ports'] != '1-65535' and rule['ports'] != 'All':
                     self.addItem(obj['id'])
