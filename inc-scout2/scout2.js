@@ -491,16 +491,12 @@ Handlebars.registerHelper('count_in', function(service, path) {
 Handlebars.registerHelper('count_ec2_in_region', function(region, path) {
     var count = 0;
     var entities = path.split('.');
-    if (typeof variable === 'undefined') {
-        return 'N/A';
-    } else {
-        for (r in ec2_info['regions']) {
-            if (r == region) {
-                return recursive_count(ec2_info['regions'][r], entities);
-            }
+    for (r in ec2_info['regions']) {
+        if (r == region) {
+            return recursive_count(ec2_info['regions'][r], entities);
         }
-        return count;
     }
+    return count;
 });
 Handlebars.registerHelper('count_role_instances', function(instance_profiles) {
     var c = 0;
