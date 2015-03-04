@@ -522,6 +522,9 @@ var recursive_count = function(input, entities) {
 Handlebars.registerHelper('find_ec2_object_attribute', function(path, id, attribute ) {
     return findEC2ObjectAttribute(ec2_info, path, id, attribute);
 });
+Handlebars.registerHelper('format_date', function(timestamp) {
+    return new Date(timestamp * 1000).toString();
+});
 Handlebars.registerHelper('format_network_acls', function (acls, direction) {
     r = '<table class="table-striped" width="100%">';
     r += '<tr><td width="20%" class="text-center">Rule number</td>';

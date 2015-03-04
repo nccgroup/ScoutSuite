@@ -58,8 +58,8 @@
             {{#each trails}}
               <li class="list-group-item-text">Name: {{Name}}</li>
               <li class="list-group-item-text">Enabled: {{IsLogging}}</li>
-              <li class="list-group-item-text">Enabled since: {{StartLoggingTime}}</li>
-              <li class="list-group-item-text">Stopped since: {{StopLoggingTime}}</li>
+              <li class="list-group-item-text">Enabled since: {{format_date StartLoggingTime}}</li>
+              <li class="list-group-item-text">Stopped since: {{format_date StopLoggingTime}}</li>
               <li class="list-group-item-text">Include global services:
                 <span id="cloudtrail_-global-services-duplicated-{{../name}}"><span id="cloudtrail_-no-global-services-{{../name}}">
                   {{#if IncludeGlobalServiceEvents}}True{{else}}False{{/if}}
