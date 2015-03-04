@@ -29,6 +29,11 @@ supported_services = ['cloudtrail', 'ec2', 'iam', 'rds', 's3']
 
 parser = argparse.ArgumentParser()
 
+parser.add_argument('--debug',
+                    dest='debug',
+                    default=False,
+                    action='store_true',
+                    help='Print the stack trace when exception occurs')
 parser.add_argument('--force',
                     dest='force_write',
                     default=False,
@@ -90,6 +95,14 @@ def check_boto_version():
         if boto.Version < latest_boto_version:
             print 'Warning: the version of boto installed (%s) is not the latest available (%s). Consider upgrading to ensure that all features are enabled.' % (boto.Version, latest_boto_version)
     return True
+
+def get_environment_name(args):
+    environment_name = None
+    if 'profile' in args and args.profile[0] != 'default':
+        environment_name = args.profile[0]
+    elif args.environment_name:
+        environment_name = args.environment_name[0]
+    return environment_name    
 
 def manage_dictionary(dictionary, key, init, callback=None):
     if not str(key) in dictionary:
@@ -364,10 +377,10 @@ def prompt_4_overwrite(filename, force_write):
         return True
     return prompt_4_yes_no('File already exists. Do you want to overwrite it')
 
-def prompt_4_value(question, choices = None, default = None):
+def prompt_4_value(question, choices = None, default = None, display_choices = True):
     if choices and len(choices) == 1 and choices[0] == 'yes_no':
         return prompt_4_yes_no(question)
-    if choices:
+    if choices and display_choices:
         question = question + ' (' + '/'.join(choices) + ')'
     while True:
         sys.stdout.write(question + '? ')

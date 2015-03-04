@@ -61,11 +61,7 @@ def main(args):
         key_id, secret, session_token = fetch_sts_credentials(key_id, secret, mfa_serial, args.mfa_code)
 
     # Set the environment name
-    environment_name = None
-    if args.profile[0] != 'default':
-        environment_name = args.profile[0]
-    elif args.environment_name:
-        environment_name = args.environment_name[0]
+    environment_name = get_environment_name(args)
 
     # Search for an existing ruleset if the environment is set
     if environment_name and args.ruleset_name == 'default':
@@ -234,11 +230,6 @@ parser.add_argument('--buckets',
                     default=[],
                     nargs='+',
                     help='Name of buckets to iterate through when checking object properties')
-parser.add_argument('--debug',
-                    dest='debug',
-                    default=False,
-                    action='store_true',
-                    help='Print the stack trace when exception occurs')
 
 args = parser.parse_args()
 
