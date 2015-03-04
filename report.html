@@ -286,9 +286,9 @@
 
     <!-- IAM group partial -->
     <script id="iam_group-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="iam_group-details-{{id}}">
+      <div class="list-group" id="iam_group-details-{{name}}">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{group_name}}</h4>
+          <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Information</h4>
@@ -298,12 +298,12 @@
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Members
               {{#if users}}
-                <a class="accordion-toggle" data-toggle="collapse" href="#iam_group-{{id}}"><span class="badge pull-right btn-info">{{users.length}}</span></a>
+                <a class="accordion-toggle" data-toggle="collapse" href="#iam_group-{{name}}"><span class="badge pull-right btn-info">{{users.length}}</span></a>
               {{else}}
                 <span class="badge pull-right">{{users.length}}</span>
               {{/if}}
             </h4>
-            <div id="iam_group-{{id}}" class="accordion-body collapse">
+            <div id="iam_group-{{name}}" class="accordion-body collapse">
               <div class="accordion-inner">
                 <ul class="no-bullet">
                   {{#each users}}
@@ -321,7 +321,7 @@
             <h4 class="list-group-item-heading">Inline Policies <span class="badge pull-right">{{count policies}}</span></h4>
           {{/if}}
           {{#each policies}}
-            {{> iam_policy iam_entity_type = 'group' iam_entity_name = ../group_name policy_name = @key}}
+            {{> iam_policy iam_entity_type = 'group' iam_entity_name = ../name policy_name = @key}}
           {{/each}}
         </div>
       </div>
@@ -354,9 +354,9 @@
 
     <!-- IAM role partial -->
     <script id="iam_role-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="iam_role-details-{{role_id}}">
+      <div class="list-group" id="iam_role-details-{{name}}">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{role_name}}</h4>
+          <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Information</h4>
@@ -365,9 +365,9 @@
         <div class="list-group-item">
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Instances
-              <a class="accordion-toggle" data-toggle="collapse" href="#iam_role_instances-{{role_id}}"><span class="badge pull-right btn-info">{{count_role_instances instance_profiles}}</span></a>
+              <a class="accordion-toggle" data-toggle="collapse" href="#iam_role_instances-{{name}}"><span class="badge pull-right btn-info">{{count_role_instances instance_profiles}}</span></a>
             </h4>
-            <div id="iam_role_instances-{{role_id}}" class="accordion-body collapse">
+            <div id="iam_role_instances-{{name}}" class="accordion-body collapse">
               <div class="accordion-inner">
                 <ul class="no-bullet">
                   {{#each instance_profiles}}
@@ -383,7 +383,7 @@
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Role Policies</h4>
           {{#each policies}}
-            {{> iam_policy iam_entity_type = 'role' iam_entity_name = ../role_name policy_name = @key}}
+            {{> iam_policy iam_entity_type = 'role' iam_entity_name = ../name policy_name = @key}}
           {{/each}}
         </div>
       </div>
@@ -394,9 +394,9 @@
 
     <!-- IAM user partial -->
     <script id="iam_user-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="iam_user-details-{{user_name}}">
+      <div class="list-group" id="iam_user-details-{{name}}">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{user_name}}</h4>
+          <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Information</h4>
@@ -406,31 +406,31 @@
           <h4 class="list-group-item-heading">Authentication methods</h4>
           <p class="list-group-item-text item-margin">Password enabled: {{has_profiles? logins}}</p>
           <ul></ul>
-          <p class="list-group-item-text item-margin">Multi-Factor enabled: <span id="iam_users-no-mfa-{{user_name}}">{{has_mfa? mfa_devices}}</span></p>
+          <p class="list-group-item-text item-margin">Multi-Factor enabled: <span id="iam_users-no-mfa-{{name}}">{{has_mfa? mfa_devices}}</span></p>
           <ul class="item-margin">
           {{#each mfa_devices}}
             <li class="list-group-item-text"> Serial number: {{serial_number}}</li>
           {{/each}}
           </ul>
-          <p class="list-group-item-text item-margin">Access Keys: <span id="iam_users-multiple-active-keys-{{user_name}}">{{has_access_keys? access_keys}}</p><span>
+          <p class="list-group-item-text item-margin">Access Keys: <span id="iam_users-multiple-active-keys-{{name}}">{{has_access_keys? access_keys}}</p><span>
           <ul class="item-margin">
           {{#each access_keys}}
-            <li class="list-group-item-text"><span id="iam_users-{{status}}-key-no-rotation-{{../user_name}}-{{access_key_id}}">{{access_key_id}}, {{status}}, created on {{create_date}}</span></li>
+            <li class="list-group-item-text"><span id="iam_users-{{status}}-key-no-rotation-{{../name}}-{{access_key_id}}">{{access_key_id}}, {{status}}, created on {{create_date}}</span></li>
           {{/each}}
           </ul>
           <p class="list-group-item-text item-margin">
-            <span id="iam_users-multiple-active-keys-{{user_name}}" class="finding-hidden">
+            <span id="iam_users-multiple-active-keys-{{name}}" class="finding-hidden">
               <i class="glyphicon glyphicon-warning-sign"></i> Review the need for multiple active access keys
             </span>
           </p>
           <p class="list-group-item-text item-margin">
-            <span id="iam_users-password-and-key-{{user_name}}" class="finding-hidden">
+            <span id="iam_users-password-and-key-{{name}}" class="finding-hidden">
               <i class="glyphicon glyphicon-warning-sign"></i> Review the need for password-based and key-based authentication
             </span>
           </p>
           <p class="list-group-item-text item-margin">
-            <span id="iam_users-not-in-global-iam-group-{{user_name}}" class="finding-hidden">
-              <i class="glyphicon glyphicon-warning-sign"></i> User "{{user_name}}" does not belong to the global/mandatory IAM group
+            <span id="iam_users-not-in-global-iam-group-{{name}}" class="finding-hidden">
+              <i class="glyphicon glyphicon-warning-sign"></i> User "{{name}}" does not belong to the global/mandatory IAM group
             </span>
           </p>
         </div>
@@ -443,9 +443,9 @@
           </ul>
         </div>
         <div class="list-group-item">
-          <h4 class="list-group-item-heading">Inline Policies <span class="badge pull-right" id="iam_users-user-policy-{{user_name}}">{{count policies}}</span></h4>
+          <h4 class="list-group-item-heading">Inline Policies <span class="badge pull-right" id="iam_users-user-policy-{{name}}">{{count policies}}</span></h4>
           {{#each policies}}
-            {{> iam_policy iam_entity_type = 'user' iam_entity_name = ../user_name policy_name = @key}}
+            {{> iam_policy iam_entity_type = 'user' iam_entity_name = ../name policy_name = @key}}
           {{/each}}
         </div>
       </div>
@@ -1124,8 +1124,8 @@
             <script id="iam_group-list-template" type="text/x-handlebars-template">
             <li class="list-group-item"><a href="javascript:showAll('iam_group')">Show all <span class="badge pull-right">{{count items}}</span></a></li>
             {{#each items}}
-              <li class="list-group-item" id="iam_group-list-{{id}}">
-                <a href="javascript:browseTo('iam_group','{{id}}')">{{group_name}}</a>
+              <li class="list-group-item" id="iam_group-list-{{name}}">
+                <a href="javascript:browseTo('iam_group','{{name}}')">{{name}}</a>
               </li>
             {{/each}}
             </script>
@@ -1229,8 +1229,8 @@
             <script id="iam_role-list-template" type="text/x-handlebars-template">
             <li class="list-group-item"><a href="javascript:showAll('iam_role')">Show all <span class="badge pull-right">{{count items}}</span></a></li>
             {{#each items}}
-              <li class="list-group-item" id="iam_role-list-{{role_id}}">
-                <a href="javascript:browseTo('iam_role','{{role_id}}')">{{role_name}}</a>
+              <li class="list-group-item" id="iam_role-list-{{name}}">
+                <a href="javascript:browseTo('iam_role','{{name}}')">{{name}}</a>
               </li>
             {{/each}}
             </script>
@@ -1252,8 +1252,8 @@
             <script id="iam_user-list-template" type="text/x-handlebars-template">
             <li class="list-group-item"><a href="javascript:showAll('iam_user')">Show all <span class="badge pull-right">{{count items}}</span></a></li>
             {{#each items}}
-              <li class="list-group-item" id="iam_user-list-{{user_name}}">
-                <a href="javascript:browseTo('iam_user','{{user_name}}')">{{user_name}}</a>
+              <li class="list-group-item" id="iam_user-list-{{name}}">
+                <a href="javascript:browseTo('iam_user','{{name}}')">{{name}}</a>
               </li>
             {{/each}}
             </script>

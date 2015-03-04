@@ -26,10 +26,11 @@ def get_groups_info(iam_connection, iam_info):
     groups = handle_truncated_responses(iam_connection.get_all_groups, None, ['list_groups_response', 'list_groups_result'], 'groups')
     count, total = init_status(groups)
     for group in groups:
-        group['users'] = get_group_users(iam_connection, group.group_name);
-        group['policies'] = get_policies(iam_connection, iam_info, 'group', group.group_name)
-        group['id'] = group.pop('group_id', None)
-        iam_info['groups'][group.group_name] = group
+        group['id'] = group.pop('group_id')
+        group['name'] = group.pop('group_name')
+        group['users'] = get_group_users(iam_connection, group.name);
+        group['policies'] = get_policies(iam_connection, iam_info, 'group', group.name)
+        iam_info['groups'][group.name] = group
         count = update_status(count, total)
     close_status(count, total)
 
@@ -131,10 +132,12 @@ def get_roles_info(iam_connection, iam_info):
     roles = handle_truncated_responses(iam_connection.list_roles, None, ['list_roles_response', 'list_roles_result'], 'roles')
     count, total = init_status(roles)
     for role in roles:
-        role['policies'] = get_policies(iam_connection, iam_info, 'role', role.role_name)
-        iam_info['roles'][role.role_name] = role
+        role['id'] = role.pop('role_id')
+        role['name'] = role.pop('role_name')
+        role['policies'] = get_policies(iam_connection, iam_info, 'role', role.name)
+        iam_info['roles'][role.name] = role
         count = update_status(count, total)
-        profiles = handle_truncated_responses(iam_connection.list_instance_profiles_for_role, role.role_name, ['list_instance_profiles_for_role_response', 'list_instance_profiles_for_role_result'], 'instance_profiles')
+        profiles = handle_truncated_responses(iam_connection.list_instance_profiles_for_role, role.name, ['list_instance_profiles_for_role_response', 'list_instance_profiles_for_role_result'], 'instance_profiles')
         manage_dictionary(role, 'instance_profiles', {})
         for profile in profiles:
             manage_dictionary(role['instance_profiles'], profile['arn'], {})
@@ -163,20 +166,21 @@ def get_users_info(iam_connection, iam_info):
     users = handle_truncated_responses(iam_connection.get_all_users, None, ['list_users_response', 'list_users_result'], 'users')
     count, total = init_status(users)
     for user in users:
-        user['policies'] = get_policies(iam_connection, iam_info, 'user', user.user_name)
-        groups = iam_connection.get_groups_for_user(user['user_name'])
+        user['id'] = user.pop('user_id')
+        user['name'] = user.pop('user_name')
+        user['policies'] = get_policies(iam_connection, iam_info, 'user', user.name)
+        groups = iam_connection.get_groups_for_user(user['name'])
         user['groups'] = groups.list_groups_for_user_response.list_groups_for_user_result.groups
         try:
-            logins = iam_connection.get_login_profiles(user['user_name'])
+            logins = iam_connection.get_login_profiles(user['name'])
             user['logins'] = logins.get_login_profile_response.get_login_profile_result.login_profile
         except Exception, e:
             pass
-        access_keys = iam_connection.get_all_access_keys(user['user_name'])
+        access_keys = iam_connection.get_all_access_keys(user['name'])
         user['access_keys'] = access_keys.list_access_keys_response.list_access_keys_result.access_key_metadata
-        mfa_devices = iam_connection.get_all_mfa_devices(user['user_name'])
+        mfa_devices = iam_connection.get_all_mfa_devices(user['name'])
         user['mfa_devices'] = mfa_devices.list_mfa_devices_response.list_mfa_devices_result.mfa_devices
-        user['user_name']
-        iam_info['users'][user['user_name']] = user
+        iam_info['users'][user['name']] = user
         count = update_status(count, total)
     close_status(count, total)
 

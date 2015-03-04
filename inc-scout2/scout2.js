@@ -213,8 +213,8 @@ function showEC2SecurityGroup(region, vpc, id) {
     $('#overlay-details').html(single_ec2_security_group_template(data));
     showPopup();
 }
-function showIAMGroup(group_id) {
-    var data = iam_info['groups'][group_id];
+function showIAMGroup(group_name) {
+    var data = iam_info['groups'][group_name];
     $('#overlay-details').html(single_iam_group_template(data));
     showPopup();
 }

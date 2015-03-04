@@ -22,7 +22,7 @@ class IamFinding(Finding):
 
     def belongsToGroup(self, key, obj):
         for group in obj['groups']:
-            if group['group_name'] == self.callback_args[0]:
+            if group['name'] == self.callback_args[0]:
                 return
         self.addItem(obj['user_name'])
 
@@ -38,7 +38,7 @@ class IamFinding(Finding):
         # IAM user
         if 'mfa_devices' in obj:
             if len(obj['mfa_devices']) == 0 and 'logins' in obj:
-                self.addItem(obj['user_name'])
+                self.addItem(obj['name'])
         # Root account
         elif 'user' in obj:
             if obj['user'] == '<root_account>' and obj['mfa_active'].lower() != 'true':
@@ -46,14 +46,14 @@ class IamFinding(Finding):
 
     def passwordAndKeyEnabled(self, key, obj):
         if len(obj['access_keys']) > 0 and 'logins' in obj:
-            self.addItem(obj['user_name'])
+            self.addItem(obj['name'])
             return True
         else:
             return False
 
     def hasUserPolicy(self, key, obj):
         if len(obj['policies']) > 0:
-            self.addItem(obj['user_name'])
+            self.addItem(obj['name'])
 
     def recentlyUsed(self, key, obj):
         max_age = 15
