@@ -562,5 +562,7 @@ Handlebars.registerHelper('ifShow', function(v1, v2, options) {
   }
 });
 Handlebars.registerHelper('fixBucketName', function(bucket_name) {
-    return bucket_name.replace(/\./g, '-');
+    if (bucket_name != undefined) {
+        return bucket_name.replace(/\./g, '-');
+    }
 });
