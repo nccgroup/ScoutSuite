@@ -45,13 +45,23 @@ def main(args):
         violation_name = violation_names[int(index)]
 
     # Dump the list of items
+    output = ''
     violation = violations[violation_name]
     if len(violation['items']) == len(violation['macro_items']):
         for item, macro_item in zip(violation['items'], violation['macro_items']):
-            print macro_item, ' : ', item
+            output = output + '%s : %s\n' % (macro_item, item)
     else:
         for item in violation['items']:
-            print item
+            output = output + '%s\n' % item
+    if args.output_file[0]:
+        try:
+            f = open(args.output_file[0], 'wt')
+            f.write(output)
+            f.close()
+        except Exception, e:
+            printException(e)
+    else:
+        print output
 
 
 ########################################
@@ -63,6 +73,11 @@ parser.add_argument('--env',
                     default=None,
                     nargs='+',
                     help='AWS environment name (used to create multiple reports)')
+parser.add_argument('--out',
+                    dest='output_file',
+                    default=[ None ],
+                    nargs='+',
+                    help='Name of the output file.')
 parser.add_argument('--violation_name',
                     dest='violation_name',
                     default=[ None ],
