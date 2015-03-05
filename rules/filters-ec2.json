@@ -16,5 +16,11 @@
         "entity": "regions.vpcs.security_groups",
         "callback": "DoesNotOpenAllPorts",
         "callback_args": []
+    },
+    "NoPublicIP": {
+        "description": "Hide instances that do not have a public IP address",
+        "entity": "regions.vpcs.instances",
+        "callback": "DoesNotHaveAPublicIP",
+        "callback_args": []
     }
 }

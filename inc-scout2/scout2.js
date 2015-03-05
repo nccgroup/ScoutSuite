@@ -262,24 +262,27 @@ function hidePopup() {
 function toggle_filter(data, filter_name) {
     var filter = data['filters'][filter_name];
     var entities = filter['entity'].split('.');
-    var checkbox = $("#" + finding_entity(filter['keyword_prefix'], filter['entity']) + '-filtericon-' + filter_name);
+    var entity = finding_entity(filter['keyword_prefix'], filter['entity']);
+    var checkbox = $("#" + entity + '-filtericon-' + filter_name);
     var action = '';
     if (checkbox.hasClass("glyphicon-check")) {
         checkbox.removeClass("glyphicon-check");
         checkbox.addClass("glyphicon-unchecked");
-        filter['enabled'] = false; // = 'uncheck';
+        filter['enabled'] = false;
     } else {
         checkbox.removeClass("glyphicon-unchecked");
         checkbox.addClass("glyphicon-check");
-        filter['enabled'] = true; // action = 'check'
+        filter['enabled'] = true;
     }
     // Iterate through the objects and update visibility
-    iterateEC2ObjectsAndCall(data, entities, toggle_filter_callback, data['filters']);
+    iterateEC2ObjectsAndCall(data, entities, toggle_filter_callback, new Array(entity, data['filters']));
 }
 
 // Generic toggle filter callback
-function toggle_filter_callback(object, filters) {
+function toggle_filter_callback(object, args) {
     var must_hide = false;
+    var entity = args[0];
+    var filters = args[1];
     // Go through each active filter
     for (f in filters) {
         if (filters[f]['enabled']) {
@@ -289,9 +292,9 @@ function toggle_filter_callback(object, filters) {
         }
     }
     if (must_hide) {
-        hideItem(finding_entity(filters[f]['keyword_prefix'], filters[f]['entity']), object['id']);
+        hideItem(entity, object['id']);
     } else {
-        showItem(finding_entity(filters[f]['keyword_prefix'], filters[f]['entity']), object['id']);
+        showItem(entity, object['id']);
     }
 }
 

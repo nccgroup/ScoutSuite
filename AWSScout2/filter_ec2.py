@@ -30,3 +30,7 @@ class Ec2Filter(Filter):
             for rule in obj['rules_ingress'][protocol]['rules']:
                 if rule['ports'] != '1-65535' and rule['ports'] != 'All':
                     self.addItem(obj['id'])
+
+    def DoesNotHaveAPublicIP(self, key, obj):
+        if not obj['ip_address']:
+            self.addItem(obj['id'])
