@@ -86,14 +86,18 @@ def check_boto_version():
         print 'Error: the version of boto installed on this system (%s) is too old. Boto version %s or newer is required.' % (boto.Version, min_boto_version)
         return False
     else:
-        # Warn users who have not the latest version of boto installed
-        release_tag_regex = re.compile('(\d+)\.(\d+)\.(\d+)')
-        tags = requests.get('https://api.github.com/repos/boto/boto/tags').json()
-        for tag in tags:
-            if release_tag_regex.match(tag['name']) and tag['name'] > latest_boto_version:
-                latest_boto_version = tag['name']
-        if boto.Version < latest_boto_version:
-            print 'Warning: the version of boto installed (%s) is not the latest available (%s). Consider upgrading to ensure that all features are enabled.' % (boto.Version, latest_boto_version)
+        try:
+            # Warn users who have not the latest version of boto installed
+            release_tag_regex = re.compile('(\d+)\.(\d+)\.(\d+)')
+            tags = requests.get('https://api.github.com/repos/boto/boto/tags').json()
+            for tag in tags:
+                if release_tag_regex.match(tag['name']) and tag['name'] > latest_boto_version:
+                    latest_boto_version = tag['name']
+            if boto.Version < latest_boto_version:
+                print 'Warning: the version of boto installed (%s) is not the latest available (%s). Consider upgrading to ensure that all features are enabled.' % (boto.Version, latest_boto_version)
+        except Exception, e:
+            print 'Warning: connection to the Github API failed.'
+            printException(e)
     return True
 
 def get_environment_name(args):
