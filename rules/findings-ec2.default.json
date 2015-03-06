@@ -220,5 +220,15 @@
         "questions": [
             "Report security groups that whitelist non-elastic EC2 public IP addresses"
         ]
+    },
+    "unused-security-groups": {
+        "description": "Unused security groups",
+        "entity": "regions.vpcs.security_groups",
+        "callback": "hasNoInstances",
+        "callback_args": [],
+        "level": "warning",
+        "questions": [
+            "Report security groups that have no instances attached"
+        ]
     }
 }

@@ -110,3 +110,7 @@ class Ec2Finding(Finding):
                         return
                     else:
                         self.addItem(pn, obj['name'])
+
+    def hasNoInstances(self, key, obj):
+        if (len(obj['running-instances']) == 0) and (len(obj['stopped-instances']) == 0):
+            self.addItem(obj['id'])
