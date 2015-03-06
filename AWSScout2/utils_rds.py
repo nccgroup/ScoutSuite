@@ -76,7 +76,7 @@ def get_instances_info(rds_connection, region_info):
     for dbi in dbinstances:
         dbi_info = {}
         total = total + len(dbinstances)
-        for key in ['id', 'create_time', 'engine', 'status', 'auto_minor_version_upgrade', 'instance_class', 'multi_az', 'endpoint', 'backup_retention_period']:
+        for key in ['id', 'create_time', 'engine', 'status', 'auto_minor_version_upgrade', 'instance_class', 'multi_az', 'endpoint', 'backup_retention_period', 'PubliclyAccessible']:
             # parameter_groups , security_groups, vpc_security_gropus
             dbi_info[key] = dbi.__dict__[key]
         region_info['instances'][dbi.id] = dbi_info
