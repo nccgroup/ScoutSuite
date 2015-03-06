@@ -116,7 +116,7 @@ def get_s3_buckets(s3_connection, s3_info, check_encryption, check_acls, checked
             s3_info['buckets'][b.name] = bucket
             count = update_status(count, total)
         except Exception, e:
-            print e
+            printException(e)
     close_status(count, total)
 
 # Get key-specific information (server-side encryption, acls, etc...)
