@@ -238,12 +238,13 @@
     <script id="ec2_instance-partial" type="text/x-handlebars-template">
       <div class="list-group" id="ec2_instance-details-{{id}}">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{id}}</h4>
+          <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
           <h4>Information</h4>
           <ul>
             <li class="list-group-item-text">Region: {{region}}</li>
+            <li class="list-group-item-text">ID: {{id}}</li>
             <li class="list-group-item-text">Reservation ID: {{reservation_id}}</li>
             <li class="list-group-item-text">Access Key name: {{key_name}}</li>
             <li class="list-group-item-text">State: {{state}}</li>
@@ -1094,7 +1095,7 @@
                   <div class="list-group-item list-sub-element">
                   {{@key}}
                   {{#each instances}}
-                    <div class="list-group-item-text list-sub-element" id="ec2_instance-list-{{id}}"><a href="javascript:browseTo('ec2_instance', '{{id}}')">{{@key}}</a></div>
+                    <div class="list-group-item-text list-sub-element" id="ec2_instance-list-{{id}}"><a href="javascript:browseTo('ec2_instance', '{{id}}')">{{name}}</a></div>
                   {{/each}}
                   </div>
                 {{/each}}

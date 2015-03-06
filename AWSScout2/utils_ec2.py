@@ -180,6 +180,11 @@ def get_instances_info(ec2, vpc_info):
             # Get instance variables (see http://boto.readthedocs.org/en/latest/ref/ec2.html#module-boto.ec2.instance to see what else is available)
             for key in ['id', 'public_dns_name', 'private_dns_name', 'key_name', 'launch_time', 'private_ip_address', 'ip_address', 'instance_type']:
                 vpc_info[vpc_id]['instances'][i.id][key] = i.__dict__[key]
+            # Get instance name
+            if 'Name' in i.tags and i.tags['Name'] != '':
+                vpc_info[vpc_id]['instances'][i.id]['name'] = i.tags['Name']
+            else:
+                vpc_info[vpc_id]['instances'][i.id]['name'] = i.id
             # FIXME ... see why it's not working when added in the list above
             vpc_info[vpc_id]['instances'][i.id]['state'] = i.state
             vpc_info[vpc_id]['instances'][i.id]['profile_arn'] = i.instance_profile['arn'] if i.instance_profile else ''
