@@ -37,8 +37,8 @@
         "description": "Non-HTTP ports open to Internet",
         "entity": "regions.vpcs.security_groups",
         "callback": "checkInternetAccessiblePort",
-        "callback_args": ["whitelist", ["HTTP(S)", "TCP", ["80", "443", "22", "3389", "1433", "3306"]]],
-        "level": "warning",
+        "callback_args": ["whitelist", ["HTTP(S)", "TCP", ["80", "443", "22", "3389", "1433", "3306", "27017", "5432", "1521"]]],
+        "level": "danger",
         "questions": [
             "Report _DESCRIPTION_"
         ]

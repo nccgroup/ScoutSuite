@@ -38,9 +38,9 @@ class Ec2Finding(Finding):
                         if cidr == '0.0.0.0/0':
                             if method == 'blacklist' and self.portInRange(port, rule['ports']):
                                 self.addItem(obj['id'])
-                        elif method == 'whitelist':
-                            if rule['ports'] not in port:
-                                self.addItem(obj['id'])
+                            elif method == 'whitelist':
+                                if rule['ports'] not in port:
+                                    self.addItem(rule['ports'], obj['id'])
 
     def checkFirstRule(self, key, unsorted_rules):
         sorted_rules = sorted(unsorted_rules, key=lambda k: k['rule_number'])
