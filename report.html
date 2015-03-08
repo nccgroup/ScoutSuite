@@ -604,12 +604,12 @@
                       <td width="80%"><a href="javascript:showS3Object('{{../name}}', '{{@key}}')">{{@key}}</a></td>
                       <td width="10%" class="text-center">
                         <span id="s3_buckets-unencrypted-s3-objects-{{../name}}-{{@key}}">
-                          {{{good_bad_icon "unencrypted-s3-objects" @key}}}
+                          {{{good_bad_icon "unencrypted-s3-objects" ../name @key}}}
                         </span>
                       </td>
                       <td width="10%" class="text-center">
                         <span id="s3_buckets-object-perms-mismatch-bucket-perms-{{../name}}-{{@key}}">
-                          {{{good_bad_icon "object-perms-mismatch-bucket-perms" @key}}}
+                          {{{good_bad_icon "object-perms-mismatch-bucket-perms" ../name @key}}}
                         </span>
                       </td>
                     </tr>
@@ -630,14 +630,14 @@
     <script id="s3_object-partial" type="text/x-handlebars-template">
       <div class="list-group" id="s3_object-details-{{name}}">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{name}}</h4>
+          <h4 class="list-group-item-heading">{{bucket_name}}/{{name}}</h4>
         </div>
         <div class="list-gorup-item">
           <h4 class="list-group-item-heading">Information</h4>
           <div class="list-group-item-text">
             <ul class="no-bullet">
-              <li>Server-side encryption: {{encrypted}}</li>
-              <li>Permissions match bucket's: {{{good_bad_icon "unencrypted-s3-objects" @key}}}</li>
+              <li>Server-side encryption: {{{good_bad_icon "unencrypted-s3-objects" bucket_name name}}}</li>
+              <li>Permissions match bucket's: {{{good_bad_icon "object-perms-mismatch-bucket-perms" bucket_name name}}}</li>
             </ul>
           </div>
         </div>

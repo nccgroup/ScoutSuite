@@ -72,9 +72,10 @@ class S3Finding(Finding):
         if 'keys' in obj:
             bucket_grants = obj['grants']
             for k in obj['keys']:
-                object_grants = obj['keys'][k]['grants']
-                if cmp(bucket_grants, object_grants) != 0:
-                    self.addItem(k, key)
+                if 'grants' in obj['keys'][k]:
+                    object_grants = obj['keys'][k]['grants']
+                    if cmp(bucket_grants, object_grants) != 0:
+                        self.addItem(k, key)
 
     def checkStaticWebsiteHosting(self, key, obj):
         if obj['web_hosting'] == 'Enabled':

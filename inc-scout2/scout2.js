@@ -246,6 +246,7 @@ function showS3Bucket(bucket_name) {
 function showS3Object(bucket_name, object_name) {
     var data = s3_info['buckets'][bucket_name]['keys'][object_name];
     data['name'] = object_name;
+    data['bucket_name'] = bucket_name;
     $('#overlay-details').html(single_s3_object_template(data));
     showPopup();
 }
@@ -450,11 +451,18 @@ function format_entity(keyword, name, policy_name, c) {
 Handlebars.registerHelper('s3_grant_2_icon', function(value) {
     return '<i class="' + ((value == true) ? 'glyphicon glyphicon-ok' : '') +'"></i>';
 });
-Handlebars.registerHelper('good_bad_icon', function(violation, item) {
-    if (s3_info['violations'][violation]['items'].indexOf(item) > -1) {
+Handlebars.registerHelper('good_bad_icon', function(violation, bucket_name, item) {
+    var index = s3_info['violations'][violation]['items'].indexOf(item);
+    if (index > -1) {
         return '<i class="glyphicon glyphicon-remove"></i>';
     } else {
-        return '<i class="glyphicon glyphicon-ok"></i>';
+        var key_details = s3_info['buckets'][bucket_name]['keys'][item];
+        if (((violation == 'object-perms-mismatch-bucket-perms') && !('grants' in key_details)) 
+            ||((violation == 'unencrypted-s3-objects') && !('encrypted' in key_details))) {
+            return '<i class="glyphicon glyphicon-question-sign"></i>';
+        } else {
+            return '<i class="glyphicon glyphicon-ok finding-good"></i>';
+        }
     }
 });
 Handlebars.registerHelper('has_logging?', function(logging) {

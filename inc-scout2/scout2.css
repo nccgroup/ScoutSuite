@@ -13,6 +13,10 @@
     color: orange !important;
     display: inline !important;
 }
+.finding-good {
+    color: green !important;
+    display: inline !important;
+}
 
 ul.no-bullet {
     list-style-type: none;
