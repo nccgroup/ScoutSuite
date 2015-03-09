@@ -52,6 +52,12 @@ function load_filters_from_json(list) {
     var compiler = Handlebars.compile($(id1).html());
     $(id2).append(compiler({items: list}));
 }
+function load_region_filters(keyword, list) {
+    var id1 = '#region-filter-list-template';
+    var id2 = '#region-filters-list';
+    var compiler = Handlebars.compile($(id1).html());
+    $(id2).append(compiler({items: list, keyword: keyword}));
+}
 
 // Display functions
 function hideAll() {
@@ -89,11 +95,15 @@ function showRowWithDetails(keyword) {
     showAll(keyword);
 }
 function showAll(keyword) {
+    prefix = keyword.split('_')[0]; 
     $("[id*='" + keyword + "-list']").show();
     $("[id*='" + keyword + "-details']").show();
     $("[id*='" + keyword + "-filter']").show();
     $("[id*='" + keyword + "-filtericon']").removeClass('glyphicon-check');
     $("[id*='" + keyword + "-filtericon']").addClass('glyphicon-unchecked');
+    $("[id*='" + prefix + "_region-']").show();
+    $("[id*='" + prefix + "_region-filtericon']").removeClass('glyphicon-unchecked');
+    $("[id*='" + prefix + "_region-filtericon']").addClass('glyphicon-check');
 }
 function toggleDetails(keyword, item) {
     var id = '#' + keyword + '-' + item;
@@ -265,7 +275,6 @@ function toggle_filter(data, filter_name) {
     var entities = filter['entity'].split('.');
     var entity = finding_entity(filter['keyword_prefix'], filter['entity']);
     var checkbox = $("#" + entity + '-filtericon-' + filter_name);
-    var action = '';
     if (checkbox.hasClass("glyphicon-check")) {
         checkbox.removeClass("glyphicon-check");
         checkbox.addClass("glyphicon-unchecked");
@@ -277,6 +286,19 @@ function toggle_filter(data, filter_name) {
     }
     // Iterate through the objects and update visibility
     iterateEC2ObjectsAndCall(data, entities, toggle_filter_callback, new Array(entity, data['filters']));
+}
+function toggle_region(keyword, region_name) {
+    var entity = keyword + '_region';
+    var checkbox = $("#" + entity + '-filtericon-' + region_name);
+    if (checkbox.hasClass("glyphicon-check")) {
+        checkbox.removeClass("glyphicon-check");
+        checkbox.addClass("glyphicon-unchecked");
+        hideItem(keyword + '_region', region_name);
+    } else {
+        checkbox.removeClass("glyphicon-unchecked");
+        checkbox.addClass("glyphicon-check");
+        showItem(keyword + '_region', region_name);
+    }
 }
 
 // Generic toggle filter callback
@@ -301,15 +323,18 @@ function toggle_filter_callback(object, args) {
 
 // Contents loading
 function load_config(keyword) {
+    var info = {};
     if (!(keyword in loaded_config_array)) {
         hideAll();
         $('[id="please_wait-row"]').show();
         setTimeout(function(){
             if (keyword == 'cloudtrail') {
+                info = cloudtrail_info;
                 load_aws_config_from_json(cloudtrail_info['regions'], 'cloudtrail_region', 2);
                 highlight_violations(cloudtrail_info['violations'], 'cloudtrail');
             }
             else if (keyword == 'ec2') {
+                info = ec2_info;
                 load_aws_config_from_json(ec2_info['regions'], 'ec2_elb', 2);
                 load_aws_config_from_json(ec2_info['regions'], 'ec2_security_group', 2);
                 load_aws_config_from_json(ec2_info['regions'], 'ec2_network_acl', 2);
@@ -319,6 +344,7 @@ function load_config(keyword) {
                 load_filters_from_json(ec2_info['filters']);
             }
             else if (keyword == 'iam') {
+                info = iam_info;
                 load_aws_config_from_json(iam_info['groups'], 'iam_group', 2);
                 load_aws_config_from_json(iam_info['permissions'], 'iam_permission', 1);
                 load_aws_config_from_json(iam_info['roles'], 'iam_role', 2);
@@ -330,13 +356,18 @@ function load_config(keyword) {
                 load_filters_from_json(iam_info['filters']);
             }
             else if (keyword == 'rds') {
+                info = rds_info;
                 load_aws_config_from_json(rds_info['regions'], 'rds_security_group', 2);
                 load_aws_config_from_json(rds_info['regions'], 'rds_instance', 2);
                 highlight_violations(rds_info['violations'], 'rds');
             }
             else if (keyword == 's3') {
+                info = s3_info;
                 load_aws_config_from_json(s3_info['buckets'], 's3_bucket', 2);
                 highlight_violations(s3_info['violations'], 's3');
+            }
+            if ('regions' in info) {
+                load_region_filters(keyword, info['regions']);
             }
             $('[id="' + keyword + '_load_button"]').hide();
             $('[id="please_wait-row"]').hide();

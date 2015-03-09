@@ -48,7 +48,7 @@
 
     <!-- CloudTrail trail partial -->
     <script id="cloudtrail_region-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="cloudtrail-region-details-{{name}}">
+      <div class="list-group" id="cloudtrail_region-details-{{name}}">
         <div class="list-group-item active">
           <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
@@ -863,6 +863,16 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Regions<b class="caret"></b></a>
+              <ul class="dropdown-menu" id="region-filters-list">
+                  <script id="region-filter-list-template" type="text/x-handlebars-template">
+                  {{#each items}}
+                    <li id="{{finding_entity ../keyword "region"}}-filter-{{name}}"><a href="javascript:toggle_region('{{../keyword}}', '{{name}}')"><i id="{{finding_entity ../keyword "region"}}-filtericon-{{name}}" class="glyphicon glyphicon-check""></i> {{name}}</a></li>
+                  {{/each}}
+                </script>
+              </ul>
+            </li>
+            <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filters<b class="caret"></b></a>
               <ul class="dropdown-menu" id="filters-list">
                 <script id="filter-list-template" type="text/x-handlebars-template">
@@ -902,7 +912,7 @@
               <li class="list-group-item"><a href="javascript:showAll('cloudtrail_region')">Show all<span class="badge pull-right">{{count_in 'cloudtrail' 'regions'}}</span></a></li>
             </ul>
             {{#each items}}
-              <ul class="list-group">
+              <ul class="list-group" id="cloudtrail_region-list-{{@key}}">
                 <li class="list-group-item active">
                   {{@key}} <span class="badge pull-right">{{count_ec2_in_region @key "vpcs.instances"}} instances </span>
                 </li>
@@ -1278,7 +1288,7 @@
               <li class="list-group-item"><a href="javascript:showAll('rds_instance')">Show all<span class="badge pull-right">{{count_in "rds" "regions.instances"}}</span></a></li>
             </ul>
             {{#each items}}
-              <ul class="list-group">
+              <ul class="list-group" id="rds_region-list-{{@key}}">
                 <li class="list-group-item active">{{@key}}</li>
                 {{#each instances}}
                   <div class="list-group-item list-sub-element">
@@ -1292,9 +1302,11 @@
         <div class="col-sm-8" id="rds_instances-details">
           <script id="rds_instance-detail-template" type="text/x-handlebars-template">
             {{#each items}}
-              {{#each instances}}
-                {{> rds_instance region=../name}}
-              {{/each}}
+              <div id="rds_region-details-{{@key}}">
+                {{#each instances}}
+                  {{> rds_instance region=../name}}
+                {{/each}}
+              </div>
             {{/each}}
           </script>
         </div><!-- /.col-sm-8 -->
@@ -1308,7 +1320,7 @@
               <li class="list-group-item"><a href="javascript:showAll('rds_security_group')">Show all<span class="badge pull-right">{{count_in "rds" "regions.security_groups"}}</span></a></li>
             </ul>
             {{#each items}}
-              <ul class="list-group">
+              <ul class="list-group" id="rds_region-list-{{@key}}">
                 <li class="list-group-item active">{{@key}}</li>
                 {{#each security_groups}}
                   <div class="list-group-item list-sub-element">
@@ -1322,9 +1334,11 @@
         <div class="col-sm-8" id="rds_security_groups-details">
           <script id="rds_security_group-detail-template" type="text/x-handlebars-template">
             {{#each items}}
-              {{#each security_groups}}
-                {{> rds_security_group region=../../name }}
-              {{/each}}
+              <div id="rds_region-details-{{@key}}">
+                {{#each security_groups}}
+                  {{> rds_security_group region=../../name }}
+                {{/each}}
+              </div>
             {{/each}}
           </script>
         </div><!-- /.col-sm-8 -->
