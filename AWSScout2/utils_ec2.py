@@ -185,6 +185,7 @@ def get_instances_info(ec2, vpc_info):
                 vpc_info[vpc_id]['instances'][i.id]['name'] = i.tags['Name']
             else:
                 vpc_info[vpc_id]['instances'][i.id]['name'] = i.id
+            read_tags(vpc_info[vpc_id]['instances'][i.id], i)
             # FIXME ... see why it's not working when added in the list above
             vpc_info[vpc_id]['instances'][i.id]['state'] = i.state
             vpc_info[vpc_id]['instances'][i.id]['profile_arn'] = i.instance_profile['arn'] if i.instance_profile else ''
@@ -222,6 +223,7 @@ def get_vpc_info(vpc_connection, vpc_info):
         vpc_info[vpc.id]['state'] = vpc.state
         vpc_info[vpc.id]['is_default'] = vpc.is_default
         vpc_info[vpc.id]['cidr_block'] = vpc.cidr_block
+        read_tags(vpc_info[vpc.id], vpc)
         acls = vpc_connection.get_all_network_acls(filters ={"vpc_id": vpc.id})
         vpc_info[vpc.id]['network_acls'] = {}
         for acl in acls:
@@ -299,3 +301,9 @@ def parse_security_group_rules(rules):
         # Save the new rule
         protocols[ip_protocol]['rules'].append(acl)
     return protocols
+
+def read_tags(local, remote):
+    if 'Name' in remote.tags and remote.tags['Name'] != '':
+        local['name'] = remote.tags['Name']
+    else:
+        local['name'] = remote.id
