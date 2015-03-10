@@ -230,5 +230,15 @@
         "questions": [
             "Report security groups that have no instances attached"
         ]
+    },
+    "all-ports-open-to-self": {
+        "description": "Unrestricted network traffic within security group",
+        "entity": "regions.vpcs.security_groups",
+        "callback": "checkTrafficRulesToSelf",
+        "callback_args": [],
+        "level": "warning",
+        "questions": [
+            "Report security groups that open all ports to other instances in the group"
+        ]
     }
 }

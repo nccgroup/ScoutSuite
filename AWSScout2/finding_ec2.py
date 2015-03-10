@@ -114,3 +114,12 @@ class Ec2Finding(Finding):
     def hasNoInstances(self, key, obj):
         if (len(obj['running-instances']) == 0) and (len(obj['stopped-instances']) == 0):
             self.addItem(obj['id'])
+
+    def checkTrafficRulesToSelf(self, key, obj):
+        for protocol in obj['rules_ingress']:
+            for rule in obj['rules_ingress'][protocol]['rules']:
+                for grant in rule['grants']:
+                    if 'security_groups' in rule['grants']:
+                        for sg in rule['grants']['security_groups']:
+                            if sg == obj['id'] and rule['ports'] == 'All':
+                                self.addItem(obj['id'])
