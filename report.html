@@ -1301,7 +1301,7 @@
               <li class="list-group-item"><a href="javascript:showAll('rds_instance')">Show all<span class="badge pull-right">{{count_in "rds" "regions.instances"}}</span></a></li>
             </ul>
             {{#each items}}
-              <ul class="list-group">
+              <ul class="list-group" id="rds_region-list-{{@key}}">
                 <li class="list-group-item active">{{@key}}</li>
                 {{#each instances}}
                   <div class="list-group-item list-sub-element">
