@@ -291,14 +291,24 @@ function toggle_region(keyword, region_name) {
     var entity = keyword + '_region';
     var checkbox = $("#" + entity + '-filtericon-' + region_name);
     if (checkbox.hasClass("glyphicon-check")) {
-        checkbox.removeClass("glyphicon-check");
-        checkbox.addClass("glyphicon-unchecked");
-        hideItem(keyword + '_region', region_name);
+        hideRegion(keyword, region_name);
     } else {
         checkbox.removeClass("glyphicon-unchecked");
         checkbox.addClass("glyphicon-check");
         showItem(keyword + '_region', region_name);
     }
+}
+function clear_regions(keyword) {
+    var info = window[keyword + '_info'];
+    for (region in info['regions']) {
+        hideRegion(keyword, region);
+    }
+}
+function hideRegion(keyword, region_name) {
+    var checkbox = $("#" + keyword + '_region-filtericon-' + region_name);
+    checkbox.removeClass("glyphicon-check");
+    checkbox.addClass("glyphicon-unchecked");
+    hideItem(keyword + '_region', region_name);
 }
 
 // Generic toggle filter callback

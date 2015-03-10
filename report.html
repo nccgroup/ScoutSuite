@@ -865,7 +865,8 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Regions<b class="caret"></b></a>
               <ul class="dropdown-menu" id="region-filters-list">
-                  <script id="region-filter-list-template" type="text/x-handlebars-template">
+                <script id="region-filter-list-template" type="text/x-handlebars-template">
+                  <li id="{{finding_entity keyword "region"}}-filter-none"><a href="javascript:clear_regions('{{keyword}}')">Hide all</a></li>
                   {{#each items}}
                     <li id="{{finding_entity ../keyword "region"}}-filter-{{name}}"><a href="javascript:toggle_region('{{../keyword}}', '{{name}}')"><i id="{{finding_entity ../keyword "region"}}-filtericon-{{name}}" class="glyphicon glyphicon-check""></i> {{name}}</a></li>
                   {{/each}}
@@ -1009,19 +1010,21 @@
               <li class="list-group-item"><a href="javascript:showAll('ec2_security_group')">Show all<span class="badge pull-right">{{count_in "ec2" "regions.vpcs.security_groups"}}</span></a></li>
             </ul>
             {{#each items}}
-             {{#if vpcs}}
-              <ul class="list-group">
-                <li class="list-group-item active">{{@key}}</li>
-                {{#each vpcs}}
-                  <div class="list-group-item list-sub-element">
-                  {{name}}
-                  {{#each security_groups}}
-                    <div class="list-group-item-text list-sub-element" id="security_group-list-{{id}}"><a href="javascript:browseTo('ec2_security_group', '{{id}}')">{{name}}</a></div>
-                  {{/each}}
-                  </div>
-                {{/each}}
-              </ul>
-             {{/if}}
+              <div id="ec2_region-list-{{@key}}"> 
+                {{#if vpcs}}
+                  <ul class="list-group">
+                    <li class="list-group-item active">{{@key}}</li>
+                    {{#each vpcs}}
+                      <div class="list-group-item list-sub-element">
+                        {{name}}
+                        {{#each security_groups}}
+                          <div class="list-group-item-text list-sub-element" id="security_group-list-{{id}}"><a href="javascript:browseTo('ec2_security_group', '{{id}}')">{{name}}</a></div>
+                        {{/each}}
+                      </div>
+                    {{/each}}
+                  </ul>
+                {{/if}}
+              </div>
             {{/each}}
             </script>
           </ul>
@@ -1029,11 +1032,13 @@
         <div class="col-sm-8" id="ec2_security_groups-details">
           <script id="ec2_security_group-detail-template" type="text/x-handlebars-template">
           {{#each items}}
-            {{#each vpcs}}
-              {{#each security_groups}}
-                {{> ec2_security_group region=../../name vpc=../id }}
+            <div id="ec2_region-details-{{@key}}">
+              {{#each vpcs}}
+                {{#each security_groups}}
+                  {{> ec2_security_group region=../../name vpc=../id }}
+                {{/each}}
               {{/each}}
-            {{/each}}
+            </div>
           {{/each}}
           </script>
         </div><!-- /.col-sm-8 -->
@@ -1047,21 +1052,23 @@
               <li class="list-group-item"><a href="javascript:showAll('ec2_network_acl')">Show all<span class="badge pull-right">{{count_in "ec2" "regions.vpcs.network_acls"}}</span></a></li>
             </ul>
             {{#each items}}
-             {{#if vpcs}}
-              <ul class="list-group">
-                <li class="list-group-item active">{{@key}}</li>
-                {{#each vpcs}}
-                  <div class="list-group-item list-sub-element">
-                  {{name}}
-                  {{#if network_acls}}
-                    {{#each network_acls}}
-                      <div class="list-group-item-text list-sub-element"><a href="javascript:browseTo('ec2_network_acl', '{{@key}}')">{{@key}}</a></div>
+              <div id="ec2_region-list-{{@key}}">
+                {{#if vpcs}}
+                  <ul class="list-group">
+                    <li class="list-group-item active">{{@key}}</li>
+                    {{#each vpcs}}
+                      <div class="list-group-item list-sub-element">
+                        {{name}}
+                        {{#if network_acls}}
+                          {{#each network_acls}}
+                            <div class="list-group-item-text list-sub-element"><a href="javascript:browseTo('ec2_network_acl', '{{@key}}')">{{@key}}</a></div>
+                          {{/each}}
+                        {{/if}}
+                      </div>
                     {{/each}}
-                  {{/if}}
-                  </div>
-                {{/each}}
-              </ul>
-             {{/if}}
+                  </ul>
+                {{/if}}
+              </div>
             {{/each}}
             </script>
           </ul>
@@ -1069,23 +1076,25 @@
         <div class="col-sm-8" id="ec2_network_acls-details">
           <script id="ec2_network_acl-detail-template" type="text/x-handlebars-template">
           {{#each items}}
-            {{#each vpcs}}
-              {{#each network_acls}}
-                <div class="list-group" id="ec2_network_acl-details-{{@key}}">
-                  <div class="list-group-item active">
-                    <h4 class="list-group-item-heading">{{@key}}</h4>
+            <div id="ec2_region-details-{{@key}}">
+              {{#each vpcs}}
+                {{#each network_acls}}
+                  <div class="list-group" id="ec2_network_acl-details-{{@key}}">
+                    <div class="list-group-item active">
+                      <h4 class="list-group-item-heading">{{@key}}</h4>
+                    </div>
+                    <div class="list-group-item">
+                      <h4 class="list-group-item-heading">Inbound rules</h4>
+                      {{{format_network_acls inbound_network_acls 'Source'}}}
+                    </div>
+                    <div class="list-group-item">
+                      <h4 class="list-group-item-heading">Outbound rules</h4>
+                      {{{format_network_acls outbound_network_acls 'Destination'}}}
+                    </div>
                   </div>
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Inbound rules</h4>
-                    {{{format_network_acls inbound_network_acls 'Source'}}}
-                  </div>
-                  <div class="list-group-item">
-                    <h4 class="list-group-item-heading">Outbound rules</h4>
-                    {{{format_network_acls outbound_network_acls 'Destination'}}}
-                  </div>
-                </div>
+                {{/each}}
               {{/each}}
-            {{/each}}
+            </div>
           {{/each}}
           </script>
         </div><!-- /.col-sm-8 -->
@@ -1099,19 +1108,21 @@
               <li class="list-group-item"><a href="javascript:showAll('ec2_instance')">Show all<span class="badge pull-right">{{count_in "ec2" "regions.vpcs.instances"}}</span></a></li>
             </ul>
             {{#each items}}
-             {{#if vpcs}}
-              <ul class="list-group">
-                <li class="list-group-item active">{{@key}}</li>
-                {{#each vpcs}}
-                  <div class="list-group-item list-sub-element">
-                  {{name}}
-                  {{#each instances}}
-                    <div class="list-group-item-text list-sub-element" id="ec2_instance-list-{{id}}"><a href="javascript:browseTo('ec2_instance', '{{id}}')">{{name}}</a></div>
-                  {{/each}}
-                  </div>
-                {{/each}}
-              </ul>
-             {{/if}}
+              <div id="ec2_region-list-{{@key}}">
+                {{#if vpcs}}
+                  <ul class="list-group">
+                    <li class="list-group-item active">{{@key}}</li>
+                    {{#each vpcs}}
+                      <div class="list-group-item list-sub-element">
+                        {{name}}
+                        {{#each instances}}
+                          <div class="list-group-item-text list-sub-element" id="ec2_instance-list-{{id}}"><a href="javascript:browseTo('ec2_instance', '{{id}}')">{{name}}</a></div>
+                        {{/each}}
+                      </div>
+                    {{/each}}
+                  </ul>
+                {{/if}}
+              </div>
             {{/each}}
             </script>
           </ul>
@@ -1119,11 +1130,13 @@
         <div class="col-sm-8" id="ec2_instances-details">
           <script id="ec2_instance-detail-template" type="text/x-handlebars-template">
           {{#each items}}
-            {{#each vpcs}}
-              {{#each instances}}
-                {{> ec2_instance region=../../name}}
+            <div id="ec2_region-details-{{@key}}">
+              {{#each vpcs}}
+                {{#each instances}}
+                  {{> ec2_instance region=../../name}}
+                {{/each}}
               {{/each}}
-            {{/each}}
+            </div>
           {{/each}}
           </script>
         </div><!-- /.col-sm-8 -->
@@ -1288,7 +1301,7 @@
               <li class="list-group-item"><a href="javascript:showAll('rds_instance')">Show all<span class="badge pull-right">{{count_in "rds" "regions.instances"}}</span></a></li>
             </ul>
             {{#each items}}
-              <ul class="list-group" id="rds_region-list-{{@key}}">
+              <ul class="list-group">
                 <li class="list-group-item active">{{@key}}</li>
                 {{#each instances}}
                   <div class="list-group-item list-sub-element">
