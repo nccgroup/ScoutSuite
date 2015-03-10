@@ -398,10 +398,11 @@ function about() {
     $('#about-row').show();
 }
 function browseTo(keyword, id) {
-    hideAll();
-    showRow(keyword);
-    var html_id = "[id=\"" + keyword + "-details-" + id + "\"]";
-    $(html_id).show();
+    // Hide similar details
+    $("[id*='" + keyword + "-details-']").hide();
+    // Show the requested details
+    $("[id='" + keyword + "-details-" + id + "']").show();
+    // Scroll to the top
     window.scrollTo(0,0);
 }
 function list_generic(keyword) {
