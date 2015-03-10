@@ -70,6 +70,8 @@ function hideRowItems(keyword) {
     $("[id*='" + keyword + "-details']").hide();
 }
 function showEmptyRow(keyword) {
+    id = '[id*="' + prefix + '_region-"]';
+    $(id).show();
     id = "#" + keyword + "s-row";
     $(id).show();
     hideRowItems(keyword);
@@ -87,6 +89,8 @@ function hideItem(keyword, id) {
     $(id2).hide();
 }
 function showRow(keyword) {
+    id = '[id*="' + prefix + '_region-"]';
+    $(id).show();
     id = "#" + keyword + "s-row";
     $(id).show();
 }
