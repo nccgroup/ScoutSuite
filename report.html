@@ -866,7 +866,8 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">Regions<b class="caret"></b></a>
               <ul class="dropdown-menu" id="region-filters-list">
                 <script id="region-filter-list-template" type="text/x-handlebars-template">
-                  <li id="{{finding_entity keyword "region"}}-filter-none"><a href="javascript:clear_regions('{{keyword}}')">Hide all</a></li>
+                  <li id="{{finding_entity keyword "region"}}-filter-select_none"><a href="javascript:clear_all_regions('{{keyword}}')">Hide all</a></li>
+                  <li id="{{finding_entity keyword "region"}}-filter-select_all"><a href="javascript:select_all_regions('{{keyword}}')">Select all</a></li>
                   {{#each items}}
                     <li id="{{finding_entity ../keyword "region"}}-filter-{{name}}"><a href="javascript:toggle_region('{{../keyword}}', '{{name}}')"><i id="{{finding_entity ../keyword "region"}}-filtericon-{{name}}" class="glyphicon glyphicon-check""></i> {{name}}</a></li>
                   {{/each}}

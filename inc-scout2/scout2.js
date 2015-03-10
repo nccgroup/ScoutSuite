@@ -57,6 +57,7 @@ function load_region_filters(keyword, list) {
     var id2 = '#region-filters-list';
     var compiler = Handlebars.compile($(id1).html());
     $(id2).append(compiler({items: list, keyword: keyword}));
+    $('[id="' + keyword  + '_region-filter-select_all"]').hide();
 }
 
 // Display functions
@@ -297,22 +298,36 @@ function toggle_region(keyword, region_name) {
     if (checkbox.hasClass("glyphicon-check")) {
         hideRegion(keyword, region_name);
     } else {
-        checkbox.removeClass("glyphicon-unchecked");
-        checkbox.addClass("glyphicon-check");
-        showItem(keyword + '_region', region_name);
+        showRegion(keyword, region_name);
     }
 }
-function clear_regions(keyword) {
+function clear_all_regions(keyword) {
     var info = window[keyword + '_info'];
     for (region in info['regions']) {
         hideRegion(keyword, region);
     }
+    $('[id="' + keyword  + '_region-filter-select_all"]').show();
+    $('[id="' + keyword  + '_region-filter-select_none"]').hide();
+}
+function select_all_regions(keyword) {
+    var info = window[keyword + '_info'];
+    for (region in info['regions']) {
+        showRegion(keyword, region);
+    }
+    $('[id="' + keyword  + '_region-filter-select_all"]').hide();
+    $('[id="' + keyword  + '_region-filter-select_none"]').show();
 }
 function hideRegion(keyword, region_name) {
     var checkbox = $("#" + keyword + '_region-filtericon-' + region_name);
     checkbox.removeClass("glyphicon-check");
     checkbox.addClass("glyphicon-unchecked");
     hideItem(keyword + '_region', region_name);
+}
+function showRegion(keyword, region_name) {
+    var checkbox = $("#" + keyword + '_region-filtericon-' + region_name);
+    checkbox.removeClass("glyphicon-unchecked");
+    checkbox.addClass("glyphicon-check");
+    showItem(keyword + '_region', region_name);
 }
 
 // Generic toggle filter callback
@@ -409,6 +424,8 @@ function list_generic(keyword) {
     updateNavbar(keyword);
     hideAll();
     showRowWithDetails(keyword);
+    prefix = keyword.split('_')[0];
+    $('[id="' + prefix  + '_region-filter-select_all"]').hide();
     window.scrollTo(0,0);
 }
 function list_findings(keyword, violations, finding) {
