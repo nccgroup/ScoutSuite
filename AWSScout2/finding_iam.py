@@ -21,10 +21,14 @@ class IamFinding(Finding):
             self.isOlderThan(key, access_key, max_age, status)
 
     def belongsToGroup(self, key, obj):
+        membership_count = 0
         for group in obj['groups']:
-            if group['name'] == self.callback_args[0]:
-                return
-        self.addItem(obj['user_name'])
+            mandatory_groups = self.callback_args[0].split(' ')
+            for mandatory_group in mandatory_groups:
+                if group['group_name'] == mandatory_group:
+                    membership_count = membership_count + 1
+        if membership_count < int(self.callback_args[1]):
+            self.addItem(obj['name'])
 
     def isOlderThan(self, key, obj, max_age, status):
         today = datetime.datetime.today()

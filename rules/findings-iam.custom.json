@@ -7,7 +7,8 @@
         "level": "danger",
         "questions": [
             "Would you like to ensure that all IAM users belong to a given IAM group?",
-            "What is the name of you global/mandatory IAM group"
+            "What is the name of your global/mandatory IAM group (use space if multiple groups are mandatory/acceptable)",
+            "How many of the previously entered groups are necessary"
         ]
     }
 }
