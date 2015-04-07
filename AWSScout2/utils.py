@@ -427,8 +427,8 @@ def write_data_to_file(f, blob, force_write):
 # Status update functions
 ########################################
 
-def init_status(items, keyword=None):
-    count = 0
+def init_status(items, keyword=None, fetched=0):
+    count = fetched
     total = 0
     if items:
         total = len(items)

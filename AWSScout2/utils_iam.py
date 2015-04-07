@@ -24,8 +24,11 @@ def analyze_iam_config(iam_info, force_write):
 
 def get_groups_info(iam_connection, iam_info):
     groups = handle_truncated_responses(iam_connection.get_all_groups, None, ['list_groups_response', 'list_groups_result'], 'groups')
-    count, total = init_status(groups)
+    count, total = init_status(groups, fetched = len(iam_info['groups']))
     for group in groups:
+        # When resuming upon throttling error, skip if already fetched
+        if group['group_name'] in iam_info['groups']:
+            continue
         group['id'] = group.pop('group_id')
         group['name'] = group.pop('group_name')
         group['users'] = get_group_users(iam_connection, group.name);
@@ -41,8 +44,7 @@ def get_group_users(iam, group_name):
         users.append(user.user_name)
     return users
 
-def get_iam_info(key_id, secret, session_token):
-    iam_info = {}
+def get_iam_info(key_id, secret, session_token, iam_info):
     manage_dictionary(iam_info, 'groups', {})
     manage_dictionary(iam_info, 'permissions', {})
     manage_dictionary(iam_info, 'roles', {})
@@ -61,7 +63,6 @@ def get_iam_info(key_id, secret, session_token):
     get_roles_info(iam_connection, iam_info)
     print 'Fetching IAM credential report...'
     get_credential_report(iam_connection, iam_info)
-    return iam_info
 
 def get_permissions(policy_document, permissions, keyword, name, policy_name):
     manage_dictionary(permissions, 'Action', {})
@@ -130,8 +131,11 @@ def get_policies(iam_connection, iam_info, keyword, name):
 
 def get_roles_info(iam_connection, iam_info):
     roles = handle_truncated_responses(iam_connection.list_roles, None, ['list_roles_response', 'list_roles_result'], 'roles')
-    count, total = init_status(roles)
+    count, total = init_status(roles, fetched = len(iam_info['roles']))
     for role in roles:
+        # When resuming upon throttling error, skip if already fetched
+        if role['role_name'] in iam_info['roles']:
+            continue
         role['id'] = role.pop('role_id')
         role['name'] = role.pop('role_name')
         role['policies'] = get_policies(iam_connection, iam_info, 'role', role.name)
@@ -164,8 +168,11 @@ def get_credential_report(iam_connection, iam_info):
 
 def get_users_info(iam_connection, iam_info):
     users = handle_truncated_responses(iam_connection.get_all_users, None, ['list_users_response', 'list_users_result'], 'users')
-    count, total = init_status(users)
+    count, total = init_status(users, fetched = len(iam_info['users']))
     for user in users:
+        # When resuming upon throttling error, skip if already fetched
+        if user['user_name'] in iam_info['users']:
+            continue
         user['id'] = user.pop('user_id')
         user['name'] = user.pop('user_name')
         user['policies'] = get_policies(iam_connection, iam_info, 'user', user.name)

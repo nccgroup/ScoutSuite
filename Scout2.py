@@ -90,17 +90,23 @@ def main(args):
 
     ##### IAM
     if 'iam' in services:
+        iam_info = {}
         try:
-            # Fetch data from AWS or an existing local file
-            if not args.fetch_local:
-                iam_info = get_iam_info(key_id, secret, session_token)
-            else:
+            # Fetch data from local file
+            if args.fetch_local or args.resume:
                 iam_info = load_info_from_json('iam', environment_name)
+            # Fetch data from AWS
+            if not args.fetch_local:
+                get_iam_info(key_id, secret, session_token, iam_info)
+        except Exception, e:
+            print 'Error: could not fetch IAM configuration'
+            printException(e)
+        try:
             # Analyze the IAM config and save data to a local file
             if 'ec2' not in services:
                 analyze_iam_config(iam_info, args.force_write)
         except Exception, e:
-            print 'Error: could not fetch and/or analyze IAM configuration'
+            print 'Error: could not analyze IAM configuration'
             printException(e)
 
     ##### EC2
@@ -230,6 +236,11 @@ parser.add_argument('--buckets',
                     default=[],
                     nargs='+',
                     help='Name of buckets to iterate through when checking object properties')
+parser.add_argument('--resume',
+                    dest='resume',
+                    default=False,
+                    action='store_true',
+                    help='Loads partial data before and only fetches missing data. Useful when throttling errors occured.')
 
 args = parser.parse_args()
 
