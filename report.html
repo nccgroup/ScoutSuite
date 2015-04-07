@@ -510,7 +510,7 @@
               {{#each groups}}
                 <li class="list-group-item-text">
                   EC2 security group:
-                  <a href="javascript:findAndShowEC2ObjectByAttr('regions.vpcs.security_groups', {'name': '{{this}}', 'owner_id': '{{@key}}'})">{{this}} @ {{@key}}</a>
+                  <a href="javascript:findAndShowEC2ObjectByAttr('regions.vpcs.security_groups', {'name': '{{this}}', 'owner_id': '{{@../key}}'})">{{this}} @ {{@../key}}</a>
                 </li>
               {{/each}}
             {{/each}}

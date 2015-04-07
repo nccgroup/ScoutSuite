@@ -61,9 +61,12 @@ def parse_security_group(group):
     security_group['ec2_groups'] = {}
     security_group['ec2_groups']['owners'] = {}
     for ec2_group in group.ec2_groups:
-        manage_dictionary(security_group['ec2_groups']['owners'], ec2_group.owner_id, {})
-        manage_dictionary(security_group['ec2_groups']['owners'][ec2_group.owner_id], 'groups', [])
-        security_group['ec2_groups']['owners'][ec2_group.owner_id]['groups'].append(ec2_group.name)
+        owner_id = ec2_group.owner_id
+        if not owner_id:
+            owner_id = 'unknown'
+        manage_dictionary(security_group['ec2_groups']['owners'], owner_id, {})
+        manage_dictionary(security_group['ec2_groups']['owners'][owner_id], 'groups', [])
+        security_group['ec2_groups']['owners'][owner_id]['groups'].append(ec2_group.name)
     security_group['ip_ranges'] = []
     for ip in group.ip_ranges:
         security_group['ip_ranges'].append(ip.cidr_ip)
