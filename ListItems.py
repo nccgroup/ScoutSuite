@@ -40,19 +40,23 @@ def main(args):
         violation_names = violations.keys()
         for v in violation_names:
             print '%3d. %s - %s' % (violation_names.index(v), violations[v]['keyword_prefix'].upper(), v)
-        indices = [ '%d' % i for i in range(1, len(violations)) ]
-        index = prompt_4_value('Which violation ID do you want to output the items for', indices, display_choices = False)
-        violation_name = violation_names[int(index)]
+        indices = [ '%d' % i for i in range(0, len(violations)) ]
+        choices = prompt_4_value('Which violation ID do you want to output the items for', indices, display_choices = False, authorize_list = True)
 
     # Dump the list of items
     output = ''
-    violation = violations[violation_name]
-    if len(violation['items']) == len(violation['macro_items']):
-        for item, macro_item in zip(violation['items'], violation['macro_items']):
-            output = output + '%s : %s\n' % (macro_item, item)
-    else:
-        for item in violation['items']:
-            output = output + '%s\n' % item
+    choices = choices.split(',')
+    for c in choices:
+        violation_name = violation_names[int(c)]
+        violation = violations[violation_name]
+        if len(violation['items']) == len(violation['macro_items']):
+            for item, macro_item in zip(violation['items'], violation['macro_items']):
+                output = output + '%s : %s\n' % (macro_item, item)
+        else:
+            for item in violation['items']:
+                output = output + '%s\n' % item
+
+    # Output
     if args.output_file[0]:
         try:
             f = open(args.output_file[0], 'wt')

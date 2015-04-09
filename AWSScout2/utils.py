@@ -381,7 +381,7 @@ def prompt_4_overwrite(filename, force_write):
         return True
     return prompt_4_yes_no('File already exists. Do you want to overwrite it')
 
-def prompt_4_value(question, choices = None, default = None, display_choices = True):
+def prompt_4_value(question, choices = None, default = None, display_choices = True, authorize_list = False):
     if choices and len(choices) == 1 and choices[0] == 'yes_no':
         return prompt_4_yes_no(question)
     if choices and display_choices:
@@ -390,10 +390,18 @@ def prompt_4_value(question, choices = None, default = None, display_choices = T
         sys.stdout.write(question + '? ')
         choice = raw_input()
         if choices:
-            if choice in choices:
-                return choice
+            user_choices = choice.split(',')
+            if not authorize_list and len(user_choices) > 1:
+                print 'Multiple values are not supported; please enter a single value.'
             else:
-                print 'Invalid value.'
+                choice_valid = True
+                for c in user_choices:
+                    if not c in choices:
+                        print 'Invalid value (%s).' % c
+                        choice_valid = False
+                        break
+                if choice_valid:
+                    return choice
         elif not choice and default:
             if prompt_4_yes_no('Use the default value (' + default + ')'):
                 return default
