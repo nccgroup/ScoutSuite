@@ -224,7 +224,7 @@
     "unused-security-groups": {
         "description": "Unused security groups",
         "entity": "regions.vpcs.security_groups",
-        "callback": "hasNoInstances",
+        "callback": "isUnused",
         "callback_args": [],
         "level": "warning",
         "questions": [
