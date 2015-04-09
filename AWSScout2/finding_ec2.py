@@ -121,5 +121,5 @@ class Ec2Finding(Finding):
                 for grant in rule['grants']:
                     if 'security_groups' in rule['grants']:
                         for sg in rule['grants']['security_groups']:
-                            if sg == obj['id'] and rule['ports'] == 'All':
+                            if sg == obj['id'] and (rule['ports'] == 'All' or rule['ports'] == '0-65535'):
                                 self.addItem(obj['id'])
