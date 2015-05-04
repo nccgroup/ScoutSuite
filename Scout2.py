@@ -1,16 +1,20 @@
 #!/usr/bin/env python2
 
-# Import AWS Scout2 tools
+# Import AWS Utils
+from AWSUtils.utils import *
+from AWSUtils.utils_ec2 import *
+from AWSUtils.utils_iam import *
+
+# Import Scout2 tools
 from AWSScout2.filters import *
 from AWSScout2.findings import *
-from AWSScout2.utils import *
-from AWSScout2.utils_cloudtrail import *
+from AWSScout2.utils_cloudtrail import * 
 from AWSScout2.utils_ec2 import *
 from AWSScout2.utils_iam import *
 from AWSScout2.utils_rds import *
 from AWSScout2.utils_s3 import *
 
-# Import other third-party packages
+# Import third-party packages
 import os
 
 
@@ -42,8 +46,9 @@ def main(args):
     if args.fetch_creds_from_csv:
         key_id, secret, mfa_serial = fetch_creds_from_csv(args.fetch_creds_from_csv[0])
     elif not args.fetch_local:
+        key_id, secret, mfa_serial, session_token = read_creds_from_aws_credentials_file(args.profile[0])
         # Check for boto config, EC2 instance metadata, and environment variables
-        key_id, secret, session_token = fetch_creds_from_system(args.profile[0])
+#        key_id, secret, session_token = fetch_creds_from_system(args.profile[0])
 
     # Check that credentials, if required, are available
     if not args.fetch_local and (key_id is None or secret is None):
@@ -53,6 +58,9 @@ def main(args):
     # If local analysis, overwrite results
     if args.fetch_local:
         args.force_write = True
+
+    # Profile name
+    profile_name = args.profile[0]
 
     # Fetch STS credentials
     if args.mfa_serial:
@@ -79,7 +87,7 @@ def main(args):
         try:
             # Fetch data from AWS or an existing local file
             if not args.fetch_local:
-                cloudtrail_info = get_cloudtrail_info(key_id, secret, session_token)
+                cloudtrail_info = get_cloudtrail_info(profile_name)
             else:
                 cloudtrail_info = load_info_from_json('cloudtrail', environment_name)
             # Analyze the CloudTrail config and save data to a local file
@@ -97,7 +105,7 @@ def main(args):
                 iam_info = load_info_from_json('iam', environment_name)
             # Fetch data from AWS
             if not args.fetch_local:
-                get_iam_info(key_id, secret, session_token, iam_info)
+                get_iam_info(profile_name, iam_info)
         except Exception, e:
             print 'Error: could not fetch IAM configuration'
             printException(e)
@@ -114,7 +122,7 @@ def main(args):
         try:
             # Fetch data from AWS or an existing local file
             if not args.fetch_local:
-                ec2_info = get_ec2_info(key_id, secret, session_token, args.fetch_gov)
+                ec2_info = get_ec2_info(profile_name, args.fetch_gov)
             else:
                 ec2_info = load_info_from_json('ec2', environment_name)
             # Analyze the EC2 config and save data to a local file
@@ -127,7 +135,7 @@ def main(args):
     if 'rds' in services:
         try:
             if not args.fetch_local:
-                rds_info = get_rds_info(key_id, secret, session_token, args.fetch_gov)
+                rds_info = get_rds_info(profile_name, args.fetch_gov)
             else:
                 rds_info = load_info_from_json('rds', environment_name)
             analyze_rds_config(rds_info, args.force_write)
@@ -147,7 +155,7 @@ def main(args):
                         pass
                 else:
                     s3_info = {}
-                get_s3_info(key_id, secret, session_token, s3_info, args.check_s3_encryption, args.check_s3_acls, args.buckets, args.skipped_buckets)
+                get_s3_info(profile_name, s3_info, args.check_s3_encryption, args.check_s3_acls, args.buckets, args.skipped_buckets)
             else:
                 s3_info = load_info_from_json('s3', environment_name)
             # Analyze the S3 config and save data to a local file
@@ -181,16 +189,12 @@ def main(args):
 ##### Argument parser
 ########################################
 
+init_parser()
 parser.add_argument('--gov',
                     dest='fetch_gov',
                     default=False,
                     action='store_true',
                     help='fetch the EC2 configuration from the us-gov-west-1 region')
-parser.add_argument('--profile',
-                    dest='profile',
-                    default=['default'],
-                    nargs='+',
-                    help='Name of the AWS profile to use')
 parser.add_argument('--credentials',
                     dest='fetch_creds_from_csv',
                     default=None,

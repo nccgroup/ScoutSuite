@@ -1,14 +1,19 @@
 #!/usr/bin/env python2
 
-# Import the Amazon SDK
-import boto
-from boto.rds import *
+# Import AWS Scout2 tools
+from AWSUtils.utils import *
+from AWSUtils.utils_rds import *
+from AWSUtils.protocols_dict import *
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
 from AWSScout2.filters import *
 from AWSScout2.findings import *
 from AWSScout2.protocols_dict import *
+
+# Import third-party packages
+import boto
+from boto import rds
 
 
 ########################################
@@ -29,14 +34,14 @@ def check_for_duplicate(rds_info):
             for instance_id in rds_info['violations']['backup-disabled'].items:
                 rds_info['violations']['short-backup-retention-period'].removeItem(instance_id)
 
-def get_rds_info(key_id, secret, session_token, fetch_gov):
+def get_rds_info(profile_name, fetch_gov):
     rds_info = {}
     rds_info['regions'] = {}
     build_region_list(boto.rds.regions(), rds_info, fetch_gov)
     for region in rds_info['regions']:
         try:
             print 'Fetching RDS data for region %s...' % region
-            rds_connection = boto.rds.connect_to_region(region, aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
+            rds_connection = connect_rds(profile_name, region)
             get_security_groups_info(rds_connection, rds_info['regions'][region])
             get_instances_info(rds_connection, rds_info['regions'][region])
 

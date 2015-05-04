@@ -1,16 +1,22 @@
 #!/usr/bin/env python2
 
-# Import the Amazon SDK
+# Import AWS Utils
+from AWSUtils.utils import *
+from AWSUtils.utils_ec2 import *
+from AWSUtils.utils_vpc import *
+from AWSUtils.protocols_dict import *
+
+# Import Scout2 tools
+from AWSScout2.utils import *
+from AWSScout2.utils_ec2 import *
+from AWSScout2.filters import *
+from AWSScout2.findings import *
+
+# Import third-party packages
 import boto
 from boto import ec2
 from boto import vpc
 from boto.ec2 import elb
-
-# Import AWS Scout2 tools
-from AWSScout2.utils import *
-from AWSScout2.filters import *
-from AWSScout2.findings import *
-from AWSScout2.protocols_dict import *
 
 
 ########################################
@@ -103,7 +109,7 @@ def list_network_attack_surface(ec2_info):
 ##### EC2 fetch functions
 ########################################
 
-def get_ec2_info(key_id, secret, session_token, fetch_ec2_gov):
+def get_ec2_info(profile_name, fetch_ec2_gov):
     ec2_info = {}
     ec2_info['regions'] = {}
     # Build region list for each EC2 service
@@ -115,19 +121,19 @@ def get_ec2_info(key_id, secret, session_token, fetch_ec2_gov):
             print 'Fetching EC2 data for region %s...' % region
             # VPC
             if region in vpc_regions:
-                vpc_connection = boto.vpc.connect_to_region(region, aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
+                vpc_connection = connect_vpc(profile_name, region)
                 manage_dictionary(ec2_info['regions'][region], 'vpcs', {})
                 get_vpc_info(vpc_connection, ec2_info['regions'][region]['vpcs'])
             # Security groups and instances
             if region in ec2_regions:
-                ec2_connection = boto.ec2.connect_to_region(region, aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
+                ec2_connection = connect_ec2(profile_name, region)
                 manage_dictionary(ec2_info['regions'][region], 'vpcs', {})
                 get_security_groups_info(ec2_connection, ec2_info['regions'][region]['vpcs'])
                 get_instances_info(ec2_connection, ec2_info['regions'][region]['vpcs'])
                 get_elastic_ip_info(ec2_connection, ec2_info['regions'][region])
             # ELB
             if region in elb_regions:
-                elb_connection = boto.ec2.elb.connect_to_region(region, aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
+                elb_connection = connect_elb(profile_name, region)
                 get_elb_info(elb_connection, ec2_info['regions'][region])
         except Exception, e:
             printException(e)

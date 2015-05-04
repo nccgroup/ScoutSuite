@@ -1,12 +1,16 @@
 #!/usr/bin/env python2
 
-# Import the Amazon SDK
-import boto
+# Import AWS Utils
+from AWSUtils.utils_s3 import *
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
 from AWSScout2.filters import *
 from AWSScout2.findings import *
+
+# Import third-party packages
+import boto
+
 
 ########################################
 ##### S3 functions
@@ -136,8 +140,8 @@ def get_s3_bucket_keys(b, bucket, check_encryption, check_acls):
         except Exception, e:
             continue
 
-def get_s3_info(key_id, secret, session_token, s3_info, check_encryption, check_acls, checked_buckets, skipped_buckets):
-    s3_connection = boto.connect_s3(aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
+def get_s3_info(profile_name, s3_info, check_encryption, check_acls, checked_buckets, skipped_buckets):
+    s3_connection = connect_s3(profile_name)
     print 'Fetching S3 buckets data...'
     get_s3_buckets(s3_connection, s3_info, check_encryption, check_acls, checked_buckets, skipped_buckets)
     return s3_info

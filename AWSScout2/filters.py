@@ -4,7 +4,7 @@
 from AWSScout2.filter import *
 from AWSScout2.filter_ec2 import *
 from AWSScout2.filter_iam import *
-from AWSScout2.utils import *
+from AWSUtils.utils import *
 
 ########################################
 # filter dictionaries

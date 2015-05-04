@@ -1,14 +1,14 @@
 #!/usr/bin/env python2
 
-# Import the Amazon SDK
-import boto
+# Import AWS Utils
+from AWSUtils.utils_iam import *
 
-# Import AWS Scout2 tools
+# Import Scout2 tools
 from AWSScout2.utils import *
 from AWSScout2.filters import *
 from AWSScout2.findings import *
 
-# Import other third-party packages
+# Import third-party packages
 import base64
 import json
 import urllib
@@ -44,12 +44,12 @@ def get_group_users(iam, group_name):
         users.append(user.user_name)
     return users
 
-def get_iam_info(key_id, secret, session_token, iam_info):
+def get_iam_info(profile_name, iam_info):
     manage_dictionary(iam_info, 'groups', {})
     manage_dictionary(iam_info, 'permissions', {})
     manage_dictionary(iam_info, 'roles', {})
     manage_dictionary(iam_info, 'users', {})
-    iam_connection = boto.connect_iam(aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
+    iam_connection = connect_iam(profile_name)
     # Generate the report early so that download doesn't fail with "ReportInProgress".
     try:
         iam_connection.generate_credential_report()
@@ -190,19 +190,3 @@ def get_users_info(iam_connection, iam_info):
         iam_info['users'][user['name']] = user
         count = update_status(count, total)
     close_status(count, total)
-
-def handle_truncated_responses(callback, callback_args, result_path, items_name):
-    marker_value = None
-    items = []
-    while True:
-        if callback_args:
-            result = callback(callback_args, marker = marker_value)
-        else:
-            result = callback(marker = marker_value)
-        for key in result_path:
-            result = result[key]
-        marker_value = result['marker'] if result['is_truncated'] != 'false' else None
-        items = items + result[items_name]
-        if marker_value is None:
-            break
-    return items

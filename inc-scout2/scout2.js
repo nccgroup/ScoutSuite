@@ -562,12 +562,16 @@ Handlebars.registerHelper('count_in', function(service, path) {
     return recursive_count(input, entities);
 });
 Handlebars.registerHelper('count_ec2_in_region', function(region, path) {
-    var count = 0;
-    var entities = path.split('.');
-    for (r in ec2_info['regions']) {
-        if (r == region) {
-            return recursive_count(ec2_info['regions'][r], entities);
+    if (typeof ec2_info != 'undefined') {
+        var count = 0;
+        var entities = path.split('.');
+        for (r in ec2_info['regions']) {
+            if (r == region) {
+                return recursive_count(ec2_info['regions'][r], entities);
+            }
         }
+    } else {
+        count = 'N/A';
     }
     return count;
 });

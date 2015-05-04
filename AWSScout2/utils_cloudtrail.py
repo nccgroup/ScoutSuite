@@ -1,14 +1,17 @@
 #!/usr/bin/env python2
 
-# Import the Amazon SDK
-import boto
-from boto import cloudtrail
+# Import AWS Utils
+from AWSUtils.utils import *
+from AWSUtils.utils_cloudtrail import *
 
-# Import AWS Scout2 tools
+# Import Scout2 tools
 from AWSScout2.utils import *
 from AWSScout2.filters import *
 from AWSScout2.findings import *
 
+# Import third-party packages
+import boto
+from boto import cloudtrail
 
 ########################################
 ##### CloudTrails functions
@@ -17,7 +20,7 @@ from AWSScout2.findings import *
 def analyze_cloudtrail_config(cloudtrail_info, force_write):
     analyze_config(cloudtrail_finding_dictionary, cloudtrail_filter_dictionary, cloudtrail_info, 'CloudTrail', force_write)
 
-def get_cloudtrail_info(key_id, secret, session_token):
+def get_cloudtrail_info(profile_name):
     cloudtrail_info = {}
     cloudtrail_info['regions'] = {}
     for region in cloudtrail.regions():
@@ -25,7 +28,7 @@ def get_cloudtrail_info(key_id, secret, session_token):
         manage_dictionary(cloudtrail_info['regions'], region.name, {})
         cloudtrail_info['regions'][region.name]['name'] = region.name
         manage_dictionary(cloudtrail_info['regions'][region.name], 'trails', {})
-        cloudtrail_connection = cloudtrail.connect_to_region(region.name, aws_access_key_id = key_id, aws_secret_access_key = secret, security_token = session_token)
+        cloudtrail_connection = connect_cloudtrail(profile_name, region.name)
         trails = cloudtrail_connection.describe_trails()
         count, total = init_status(None, 'CloudTrails')
         for trail in trails['trailList']:
