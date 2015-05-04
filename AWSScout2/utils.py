@@ -230,7 +230,7 @@ def prompt_4_overwrite(filename, force_write):
     # Do not prompt if the file does not exist or force_write is set
     if not os.path.exists(filename) or force_write:
         return True
-    return prompt_4_yes_no('File already exists. Do you want to overwrite it')
+    return prompt_4_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename))
 
 def prompt_4_value(question, choices = None, default = None, display_choices = True, authorize_list = False):
     if choices and len(choices) == 1 and choices[0] == 'yes_no':
