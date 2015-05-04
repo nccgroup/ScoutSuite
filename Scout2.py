@@ -1,9 +1,19 @@
 #!/usr/bin/env python2
 
+# Import third-party packages
+import os
+import sys
+
 # Import AWS Utils
-from AWSUtils.utils import *
-from AWSUtils.utils_ec2 import *
-from AWSUtils.utils_iam import *
+try:
+    from AWSUtils.utils import *
+    from AWSUtils.utils_ec2 import *
+    from AWSUtils.utils_iam import *
+except:
+    print 'Error: Scout2 now depends on the AWS Utils module. Update your local repository with the following commands:'
+    print '  $ git submodule init'
+    print '  $ git submodule update'
+    sys.exit()
 
 # Import Scout2 tools
 from AWSScout2.filters import *
@@ -13,9 +23,6 @@ from AWSScout2.utils_ec2 import *
 from AWSScout2.utils_iam import *
 from AWSScout2.utils_rds import *
 from AWSScout2.utils_s3 import *
-
-# Import third-party packages
-import os
 
 
 ########################################
@@ -46,6 +53,7 @@ def main(args):
     if args.fetch_creds_from_csv:
         key_id, secret, mfa_serial = fetch_creds_from_csv(args.fetch_creds_from_csv[0])
     elif not args.fetch_local:
+        # Read from ~/.aws/credentials
         key_id, secret, mfa_serial, session_token = read_creds_from_aws_credentials_file(args.profile[0])
         # Check for boto config, EC2 instance metadata, and environment variables
 #        key_id, secret, session_token = fetch_creds_from_system(args.profile[0])
