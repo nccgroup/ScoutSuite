@@ -1,0 +1,3 @@
+[submodule "AWSUtils"]
+	path = AWSUtils
+	url = https://github.com/iSECPartners/AWSUtils
