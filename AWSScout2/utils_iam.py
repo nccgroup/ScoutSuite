@@ -44,12 +44,12 @@ def get_group_users(iam, group_name):
         users.append(user.user_name)
     return users
 
-def get_iam_info(profile_name, iam_info):
+def get_iam_info(key_id, secret, session_token, iam_info):
     manage_dictionary(iam_info, 'groups', {})
     manage_dictionary(iam_info, 'permissions', {})
     manage_dictionary(iam_info, 'roles', {})
     manage_dictionary(iam_info, 'users', {})
-    iam_connection = connect_iam(profile_name)
+    iam_connection = connect_iam(key_id, secret, session_token)
     # Generate the report early so that download doesn't fail with "ReportInProgress".
     try:
         iam_connection.generate_credential_report()

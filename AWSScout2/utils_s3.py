@@ -140,8 +140,8 @@ def get_s3_bucket_keys(b, bucket, check_encryption, check_acls):
         except Exception, e:
             continue
 
-def get_s3_info(profile_name, s3_info, check_encryption, check_acls, checked_buckets, skipped_buckets):
-    s3_connection = connect_s3(profile_name)
+def get_s3_info(key_id, secret, session_token, s3_info, check_encryption, check_acls, checked_buckets, skipped_buckets):
+    s3_connection = connect_s3(key_id, secret, session_token)
     print 'Fetching S3 buckets data...'
     get_s3_buckets(s3_connection, s3_info, check_encryption, check_acls, checked_buckets, skipped_buckets)
     return s3_info

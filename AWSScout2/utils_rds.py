@@ -34,14 +34,14 @@ def check_for_duplicate(rds_info):
             for instance_id in rds_info['violations']['backup-disabled'].items:
                 rds_info['violations']['short-backup-retention-period'].removeItem(instance_id)
 
-def get_rds_info(profile_name, fetch_gov):
+def get_rds_info(key_id, secret, session_token, fetch_gov):
     rds_info = {}
     rds_info['regions'] = {}
     build_region_list(boto.rds.regions(), rds_info, fetch_gov)
     for region in rds_info['regions']:
         try:
             print 'Fetching RDS data for region %s...' % region
-            rds_connection = connect_rds(profile_name, region)
+            rds_connection = connect_rds(key_id, secret, session_token, region)
             get_security_groups_info(rds_connection, rds_info['regions'][region])
             get_instances_info(rds_connection, rds_info['regions'][region])
 

@@ -109,7 +109,7 @@ def list_network_attack_surface(ec2_info):
 ##### EC2 fetch functions
 ########################################
 
-def get_ec2_info(profile_name, fetch_ec2_gov):
+def get_ec2_info(key_id, secret, session_token, fetch_ec2_gov):
     ec2_info = {}
     ec2_info['regions'] = {}
     # Build region list for each EC2 service
@@ -121,19 +121,19 @@ def get_ec2_info(profile_name, fetch_ec2_gov):
             print 'Fetching EC2 data for region %s...' % region
             # VPC
             if region in vpc_regions:
-                vpc_connection = connect_vpc(profile_name, region)
+                vpc_connection = connect_vpc(key_id, secret, session_token, region)
                 manage_dictionary(ec2_info['regions'][region], 'vpcs', {})
                 get_vpc_info(vpc_connection, ec2_info['regions'][region]['vpcs'])
             # Security groups and instances
             if region in ec2_regions:
-                ec2_connection = connect_ec2(profile_name, region)
+                ec2_connection = connect_ec2(key_id, secret, session_token, region)
                 manage_dictionary(ec2_info['regions'][region], 'vpcs', {})
                 get_security_groups_info(ec2_connection, ec2_info['regions'][region]['vpcs'])
                 get_instances_info(ec2_connection, ec2_info['regions'][region]['vpcs'])
                 get_elastic_ip_info(ec2_connection, ec2_info['regions'][region])
             # ELB
             if region in elb_regions:
-                elb_connection = connect_elb(profile_name, region)
+                elb_connection = connect_elb(key_id, secret, session_token, region)
                 get_elb_info(elb_connection, ec2_info['regions'][region])
         except Exception, e:
             printException(e)
