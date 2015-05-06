@@ -41,7 +41,7 @@ def main(args):
         for v in violation_names:
             print '%3d. %s - %s' % (violation_names.index(v), violations[v]['keyword_prefix'].upper(), v)
         indices = [ '%d' % i for i in range(0, len(violations)) ]
-        choices = prompt_4_value('Which violation ID do you want to output the items for', indices, display_choices = False, authorize_list = True)
+        choices = prompt_4_value('Which violation ID do you want to output the items for', indices, display_choices = False, authorize_list = True, is_question = True)
 
     # Dump the list of items
     output = ''
