@@ -24,18 +24,28 @@ def analyze_iam_config(iam_info, force_write):
 
 def get_groups_info(iam_connection, iam_info):
     groups = handle_truncated_responses(iam_connection.get_all_groups, None, ['list_groups_response', 'list_groups_result'], 'groups')
-    count, total = init_status(groups, fetched = len(iam_info['groups']))
-    for group in groups:
-        # When resuming upon throttling error, skip if already fetched
-        if group['group_name'] in iam_info['groups']:
-            continue
-        group['id'] = group.pop('group_id')
-        group['name'] = group.pop('group_name')
-        group['users'] = get_group_users(iam_connection, group.name);
-        group['policies'] = get_policies(iam_connection, iam_info, 'group', group.name)
-        iam_info['groups'][group.name] = group
-        count = update_status(count, total)
-    close_status(count, total)
+    iam_info['groups_count'] = len(groups)
+    thread_work(iam_connection, iam_info, groups, get_group_info, num_threads = 10)
+    show_status(iam_info, 'groups')
+
+def get_group_info(iam_connection, q, params):
+    while True:
+        try:
+            iam_info, group = q.get()
+            # When resuming upon throttling error, skip if already fetched
+            if group['group_name'] in iam_info['groups']:
+                continue
+            group['id'] = group.pop('group_id')
+            group['name'] = group.pop('group_name')
+            group['users'] = get_group_users(iam_connection, group.name);
+            group['policies'] = get_policies(iam_connection, iam_info, 'group', group.name)
+            iam_info['groups'][group.name] = group
+            show_status(iam_info, 'groups', False)
+        except Exception, e:
+            printException(e)
+            pass
+        finally:
+            q.task_done()
 
 def get_group_users(iam, group_name):
     users = []
@@ -131,23 +141,33 @@ def get_policies(iam_connection, iam_info, keyword, name):
 
 def get_roles_info(iam_connection, iam_info):
     roles = handle_truncated_responses(iam_connection.list_roles, None, ['list_roles_response', 'list_roles_result'], 'roles')
-    count, total = init_status(roles, fetched = len(iam_info['roles']))
-    for role in roles:
-        # When resuming upon throttling error, skip if already fetched
-        if role['role_name'] in iam_info['roles']:
-            continue
-        role['id'] = role.pop('role_id')
-        role['name'] = role.pop('role_name')
-        role['policies'] = get_policies(iam_connection, iam_info, 'role', role.name)
-        iam_info['roles'][role.name] = role
-        count = update_status(count, total)
-        profiles = handle_truncated_responses(iam_connection.list_instance_profiles_for_role, role.name, ['list_instance_profiles_for_role_response', 'list_instance_profiles_for_role_result'], 'instance_profiles')
-        manage_dictionary(role, 'instance_profiles', {})
-        for profile in profiles:
-            manage_dictionary(role['instance_profiles'], profile['arn'], {})
-            role['instance_profiles'][profile['arn']]['id'] = profile['instance_profile_id']
-            role['instance_profiles'][profile['arn']]['name'] = profile['instance_profile_name']
-    close_status(count, total)
+    iam_info['roles_count'] = len(roles)
+    thread_work(iam_connection, iam_info, roles, get_role_info, num_threads = 10)
+    show_status(iam_info, 'roles')
+
+def get_role_info(iam_connection, q, params):
+    while True:
+        try:
+            iam_info, role = q.get()
+            # When resuming upon throttling error, skip if already fetched
+            if role['role_name'] in iam_info['roles']:
+                continue
+            role['id'] = role.pop('role_id')
+            role['name'] = role.pop('role_name')
+            role['policies'] = get_policies(iam_connection, iam_info, 'role', role.name)
+            iam_info['roles'][role.name] = role
+            profiles = handle_truncated_responses(iam_connection.list_instance_profiles_for_role, role.name, ['list_instance_profiles_for_role_response', 'list_instance_profiles_for_role_result'], 'instance_profiles')
+            manage_dictionary(role, 'instance_profiles', {})
+            for profile in profiles:
+                manage_dictionary(role['instance_profiles'], profile['arn'], {})
+                role['instance_profiles'][profile['arn']]['id'] = profile['instance_profile_id']
+                role['instance_profiles'][profile['arn']]['name'] = profile['instance_profile_name']
+            show_status(iam_info, 'roles', False)
+        except Exception, e:
+            printException(e)
+            pass
+        finally:
+            q.task_done()
 
 def get_credential_report(iam_connection, iam_info):
     iam_report = {}
@@ -168,25 +188,43 @@ def get_credential_report(iam_connection, iam_info):
 
 def get_users_info(iam_connection, iam_info):
     users = handle_truncated_responses(iam_connection.get_all_users, None, ['list_users_response', 'list_users_result'], 'users')
-    count, total = init_status(users, fetched = len(iam_info['users']))
-    for user in users:
-        # When resuming upon throttling error, skip if already fetched
-        if user['user_name'] in iam_info['users']:
-            continue
-        user['id'] = user.pop('user_id')
-        user['name'] = user.pop('user_name')
-        user['policies'] = get_policies(iam_connection, iam_info, 'user', user.name)
-        groups = iam_connection.get_groups_for_user(user['name'])
-        user['groups'] = groups.list_groups_for_user_response.list_groups_for_user_result.groups
+    iam_info['users_count'] = len(users)
+    thread_work(iam_connection, iam_info, users, get_user_info, num_threads = 10)
+    show_status(iam_info, 'users')
+
+def get_user_info(iam_connection, q, params):
+    while True:
         try:
-            logins = iam_connection.get_login_profiles(user['name'])
-            user['logins'] = logins.get_login_profile_response.get_login_profile_result.login_profile
+            iam_info, user = q.get()
+            # When resuming upon throttling error, skip if already fetched
+            if user['user_name'] in iam_info['users']:
+                continue
+            user['id'] = user.pop('user_id')
+            user['name'] = user.pop('user_name')
+            user['policies'] = get_policies(iam_connection, iam_info, 'user', user.name)
+            groups = iam_connection.get_groups_for_user(user['name'])
+            user['groups'] = groups.list_groups_for_user_response.list_groups_for_user_result.groups
+            try:
+                logins = iam_connection.get_login_profiles(user['name'])
+                user['logins'] = logins.get_login_profile_response.get_login_profile_result.login_profile
+            except Exception, e:
+                pass
+            access_keys = iam_connection.get_all_access_keys(user['name'])
+            user['access_keys'] = access_keys.list_access_keys_response.list_access_keys_result.access_key_metadata
+            mfa_devices = iam_connection.get_all_mfa_devices(user['name'])
+            user['mfa_devices'] = mfa_devices.list_mfa_devices_response.list_mfa_devices_result.mfa_devices
+            iam_info['users'][user['name']] = user
+            show_status(iam_info, 'users', False)
         except Exception, e:
+            printException(e)
             pass
-        access_keys = iam_connection.get_all_access_keys(user['name'])
-        user['access_keys'] = access_keys.list_access_keys_response.list_access_keys_result.access_key_metadata
-        mfa_devices = iam_connection.get_all_mfa_devices(user['name'])
-        user['mfa_devices'] = mfa_devices.list_mfa_devices_response.list_mfa_devices_result.mfa_devices
-        iam_info['users'][user['name']] = user
-        count = update_status(count, total)
-    close_status(count, total)
+        finally:
+            q.task_done()
+
+def show_status(iam_info, entities, newline = True):
+    current = len(iam_info[entities])
+    total = iam_info[entities + '_count']
+    sys.stdout.write("\r%d/%d" % (current, total))
+    sys.stdout.flush()
+    if newline:
+        sys.stdout.write('\n')
