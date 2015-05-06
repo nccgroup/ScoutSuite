@@ -113,31 +113,40 @@ def get_ec2_info(key_id, secret, session_token, fetch_ec2_gov):
     ec2_info = {}
     ec2_info['regions'] = {}
     # Build region list for each EC2 service
-    ec2_regions = build_region_list(boto.ec2.regions(), ec2_info, fetch_ec2_gov)
-    elb_regions = build_region_list(boto.ec2.elb.regions(), ec2_info, fetch_ec2_gov)
-    vpc_regions = build_region_list(boto.vpc.regions(), ec2_info, fetch_ec2_gov)
-    for region in ec2_info['regions']:
+    ec2_params = {}
+    ec2_params['ec2_regions'] = build_region_list(boto.ec2.regions(), ec2_info, fetch_ec2_gov)
+    ec2_params['elb_regions'] = build_region_list(boto.ec2.elb.regions(), ec2_info, fetch_ec2_gov)
+    ec2_params['vpc_regions'] = build_region_list(boto.vpc.regions(), ec2_info, fetch_ec2_gov)
+    all_regions = set(ec2_params['ec2_regions'] + ec2_params['elb_regions'] + ec2_params['vpc_regions'])
+    thread_work((key_id, secret, session_token), ec2_info, all_regions, get_ec2_region, show_status, service_params = ec2_params)
+    return ec2_info   
+
+def get_ec2_region(connection_info, q, params):
+    key_id, secret, session_token = connection_info
+    while True:
         try:
-            print 'Fetching EC2 data for region %s...' % region
+            ec2_info, region = q.get()
             # VPC
-            if region in vpc_regions:
+            if region in params['vpc_regions']:
                 vpc_connection = connect_vpc(key_id, secret, session_token, region)
                 manage_dictionary(ec2_info['regions'][region], 'vpcs', {})
                 get_vpc_info(vpc_connection, ec2_info['regions'][region]['vpcs'])
             # Security groups and instances
-            if region in ec2_regions:
+            if region in params['ec2_regions']:
                 ec2_connection = connect_ec2(key_id, secret, session_token, region)
                 manage_dictionary(ec2_info['regions'][region], 'vpcs', {})
                 get_security_groups_info(ec2_connection, ec2_info['regions'][region]['vpcs'])
                 get_instances_info(ec2_connection, ec2_info['regions'][region]['vpcs'])
                 get_elastic_ip_info(ec2_connection, ec2_info['regions'][region])
             # ELB
-            if region in elb_regions:
+            if region in params['elb_regions']:
                 elb_connection = connect_elb(key_id, secret, session_token, region)
                 get_elb_info(elb_connection, ec2_info['regions'][region])
         except Exception, e:
             printException(e)
             pass
+        finally:
+            q.task_done()
     return ec2_info
 
 def get_elastic_ip_info(ec2_connection, region_info):
@@ -152,7 +161,6 @@ def get_elastic_ip_info(ec2_connection, region_info):
 
 def get_elb_info(elb_connection, region_info):
     load_balancers = elb_connection.get_all_load_balancers()
-    count, total = init_status(None, 'ELB')
     for lb in load_balancers:
         manage_dictionary(region_info, 'elbs', {})
         manage_dictionary(region_info['elbs'], lb.name, {})
@@ -170,14 +178,10 @@ def get_elb_info(elb_connection, region_info):
         manage_dictionary(region_info['elbs'][lb.name], 'source_security_group', {})
         region_info['elbs'][lb.name]['source_security_group']['name'] = lb.source_security_group.name
         region_info['elbs'][lb.name]['source_security_group']['owner_alias'] = lb.source_security_group.owner_alias
-        count = update_status(count, total, 'ELB')
-    close_status(count, total, 'ELB')
 
 def get_instances_info(ec2, vpc_info):
     reservations = ec2.get_all_reservations()
-    count, total = init_status(None, 'Instances')
     for reservation in reservations:
-        total = total + len(reservation.instances)
         for i in reservation.instances:
             vpc_id = i.vpc_id if i.vpc_id else 'no-vpc'
             manage_dictionary(vpc_info[vpc_id], 'instances', {})
@@ -202,8 +206,6 @@ def get_instances_info(ec2, vpc_info):
             vpc_info[vpc_id]['instances'][i.id]['interfaces'] = []
             for interface in i.interfaces:
                 vpc_info[vpc_id]['instances'][i.id]['interfaces'].append(interface.id)
-            count = update_status(count, total, 'Instances')
-    close_status(count, total, 'Instances')
 
 def get_network_acl_entries(entries, egress):
     acl_list = []
@@ -221,7 +223,6 @@ def get_network_acl_entries(entries, egress):
 
 def get_vpc_info(vpc_connection, vpc_info):
     vpcs = vpc_connection.get_all_vpcs()
-    count, total = init_status(vpcs, 'VPC')
     for vpc in vpcs:
         manage_dictionary(vpc_info, vpc.id, {})
         # h4ck : data redundancy because I can't call ../@key in Handlebars
@@ -238,13 +239,10 @@ def get_vpc_info(vpc_connection, vpc_info):
             vpc_info[vpc.id]['network_acls'][acl.id]['inbound_network_acls'] = get_network_acl_entries(acl.network_acl_entries, "false")
             vpc_info[vpc.id]['network_acls'][acl.id]['outbound_network_acls'] = get_network_acl_entries(acl.network_acl_entries, "true")
         manage_dictionary(vpc_info[vpc.id], 'instances', {})
-        count = update_status(count, total, 'VPC')
-    close_status(count, total, 'VPC')
     return vpc_info
 
 def get_security_groups_info(ec2_connection, vpc_info):
     groups = ec2_connection.get_all_security_groups()
-    count, total = init_status(groups, 'Security groups')
     for group in groups:
         vpc_id = group.vpc_id if group.vpc_id else 'no-vpc'
         manage_dictionary(vpc_info, vpc_id, {})
@@ -254,8 +252,6 @@ def get_security_groups_info(ec2_connection, vpc_info):
         manage_dictionary(vpc_info[vpc_id]['security_groups'], group.id, {})
         # Append the new security group to the return list
         vpc_info[vpc_id]['security_groups'][group.id] = parse_security_group(group)
-        count = update_status(count, total, 'Security groups')
-    close_status(count, total, 'Security groups')
 
 def parse_security_group(group):
     security_group = {}
@@ -313,3 +309,10 @@ def read_tags(local, remote):
         local['name'] = remote.tags['Name']
     else:
         local['name'] = remote.id
+
+def show_status(rds_info, stop_event):
+    print 'Fetching EC2 data...'
+    while(not stop_event.is_set()):
+        # This one is quiet for now...
+        stop_event.wait(1)
+        pass
