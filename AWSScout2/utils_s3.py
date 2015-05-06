@@ -89,15 +89,24 @@ def get_s3_bucket_webhosting(bucket):
     return 'Disabled'
 
 # List all available buckets
-def get_s3_buckets(s3_connection, s3_info, check_encryption, check_acls, checked_buckets, skipped_buckets):
+def get_s3_buckets(s3_connection, s3_info, s3_params):
     manage_dictionary(s3_info, 'buckets', {})
     buckets = s3_connection.get_all_buckets()
-    count, total = init_status(buckets)
+    targets = []
     for b in buckets:
+        # Abort if bucket is not of interest
+        if (b.name in s3_params['skipped_buckets']) or (len(s3_params['checked_buckets']) and b.name not in s3_params['checked_buckets']):
+            continue
+        targets.append(b)
+    s3_info['buckets_count'] = len(targets)
+    thread_work(s3_connection, s3_info, targets, get_s3_bucket, show_status_thread, service_params = s3_params, num_threads = 5)
+    show_status(s3_info)
+    return s3_info
+
+def get_s3_bucket(s3_connection, q, s3_params):
+    while True:
         try:
-            # Abort if bucket is not of interest
-            if (b.name in skipped_buckets) or (len(checked_buckets) and b.name not in checked_buckets):
-                continue
+            s3_info, b = q.get()
             # Get general bucket configuration
             bucket = {}
             bucket['grants'] = get_s3_acls(b)
@@ -115,13 +124,13 @@ def get_s3_buckets(s3_connection, s3_info, check_encryption, check_acls, checked
             # h4ck : data redundancy because I can't call ../@key in Handlebars
             bucket['name'] = b.name
             # If requested, get key properties
-            if check_encryption or check_acls:
-                get_s3_bucket_keys(b, bucket, check_encryption, check_acls)
+            if s3_params['check_encryption'] or s3_params['check_acls']:
+                get_s3_bucket_keys(b, bucket, s3_params['check_encryption'], s3_params['check_acls'])
             s3_info['buckets'][b.name] = bucket
-            count = update_status(count, total)
         except Exception, e:
             printException(e)
-    close_status(count, total)
+        finally:
+            q.task_done()
 
 # Get key-specific information (server-side encryption, acls, etc...)
 def get_s3_bucket_keys(b, bucket, check_encryption, check_acls):
@@ -140,8 +149,19 @@ def get_s3_bucket_keys(b, bucket, check_encryption, check_acls):
         except Exception, e:
             continue
 
-def get_s3_info(key_id, secret, session_token, s3_info, check_encryption, check_acls, checked_buckets, skipped_buckets):
+def get_s3_info(key_id, secret, session_token, s3_info, s3_params):
     s3_connection = connect_s3(key_id, secret, session_token)
     print 'Fetching S3 buckets data...'
-    get_s3_buckets(s3_connection, s3_info, check_encryption, check_acls, checked_buckets, skipped_buckets)
+    get_s3_buckets(s3_connection, s3_info, s3_params)
     return s3_info
+
+def show_status_thread(s3_info, stop_event):
+    while(not stop_event.is_set()):
+        show_status(s3_info, False)
+        stop_event.wait(1)
+
+def show_status(s3_info, newline = True):
+    sys.stdout.write("\r%d/%d" % (len(s3_info['buckets']), s3_info['buckets_count']))
+    sys.stdout.flush()
+    if newline:
+        sys.stdout.write('\n')

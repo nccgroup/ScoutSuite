@@ -148,7 +148,12 @@ def main(args):
                         pass
                 else:
                     s3_info = {}
-                get_s3_info(key_id, secret, token, s3_info, args.check_s3_encryption, args.check_s3_acls, args.buckets, args.skipped_buckets)
+                s3_params = {}
+                s3_params['check_encryption'] = args.check_s3_encryption
+                s3_params['check_acls'] = args.check_s3_acls
+                s3_params['checked_buckets'] = args.buckets
+                s3_params['skipped_buckets'] = args.skipped_buckets
+                get_s3_info(key_id, secret, token, s3_info, s3_params)
             else:
                 s3_info = load_info_from_json('s3', environment_name)
             # Analyze the S3 config and save data to a local file
