@@ -12,7 +12,18 @@ class Finding(Filter):
         self.level = level
         self.questions = questions
         self.macro_items = []
+        self.flagged_items = 0
         super(Finding, self).__init__(description, entity, callback, callback_args)
+
+    def addItem(self, item, macro_item = None):
+        super(Finding, self).addItem(item, macro_item)
+        if macro_item not in self.macro_items:
+            self.flagged_items = self.flagged_items + 1
+
+    def removeItem(self, item, macro_item = None):
+        super(Finding, self).removeItem(item, macro_item)
+        if macro_item not in self.macro_items:
+            self.flagged_items = self.flagged_items - 1
 
     # arg0: limit
     # arg1: object attribute to count

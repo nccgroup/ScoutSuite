@@ -361,6 +361,7 @@ function load_config(keyword) {
                 info = cloudtrail_info;
                 load_aws_config_from_json(cloudtrail_info['regions'], 'cloudtrail_region', 2);
                 highlight_violations(cloudtrail_info['violations'], 'cloudtrail');
+                load_aws_config_from_json(cloudtrail_info['violations'], 'cloudtrail_dashboard', 1);
             }
             else if (keyword == 'ec2') {
                 info = ec2_info;
@@ -370,6 +371,7 @@ function load_config(keyword) {
                 load_aws_config_from_json(ec2_info['regions'], 'ec2_instance', 2);
                 load_aws_config_from_json(ec2_info['attack_surface'], 'ec2_attack_surface', 1);
                 highlight_violations(ec2_info['violations'], 'ec2');
+                load_aws_config_from_json(ec2_info['violations'], 'ec2_dashboard', 1);
                 load_filters_from_json(ec2_info['filters']);
             }
             else if (keyword == 'iam') {
@@ -382,6 +384,7 @@ function load_config(keyword) {
                     load_aws_config_from_json(iam_info['credential_report']['<root_account>'], 'iam_credential_report', 1);
                 }
                 highlight_violations(iam_info['violations'], 'iam');
+                load_aws_config_from_json(iam_info['violations'], 'iam_dashboard', 1);
                 load_filters_from_json(iam_info['filters']);
             }
             else if (keyword == 'rds') {
@@ -389,11 +392,13 @@ function load_config(keyword) {
                 load_aws_config_from_json(rds_info['regions'], 'rds_security_group', 2);
                 load_aws_config_from_json(rds_info['regions'], 'rds_instance', 2);
                 highlight_violations(rds_info['violations'], 'rds');
+                load_aws_config_from_json(rds_info['violations'], 'rds_dashboard', 1);
             }
             else if (keyword == 's3') {
                 info = s3_info;
                 load_aws_config_from_json(s3_info['buckets'], 's3_bucket', 2);
                 highlight_violations(s3_info['violations'], 's3');
+                load_aws_config_from_json(s3_info['violations'], 's3_dashboard', 1);
             }
             if ('regions' in info) {
                 load_region_filters(keyword, info['regions']);
@@ -401,8 +406,7 @@ function load_config(keyword) {
             $('[id="' + keyword + '_load_button"]').hide();
             $('[id="please_wait-row"]').hide();
             loaded_config_array.push(keyword);
-            // TODO: Show dashboard for service
-            // showAll(keyword + '_dashboard');
+            list_generic(keyword + '_dashboard');
         }, 50);
     }
 }
@@ -543,6 +547,11 @@ function finding_entity(prefix, entity) {
         return prefix + '_' + entity;
     }
 }
+Handlebars.registerHelper('friendly_name', function(entity) {
+    var name = entity.split('.').pop();
+    name = name.replace('_', ' ');
+    return name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+});
 Handlebars.registerHelper('count', function(items) {
     var c = 0;
     for (i in items) {
@@ -644,5 +653,32 @@ Handlebars.registerHelper('ifShow', function(v1, v2, options) {
 Handlebars.registerHelper('fixBucketName', function(bucket_name) {
     if (bucket_name != undefined) {
         return bucket_name.replace(/\./g, '-');
+    }
+});
+// http://funkjedi.com/technology/412-every-nth-item-in-handlebars, slightly tweaked to work with a dictionary
+Handlebars.registerHelper('grouped_each', function(every, context, options) {
+    var out = "", subcontext = [], i;
+    var keys = Object.keys(context);
+    var count = keys.length;
+    var subcontext = {};
+    if (context && count > 0) {
+        for (i = 0; i < count; i++) {
+            if (i > 0 && i % every === 0) {
+                out += options.fn(subcontext);
+                subcontext = {};
+            }
+            subcontext[keys[i]] = context[keys[i]];
+        }
+        out += options.fn(subcontext);
+    }
+    return out;
+});
+Handlebars.registerHelper('dashboard_color', function(level, checked, flagged) {
+    if (checked == 0) {
+        return 'unknown';
+    } else if (flagged == 0) {
+        return 'good';
+    } else {
+        return level;
     }
 });

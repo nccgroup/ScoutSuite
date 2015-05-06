@@ -46,6 +46,32 @@
         Handlebars.registerPartial("finding_menu_item", $("#finding_menu_item-partial").html());
     </script>
 
+    <!-- Generic dashboard partial -->
+    <script id="dashboard-partial" type="text/x-handlebars-template">
+      <div class="container">
+        {{#grouped_each 3 items}}
+          <div class="row">
+            {{#each this }}
+              <div class="col-sm-4">
+                <div class="list-group-item finding-title-{{dashboard_color level checked_items flagged_items}}">
+                  {{description}}
+                </div>
+                <div class="list-group-item">
+                  <ul>
+                    <li>{{friendly_name entity}} checked: {{checked_items}}</li>
+                    <li>{{friendly_name entity}} flagged: {{flagged_items}}</li>
+                  </ul>
+                </div>
+              </div>
+            {{/each}}
+          </div>
+        {{/grouped_each}}
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("dashboard", $("#dashboard-partial").html());
+    </script>
+
     <!-- CloudTrail trail partial -->
     <script id="cloudtrail_region-partial" type="text/x-handlebars-template">
       <div class="list-group" id="cloudtrail_region-details-{{name}}">
@@ -776,6 +802,9 @@
                   <li class="dropdown-header">CloudTrail config</li>
                   <li><a href="javascript:list_generic('cloudtrail_region')">Trails</a></li>
                   <li class="divider"></li>
+                  <li class="dropdown-header">Summaries</li>
+                  <li><a href="javascript:list_generic('cloudtrail_dashboard')">Dashboard</a></li>
+                  <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
                     {{> finding_menu_item}}
@@ -796,6 +825,7 @@
                   <li><a href="javascript:list_generic('ec2_security_group')">Security Groups</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Summaries</li>
+                  <li><a href="javascript:list_generic('ec2_dashboard')">Dashboard</a></li>
                   <li><a href="javascript:list_generic('ec2_attack_surface')">External Attack Surface</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
@@ -818,6 +848,7 @@
                   <li><a href="javascript:list_generic('iam_user')">Users</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Summaries</li>
+                  <li><a href="javascript:list_generic('iam_dashboard')">Dashboard</a></li>
                   <li><a href="javascript:list_generic('iam_permission')">Permissions</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
@@ -837,6 +868,9 @@
                   <li><a href="javascript:list_generic('rds_instance')">Instances</a></li>
                   <li><a href="javascript:list_generic('rds_security_group')">Security Groups</a></li>
                   <li class="divider"></li>
+                  <li class="dropdown-header">Summaries</li>
+                  <li><a href="javascript:list_generic('rds_dashboard')">Dashboard</a></li>
+                  <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
                     {{> finding_menu_item}}
@@ -852,6 +886,9 @@
                 <script id="s3_violation-list-template" type="text/x-handlebars-template">
                   <li class="dropdown-header">S3 config</li>
                   <li><a href="javascript:list_generic('s3_bucket')">Buckets</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">Summaries</li>
+                  <li><a href="javascript:list_generic('s3_dashboard')">Dashboard</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
@@ -905,6 +942,43 @@
       <!-- Overlay divs used to show entity details in pop up -->
       <div id="overlay-background" class="overlay-bg"></div>
       <div id="overlay-details" class="overlay col-sm-6"></div>
+
+      <!-- Dashboards -->
+      <div class="row" id="cloudtrail_dashboards-row">
+        <div class="col-sm-12" id="cloudtrail_dashboards-list">
+          <script id="cloudtrail_dashboard-list-template" type="text/x-handlebars-template">
+            {{> dashboard service_name = 'cloudtrail'}}
+          </script>
+        </div>
+      </div>
+      <div class="row" id="ec2_dashboards-row">
+        <div class="col-sm-12" id="ec2_dashboards-list">
+          <script id="ec2_dashboard-list-template" type="text/x-handlebars-template">
+            {{> dashboard service_name = 'ec2'}}
+          </script>
+        </div>
+      </div>
+      <div class="row" id="iam_dashboards-row">
+        <div class="col-sm-12" id="iam_dashboards-list">
+          <script id="iam_dashboard-list-template" type="text/x-handlebars-template">
+            {{> dashboard service_name = 'iam'}}
+          </script>
+        </div>
+      </div>
+      <div class="row" id="rds_dashboards-row">
+        <div class="col-sm-12" id="rds_dashboards-list">
+          <script id="rds_dashboard-list-template" type="text/x-handlebars-template">
+            {{> dashboard service_name = 'rds'}}
+          </script>
+        </div>
+      </div>
+      <div class="row" id="s3_dashboards-row">
+        <div class="col-sm-12" id="s3_dashboards-list">
+          <script id="s3_dashboard-list-template" type="text/x-handlebars-template">
+            {{> dashboard service_name = 's3'}}
+          </script>
+        </div>
+      </div>
 
       <!-- Template for CloudTrail -->
       <div class="row" id="cloudtrail_regions-row">

@@ -135,6 +135,8 @@ def process_entities(config, finding, entity_path):
                 callback = getattr(finding, finding.callback)
                 if entities in config:
                     for key in config[entities]:
+                        # Dashboard: count the number of processed entities here
+                        finding.checked_items = finding.checked_items + 1
                         callback(key, config[entities][key])
                 else:
                     # Special case when performing a check that requires access to the whole config, leave entities empty

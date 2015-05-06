@@ -20,7 +20,7 @@
         ]
     },
     "postgres-invalid-ssl-cert": {
-        "description": "Invalid SSL certificate",
+        "description": "Invalid SSL certificate (PostgreSQL)",
         "entity": "regions.instances",
         "callback": "checkPostgresCreationDate",
         "callback_args": [ "create_time", "08/05/2014" ],

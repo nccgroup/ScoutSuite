@@ -37,6 +37,7 @@ class CloudTrailFinding(Finding):
     def getGlobalServicesLoggingRegions(self, cloudtrail_info):
         enabledRegions = []
         for r in cloudtrail_info['regions']:
+            self.checkedNewItem()
             for t in cloudtrail_info['regions'][r]['trails']:
                 if cloudtrail_info['regions'][r]['trails'][t]['IncludeGlobalServiceEvents']:
                     enabledRegions.append(r)

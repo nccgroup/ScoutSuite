@@ -45,8 +45,10 @@ class IamFinding(Finding):
                 self.addItem(obj['name'])
         # Root account
         elif 'user' in obj:
-            if obj['user'] == '<root_account>' and obj['mfa_active'].lower() != 'true':
-                self.addItem('')
+            if obj['user'] == '<root_account>':
+                self.checkedNewItem()
+                if obj['mfa_active'].lower() != 'true':
+                    self.addItem('')
 
     def passwordAndKeyEnabled(self, key, obj):
         if len(obj['access_keys']) > 0 and 'logins' in obj:
@@ -62,6 +64,7 @@ class IamFinding(Finding):
     def recentlyUsed(self, key, obj):
         max_age = 15
         if obj['user'] == '<root_account>':
+            self.checkedNewItem()
             today = datetime.datetime.today()
             last_used_date = dateutil.parser.parse(obj['password_last_used']).replace(tzinfo=None)
             age = (today - last_used_date).days
@@ -70,6 +73,7 @@ class IamFinding(Finding):
 
     def hasActiveKeys(self, key, obj):
         if key == '<root_account>':
+            self.checkedNewItem()
             if obj['access_key_1_active'].lower() == 'true':
                 self.addItem('access_key_1_active')
             if obj['access_key_2_active'].lower() == 'true':

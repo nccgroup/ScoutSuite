@@ -8,6 +8,7 @@ class Filter(object):
         self.callback = callback
         self.callback_args = callback_args
         self.items = []
+        self.checked_items = 0
 
     def addItem(self, item, macro_item = None):
         if not macro_item:
@@ -30,3 +31,6 @@ class Filter(object):
         except Exception, e:
             print e
             pass
+
+    def checkedNewItem(self):
+        self.checked_items = self.checked_items + 1
