@@ -38,9 +38,14 @@ def get_rds_info(key_id, secret, session_token, fetch_gov):
     rds_info = {}
     rds_info['regions'] = {}
     build_region_list(boto.rds.regions(), rds_info, fetch_gov)
-    for region in rds_info['regions']:
+    thread_work((key_id, secret, session_token), rds_info, rds_info['regions'], get_rds_region, show_status)
+    return rds_info
+
+def get_rds_region(connection_info, q, params):
+    key_id, secret, session_token = connection_info
+    while True:
         try:
-            print 'Fetching RDS data for region %s...' % region
+            rds_info, region = q.get()
             rds_connection = connect_rds(key_id, secret, session_token, region)
             get_security_groups_info(rds_connection, rds_info['regions'][region])
             get_instances_info(rds_connection, rds_info['regions'][region])
@@ -48,16 +53,14 @@ def get_rds_info(key_id, secret, session_token, fetch_gov):
         except Exception, e:
             printException(e)
             pass
-    return rds_info
+        finally:
+            q.task_done()
 
 def get_security_groups_info(rds_connection, region_info):
     groups = rds_connection.get_all_dbsecurity_groups()
     manage_dictionary(region_info, 'security_groups', {})
-    count, total = init_status(groups, 'Security groups')
     for group in groups:
         region_info['security_groups'][group.name] = parse_security_group(group)
-        count = update_status(count, total, 'Security groups')
-    close_status(count, total, 'Security groups')
 
 def parse_security_group(group):
     security_group = {}
@@ -80,7 +83,6 @@ def parse_security_group(group):
 def get_instances_info(rds_connection, region_info):
     manage_dictionary(region_info, 'instances', {})
     dbinstances = rds_connection.get_all_dbinstances()
-    count, total = init_status(None, 'Instances')
     for dbi in dbinstances:
         dbi_info = {}
         total = total + len(dbinstances)
@@ -88,5 +90,10 @@ def get_instances_info(rds_connection, region_info):
             # parameter_groups , security_groups, vpc_security_gropus
             dbi_info[key] = dbi.__dict__[key]
         region_info['instances'][dbi.id] = dbi_info
-        count = update_status(count, total, 'Instances')
-    close_status(count, total, 'Instances')
+
+def show_status(rds_info, stop_event):
+    print 'Fetching RDS data...'
+    while(not stop_event.is_set()):
+        # This one is quiet for now...
+        stop_event.wait(1)
+        pass
