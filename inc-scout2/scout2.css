@@ -66,3 +66,36 @@ ul.no-bullet {
     display: none;
     border-radius: 5px;
 }
+
+.plain-link a:link {
+    color: black !important;
+    text-decoration: none !important;
+}
+.plain-link a:visited {
+    color: black !important;
+    text-decoration: none !important;
+}
+.plain-link a:hover {
+    color: black !important;
+    text-decoration: none !important;
+}
+.plain-link a:active {
+    color: black !important;
+    text-decoration: none !important;
+}
+.disabled-link a:link{
+    pointer-events: none;
+    cursor: default;
+}
+.disabled-link a:visited{
+    pointer-events: none;
+    cursor: default;
+}
+.disabled-link a:hover{
+    pointer-events: none;
+    cursor: default;
+}
+.disabled-link a:active{
+    pointer-events: none;
+    cursor: default;
+}

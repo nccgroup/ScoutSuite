@@ -51,10 +51,12 @@
       <div class="container">
         {{#grouped_each 3 items}}
           <div class="row">
-            {{#each this }}
+            {{#each this}}
               <div class="col-sm-4">
-                <div class="list-group-item finding-title-{{dashboard_color level checked_items flagged_items}}">
-                  {{description}}
+                <div class="list-group-item finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
+                  <a href="javascript:list_findings('{{finding_entity keyword_prefix entity}}', {{keyword_prefix}}_info['violations'], '{{@key}}')">
+                    {{description}}
+                  </a>
                 </div>
                 <div class="list-group-item">
                   <ul>
@@ -954,7 +956,7 @@
       <div class="row" id="ec2_dashboards-row">
         <div class="col-sm-12" id="ec2_dashboards-list">
           <script id="ec2_dashboard-list-template" type="text/x-handlebars-template">
-            {{> dashboard service_name = 'ec2'}}
+            {{> dashboard service_name = 'ec2''}}
           </script>
         </div>
       </div>

@@ -675,9 +675,9 @@ Handlebars.registerHelper('grouped_each', function(every, context, options) {
 });
 Handlebars.registerHelper('dashboard_color', function(level, checked, flagged) {
     if (checked == 0) {
-        return 'unknown';
+        return 'unknown disabled-link';
     } else if (flagged == 0) {
-        return 'good';
+        return 'good disabled-link';
     } else {
         return level;
     }
