@@ -170,13 +170,6 @@ def main(args):
         except Exception, e:
             print 'Error: EC2 or IAM configuration is missing'
             printException(e)
-    if 'cloudtrail' in services and 'ec2' in services:
-        try:
-            refine_cloudtrail(cloudtrail_info, ec2_info)
-            save_config_to_file(cloudtrail_info, 'cloudtrail', args.force_write)
-        except Exception, e:
-            print 'Error: CloudTrail or EC2 configuration is missing'
-            printException(e)
 
     ##### Rename data based on environment's name
     if environment_name:

@@ -154,11 +154,6 @@ def process_finding(config, finding):
     entity_path = finding.entity.split('.')
     process_entities(config, finding, entity_path)
 
-def refine_cloudtrail(cloudtrail_config, ec2_config):
-    inactive_regions = [r for r in cloudtrail_config['violations']['Service disabled'].items]
-    for r in inactive_regions:
-        cloudtrail_config['violations']['Service disabled'].removeItem(r)
-
 
 ########################################
 # File read/write functions
