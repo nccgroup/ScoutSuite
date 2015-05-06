@@ -99,7 +99,7 @@ def get_s3_buckets(s3_connection, s3_info, s3_params):
             continue
         targets.append(b)
     s3_info['buckets_count'] = len(targets)
-    thread_work(s3_connection, s3_info, targets, get_s3_bucket, show_status_thread, service_params = s3_params, num_threads = 5)
+    thread_work(s3_connection, s3_info, targets, get_s3_bucket, service_params = s3_params, num_threads = 5)
     show_status(s3_info)
     return s3_info
 
@@ -127,6 +127,7 @@ def get_s3_bucket(s3_connection, q, s3_params):
             if s3_params['check_encryption'] or s3_params['check_acls']:
                 get_s3_bucket_keys(b, bucket, s3_params['check_encryption'], s3_params['check_acls'])
             s3_info['buckets'][b.name] = bucket
+            show_status(s3_info, False)
         except Exception, e:
             printException(e)
         finally:
@@ -155,13 +156,10 @@ def get_s3_info(key_id, secret, session_token, s3_info, s3_params):
     get_s3_buckets(s3_connection, s3_info, s3_params)
     return s3_info
 
-def show_status_thread(s3_info, stop_event):
-    while(not stop_event.is_set()):
-        show_status(s3_info, False)
-        stop_event.wait(1)
-
 def show_status(s3_info, newline = True):
-    sys.stdout.write("\r%d/%d" % (len(s3_info['buckets']), s3_info['buckets_count']))
+    current = len(s3_info['buckets'])
+    total = s3_info['buckets_count']
+    sys.stdout.write("\r%d/%d" % (current, total))
     sys.stdout.flush()
     if newline:
         sys.stdout.write('\n')
