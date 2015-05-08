@@ -243,7 +243,8 @@ def save_config_to_file(blob, keyword, force_write):
             keyword = keyword.lower().replace(' ','_')
             print >>f, keyword + '_info ='
             write_data_to_file(f, blob, force_write)
-    except:
+    except Exception, e:
+        printException(e)
         pass
 
 def write_data_to_file(f, blob, force_write):
