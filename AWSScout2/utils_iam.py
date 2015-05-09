@@ -158,24 +158,38 @@ def get_managed_policies(key_id, secret, token, iam_info):
     params['OnlyAttached'] = True
     policies = handle_truncated_boto3(iam_connection3.meta.client.list_policies, params, ['Policies'])
     manage_dictionary(iam_info, 'managed_policies', {})
-    for policy in policies['Policies']:
-        manage_dictionary(iam_info['managed_policies'], policy['Arn'], {})
-        iam_info['managed_policies'][policy['Arn']]['policy_name'] = policy['PolicyName']
-        iam_info['managed_policies'][policy['Arn']]['policy_id'] = policy['PolicyId']
-        # Download version and document
-        policy_version = iam_connection3.meta.client.get_policy_version(PolicyArn = policy['Arn'], VersionId = policy['DefaultVersionId'])
-        policy_version = policy_version['PolicyVersion']
-        policy_document = urllib.quote(json.dumps(policy_version['Document']))
-        iam_info['managed_policies'][policy['Arn']]['policy_document'] = policy_document
-        # Get attached IAM entities
-        attached_entities = handle_truncated_boto3(iam_connection3.meta.client.list_entities_for_policy, {'PolicyArn': policy['Arn']}, ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'])
-        for entity_type in attached_entities:
-            type_field = entity_type.replace('Policy', '').lower()
-            for entity in attached_entities[entity_type]:
-                name_field = entity_type.replace('Policy', '')[:-1] + 'Name'
-                manage_dictionary(iam_info[type_field][entity[name_field]], 'managed_policies', [])
-                iam_info[type_field][entity[name_field]]['managed_policies'].append(policy['Arn'])
-                get_permissions(policy_document, iam_info['permissions'], type_field, entity[name_field], policy['Arn'], True)
+    iam_info['managed_policies_count'] = len(policies['Policies'])
+    show_status(iam_info, 'managed_policies', False)
+    thread_work(iam_connection3, iam_info, policies['Policies'], get_managed_policy, num_threads = 10)
+    show_status(iam_info, 'managed_policies')
+
+def get_managed_policy(iam_connection3, q, params):
+    while True:
+        try:
+            iam_info, policy = q.get()
+            manage_dictionary(iam_info['managed_policies'], policy['Arn'], {})
+            iam_info['managed_policies'][policy['Arn']]['policy_name'] = policy['PolicyName']
+            iam_info['managed_policies'][policy['Arn']]['policy_id'] = policy['PolicyId']
+            # Download version and document
+            policy_version = iam_connection3.meta.client.get_policy_version(PolicyArn = policy['Arn'], VersionId = policy['DefaultVersionId'])
+            policy_version = policy_version['PolicyVersion']
+            policy_document = urllib.quote(json.dumps(policy_version['Document']))
+            iam_info['managed_policies'][policy['Arn']]['policy_document'] = policy_document
+            # Get attached IAM entities
+            attached_entities = handle_truncated_boto3(iam_connection3.meta.client.list_entities_for_policy, {'PolicyArn': policy['Arn']}, ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'])
+            for entity_type in attached_entities:
+                type_field = entity_type.replace('Policy', '').lower()
+                for entity in attached_entities[entity_type]:
+                    name_field = entity_type.replace('Policy', '')[:-1] + 'Name'
+                    manage_dictionary(iam_info[type_field][entity[name_field]], 'managed_policies', [])
+                    iam_info[type_field][entity[name_field]]['managed_policies'].append(policy['Arn'])
+                    get_permissions(policy_document, iam_info['permissions'], type_field, entity[name_field], policy['Arn'], True)
+            show_status(iam_info, 'managed_policies', False)
+        except Exception, e:
+            printException(e)
+            pass
+        finally:
+            q.task_done()
 
 def get_policies(iam_connection, iam_info, keyword, name):
     fetched_policies = {}
