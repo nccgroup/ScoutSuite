@@ -10,6 +10,7 @@ from AWSScout2.findings import *
 
 # Import third-party packages
 import base64
+import boto3 # h4ck # Because boto doesn't support managed policies yet...
 import json
 import urllib
 
@@ -65,59 +66,110 @@ def get_iam_info(key_id, secret, session_token, iam_info):
         iam_connection.generate_credential_report()
     except Exception, e:
         pass
-    print 'Fetching IAM users data...'
+    print 'Fetching IAM users...'
     get_users_info(iam_connection, iam_info)
-    print 'Fetching IAM groups data...'
+    print 'Fetching IAM groups...'
     get_groups_info(iam_connection, iam_info)
-    print 'Fetching IAM roles data...'
+    print 'Fetching IAM roles...'
     get_roles_info(iam_connection, iam_info)
+    try:
+        print 'Fetching IAM policies...'
+        get_managed_policies(key_id, secret, session_token, iam_info)
+    except Exception, e:
+        printException(e)
+        pass
     print 'Fetching IAM credential report...'
     get_credential_report(iam_connection, iam_info)
 
-def get_permissions(policy_document, permissions, keyword, name, policy_name):
+def get_permissions(policy_document, permissions, keyword, name, policy_name, is_managed_policy = False):
     manage_dictionary(permissions, 'Action', {})
     manage_dictionary(permissions, 'NotAction', {})
     document = json.loads(urllib.unquote(policy_document).decode('utf-8'))
     if type(document['Statement']) != list:
-        parse_statement(policy_document, permissions, keyword, name, policy_name, document['Statement'])
+        parse_statement(policy_document, permissions, keyword, name, policy_name, is_managed_policy, document['Statement'])
     else:
         for statement in document['Statement']:
-            parse_statement(policy_document, permissions, keyword, name, policy_name, statement)
+            parse_statement(policy_document, permissions, keyword, name, policy_name, is_managed_policy, statement)
 
-def parse_statement(policy_document, permissions, keyword, name, policy_name, statement):
+def parse_statement(policy_document, permissions, keyword, name, policy_name, is_managed_policy, statement):
         effect = str(statement['Effect'])
         action_string = 'Action' if 'Action' in statement else 'NotAction'
         resource_string = 'Resource' if 'Resource' in statement else 'NotResource'
         condition = statement['Condition'] if 'Condition' in statement else None
-        parse_actions(permissions[action_string], statement[action_string], resource_string, statement[resource_string], effect, keyword, name, policy_name, condition)
+        parse_actions(permissions[action_string], statement[action_string], resource_string, statement[resource_string], effect, keyword, name, policy_name, is_managed_policy, condition)
 
-def parse_actions(permissions, actions, resource_string, resources, effect, keyword, name, policy_name, condition):
+def parse_actions(permissions, actions, resource_string, resources, effect, keyword, name, policy_name, is_managed_policy, condition):
     if type(actions) == list:
         for action in actions:
-            parse_action(permissions, action, resource_string, resources, effect, keyword, name, policy_name, condition)
+            parse_action(permissions, action, resource_string, resources, effect, keyword, name, policy_name, is_managed_policy, condition)
     else:
-        parse_action(permissions, actions, resource_string, resources, effect, keyword, name, policy_name, condition)
+        parse_action(permissions, actions, resource_string, resources, effect, keyword, name, policy_name, is_managed_policy, condition)
 
-def parse_action(permissions, action, resource_string, resources, effect, keyword, name, policy_name, condition):
+def parse_action(permissions, action, resource_string, resources, effect, keyword, name, policy_name, is_managed_policy, condition):
     manage_dictionary(permissions, action, {})
-    parse_resources(permissions[action], resource_string, resources, effect, keyword, name, policy_name, condition)
+    parse_resources(permissions[action], resource_string, resources, effect, keyword, name, policy_name, is_managed_policy, condition)
 
-def parse_resources(permission, resource_string, resources, effect, keyword, name, policy_name, condition):
+def parse_resources(permission, resource_string, resources, effect, keyword, name, policy_name, is_managed_policy, condition):
     if type(resources) == list:
         for resource in resources:
-            parse_resource(permission, resource_string, resource, effect, keyword, name, policy_name, condition)
+            parse_resource(permission, resource_string, resource, effect, keyword, name, policy_name, is_managed_policy, condition)
     else:
-        parse_resource(permission, resource_string, resources, effect, keyword, name, policy_name, condition)
+        parse_resource(permission, resource_string, resources, effect, keyword, name, policy_name, is_managed_policy, condition)
 
-def parse_resource(permission, resource_string, resource, effect, keyword, name, policy_name, condition):
+def parse_resource(permission, resource_string, resource, effect, keyword, name, policy_name, is_managed_policy, condition):
     manage_dictionary(permission, keyword, {})
     manage_dictionary(permission[keyword], effect, {})
     manage_dictionary(permission[keyword][effect], name, {})
     manage_dictionary(permission[keyword][effect][name], resource_string, {})
     manage_dictionary(permission[keyword][effect][name][resource_string], resource, {})
-    manage_dictionary(permission[keyword][effect][name][resource_string][resource], 'Policies', {})
-    manage_dictionary(permission[keyword][effect][name][resource_string][resource]['Policies'], policy_name, {})
-    permission[keyword][effect][name][resource_string][resource]['Policies'][policy_name]['condition'] = condition
+    if is_managed_policy:
+        policy_type = 'ManagedPolicies'
+    else:
+        policy_type = 'InlinePolicies'
+    manage_dictionary(permission[keyword][effect][name][resource_string][resource], policy_type, {})
+    manage_dictionary(permission[keyword][effect][name][resource_string][resource][policy_type], policy_name, {})
+    permission[keyword][effect][name][resource_string][resource][policy_type][policy_name]['condition'] = condition
+
+def handle_truncated_boto3(iam_method, params, entities):
+    results = {}
+    for entity in entities:
+        results[entity] = []
+    while True:
+        response = iam_method(**params)
+        for entity in entities:
+            results[entity] = results[entity] + response[entity]
+        if 'IsTruncated' in response and response['IsTruncated'] == True:
+            params['Marker'] = response['Marker']
+        else:
+            break
+    return results
+
+def get_managed_policies(key_id, secret, token, iam_info):
+    boto3_session = boto3.session.Session(aws_access_key_id = key_id, aws_secret_access_key = secret, aws_session_token = token)
+    iam_connection3 = boto3_session.resource('iam')
+    policies = []
+    params = {}
+    params['OnlyAttached'] = True
+    policies = handle_truncated_boto3(iam_connection3.meta.client.list_policies, params, ['Policies'])
+    manage_dictionary(iam_info, 'managed_policies', {})
+    for policy in policies['Policies']:
+        manage_dictionary(iam_info['managed_policies'], policy['Arn'], {})
+        iam_info['managed_policies'][policy['Arn']]['policy_name'] = policy['PolicyName']
+        iam_info['managed_policies'][policy['Arn']]['policy_id'] = policy['PolicyId']
+        # Download version and document
+        policy_version = iam_connection3.meta.client.get_policy_version(PolicyArn = policy['Arn'], VersionId = policy['DefaultVersionId'])
+        policy_version = policy_version['PolicyVersion']
+        policy_document = urllib.quote(json.dumps(policy_version['Document']))
+        iam_info['managed_policies'][policy['Arn']]['policy_document'] = policy_document
+        # Get attached IAM entities
+        attached_entities = handle_truncated_boto3(iam_connection3.meta.client.list_entities_for_policy, {'PolicyArn': policy['Arn']}, ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'])
+        for entity_type in attached_entities:
+            type_field = entity_type.replace('Policy', '').lower()
+            for entity in attached_entities[entity_type]:
+                name_field = entity_type.replace('Policy', '')[:-1] + 'Name'
+                manage_dictionary(iam_info[type_field][entity[name_field]], 'managed_policies', [])
+                iam_info[type_field][entity[name_field]]['managed_policies'].append(policy['Arn'])
+                get_permissions(policy_document, iam_info['permissions'], type_field, entity[name_field], policy['Arn'], True)
 
 def get_policies(iam_connection, iam_info, keyword, name):
     fetched_policies = {}

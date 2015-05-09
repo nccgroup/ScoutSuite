@@ -354,6 +354,7 @@
             {{> iam_policy iam_entity_type = 'group' iam_entity_name = ../name policy_name = @key}}
           {{/each}}
         </div>
+        {{> iam_managed_policies}}
       </div>
     </script>
     <script>
@@ -380,6 +381,25 @@
     </script>
     <script>
       Handlebars.registerPartial("iam_policy", $("#iam_policy-partial").html());
+    </script>
+
+    <!-- IAM managed policies partial -->
+    <script id="iam_managed_policies-partial" type="text/x-handlebars-template">
+        <div class="list-group-item">
+          {{#if managed_policies}}
+            <h4 class="list-group-item-heading">Managed Policies <span class="badge pull-right btn-info">{{count managed_policies}}</span></h4>
+          {{else}}
+            <h4 class="list-group-item-heading">Managed Policies <span class="badge pull-right">{{count managed_policies}}</span></h4>
+          {{/if}}
+          <ul class="no-bullet">
+          {{#each managed_policies}}
+            <li class="list-group-item-text"><a href="javascript:showIAMPolicy('{{this}}')">{{policy_friendly_name this}}</a></li>
+          {{/each}}
+          </ul>
+        </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("iam_managed_policies", $("#iam_managed_policies-partial").html());
     </script>
 
     <!-- IAM role partial -->
@@ -411,11 +431,12 @@
           </div>
         </div>
         <div class="list-group-item">
-          <h4 class="list-group-item-heading">Role Policies</h4>
+          <h4 class="list-group-item-heading">Inline Policies</h4>
           {{#each policies}}
             {{> iam_policy iam_entity_type = 'role' iam_entity_name = ../name policy_name = @key}}
           {{/each}}
         </div>
+        {{> iam_managed_policies}}
       </div>
     </script>
     <script>
@@ -478,6 +499,7 @@
             {{> iam_policy iam_entity_type = 'user' iam_entity_name = ../name policy_name = @key}}
           {{/each}}
         </div>
+        {{> iam_managed_policies}}
       </div>
     </script>
     <script>
@@ -1274,9 +1296,19 @@
                                       <ul class="no-bullet">
                                         {{#each this}}
                                           {{addMember 'Resource' @key}}
-                                          {{#each Policies}}
+                                          {{#each InlinePolicies}}
                                             <li>
-                                              {{../Resource}} granted in <a href="javascript:showIAMPolicy('{{../../../../../../../type}}', '{{../../../../name}}', '{{@key}}')">{{@key}}</a>
+                                              {{../Resource}} granted in <a href="javascript:showIAMInlinePolicy('{{../../../../../../../type}}', '{{../../../../name}}', '{{@key}}')">{{@key}}</a>
+                                              {{#if condition}}
+                                                <ul class="no-bullet">
+                                                  <li class="list-group-item-text">Condition: {{condition}}</li>
+                                                </ul>
+                                              {{/if}}
+                                            </li>
+                                          {{/each}}
+                                          {{#each ManagedPolicies}}
+                                            <li>
+                                              {{../Resource}} granted in <a href="javascript:showIAMManagedPolicy('{{@key}}')">{{policy_friendly_name @key}}</a>
                                               {{#if condition}}
                                                 <ul class="no-bullet">
                                                   <li class="list-group-item-text">Condition: {{condition}}</li>

@@ -233,7 +233,14 @@ function showIAMGroup(group_name) {
     $('#overlay-details').html(single_iam_group_template(data));
     showPopup();
 }
-function showIAMPolicy(iam_entity_type, iam_entity_name, policy_name) {
+function showIAMManagedPolicy(policy_arn) {
+    var data = iam_info['managed_policies'][policy_arn];
+    $('#overlay-details').html(single_iam_policy_template(data));
+    showPopup();
+    var id = '#iam_' + iam_entity_type + '_policy_details-' + iam_entity_name + '-' + policy_name;
+    $(id).toggle();
+}
+function showIAMInlinePolicy(iam_entity_type, iam_entity_name, policy_name) {
     var data = iam_info[iam_entity_type][iam_entity_name]['policies'][policy_name];
     data['iam_entity_type'] = iam_entity_type;
     data['iam_entity_name'] = iam_entity_name;
@@ -681,4 +688,7 @@ Handlebars.registerHelper('dashboard_color', function(level, checked, flagged) {
     } else {
         return level;
     }
+});
+Handlebars.registerHelper('policy_friendly_name', function(arn) {
+    return arn.split(':policy/').pop()
 });
