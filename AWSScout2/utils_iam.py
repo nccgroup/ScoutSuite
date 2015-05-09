@@ -10,7 +10,11 @@ from AWSScout2.findings import *
 
 # Import third-party packages
 import base64
-import boto3 # h4ck # Because boto doesn't support managed policies yet...
+try:
+    import boto3 # h4ck # Because boto doesn't support managed policies yet...
+except:
+    print 'You need to install boto3 if you want Scout2 to fetch the managed policies.'
+    pass
 import json
 import urllib
 
