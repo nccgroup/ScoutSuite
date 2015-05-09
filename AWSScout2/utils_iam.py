@@ -39,7 +39,9 @@ def get_group_info(iam_connection, q, params):
             group['id'] = group.pop('group_id')
             group['name'] = group.pop('group_name')
             group['users'] = get_group_users(iam_connection, group.name);
-            group['policies'] = get_policies(iam_connection, iam_info, 'group', group.name)
+            policies = get_policies(iam_connection, iam_info, 'group', group.name)
+            if len(policies):
+                group['policies'] = policies
             iam_info['groups'][group.name] = group
             show_status(iam_info, 'groups', False)
         except Exception, e:
@@ -206,7 +208,9 @@ def get_role_info(iam_connection, q, params):
                 continue
             role['id'] = role.pop('role_id')
             role['name'] = role.pop('role_name')
-            role['policies'] = get_policies(iam_connection, iam_info, 'role', role.name)
+            policies = get_policies(iam_connection, iam_info, 'role', role.name)
+            if len(policies):
+                role['policies'] = policies
             iam_info['roles'][role.name] = role
             profiles = handle_truncated_responses(iam_connection.list_instance_profiles_for_role, role.name, ['list_instance_profiles_for_role_response', 'list_instance_profiles_for_role_result'], 'instance_profiles')
             manage_dictionary(role, 'instance_profiles', {})
@@ -253,7 +257,9 @@ def get_user_info(iam_connection, q, params):
                 continue
             user['id'] = user.pop('user_id')
             user['name'] = user.pop('user_name')
-            user['policies'] = get_policies(iam_connection, iam_info, 'user', user.name)
+            policies = get_policies(iam_connection, iam_info, 'user', user.name)
+            if len(policies):
+                user['policies'] = policies
             groups = iam_connection.get_groups_for_user(user['name'])
             user['groups'] = groups.list_groups_for_user_response.list_groups_for_user_result.groups
             try:

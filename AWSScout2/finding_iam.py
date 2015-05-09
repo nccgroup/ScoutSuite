@@ -58,7 +58,7 @@ class IamFinding(Finding):
             return False
 
     def hasUserPolicy(self, key, obj):
-        if len(obj['policies']) > 0:
+        if 'policies' in obj and len(obj['policies']) > 0:
             self.addItem(obj['name'])
 
     def recentlyUsed(self, key, obj):
