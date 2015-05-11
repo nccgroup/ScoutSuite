@@ -99,7 +99,7 @@ def get_s3_buckets(s3_connection, s3_info, s3_params):
             continue
         targets.append(b)
     s3_info['buckets_count'] = len(targets)
-    thread_work(s3_connection, s3_info, targets, get_s3_bucket, service_params = s3_params, num_threads = 5)
+    thread_work(s3_connection, s3_info, targets, get_s3_bucket, service_params = s3_params, num_threads = 30)
     show_status(s3_info)
     return s3_info
 
