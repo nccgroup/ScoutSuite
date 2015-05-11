@@ -9,7 +9,6 @@ from AWSUtils.protocols_dict import *
 from AWSScout2.utils import *
 from AWSScout2.filters import *
 from AWSScout2.findings import *
-from AWSScout2.protocols_dict import *
 
 # Import third-party packages
 import boto
