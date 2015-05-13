@@ -262,6 +262,81 @@
       Handlebars.registerPartial("ec2_security_group-rule_list", $("#ec2_security_group-rule_list-partial").html());
     </script>
 
+    <!-- EC2 Network ACL partial -->
+    <script id="ec2_network_acl-partial" type="text/x-handlebars-template">
+        <div id="ec2_region-details-{{@key}}">
+            <div class="list-group" id="ec2_network_acl-details-{{name}}">
+            <div class="list-group-item active">
+                <h4 class="list-group-item-heading">{{name}}</h4>
+            </div>
+            <div class="list-group-item">
+                <h4 class="list-group-item-heading">Inbound rules</h4>
+                {{{format_network_acls inbound_network_acls 'Source'}}}
+            </div>
+            <div class="list-group-item">
+                <h4 class="list-group-item-heading">Outbound rules</h4>
+                {{{format_network_acls outbound_network_acls 'Destination'}}}
+            </div>
+            </div>
+        </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("ec2_network_acl", $("#ec2_network_acl-partial").html());
+    </script>
+    
+
+    <!-- EC2 VPC partial -->
+    <script id="ec2_vpc-partial" type="text/x-handlebars-template">
+      <div class="list-group" id="ec2_vpc-details-{{id}}">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4>Information</h4>
+          <ul>
+            <li class="list-group-item-text">Region: {{region}}</li>
+            <li class="list-group-item-text">ID: {{id}}</li>
+            <li class="list-group-item-text">Name: {{name}}</li>
+          </ul>
+        </div>
+        <div class="list-group-item" style="padding-bottom: 0 !important;">
+          <div class="accordion">
+            <h4 class="list-group-item-heading accordion-heading">Network ACLs
+              <a class="accordion-toggle" data-toggle="collapse" href="#ec2_vpc-{{id}}-network_acls"><span class="badge pull-right btn-info">{{count_vpc_network_acls network_acls}}</span></a>
+            </h4>
+            <div id="ec2_vpc-{{id}}-network_acls" class="accordion-body collapse">
+              <div class="accordion-inner">
+                <ul class="no-bullet">
+                  {{#each network_acls}}
+                    <li><a href="javascript:findAndShowEC2Object('regions.vpcs.network_acls', '{{@key}}')">{{@key}}</a></li>
+                  {{/each}}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="list-group-item" style="padding-bottom: 0 !important;">
+          <div class="accordion">
+            <h4 class="list-group-item-heading accordion-heading">Instances
+              <a class="accordion-toggle" data-toggle="collapse" href="#ec2_vpc-{{id}}-instances"><span class="badge pull-right btn-info">{{count_vpc_instances instances}}</span></a>
+            </h4>
+            <div id="ec2_vpc-{{id}}-instances" class="accordion-body collapse">
+              <div class="accordion-inner">
+                <ul class="no-bullet">
+                  {{#each instances}}
+                    <li><a href="javascript:findAndShowEC2Object('regions.vpcs.instances', '{{@key}}')">{{@key}}</a></li>
+                  {{/each}}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("ec2_vpc", $("#ec2_vpc-partial").html());
+    </script>
+    
 
     <!-- EC2 instance partial -->
     <script id="ec2_instance-partial" type="text/x-handlebars-template">
@@ -744,6 +819,24 @@
         var single_ec2_instance_template = Handlebars.compile($("#single_ec2_instance-template").html());
     </script>
 
+    <!-- Single EC2 VPC template -->
+    <script id="single_ec2_vpc-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> ec2_vpc}}
+    </script>
+    <script>
+        var single_ec2_vpc_template = Handlebars.compile($("#single_ec2_vpc-template").html());
+    </script>
+    
+    <!-- Single EC2 Network ACL template -->
+    <script id="single_ec2_network_acl-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> ec2_network_acl}}
+    </script>
+    <script>
+        var single_ec2_network_acl_template = Handlebars.compile($("#single_ec2_network_acl-template").html());
+    </script>
+
     <!-- Single EC2 security group template -->
     <script id="single_ec2_security_group-template" type="text/x-handlebars-template">
         <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
@@ -1203,6 +1296,41 @@
           </script>
         </div><!-- /.col-sm-8 -->
       </div><!-- /.row -->
+
+      <!-- Template for EC2 VPCs -->
+      <div class="row" id="ec2_vpcs-row">
+        <div class="col-sm-4" id="ec2_vpcs-list">
+          <script id="ec2_vpc-list-template" type="text/x-handlebars-template">
+            <ul class="list-group">
+              <li class="list-group-item"><a href="javascript:showAll('ec2_vpc')">Show all<span class="badge pull-right">{{count_in "ec2" "regions.vpcs"}}</span></a></li>
+            </ul>
+            {{#each items}}
+              <div id="ec2_region-list-{{@key}}">
+                {{#if vpcs}}
+                  <ul class="list-group">
+                    <li class="list-group-item active">{{@key}}</li>
+                    {{#each vpcs}}
+                        <div class="list-group-item-text list-sub-element" id="ec2_instance-list-{{id}}"><a href="javascript:browseTo('ec2_vpc', '{{id}}')">{{name}}</a></div>
+                    {{/each}}
+                  </ul>
+                {{/if}}
+              </div>
+            {{/each}}
+            </script>
+          </ul>
+        </div>
+        <div class="col-sm-8" id="ec2_vpcs-details">
+          <script id="ec2_vpcs-detail-template" type="text/x-handlebars-template">
+          {{#each items}}
+            <div id="ec2_region-details-{{@key}}">
+              {{#each vpcs}}
+                    {{> ec2_vpc region=../name}}
+              {{/each}}
+            </div>
+          {{/each}}
+          </script>
+        </div><!-- /.col-sm-8 -->
+      </div><!-- /.row -->      
 
       <!-- Template for EC2 instances -->
       <div class="row" id="ec2_instances-row">

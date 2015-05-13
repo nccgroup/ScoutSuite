@@ -202,6 +202,11 @@ function findAndShowEC2Object(path, id) {
         $('#overlay-details').html(single_ec2_instance_template(object));
     } else if(etype == 'security_groups') {
         $('#overlay-details').html(single_ec2_security_group_template(object));
+    } else if (etype == 'vpcs') {
+        $('#overlay-details').html(single_ec2_vpc_template(object));
+    } else if (etype == 'network_acls') {
+        object['name']=id;
+        $('#overlay-details').html(single_ec2_network_acl_template(object));
     }
     showPopup();
 }
@@ -374,6 +379,7 @@ function load_config(keyword) {
             else if (keyword == 'ec2') {
                 info = ec2_info;
                 load_aws_config_from_json(ec2_info['regions'], 'ec2_elb', 2);
+                load_aws_config_from_json(ec2_info['regions'], 'ec2_vpc', 2);
                 load_aws_config_from_json(ec2_info['regions'], 'ec2_security_group', 2);
                 load_aws_config_from_json(ec2_info['regions'], 'ec2_network_acl', 2);
                 load_aws_config_from_json(ec2_info['regions'], 'ec2_instance', 2);
@@ -597,6 +603,20 @@ Handlebars.registerHelper('count_ec2_in_region', function(region, path) {
         count = 'N/A';
     }
     return count;
+});
+Handlebars.registerHelper('count_vpc_network_acls', function(vpc_network_acls) {
+    var c = 0;
+    for (x in vpc_network_acls) {
+            c = c + 1;
+    }
+    return c;
+});
+Handlebars.registerHelper('count_vpc_instances', function(vpc_instances) {
+    var c = 0;
+    for (x in vpc_instances) {
+            c = c + 1;
+    }
+    return c;
 });
 Handlebars.registerHelper('count_role_instances', function(instance_profiles) {
     var c = 0;
