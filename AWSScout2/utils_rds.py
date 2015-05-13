@@ -36,7 +36,9 @@ def check_for_duplicate(rds_info):
 def get_rds_info(key_id, secret, session_token, fetch_gov):
     rds_info = {}
     rds_info['regions'] = {}
-    build_region_list(boto.rds.regions(), rds_info, fetch_gov)
+    for region in build_region_list(boto.rds.regions(), include_gov = fetch_gov):
+        rds_info['regions'][region] = {}
+        rds_info['regions'][region]['name'] = region
     thread_work((key_id, secret, session_token), rds_info, rds_info['regions'], get_rds_region, show_status)
     return rds_info
 

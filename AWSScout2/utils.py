@@ -54,17 +54,6 @@ parser.add_argument('--skip',
 # Common functions
 ########################################
 
-def build_region_list(regions, aws_info, fetch_gov):
-    region_list = []
-    for region in regions:
-        # h4ck -- skip china north region as it hangs when requesting instances (https://github.com/boto/boto/issues/2083)
-        if (region.name != 'us-gov-west-1' or fetch_gov) and (region.name != 'cn-north-1'):
-            region_list.append(region.name)
-            manage_dictionary(aws_info['regions'], region.name, {})
-            # h4ck : data redundancy because I can't call ../@key in Handlebars
-            aws_info['regions'][region.name]['name'] = region.name
-    return region_list
-
 def build_services_list(services, skipped_services):
 
     enabled_services = []

@@ -114,10 +114,13 @@ def get_ec2_info(key_id, secret, session_token, fetch_ec2_gov):
     ec2_info['regions'] = {}
     # Build region list for each EC2 entities and VPC
     ec2_params = {}
-    ec2_params['ec2_regions'] = build_region_list(boto.ec2.regions(), ec2_info, fetch_ec2_gov)
-    ec2_params['elb_regions'] = build_region_list(boto.ec2.elb.regions(), ec2_info, fetch_ec2_gov)
-    ec2_params['vpc_regions'] = build_region_list(boto.vpc.regions(), ec2_info, fetch_ec2_gov)
+    ec2_params['ec2_regions'] = build_region_list(boto.ec2.regions(), include_gov = fetch_ec2_gov)
+    ec2_params['elb_regions'] = build_region_list(boto.ec2.elb.regions(), include_gov = fetch_ec2_gov)
+    ec2_params['vpc_regions'] = build_region_list(boto.vpc.regions(), include_gov = fetch_ec2_gov)
     all_regions = set(ec2_params['ec2_regions'] + ec2_params['elb_regions'] + ec2_params['vpc_regions'])
+    for region in all_regions:
+        ec2_info['regions'][region] = {}
+        ec2_info['regions'][region]['name'] = region
     print 'Fetching EC2 data...'
     formatted_status('region', 'Elastic LBs', 'Elastic IPs', 'VPCs', 'Sec. Groups', 'Instances', True)
     ec2_targets = ['elastic_ips', 'elbs', 'vpcs', 'security_groups', 'instances']
