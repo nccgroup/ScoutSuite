@@ -23,7 +23,8 @@ def analyze_cloudtrail_config(cloudtrail_info, force_write):
 def get_cloudtrail_info(key_id, secret, session_token):
     cloudtrail_info = {}
     cloudtrail_info['regions'] = {}
-    thread_work((key_id, secret, session_token), cloudtrail_info, cloudtrail.regions(), get_region_trails, show_status)
+    print 'Fetching CloudTrail data...'
+    thread_work((key_id, secret, session_token), cloudtrail_info, cloudtrail.regions(), get_region_trails)
     return cloudtrail_info
 
 def get_region_trails(connection_info, q, params):
@@ -52,10 +53,3 @@ def get_region_trails(connection_info, q, params):
           printException(e)
       finally:
         q.task_done()
-
-def show_status(cloudtrail_info, stop_event):
-    print 'Fetching CloudTrail data...'
-    while(not stop_event.is_set()):
-        # This one is quiet for now...
-        stop_event.wait(1)
-        pass
