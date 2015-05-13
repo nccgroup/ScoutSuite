@@ -438,12 +438,18 @@ function list_generic(keyword) {
     showRowWithDetails(keyword);
     prefix = keyword.split('_')[0];
     $('[id="' + prefix  + '_region-filter-select_all"]').hide();
+    title = keyword.replace(/_/g, ' ');
+    title = title.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    title = title.replace("Cloudtrail","CloudTrail").replace("Ec2","EC2").replace("Iam","IAM").replace("Rds","RDS");
+    title = title.replace("Elb", "ELB").replace("Acl","ACL");
+    $("#section_title-h2").text(title);
     window.scrollTo(0,0);
 }
 function list_findings(keyword, violations, finding) {
     updateNavbar(keyword);
     hideAll();
     showEmptyRow(keyword);
+    $("#section_title-h2").text(violations[finding]['description']);
     if (violations[finding]['macro_items'].length == violations[finding]['items'].length ) {
         items = [];
         dict  = {};
