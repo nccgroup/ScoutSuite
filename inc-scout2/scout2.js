@@ -366,6 +366,7 @@ function toggle_filter_callback(object, args) {
 // Contents loading
 function load_config(keyword) {
     var info = {};
+    $("#section_title-h2").text('');
     if (!(keyword in loaded_config_array)) {
         hideAll();
         $('[id="please_wait-row"]').show();
