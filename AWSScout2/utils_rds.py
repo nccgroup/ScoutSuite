@@ -84,6 +84,7 @@ def parse_security_group(group):
 def get_instances_info(rds_connection, region_info):
     manage_dictionary(region_info, 'instances', {})
     dbinstances = rds_connection.get_all_dbinstances()
+    total = 0
     for dbi in dbinstances:
         dbi_info = {}
         total = total + len(dbinstances)
