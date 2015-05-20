@@ -197,6 +197,7 @@ def get_instance_info(ec2_connection, q, paramas):
             vpc_info = region_info['vpcs']
             vpc_id = i.vpc_id if i.vpc_id else 'no-vpc'
             manage_dictionary(vpc_info, vpc_id, {})
+            vpc_info[vpc_id]['id'] = vpc_id
             manage_dictionary(vpc_info[vpc_id], 'instances', {})
             manage_dictionary(vpc_info[vpc_id]['instances'], i.id, {})
             vpc_info[vpc_id]['instances'][i.id]['reservation_id'] = reservation.id
