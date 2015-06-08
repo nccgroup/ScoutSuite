@@ -35,17 +35,19 @@ def main(args):
             printException(e)
 
     # Let users pick the violation to dump the items for
-    violation_name = args.violation_name[0]
-    if not violation_name:
-        violation_names = violations.keys()
+    violation_names = violations.keys()
+    if args.violation_name == [ None ]:
         for v in violation_names:
             print '%3d. %s - %s' % (violation_names.index(v), violations[v]['keyword_prefix'].upper(), v)
         indices = [ '%d' % i for i in range(0, len(violations)) ]
         choices = prompt_4_value('Which violation ID do you want to output the items for', indices, display_choices = False, authorize_list = True, is_question = True)
-
+        choices = [choice.strip() for choice in choices.split(',')]
+    else:
+      choices =[]
+      for violation_name in args.violation_name:
+        choices.append(str(violation_names.index(violation_name)))
     # Dump the list of items
     output = ''
-    choices = choices.split(',')
     for c in choices:
         violation_name = violation_names[int(c)]
         violation = violations[violation_name]
