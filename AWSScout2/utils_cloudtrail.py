@@ -20,11 +20,14 @@ from boto import cloudtrail
 def analyze_cloudtrail_config(cloudtrail_info, force_write):
     analyze_config(cloudtrail_finding_dictionary, cloudtrail_filter_dictionary, cloudtrail_info, 'CloudTrail', force_write)
 
-def get_cloudtrail_info(key_id, secret, session_token):
+def get_cloudtrail_info(key_id, secret, session_token, selected_regions):
     cloudtrail_info = {}
     cloudtrail_info['regions'] = {}
     print 'Fetching CloudTrail data...'
-    thread_work((key_id, secret, session_token), cloudtrail_info, cloudtrail.regions(), get_region_trails)
+    for region in build_region_list(boto.cloudtrail.regions(), selected_regions):
+        cloudtrail_info['regions'][region] = {}
+        cloudtrail_info['regions'][region]['name'] = region
+    thread_work((key_id, secret, session_token), cloudtrail_info, cloudtrail_info['regions'], get_region_trails)
     return cloudtrail_info
 
 def get_region_trails(connection_info, q, params):
@@ -32,12 +35,10 @@ def get_region_trails(connection_info, q, params):
     while True:
       try:
         cloudtrail_info, region = q.get()
-        manage_dictionary(cloudtrail_info['regions'], region.name, {})
-        cloudtrail_info['regions'][region.name]['name'] = region.name
-        manage_dictionary(cloudtrail_info['regions'][region.name], 'trails', {})
-        cloudtrail_connection = connect_cloudtrail(key_id, secret, session_token, region.name)
+        manage_dictionary(cloudtrail_info['regions'][region], 'trails', {})
+        cloudtrail_connection = connect_cloudtrail(key_id, secret, session_token, region)
         trails = cloudtrail_connection.describe_trails()
-        cloudtrail_info['regions'][region.name]['trails_count'] = len(trails['trailList'])
+        cloudtrail_info['regions'][region]['trails_count'] = len(trails['trailList'])
         for trail in trails['trailList']:
             trail_info = {}
             for key in trail:
@@ -47,7 +48,7 @@ def get_region_trails(connection_info, q, params):
                 trail_info[key] = trail_details[key] if key in trail_details else None
                 trail_info['StopLoggingTime'] = trail_details['StopLoggingTime'] if  'StopLoggingTime' in trail_details else trail_details['TimeLoggingStopped']
                 trail_info['LatestNotificationTime'] = trail_details['LatestNotificationTime'] if 'LatestNotificationTime' in trail_details else trail_details['LatestNotificationAttemptTime']
-            cloudtrail_info['regions'][region.name]['trails'][trail['Name']] = trail_info
+            cloudtrail_info['regions'][region]['trails'][trail['Name']] = trail_info
       except Exception, e:
           print ':('
           printException(e)

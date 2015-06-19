@@ -109,14 +109,14 @@ def list_network_attack_surface(ec2_info):
 ##### EC2 fetch functions
 ########################################
 
-def get_ec2_info(key_id, secret, session_token, fetch_ec2_gov):
+def get_ec2_info(key_id, secret, session_token, selected_regions, fetch_ec2_gov):
     ec2_info = {}
     ec2_info['regions'] = {}
     # Build region list for each EC2 entities and VPC
     ec2_params = {}
-    ec2_params['ec2_regions'] = build_region_list(boto.ec2.regions(), include_gov = fetch_ec2_gov)
-    ec2_params['elb_regions'] = build_region_list(boto.ec2.elb.regions(), include_gov = fetch_ec2_gov)
-    ec2_params['vpc_regions'] = build_region_list(boto.vpc.regions(), include_gov = fetch_ec2_gov)
+    ec2_params['ec2_regions'] = build_region_list(boto.ec2.regions(), selected_regions, include_gov = fetch_ec2_gov)
+    ec2_params['elb_regions'] = build_region_list(boto.ec2.elb.regions(), selected_regions, include_gov = fetch_ec2_gov)
+    ec2_params['vpc_regions'] = build_region_list(boto.vpc.regions(), selected_regions, include_gov = fetch_ec2_gov)
     all_regions = set(ec2_params['ec2_regions'] + ec2_params['elb_regions'] + ec2_params['vpc_regions'])
     for region in all_regions:
         ec2_info['regions'][region] = {}

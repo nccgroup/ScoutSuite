@@ -33,10 +33,10 @@ def check_for_duplicate(rds_info):
             for instance_id in rds_info['violations']['backup-disabled'].items:
                 rds_info['violations']['short-backup-retention-period'].removeItem(instance_id)
 
-def get_rds_info(key_id, secret, session_token, fetch_gov):
+def get_rds_info(key_id, secret, session_token, selected_regions, fetch_gov):
     rds_info = {}
     rds_info['regions'] = {}
-    for region in build_region_list(boto.rds.regions(), include_gov = fetch_gov):
+    for region in build_region_list(boto.rds.regions(), selected_regions, include_gov = fetch_gov):
         rds_info['regions'][region] = {}
         rds_info['regions'][region]['name'] = region
     thread_work((key_id, secret, session_token), rds_info, rds_info['regions'], get_rds_region, show_status)
@@ -50,7 +50,6 @@ def get_rds_region(connection_info, q, params):
             rds_connection = connect_rds(key_id, secret, session_token, region)
             get_security_groups_info(rds_connection, rds_info['regions'][region])
             get_instances_info(rds_connection, rds_info['regions'][region])
-
         except Exception, e:
             printException(e)
             pass

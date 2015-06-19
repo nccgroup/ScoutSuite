@@ -80,7 +80,7 @@ def main(args):
         try:
             # Fetch data from AWS or an existing local file
             if not args.fetch_local:
-                cloudtrail_info = get_cloudtrail_info(key_id, secret, token)
+                cloudtrail_info = get_cloudtrail_info(key_id, secret, token, args.regions)
             else:
                 cloudtrail_info = load_info_from_json('cloudtrail', environment_name)
             # Analyze the CloudTrail config and save data to a local file
@@ -115,7 +115,7 @@ def main(args):
         try:
             # Fetch data from AWS or an existing local file
             if not args.fetch_local:
-                ec2_info = get_ec2_info(key_id, secret, token, args.fetch_gov)
+                ec2_info = get_ec2_info(key_id, secret, token, args.regions, args.fetch_gov)
             else:
                 ec2_info = load_info_from_json('ec2', environment_name)
             # Analyze the EC2 config and save data to a local file
@@ -128,7 +128,7 @@ def main(args):
     if 'rds' in services:
         try:
             if not args.fetch_local:
-                rds_info = get_rds_info(key_id, secret, token, args.fetch_gov)
+                rds_info = get_rds_info(key_id, secret, token, args.regions, args.fetch_gov)
             else:
                 rds_info = load_info_from_json('rds', environment_name)
             analyze_rds_config(rds_info, args.force_write)
@@ -236,6 +236,11 @@ parser.add_argument('--resume',
                     default=False,
                     action='store_true',
                     help='Loads partial data before and only fetches missing data. Useful when throttling errors occured.')
+parser.add_argument('--regions',
+                    dest='regions',
+                    default=[],
+                    nargs='+',
+                    help='Name of the regions to fetch the data from')
 
 args = parser.parse_args()
 
