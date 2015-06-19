@@ -100,9 +100,6 @@ def list_network_attack_surface(ec2_info):
                                         manage_dictionary(ec2_info['attack_surface'][instance['ip_address']]['protocols'][p][port], 'cidrs', [])
                                         for cidr in ru['grants']['cidrs']:
                                             ec2_info['attack_surface'][instance['ip_address']]['protocols'][p][port]['cidrs'].append(cidr)
-                                    elif not port:
-                                        print instance['ip_address']
-                                        print ru
 
 
 ########################################
@@ -196,7 +193,7 @@ def get_instance_info(ec2_connection, q, paramas):
             region_info, (i, reservation) = q.get()
             vpc_info = region_info['vpcs']
             vpc_id = i.vpc_id if i.vpc_id else 'no-vpc'
-            manage_dictionary(vpc_info, vpc_id, {})
+            manage_vpc(vpc_info, vpc_id)
             manage_dictionary(vpc_info[vpc_id], 'instances', {})
             manage_dictionary(vpc_info[vpc_id]['instances'], i.id, {})
             vpc_info[vpc_id]['instances'][i.id]['reservation_id'] = reservation.id
@@ -292,9 +289,7 @@ def get_security_group_info(ec2_connection, q, params):
             region_info, group = q.get()
             vpc_info = region_info['vpcs']
             vpc_id = group.vpc_id if group.vpc_id else 'no-vpc'
-            manage_dictionary(vpc_info, vpc_id, {})
-            # h4ck : data redundancy because I can't call ../@key in Handlebars
-            vpc_info[vpc_id]['id'] = vpc_id
+            manage_vpc(vpc_info, vpc_id)
             manage_dictionary(vpc_info[vpc_id], 'security_groups', {})
             manage_dictionary(vpc_info[vpc_id]['security_groups'], group.id, {})
             # Append the new security group to the return list
@@ -312,6 +307,14 @@ def get_security_groups_info(ec2_connection, region_info):
     show_status(region_info, ['vpcs', 'security_groups'], False)    
     thread_work(ec2_connection, region_info, groups, get_security_group_info, num_threads = 10)
     show_status(region_info, ['vpcs', 'security_groups'], False)
+
+def manage_vpc(vpc_info, vpc_id):
+    manage_dictionary(vpc_info, vpc_id, {})
+    vpc_info[vpc_id]['id'] = vpc_id
+    if vpc_id == 'no-vpc':
+        vpc_info[vpc_id]['name'] = 'EC2 Classic'
+    elif not 'name' in vpc_info[vpc_id]:
+        vpc_info[vpc_id]['name'] = vpc_id
 
 def parse_security_group(group):
     security_group = {}
