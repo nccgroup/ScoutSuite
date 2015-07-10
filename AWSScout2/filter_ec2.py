@@ -14,23 +14,32 @@ class Ec2Filter(Filter):
             self.addItem(obj['id'])
 
     def HasNoCIDRsGrants(self, key, obj):
-        if not len(obj['rules_ingress']):
+        if not len(obj['rules']['ingress']['protocols']):
             self.addItem(obj['id'])
             return
-        for protocol in obj['rules_ingress']:
-            for rule in obj['rules_ingress'][protocol]['rules']:
-                if not 'cidrs' in rule['grants']:
+        for protocol in obj['rules']['ingress']['protocols']:
+            for port in obj['rules']['ingress']['protocols'][protocol]['ports']:
+                if not 'cidrs' in obj['rules']['ingress']['protocols'][protocol]['ports'][port]:
                     self.addItem(obj['id'])
 
     def DoesNotOpenAllPorts(self, key, obj):
-        if not len(obj['rules_ingress']):
+        if not len(obj['rules']['ingress']['protocols']):
             self.addItem(obj['id']);
             return
-        for protocol in obj['rules_ingress']:
-            for rule in obj['rules_ingress'][protocol]['rules']:
-                if rule['ports'] != '1-65535' and rule['ports'] != 'All':
+        for protocol in obj['rules']['ingress']['protocols']:
+            for port in obj['rules']['ingress']['protocols'][protocol]['ports']:
+                if port != '1-65535' and port != 'All':
                     self.addItem(obj['id'])
 
     def DoesNotHaveAPublicIP(self, key, obj):
         if not obj['ip_address']:
             self.addItem(obj['id'])
+
+    def IsOpenToAll(self, key, obj):
+        for ip in obj:
+            for p in obj[ip]: 
+                for port in obj[ip][p]:
+                    if 'cidrs' in obj[ip][p][port]:
+                        for cidr in obj[ip][p][port]['cidrs']:
+                            if cidr == '0.0.0.0/0':
+                                self.addItem('%s-%s-%s' % (ip, p, port))

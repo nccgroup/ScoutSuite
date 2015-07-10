@@ -22,5 +22,11 @@
         "entity": "regions.vpcs.instances",
         "callback": "DoesNotHaveAPublicIP",
         "callback_args": []
+    },
+    "PortOpenToAll": {
+        "description": "Hide ports that are not open to all IP addresses",
+        "entity": "attack_surface",
+        "callback": "IsOpenToAll",
+        "callback_args": []
     }
 }

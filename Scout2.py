@@ -245,4 +245,4 @@ parser.add_argument('--regions',
 args = parser.parse_args()
 
 if __name__ == '__main__':
-    main(args)
+    sys.exit(main(args))

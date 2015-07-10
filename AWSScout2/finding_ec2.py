@@ -27,20 +27,20 @@ class Ec2Finding(Finding):
         method = self.callback_args[0]
         if method == 'whitelist':
             protocol = self.callback_args[1][1]
-            port = self.callback_args[1][2]
+            check_port = self.callback_args[1][2]
         else:
             protocol = self.callback_args[1]
-            port = self.callback_args[2]
-        if protocol in obj['rules_ingress']:
-            for rule in obj['rules_ingress'][protocol]['rules']:
-                if 'cidrs' in rule['grants']:
-                    for cidr in rule['grants']['cidrs']:
+            check_port = self.callback_args[2]
+        if protocol in obj['rules']['ingress']['protocols']:
+            for port in obj['rules']['ingress']['protocols'][protocol]['ports']:
+                if 'cidrs' in obj['rules']['ingress']['protocols'][protocol]['ports'][port]:
+                    for cidr in obj['rules']['ingress']['protocols'][protocol]['ports'][port]['cidrs']:
                         if cidr == '0.0.0.0/0':
-                            if method == 'blacklist' and self.portInRange(port, rule['ports']):
+                            if method == 'blacklist' and self.portInRange(check_port, port):
                                 self.addItem(obj['id'])
                             elif method == 'whitelist':
-                                if rule['ports'] not in port:
-                                    self.addItem(rule['ports'], obj['id'])
+                                if port not in check_port:
+                                    self.addItem(port, obj['id'])
 
     def checkFirstRule(self, key, unsorted_rules):
         sorted_rules = sorted(unsorted_rules, key=lambda k: k['rule_number'])
@@ -58,10 +58,10 @@ class Ec2Finding(Finding):
                 self.addItem(key)
 
     def checkNonEIPwhitelisted(self, key, obj):
-        for protocol in obj['rules_ingress']:
-            for rule in obj['rules_ingress'][protocol]['rules']:
-                if 'cidrs' in rule['grants']:
-                    for cidr in rule['grants']['cidrs']:
+        for protocol in obj['rules']['ingress']['protocols']:
+            for port in obj['rules']['ingress']['protocols'][protocol]['ports']:
+                if 'cidrs' in obj['rules']['ingress']['protocols'][protocol]['ports'][port]:
+                    for cidr in obj['rules']['ingress']['protocols'][protocol]['ports'][port]['cidrs']:
                         authorized_cidr = netaddr.IPNetwork(cidr)
                         for ec2_cidr in self.callback_args:
                             ec2_cidr = netaddr.IPNetwork(ec2_cidr)
@@ -70,24 +70,24 @@ class Ec2Finding(Finding):
                                 self.addItem(cidr, obj['id'])
 
     def checkSinglePortOnly(self, key, obj):
-        for protocol in obj['rules_ingress']:
-            for rule in obj['rules_ingress'][protocol]['rules']:
-                if self.re_port_range.match(str(rule['ports'])):
-                    # Exception: don't flag if the port range is due to AWS' default config that opens all ports to self
-                    if not ('security_groups' in rule['grants'] and len(rule['grants']['security_groups']) == 1 and rule['grants']['security_groups'][0] == obj['id']):
-                        self.addItem(rule['ports'], obj['id'])
+        for protocol in obj['rules']['ingress']['protocols']:
+            for port in obj['rules']['ingress']['protocols'][protocol]['ports']:
+                if self.re_port_range.match(str(port)):
+                    # Exception: don't flag if the port range is due to AWS' default config that opens all ports to self 
+                    grants = obj['rules']['ingress']['protocols'][protocol]['ports'][port]
+                    if not ('security_groups' in grants and len(grants['security_groups']) == 1 and grants['security_groups'][0] == obj['id']):
+                        self.addItem(port, obj['id'])
 
     def checkOpenPort(self, key, obj):
         protocol = self.callback_args[0]
         port = self.callback_args[1]
-        if protocol in obj['rules_ingress']:
-            for rule in obj['rules_ingress'][protocol]['rules']:
-                for grant in rule['grants']:
-                    if len(self.callback_args) > 2 and self.callback_args[2] != 'no' and self.callback_args[2] != 'n':
-                        if self.portInRange(port, rule['ports']):
-                            self.addItem(obj['id'])
-                    elif port == rule['ports']:
+        if protocol in obj['rules']['ingress']['protocols']:
+            for rule_port in obj['rules']['ingress']['protocols'][protocol]['ports']:
+                if len(self.callback_args) > 2 and self.callback_args[2] != 'no' and self.callback_args[2] != 'n':
+                    if self.portInRange(port, rule_port):
                         self.addItem(obj['id'])
+                elif port == rule_port:
+                    self.addItem(obj['id'])
 
     def portInRange(self, port, ports):
         result = self.re_port_range.match(ports)
@@ -116,10 +116,10 @@ class Ec2Finding(Finding):
             self.addItem(obj['id'])
 
     def checkTrafficRulesToSelf(self, key, obj):
-        for protocol in obj['rules_ingress']:
-            for rule in obj['rules_ingress'][protocol]['rules']:
-                for grant in rule['grants']:
-                    if 'security_groups' in rule['grants']:
-                        for sg in rule['grants']['security_groups']:
-                            if sg == obj['id'] and (rule['ports'] == 'All' or rule['ports'] == '0-65535'):
-                                self.addItem(obj['id'])
+        for protocol in obj['rules']['ingress']['protocols']:
+            for port in obj['rules']['ingress']['protocols'][protocol]['ports']:
+                grants = obj['rules']['ingress']['protocols'][protocol]['ports'][port]
+                if 'security_groups' in grants:
+                    for sg in grants['security_groups']:
+                        if sg == obj['id'] and (port == 'All' or port == '0-65535'):
+                            self.addItem(obj['id'])

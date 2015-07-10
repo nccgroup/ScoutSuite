@@ -1155,7 +1155,7 @@
                     {{#each protocols ip = @key}}
                       <li class="list-group-item-text">{{@key}}</li>
                       <ul>
-                      {{#each this}}
+                      {{#each ports}}
                         {{> ec2_ip_grant}}
                       {{/each}}
                       </ul>
