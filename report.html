@@ -225,26 +225,27 @@
     <!-- EC2 security group rules partial -->
     <script id="ec2_security_group-rule_list-partial" type="text/x-handlebars-template">
       <div class="list-group-item">
-        <h4 class="list-group-item-heading">{{direction}} Rules</h4>
+        <h4 class="list-group-item-heading">{{make_title direction}} Rules</h4>
         <ul>
         {{#each protocols}}
           <li class="list-group-item-text">{{@key}}</li>
           <ul>
-          <li class="list-group-item-text">Ports:
-          <ul>
-          {{#each ports}}
-            <li>{{@key}}</li>
+            <li class="list-group-item-text">Ports:
             <ul>
-            {{#if cidrs}}
-              <li class="list-group-item-text">IP addresses:</li>
-              {{> ec2_grants items = cidrs protocol = @../key ports = @key sg_id = ../../../sg_id}}
-            {{/if}}
-            {{#if security_groups}}
-              <li class="list-group-item-text">EC2 security groups:</li>
-              {{> ec2_grants items = security_groups protocol = @../key ports = @key sg_id = ../../../sg_id}}
-            {{/if}}
+            {{#each ports}}
+              <li>{{@key}}</li>
+              <ul>
+              {{#if cidrs}}
+                <li class="list-group-item-text">IP addresses:</li>
+                {{> ec2_grants items = cidrs protocol = @../key ports = @key sg_id = ../../../sg_id}}
+              {{/if}}
+              {{#if security_groups}}
+                <li class="list-group-item-text">EC2 security groups:</li>
+                {{> ec2_grants items = security_groups protocol = @../key ports = @key sg_id = ../../../sg_id}}
+              {{/if}}
+              </ul>
+            {{/each}}
             </ul>
-          {{/each}}
           </ul>
         {{/each}}
         </ul>

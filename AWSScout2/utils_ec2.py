@@ -88,20 +88,18 @@ def list_network_attack_surface(ec2_info, attack_surface_attribute_name, ip_attr
                 for i in ec2_info['regions'][r]['vpcs'][v]['instances']:
                     instance = ec2_info['regions'][r]['vpcs'][v]['instances'][i]
                     if instance[ip_attribute_name]:
-                        # Here, there must be a way to kill all this code by merging dictionaries of security groups...
                         ec2_info[attack_surface_attribute_name][instance[ip_attribute_name]] = {}
                         ec2_info[attack_surface_attribute_name][instance[ip_attribute_name]]['protocols'] = {}
                         for sgid in instance['security_groups']:
-                            sg = ec2_info['regions'][r]['vpcs'][v]['security_groups'][sgid]
+                            sg = copy.deepcopy(ec2_info['regions'][r]['vpcs'][v]['security_groups'][sgid])
+                            tmp = ec2_info[attack_surface_attribute_name][instance[ip_attribute_name]]
                             for p in sg['rules']['ingress']['protocols']:
-                                for port in sg['rules']['ingress']['protocols'][p]['ports']:
-                                    if port and 'cidrs' in sg['rules']['ingress']['protocols'][p]['ports'][port]:
-                                        manage_dictionary(ec2_info[attack_surface_attribute_name][instance[ip_attribute_name]]['protocols'], p, {})
-                                        manage_dictionary(ec2_info[attack_surface_attribute_name][instance[ip_attribute_name]]['protocols'][p], 'ports', {})
-                                        manage_dictionary(ec2_info[attack_surface_attribute_name][instance[ip_attribute_name]]['protocols'][p]['ports'], port, {})
-                                        manage_dictionary(ec2_info[attack_surface_attribute_name][instance[ip_attribute_name]]['protocols'][p]['ports'][port], 'cidrs', [])
-                                        for cidr in sg['rules']['ingress']['protocols'][p]['ports'][port]['cidrs']:
-                                            ec2_info[attack_surface_attribute_name][instance[ip_attribute_name]]['protocols'][p]['ports'][port]['cidrs'].append(cidr)
+                                for port in ec2_info['regions'][r]['vpcs'][v]['security_groups'][sgid]['rules']['ingress']['protocols'][p]['ports']:
+                                    if not 'cidrs' in sg['rules']['ingress']['protocols'][p]['ports'][port]:
+                                        sg['rules']['ingress']['protocols'][p]['ports'].pop(port, None)
+                                    elif 'security_groups' in ec2_info['regions'][r]['vpcs'][v]['security_groups'][sgid]['rules']['ingress']['protocols'][p]['ports'][port]:
+                                        sg['rules']['ingress']['protocols'][p]['ports'][port].pop('security_groups', None)
+                            tmp = tmp.update(sg['rules']['ingress'])
 
 
 ########################################
