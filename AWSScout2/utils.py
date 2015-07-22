@@ -55,7 +55,6 @@ parser.add_argument('--skip',
 ########################################
 
 def build_services_list(services, skipped_services):
-
     enabled_services = []
     for s in services:
         if s in supported_services and s not in skipped_services:
