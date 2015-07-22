@@ -107,17 +107,15 @@
     </script>
 
     <!-- EC2 attack surface item -->
-    <script id="ec2_ip_grant-partial" type="text/x-handlebars-template">
-      <li class="list-group-item-text">{{@key}}</li>
-        <ul>
-        {{#each cidrs}}
+    <script id="ec2_grants-partial" type="text/x-handlebars-template">
+      <ul>
+        {{#each items}}
           <span class="ec2_attack_surface_item"><li class="list-group-item-text">{{this}}</li></span>
         {{/each}}
-        </ul>
-      </li>
+      </ul>
     </script>
     <script>
-        Handlebars.registerPartial("ec2_ip_grant", $("#ec2_ip_grant-partial").html());
+        Handlebars.registerPartial("ec2_grants", $("#ec2_grants-partial").html());
     </script>
 
     <!-- EC2 ELB partial -->
@@ -178,8 +176,9 @@
           <div class="list-group-item-text item-margin">Description: {{description}}</div>
           <div class="list-group-item-text item-margin">ID: {{id}}</div>
         </div>
-        {{> ec2_security_group-rule_list direction='Ingress' protocols=rules_ingress}}
-        {{> ec2_security_group-rule_list direction='Egress' protocols=rules_egress}}
+        {{#each rules}}
+          {{> ec2_security_group-rule_list this direction = @key}}
+        {{/each}}
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Instances</h4>
           {{> ec2_security_group-instance_list instances=running-instances status='Running' region=region vpc=vpc group=id}}
@@ -224,33 +223,21 @@
         <h4 class="list-group-item-heading">{{direction}} Rules</h4>
         <ul>
         {{# each protocols}}
-          <li class="list-group-item-text">{{name}}</li>
+          <li class="list-group-item-text">{{@key}}</li>
           <ul>
-          {{# each rules}}
-            <li class="list-group-item-text">Ports:
-              <span id="ec2_security_groups-{{../name}}-{{ports}}-{{../../id}}">
-                <span id="ec2_security_groups-ports-range-{{../../id}}-{{ports}}">
-                  {{ports}}
-                </span>
-              </span>
-            </li>
+          <li class="list-group-item-text">Ports:
+          <ul>
+          {{# each ports}}
+            <li>{{@key}}</li>
             <ul>
-            {{# each grants/cidrs}}
-              <li class="list-group-item-text">IP:
-                <span id="ec2_security_groups-public-ports-{{../../../id}}-{{../ports}}">
-                <span id="ec2_security_groups-non-elastic-ec2-public-ip-whitelisted-{{../../../id}}-{{this}}">
-                <span id="ec2_security_groups-{{../../name}}-{{../ports}}-{{this}}-{{../../../id}}">
-                  {{this}}
-                </span></span></span>
-              </li>
-            {{/each}}
-            {{# each grants/security_groups}}
-              <li class="list-group-item-text"> EC2 security group:
-                <span id="ec2_security_groups-{{../../name}}-{{../ports}}-{{this}}-{{../../../id}}">
-                  <a href="javascript:findAndShowEC2Object('regions.vpcs.security_groups', '{{this}}')"> {{find_ec2_object_attribute "regions.vpcs.security_groups" this "name"}} ({{this}})</a>
-                </span>
-              </li>
-            {{/each}}
+            {{#if cidrs}}
+              <li class="list-group-item-text">IP addresses:</li>
+              {{> ec2_grants items = cidrs}}
+            {{/if}}
+            {{#if security_groups}}
+              <li class="list-group-item-text">EC2 security groups:</li>
+              {{> ec2_grants items = security_groups}}
+            {{/if}}
             </ul>
           {{/each}}
           </ul>
@@ -283,7 +270,7 @@
     <script>
       Handlebars.registerPartial("ec2_network_acl", $("#ec2_network_acl-partial").html());
     </script>
-    
+
 
     <!-- EC2 VPC partial -->
     <script id="ec2_vpc-partial" type="text/x-handlebars-template">
@@ -336,7 +323,7 @@
     <script>
       Handlebars.registerPartial("ec2_vpc", $("#ec2_vpc-partial").html());
     </script>
-    
+
 
     <!-- EC2 instance partial -->
     <script id="ec2_instance-partial" type="text/x-handlebars-template">
@@ -827,7 +814,7 @@
     <script>
         var single_ec2_vpc_template = Handlebars.compile($("#single_ec2_vpc-template").html());
     </script>
-    
+
     <!-- Single EC2 Network ACL template -->
     <script id="single_ec2_network_acl-template" type="text/x-handlebars-template">
         <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
@@ -1156,7 +1143,8 @@
                       <li class="list-group-item-text">{{@key}}</li>
                       <ul>
                       {{#each ports}}
-                        {{> ec2_ip_grant}}
+                        <li>{{@key}}</li>
+                        {{> ec2_grants items = cidrs}}
                       {{/each}}
                       </ul>
                     {{/each}}
@@ -1208,7 +1196,7 @@
               <li class="list-group-item"><a href="javascript:showAll('ec2_security_group')">Show all<span class="badge pull-right">{{count_in "ec2" "regions.vpcs.security_groups"}}</span></a></li>
             </ul>
             {{#each items}}
-              <div id="ec2_region-list-{{@key}}"> 
+              <div id="ec2_region-list-{{@key}}">
                 {{#if vpcs}}
                   <ul class="list-group">
                     <li class="list-group-item active">{{@key}}</li>
@@ -1331,7 +1319,7 @@
           {{/each}}
           </script>
         </div><!-- /.col-sm-8 -->
-      </div><!-- /.row -->      
+      </div><!-- /.row -->
 
       <!-- Template for EC2 instances -->
       <div class="row" id="ec2_instances-row">
