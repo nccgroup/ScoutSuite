@@ -93,12 +93,14 @@ def list_network_attack_surface(ec2_info, attack_surface_attribute_name, ip_attr
                         for sgid in instance['security_groups']:
                             sg = copy.deepcopy(ec2_info['regions'][r]['vpcs'][v]['security_groups'][sgid])
                             tmp = ec2_info[attack_surface_attribute_name][instance[ip_attribute_name]]
-                            for p in sg['rules']['ingress']['protocols']:
+                            for p in ec2_info['regions'][r]['vpcs'][v]['security_groups'][sgid]['rules']['ingress']['protocols']:
                                 for port in ec2_info['regions'][r]['vpcs'][v]['security_groups'][sgid]['rules']['ingress']['protocols'][p]['ports']:
                                     if not 'cidrs' in sg['rules']['ingress']['protocols'][p]['ports'][port]:
                                         sg['rules']['ingress']['protocols'][p]['ports'].pop(port, None)
                                     elif 'security_groups' in ec2_info['regions'][r]['vpcs'][v]['security_groups'][sgid]['rules']['ingress']['protocols'][p]['ports'][port]:
                                         sg['rules']['ingress']['protocols'][p]['ports'][port].pop('security_groups', None)
+                                if not sg['rules']['ingress']['protocols'][p]['ports']:
+                                    sg['rules']['ingress']['protocols'].pop(p)
                             tmp = tmp.update(sg['rules']['ingress'])
 
 
@@ -304,7 +306,7 @@ def get_security_group_info(ec2_connection, q, params):
 def get_security_groups_info(ec2_connection, region_info):
     groups = ec2_connection.get_all_security_groups()
     region_info['security_groups_count' ] = len(groups)
-    show_status(region_info, ['vpcs', 'security_groups'], False)    
+    show_status(region_info, ['vpcs', 'security_groups'], False)
     thread_work(ec2_connection, region_info, groups, get_security_group_info, num_threads = 10)
     show_status(region_info, ['vpcs', 'security_groups'], False)
 
@@ -389,7 +391,7 @@ def show_status(info = None, entities = None, newline = True, count_self = False
         if entities in subset:
             current = len(subset[entities])
         elif count_self == True:
-            current = len(subset)   
+            current = len(subset)
         elif type(subset) == dict:
             for key in subset:
                 if type(subset[key]) == dict and entities in subset[key]:
@@ -402,7 +404,7 @@ def formatted_status(region, elbs, eips, vpcs, sgs, instances, newline = False):
     sys.stdout.write('\r{:>20} {:>13} {:>13} {:>13} {:>13} {:>13}'.format(region, elbs, eips, vpcs, sgs, instances))
     sys.stdout.flush()
     if newline:
-        sys.stdout.write('\n')    
+        sys.stdout.write('\n')
 
 def thread_region(connection_info, q, ec2_params):
     key_id, secret, session_token = connection_info
@@ -433,7 +435,7 @@ def thread_region(connection_info, q, ec2_params):
                     manage_dictionary(region_info, 'vpcs', {})
                     get_instances_info(ec2_connection, region_info)
             else:
-                print 'Error'       
+                print 'Error'
         except Exception, e:
             printException(e)
             pass
