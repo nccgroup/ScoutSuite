@@ -110,7 +110,12 @@
     <script id="ec2_grants-partial" type="text/x-handlebars-template">
       <ul>
         {{#each items}}
-          <span class="ec2_attack_surface_item"><li class="list-group-item-text">{{this}}</li></span>
+          <span id="ec2_security_groups-{{../protocol}}-{{../ports}}-{{this}}-{{../sg_id}}">
+          <span id="ec2_security_groups-ports-range-{{../sg_id}}-{{../ports}}">
+          <span id="ec2_security_groups-all-ports-open-to-self-{{../sg_id}}">
+          <span class="ec2_attack_surface_item">
+            <li class="list-group-item-text">{{this}}</li>
+          </span></span></span>
         {{/each}}
       </ul>
     </script>
@@ -177,7 +182,7 @@
           <div class="list-group-item-text item-margin">ID: {{id}}</div>
         </div>
         {{#each rules}}
-          {{> ec2_security_group-rule_list this direction = @key}}
+          {{> ec2_security_group-rule_list this sg_name = ../name sg_id = ../id direction = @key}}
         {{/each}}
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Instances</h4>
@@ -222,21 +227,21 @@
       <div class="list-group-item">
         <h4 class="list-group-item-heading">{{direction}} Rules</h4>
         <ul>
-        {{# each protocols}}
+        {{#each protocols}}
           <li class="list-group-item-text">{{@key}}</li>
           <ul>
           <li class="list-group-item-text">Ports:
           <ul>
-          {{# each ports}}
+          {{#each ports}}
             <li>{{@key}}</li>
             <ul>
             {{#if cidrs}}
               <li class="list-group-item-text">IP addresses:</li>
-              {{> ec2_grants items = cidrs}}
+              {{> ec2_grants items = cidrs protocol = @../key ports = @key sg_id = ../../../sg_id}}
             {{/if}}
             {{#if security_groups}}
               <li class="list-group-item-text">EC2 security groups:</li>
-              {{> ec2_grants items = security_groups}}
+              {{> ec2_grants items = security_groups protocol = @../key ports = @key sg_id = ../../../sg_id}}
             {{/if}}
             </ul>
           {{/each}}
