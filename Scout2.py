@@ -80,7 +80,7 @@ def main(args):
         try:
             # Fetch data from AWS or an existing local file
             if not args.fetch_local:
-                cloudtrail_info = get_cloudtrail_info(key_id, secret, token, args.regions)
+                cloudtrail_info = get_cloudtrail_info(key_id, secret, token, args.regions, args.fetch_gov)
             else:
                 cloudtrail_info = load_info_from_json('cloudtrail', environment_name)
             # Analyze the CloudTrail config and save data to a local file

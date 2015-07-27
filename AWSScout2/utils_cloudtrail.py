@@ -9,9 +9,6 @@ from AWSScout2.utils import *
 from AWSScout2.filters import *
 from AWSScout2.findings import *
 
-# Import third-party packages
-import boto
-from boto import cloudtrail
 
 ########################################
 ##### CloudTrails functions
@@ -20,11 +17,11 @@ from boto import cloudtrail
 def analyze_cloudtrail_config(cloudtrail_info, force_write):
     analyze_config(cloudtrail_finding_dictionary, cloudtrail_filter_dictionary, cloudtrail_info, 'CloudTrail', force_write)
 
-def get_cloudtrail_info(key_id, secret, session_token, selected_regions):
+def get_cloudtrail_info(key_id, secret, session_token, selected_regions, fetch_ec2_gov):
     cloudtrail_info = {}
     cloudtrail_info['regions'] = {}
     print 'Fetching CloudTrail data...'
-    for region in build_region_list(boto.cloudtrail.regions(), selected_regions):
+    for region in build_region_list('cloudtrail', selected_regions, fetch_ec2_gov):
         cloudtrail_info['regions'][region] = {}
         cloudtrail_info['regions'][region]['name'] = region
     thread_work((key_id, secret, session_token), cloudtrail_info, cloudtrail_info['regions'], get_region_trails)
@@ -36,18 +33,17 @@ def get_region_trails(connection_info, q, params):
       try:
         cloudtrail_info, region = q.get()
         manage_dictionary(cloudtrail_info['regions'][region], 'trails', {})
-        cloudtrail_connection = connect_cloudtrail(key_id, secret, session_token, region)
-        trails = cloudtrail_connection.describe_trails()
+        cloudtrail_client = connect_cloudtrail(key_id, secret, session_token, region)
+        trails = cloudtrail_client.describe_trails()
         cloudtrail_info['regions'][region]['trails_count'] = len(trails['trailList'])
         for trail in trails['trailList']:
             trail_info = {}
             for key in trail:
                 trail_info[key] = trail[key]
-            trail_details = cloudtrail_connection.get_trail_status(trail['Name'])
-            for key in ['IsLogging', 'LatestDeliveryTime', 'StartLoggingTime', 'LatestNotificationError', 'LatestDeliveryError', 'LatestDeliveryAttemptSucceeded', 'LatestNotificationAttemptSucceeded']:
-                trail_info[key] = trail_details[key] if key in trail_details else None
-                trail_info['StopLoggingTime'] = trail_details['StopLoggingTime'] if  'StopLoggingTime' in trail_details else trail_details['TimeLoggingStopped']
-                trail_info['LatestNotificationTime'] = trail_details['LatestNotificationTime'] if 'LatestNotificationTime' in trail_details else trail_details['LatestNotificationAttemptTime']
+            trail_details = cloudtrail_client.get_trail_status(Name = trail['Name'])
+            trail_info['IsLogging'] = trail_details['IsLogging']
+            for key in [ 'LatestDeliveryTime', 'LatestDeliveryError', 'StartLoggingTime', 'StopLoggingTime', 'LatestNotificationTime', 'LatestNotificationError', 'LatestCloudWatchLogsDeliveryError', 'LatestCloudWatchLogsDeliveryTime']:
+                trail_info[key] = str(trail_details[key]) if key in trail_details else None
             cloudtrail_info['regions'][region]['trails'][trail['Name']] = trail_info
       except Exception, e:
           print ':('
