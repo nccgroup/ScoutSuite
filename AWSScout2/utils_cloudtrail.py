@@ -41,9 +41,8 @@ def get_region_trails(connection_info, q, params):
             for key in trail:
                 trail_info[key] = trail[key]
             trail_details = cloudtrail_client.get_trail_status(Name = trail['Name'])
-            trail_info['IsLogging'] = trail_details['IsLogging']
-            for key in [ 'LatestDeliveryTime', 'LatestDeliveryError', 'StartLoggingTime', 'StopLoggingTime', 'LatestNotificationTime', 'LatestNotificationError', 'LatestCloudWatchLogsDeliveryError', 'LatestCloudWatchLogsDeliveryTime']:
-                trail_info[key] = str(trail_details[key]) if key in trail_details else None
+            for key in ['IsLogging', 'LatestDeliveryTime', 'LatestDeliveryError', 'StartLoggingTime', 'StopLoggingTime', 'LatestNotificationTime', 'LatestNotificationError', 'LatestCloudWatchLogsDeliveryError', 'LatestCloudWatchLogsDeliveryTime']:
+                trail_info[key] = trail_details[key] if key in trail_details else None
             cloudtrail_info['regions'][region]['trails'][trail['Name']] = trail_info
       except Exception, e:
           print ':('

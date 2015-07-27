@@ -6,6 +6,7 @@ from AWSUtils.utils import *
 # Import third-party packages
 import argparse
 import boto
+import datetime
 from distutils import dir_util
 import copy
 import json
@@ -63,7 +64,10 @@ def build_services_list(services, skipped_services):
 
 class Scout2Encoder(json.JSONEncoder):
     def default(self, o):
-        return o.__dict__
+        if type(o) == datetime.datetime:
+            return str(o)
+        else:
+            return o.__dict__
 
 
 ########################################
