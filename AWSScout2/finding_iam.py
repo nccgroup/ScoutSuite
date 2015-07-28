@@ -12,7 +12,7 @@ class IamFinding(Finding):
         Finding.__init__(self, description, entity, callback, callback_args, level, questions)
 
     def checkAccessKeys(self, key, obj):
-        for access_key in obj['access_keys']:
+        for access_key in obj['AccessKeys']:
             status = self.callback_args[0]
             if len(self.callback_args) > 1:
                 max_age = int(self.callback_args[1])
@@ -22,27 +22,27 @@ class IamFinding(Finding):
 
     def belongsToGroup(self, key, obj):
         membership_count = 0
-        for group in obj['groups']:
+        for group in obj['Groups']:
             mandatory_groups = self.callback_args[0].split(' ')
             for mandatory_group in mandatory_groups:
-                if group['group_name'] == mandatory_group:
+                if group['GroupName'] == mandatory_group:
                     membership_count = membership_count + 1
         if membership_count < int(self.callback_args[1]):
-            self.addItem(obj['name'])
+            self.addItem(obj['Name'])
 
     def isOlderThan(self, key, obj, max_age, status):
         today = datetime.datetime.today()
-        key_creation_date = dateutil.parser.parse(obj['create_date']).replace(tzinfo=None)
+        key_creation_date = dateutil.parser.parse(obj['CreateDate']).replace(tzinfo=None)
         key_age = (today - key_creation_date).days
-        key_status = obj['status']
+        key_status = obj['Status']
         if (key_age > max_age) and key_status == status:
-            self.addItem(obj['access_key_id'], obj['user_name'])
+            self.addItem(obj['AccessKeyId'], obj['UserName'])
 
     def lacksMFA(self, key, obj):
         # IAM user
-        if 'mfa_devices' in obj:
-            if len(obj['mfa_devices']) == 0 and 'logins' in obj:
-                self.addItem(obj['name'])
+        if 'MFADevices' in obj:
+            if len(obj['MFADevices']) == 0 and 'LoginProfile' in obj:
+                self.addItem(obj['Name'])
         # Root account
         elif 'user' in obj:
             if obj['user'] == '<root_account>':
@@ -51,15 +51,15 @@ class IamFinding(Finding):
                     self.addItem('')
 
     def passwordAndKeyEnabled(self, key, obj):
-        if len(obj['access_keys']) > 0 and 'logins' in obj:
-            self.addItem(obj['name'])
+        if len(obj['AccessKeys']) > 0 and 'LoginProfile' in obj:
+            self.addItem(obj['Name'])
             return True
         else:
             return False
 
     def hasUserPolicy(self, key, obj):
-        if 'policies' in obj and len(obj['policies']) > 0:
-            self.addItem(obj['name'])
+        if 'Policies' in obj and len(obj['Policies']) > 0:
+            self.addItem(obj['Name'])
 
     def recentlyUsed(self, key, obj):
         max_age = 15
