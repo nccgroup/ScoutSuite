@@ -156,37 +156,39 @@ def get_elastic_ips_info(ec2_connection, region_info):
         region_info['elastic_ips_count'] = 0
     show_status(region_info, 'elastic_ips', False)
 
-def get_elb_info(elb_connection, q, params):
+def get_elb_info(elb_client, q, params):
     while True:
         try:
             region_info, lb = q.get()
+            elb = {}
+            elb_name = lb['LoadBalancerName']
+            for key in ['DnsName', 'CreatedTime', 'AvailabilityZones', 'LoadBalancerName', 'SecurityGroups', 'Subnets', 'VpcId', 'Policies']:
+                elb[key] = lb[key] if key in lb else None
+            manage_dictionary(elb, 'listeners', {})
+            for l in lb['ListenerDescriptions']:
+                listener = l['Listener']
+                manage_dictionary(listener, 'policies', {})
+                for policy_name in l['PolicyNames']:
+                    manage_dictionary(listener['policies'], policy_name, {})
+                elb['listeners'][l['Listener']['LoadBalancerPort']] = listener
+            manage_dictionary(elb, 'instances', [])
+            for i in lb['Instances']:
+                elb['instances'].append(i['InstanceId'])
+            # Save
             manage_dictionary(region_info, 'elbs', {})
-            manage_dictionary(region_info['elbs'], lb.name, {})
-            for key in ['dns_name', 'created_time', 'availability_zones', 'canonical_hosted_zone_name', 'canonical_hosted_zone_name_id', 'name', 'security_groups', 'subnets', 'vpc_id']:
-                region_info['elbs'][lb.name][key] = lb.__dict__[key]
-            manage_dictionary(region_info['elbs'][lb.name], 'listeners', {})
-            for l in lb.listeners:
-                port = str(l.load_balancer_port)
-                manage_dictionary(region_info['elbs'][lb.name]['listeners'], port, {})
-                for key in ['load_balancer_port', 'instance_port', 'protocol', 'instance_protocol', 'ssl_certificate_id', 'policy_names']:
-                    region_info['elbs'][lb.name]['listeners'][port][key] = l.__dict__[key]
-            manage_dictionary(region_info['elbs'][lb.name], 'instances', [])
-            for i in lb.instances:
-                region_info['elbs'][lb.name]['instances'].append(i.id)
-            manage_dictionary(region_info['elbs'][lb.name], 'source_security_group', {})
-            region_info['elbs'][lb.name]['source_security_group']['name'] = lb.source_security_group.name
-            region_info['elbs'][lb.name]['source_security_group']['owner_alias'] = lb.source_security_group.owner_alias
+            manage_dictionary(region_info['elbs'], elb_name, {})
+            region_info['elbs'][elb_name] = elb
         except Exception, e:
             printException(e)
             pass
         finally:
             q.task_done()
 
-def get_elbs_info(elb_connection, region_info):
-    elbs = elb_connection.get_all_load_balancers()
+def get_elbs_info(elb_client, region_info):
+    elbs = elb_client.describe_load_balancers()['LoadBalancerDescriptions']
     region_info['elbs_count'] = len(elbs)
     show_status(region_info, 'elbs', False)
-    thread_work(elb_connection, region_info, elbs, get_elb_info, num_threads = 5)
+    thread_work(elb_client, region_info, elbs, get_elb_info, num_threads = 5)
     show_status(region_info, 'elbs', False)
 
 def get_instance_info(ec2_client, q, paramas):
@@ -401,14 +403,13 @@ def thread_region(connection_info, q, ec2_params):
         try:
             region_info, target = q.get()
             if target == 'elastic_ips' and False:
-                if region_info['name'] in ec2_params['ec2_regions'] and False:
+                if region_info['name'] in ec2_params['ec2_regions']:
                     ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
                     get_elastic_ips_info(ec2_connection, region_info)
-            elif target == 'elbs' and False:
-# This will remain a different client
-                if region_info['name'] in ec2_params['elb_regions'] and False:
-                    elb_connection = connect_elb(key_id, secret, session_token, region_info['name'])
-                    get_elbs_info(elb_connection, region_info)
+            elif target == 'elbs':
+                if region_info['name'] in ec2_params['elb_regions']:
+                    elb_client = connect_elb(key_id, secret, session_token, region_info['name'])
+                    get_elbs_info(elb_client, region_info)
             elif target == 'vpcs':
                 if region_info['name'] in ec2_params['vpc_regions']:
                     ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
@@ -424,8 +425,8 @@ def thread_region(connection_info, q, ec2_params):
                     ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
                     manage_dictionary(region_info, 'vpcs', {})
                     get_instances_info(ec2_client, region_info)
-#            else:
-#                print 'Error'
+            else:
+                print 'Error'
         except Exception, e:
             printException(e)
             pass
