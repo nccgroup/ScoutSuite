@@ -8,10 +8,10 @@
         "targets": [
             ["http://acs.amazonaws.com/groups/global/AllUsers", "write", "Bucket world-writable (anonymous)", "danger"],
             ["http://acs.amazonaws.com/groups/global/AllUsers", "write_acp", "Bucket's permissions world-writable (anonymous)", "danger"],
-            ["http://acs.amazonaws.com/groups/global/AllUsers", "read", "Bucket world-readable (anonymous)", "warning"],
+            ["http://acs.amazonaws.com/groups/global/AllUsers", "read", "Bucket world-listable (anonymous)", "warning"],
             ["http://acs.amazonaws.com/groups/global/AuthenticatedUsers", "write", "Bucket world-writable", "danger"],
             ["http://acs.amazonaws.com/groups/global/AuthenticatedUsers", "write_acp", "Bucket's permissions world-writable", "danger"],
-            ["http://acs.amazonaws.com/groups/global/AuthenticatedUsers", "read", "Bucket world-readable", "warning"]
+            ["http://acs.amazonaws.com/groups/global/AuthenticatedUsers", "read", "Bucket world-listable", "warning"]
         ],
         "questions": [
             "Report _DESCRIPTION_"
