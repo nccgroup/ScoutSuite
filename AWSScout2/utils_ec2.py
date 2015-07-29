@@ -65,7 +65,7 @@ def link_elastic_ips(ec2_info):
                 for v in ec2_info['regions'][r]['vpcs']:
                     if 'instances' in ec2_info['regions'][r]['vpcs'][v]:
                         for i in ec2_info['regions'][r]['vpcs'][v]['instances']:
-                            if i == ec2_info['regions'][r]['elastic_ips'][eip]['instance_id']:
+                            if i == ec2_info['regions'][r]['elastic_ips'][eip]['InstanceId']:
                                 if not ec2_info['regions'][r]['vpcs'][v]['instances'][i]['PublicIpAddress']:
                                     ec2_info['regions'][r]['vpcs'][v]['instances'][i]['PublicIpAddress'] = eip
                                 elif ec2_info['regions'][r]['vpcs'][v]['instances'][i]['PublicIpAddress'] != eip:
@@ -123,14 +123,12 @@ def get_ec2_info(key_id, secret, session_token, selected_regions, fetch_ec2_gov)
          show_status()
     return ec2_info
 
-def get_elastic_ip_info(ec2_connection, q, params):
+def get_elastic_ip_info(ec2_client, q, params):
     while True:
         try:
             region_info, eip = q.get()
-            ip = eip.public_ip
-            manage_dictionary(region_info['elastic_ips'], ip, {})
-            for key in ['instance_id', 'domain', 'allocation_id', 'association_id', 'network_interface_id', 'network_interface_owner_id', 'private_ip_address']:
-                region_info['elastic_ips'][ip][key] = eip.__dict__[key]
+            ip = eip['PublicIp']
+            region_info['elastic_ips'][ip] = eip
             show_status(region_info, 'elastic_ips', False)
         except Exception, e:
             printException(e)
@@ -138,14 +136,14 @@ def get_elastic_ip_info(ec2_connection, q, params):
         finally:
             q.task_done()
 
-def get_elastic_ips_info(ec2_connection, region_info):
-    eips = ec2_connection.get_all_addresses()
+def get_elastic_ips_info(ec2_client, region_info):
+    eips = ec2_client.describe_addresses()['Addresses']
     count = len(eips)
     if count > 0:
         region_info['elastic_ips_count'] = count
         manage_dictionary(region_info, 'elastic_ips', {})
         show_status(region_info, 'elastic_ips', False)
-        thread_work(ec2_connection, region_info, eips, get_elastic_ip_info, None, num_threads = 5)
+        thread_work(ec2_client, region_info, eips, get_elastic_ip_info, None, num_threads = 5)
     else:
         region_info['elastic_ips_count'] = 0
     show_status(region_info, 'elastic_ips', False)
@@ -396,10 +394,10 @@ def thread_region(connection_info, q, ec2_params):
     while True:
         try:
             region_info, target = q.get()
-            if target == 'elastic_ips' and False:
+            if target == 'elastic_ips':
                 if region_info['name'] in ec2_params['ec2_regions']:
                     ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
-                    get_elastic_ips_info(ec2_connection, region_info)
+                    get_elastic_ips_info(ec2_client, region_info)
             elif target == 'elbs':
                 if region_info['name'] in ec2_params['elb_regions']:
                     elb_client = connect_elb(key_id, secret, session_token, region_info['name'])
