@@ -23,7 +23,7 @@
         "description": "Invalid SSL certificate (PostgreSQL)",
         "entity": "regions.instances",
         "callback": "checkPostgresCreationDate",
-        "callback_args": [ "create_time", "08/05/2014" ],
+        "callback_args": [ "InstanceCreateTime", "08/05/2014" ],
         "level": "danger",
         "questions": [
             "Report PostgreSQL RDS instances created before August 5, 2014"
@@ -43,7 +43,7 @@
         "description": "Backup disabled",
         "entity": "regions.instances",
         "callback": "isLessThan",
-        "callback_args": ["backup_retention_period", "1"],
+        "callback_args": ["BackupRetentionPeriod", "1"],
         "level": "danger",
         "questions": [
             "Report RDS instances with backup disabled"
@@ -53,7 +53,7 @@
         "description": "Short backup retention period",
         "entity": "regions.instances",
         "callback": "isLessThan",
-        "callback_args": ["backup_retention_period", "30"],
+        "callback_args": ["BackupRetentionPeriod", "30"],
         "level": "warning",
         "questions": [
             "Report RDS instances with a backup retention period less than 30 days"

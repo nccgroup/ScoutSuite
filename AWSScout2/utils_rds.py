@@ -10,10 +10,6 @@ from AWSScout2.utils import *
 from AWSScout2.filters import *
 from AWSScout2.findings import *
 
-# Import third-party packages
-import boto
-from boto import rds
-
 
 ########################################
 ##### RDS functions
@@ -36,7 +32,7 @@ def check_for_duplicate(rds_info):
 def get_rds_info(key_id, secret, session_token, selected_regions, fetch_gov):
     rds_info = {}
     rds_info['regions'] = {}
-    for region in build_region_list(boto.rds.regions(), selected_regions, include_gov = fetch_gov):
+    for region in build_region_list('rds', selected_regions, include_gov = fetch_gov):
         rds_info['regions'][region] = {}
         rds_info['regions'][region]['name'] = region
     thread_work((key_id, secret, session_token), rds_info, rds_info['regions'], get_rds_region, show_status)
@@ -47,50 +43,41 @@ def get_rds_region(connection_info, q, params):
     while True:
         try:
             rds_info, region = q.get()
-            rds_connection = connect_rds(key_id, secret, session_token, region)
-            get_security_groups_info(rds_connection, rds_info['regions'][region])
-            get_instances_info(rds_connection, rds_info['regions'][region])
+            rds_client = connect_rds(key_id, secret, session_token, region)
+            get_security_groups_info(rds_client, rds_info['regions'][region])
+            get_instances_info(rds_client, rds_info['regions'][region])
         except Exception, e:
             printException(e)
             pass
         finally:
             q.task_done()
 
-def get_security_groups_info(rds_connection, region_info):
-    groups = rds_connection.get_all_dbsecurity_groups()
+def get_security_groups_info(rds_client, region_info):
+    groups = rds_client.describe_db_security_groups()['DBSecurityGroups']
     manage_dictionary(region_info, 'security_groups', {})
     for group in groups:
-        region_info['security_groups'][group.name] = parse_security_group(group)
+        region_info['security_groups'][group['DBSecurityGroupName']] = parse_security_group(group)
 
 def parse_security_group(group):
     security_group = {}
-    security_group['name'] = group.name
-    security_group['description'] = group.description
-    security_group['ec2_groups'] = {}
-    security_group['ec2_groups']['owners'] = {}
-    for ec2_group in group.ec2_groups:
-        owner_id = ec2_group.owner_id
-        if not owner_id:
-            owner_id = 'unknown'
-        manage_dictionary(security_group['ec2_groups']['owners'], owner_id, {})
-        manage_dictionary(security_group['ec2_groups']['owners'][owner_id], 'groups', [])
-        security_group['ec2_groups']['owners'][owner_id]['groups'].append(ec2_group.name)
-    security_group['ip_ranges'] = []
-    for ip in group.ip_ranges:
-        security_group['ip_ranges'].append(ip.cidr_ip)
+    vpc_id = group['VpcId'] if 'VpcId' in group else 'no-vpc'
+    security_group['name'] = group['DBSecurityGroupName']
+    security_group['description'] = group['DBSecurityGroupDescription']
+    security_group['ec2_groups'] = group['EC2SecurityGroups']
+    security_group['ip_ranges'] = group['IPRanges']
     return security_group
 
-def get_instances_info(rds_connection, region_info):
+def get_instances_info(rds_client, region_info):
     manage_dictionary(region_info, 'instances', {})
-    dbinstances = rds_connection.get_all_dbinstances()
+    dbinstances = rds_client.describe_db_instances()['DBInstances']
     total = 0
     for dbi in dbinstances:
         dbi_info = {}
         total = total + len(dbinstances)
-        for key in ['id', 'create_time', 'engine', 'status', 'auto_minor_version_upgrade', 'instance_class', 'multi_az', 'endpoint', 'backup_retention_period', 'PubliclyAccessible']:
+        for key in ['DBInstanceIdentifier', 'InstanceCreateTime', 'Engine', 'DBInstanceStatus', 'AutoMinorVersionUpgrade', 'DBInstanceClass', 'MultiAZ', 'Endpoint', 'BackupRetentionPeriod', 'PubliclyAccessible', 'StorageEncrypted']:
             # parameter_groups , security_groups, vpc_security_gropus
-            dbi_info[key] = dbi.__dict__[key]
-        region_info['instances'][dbi.id] = dbi_info
+            dbi_info[key] = dbi[key]
+        region_info['instances'][dbi['DBInstanceIdentifier']] = dbi_info
 
 def show_status(rds_info, stop_event):
     print 'Fetching RDS data...'

@@ -14,14 +14,14 @@ class RdsFinding(Finding):
                 self.addItem(obj['name'])
 
     def checkMultiAZ(self, key, obj):
-        if not obj['multi_az']:
-            self.addItem(obj['id'])
+        if not obj['MultiAZ']:
+            self.addItem(obj['DBInstanceIdentifier'])
 
     def checkAutoUpgrade(self, key, obj):
-        if not obj['auto_minor_version_upgrade']:
-            self.addItem(obj['id'])
+        if not obj['AutoMinorVersionUpgrade']:
+            self.addItem(obj['DBInstanceIdentifier'])
 
     def checkPostgresCreationDate(self, key, obj):
-        if (obj['engine'] == 'postgres'):
+        if (obj['Engine'].lower() == 'postgres'):
             if self.wasCreatedBefore(key, obj):
-                self.addItem(obj['id'])
+                self.addItem(obj['DBInstanceIdentifier'])

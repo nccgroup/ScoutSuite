@@ -578,22 +578,22 @@
     <script id="rds_instance-partial" type="text/x-handlebars-template">
       <div class="list-group" id="rds_instance-details-{{id}}">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{id}}</h4>
+          <h4 class="list-group-item-heading">{{DBInstanceIdentifier}}</h4>
         </div>
         <div class="list-group-item">
           <h4>Information</h4>
           <ul>
             <li class="list-group-item-text">Region: {{region}}</li>
-            <li class="list-group-item-text">Engine: {{engine}}</li>
-            <li class="list-group-item-text">Status: {{status}}</li>
-            <li class="list-group-item-text">Auto Minor Version Upgrade: <span id="rds_instances-no-minor-auto-upgrade-{{id}}">{{#if auto_minor_version_upgrade}} Yes {{else}} No {{/if}}</span></li>
-            <li class="list-group-item-text">Multi Availability Zones: <span id="rds_instances-single-az-{{id}}">{{#if multi_az}} Yes {{else}} No {{/if}}</span></li>
-            <li class="list-group-item-text">Instance Class: <span id="rds_instances-unscannable-instance-types-{{id}}"> {{instance_class}}<span></li>
-            <li class="list-group-item-text">Created on: <span id="rds_instances-postgres-invalid-ssl-cert-{{id}}">{{create_time}}</span></li>
+            <li class="list-group-item-text">Engine: {{Engine}}</li>
+            <li class="list-group-item-text">Status: {{make_title DBInstanceStatus}}</li>
+            <li class="list-group-item-text">Auto Minor Version Upgrade: <span id="rds_instances-no-minor-auto-upgrade-{{id}}">{{#if AutoMinorVersionUpgrade}} Enabled {{else}} Disabled {{/if}}</span></li>
+            <li class="list-group-item-text">Multi Availability Zones: <span id="rds_instances-single-az-{{id}}">{{#if MultiAZ}} Enabled {{else}} Disabled {{/if}}</span></li>
+            <li class="list-group-item-text">Instance Class: <span id="rds_instances-unscannable-instance-types-{{id}}"> {{DBInstanceClass}}<span></li>
+            <li class="list-group-item-text">Created on: <span id="rds_instances-postgres-invalid-ssl-cert-{{id}}">{{InstanceCreateTime}}</span></li>
             <li class="list-group-item-tex">Backup retention period in days:
             <span id="rds_instances-backup-disabled-{{id}}">
             <span id="rds_instances-short-backup-retention-period-{{id}}">
-              {{backup_retention_period}}
+              {{BackupRetentionPeriod}}
             </span>
             </span>
           </ul>
@@ -601,7 +601,7 @@
         <div class="list-group-item">
           <h4>Network</h4>
           <ul>
-            <li class="list-group-item-text">Endpoint: {{endpoint}}</li>
+            <li class="list-group-item-text">Endpoint: {{Endpoint.Address}}:{{Endpoint.Port}}</li>
             <li class="list-group-item-text">Publicly accessible: {{PubliclyAccessible}}</li>
           </ul>
         </div>
