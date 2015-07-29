@@ -29,8 +29,8 @@ def analyze_ec2_config(ec2_info, force_write):
     # Custom EC2 analysis
     check_for_elastic_ip(ec2_info)
     link_elastic_ips(ec2_info)
-    list_network_attack_surface(ec2_info, 'attack_surface', 'ip_address')
-    list_network_attack_surface(ec2_info, 'private_attack_surface', 'private_ip_address')
+#    list_network_attack_surface(ec2_info, 'attack_surface', 'PublicIpAddress')
+#    list_network_attack_surface(ec2_info, 'private_attack_surface', 'PrivateIpAddress')
     save_config_to_file(ec2_info, 'EC2', force_write)
 
 
@@ -72,10 +72,10 @@ def link_elastic_ips(ec2_info):
                     if 'instances' in ec2_info['regions'][r]['vpcs'][v]:
                         for i in ec2_info['regions'][r]['vpcs'][v]['instances']:
                             if i == ec2_info['regions'][r]['elastic_ips'][eip]['instance_id']:
-                                if not ec2_info['regions'][r]['vpcs'][v]['instances'][i]['ip_address']:
-                                    ec2_info['regions'][r]['vpcs'][v]['instances'][i]['ip_address'] = eip
-                                elif ec2_info['regions'][r]['vpcs'][v]['instances'][i]['ip_address'] != eip:
-                                    print 'Warning: public IP address exists (%s) for an instance associated with an elastic IP (%s)' % (ec2_info['regions'][r]['vpcs'][v]['instances'][i]['ip_address'], eip)
+                                if not ec2_info['regions'][r]['vpcs'][v]['instances'][i]['PublicIpAddress']:
+                                    ec2_info['regions'][r]['vpcs'][v]['instances'][i]['PublicIpAddress'] = eip
+                                elif ec2_info['regions'][r]['vpcs'][v]['instances'][i]['PublicIpAddress'] != eip:
+                                    print 'Warning: public IP address exists (%s) for an instance associated with an elastic IP (%s)' % (ec2_info['regions'][r]['vpcs'][v]['instances'][i]['PublicIpAddress'], eip)
 
 #
 # List the publicly available IPs/Ports
@@ -113,9 +113,9 @@ def get_ec2_info(key_id, secret, session_token, selected_regions, fetch_ec2_gov)
     ec2_info['regions'] = {}
     # Build region list for each EC2 entities and VPC
     ec2_params = {}
-    ec2_params['ec2_regions'] = build_region_list(boto.ec2.regions(), selected_regions, include_gov = fetch_ec2_gov)
-    ec2_params['elb_regions'] = build_region_list(boto.ec2.elb.regions(), selected_regions, include_gov = fetch_ec2_gov)
-    ec2_params['vpc_regions'] = build_region_list(boto.vpc.regions(), selected_regions, include_gov = fetch_ec2_gov)
+    ec2_params['ec2_regions'] = build_region_list('ec2', selected_regions, include_gov = fetch_ec2_gov)
+    ec2_params['elb_regions'] = build_region_list('ec2', selected_regions, include_gov = fetch_ec2_gov)
+    ec2_params['vpc_regions'] = build_region_list('ec2', selected_regions, include_gov = fetch_ec2_gov)
     all_regions = set(ec2_params['ec2_regions'] + ec2_params['elb_regions'] + ec2_params['vpc_regions'])
     for region in all_regions:
         ec2_info['regions'][region] = {}
@@ -189,88 +189,78 @@ def get_elbs_info(elb_connection, region_info):
     thread_work(elb_connection, region_info, elbs, get_elb_info, num_threads = 5)
     show_status(region_info, 'elbs', False)
 
-def get_instance_info(ec2_connection, q, paramas):
+def get_instance_info(ec2_client, q, paramas):
     while True:
         try:
-            region_info, (i, reservation) = q.get()
-            vpc_info = region_info['vpcs']
-            vpc_id = i.vpc_id if i.vpc_id else 'no-vpc'
-            manage_vpc(vpc_info, vpc_id)
-            manage_dictionary(vpc_info[vpc_id], 'instances', {})
-            manage_dictionary(vpc_info[vpc_id]['instances'], i.id, {})
-            vpc_info[vpc_id]['instances'][i.id]['reservation_id'] = reservation.id
-            # Get instance variables (see http://boto.readthedocs.org/en/latest/ref/ec2.html#module-boto.ec2.instance to see what else is available)
-            for key in ['id', 'public_dns_name', 'private_dns_name', 'key_name', 'launch_time', 'private_ip_address', 'ip_address', 'instance_type']:
-                vpc_info[vpc_id]['instances'][i.id][key] = i.__dict__[key]
-            # Get instance name
-            if 'Name' in i.tags and i.tags['Name'] != '':
-                vpc_info[vpc_id]['instances'][i.id]['name'] = i.tags['Name']
-            else:
-                vpc_info[vpc_id]['instances'][i.id]['name'] = i.id
-            read_tags(vpc_info[vpc_id]['instances'][i.id], i)
-            # FIXME ... see why it's not working when added in the list above
-            vpc_info[vpc_id]['instances'][i.id]['state'] = i.state
-            vpc_info[vpc_id]['instances'][i.id]['profile_arn'] = i.instance_profile['arn'] if i.instance_profile else ''
-            manage_dictionary(vpc_info[vpc_id]['instances'][i.id], 'security_groups', [])
-            for sg in i.groups:
-                vpc_info[vpc_id]['instances'][i.id]['security_groups'].append(sg.id)
-            # Network interfaces
-            vpc_info[vpc_id]['instances'][i.id]['interfaces'] = []
-            for interface in i.interfaces:
-                vpc_info[vpc_id]['instances'][i.id]['interfaces'].append(interface.id)
-            show_status(vpc_info, 'instances', False)
+            region_info, (i, reservation_id) = q.get()
+            # Get instance variables
+            instance = {}
+            vpc_id = i['VpcId'] if i['VpcId'] else 'no-vpc'
+            instance['reservation_id'] = reservation_id
+            for key in ['InstanceId', 'PublicDnsName', 'PrivateDnsName', 'KeyName', 'LaunchTime', 'PrivateIpAddress', 'PublicIpAddress', 'InstanceType', 'State', 'IamInstanceProfile']:
+                instance[key] = i[key] if key in i else None
+            get_name(instance, i, 'InstanceId')
+            manage_dictionary(instance, 'security_groups', [])
+            for sg in i['SecurityGroups']:
+                instance['security_groups'].append(sg)
+            # Save new instance
+            manage_vpc(region_info['vpcs'], vpc_id)
+            manage_dictionary(region_info['vpcs'][vpc_id], 'instances', {})
+            region_info['vpcs'][vpc_id]['instances'][i['InstanceId']] = instance
+            # Status update
+            show_status(region_info['vpcs'], 'instances', False)
         except Exception, e:
             printException(e)
             pass
         finally:
             q.task_done()
 
-def get_instances_info(ec2_connection, region_info):
+def get_instances_info(ec2_client, region_info):
     instances = []
-    reservations = ec2_connection.get_all_reservations()
+    reservations = ec2_client.describe_instances()['Reservations']
     for reservation in reservations:
-        for i in reservation.instances:
-            instances.append((i, reservation))
+        for i in reservation['Instances']:
+            instances.append((i, reservation['ReservationId']))
     region_info['instances_count'] = len(instances)
     show_status(region_info, ['vpcs', 'instances'], False)
-    thread_work(ec2_connection, region_info, instances, get_instance_info, None, num_threads = 10)
+    thread_work(ec2_client, region_info, instances, get_instance_info, None, num_threads = 10)
     show_status(region_info, ['vpcs', 'instances'], False)
 
 def get_network_acl_entries(entries, egress):
     acl_list = []
     for entry in entries:
-        if entry.egress == egress:
+        if entry['Egress'] == egress:
             acl = {}
-            for key in ['cidr_block', 'rule_action', 'rule_number']:
-                acl[key] = entry.__dict__[key]
-            from_port = entry.port_range.from_port if entry.port_range.from_port else 1
-            to_port = entry.port_range.to_port if entry.port_range.to_port else 65535
-            acl['port_range'] = from_port if from_port == to_port else str(from_port) + '-' + str(to_port)
-            acl['protocol'] = protocols_dict[entry.protocol]
+            for key in ['CidrBlock', 'RuleAction', 'RuleNumber']:
+                acl[key] = entry[key]
+            acl['protocol'] = protocols_dict[entry['Protocol']]
+            if 'PortRange' in entry:
+                from_port = entry['PortRange']['From'] if entry['PortRange']['From'] else 1
+                to_port = entry['PortRange']['To'] if entry['PortRange']['To'] else 65535
+                acl['port_range'] = from_port if from_port == to_port else str(from_port) + '-' + str(to_port)
+            else:
+                acl['port_range'] = '1-65535'
+
             acl_list.append(acl)
     return acl_list
 
-def get_vpc_info(vpc_connection, q, params):
+def get_vpc_info(ec2_client, q, params):
     while True:
         try:
             region_info, vpc = q.get()
-            manage_dictionary(region_info, 'vpcs', {})
-            manage_dictionary(region_info['vpcs'], vpc.id, {})
-            vpc_info = region_info['vpcs'][vpc.id]
-            # h4ck : data redundancy because I can't call ../@key in Handlebars
-            vpc_info['id'] = vpc.id
-            vpc_info['state'] = vpc.state
-            vpc_info['is_default'] = vpc.is_default
-            vpc_info['cidr_block'] = vpc.cidr_block
-            read_tags(vpc_info, vpc)
-            acls = vpc_connection.get_all_network_acls(filters ={"vpc_id": vpc.id})
-            vpc_info['network_acls'] = {}
-            for acl in acls:
-                manage_dictionary(vpc_info['network_acls'], acl.id, {})
-                vpc_info['network_acls'][acl.id]['default'] = acl.default
-                vpc_info['network_acls'][acl.id]['inbound_network_acls'] = get_network_acl_entries(acl.network_acl_entries, "false")
-                vpc_info['network_acls'][acl.id]['outbound_network_acls'] = get_network_acl_entries(acl.network_acl_entries, "true")
-            manage_dictionary(vpc_info, 'instances', {})
+            manage_dictionary(region_info['vpcs'], vpc['VpcId'], {})
+            get_name(vpc, vpc, 'VpcId')
+            acls = ec2_client.describe_network_acls(Filters = [{'Name': 'vpc-id', 'Values': [vpc['VpcId']]}])
+            vpc['network_acls'] = {}
+            for acl in acls['NetworkAcls']:
+                manage_dictionary(vpc['network_acls'], acl['NetworkAclId'], {})
+                vpc['network_acls'][acl['NetworkAclId']] = acl
+                # CleanUp Entries
+                vpc['network_acls'][acl['NetworkAclId']]['inbound_network_acls'] = get_network_acl_entries(acl['Entries'], False)
+                vpc['network_acls'][acl['NetworkAclId']]['outbound_network_acls'] = get_network_acl_entries(acl['Entries'], True)
+                vpc['network_acls'][acl['NetworkAclId']].pop('Entries')
+            manage_dictionary(vpc, 'instances', {})
+            region_info['vpcs'][vpc['VpcId']].update(vpc)
             show_status(region_info, 'vpcs', False, True)
         except Exception, e:
             printException(e)
@@ -278,36 +268,34 @@ def get_vpc_info(vpc_connection, q, params):
         finally:
             q.task_done()
 
-def get_vpcs_info(vpc_connection, region_info):
-    vpcs = vpc_connection.get_all_vpcs()
+def get_vpcs_info(ec2_client, region_info):
+    vpcs = ec2_client.describe_vpcs()['Vpcs']
     region_info['vpcs_count'] = len(vpcs)
     show_status(region_info, 'vpcs', False, True)
-    thread_work(vpc_connection, region_info, vpcs, get_vpc_info, num_threads = 5)
+    thread_work(ec2_client, region_info, vpcs, get_vpc_info, num_threads = 5)
     show_status(region_info, 'vpcs', False, True)
 
-def get_security_group_info(ec2_connection, q, params):
+def get_security_group_info(ec2_client, q, params):
     while True:
         try:
             region_info, group = q.get()
-            vpc_info = region_info['vpcs']
-            vpc_id = group.vpc_id if group.vpc_id else 'no-vpc'
-            manage_vpc(vpc_info, vpc_id)
-            manage_dictionary(vpc_info[vpc_id], 'security_groups', {})
-            manage_dictionary(vpc_info[vpc_id]['security_groups'], group.id, {})
-            # Append the new security group to the return list
-            vpc_info[vpc_id]['security_groups'][group.id] = parse_security_group(group)
-            show_status(vpc_info, 'security_groups', False)
+            vpc_id = group['VpcId'] if group['VpcId'] else 'no-vpc'
+            manage_vpc(region_info['vpcs'], vpc_id)
+            manage_dictionary(region_info['vpcs'][vpc_id], 'security_groups', {})
+            manage_dictionary(region_info['vpcs'][vpc_id]['security_groups'], group['GroupId'], {})
+            region_info['vpcs'][vpc_id]['security_groups'][group['GroupId']] = parse_security_group(ec2_client, group)
+            show_status(region_info['vpcs'], 'security_groups', False)
         except Exception, e:
             printException(e)
             pass
         finally:
             q.task_done()
 
-def get_security_groups_info(ec2_connection, region_info):
-    groups = ec2_connection.get_all_security_groups()
-    region_info['security_groups_count' ] = len(groups)
+def get_security_groups_info(ec2_client, region_info):
+    security_groups = ec2_client.describe_security_groups()['SecurityGroups']
+    region_info['security_groups_count' ] = len(security_groups)
     show_status(region_info, ['vpcs', 'security_groups'], False)
-    thread_work(ec2_connection, region_info, groups, get_security_group_info, num_threads = 10)
+    thread_work(ec2_client, region_info, security_groups, get_security_group_info, num_threads = 10)
     show_status(region_info, ['vpcs', 'security_groups'], False)
 
 def manage_vpc(vpc_info, vpc_id):
@@ -318,59 +306,60 @@ def manage_vpc(vpc_info, vpc_id):
     elif not 'name' in vpc_info[vpc_id]:
         vpc_info[vpc_id]['name'] = vpc_id
 
-def parse_security_group(group):
+def parse_security_group(ec2_client, group):
     security_group = {}
-    security_group['name'] = group.name
-    security_group['id'] = group.id
-    security_group['description'] = group.description
-    security_group['owner_id'] = group.owner_id
-    security_group = manage_dictionary(security_group, 'running-instances', [])
-    security_group = manage_dictionary(security_group, 'stopped-instances', [])
+    security_group['name'] = group['GroupName']
+    security_group['id'] = group['GroupId']
+    security_group['description'] = group['Description']
+    security_group['owner_id'] = group['OwnerId']
     security_group['rules'] = {'ingress': {}, 'egress': {}}
-    security_group['rules']['ingress']['protocols'] = parse_security_group_rules(group.rules)
-    security_group['rules']['egress']['protocols'] = parse_security_group_rules(group.rules_egress)
+    security_group['rules']['ingress']['protocols'] = parse_security_group_rules(group['IpPermissions'])
+    security_group['rules']['egress']['protocols'] = parse_security_group_rules(group['IpPermissionsEgress'])
     # Save all instances associated with this group
-    for i in group.instances():
-        if i.state == 'running':
-            security_group['running-instances'].append(i.id)
-        else:
-            security_group['stopped-instances'].append(i.id)
+    manage_dictionary(security_group, 'running-instances', [])
+    manage_dictionary(security_group, 'stopped-instances', [])
+#    reservations = ec2_client.describe_instances(Filters = [{'Name': 'instance.group-id', 'Values': [group['GroupId']]}])
+#    print reservations
+#        if i.state == 'running':
+#            security_group['running-instances'].append(i.id)
+#        else:
+#            security_group['stopped-instances'].append(i.id)
     return security_group
 
 def parse_security_group_rules(rules):
     protocols = {}
     for rule in rules:
-        ip_protocol = rule.ip_protocol.upper()
+        ip_protocol = rule['IpProtocol'].upper()
         if ip_protocol == '-1':
             ip_protocol = 'ALL'
         protocols = manage_dictionary(protocols, ip_protocol, {})
         protocols[ip_protocol] = manage_dictionary(protocols[ip_protocol], 'ports', {})
         # Save the port (single port or range)
-        if ip_protocol == 'ICMP':
+        if ip_protocol == 'ICMP' or ip_protocol == 'ALL':
             port_value = 'N/A'
-        elif rule.from_port == rule.to_port:
-            if not rule.from_port:
-                port_value = 'All'
+        elif rule['FromPort'] == rule['ToPort']:
+            if not rule['FromPort']:
+                port_value = 'ALL'
             else:
-                port_value = rule.from_port
+                port_value = rule['FromPort']
         else:
-            port_value = '%s-%s' % (rule.from_port, rule.to_port)
+            port_value = '%s-%s' % (rule['FromPort'], rule['ToPort'])
+        port_value = str(port_value)
         manage_dictionary(protocols[ip_protocol]['ports'], port_value, {})
         # Save grants, values are either a CIDR or an EC2 security group
-        for grant in rule.grants:
-            if grant.cidr_ip:
-                manage_dictionary(protocols[ip_protocol]['ports'][port_value], 'cidrs', [])
-                protocols[ip_protocol]['ports'][port_value]['cidrs'].append(grant.cidr_ip)
-            else:
-                manage_dictionary(protocols[ip_protocol]['ports'][port_value], 'security_groups', [])
-                protocols[ip_protocol]['ports'][port_value]['security_groups'].append(grant.groupId)
+        for grant in rule['UserIdGroupPairs']:
+            manage_dictionary(protocols[ip_protocol]['ports'][port_value], 'security_groups', [])
+            protocols[ip_protocol]['ports'][port_value]['security_groups'].append(grant)
+        for grant in rule['IpRanges']:
+            manage_dictionary(protocols[ip_protocol]['ports'][port_value], 'cidrs', [])
+            protocols[ip_protocol]['ports'][port_value]['cidrs'].append(grant['CidrIp'])
     return protocols
 
-def read_tags(local, remote):
-    if 'Name' in remote.tags and remote.tags['Name'] != '':
-        local['name'] = remote.tags['Name']
+def get_name(local, remote, default_attribute):
+    if 'Tags' in remote and 'Name' in remote['Tags'] and remote['Tags']['Name'] != '':
+        local['Name'] = remote['Tags']['Name']
     else:
-        local['name'] = remote.id
+        local['Name'] = remote[default_attribute]
 
 status = {}
 status['region_name'] = ''
@@ -411,31 +400,32 @@ def thread_region(connection_info, q, ec2_params):
     while True:
         try:
             region_info, target = q.get()
-            if target == 'elastic_ips':
-                if region_info['name'] in ec2_params['ec2_regions']:
-                    ec2_connection = connect_ec2(key_id, secret, session_token, region_info['name'])
+            if target == 'elastic_ips' and False:
+                if region_info['name'] in ec2_params['ec2_regions'] and False:
+                    ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
                     get_elastic_ips_info(ec2_connection, region_info)
-            elif target == 'elbs':
-                if region_info['name'] in ec2_params['elb_regions']:
+            elif target == 'elbs' and False:
+# This will remain a different client
+                if region_info['name'] in ec2_params['elb_regions'] and False:
                     elb_connection = connect_elb(key_id, secret, session_token, region_info['name'])
                     get_elbs_info(elb_connection, region_info)
             elif target == 'vpcs':
                 if region_info['name'] in ec2_params['vpc_regions']:
-                    vpc_connection = connect_vpc(key_id, secret, session_token, region_info['name'])
+                    ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
                     manage_dictionary(region_info, 'vpcs', {})
-                    get_vpcs_info(vpc_connection, region_info)
+                    get_vpcs_info(ec2_client, region_info)
             elif target == 'security_groups':
                 if region_info['name'] in ec2_params['ec2_regions']:
-                    ec2_connection = connect_ec2(key_id, secret, session_token, region_info['name'])
+                    ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
                     manage_dictionary(region_info, 'vpcs', {})
-                    get_security_groups_info(ec2_connection, region_info)
+                    get_security_groups_info(ec2_client, region_info)
             elif target == 'instances':
                 if region_info['name'] in ec2_params['ec2_regions']:
-                    ec2_connection = connect_ec2(key_id, secret, session_token, region_info['name'])
+                    ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
                     manage_dictionary(region_info, 'vpcs', {})
-                    get_instances_info(ec2_connection, region_info)
-            else:
-                print 'Error'
+                    get_instances_info(ec2_client, region_info)
+#            else:
+#                print 'Error'
         except Exception, e:
             printException(e)
             pass

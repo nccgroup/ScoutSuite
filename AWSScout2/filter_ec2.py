@@ -32,8 +32,8 @@ class Ec2Filter(Filter):
                     self.addItem(obj['id'])
 
     def DoesNotHaveAPublicIP(self, key, obj):
-        if not obj['ip_address']:
-            self.addItem(obj['id'])
+        if not obj['PublicIpAddress']:
+            self.addItem(obj['InstanceId'])
 
     def IsOpenToAll(self, key, obj):
         for ip in obj:

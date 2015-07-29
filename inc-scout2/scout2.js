@@ -663,11 +663,11 @@ Handlebars.registerHelper('format_network_acls', function (acls, direction) {
     r += '<td width="20%" class="text-center">Action</td></tr>';
     for (a in acls) {
         r += '<tr>';
-        r += '<td width="20%" class="text-center">' + acls[a]['rule_number'] + '</td>';
+        r += '<td width="20%" class="text-center">' + acls[a]['RuleNumber'] + '</td>';
         r += '<td width="20%" class="text-center">' + acls[a]['port_range'] + '</td>';
         r += '<td width="20%" class="text-center">' + acls[a]['protocol'] + '</td>';
-        r += '<td width="20%" class="text-center">' + acls[a]['cidr_block'] + '</td>';
-        r += '<td width="20%" class="text-center">' + acls[a]['rule_action'] + '</td>';
+        r += '<td width="20%" class="text-center">' + acls[a]['CidrBlock'] + '</td>';
+        r += '<td width="20%" class="text-center">' + acls[a]['RuleAction'] + '</td>';
         r += '</tr>';
     }
     r += '</table>';

@@ -341,23 +341,23 @@
           <h4>Information</h4>
           <ul>
             <li class="list-group-item-text">Region: {{region}}</li>
-            <li class="list-group-item-text">ID: {{id}}</li>
+            <li class="list-group-item-text">ID: {{InstanceId}}</li>
             <li class="list-group-item-text">Reservation ID: {{reservation_id}}</li>
-            <li class="list-group-item-text">Access Key name: {{key_name}}</li>
-            <li class="list-group-item-text">State: {{state}}</li>
+            <li class="list-group-item-text">Access Key name: {{KeyName}}</li>
+            <li class="list-group-item-text">State: {{make_title State.Name}}</li>
             <li class="list-group-item-text">Instance Type:
-              <span id="ec2_instances-unscannable-instance-types-{{id}}"> {{instance_type}}<span>
+              <span id="ec2_instances-unscannable-instance-types-{{id}}"> {{InstanceType}}<span>
             </li>
-            <li class="list-group-item-text">Up since: {{launch_time}}</li>
+            <li class="list-group-item-text">Up since: {{LaunchTime}}</li>
           </ul>
         </div>
         <div class="list-group-item">
           <h4>Network</h4>
           <ul>
-            <li class="list-group-item-text">Public IP: {{ip_address}}</li>
-            <li class="list-group-item-text">Public DNS: {{public_dns_name}}</li>
-            <li class="list-group-item-text">Private IP: {{private_ip_address}}</li>
-            <li class="list-group-item-text">Private DNS: {{private_dns_name}}</li>
+            <li class="list-group-item-text">Public IP: {{PublicIpAddress}}</li>
+            <li class="list-group-item-text">Public DNS: {{PublicDnsName}}</li>
+            <li class="list-group-item-text">Private IP: {{PrivateIpAddress}}</li>
+            <li class="list-group-item-text">Private DNS: {{PrivateDnsName}}</li>
           </ul>
         </div>
         <div class="list-group-item" style="padding-bottom: 0 !important;">
@@ -369,7 +369,7 @@
               <div class="accordion-inner">
                 <ul class="no-bullet">
                   {{#each security_groups}}
-                    <li><a href="javascript:findAndShowEC2Object('regions.vpcs.security_groups', '{{this}}')">{{this}}</a></li>
+                    <li><a href="javascript:findAndShowEC2Object('regions.vpcs.security_groups', '{{GroupId}}')">{{GroupName}}</a></li>
                   {{/each}}
                 </ul>
               </div>
@@ -1344,7 +1344,7 @@
                       <div class="list-group-item list-sub-element">
                         {{Name}}
                         {{#each instances}}
-                          <div class="list-group-item-text list-sub-element" id="ec2_instance-list-{{id}}"><a href="javascript:browseTo('ec2_instance', '{{id}}')">{{Name}}</a></div>
+                          <div class="list-group-item-text list-sub-element" id="ec2_instance-list-{{id}}"><a href="javascript:browseTo('ec2_instance', '{{InstanceId}}')">{{Name}}</a></div>
                         {{/each}}
                       </div>
                     {{/each}}

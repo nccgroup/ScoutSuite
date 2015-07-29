@@ -43,13 +43,13 @@ class Ec2Finding(Finding):
                                     self.addItem(port, obj['id'])
 
     def checkFirstRule(self, key, unsorted_rules):
-        sorted_rules = sorted(unsorted_rules, key=lambda k: k['rule_number'])
+        sorted_rules = sorted(unsorted_rules, key=lambda k: k['RuleNumber'])
         first_rule = sorted_rules[0]
-        if first_rule['port_range'] == '1-65535' and first_rule['cidr_block'] == '0.0.0.0/0':
+        if first_rule['port_range'] == '1-65535' and first_rule['CidrBlock'] == '0.0.0.0/0':
             self.addItem(key)
 
     def checkNetworkACLs(self, key, obj):
-        if obj['id'] != 'no-vpc':
+        if obj['VpcId'] != 'no-vpc':
             if 'network_acls' in obj:
                 field_name = self.callback_args[0] + '_network_acls'
                 for acl in obj['network_acls']:
