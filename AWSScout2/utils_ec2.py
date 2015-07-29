@@ -12,12 +12,6 @@ from AWSScout2.utils_ec2 import *
 from AWSScout2.filters import *
 from AWSScout2.findings import *
 
-# Import third-party packages
-import boto
-from boto import ec2
-from boto import vpc
-from boto.ec2 import elb
-
 
 ########################################
 ##### EC2 analysis functions
