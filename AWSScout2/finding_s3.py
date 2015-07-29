@@ -33,10 +33,6 @@ class S3Finding(Finding):
         if obj['versioning_status'] == 'Disabled':
             self.addItem(key)
 
-    def checkWebhosting(self, key, obj):
-        if obj['web_hosting'] == 'Enabled':
-            self.addItem(key)
-
     def checkEncryption(self, key, obj):
         if 'keys' in obj:
             for k in obj['keys']:
@@ -55,7 +51,7 @@ class S3Finding(Finding):
                         self.addItem(k, key)
 
     def checkStaticWebsiteHosting(self, key, obj):
-        if obj['web_hosting'] == 'Enabled':
+        if 'web_hosting' in obj and obj['web_hosting'] == 'Enabled':
             self.addItem(key)
 
     def checkIPOnlyCondition(self, key, obj):

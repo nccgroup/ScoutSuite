@@ -45,6 +45,7 @@ def load_findings(service, ruleset_name, customize = False):
         with open(filename) as f:
             findings = json.load(f)
     except Exception, e:
+        printException(e)
         print 'Error: the ruleset name entered (%s) does not match an existing configuration.' % ruleset_name
         return
 
