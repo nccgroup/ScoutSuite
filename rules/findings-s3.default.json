@@ -74,10 +74,10 @@
         "callback_args": ["_ARG_1_"],
         "level": "danger",
         "targets": [
-            ["delete", "s3:DeleteObject"],
-            ["get", "s3:GetObject"],
-            ["list", "s3:ListBucket"],
-            ["put", "s3:PutObject"],
+            ["delete", "s3:Delete*"],
+            ["get", "s3:Get*"],
+            ["list", "s3:List*"],
+            ["put", "s3:Put*"],
             ["all", "s3:*"]
         ],
         "level": "danger",

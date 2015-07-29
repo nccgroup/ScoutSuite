@@ -84,10 +84,12 @@ def get_s3_bucket_policy(s3_client, bucket_name, bucket_info):
 
 def get_s3_bucket_versioning(s3_client, bucket_name, bucket_info):
     try:
-        bucket_info['versioning'] = s3_client.get_bucket_versioning(Bucket = bucket_name)
+        versioning = s3_client.get_bucket_versioning(Bucket = bucket_name)
+        bucket_info['versioning_status'] = versioning['Status'] if 'Status' in versioning else 'Disabled'
+        bucket_info['version_mfa_delete'] = versioning['MFADelete'] if 'MFADelete' in versioning else 'Disabled'
     except Exception as e:
-        bucket_info['versioning'] = 'Unknown'
-        bucket_info['mfa_delete'] = 'Unknown'
+        bucket_info['versioning_status'] = 'Unknown'
+        bucket_info['version_mfa_delete'] = 'Unknown'
 
 def get_s3_bucket_location(s3_client, bucket_name, bucket_info):
     location = s3_client.get_bucket_location(Bucket = bucket_name)
@@ -102,16 +104,16 @@ def get_s3_bucket_logging(s3_client, bucket_name, bucket_info):
         else:
             bucket_info['logging'] = 'Disabled'
     except Exception as e:
+        printError('Failed to get logging configuration for %s' % bucket_name)
+        printException(e)
         bucket_info['logging'] = 'Unknown'
 
 def get_s3_bucket_webhosting(s3_client, bucket_name, bucket_info):
     try:
         result = s3_client.get_bucket_website(Bucket = bucket_name)
-#        print result
-        bucket_info['web_hosting'] = 'Enabled'
+        bucket_info['web_hosting'] = 'Enabled' if 'IndexDocument' in result else 'Disabled'
     except:
         pass
-    bucket_info['web_hosting'] = 'Disabled'
 
 # List all available buckets
 def get_s3_buckets(s3_client, s3_info, s3_params):
@@ -135,11 +137,11 @@ def get_s3_bucket(s3_clients, q, s3_params):
             s3_client = s3_clients['us-east-1']
             bucket['CreationDate'] = str(bucket['CreationDate'])
             get_s3_bucket_location(s3_client, bucket['Name'], bucket)
+            # h4ck :: need to use the right endpoint because signature scheme autochange is not working
+            s3_client = s3_clients[bucket['region']]
             get_s3_bucket_logging(s3_client, bucket['Name'], bucket)
             get_s3_bucket_versioning(s3_client, bucket['Name'], bucket)
             get_s3_bucket_webhosting(s3_client, bucket['Name'], bucket)
-            # h4ck :: need to use the right endpoint because signature scheme autochange is not working
-            s3_client = s3_clients[bucket['region']]
             get_s3_acls(s3_client, bucket['Name'], bucket)
             # TODO:
             # CORS

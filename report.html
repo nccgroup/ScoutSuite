@@ -653,7 +653,8 @@
           <h4 class="list-group-item-heading">Information</h4>
           <div class="list-group-item-text item-margin">Creation date: {{CreationDate}}</div>
           <div class="list-group-item-text item-margin">Logging: <span id="s3_buckets-logging-disabled-{{Name}}">{{has_logging? logging}}</span></div>
-          <div class="list-group-item-text item-margin">Versioning: <span id="s3_buckets-versioning-disabled-{{Name}}">{{versioning}}</span></div>
+          <div class="list-group-item-text item-margin">Versioning: <span id="s3_buckets-versioning-disabled-{{Name}}">{{versioning_status}}</span></div>
+          <div class="list-group-item-text item-margin">MFA Delete: <span id="s3_buckets-version_mfa_delete-disabled-{{Name}}">{{version_mfa_delete}}</span></div>
           <div class="list-group-item-text item-margin">Static website hosting: <span id="s3_buckets-static_website_hosting_enabled-{{Name}}">{{web_hosting}}</span></div>
         </div>
         <div class="list-group-item">

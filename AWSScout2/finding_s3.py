@@ -1,8 +1,11 @@
 #!/usr/bin/env python2
 
-import json
-
+# Import Scout2 tools
 from AWSScout2.finding import *
+
+# Import stock packages
+import json
+import re
 
 class S3Finding(Finding):
 
@@ -18,8 +21,8 @@ class S3Finding(Finding):
     def checkBucketACLs(self, key, obj):
         grantee = self.callback_args[0]
         grant = self.callback_args[1]
-        if grantee in obj['grantees']:
-            if grant in obj['grantees'][grantee]['permissions']:
+        if 'grantees' in obj and grantee in obj['grantees']:
+            if obj['grantees'][grantee]['permissions'][grant] == True:
                 self.addItem(key)
 
     def checkLogging(self, key, obj):
@@ -27,7 +30,7 @@ class S3Finding(Finding):
             self.addItem(key)
 
     def checkVersioning(self, key, obj):
-        if obj['versioning'] == 'Disabled':
+        if obj['versioning_status'] == 'Disabled':
             self.addItem(key)
 
     def checkWebhosting(self, key, obj):
@@ -71,7 +74,6 @@ class S3Finding(Finding):
 
     def checkOpenPolicy(self, key, obj):
         open_policy = False
-        deny_condition = False
         if 'policy' in obj:
             policy = obj['policy']
             statements = self.getList(policy, 'Statement')
@@ -80,14 +82,14 @@ class S3Finding(Finding):
                 if len(conditions) == 0 and s['Effect'] == 'Allow':
                     principals = self.getList(s, 'Principal')
                     for p in principals:
-                        if 'AWS' in p and p['AWS'] == '*':
+                        if 'AWS' in p and p['AWS'] == '*' or p == '*':
                             actions = self.getList(s, 'Action')
                             for a in actions:
-                                if a == self.callback_args[0]:
+                                if self.callback_args[0] != 's3:*' and re.match(self.callback_args[0], a):
                                     open_policy = True
-                elif s['Effect'] == 'Deny':
-                    deny_condition = True
-        if not deny_condition and open_policy:
+                                elif a == self.callback_args[0]:
+                                    open_policy = True
+        if open_policy:
             self.addItem(key)
 
 
