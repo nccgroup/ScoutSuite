@@ -46,7 +46,7 @@ def main(args):
         return -1
 
     # Check the version of boto
-    if not args.fetch_local and not check_boto_version():
+    if not args.fetch_local and not check_boto3_version():
         return -1
 
     # Fetch credentials
