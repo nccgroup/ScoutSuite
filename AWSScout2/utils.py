@@ -5,7 +5,6 @@ from AWSUtils.utils import *
 
 # Import third-party packages
 import argparse
-import boto
 import datetime
 from distutils import dir_util
 import copy
