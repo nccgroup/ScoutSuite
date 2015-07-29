@@ -432,7 +432,7 @@
           </h5>
           <div id="iam_policy_details-{{ReportId}}" class="accordion-body collapse">
             <div class="accordion-inner">
-              {{{displayPolicy PolicyDocument 0}}}
+              {{{displayPolicy PolicyDocument}}}
             </div>
           </div>
         </div>
@@ -651,7 +651,7 @@
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Information</h4>
-          <div class="list-group-item-text item-margin">Creation date: {{creation_date}}</div>
+          <div class="list-group-item-text item-margin">Creation date: {{CreationDate}}</div>
           <div class="list-group-item-text item-margin">Logging: <span id="s3_buckets-logging-disabled-{{Name}}">{{has_logging? logging}}</span></div>
           <div class="list-group-item-text item-margin">Versioning: <span id="s3_buckets-versioning-disabled-{{Name}}">{{versioning}}</span></div>
           <div class="list-group-item-text item-margin">Static website hosting: <span id="s3_buckets-static_website_hosting_enabled-{{Name}}">{{web_hosting}}</span></div>
@@ -666,20 +666,20 @@
               <td width="20%" class="text-center">Write access</td>
               <td width="20%" class="text-center">Write permissions</td>
             </tr>
-            {{#each grants}}
+            {{#each grantees}}
             <tr>
-              <td width="20%">{{@key}}</td>
+              <td width="20%" class="text-center">{{DisplayName}}</td>
               <td width="20%" class="text-center">
-                <span id="s3_buckets-{{Name}}-read-{{../name}}">{{{s3_grant_2_icon this.read}}}</td></span>
+                <span id="s3_buckets-{{@key}}-read-{{../Name}}">{{{s3_grant_2_icon permissions.read}}}</td></span>
               </td>
               <td width="20%" class="text-center">
-                <span id="s3_buckets-{{Name}}-read_acp-{{../name}}">{{{s3_grant_2_icon this.read_acp}}}</td></span>
+                <span id="s3_buckets-{{@key}}-read_acp-{{../Name}}">{{{s3_grant_2_icon permissions.read_acp}}}</td></span>
               </td>
               <td width="20%" class="text-center">
-                <span id="s3_buckets-{{Name}}-write-{{../name}}">{{{s3_grant_2_icon this.write}}}</td></span>
+                <span id="s3_buckets-{{@key}}-write-{{../Name}}">{{{s3_grant_2_icon permissions.write}}}</td></span>
               </td>
               <td width="20%" class="text-center">
-                <span id="s3_buckets-{{Name}}-write_acp-{{../name}}">{{{s3_grant_2_icon this.write_acp}}}</td></span>
+                <span id="s3_buckets-{{@key}}-write_acp-{{../Name}}">{{{s3_grant_2_icon permissions.write_acp}}}</td></span>
               </td>
             </tr>
             {{/each}}
@@ -695,7 +695,7 @@
               </h4>
               <div id="s3_bucket_policy_details-{{fixBucketName @key}}" class="accordion-body item-margin collapse">
                 <div class="accordion-inner">
-                  {{{displayPolicy policy 0}}}
+                  {{{displayPolicy policy}}}
                 </div>
               </div>
             </div>
@@ -719,15 +719,15 @@
                     </tr>
                     {{#each keys}}
                     <tr>
-                      <td width="80%"><a href="javascript:showS3Object('{{../name}}', '{{@key}}')">{{@key}}</a></td>
+                      <td width="80%"><a href="javascript:showS3Object('{{../Name}}', '{{@key}}')">{{@key}}</a></td>
                       <td width="10%" class="text-center">
-                        <span id="s3_buckets-unencrypted-s3-objects-{{../name}}-{{@key}}">
-                          {{{good_bad_icon "unencrypted-s3-objects" ../name @key}}}
+                        <span id="s3_buckets-unencrypted-s3-objects-{{../Name}}-{{@key}}">
+                          {{{good_bad_icon "unencrypted-s3-objects" ../Name @key}}}
                         </span>
                       </td>
                       <td width="10%" class="text-center">
-                        <span id="s3_buckets-object-perms-mismatch-bucket-perms-{{../name}}-{{@key}}">
-                          {{{good_bad_icon "object-perms-mismatch-bucket-perms" ../name @key}}}
+                        <span id="s3_buckets-object-perms-mismatch-bucket-perms-{{../Name}}-{{@key}}">
+                          {{{good_bad_icon "object-perms-mismatch-bucket-perms" ../Name @key}}}
                         </span>
                       </td>
                     </tr>
@@ -990,7 +990,7 @@
               </ul>
             </li>
             <li class="dropdown">
-              <a hreaf="javascript:show_s3()" class="dropdown-toggle" data-toggle="dropdown"><span id="s3_dropdown">S3</span><b class="caret"></b></a>
+              <a href="javascript:show_s3()" class="dropdown-toggle" data-toggle="dropdown"><span id="s3_dropdown">S3</span><b class="caret"></b></a>
               <ul class="dropdown-menu" id="s3_violations-list">
                 <li class="dropdown-header">S3 config</li>
                 <li><a href="javascript:load_config('s3')">Load</a></li>

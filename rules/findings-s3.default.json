@@ -6,12 +6,12 @@
         "callback_args": [ "_ARG_0_", "_ARG_1_" ],
         "level": "_ARG_3_",
         "targets": [
-            ["All users", "write", "Bucket world-writable", "danger"],
-            ["All users", "write_acp", "Bucket's permissions world-writable", "danger"],
-            ["All users", "read", "Bucket world-readable", "warning"],
-            ["Authenticated users", "write", "Bucket world-writable", "danger"],
-            ["Authenticated users", "write_acp", "Bucket's permissions world-writable", "danger"],
-            ["Authenticated users", "read", "Bucket world-readable", "warning"]
+            ["http://acs.amazonaws.com/groups/global/AllUsers", "write", "Bucket world-writable (anonymous)", "danger"],
+            ["http://acs.amazonaws.com/groups/global/AllUsers", "write_acp", "Bucket's permissions world-writable (anonymous)", "danger"],
+            ["http://acs.amazonaws.com/groups/global/AllUsers", "read", "Bucket world-readable (anonymous)", "warning"],
+            ["http://acs.amazonaws.com/groups/global/AuthenticatedUsers", "write", "Bucket world-writable", "danger"],
+            ["http://acs.amazonaws.com/groups/global/AuthenticatedUsers", "write_acp", "Bucket's permissions world-writable", "danger"],
+            ["http://acs.amazonaws.com/groups/global/AuthenticatedUsers", "read", "Bucket world-readable", "warning"]
         ],
         "questions": [
             "Report _DESCRIPTION_"

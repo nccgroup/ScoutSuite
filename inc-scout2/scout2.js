@@ -477,15 +477,10 @@ function list_findings(keyword, violations, finding) {
 }
 
 // Handlebars helpers
-Handlebars.registerHelper('displayPolicy', function(blob, decodeURI) {
-    var policy = '';
-    if (decodeURI) {
-         policy = decodeURIComponent(blob);
-    } else {
-        // this fails now that the policies are all JSON... check in chrome though
-        //policy = JSON.stringify(eval("(" + blob + ")"), null, 2);
-        policy = JSON.stringify(blob, null, 2);
-    }
+Handlebars.registerHelper('displayPolicy', function(blob) {
+    // this fails now that the policies are all JSON... check in chrome though
+    //policy = JSON.stringify(eval("(" + blob + ")"), null, 2);
+    var policy = JSON.stringify(blob, null, 2);
     policy = policy.replace(/ /g, '&nbsp;');
     policy = policy.replace(/\n/g, '<br />');
     return policy;
@@ -542,15 +537,26 @@ Handlebars.registerHelper('s3_grant_2_icon', function(value) {
     return '<i class="' + ((value == true) ? 'glyphicon glyphicon-ok' : '') +'"></i>';
 });
 Handlebars.registerHelper('good_bad_icon', function(violation, bucket_name, item) {
-    var index = s3_info['violations'][violation]['items'].indexOf(item);
+    index = -1;
+    /* TODO: this shouldn't happen in JS... will take forever on buckets that contain many files */
+    for (i in s3_info['violations'][violation]['macro_items']) {
+        if (s3_info['violations'][violation]['macro_items'][i] == bucket_name) {
+            if (s3_info['violations'][violation]['items'][i] == item) {
+                index = i;
+                break;
+            }
+        }
+    }
     if (index > -1) {
         return '<i class="glyphicon glyphicon-remove"></i>';
     } else {
         var key_details = s3_info['buckets'][bucket_name]['keys'][item];
-        if (((violation == 'object-perms-mismatch-bucket-perms') && !('grants' in key_details)) 
-            ||((violation == 'unencrypted-s3-objects') && !('encrypted' in key_details))) {
+        if (((violation == 'object-perms-mismatch-bucket-perms') && !('grantees' in key_details)) 
+            ||((violation == 'unencrypted-s3-objects') && !('ServerSideEncryption' in key_details))) {
+            /* Say that we don't know if there's no corresponding attribute for the key */
             return '<i class="glyphicon glyphicon-question-sign"></i>';
         } else {
+            /* Mark as good */
             return '<i class="glyphicon glyphicon-ok finding-good"></i>';
         }
     }

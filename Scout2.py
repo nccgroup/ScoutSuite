@@ -153,7 +153,7 @@ def main(args):
                 s3_params['check_acls'] = args.check_s3_acls
                 s3_params['checked_buckets'] = args.buckets
                 s3_params['skipped_buckets'] = args.skipped_buckets
-                get_s3_info(key_id, secret, token, s3_info, s3_params)
+                get_s3_info(key_id, secret, token, s3_info, args.regions, args.fetch_gov, s3_params)
             else:
                 s3_info = load_info_from_json('s3', environment_name)
             # Analyze the S3 config and save data to a local file
