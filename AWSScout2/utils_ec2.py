@@ -3,7 +3,6 @@
 # Import AWS Utils
 from AWSUtils.utils import *
 from AWSUtils.utils_ec2 import *
-from AWSUtils.utils_vpc import *
 from AWSUtils.protocols_dict import *
 
 # Import Scout2 tools
