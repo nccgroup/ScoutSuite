@@ -93,7 +93,7 @@ def get_s3_bucket_versioning(s3_client, bucket_name, bucket_info):
 
 def get_s3_bucket_location(s3_client, bucket_name, bucket_info):
     location = s3_client.get_bucket_location(Bucket = bucket_name)
-    bucket_info['region'] = location['LocationConstraint']
+    bucket_info['region'] = location['LocationConstraint'] if location['LocationConstraint'] else 'us-east-1'
 
 def get_s3_bucket_logging(s3_client, bucket_name, bucket_info):
     try:
