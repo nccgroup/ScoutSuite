@@ -10,7 +10,7 @@ class Ec2Filter(Filter):
         Filter.__init__(self, description, entity, callback, callback_args)
 
     def hasNoRunningInstances(self, key, obj):
-        if len(obj['running-instances']) == 0:
+        if not 'instances' in obj or not 'running' in obj['instances'] or len(obj['instances']['running']) == 0:
             self.addItem(obj['id'])
 
     def HasNoCIDRsGrants(self, key, obj):

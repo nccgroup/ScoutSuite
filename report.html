@@ -201,11 +201,14 @@
         {{#each rules}}
           {{> ec2_security_group-rule_list this sg_name = ../name sg_id = ../id direction = @key}}
         {{/each}}
-        <div class="list-group-item">
-          <h4 class="list-group-item-heading">Instances</h4>
-          {{> ec2_security_group-instance_list instances=running-instances status='Running' region=region vpc=vpc group=id}}
-          {{> ec2_security_group-instance_list instances=stopped-instances status='Stopped' region=region vpc=vpc group=id}}
-        </div>
+        {{#if instances}}
+          <div class="list-group-item">
+            <h4 class="list-group-item-heading">Instances</h4>
+            {{#each instances}}
+              {{> ec2_security_group-instance_list instances=this status=@key region=../region vpc=../vpc group=../id}}
+            {{/each}}
+          </div>
+        {{/if}}
       </div>
     </script>
     <script>
@@ -215,7 +218,7 @@
     <script id="ec2_security_group-instance_list-partial" type="text/x-handlebars-template">
       {{#if instances}}
         <div class="accordion">
-          <h5 class="list-group-item-heading item-margin accordion-heading">{{status}}
+          <h5 class="list-group-item-heading item-margin accordion-heading">{{make_title status}}
             <a class="accordion-toggle" data-toggle="collapse" href="#ec2_security_group-{{group}}-instance_list-{{status}}">
               <span class="badge pull-right btn-info">{{instances.length}}</span>
             </a>
@@ -1259,7 +1262,7 @@
             <div id="ec2_region-details-{{@key}}">
               {{#each vpcs}}
                 {{#each security_groups}}
-                  {{> ec2_security_group region=../../name vpc=../id }}
+                  {{> ec2_security_group region=@../../key vpc=@../key}}
                 {{/each}}
               {{/each}}
             </div>

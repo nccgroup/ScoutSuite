@@ -121,7 +121,20 @@ def get_ec2_info(key_id, secret, session_token, selected_regions, fetch_ec2_gov)
          manage_dictionary(ec2_info['regions'][region], 'vpcs', {})
          thread_work((key_id, secret, session_token), ec2_info['regions'][region], ec2_targets, thread_region, service_params = ec2_params)
          show_status()
+         list_instances_in_security_groups(ec2_info['regions'][region])
     return ec2_info
+
+def list_instances_in_security_groups(region_info):
+    for vpc in region_info['vpcs']:
+        if not 'instances' in region_info['vpcs'][vpc]:
+            return
+        for instance in region_info['vpcs'][vpc]['instances']:
+            state = region_info['vpcs'][vpc]['instances'][instance]['State']['Name']
+            for sg in region_info['vpcs'][vpc]['instances'][instance]['security_groups']:
+                sg_id = sg['GroupId']
+                manage_dictionary(region_info['vpcs'][vpc]['security_groups'][sg_id], 'instances', {})
+                manage_dictionary(region_info['vpcs'][vpc]['security_groups'][sg_id]['instances'], state, [])
+                region_info['vpcs'][vpc]['security_groups'][sg_id]['instances'][state].append(instance)
 
 def get_elastic_ip_info(ec2_client, q, params):
     while True:
@@ -307,15 +320,6 @@ def parse_security_group(ec2_client, group):
     security_group['rules'] = {'ingress': {}, 'egress': {}}
     security_group['rules']['ingress']['protocols'] = parse_security_group_rules(group['IpPermissions'])
     security_group['rules']['egress']['protocols'] = parse_security_group_rules(group['IpPermissionsEgress'])
-    # Save all instances associated with this group
-    manage_dictionary(security_group, 'running-instances', [])
-    manage_dictionary(security_group, 'stopped-instances', [])
-#    reservations = ec2_client.describe_instances(Filters = [{'Name': 'instance.group-id', 'Values': [group['GroupId']]}])
-#    print reservations
-#        if i.state == 'running':
-#            security_group['running-instances'].append(i.id)
-#        else:
-#            security_group['stopped-instances'].append(i.id)
     return security_group
 
 def parse_security_group_rules(rules):
