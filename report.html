@@ -620,10 +620,10 @@
             <li class="list-group-item-text">Region: {{region}}</li>
             <li class="list-group-item-text">Engine: {{Engine}}</li>
             <li class="list-group-item-text">Status: {{make_title DBInstanceStatus}}</li>
-            <li class="list-group-item-text">Auto Minor Version Upgrade: <span id="rds_instances-no-minor-auto-upgrade-{{id}}">{{#if AutoMinorVersionUpgrade}} Enabled {{else}} Disabled {{/if}}</span></li>
-            <li class="list-group-item-text">Multi Availability Zones: <span id="rds_instances-single-az-{{id}}">{{#if MultiAZ}} Enabled {{else}} Disabled {{/if}}</span></li>
-            <li class="list-group-item-text">Instance Class: <span id="rds_instances-unscannable-instance-types-{{id}}"> {{DBInstanceClass}}<span></li>
-            <li class="list-group-item-text">Created on: <span id="rds_instances-postgres-invalid-ssl-cert-{{id}}">{{InstanceCreateTime}}</span></li>
+            <li class="list-group-item-text">Auto Minor Version Upgrade: <span id="rds_instances-no-minor-auto-upgrade-{{DBInstanceIdentifier}}">{{#if AutoMinorVersionUpgrade}} Enabled {{else}} Disabled {{/if}}</span></li>
+            <li class="list-group-item-text">Multi Availability Zones: <span id="rds_instances-single-az-{{DBInstanceIdentifier}}">{{#if MultiAZ}} Enabled {{else}} Disabled {{/if}}</span></li>
+            <li class="list-group-item-text">Instance Class: <span id="rds_instances-unscannable-instance-types-{{DBInstanceIdentifer}}"> {{DBInstanceClass}}<span></li>
+            <li class="list-group-item-text">Created on: <span id="rds_instances-postgres-invalid-ssl-cert-{{DBInstanceIdentifier}}">{{InstanceCreateTime}}</span></li>
             <li class="list-group-item-tex">Backup retention period in days:
             <span id="rds_instances-backup-disabled-{{DBInstanceIdentifier}}">
             <span id="rds_instances-short-backup-retention-period-{{DBInstanceIdentifier}}">
