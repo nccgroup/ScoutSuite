@@ -248,9 +248,9 @@ def get_vpc_info(ec2_client, q, params):
             for acl in acls['NetworkAcls']:
                 manage_dictionary(vpc['network_acls'], acl['NetworkAclId'], {})
                 vpc['network_acls'][acl['NetworkAclId']] = acl
-                # CleanUp Entries
-                vpc['network_acls'][acl['NetworkAclId']]['inbound_network_acls'] = get_network_acl_entries(acl['Entries'], False)
-                vpc['network_acls'][acl['NetworkAclId']]['outbound_network_acls'] = get_network_acl_entries(acl['Entries'], True)
+                manage_dictionary(vpc['network_acls'][acl['NetworkAclId']], 'rules', {})
+                vpc['network_acls'][acl['NetworkAclId']]['rules']['ingress'] = get_network_acl_entries(acl['Entries'], False)
+                vpc['network_acls'][acl['NetworkAclId']]['rules']['egress'] = get_network_acl_entries(acl['Entries'], True)
                 vpc['network_acls'][acl['NetworkAclId']].pop('Entries')
             region_info['vpcs'][vpc['VpcId']].update(vpc)
             show_status(region_info, 'vpcs', False, True)

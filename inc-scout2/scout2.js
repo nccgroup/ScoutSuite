@@ -654,25 +654,6 @@ Handlebars.registerHelper('find_ec2_object_attribute', function(path, id, attrib
 Handlebars.registerHelper('format_date', function(timestamp) {
     return new Date(timestamp * 1000).toString();
 });
-Handlebars.registerHelper('format_network_acls', function (acls, direction) {
-    r = '<table class="table-striped" width="100%">';
-    r += '<tr><td width="20%" class="text-center">Rule number</td>';
-    r += '<td width="20%" class="text-center">Port</td>';
-    r += '<td width="20%" class="text-center">Protocol</td>';
-    r += '<td width="20%" class="text-center">' + direction + '</td>';
-    r += '<td width="20%" class="text-center">Action</td></tr>';
-    for (a in acls) {
-        r += '<tr>';
-        r += '<td width="20%" class="text-center">' + acls[a]['RuleNumber'] + '</td>';
-        r += '<td width="20%" class="text-center">' + acls[a]['port_range'] + '</td>';
-        r += '<td width="20%" class="text-center">' + acls[a]['protocol'] + '</td>';
-        r += '<td width="20%" class="text-center">' + acls[a]['CidrBlock'] + '</td>';
-        r += '<td width="20%" class="text-center">' + acls[a]['RuleAction'] + '</td>';
-        r += '</tr>';
-    }
-    r += '</table>';
-    return r;
-});
 var make_title = function(title) {
     return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase());
 }

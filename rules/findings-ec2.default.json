@@ -54,24 +54,18 @@
             "Warn against security groups that open port ranges"
         ]
     },
-    "lack-of-inbound-network-acls": {
-        "description": "Lack of network ACLs (Inbound)",
+    "lack-of-_ARG_0_-network-acls": {
+        "description": "Lack of network ACLs (_ARG_0_)",
         "entity": "regions.vpcs",
         "callback": "checkNetworkACLs",
-        "callback_args": ["inbound"],
+        "callback_args": ["_ARG_0_"],
         "level": "warning",
+        "targets": [
+            [ "egress" ],
+            [ "ingress" ]
+        ],
         "questions": [
-            "Warn against the lack of inbound network access controls lists"
-        ]
-    },
-    "lack-of-outbound-network-acls": {
-        "description": "Lack of network ACLs (Outbound)",
-        "entity": "regions.vpcs",
-        "callback": "checkNetworkACLs",
-        "callback_args": ["outbound"],
-        "level": "warning",
-        "questions": [
-            "Warn against the lack of outbound network access controls lists"
+            "Warn against the lack of _ARG_0_ network access controls lists"
         ]
     },
     "old-ssl-policy": {
