@@ -252,7 +252,6 @@ def get_vpc_info(ec2_client, q, params):
                 vpc['network_acls'][acl['NetworkAclId']]['inbound_network_acls'] = get_network_acl_entries(acl['Entries'], False)
                 vpc['network_acls'][acl['NetworkAclId']]['outbound_network_acls'] = get_network_acl_entries(acl['Entries'], True)
                 vpc['network_acls'][acl['NetworkAclId']].pop('Entries')
-            manage_dictionary(vpc, 'instances', {})
             region_info['vpcs'][vpc['VpcId']].update(vpc)
             show_status(region_info, 'vpcs', False, True)
         except Exception, e:
