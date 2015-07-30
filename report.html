@@ -132,11 +132,11 @@
         <div class="list-group-item">
           <h4>Network</h4>
           <ul>
-            <li class="list-group-item-text">VPC: {{vpc_id}}</li>
-            <li class="list-group-item-text">DNS: {{dns_name}}</li>
+            <li class="list-group-item-text">VPC: {{VpcId}}</li>
+            <li class="list-group-item-text">DNS: {{DnsName}}</li>
             <li class="list-group-item-text">Availability zones:</li>
             <ul>
-              {{#each availability_zones}}
+              {{#each AvailabilityZones}}
                 <li class="list-group-item-text">{{this}}</li>
               {{/each}}
             </ul>
@@ -147,8 +147,8 @@
           <ul>
           {{#each listeners}}
             <li class="list-group-item-text">
-              {{load_balancer_port}} ({{protocol}}) <i class="glyphicon glyphicon-arrow-right"></i> {{instance_port}} ({{instance_protocol}})
-              {{#if ssl_certificate_id}} :
+              {{LoadBalancerPort}} ({{Protocol}}) <i class="glyphicon glyphicon-arrow-right"></i> {{InstancePort}} ({{InstanceProtocol}})
+              {{#if SslCertificateId}} :
                 {{#each policy_names}}
                   <span id="ec2_elbs-old-ssl-policy-{{../../../name}}-{{this}}">{{this}}</span>
                 {{/each}}
@@ -160,9 +160,9 @@
         <div class="list-group-item">
           <h4>Destination</h4>
           <ul>
-            <li class="list-group-item-text">Security groups:  <span class="badge pull-right btn-info">{{count security_groups}}</span></li>
-            <li class="list-group-item-text">Instances: <span class="badge pull-right btn-info">{{count instances}}</span></li>
-            <li class="list-group-item-text">Subnets: <span class="badge pull-right btn-info">{{count subnets}}</span></li>
+            <li class="list-group-item-text">Security groups:  <span class="badge pull-right btn-info">{{count SecurityGroups}}</span></li>
+            <li class="list-group-item-text">Instances: <span class="badge pull-right btn-info">{{count Instances}}</span></li>
+            <li class="list-group-item-text">Subnets: <span class="badge pull-right btn-info">{{count Subnets}}</span></li>
         </div>
       </div>
     </script>
