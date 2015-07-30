@@ -8,10 +8,10 @@
         "targets": [
             ["All users", "write", "Bucket world-writable", "danger"],
             ["All users", "write_acp", "Bucket's permissions world-writable", "danger"],
-            ["All users", "read", "Bucket world-readable", "warning"],
+            ["All users", "read", "Bucket world-listable", "warning"],
             ["Authenticated users", "write", "Bucket world-writable", "danger"],
             ["Authenticated users", "write_acp", "Bucket's permissions world-writable", "danger"],
-            ["Authenticated users", "read", "Bucket world-readable", "warning"]
+            ["Authenticated users", "read", "Bucket world-listable", "warning"]
         ],
         "questions": [
             "Report _DESCRIPTION_"
