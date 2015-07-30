@@ -32,7 +32,7 @@ class IamFinding(Finding):
 
     def isOlderThan(self, key, obj, max_age, status):
         today = datetime.datetime.today()
-        key_creation_date = dateutil.parser.parse(obj['CreateDate']).replace(tzinfo=None)
+        key_creation_date = dateutil.parser.parse(str(obj['CreateDate'])).replace(tzinfo=None)
         key_age = (today - key_creation_date).days
         key_status = obj['Status']
         if (key_age > max_age) and key_status == status:
