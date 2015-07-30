@@ -109,7 +109,7 @@ def match_instances_and_roles(ec2_config, iam_config):
         for v in ec2_config['regions'][r]['vpcs']:
             if 'instances' in ec2_config['regions'][r]['vpcs'][v]:
                 for i in ec2_config['regions'][r]['vpcs'][v]['instances']:
-                    arn = ec2_config['regions'][r]['vpcs'][v]['instances'][i]['IAMInstanceProfile']['Arn'] if 'IAMInstanceProfile' in ec2_config['regions'][r]['vpcs']['instances'][i] else None
+                    arn = ec2_config['regions'][r]['vpcs'][v]['instances'][i]['IAMInstanceProfile']['Arn'] if 'IAMInstanceProfile' in ec2_config['regions'][r]['vpcs'][v]['instances'][i] else None
                     if arn:
                         manage_dictionary(role_instances, arn, [])
                         role_instances[arn].append(i)
