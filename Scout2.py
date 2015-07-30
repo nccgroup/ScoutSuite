@@ -4,15 +4,14 @@
 import os
 import sys
 
-# Import AWS Utils
+# Import opinel
 try:
-    from AWSUtils.utils import *
-    from AWSUtils.utils_ec2 import *
-    from AWSUtils.utils_iam import *
+    from opinel.utils import *
+    from opinel.utils_ec2 import *
+    from opinel.utils_iam import *
 except:
-    print 'Error: Scout2 now depends on the AWS Utils module. Update your local repository with the following commands:'
-    print '  $ git submodule init'
-    print '  $ git submodule update'
+    print 'Error: Scout2 now depends on the opinel package (previously AWSUtils submodule). Install all the requirements with the following command:'
+    print '  $ pip install -r requirements.txt'
     sys.exit()
 
 # Import Scout2 tools

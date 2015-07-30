@@ -1,6 +1,6 @@
 
-# Import AWS Utils
-from AWSUtils.utils_iam import *
+# Import opinel
+from opinel.utils_iam import *
 
 # Import Scout2 tools
 from AWSScout2.utils import *

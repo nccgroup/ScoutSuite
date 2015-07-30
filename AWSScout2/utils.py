@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 
-# Import AWSUtils
-from AWSUtils.utils import *
+# Import opinel
+from opinel.utils import *
 
 # Import third-party packages
 import argparse

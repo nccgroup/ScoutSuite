@@ -1,9 +1,9 @@
 #!/usr/bin/env python2
 
-# Import AWS Scout2 tools
-from AWSUtils.utils import *
-from AWSUtils.utils_rds import *
-from AWSUtils.protocols_dict import *
+# Import opinel
+from opinel.utils import *
+from opinel.utils_rds import *
+from opinel.protocols_dict import *
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *

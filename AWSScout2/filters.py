@@ -4,7 +4,9 @@
 from AWSScout2.filter import *
 from AWSScout2.filter_ec2 import *
 from AWSScout2.filter_iam import *
-from AWSUtils.utils import *
+
+# Import opinel
+from opinel.utils import *
 
 ########################################
 # filter dictionaries

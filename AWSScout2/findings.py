@@ -6,7 +6,9 @@ from AWSScout2.finding_ec2 import *
 from AWSScout2.finding_iam import *
 from AWSScout2.finding_rds import *
 from AWSScout2.finding_s3 import *
-from AWSUtils.utils import *
+
+# Import opinel
+from opinel.utils import *
 
 import copy
 import fnmatch

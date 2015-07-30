@@ -1,8 +1,8 @@
 #!/usr/bin/env python2
 
-# Import AWS Utils
-from AWSUtils.utils import *
-from AWSUtils.utils_cloudtrail import *
+# Import opinel
+from opinel.utils import *
+from opinel.utils_cloudtrail import *
 
 # Import Scout2 tools
 from AWSScout2.utils import *
