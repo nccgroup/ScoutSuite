@@ -106,8 +106,8 @@
       Handlebars.registerPartial("cloudtrail_region", $("#cloudtrail_region-partial").html());
     </script>
 
-    <!-- EC2 attack surface item -->
-    <script id="ec2_grants-partial" type="text/x-handlebars-template">
+    <!-- IP grant -->
+    <script id="ip_grants-partial" type="text/x-handlebars-template">
       <ul>
         {{#each items}}
           <span id="ec2_security_groups-{{../protocol}}-{{../ports}}-{{this}}-{{../sg_id}}">
@@ -115,6 +115,23 @@
           <span id="ec2_security_groups-all-ports-open-to-self-{{../sg_id}}">
           <span class="ec2_attack_surface_item">
             <li class="list-group-item-text">{{this}}</li>
+          </span></span></span>
+        {{/each}}
+      </ul>
+    </script>
+    <script>
+        Handlebars.registerPartial("ip_grants", $("#ip_grants-partial").html());
+    </script>
+
+    <!-- EC2 grant -->
+    <script id="ec2_grants-partial" type="text/x-handlebars-template">
+      <ul>
+        {{#each items}}
+          <span id="ec2_security_groups-{{../protocol}}-{{../ports}}-{{this}}-{{../sg_id}}">
+          <span id="ec2_security_groups-ports-range-{{../sg_id}}-{{../ports}}">
+          <span id="ec2_security_groups-all-ports-open-to-self-{{../sg_id}}">
+          <span class="ec2_attack_surface_item">
+            <li class="list-group-item-text">{{GroupId}} (AWS account ID {{UserId}})</li>
           </span></span></span>
         {{/each}}
       </ul>
@@ -237,7 +254,7 @@
               <ul>
               {{#if cidrs}}
                 <li class="list-group-item-text">IP addresses:</li>
-                {{> ec2_grants items = cidrs protocol = @../key ports = @key sg_id = ../../../sg_id}}
+                {{> ip_grants items = cidrs protocol = @../key ports = @key sg_id = ../../../sg_id}}
               {{/if}}
               {{#if security_groups}}
                 <li class="list-group-item-text">EC2 security groups:</li>
@@ -1165,7 +1182,7 @@
                       <ul>
                       {{#each ports}}
                         <li>{{@key}}</li>
-                        {{> ec2_grants items = cidrs}}
+                        {{> ip_grants items = cidrs}}
                       {{/each}}
                       </ul>
                     {{/each}}
