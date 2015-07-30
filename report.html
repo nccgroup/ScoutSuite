@@ -696,10 +696,10 @@
           <table class="table-striped" width="100%" >
             <tr>
               <td width="20%"></td>
-              <td width="20%" class="text-center">Read access</td>
-              <td width="20%" class="text-center">Read permissions</td>
-              <td width="20%" class="text-center">Write access</td>
-              <td width="20%" class="text-center">Write permissions</td>
+              <td width="20%" class="text-center">List</td>
+              <td width="20%" class="test-center">Upload/Delete</td>
+              <td width="20%" class="text-center">View Permissions</td>
+              <td width="20%" class="text-center">Edit Permissions</td>
             </tr>
             {{#each grantees}}
             <tr>
@@ -708,10 +708,10 @@
                 <span id="s3_buckets-{{@key}}-read-{{../Name}}">{{{s3_grant_2_icon permissions.read}}}</td></span>
               </td>
               <td width="20%" class="text-center">
-                <span id="s3_buckets-{{@key}}-read_acp-{{../Name}}">{{{s3_grant_2_icon permissions.read_acp}}}</td></span>
+                <span id="s3_buckets-{{@key}}-read_acp-{{../Name}}">{{{s3_grant_2_icon permissions.write}}}</td></span>
               </td>
               <td width="20%" class="text-center">
-                <span id="s3_buckets-{{@key}}-write-{{../Name}}">{{{s3_grant_2_icon permissions.write}}}</td></span>
+                <span id="s3_buckets-{{@key}}-write-{{../Name}}">{{{s3_grant_2_icon permissions.read_acp}}}</td></span>
               </td>
               <td width="20%" class="text-center">
                 <span id="s3_buckets-{{@key}}-write_acp-{{../Name}}">{{{s3_grant_2_icon permissions.write_acp}}}</td></span>
