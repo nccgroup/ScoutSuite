@@ -118,6 +118,7 @@ def get_ec2_info(key_id, secret, session_token, selected_regions, fetch_ec2_gov)
     ec2_targets = ['elastic_ips', 'elbs', 'vpcs', 'security_groups', 'instances']
     for region in all_regions:
          status['region_name'] = region
+         manage_dictionary(ec2_info['regions'][region], 'vpcs', {})
          thread_work((key_id, secret, session_token), ec2_info['regions'][region], ec2_targets, thread_region, service_params = ec2_params)
          show_status()
     return ec2_info
@@ -126,8 +127,7 @@ def get_elastic_ip_info(ec2_client, q, params):
     while True:
         try:
             region_info, eip = q.get()
-            ip = eip['PublicIp']
-            region_info['elastic_ips'][ip] = eip
+            manage_dictionary(region_info['elastic_ips'], eip['PublicIp'], eip)
             show_status(region_info, 'elastic_ips', False)
         except Exception, e:
             printException(e)
@@ -404,17 +404,14 @@ def thread_region(connection_info, q, ec2_params):
             elif target == 'vpcs':
                 if region_info['name'] in ec2_params['vpc_regions']:
                     ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
-                    manage_dictionary(region_info, 'vpcs', {})
                     get_vpcs_info(ec2_client, region_info)
             elif target == 'security_groups':
                 if region_info['name'] in ec2_params['ec2_regions']:
                     ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
-                    manage_dictionary(region_info, 'vpcs', {})
                     get_security_groups_info(ec2_client, region_info)
             elif target == 'instances':
                 if region_info['name'] in ec2_params['ec2_regions']:
                     ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
-                    manage_dictionary(region_info, 'vpcs', {})
                     get_instances_info(ec2_client, region_info)
             else:
                 print 'Error'
