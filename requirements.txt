@@ -1,5 +1,5 @@
-boto>=2.31.1
-boto3==0.0.17
+boto3>=1.1.0
 requests>=2.4.0
 python-dateutil>=2.2
 netaddr>=0.7.11
+opinel>=0.9.5

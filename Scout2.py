@@ -4,15 +4,14 @@
 import os
 import sys
 
-# Import AWS Utils
+# Import opinel
 try:
-    from AWSUtils.utils import *
-    from AWSUtils.utils_ec2 import *
-    from AWSUtils.utils_iam import *
+    from opinel.utils import *
+    from opinel.utils_ec2 import *
+    from opinel.utils_iam import *
 except:
-    print 'Error: Scout2 now depends on the AWS Utils module. Update your local repository with the following commands:'
-    print '  $ git submodule init'
-    print '  $ git submodule update'
+    print 'Error: Scout2 now depends on the opinel package (previously AWSUtils submodule). Install all the requirements with the following command:'
+    print '  $ pip install -r requirements.txt'
     sys.exit()
 
 # Import Scout2 tools
@@ -46,7 +45,7 @@ def main(args):
         return -1
 
     # Check the version of boto
-    if not args.fetch_local and not check_boto_version():
+    if not args.fetch_local and not check_boto3_version():
         return -1
 
     # Fetch credentials
@@ -80,7 +79,7 @@ def main(args):
         try:
             # Fetch data from AWS or an existing local file
             if not args.fetch_local:
-                cloudtrail_info = get_cloudtrail_info(key_id, secret, token, args.regions)
+                cloudtrail_info = get_cloudtrail_info(key_id, secret, token, args.regions, args.fetch_gov)
             else:
                 cloudtrail_info = load_info_from_json('cloudtrail', environment_name)
             # Analyze the CloudTrail config and save data to a local file
@@ -153,7 +152,7 @@ def main(args):
                 s3_params['check_acls'] = args.check_s3_acls
                 s3_params['checked_buckets'] = args.buckets
                 s3_params['skipped_buckets'] = args.skipped_buckets
-                get_s3_info(key_id, secret, token, s3_info, s3_params)
+                get_s3_info(key_id, secret, token, s3_info, args.regions, args.fetch_gov, s3_params)
             else:
                 s3_info = load_info_from_json('s3', environment_name)
             # Analyze the S3 config and save data to a local file

@@ -1,11 +1,11 @@
 #!/usr/bin/env python2
 
-# Import AWSUtils
-from AWSUtils.utils import *
+# Import opinel
+from opinel.utils import *
 
 # Import third-party packages
 import argparse
-import boto
+import datetime
 from distutils import dir_util
 import copy
 import json
@@ -63,7 +63,10 @@ def build_services_list(services, skipped_services):
 
 class Scout2Encoder(json.JSONEncoder):
     def default(self, o):
-        return o.__dict__
+        if type(o) == datetime.datetime:
+            return str(o)
+        else:
+            return o.__dict__
 
 
 ########################################
@@ -106,14 +109,14 @@ def match_instances_and_roles(ec2_config, iam_config):
         for v in ec2_config['regions'][r]['vpcs']:
             if 'instances' in ec2_config['regions'][r]['vpcs'][v]:
                 for i in ec2_config['regions'][r]['vpcs'][v]['instances']:
-                    arn = ec2_config['regions'][r]['vpcs'][v]['instances'][i]['profile_arn']
+                    arn = ec2_config['regions'][r]['vpcs'][v]['instances'][i]['IAMInstanceProfile']['Arn'] if 'IAMInstanceProfile' in ec2_config['regions'][r]['vpcs'][v]['instances'][i] else None
                     if arn:
                         manage_dictionary(role_instances, arn, [])
                         role_instances[arn].append(i)
-    for role in iam_config['roles']:
-        for arn in iam_config['roles'][role]['instance_profiles']:
+    for role in iam_config['Roles']:
+        for arn in iam_config['Roles'][role]['InstanceProfiles']:
             if arn in role_instances:
-                iam_config['roles'][role]['instance_profiles'][arn]['instances'] = role_instances[arn]
+                iam_config['Roles'][role]['InstanceProfiles'][arn]['instances'] = role_instances[arn]
 
 def process_entities(config, finding, entity_path):
     if len(entity_path) == 1:

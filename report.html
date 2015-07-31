@@ -86,8 +86,8 @@
             {{#each trails}}
               <li class="list-group-item-text">Name: {{Name}}</li>
               <li class="list-group-item-text">Enabled: {{IsLogging}}</li>
-              <li class="list-group-item-text">Enabled since: {{format_date StartLoggingTime}}</li>
-              <li class="list-group-item-text">Stopped since: {{format_date StopLoggingTime}}</li>
+              <li class="list-group-item-text">Start Logging Time: {{StartLoggingTime}}</li>
+              <li class="list-group-item-text">Stop Logging Time: {{StopLoggingTime}}</li>
               <li class="list-group-item-text">Include global services:
                 <span id="cloudtrail_-global-services-duplicated-{{../name}}"><span id="cloudtrail_-no-global-services-{{../name}}">
                   {{#if IncludeGlobalServiceEvents}}True{{else}}False{{/if}}
@@ -106,8 +106,8 @@
       Handlebars.registerPartial("cloudtrail_region", $("#cloudtrail_region-partial").html());
     </script>
 
-    <!-- EC2 attack surface item -->
-    <script id="ec2_grants-partial" type="text/x-handlebars-template">
+    <!-- IP grant -->
+    <script id="ip_grants-partial" type="text/x-handlebars-template">
       <ul>
         {{#each items}}
           <span id="ec2_security_groups-{{../protocol}}-{{../ports}}-{{this}}-{{../sg_id}}">
@@ -120,23 +120,40 @@
       </ul>
     </script>
     <script>
+        Handlebars.registerPartial("ip_grants", $("#ip_grants-partial").html());
+    </script>
+
+    <!-- EC2 grant -->
+    <script id="ec2_grants-partial" type="text/x-handlebars-template">
+      <ul>
+        {{#each items}}
+          <span id="ec2_security_groups-{{../protocol}}-{{../ports}}-{{this}}-{{../sg_id}}">
+          <span id="ec2_security_groups-ports-range-{{../sg_id}}-{{../ports}}">
+          <span id="ec2_security_groups-all-ports-open-to-self-{{../sg_id}}">
+          <span class="ec2_attack_surface_item">
+            <li class="list-group-item-text">{{GroupId}} (AWS account ID {{UserId}})</li>
+          </span></span></span>
+        {{/each}}
+      </ul>
+    </script>
+    <script>
         Handlebars.registerPartial("ec2_grants", $("#ec2_grants-partial").html());
     </script>
 
     <!-- EC2 ELB partial -->
     <script id="ec2_elb-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="ec2_elb-details-{{name}}">
+      <div class="list-group" id="ec2_elb-details-{{Name}}">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{name}}</h4>
+          <h4 class="list-group-item-heading">{{Name}}</h4>
         </div>
         <div class="list-group-item">
           <h4>Network</h4>
           <ul>
-            <li class="list-group-item-text">VPC: {{vpc_id}}</li>
-            <li class="list-group-item-text">DNS: {{dns_name}}</li>
+            <li class="list-group-item-text">VPC: {{VpcId}}</li>
+            <li class="list-group-item-text">DNS: {{DnsName}}</li>
             <li class="list-group-item-text">Availability zones:</li>
             <ul>
-              {{#each availability_zones}}
+              {{#each AvailabilityZones}}
                 <li class="list-group-item-text">{{this}}</li>
               {{/each}}
             </ul>
@@ -147,8 +164,8 @@
           <ul>
           {{#each listeners}}
             <li class="list-group-item-text">
-              {{load_balancer_port}} ({{protocol}}) <i class="glyphicon glyphicon-arrow-right"></i> {{instance_port}} ({{instance_protocol}})
-              {{#if ssl_certificate_id}} :
+              {{LoadBalancerPort}} ({{Protocol}}) <i class="glyphicon glyphicon-arrow-right"></i> {{InstancePort}} ({{InstanceProtocol}})
+              {{#if SslCertificateId}} :
                 {{#each policy_names}}
                   <span id="ec2_elbs-old-ssl-policy-{{../../../name}}-{{this}}">{{this}}</span>
                 {{/each}}
@@ -160,9 +177,9 @@
         <div class="list-group-item">
           <h4>Destination</h4>
           <ul>
-            <li class="list-group-item-text">Security groups:  <span class="badge pull-right btn-info">{{count security_groups}}</span></li>
-            <li class="list-group-item-text">Instances: <span class="badge pull-right btn-info">{{count instances}}</span></li>
-            <li class="list-group-item-text">Subnets: <span class="badge pull-right btn-info">{{count subnets}}</span></li>
+            <li class="list-group-item-text">Security groups:  <span class="badge pull-right btn-info">{{count SecurityGroups}}</span></li>
+            <li class="list-group-item-text">Instances: <span class="badge pull-right btn-info">{{count Instances}}</span></li>
+            <li class="list-group-item-text">Subnets: <span class="badge pull-right btn-info">{{count Subnets}}</span></li>
         </div>
       </div>
     </script>
@@ -184,11 +201,14 @@
         {{#each rules}}
           {{> ec2_security_group-rule_list this sg_name = ../name sg_id = ../id direction = @key}}
         {{/each}}
-        <div class="list-group-item">
-          <h4 class="list-group-item-heading">Instances</h4>
-          {{> ec2_security_group-instance_list instances=running-instances status='Running' region=region vpc=vpc group=id}}
-          {{> ec2_security_group-instance_list instances=stopped-instances status='Stopped' region=region vpc=vpc group=id}}
-        </div>
+        {{#if instances}}
+          <div class="list-group-item">
+            <h4 class="list-group-item-heading">Instances</h4>
+            {{#each instances}}
+              {{> ec2_security_group-instance_list instances=this status=@key region=../region vpc=../vpc group=../id}}
+            {{/each}}
+          </div>
+        {{/if}}
       </div>
     </script>
     <script>
@@ -198,7 +218,7 @@
     <script id="ec2_security_group-instance_list-partial" type="text/x-handlebars-template">
       {{#if instances}}
         <div class="accordion">
-          <h5 class="list-group-item-heading item-margin accordion-heading">{{status}}
+          <h5 class="list-group-item-heading item-margin accordion-heading">{{make_title status}}
             <a class="accordion-toggle" data-toggle="collapse" href="#ec2_security_group-{{group}}-instance_list-{{status}}">
               <span class="badge pull-right btn-info">{{instances.length}}</span>
             </a>
@@ -237,7 +257,7 @@
               <ul>
               {{#if cidrs}}
                 <li class="list-group-item-text">IP addresses:</li>
-                {{> ec2_grants items = cidrs protocol = @../key ports = @key sg_id = ../../../sg_id}}
+                {{> ip_grants items = cidrs protocol = @../key ports = @key sg_id = ../../../sg_id}}
               {{/if}}
               {{#if security_groups}}
                 <li class="list-group-item-text">EC2 security groups:</li>
@@ -257,20 +277,34 @@
 
     <!-- EC2 Network ACL partial -->
     <script id="ec2_network_acl-partial" type="text/x-handlebars-template">
-        <div id="ec2_region-details-{{@key}}">
-            <div class="list-group" id="ec2_network_acl-details-{{name}}">
+        <div id="ec2_region-details-{{RegionName}}">
+            <div class="list-group" id="ec2_network_acl-details-{{NetworkAclId}}">
             <div class="list-group-item active">
-                <h4 class="list-group-item-heading">{{name}}</h4>
+                <h4 class="list-group-item-heading">{{NetworkAclId}}</h4>
             </div>
-            <div class="list-group-item">
-                <h4 class="list-group-item-heading">Inbound rules</h4>
-                {{{format_network_acls inbound_network_acls 'Source'}}}
-            </div>
-            <div class="list-group-item">
-                <h4 class="list-group-item-heading">Outbound rules</h4>
-                {{{format_network_acls outbound_network_acls 'Destination'}}}
-            </div>
-            </div>
+            {{#each rules}}
+              <div class="list-group-item">
+                <h4 class="list-group-item-heading">{{make_title @key}} rules</h4>
+                <table class="table-striped" width="100%">
+                  <tr>
+                    <td width="20%" class="text-center">Rule number</td>
+                    <td width="20%" class="text-center">Port</td>
+                    <td width="20%" class="text-center">Protocol</td>
+                    <td width="20%" class="text-center">IP address</td>
+                    <td width="20%" class="text-center">Action</td>
+                  </tr>
+                  {{#each this}}
+                    <tr>
+                      <td width="20%" class="text-center">{{RuleNumber}}</td>
+                      <td width="20%" class="text-center">{{port_range}}</td>
+                      <td width="20%" class="text-center">{{protocol}}</td>
+                      <td width="20%" class="text-center">{{CidrBlock}}</td>
+                      <td width="20%" class="text-center">{{RuleAction}}</td>
+                    </tr>
+                  {{/each}}
+                </table>
+              </div>  
+            {{/each}}
         </div>
     </script>
     <script>
@@ -282,14 +316,14 @@
     <script id="ec2_vpc-partial" type="text/x-handlebars-template">
       <div class="list-group" id="ec2_vpc-details-{{id}}">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{name}}</h4>
+          <h4 class="list-group-item-heading">{{Name}}</h4>
         </div>
         <div class="list-group-item">
           <h4>Information</h4>
           <ul>
             <li class="list-group-item-text">Region: {{region}}</li>
             <li class="list-group-item-text">ID: {{id}}</li>
-            <li class="list-group-item-text">Name: {{name}}</li>
+            <li class="list-group-item-text">Name: {{Name}}</li>
           </ul>
         </div>
         <div class="list-group-item" style="padding-bottom: 0 !important;">
@@ -333,43 +367,43 @@
 
     <!-- EC2 instance partial -->
     <script id="ec2_instance-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="ec2_instance-details-{{id}}">
+      <div class="list-group" id="ec2_instance-details-{{InstanceId}}">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{name}}</h4>
+          <h4 class="list-group-item-heading">{{Name}}</h4>
         </div>
         <div class="list-group-item">
           <h4>Information</h4>
           <ul>
             <li class="list-group-item-text">Region: {{region}}</li>
-            <li class="list-group-item-text">ID: {{id}}</li>
+            <li class="list-group-item-text">ID: {{InstanceId}}</li>
             <li class="list-group-item-text">Reservation ID: {{reservation_id}}</li>
-            <li class="list-group-item-text">Access Key name: {{key_name}}</li>
-            <li class="list-group-item-text">State: {{state}}</li>
+            <li class="list-group-item-text">Access Key name: {{KeyName}}</li>
+            <li class="list-group-item-text">State: {{make_title State.Name}}</li>
             <li class="list-group-item-text">Instance Type:
-              <span id="ec2_instances-unscannable-instance-types-{{id}}"> {{instance_type}}<span>
+              <span id="ec2_instances-unscannable-instance-types-{{InstanceId}}"> {{InstanceType}}<span>
             </li>
-            <li class="list-group-item-text">Up since: {{launch_time}}</li>
+            <li class="list-group-item-text">Up since: {{LaunchTime}}</li>
           </ul>
         </div>
         <div class="list-group-item">
           <h4>Network</h4>
           <ul>
-            <li class="list-group-item-text">Public IP: {{ip_address}}</li>
-            <li class="list-group-item-text">Public DNS: {{public_dns_name}}</li>
-            <li class="list-group-item-text">Private IP: {{private_ip_address}}</li>
-            <li class="list-group-item-text">Private DNS: {{private_dns_name}}</li>
+            <li class="list-group-item-text">Public IP: {{PublicIpAddress}}</li>
+            <li class="list-group-item-text">Public DNS: {{PublicDnsName}}</li>
+            <li class="list-group-item-text">Private IP: {{PrivateIpAddress}}</li>
+            <li class="list-group-item-text">Private DNS: {{PrivateDnsName}}</li>
           </ul>
         </div>
         <div class="list-group-item" style="padding-bottom: 0 !important;">
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Security groups
-              <a class="accordion-toggle" data-toggle="collapse" href="#ec2_instance-{{id}}-security_groups"><span class="badge pull-right btn-info">{{security_groups.length}}</span></a>
+              <a class="accordion-toggle" data-toggle="collapse" href="#ec2_instance-{{InstanceId}}-security_groups"><span class="badge pull-right btn-info">{{security_groups.length}}</span></a>
             </h4>
-            <div id="ec2_instance-{{id}}-security_groups" class="accordion-body collapse">
+            <div id="ec2_instance-{{InstanceId}}-security_groups" class="accordion-body collapse">
               <div class="accordion-inner">
                 <ul class="no-bullet">
                   {{#each security_groups}}
-                    <li><a href="javascript:findAndShowEC2Object('regions.vpcs.security_groups', '{{this}}')">{{this}}</a></li>
+                    <li><a href="javascript:findAndShowEC2Object('regions.vpcs.security_groups', '{{GroupId}}')">{{GroupName}}</a></li>
                   {{/each}}
                 </ul>
               </div>
@@ -383,28 +417,28 @@
     </script>
 
     <!-- IAM group partial -->
-    <script id="iam_group-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="iam_group-details-{{name}}">
+    <script id="iam_Group-partial" type="text/x-handlebars-template">
+      <div class="list-group" id="iam_Group-details-{{Name}}">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{name}}</h4>
+          <h4 class="list-group-item-heading">{{Name}}</h4>
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Information</h4>
-          <div class="list-group-item-text item-margin">Creation date: {{create_date}}</div>
+          <div class="list-group-item-text item-margin">Creation date: {{CreateDate}}</div>
         </div>
         <div class="list-group-item" style="padding-bottom: 0 !important;">
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Members
-              {{#if users}}
-                <a class="accordion-toggle" data-toggle="collapse" href="#iam_group-{{name}}"><span class="badge pull-right btn-info">{{users.length}}</span></a>
+              {{#if Users}}
+                <a class="accordion-toggle" data-toggle="collapse" href="#iam_Group-{{Name}}"><span class="badge pull-right btn-info">{{Users.length}}</span></a>
               {{else}}
-                <span class="badge pull-right">{{users.length}}</span>
+                <span class="badge pull-right">{{Users.length}}</span>
               {{/if}}
             </h4>
-            <div id="iam_group-{{name}}" class="accordion-body collapse">
+            <div id="iam_Group-{{Name}}" class="accordion-body collapse">
               <div class="accordion-inner">
                 <ul class="no-bullet">
-                  {{#each users}}
+                  {{#each Users}}
                     <li><a href="javascript:showIAMUser('{{this}}')">{{this}}</a></li>
                   {{/each}}
                 </ul>
@@ -417,7 +451,7 @@
       </div>
     </script>
     <script>
-      Handlebars.registerPartial("iam_group", $("#iam_group-partial").html());
+      Handlebars.registerPartial("iam_group", $("#iam_Group-partial").html());
     </script>
 
     <!-- IAM policy partial -->
@@ -425,14 +459,14 @@
       <hr>
       <div>
         <div class="accordion item-margin">
-          <h5 class="list-group-item-heading accordion-heading">{{policy_name}}
-            <a class="accordion-toggle" data-toggle="collapse" href="#iam_policy_details-{{report_id}}">
+          <h5 class="list-group-item-heading accordion-heading">{{PolicyName}}
+            <a class="accordion-toggle" data-toggle="collapse" href="#iam_policy_details-{{ReportId}}">
               <span class="badge pull-right btn-info">Details</span>
             </a>
           </h5>
-          <div id="iam_policy_details-{{report_id}}" class="accordion-body collapse">
+          <div id="iam_policy_details-{{ReportId}}" class="accordion-body collapse">
             <div class="accordion-inner">
-              {{{displayPolicy policy_document 1}}}
+              {{{displayPolicy PolicyDocument}}}
             </div>
           </div>
         </div>
@@ -445,13 +479,13 @@
     <!-- IAM managed policies partial -->
     <script id="iam_managed_policies-partial" type="text/x-handlebars-template">
         <div class="list-group-item">
-          {{#if managed_policies}}
-            <h4 class="list-group-item-heading">Managed Policies <span class="badge pull-right btn-info">{{count managed_policies}}</span></h4>
+          {{#if ManagedPolicies}}
+            <h4 class="list-group-item-heading">Managed Policies <span class="badge pull-right btn-info">{{count ManagedPolicies}}</span></h4>
           {{else}}
-            <h4 class="list-group-item-heading">Managed Policies <span class="badge pull-right">{{count managed_policies}}</span></h4>
+            <h4 class="list-group-item-heading">Managed Policies <span class="badge pull-right">{{count ManagedPolicies}}</span></h4>
           {{/if}}
           <ul class="no-bullet">
-          {{#each managed_policies}}
+          {{#each ManagedPolicies}}
             <li class="list-group-item-text"><a href="javascript:showIAMManagedPolicy('{{this}}')">{{policy_friendly_name this}}</a></li>
           {{/each}}
           </ul>
@@ -464,14 +498,14 @@
     <!-- IAM inline policies partial -->
     <script id="iam_inline_policies-partial" type="text/x-handlebars-template">
         <div class="list-group-item">
-          {{#if policies}}
-            <h4 class="list-group-item-heading">Inline Policies <span class="badge pull-right btn-info">{{count policies}}</span></h4>
+          {{#if Policies}}
+            <h4 class="list-group-item-heading">Inline Policies <span class="badge pull-right btn-info" id="iam_Users-user-inline-policy-{{user_name}}">{{count Policies}}</span></h4>
           {{else}}
-            <h4 class="list-group-item-heading">Inline Policies <span class="badge pull-right">{{count policies}}</span></h4>
+            <h4 class="list-group-item-heading">Inline Policies <span class="badge pull-right">{{count Policies}}</span></h4>
           {{/if}}
-          {{#each policies}}
+          {{#each Policies}}
             {{policy_report_id this entity_type ../name @key}}
-            {{> iam_policy policy_name = @key}}
+            {{> iam_policy PolicyName = @key}}
           {{/each}}
         </div>
     </script>
@@ -481,10 +515,10 @@
 
 
     <!-- IAM role partial -->
-    <script id="iam_role-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="iam_role-details-{{name}}">
+    <script id="iam_Role-partial" type="text/x-handlebars-template">
+      <div class="list-group" id="iam_Role-details-{{Name}}">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{name}}</h4>
+          <h4 class="list-group-item-heading">{{Name}}</h4>
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Information</h4>
@@ -493,9 +527,9 @@
         <div class="list-group-item">
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Instances
-              <a class="accordion-toggle" data-toggle="collapse" href="#iam_role_instances-{{name}}"><span class="badge pull-right btn-info">{{count_role_instances instance_profiles}}</span></a>
+              <a class="accordion-toggle" data-toggle="collapse" href="#iam_role_instances-{{Name}}"><span class="badge pull-right btn-info">{{count_role_instances instance_profiles}}</span></a>
             </h4>
-            <div id="iam_role_instances-{{name}}" class="accordion-body collapse">
+            <div id="iam_role_instances-{{Name}}" class="accordion-body collapse">
               <div class="accordion-inner">
                 <ul class="no-bullet">
                   {{#each instance_profiles}}
@@ -513,87 +547,87 @@
       </div>
     </script>
     <script>
-      Handlebars.registerPartial("iam_role", $("#iam_role-partial").html());
+      Handlebars.registerPartial("iam_role", $("#iam_Role-partial").html());
     </script>
 
     <!-- IAM user partial -->
-    <script id="iam_user-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="iam_user-details-{{name}}">
+    <script id="iam_User-partial" type="text/x-handlebars-template">
+      <div class="list-group" id="iam_User-details-{{Name}}">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{name}}</h4>
+          <h4 class="list-group-item-heading">{{Name}}</h4>
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Information</h4>
-          <div class="list-group-item-text item-margin">Creation date: {{create_date}}</div>
+          <div class="list-group-item-text item-margin">Creation date: {{CreateDate}}</div>
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Authentication methods</h4>
-          <p class="list-group-item-text item-margin">Password enabled: {{has_profiles? logins}}</p>
+          <p class="list-group-item-text item-margin">Password enabled: {{has_profiles? LoginProfile}}</p>
           <ul></ul>
-          <p class="list-group-item-text item-margin">Multi-Factor enabled: <span id="iam_users-no-mfa-{{name}}">{{has_mfa? mfa_devices}}</span></p>
+          <p class="list-group-item-text item-margin">Multi-Factor enabled: <span id="iam_Users-no-mfa-{{Name}}">{{has_mfa? MFADevices}}</span></p>
           <ul class="item-margin">
-          {{#each mfa_devices}}
-            <li class="list-group-item-text"> Serial number: {{serial_number}}</li>
+          {{#each MFADevices}}
+            <li class="list-group-item-text"> Serial number: {{SerialNumber}}</li>
           {{/each}}
           </ul>
-          <p class="list-group-item-text item-margin">Access Keys: <span id="iam_users-multiple-active-keys-{{name}}">{{has_access_keys? access_keys}}</p><span>
+          <p class="list-group-item-text item-margin">Access Keys: <span id="iam_Users-multiple-active-keys-{{Name}}">{{has_access_keys? AccessKeys}}</p><span>
           <ul class="item-margin">
-          {{#each access_keys}}
-            <li class="list-group-item-text"><span id="iam_users-{{status}}-key-no-rotation-{{../name}}-{{access_key_id}}">{{access_key_id}}, {{status}}, created on {{create_date}}</span></li>
+          {{#each AccessKeys}}
+            <li class="list-group-item-text"><span id="iam_Users-{{Status}}-key-no-rotation-{{../Name}}-{{AccessKeyId}}">{{AccessKeyId}}, {{Status}}, created on {{CreateDate}}</span></li>
           {{/each}}
           </ul>
           <p class="list-group-item-text item-margin">
-            <span id="iam_users-multiple-active-keys-{{name}}" class="finding-hidden">
+            <span id="iam_Users-multiple-active-keys-{{Name}}" class="finding-hidden">
               <i class="glyphicon glyphicon-warning-sign"></i> Review the need for multiple active access keys
             </span>
           </p>
           <p class="list-group-item-text item-margin">
-            <span id="iam_users-password-and-key-{{name}}" class="finding-hidden">
+            <span id="iam_Users-password-and-key-{{Name}}" class="finding-hidden">
               <i class="glyphicon glyphicon-warning-sign"></i> Review the need for password-based and key-based authentication
             </span>
           </p>
           <p class="list-group-item-text item-margin">
-            <span id="iam_users-not-in-global-iam-group-{{name}}" class="finding-hidden">
-              <i class="glyphicon glyphicon-warning-sign"></i> User "{{name}}" does not belong to the global/mandatory IAM group
+            <span id="iam_Users-not-in-global-iam-group-{{Name}}" class="finding-hidden">
+              <i class="glyphicon glyphicon-warning-sign"></i> User "{{Name}}" does not belong to the global/mandatory IAM group
             </span>
           </p>
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Groups</h4>
           <ul class="no-bullet">
-          {{#each groups}}
-            <li class="list-group-item-text"><a href="javascript:showIAMGroup('{{group_name}}')">{{group_name}}</a></li>
+          {{#each Groups}}
+            <li class="list-group-item-text"><a href="javascript:showIAMGroup('{{GroupName}}')">{{GroupName}}</a></li>
           {{/each}}
           </ul>
         </div>
-        {{> iam_inline_policies entity_type = 'user'}}
+        {{> iam_inline_policies entity_type = 'user' user_name = Name}}
         {{> iam_managed_policies}}
       </div>
     </script>
     <script>
-      Handlebars.registerPartial("iam_user", $("#iam_user-partial").html());
+      Handlebars.registerPartial("iam_user", $("#iam_User-partial").html());
     </script>
 
     <!-- RDS instance partial -->
     <script id="rds_instance-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="rds_instance-details-{{id}}">
+      <div class="list-group" id="rds_instance-details-{{DBInstanceIdentifier}}">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{id}}</h4>
+          <h4 class="list-group-item-heading">{{DBInstanceIdentifier}}</h4>
         </div>
         <div class="list-group-item">
           <h4>Information</h4>
           <ul>
             <li class="list-group-item-text">Region: {{region}}</li>
-            <li class="list-group-item-text">Engine: {{engine}}</li>
-            <li class="list-group-item-text">Status: {{status}}</li>
-            <li class="list-group-item-text">Auto Minor Version Upgrade: <span id="rds_instances-no-minor-auto-upgrade-{{id}}">{{#if auto_minor_version_upgrade}} Yes {{else}} No {{/if}}</span></li>
-            <li class="list-group-item-text">Multi Availability Zones: <span id="rds_instances-single-az-{{id}}">{{#if multi_az}} Yes {{else}} No {{/if}}</span></li>
-            <li class="list-group-item-text">Instance Class: <span id="rds_instances-unscannable-instance-types-{{id}}"> {{instance_class}}<span></li>
-            <li class="list-group-item-text">Created on: <span id="rds_instances-postgres-invalid-ssl-cert-{{id}}">{{create_time}}</span></li>
+            <li class="list-group-item-text">Engine: {{Engine}}</li>
+            <li class="list-group-item-text">Status: {{make_title DBInstanceStatus}}</li>
+            <li class="list-group-item-text">Auto Minor Version Upgrade: <span id="rds_instances-no-minor-auto-upgrade-{{DBInstanceIdentifier}}">{{#if AutoMinorVersionUpgrade}} Enabled {{else}} Disabled {{/if}}</span></li>
+            <li class="list-group-item-text">Multi Availability Zones: <span id="rds_instances-single-az-{{DBInstanceIdentifier}}">{{#if MultiAZ}} Enabled {{else}} Disabled {{/if}}</span></li>
+            <li class="list-group-item-text">Instance Class: <span id="rds_instances-unscannable-instance-types-{{DBInstanceIdentifer}}"> {{DBInstanceClass}}<span></li>
+            <li class="list-group-item-text">Created on: <span id="rds_instances-postgres-invalid-ssl-cert-{{DBInstanceIdentifier}}">{{InstanceCreateTime}}</span></li>
             <li class="list-group-item-tex">Backup retention period in days:
-            <span id="rds_instances-backup-disabled-{{id}}">
-            <span id="rds_instances-short-backup-retention-period-{{id}}">
-              {{backup_retention_period}}
+            <span id="rds_instances-backup-disabled-{{DBInstanceIdentifier}}">
+            <span id="rds_instances-short-backup-retention-period-{{DBInstanceIdentifier}}">
+              {{BackupRetentionPeriod}}
             </span>
             </span>
           </ul>
@@ -601,7 +635,7 @@
         <div class="list-group-item">
           <h4>Network</h4>
           <ul>
-            <li class="list-group-item-text">Endpoint: {{endpoint}}</li>
+            <li class="list-group-item-text">Endpoint: {{Endpoint.Address}}:{{Endpoint.Port}}</li>
             <li class="list-group-item-text">Publicly accessible: {{PubliclyAccessible}}</li>
           </ul>
         </div>
@@ -645,41 +679,42 @@
 
     <!-- S3 bucket partial -->
     <script id="s3_bucket-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="s3_bucket-details-{{name}}">
+      <div class="list-group" id="s3_bucket-details-{{Name}}">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{name}}</h4>
+          <h4 class="list-group-item-heading">{{Name}}</h4>
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Information</h4>
-          <div class="list-group-item-text item-margin">Creation date: {{creation_date}}</div>
-          <div class="list-group-item-text item-margin">Logging: <span id="s3_buckets-logging-disabled-{{name}}">{{has_logging? logging}}</span></div>
-          <div class="list-group-item-text item-margin">Versioning: <span id="s3_buckets-versioning-disabled-{{name}}">{{versioning}}</span></div>
-          <div class="list-group-item-text item-margin">Static website hosting: <span id="s3_buckets-static_website_hosting_enabled-{{name}}">{{web_hosting}}</span></div>
+          <div class="list-group-item-text item-margin">Creation date: {{CreationDate}}</div>
+          <div class="list-group-item-text item-margin">Logging: <span id="s3_buckets-logging-disabled-{{Name}}">{{has_logging? logging}}</span></div>
+          <div class="list-group-item-text item-margin">Versioning: <span id="s3_buckets-versioning-disabled-{{Name}}">{{versioning_status}}</span></div>
+          <div class="list-group-item-text item-margin">MFA Delete: <span id="s3_buckets-version_mfa_delete-disabled-{{Name}}">{{version_mfa_delete}}</span></div>
+          <div class="list-group-item-text item-margin">Static website hosting: <span id="s3_buckets-static_website_hosting_enabled-{{Name}}">{{web_hosting}}</span></div>
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Permissions</h4>
           <table class="table-striped" width="100%" >
             <tr>
               <td width="20%"></td>
-              <td width="20%" class="text-center">Read access</td>
-              <td width="20%" class="text-center">Read permissions</td>
-              <td width="20%" class="text-center">Write access</td>
-              <td width="20%" class="text-center">Write permissions</td>
+              <td width="20%" class="text-center">List</td>
+              <td width="20%" class="test-center">Upload/Delete</td>
+              <td width="20%" class="text-center">View Permissions</td>
+              <td width="20%" class="text-center">Edit Permissions</td>
             </tr>
-            {{#each grants}}
+            {{#each grantees}}
             <tr>
-              <td width="20%">{{@key}}</td>
+              <td width="20%" class="text-center">{{DisplayName}}</td>
               <td width="20%" class="text-center">
-                <span id="s3_buckets-{{name}}-read-{{../name}}">{{{s3_grant_2_icon this.read}}}</td></span>
+                <span id="s3_buckets-{{@key}}-read-{{../Name}}">{{{s3_grant_2_icon permissions.read}}}</td></span>
               </td>
               <td width="20%" class="text-center">
-                <span id="s3_buckets-{{name}}-read_acp-{{../name}}">{{{s3_grant_2_icon this.read_acp}}}</td></span>
+                <span id="s3_buckets-{{@key}}-read_acp-{{../Name}}">{{{s3_grant_2_icon permissions.write}}}</td></span>
               </td>
               <td width="20%" class="text-center">
-                <span id="s3_buckets-{{name}}-write-{{../name}}">{{{s3_grant_2_icon this.write}}}</td></span>
+                <span id="s3_buckets-{{@key}}-write-{{../Name}}">{{{s3_grant_2_icon permissions.read_acp}}}</td></span>
               </td>
               <td width="20%" class="text-center">
-                <span id="s3_buckets-{{name}}-write_acp-{{../name}}">{{{s3_grant_2_icon this.write_acp}}}</td></span>
+                <span id="s3_buckets-{{@key}}-write_acp-{{../Name}}">{{{s3_grant_2_icon permissions.write_acp}}}</td></span>
               </td>
             </tr>
             {{/each}}
@@ -695,7 +730,7 @@
               </h4>
               <div id="s3_bucket_policy_details-{{fixBucketName @key}}" class="accordion-body item-margin collapse">
                 <div class="accordion-inner">
-                  {{{displayPolicy policy 0}}}
+                  {{{displayPolicy policy}}}
                 </div>
               </div>
             </div>
@@ -719,15 +754,15 @@
                     </tr>
                     {{#each keys}}
                     <tr>
-                      <td width="80%"><a href="javascript:showS3Object('{{../name}}', '{{@key}}')">{{@key}}</a></td>
+                      <td width="80%"><a href="javascript:showS3Object('{{../Name}}', '{{@key}}')">{{@key}}</a></td>
                       <td width="10%" class="text-center">
-                        <span id="s3_buckets-unencrypted-s3-objects-{{../name}}-{{@key}}">
-                          {{{good_bad_icon "unencrypted-s3-objects" ../name @key}}}
+                        <span id="s3_buckets-unencrypted-s3-objects-{{../Name}}-{{@key}}">
+                          {{{good_bad_icon "unencrypted-s3-objects" ../Name @key}}}
                         </span>
                       </td>
                       <td width="10%" class="text-center">
-                        <span id="s3_buckets-object-perms-mismatch-bucket-perms-{{../name}}-{{@key}}">
-                          {{{good_bad_icon "object-perms-mismatch-bucket-perms" ../name @key}}}
+                        <span id="s3_buckets-object-perms-mismatch-bucket-perms-{{../Name}}-{{@key}}">
+                          {{{good_bad_icon "object-perms-mismatch-bucket-perms" ../Name @key}}}
                         </span>
                       </td>
                     </tr>
@@ -746,9 +781,9 @@
 
     <!-- S3 object partial -->
     <script id="s3_object-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="s3_object-details-{{name}}">
+      <div class="list-group" id="s3_object-details-{{Name}}">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{bucket_name}}/{{name}}</h4>
+          <h4 class="list-group-item-heading">{{bucket_name}}/{{Name}}</h4>
         </div>
         <div class="list-gorup-item">
           <h4 class="list-group-item-heading">Information</h4>
@@ -773,16 +808,16 @@
               <tr>
                 <td width="20%">{{@key}}</td>
                 <td width="20%" class="text-center">
-                  <span id="s3_buckets-{{name}}-read-{{../name}}">{{{s3_grant_2_icon this.read}}}</td></span>
+                  <span id="s3_buckets-{{Name}}-read-{{../name}}">{{{s3_grant_2_icon this.read}}}</td></span>
                 </td>
                 <td width="20%" class="text-center">
-                  <span id="s3_buckets-{{name}}-read_acp-{{../name}}">{{{s3_grant_2_icon this.read_acp}}}</td></span>
+                  <span id="s3_buckets-{{Name}}-read_acp-{{../name}}">{{{s3_grant_2_icon this.read_acp}}}</td></span>
                 </td>
                 <td width="20%" class="text-center">
-                  <span id="s3_buckets-{{name}}-write-{{../name}}">{{{s3_grant_2_icon this.write}}}</td></span>
+                  <span id="s3_buckets-{{Name}}-write-{{../name}}">{{{s3_grant_2_icon this.write}}}</td></span>
                 </td>
                 <td width="20%" class="text-center">
-                  <span id="s3_buckets-{{name}}-write_acp-{{../name}}">{{{s3_grant_2_icon this.write_acp}}}</td></span>
+                  <span id="s3_buckets-{{Name}}-write_acp-{{../name}}">{{{s3_grant_2_icon this.write_acp}}}</td></span>
                 </td>
               </tr>
             {{/each}}
@@ -840,12 +875,12 @@
     </script>
 
     <!-- Single IAM group template -->
-    <script id="single_iam_group-template" type="text/x-handlebars-template">
+    <script id="single_iam_Group-template" type="text/x-handlebars-template">
         <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
         {{> iam_group}}
     </script>
     <script>
-        var single_iam_group_template = Handlebars.compile($("#single_iam_group-template").html());
+        var single_iam_group_template = Handlebars.compile($("#single_iam_Group-template").html());
     </script>
 
     <!-- Single IAM policy template -->
@@ -859,21 +894,21 @@
     </script>
 
     <!-- Single IAM role template -->
-    <script id="single_iam_role-template" type="text/x-handlebars-template">
+    <script id="single_iam_Role-template" type="text/x-handlebars-template">
         <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
         {{> iam_role}}
     </script>
     <script>
-        var single_iam_role_template = Handlebars.compile($("#single_iam_role-template").html());
+        var single_iam_role_template = Handlebars.compile($("#single_iam_Role-template").html());
     </script>
 
     <!-- Single IAM user template -->
-    <script id="single_iam_user-template" type="text/x-handlebars-template">
+    <script id="single_iam_User-template" type="text/x-handlebars-template">
         <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
         {{> iam_user}}
     </script>
     <script>
-        var single_iam_user_template = Handlebars.compile($("#single_iam_user-template").html());
+        var single_iam_user_template = Handlebars.compile($("#single_iam_User-template").html());
     </script>
 
     <!-- Single S3 bucket template -->
@@ -953,14 +988,14 @@
                 <li id="iam_load_button"><a href="javascript:load_config('iam')">Load</a></li>
                 <script id="iam_violation-list-template" type="text/x-handlebars-template">
                   <li class="dropdown-header">IAM config</li>
-                  <li><a href="javascript:list_generic('iam_group')">Groups</a></li>
-                  <li><a href="javascript:list_generic('iam_role')">Roles</a></li>
-                  <li><a href="javascript:list_generic('iam_credential_report')">Root account</a></li>
-                  <li><a href="javascript:list_generic('iam_user')">Users</a></li>
+                  <li><a href="javascript:list_generic('iam_Group')">Groups</a></li>
+                  <li><a href="javascript:list_generic('iam_Role')">Roles</a></li>
+                  <li><a href="javascript:list_generic('iam_CredentialReport')">Root account</a></li>
+                  <li><a href="javascript:list_generic('iam_User')">Users</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Summaries</li>
                   <li><a href="javascript:list_generic('iam_dashboard')">Dashboard</a></li>
-                  <li><a href="javascript:list_generic('iam_permission')">Permissions</a></li>
+                  <li><a href="javascript:list_generic('iam_Permission')">Permissions</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
@@ -990,7 +1025,7 @@
               </ul>
             </li>
             <li class="dropdown">
-              <a hreaf="javascript:show_s3()" class="dropdown-toggle" data-toggle="dropdown"><span id="s3_dropdown">S3</span><b class="caret"></b></a>
+              <a href="javascript:show_s3()" class="dropdown-toggle" data-toggle="dropdown"><span id="s3_dropdown">S3</span><b class="caret"></b></a>
               <ul class="dropdown-menu" id="s3_violations-list">
                 <li class="dropdown-header">S3 config</li>
                 <li><a href="javascript:load_config('s3')">Load</a></li>
@@ -1017,7 +1052,7 @@
                   <li id="{{finding_entity keyword "region"}}-filter-select_none"><a href="javascript:clear_all_regions('{{keyword}}')">Hide all</a></li>
                   <li id="{{finding_entity keyword "region"}}-filter-select_all"><a href="javascript:select_all_regions('{{keyword}}')">Select all</a></li>
                   {{#each items}}
-                    <li id="{{finding_entity ../keyword "region"}}-filter-{{name}}"><a href="javascript:toggle_region('{{../keyword}}', '{{name}}')"><i id="{{finding_entity ../keyword "region"}}-filtericon-{{name}}" class="glyphicon glyphicon-check""></i> {{name}}</a></li>
+                    <li id="{{finding_entity ../keyword "region"}}-filter-{{Name}}"><a href="javascript:toggle_region('{{../keyword}}', '{{Name}}')"><i id="{{finding_entity ../keyword "region"}}-filtericon-{{Name}}" class="glyphicon glyphicon-check""></i> {{Name}}</a></li>
                   {{/each}}
                 </script>
               </ul>
@@ -1150,7 +1185,7 @@
                       <ul>
                       {{#each ports}}
                         <li>{{@key}}</li>
-                        {{> ec2_grants items = cidrs}}
+                        {{> ip_grants items = cidrs}}
                       {{/each}}
                       </ul>
                     {{/each}}
@@ -1208,7 +1243,7 @@
                     <li class="list-group-item active">{{@key}}</li>
                     {{#each vpcs}}
                       <div class="list-group-item list-sub-element">
-                        {{name}}
+                        {{Name}}
                         {{#each security_groups}}
                           <div class="list-group-item-text list-sub-element" id="security_group-list-{{id}}"><a href="javascript:browseTo('ec2_security_group', '{{id}}')">{{name}}</a></div>
                         {{/each}}
@@ -1227,7 +1262,7 @@
             <div id="ec2_region-details-{{@key}}">
               {{#each vpcs}}
                 {{#each security_groups}}
-                  {{> ec2_security_group region=../../name vpc=../id }}
+                  {{> ec2_security_group region=@../../key vpc=@../key}}
                 {{/each}}
               {{/each}}
             </div>
@@ -1250,7 +1285,7 @@
                     <li class="list-group-item active">{{@key}}</li>
                     {{#each vpcs}}
                       <div class="list-group-item list-sub-element">
-                        {{name}}
+                        {{Name}}
                         {{#if network_acls}}
                           {{#each network_acls}}
                             <div class="list-group-item-text list-sub-element"><a href="javascript:browseTo('ec2_network_acl', '{{@key}}')">{{@key}}</a></div>
@@ -1271,19 +1306,7 @@
             <div id="ec2_region-details-{{@key}}">
               {{#each vpcs}}
                 {{#each network_acls}}
-                  <div class="list-group" id="ec2_network_acl-details-{{@key}}">
-                    <div class="list-group-item active">
-                      <h4 class="list-group-item-heading">{{@key}}</h4>
-                    </div>
-                    <div class="list-group-item">
-                      <h4 class="list-group-item-heading">Inbound rules</h4>
-                      {{{format_network_acls inbound_network_acls 'Source'}}}
-                    </div>
-                    <div class="list-group-item">
-                      <h4 class="list-group-item-heading">Outbound rules</h4>
-                      {{{format_network_acls outbound_network_acls 'Destination'}}}
-                    </div>
-                  </div>
+                  {{> ec2_network_acl RegionName = @../../key}}
                 {{/each}}
               {{/each}}
             </div>
@@ -1305,7 +1328,7 @@
                   <ul class="list-group">
                     <li class="list-group-item active">{{@key}}</li>
                     {{#each vpcs}}
-                        <div class="list-group-item-text list-sub-element" id="ec2_instance-list-{{id}}"><a href="javascript:browseTo('ec2_vpc', '{{id}}')">{{name}}</a></div>
+                        <div class="list-group-item-text list-sub-element" id="ec2_instance-list-{{id}}"><a href="javascript:browseTo('ec2_vpc', '{{id}}')">{{Name}}</a></div>
                     {{/each}}
                   </ul>
                 {{/if}}
@@ -1341,9 +1364,9 @@
                     <li class="list-group-item active">{{@key}}</li>
                     {{#each vpcs}}
                       <div class="list-group-item list-sub-element">
-                        {{name}}
+                        {{Name}}
                         {{#each instances}}
-                          <div class="list-group-item-text list-sub-element" id="ec2_instance-list-{{id}}"><a href="javascript:browseTo('ec2_instance', '{{id}}')">{{name}}</a></div>
+                          <div class="list-group-item-text list-sub-element" id="ec2_instance-list-{{id}}"><a href="javascript:browseTo('ec2_instance', '{{InstanceId}}')">{{Name}}</a></div>
                         {{/each}}
                       </div>
                     {{/each}}
@@ -1370,21 +1393,21 @@
       </div><!-- /.row -->
 
       <!-- Template for IAM groups -->
-      <div class="row" id="iam_groups-row">
+      <div class="row" id="iam_Groups-row">
         <div class="col-sm-4">
-          <ul class="list-group" id="iam_groups-list">
-            <script id="iam_group-list-template" type="text/x-handlebars-template">
-            <li class="list-group-item"><a href="javascript:showAll('iam_group')">Show all <span class="badge pull-right">{{count items}}</span></a></li>
+          <ul class="list-group" id="iam_Groups-list">
+            <script id="iam_Group-list-template" type="text/x-handlebars-template">
+            <li class="list-group-item"><a href="javascript:showAll('iam_Group')">Show all <span class="badge pull-right">{{count items}}</span></a></li>
             {{#each items}}
-              <li class="list-group-item" id="iam_group-list-{{name}}">
-                <a href="javascript:browseTo('iam_group','{{name}}')">{{name}}</a>
+              <li class="list-group-item" id="iam_Group-list-{{Name}}">
+                <a href="javascript:browseTo('iam_Group','{{Name}}')">{{Name}}</a>
               </li>
             {{/each}}
             </script>
           </ul>
         </div>
-        <div class="col-sm-8" id="iam_groups-details">
-          <script id="iam_group-detail-template" type="text/x-handlebars-template">
+        <div class="col-sm-8" id="iam_Groups-details">
+          <script id="iam_Group-detail-template" type="text/x-handlebars-template">
           {{#each items}}
             {{> iam_group}}
           {{/each}}
@@ -1393,9 +1416,9 @@
       </div><!-- /.row -->
 
       <!-- Template for IAM permissions -->
-      <div class="row" id="iam_permissions-row">
-        <div id="iam_permissions-list"></div>
-          <script id="iam_permission-list-template" type="text/x-handlebars-template">
+      <div class="row" id="iam_Permissions-row">
+        <div id="iam_Permissions-list"></div>
+          <script id="iam_Permission-list-template" type="text/x-handlebars-template">
           {{#each items}}
             <div class="list-group">
               <div class="row list-group-item active">
@@ -1403,7 +1426,7 @@
                 <div class="col-sm-8"><h4>Details</h4></div>
               </div>
               {{#each this}}
-                <div class="row list-group-item" id="iam_permission-details-{{@key}}">
+                <div class="row list-group-item" id="iam_Permission-details-{{@key}}">
                   <div class="col-sm-4">{{@key}}:</div>
                   <div class="col-sm-8">
                     {{#each this}}
@@ -1464,19 +1487,19 @@
       </div><!-- /.row -->
 
       <!-- Template for IAM root account overview -->
-      <div class="row" id="iam_credential_reports-row">
-        <div id="iam_credential_reports-list"></div>
-          <script id="iam_credential_report-list-template" type="text/x-handlebars-template">
-            <div class="list-group" id="iam_credential_report-details-">
+      <div class="row" id="iam_CredentialReports-row">
+        <div id="iam_CredentialReports-list"></div>
+          <script id="iam_CredentialReport-list-template" type="text/x-handlebars-template">
+            <div class="list-group" id="iam_CredentialReport-details-">
               <div class="list-group-item active">
                 <h4 class="list-group-item-heading">AWS root account</h4>
               </div>
               <div class="list-group-item">
                 <div class="list-group-item-text item-margin">Creation date: {{items.user_creation_time}}</div>
-                <div class="list-group-item-text item-margin">Password last used: <span id="iam_credential_report-root-active-password-">{{items.password_last_used}}</span></div>
-                <div class="list-group-item-text item-margin">MFA enabled: <span id="iam_credential_report-root-no-mfa-">{{items.mfa_active}}</span></div>
-                <div class="list-group-item-text item-margin">Access key 1 active: <span id="iam_credential_report-root-active-key-access_key_1_active">{{items.access_key_1_active}}</span></div>
-                <div class="list-group-item-text item-margin">Access key 2 active: <span id="iam_credential_report-root-active-key-access_key_2_active">{{items.access_key_2_active}}</span></div>
+                <div class="list-group-item-text item-margin">Password last used: <span id="iam_CredentialReport-root-active-password-">{{items.password_last_used}}</span></div>
+                <div class="list-group-item-text item-margin">MFA enabled: <span id="iam_CredentialReport-root-no-mfa-">{{items.mfa_active}}</span></div>
+                <div class="list-group-item-text item-margin">Access key 1 active: <span id="iam_CredentialReport-root-active-key-access_key_1_active">{{items.access_key_1_active}}</span></div>
+                <div class="list-group-item-text item-margin">Access key 2 active: <span id="iam_CredentialReport-root-active-key-access_key_2_active">{{items.access_key_2_active}}</span></div>
                 <div class="list-group-item-text item-margin">Signing cert 1 active: {{items.cert_1_active}}</div>
                 <div class="list-group-item-text item-margin">Signing cert 2 active: {{items.cert_2_active}}</div>
               </div>
@@ -1485,21 +1508,21 @@
       </div><!-- /.row -->
 
       <!-- Template for IAM roles -->
-      <div class="row" id="iam_roles-row">
+      <div class="row" id="iam_Roles-row">
         <div class="col-sm-3">
-          <ul class="list-group" id="iam_roles-list">
-            <script id="iam_role-list-template" type="text/x-handlebars-template">
-            <li class="list-group-item"><a href="javascript:showAll('iam_role')">Show all <span class="badge pull-right">{{count items}}</span></a></li>
+          <ul class="list-group" id="iam_Roles-list">
+            <script id="iam_Role-list-template" type="text/x-handlebars-template">
+            <li class="list-group-item"><a href="javascript:showAll('iam_Role')">Show all <span class="badge pull-right">{{count items}}</span></a></li>
             {{#each items}}
-              <li class="list-group-item" id="iam_role-list-{{name}}">
-                <a href="javascript:browseTo('iam_role','{{name}}')">{{name}}</a>
+              <li class="list-group-item" id="iam_Role-list-{{Name}}">
+                <a href="javascript:browseTo('iam_Role','{{Name}}')">{{Name}}</a>
               </li>
             {{/each}}
             </script>
           </ul>
         </div>
-        <div class="col-sm-8" id="iam_roles-details">
-          <script id="iam_role-detail-template" type="text/x-handlebars-template">
+        <div class="col-sm-8" id="iam_Roles-details">
+          <script id="iam_Role-detail-template" type="text/x-handlebars-template">
           {{#each items}}
             {{> iam_role}}
           {{/each}}
@@ -1508,21 +1531,21 @@
       </div><!-- /.row -->
 
       <!-- Template for IAM users -->
-      <div class="row" id="iam_users-row">
+      <div class="row" id="iam_Users-row">
         <div class="col-sm-4">
-          <ul class="list-group" id="iam_users-list">
-            <script id="iam_user-list-template" type="text/x-handlebars-template">
-            <li class="list-group-item"><a href="javascript:showAll('iam_user')">Show all <span class="badge pull-right">{{count items}}</span></a></li>
+          <ul class="list-group" id="iam_Users-list">
+            <script id="iam_User-list-template" type="text/x-handlebars-template">
+            <li class="list-group-item"><a href="javascript:showAll('iam_User')">Show all <span class="badge pull-right">{{count items}}</span></a></li>
             {{#each items}}
-              <li class="list-group-item" id="iam_user-list-{{name}}">
-                <a href="javascript:browseTo('iam_user','{{name}}')">{{name}}</a>
+              <li class="list-group-item" id="iam_User-list-{{Name}}">
+                <a href="javascript:browseTo('iam_User','{{Name}}')">{{Name}}</a>
               </li>
             {{/each}}
             </script>
           </ul>
         </div>
-        <div class="col-sm-8" id="iam_users-details">
-          <script id="iam_user-detail-template" type="text/x-handlebars-template">
+        <div class="col-sm-8" id="iam_Users-details">
+          <script id="iam_User-detail-template" type="text/x-handlebars-template">
           {{#each items}}
             {{> iam_user}}
           {{/each}}

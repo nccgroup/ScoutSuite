@@ -1,7 +1,7 @@
 {
     "_ARG_0_-key-no-rotation": {
         "description": "Lack of key rotation (_ARG_0_)",
-        "entity": "users",
+        "entity": "Users",
         "callback": "checkAccessKeys",
         "callback_args": ["_ARG_0_"],
         "targets": [
@@ -16,7 +16,7 @@
     },
     "no-mfa": {
         "description": "Lack of MFA",
-        "entity": "users",
+        "entity": "Users",
         "callback": "lacksMFA",
         "callback_args": [],
         "level": "danger",
@@ -26,7 +26,7 @@
     },
     "password-and-key": {
         "description": "Password and keys enabled",
-        "entity": "users",
+        "entity": "Users",
         "callback": "passwordAndKeyEnabled",
         "callback_args": [],
         "level": "warning",
@@ -34,9 +34,9 @@
             "Warn against IAM users who have both web console and API access"
         ]
     },
-    "user-policy": {
+    "user-inline-policy": {
         "description": "User policies",
-        "entity": "users",
+        "entity": "Users",
         "callback": "hasUserPolicy",
         "callback_args": [],
         "level": "warning",
@@ -46,9 +46,9 @@
     },
     "multiple-active-keys": {
         "description": "Multiple active keys for single user",
-        "entity": "users",
+        "entity": "Users",
         "callback": "hasMoreThan",
-        "callback_args": [ "1", "access_keys", "status", "Active" ],
+        "callback_args": [ "1", "AccessKeys", "Status", "Active" ],
         "level": "warning",
         "questions": [
             "Warn against IAM users who have two active access keys"
@@ -56,7 +56,7 @@
     },
     "root-active-password": {
         "description": "Root account used recently",
-        "entity": "credential_report",
+        "entity": "CredentialReport",
         "callback": "recentlyUsed",
         "callback_args": [],
         "level": "danger",
@@ -66,7 +66,7 @@
     },
     "root-no-mfa": {
         "description": "Lack of MFA (root account)",
-        "entity": "credential_report",
+        "entity": "CredentialReport",
         "callback": "lacksMFA",
         "callback_args": [],
         "level": "danger",
@@ -76,7 +76,7 @@
     },
     "root-active-key": {
         "description": "Root account has active keys",
-        "entity": "credential_report",
+        "entity": "CredentialReport",
         "callback": "hasActiveKeys",
         "callback_args": [],
         "level": "danger",

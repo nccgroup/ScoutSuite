@@ -6,7 +6,9 @@ from AWSScout2.finding_ec2 import *
 from AWSScout2.finding_iam import *
 from AWSScout2.finding_rds import *
 from AWSScout2.finding_s3 import *
-from AWSUtils.utils import *
+
+# Import opinel
+from opinel.utils import *
 
 import copy
 import fnmatch
@@ -45,6 +47,7 @@ def load_findings(service, ruleset_name, customize = False):
         with open(filename) as f:
             findings = json.load(f)
     except Exception, e:
+        printException(e)
         print 'Error: the ruleset name entered (%s) does not match an existing configuration.' % ruleset_name
         return
 

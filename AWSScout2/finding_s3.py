@@ -1,8 +1,11 @@
 #!/usr/bin/env python2
 
-import json
-
+# Import Scout2 tools
 from AWSScout2.finding import *
+
+# Import stock packages
+import json
+import re
 
 class S3Finding(Finding):
 
@@ -18,32 +21,8 @@ class S3Finding(Finding):
     def checkBucketACLs(self, key, obj):
         grantee = self.callback_args[0]
         grant = self.callback_args[1]
-        if grant == 'write':
-            self.checkWorldWritableBucket(key, obj)
-        elif grant == 'write_acp':
-            self.checkWorldWritableBucketPerms(key, obj)
-        elif grant == 'read':
-            self.checkWorldReadableBucket(key, obj)
-
-    def checkWorldWritableBucket(self, key, obj):
-        grantee = self.callback_args[0]
-        for grant in obj['grants']:
-            if grantee in grant:
-                if obj['grants'][grantee]['write']:
-                    self.addItem(key)
-
-    def checkWorldWritableBucketPerms(self, key, obj):
-        grantee = self.callback_args[0]
-        for grant in obj['grants']:
-            if grantee in grant:
-                if obj['grants'][grantee]['write_acp']:
-                    self.addItem(key)
-
-
-    def checkWorldReadableBucket(self, key, obj):
-        grantee = self.callback_args[0]
-        for grant in obj['grants']:
-            if grantee in grant and obj['grants'][grantee]['read']:
+        if 'grantees' in obj and grantee in obj['grantees']:
+            if obj['grantees'][grantee]['permissions'][grant] == True:
                 self.addItem(key)
 
     def checkLogging(self, key, obj):
@@ -51,39 +30,33 @@ class S3Finding(Finding):
             self.addItem(key)
 
     def checkVersioning(self, key, obj):
-        if obj['versioning'] == 'Disabled':
-            self.addItem(key)
-
-    def checkWebhosting(self, key, obj):
-        if obj['web_hosting'] == 'Enabled':
+        if obj['versioning_status'] == 'Disabled':
             self.addItem(key)
 
     def checkEncryption(self, key, obj):
         if 'keys' in obj:
             for k in obj['keys']:
-                if 'encrypted' in obj['keys'][k] and not obj['keys'][k]['encrypted']:
+                if 'ServerSideEncryption' in obj['keys'][k] and not obj['keys'][k]['ServerSideEncryption']:
                     # Folders cant' be encrypted
                     if not k.endswith('/'):
                         self.addItem(k, key)
-                    else:
-                        obj['keys'][k]['encrypted'] = 'N/A'
 
     def checkObjectsPermissions(self, key, obj):
         if 'keys' in obj:
-            bucket_grants = obj['grants']
+            bucket_grants = obj['grantees']
             for k in obj['keys']:
-                if 'grants' in obj['keys'][k]:
-                    object_grants = obj['keys'][k]['grants']
+                if 'grantees' in obj['keys'][k]:
+                    object_grants = obj['keys'][k]['grantees']
                     if cmp(bucket_grants, object_grants) != 0:
                         self.addItem(k, key)
 
     def checkStaticWebsiteHosting(self, key, obj):
-        if obj['web_hosting'] == 'Enabled':
+        if 'web_hosting' in obj and obj['web_hosting'] == 'Enabled':
             self.addItem(key)
 
     def checkIPOnlyCondition(self, key, obj):
         if 'policy' in obj:
-            policy = json.loads(obj['policy'])
+            policy = obj['policy']
             statements = self.getList(policy, 'Statement')
             for s in statements:
                 conditions = self.getList(s, 'Condition')
@@ -97,23 +70,22 @@ class S3Finding(Finding):
 
     def checkOpenPolicy(self, key, obj):
         open_policy = False
-        deny_condition = False
         if 'policy' in obj:
-            policy = json.loads(obj['policy'])
+            policy = obj['policy']
             statements = self.getList(policy, 'Statement')
             for s in statements:
                 conditions = self.getList(s, 'Condition')
                 if len(conditions) == 0 and s['Effect'] == 'Allow':
                     principals = self.getList(s, 'Principal')
                     for p in principals:
-                        if 'AWS' in p and p['AWS'] == '*':
+                        if 'AWS' in p and p['AWS'] == '*' or p == '*':
                             actions = self.getList(s, 'Action')
                             for a in actions:
-                                if a == self.callback_args[0]:
+                                if self.callback_args[0] != 's3:*' and re.match(self.callback_args[0], a):
                                     open_policy = True
-                elif s['Effect'] == 'Deny':
-                    deny_condition = True
-        if not deny_condition and open_policy:
+                                elif a == self.callback_args[0]:
+                                    open_policy = True
+        if open_policy:
             self.addItem(key)
 
 

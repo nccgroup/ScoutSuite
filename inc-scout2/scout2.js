@@ -234,20 +234,20 @@ function showEC2SecurityGroup(region, vpc, id) {
     showPopup();
 }
 function showIAMGroup(group_name) {
-    var data = iam_info['groups'][group_name];
+    var data = iam_info['Groups'][group_name];
     $('#overlay-details').html(single_iam_group_template(data));
     showPopup();
 }
 function showIAMManagedPolicy(policy_arn) {
-    var data = iam_info['managed_policies'][policy_arn];
-    data['policy_name'] = policy_friendly_name(policy_arn);
-    data['report_id'] = policy_arn.replace(/:/g, '-').replace(/\//g, '-');
+    var data = iam_info['ManagedPolicies'][policy_arn];
+    data['PolicyName'] = policy_friendly_name(policy_arn);
+    data['ReportId'] = policy_arn.replace(/:/g, '-').replace(/\//g, '-');
     showIAMPolicy(data);
 }
 function showIAMInlinePolicy(iam_entity_type, iam_entity_name, policy_name) {
-    var data = iam_info[iam_entity_type][iam_entity_name]['policies'][policy_name];
-    data['policy_name'] = policy_name;
-    data['report_id'] = iam_entity_type + '-' + iam_entity_name + '-' + policy_name;
+    var data = iam_info[make_title(iam_entity_type)][iam_entity_name]['Policies'][policy_name];
+    data['PolicyName'] = policy_name;
+    data['ReportId'] = iam_entity_type + '-' + iam_entity_name + '-' + policy_name;
     showIAMPolicy(data);
 }
 function showIAMPolicy(data) {
@@ -257,12 +257,12 @@ function showIAMPolicy(data) {
     $(id).toggle();
 }
 function showIAMRole(role_name) {
-    var data = iam_info['roles'][role_name];
+    var data = iam_info['Roles'][role_name];
     $('#overlay-details').html(single_iam_role_template(data));
     showPopup();
 }
 function showIAMUser(user_name) {
-    var data = iam_info['users'][user_name];
+    var data = iam_info['Users'][user_name];
     $('#overlay-details').html(single_iam_user_template(data));
     showPopup();
 }
@@ -391,12 +391,12 @@ function load_config(keyword) {
             }
             else if (keyword == 'iam') {
                 info = iam_info;
-                load_aws_config_from_json(iam_info['groups'], 'iam_group', 2);
-                load_aws_config_from_json(iam_info['permissions'], 'iam_permission', 1);
-                load_aws_config_from_json(iam_info['roles'], 'iam_role', 2);
-                load_aws_config_from_json(iam_info['users'], 'iam_user', 2);
-                if ('credential_report' in iam_info) {
-                    load_aws_config_from_json(iam_info['credential_report']['<root_account>'], 'iam_credential_report', 1);
+                load_aws_config_from_json(iam_info['Groups'], 'iam_Group', 2);
+                load_aws_config_from_json(iam_info['Permissions'], 'iam_Permission', 1);
+                load_aws_config_from_json(iam_info['Roles'], 'iam_Role', 2);
+                load_aws_config_from_json(iam_info['Users'], 'iam_User', 2);
+                if ('CredentialReport' in iam_info) {
+                    load_aws_config_from_json(iam_info['CredentialReport']['<root_account>'], 'iam_CredentialReport', 1);
                 }
                 highlight_violations(iam_info['violations'], 'iam');
                 load_aws_config_from_json(iam_info['violations'], 'iam_dashboard', 1);
@@ -477,13 +477,10 @@ function list_findings(keyword, violations, finding) {
 }
 
 // Handlebars helpers
-Handlebars.registerHelper('displayPolicy', function(blob, decodeURI) {
-    var policy = '';
-    if (decodeURI) {
-         policy = decodeURIComponent(blob);
-    } else {
-        policy = JSON.stringify(eval("(" + blob + ")"), null, 2);
-    }
+Handlebars.registerHelper('displayPolicy', function(blob) {
+    // this fails now that the policies are all JSON... check in chrome though
+    //policy = JSON.stringify(eval("(" + blob + ")"), null, 2);
+    var policy = JSON.stringify(blob, null, 2);
     policy = policy.replace(/ /g, '&nbsp;');
     policy = policy.replace(/\n/g, '<br />');
     return policy;
@@ -540,15 +537,26 @@ Handlebars.registerHelper('s3_grant_2_icon', function(value) {
     return '<i class="' + ((value == true) ? 'glyphicon glyphicon-ok' : '') +'"></i>';
 });
 Handlebars.registerHelper('good_bad_icon', function(violation, bucket_name, item) {
-    var index = s3_info['violations'][violation]['items'].indexOf(item);
+    index = -1;
+    /* TODO: this shouldn't happen in JS... will take forever on buckets that contain many files */
+    for (i in s3_info['violations'][violation]['macro_items']) {
+        if (s3_info['violations'][violation]['macro_items'][i] == bucket_name) {
+            if (s3_info['violations'][violation]['items'][i] == item) {
+                index = i;
+                break;
+            }
+        }
+    }
     if (index > -1) {
         return '<i class="glyphicon glyphicon-remove"></i>';
     } else {
         var key_details = s3_info['buckets'][bucket_name]['keys'][item];
-        if (((violation == 'object-perms-mismatch-bucket-perms') && !('grants' in key_details)) 
-            ||((violation == 'unencrypted-s3-objects') && !('encrypted' in key_details))) {
+        if (((violation == 'object-perms-mismatch-bucket-perms') && !('grantees' in key_details)) 
+            ||((violation == 'unencrypted-s3-objects') && !('ServerSideEncryption' in key_details))) {
+            /* Say that we don't know if there's no corresponding attribute for the key */
             return '<i class="glyphicon glyphicon-question-sign"></i>';
         } else {
+            /* Mark as good */
             return '<i class="glyphicon glyphicon-ok finding-good"></i>';
         }
     }
@@ -646,27 +654,11 @@ Handlebars.registerHelper('find_ec2_object_attribute', function(path, id, attrib
 Handlebars.registerHelper('format_date', function(timestamp) {
     return new Date(timestamp * 1000).toString();
 });
-Handlebars.registerHelper('format_network_acls', function (acls, direction) {
-    r = '<table class="table-striped" width="100%">';
-    r += '<tr><td width="20%" class="text-center">Rule number</td>';
-    r += '<td width="20%" class="text-center">Port</td>';
-    r += '<td width="20%" class="text-center">Protocol</td>';
-    r += '<td width="20%" class="text-center">' + direction + '</td>';
-    r += '<td width="20%" class="text-center">Action</td></tr>';
-    for (a in acls) {
-        r += '<tr>';
-        r += '<td width="20%" class="text-center">' + acls[a]['rule_number'] + '</td>';
-        r += '<td width="20%" class="text-center">' + acls[a]['port_range'] + '</td>';
-        r += '<td width="20%" class="text-center">' + acls[a]['protocol'] + '</td>';
-        r += '<td width="20%" class="text-center">' + acls[a]['cidr_block'] + '</td>';
-        r += '<td width="20%" class="text-center">' + acls[a]['rule_action'] + '</td>';
-        r += '</tr>';
-    }
-    r += '</table>';
-    return r;
-});
-Handlebars.registerHelper('make_title', function(title) {
+var make_title = function(title) {
     return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase());
+}
+Handlebars.registerHelper('make_title', function(title) {
+    return make_title(title);
 });
 Handlebars.registerHelper('entity_details_callback', function(type) {
     if (type == 'roles') {
@@ -724,5 +716,5 @@ var policy_friendly_name = function(arn) {
     return arn.split(':policy/').pop();
 }
 Handlebars.registerHelper('policy_report_id', function(policy, a, b, c) {
-    policy['report_id'] = a + '-' + b + '-' + c;
+    policy['ReportId'] = a + '-' + b + '-' + c;
 });

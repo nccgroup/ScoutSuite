@@ -6,12 +6,12 @@
         "callback_args": [ "_ARG_0_", "_ARG_1_" ],
         "level": "_ARG_3_",
         "targets": [
-            ["All users", "write", "Bucket world-writable", "danger"],
-            ["All users", "write_acp", "Bucket's permissions world-writable", "danger"],
-            ["All users", "read", "Bucket world-listable", "warning"],
-            ["Authenticated users", "write", "Bucket world-writable", "danger"],
-            ["Authenticated users", "write_acp", "Bucket's permissions world-writable", "danger"],
-            ["Authenticated users", "read", "Bucket world-listable", "warning"]
+            ["http://acs.amazonaws.com/groups/global/AllUsers", "write", "Bucket world-writable (anonymous)", "danger"],
+            ["http://acs.amazonaws.com/groups/global/AllUsers", "write_acp", "Bucket's permissions world-writable (anonymous)", "danger"],
+            ["http://acs.amazonaws.com/groups/global/AllUsers", "read", "Bucket world-listable (anonymous)", "warning"],
+            ["http://acs.amazonaws.com/groups/global/AuthenticatedUsers", "write", "Bucket world-writable", "danger"],
+            ["http://acs.amazonaws.com/groups/global/AuthenticatedUsers", "write_acp", "Bucket's permissions world-writable", "danger"],
+            ["http://acs.amazonaws.com/groups/global/AuthenticatedUsers", "read", "Bucket world-listable", "warning"]
         ],
         "questions": [
             "Report _DESCRIPTION_"
@@ -47,16 +47,6 @@
             "Report S3 objects whose permissions do not match their bucket's permissions"
         ]
     },
-    "static-website-enabled": {
-        "description": "Static website hosting enabled",
-        "entity": "buckets",
-        "callback": "checkStaticWebsiteHosting",
-        "callback_args": [],
-        "level": "warning",
-        "questions": [
-            "Report S3 buckets with static website hosting enabled"
-        ]
-    },
     "only-ip-based-policy": {
         "description": "IP-based bucket policy",
         "entity": "buckets",
@@ -74,10 +64,10 @@
         "callback_args": ["_ARG_1_"],
         "level": "danger",
         "targets": [
-            ["delete", "s3:DeleteObject"],
-            ["get", "s3:GetObject"],
-            ["list", "s3:ListBucket"],
-            ["put", "s3:PutObject"],
+            ["delete", "s3:Delete*"],
+            ["get", "s3:Get*"],
+            ["list", "s3:List*"],
+            ["put", "s3:Put*"],
             ["all", "s3:*"]
         ],
         "level": "danger",
