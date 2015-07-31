@@ -20,9 +20,6 @@ To install Scout2:
 
 	# Clone this repository.
 	$ git clone git@github.com:iSECPartners/Scout2.git
-	# Initialize and update the AWSUtils submodule
-	$ git submodule init
-	$ git submodule update
 
 	# install required packages:
 	$ pip install -r requirements.txt
