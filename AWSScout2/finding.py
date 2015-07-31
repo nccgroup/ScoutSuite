@@ -1,11 +1,11 @@
-#!/usr/bin/env python2
-
-# Import AWS Scout2 tools
 from AWSScout2.filter import *
 
-# Import other third-party packages
+# Import third-party packages
 import dateutil.parser
 
+#
+# Base finding class
+#
 class Finding(Filter):
 
     def __init__(self, description, entity, callback, callback_args, level, questions):

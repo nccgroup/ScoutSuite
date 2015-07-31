@@ -1,9 +1,10 @@
-#!/usr/bin/env python2
+# Import future print
+from __future__ import print_function
 
 # Import opinel
 from opinel.utils import *
 
-# Import third-party packages
+# Import stock packages
 import argparse
 import datetime
 from distutils import dir_util
@@ -11,12 +12,18 @@ import copy
 import json
 import os
 import re
-import requests
 import shutil
 import sys
 import traceback
-import urllib2
 
+# Python2 vs Python3
+try:
+    import urllib2
+except ImportError:
+    import urllib.request as urllib2
+
+# Import third-party packages
+import requests
 
 ########################################
 # Globals
@@ -81,7 +88,7 @@ def analyze_config(finding_dictionary, filter_dictionary, config, keyword, force
             entity_path = f.entity.split('.')
             process_finding(config, f)
         config['filters'] = filter_dictionary
-    except Exception, e:
+    except Exception as e:
         printException(e)
         pass
     # Violations
@@ -91,7 +98,7 @@ def analyze_config(finding_dictionary, filter_dictionary, config, keyword, force
             entity_path = finding.entity.split('.')
             process_finding(config, finding)
         config['violations'] = finding_dictionary
-    except Exception, e:
+    except Exception as e:
         printException(e)
         pass
     save_config_to_file(config, keyword, force_write)
@@ -139,7 +146,7 @@ def process_entities(config, finding, entity_path):
         for key in config[entities]:
             process_entities(config[entities][key], finding, copy.deepcopy(entity_path))
     else:
-        print 'Unknown error'
+        printError('Unknown error.')
 
 def process_finding(config, finding):
     entity_path = finding.entity.split('.')
@@ -158,7 +165,7 @@ def create_new_scout_report(environment_name, force_write):
     if not os.path.exists(AWSCONFIG_DIR):
         return
     new_file = 'report-' + environment_name + '.html'
-    print 'Creating %s ...' % new_file
+    printInfo('Creating %s ...' % new_file)
     if prompt_4_overwrite(new_dir, force_write):
         if not os.path.exists(new_dir):
             os.makedirs(new_dir)
@@ -194,7 +201,7 @@ def load_from_json(keyword, var):
 
 def open_file(keyword, force_write):
     out_dir = AWSCONFIG_DIR
-    print 'Saving ' + keyword + ' data...'
+    printInfo('Saving ' + keyword + ' data...')
     if not os.path.exists(out_dir):
         os.makedirs(out_dir)
     filename = out_dir + '/' + keyword.lower().replace(' ','_') + '_config.js'
@@ -206,13 +213,16 @@ def open_file(keyword, force_write):
 def prompt_4_yes_no(question):
     while True:
         sys.stdout.write(question + ' (y/n)? ')
-        choice = raw_input().lower()
+        try:
+            choice = raw_input().lower()
+        except:
+            choice = input().lower()
         if choice == 'yes' or choice == 'y':
             return True
         elif choice == 'no' or choice == 'n':
             return False
         else:
-            print '\'%s\' is not a valid answer. Enter \'yes\'(y) or \'no\'(n).' % choice
+            printError('\'%s\' is not a valid answer. Enter \'yes\'(y) or \'no\'(n).' % choice)
 
 def prompt_4_overwrite(filename, force_write):
     # Do not prompt if the file does not exist or force_write is set
@@ -232,14 +242,14 @@ def save_config_to_file(blob, keyword, force_write):
     try:
         with open_file(keyword, force_write) as f:
             keyword = keyword.lower().replace(' ','_')
-            print >>f, keyword + '_info ='
+            print(keyword + '_info =', file = f)
             write_data_to_file(f, blob, force_write)
-    except Exception, e:
+    except Exception as e:
         printException(e)
         pass
 
 def write_data_to_file(f, blob, force_write):
-    print >>f, '%s' % json.dumps(blob, indent=4, separators=(',', ': '), sort_keys=True, cls=Scout2Encoder)
+    print('%s' % json.dumps(blob, indent=4, separators=(',', ': '), sort_keys=True, cls=Scout2Encoder), file = f)
 
 
 ########################################

@@ -1,8 +1,8 @@
-#!/usr/bin/env python2
-
 from AWSScout2.filter import *
 
-
+#
+# IAM filters
+#
 class IamFilter(Filter):
 
     def __init__(self, description, entity, callback, callback_args):

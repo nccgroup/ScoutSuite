@@ -1,5 +1,8 @@
-#!/usr/bin/env python2
+from opinel.utils import printException
 
+#
+# Base filter
+#
 class Filter(object):
 
     def __init__(self, description, entity, callback, callback_args):
@@ -28,8 +31,8 @@ class Filter(object):
             del self.items[target]
             if macro_item:
                 del self.macro_items[target]
-        except Exception, e:
-            print e
+        except Exception as e:
+            printException(e)
             pass
 
     def checkedNewItem(self):

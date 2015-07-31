@@ -1,12 +1,12 @@
-#!/usr/bin/env python2
-
-# Import Scout2 tools
 from AWSScout2.finding import *
 
 # Import stock packages
 import json
 import re
 
+#
+# S3 findings
+#
 class S3Finding(Finding):
 
     def __init__(self, description, entity, callback, callback_args, level, questions):

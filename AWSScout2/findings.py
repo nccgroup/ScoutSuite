@@ -1,5 +1,3 @@
-#!/usr/bin/env python2
-
 # Import AWS Scout2 finding-related classes
 from AWSScout2.finding_cloudtrail import *
 from AWSScout2.finding_ec2 import *
@@ -10,6 +8,7 @@ from AWSScout2.finding_s3 import *
 # Import opinel
 from opinel.utils import *
 
+# Import stock packages
 import copy
 import fnmatch
 import os
@@ -46,9 +45,9 @@ def load_findings(service, ruleset_name, customize = False):
         filename = 'rules/findings-' + service + '.' + ruleset_name + '.json'
         with open(filename) as f:
             findings = json.load(f)
-    except Exception, e:
+    except Exception as e:
         printException(e)
-        print 'Error: the ruleset name entered (%s) does not match an existing configuration.' % ruleset_name
+        printError('Error: the ruleset name entered (%s) does not match an existing configuration.' % ruleset_name)
         return
 
     # Special case
@@ -97,7 +96,7 @@ def new_finding(service, customize, key, description, entity, callback_name, cal
 
     # If this is a custom rule, prompt users for answers
     if customize and questions and len(questions):
-        print ''
+        print('')
         activate_rule_question = set_description(questions.pop(0), description)
         if prompt_4_yes_no(activate_rule_question):
             for question in questions:
@@ -153,7 +152,7 @@ def set_description(string, description):
         if name == 'description':
             string = string.replace(attribute[0], description)
         else:
-            print 'The field %s is not supported yet for injection in the questions'
+            printError('The field %s is not supported yet for injection in the questions')
     return string
 
 def get_finding_variables(keyword):

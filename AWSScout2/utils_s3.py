@@ -154,7 +154,7 @@ def get_s3_bucket(s3_clients, q, s3_params):
                 get_s3_bucket_keys(s3_client, bucket['Name'], bucket, s3_params['check_encryption'], s3_params['check_acls'])
             s3_info['buckets'][bucket['Name']] = bucket
             show_status(s3_info, False)
-        except Exception, e:
+        except Exception as e:
             printError('Failed to get config for %s' % bucket['Name'])
             printException(e)
         finally:

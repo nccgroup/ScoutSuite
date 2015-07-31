@@ -1,7 +1,8 @@
-#!/usr/bin/env python2
-
 from AWSScout2.finding import *
 
+#
+# RDS findings
+#
 class RdsFinding(Finding):
 
     def __init__(self, description, entity, callback, callback_args, level, questions):

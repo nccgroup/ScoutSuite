@@ -1,7 +1,8 @@
-#!/usr/bin/env python2
-
 from AWSScout2.finding import *
 
+#
+# CloudTrail findings
+#
 class CloudTrailFinding(Finding):
 
     def __init__(self, description, entity, callback, callback_args, level, questions):

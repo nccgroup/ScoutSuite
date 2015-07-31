@@ -1,5 +1,3 @@
-#!/usr/bin/env python2
-
 # Import opinel
 from opinel.utils import *
 from opinel.utils_cloudtrail import *
@@ -20,7 +18,7 @@ def analyze_cloudtrail_config(cloudtrail_info, force_write):
 def get_cloudtrail_info(key_id, secret, session_token, selected_regions, fetch_ec2_gov):
     cloudtrail_info = {}
     cloudtrail_info['regions'] = {}
-    print 'Fetching CloudTrail data...'
+    printInfo('Fetching CloudTrail data...')
     for region in build_region_list('cloudtrail', selected_regions, fetch_ec2_gov):
         cloudtrail_info['regions'][region] = {}
         cloudtrail_info['regions'][region]['name'] = region
@@ -44,8 +42,7 @@ def get_region_trails(connection_info, q, params):
             for key in ['IsLogging', 'LatestDeliveryTime', 'LatestDeliveryError', 'StartLoggingTime', 'StopLoggingTime', 'LatestNotificationTime', 'LatestNotificationError', 'LatestCloudWatchLogsDeliveryError', 'LatestCloudWatchLogsDeliveryTime']:
                 trail_info[key] = trail_details[key] if key in trail_details else None
             cloudtrail_info['regions'][region]['trails'][trail['Name']] = trail_info
-      except Exception, e:
-          print ':('
+      except Exception as e:
           printException(e)
       finally:
         q.task_done()

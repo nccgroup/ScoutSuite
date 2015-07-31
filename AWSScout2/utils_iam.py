@@ -1,4 +1,3 @@
-
 # Import opinel
 from opinel.utils_iam import *
 
@@ -7,7 +6,7 @@ from AWSScout2.utils import *
 from AWSScout2.filters import *
 from AWSScout2.findings import *
 
-# Import third-party packages
+# Import stock packages
 import base64
 import json
 import urllib
@@ -18,7 +17,7 @@ import urllib
 ########################################
 
 def analyze_iam_config(iam_info, force_write):
-    sys.stdout.write('Analyzing IAM data...\n')
+    printInfo('Analyzing IAM data...')
     analyze_config(iam_finding_dictionary, iam_filter_dictionary, iam_info, 'IAM', force_write)
 
 def get_groups_info(iam_client, iam_info):
@@ -40,7 +39,7 @@ def get_group_info(iam_client, q, params):
             group['Policies'] = get_inline_policies(iam_client, iam_info, 'group', group['Name'])
             iam_info['Groups'][group['Name']] = group
             show_status(iam_info, 'Groups', False)
-        except Exception, e:
+        except Exception as e:
             printException(e)
             pass
         finally:
@@ -62,17 +61,17 @@ def get_iam_info(key_id, secret, session_token, iam_info):
     # Generate the report early so that download doesn't fail with "ReportInProgress".
     try:
         iam_client.generate_credential_report()
-    except Exception, e:
+    except Exception as e:
         pass
-    print 'Fetching IAM users...'
+    printInfo('Fetching IAM users...')
     get_users_info(iam_client, iam_info)
-    print 'Fetching IAM groups...'
+    printInfo('Fetching IAM groups...')
     get_groups_info(iam_client, iam_info)
-    print 'Fetching IAM roles...'
+    printInfo('Fetching IAM roles...')
     get_roles_info(iam_client, iam_info)
-    print 'Fetching IAM policies...'
+    printInfo('Fetching IAM policies...')
     get_managed_policies(iam_client, iam_info)
-    print 'Fetching IAM credential report...'
+    printInfo('Fetching IAM credential report...')
     get_credential_report(iam_client, iam_info)
 
 def get_permissions(policy_document, permissions, keyword, name, policy_name, is_managed_policy = False):
@@ -169,7 +168,7 @@ def get_managed_policy(iam_client, q, params):
                     iam_info[type_field][entity[name_field]]['ManagedPolicies'].append(policy['Arn'])
                     get_permissions(policy_version['Document'], iam_info['Permissions'], type_field, entity[name_field], policy['Arn'], True)
             show_status(iam_info, 'ManagedPolicies', False)
-        except Exception, e:
+        except Exception as e:
             printException(e)
             pass
         finally:
@@ -221,7 +220,7 @@ def get_role_info(iam_client, q, params):
                 role['InstanceProfiles'][profile['Arn']]['Name'] = profile['InstanceProfileName']
             iam_info['Roles'][role['Name']] = role
             show_status(iam_info, 'Roles', False)
-        except Exception, e:
+        except Exception as e:
             printException(e)
             pass
         finally:
@@ -231,7 +230,7 @@ def get_credential_report(iam_client, iam_info):
     iam_report = {}
     try:
         report = iam_client.get_credential_report()['Content']
-        lines = report.split('\n')
+        lines = report.splitlines()
         keys = lines[0].split(',')
         for line in lines[1:]:
             values = line.split(',')
@@ -239,9 +238,9 @@ def get_credential_report(iam_client, iam_info):
             for key, value in zip(keys, values):
                 iam_report[values[0]][key] = value
         iam_info['CredentialReport'] = iam_report
-    except Exception, e:
-        print 'Failed to generate/download a credential report.'
-        print e
+    except Exception as e:
+        printError('Failed to generate/download a credential report.')
+        printException(e)
 
 def get_users_info(iam_client, iam_info):
     users = handle_truncated_response(iam_client.list_users, {}, ['Users'])
@@ -262,13 +261,13 @@ def get_user_info(iam_client, q, params):
             user['Groups'] = handle_truncated_response(iam_client.list_groups_for_user, {'UserName': user['Name']}, ['Groups'])['Groups']
             try:
                 user['LoginProfile'] = iam_client.get_login_profiles(UserName = user['Name'])['LoginProfile']
-            except Exception, e:
+            except Exception as e:
                 pass
             user['AccessKeys'] = iam_client.list_access_keys(UserName = user['Name'])['AccessKeyMetadata']
             user['MFADevices'] = iam_client.list_mfa_devices(UserName = user['Name'])['MFADevices']
             iam_info['Users'][user['Name']] = user
             show_status(iam_info, 'Users', False)
-        except Exception, e:
+        except Exception as e:
             printException(e)
             pass
         finally:

@@ -1,5 +1,3 @@
-#!/usr/bin/env python2
-
 # Import AWS Scout2 filter-related classes
 from AWSScout2.filter import *
 from AWSScout2.filter_ec2 import *
@@ -31,8 +29,8 @@ def load_filters(service):
         filename = 'rules/filters-' + service + '.json'
         with open(filename) as f:
             filters = json.load(f)
-    except Exception, e:
-        print 'Error: no filters are defined for the %s service.' % service
+    except Exception as e:
+        printError('Error: no filters are defined for the %s service.' % service)
         return
 
     # Parse rules

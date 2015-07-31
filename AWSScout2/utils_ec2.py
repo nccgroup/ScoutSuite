@@ -1,5 +1,3 @@
-#!/usr/bin/env python2
-
 # Import opinel
 from opinel.utils import *
 from opinel.utils_ec2 import *
@@ -17,7 +15,7 @@ from AWSScout2.findings import *
 ########################################
 
 def analyze_ec2_config(ec2_info, force_write):
-    print 'Analyzing EC2 data...'
+    printInfo('Analyzing EC2 data...')
     analyze_config(ec2_finding_dictionary, ec2_filter_dictionary, ec2_info, 'EC2', force_write)
     # Custom EC2 analysis
     check_for_elastic_ip(ec2_info)
@@ -68,7 +66,7 @@ def link_elastic_ips(ec2_info):
                                 if not ec2_info['regions'][r]['vpcs'][v]['instances'][i]['PublicIpAddress']:
                                     ec2_info['regions'][r]['vpcs'][v]['instances'][i]['PublicIpAddress'] = eip
                                 elif ec2_info['regions'][r]['vpcs'][v]['instances'][i]['PublicIpAddress'] != eip:
-                                    print 'Warning: public IP address exists (%s) for an instance associated with an elastic IP (%s)' % (ec2_info['regions'][r]['vpcs'][v]['instances'][i]['PublicIpAddress'], eip)
+                                    printInfo('Warning: public IP address exists (%s) for an instance associated with an elastic IP (%s)' % (ec2_info['regions'][r]['vpcs'][v]['instances'][i]['PublicIpAddress'], eip))
 
 #
 # List the publicly available IPs/Ports
@@ -113,7 +111,7 @@ def get_ec2_info(key_id, secret, session_token, selected_regions, fetch_ec2_gov)
     for region in all_regions:
         ec2_info['regions'][region] = {}
         ec2_info['regions'][region]['name'] = region
-    print 'Fetching EC2 data...'
+    printInfo('Fetching EC2 data...')
     formatted_status('region', 'Elastic LBs', 'Elastic IPs', 'VPCs', 'Sec. Groups', 'Instances', True)
     ec2_targets = ['elastic_ips', 'elbs', 'vpcs', 'security_groups', 'instances']
     for region in all_regions:
@@ -142,7 +140,7 @@ def get_elastic_ip_info(ec2_client, q, params):
             region_info, eip = q.get()
             manage_dictionary(region_info['elastic_ips'], eip['PublicIp'], eip)
             show_status(region_info, 'elastic_ips', False)
-        except Exception, e:
+        except Exception as e:
             printException(e)
             pass
         finally:
@@ -182,7 +180,7 @@ def get_elb_info(elb_client, q, params):
             manage_dictionary(region_info, 'elbs', {})
             manage_dictionary(region_info['elbs'], elb_name, {})
             region_info['elbs'][elb_name] = elb
-        except Exception, e:
+        except Exception as e:
             printException(e)
             pass
         finally:
@@ -215,7 +213,7 @@ def get_instance_info(ec2_client, q, paramas):
             region_info['vpcs'][vpc_id]['instances'][i['InstanceId']] = instance
             # Status update
             show_status(region_info['vpcs'], 'instances', False)
-        except Exception, e:
+        except Exception as e:
             printException(e)
             pass
         finally:
@@ -267,7 +265,7 @@ def get_vpc_info(ec2_client, q, params):
                 vpc['network_acls'][acl['NetworkAclId']].pop('Entries')
             region_info['vpcs'][vpc['VpcId']].update(vpc)
             show_status(region_info, 'vpcs', False, True)
-        except Exception, e:
+        except Exception as e:
             printException(e)
             pass
         finally:
@@ -290,7 +288,7 @@ def get_security_group_info(ec2_client, q, params):
             manage_dictionary(region_info['vpcs'][vpc_id]['security_groups'], group['GroupId'], {})
             region_info['vpcs'][vpc_id]['security_groups'][group['GroupId']] = parse_security_group(ec2_client, group)
             show_status(region_info['vpcs'], 'security_groups', False)
-        except Exception, e:
+        except Exception as e:
             printException(e)
             pass
         finally:
@@ -417,8 +415,8 @@ def thread_region(connection_info, q, ec2_params):
                     ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
                     get_instances_info(ec2_client, region_info)
             else:
-                print 'Error'
-        except Exception, e:
+                printError('Error: %s are not supported yet.' % target)
+        except Exception as e:
             printException(e)
             pass
         finally:

@@ -1,10 +1,14 @@
-#!/usr/bin/env python2
-
 from AWSScout2.finding import *
 
+# Import stock packages
 import datetime
+
+# Import third-party packages
 import dateutil.parser
 
+#
+# IAM findings
+#
 class IamFinding(Finding):
 
     def __init__(self, description, entity, callback, callback_args, level, questions):

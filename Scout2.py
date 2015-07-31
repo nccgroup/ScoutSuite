@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 # Import third-party packages
 import os
@@ -10,8 +10,8 @@ try:
     from opinel.utils_ec2 import *
     from opinel.utils_iam import *
 except:
-    print 'Error: Scout2 now depends on the opinel package (previously AWSUtils submodule). Install all the requirements with the following command:'
-    print '  $ pip install -r requirements.txt'
+    print('Error: Scout2 now depends on the opinel package (previously AWSUtils submodule). Install all the requirements with the following command:')
+    print('  $ pip install -r requirements.txt')
     sys.exit()
 
 # Import Scout2 tools
@@ -41,11 +41,11 @@ def main(args):
     # Create the list of services to analyze
     services = build_services_list(args.services, args.skipped_services)
     if not len(services):
-        print 'Error: list of Amazon Web Services to be analyzed is empty.'
+        printError('Error: list of Amazon Web Services to be analyzed is empty.')
         return -1
 
     # Check the version of boto
-    if not args.fetch_local and not check_boto3_version():
+    if not args.fetch_local and False: # and not check_requirements(): # check_boto3_version():
         return -1
 
     # Fetch credentials
@@ -53,7 +53,7 @@ def main(args):
 
     # Check that credentials, if required, are available
     if not args.fetch_local and key_id is None:
-        print 'Error: could not find AWS credentials. Use the --help option for more information.'
+        printError('Error: could not find AWS credentials. Use the --help option for more information.')
         return -1
 
     # If local analysis, overwrite results
@@ -84,8 +84,8 @@ def main(args):
                 cloudtrail_info = load_info_from_json('cloudtrail', environment_name)
             # Analyze the CloudTrail config and save data to a local file
             analyze_cloudtrail_config(cloudtrail_info, args.force_write)
-        except Exception, e:
-            print 'Error: could not fetch and/or analyze CloudTrail configuration'
+        except Exception as e:
+            printError('Error: could not fetch and/or analyze CloudTrail configuration.')
             printException(e)
 
     ##### IAM
@@ -98,15 +98,15 @@ def main(args):
             # Fetch data from AWS
             if not args.fetch_local:
                 get_iam_info(key_id, secret, token, iam_info)
-        except Exception, e:
-            print 'Error: could not fetch IAM configuration'
+        except Exception as e:
+            printError('Error: could not fetch IAM configuration.')
             printException(e)
         try:
             # Analyze the IAM config and save data to a local file
             if 'ec2' not in services:
                 analyze_iam_config(iam_info, args.force_write)
-        except Exception, e:
-            print 'Error: could not analyze IAM configuration'
+        except Exception as e:
+            printError('Error: could not analyze IAM configuration.')
             printException(e)
 
     ##### EC2
@@ -119,8 +119,8 @@ def main(args):
                 ec2_info = load_info_from_json('ec2', environment_name)
             # Analyze the EC2 config and save data to a local file
             analyze_ec2_config(ec2_info, args.force_write)
-        except Exception, e:
-            print 'Error: could not fetch and/or analyze EC2 configuration'
+        except Exception as e:
+            printError('Error: could not fetch and/or analyze EC2 configuration.')
             printException(e)
 
     ##### RDS
@@ -131,8 +131,8 @@ def main(args):
             else:
                 rds_info = load_info_from_json('rds', environment_name)
             analyze_rds_config(rds_info, args.force_write)
-        except Exception, e:
-            print 'Error: could not fetch and/or analyze RDS configuration'
+        except Exception as e:
+            printError('Error: could not fetch and/or analyze RDS configuration.')
             printException(e)
 
     ##### S3
@@ -143,7 +143,7 @@ def main(args):
                 if args.buckets or args.skipped_buckets:
                     try:
                         s3_info = load_info_from_json('s3', environment_name)
-                    except Exception, e:
+                    except Exception as e:
                         pass
                 else:
                     s3_info = {}
@@ -157,8 +157,8 @@ def main(args):
                 s3_info = load_info_from_json('s3', environment_name)
             # Analyze the S3 config and save data to a local file
             analyze_s3_config(s3_info, args.force_write)
-        except Exception, e:
-            print 'Error: could not fetch and/or analyze S3 configuration'
+        except Exception as e:
+            printError('Error: could not fetch and/or analyze S3 configuration.')
             printException(e)
 
     ##### Analyzis that requires multiple configuration
@@ -166,8 +166,8 @@ def main(args):
         try:
             match_instances_and_roles(ec2_info, iam_info)
             analyze_iam_config(iam_info, args.force_write)
-        except Exception, e:
-            print 'Error: EC2 or IAM configuration is missing'
+        except Exception as e:
+            printError('Error: EC2 or IAM configuration is missing.')
             printException(e)
 
     ##### Rename data based on environment's name

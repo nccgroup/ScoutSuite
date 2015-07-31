@@ -16,7 +16,7 @@ from AWSScout2.findings import *
 ########################################
 
 def analyze_rds_config(rds_info, force_write):
-    print 'Analyzing RDS data...'
+    printInfo('Analyzing RDS data...')
     analyze_config(rds_finding_dictionary, rds_filter_dictionary, rds_info, 'RDS', force_write)
     # Custom RDS analysis
     check_for_duplicate(rds_info)
@@ -35,7 +35,7 @@ def get_rds_info(key_id, secret, session_token, selected_regions, fetch_gov):
     for region in build_region_list('rds', selected_regions, include_gov = fetch_gov):
         rds_info['regions'][region] = {}
         rds_info['regions'][region]['name'] = region
-    thread_work((key_id, secret, session_token), rds_info, rds_info['regions'], get_rds_region, show_status)
+    thread_work((key_id, secret, session_token), rds_info, rds_info['regions'], get_rds_region)
     return rds_info
 
 def get_rds_region(connection_info, q, params):
@@ -46,7 +46,7 @@ def get_rds_region(connection_info, q, params):
             rds_client = connect_rds(key_id, secret, session_token, region)
             get_security_groups_info(rds_client, rds_info['regions'][region])
             get_instances_info(rds_client, rds_info['regions'][region])
-        except Exception, e:
+        except Exception as e:
             printException(e)
             pass
         finally:
@@ -78,10 +78,3 @@ def get_instances_info(rds_client, region_info):
             # parameter_groups , security_groups, vpc_security_gropus
             dbi_info[key] = dbi[key]
         region_info['instances'][dbi['DBInstanceIdentifier']] = dbi_info
-
-def show_status(rds_info, stop_event):
-    print 'Fetching RDS data...'
-    while(not stop_event.is_set()):
-        # This one is quiet for now...
-        stop_event.wait(1)
-        pass

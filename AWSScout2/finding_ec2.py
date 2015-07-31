@@ -1,11 +1,15 @@
-#!/usr/bin/env python2
-
 from AWSScout2.finding import *
 
+# Import stock packages
 import json
-import netaddr
 import re
 
+# Import third-party packages
+import netaddr
+
+#
+# EC2 findings
+#
 class Ec2Finding(Finding):
 
     re_port_range = re.compile(r'(\d+)\-(\d+)')

@@ -1,8 +1,8 @@
-#!/usr/bin/env python2
-
 from AWSScout2.filter import *
 
-
+#
+# EC2 filters
+#
 class Ec2Filter(Filter):
 
     def __init__(self, description, entity, callback, callback_args):
