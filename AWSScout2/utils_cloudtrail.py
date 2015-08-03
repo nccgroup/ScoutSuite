@@ -15,15 +15,13 @@ from AWSScout2.findings import *
 def analyze_cloudtrail_config(cloudtrail_info, force_write):
     analyze_config(cloudtrail_finding_dictionary, cloudtrail_filter_dictionary, cloudtrail_info, 'CloudTrail', force_write)
 
-def get_cloudtrail_info(key_id, secret, session_token, selected_regions, fetch_ec2_gov):
-    cloudtrail_info = {}
-    cloudtrail_info['regions'] = {}
+def get_cloudtrail_info(key_id, secret, session_token, service_config, selected_regions, fetch_gov):
+    manage_dictionary(service_config, 'regions', {})
     printInfo('Fetching CloudTrail data...')
-    for region in build_region_list('cloudtrail', selected_regions, fetch_ec2_gov):
-        cloudtrail_info['regions'][region] = {}
-        cloudtrail_info['regions'][region]['name'] = region
-    thread_work((key_id, secret, session_token), cloudtrail_info, cloudtrail_info['regions'], get_region_trails)
-    return cloudtrail_info
+    for region in build_region_list('cloudtrail', selected_regions, fetch_gov):
+        manage_dictionary(service_config['regions'], region, {})
+        service_config['regions'][region]['name'] = region
+    thread_work((key_id, secret, session_token), service_config, service_config['regions'], get_region_trails)
 
 def get_region_trails(connection_info, q, params):
     key_id, secret, session_token = connection_info

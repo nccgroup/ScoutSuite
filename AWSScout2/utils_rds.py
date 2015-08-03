@@ -20,7 +20,6 @@ def analyze_rds_config(rds_info, force_write):
     analyze_config(rds_finding_dictionary, rds_filter_dictionary, rds_info, 'RDS', force_write)
     # Custom RDS analysis
     check_for_duplicate(rds_info)
-    save_config_to_file(rds_info, 'RDS', force_write)
 
 def check_for_duplicate(rds_info):
     # Backup disabled also triggers short-backup-retention, remove duplicates
@@ -29,14 +28,12 @@ def check_for_duplicate(rds_info):
             for instance_id in rds_info['violations']['backup-disabled'].items:
                 rds_info['violations']['short-backup-retention-period'].removeItem(instance_id)
 
-def get_rds_info(key_id, secret, session_token, selected_regions, fetch_gov):
-    rds_info = {}
-    rds_info['regions'] = {}
+def get_rds_info(key_id, secret, session_token, service_config, selected_regions, fetch_gov):
+    manage_dictionary(service_config, 'regions', {})
     for region in build_region_list('rds', selected_regions, include_gov = fetch_gov):
-        rds_info['regions'][region] = {}
-        rds_info['regions'][region]['name'] = region
-    thread_work((key_id, secret, session_token), rds_info, rds_info['regions'], get_rds_region)
-    return rds_info
+        manage_dictionary(service_config['regions'], region, {})
+        service_config['regions'][region]['name'] = region
+    thread_work((key_id, secret, session_token), service_config, service_config['regions'], get_rds_region)
 
 def get_rds_region(connection_info, q, params):
     key_id, secret, session_token = connection_info

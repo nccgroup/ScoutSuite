@@ -183,15 +183,14 @@ def get_s3_bucket_keys(s3_client, bucket_name, bucket, check_encryption, check_a
             except Exception as e:
                 continue
 
-def get_s3_info(key_id, secret, session_token, s3_info, selected_regions, fetch_ec2_gov, s3_params):
+def get_s3_info(key_id, secret, session_token, service_config, selected_regions, fetch_gov, s3_params):
     # h4ck :: Create multiple clients here to avoid propagation of credentials. This is necessary because s3 is a global service that requires to access the API via the right region endpoints...
     s3_clients = {}
-    for region in build_region_list('s3', selected_regions, include_gov = fetch_ec2_gov):
+    for region in build_region_list('s3', selected_regions, include_gov = fetch_gov):
         config = botocore.client.Config(region_name = region, signature_version ='s3v4')
         s3_clients[region] = connect_s3(key_id, secret, session_token, region_name = region, config = config)
     printInfo('Fetching S3 buckets data...')
-    get_s3_buckets(s3_clients, s3_info, s3_params)
-    return s3_info
+    get_s3_buckets(s3_clients, service_config, s3_params)
 
 def show_status(s3_info, newline = True):
     current = len(s3_info['buckets'])

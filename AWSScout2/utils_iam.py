@@ -52,11 +52,11 @@ def get_group_users(iam_client, group_name):
         users.append(user['UserName'])
     return users
 
-def get_iam_info(key_id, secret, session_token, iam_info):
-    manage_dictionary(iam_info, 'Groups', {})
-    manage_dictionary(iam_info, 'Permissions', {})
-    manage_dictionary(iam_info, 'Roles', {})
-    manage_dictionary(iam_info, 'Users', {})
+def get_iam_info(key_id, secret, session_token, service_config):
+    manage_dictionary(service_config, 'Groups', {})
+    manage_dictionary(service_config, 'Permissions', {})
+    manage_dictionary(service_config, 'Roles', {})
+    manage_dictionary(service_config, 'Users', {})
     iam_client = connect_iam(key_id, secret, session_token)
     # Generate the report early so that download doesn't fail with "ReportInProgress".
     try:
@@ -64,15 +64,15 @@ def get_iam_info(key_id, secret, session_token, iam_info):
     except Exception as e:
         pass
     printInfo('Fetching IAM users...')
-    get_users_info(iam_client, iam_info)
+    get_users_info(iam_client, service_config)
     printInfo('Fetching IAM groups...')
-    get_groups_info(iam_client, iam_info)
+    get_groups_info(iam_client, service_config)
     printInfo('Fetching IAM roles...')
-    get_roles_info(iam_client, iam_info)
+    get_roles_info(iam_client, service_config)
     printInfo('Fetching IAM policies...')
-    get_managed_policies(iam_client, iam_info)
+    get_managed_policies(iam_client, service_config)
     printInfo('Fetching IAM credential report...')
-    get_credential_report(iam_client, iam_info)
+    get_credential_report(iam_client, service_config)
 
 def get_permissions(policy_document, permissions, keyword, name, policy_name, is_managed_policy = False):
     manage_dictionary(permissions, 'Action', {})

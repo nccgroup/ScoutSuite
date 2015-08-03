@@ -17,7 +17,7 @@ except:
 # Import Scout2 tools
 from AWSScout2.filters import *
 from AWSScout2.findings import *
-from AWSScout2.utils_cloudtrail import * 
+from AWSScout2.utils_cloudtrail import *
 from AWSScout2.utils_ec2 import *
 from AWSScout2.utils_iam import *
 from AWSScout2.utils_rds import *
@@ -74,101 +74,59 @@ def main(args):
         load_findings(service, ruleset_name)
         load_filters(service)
 
-    ##### CloudTrail
-    if 'cloudtrail' in services:
+    ##### Fetch all supported services' configuration
+    aws_config = {}
+    for service in services:
+        method = globals()['get_' + service + '_info']
+        manage_dictionary(aws_config, service, {})
         try:
-            # Fetch data from AWS or an existing local file
             if not args.fetch_local:
-                cloudtrail_info = get_cloudtrail_info(key_id, secret, token, args.regions, args.fetch_gov)
+                # Reload data in specific cases...
+                try:
+                    if args.resume and service == 'iam':
+                        aws_config[service] = load_info_from_json(service, environment_name)
+                    if (args.buckets or args.skipped_buckets) and service == 's3':
+                        aws_config[service] = load_info_from_json(service, environment_name)
+                except Exception as e:
+                    pass
+                # Fetch data from AWS API
+                method_args = {}
+                method_args['key_id'] = key_id
+                method_args['secret'] = secret
+                method_args['session_token'] = token
+                method_args['service_config'] = aws_config[service]
+                if service != 'iam':
+                    method_args['selected_regions'] = args.regions
+                    method_args['fetch_gov'] = args.fetch_gov
+                if service == 's3':
+                    method_args['s3_params'] = {}
+                    method_args['s3_params']['check_encryption'] = args.check_s3_encryption
+                    method_args['s3_params']['check_acls'] = args.check_s3_acls
+                    method_args['s3_params']['checked_buckets'] = args.buckets
+                    method_args['s3_params']['skipped_buckets'] = args.skipped_buckets
+                method(**method_args)
             else:
-                cloudtrail_info = load_info_from_json('cloudtrail', environment_name)
-            # Analyze the CloudTrail config and save data to a local file
-            analyze_cloudtrail_config(cloudtrail_info, args.force_write)
+                # Fetch data from a local file
+                aws_config[service] = load_info_from_json(service, environment_name)
         except Exception as e:
-            printError('Error: could not fetch and/or analyze CloudTrail configuration.')
+            printError('Error: could not fetch %s configuration.' % service)
             printException(e)
 
-    ##### IAM
-    if 'iam' in services:
-        iam_info = {}
-        try:
-            # Fetch data from local file
-            if args.fetch_local or args.resume:
-                iam_info = load_info_from_json('iam', environment_name)
-            # Fetch data from AWS
-            if not args.fetch_local:
-                get_iam_info(key_id, secret, token, iam_info)
-        except Exception as e:
-            printError('Error: could not fetch IAM configuration.')
-            printException(e)
-        try:
-            # Analyze the IAM config and save data to a local file
-            if 'ec2' not in services:
-                analyze_iam_config(iam_info, args.force_write)
-        except Exception as e:
-            printError('Error: could not analyze IAM configuration.')
-            printException(e)
+    ##### Single service analyzis
+    for service in services:
+        method = globals()['analyze_' + service + '_config']
+        method(aws_config[service], args.force_write)
 
-    ##### EC2
-    if 'ec2' in services:
-        try:
-            # Fetch data from AWS or an existing local file
-            if not args.fetch_local:
-                ec2_info = get_ec2_info(key_id, secret, token, args.regions, args.fetch_gov)
-            else:
-                ec2_info = load_info_from_json('ec2', environment_name)
-            # Analyze the EC2 config and save data to a local file
-            analyze_ec2_config(ec2_info, args.force_write)
-        except Exception as e:
-            printError('Error: could not fetch and/or analyze EC2 configuration.')
-            printException(e)
-
-    ##### RDS
-    if 'rds' in services:
-        try:
-            if not args.fetch_local:
-                rds_info = get_rds_info(key_id, secret, token, args.regions, args.fetch_gov)
-            else:
-                rds_info = load_info_from_json('rds', environment_name)
-            analyze_rds_config(rds_info, args.force_write)
-        except Exception as e:
-            printError('Error: could not fetch and/or analyze RDS configuration.')
-            printException(e)
-
-    ##### S3
-    if 's3' in services:
-        try:
-            if not args.fetch_local:
-                # If working on a subset of buckets, attempt to load an existing configuration dump to complete it
-                if args.buckets or args.skipped_buckets:
-                    try:
-                        s3_info = load_info_from_json('s3', environment_name)
-                    except Exception as e:
-                        pass
-                else:
-                    s3_info = {}
-                s3_params = {}
-                s3_params['check_encryption'] = args.check_s3_encryption
-                s3_params['check_acls'] = args.check_s3_acls
-                s3_params['checked_buckets'] = args.buckets
-                s3_params['skipped_buckets'] = args.skipped_buckets
-                get_s3_info(key_id, secret, token, s3_info, args.regions, args.fetch_gov, s3_params)
-            else:
-                s3_info = load_info_from_json('s3', environment_name)
-            # Analyze the S3 config and save data to a local file
-            analyze_s3_config(s3_info, args.force_write)
-        except Exception as e:
-            printError('Error: could not fetch and/or analyze S3 configuration.')
-            printException(e)
-
-    ##### Analyzis that requires multiple configuration
+    ##### Multiple service analyzis
     if 'ec2' in services and 'iam' in services:
         try:
-            match_instances_and_roles(ec2_info, iam_info)
-            analyze_iam_config(iam_info, args.force_write)
+            match_instances_and_roles(aws_config['ec2'], aws_config['iam'])
         except Exception as e:
             printError('Error: EC2 or IAM configuration is missing.')
             printException(e)
+
+    # Save data
+    save_config_to_file(aws_config, 'aws', args.force_write, args.debug)
 
     ##### Rename data based on environment's name
     if environment_name:

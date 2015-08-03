@@ -101,7 +101,6 @@ def analyze_config(finding_dictionary, filter_dictionary, config, keyword, force
     except Exception as e:
         printException(e)
         pass
-    save_config_to_file(config, keyword, force_write)
 
 def has_instances(ec2_region):
     count = 0
@@ -180,16 +179,18 @@ def create_new_scout_report(environment_name, force_write):
                     newline = newline.replace(AWSCONFIG_DIR, new_dir)
                     nf.write(newline)
 
-def load_info_from_json(aws_service, environment_name):
+def load_info_from_json(service, environment_name):
     filename = AWSCONFIG_DIR
     if environment_name:
         filename = filename + '-' + environment_name
-    filename = filename + '/' + aws_service + '_config.js'
+    filename = filename + '/aws_config.js'
     with open(filename) as f:
         json_payload = f.readlines()
         json_payload.pop(0)
         json_payload = ''.join(json_payload)
-        return json.loads(json_payload)
+        aws_config = json.loads(json_payload)
+    return aws_config[service] if service in aws_config else {}
+    
 
 def load_from_json(keyword, var):
     filename = AWSCONFIG_DIR + '/' + keyword + '_config.js'
@@ -238,18 +239,18 @@ def save_blob_to_file(filename, blob, force_write):
     except:
         pass
 
-def save_config_to_file(blob, keyword, force_write):
+def save_config_to_file(blob, keyword, force_write, debug):
     try:
         with open_file(keyword, force_write) as f:
             keyword = keyword.lower().replace(' ','_')
             print(keyword + '_info =', file = f)
-            write_data_to_file(f, blob, force_write)
+            write_data_to_file(f, blob, force_write, debug)
     except Exception as e:
         printException(e)
         pass
 
-def write_data_to_file(f, blob, force_write):
-    print('%s' % json.dumps(blob, separators=(',', ': '), sort_keys=True, cls=Scout2Encoder), file = f)
+def write_data_to_file(f, blob, force_write, debug):
+    print('%s' % json.dumps(blob, indent = 4 if debug else None, separators=(',', ': '), sort_keys=True, cls=Scout2Encoder), file = f)
 
 
 ########################################

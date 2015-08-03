@@ -22,7 +22,6 @@ def analyze_ec2_config(ec2_info, force_write):
     link_elastic_ips(ec2_info)
 #    list_network_attack_surface(ec2_info, 'attack_surface', 'PublicIpAddress')
 #    list_network_attack_surface(ec2_info, 'private_attack_surface', 'PrivateIpAddress')
-    save_config_to_file(ec2_info, 'EC2', force_write)
 
 
 #
@@ -99,28 +98,26 @@ def list_network_attack_surface(ec2_info, attack_surface_attribute_name, ip_attr
 ##### EC2 fetch functions
 ########################################
 
-def get_ec2_info(key_id, secret, session_token, selected_regions, fetch_ec2_gov):
-    ec2_info = {}
-    ec2_info['regions'] = {}
+def get_ec2_info(key_id, secret, session_token, service_config, selected_regions, fetch_gov):
     # Build region list for each EC2 entities and VPC
     ec2_params = {}
-    ec2_params['ec2_regions'] = build_region_list('ec2', selected_regions, include_gov = fetch_ec2_gov)
-    ec2_params['elb_regions'] = build_region_list('ec2', selected_regions, include_gov = fetch_ec2_gov)
-    ec2_params['vpc_regions'] = build_region_list('ec2', selected_regions, include_gov = fetch_ec2_gov)
+    ec2_params['ec2_regions'] = build_region_list('ec2', selected_regions, include_gov = fetch_gov)
+    ec2_params['elb_regions'] = build_region_list('ec2', selected_regions, include_gov = fetch_gov)
+    ec2_params['vpc_regions'] = build_region_list('ec2', selected_regions, include_gov = fetch_gov)
     all_regions = set(ec2_params['ec2_regions'] + ec2_params['elb_regions'] + ec2_params['vpc_regions'])
+    manage_dictionary(service_config, 'regions', {})
     for region in all_regions:
-        ec2_info['regions'][region] = {}
-        ec2_info['regions'][region]['name'] = region
+        manage_dictionary(service_config['regions'], region, {})
+        service_config['regions'][region]['name'] = region
     printInfo('Fetching EC2 data...')
     formatted_status('region', 'Elastic LBs', 'Elastic IPs', 'VPCs', 'Sec. Groups', 'Instances', True)
     ec2_targets = ['elastic_ips', 'elbs', 'vpcs', 'security_groups', 'instances']
     for region in all_regions:
          status['region_name'] = region
-         manage_dictionary(ec2_info['regions'][region], 'vpcs', {})
-         thread_work((key_id, secret, session_token), ec2_info['regions'][region], ec2_targets, thread_region, service_params = ec2_params)
+         manage_dictionary(service_config['regions'][region], 'vpcs', {})
+         thread_work((key_id, secret, session_token), service_config['regions'][region], ec2_targets, thread_region, service_params = ec2_params)
          show_status()
-         list_instances_in_security_groups(ec2_info['regions'][region])
-    return ec2_info
+         list_instances_in_security_groups(service_config['regions'][region])
 
 def list_instances_in_security_groups(region_info):
     for vpc in region_info['vpcs']:
