@@ -249,7 +249,7 @@ def save_config_to_file(blob, keyword, force_write):
         pass
 
 def write_data_to_file(f, blob, force_write):
-    print('%s' % json.dumps(blob, indent=4, separators=(',', ': '), sort_keys=True, cls=Scout2Encoder), file = f)
+    print('%s' % json.dumps(blob, separators=(',', ': '), sort_keys=True, cls=Scout2Encoder), file = f)
 
 
 ########################################
