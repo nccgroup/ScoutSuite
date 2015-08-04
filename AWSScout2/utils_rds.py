@@ -28,9 +28,9 @@ def check_for_duplicate(rds_info):
             for instance_id in rds_info['violations']['backup-disabled'].items:
                 rds_info['violations']['short-backup-retention-period'].removeItem(instance_id)
 
-def get_rds_info(key_id, secret, session_token, service_config, selected_regions, fetch_gov):
+def get_rds_info(key_id, secret, session_token, service_config, selected_regions, with_gov, with_cn):
     manage_dictionary(service_config, 'regions', {})
-    for region in build_region_list('rds', selected_regions, include_gov = fetch_gov):
+    for region in build_region_list('rds', selected_regions, include_gov = with_gov, include_cn = with_cn):
         manage_dictionary(service_config['regions'], region, {})
         service_config['regions'][region]['name'] = region
     thread_work((key_id, secret, session_token), service_config, service_config['regions'], get_rds_region)

@@ -15,10 +15,10 @@ from AWSScout2.findings import *
 def analyze_cloudtrail_config(cloudtrail_info, aws_account_id, force_write):
     analyze_config(cloudtrail_finding_dictionary, cloudtrail_filter_dictionary, cloudtrail_info, 'CloudTrail', force_write)
 
-def get_cloudtrail_info(key_id, secret, session_token, service_config, selected_regions, fetch_gov):
+def get_cloudtrail_info(key_id, secret, session_token, service_config, selected_regions, with_gov, with_cn):
     manage_dictionary(service_config, 'regions', {})
     printInfo('Fetching CloudTrail data...')
-    for region in build_region_list('cloudtrail', selected_regions, fetch_gov):
+    for region in build_region_list('cloudtrail', selected_regions, include_gov = with_gov, include_cn = with_cn):
         manage_dictionary(service_config['regions'], region, {})
         service_config['regions'][region]['name'] = region
     thread_work((key_id, secret, session_token), service_config, service_config['regions'], get_region_trails)
