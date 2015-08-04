@@ -131,7 +131,11 @@
           <span id="ec2_security_groups-ports-range-{{../sg_id}}-{{../ports}}">
           <span id="ec2_security_groups-all-ports-open-to-self-{{../sg_id}}">
           <span class="ec2_attack_surface_item">
-            <li class="list-group-item-text">{{GroupId}} (AWS account ID {{UserId}})</li>
+            {{#if GroupName}}
+              <li class="list-group-item-text">{{GroupName}} (<a href="javascript:findAndShowEC2Object('regions.vpcs.security_groups', '{{GroupId}}')">{{GroupId}}</a>)</li>
+            {{else}}
+              <li class="list-group-item-text">{{GroupId}} (AWS account ID {{UserId}})</li>
+            {{/if}}
           </span></span></span>
         {{/each}}
       </ul>
@@ -303,7 +307,7 @@
                     </tr>
                   {{/each}}
                 </table>
-              </div>  
+              </div>
             {{/each}}
         </div>
     </script>

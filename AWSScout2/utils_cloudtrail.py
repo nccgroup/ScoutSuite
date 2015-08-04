@@ -12,7 +12,7 @@ from AWSScout2.findings import *
 ##### CloudTrails functions
 ########################################
 
-def analyze_cloudtrail_config(cloudtrail_info, force_write):
+def analyze_cloudtrail_config(cloudtrail_info, aws_account_id, force_write):
     analyze_config(cloudtrail_finding_dictionary, cloudtrail_filter_dictionary, cloudtrail_info, 'CloudTrail', force_write)
 
 def get_cloudtrail_info(key_id, secret, session_token, service_config, selected_regions, fetch_gov):

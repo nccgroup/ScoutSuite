@@ -15,7 +15,7 @@ from AWSScout2.findings import *
 ##### RDS functions
 ########################################
 
-def analyze_rds_config(rds_info, force_write):
+def analyze_rds_config(rds_info, aws_account_id, force_write):
     printInfo('Analyzing RDS data...')
     analyze_config(rds_finding_dictionary, rds_filter_dictionary, rds_info, 'RDS', force_write)
     # Custom RDS analysis

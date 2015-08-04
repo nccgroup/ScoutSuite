@@ -14,15 +14,35 @@ from AWSScout2.findings import *
 ##### EC2 analysis functions
 ########################################
 
-def analyze_ec2_config(ec2_info, force_write):
+def analyze_ec2_config(ec2_info, aws_account_id, force_write):
     printInfo('Analyzing EC2 data...')
+
     analyze_config(ec2_finding_dictionary, ec2_filter_dictionary, ec2_info, 'EC2', force_write)
+    # Tweaks
+#    link_elastic_ips(ec2_info)
+    add_security_group_name_to_ec2_grants(ec2_info, aws_account_id)
     # Custom EC2 analysis
-    check_for_elastic_ip(ec2_info)
-    link_elastic_ips(ec2_info)
+#    check_for_elastic_ip(ec2_info)
 #    list_network_attack_surface(ec2_info, 'attack_surface', 'PublicIpAddress')
 #    list_network_attack_surface(ec2_info, 'private_attack_surface', 'PrivateIpAddress')
 
+#
+# Github issue #24: display the security group names in the list of grants (added here to have ligher JS code)
+#
+def add_security_group_name_to_ec2_grants(ec2_config, aws_account_id):
+    go_to_and_do(ec2_config, None, ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports', 'security_groups'], [], add_security_group_name_to_ec2_grants_callback, {'AWSAccountId': aws_account_id})
+#
+# Callback
+#
+def add_security_group_name_to_ec2_grants_callback(ec2_config, current_config, path, current_path, ec2_grant, callback_args):
+    sg_id = ec2_grant['GroupId']
+    if sg_id in current_path:
+        target = current_path[:(current_path.index(sg_id)+1)]
+        ec2_grant['GroupName'] = get_attribute_at(ec2_config, target, 'name')
+    elif ec2_grant['UserId'] == callback_args['AWSAccountId']:
+        target = current_path[:(current_path.index('security_groups')+1)]
+        target.append(sg_id)
+        ec2_grant['GroupName'] = get_attribute_at(ec2_config, target, 'name')
 
 #
 # Check that the whitelisted EC2 IP addresses are not static IPs

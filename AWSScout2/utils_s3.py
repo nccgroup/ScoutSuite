@@ -16,7 +16,7 @@ import botocore.client
 ##### S3 functions
 ########################################
 
-def analyze_s3_config(s3_info, force_write):
+def analyze_s3_config(s3_info, aws_account_id, force_write):
     printInfo('Analyzing S3 data...')
     analyze_config(s3_finding_dictionary, s3_filter_dictionary, s3_info, 'S3', force_write)
 

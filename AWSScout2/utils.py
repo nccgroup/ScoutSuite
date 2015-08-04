@@ -61,13 +61,45 @@ parser.add_argument('--skip',
 # Common functions
 ########################################
 
-def build_services_list(services, skipped_services):
+#
+# Return the list of services to iterate over
+#
+def build_services_list(services = supported_services, skipped_services = []):
     enabled_services = []
     for s in services:
         if s in supported_services and s not in skipped_services:
             enabled_services.append(s)
     return enabled_services
 
+#
+# Return attribute value at a given path
+#
+def get_attribute_at(config, target_path, key, default_value = None):
+    for target in target_path:
+        config = config[target]
+    return config[key] if key in config else default_value
+
+#
+# Recursively go to a target and execute a callback
+#
+def go_to_and_do(aws_config, current_config, path, current_path, callback, callback_args):
+    key = path.pop(0)
+    if not current_config:
+        current_config = aws_config
+    if key in current_config:
+        current_path.append(key)
+        for value in current_config[key]:
+            if len(path) == 0:
+                callback(aws_config, current_config, path, current_path, value, callback_args)
+            else:
+                # keep track of where we are...
+                tmp = copy.deepcopy(current_path)
+                tmp.append(value)
+                go_to_and_do(aws_config, current_config[key][value], copy.deepcopy(path), tmp, callback, callback_args)
+
+#
+# JSON encoder class
+#
 class Scout2Encoder(json.JSONEncoder):
     def default(self, o):
         if type(o) == datetime.datetime:
@@ -184,12 +216,15 @@ def load_info_from_json(service, environment_name):
     if environment_name:
         filename = filename + '-' + environment_name
     filename = filename + '/aws_config.js'
-    with open(filename) as f:
-        json_payload = f.readlines()
-        json_payload.pop(0)
-        json_payload = ''.join(json_payload)
-        aws_config = json.loads(json_payload)
-    return aws_config[service] if service in aws_config else {}
+    try:
+        with open(filename) as f:
+            json_payload = f.readlines()
+            json_payload.pop(0)
+            json_payload = ''.join(json_payload)
+            aws_config = json.loads(json_payload)
+    except Exception as e:
+        return {}
+    return aws_config['services'][service] if service in aws_config['services'] else {}
     
 
 def load_from_json(keyword, var):

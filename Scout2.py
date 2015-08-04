@@ -74,27 +74,32 @@ def main(args):
         load_findings(service, ruleset_name)
         load_filters(service)
 
-    ##### Fetch all supported services' configuration
+    ##### Load local data first
     aws_config = {}
+    manage_dictionary(aws_config, 'services', {})
+    for service in build_services_list():
+        if service not in services or args.fetch_local:
+            aws_config['services'][service] = load_info_from_json(service, environment_name)
+        else:
+            # Reload data in specific cases...
+            if service == 'iam' and args.resume:
+                aws_config['services'][service] = load_info_from_json(service, environment_name)
+            if service == 's3' and (args.buckets or args.skipped_buckets):
+                aws_config['services'][service] = load_info_from_json(service, environment_name)
+            # TODO: when working on a subset of available regions, reload data for other regions (reload all and kill selected regions)
+
+    ##### Fetch all requested services' configuration
     for service in services:
         method = globals()['get_' + service + '_info']
-        manage_dictionary(aws_config, service, {})
+        manage_dictionary(aws_config['services'], service, {})
         try:
             if not args.fetch_local:
-                # Reload data in specific cases...
-                try:
-                    if args.resume and service == 'iam':
-                        aws_config[service] = load_info_from_json(service, environment_name)
-                    if (args.buckets or args.skipped_buckets) and service == 's3':
-                        aws_config[service] = load_info_from_json(service, environment_name)
-                except Exception as e:
-                    pass
                 # Fetch data from AWS API
                 method_args = {}
                 method_args['key_id'] = key_id
                 method_args['secret'] = secret
                 method_args['session_token'] = token
-                method_args['service_config'] = aws_config[service]
+                method_args['service_config'] = aws_config['services'][service]
                 if service != 'iam':
                     method_args['selected_regions'] = args.regions
                     method_args['fetch_gov'] = args.fetch_gov
@@ -107,20 +112,26 @@ def main(args):
                 method(**method_args)
             else:
                 # Fetch data from a local file
-                aws_config[service] = load_info_from_json(service, environment_name)
+                aws_config['services'][service] = load_info_from_json(service, environment_name)
         except Exception as e:
             printError('Error: could not fetch %s configuration.' % service)
             printException(e)
 
+    ##### Save this AWS account ID
+    if 'iam' in services and (not 'account_id' in aws_config or not aws_config['account_id']):
+        aws_config['account_id'] = get_aws_account_id(aws_config['services']['iam'])
+    else:
+        manage_dictionary(aws_config, 'account_id', None)
+
     ##### Single service analyzis
     for service in services:
         method = globals()['analyze_' + service + '_config']
-        method(aws_config[service], args.force_write)
+        method(aws_config['services'][service], aws_config['account_id'], args.force_write)
 
     ##### Multiple service analyzis
     if 'ec2' in services and 'iam' in services:
         try:
-            match_instances_and_roles(aws_config['ec2'], aws_config['iam'])
+            match_instances_and_roles(aws_config['services']['ec2'], aws_config['services']['iam'])
         except Exception as e:
             printError('Error: EC2 or IAM configuration is missing.')
             printException(e)

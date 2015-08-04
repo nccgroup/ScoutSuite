@@ -196,7 +196,7 @@ function findEC2ObjectAttribute(ec2_info, path, id, attribute) {
 }
 function findAndShowEC2Object(path, id) {
     entities = path.split('.');
-    var object = findEC2Object(aws_info['ec2'], entities, id);
+    var object = findEC2Object(aws_info['services']['ec2'], entities, id);
     var etype = entities.pop();
     if (etype == 'instances') {
         $('#overlay-details').html(single_ec2_instance_template(object));
@@ -212,7 +212,7 @@ function findAndShowEC2Object(path, id) {
 }
 function findAndShowEC2ObjectByAttr(path, attributes) {
     entities = path.split('.');
-    var object = findEC2ObjectByAttr(aws_info['ec2'], entities, attributes);
+    var object = findEC2ObjectByAttr(aws_info['services']['ec2'], entities, attributes);
     var etype = entities.pop();
     if (etype == 'security_groups') {
         $('#overlay-details').html(single_ec2_security_group_template(object));
@@ -224,28 +224,28 @@ function showEC2Instance2(data) {
     showPopup();
 }
 function showEC2Instance(region, vpc, id) {
-    var data = aws_info['ec2']['regions'][region]['vpcs'][vpc]['instances'][id];
+    var data = aws_info['services']['ec2']['regions'][region]['vpcs'][vpc]['instances'][id];
     $('#overlay-details').html(single_ec2_instance_template(data));
     showPopup();
 }
 function showEC2SecurityGroup(region, vpc, id) {
-    var data = aws_info['ec2']['regions'][region]['vpcs'][vpc]['security_groups'][id];
+    var data = aws_info['services']['ec2']['regions'][region]['vpcs'][vpc]['security_groups'][id];
     $('#overlay-details').html(single_ec2_security_group_template(data));
     showPopup();
 }
 function showIAMGroup(group_name) {
-    var data = aws_info['iam']['Groups'][group_name];
+    var data = aws_info['services']['iam']['Groups'][group_name];
     $('#overlay-details').html(single_iam_group_template(data));
     showPopup();
 }
 function showIAMManagedPolicy(policy_arn) {
-    var data = aws_info['iam']['ManagedPolicies'][policy_arn];
+    var data = aws_info['services']['iam']['ManagedPolicies'][policy_arn];
     data['PolicyName'] = policy_friendly_name(policy_arn);
     data['ReportId'] = policy_arn.replace(/:/g, '-').replace(/\//g, '-');
     showIAMPolicy(data);
 }
 function showIAMInlinePolicy(iam_entity_type, iam_entity_name, policy_name) {
-    var data = aws_info['iam'][make_title(iam_entity_type)][iam_entity_name]['Policies'][policy_name];
+    var data = aws_info['services']['iam'][make_title(iam_entity_type)][iam_entity_name]['Policies'][policy_name];
     data['PolicyName'] = policy_name;
     data['ReportId'] = iam_entity_type + '-' + iam_entity_name + '-' + policy_name;
     showIAMPolicy(data);
@@ -257,7 +257,7 @@ function showIAMPolicy(data) {
     $(id).toggle();
 }
 function showIAMRole(role_name) {
-    var data = aws_info['iam']['Roles'][role_name];
+    var data = aws_info['services']['iam']['Roles'][role_name];
     $('#overlay-details').html(single_iam_role_template(data));
     showPopup();
 }
@@ -267,12 +267,12 @@ function showIAMUser(user_name) {
     showPopup();
 }
 function showS3Bucket(bucket_name) {
-    var data = aws_info['s3']['buckets'][bucket_name];
+    var data = aws_info['services']['s3']['buckets'][bucket_name];
     $('#overlay-details').html(single_s3_bucket_template(data));
     showPopup();
 }
 function showS3Object(bucket_name, object_name) {
-    var data = aws_info['s3']['buckets'][bucket_name]['keys'][object_name];
+    var data = aws_info['services']['s3']['buckets'][bucket_name]['keys'][object_name];
     data['name'] = object_name;
     data['bucket_name'] = bucket_name;
     $('#overlay-details').html(single_s3_object_template(data));
@@ -372,46 +372,46 @@ function load_config(keyword) {
         $('[id="please_wait-row"]').show();
         setTimeout(function(){
             if (keyword == 'cloudtrail') {
-                load_aws_config_from_json(aws_info['cloudtrail']['regions'], 'cloudtrail_region', 2);
-                highlight_violations(aws_info['cloudtrail']['violations'], 'cloudtrail');
-                load_aws_config_from_json(aws_info['cloudtrail']['violations'], 'cloudtrail_dashboard', 1);
+                load_aws_config_from_json(aws_info['services']['cloudtrail']['regions'], 'cloudtrail_region', 2);
+                highlight_violations(aws_info['services']['cloudtrail']['violations'], 'cloudtrail');
+                load_aws_config_from_json(aws_info['services']['cloudtrail']['violations'], 'cloudtrail_dashboard', 1);
             }
             else if (keyword == 'ec2') {
-                load_aws_config_from_json(aws_info['ec2']['regions'], 'ec2_elb', 2);
-                load_aws_config_from_json(aws_info['ec2']['regions'], 'ec2_vpc', 2);
-                load_aws_config_from_json(aws_info['ec2']['regions'], 'ec2_security_group', 2);
-                load_aws_config_from_json(aws_info['ec2']['regions'], 'ec2_network_acl', 2);
-                load_aws_config_from_json(aws_info['ec2']['regions'], 'ec2_instance', 2);
-                load_aws_config_from_json(aws_info['ec2']['attack_surface'], 'ec2_attack_surface', 1);
-                highlight_violations(aws_info['ec2']['violations'], 'ec2');
-                load_aws_config_from_json(aws_info['ec2']['violations'], 'ec2_dashboard', 1);
-                load_filters_from_json(aws_info['ec2']['filters']);
+                load_aws_config_from_json(aws_info['services']['ec2']['regions'], 'ec2_elb', 2);
+                load_aws_config_from_json(aws_info['services']['ec2']['regions'], 'ec2_vpc', 2);
+                load_aws_config_from_json(aws_info['services']['ec2']['regions'], 'ec2_security_group', 2);
+                load_aws_config_from_json(aws_info['services']['ec2']['regions'], 'ec2_network_acl', 2);
+                load_aws_config_from_json(aws_info['services']['ec2']['regions'], 'ec2_instance', 2);
+                load_aws_config_from_json(aws_info['services']['ec2']['attack_surface'], 'ec2_attack_surface', 1);
+                highlight_violations(aws_info['services']['ec2']['violations'], 'ec2');
+                load_aws_config_from_json(aws_info['services']['ec2']['violations'], 'ec2_dashboard', 1);
+                load_filters_from_json(aws_info['services']['ec2']['filters']);
             }
             else if (keyword == 'iam') {
-                load_aws_config_from_json(aws_info['iam']['Groups'], 'iam_Group', 2);
-                load_aws_config_from_json(aws_info['iam']['Permissions'], 'iam_Permission', 1);
-                load_aws_config_from_json(aws_info['iam']['Roles'], 'iam_Role', 2);
-                load_aws_config_from_json(aws_info['iam']['Users'], 'iam_User', 2);
-                if ('CredentialReport' in aws_info['iam']) {
-                    load_aws_config_from_json(aws_info['iam']['CredentialReport']['<root_account>'], 'iam_CredentialReport', 1);
+                load_aws_config_from_json(aws_info['services']['iam']['Groups'], 'iam_Group', 2);
+                load_aws_config_from_json(aws_info['services']['iam']['Permissions'], 'iam_Permission', 1);
+                load_aws_config_from_json(aws_info['services']['iam']['Roles'], 'iam_Role', 2);
+                load_aws_config_from_json(aws_info['services']['iam']['Users'], 'iam_User', 2);
+                if ('CredentialReport' in aws_info['services']['iam']) {
+                    load_aws_config_from_json(aws_info['services']['iam']['CredentialReport']['<root_account>'], 'iam_CredentialReport', 1);
                 }
-                highlight_violations(aws_info['iam']['violations'], 'iam');
-                load_aws_config_from_json(aws_info['iam']['violations'], 'iam_dashboard', 1);
-                load_filters_from_json(aws_info['iam']['filters']);
+                highlight_violations(aws_info['services']['iam']['violations'], 'iam');
+                load_aws_config_from_json(aws_info['services']['iam']['violations'], 'iam_dashboard', 1);
+                load_filters_from_json(aws_info['services']['iam']['filters']);
             }
             else if (keyword == 'rds') {
-                load_aws_config_from_json(aws_info['rds']['regions'], 'rds_security_group', 2);
-                load_aws_config_from_json(aws_info['rds']['regions'], 'rds_instance', 2);
-                highlight_violations(aws_info['rds']['violations'], 'rds');
-                load_aws_config_from_json(aws_info['rds']['violations'], 'rds_dashboard', 1);
+                load_aws_config_from_json(aws_info['services']['rds']['regions'], 'rds_security_group', 2);
+                load_aws_config_from_json(aws_info['services']['rds']['regions'], 'rds_instance', 2);
+                highlight_violations(aws_info['services']['rds']['violations'], 'rds');
+                load_aws_config_from_json(aws_info['services']['rds']['violations'], 'rds_dashboard', 1);
             }
             else if (keyword == 's3') {
-                load_aws_config_from_json(aws_info['s3']['buckets'], 's3_bucket', 2);
-                highlight_violations(aws_info['s3']['violations'], 's3');
-                load_aws_config_from_json(aws_info['s3']['violations'], 's3_dashboard', 1);
+                load_aws_config_from_json(aws_info['services']['s3']['buckets'], 's3_bucket', 2);
+                highlight_violations(aws_info['services']['s3']['violations'], 's3');
+                load_aws_config_from_json(aws_info['services']['s3']['violations'], 's3_dashboard', 1);
             }
-            if ('regions' in aws_info[keyword]) {
-                load_region_filters(keyword, aws_info[keyword]['regions']);
+            if ('regions' in aws_info['services'][keyword]) {
+                load_region_filters(keyword, aws_info['services'][keyword]['regions']);
             }
             $('[id="' + keyword + '_load_button"]').hide();
             $('[id="please_wait-row"]').hide();
@@ -534,9 +534,9 @@ Handlebars.registerHelper('s3_grant_2_icon', function(value) {
 Handlebars.registerHelper('good_bad_icon', function(violation, bucket_name, item) {
     index = -1;
     /* TODO: this shouldn't happen in JS... will take forever on buckets that contain many files */
-    for (i in aws_info['s3']['violations'][violation]['macro_items']) {
-        if (aws_info['s3']['violations'][violation]['macro_items'][i] == bucket_name) {
-            if (aws_info['s3']['violations'][violation]['items'][i] == item) {
+    for (i in aws_info['services']['s3']['violations'][violation]['macro_items']) {
+        if (aws_info['services']['s3']['violations'][violation]['macro_items'][i] == bucket_name) {
+            if (aws_info['services']['s3']['violations'][violation]['items'][i] == item) {
                 index = i;
                 break;
             }
@@ -545,7 +545,7 @@ Handlebars.registerHelper('good_bad_icon', function(violation, bucket_name, item
     if (index > -1) {
         return '<i class="glyphicon glyphicon-remove"></i>';
     } else {
-        var key_details = aws_info['s3']['buckets'][bucket_name]['keys'][item];
+        var key_details = aws_info['services']['s3']['buckets'][bucket_name]['keys'][item];
         if (((violation == 'object-perms-mismatch-bucket-perms') && !('grantees' in key_details)) 
             ||((violation == 'unencrypted-s3-objects') && !('ServerSideEncryption' in key_details))) {
             /* Say that we don't know if there's no corresponding attribute for the key */
@@ -586,21 +586,21 @@ Handlebars.registerHelper('count', function(items) {
 Handlebars.registerHelper('count_in', function(service, path) {
     var entities = path.split('.');
     if (service == 'ec2') {
-        var input = aws_info['ec2'];
+        var input = aws_info['services']['ec2'];
     } else if(service == 'cloudtrail') {
-        var input = aws_info['cloudtrail'];
+        var input = aws_info['services']['cloudtrail'];
     } else {
         return 0;
     }
     return recursive_count(input, entities);
 });
 Handlebars.registerHelper('count_ec2_in_region', function(region, path) {
-    if (typeof aws_info['ec2'] != 'undefined') {
+    if (typeof aws_info['services']['ec2'] != 'undefined') {
         var count = 0;
         var entities = path.split('.');
-        for (r in aws_info['ec2']['regions']) {
+        for (r in aws_info['services']['ec2']['regions']) {
             if (r == region) {
-                return recursive_count(aws_info['ec2']['regions'][r], entities);
+                return recursive_count(aws_info['services']['ec2']['regions'][r], entities);
             }
         }
     } else {
@@ -644,7 +644,7 @@ var recursive_count = function(input, entities) {
     return count;
 }
 Handlebars.registerHelper('find_ec2_object_attribute', function(path, id, attribute ) {
-    return findEC2ObjectAttribute(aws_info['ec2'], path, id, attribute);
+    return findEC2ObjectAttribute(aws_info['services']['ec2'], path, id, attribute);
 });
 Handlebars.registerHelper('format_date', function(timestamp) {
     return new Date(timestamp * 1000).toString();

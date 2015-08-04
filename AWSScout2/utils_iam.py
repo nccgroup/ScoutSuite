@@ -16,9 +16,18 @@ import urllib
 ##### IAM functions
 ########################################
 
-def analyze_iam_config(iam_info, force_write):
+def analyze_iam_config(iam_info, aws_account_id, force_write):
     printInfo('Analyzing IAM data...')
     analyze_config(iam_finding_dictionary, iam_filter_dictionary, iam_info, 'IAM', force_write)
+
+def get_aws_account_id(iam_info):
+    for resources in ['Groups', 'Roles', 'Users']:
+        if resources in iam_info:
+            for resource in iam_info[resources]:
+                try:
+                    return iam_info[resources][resource]['Arn'].split(':')[4]
+                except:
+                    pass
 
 def get_groups_info(iam_client, iam_info):
     groups = handle_truncated_response(iam_client.list_groups, {}, ['Groups'])
