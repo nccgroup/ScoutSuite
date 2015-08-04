@@ -1056,7 +1056,7 @@
                   <li id="{{finding_entity keyword "region"}}-filter-select_none"><a href="javascript:clear_all_regions('{{keyword}}')">Hide all</a></li>
                   <li id="{{finding_entity keyword "region"}}-filter-select_all"><a href="javascript:select_all_regions('{{keyword}}')">Select all</a></li>
                   {{#each items}}
-                    <li id="{{finding_entity ../keyword "region"}}-filter-{{Name}}"><a href="javascript:toggle_region('{{../keyword}}', '{{Name}}')"><i id="{{finding_entity ../keyword "region"}}-filtericon-{{Name}}" class="glyphicon glyphicon-check""></i> {{Name}}</a></li>
+                    <li id="{{finding_entity ../keyword "region"}}-filter-{{@key}}"><a href="javascript:toggle_region('{{../keyword}}', '{{@key}}')"><i id="{{finding_entity ../keyword "region"}}-filtericon-{{@key}}" class="glyphicon glyphicon-check""></i> {{@key}}</a></li>
                   {{/each}}
                 </script>
               </ul>

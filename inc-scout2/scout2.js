@@ -305,44 +305,6 @@ function toggle_filter(data, filter_name) {
     // Iterate through the objects and update visibility
     iterateEC2ObjectsAndCall(data, entities, toggle_filter_callback, new Array(entity, data['filters']));
 }
-function toggle_region(keyword, region_name) {
-    var entity = keyword + '_region';
-    var checkbox = $("#" + entity + '-filtericon-' + region_name);
-    if (checkbox.hasClass("glyphicon-check")) {
-        hideRegion(keyword, region_name);
-    } else {
-        showRegion(keyword, region_name);
-    }
-}
-function clear_all_regions(keyword) {
-    var info = window[keyword + '_info'];
-    for (region in info['regions']) {
-        hideRegion(keyword, region);
-    }
-    $('[id="' + keyword  + '_region-filter-select_all"]').show();
-    $('[id="' + keyword  + '_region-filter-select_none"]').hide();
-}
-function select_all_regions(keyword) {
-    var info = window[keyword + '_info'];
-    for (region in info['regions']) {
-        showRegion(keyword, region);
-    }
-    $('[id="' + keyword  + '_region-filter-select_all"]').hide();
-    $('[id="' + keyword  + '_region-filter-select_none"]').show();
-}
-function hideRegion(keyword, region_name) {
-    var checkbox = $("#" + keyword + '_region-filtericon-' + region_name);
-    checkbox.removeClass("glyphicon-check");
-    checkbox.addClass("glyphicon-unchecked");
-    hideItem(keyword + '_region', region_name);
-}
-function showRegion(keyword, region_name) {
-    var checkbox = $("#" + keyword + '_region-filtericon-' + region_name);
-    checkbox.removeClass("glyphicon-unchecked");
-    checkbox.addClass("glyphicon-check");
-    showItem(keyword + '_region', region_name);
-}
-
 // Generic toggle filter callback
 function toggle_filter_callback(object, args) {
     var must_hide = false;
@@ -361,6 +323,43 @@ function toggle_filter_callback(object, args) {
     } else {
         showItem(entity, object['id']);
     }
+}
+
+// Region filter functions
+function toggle_region(service_name, region_name) {
+    var entity = service_name + '_region';
+    var checkbox = $("#" + entity + '-filtericon-' + region_name);
+    if (checkbox.hasClass("glyphicon-check")) {
+        hideRegion(service_name, region_name);
+    } else {
+        showRegion(service_name, region_name);
+    }
+}
+function clear_all_regions(service_name) {
+    for (region in aws_info['services'][service_name]['regions']) {
+        hideRegion(service_name, region);
+    }
+    $('[id="' + service_name  + '_region-filter-select_all"]').show();
+    $('[id="' + service_name  + '_region-filter-select_none"]').hide();
+}
+function select_all_regions(service_name) {
+    for (region in aws_info['services'][service_name]['regions']) {
+        showRegion(service_name, region);
+    }
+    $('[id="' + service_name  + '_region-filter-select_all"]').hide();
+    $('[id="' + service_name  + '_region-filter-select_none"]').show();
+}
+function hideRegion(service_name, region_name) {
+    var checkbox = $("#" + service_name + '_region-filtericon-' + region_name);
+    checkbox.removeClass("glyphicon-check");
+    checkbox.addClass("glyphicon-unchecked");
+    hideItem(service_name + '_region', region_name);
+}
+function showRegion(service_name, region_name) {
+    var checkbox = $("#" + service_name + '_region-filtericon-' + region_name);
+    checkbox.removeClass("glyphicon-unchecked");
+    checkbox.addClass("glyphicon-check");
+    showItem(service_name + '_region', region_name);
 }
 
 // Contents loading
