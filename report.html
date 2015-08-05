@@ -99,6 +99,7 @@
 
     <!-- Generic left-menu partial for region-then-vpc-then-resource -->
     <script id="region_vpc-partial" type="text/x-handlebars-template">
+{{#if is_menu}}
       <ul class="list-group">
         <li class="list-group-item">
           <a href="javascript:showAll('{{service_name}}_{{resource_type}}')">
@@ -106,17 +107,26 @@
           </a>
         </li>
       </ul>
+{{/if}}
       {{#each regions}}
+{{#if ../is_menu}}
         <ul class="list-group" id="{{../service_name}}_region-list-{{@key}}">
           <li class="list-group-item active">{{@key}}</li>
+{{/if}}
           {{#each vpcs}}
+{{#if ../../is_menu}}
             <div class="list-group-item list-sub-element">{{@key}}
+{{/if}}
               {{#each (lookup . ../../resource_type)}}
                 {{> (lookup ../../.. 'partial_name') service_name = ../../../service_name region = @../../key vpc = @../key resource_type = ../../../resource_type resource_key = @key resource = this}}
               {{/each}}
+{{#if ../../is_menu}}
             </div>
+{{/if}}
           {{/each}}
+{{#if ../is_menu}}
         </ul>
+{{/if}}
       {{/each}}
     </script>
     <script>
@@ -797,7 +807,7 @@
     <script id="redshift_security_group-partial" type="text/x-handlebars-template">
       <div class="list-group" id="redshift_security_group-details-{{id}}">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{this.name}}</h4>
+          <h4 class="list-group-item-heading">Foo</h4>
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Information</h4>
@@ -1787,22 +1797,15 @@
       </div><!-- /.row -->
 
       <!-- Template for Redshift security groups -->
-      <!-- TODO: look into making this generic... -->
       <div class="row" id="redshift_security_groups-row">
         <div class="col-sm-4" id="redshift_security_groups-list">
           <script id="redshift_security_group-list-template" type="text/x-handlebars-template">
-            {{> region_vpc service_name = 'redshift' resource_type = 'security_groups' regions = items partial_name = 'region_vpc_link'}}
+            {{> region_vpc service_name = 'redshift' resource_type = 'security_groups' regions = items partial_name = 'region_vpc_link' is_menu = true}}
           </script>
         </div>
         <div class="col-sm-8" id="redshift_security_groups-details">
           <script id="redshift_security_group-detail-template" type="text/x-handlebars-template">
-            {{#each items}}
-              <div id="redshift_region-details-{{@key}}">
-                {{#each security_groups}}
-                  {{> redshift_security_group region=../../name }}
-                {{/each}}
-              </div>
-            {{/each}}
+            {{> region_vpc service_name = 'redshift' resource_type = 'security_groups' regions = items partial_name = 'redshift_security_group'}}
           </script>
         </div><!-- /.col-sm-8 -->
       </div><!-- /.row -->
