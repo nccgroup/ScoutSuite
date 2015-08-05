@@ -269,7 +269,7 @@ def get_user_info(iam_client, q, params):
             user['Policies'] = get_inline_policies(iam_client, iam_info, 'user', user['Name'])
             user['Groups'] = handle_truncated_response(iam_client.list_groups_for_user, {'UserName': user['Name']}, ['Groups'])['Groups']
             try:
-                user['LoginProfile'] = iam_client.get_login_profiles(UserName = user['Name'])['LoginProfile']
+                user['LoginProfile'] = iam_client.get_login_profile(UserName = user['Name'])['LoginProfile']
             except Exception as e:
                 pass
             user['AccessKeys'] = iam_client.list_access_keys(UserName = user['Name'])['AccessKeyMetadata']

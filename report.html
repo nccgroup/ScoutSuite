@@ -37,7 +37,7 @@
     <!-- Finding menu item partial -->
     <script id="finding_menu_item-partial" type="text/x-handlebars-template">
       {{#if items}}
-        <li><a href="javascript:list_findings('{{finding_entity keyword_prefix entity}}', aws_info['{{keyword_prefix}}']['violations'], '{{@key}}')">
+        <li><a href="javascript:list_findings('{{finding_entity keyword_prefix entity}}', aws_info['services']['{{keyword_prefix}}']['violations'], '{{@key}}')">
           {{description}} ({{items.length}})
         </a></li>
       {{/if}}
@@ -54,7 +54,7 @@
             {{#each this}}
               <div class="col-sm-4">
                 <div class="list-group-item finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
-                  <a href="javascript:list_findings('{{finding_entity keyword_prefix entity}}', aws_info['{{keyword_prefix}}']['violations'], '{{@key}}')">
+                  <a href="javascript:list_findings('{{finding_entity keyword_prefix entity}}', aws_info['services']['{{keyword_prefix}}']['violations'], '{{@key}}')">
                     {{description}}
                   </a>
                 </div>
