@@ -91,10 +91,6 @@ def get_s3_bucket_versioning(s3_client, bucket_name, bucket_info):
         bucket_info['versioning_status'] = 'Unknown'
         bucket_info['version_mfa_delete'] = 'Unknown'
 
-def get_s3_bucket_location(s3_client, bucket_name, bucket_info):
-    location = s3_client.get_bucket_location(Bucket = bucket_name)
-    bucket_info['region'] = location['LocationConstraint'] if location['LocationConstraint'] else 'us-east-1'
-
 def get_s3_bucket_logging(s3_client, bucket_name, bucket_info):
     try:
         logging = s3_client.get_bucket_logging(Bucket = bucket_name)
@@ -126,17 +122,21 @@ def get_s3_buckets(s3_client, s3_info, s3_params):
             continue
         targets.append(b)
     s3_info['buckets_count'] = len(targets)
-    thread_work(s3_client, s3_info, targets, get_s3_bucket, service_params = s3_params, num_threads = 30)
+    s3_params['s3_clients'] = s3_client
+    s3_params['s3_info'] = s3_info
+    thread_work(targets, get_s3_bucket, params = s3_params, num_threads = 30)
     show_status(s3_info)
     return s3_info
 
-def get_s3_bucket(s3_clients, q, s3_params):
+def get_s3_bucket(q, params):
+    s3_clients = params['s3_clients']
+    s3_info = params['s3_info']
     while True:
         try:
-            s3_info, bucket = q.get()
+            bucket = q.get()
             s3_client = s3_clients['us-east-1']
             bucket['CreationDate'] = str(bucket['CreationDate'])
-            get_s3_bucket_location(s3_client, bucket['Name'], bucket)
+            bucket['region'] = get_s3_bucket_location(s3_client, bucket['Name'])
             # h4ck :: need to use the right endpoint because signature scheme autochange is not working
             s3_client = s3_clients[bucket['region']]
             get_s3_bucket_logging(s3_client, bucket['Name'], bucket)
@@ -150,8 +150,8 @@ def get_s3_bucket(s3_clients, q, s3_params):
             # Get bucket's policy
             get_s3_bucket_policy(s3_client, bucket['Name'], bucket)
             # If requested, get key properties
-            if s3_params['check_encryption'] or s3_params['check_acls']:
-                get_s3_bucket_keys(s3_client, bucket['Name'], bucket, s3_params['check_encryption'], s3_params['check_acls'])
+            if params['check_encryption'] or params['check_acls']:
+                get_s3_bucket_keys(s3_client, bucket['Name'], bucket, params['check_encryption'], params['check_acls'])
             s3_info['buckets'][bucket['Name']] = bucket
             show_status(s3_info, False)
         except Exception as e:

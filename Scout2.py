@@ -35,7 +35,8 @@ def main(args):
     configPrintException(args.debug)
 
     # Check version of opinel
-    if not check_opinel_version('0.10.1'):
+    # TODO: read version from requirements
+    if not check_opinel_version('0.11.0'):
         return 42
 
     # Create the list of services to analyze

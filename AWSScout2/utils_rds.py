@@ -33,13 +33,14 @@ def get_rds_info(key_id, secret, session_token, service_config, selected_regions
     for region in build_region_list('rds', selected_regions, include_gov = with_gov, include_cn = with_cn):
         manage_dictionary(service_config['regions'], region, {})
         service_config['regions'][region]['name'] = region
-    thread_work((key_id, secret, session_token), service_config, service_config['regions'], get_rds_region)
+    thread_work(service_config['regions'], get_rds_region, params = {'creds': (key_id, secret, session_token), 'rds_info': service_config})
 
-def get_rds_region(connection_info, q, params):
-    key_id, secret, session_token = connection_info
+def get_rds_region(q, params):
+    key_id, secret, session_token = params['creds']
+    rds_info = params['rds_info']
     while True:
         try:
-            rds_info, region = q.get()
+            region = q.get()
             rds_client = connect_rds(key_id, secret, session_token, region)
             get_security_groups_info(rds_client, rds_info['regions'][region])
             get_instances_info(rds_client, rds_info['regions'][region])

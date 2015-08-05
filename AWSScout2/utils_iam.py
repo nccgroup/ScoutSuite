@@ -32,13 +32,15 @@ def get_aws_account_id(iam_info):
 def get_groups_info(iam_client, iam_info):
     groups = handle_truncated_response(iam_client.list_groups, {}, ['Groups'])
     iam_info['GroupsCount'] = len(groups)
-    thread_work(iam_client, iam_info, groups['Groups'], get_group_info, num_threads = 10)
+    thread_work(groups['Groups'], get_group_info, params = {'iam_client': iam_client, 'iam_info': iam_info}, num_threads = 10)
     show_status(iam_info, 'Groups')
 
-def get_group_info(iam_client, q, params):
+def get_group_info(q, params):
+    iam_client = params['iam_client']
+    iam_info = params['iam_info']
     while True:
         try:
-            iam_info, group = q.get()
+            group = q.get()
             # When resuming upon throttling error, skip if already fetched
             if group['GroupName'] in iam_info['Groups']:
                 continue
@@ -153,13 +155,15 @@ def get_managed_policies(iam_client, iam_info):
     manage_dictionary(iam_info, 'ManagedPolicies', {})
     iam_info['ManagedPoliciesCount'] = len(policies['Policies'])
     show_status(iam_info, 'ManagedPolicies', False)
-    thread_work(iam_client, iam_info, policies['Policies'], get_managed_policy, num_threads = 10)
+    thread_work(policies['Policies'], get_managed_policy, params = {'iam_client': iam_client, 'iam_info': iam_info}, num_threads = 10)
     show_status(iam_info, 'ManagedPolicies')
 
-def get_managed_policy(iam_client, q, params):
+def get_managed_policy(q, params):
+    iam_client = params['iam_client']
+    iam_info = params['iam_info']
     while True:
         try:
-            iam_info, policy = q.get()
+            policy = q.get()
             manage_dictionary(iam_info['ManagedPolicies'], policy['Arn'], {})
             iam_info['ManagedPolicies'][policy['Arn']]['PolicyName'] = policy['PolicyName']
             iam_info['ManagedPolicies'][policy['Arn']]['PolicyId'] = policy['PolicyId']
@@ -208,13 +212,15 @@ def get_inline_policies(iam_client, iam_info, keyword, name):
 def get_roles_info(iam_client, iam_info):
     roles = handle_truncated_response(iam_client.list_roles, {}, ['Roles'])
     iam_info['RolesCount'] = len(roles)
-    thread_work(iam_client, iam_info, roles['Roles'], get_role_info, num_threads = 10)
+    thread_work(roles['Roles'], get_role_info, params = {'iam_client': iam_client, 'iam_info': iam_info}, num_threads = 10)
     show_status(iam_info, 'Roles')
 
-def get_role_info(iam_client, q, params):
+def get_role_info(q, params):
+    iam_client = params['iam_client']
+    iam_info = params['iam_info']
     while True:
         try:
-            iam_info, role = q.get()
+            role = q.get()
             # When resuming upon throttling error, skip if already fetched
             if role['RoleName'] in iam_info['Roles']:
                 continue
@@ -254,13 +260,15 @@ def get_credential_report(iam_client, iam_info):
 def get_users_info(iam_client, iam_info):
     users = handle_truncated_response(iam_client.list_users, {}, ['Users'])
     iam_info['UsersCount'] = len(users['Users'])
-    thread_work(iam_client, iam_info, users['Users'], get_user_info, num_threads = 10)
+    thread_work(users['Users'], get_user_info, params = {'iam_client': iam_client, 'iam_info': iam_info}, num_threads = 10)
     show_status(iam_info, 'Users')
 
-def get_user_info(iam_client, q, params):
+def get_user_info(q, params):
+    iam_client = params['iam_client']
+    iam_info = params['iam_info']
     while True:
         try:
-            iam_info, user = q.get()
+            user = q.get()
             # When resuming upon throttling error, skip if already fetched
             if user['UserName'] in iam_info['Users']:
                 continue

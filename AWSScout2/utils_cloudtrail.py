@@ -21,13 +21,14 @@ def get_cloudtrail_info(key_id, secret, session_token, service_config, selected_
     for region in build_region_list('cloudtrail', selected_regions, include_gov = with_gov, include_cn = with_cn):
         manage_dictionary(service_config['regions'], region, {})
         service_config['regions'][region]['name'] = region
-    thread_work((key_id, secret, session_token), service_config, service_config['regions'], get_region_trails)
+    thread_work(service_config['regions'], get_region_trails, params = {'creds': (key_id, secret, session_token), 'cloudtrail_info': service_config})
 
-def get_region_trails(connection_info, q, params):
-    key_id, secret, session_token = connection_info
+def get_region_trails(q, params):
+    key_id, secret, session_token = params['creds']
+    cloudtrail_info = params['cloudtrail_info']
     while True:
       try:
-        cloudtrail_info, region = q.get()
+        region = q.get()
         manage_dictionary(cloudtrail_info['regions'][region], 'trails', {})
         cloudtrail_client = connect_cloudtrail(key_id, secret, session_token, region)
         trails = cloudtrail_client.describe_trails()

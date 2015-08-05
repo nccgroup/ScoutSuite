@@ -121,6 +121,7 @@ def list_network_attack_surface(ec2_info, attack_surface_attribute_name, ip_attr
 def get_ec2_info(key_id, secret, session_token, service_config, selected_regions, with_gov, with_cn):
     # Build region list for each EC2 entities and VPC
     ec2_params = {}
+    # TODO: this should be reduced to a single list...
     ec2_params['ec2_regions'] = build_region_list('ec2', selected_regions, include_gov = with_gov, include_cn = with_cn)
     ec2_params['elb_regions'] = build_region_list('ec2', selected_regions, include_gov = with_gov, include_cn = with_cn)
     ec2_params['vpc_regions'] = build_region_list('ec2', selected_regions, include_gov = with_gov, include_cn = with_cn)
@@ -135,7 +136,10 @@ def get_ec2_info(key_id, secret, session_token, service_config, selected_regions
     for region in all_regions:
          status['region_name'] = region
          manage_dictionary(service_config['regions'][region], 'vpcs', {})
-         thread_work((key_id, secret, session_token), service_config['regions'][region], ec2_targets, thread_region, service_params = ec2_params)
+         params = copy.deepcopy(ec2_params)
+         params['creds'] = (key_id, secret, session_token)
+         params['region_info'] = service_config['regions'][region]
+         thread_work(ec2_targets, thread_region, params = params)
          show_status()
          list_instances_in_security_groups(service_config['regions'][region])
 
@@ -151,10 +155,12 @@ def list_instances_in_security_groups(region_info):
                 manage_dictionary(region_info['vpcs'][vpc]['security_groups'][sg_id]['instances'], state, [])
                 region_info['vpcs'][vpc]['security_groups'][sg_id]['instances'][state].append(instance)
 
-def get_elastic_ip_info(ec2_client, q, params):
+def get_elastic_ip_info(q, params):
+    ec2_client = params['ec2_client']
+    region_info = params['region_info']
     while True:
         try:
-            region_info, eip = q.get()
+            eip = q.get()
             manage_dictionary(region_info['elastic_ips'], eip['PublicIp'], eip)
             show_status(region_info, 'elastic_ips', False)
         except Exception as e:
@@ -170,15 +176,17 @@ def get_elastic_ips_info(ec2_client, region_info):
         region_info['elastic_ips_count'] = count
         manage_dictionary(region_info, 'elastic_ips', {})
         show_status(region_info, 'elastic_ips', False)
-        thread_work(ec2_client, region_info, eips, get_elastic_ip_info, None, num_threads = 5)
+        thread_work(eips, get_elastic_ip_info, params = {'ec2_client': ec2_client, 'region_info': region_info}, num_threads = 5)
     else:
         region_info['elastic_ips_count'] = 0
     show_status(region_info, 'elastic_ips', False)
 
-def get_elb_info(elb_client, q, params):
+def get_elb_info(q, params):
+    elb_client = params['elb_client']
+    region_info = params['region_info']
     while True:
         try:
-            region_info, lb = q.get()
+            lb = q.get()
             elb = {}
             elb_name = lb['LoadBalancerName']
             for key in ['DnsName', 'CreatedTime', 'AvailabilityZones', 'LoadBalancerName', 'SecurityGroups', 'Subnets', 'VpcId', 'Policies']:
@@ -207,13 +215,15 @@ def get_elbs_info(elb_client, region_info):
     elbs = elb_client.describe_load_balancers()['LoadBalancerDescriptions']
     region_info['elbs_count'] = len(elbs)
     show_status(region_info, 'elbs', False)
-    thread_work(elb_client, region_info, elbs, get_elb_info, num_threads = 5)
+    thread_work(elbs, get_elb_info, params = {'elb_client': elb_client, 'region_info': region_info}, num_threads = 5)
     show_status(region_info, 'elbs', False)
 
-def get_instance_info(ec2_client, q, paramas):
+def get_instance_info(q, params):
+    ec2_client = params['ec2_client']
+    region_info = params['region_info']
     while True:
         try:
-            region_info, (i, reservation_id) = q.get()
+            i, reservation_id = q.get()
             # Get instance variables
             instance = {}
             vpc_id = i['VpcId'] if 'VpcId' in i and i['VpcId'] else 'no-vpc'
@@ -244,7 +254,7 @@ def get_instances_info(ec2_client, region_info):
             instances.append((i, reservation['ReservationId']))
     region_info['instances_count'] = len(instances)
     show_status(region_info, ['vpcs', 'instances'], False)
-    thread_work(ec2_client, region_info, instances, get_instance_info, None, num_threads = 10)
+    thread_work(instances, get_instance_info, params = {'ec2_client': ec2_client, 'region_info': region_info}, num_threads = 10)
     show_status(region_info, ['vpcs', 'instances'], False)
 
 def get_network_acl_entries(entries, egress):
@@ -265,10 +275,12 @@ def get_network_acl_entries(entries, egress):
             acl_list.append(acl)
     return acl_list
 
-def get_vpc_info(ec2_client, q, params):
+def get_vpc_info(q, params):
+    ec2_client = params['ec2_client']
+    region_info = params['region_info']
     while True:
         try:
-            region_info, vpc = q.get()
+            vpc = q.get()
             manage_dictionary(region_info['vpcs'], vpc['VpcId'], {})
             get_name(vpc, vpc, 'VpcId')
             acls = ec2_client.describe_network_acls(Filters = [{'Name': 'vpc-id', 'Values': [vpc['VpcId']]}])
@@ -292,13 +304,15 @@ def get_vpcs_info(ec2_client, region_info):
     vpcs = ec2_client.describe_vpcs()['Vpcs']
     region_info['vpcs_count'] = len(vpcs)
     show_status(region_info, 'vpcs', False, True)
-    thread_work(ec2_client, region_info, vpcs, get_vpc_info, num_threads = 5)
+    thread_work(vpcs, get_vpc_info, params = {'ec2_client': ec2_client, 'region_info': region_info}, num_threads = 5)
     show_status(region_info, 'vpcs', False, True)
 
-def get_security_group_info(ec2_client, q, params):
+def get_security_group_info(q, params):
+    ec2_client = params['ec2_client']
+    region_info = params['region_info']
     while True:
         try:
-            region_info, group = q.get()
+            group = q.get()
             vpc_id = group['VpcId'] if 'VpcId' in group and group['VpcId'] else 'no-vpc'
             manage_vpc(region_info['vpcs'], vpc_id)
             manage_dictionary(region_info['vpcs'][vpc_id], 'security_groups', {})
@@ -315,7 +329,7 @@ def get_security_groups_info(ec2_client, region_info):
     security_groups = ec2_client.describe_security_groups()['SecurityGroups']
     region_info['security_groups_count' ] = len(security_groups)
     show_status(region_info, ['vpcs', 'security_groups'], False)
-    thread_work(ec2_client, region_info, security_groups, get_security_group_info, num_threads = 10)
+    thread_work(security_groups, get_security_group_info, params = {'ec2_client': ec2_client, 'region_info': region_info}, num_threads = 10)
     show_status(region_info, ['vpcs', 'security_groups'], False)
 
 def manage_vpc(vpc_info, vpc_id):
@@ -406,11 +420,12 @@ def formatted_status(region, elbs, eips, vpcs, sgs, instances, newline = False):
     if newline:
         sys.stdout.write('\n')
 
-def thread_region(connection_info, q, ec2_params):
-    key_id, secret, session_token = connection_info
+def thread_region(q, ec2_params):
+    key_id, secret, session_token = ec2_params['creds']
+    region_info = ec2_params['region_info']
     while True:
         try:
-            region_info, target = q.get()
+            target = q.get()
             if target == 'elastic_ips':
                 if region_info['name'] in ec2_params['ec2_regions']:
                     ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
