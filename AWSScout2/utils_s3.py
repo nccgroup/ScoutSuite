@@ -10,6 +10,10 @@ from AWSScout2.findings import *
 # Import third-party packages
 import botocore.client
 
+########################################
+# Globals
+########################################
+supported_services.append('s3')
 
 ########################################
 ##### S3 functions

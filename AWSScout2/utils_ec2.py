@@ -9,6 +9,10 @@ from AWSScout2.utils_ec2 import *
 from AWSScout2.filters import *
 from AWSScout2.findings import *
 
+########################################
+# Globals
+########################################
+supported_services.append('ec2')
 
 ########################################
 ##### EC2 analysis functions

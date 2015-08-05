@@ -11,6 +11,10 @@ import base64
 import json
 import urllib
 
+########################################
+# Globals
+########################################
+supported_services.append('iam')
 
 ########################################
 ##### IAM functions

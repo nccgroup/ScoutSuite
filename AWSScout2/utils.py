@@ -28,7 +28,8 @@ import requests
 ########################################
 # Globals
 ########################################
-supported_services = ['cloudtrail', 'ec2', 'iam', 'rds', 's3']
+supported_services = []
+ec2_classic = 'EC2-Classic'
 
 ########################################
 ##### Argument parser

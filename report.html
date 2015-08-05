@@ -97,6 +97,35 @@
       Handlebars.registerPartial("dashboard", $("#dashboard-partial").html());
     </script>
 
+    <!-- Generic left-menu partial for region-then-vpc-then-resource -->
+    <script id="region_vpc-partial" type="text/x-handlebars-template">
+      <ul class="list-group">
+        <li class="list-group-item">
+          <a href="javascript:showAll('{{service_name}}_{{resource_type}}')">
+            Show all<span class="badge pull-right">{{count_in "{{service_name}}" "regions.vpcs.{{resource_type}}"}}</span>
+          </a>
+        </li>
+      </ul>
+      {{#each regions}}
+        <ul class="list-group" id="{{../service_name}}_region-list-{{@key}}">
+          <li class="list-group-item active">{{@key}}</li>
+          {{#each vpcs}}
+            <div class="list-group-item list-sub-element">{{@key}}
+              {{#each (lookup . ../../resource_type)}}
+                <div class="list-group-item-text list-sub-element" id="{{../../../service_name}}_{{../../../resource_type}}-list-{{@key}}">
+                  <a href="javascript:browseTo('{{../../../service_name}}_{{../../../resource_type}}', '{{@key}}')">{{@key}}</a>
+                </div>
+              {{/each}}
+            </div>
+          {{/each}}
+        </ul>
+      {{/each}}
+    </script>
+    <script>
+      Handlebars.registerPartial("region_vpc", $("#region_vpc-partial").html());
+    </script>
+ 
+
     <!-- CloudTrail trail partial -->
     <script id="cloudtrail_region-partial" type="text/x-handlebars-template">
       <div class="list-group" id="cloudtrail_region-details-{{name}}">
@@ -1755,19 +1784,7 @@
       <div class="row" id="redshift_security_groups-row">
         <div class="col-sm-4" id="redshift_security_groups-list">
           <script id="redshift_security_group-list-template" type="text/x-handlebars-template">
-            <ul class="list-group">
-              <li class="list-group-item"><a href="javascript:showAll('redshift_security_group')">Show all<span class="badge pull-right">{{count_in "redshift" "regions.security_groups"}}</span></a></li>
-            </ul>
-            {{#each items}}
-              <ul class="list-group" id="redshift_region-list-{{@key}}">
-                <li class="list-group-item active">{{@key}}</li>
-                {{#each security_groups}}
-                  <div class="list-group-item list-sub-element">
-                    <div class="list-group-item-text list-sub-element" id="redshift_security_group-list-{{name}}"><a href="javascript:browseTo('redshift_security_group', '{{name}}')">{{name}}</a></div>
-                  </div>
-                {{/each}}
-              </ul>
-            {{/each}}
+            {{> region_vpc service_name = 'redshift' resource_type = 'security_groups' regions = items}}
           </script>
         </div>
         <div class="col-sm-8" id="redshift_security_groups-details">
