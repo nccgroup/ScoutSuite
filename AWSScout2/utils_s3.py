@@ -162,8 +162,8 @@ def get_s3_bucket(q, params):
 # Get key-specific information (server-side encryption, acls, etc...)
 def get_s3_bucket_keys(s3_client, bucket_name, bucket, check_encryption, check_acls):
     bucket['keys'] = {}
-    keys = handle_truncated_responses(s3_client.list_objects, {'Bucket': bucket_name}, 'Contents')
-    for key in keys:
+    keys = handle_truncated_response(s3_client.list_objects, {'Bucket': bucket_name}, ['Contents'])
+    for key in keys['Contents']:
         key_name = key.pop('Key')
         key['LastModified'] = str(key['LastModified'])
         bucket['keys'][key_name] = key

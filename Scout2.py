@@ -22,6 +22,7 @@ from AWSScout2.utils_cloudtrail import *
 from AWSScout2.utils_ec2 import *
 from AWSScout2.utils_iam import *
 from AWSScout2.utils_rds import *
+from AWSScout2.utils_redshift import *
 from AWSScout2.utils_s3 import *
 
 

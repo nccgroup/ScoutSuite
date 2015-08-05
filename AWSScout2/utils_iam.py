@@ -133,20 +133,6 @@ def parse_resource(permission, resource_string, resource, effect, keyword, name,
     manage_dictionary(permission[keyword][effect][name][resource_string][resource][policy_type], policy_name, {})
     permission[keyword][effect][name][resource_string][resource][policy_type][policy_name]['condition'] = condition
 
-def handle_truncated_response(iam_method, params, entities):
-    results = {}
-    for entity in entities:
-        results[entity] = []
-    while True:
-        response = iam_method(**params)
-        for entity in entities:
-            results[entity] = results[entity] + response[entity]
-        if 'IsTruncated' in response and response['IsTruncated'] == True:
-            params['Marker'] = response['Marker']
-        else:
-            break
-    return results
-
 def get_managed_policies(iam_client, iam_info):
     policies = []
     params = {}

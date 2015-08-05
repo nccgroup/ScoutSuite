@@ -681,6 +681,73 @@
         Handlebars.registerPartial("rds_security_group", $("#rds_security_group-partial").html());
     </script>
 
+<!-- TODO: get parameter groups and flag stuff like : require_ssl false, enable_user_activity_logging false (check what that is) -->
+
+    <!-- Redshift partials -->
+    <!-- Redshift cluster partial -->
+    <script id="redshift_cluster-partial" type="text/x-handlebars-template">
+      <div class="list-group" id="redshift_cluster-details-{{ClusterIdentifier}}">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{ClusterIdentifier}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text item-margin">Node Type: {{NodeType}}</div>
+          <div class="list-group-item-text item-margin">Allow Version Upgrade: {{AllowVersionUpgrade}}</div>
+          <div class="list-group-item-text item-margin">Automated Snapshot Retention Period: {{AutomatedSnapshotRetentionPeriod}}</div>
+          <div class="list-group-item-text item-margin">Publicly Accessible: {{PubliclyAccessible}}</div>
+          <div class="list-group-item-text item-margin">Created at: {{ClusterCreateTime}}</div>
+          <div class="list-group-item-text item-margin">Availability Zone: {{AvailabilityZone}}</div>
+          <div class="list-group-item-text item-margin">Encrypted: {{Encrypted}}</div>
+          <div class="list-group-item-text item-margin">Cluster Parameter Groups:
+            <ul>{{#each ClusterParameterGroups}}
+              <li>{{ParameterGroupName}}</li>
+            {{/each}}</ul>
+          </div>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Network</h4>
+          <div>Endpoint: {{Endpoint.Address}}:{{Endpoint.Port}}</div>
+          <div class="list-group-item-text item-margin">VPC: {{VpcId}}</div>
+          <div class="list-group-item-text item-margin">Subnet: {{ClusterSubnet}}</div>
+          <div class="list-group-item-text item-margin">Security groups:</div>
+          <ul class="item-margin">{{#each VpcSecurityGroups}}
+            <li>{{VpcSecurityGroupId}}</li>
+          {{/each}}
+          {{#each ClusterSecurityGroups}}
+            <li>:: TODO ::</li>
+          {{/each}}</ul>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Nodes</h4>
+          {{#each ClusterNodes}}
+          <div class="list-group-item-text">{{PrivateIPAddress}} -- {{PublicIPAddress}} -- {{NodeRole}}</div>
+          {{/each}}
+        </div>
+      </div>
+    </script>
+    <script>
+        Handlebars.registerPartial("redshift_cluster", $("#redshift_cluster-partial").html());
+    </script>
+    <!-- Redshift security group partials -->
+    <script id="redshift_security_group-partial" type="text/x-handlebars-template">
+      <div class="list-group" id="redshift_security_group-details-{{id}}">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{this.name}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text item-margin">Description: {{description}}</div>
+          <div class="list-group-item-text item-margin">ID: {{id}}</div>
+        </div>
+      </div>
+    </script>
+    <script>
+        Handlebars.registerPartial("redshift_security_group", $("#redshift_security_group-partial").html());
+    </script>
+
+
+    <!-- S3 partials -->
     <!-- S3 bucket partial -->
     <script id="s3_bucket-partial" type="text/x-handlebars-template">
       <div class="list-group" id="s3_bucket-details-{{Name}}">
@@ -1020,6 +1087,27 @@
                   <li class="divider"></li>
                   <li class="dropdown-header">Summaries</li>
                   <li><a href="javascript:list_generic('rds_dashboard')">Dashboard</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">Security risks</li>
+                  {{#each items}}
+                    {{> finding_menu_item}}
+                  {{/each}}
+                </script>
+              </ul>
+            </li>
+            <!-- TODO: stop duplicating this code... automate it based on the data structure -->
+            <li class="dropdown">
+              <a href="javascript:show_redshift()" class="dropdown-toggle" data-toggle="dropdown"><span id="redshift_dropdown">Redshift</span><b class="caret"></b></a>
+              <ul class="dropdown-menu" id="redshift_violations-list">
+                <li class="dropdown-header">Redshift config</li>
+                <li><a href="javascript:load_config('redshift')">Load</a></li>
+                <script id="redshift_violation-list-template" type="text/x-handlebars-template">
+                  <li class="dropdown-header">Redshift config</li>
+                  <li><a href="javascript:list_generic('redshift_cluster')">Clusters</a></li>
+                  <li><a href="javascript:list_generic('redshift_security_group')">Security Groups</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">Summaries</li>
+                  <li><a href="javascript:list_generic('redshift_dashboard')">Dashboard</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
@@ -1614,6 +1702,70 @@
               <div id="rds_region-details-{{@key}}">
                 {{#each security_groups}}
                   {{> rds_security_group region=../../name }}
+                {{/each}}
+              </div>
+            {{/each}}
+          </script>
+        </div><!-- /.col-sm-8 -->
+      </div><!-- /.row -->
+
+      <!-- Template for Redshift security groups -->
+      <!-- TODO: look into making this generic... -->
+      <div class="row" id="redshift_security_groups-row">
+        <div class="col-sm-4" id="redshift_security_groups-list">
+          <script id="redshift_security_group-list-template" type="text/x-handlebars-template">
+            <ul class="list-group">
+              <li class="list-group-item"><a href="javascript:showAll('redshift_security_group')">Show all<span class="badge pull-right">{{count_in "redshift" "regions.security_groups"}}</span></a></li>
+            </ul>
+            {{#each items}}
+              <ul class="list-group" id="redshift_region-list-{{@key}}">
+                <li class="list-group-item active">{{@key}}</li>
+                {{#each security_groups}}
+                  <div class="list-group-item list-sub-element">
+                    <div class="list-group-item-text list-sub-element" id="redshift_security_group-list-{{name}}"><a href="javascript:browseTo('redshift_security_group', '{{name}}')">{{name}}</a></div>
+                  </div>
+                {{/each}}
+              </ul>
+            {{/each}}
+          </script>
+        </div>
+        <div class="col-sm-8" id="redshift_security_groups-details">
+          <script id="redshift_security_group-detail-template" type="text/x-handlebars-template">
+            {{#each items}}
+              <div id="redshift_region-details-{{@key}}">
+                {{#each security_groups}}
+                  {{> redshift_security_group region=../../name }}
+                {{/each}}
+              </div>
+            {{/each}}
+          </script>
+        </div><!-- /.col-sm-8 -->
+      </div><!-- /.row -->
+
+      <!-- Template for Redshift clusters -->
+      <!-- TODO: look into making this generic... -->
+      <div class="row" id="redshift_clusters-row">
+        <div class="col-sm-4" id="redshift_clusters-list">
+          <script id="redshift_cluster-list-template" type="text/x-handlebars-template">
+            <ul class="list-group">
+              <li class="list-group-item"><a href="javascript:showAll('redshift_cluster')">Show all<span class="badge pull-right">{{count_in "redshift" "regions.clusters"}}</span></a></li>
+            </ul>
+            {{#each items}}
+              <ul class="list-group" id="redshift_region-list-{{@key}}">
+                <li class="list-group-item active">{{@key}}</li>
+                {{#each clusters}}
+                  <div class="list-group-item list-sub-element" id="redshift_cluster-list-{{ClusterIdentifier}}"><a href="javascript:browseTo('redshift_cluster', '{{ClusterIdentifier}}')">{{ClusterIdentifier}}</a></div>
+                {{/each}}
+              </ul>
+            {{/each}}
+          </script>
+        </div>
+        <div class="col-sm-8" id="redshift_clusters-details">
+          <script id="redshift_cluster-detail-template" type="text/x-handlebars-template">
+            {{#each items}}
+              <div id="redshift_region-details-{{@key}}">
+                {{#each clusters}}
+                  {{> redshift_cluster region=@../key}}
                 {{/each}}
               </div>
             {{/each}}

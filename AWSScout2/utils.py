@@ -224,7 +224,7 @@ def load_info_from_json(service, environment_name):
             aws_config = json.loads(json_payload)
     except Exception as e:
         return {}
-    return aws_config['services'][service] if service in aws_config['services'] else {}
+    return aws_config['services'][service] if 'services' in aws_config and service in aws_config['services'] else {}
     
 
 def load_from_json(keyword, var):

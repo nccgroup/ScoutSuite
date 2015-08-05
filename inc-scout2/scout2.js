@@ -404,6 +404,13 @@ function load_config(keyword) {
                 highlight_violations(aws_info['services']['rds']['violations'], 'rds');
                 load_aws_config_from_json(aws_info['services']['rds']['violations'], 'rds_dashboard', 1);
             }
+            else if (keyword == 'redshift') {
+                load_aws_config_from_json(aws_info['services']['redshift']['regions'], 'redshift_security_group', 2);
+                load_aws_config_from_json(aws_info['services']['redshift']['regions'], 'redshift_cluster', 2);
+                highlight_violations(aws_info['services']['redshift']['violations'], 'redshift');
+//                load_aws_config_from_json(aws_info['services']['redshift']['violations'], 'redshift_dashboard', 1);
+                  console.log('a');
+            }
             else if (keyword == 's3') {
                 load_aws_config_from_json(aws_info['services']['s3']['buckets'], 's3_bucket', 2);
                 highlight_violations(aws_info['services']['s3']['violations'], 's3');
