@@ -112,9 +112,7 @@
           {{#each vpcs}}
             <div class="list-group-item list-sub-element">{{@key}}
               {{#each (lookup . ../../resource_type)}}
-                <div class="list-group-item-text list-sub-element" id="{{../../../service_name}}_{{../../../resource_type}}-list-{{@key}}">
-                  <a href="javascript:browseTo('{{../../../service_name}}_{{../../../resource_type}}', '{{@key}}')">{{@key}}</a>
-                </div>
+                {{> (lookup ../../.. 'partial_name') service_name = ../../../service_name region = @../../key vpc = @../key resource_type = ../../../resource_type resource_key = @key resource = this}}
               {{/each}}
             </div>
           {{/each}}
@@ -123,6 +121,15 @@
     </script>
     <script>
       Handlebars.registerPartial("region_vpc", $("#region_vpc-partial").html());
+    </script>
+    <!-- Generic left-menu link partial for region-then-vpc-then-resource -->
+    <script id="region_vpc_link-partial" type="text/x-handlebars-template">
+      <div class="list-group-item-text list-sub-element" id="{{service_name}}_{{resource_type}}-list-{{resource_key}}">
+        <a href="#{{service_name}}/regions/{{region}}/vpcs/{{vpc}}/{{resource_type}}/{{resource_key}}/details">{{resource_key}}</a>
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("region_vpc_link", $("#region_vpc_link-partial").html());
     </script>
  
 
@@ -1784,7 +1791,7 @@
       <div class="row" id="redshift_security_groups-row">
         <div class="col-sm-4" id="redshift_security_groups-list">
           <script id="redshift_security_group-list-template" type="text/x-handlebars-template">
-            {{> region_vpc service_name = 'redshift' resource_type = 'security_groups' regions = items}}
+            {{> region_vpc service_name = 'redshift' resource_type = 'security_groups' regions = items partial_name = 'region_vpc_link'}}
           </script>
         </div>
         <div class="col-sm-8" id="redshift_security_groups-details">
