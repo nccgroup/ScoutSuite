@@ -46,6 +46,29 @@
         Handlebars.registerPartial("finding_menu_item", $("#finding_menu_item-partial").html());
     </script>
 
+    <!-- Accordion partial -->
+    <script id="accordion-partial" type="text/x-handlebars-template">
+        <div class="list-group-item" style="padding-bottom: 0 !important;">
+          <div class="accordion">
+            <h4 class="list-group-item-heading accordion-heading">{{make_title member_type}}
+              <a class="accordion-toggle" data-toggle="collapse" href="#{{service_name}}-{{resource_type}}-{{resource_id}}-{{member_type}}"><span class="badge pull-right btn-info">{{members.length}}</span></a>
+            </h4>
+            <div id="{{service_name}}-{{resource_type}}-{{resource_id}}-{{member_type}}" class="accordion-body collapse">
+              <div class="accordion-inner">
+                <ul>
+                  {{#each members}}
+                    <li>{{> (lookup .. 'member_partial_name')}}</li>
+                  {{/each}}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+    </script>
+    <script>
+        Handlebars.registerPartial("accordion", $("#accordion-partial").html());
+    </script>
+
     <!-- Generic dashboard partial -->
     <script id="dashboard-partial" type="text/x-handlebars-template">
       <div class="container">
@@ -692,38 +715,43 @@
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Information</h4>
-          <div class="list-group-item-text item-margin">Node Type: {{NodeType}}</div>
-          <div class="list-group-item-text item-margin">Allow Version Upgrade: {{AllowVersionUpgrade}}</div>
-          <div class="list-group-item-text item-margin">Automated Snapshot Retention Period: {{AutomatedSnapshotRetentionPeriod}}</div>
-          <div class="list-group-item-text item-margin">Publicly Accessible: {{PubliclyAccessible}}</div>
-          <div class="list-group-item-text item-margin">Created at: {{ClusterCreateTime}}</div>
-          <div class="list-group-item-text item-margin">Availability Zone: {{AvailabilityZone}}</div>
-          <div class="list-group-item-text item-margin">Encrypted: {{Encrypted}}</div>
-          <div class="list-group-item-text item-margin">Cluster Parameter Groups:
-            <ul>{{#each ClusterParameterGroups}}
-              <li>{{ParameterGroupName}}</li>
-            {{/each}}</ul>
-          </div>
+          <ul>
+            <li class="list-group-item-text">Node Type: {{NodeType}}</li>
+            <li class="list-group-item-text">Allow Version Upgrade: {{AllowVersionUpgrade}}</li>
+            <li class="list-group-item-text">Automated Snapshot Retention Period: {{AutomatedSnapshotRetentionPeriod}}</li>
+            <li class="list-group-item-text">Publicly Accessible: {{PubliclyAccessible}}</li>
+            <li class="list-group-item-text">Created at: {{ClusterCreateTime}}</li>
+            <li class="list-group-item-text">Availability Zone: {{AvailabilityZone}}</li>
+            <li class="list-group-item-text">Encrypted: {{Encrypted}}</li>
+            <li class="list-group-item-text">Cluster Parameter Groups:
+              <ul>
+                {{#each ClusterParameterGroups}}
+                  <li>{{ParameterGroupName}}</li>
+                {{/each}}
+              </ul>
+            </li>
+          </ul>
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Network</h4>
-          <div>Endpoint: {{Endpoint.Address}}:{{Endpoint.Port}}</div>
-          <div class="list-group-item-text item-margin">VPC: {{VpcId}}</div>
-          <div class="list-group-item-text item-margin">Subnet: {{ClusterSubnet}}</div>
-          <div class="list-group-item-text item-margin">Security groups:</div>
-          <ul class="item-margin">{{#each VpcSecurityGroups}}
-            <li>{{VpcSecurityGroupId}}</li>
-          {{/each}}
-          {{#each ClusterSecurityGroups}}
-            <li>:: TODO ::</li>
-          {{/each}}</ul>
+          <ul>
+            <li class="list-group-item-text">Endpoint: {{Endpoint.Address}}:{{Endpoint.Port}}</li>
+            <li class="list-group-item-text">Publicly accessible: {{PubliclyAccessible}}</li>
+            <li class="list-group-item-text">VPC: {{VpcId}}</li>
+            <li class="list-group-item-text">Subnet: {{ClusterSubnetGroupName}}</li>
+            <li class="list-group-item-text">Security groups:
+              <ul>
+                {{#each VpcSecurityGroups}}
+                  <li>{{VpcSecurityGroupId}}</li>
+                {{/each}}
+                {{#each ClusterSecurityGroups}}
+                  <li>:: TODO ::</li>
+                {{/each}}
+              </ul>
+            </li>
+          </ul>
         </div>
-        <div class="list-group-item">
-          <h4 class="list-group-item-heading">Nodes</h4>
-          {{#each ClusterNodes}}
-          <div class="list-group-item-text">{{PrivateIPAddress}} -- {{PublicIPAddress}} -- {{NodeRole}}</div>
-          {{/each}}
-        </div>
+        {{> accordion service_name = 'redshift' resource_type = 'cluster' resource_id = ClusterIdentifier member_type = 'Nodes' members = ClusterNodes member_partial_name = 'redshift_cluster_node'}}
       </div>
     </script>
     <script>
@@ -745,7 +773,13 @@
     <script>
         Handlebars.registerPartial("redshift_security_group", $("#redshift_security_group-partial").html());
     </script>
-
+    <!-- Redshift node partial -->
+    <script id="redshift_cluster_node-partial" type="text/x-handlebars-template">
+      {{NodeRole}}: {{PrivateIPAddress}} / {{PublicIPAddress}}
+    </script>
+    <script>
+        Handlebars.registerPartial("redshift_cluster_node", $("#redshift_cluster_node-partial").html());
+    </script>
 
     <!-- S3 partials -->
     <!-- S3 bucket partial -->
