@@ -805,14 +805,13 @@
     </script>
     <!-- Redshift security group partials -->
     <script id="redshift_security_group-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="redshift_security_group-details-{{id}}">
+      <div class="list-group" id="redshift_security_group-details-{{resource_key}}">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">Foo</h4>
+          <h4 class="list-group-item-heading">{{resource_key}}</h4>
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Information</h4>
-          <div class="list-group-item-text item-margin">Description: {{description}}</div>
-          <div class="list-group-item-text item-margin">ID: {{id}}</div>
+          <div class="list-group-item-text item-margin">Description: {{Description}}</div>
         </div>
       </div>
     </script>
