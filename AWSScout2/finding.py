@@ -48,7 +48,7 @@ class Finding(Filter):
     # arg0: object attribute to check (date)
     # arg1: date to compare with
     def wasCreatedBefore(self, key, obj):
-        creation_date = dateutil.parser.parse(obj[self.callback_args[0]]).replace(tzinfo=None)
+        creation_date = dateutil.parser.parse(str(obj[self.callback_args[0]])).replace(tzinfo=None)
         expiration_date = dateutil.parser.parse(self.callback_args[1]).replace(tzinfo=None)
         age = (creation_date - expiration_date).days
         if (age < 0):
