@@ -13,6 +13,7 @@ cloudtrail_filter_dictionary = {}
 iam_filter_dictionary = {}
 ec2_filter_dictionary = {}
 rds_filter_dictionary = {}
+redshift_filter_dictionary = {}
 s3_filter_dictionary = {}
 
 ########################################

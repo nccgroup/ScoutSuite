@@ -71,3 +71,9 @@ class Finding(Filter):
         threshold = int(self.callback_args[1])
         if value < threshold:
              self.addItem(key)
+
+    # arg0: name of the attribute to check
+    def isNotTrue(self, key, obj):
+        value = bool(obj[self.callback_args[0]])
+        if not value:
+            self.addItem(key)

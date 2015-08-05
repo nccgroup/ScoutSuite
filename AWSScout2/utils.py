@@ -112,7 +112,7 @@ class Scout2Encoder(json.JSONEncoder):
 # Violations search functions
 ########################################
 
-def analyze_config(finding_dictionary, filter_dictionary, config, keyword, force_write):
+def analyze_config(finding_dictionary, filter_dictionary, config, keyword, force_write = False):
     # Filters
     try:
         for key in filter_dictionary:

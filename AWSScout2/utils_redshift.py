@@ -17,8 +17,9 @@ supported_services.append('redshift')
 ########################################
 
 # Analysis
-def analyze_redshift_config(redshift_info, aws_account_id, force_write):
-    print 'f0000'
+def analyze_redshift_config(redshift_config, aws_account_id, force_write):
+    printInfo('Analyzing Redshift config...')
+    analyze_config(redshift_finding_dictionary, redshift_filter_dictionary, redshift_config, 'Redshift')
 
 ########################################
 ##### Redshift fetching
@@ -69,4 +70,6 @@ def get_redshift_cluster_security_groups(redshift_client, region_config):
 def get_redshift_clusters_info(redshift_client, region_config):
     region_config['clusters'] = {}
     clusters = handle_truncated_response(redshift_client.describe_clusters, {}, ['Clusters'])
-    region_config['clusters'] = clusters['Clusters']
+    for cluster in clusters['Clusters']:
+        cluster_id = cluster.pop('ClusterIdentifier')
+        region_config['clusters'][cluster_id] = cluster

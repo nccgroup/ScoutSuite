@@ -709,9 +709,9 @@
     <!-- Redshift partials -->
     <!-- Redshift cluster partial -->
     <script id="redshift_cluster-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="redshift_cluster-details-{{ClusterIdentifier}}">
+      <div class="list-group" id="redshift_cluster-details-{{id}}">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{ClusterIdentifier}}</h4>
+          <h4 class="list-group-item-heading">{{id}}</h4>
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Information</h4>
@@ -751,7 +751,7 @@
             </li>
           </ul>
         </div>
-        {{> accordion service_name = 'redshift' resource_type = 'cluster' resource_id = ClusterIdentifier member_type = 'Nodes' members = ClusterNodes member_partial_name = 'redshift_cluster_node'}}
+        {{> accordion service_name = 'redshift' resource_type = 'cluster' resource_id = id member_type = 'Nodes' members = ClusterNodes member_partial_name = 'redshift_cluster_node'}}
       </div>
     </script>
     <script>
@@ -1246,6 +1246,13 @@
         <div class="col-sm-12" id="rds_dashboards-list">
           <script id="rds_dashboard-list-template" type="text/x-handlebars-template">
             {{> dashboard service_name = 'rds'}}
+          </script>
+        </div>
+      </div>
+      <div class="row" id="redshift_dashboards-row">
+        <div class="col-sm-12" id="redshift_dashboards-list">
+          <script id="redshift_dashboard-list-template" type="text/x-handlebars-template">
+            {{> dashboard service_name = 'redshift'}}
           </script>
         </div>
       </div>
@@ -1788,7 +1795,7 @@
               <ul class="list-group" id="redshift_region-list-{{@key}}">
                 <li class="list-group-item active">{{@key}}</li>
                 {{#each clusters}}
-                  <div class="list-group-item list-sub-element" id="redshift_cluster-list-{{ClusterIdentifier}}"><a href="javascript:browseTo('redshift_cluster', '{{ClusterIdentifier}}')">{{ClusterIdentifier}}</a></div>
+                  <div class="list-group-item list-sub-element" id="redshift_cluster-list-{{@key}}"><a href="javascript:browseTo('redshift_cluster', '{{@key}}')">{{@key}}</a></div>
                 {{/each}}
               </ul>
             {{/each}}
@@ -1799,7 +1806,7 @@
             {{#each items}}
               <div id="redshift_region-details-{{@key}}">
                 {{#each clusters}}
-                  {{> redshift_cluster region=@../key}}
+                  {{> redshift_cluster region = @../key id = @key}}
                 {{/each}}
               </div>
             {{/each}}

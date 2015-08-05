@@ -1,1 +1,12 @@
-{}
+{
+    "no-version-upgrade": {
+        "description": "Version upgrade disabled",
+        "entity": "regions.clusters",
+        "callback": "isNotTrue",
+        "callback_args": [ "AllowVersionUpgrade" ],
+        "level": "danger",
+        "questions": [
+            "Report Redshift clusters that do not allow version upgrade"
+        ]
+    }
+}
