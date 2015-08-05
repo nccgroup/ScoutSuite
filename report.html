@@ -755,9 +755,9 @@
     <!-- Redshift partials -->
     <!-- Redshift cluster partial -->
     <script id="redshift_cluster-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="redshift_cluster-details-{{id}}">
+      <div class="list-group" id="redshift_cluster-details-{{resource_key}}">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{id}}</h4>
+          <h4 class="list-group-item-heading">{{resource_key}}</h4>
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Information</h4>
@@ -788,10 +788,10 @@
             <li class="list-group-item-text">Security groups:
               <ul>
                 {{#each VpcSecurityGroups}}
-                  <li>{{VpcSecurityGroupId}}</li>
+                  <li>{{VpcSecurityGroupId}}: {{Status}}</li>
                 {{/each}}
                 {{#each ClusterSecurityGroups}}
-                  <li>:: TODO ::</li>
+                  <li>{{ClusterSecurityGroupName}}: {{Status}}</li>
                 {{/each}}
               </ul>
             </li>
@@ -820,7 +820,7 @@
               <li class="list-group-item-text">IP addresses:</li>
               <ul>
                 {{#each IPRanges}}
-                  <li class="list-group-item-text">{{CIDRIP}} {{Status}}</li>
+                  <li class="list-group-item-text">{{CIDRIP}}: {{Status}}</li>
                 {{/each}}
               </ul>
             {{/if}}
@@ -828,7 +828,7 @@
               <li class="list-group-item-text">EC2 security groups:</li>
               <ul>
                 {{#each EC2SecurityGroups}}
-                  <li class="list-group-item-text">{{EC2SecurityGroupName}} (AWS account ID {{UserId}})</li>
+                  <li class="list-group-item-text">{{EC2SecurityGroupName}} (AWS account ID {{UserId}}): {{Status}}</li>
                 {{/each}}
               </ul>
             {{/if}}
@@ -1835,28 +1835,12 @@
       <div class="row" id="redshift_clusters-row">
         <div class="col-sm-4" id="redshift_clusters-list">
           <script id="redshift_cluster-list-template" type="text/x-handlebars-template">
-            <ul class="list-group">
-              <li class="list-group-item"><a href="javascript:showAll('redshift_cluster')">Show all<span class="badge pull-right">{{count_in "redshift" "regions.clusters"}}</span></a></li>
-            </ul>
-            {{#each items}}
-              <ul class="list-group" id="redshift_region-list-{{@key}}">
-                <li class="list-group-item active">{{@key}}</li>
-                {{#each clusters}}
-                  <div class="list-group-item list-sub-element" id="redshift_cluster-list-{{@key}}"><a href="javascript:browseTo('redshift_cluster', '{{@key}}')">{{@key}}</a></div>
-                {{/each}}
-              </ul>
-            {{/each}}
+            {{> region_vpc service_name = 'redshift' resource_type = 'clusters' regions = items partial_name = 'region_vpc_link' is_menu = true}}
           </script>
         </div>
         <div class="col-sm-8" id="redshift_clusters-details">
           <script id="redshift_cluster-detail-template" type="text/x-handlebars-template">
-            {{#each items}}
-              <div id="redshift_region-details-{{@key}}">
-                {{#each clusters}}
-                  {{> redshift_cluster region = @../key id = @key}}
-                {{/each}}
-              </div>
-            {{/each}}
+            {{> region_vpc service_name = 'redshift' resource_type = 'clusters' regions = items partial_name = 'redshift_cluster'}}
           </script>
         </div><!-- /.col-sm-8 -->
       </div><!-- /.row -->
