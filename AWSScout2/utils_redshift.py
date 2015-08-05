@@ -44,13 +44,41 @@ def get_redshift_region(q, params):
         try:
             region = q.get()
             redshift_client = connect_redshift(key_id, secret, session_token, region)
+            get_redshift_clusters(redshift_client, redshift_config['regions'][region])
+            get_redshift_cluster_parameter_groups(redshift_client, redshift_config['regions'][region])
             get_redshift_cluster_security_groups(redshift_client, redshift_config['regions'][region])
-            get_redshift_clusters_info(redshift_client, redshift_config['regions'][region])
         except Exception as e:
             printException(e)
             pass
         finally:
             q.task_done()
+
+#
+# Clusters
+#
+def get_redshift_clusters(redshift_client, region_config):
+    region_config['clusters'] = {}
+    clusters = handle_truncated_response(redshift_client.describe_clusters, {}, ['Clusters'])
+    for cluster in clusters['Clusters']:
+        cluster_id = cluster.pop('ClusterIdentifier')
+        region_config['clusters'][cluster_id] = cluster
+
+#
+# Parameter groups
+#
+def get_redshift_cluster_parameter_groups(redshift_client, region_config):
+    region_config['parameter_groups'] = {}
+    parameter_groups = handle_truncated_response(redshift_client.describe_cluster_parameter_groups, {}, ['ParameterGroups'])
+    for parameter_group in parameter_groups['ParameterGroups']:
+        parameter_group_name = parameter_group.pop('ParameterGroupName')
+        region_config['parameter_groups'][parameter_group_name] = parameter_group
+        parameters = handle_truncated_response(redshift_client.describe_cluster_parameters, {'ParameterGroupName': parameter_group_name}, ['Parameters'])
+        region_config['parameter_groups'][parameter_group_name]['parameters'] = []
+        for parameter in parameters['Parameters']:
+            param = {}
+            for key in ['ParameterName', 'ParameterValue', 'Source']:
+                param[key] = parameter[key]
+            region_config['parameter_groups'][parameter_group_name]['parameters'].append(param)
 
 #
 # Security groups
@@ -63,13 +91,3 @@ def get_redshift_cluster_security_groups(redshift_client, region_config):
     except Exception as e:
         # An exception occurs when VPC-by-default customers make this call, silently pass
         pass
-
-#
-# Clusters
-#
-def get_redshift_clusters_info(redshift_client, region_config):
-    region_config['clusters'] = {}
-    clusters = handle_truncated_response(redshift_client.describe_clusters, {}, ['Clusters'])
-    for cluster in clusters['Clusters']:
-        cluster_id = cluster.pop('ClusterIdentifier')
-        region_config['clusters'][cluster_id] = cluster
