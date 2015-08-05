@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 
 # Import opinel
 from opinel.utils_s3 import *
