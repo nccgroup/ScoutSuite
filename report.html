@@ -311,21 +311,24 @@
         {{#each rules}}
           {{> ec2_security_group-rule_list this sg_name = ../name sg_id = ../id direction = @key}}
         {{/each}}
-        {{#if used_by}}
-          <div class="list-group-item">
-            <h4 class="list-group-item-heading">Usage</h4>
-            <ul>
-              {{#each used_by}}
-                <li>{{@key}}:</li>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Usage</h4>
+          <ul>
+            {{#each used_by}}
+              {{#each resource_type}}
+                <li>{{make_title @../key}} {{make_title @key}}:</li>
                 <ul>
                   {{#each this}}
-                    {{> ec2_security_group-resource_list resource_type=@../key resources=this status=@key region=../../region vpc=../../vpc group=../../id}}
+                    {{> ec2_security_group-resource_list service=@../../key resource_type=@../key resources=this status=@key region=../../../region vpc=../../../vpc group=../../../id}}
                   {{/each}}
                 </ul>
               {{/each}}
-            </ul>
-          </div>
-        {{/if}}
+            {{/each}}
+          </ul>
+          <span id="ec2_security_groups-unused-{{id}}" class="finding-hidden item-margin">
+            <i class="glyphicon glyphicon-warning-sign"></i> This group is not used by either EC2, RDS, or Redshift.
+          </span>
+        </div>
       </div>
     </script>
     <script>
@@ -336,15 +339,15 @@
       {{#if resources}}
         <div class="accordion">
           <li><h5 class="list-group-item-heading accordion-heading">{{make_title status}}
-            <a class="accordion-toggle" data-toggle="collapse" href="#ec2_security_group-{{group}}-{{resource_type}}_list-{{status}}">
+            <a class="accordion-toggle" data-toggle="collapse" href="#ec2_security_group-{{group}}-{{service}}_{{resource_type}}_list-{{status}}">
               <span class="badge pull-right btn-info">{{resources.length}}</span>
             </a>
           </h5></li>
-          <div id="ec2_security_group-{{group}}-{{resource_type}}_list-{{status}}" class="accordion-body collapse">
+          <div id="ec2_security_group-{{group}}-{{service}}_{{resource_type}}_list-{{status}}" class="accordion-body collapse">
             <div class="accordion-inner">
               <ul>
               {{#each resources}}
-                <li class="list-group-item-text"><a href="javascript:showEC2Instance('{{../region}}','{{../vpc}}','{{this}}')">{{this}}</a></li>
+                <li class="list-group-item-text"><a href="javascript:showObject(['services', '{{../service}}', 'regions', '{{../region}}', 'vpcs', '{{../vpc}}', '{{../resource_type}}', '{{this}}'])">{{this}}</a></li>
               {{/each}}
               </ul>
             </div>
@@ -556,7 +559,7 @@
               <div class="accordion-inner">
                 <ul class="no-bullet">
                   {{#each Users}}
-                    <li><a href="javascript:showIAMUser('{{this}}')">{{this}}</a></li>
+                    <li><a href="javascript:showObject(['services', 'iam', 'Users', '{{this}}'])">{{this}}</a></li>
                   {{/each}}
                 </ul>
               </div>
@@ -713,7 +716,7 @@
           <h4 class="list-group-item-heading">Groups</h4>
           <ul class="no-bullet">
           {{#each Groups}}
-            <li class="list-group-item-text"><a href="javascript:showIAMGroup('{{GroupName}}')">{{GroupName}}</a></li>
+            <li class="list-group-item-text"><a href="javascript:showObject(['services', 'iam', 'Groups', '{{GroupName}}'])">{{GroupName}}</a></li>
           {{/each}}
           </ul>
         </div>
@@ -898,7 +901,7 @@
           <h4 class="list-group-item-heading">Parameters</h4>
           <ul>
             {{#each parameters}}
-              <li class="list-group-item-text">{{@key}}: 
+              <li class="list-group-item-text">{{@key}}:
                 <span id="redshift_parameter_groups-{{@key}}-not-true-{{../resource_key}}">{{value}}</span>
               </li>
             {{/each}}
@@ -1151,6 +1154,24 @@
     </script>
     <script>
         var single_iam_user_template = Handlebars.compile($("#single_iam_User-template").html());
+    </script>
+
+    <!-- Single RDS instance template -->
+    <script id="single_rds_instance-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> rds_instance}}
+    </script>
+    <script>
+        var single_rds_instance_template = Handlebars.compile($("#single_rds_instance-template").html());
+    </script>
+
+    <!-- Single Redshift cluster template -->
+    <script id="single_redshift_cluster-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> redshift_cluster}}
+    </script>
+    <script>
+        var single_redshift_cluster_template = Handlebars.compile($("#single_redshift_cluster-template").html());
     </script>
 
     <!-- Single S3 bucket template -->
@@ -1710,7 +1731,7 @@
                             <ul>
                               {{#each this}}
                                 {{addMember 'name' @key}}
-                                <li class="list-group-item-text"><a href="javascript:{{entity_details_callback ../../../type}}('{{@key}}')">{{@key}}</a></li>
+                                <li class="list-group-item-text"><a href="javascript:showObject(['services', 'iam', '{{../../../type}}', '{{@key}}'])">{{@key}}</a></li>
                                 <ul>
                                   {{#each this}}
                                     {{#ifShow @key 'name'}}
@@ -1889,8 +1910,14 @@
       </div><!-- /.row -->
 
 
+
+      <!---------------------->
       <!-- Redshift section -->
-      <!-- Template for Redshift clusters -->
+      <!---------------------->
+
+
+
+      <!-- Redshift clusters -->
       <div class="row" id="redshift_clusters-row">
         <div class="col-sm-4" id="redshift_clusters-list">
           <script id="redshift_cluster-list-template" type="text/x-handlebars-template">
@@ -1903,7 +1930,8 @@
           </script>
         </div>
       </div>
-      <!-- Template for Redshift parameter groups -->
+
+      <!-- Redshift parameter groups -->
       <div class="row" id="redshift_parameter_groups-row">
         <div class="col-sm-4" id="redshift_parameter_groups-list">
           <script id="redshift_parameter_group-list-template" type="text/x-handlebars-template">
@@ -1916,7 +1944,8 @@
           </script>
         </div>
       </div>
-      <!-- Template for Redshift security groups -->
+
+      <!-- Redshift security groups -->
       <div class="row" id="redshift_security_groups-row">
         <div class="col-sm-4" id="redshift_security_groups-list">
           <script id="redshift_security_group-list-template" type="text/x-handlebars-template">
@@ -1931,8 +1960,14 @@
       </div>
 
 
+
+      <!---------------->
       <!-- S3 section -->
-      <!-- Template for S3 buckets -->
+      <!---------------->
+
+
+
+      <!-- S3 buckets -->
       <div class="row" id="s3_buckets-row">
         <div class="col-sm-4">
           <ul class="list-group" id="s3_buckets-list">

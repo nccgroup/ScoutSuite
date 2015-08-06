@@ -115,7 +115,7 @@ class Ec2Finding(Finding):
                         self.addItem(pn, obj['name'])
 
     def isUnused(self, key, obj):
-        if not 'instances' is obj:
+        if 'used_by' not in obj or len(obj['used_by']) == 0:
             self.addItem(obj['id'])
 
     def checkTrafficRulesToSelf(self, key, obj):

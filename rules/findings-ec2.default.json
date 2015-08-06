@@ -215,7 +215,7 @@
             "Report security groups that whitelist non-elastic EC2 public IP addresses"
         ]
     },
-    "unused-security-groups": {
+    "unused": {
         "description": "Unused security groups",
         "entity": "regions.vpcs.security_groups",
         "callback": "isUnused",

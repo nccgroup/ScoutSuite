@@ -100,7 +100,7 @@ function showRowWithDetails(keyword) {
     showAll(keyword);
 }
 function showAll(keyword) {
-    prefix = keyword.split('_')[0]; 
+    prefix = keyword.split('_')[0];
     $("[id*='" + keyword + "-list']").show();
     $("[id*='" + keyword + "-details']").show();
     $("[id*='" + keyword + "-filter']").show();
@@ -233,9 +233,36 @@ function showEC2SecurityGroup(region, vpc, id) {
     $('#overlay-details').html(single_ec2_security_group_template(data));
     showPopup();
 }
-function showIAMGroup(group_name) {
-    var data = aws_info['services']['iam']['Groups'][group_name];
-    $('#overlay-details').html(single_iam_group_template(data));
+function showObject(path) {
+    var plen = path.length
+    var data = aws_info;
+    for (var i = 0; i < plen; i++) {
+        data = data[path[i]];
+    }
+    var resource_type = path[1] + '_' + path[plen-2];
+    switch(resource_type) {
+        case "iam_Groups":
+            $('#overlay-details').html(single_iam_group_template(data));
+        break;
+        case "iam_Roles":
+            $('#overlay-details').html(single_iam_role_template(data));
+        break;
+        case "iam_Users":
+            $('#overlay-details').html(single_iam_user_template(data));
+        break;
+        case "ec2_instances":
+            $('#overlay-details').html(single_ec2_instance_template(data));
+        break;
+        case "ec2_security_groups":
+            $('#overlay-details').html(single_ec2_security_group_template(data));
+        break;
+        case "rds_instances":
+            $('#overlay-details').html(single_rds_instance_template(data));
+        break;
+        case "redshift_clusters":
+            $('#overlay-details').html(single_redshift_cluster_template(data));
+        break;
+    }
     showPopup();
 }
 function showIAMManagedPolicy(policy_arn) {
@@ -255,16 +282,6 @@ function showIAMPolicy(data) {
     showPopup();
     var id = '#iam_policy_details-' + data['report_id'];
     $(id).toggle();
-}
-function showIAMRole(role_name) {
-    var data = aws_info['services']['iam']['Roles'][role_name];
-    $('#overlay-details').html(single_iam_role_template(data));
-    showPopup();
-}
-function showIAMUser(user_name) {
-    var data = aws_info['iam']['Users'][user_name];
-    $('#overlay-details').html(single_iam_user_template(data));
-    showPopup();
 }
 function showS3Bucket(bucket_name) {
     var data = aws_info['services']['s3']['buckets'][bucket_name];
@@ -552,7 +569,7 @@ Handlebars.registerHelper('good_bad_icon', function(violation, bucket_name, item
         return '<i class="glyphicon glyphicon-remove"></i>';
     } else {
         var key_details = aws_info['services']['s3']['buckets'][bucket_name]['keys'][item];
-        if (((violation == 'object-perms-mismatch-bucket-perms') && !('grantees' in key_details)) 
+        if (((violation == 'object-perms-mismatch-bucket-perms') && !('grantees' in key_details))
             ||((violation == 'unencrypted-s3-objects') && !('ServerSideEncryption' in key_details))) {
             /* Say that we don't know if there's no corresponding attribute for the key */
             return '<i class="glyphicon glyphicon-question-sign"></i>';
@@ -660,15 +677,6 @@ var make_title = function(title) {
 }
 Handlebars.registerHelper('make_title', function(title) {
     return make_title(title);
-});
-Handlebars.registerHelper('entity_details_callback', function(type) {
-    if (type == 'roles') {
-        return 'showIAMRole';
-    } else if (type == 'groups') {
-        return 'showIAMGroup';
-    } else if (type == 'users') {
-        return 'showIAMUser';
-    }
 });
 Handlebars.registerHelper('addMember', function(member_name, value) {
     this[member_name] = value;
