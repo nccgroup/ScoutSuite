@@ -55,13 +55,14 @@ def get_rds_region(q, params):
 
 def get_security_groups_info(rds_client, region_info):
     groups = rds_client.describe_db_security_groups()['DBSecurityGroups']
-    manage_dictionary(region_info, 'security_groups', {})
+    manage_dictionary(region_info, 'vpcs', {})
+    manage_dictionary(region_info['vpcs'], ec2_classic, {})
+    manage_dictionary(region_info['vpcs'][ec2_classic], 'security_groups', {})
     for group in groups:
-        region_info['security_groups'][group['DBSecurityGroupName']] = parse_security_group(group)
+        region_info['vpcs'][ec2_classic]['security_groups'][group['DBSecurityGroupName']] = parse_security_group(group)
 
 def parse_security_group(group):
     security_group = {}
-    vpc_id = group['VpcId'] if 'VpcId' in group else 'no-vpc'
     security_group['name'] = group['DBSecurityGroupName']
     security_group['description'] = group['DBSecurityGroupDescription']
     security_group['ec2_groups'] = group['EC2SecurityGroups']
@@ -69,13 +70,16 @@ def parse_security_group(group):
     return security_group
 
 def get_instances_info(rds_client, region_info):
-    manage_dictionary(region_info, 'instances', {})
+    manage_dictionary(region_info, 'vpcs', {})
     dbinstances = rds_client.describe_db_instances()['DBInstances']
     total = 0
     for dbi in dbinstances:
+        vpc_id = dbi['DBSubnetGroup']['VpcId'] if 'DBSubnetGroup' in dbi and 'VpcId' in dbi['DBSubnetGroup'] and dbi['DBSubnetGroup']['VpcId'] else ec2_classic
+        manage_dictionary(region_info['vpcs'], vpc_id, {})
+        manage_dictionary(region_info['vpcs'][vpc_id], 'instances', {})
         dbi_info = {}
         total = total + len(dbinstances)
-        for key in ['DBInstanceIdentifier', 'InstanceCreateTime', 'Engine', 'DBInstanceStatus', 'AutoMinorVersionUpgrade', 'DBInstanceClass', 'MultiAZ', 'Endpoint', 'BackupRetentionPeriod', 'PubliclyAccessible', 'StorageEncrypted']:
+        for key in ['DBInstanceIdentifier', 'InstanceCreateTime', 'Engine', 'DBInstanceStatus', 'AutoMinorVersionUpgrade', 'DBInstanceClass', 'MultiAZ', 'Endpoint', 'BackupRetentionPeriod', 'PubliclyAccessible', 'StorageEncrypted', 'VpcSecurityGroups', 'DBSecurityGroups', 'DBParameterGroups']:
             # parameter_groups , security_groups, vpc_security_gropus
             dbi_info[key] = dbi[key]
-        region_info['instances'][dbi['DBInstanceIdentifier']] = dbi_info
+        region_info['vpcs'][vpc_id]['instances'][dbi['DBInstanceIdentifier']] = dbi_info

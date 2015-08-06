@@ -24,6 +24,7 @@ from AWSScout2.utils_iam import *
 from AWSScout2.utils_rds import *
 from AWSScout2.utils_redshift import *
 from AWSScout2.utils_s3 import *
+from AWSScout2.utils_vpc import *
 
 
 ########################################
@@ -129,6 +130,9 @@ def main(args):
         except Exception as e:
             printError('Error: EC2 or IAM configuration is missing.')
             printException(e)
+
+    ##### VPC analyzis
+    analyze_vpc_config(aws_config)
 
     # Save data
     save_config_to_file(aws_config, 'aws', args.force_write, args.debug)

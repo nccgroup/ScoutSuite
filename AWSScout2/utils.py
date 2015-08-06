@@ -87,6 +87,8 @@ def go_to_and_do(aws_config, current_config, path, current_path, callback, callb
     key = path.pop(0)
     if not current_config:
         current_config = aws_config
+    if not current_path:
+        current_path = []
     if key in current_config:
         current_path.append(key)
         for value in current_config[key]:

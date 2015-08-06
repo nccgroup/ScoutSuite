@@ -230,7 +230,7 @@ def get_instance_info(q, params):
             i, reservation_id = q.get()
             # Get instance variables
             instance = {}
-            vpc_id = i['VpcId'] if 'VpcId' in i and i['VpcId'] else 'no-vpc'
+            vpc_id = i['VpcId'] if 'VpcId' in i and i['VpcId'] else ec2_classic
             instance['reservation_id'] = reservation_id
             for key in ['InstanceId', 'PublicDnsName', 'PrivateDnsName', 'KeyName', 'LaunchTime', 'PrivateIpAddress', 'PublicIpAddress', 'InstanceType', 'State', 'IamInstanceProfile']:
                 instance[key] = i[key] if key in i else None
@@ -317,7 +317,7 @@ def get_security_group_info(q, params):
     while True:
         try:
             group = q.get()
-            vpc_id = group['VpcId'] if 'VpcId' in group and group['VpcId'] else 'no-vpc'
+            vpc_id = group['VpcId'] if 'VpcId' in group and group['VpcId'] else ec2_classic
             manage_vpc(region_info['vpcs'], vpc_id)
             manage_dictionary(region_info['vpcs'][vpc_id], 'security_groups', {})
             manage_dictionary(region_info['vpcs'][vpc_id]['security_groups'], group['GroupId'], {})
@@ -339,9 +339,7 @@ def get_security_groups_info(ec2_client, region_info):
 def manage_vpc(vpc_info, vpc_id):
     manage_dictionary(vpc_info, vpc_id, {})
     vpc_info[vpc_id]['id'] = vpc_id
-    if vpc_id == 'no-vpc':
-        vpc_info[vpc_id]['name'] = 'EC2 Classic'
-    elif not 'name' in vpc_info[vpc_id]:
+    if not 'name' in vpc_info[vpc_id]:
         vpc_info[vpc_id]['name'] = vpc_id
 
 def parse_security_group(ec2_client, group):

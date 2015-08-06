@@ -1,4 +1,5 @@
 from opinel.utils import printException
+from AWSScout2.utils import ec2_classic
 
 #
 # Base filter

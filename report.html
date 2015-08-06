@@ -311,12 +311,19 @@
         {{#each rules}}
           {{> ec2_security_group-rule_list this sg_name = ../name sg_id = ../id direction = @key}}
         {{/each}}
-        {{#if instances}}
+        {{#if used_by}}
           <div class="list-group-item">
-            <h4 class="list-group-item-heading">Instances</h4>
-            {{#each instances}}
-              {{> ec2_security_group-instance_list instances=this status=@key region=../region vpc=../vpc group=../id}}
-            {{/each}}
+            <h4 class="list-group-item-heading">Usage</h4>
+            <ul>
+              {{#each used_by}}
+                <li>{{@key}}:</li>
+                <ul>
+                  {{#each this}}
+                    {{> ec2_security_group-resource_list resource_type=@../key resources=this status=@key region=../../region vpc=../../vpc group=../../id}}
+                  {{/each}}
+                </ul>
+              {{/each}}
+            </ul>
           </div>
         {{/if}}
       </div>
@@ -324,19 +331,19 @@
     <script>
         Handlebars.registerPartial("ec2_security_group", $("#ec2_security_group-partial").html());
     </script>
-    <!-- EC2 security group instances partial -->
-    <script id="ec2_security_group-instance_list-partial" type="text/x-handlebars-template">
-      {{#if instances}}
+    <!-- EC2 security group associated resources list partial -->
+    <script id="ec2_security_group-resource_list-partial" type="text/x-handlebars-template">
+      {{#if resources}}
         <div class="accordion">
-          <h5 class="list-group-item-heading item-margin accordion-heading">{{make_title status}}
-            <a class="accordion-toggle" data-toggle="collapse" href="#ec2_security_group-{{group}}-instance_list-{{status}}">
-              <span class="badge pull-right btn-info">{{instances.length}}</span>
+          <li><h5 class="list-group-item-heading accordion-heading">{{make_title status}}
+            <a class="accordion-toggle" data-toggle="collapse" href="#ec2_security_group-{{group}}-{{resource_type}}_list-{{status}}">
+              <span class="badge pull-right btn-info">{{resources.length}}</span>
             </a>
-          </h5>
-          <div id="ec2_security_group-{{group}}-instance_list-{{status}}" class="accordion-body collapse">
+          </h5></li>
+          <div id="ec2_security_group-{{group}}-{{resource_type}}_list-{{status}}" class="accordion-body collapse">
             <div class="accordion-inner">
-              <ul class="no-bullet">
-              {{#each instances}}
+              <ul>
+              {{#each resources}}
                 <li class="list-group-item-text"><a href="javascript:showEC2Instance('{{../region}}','{{../vpc}}','{{this}}')">{{this}}</a></li>
               {{/each}}
               </ul>
@@ -345,12 +352,12 @@
         </div>
       {{else}}
         <h5 class="list-group-item-heading item-margin accordion-heading">{{status}}
-          <span class="badge pull-right">{{instances.length}}</span>
+          <span class="badge pull-right">{{resources.length}}</span>
         </h5>
       {{/if}}
     </script>
     <script>
-      Handlebars.registerPartial("ec2_security_group-instance_list", $("#ec2_security_group-instance_list-partial").html());
+      Handlebars.registerPartial("ec2_security_group-resource_list", $("#ec2_security_group-resource_list-partial").html());
     </script>
     <!-- EC2 security group rules partial -->
     <script id="ec2_security_group-rule_list-partial" type="text/x-handlebars-template">

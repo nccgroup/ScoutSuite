@@ -53,7 +53,7 @@ class Ec2Finding(Finding):
             self.addItem(key)
 
     def checkNetworkACLs(self, key, obj):
-        if 'VpcId' in obj and obj['VpcId'] != 'no-vpc':
+        if 'VpcId' in obj and obj['VpcId'] != ec2_classic:
             if 'network_acls' in obj:
                 for acl in obj['network_acls']:
                     self.checkFirstRule(key, obj['network_acls'][acl]['rules'][self.callback_args[0]])
