@@ -73,6 +73,12 @@ class Finding(Filter):
              self.addItem(key)
 
     # arg0: name of the attribute to check
+    def isTrue(self, key, obj):
+        value = bool(obj[self.callback_args[0]])
+        if value:
+            self.addItem(key)
+
+    # arg0: name of the attribute to check
     def isNotTrue(self, key, obj):
         value = bool(obj[self.callback_args[0]])
         if not value:

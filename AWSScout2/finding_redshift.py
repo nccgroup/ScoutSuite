@@ -14,3 +14,9 @@ class RedshiftFinding(Finding):
             if parameter == self.callback_args[0]:
                 if (obj['parameters'][parameter]['value']).lower() != 'true':
                     self.addItem(key)
+
+    def checkSecurityGroupAllowsAll(self, key, obj):
+        if 'IPRanges' in obj:
+            for IPRange in obj['IPRanges']:
+                if IPRange['Status'] == 'authorized' and IPRange['CIDRIP'] == '0.0.0.0/0':
+                    self.addItem(key)

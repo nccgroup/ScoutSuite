@@ -800,7 +800,6 @@
             <li class="list-group-item-text">Node Type: {{NodeType}}</li>
             <li class="list-group-item-text">Allow Version Upgrade: {{AllowVersionUpgrade}}</li>
             <li class="list-group-item-text">Automated Snapshot Retention Period: {{AutomatedSnapshotRetentionPeriod}}</li>
-            <li class="list-group-item-text">Publicly Accessible: {{PubliclyAccessible}}</li>
             <li class="list-group-item-text">Created at: {{ClusterCreateTime}}</li>
             <li class="list-group-item-text">Availability Zone: {{AvailabilityZone}}</li>
             <li class="list-group-item-text">Encrypted: {{Encrypted}}</li>
@@ -817,7 +816,7 @@
           <h4 class="list-group-item-heading">Network</h4>
           <ul>
             <li class="list-group-item-text">Endpoint: {{Endpoint.Address}}:{{Endpoint.Port}}</li>
-            <li class="list-group-item-text">Publicly accessible: {{PubliclyAccessible}}</li>
+            <li class="list-group-item-text">Publicly accessible: <span id="redshift_clusters-publicly-accessible-{{resource_key}}">{{PubliclyAccessible}}</span></li>
             <li class="list-group-item-text">VPC: {{VpcId}}</li>
             <li class="list-group-item-text">Subnet: {{ClusterSubnetGroupName}}</li>
             <li class="list-group-item-text">Security groups:
@@ -855,7 +854,7 @@
               <li class="list-group-item-text">IP addresses:</li>
               <ul>
                 {{#each IPRanges}}
-                  <li class="list-group-item-text">{{CIDRIP}}: {{Status}}</li>
+                  <li class="list-group-item-text">{{CIDRIP}}: <span id="redshift_security_groups-all-ips-authorized-{{../resource_key}}">{{Status}}</span></li>
                 {{/each}}
               </ul>
             {{/if}}

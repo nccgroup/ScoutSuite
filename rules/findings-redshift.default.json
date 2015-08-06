@@ -1,7 +1,27 @@
 {
+    "publicly-accessible": {
+        "description": "Cluster publicly accessible",
+        "entity": "regions.vpcs.clusters",
+        "callback": "isTrue",
+        "callback_args": [ "PubliclyAccessible" ],
+        "level": "warning",
+        "questions": [
+            "Report Redshift clusters that are publicly accessible"
+        ]
+    },
+    "encrypted": {
+        "description": "Cluster database encryption disabled",
+        "entity": "regions.vpcs.clusters",
+        "callback": "isNotTrue",
+        "callback_args": [ "Encrypted" ],
+        "level": "warning",
+        "questions": [
+            "Report Redshift clusters that do not encrypt data at rest"
+        ]
+    },
     "no-version-upgrade": {
         "description": "Version upgrade disabled",
-        "entity": "regions.clusters",
+        "entity": "regions.vpcs.clusters",
         "callback": "isNotTrue",
         "callback_args": [ "AllowVersionUpgrade" ],
         "level": "danger",
@@ -14,13 +34,23 @@
         "entity": "regions.parameter_groups",
         "callback": "checkParameterIsNotTrue",
         "callback_args": [ "_ARG_0_" ],
-        "level": "danger",
+        "level": "_ARG_3_",
         "targets": [
-            [ "require_ssl", "SSL not required", "do not require SSL" ],
-            [ "enable_user_activity_logging", "User activity logging disabled", "do not enable user activity logging" ]
+            [ "require_ssl", "SSL not required", "do not require SSL", "danger" ],
+            [ "enable_user_activity_logging", "User activity logging disabled", "do not enable user activity logging", "warning" ]
         ],
         "questions": [
             "Report Redshift parameter groups that _ARG_2_"
+        ]
+    },
+    "all-ips-authorized": {
+        "description": "Security group allows all",
+        "entity": "regions.vpcs.security_groups",
+        "callback": "checkSecurityGroupAllowsAll",
+        "callback_args": [],
+        "level": "danger",
+        "questions": [
+            "Report Redshift clusters that do not allow version upgrade"
         ]
     }
 }
