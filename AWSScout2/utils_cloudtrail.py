@@ -8,11 +8,6 @@ from AWSScout2.filters import *
 from AWSScout2.findings import *
 
 ########################################
-# Globals
-########################################
-supported_services.append('cloudtrail')
-
-########################################
 ##### CloudTrails functions
 ########################################
 
