@@ -97,8 +97,46 @@
       Handlebars.registerPartial("dashboard", $("#dashboard-partial").html());
     </script>
 
+    <!-- Generic left-menu partial for region-then-resource -->
+    <script id="per_region-partial" type="text/x-handlebars-template">
+{{#if is_menu}}
+      <ul class="list-group">
+        <li class="list-group-item">
+          <a href="javascript:showAll('{{service_name}}_{{resource_type}}')">
+            Show all<span class="badge pull-right">{{count_in "{{service_name}}" "regions.{{resource_type}}"}}</span>
+          </a>
+        </li>
+      </ul>
+{{/if}}
+      {{#each regions}}
+        {{log this}}
+{{#if ../is_menu}}
+        <ul class="list-group" id="{{../service_name}}_region-list-{{@key}}">
+          <li class="list-group-item active">{{@key}}</li>
+{{/if}}
+            {{#each (lookup . ../resource_type)}}
+              {{> (lookup ../.. 'partial_name') service_name = ../../service_name region = @../key resource_type = ../../resource_type resource_key = @key resource = this}}
+            {{/each}}
+{{#if ../is_menu}}
+        </ul>
+{{/if}}
+      {{/each}}
+    </script>
+    <script>
+      Handlebars.registerPartial("per_region", $("#per_region-partial").html());
+    </script>
+    <!-- Generic left-menu link partial for region-then-resource -->
+    <script id="per_region_link-partial" type="text/x-handlebars-template">
+      <div class="list-group-item-text list-sub-element" id="{{service_name}}_{{resource_type}}-list-{{resource_key}}">
+        <a href="#{{service_name}}/regions/{{region}}/{{resource_type}}/{{resource_key}}/details">{{resource_key}}</a>
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("per_region_link", $("#per_region_link-partial").html());
+    </script>
+
     <!-- Generic left-menu partial for region-then-vpc-then-resource -->
-    <script id="region_vpc-partial" type="text/x-handlebars-template">
+    <script id="per_vpc-partial" type="text/x-handlebars-template">
 {{#if is_menu}}
       <ul class="list-group">
         <li class="list-group-item">
@@ -130,18 +168,18 @@
       {{/each}}
     </script>
     <script>
-      Handlebars.registerPartial("region_vpc", $("#region_vpc-partial").html());
+      Handlebars.registerPartial("per_vpc", $("#per_vpc-partial").html());
     </script>
     <!-- Generic left-menu link partial for region-then-vpc-then-resource -->
-    <script id="region_vpc_link-partial" type="text/x-handlebars-template">
+    <script id="per_vpc_link-partial" type="text/x-handlebars-template">
       <div class="list-group-item-text list-sub-element" id="{{service_name}}_{{resource_type}}-list-{{resource_key}}">
         <a href="#{{service_name}}/regions/{{region}}/vpcs/{{vpc}}/{{resource_type}}/{{resource_key}}/details">{{resource_key}}</a>
       </div>
     </script>
     <script>
-      Handlebars.registerPartial("region_vpc_link", $("#region_vpc_link-partial").html());
+      Handlebars.registerPartial("per_vpc_link", $("#per_vpc_link-partial").html());
     </script>
- 
+
 
     <!-- CloudTrail trail partial -->
     <script id="cloudtrail_region-partial" type="text/x-handlebars-template">
@@ -750,8 +788,6 @@
         Handlebars.registerPartial("rds_security_group", $("#rds_security_group-partial").html());
     </script>
 
-<!-- TODO: get parameter groups and flag stuff like : require_ssl false, enable_user_activity_logging false (check what that is) -->
-
     <!-- Redshift partials -->
     <!-- Redshift cluster partial -->
     <script id="redshift_cluster-partial" type="text/x-handlebars-template">
@@ -839,6 +875,34 @@
     <script>
         Handlebars.registerPartial("redshift_security_group", $("#redshift_security_group-partial").html());
     </script>
+
+
+
+    <!-- Redshift security group partials -->
+    <script id="redshift_parameter_group-partial" type="text/x-handlebars-template">
+      <div class="list-group" id="redshift/regions/{{region}}/parameter_groups/{{resource_key}}/details">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{resource_key}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text item-margin">Description: {{Description}}</div>
+          <div class="list-group-item-text item-margin">Group Family: {{ParameterGroupFamily}}</div>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Parameters</h4>
+          <ul>
+            {{#each parameters}}
+              <li class="list-group-item-text">{{ParameterName}}: {{ParameterValue}}</li>
+            {{/each}}
+          </ul>
+        </div>
+      </div>
+    </script>
+    <script>
+        Handlebars.registerPartial("redshift_parameter_group", $("#redshift_parameter_group-partial").html());
+    </script>
+
     <!-- Redshift node partial -->
     <script id="redshift_cluster_node-partial" type="text/x-handlebars-template">
       {{NodeRole}}: {{PrivateIPAddress}} / {{PublicIPAddress}}
@@ -1204,6 +1268,7 @@
                 <script id="redshift_violation-list-template" type="text/x-handlebars-template">
                   <li class="dropdown-header">Redshift config</li>
                   <li><a href="javascript:list_generic('redshift_cluster')">Clusters</a></li>
+                  <li><a href="javascript:list_generic('redshift_parameter_group')">Parameter Groups</a></li>
                   <li><a href="javascript:list_generic('redshift_security_group')">Security Groups</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Summaries</li>
@@ -1816,35 +1881,50 @@
         </div><!-- /.col-sm-8 -->
       </div><!-- /.row -->
 
-      <!-- Template for Redshift security groups -->
-      <div class="row" id="redshift_security_groups-row">
-        <div class="col-sm-4" id="redshift_security_groups-list">
-          <script id="redshift_security_group-list-template" type="text/x-handlebars-template">
-            {{> region_vpc service_name = 'redshift' resource_type = 'security_groups' regions = items partial_name = 'region_vpc_link' is_menu = true}}
-          </script>
-        </div>
-        <div class="col-sm-8" id="redshift_security_groups-details">
-          <script id="redshift_security_group-detail-template" type="text/x-handlebars-template">
-            {{> region_vpc service_name = 'redshift' resource_type = 'security_groups' regions = items partial_name = 'redshift_security_group'}}
-          </script>
-        </div><!-- /.col-sm-8 -->
-      </div><!-- /.row -->
 
+      <!-- Redshift section -->
       <!-- Template for Redshift clusters -->
-      <!-- TODO: look into making this generic... -->
       <div class="row" id="redshift_clusters-row">
         <div class="col-sm-4" id="redshift_clusters-list">
           <script id="redshift_cluster-list-template" type="text/x-handlebars-template">
-            {{> region_vpc service_name = 'redshift' resource_type = 'clusters' regions = items partial_name = 'region_vpc_link' is_menu = true}}
+            {{> per_vpc service_name = 'redshift' resource_type = 'clusters' regions = items partial_name = 'per_vpc_link' is_menu = true}}
           </script>
         </div>
         <div class="col-sm-8" id="redshift_clusters-details">
           <script id="redshift_cluster-detail-template" type="text/x-handlebars-template">
-            {{> region_vpc service_name = 'redshift' resource_type = 'clusters' regions = items partial_name = 'redshift_cluster'}}
+            {{> per_vpc service_name = 'redshift' resource_type = 'clusters' regions = items partial_name = 'redshift_cluster'}}
           </script>
-        </div><!-- /.col-sm-8 -->
-      </div><!-- /.row -->
+        </div>
+      </div>
+      <!-- Template for Redshift parameter groups -->
+      <div class="row" id="redshift_parameter_groups-row">
+        <div class="col-sm-4" id="redshift_parameter_groups-list">
+          <script id="redshift_parameter_group-list-template" type="text/x-handlebars-template">
+            {{> per_region service_name = 'redshift' resource_type = 'parameter_groups' regions = items partial_name = 'per_region_link' is_menu = true}}
+          </script>
+        </div>
+        <div class="col-sm-8" id="redshift_parameter_groups-details">
+          <script id="redshift_parameter_group-detail-template" type="text/x-handlebars-template">
+            {{> per_region service_name = 'redshift' resource_type = 'parameter_groups' regions = items partial_name = 'redshift_parameter_group'}}
+          </script>
+        </div>
+      </div>
+      <!-- Template for Redshift security groups -->
+      <div class="row" id="redshift_security_groups-row">
+        <div class="col-sm-4" id="redshift_security_groups-list">
+          <script id="redshift_security_group-list-template" type="text/x-handlebars-template">
+            {{> per_vpc service_name = 'redshift' resource_type = 'security_groups' regions = items partial_name = 'per_vpc_link' is_menu = true}}
+          </script>
+        </div>
+        <div class="col-sm-8" id="redshift_security_groups-details">
+          <script id="redshift_security_group-detail-template" type="text/x-handlebars-template">
+            {{> per_vpc service_name = 'redshift' resource_type = 'security_groups' regions = items partial_name = 'redshift_security_group'}}
+          </script>
+        </div>
+      </div>
 
+
+      <!-- S3 section -->
       <!-- Template for S3 buckets -->
       <div class="row" id="s3_buckets-row">
         <div class="col-sm-4">

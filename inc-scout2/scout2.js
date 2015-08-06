@@ -405,8 +405,9 @@ function load_config(keyword) {
                 load_aws_config_from_json(aws_info['services']['rds']['violations'], 'rds_dashboard', 1);
             }
             else if (keyword == 'redshift') {
-                load_aws_config_from_json(aws_info['services']['redshift']['regions'], 'redshift_security_group', 2);
                 load_aws_config_from_json(aws_info['services']['redshift']['regions'], 'redshift_cluster', 2);
+                load_aws_config_from_json(aws_info['services']['redshift']['regions'], 'redshift_security_group', 2);
+                load_aws_config_from_json(aws_info['services']['redshift']['regions'], 'redshift_parameter_group', 2);
                 highlight_violations(aws_info['services']['redshift']['violations'], 'redshift');
                 load_aws_config_from_json(aws_info['services']['redshift']['violations'], 'redshift_dashboard', 1);
             }
