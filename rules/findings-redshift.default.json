@@ -8,5 +8,19 @@
         "questions": [
             "Report Redshift clusters that do not allow version upgrade"
         ]
+    },
+    "_ARG_0_-not-true": {
+        "description": "_ARG_1_",
+        "entity": "regions.parameter_groups",
+        "callback": "checkParameterIsNotTrue",
+        "callback_args": [ "_ARG_0_" ],
+        "level": "danger",
+        "targets": [
+            [ "require_ssl", "SSL not required", "do not require SSL" ],
+            [ "enable_user_activity_logging", "User activity logging disabled", "do not enable user activity logging" ]
+        ],
+        "questions": [
+            "Report Redshift parameter groups that _ARG_2_"
+        ]
     }
 }

@@ -81,12 +81,12 @@ def get_redshift_cluster_parameter_groups(redshift_client, region_config):
         parameter_group_name = parameter_group.pop('ParameterGroupName')
         region_config['parameter_groups'][parameter_group_name] = parameter_group
         parameters = handle_truncated_response(redshift_client.describe_cluster_parameters, {'ParameterGroupName': parameter_group_name}, ['Parameters'])
-        region_config['parameter_groups'][parameter_group_name]['parameters'] = []
+        region_config['parameter_groups'][parameter_group_name]['parameters'] = {}
         for parameter in parameters['Parameters']:
             param = {}
-            for key in ['ParameterName', 'ParameterValue', 'Source']:
-                param[key] = parameter[key]
-            region_config['parameter_groups'][parameter_group_name]['parameters'].append(param)
+            param['value'] = parameter['ParameterValue']
+            param['source'] = parameter['Source']
+            region_config['parameter_groups'][parameter_group_name]['parameters'][parameter['ParameterName']] = param
 
 #
 # Security groups
