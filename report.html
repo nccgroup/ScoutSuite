@@ -755,7 +755,7 @@
     <!-- Redshift partials -->
     <!-- Redshift cluster partial -->
     <script id="redshift_cluster-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="redshift_cluster-details-{{resource_key}}">
+      <div class="list-group" id="redshift/regions/{{region}}/vpcs/{{vpc}}/clusters/{{resource_key}}/details">
         <div class="list-group-item active">
           <h4 class="list-group-item-heading">{{resource_key}}</h4>
         </div>
@@ -805,7 +805,7 @@
     </script>
     <!-- Redshift security group partials -->
     <script id="redshift_security_group-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="redshift_security_group-details-{{resource_key}}">
+      <div class="list-group" id="redshift/regions/{{region}}/vpcs/{{vpc}}/security_groups/{{resource_key}}/details">
         <div class="list-group-item active">
           <h4 class="list-group-item-heading">{{resource_key}}</h4>
         </div>
