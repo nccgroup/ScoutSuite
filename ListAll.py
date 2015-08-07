@@ -27,7 +27,7 @@ def read_dump_config(config_file):
         with open(config_file, 'rt') as f:
             config = json.load(f)
     except Exception as e:
-        print 'Error: failed to read the configuration from %s' % config_file
+        printError('Error: failed to read the configuration from %s' % config_file)
     return config
 
 
@@ -109,7 +109,8 @@ def macro_get_key_at(all_info, info, current_path, key, value, k):
         first = path_to_key[0]
         last = path_to_key[-1]
         if first in supported_services:
-            print first
+            # TODO: is this broken?
+            print(first)
         elif last in current_path:
             index_of_key = current_path.index(last) + 1
             result = current_path[index_of_key]
@@ -164,7 +165,7 @@ def list_all(all_info, info, path, current_path, keys, conditions):
                                 output = output + ', ' + str(key_value)
                             else:
                                 output = str(key_value)
-                        print output
+                        printInfo(output)
                 else:
                     raise Exception
             else:
@@ -185,7 +186,7 @@ def main(cmd_args):
 
     # Get the environment name
     if len(cmd_args.environment_names) < 1:
-        print 'Error: you need to specify an environment name.'
+        printError('Error: you need to specify an environment name.')
         return 42
 
     # Load arguments from config if specified
