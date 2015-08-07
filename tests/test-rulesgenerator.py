@@ -8,7 +8,7 @@ class TestRulesGeneratorClass:
     #
     # Make sure that RulesGenerator does not crash with --help
     #
-    def test_listall_help(self):
+    def test_rulesgenerator_help(self):
         command = './RulesGenerator.py --help'
         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
         process.wait()
