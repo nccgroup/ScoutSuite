@@ -53,24 +53,26 @@ def add_scout2_argument(parser, default_args, argument_name):
                             default=False,
                             action='store_true',
                             help='Overwrite existing json files')
-    if argument_name == 'ruleset-name':
+    elif argument_name == 'ruleset-name':
         parser.add_argument('--ruleset-name',
                             dest='ruleset_name',
                             default='default',
                             nargs='+',
                             help='Customized set of rules')
-    if argument_name == 'services':
-        parser.add_argument('services',
+    elif argument_name == 'services':
+        parser.add_argument('--services',
                             dest='services',
                             default=supported_services,
                             nargs='+',
                             help='Name of the Amazon Web Services you want to work with')
-    if argument_name == 'skip':
+    elif argument_name == 'skip':
         parser.add_argument('--skip',
                             dest='skipped_services',
                             default=[],
                             nargs='+',
                             help='Name of services you want to ignore')
+    else:
+        raise Exception('Invalid parameter name %s' % argument_name)
 
 
 ########################################
