@@ -18,11 +18,12 @@ def analyze_ec2_config(ec2_info, aws_account_id, force_write):
 
     analyze_config(ec2_finding_dictionary, ec2_filter_dictionary, ec2_info, 'EC2', force_write)
     # Tweaks
-#    link_elastic_ips(ec2_info)
+    link_elastic_ips(ec2_info)
     add_security_group_name_to_ec2_grants(ec2_info, aws_account_id)
     # Custom EC2 analysis
-#    check_for_elastic_ip(ec2_info)
-#    list_network_attack_surface(ec2_info, 'attack_surface', 'PublicIpAddress')
+    check_for_elastic_ip(ec2_info)
+    list_network_attack_surface(ec2_info, 'attack_surface', 'PublicIpAddress')
+    # TODO: make this optional, commented out for now
 #    list_network_attack_surface(ec2_info, 'private_attack_surface', 'PrivateIpAddress')
 
 #
@@ -71,20 +72,23 @@ def check_for_elastic_ip(ec2_info):
 
 
 #
-# Link EIP with instances
+# Link EIP with instances (looks like this might be no longer needed with boto3)
 #
-def link_elastic_ips(ec2_info):
-    for r in ec2_info['regions']:
-        if 'elastic_ips' in ec2_info['regions'][r]:
-            for eip in ec2_info['regions'][r]['elastic_ips']:
-                for v in ec2_info['regions'][r]['vpcs']:
-                    if 'instances' in ec2_info['regions'][r]['vpcs'][v]:
-                        for i in ec2_info['regions'][r]['vpcs'][v]['instances']:
-                            if i == ec2_info['regions'][r]['elastic_ips'][eip]['InstanceId']:
-                                if not ec2_info['regions'][r]['vpcs'][v]['instances'][i]['PublicIpAddress']:
-                                    ec2_info['regions'][r]['vpcs'][v]['instances'][i]['PublicIpAddress'] = eip
-                                elif ec2_info['regions'][r]['vpcs'][v]['instances'][i]['PublicIpAddress'] != eip:
-                                    printInfo('Warning: public IP address exists (%s) for an instance associated with an elastic IP (%s)' % (ec2_info['regions'][r]['vpcs'][v]['instances'][i]['PublicIpAddress'], eip))
+def link_elastic_ips(ec2_config):
+    go_to_and_do(ec2_config, None, ['regions', 'elastic_ips'], None, link_elastic_ips_callback1, {})
+
+def link_elastic_ips_callback1(ec2_config, current_config, path, current_path, elastic_ip, callback_args):
+    if not 'InstanceId' in current_config:
+        return
+    instance_id = current_config['InstanceId']
+    go_to_and_do(ec2_config, None, ['regions', 'vpcs', 'instances'], None, link_elastic_ips_callback2, {'instance_id': instance_id, 'elastic_ip': elastic_ip})
+
+def link_elastic_ips_callback2(ec2_config, current_config, path, current_path, instance_id, callback_args):
+    if instance_id == callback_args['instance_id']:
+        if not 'PublicIpAddress' in current_config:
+            current_config['PublicIpAddress'] = callback_args['elastic_ip']
+        elif current_config['PublicIpAddress'] != callback_args['elastic_ip']:
+            printInfo('Warning: public IP address exists (%s) for an instance associated with an elastic IP (%s)' % (ec2_info['regions'][r]['vpcs'][v]['instances'][i]['PublicIpAddress'], eip))
 
 #
 # List the publicly available IPs/Ports
@@ -99,14 +103,14 @@ def list_network_attack_surface(ec2_info, attack_surface_attribute_name, ip_attr
                     if instance[ip_attribute_name]:
                         ec2_info[attack_surface_attribute_name][instance[ip_attribute_name]] = {}
                         ec2_info[attack_surface_attribute_name][instance[ip_attribute_name]]['protocols'] = {}
-                        for sgid in instance['security_groups']:
-                            sg = copy.deepcopy(ec2_info['regions'][r]['vpcs'][v]['security_groups'][sgid])
+                        for isg in instance['security_groups']:
+                            sg = copy.deepcopy(ec2_info['regions'][r]['vpcs'][v]['security_groups'][isg['GroupId']])
                             tmp = ec2_info[attack_surface_attribute_name][instance[ip_attribute_name]]
-                            for p in ec2_info['regions'][r]['vpcs'][v]['security_groups'][sgid]['rules']['ingress']['protocols']:
-                                for port in ec2_info['regions'][r]['vpcs'][v]['security_groups'][sgid]['rules']['ingress']['protocols'][p]['ports']:
+                            for p in ec2_info['regions'][r]['vpcs'][v]['security_groups'][isg['GroupId']]['rules']['ingress']['protocols']:
+                                for port in ec2_info['regions'][r]['vpcs'][v]['security_groups'][isg['GroupId']]['rules']['ingress']['protocols'][p]['ports']:
                                     if not 'cidrs' in sg['rules']['ingress']['protocols'][p]['ports'][port]:
                                         sg['rules']['ingress']['protocols'][p]['ports'].pop(port, None)
-                                    elif 'security_groups' in ec2_info['regions'][r]['vpcs'][v]['security_groups'][sgid]['rules']['ingress']['protocols'][p]['ports'][port]:
+                                    elif 'security_groups' in ec2_info['regions'][r]['vpcs'][v]['security_groups'][isg['GroupId']]['rules']['ingress']['protocols'][p]['ports'][port]:
                                         sg['rules']['ingress']['protocols'][p]['ports'][port].pop('security_groups', None)
                                 if not sg['rules']['ingress']['protocols'][p]['ports']:
                                     sg['rules']['ingress']['protocols'].pop(p)

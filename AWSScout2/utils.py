@@ -98,6 +98,18 @@ def get_attribute_at(config, target_path, key, default_value = None):
     return config[key] if key in config else default_value
 
 #
+# Get arbitrary object given a dictionary and path (list of keys)
+#
+def get_object_at(dictionary, path, attribute_name = None):
+    o = dictionary
+    for p in path:
+        o = o[p]
+    if attribute_name:
+        return o[attribute_name]
+    else:
+        return o
+
+#
 # Recursively go to a target and execute a callback
 #
 def go_to_and_do(aws_config, current_config, path, current_path, callback, callback_args):
@@ -110,7 +122,11 @@ def go_to_and_do(aws_config, current_config, path, current_path, callback, callb
         current_path.append(key)
         for value in current_config[key]:
             if len(path) == 0:
-                callback(aws_config, current_config, path, current_path, value, callback_args)
+                if type(current_config[key] == dict) and type(value) != dict and type(value) != list:
+                    callback(aws_config, current_config[key][value], path, current_path, value, callback_args)
+                else:
+                    # TODO: the current_config value passed here is not correct...
+                    callback(aws_config, current_config, path, current_path, value, callback_args)
             else:
                 # keep track of where we are...
                 tmp = copy.deepcopy(current_path)
