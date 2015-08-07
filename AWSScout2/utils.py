@@ -34,7 +34,7 @@ re_service_utils = re.compile(r'^utils_(.*?).py$')
 scout2_utils_dir, foo = os.path.split(__file__)
 for filename in os.listdir(scout2_utils_dir):
     service = re_service_utils.match(filename)
-    if service:
+    if service and service.groups()[0] != 'vpc':
         supported_services.append(service.groups()[0])
 
 ec2_classic = 'EC2-Classic'
