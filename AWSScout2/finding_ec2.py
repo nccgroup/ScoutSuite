@@ -114,10 +114,6 @@ class Ec2Finding(Finding):
                     else:
                         self.addItem(pn, obj['name'])
 
-    def isUnused(self, key, obj):
-        if 'used_by' not in obj or len(obj['used_by']) == 0:
-            self.addItem(obj['id'])
-
     def checkTrafficRulesToSelf(self, key, obj):
         for protocol in obj['rules']['ingress']['protocols']:
             for port in obj['rules']['ingress']['protocols'][protocol]['ports']:

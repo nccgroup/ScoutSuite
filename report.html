@@ -1347,7 +1347,7 @@
               <ul class="dropdown-menu" id="filters-list">
                 <script id="filter-list-template" type="text/x-handlebars-template">
                   {{#each items}}
-                    <li id="{{finding_entity keyword_prefix entity}}-filter-{{@key}}"><a href="javascript:toggle_filter(aws_info['{{keyword_prefix}}', '{{@key}}')"><i id="{{finding_entity keyword_prefix entity}}-filtericon-{{@key}}" class="glyphicon glyphicon-unchecked""></i> {{description}} ({{items.length}})</a></li>
+                    <li id="{{finding_entity keyword_prefix entity}}-filter-{{@key}}"><a href="javascript:toggle_filter(aws_info['services']['{{keyword_prefix}}'], '{{@key}}')"><i id="{{finding_entity keyword_prefix entity}}-filtericon-{{@key}}" class="glyphicon glyphicon-unchecked""></i> {{description}} ({{items.length}})</a></li>
                   {{/each}}
                 </script>
               </ul>
