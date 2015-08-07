@@ -53,15 +53,3 @@ def list_resources_in_security_group(aws_config, current_config, path, current_p
         manage_dictionary(sg['used_by'][service]['resource_type'][resource_type], resource_status, [])
         if not resource_id in sg['used_by'][service]['resource_type'][resource_type][resource_status]:
             sg['used_by'][service]['resource_type'][resource_type][resource_status].append(resource_id)
-
-#
-# Get arbitrary object given a dictionary and path (list of keys)
-#
-def get_object_at(dictionary, path, attribute_name = None):
-    o = dictionary
-    for p in path:
-        o = o[p]
-    if attribute_name:
-        return o[attribute_name]
-    else:
-        return o

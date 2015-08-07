@@ -449,6 +449,42 @@ function about() {
     hideAll();
     $('#about-row').show();
 }
+
+//if ("onhashchange" in window) {
+//    alert("The browser supports the hashchange event!");
+//}
+
+function locationHashChanged() {
+    myBrowse(location.hash);
+}
+window.onhashchange = locationHashChanged;
+
+function myBrowse(anchor) {
+    path = anchor.replace('#', '').split('/');
+    var p1 = '';
+    var p2 = '';
+    // Hide all
+    while (val1 = path.shift()) {
+        val2 = path.shift();
+        if (val2 == 'undefined') {
+            break;
+        }
+        if (p1 == '') {
+            p1 = val1 + '\\\/';
+        } else {
+            p1 = p1 + val1 + '\\\/';
+        }
+        p2 = p1 + val2 + '\\\/';
+        $('div').filter("[id^='"+p1+"']").not("[id^='"+p2+"']").hide();
+        p1 = p2;
+    }
+    // Show one
+    $(document.getElementById(anchor.replace('#', ''))).show();
+    // TODO: handle show all
+    // Scroll to the top
+    window.scrollTo(0,0);
+}
+
 function browseTo(keyword, id) {
     // Hide similar details
     $("[id*='" + keyword + "-details-']").hide();

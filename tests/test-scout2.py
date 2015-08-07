@@ -1,15 +1,24 @@
 import subprocess
 
 #
-# Test methods to make sure that Scout2 as a whole runs
+# Test for Scout2.py
 #
-class TestScout2Class:  
+class TestScout2Class:
 
     #
-    # Rough high-level test: make sure that Scout2 does not crash
+    # Make sure that Scout2 does not crash with --help
     #
-    def test_scout2(self):
-        scout2_command = './Scout2.py --force'
-        process = subprocess.Popen(scout2_command, shell=True, stdout=subprocess.PIPE)
+    def test_scout2_help(self):
+        command = './Scout2.py --help'
+        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+        process.wait()
+        assert process.returncode == 0
+
+    #
+    # Make sure that Scout2's default run does not crash
+    #
+    def test_scout2_default_run(self):
+        command = './Scout2.py --force'
+        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
         process.wait()
         assert process.returncode == 0

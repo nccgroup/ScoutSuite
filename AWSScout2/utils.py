@@ -28,34 +28,51 @@ import requests
 ########################################
 # Globals
 ########################################
+
 supported_services = []
+re_service_utils = re.compile(r'^utils_(.*?).py$')
+scout2_utils_dir, foo = os.path.split(__file__)
+for filename in os.listdir(scout2_utils_dir):
+    service = re_service_utils.match(filename)
+    if service and service.groups()[0] != 'vpc':
+        supported_services.append(service.groups()[0])
+
 ec2_classic = 'EC2-Classic'
 
 ########################################
 ##### Argument parser
 ########################################
 
-init_parser()
-parser.add_argument('--force',
-                    dest='force_write',
-                    default=False,
-                    action='store_true',
-                    help='overwrite existing json files')
-parser.add_argument('--ruleset_name',
-                    dest='ruleset_name',
-                    default='default',
-                    nargs='+',
-                    help='Customized set of rules')
-parser.add_argument('--services',
-                    dest='services',
-                    default=supported_services,
-                    nargs='+',
-                    help='Name of services you want to analyze')
-parser.add_argument('--skip',
-                    dest='skipped_services',
-                    default=[],
-                    nargs='+',
-                    help='Name of services you want to ignore')
+#
+# Add a shared argument to a Scout2 utility
+#
+def add_scout2_argument(parser, default_args, argument_name):
+    if argument_name == 'force':
+        parser.add_argument('--force',
+                            dest='force_write',
+                            default=False,
+                            action='store_true',
+                            help='Overwrite existing json files')
+    elif argument_name == 'ruleset-name':
+        parser.add_argument('--ruleset-name',
+                            dest='ruleset_name',
+                            default='default',
+                            nargs='+',
+                            help='Customized set of rules')
+    elif argument_name == 'services':
+        parser.add_argument('--services',
+                            dest='services',
+                            default=supported_services,
+                            nargs='+',
+                            help='Name of the Amazon Web Services you want to work with')
+    elif argument_name == 'skip':
+        parser.add_argument('--skip',
+                            dest='skipped_services',
+                            default=[],
+                            nargs='+',
+                            help='Name of services you want to ignore')
+    else:
+        raise Exception('Invalid parameter name %s' % argument_name)
 
 
 ########################################
@@ -81,6 +98,18 @@ def get_attribute_at(config, target_path, key, default_value = None):
     return config[key] if key in config else default_value
 
 #
+# Get arbitrary object given a dictionary and path (list of keys)
+#
+def get_object_at(dictionary, path, attribute_name = None):
+    o = dictionary
+    for p in path:
+        o = o[p]
+    if attribute_name:
+        return o[attribute_name]
+    else:
+        return o
+
+#
 # Recursively go to a target and execute a callback
 #
 def go_to_and_do(aws_config, current_config, path, current_path, callback, callback_args):
@@ -93,7 +122,11 @@ def go_to_and_do(aws_config, current_config, path, current_path, callback, callb
         current_path.append(key)
         for value in current_config[key]:
             if len(path) == 0:
-                callback(aws_config, current_config, path, current_path, value, callback_args)
+                if type(current_config[key] == dict) and type(value) != dict and type(value) != list:
+                    callback(aws_config, current_config[key][value], path, current_path, value, callback_args)
+                else:
+                    # TODO: the current_config value passed here is not correct...
+                    callback(aws_config, current_config, path, current_path, value, callback_args)
             else:
                 # keep track of where we are...
                 tmp = copy.deepcopy(current_path)
@@ -269,12 +302,13 @@ def prompt_4_overwrite(filename, force_write):
         return True
     return prompt_4_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename))
 
-def save_blob_to_file(filename, blob, force_write):
+def save_blob_to_file(filename, blob, force_write, debug):
     try:
         if prompt_4_overwrite(filename, force_write):
             with open(filename, 'wt') as f:
-                write_data_to_file(f, blob, force_write)
-    except:
+                write_data_to_file(f, blob, force_write, debug)
+    except Exception as e:
+        printException(e)
         pass
 
 def save_config_to_file(blob, keyword, force_write, debug):

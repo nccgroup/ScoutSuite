@@ -153,6 +153,10 @@ add_sts_argument(parser, 'mfa-code')
 add_common_argument(parser, default_args, 'regions')
 add_common_argument(parser, default_args, 'with-gov')
 add_common_argument(parser, default_args, 'with-cn')
+add_scout2_argument(parser, default_args, 'force')
+add_scout2_argument(parser, default_args, 'ruleset-name')
+add_scout2_argument(parser, default_args, 'services')
+add_scout2_argument(parser, default_args, 'skip')
 
 parser.add_argument('--csv-credentials',
                     dest='fetch_creds_from_csv',

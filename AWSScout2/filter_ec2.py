@@ -9,10 +9,6 @@ class Ec2Filter(Filter):
         self.keyword_prefix = 'ec2'
         Filter.__init__(self, description, entity, callback, callback_args)
 
-    def hasNoRunningInstances(self, key, obj):
-        if not 'instances' in obj or not 'running' in obj['instances'] or len(obj['instances']['running']) == 0:
-            self.addItem(obj['id'])
-
     def HasNoCIDRsGrants(self, key, obj):
         if not len(obj['rules']['ingress']['protocols']):
             self.addItem(obj['id'])

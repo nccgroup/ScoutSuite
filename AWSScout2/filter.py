@@ -38,3 +38,10 @@ class Filter(object):
 
     def checkedNewItem(self):
         self.checked_items = self.checked_items + 1
+
+    #
+    # Callback used by EC2 finding and filter
+    # 
+    def isUnused(self, key, obj):
+        if 'used_by' not in obj or len(obj['used_by']) == 0:
+            self.addItem(obj['id'])

@@ -127,7 +127,7 @@
     <!-- Generic left-menu link partial for region-then-resource -->
     <script id="per_region_link-partial" type="text/x-handlebars-template">
       <div class="list-group-item-text list-sub-element" id="{{service_name}}_{{resource_type}}-list-{{resource_key}}">
-        <a href="#{{service_name}}/regions/{{region}}/{{resource_type}}/{{resource_key}}/details">{{resource_key}}</a>
+        <a href="#services/{{service_name}}/regions/{{region}}/{{resource_type}}/{{resource_key}}/details">{{resource_key}}</a>
       </div>
     </script>
     <script>
@@ -139,7 +139,7 @@
 {{#if is_menu}}
       <ul class="list-group">
         <li class="list-group-item">
-          <a href="javascript:showAll('{{service_name}}_{{resource_type}}')">
+          <a href="#services/{{service_name}}/regions">
             Show all<span class="badge pull-right">{{count_in "{{service_name}}" "regions.vpcs.{{resource_type}}"}}</span>
           </a>
         </li>
@@ -170,9 +170,11 @@
       Handlebars.registerPartial("per_vpc", $("#per_vpc-partial").html());
     </script>
     <!-- Generic left-menu link partial for region-then-vpc-then-resource -->
+    <!-- TODO: fix this id -->
     <script id="per_vpc_link-partial" type="text/x-handlebars-template">
       <div class="list-group-item-text list-sub-element" id="{{service_name}}_{{resource_type}}-list-{{resource_key}}">
-        <a href="#{{service_name}}/regions/{{region}}/vpcs/{{vpc}}/{{resource_type}}/{{resource_key}}/details">{{resource_key}}</a>
+        <a href="#services/{{service_name}}/regions/{{region}}/vpcs/{{vpc}}/{{resource_type}}/{{resource_key}}/details">{{resource_key}}</a>
+
       </div>
     </script>
     <script>
@@ -800,7 +802,7 @@
     <!-- Redshift partials -->
     <!-- Redshift cluster partial -->
     <script id="redshift_cluster-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="redshift/regions/{{region}}/vpcs/{{vpc}}/clusters/{{resource_key}}/details">
+      <div class="list-group" id="services/redshift/regions/{{region}}/vpcs/{{vpc}}/clusters/{{resource_key}}/details">
         <div class="list-group-item active">
           <h4 class="list-group-item-heading">{{resource_key}}</h4>
         </div>
@@ -849,7 +851,7 @@
     </script>
     <!-- Redshift security group partials -->
     <script id="redshift_security_group-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="redshift/regions/{{region}}/vpcs/{{vpc}}/security_groups/{{resource_key}}/details">
+      <div class="list-group" id="services/redshift/regions/{{region}}/vpcs/{{vpc}}/security_groups/{{resource_key}}/details">
         <div class="list-group-item active">
           <h4 class="list-group-item-heading">{{resource_key}}</h4>
         </div>
@@ -888,7 +890,7 @@
 
     <!-- Redshift security group partials -->
     <script id="redshift_parameter_group-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="redshift/regions/{{region}}/parameter_groups/{{resource_key}}/details">
+      <div class="list-group" id="services/redshift/regions/{{region}}/parameter_groups/{{resource_key}}/details">
         <div class="list-group-item active">
           <h4 class="list-group-item-heading">{{resource_key}}</h4>
         </div>
@@ -1347,7 +1349,7 @@
               <ul class="dropdown-menu" id="filters-list">
                 <script id="filter-list-template" type="text/x-handlebars-template">
                   {{#each items}}
-                    <li id="{{finding_entity keyword_prefix entity}}-filter-{{@key}}"><a href="javascript:toggle_filter(aws_info['{{keyword_prefix}}', '{{@key}}')"><i id="{{finding_entity keyword_prefix entity}}-filtericon-{{@key}}" class="glyphicon glyphicon-unchecked""></i> {{description}} ({{items.length}})</a></li>
+                    <li id="{{finding_entity keyword_prefix entity}}-filter-{{@key}}"><a href="javascript:toggle_filter(aws_info['services']['{{keyword_prefix}}'], '{{@key}}')"><i id="{{finding_entity keyword_prefix entity}}-filtericon-{{@key}}" class="glyphicon glyphicon-unchecked""></i> {{description}} ({{items.length}})</a></li>
                   {{/each}}
                 </script>
               </ul>

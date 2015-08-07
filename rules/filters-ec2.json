@@ -1,8 +1,8 @@
 {
-    "NoRunningInstances": {
-        "description": "Hide groups that have no running instance",
+    "Unused": {
+        "description": "Hide groups that are not used",
         "entity": "regions.vpcs.security_groups",
-        "callback": "hasNoRunningInstances",
+        "callback": "isUnused",
         "callback_args": []
     },
     "NoCIDRsGrants": {
