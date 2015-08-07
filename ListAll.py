@@ -155,9 +155,11 @@ def list_all(all_info, info, path, current_path, keys, conditions):
                 if type(info[key]) == dict:
                     # Check that all conditions are met
                     if pass_conditions(conditions, info[key][value], all_info, current_path, value):
+                        # TODO: allow for other formatting than CSV and clean that code
                         output = ''
                         for k in keys:
                             key_value = macro_get_key_at(all_info, info, current_path, key, value, k)
+                            key_value = key_value[0] if (type(key_value) == list and len(key_value) == 1) else key_value
                             if output:
                                 output = output + ', ' + str(key_value)
                             else:

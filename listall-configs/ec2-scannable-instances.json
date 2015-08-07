@@ -1,0 +1,13 @@
+{
+    "entities": [
+        "ec2.regions.vpcs.instances"
+    ],
+    "keys": [
+        "PublicIpAddress",
+        "InstanceType"
+    ],
+    "conditions": [
+        [ "PublicIpAddress", "notNull", "" ],
+        [ "InstanceType", "notMatch", "(m1.small|t1.micro)" ]
+    ]
+}
