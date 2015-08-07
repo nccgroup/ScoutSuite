@@ -6,7 +6,7 @@
         "this"
     ],
     "conditions": [
-        ["Groups.GroupName", "contain", ["AllMisconfiguredUsers", "AllHumanUsers"] ],
+        ["Groups.GroupName", "containAtleastOneOf", ["AllMisconfiguredUsers", "AllHumanUsers"] ],
         ["MFADevices", "empty", ""]
     ]
 }

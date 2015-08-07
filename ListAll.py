@@ -66,8 +66,13 @@ def pass_conditions(conditions, obj, all_info, current_path, current_value):
 # Generic tests
 #
 def pass_condition(test, a, b):
-    if test == 'contain':
-        return b in a
+    if test == 'containAtleastOneOf':
+        if not type(b) == list:
+            b = [ b ]
+        for c in b:
+            if c in a:
+                return True
+        return False
     elif test == 'equal':
         return a == b
     elif test == 'notEqual':
@@ -129,7 +134,11 @@ def get_values_at(dictionary, dic, path):
     if not dic:
         dic = dictionary
     for p in path:
-        if type(dic) == dict and p in dic:
+        if p == '*':
+            for k in dic:
+                test = path[path.index(p)+1:]
+                values = values + get_values_at(dictionary, dic[k], test)
+        elif type(dic) == dict and p in dic:
             dic = dic[p]
             if p == path[-1]:
                 values.append(dic)
