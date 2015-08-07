@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
@@ -22,7 +22,7 @@ def main(args):
     # Create the list of services to analyze
     services = build_services_list(args.services, args.skipped_services)
     if not len(services):
-        print 'Error: list of Amazon Web Services to be analyzed is empty.'
+        printError('Error: list of Amazon Web Services to be analyzed is empty.')
         return
 
     # Load the data
@@ -38,7 +38,7 @@ def main(args):
     violation_names = violations.keys()
     if args.violation_name == [ None ]:
         for v in violation_names:
-            print '%3d. %s - %s' % (violation_names.index(v), violations[v]['keyword_prefix'].upper(), v)
+            printInfo('%3d. %s - %s' % (violation_names.index(v), violations[v]['keyword_prefix'].upper(), v))
         indices = [ '%d' % i for i in range(0, len(violations)) ]
         choices = prompt_4_value('Which violation ID do you want to output the items for', indices, display_choices = False, authorize_list = True, is_question = True)
         choices = [choice.strip() for choice in choices.split(',')]
@@ -67,12 +67,17 @@ def main(args):
         except Exception, e:
             printException(e)
     else:
-        print output
+        printInfo(output)
 
 
 ########################################
 ##### Argument parser
 ########################################
+
+default_args = read_profile_default_args(parser.prog)
+
+add_scout2_argument(parser, default_args, 'services')
+add_scout2_argument(parser, default_args, 'skip')
 
 parser.add_argument('--env',
                     dest='environment_name',
