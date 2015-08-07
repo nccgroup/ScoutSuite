@@ -31,7 +31,7 @@ def main(args):
         try:
             data = load_info_from_json(service, environment_name)
             violations.update(data['violations'])
-        except Exception, e:
+        except Exception as e:
             printException(e)
 
     # Let users pick the violation to dump the items for
@@ -64,7 +64,7 @@ def main(args):
             f = open(args.output_file[0], 'wt')
             f.write(output)
             f.close()
-        except Exception, e:
+        except Exception as e:
             printException(e)
     else:
         printInfo(output)

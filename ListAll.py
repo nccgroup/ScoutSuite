@@ -26,7 +26,7 @@ def read_dump_config(config_file):
     try:
         with open(config_file, 'rt') as f:
             config = json.load(f)
-    except Exception, e:
+    except Exception as e:
         print 'Error: failed to read the configuration from %s' % config_file
     return config
 
@@ -88,7 +88,7 @@ def pass_condition(test, a, b):
         try:
             age = (datetime.datetime.today() - dateutil.parser.parse(b).replace(tzinfo=None)).days
             return age > a
-        except Exception, e:
+        except Exception as e:
             # Failure means an invalid date, meaning no activity
             return True
     return False
@@ -209,7 +209,7 @@ def main(cmd_args):
         for service in supported_services:
             try:
                 aws_config[service] = load_info_from_json(service, environment_name)
-            except Exception, e:
+            except Exception as e:
                 printException(e)
 
         # Output stuff
