@@ -1,6 +1,8 @@
 AWS Scout2
 ==========
 
+[![Build Status](https://travis-ci.org/iSECPartners/Scout2.svg?branch=master)](https://travis-ci.org/iSECPartners/Scout2)
+
 ## Description
 
 Scout2 is a security tool that lets AWS administrators assess their environment's
@@ -27,21 +29,32 @@ To install Scout2:
 ## Requirements
 
 To run Scout2, you will need valid AWS credentials (Access Key). The role, or
-user account, associated with this Access Key needs to have read access on all
-resources within:
+user account, associated with this Access Key requires read-only access for all
+resources in the following services:
 
 * Cloudtrail
 * Elastic Compute Cloud (EC2)
 * Identity and Access Management (IAM)
 * Relational Database Service (RDS)
+* Redshift
 * Simple Storage Service (S3)
+
+If you are not sure what permissions to grant, the
+[Scout2-Default](https://github.com/iSECPartners/AWS-recipes/blob/master/IAM-Policies/Scout2-Default.json)
+IAM policy lists the permissions necessary for a default run of Scout2.
 
 ## Usage
 
-To run Scout2 from  a computer already configured to use the AWS CLI or Boto, or
-from an EC2 instance within an appropriate role, run the following command:
+To run Scout2 from  an EC2 instance with an appropriate role or from a computer
+already configured to use the AWS CLI, boto, or another AWS SDK (via
+environment variables or configuration files), run the following command:
 
     $ python Scout2.py
+
+If you configured multiple profiles, run the following command if you do not
+wish to use the default profile:
+
+    $ pyhon Scout2.py --profile <PROFILE_NAME>
 
 To run Scout2 using an access key downloaded from AWS, run the following command:
 
@@ -72,6 +85,9 @@ everytime you run Scout2.
 The following command will provide the list of available command line options:
 
     $ python Scout2.py --help
+
+For further details, checkout our GitHub pages at
+[https://isecpartners.github.io/Scout2/](https://isecpartners.github.io/Scout2/).
 
 ## License
 
