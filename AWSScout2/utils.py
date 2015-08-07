@@ -286,12 +286,13 @@ def prompt_4_overwrite(filename, force_write):
         return True
     return prompt_4_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename))
 
-def save_blob_to_file(filename, blob, force_write):
+def save_blob_to_file(filename, blob, force_write, debug):
     try:
         if prompt_4_overwrite(filename, force_write):
             with open(filename, 'wt') as f:
-                write_data_to_file(f, blob, force_write)
-    except:
+                write_data_to_file(f, blob, force_write, debug)
+    except Exception as e:
+        printException(e)
         pass
 
 def save_config_to_file(blob, keyword, force_write, debug):

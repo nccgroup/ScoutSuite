@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
@@ -11,15 +11,18 @@ from AWSScout2.findings import *
 
 def main(args):
 
+    # Configure the debug level
+    configPrintException(args.debug)
+
     # Check arguments
     if args.ruleset_name == 'default':
-        print 'Error, you need to provide a name for your custom ruleset.'
+        printError('Error, you need to provide a name for your custom ruleset.')
         return
 
     # Create the list of services to customize
     services = build_services_list(args.services, args.skipped_services)
     if not len(services):
-        print 'Error: list of Amazon Web Services to be analyzed is empty.'
+        printError('Error: list of Amazon Web Services to be analyzed is empty.')
         return
 
     for service in supported_services:
@@ -42,12 +45,19 @@ def main(args):
     for service in supported_services:
         ruleset = globals()[service + '_finding_dictionary']
         filename = 'rules/findings-' + service + '.' + args.ruleset_name[0] + '.json'
-        save_blob_to_file(filename, ruleset, args.force_write)
+        save_blob_to_file(filename, ruleset, args.force_write, args.debug)
 
 
 ########################################
 ##### Argument parser
 ########################################
+
+default_args = read_profile_default_args(parser.prog)
+
+add_scout2_argument(parser, default_args, 'force')
+add_scout2_argument(parser, default_args, 'ruleset-name')
+add_scout2_argument(parser, default_args, 'services')
+add_scout2_argument(parser, default_args, 'skip')
 
 parser.add_argument('--all',
                     dest='review_defaults',
