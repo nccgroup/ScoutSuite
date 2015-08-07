@@ -43,27 +43,34 @@ ec2_classic = 'EC2-Classic'
 ##### Argument parser
 ########################################
 
-init_parser()
-parser.add_argument('--force',
-                    dest='force_write',
-                    default=False,
-                    action='store_true',
-                    help='overwrite existing json files')
-parser.add_argument('--ruleset_name',
-                    dest='ruleset_name',
-                    default='default',
-                    nargs='+',
-                    help='Customized set of rules')
-parser.add_argument('--services',
-                    dest='services',
-                    default=supported_services,
-                    nargs='+',
-                    help='Name of services you want to analyze')
-parser.add_argument('--skip',
-                    dest='skipped_services',
-                    default=[],
-                    nargs='+',
-                    help='Name of services you want to ignore')
+#
+# Add a shared argument to a Scout2 utility
+#
+def add_scout2_argument(parser, default_args, argument_name):
+    if argument_name == 'force':
+        parser.add_argument('--force',
+                            dest='force_write',
+                            default=False,
+                            action='store_true',
+                            help='Overwrite existing json files')
+    if argument_name == 'ruleset-name':
+        parser.add_argument('--ruleset-name',
+                            dest='ruleset_name',
+                            default='default',
+                            nargs='+',
+                            help='Customized set of rules')
+    if argument_name == 'services':
+        parser.add_argument('services',
+                            dest='services',
+                            default=supported_services,
+                            nargs='+',
+                            help='Name of the Amazon Web Services you want to work with')
+    if argument_name == 'skip':
+        parser.add_argument('--skip',
+                            dest='skipped_services',
+                            default=[],
+                            nargs='+',
+                            help='Name of services you want to ignore')
 
 
 ########################################
