@@ -57,7 +57,7 @@ def main(args):
         args.force_write = True
 
     # Set the environment name
-    environment_name = get_environment_name(args)
+    environment_name = get_environment_name(args)[0]
 
     # Search for an existing ruleset if the environment is set
     if environment_name and args.ruleset_name == 'default':
@@ -138,7 +138,7 @@ def main(args):
     save_config_to_file(aws_config, 'aws', args.force_write, args.debug)
 
     ##### Rename data based on environment's name
-    if environment_name:
+    if environment_name != 'default':
         create_new_scout_report(environment_name, args.force_write)
 
 
@@ -157,6 +157,7 @@ add_scout2_argument(parser, default_args, 'force')
 add_scout2_argument(parser, default_args, 'ruleset-name')
 add_scout2_argument(parser, default_args, 'services')
 add_scout2_argument(parser, default_args, 'skip')
+add_scout2_argument(parser, default_args, 'env')
 
 parser.add_argument('--csv-credentials',
                     dest='fetch_creds_from_csv',
@@ -168,11 +169,6 @@ parser.add_argument('--local',
                     default=False,
                     action='store_true',
                     help='use local data previously fetched to feed the analyzer')
-parser.add_argument('--env',
-                    dest='environment_name',
-                    default=None,
-                    nargs='+',
-                    help='AWS environment name (used to create multiple reports)')
 parser.add_argument('--check-s3-acls',
                     dest='check_s3_acls',
                     default=False,

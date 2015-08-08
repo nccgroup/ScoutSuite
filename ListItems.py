@@ -17,7 +17,7 @@ def main(args):
     configPrintException(args.debug)
 
     # Get the environment name
-    environment_name = get_environment_name(args)
+    environment_name = get_environment_name(args)[0]
 
     # Create the list of services to analyze
     services = build_services_list(args.services, args.skipped_services)
@@ -76,14 +76,10 @@ def main(args):
 
 default_args = read_profile_default_args(parser.prog)
 
+add_scout2_argument(parser, default_args, 'env')
 add_scout2_argument(parser, default_args, 'services')
 add_scout2_argument(parser, default_args, 'skip')
 
-parser.add_argument('--env',
-                    dest='environment_name',
-                    default=None,
-                    nargs='+',
-                    help='AWS environment name (used to create multiple reports)')
 parser.add_argument('--out',
                     dest='output_file',
                     default=[ None ],

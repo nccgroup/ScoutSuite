@@ -71,6 +71,12 @@ def add_scout2_argument(parser, default_args, argument_name):
                             default=[],
                             nargs='+',
                             help='Name of services you want to ignore')
+    elif argument_name == 'env':
+        parser.add_argument('--env',
+                            dest='environment_name',
+                            default=[ 'default' ],
+                            nargs='+',
+                            help='AWS environment name (used when working with multiple reports)')
     else:
         raise Exception('Invalid parameter name %s' % argument_name)
 
@@ -249,7 +255,7 @@ def create_new_scout_report(environment_name, force_write):
 
 def load_info_from_json(service, environment_name):
     filename = AWSCONFIG_DIR
-    if environment_name:
+    if environment_name != 'default':
         filename = filename + '-' + environment_name
     filename = filename + '/aws_config.js'
     try:
@@ -259,6 +265,7 @@ def load_info_from_json(service, environment_name):
             json_payload = ''.join(json_payload)
             aws_config = json.loads(json_payload)
     except Exception as e:
+        printException(e)
         return {}
     return aws_config['services'][service] if 'services' in aws_config and service in aws_config['services'] else {}
     

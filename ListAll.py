@@ -194,9 +194,7 @@ def main(cmd_args):
     configPrintException(cmd_args.debug)
 
     # Get the environment name
-    if len(cmd_args.environment_names) < 1:
-        printError('Error: you need to specify an environment name.')
-        return 42
+    environment_names = get_environment_name(cmd_args)
 
     # Load arguments from config if specified
     if len(cmd_args.config):
@@ -212,7 +210,7 @@ def main(cmd_args):
     conditions = args.conditions if hasattr(args, 'conditions') else None
 
     # Support multiple environments
-    for environment_name in cmd_args.environment_names:
+    for environment_name in environment_names:
 
         # Load the data
         aws_config = {}
@@ -235,16 +233,13 @@ def main(cmd_args):
 
 default_args = read_profile_default_args(parser.prog)
 
+add_scout2_argument(parser, default_args, 'env')
+
 parser.add_argument('--config',
                     dest='config',
                     default=[],
                     nargs='+',
                     help='Config file that sets the entities and keys to be listed.')
-parser.add_argument('--env',
-                    dest='environment_names',
-                    default=[],
-                    nargs='+',
-                    help='AWS environment name (used to create multiple reports)')
 parser.add_argument('--entities',
                     dest='entities',
                     default=[],
