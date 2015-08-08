@@ -125,14 +125,14 @@ def new_finding(service, customize, key, description, entity, callback_name, cal
 # Search for an existing ruleset that matches the environment name
 #
 def search_ruleset(environment_name):
-    ruleset_found = False
-    for f in os.listdir('rules'):
-        if fnmatch.fnmatch(f, '*.' + environment_name + '.json'):
-            ruleset_found = True
-    if ruleset_found and prompt_4_yes_no("A ruleset whose name matches your environment name (%s) was found. Would you like to use it instead of the default one" % environment_name):
-        return environment_name
-    else:
-        return 'default'
+    if environment_name != 'default':
+        ruleset_found = False
+        for f in os.listdir('rules'):
+            if fnmatch.fnmatch(f, '*.' + environment_name + '.json'):
+                ruleset_found = True
+        if ruleset_found and prompt_4_yes_no("A ruleset whose name matches your environment name (%s) was found. Would you like to use it instead of the default one" % environment_name):
+            return environment_name
+    return 'default'
 
 def set_arguments(arg_names, t):
     real_args = []
