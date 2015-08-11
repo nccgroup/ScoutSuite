@@ -38,15 +38,13 @@ def read_dump_config(config_file):
 #
 # Pass all conditions?
 #
-def pass_conditions(conditions, obj, all_info, current_path, current_value):
+def pass_conditions(conditions, all_info, current_path, current_value):
     if not conditions:
         return True
-    test_path = copy.deepcopy(current_path)
-    test_path.append(current_value)
     for condition in conditions:
         key, test, value = condition
         target_obj = all_info
-        for p in test_path:
+        for p in current_path:
             target_obj = target_obj[p]
         target_obj = get_values_at(target_obj, {}, key.split('.'))
         if type(target_obj) == list:
@@ -113,10 +111,7 @@ def macro_get_key_at(all_info, info, current_path, key, value, k):
         path_to_key = k.split('.')
         first = path_to_key[0]
         last = path_to_key[-1]
-        if first in supported_services:
-            # TODO: is this broken?
-            print(first)
-        elif last in current_path:
+        if last in current_path:
             index_of_key = current_path.index(last) + 1
             result = current_path[index_of_key]
         else:
@@ -133,6 +128,8 @@ def get_values_at(dictionary, dic, path):
     values = []
     if not dic:
         dic = dictionary
+    if path == ['this']:
+        return dic    
     for p in path:
         if p == '*':
             for k in dic:
@@ -164,19 +161,24 @@ def list_all(all_info, info, path, current_path, keys, conditions):
             if len(path) == 0:
                 if type(info[key]) == dict:
                     # Check that all conditions are met
-                    if pass_conditions(conditions, info[key][value], all_info, current_path, value):
-                        # TODO: allow for other formatting than CSV and clean that code
-                        output = ''
-                        for k in keys:
-                            key_value = macro_get_key_at(all_info, info, current_path, key, value, k)
-                            key_value = key_value[0] if (type(key_value) == list and len(key_value) == 1) else key_value
-                            if output:
-                                output = output + ', ' + str(key_value)
-                            else:
-                                output = str(key_value)
-                        printInfo(output)
+                    test_path = copy.deepcopy(current_path)
+                    test_path.append(value)
+                    condition_passed = pass_conditions(conditions, all_info, test_path, value)
+                elif type(info[key]) == list:
+                    condition_passed = pass_conditions(conditions, all_info, current_path, value)
                 else:
                     raise Exception
+                if condition_passed:
+                    # TODO: allow for other formatting than CSV and clean that code
+                    output = ''
+                    for k in keys:
+                        key_value = macro_get_key_at(all_info, info, current_path, key, value, k)
+                        key_value = key_value[0] if (type(key_value) == list and len(key_value) == 1) else key_value
+                        if output:
+                            output = output + ', ' + str(key_value)
+                        else:
+                            output = str(key_value)
+                    printInfo(output)
             else:
                 # keep track of where we are...
                 tmp = copy.deepcopy(current_path)

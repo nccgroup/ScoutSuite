@@ -1,12 +1,14 @@
 {
     "entities": [
-        "ec2.regions.vpcs.security_groups"
+        "ec2.regions.vpcs.security_groups.rules.protocols.ports.cidrs"
     ],
     "keys": [
-        "this",
-        "rules.ingress"
+        "ec2.regions.vpcs.security_groups",
+        "ec2.regions.vpcs.security_groups.rules.protocols",
+        "ec2.regions.vpcs.security_groups.rules.protocols.ports",
+        "this"
     ],
     "conditions": [
-        [ "rules.ingress.protocols.*.ports.*.cidrs", "containAtleastOneOf", ["0.0.0.0/0"] ]
+        [ "this", "containAtleastOneOf", ["0.0.0.0/0"] ]
     ]
 }
