@@ -74,7 +74,7 @@ def add_scout2_argument(parser, default_args, argument_name):
     elif argument_name == 'env':
         parser.add_argument('--env',
                             dest='environment_name',
-                            default=[ 'default' ],
+                            default=[],
                             nargs='+',
                             help='AWS environment name (used when working with multiple reports)')
     else:
@@ -231,61 +231,75 @@ def process_finding(config, finding):
 ########################################
 
 AWSCONFIG_DIR = 'inc-awsconfig'
+AWSCONFIG_FILE = 'aws_config.js'
 REPORT_TITLE  = 'AWS Scout2 Report'
 
-def create_new_scout_report(environment_name, force_write):
-    new_dir = AWSCONFIG_DIR + '-' + environment_name
-    if not os.path.exists(AWSCONFIG_DIR):
-        return
-    new_file = 'report-' + environment_name + '.html'
-    printInfo('Creating %s ...' % new_file)
-    if prompt_4_overwrite(new_dir, force_write):
-        if not os.path.exists(new_dir):
-            os.makedirs(new_dir)
-        dir_util.copy_tree(AWSCONFIG_DIR, new_dir, update = force_write)
-        shutil.rmtree(AWSCONFIG_DIR)
-        if os.path.exists(new_file):
-            os.remove(new_file)
-        with open('report.html') as f:
-            with open(new_file, 'wt') as nf:
-                for line in f:
-                    newline = line.replace(REPORT_TITLE, REPORT_TITLE + ' [' + environment_name + ']')
-                    newline = newline.replace(AWSCONFIG_DIR, new_dir)
-                    nf.write(newline)
+def create_scout_report(environment_name, aws_config, force_write, debug):
+    # Save data
+    save_config_to_file(environment_name, aws_config, force_write, debug)
+    # If needed, create a a new report named after environment's name
+    if environment_name != 'default':
+        def_report_filename, def_config_filename = get_scout2_paths('default')
+        new_report_filename, new_config_filename = get_scout2_paths(environment_name)
+        new_file = 'report-' + environment_name + '.html'
+        printInfo('Creating %s ...' % new_file)
+        if prompt_4_overwrite(new_file, force_write):
+            if os.path.exists(new_file):
+                os.remove(new_file)
+            with open('report.html') as f:
+                with open(new_file, 'wt') as nf:
+                    for line in f:
+                        newline = line.replace(REPORT_TITLE, REPORT_TITLE + ' [' + environment_name + ']')
+                        newline = newline.replace(def_config_filename, new_config_filename)
+                        nf.write(newline)
+
+#
+# Return the filename of the Scout2 report and config
+#
+def get_scout2_paths(environment_name):
+    if environment_name == 'default':
+        report_filename = 'report.html'
+        config_filename = AWSCONFIG_DIR + '/' + AWSCONFIG_FILE
+    else:
+        report_filename = ('report-%s.html' % environment_name)
+        config_filename = ('%s-%s/%s' % (AWSCONFIG_DIR, environment_name, AWSCONFIG_FILE))
+    return report_filename, config_filename
 
 def load_info_from_json(service, environment_name):
-    filename = AWSCONFIG_DIR
-    if environment_name != 'default':
-        filename = filename + '-' + environment_name
-    filename = filename + '/aws_config.js'
+    report_filename, config_filename = get_scout2_paths(environment_name)
     try:
-        with open(filename) as f:
-            json_payload = f.readlines()
-            json_payload.pop(0)
-            json_payload = ''.join(json_payload)
-            aws_config = json.loads(json_payload)
+        if os.path.isfile(config_filename):
+            with open(config_filename) as f:
+                json_payload = f.readlines()
+                json_payload.pop(0)
+                json_payload = ''.join(json_payload)
+                aws_config = json.loads(json_payload)
+        else:
+            aws_config = {}
     except Exception as e:
         printException(e)
         return {}
     return aws_config['services'][service] if 'services' in aws_config and service in aws_config['services'] else {}
-    
 
-def load_from_json(keyword, var):
-    filename = AWSCONFIG_DIR + '/' + keyword + '_config.js'
-    with open(filename) as f:
+def load_from_json(environment_name, var):
+    report_filename, config_filename = get_scout2_paths(environment_name)
+    with open(report_filename) as f:
         json_payload = f.readlines()
         json_payload.pop(0)
         json_payload = ''.join(json_payload)
         return json.loads(json_payload)
 
-def open_file(keyword, force_write):
-    out_dir = AWSCONFIG_DIR
-    printInfo('Saving ' + keyword + ' data...')
-    if not os.path.exists(out_dir):
-        os.makedirs(out_dir)
-    filename = out_dir + '/' + keyword.lower().replace(' ','_') + '_config.js'
-    if prompt_4_overwrite(filename, force_write):
-       return open(filename, 'wt')
+def open_file(environment_name, force_write):
+    printInfo('Saving AWS config...')
+    report_filename, config_filename = get_scout2_paths(environment_name)
+    if prompt_4_overwrite(config_filename, force_write):
+       try:
+           config_dirname = os.path.dirname(config_filename)
+           if not os.path.isdir(config_dirname):
+               os.makedirs(config_dirname)
+           return open(config_filename, 'wt')
+       except Exception as e:
+           printException(e)
     else:
         return None
 
@@ -318,18 +332,20 @@ def save_blob_to_file(filename, blob, force_write, debug):
         printException(e)
         pass
 
-def save_config_to_file(blob, keyword, force_write, debug):
+#
+# Save AWS configuration (python dictionary) as JSON
+#
+def save_config_to_file(environment_name, aws_config, force_write, debug):
     try:
-        with open_file(keyword, force_write) as f:
-            keyword = keyword.lower().replace(' ','_')
-            print(keyword + '_info =', file = f)
-            write_data_to_file(f, blob, force_write, debug)
+        with open_file(environment_name, force_write) as f:
+            print('aws_info =', file = f)
+            write_data_to_file(f, aws_config, force_write, debug)
     except Exception as e:
         printException(e)
         pass
 
-def write_data_to_file(f, blob, force_write, debug):
-    print('%s' % json.dumps(blob, indent = 4 if debug else None, separators=(',', ': '), sort_keys=True, cls=Scout2Encoder), file = f)
+def write_data_to_file(f, aws_config, force_write, debug):
+    print('%s' % json.dumps(aws_config, indent = 4 if debug else None, separators=(',', ': '), sort_keys=True, cls=Scout2Encoder), file = f)
 
 
 ########################################

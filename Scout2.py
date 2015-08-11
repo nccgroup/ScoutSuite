@@ -38,7 +38,7 @@ def main(args):
 
     # Check version of opinel
     # TODO: read version from requirements
-    if not check_opinel_version('0.11.0'):
+    if not check_opinel_version('0.13.0'):
         return 42
 
     # Create the list of services to analyze
@@ -135,11 +135,7 @@ def main(args):
     analyze_vpc_config(aws_config)
 
     # Save data
-    save_config_to_file(aws_config, 'aws', args.force_write, args.debug)
-
-    ##### Rename data based on environment's name
-    if environment_name != 'default':
-        create_new_scout_report(environment_name, args.force_write)
+    create_scout_report(environment_name, aws_config, args.force_write, args.debug)
 
 
 ########################################
