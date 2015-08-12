@@ -88,7 +88,8 @@ def link_elastic_ips_callback2(ec2_config, current_config, path, current_path, i
         if not 'PublicIpAddress' in current_config:
             current_config['PublicIpAddress'] = callback_args['elastic_ip']
         elif current_config['PublicIpAddress'] != callback_args['elastic_ip']:
-            printInfo('Warning: public IP address exists (%s) for an instance associated with an elastic IP (%s)' % (ec2_info['regions'][r]['vpcs'][v]['instances'][i]['PublicIpAddress'], eip))
+            printInfo('Warning: public IP address exists (%s) for an instance associated with an elastic IP (%s)' % (current_config['PublicIpAddress'], callback_args['elastic_ip']))
+            # This can happen... fix it
 
 #
 # List the publicly available IPs/Ports
