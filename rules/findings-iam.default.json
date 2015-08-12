@@ -34,14 +34,18 @@
             "Warn against IAM users who have both web console and API access"
         ]
     },
-    "user-inline-policy": {
-        "description": "User policies",
+    "user-_ARG_0_-policy": {
+        "description": "User with _ARG_0_ policies",
         "entity": "Users",
         "callback": "hasUserPolicy",
-        "callback_args": [],
+        "callback_args": ["_ARG_1_"],
         "level": "warning",
+        "targets": [
+            ["inline", "Policies"],
+            ["managed", "ManagedPolicies"]
+        ],
         "questions": [
-            "Warn against the use of user policies to grant privileges"
+            "Warn against the use of _ARG_0_ policies for IAM users"
         ]
     },
     "multiple-active-keys": {
