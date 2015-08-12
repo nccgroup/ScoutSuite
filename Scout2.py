@@ -118,6 +118,9 @@ def main(args):
     else:
         manage_dictionary(aws_config, 'account_id', None)
 
+    ##### VPC analyzis
+    analyze_vpc_config(aws_config)
+
     ##### Single service analyzis
     for service in services:
         method = globals()['analyze_' + service + '_config']
@@ -130,9 +133,6 @@ def main(args):
         except Exception as e:
             printError('Error: EC2 or IAM configuration is missing.')
             printException(e)
-
-    ##### VPC analyzis
-    analyze_vpc_config(aws_config)
 
     # Save data
     create_scout_report(environment_name, aws_config, args.force_write, args.debug)
