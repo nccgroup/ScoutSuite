@@ -54,7 +54,7 @@ environment variables or configuration files), run the following command:
 If you configured multiple profiles, run the following command if you do not
 wish to use the default profile:
 
-    $ pyhon Scout2.py --profile <PROFILE_NAME>
+    $ python Scout2.py --profile <PROFILE_NAME>
 
 To run Scout2 using an access key downloaded from AWS, run the following command:
 
