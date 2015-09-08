@@ -1198,7 +1198,7 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
-          <span class="navbar-brand">AWS Scout</span>
+          <span class="navbar-brand"><a href="javascript:dashboard()">AWS Scout2</a></span>
         </div>
         <div class="navbar-collapse collapse">
           <div class="navbar-collapse collapse">
@@ -1992,6 +1992,20 @@
         </div><!-- /.col-sm-8 -->
       </div><!-- /.row -->
 
+      <!-- Home dashboard -->
+      <div class="row" id="about_run-row">
+        <div id="about_runs-list"></div>
+        <script id="about_run-list-template" type="text/x-handlebars-template">
+          <div class="list-group-item active">
+            <h4 class="list-group-item-heading">Dashboard</h4>
+          </div>
+          <div class="list-group-item">
+            <div class="list-group-item-text item-margin">Last run time: {{items.time}}</div>
+            <div class="list-group-item-text item-margin">Last run command: {{items.cmd}}</div>
+          </div>
+        </script>
+      </div><!-- /.row -->
+
       <div class="row" id="about-row">
         <div class="list-group">
           <div class="row list-group-item active">
@@ -2028,7 +2042,6 @@
         </div>
       </div>
 
-
     </div> <!-- /container -->
 
     <!-- Include all AWS services configs -->
@@ -2036,6 +2049,9 @@
 
     <!-- Bootstrap core JavaScript, placed at the end of the document so the pages load faster -->
     <script src="inc-bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Display dashbord -->
+    <script>load_dashboard();</script>
 
     <!-- Hide the please wait message -->
     <script>$('#please_wait-row').hide();</script>

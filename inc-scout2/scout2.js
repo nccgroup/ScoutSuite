@@ -443,11 +443,21 @@ function load_config(keyword) {
         }, 50);
     }
 }
+function load_dashboard() {
+    load_aws_config_from_json(aws_info['last_run'], 'about_run', 1);
+    dashboard();
+}
 
 // Browsing functions
 function about() {
     hideAll();
     $('#about-row').show();
+    $('#section_title-h2').text('');
+}
+function dashboard() {
+    hideAll()
+    $('#about_run-row').show();
+    $('#section_title-h2').text('');
 }
 
 //if ("onhashchange" in window) {

@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
-# Import third-party packages
-import os
+# Import stock packages
+import datetime
+import dateutil
 import sys
 
 # Import opinel
@@ -133,6 +134,11 @@ def main(args):
         except Exception as e:
             printError('Error: EC2 or IAM configuration is missing.')
             printException(e)
+
+    # Save info about run
+    aws_config['last_run'] = {}
+    aws_config['last_run']['time'] = datetime.datetime.now(dateutil.tz.tzlocal()).strftime("%Y-%m-%d %H:%M%S%z")
+    aws_config['last_run']['cmd'] = ' '.join(sys.argv)
 
     # Save data
     create_scout_report(environment_name, aws_config, args.force_write, args.debug)
