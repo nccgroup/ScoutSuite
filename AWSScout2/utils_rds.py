@@ -2,7 +2,6 @@
 # Import opinel
 from opinel.utils import *
 from opinel.utils_rds import *
-from opinel.protocols_dict import *
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
@@ -27,6 +26,7 @@ def check_for_duplicate(rds_info):
                 rds_info['violations']['short-backup-retention-period'].removeItem(instance_id)
 
 def get_rds_info(key_id, secret, session_token, service_config, selected_regions, with_gov, with_cn):
+    printInfo('Fetching RDS config...')
     manage_dictionary(service_config, 'regions', {})
     for region in build_region_list('rds', selected_regions, include_gov = with_gov, include_cn = with_cn):
         manage_dictionary(service_config['regions'], region, {})

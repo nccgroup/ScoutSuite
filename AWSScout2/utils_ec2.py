@@ -1,13 +1,20 @@
 # Import opinel
 from opinel.utils import *
 from opinel.utils_ec2 import *
-from opinel.protocols_dict import *
 
 # Import Scout2 tools
 from AWSScout2.utils import *
 from AWSScout2.utils_ec2 import *
 from AWSScout2.filters import *
 from AWSScout2.findings import *
+
+
+########################################
+##### Globals
+########################################
+icmp_message_types_dict = load_data('icmp_message_types.json', 'icmp_message_types')
+protocols_dict = load_data('protocols.json', 'protocols')
+
 
 ########################################
 ##### EC2 analysis functions
@@ -28,7 +35,7 @@ def analyze_ec2_config(ec2_info, aws_account_id, force_write):
         printInfo('Success')
     except Exception as e:
         printInfo('Error')
-        printException(e)       
+        printException(e)
 
 #
 # Github issue #24: display the security group names in the list of grants (added here to have ligher JS code)
@@ -366,16 +373,15 @@ def parse_security_group_rules(rules):
         protocols = manage_dictionary(protocols, ip_protocol, {})
         protocols[ip_protocol] = manage_dictionary(protocols[ip_protocol], 'ports', {})
         # Save the port (single port or range)
-        if ip_protocol == 'ICMP' or ip_protocol == 'ALL':
-            port_value = 'N/A'
-        elif rule['FromPort'] == rule['ToPort']:
-            if not rule['FromPort']:
-                port_value = 'ALL'
+        port_value = 'N/A'
+        if 'FromPort' in rule and 'ToPort' in rule:
+            if ip_protocol == 'ICMP':
+                # FromPort with ICMP is the type of message
+                port_value = icmp_message_types_dict[str(rule['FromPort'])]
+            elif rule['FromPort'] == rule['ToPort']:
+                port_value = str(rule['FromPort'])
             else:
-                port_value = rule['FromPort']
-        else:
-            port_value = '%s-%s' % (rule['FromPort'], rule['ToPort'])
-        port_value = str(port_value)
+                port_value = '%s-%s' % (rule['FromPort'], rule['ToPort'])
         manage_dictionary(protocols[ip_protocol]['ports'], port_value, {})
         # Save grants, values are either a CIDR or an EC2 security group
         for grant in rule['UserIdGroupPairs']:

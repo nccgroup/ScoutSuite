@@ -773,3 +773,10 @@ var policy_friendly_name = function(arn) {
 Handlebars.registerHelper('policy_report_id', function(policy, a, b, c) {
     policy['ReportId'] = a + '-' + b + '-' + c;
 });
+Handlebars.registerHelper('ifEqual', function(v1, v2, options) {
+    if (v1 === v2) {
+        return options.fn(this);
+    } else {
+        return options.inverse(this);
+    }
+});

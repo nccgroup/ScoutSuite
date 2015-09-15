@@ -372,7 +372,7 @@
         {{#each protocols}}
           <li class="list-group-item-text">{{@key}}</li>
           <ul>
-            <li class="list-group-item-text">Ports:
+            <li class="list-group-item-text">{{#ifEqual @key "ICMP"}}Message types{{else}}Ports{{/ifEqual}}:
             <ul>
             {{#each ports}}
               <li>{{@key}}</li>
