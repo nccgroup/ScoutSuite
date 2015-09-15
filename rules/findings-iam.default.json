@@ -87,5 +87,19 @@
         "questions": [
             "Report active access keys for the root account"
         ]
+    },
+    "_ARG_0_": {
+        "description": "_ARG_3_",
+        "entity": "PasswordPolicy",
+        "callback": "booleanKeyEquals",
+        "callback_args": ["_ARG_0_", "_ARG_1_"],
+        "targets": [
+            ["PasswordReusePrevention", "false", "danger", "Password reuse enabled"  ],
+            ["ExpirePasswords", "false", "warning", "Password expiration disabled" ]
+        ],
+        "level": "_ARG_2_",
+        "questions": [
+            "Report _ARG_3_"
+        ]
     }
 }

@@ -83,3 +83,8 @@ class IamFinding(Finding):
                 self.addItem('access_key_1_active')
             if obj['access_key_2_active'].lower() == 'true':
                 self.addItem('access_key_2_active')
+
+    def booleanKeyEquals(self, key, obj):
+        if key == self.callback_args[0]:
+            if str(obj).lower() == self.callback_args[1].lower():
+                self.addItem('')

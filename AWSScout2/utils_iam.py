@@ -21,6 +21,14 @@ def analyze_iam_config(iam_info, aws_account_id, force_write):
 
 def get_account_password_policy(iam_client, iam_info):
     iam_info['PasswordPolicy'] = iam_client.get_account_password_policy()['PasswordPolicy']
+    if 'PasswordReusePrevention' not in iam_info['PasswordPolicy']:
+        iam_info['PasswordPolicy']['PasswordReusePrevention'] = False
+    else:
+        iam_info['PasswordPolicy']['PreviousPasswordPrevented'] = iam_info['PasswordPolicy']['PasswordReusePrevention']
+        iam_info['PasswordPolicy']['PasswordReusePrevention'] = True
+    # There is a bug in the API: ExpirePasswords always returns false
+    if 'MaxPasswordAge' in iam_info['PasswordPolicy']:
+        iam_info['PasswordPolicy']['ExpirePasswords'] = True
 
 def get_aws_account_id(iam_info):
     for resources in ['Groups', 'Roles', 'Users']:
