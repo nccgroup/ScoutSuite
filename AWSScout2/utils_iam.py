@@ -19,6 +19,9 @@ def analyze_iam_config(iam_info, aws_account_id, force_write):
     printInfo('Analyzing IAM data...')
     analyze_config(iam_finding_dictionary, iam_filter_dictionary, iam_info, 'IAM', force_write)
 
+def get_account_password_policy(iam_client, iam_info):
+    iam_info['PasswordPolicy'] = iam_client.get_account_password_policy()['PasswordPolicy']
+
 def get_aws_account_id(iam_info):
     for resources in ['Groups', 'Roles', 'Users']:
         if resources in iam_info:
@@ -83,6 +86,8 @@ def get_iam_info(key_id, secret, session_token, service_config):
     get_managed_policies(iam_client, service_config)
     printInfo('Fetching IAM credential report...')
     get_credential_report(iam_client, service_config)
+    printInfo('Fetching IAM password policy...')
+    get_account_password_policy(iam_client, service_config)
 
 def get_permissions(policy_document, permissions, keyword, name, policy_name, is_managed_policy = False):
     manage_dictionary(permissions, 'Action', {})
@@ -231,9 +236,9 @@ def get_credential_report(iam_client, iam_info):
     try:
         report = iam_client.get_credential_report()['Content']
         lines = report.splitlines()
-        keys = lines[0].split(',')
+        keys = lines[0].decode('utf-8').split(',')
         for line in lines[1:]:
-            values = line.split(',')
+            values = line.decode('utf-8').split(',')
             manage_dictionary(iam_report, values[0], {})
             for key, value in zip(keys, values):
                 iam_report[values[0]][key] = value

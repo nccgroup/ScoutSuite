@@ -411,6 +411,7 @@ function load_config(keyword) {
                 if ('CredentialReport' in aws_info['services']['iam']) {
                     load_aws_config_from_json(aws_info['services']['iam']['CredentialReport']['<root_account>'], 'iam_CredentialReport', 1);
                 }
+                load_aws_config_from_json(aws_info['services']['iam']['PasswordPolicy'], 'iam_PasswordPolicy', 1);
                 highlight_violations(aws_info['services']['iam']['violations'], 'iam');
                 load_aws_config_from_json(aws_info['services']['iam']['violations'], 'iam_dashboard', 1);
                 load_filters_from_json(aws_info['services']['iam']['filters']);
