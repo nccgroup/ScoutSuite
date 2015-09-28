@@ -49,7 +49,7 @@ def main(args):
         return 42
 
     # Search for AWS credentials
-    key_id, secret, token = read_creds(args.profile[0], args.fetch_creds_from_csv[0], args.mfa_serial[0], args.mfa_code[0])
+    key_id, secret, token = read_creds(args.profile[0], args.csv_credentials[0], args.mfa_serial[0], args.mfa_code[0])
     if not args.fetch_local and key_id is None:
         return 42
 
@@ -155,17 +155,13 @@ add_sts_argument(parser, 'mfa-code')
 add_common_argument(parser, default_args, 'regions')
 add_common_argument(parser, default_args, 'with-gov')
 add_common_argument(parser, default_args, 'with-cn')
+add_iam_argument(parser, default_args, 'csv-credentials')
 add_scout2_argument(parser, default_args, 'force')
 add_scout2_argument(parser, default_args, 'ruleset-name')
 add_scout2_argument(parser, default_args, 'services')
 add_scout2_argument(parser, default_args, 'skip')
 add_scout2_argument(parser, default_args, 'env')
 
-parser.add_argument('--csv-credentials',
-                    dest='fetch_creds_from_csv',
-                    default=[ None ],
-                    nargs='+',
-                    help='fetch credentials from a CSV file')
 parser.add_argument('--local',
                     dest='fetch_local',
                     default=False,
