@@ -49,7 +49,7 @@ def main(args):
         return 42
 
     # Search for AWS credentials
-    key_id, secret, token = read_creds(args.profile[0], args.fetch_creds_from_csv[0], args.mfa_serial[0], args.mfa_code[0])
+    key_id, secret, token = read_creds(args.profile[0], args.csv_credentials[0], args.mfa_serial[0], args.mfa_code[0])
     if not args.fetch_local and key_id is None:
         return 42
 
