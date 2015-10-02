@@ -1,0 +1,16 @@
+{
+    "entities": [
+        "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id"
+    ],
+    "conditions": [
+        [ "this", "inSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges.json)" ]
+    ],
+    "finding": {
+        "level": "danger"
+    },
+    "listing": {
+        "keys": [
+            "this"
+        ]
+    }
+}

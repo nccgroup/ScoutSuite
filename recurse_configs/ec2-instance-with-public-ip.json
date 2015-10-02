@@ -1,0 +1,13 @@
+{
+    "entities": [
+        "ec2.regions.id.vpcs.id.instances.id.PublicIpAddress"
+    ],
+    "conditions": [
+        [ "this", "notNull", "" ]
+    ],
+    "listing": {
+        "keys": [
+            "this"
+        ]
+    }
+}
