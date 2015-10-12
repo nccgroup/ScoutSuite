@@ -939,7 +939,7 @@
           <div class="list-group-item-text item-margin">Static website hosting: <span id="s3_buckets-static_website_hosting_enabled-{{Name}}">{{web_hosting}}</span></div>
         </div>
         <div class="list-group-item">
-          <h4 class="list-group-item-heading">Permissions</h4>
+          <h4 class="list-group-item-heading">Bucket ACLs</h4>
           <table class="table-striped" width="100%" >
             <tr>
               <td width="20%"></td>
@@ -970,7 +970,7 @@
         {{#if policy}}
           <div class="list-group-item">
             <div class="accordion">
-              <h4 class="list-group-item-heading accordion-heading">Policy
+              <h4 class="list-group-item-heading accordion-heading">Bucket policy
                 <a class="accordion-toggle" data-toggle="collapse" href="#s3_bucket_policy_details-{{fixBucketName @key}}">
                   <span class="badge pull-right btn-info">Details</span>
                 </a>
@@ -983,6 +983,9 @@
             </div>
           </div>
         {{/if}}
+        {{> s3_bucket_iam_policies iam_type = 'Groups' iam_entities = iam_groups}}
+        {{> s3_bucket_iam_policies iam_type = 'Roles' iam_entities = iam_roles}}
+        {{> s3_bucket_iam_policies iam_type = 'Users' iam_entities = iam_users}}
         {{#if keys}}
           <div class="list-group-item">
             <div class="accordion">
@@ -1074,6 +1077,59 @@
     </script>
     <script>
       Handlebars.registerPartial("s3_object", $("#s3_object-partial").html());
+    </script>
+
+    <!-- List of IAM policies referring a given bucket -->
+    <script id="s3_bucket_iam_policies-partial" type="text/x-handlebars-template">
+        {{#if iam_entities}}
+          <div class="list-group-item">
+            <div class="accordion">
+              <h4 class="list-group-item-heading accordion-heading">IAM {{iam_type}} policies
+                <a class="accordion-toggle" data-toggle="collapse" href="#s3_iam_{{iam_type}}_policies_details-{{../Name}}">
+                  <span class="badge pull-right btn-info">{{count iam_entities}}</span>
+                </a>
+              </h4>
+              <div id="s3_iam_{{iam_type}}_policies_details-{{../Name}}" class="accordion-body item-margin collapse">
+                <div class="accordion-inner">
+                  <table class="table-striped" width="100%" >
+                    <tr>
+                      <td width="40%">{{make_title ../iam_type}} name</td>
+                      <td width="40%" class="text-center">Policy name</td>
+                      <td width="20%" class="text-center">Condition?</td>
+                    </tr>
+                    {{#each iam_entities}}
+                      {{#each ManagedPolicies}}
+                        <tr>
+                        <td width="40%"><a href="javascript:showObject(['services', 'iam', '{{../../iam_type}}', '{{@../key}}'])">{{@../key}}</a></td>
+                        <td width="40%" class="text-center">
+                          <a href="javascript:showIAMManagedPolicy('{{@key}}')">{{policy_friendly_name @key}}</a>
+                        </td>
+                        <td width="20%" class="text-center">
+                          {{has_condition  this}}
+                        </td>
+                        </tr>
+                      {{/each}}
+                      {{#each InlinePolicies}}
+                        <tr>
+                        <td width="40%"><a href="javascript:showObject(['services', 'iam', '{{../../iam_type}}', '{{@../key}}'])">{{@../key}}</a></td>
+                        <td width="40%" class="text-center">
+                          <a href="javascript:showIAMInlinePolicy('{{../../iam_type}}', '{{@../key}}', '{{@key}}')">{{@key}}</a>
+                        </td>
+                        <td width="20%" class="text-center">
+                          {{has_condition  this}}
+                        </td>
+                        </tr>
+                      {{/each}}                      
+                    {{/each}}
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        {{/if}}
+    </script>
+    <script>
+        Handlebars.registerPartial("s3_bucket_iam_policies", $("#s3_bucket_iam_policies-partial").html());
     </script>
 
 

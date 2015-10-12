@@ -781,3 +781,10 @@ Handlebars.registerHelper('ifEqual', function(v1, v2, options) {
         return options.inverse(this);
     }
 });
+Handlebars.registerHelper('has_condition', function(policy_info) {
+    if (('condition' in policy_info) && (policy_info['condition'] != null)) {
+        return true;
+    } else {
+        return false;
+    }
+});

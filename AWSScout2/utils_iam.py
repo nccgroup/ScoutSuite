@@ -40,7 +40,7 @@ def get_aws_account_id(iam_info):
                     pass
 
 def get_groups_info(iam_client, iam_info):
-    groups = handle_truncated_response(iam_client.list_groups, {}, ['Groups'])
+    groups = handle_truncated_response(iam_client.list_groups, {}, 'Marker', ['Groups'])
     iam_info['GroupsCount'] = len(groups)
     thread_work(groups['Groups'], get_group_info, params = {'iam_client': iam_client, 'iam_info': iam_info}, num_threads = 10)
     show_status(iam_info, 'Groups')
@@ -149,7 +149,7 @@ def get_managed_policies(iam_client, iam_info):
     policies = []
     params = {}
     params['OnlyAttached'] = True
-    policies = handle_truncated_response(iam_client.list_policies, params, ['Policies'])
+    policies = handle_truncated_response(iam_client.list_policies, params, 'Marker', ['Policies'])
     manage_dictionary(iam_info, 'ManagedPolicies', {})
     iam_info['ManagedPoliciesCount'] = len(policies['Policies'])
     show_status(iam_info, 'ManagedPolicies', False)
@@ -170,7 +170,7 @@ def get_managed_policy(q, params):
             policy_version = policy_version['PolicyVersion']
             iam_info['ManagedPolicies'][policy['Arn']]['PolicyDocument'] = policy_version['Document']
             # Get attached IAM entities
-            attached_entities = handle_truncated_response(iam_client.list_entities_for_policy, {'PolicyArn': policy['Arn']}, ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'])
+            attached_entities = handle_truncated_response(iam_client.list_entities_for_policy, {'PolicyArn': policy['Arn']}, 'Marker', ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'])
             for entity_type in attached_entities:
                 type_field = entity_type.replace('Policy', '').title()
                 for entity in attached_entities[entity_type]:
@@ -208,7 +208,7 @@ def get_inline_policies(iam_client, iam_info, keyword, name):
     return fetched_policies
 
 def get_roles_info(iam_client, iam_info):
-    roles = handle_truncated_response(iam_client.list_roles, {}, ['Roles'])
+    roles = handle_truncated_response(iam_client.list_roles, {}, 'Marker', ['Roles'])
     iam_info['RolesCount'] = len(roles)
     thread_work(roles['Roles'], get_role_info, params = {'iam_client': iam_client, 'iam_info': iam_info}, num_threads = 10)
     show_status(iam_info, 'Roles')
@@ -225,7 +225,7 @@ def get_role_info(q, params):
             role['Id'] = role.pop('RoleId')
             role['Name'] = role.pop('RoleName')
             role['Policies'] = get_inline_policies(iam_client, iam_info, 'role', role['Name'])
-            profiles = handle_truncated_response(iam_client.list_instance_profiles_for_role, {'RoleName': role['Name']}, ['InstanceProfiles'])
+            profiles = handle_truncated_response(iam_client.list_instance_profiles_for_role, {'RoleName': role['Name']}, 'Marker', ['InstanceProfiles'])
             manage_dictionary(role, 'InstanceProfiles', {})
             for profile in profiles['InstanceProfiles']:
                 manage_dictionary(role['InstanceProfiles'], profile['Arn'], {})
@@ -256,7 +256,7 @@ def get_credential_report(iam_client, iam_info):
         printException(e)
 
 def get_users_info(iam_client, iam_info):
-    users = handle_truncated_response(iam_client.list_users, {}, ['Users'])
+    users = handle_truncated_response(iam_client.list_users, {}, 'Marker', ['Users'])
     iam_info['UsersCount'] = len(users['Users'])
     thread_work(users['Users'], get_user_info, params = {'iam_client': iam_client, 'iam_info': iam_info}, num_threads = 10)
     show_status(iam_info, 'Users')
@@ -273,7 +273,7 @@ def get_user_info(q, params):
             user['Id'] = user.pop('UserId')
             user['Name'] = user.pop('UserName')
             user['Policies'] = get_inline_policies(iam_client, iam_info, 'user', user['Name'])
-            user['Groups'] = handle_truncated_response(iam_client.list_groups_for_user, {'UserName': user['Name']}, ['Groups'])['Groups']
+            user['Groups'] = handle_truncated_response(iam_client.list_groups_for_user, {'UserName': user['Name']}, 'Marker', ['Groups'])['Groups']
             try:
                 user['LoginProfile'] = iam_client.get_login_profile(UserName = user['Name'])['LoginProfile']
             except Exception as e:
