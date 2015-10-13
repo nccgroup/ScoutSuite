@@ -58,7 +58,7 @@ def get_redshift_region(q, params):
 # Clusters
 #
 def get_redshift_clusters(redshift_client, region_config):
-    clusters = handle_truncated_response(redshift_client.describe_clusters, {}, ['Clusters'])
+    clusters = handle_truncated_response(redshift_client.describe_clusters, {}, 'Marker', ['Clusters'])
     for cluster in clusters['Clusters']:
         vpc_id = cluster.pop('VpcId') if 'VpcId' in cluster else ec2_classic
         manage_dictionary(region_config['vpcs'], vpc_id, {})
@@ -71,11 +71,11 @@ def get_redshift_clusters(redshift_client, region_config):
 #
 def get_redshift_cluster_parameter_groups(redshift_client, region_config):
     region_config['parameter_groups'] = {}
-    parameter_groups = handle_truncated_response(redshift_client.describe_cluster_parameter_groups, {}, ['ParameterGroups'])
+    parameter_groups = handle_truncated_response(redshift_client.describe_cluster_parameter_groups, {}, 'Marker', ['ParameterGroups'])
     for parameter_group in parameter_groups['ParameterGroups']:
         parameter_group_name = parameter_group.pop('ParameterGroupName')
         region_config['parameter_groups'][parameter_group_name] = parameter_group
-        parameters = handle_truncated_response(redshift_client.describe_cluster_parameters, {'ParameterGroupName': parameter_group_name}, ['Parameters'])
+        parameters = handle_truncated_response(redshift_client.describe_cluster_parameters, {'ParameterGroupName': parameter_group_name}, 'Marker', ['Parameters'])
         region_config['parameter_groups'][parameter_group_name]['parameters'] = {}
         for parameter in parameters['Parameters']:
             param = {}
@@ -89,7 +89,7 @@ def get_redshift_cluster_parameter_groups(redshift_client, region_config):
 def get_redshift_cluster_security_groups(redshift_client, region_config):
     try:
         region_config['security_groups'] = {}
-        security_groups = handle_truncated_response(redshift_client.describe_cluster_security_groups, {}, ['ClusterSecurityGroups'])
+        security_groups = handle_truncated_response(redshift_client.describe_cluster_security_groups, {}, 'Marker', ['ClusterSecurityGroups'])
         for security_group in security_groups['ClusterSecurityGroups']:
             security_group_name = security_group.pop('ClusterSecurityGroupName')
             region_config['security_groups'][security_group_name] = security_group
