@@ -983,9 +983,9 @@
             </div>
           </div>
         {{/if}}
-        {{> s3_bucket_iam_policies iam_type = 'Groups' iam_entities = iam_groups}}
-        {{> s3_bucket_iam_policies iam_type = 'Roles' iam_entities = iam_roles}}
-        {{> s3_bucket_iam_policies iam_type = 'Users' iam_entities = iam_users}}
+        {{> s3_bucket_iam_policies iam_type = 'Groups' iam_entities = iam_Groups}}
+        {{> s3_bucket_iam_policies iam_type = 'Roles' iam_entities = iam_Roles}}
+        {{> s3_bucket_iam_policies iam_type = 'Users' iam_entities = iam_Users}}
         {{#if keys}}
           <div class="list-group-item">
             <div class="accordion">
@@ -1084,7 +1084,7 @@
         {{#if iam_entities}}
           <div class="list-group-item">
             <div class="accordion">
-              <h4 class="list-group-item-heading accordion-heading">IAM {{iam_type}} policies
+              <h4 class="list-group-item-heading accordion-heading">{{iam_type}} with access via IAM policies
                 <a class="accordion-toggle" data-toggle="collapse" href="#s3_iam_{{iam_type}}_policies_details-{{../Name}}">
                   <span class="badge pull-right btn-info">{{count iam_entities}}</span>
                 </a>

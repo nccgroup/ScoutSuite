@@ -132,6 +132,7 @@ def parse_resources(permission, resource_string, resources, effect, keyword, nam
         parse_resource(permission, resource_string, resources, effect, keyword, name, policy_name, is_managed_policy, condition)
 
 def parse_resource(permission, resource_string, resource, effect, keyword, name, policy_name, is_managed_policy, condition):
+    keyword = keyword.title()
     manage_dictionary(permission, keyword, {})
     manage_dictionary(permission[keyword], effect, {})
     manage_dictionary(permission[keyword][effect], name, {})
