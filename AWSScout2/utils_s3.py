@@ -18,6 +18,72 @@ def analyze_s3_config(s3_info, aws_account_id, force_write):
     printInfo('Analyzing S3 data...')
     analyze_config(s3_finding_dictionary, s3_filter_dictionary, s3_info, 'S3', force_write)
 
+def match_iam_policies_and_buckets(s3_info, iam_info):
+    if 'Action' in iam_info['Permissions']:
+        for action in (x for x in iam_info['Permissions']['Action'] if ((x.startswith('s3:') and x != 's3:ListAllMyBuckets') or (x == '*'))):
+            for iam_entity in iam_info['Permissions']['Action'][action]:
+                if 'Allow' in iam_info['Permissions']['Action'][action][iam_entity]:
+                    for allowed_iam_entity in iam_info['Permissions']['Action'][action][iam_entity]['Allow']:
+                        # For resource statements, we can easily rely on the existing permissions structure
+                        if 'Resource' in iam_info['Permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]:
+                            for full_path in (x for x in iam_info['Permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['Resource'] if x.startswith('arn:aws:s3:') or x == '*'):
+                                parts = full_path.split('/')
+                                bucket_name = parts[0].split(':')[-1]
+                                update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entity, iam_info['Permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['Resource'][full_path])
+                        # For notresource statements, we must fetch the policy document to determine which buckets are not protected
+                        if 'NotResource' in iam_info['Permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]:
+                            for full_path in (x for x in iam_info['Permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['NotResource'] if x.startswith('arn:aws:s3:') or x == '*'):
+                                for policy_type in ['InlinePolicies', 'ManagedPolicies']:
+                                    if policy_type in iam_info['Permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['NotResource'][full_path]:
+                                        for policy in iam_info['Permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['NotResource'][full_path][policy_type]:
+                                            update_bucket_permissions(s3_info, iam_info, action, iam_entity, allowed_iam_entity, full_path, policy_type, policy)
+
+
+def update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entity, policy_info):
+    if bucket_name != '*' and bucket_name in s3_info['buckets']:
+        bucket = s3_info['buckets'][bucket_name]
+        iam_entity = 'iam_' + iam_entity
+        manage_dictionary(bucket, iam_entity, {})
+        manage_dictionary(bucket[iam_entity], allowed_iam_entity, {})
+        if 'InlinePolicies' in policy_info:
+            manage_dictionary(bucket[iam_entity][allowed_iam_entity], 'InlinePolicies', {})
+            bucket[iam_entity][allowed_iam_entity]['InlinePolicies'].update(policy_info['InlinePolicies'])
+        if 'ManagedPolicies' in policy_info:
+            manage_dictionary(bucket[iam_entity][allowed_iam_entity], 'ManagedPolicies', {})
+            bucket[iam_entity][allowed_iam_entity]['ManagedPolicies'].update(policy_info['ManagedPolicies'])
+    elif bucket_name == '*':
+        for bucket in s3_info['buckets']:
+            update_iam_permissions(s3_info, bucket, iam_entity, allowed_iam_entity, policy_info)
+        pass
+    else:
+        # Could be an error or cross-account access, ignore...
+        pass
+
+def update_bucket_permissions(s3_info, iam_info, action, iam_entity, allowed_iam_entity, full_path, policy_type, policy_name):
+    allowed_buckets = []
+    # By default, all buckets are allowed
+    for bucket_name in s3_info['buckets']:
+        allowed_buckets.append(bucket_name)
+    if policy_type == 'InlinePolicies':
+        policy = iam_info[iam_entity.title()][allowed_iam_entity]['Policies'][policy_name]['PolicyDocument']
+    elif policy_type == 'ManagedPolicies':
+        policy = iam_info['ManagedPolicies'][policy_name]['PolicyDocument']
+    else:
+        printError('Error, found unknown policy type.')
+    for statement in policy['Statement']:
+        for target_path in statement['NotResource']:
+            parts = target_path.split('/')
+            bucket_name = parts[0].split(':')[-1]
+            path = '/' + '/'.join(parts[1:]) if len(parts) > 1 else '/'
+            if (path == '/' or path == '/*') and (bucket_name in allowed_buckets):
+                # Remove bucket from list
+                allowed_buckets.remove(bucket_name)
+    policy_info = {}
+    policy_info[policy_type] = {}
+    policy_info[policy_type][policy_name] = iam_info['Permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['NotResource'][full_path][policy_type][policy_name]
+    for bucket_name in allowed_buckets:
+        update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entity, policy_info)
+
 def init_s3_permissions():
     permissions = {}
     permissions['read'] = False
@@ -56,7 +122,7 @@ def get_s3_acls(s3_client, bucket_name, bucket, key_name = None):
     for grant in grants['Grants']:
         if 'ID' in grant['Grantee']:
             grantee = grant['Grantee']['ID']
-            display_name = grant['Grantee']['DisplayName']
+            display_name = grant['Grantee']['DisplayName'] if 'DisplayName' in grant['Grantee'] else grant['Grantee']['ID']
         elif 'URI' in grant['Grantee']:
             grantee = grant['Grantee']['URI']
             display_name = s3_group_to_string(grantee)
@@ -185,7 +251,7 @@ def get_s3_info(key_id, secret, session_token, service_config, selected_regions,
     # h4ck :: Create multiple clients here to avoid propagation of credentials. This is necessary because s3 is a global service that requires to access the API via the right region endpoints...
     s3_clients = {}
     for region in build_region_list('s3', selected_regions, include_gov = with_gov, include_cn = with_cn):
-        config = botocore.client.Config(region_name = region, signature_version ='s3v4')
+        config = botocore.client.Config(signature_version = 's3v4') # region_name = region, signature_version ='s3v4')
         s3_clients[region] = connect_s3(key_id, secret, session_token, region_name = region, config = config)
     printInfo('Fetching S3 buckets data...')
     get_s3_buckets(s3_clients, service_config, s3_params)

@@ -134,6 +134,12 @@ def main(args):
         except Exception as e:
             printError('Error: EC2 or IAM configuration is missing.')
             printException(e)
+    if 's3' in services and 'iam' in services:
+        try:
+            match_iam_policies_and_buckets(aws_config['services']['s3'], aws_config['services']['iam'])
+        except Exception as e:
+            printError('Error: s3 or IAM configuration is missing.')
+            printException(e)
 
     # Save info about run
     aws_config['last_run'] = {}
