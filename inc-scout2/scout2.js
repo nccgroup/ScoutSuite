@@ -788,3 +788,6 @@ Handlebars.registerHelper('has_condition', function(policy_info) {
         return false;
     }
 });
+Handlebars.registerHelper('escape_special_chars', function(value) {
+    return value.replace(/\./g, 'nccdot').replace(/,/g, 'ncccoma');
+});

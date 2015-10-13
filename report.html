@@ -582,11 +582,11 @@
       <div>
         <div class="accordion item-margin">
           <h5 class="list-group-item-heading accordion-heading">{{PolicyName}}
-            <a class="accordion-toggle" data-toggle="collapse" href="#iam_policy_details-{{ReportId}}">
+            <a class="accordion-toggle" data-toggle="collapse" href="#iam_policy_details-{{escape_special_chars ReportId}}">
               <span class="badge pull-right btn-info">Details</span>
             </a>
           </h5>
-          <div id="iam_policy_details-{{ReportId}}" class="accordion-body collapse">
+          <div id="iam_policy_details-{{escape_special_chars ReportId}}" class="accordion-body collapse">
             <div class="accordion-inner">
               {{{displayPolicy PolicyDocument}}}
             </div>
@@ -1085,11 +1085,11 @@
           <div class="list-group-item">
             <div class="accordion">
               <h4 class="list-group-item-heading accordion-heading">{{iam_type}} with access via IAM policies
-                <a class="accordion-toggle" data-toggle="collapse" href="#s3_iam_{{iam_type}}_policies_details-{{../Name}}">
+                <a class="accordion-toggle" data-toggle="collapse" href="#s3_iam_{{iam_type}}_policies_details-{{escape_special_chars ../Name}}">
                   <span class="badge pull-right btn-info">{{count iam_entities}}</span>
                 </a>
               </h4>
-              <div id="s3_iam_{{iam_type}}_policies_details-{{../Name}}" class="accordion-body item-margin collapse">
+              <div id="s3_iam_{{iam_type}}_policies_details-{{escape_special_chars ../Name}}" class="accordion-body item-margin collapse">
                 <div class="accordion-inner">
                   <table class="table-striped" width="100%" >
                     <tr>
