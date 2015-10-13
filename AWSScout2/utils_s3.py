@@ -122,7 +122,7 @@ def get_s3_acls(s3_client, bucket_name, bucket, key_name = None):
     for grant in grants['Grants']:
         if 'ID' in grant['Grantee']:
             grantee = grant['Grantee']['ID']
-            display_name = grant['Grantee']['DisplayName']
+            display_name = grant['Grantee']['DisplayName'] if 'DisplayName' in grant['Grantee'] else grant['Grantee']['ID']
         elif 'URI' in grant['Grantee']:
             grantee = grant['Grantee']['URI']
             display_name = s3_group_to_string(grantee)
