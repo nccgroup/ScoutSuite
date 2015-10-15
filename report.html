@@ -139,7 +139,7 @@
 {{#if is_menu}}
       <ul class="list-group">
         <li class="list-group-item">
-          <a href="#services/{{service_name}}/regions">
+          <a href="javascript:showAllNew('services/{{service_name}}/regions')">
             Show all<span class="badge pull-right">{{count_in "{{service_name}}" "regions.vpcs.{{resource_type}}"}}</span>
           </a>
         </li>
@@ -783,12 +783,12 @@
             {{#each ec2_groups}}
               <li class="list-group-item-text">EC2 security group:
                 <a href="javascript:findAndShowEC2ObjectByAttr('regions.vpcs.security_groups', {'name': '{{EC2SecurityGroupName}}', 'owner_id': '{{EC2SecurityGroupOwnerId}}'})">
-                  {{EC2SecurityGroupName}} ({{EC2SecurityGroupId}}) @ {{EC2SecurityGroupOwnerId}}
+                  {{EC2SecurityGroupName}} ({{@key}}) @ {{EC2SecurityGroupOwnerId}} ({{Status}})
                 </a>
               </li>
             {{/each}}
             {{#each ip_ranges}}
-              <li class="list-group-item-text">IP: {{this.CIDRIP}}</li>
+              <li class="list-group-item-text">IP: {{@key}} ({{Status}})</li>
             {{/each}}
           </ul>
         </div>

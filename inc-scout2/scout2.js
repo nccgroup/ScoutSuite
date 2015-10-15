@@ -99,6 +99,9 @@ function showRowWithDetails(keyword) {
     showRow(keyword);
     showAll(keyword);
 }
+function showAllNew(path) {
+    $("[id^='" + path + "']").show();
+}
 function showAll(keyword) {
     prefix = keyword.split('_')[0];
     $("[id*='" + keyword + "-list']").show();
