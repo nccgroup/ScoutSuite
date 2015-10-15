@@ -78,6 +78,8 @@ def update_bucket_permissions(s3_info, iam_info, action, iam_entity, allowed_iam
             if (path == '/' or path == '/*') and (bucket_name in allowed_buckets):
                 # Remove bucket from list
                 allowed_buckets.remove(bucket_name)
+            elif bucket_name == '*':
+                allowed_buckets = []
     policy_info = {}
     policy_info[policy_type] = {}
     policy_info[policy_type][policy_name] = iam_info['Permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['NotResource'][full_path][policy_type][policy_name]
