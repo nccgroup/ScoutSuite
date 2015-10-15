@@ -732,7 +732,7 @@
 
     <!-- RDS instance partial -->
     <script id="rds_instance-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="rds_instance-details-{{DBInstanceIdentifier}}">
+      <div class="list-group" id="services/rds/regions/{{region}}/vpcs/{{vpc}}/instances/{{resource_key}}/details">
         <div class="list-group-item active">
           <h4 class="list-group-item-heading">{{DBInstanceIdentifier}}</h4>
         </div>
@@ -769,7 +769,7 @@
 
     <!-- RDS security group partials -->
     <script id="rds_security_group-partial" type="text/x-handlebars-template">
-      <div class="list-group" id="rds_security_group-details-{{name}}">
+      <div class="list-group" id="services/rds/regions/{{region}}/vpcs/{{vpc}}/security_groups/{{resource_key}}/details">
         <div class="list-group-item active">
           <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
@@ -780,16 +780,15 @@
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Authorizations</h4>
           <ul>
-            {{#each ec2_groups.owners}}
-              {{#each groups}}
-                <li class="list-group-item-text">
-                  EC2 security group:
-                  <a href="javascript:findAndShowEC2ObjectByAttr('regions.vpcs.security_groups', {'name': '{{this}}', 'owner_id': '{{@../key}}'})">{{this}} @ {{@../key}}</a>
-                </li>
-              {{/each}}
+            {{#each ec2_groups}}
+              <li class="list-group-item-text">EC2 security group:
+                <a href="javascript:findAndShowEC2ObjectByAttr('regions.vpcs.security_groups', {'name': '{{EC2SecurityGroupName}}', 'owner_id': '{{EC2SecurityGroupOwnerId}}'})">
+                  {{EC2SecurityGroupName}} ({{EC2SecurityGroupId}}) @ {{EC2SecurityGroupOwnerId}}
+                </a>
+              </li>
             {{/each}}
             {{#each ip_ranges}}
-              <li class="list-group-item-text">IP: {{this}}</li>
+              <li class="list-group-item-text">IP: {{this.CIDRIP}}</li>
             {{/each}}
           </ul>
         </div>
@@ -1933,69 +1932,41 @@
         </div><!-- /.col-sm-8 -->
       </div><!-- /.row -->
 
-      <!-- Template for RDS instances -->
+
+
+      <!---------------------->
+      <!-- RDS section -->
+      <!---------------------->
+
+
+
+      <!-- RDS instances -->
       <div class="row" id="rds_instances-row">
         <div class="col-sm-4" id="rds_instances-list">
           <script id="rds_instance-list-template" type="text/x-handlebars-template">
-            <ul class="list-group">
-              <li class="list-group-item"><a href="javascript:showAll('rds_instance')">Show all<span class="badge pull-right">{{count_in "rds" "regions.instances"}}</span></a></li>
-            </ul>
-            {{#each items}}
-              <ul class="list-group" id="rds_region-list-{{@key}}">
-                <li class="list-group-item active">{{@key}}</li>
-                {{#each instances}}
-                  <div class="list-group-item list-sub-element">
-                    <div class="list-group-item-text list-sub-element" id="rds_instance-list-{{@key}}"><a href="javascript:browseTo('rds_instance', '{{@key}}')">{{@key}}</a></div>
-                  </div>
-                {{/each}}
-              </ul>
-            {{/each}}
+            {{> per_vpc service_name = 'rds' resource_type = 'instances' regions = items partial_name = 'per_vpc_link' is_menu = true}}
           </script>
         </div>
         <div class="col-sm-8" id="rds_instances-details">
           <script id="rds_instance-detail-template" type="text/x-handlebars-template">
-            {{#each items}}
-              <div id="rds_region-details-{{@key}}">
-                {{#each instances}}
-                  {{> rds_instance region=../name}}
-                {{/each}}
-              </div>
-            {{/each}}
+            {{> per_vpc service_name = 'rds' resource_type = 'instances' regions = items partial_name = 'rds_instance'}}
           </script>
-        </div><!-- /.col-sm-8 -->
-      </div><!-- /.row -->
+        </div>
+      </div>
 
-      <!-- Template for RDS security groups -->
+      <!-- RDS security groups -->
       <div class="row" id="rds_security_groups-row">
         <div class="col-sm-4" id="rds_security_groups-list">
           <script id="rds_security_group-list-template" type="text/x-handlebars-template">
-            <ul class="list-group">
-              <li class="list-group-item"><a href="javascript:showAll('rds_security_group')">Show all<span class="badge pull-right">{{count_in "rds" "regions.security_groups"}}</span></a></li>
-            </ul>
-            {{#each items}}
-              <ul class="list-group" id="rds_region-list-{{@key}}">
-                <li class="list-group-item active">{{@key}}</li>
-                {{#each security_groups}}
-                  <div class="list-group-item list-sub-element">
-                    <div class="list-group-item-text list-sub-element" id="rds_security_group-list-{{name}}"><a href="javascript:browseTo('rds_security_group', '{{name}}')">{{name}}</a></div>
-                  </div>
-                {{/each}}
-              </ul>
-            {{/each}}
+            {{> per_vpc service_name = 'rds' resource_type = 'security_groups' regions = items partial_name = 'per_vpc_link' is_menu = true}}
           </script>
         </div>
         <div class="col-sm-8" id="rds_security_groups-details">
           <script id="rds_security_group-detail-template" type="text/x-handlebars-template">
-            {{#each items}}
-              <div id="rds_region-details-{{@key}}">
-                {{#each security_groups}}
-                  {{> rds_security_group region=../../name }}
-                {{/each}}
-              </div>
-            {{/each}}
+            {{> per_vpc service_name = 'rds' resource_type = 'security_groups' regions = items partial_name = 'rds_security_group'}}
           </script>
-        </div><!-- /.col-sm-8 -->
-      </div><!-- /.row -->
+        </div>
+      </div>
 
 
 
