@@ -60,8 +60,17 @@ def parse_security_group(group):
     security_group = {}
     security_group['name'] = group['DBSecurityGroupName']
     security_group['description'] = group['DBSecurityGroupDescription']
-    security_group['ec2_groups'] = group['EC2SecurityGroups']
-    security_group['ip_ranges'] = group['IPRanges']
+    security_group['ec2_groups'] = {}
+    for grant in group['EC2SecurityGroups']:
+        if 'EC2SecurityGroupId' in grant:
+            group_id = grant.pop('EC2SecurityGroupId')
+        else:
+            group_id = '%s-%s' % (grant['EC2SecurityGroupOwnerId'], grant['EC2SecurityGroupName'])
+        security_group['ec2_groups'][group_id] = grant
+    security_group['ip_ranges'] = {}
+    for ip_range in group['IPRanges']:
+        cidr = ip_range.pop('CIDRIP')
+        security_group['ip_ranges'][cidr] = ip_range
     return security_group
 
 def get_instances_info(rds_client, region_info):
