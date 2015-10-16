@@ -1,7 +1,7 @@
 {
     "rds-publicly-accessible": {
         "description": "RDS database open to Internet",
-        "entity": "regions.security_groups",
+        "entity": "regions.vpcs.security_groups",
         "callback": "checkInternetAccessible",
         "callback_args": [],
         "level": "danger",
@@ -11,7 +11,7 @@
     },
     "single-az": {
         "description": "Single AZ RDS instance",
-        "entity": "regions.instances",
+        "entity": "regions.vpcs.instances",
         "callback": "checkMultiAZ",
         "callback_args": [],
         "level": "danger",
@@ -21,7 +21,7 @@
     },
     "postgres-invalid-ssl-cert": {
         "description": "Invalid SSL certificate (PostgreSQL)",
-        "entity": "regions.instances",
+        "entity": "regions.vpcs.instances",
         "callback": "checkPostgresCreationDate",
         "callback_args": [ "InstanceCreateTime", "08/05/2014" ],
         "level": "danger",
@@ -31,7 +31,7 @@
     },
     "no-minor-auto-upgrade": {
         "description": "Auto minor version upgrade disabled",
-        "entity": "regions.instances",
+        "entity": "regions.vpcs.instances",
         "callback": "checkAutoUpgrade",
         "callback_args": [],
         "level": "danger",
@@ -41,7 +41,7 @@
     },
     "backup-disabled": {
         "description": "Backup disabled",
-        "entity": "regions.instances",
+        "entity": "regions.vpcs.instances",
         "callback": "isLessThan",
         "callback_args": ["BackupRetentionPeriod", "1"],
         "level": "danger",
@@ -51,7 +51,7 @@
     },
     "short-backup-retention-period": {
         "description": "Short backup retention period",
-        "entity": "regions.instances",
+        "entity": "regions.vpcs.instances",
         "callback": "isLessThan",
         "callback_args": ["BackupRetentionPeriod", "30"],
         "level": "warning",
