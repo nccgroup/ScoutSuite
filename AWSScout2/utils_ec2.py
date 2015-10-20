@@ -204,7 +204,8 @@ def get_elb_info(q, params):
             lb = q.get()
             elb = {}
             elb_name = lb['LoadBalancerName']
-            for key in ['DnsName', 'CreatedTime', 'AvailabilityZones', 'LoadBalancerName', 'SecurityGroups', 'Subnets', 'VpcId', 'Policies']:
+            elb['VpcId'] = lb['VpcId'] if 'VpcId' in lb and lb['VpcId'] else ec2_classic
+            for key in ['DNSName', 'CreatedTime', 'AvailabilityZones', 'LoadBalancerName', 'SecurityGroups', 'Subnets', 'Policies']:
                 elb[key] = lb[key] if key in lb else None
             manage_dictionary(elb, 'listeners', {})
             for l in lb['ListenerDescriptions']:
