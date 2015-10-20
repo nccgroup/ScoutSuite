@@ -723,7 +723,7 @@ Handlebars.registerHelper('format_date', function(timestamp) {
     return new Date(timestamp * 1000).toString();
 });
 var make_title = function(title) {
-    return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase());
+    return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
 }
 Handlebars.registerHelper('make_title', function(title) {
     return make_title(title);
