@@ -1572,7 +1572,7 @@
           <script id="ec2_elb-detail-template" type="text/x-handlebars-template">
           {{#each items}}
             {{#each elbs}}
-              {{> ec2_elb}}
+              {{> ec2_elb Name = @key}}
             {{/each}}
           {{/each}}
           </script>
