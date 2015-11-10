@@ -11,9 +11,10 @@ try:
     from opinel.utils_ec2 import *
     from opinel.utils_iam import *
     from opinel.utils_sts import *
-except:
+except Exception as e:
     print('Error: Scout2 now depends on the opinel package (previously AWSUtils submodule). Install all the requirements with the following command:')
     print('  $ pip install -r requirements.txt')
+
     sys.exit()
 
 # Import Scout2 tools
@@ -38,8 +39,8 @@ def main(args):
     configPrintException(args.debug)
 
     # Check version of opinel
-    # TODO: read version from requirements
-    if not check_opinel_version('0.13.0'):
+    min_opinel, max_opinel = get_opinel_requirement()
+    if not check_opinel_version(min_opinel):
         return 42
 
     # Create the list of services to analyze
@@ -79,7 +80,7 @@ def main(args):
             aws_config['services'][service] = load_info_from_json(service, environment_name)
         else:
             # Reload data in specific cases...
-            if service == 's3' and (args.buckets or args.skipped_buckets):
+            if service == 's3' and (args.bucket_name or args.skipped_bucket_name):
                 aws_config['services'][service] = load_info_from_json(service, environment_name)
             # TODO: when working on a subset of available regions, reload data for other regions (reload all and kill selected regions)
 
@@ -103,8 +104,8 @@ def main(args):
                     method_args['s3_params'] = {}
                     method_args['s3_params']['check_encryption'] = args.check_s3_encryption
                     method_args['s3_params']['check_acls'] = args.check_s3_acls
-                    method_args['s3_params']['checked_buckets'] = args.buckets
-                    method_args['s3_params']['skipped_buckets'] = args.skipped_buckets
+                    method_args['s3_params']['checked_buckets'] = args.bucket_name
+                    method_args['s3_params']['skipped_buckets'] = args.skipped_bucket_name
                 method(**method_args)
             else:
                 # Fetch data from a local file
@@ -162,6 +163,8 @@ add_common_argument(parser, default_args, 'regions')
 add_common_argument(parser, default_args, 'with-gov')
 add_common_argument(parser, default_args, 'with-cn')
 add_iam_argument(parser, default_args, 'csv-credentials')
+add_s3_argument(parser, default_args, 'bucket-name')
+add_s3_argument(parser, default_args, 'skipped-bucket-name')
 add_scout2_argument(parser, default_args, 'force')
 add_scout2_argument(parser, default_args, 'ruleset-name')
 add_scout2_argument(parser, default_args, 'services')
@@ -183,16 +186,6 @@ parser.add_argument('--check-s3-encryption',
                     default=False,
                     action='store_true',
                     help='Pulls server-side encryption settings for each object in bucket (Slow)')
-parser.add_argument('--buckets',
-                    dest='buckets',
-                    default=[],
-                    nargs='+',
-                    help='Name of buckets to iterate through when checking object properties')
-parser.add_argument('--skipped-buckets',
-                    dest='skipped_buckets',
-                    default=[],
-                    nargs='+',
-                    help='Name of S3 buckets to skip when checking object properties')
 parser.add_argument('--resume',
                     dest='resume',
                     default=False,
