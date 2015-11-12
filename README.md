@@ -58,7 +58,7 @@ wish to use the default profile:
 
 To run Scout2 using an access key downloaded from AWS, run the following command:
 
-    $ python Scout2.py --csv_credentials <CREDENTIALS.CSV>
+    $ python Scout2.py --csv-credentials <CREDENTIALS.CSV>
 
 To run Scout2 when MFA-Protected API Access is configured, add the following
 parameters to your command:
