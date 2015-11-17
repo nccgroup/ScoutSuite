@@ -1291,11 +1291,11 @@
                 <li class="dropdown-header">CloudTrail config</li>
                 <li id="cloudtrail_load_button"><a href="javascript:load_config('cloudtrail')">Load</a></li>
                 <script id="cloudtrail_violation-list-template" type="text/x-handlebars-template">
-                  <li class="dropdown-header">CloudTrail config</li>
-                  <li><a href="javascript:list_generic('cloudtrail_region')">Trails</a></li>
-                  <li class="divider"></li>
                   <li class="dropdown-header">Summaries</li>
                   <li><a href="javascript:list_generic('cloudtrail_dashboard')">Dashboard</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">CloudTrail config</li>
+                  <li><a href="javascript:list_generic('cloudtrail_region')">Trails</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
@@ -1310,16 +1310,16 @@
                 <li class="dropdown-header">EC2 config</li>
                 <li id="ec2_load_button"><a href="javascript:load_config('ec2')">Load</a></li>
                 <script id="ec2_violation-list-template" type="text/x-handlebars-template">
+                  <li class="dropdown-header">Summaries</li>
+                  <li><a href="javascript:list_generic('ec2_dashboard')">Dashboard</a></li>
+                  <li><a href="javascript:list_generic('ec2_attack_surface')">External Attack Surface</a></li>
+                  <li class="divider"></li>
                   <li class="dropdown-header">EC2 config</li>
                   <li><a href="javascript:list_generic('ec2_elb')">ELBs</a></li>
                   <li><a href="javascript:list_generic('ec2_instance')">Instances</a></li>
                   <li><a href="javascript:list_generic('ec2_vpc')">VPCs</a></li>
                   <li><a href="javascript:list_generic('ec2_network_acl')">Network ACLs</a></li>
                   <li><a href="javascript:list_generic('ec2_security_group')">Security Groups</a></li>
-                  <li class="divider"></li>
-                  <li class="dropdown-header">Summaries</li>
-                  <li><a href="javascript:list_generic('ec2_dashboard')">Dashboard</a></li>
-                  <li><a href="javascript:list_generic('ec2_attack_surface')">External Attack Surface</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
@@ -1334,16 +1334,16 @@
                 <li class="dropdown-header">IAM config</li>
                 <li id="iam_load_button"><a href="javascript:load_config('iam')">Load</a></li>
                 <script id="iam_violation-list-template" type="text/x-handlebars-template">
+                  <li class="dropdown-header">Summaries</li>
+                  <li><a href="javascript:list_generic('iam_dashboard')">Dashboard</a></li>
+                  <li><a href="javascript:list_generic('iam_Permission')">Permissions</a></li>
+                  <li class="divider"></li>
                   <li class="dropdown-header">IAM config</li>
                   <li><a href="javascript:list_generic('iam_Group')">Groups</a></li>
                   <li><a href="javascript:list_generic('iam_PasswordPolicy')">Password policy</a></li>
                   <li><a href="javascript:list_generic('iam_Role')">Roles</a></li>
                   <li><a href="javascript:list_generic('iam_CredentialReport')">Root account</a></li>
                   <li><a href="javascript:list_generic('iam_User')">Users</a></li>
-                  <li class="divider"></li>
-                  <li class="dropdown-header">Summaries</li>
-                  <li><a href="javascript:list_generic('iam_dashboard')">Dashboard</a></li>
-                  <li><a href="javascript:list_generic('iam_Permission')">Permissions</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
@@ -1358,12 +1358,12 @@
                 <li class="dropdown-header">RDS config</li>
                 <li id="rds_load_button"><a href="javascript:load_config('rds')">Load</a></li>
                 <script id="rds_violation-list-template" type="text/x-handlebars-template">
+                  <li class="dropdown-header">Summaries</li>
+                  <li><a href="javascript:list_generic('rds_dashboard')">Dashboard</a></li>
+                  <li class="divider"></li>
                   <li class="dropdown-header">RDS config</li>
                   <li><a href="javascript:list_generic('rds_instance')">Instances</a></li>
                   <li><a href="javascript:list_generic('rds_security_group')">Security Groups</a></li>
-                  <li class="divider"></li>
-                  <li class="dropdown-header">Summaries</li>
-                  <li><a href="javascript:list_generic('rds_dashboard')">Dashboard</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
@@ -1379,13 +1379,13 @@
                 <li class="dropdown-header">Redshift config</li>
                 <li><a href="javascript:load_config('redshift')">Load</a></li>
                 <script id="redshift_violation-list-template" type="text/x-handlebars-template">
+                  <li class="dropdown-header">Summaries</li>
+                  <li><a href="javascript:list_generic('redshift_dashboard')">Dashboard</a></li>
+                  <li class="divider"></li>
                   <li class="dropdown-header">Redshift config</li>
                   <li><a href="javascript:list_generic('redshift_cluster')">Clusters</a></li>
                   <li><a href="javascript:list_generic('redshift_parameter_group')">Parameter Groups</a></li>
                   <li><a href="javascript:list_generic('redshift_security_group')">Security Groups</a></li>
-                  <li class="divider"></li>
-                  <li class="dropdown-header">Summaries</li>
-                  <li><a href="javascript:list_generic('redshift_dashboard')">Dashboard</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
@@ -1400,11 +1400,11 @@
                 <li class="dropdown-header">S3 config</li>
                 <li><a href="javascript:load_config('s3')">Load</a></li>
                 <script id="s3_violation-list-template" type="text/x-handlebars-template">
-                  <li class="dropdown-header">S3 config</li>
-                  <li><a href="javascript:list_generic('s3_bucket')">Buckets</a></li>
-                  <li class="divider"></li>
                   <li class="dropdown-header">Summaries</li>
                   <li><a href="javascript:list_generic('s3_dashboard')">Dashboard</a></li>
+                  <li class="divider"></li>
+                  <li class="dropdown-header">S3 config</li>
+                  <li><a href="javascript:list_generic('s3_bucket')">Buckets</a></li>
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
                   {{#each items}}
