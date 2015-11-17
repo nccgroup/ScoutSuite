@@ -64,7 +64,7 @@ def get_value_at(all_info, current_path, key):
             target_path = current_path
         elif '.' in key:
             target_path = current_path[0:len(keys)-1]
-            if keys[-1] != 'id':
+            if keys[-1] != 'id' and keys[-1] != '':
                 target_path.append(keys[-1])
         else:
             target_path = copy.deepcopy(current_path)

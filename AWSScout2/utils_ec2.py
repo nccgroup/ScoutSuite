@@ -390,7 +390,7 @@ def parse_security_group_rules(rules):
             protocols[ip_protocol]['ports'][port_value]['security_groups'].append(grant)
         for grant in rule['IpRanges']:
             manage_dictionary(protocols[ip_protocol]['ports'][port_value], 'cidrs', [])
-            protocols[ip_protocol]['ports'][port_value]['cidrs'].append(grant['CidrIp'])
+            protocols[ip_protocol]['ports'][port_value]['cidrs'].append({'CIDR': grant['CidrIp']})
     return protocols
 
 def get_name(local, remote, default_attribute):
