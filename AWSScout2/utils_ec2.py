@@ -393,16 +393,6 @@ def parse_security_group_rules(rules):
             protocols[ip_protocol]['ports'][port_value]['cidrs'].append({'CIDR': grant['CidrIp']})
     return protocols
 
-def get_name(local, remote, default_attribute):
-    name_found = False
-    if 'Tags' in remote:
-        for tag in remote['Tags']:
-            if tag['Key'] == 'Name':
-                local['Name'] = tag['Value']
-                name_found = True
-    if not name_found:
-        local['Name'] = remote[default_attribute]
-
 status = {}
 status['region_name'] = ''
 status['elastic_ips'] = 0
