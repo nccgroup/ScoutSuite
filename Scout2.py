@@ -121,7 +121,7 @@ def main(args):
         manage_dictionary(aws_config, 'account_id', None)
 
     ##### VPC analyzis
-    analyze_vpc_config(aws_config, args.ip_ranges, args.ip_ranges_name_key)
+    analyze_vpc_config(aws_config, args.ip_ranges, args.ip_ranges_key_name)
 
     ##### Single service analyzis
     for service in services:
