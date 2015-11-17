@@ -121,7 +121,7 @@ def main(args):
         manage_dictionary(aws_config, 'account_id', None)
 
     ##### VPC analyzis
-    analyze_vpc_config(aws_config)
+    analyze_vpc_config(aws_config, args.ip_ranges, args.ip_ranges_key_name)
 
     ##### Single service analyzis
     for service in services:
@@ -162,6 +162,8 @@ add_sts_argument(parser, 'mfa-code')
 add_common_argument(parser, default_args, 'regions')
 add_common_argument(parser, default_args, 'with-gov')
 add_common_argument(parser, default_args, 'with-cn')
+add_common_argument(parser, default_args, 'ip-ranges')
+add_common_argument(parser, default_args, 'ip-ranges-key-name')
 add_iam_argument(parser, default_args, 'csv-credentials')
 add_s3_argument(parser, default_args, 'bucket-name')
 add_s3_argument(parser, default_args, 'skipped-bucket-name')

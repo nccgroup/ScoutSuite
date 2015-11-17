@@ -39,6 +39,7 @@ class Ec2Finding(Finding):
             for port in obj['rules']['ingress']['protocols'][protocol]['ports']:
                 if 'cidrs' in obj['rules']['ingress']['protocols'][protocol]['ports'][port]:
                     for cidr in obj['rules']['ingress']['protocols'][protocol]['ports'][port]['cidrs']:
+                        cidr = cidr['CIDR']
                         if cidr == '0.0.0.0/0':
                             if method == 'blacklist' and self.portInRange(check_port, port):
                                 self.addItem(obj['id'])
@@ -65,6 +66,7 @@ class Ec2Finding(Finding):
             for port in obj['rules']['ingress']['protocols'][protocol]['ports']:
                 if 'cidrs' in obj['rules']['ingress']['protocols'][protocol]['ports'][port]:
                     for cidr in obj['rules']['ingress']['protocols'][protocol]['ports'][port]['cidrs']:
+                        cidr = cidr['CIDR']
                         authorized_cidr = netaddr.IPNetwork(cidr)
                         for ec2_cidr in self.callback_args:
                             ec2_cidr = netaddr.IPNetwork(ec2_cidr)
