@@ -26,11 +26,15 @@ class Bunch(object):
 #
 # Read arguments from a config file
 #
-def read_dump_config(config_file, environment_name, ip_ranges):
+def read_dump_config(config_file, environment_name, ip_ranges, config_args):
     config = None
     try:
         with open(config_file, 'rt') as f:
-            config = json.load(f)
+            config = f.read()
+        # Replace arguments
+        for idx, argument in enumerate(config_args):
+            config = config.replace('_ARG_'+str(idx)+'_', argument.strip())
+        config = json.loads(config)
         # Load lists from files
         for c1 in config['conditions']:
             if ((type(c1[2]) == str) or (type(c1[2]) == unicode)):
@@ -48,7 +52,7 @@ def read_dump_config(config_file, environment_name, ip_ranges):
     except Exception as e:
         printException(e)
         printError('Error: failed to read the configuration from %s' % config_file)
-    return config    
+    return config
 
 
 ########################################
@@ -156,7 +160,7 @@ def main(cmd_args):
 
         # Load arguments from config if specified
         if len(cmd_args.config):
-            config = read_dump_config(cmd_args.config[0], environment_name, cmd_args.ip_ranges)
+            config = read_dump_config(cmd_args.config[0], environment_name, cmd_args.ip_ranges, cmd_args.config_args)
             if config:
                 args = Bunch(config)
             else:
@@ -224,6 +228,11 @@ parser.add_argument('--ip-ranges',
                     default=[],
                     nargs='+',
                     help='Config file(s) that contain your own IP ranges.')
+parser.add_argument('--config-args',
+                    dest='config_args',
+                    default=[],
+                    nargs='+',
+                    help='Arguments to be passed to the config file.')
 
 args = parser.parse_args()
 
