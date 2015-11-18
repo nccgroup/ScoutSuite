@@ -203,6 +203,9 @@ def get_s3_bucket(q, params):
             s3_client = s3_clients['us-east-1']
             bucket['CreationDate'] = str(bucket['CreationDate'])
             bucket['region'] = get_s3_bucket_location(s3_client, bucket['Name'])
+            # h4ck :: fix issue #59, location constraint can be EU or eu-west-1 for Ireland...
+            if bucket['region'] == 'EU':
+                bucket['region'] = 'eu-west-1'
             # h4ck :: need to use the right endpoint because signature scheme autochange is not working
             s3_client = s3_clients[bucket['region']]
             get_s3_bucket_logging(s3_client, bucket['Name'], bucket)
@@ -253,7 +256,7 @@ def get_s3_info(key_id, secret, session_token, service_config, selected_regions,
     # h4ck :: Create multiple clients here to avoid propagation of credentials. This is necessary because s3 is a global service that requires to access the API via the right region endpoints...
     s3_clients = {}
     for region in build_region_list('s3', selected_regions, include_gov = with_gov, include_cn = with_cn):
-        config = botocore.client.Config(signature_version = 's3v4') # region_name = region, signature_version ='s3v4')
+        config = botocore.client.Config(signature_version = 's3v4')
         s3_clients[region] = connect_s3(key_id, secret, session_token, region_name = region, config = config)
     printInfo('Fetching S3 buckets data...')
     get_s3_buckets(s3_clients, service_config, s3_params)
