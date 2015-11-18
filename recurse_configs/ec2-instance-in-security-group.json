@@ -1,0 +1,15 @@
+{
+    "entities": [
+        "ec2.regions.id.vpcs.id.instances.id"
+    ],
+    "conditions": [
+        [ "ec2.regions.id.vpcs.id.instances.id.security_groups", "match", ".*_ARG_0_.*" ]
+    ],
+    "listing": {
+        "keys": [
+            "ec2.regions.id.vpcs.id.instances.id",
+            "ec2.regions.id.vpcs.id.instances.id.PrivateIpAddress",
+            "ec2.regions.id.vpcs.id.instances.id.PublicIpAddress"
+        ]
+    }
+}
