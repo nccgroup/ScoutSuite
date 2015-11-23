@@ -59,7 +59,7 @@ def read_dump_config(config_file, environment_name, ip_ranges, config_args):
 ##### Tests
 ########################################
 
-def get_value_at(all_info, current_path, key):
+def get_value_at(all_info, current_path, key, to_string = False):
     keys = key.split('.')
     if keys[-1] == 'id':
         target_obj = current_path[len(keys)-1]
@@ -68,8 +68,8 @@ def get_value_at(all_info, current_path, key):
             target_path = current_path
         elif '.' in key:
             target_path = current_path[0:len(keys)-1]
-            if keys[-1] != 'id' and keys[-1] != '':
-                target_path.append(keys[-1])
+            if len(keys) > len(current_path):
+                target_path = target_path + keys[len(target_path):]
         else:
             target_path = copy.deepcopy(current_path)
             target_path.append(key)
@@ -80,7 +80,10 @@ def get_value_at(all_info, current_path, key):
                 target_obj = p
             else:
                 target_obj = target_obj[p]
-    return str(target_obj)
+    if to_string:
+        return str(target_obj)
+    else:
+        return target_obj
 
 #
 # Pass all conditions?
@@ -112,9 +115,9 @@ def recurse(all_info, current_info, target_path, current_path, config):
                 output = ''
                 for key in config['listing']['keys']:
                     if not output:
-                        output = get_value_at(all_info, current_path, key)
+                        output = get_value_at(all_info, current_path, key, True)
                     else:
-                        output = output + ', ' + get_value_at(all_info, current_path, key)
+                        output = output + ', ' + get_value_at(all_info, current_path, key, True)
                 print output
         return
     target_path = copy.deepcopy(target_path)
