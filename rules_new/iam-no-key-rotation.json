@@ -1,0 +1,9 @@
+{
+    "description": "Lack of key rotation (_ARG_0_)",
+    "entities": "iam.Users.id.AccessKeys.id",
+    "conditions": [
+        [ "iam.Users.id.AccessKeys.id.CreateDate", "dateOlderThan", "90" ],
+        [ "iam.Users.id.AccessKeys.id.Status", "equal", "_ARG_0_" ]
+    ],
+    "level": "_ARG_1_"
+}

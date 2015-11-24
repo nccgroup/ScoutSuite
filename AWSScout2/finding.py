@@ -8,7 +8,7 @@ import dateutil.parser
 #
 class Finding(Filter):
 
-    def __init__(self, description, entity, callback, callback_args, level, questions):
+    def __init__(self, description, entity, conditions, level, questions):
         self.level = level
         self.questions = questions
         self.macro_items = []

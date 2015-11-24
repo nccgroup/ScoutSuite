@@ -1,0 +1,8 @@
+{
+    "description": "Service disabled",
+    "entities": "cloudtrail.regions.id.trails.id",
+    "conditions": [
+        [ "cloudtrail.regions.id.trails.id.IncludeGlobalServiceEvents", "true", "" ]
+    ]
+    "level": "danger"
+}

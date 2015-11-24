@@ -1,0 +1,8 @@
+{
+    "description": "Invalid SSL certificate (PostgreSQL)",
+    "entities": "rds.regions.id.vpcs.id.instances.id",
+    "conditions": [
+        [ "rds.regions.id.vpcs.id.instances.id.InstanceCreateTime", "datePriorTo", "08/05/2014" ]
+    ],
+    "level": "warning"
+}

@@ -1,0 +1,8 @@
+{
+    "description": "Single AZ RDS instance",
+    "entities": "rds.regions.id.vpcs.id.instances.id",
+    "conditions": [
+        [ "rds.regions.id.vpcs.id.instances.id.MultiAZ", "false", "" ]
+    ],
+    "level": "danger"
+}

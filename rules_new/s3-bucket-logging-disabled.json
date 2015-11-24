@@ -1,0 +1,8 @@
+{
+    "description": "Cluster database encryption disabled",
+    "entities": "s3.buckets.id",
+    "conditions": [
+        [ "s3.buckets.id.logging", "equal", "Disabled" ]
+    ],
+    "level": "warning"
+}

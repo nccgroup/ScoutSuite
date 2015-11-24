@@ -1,0 +1,9 @@
+{
+    "description": "Root account used recently",
+    "entities": "iam.CredentialReport.<root_account>",
+    "conditions": [
+        [ "iam.CredentialReport.<root_account>.mfa_active", "notTrue", "" ]
+    ],
+    "level": "danger",
+    "listing": { "keys": [ "this" ] }
+}

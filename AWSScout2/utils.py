@@ -39,6 +39,13 @@ for filename in os.listdir(scout2_utils_dir):
 
 ec2_classic = 'EC2-Classic'
 
+
+#re_profile = re.compile(r'.*?_PROFILE_.*?')
+re_ip_ranges_from_file = re.compile(r'_IP_RANGES_FROM_FILE_\((.*?),\s*(.*?)\)')
+re_get_value_at = re.compile(r'_GET_VALUE_AT_\((.*?)\)')
+aws_ip_ranges = 'ip-ranges.json'
+ip_ranges_from_args = 'ip-ranges-from-args'
+
 ########################################
 ##### Argument parser
 ########################################
@@ -56,7 +63,7 @@ def add_scout2_argument(parser, default_args, argument_name):
     elif argument_name == 'ruleset-name':
         parser.add_argument('--ruleset-name',
                             dest='ruleset_name',
-                            default='default',
+                            default=['default'],
                             nargs='+',
                             help='Customized set of rules')
     elif argument_name == 'services':
@@ -227,6 +234,120 @@ def process_finding(config, finding):
 
 
 ########################################
+##### Recursion
+########################################
+
+def recurse(all_info, current_info, target_path, current_path, config):
+    results = []
+    if len(target_path) == 0:
+        if pass_conditions(all_info, current_path, config['conditions'], config['condition_operator']):
+            # Build a list of values to return...
+            results.append('/'.join(current_path))
+        return results
+            # 
+            # Will need to pass a mode
+#            if False:
+#                pass
+#            elif True:
+#                # Print mode
+#                output = ''
+#                for key in config['listing']['keys']:
+#                    if not output:
+#                        output = get_value_at(all_info, current_path, key, True)
+#                    else:
+#                        output = output + ', ' + get_value_at(all_info, current_path, key, True)
+#                print output
+
+    target_path = copy.deepcopy(target_path)
+    current_path = copy.deepcopy(current_path)
+    attribute = target_path.pop(0)
+    if type(current_info) == dict:
+        if attribute in current_info:
+            split_path = copy.deepcopy(current_path)
+            split_path.append(attribute)
+            results = results + recurse(all_info, current_info[attribute], target_path, split_path, config)
+        elif attribute == 'id':
+            for key in current_info:
+                split_target_path = copy.deepcopy(target_path)
+                split_current_path = copy.deepcopy(current_path)
+                split_current_path.append(key)
+                split_current_info = current_info[key]
+                results = results + recurse(all_info, split_current_info, split_target_path, split_current_path, config)
+    # To handle lists properly, I would have to make sure the list is properly ordered and I can use the index to consistently access an object... Investigate (or do not use lists)
+    elif type(current_info) == list:
+        for index, split_current_info in enumerate(current_info):
+            split_current_path = copy.deepcopy(current_path)
+            split_current_path.append(str(index))
+            results = results + recurse(all_info, split_current_info, copy.deepcopy(target_path), split_current_path, config)
+    else:
+        printError('Error: unhandled case, typeof(current_info) = %s' % type(current_info))
+        printError(current_info)
+    return results
+
+
+#
+# Pass all conditions?
+#
+def pass_conditions(all_info, current_path, conditions, condition_operator):
+    result = False
+    for condition in conditions:
+        # Conditions are formed as "path to value", "type of test", "value(s) for test"
+        path_to_value, test_name, test_values = condition
+        target_obj = get_value_at(all_info, current_path, path_to_value)
+        if type(test_values) != list:
+            dynamic_value = re_get_value_at.match(test_values)
+            if dynamic_value:
+                test_values = get_value_at(all_info, current_path, dynamic_value.groups()[0], True)
+        res = pass_condition(target_obj, test_name, test_values)
+        if condition_operator == 'and' and not res:
+            return False
+        if condition_operator == 'or':
+            result = result or res
+    if condition_operator == 'or':
+        return result
+    else:
+        return True
+
+#
+# Get value located at a given path
+#
+def get_value_at(all_info, current_path, key, to_string = False):
+    keys = key.split('.')
+    if keys[-1] == 'id':
+        target_obj = current_path[len(keys)-1]
+    else:
+        if key == 'this':
+            target_path = current_path
+        elif '.' in key:
+            target_path = current_path[0:len(keys)-1]
+            if len(keys) > len(current_path):
+                target_path = target_path + keys[len(target_path):]
+        else:
+            target_path = copy.deepcopy(current_path)
+            target_path.append(key)
+        target_obj = all_info
+        for p in target_path:
+            # Handle lists...
+            if type(target_obj) == list and type(target_obj[0]) == dict:
+                target_obj = target_obj[int(p)]
+            elif type(target_obj) == list:
+                target_obj = p
+            elif p == '':
+                target_obj = target_obj
+            else:
+              try:
+                target_obj = target_obj[p]
+              except:
+                print('Key = %s' % p)
+                print(target_obj)
+                raise Exception
+    if to_string:
+        return str(target_obj)
+    else:
+        return target_obj
+
+
+########################################
 # File read/write functions
 ########################################
 
@@ -288,6 +409,40 @@ def load_from_json(environment_name, var):
         json_payload.pop(0)
         json_payload = ''.join(json_payload)
         return json.loads(json_payload)
+
+#
+# Load rule from a JSON config file
+#
+def load_config_from_json(config_file, environment_name, ip_ranges, config_args):
+    config = None
+    try:
+        with open(config_file, 'rt') as f:
+            config = f.read()
+        # Replace arguments
+        for idx, argument in enumerate(config_args):
+            config = config.replace('_ARG_'+str(idx)+'_', argument.strip())
+        config = json.loads(config)
+        # Load lists from files
+        for c1 in config['conditions']:
+            if ((type(c1[2]) == str) or (type(c1[2]) == unicode)):
+                values = re_ip_ranges_from_file.match(c1[2])
+                if values:
+                    filename = values.groups()[0]
+                    conditions = json.loads(values.groups()[1])
+                    if filename == aws_ip_ranges:
+                        filename = filename.replace('_PROFILE_', environment_name)
+                        c1[2] = read_ip_ranges(filename, False, conditions, True)
+                    elif filename == ip_ranges_from_args:
+                        c1[2] = []
+                        for ip_range in ip_ranges:
+                            c1[2] = c1[2] + read_ip_ranges(ip_range, True, conditions, True)
+        # Set condition operator
+        if not 'condition_operator' in config:
+            config['condition_operator'] = 'and'
+    except Exception as e:
+        printException(e)
+        printError('Error: failed to read the rule from %s' % config_file)
+    return config
 
 def open_file(environment_name, force_write):
     printInfo('Saving AWS config...')

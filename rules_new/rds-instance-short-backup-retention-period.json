@@ -1,0 +1,8 @@
+{
+    "description": "Short backup retention period",
+    "entities": "rds.regions.id.vpcs.id.instances.id",
+    "conditions": [
+        [ "rds.regions.id.vpcs.id.instances.id.BackupRetentionPeriod", "lessThan", "30" ]
+    ],
+    "level": "warning"
+}

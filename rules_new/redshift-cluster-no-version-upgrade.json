@@ -1,0 +1,8 @@
+{
+    "description": "Version upgrade disabled",
+    "entities": "redshift.regions.id.vpcs.id.clusters.id",
+    "conditions": [
+        [ "redshift.regions.id.vpcs.id.clusters.id.AllowVersionUpgrade", "false", "" ]
+    ],
+    "level": "danger"
+}

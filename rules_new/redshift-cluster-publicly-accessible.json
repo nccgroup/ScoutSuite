@@ -1,0 +1,8 @@
+{
+    "description": "Cluster publicly accessible",
+    "entities": "redshift.regions.id.vpcs.id.clusters.id",
+    "conditions": [
+        [ "redshift.regions.id.vpcs.id.clusters.id.PubliclyAccessible", "true", "" ]
+    ],
+    "level": "warning"
+}

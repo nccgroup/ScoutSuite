@@ -38,23 +38,82 @@ def change_level(level):
     else:
         return level
 
-def load_findings(service, ruleset_name, customize = False):
-
-    # Load rules from JSON file
+#
+# Load rule from a JSON file
+#
+def load_rule(rule_metadata):
+    print rule_metadata
+    rule_filename = 'rules_new/%s' % rule_metadata['filename']
+    if not os.path.exists(rule_filename):
+        printError('Error: the file %s does not exist.' % rule_filename)
+        return None
     try:
-        if type(ruleset_name) == list:
-            ruleset_name = ruleset_name[0]
-        filename = 'rules/findings-' + service + '.' + ruleset_name + '.json'
-        with open(filename) as f:
-            findings = json.load(f)
+        with open(rule_filename, 'rt') as f:
+            rule = json.load(f)
     except Exception as e:
         printException(e)
-        printError('Error: the ruleset name entered (%s) does not match an existing configuration.' % ruleset_name)
-        return
+        printError('Error: rule file %s contains malformed JSON.' % rule_filename)
+        return None
+    # Set arguments values
+    if 'args' in rule_metadata:
+        rule['key'] = set_argument_values(rule['key'], rule_metadata['args']) if 'key' in rule else rule_metadata['filename']
+        conditions = []
+        for c1 in rule['conditions']:
+            condition = []
+            for c2 in c1:
+                c2 = set_argument_values(c2, rule_metadata['args'])
+                condition.append(c2)
+            conditions.append(condition)
+        rule['conditions'] = conditions
+    # Fix level
+    if 'level' in rule_metadata:
+        rule['level'] = rule_metadata['level']
+    return rule
 
-    # Special case
-    if ruleset_name == 'custom':
-        customize = True
+#
+# Load a ruleset from a JSON file
+#
+def load_ruleset(ruleset_name):
+    ruleset_filename = 'rulesets/%s.json' % ruleset_name[0]
+    if not os.path.exists(ruleset_filename):
+        printError('Error: the ruleset name entered (%s) does not match an existing configuration.' % ruleset_name[0])
+        return None
+    try:
+        with open(ruleset_filename, 'rt') as f:
+            ruleset = json.load(f)
+    except Exception as e:
+        printException(e)
+        printError('Error: ruleset file %s contains malformed JSON.' % ruleset_filename)
+        return None
+    return ruleset
+
+def init_rules(ruleset, services):
+    # Load rules from JSON files
+    rules = {}
+    for rule in ruleset['rules']:
+        # Skip disabled rules
+        if 'enabled' in rule and rule['enabled'] in ['false', 'False']:
+            continue
+        # Skip rules that apply to an out-of-scope service
+        rule_details = load_rule(rule)
+        skip_rule = True
+        for service in services:
+            if rule_details['entities'].startswith(service):
+                skip_rule = False
+        if skip_rule:
+            continue
+        # Build the rules dictionary
+        entities = rule_details.pop('entities')
+        manage_dictionary(rules, entities, {})
+        if 'level' in rule:
+            rule_details['level'] = rule['level']
+        key = rule_details['key'] if 'key' in rule_details else rule['filename']
+        # Set condition operator
+        if not 'condition_operator' in rule_details:
+            rule_details['condition_operator'] = 'and'
+        # Save details for rule
+        rules[entities][key] = rule_details
+    return rules
 
     # Parse and customize rules
     for f in findings:
@@ -83,15 +142,16 @@ def load_findings(service, ruleset_name, customize = False):
                     new_questions)
 
         else:
+            update_ruleset(findings[f])
+
             new_finding(service, customize, f,
                 findings[f]['description'],
-                findings[f]['entity'],
-                findings[f]['callback'],
-                findings[f]['callback_args'],
+                findings[f]['entities'],
+                findings[f]['conditions'],
                 findings[f]['level'],
                 questions)
 
-def new_finding(service, customize, key, description, entity, callback_name, callback_args, level, questions):
+def new_finding(service, customize, key, description, entity, callback_name, level, questions):
 
     # Based on the service name, determine the finding dictionary and class
     finding_dictionary, finding_class = get_finding_variables(service)
@@ -119,7 +179,7 @@ def new_finding(service, customize, key, description, entity, callback_name, cal
             return
 
     # Save the rule in the finding dictionary
-    finding_dictionary[key] = finding_class(description, entity, callback_name, callback_args, level, questions)
+    finding_dictionary[key] = finding_class(description, entity, callback_name, level, questions)
 
 #
 # Search for an existing ruleset that matches the environment name
@@ -127,7 +187,7 @@ def new_finding(service, customize, key, description, entity, callback_name, cal
 def search_ruleset(environment_name):
     if environment_name != 'default':
         ruleset_found = False
-        for f in os.listdir('rules'):
+        for f in os.listdir('rulesets'):
             if fnmatch.fnmatch(f, '*.' + environment_name + '.json'):
                 ruleset_found = True
         if ruleset_found and prompt_4_yes_no("A ruleset whose name matches your environment name (%s) was found. Would you like to use it instead of the default one" % environment_name):

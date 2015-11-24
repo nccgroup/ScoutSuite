@@ -1,0 +1,9 @@
+{
+    "description": "Multiple active keys for single user",
+    "entities": "iam.Users.id",
+    "conditions": [
+        [ "iam.Users.id.AccessKeys", "lengthMoreThan", "1" ]
+    ],
+    "level": "warning",
+    "listing": { "keys": [ "iam.Users.id.AccessKeys" ] }
+}

@@ -273,7 +273,9 @@ def get_user_info(q, params):
                 continue
             user['Id'] = user.pop('UserId')
             user['Name'] = user.pop('UserName')
-            user['Policies'] = get_inline_policies(iam_client, iam_info, 'user', user['Name'])
+            policies = get_inline_policies(iam_client, iam_info, 'user', user['Name'])
+            if policies:
+                user['Policies'] = policies
             user['Groups'] = handle_truncated_response(iam_client.list_groups_for_user, {'UserName': user['Name']}, 'Marker', ['Groups'])['Groups']
             try:
                 user['LoginProfile'] = iam_client.get_login_profile(UserName = user['Name'])['LoginProfile']

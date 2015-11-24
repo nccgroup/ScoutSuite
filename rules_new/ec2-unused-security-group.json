@@ -1,0 +1,8 @@
+{
+    "description": "Unused security groups",
+    "entities": "ec2.regions.id.vpcs.id.security_groups.id",
+    "conditions": [
+        [ "ec2.regions.id.vpcs.id.security_groups.id.", "withoutKey", "used_by" ]
+    ],
+    "level": "danger"
+}

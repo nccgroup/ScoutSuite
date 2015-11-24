@@ -50,9 +50,10 @@ def main(args):
         return 42
 
     # Search for AWS credentials
-    key_id, secret, token = read_creds(args.profile[0], args.csv_credentials[0], args.mfa_serial[0], args.mfa_code[0])
-    if not args.fetch_local and key_id is None:
-        return 42
+    if not args.fetch_local:
+        key_id, secret, token = read_creds(args.profile[0], args.csv_credentials[0], args.mfa_serial[0], args.mfa_code[0])
+        if key_id is None:
+            return 42
 
     # If local analysis, overwrite results
     if args.fetch_local:
@@ -68,9 +69,10 @@ def main(args):
         ruleset_name = args.ruleset_name
 
     # Load findings from JSON config files
-    for service in services:
-        load_findings(service, ruleset_name)
-        load_filters(service)
+    ruleset = load_ruleset(ruleset_name)
+    rules = init_rules(ruleset, services)
+
+#        load_filters(service)
 
     ##### Load local data first
     aws_config = {}
@@ -88,6 +90,7 @@ def main(args):
     for service in services:
         method = globals()['get_' + service + '_info']
         manage_dictionary(aws_config['services'], service, {})
+        manage_dictionary(aws_config['services'][service], 'violations', {})
         try:
             if not args.fetch_local:
                 # Fetch data from AWS API
@@ -123,11 +126,6 @@ def main(args):
     ##### VPC analyzis
     analyze_vpc_config(aws_config, args.ip_ranges, args.ip_ranges_key_name)
 
-    ##### Single service analyzis
-    for service in services:
-        method = globals()['analyze_' + service + '_config']
-        method(aws_config['services'][service], aws_config['account_id'], args.force_write)
-
     ##### Multiple service analyzis
     if 'ec2' in services and 'iam' in services:
         try:
@@ -141,6 +139,15 @@ def main(args):
         except Exception as e:
             printError('Error: s3 or IAM configuration is missing.')
             printException(e)
+
+    # Single service analyzis
+    for finding_path in rules:
+        for rule in rules[finding_path]:
+             path = finding_path.split('.')
+             service = path[0]
+             aws_config['services'][service]['violations'][rule] = {}
+             aws_config['services'][service]['violations'][rule]['level'] = rules[finding_path][rule]['level']
+             aws_config['services'][service]['violations'][rule]['items'] = recurse(aws_config['services'], aws_config['services'], path, [], rules[finding_path][rule])
 
     # Save info about run
     aws_config['last_run'] = {}

@@ -1,0 +1,9 @@
+{
+    "description": "Root account used recently",
+    "entities": "iam.CredentialReport.<root_account>",
+    "conditions": [
+        [ "iam.CredentialReport.<root_account>.password_last_used", "dateNotOlderThan", "90" ]
+    ],
+    "level": "warning",
+    "listing": { "keys": [ "this" ] }
+}

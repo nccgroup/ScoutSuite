@@ -1,0 +1,8 @@
+{
+    "description": "SSL not required",
+    "entities": "redshift.regions.id.parameter_groups",
+    "conditions": [
+        [ "redshift.regions.id.parameter_groups.require_ssl", "false", "" ]
+    ],
+    "level": "danger"
+}

@@ -1,0 +1,8 @@
+{
+    "description": "Backup disabled",
+    "entities": "rds.regions.id.vpcs.id.instances.id",
+    "conditions": [
+        [ "rds.regions.id.vpcs.id.instances.id.BackupRetentionPeriod", "lessThan", "1" ]
+    ],
+    "level": "danger"
+}

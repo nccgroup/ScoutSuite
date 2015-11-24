@@ -1,0 +1,8 @@
+{
+    "description": "Cluster database encryption disabled",
+    "entities": "redshift.regions.id.vpcs.id.clusters.id",
+    "conditions": [
+        [ "redshift.regions.id.vpcs.id.clusters.id.Encrypted", "false", "" ]
+    ],
+    "level": "warning"
+}
