@@ -240,9 +240,14 @@ def process_finding(config, finding):
 def recurse(all_info, current_info, target_path, current_path, config):
     results = []
     if len(target_path) == 0:
+        # Dashboard: count the number of processed entities here
+        manage_dictionary(config, 'checked_items', 0)
+        config['checked_items'] = config['checked_items'] + 1
+        # Test for conditions...
         if pass_conditions(all_info, current_path, config['conditions'], config['condition_operator']):
-            # Build a list of values to return...
             results.append('/'.join(current_path))
+        # Return the flagged items...
+        config['flagged_items'] = len(results)
         return results
             # 
             # Will need to pass a mode
