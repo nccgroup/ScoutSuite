@@ -148,11 +148,11 @@ def main(args):
              aws_config['services'][service]['violations'][rule] = {}
              aws_config['services'][service]['violations'][rule]['description'] =  rules[finding_path][rule]['description']
              aws_config['services'][service]['violations'][rule]['level'] = rules[finding_path][rule]['level']
-             aws_config['services'][service]['violations'][rule]['items'] = recurse(aws_config['services'], aws_config['services'], path, [], rules[finding_path][rule])
+             aws_config['services'][service]['violations'][rule]['items'] = recurse(aws_config['services'], aws_config['services'], path, [], rules[finding_path][rule], True)
              if 'checked_items' in rules[finding_path][rule]:
                  aws_config['services'][service]['violations'][rule]['checked_items'] = rules[finding_path][rule]['checked_items']
-             if 'flagged_items' in rules[finding_path][rule]:
-                 aws_config['services'][service]['violations'][rule]['flagged_items'] = rules[finding_path][rule]['flagged_items']
+             aws_config['services'][service]['violations'][rule]['flagged_items'] = len(aws_config['services'][service]['violations'][rule]['items'])
+             aws_config['services'][service]['violations'][rule]['service'] = service
 
     # Save info about run
     aws_config['last_run'] = {}

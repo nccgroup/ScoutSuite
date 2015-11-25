@@ -1,4 +1,5 @@
 {
+    "description": "",
     "entities": [
         "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id"
     ],

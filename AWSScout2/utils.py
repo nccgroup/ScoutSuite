@@ -237,7 +237,7 @@ def process_finding(config, finding):
 ##### Recursion
 ########################################
 
-def recurse(all_info, current_info, target_path, current_path, config):
+def recurse(all_info, current_info, target_path, current_path, config, add_suffix = False):
     results = []
     if len(target_path) == 0:
         # Dashboard: count the number of processed entities here
@@ -245,7 +245,9 @@ def recurse(all_info, current_info, target_path, current_path, config):
         config['checked_items'] = config['checked_items'] + 1
         # Test for conditions...
         if pass_conditions(all_info, current_path, config['conditions'], config['condition_operator']):
-            results.append('/'.join(current_path))
+            if add_suffix and 'id_suffix' in config:
+                current_path.append(config['id_suffix'])
+            results.append('.'.join(current_path))
         # Return the flagged items...
         config['flagged_items'] = len(results)
         return results
@@ -270,20 +272,20 @@ def recurse(all_info, current_info, target_path, current_path, config):
         if attribute in current_info:
             split_path = copy.deepcopy(current_path)
             split_path.append(attribute)
-            results = results + recurse(all_info, current_info[attribute], target_path, split_path, config)
+            results = results + recurse(all_info, current_info[attribute], target_path, split_path, config, add_suffix)
         elif attribute == 'id':
             for key in current_info:
                 split_target_path = copy.deepcopy(target_path)
                 split_current_path = copy.deepcopy(current_path)
                 split_current_path.append(key)
                 split_current_info = current_info[key]
-                results = results + recurse(all_info, split_current_info, split_target_path, split_current_path, config)
+                results = results + recurse(all_info, split_current_info, split_target_path, split_current_path, config, add_suffix)
     # To handle lists properly, I would have to make sure the list is properly ordered and I can use the index to consistently access an object... Investigate (or do not use lists)
     elif type(current_info) == list:
         for index, split_current_info in enumerate(current_info):
             split_current_path = copy.deepcopy(current_path)
             split_current_path.append(str(index))
-            results = results + recurse(all_info, split_current_info, copy.deepcopy(target_path), split_current_path, config)
+            results = results + recurse(all_info, split_current_info, copy.deepcopy(target_path), split_current_path, config, add_suffix)
     else:
         printError('Error: unhandled case, typeof(current_info) = %s' % type(current_info))
         printError(current_info)

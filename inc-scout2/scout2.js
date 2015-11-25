@@ -2,22 +2,51 @@ var loaded_config_array = new Array();
 var violations_array = new Array();
 
 // Generic load JSON function
-function load_aws_config_from_json(list, keyword, cols) {
-    var id1 = '#' + keyword + '-list-template';
-    var id2 = keyword + 's-list';
-    var tmp = Handlebars.compile($(id1).html());
-    document.getElementById(id2).innerHTML = tmp({items: list});
+function load_aws_config_from_json(list, base_id, cols) {
+    var id1 = base_id + '-list-template';
+    var id2 = base_id + '-list';
+    process_template(id1, id2, list);
     if (cols >= 2) {
-        var id3 = '#' + keyword + '-detail-template';
-        var id4 = keyword + 's-details';
-        var tmp = Handlebars.compile($(id3).html());
-        document.getElementById(id4).innerHTML = tmp({items: list});
+        var id3 = base_id + '-details-template';
+        var id4 = base_id + '-details';
+        process_template(id3, id4, list);
     }
 }
 
+function process_template(id1, id2, list) {
+    console.log(id1);
+    var template_to_compile = document.getElementById(id1).innerHTML;
+    console.log(id2);
+    var compiled_template = Handlebars.compile(template_to_compile);
+    console.log('Done compiling...');
+    document.getElementById(id2).innerHTML = compiled_template({items: list});
+    console.log('Done processing template...');
+}
+
+
 // Generic highlight finding function
 function highlight_violations(violations, keyword) {
+    console.log(violations);
+    for (v in violations) {
+        var level = violations[v]['level'];
+        for (i in violations[v]['items']) {
+            id = violations[v]['items'][i];
+            console.log('Will add class ' + level + ' to the ID ' + id);
+//            var element = $("#cloudtrail\\.regions\\.ap-southeast-1\\.trails\\.Default\\.IsLogging");
+//            var element = document.getElementById("cloudtrail.regions.ap-southeast-1.trails.Default.IsLogging");
+//            console.log('Element has value ' + element.text());
+//            console.log(element);
+//            element.addClass('finding-' + level);
+            if ($('[id$="' + id + '"]').hasClass("badge")) {
+                $('[id$="' + id + '"]').addClass('btn-' + level);
+            } else {
+                $('[id$="' + id + '"]').addClass('finding-' + level);
+            }
+        }
+    }
+/*
     for (i in violations) {
+        var vkey = ''; 
         var read_macro_items = false;
         var vkey = violations[i]['keyword_prefix'] + '_' + violations[i]['entity'].split('.').pop() + '-' + i;
         violations_array[vkey] = new Array();
@@ -41,7 +70,7 @@ function highlight_violations(violations, keyword) {
                 violations_array[vkey].push(violations[i]['items'][j]);
             }
         }
-    }
+    }*/
     load_aws_config_from_json(violations, keyword + '_violation', 1);
 }
 
@@ -89,11 +118,15 @@ function hideItem(keyword, id) {
     $(id1).hide();
     $(id2).hide();
 }
-function showRow(keyword) {
-    id = '[id*="' + prefix + '_region-"]';
+function showRow(path) {
+//    id = '[id*="' + prefix + '_region-"]';
+    id = '[id="' + path + '-row"]';
     $(id).show();
-    id = "#" + keyword + "s-row";
-    $(id).show();
+//    id = "#" + keyword + "-row";
+//    $(id).show();
+
+     
+
 }
 function showRowWithDetails(keyword) {
     showRow(keyword);
@@ -118,10 +151,9 @@ function toggleDetails(keyword, item) {
     $(id).toggle();
 }
 
-function updateNavbar(active) {
-    prefix = active.split('_')[0];
+function updateNavbar(service) {
     $('[id*="_dropdown"]').removeClass('active-dropdown');
-    $('#' + prefix + '_dropdown').addClass('active-dropdown');
+    $('#' + service + '_dropdown').addClass('active-dropdown');
 }
 function toggleVisibility(id) {
     id1 = '#' + id;
@@ -383,19 +415,19 @@ function showRegion(service_name, region_name) {
 }
 
 // Contents loading
-function load_config(keyword) {
+function load_config(service) {
     var info = {};
     $("#section_title-h2").text('');
-    if (!(keyword in loaded_config_array)) {
+    if (!(service in loaded_config_array)) {
         hideAll();
         $('[id="please_wait-row"]').show();
         setTimeout(function(){
-            if (keyword == 'cloudtrail') {
-                load_aws_config_from_json(aws_info['services']['cloudtrail']['regions'], 'cloudtrail_region', 2);
+            if (service == 'cloudtrail') {
+                load_aws_config_from_json(aws_info['services']['cloudtrail']['violations'], 'cloudtrail.dashboard', 1);
+                load_aws_config_from_json(aws_info['services']['cloudtrail']['regions'], 'cloudtrail.trails', 2);
                 highlight_violations(aws_info['services']['cloudtrail']['violations'], 'cloudtrail');
-                load_aws_config_from_json(aws_info['services']['cloudtrail']['violations'], 'cloudtrail_dashboard', 1);
             }
-            else if (keyword == 'ec2') {
+            else if (service == 'ec2') {
                 load_aws_config_from_json(aws_info['services']['ec2']['regions'], 'ec2_elb', 2);
                 load_aws_config_from_json(aws_info['services']['ec2']['regions'], 'ec2_vpc', 2);
                 load_aws_config_from_json(aws_info['services']['ec2']['regions'], 'ec2_security_group', 2);
@@ -406,7 +438,7 @@ function load_config(keyword) {
                 load_aws_config_from_json(aws_info['services']['ec2']['violations'], 'ec2_dashboard', 1);
                 load_filters_from_json(aws_info['services']['ec2']['filters']);
             }
-            else if (keyword == 'iam') {
+            else if (service == 'iam') {
                 load_aws_config_from_json(aws_info['services']['iam']['Groups'], 'iam_Group', 2);
                 load_aws_config_from_json(aws_info['services']['iam']['Permissions'], 'iam_Permission', 1);
                 load_aws_config_from_json(aws_info['services']['iam']['Roles'], 'iam_Role', 2);
@@ -419,36 +451,40 @@ function load_config(keyword) {
                 load_aws_config_from_json(aws_info['services']['iam']['violations'], 'iam_dashboard', 1);
                 load_filters_from_json(aws_info['services']['iam']['filters']);
             }
-            else if (keyword == 'rds') {
+            else if (service == 'rds') {
                 load_aws_config_from_json(aws_info['services']['rds']['regions'], 'rds_security_group', 2);
                 load_aws_config_from_json(aws_info['services']['rds']['regions'], 'rds_instance', 2);
                 highlight_violations(aws_info['services']['rds']['violations'], 'rds');
                 load_aws_config_from_json(aws_info['services']['rds']['violations'], 'rds_dashboard', 1);
             }
-            else if (keyword == 'redshift') {
+            else if (service == 'redshift') {
                 load_aws_config_from_json(aws_info['services']['redshift']['regions'], 'redshift_cluster', 2);
                 load_aws_config_from_json(aws_info['services']['redshift']['regions'], 'redshift_security_group', 2);
                 load_aws_config_from_json(aws_info['services']['redshift']['regions'], 'redshift_parameter_group', 2);
                 highlight_violations(aws_info['services']['redshift']['violations'], 'redshift');
                 load_aws_config_from_json(aws_info['services']['redshift']['violations'], 'redshift_dashboard', 1);
             }
-            else if (keyword == 's3') {
+            else if (service == 's3') {
                 load_aws_config_from_json(aws_info['services']['s3']['buckets'], 's3_bucket', 2);
                 highlight_violations(aws_info['services']['s3']['violations'], 's3');
                 load_aws_config_from_json(aws_info['services']['s3']['violations'], 's3_dashboard', 1);
             }
-            if ('regions' in aws_info['services'][keyword]) {
-                load_region_filters(keyword, aws_info['services'][keyword]['regions']);
+/*
+            if ('regions' in aws_info['services'][service]) {
+                load_region_filters(service, aws_info['services'][service]['regions']);
             }
-            $('[id="' + keyword + '_load_button"]').hide();
+*/
+            $('[id="' + service + '_load_button"]').hide();
             $('[id="please_wait-row"]').hide();
-            loaded_config_array.push(keyword);
-            list_generic(keyword + '_dashboard');
+            loaded_config_array.push(service);
+            list_generic(service + '.dashboard');
         }, 50);
     }
 }
-function load_dashboard() {
+function load_dashboards() {
     load_aws_config_from_json(aws_info['last_run'], 'about_run', 1);
+    load_aws_config_from_json(aws_info['services'], 'dashboard', 1);
+    // Set menus as well...
     dashboard();
 }
 
@@ -507,24 +543,39 @@ function browseTo(keyword, id) {
     // Scroll to the top
     window.scrollTo(0,0);
 }
-function list_generic(keyword) {
-    updateNavbar(keyword);
+
+function list_generic(path) {
+    path_array = path.split('.');
+    service = path_array[0];
+    updateNavbar(service);
     hideAll();
-    showRowWithDetails(keyword);
-    prefix = keyword.split('_')[0];
-    $('[id="' + prefix  + '_region-filter-select_all"]').hide();
-    title = keyword.replace(/_/g, ' ');
+    // Show stuff
+    for (var i=1;i<path_array.length;i+=2) {
+        var id=path_array.slice(0,i+1).join('.');
+        console.log('Id = ' + id);
+        var element = document.getElementById(id + '-row');
+        if (element) { element.style.display = 'block' }
+        var element = document.getElementById(id + '-list');
+        if (element) { element.style.display = 'block' }
+        var element = document.getElementById(id + '-details');
+        if (element) { element.style.display = 'block' }
+    }
+//    showRowWithDetails(keyword);
+//    prefix = keyword.split('_')[0];
+//    $('[id="' + prefix  + '_region-filter-select_all"]').hide();
+    title = (service + ' ' + path_array[path_array.length-1])
+    title = title.replace(/_/g, ' ');
     title = title.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-    title = title.replace("Cloudtrail","CloudTrail").replace("Ec2","EC2").replace("Iam","IAM").replace("Rds","RDS");
-    title = title.replace("Elb", "ELB").replace("Acl","ACL");
+    title = title.replace("Cloudtrail","CloudTrail").replace("Ec2","EC2").replace("Iam","IAM").replace("Rds","RDS").replace("Elb", "ELB").replace("Acl","ACL");
     $("#section_title-h2").text(title);
     window.scrollTo(0,0);
 }
-function list_findings(keyword, violations, finding) {
-    updateNavbar(keyword);
+function list_findings(service, finding_name) {
+    updateNavbar(service);
     hideAll();
-    showEmptyRow(keyword);
-    $("#section_title-h2").text(violations[finding]['description']);
+//    showEmptyRow(service);
+    $("#section_title-h2").text(aws_info['services'][service]['violations'][finding_name]['description']);
+    return
     if (violations[finding]['macro_items'].length == violations[finding]['items'].length ) {
         items = [];
         dict  = {};
@@ -636,6 +687,7 @@ Handlebars.registerHelper('finding_entity', function(prefix, entity) {
     return finding_entity(prefix, entity);
 });
 function finding_entity(prefix, entity) {
+    return '';
     entity = entity.split('.').pop();
     elength = entity.length;
     if (entity.substring(elength - 1, elength) == 's') {
@@ -645,6 +697,7 @@ function finding_entity(prefix, entity) {
     }
 }
 Handlebars.registerHelper('friendly_name', function(entity) {
+    return 'friendly_name';
     var name = entity.split('.').pop();
     name = name.replace('_', ' ');
     return name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
