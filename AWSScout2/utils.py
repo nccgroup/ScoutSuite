@@ -233,6 +233,26 @@ def process_finding(config, finding):
     process_entities(config, finding, entity_path)
 
 
+#
+# Create dashboard metadata
+#
+def create_report_metadata(aws_config, services):
+    # Load resources and summaries metadata from file
+    with open('dropdown.json', 'rt') as f:
+        aws_config['metadata'] = json.load(f)
+    # Dynamically update violations metadata
+    for service in services:
+        manage_dictionary(aws_config['metadata'][service], 'violations', {})
+        if 'violations' in aws_config['services'][service]:
+            for violation in aws_config['services'][service]['violations']:
+                description = aws_config['services'][service]['violations'][violation]['description']
+                if aws_config['services'][service]['violations'][violation]['flagged_items']:
+                    violation_meta = {}
+                    violation_meta['checked_items'] = aws_config['services'][service]['violations'][violation]['checked_items']
+                    violation_meta['flagged_items'] = aws_config['services'][service]['violations'][violation]['flagged_items']
+                    aws_config['metadata'][service]['violations'][description] = violation_meta
+
+
 ########################################
 ##### Recursion
 ########################################

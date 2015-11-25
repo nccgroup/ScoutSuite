@@ -279,24 +279,20 @@
                   <ul class="dropdown-menu">
                     <li class="dropdown-header">Summaries</li>
                     <li><a href="javascript:list_generic('{{@key}}.dashboard')">Dashboard</a></li>
-                    {{#if summaries}}
                       {{#each summaries}}
-                        <li>{{@key}}</li>
+                        <li><a href="javascript:list_generic('{{@../key}}', '{{@key}}')">{{make_title @key}}</a></li>
                       {{/each}}
-                    {{/if}}
                     <li class="divider"></li>
                     <li class="dropdown-header">{{make_title @key}} config</li>
-                    {{#if resources}}
                       {{#each resources}}
-                        {{@key}}
+                        <li><a href="javascript:list_generic('{{this}}')">{{make_title @key}} ({{count}})</a></li>
                       {{/each}}
-                   {{/if}}
                     <li class="divider"></li>
                     <li class="dropdown-header">Security risks</li>
                     {{#each violations}}
-                      {{#if items}}
-                        <li><a href="javascript:list_findings('{{../service_name}}', '{{@key}}')">
-                          {{description}} ({{items.length}})
+                      {{#if flagged_items}}
+                        <li><a href="javascript:list_findings('{{@../key}}', '{{@key}}')">
+                          {{@key}} ({{flagged_items}})
                         </a></li>
                       {{/if}}
                     {{/each}}

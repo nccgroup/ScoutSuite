@@ -479,7 +479,7 @@ function load_config(service) {
 function load_dashboards() {
     load_aws_config_from_json(aws_info['last_run'], 'about_run', 1);
     load_aws_config_from_json(aws_info['services'], 'dashboard', 1);
-    load_aws_config_from_json(aws_info['services'], 'dropdown', 1);
+    load_aws_config_from_json(aws_info['metadata'], 'dropdown', 1);
     show_main_dashboard();
 }
 
