@@ -18,7 +18,7 @@ function process_template(id1, id2, list) {
     var template_to_compile = document.getElementById(id1).innerHTML;
     console.log(id2);
     var compiled_template = Handlebars.compile(template_to_compile);
-    console.log('Done compiling...');
+    console.log('Done compiling, starting processing...');
     document.getElementById(id2).innerHTML = compiled_template({items: list});
     console.log('Done processing template...');
 }
@@ -423,7 +423,6 @@ function load_config(service) {
         $('[id="please_wait-row"]').show();
         setTimeout(function(){
             if (service == 'cloudtrail') {
-                load_aws_config_from_json(aws_info['services']['cloudtrail']['violations'], 'cloudtrail.dashboard', 1);
                 load_aws_config_from_json(aws_info['services']['cloudtrail']['regions'], 'cloudtrail.trails', 2);
                 highlight_violations(aws_info['services']['cloudtrail']['violations'], 'cloudtrail');
             }
@@ -435,7 +434,6 @@ function load_config(service) {
                 load_aws_config_from_json(aws_info['services']['ec2']['regions'], 'ec2_instance', 2);
                 load_aws_config_from_json(aws_info['services']['ec2']['attack_surface'], 'ec2_attack_surface', 1);
                 highlight_violations(aws_info['services']['ec2']['violations'], 'ec2');
-                load_aws_config_from_json(aws_info['services']['ec2']['violations'], 'ec2_dashboard', 1);
                 load_filters_from_json(aws_info['services']['ec2']['filters']);
             }
             else if (service == 'iam') {
@@ -448,26 +446,22 @@ function load_config(service) {
                 }
                 load_aws_config_from_json(aws_info['services']['iam']['PasswordPolicy'], 'iam_PasswordPolicy', 1);
                 highlight_violations(aws_info['services']['iam']['violations'], 'iam');
-                load_aws_config_from_json(aws_info['services']['iam']['violations'], 'iam_dashboard', 1);
                 load_filters_from_json(aws_info['services']['iam']['filters']);
             }
             else if (service == 'rds') {
                 load_aws_config_from_json(aws_info['services']['rds']['regions'], 'rds_security_group', 2);
                 load_aws_config_from_json(aws_info['services']['rds']['regions'], 'rds_instance', 2);
                 highlight_violations(aws_info['services']['rds']['violations'], 'rds');
-                load_aws_config_from_json(aws_info['services']['rds']['violations'], 'rds_dashboard', 1);
             }
             else if (service == 'redshift') {
                 load_aws_config_from_json(aws_info['services']['redshift']['regions'], 'redshift_cluster', 2);
                 load_aws_config_from_json(aws_info['services']['redshift']['regions'], 'redshift_security_group', 2);
                 load_aws_config_from_json(aws_info['services']['redshift']['regions'], 'redshift_parameter_group', 2);
                 highlight_violations(aws_info['services']['redshift']['violations'], 'redshift');
-                load_aws_config_from_json(aws_info['services']['redshift']['violations'], 'redshift_dashboard', 1);
             }
             else if (service == 's3') {
                 load_aws_config_from_json(aws_info['services']['s3']['buckets'], 's3_bucket', 2);
                 highlight_violations(aws_info['services']['s3']['violations'], 's3');
-                load_aws_config_from_json(aws_info['services']['s3']['violations'], 's3_dashboard', 1);
             }
 /*
             if ('regions' in aws_info['services'][service]) {
@@ -477,15 +471,16 @@ function load_config(service) {
             $('[id="' + service + '_load_button"]').hide();
             $('[id="please_wait-row"]').hide();
             loaded_config_array.push(service);
-            list_generic(service + '.dashboard');
         }, 50);
     }
 }
+
+// Set up dashboards and dropdown menus
 function load_dashboards() {
     load_aws_config_from_json(aws_info['last_run'], 'about_run', 1);
     load_aws_config_from_json(aws_info['services'], 'dashboard', 1);
-    // Set menus as well...
-    dashboard();
+    load_aws_config_from_json(aws_info['services'], 'dropdown', 1);
+    show_main_dashboard();
 }
 
 // Browsing functions
@@ -494,7 +489,7 @@ function about() {
     $('#about-row').show();
     $('#section_title-h2').text('');
 }
-function dashboard() {
+function show_main_dashboard() {
     hideAll()
     $('#about_run-row').show();
     $('#section_title-h2').text('');
@@ -776,7 +771,18 @@ Handlebars.registerHelper('format_date', function(timestamp) {
     return new Date(timestamp * 1000).toString();
 });
 var make_title = function(title) {
-    return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
+    title = title.toLowerCase();
+    if (title == 'cloudtrail') {
+        return 'CloudTrail';
+    } else if (title == 'ec2') {
+        return 'EC2';
+    } else if (title == 'iam') {
+        return 'IAM';
+    } else if (title == 'rds') {
+        return 'RDS';
+    } else {
+        return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
+    }
 }
 Handlebars.registerHelper('make_title', function(title) {
     return make_title(title);

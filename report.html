@@ -304,143 +304,51 @@
       var single_s3_object_template = Handlebars.compile($("#single_s3_object-template").html());
     </script>
 
+
+
+    <!------------------>
     <!-- Fixed navbar -->
+    <!------------------>
+
+
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
-          <span class="navbar-brand"><a href="javascript:dashboard()">AWS Scout2</a></span>
+          <span class="navbar-brand"><a href="javascript:show_main_dashboard()">AWS Scout2</a></span>
         </div>
         <div class="navbar-collapse collapse">
           <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="dropdown">
-              <a href="javascript:show_cloudtrail()" class="dropdown-toggle" data-toggle="dropdown"><span id="cloudtrail_dropdown">CloudTrail</span><b class="caret"></b></a>
-              <ul class="dropdown-menu" id="services.cloudtrail.violations-list">
-                <li class="dropdown-header">CloudTrail config</li>
-                <li id="cloudtrail_load_button"><a href="javascript:load_config('cloudtrail')">Load</a></li>
-                <script id="cloudtrail_violation-list-template" type="text/x-handlebars-template">
+          <ul class="nav navbar-nav" id="dropdown-list">
+            <script id="dropdown-list-template" type="text/x-handlebars-template">
+              {{#each items}}
+
+              <li class="dropdown">
+                <a href="javascript:show_{{@key}}()" class="dropdown-toggle" data-toggle="dropdown"><span id="cloudtrail_dropdown">{{make_title @key}}</span><b class="caret"></b></a>
+                <ul class="dropdown-menu" id="services.{{service_name}}.violations-list">
                   <li class="dropdown-header">Summaries</li>
                   <li><a href="javascript:list_generic('cloudtrail.dashboard')">Dashboard</a></li>
+                  {{#if summaries}}
+                    {{#each summaries}}
+                      <li>{{@key}}</li>
+                    {{/each}}
+                  {{/if}}
                   <li class="divider"></li>
-                  <li class="dropdown-header">CloudTrail config</li>
-                  <li><a href="javascript:list_generic('cloudtrail_region')">Trails</a></li>
+                  <li class="dropdown-header">{{make_title @key}} config</li>
+                  {{#if resources}}
+                    {{#each resources}}
+                      {{@key}}
+                    {{/each}}
+                  {{/if}}
                   <li class="divider"></li>
                   <li class="dropdown-header">Security risks</li>
-                  {{#each items}}
+                  {{#each violations}}
                     {{> finding_menu_item finding_name=@key}}
                   {{/each}}
-                </script>
-              </ul>
-            </li>
-            <li class="dropdown">
-              <a href="javascript:show_ec2()" class="dropdown-toggle" data-toggle="dropdown"><span id="ec2_dropdown">EC2</span><b class="caret"></b></a>
-              <ul class="dropdown-menu" id="ec2_violations-list">
-                <li class="dropdown-header">EC2 config</li>
-                <li id="ec2_load_button"><a href="javascript:load_config('ec2')">Load</a></li>
-                <script id="ec2_violation-list-template" type="text/x-handlebars-template">
-                  <li class="dropdown-header">Summaries</li>
-                  <li><a href="javascript:list_generic('ec2_dashboard')">Dashboard</a></li>
-                  <li><a href="javascript:list_generic('ec2_attack_surface')">External Attack Surface</a></li>
-                  <li class="divider"></li>
-                  <li class="dropdown-header">EC2 config</li>
-                  <li><a href="javascript:list_generic('ec2_elb')">ELBs</a></li>
-                  <li><a href="javascript:list_generic('ec2_instance')">Instances</a></li>
-                  <li><a href="javascript:list_generic('ec2_vpc')">VPCs</a></li>
-                  <li><a href="javascript:list_generic('ec2_network_acl')">Network ACLs</a></li>
-                  <li><a href="javascript:list_generic('ec2_security_group')">Security Groups</a></li>
-                  <li class="divider"></li>
-                  <li class="dropdown-header">Security risks</li>
-                  {{#each items}}
-                    {{> finding_menu_item}}
-                  {{/each}}
-                </script>
-              </ul>
-            </li>
-            <li class="dropdown">
-              <a href="javascript:show_iam()" class="dropdown-toggle" data-toggle="dropdown"><span id="iam_dropdown">IAM</span><b class="caret"></b></a>
-              <ul class="dropdown-menu" id="iam_violations-list">
-                <li class="dropdown-header">IAM config</li>
-                <li id="iam_load_button"><a href="javascript:load_config('iam')">Load</a></li>
-                <script id="iam_violation-list-template" type="text/x-handlebars-template">
-                  <li class="dropdown-header">Summaries</li>
-                  <li><a href="javascript:list_generic('iam_dashboard')">Dashboard</a></li>
-                  <li><a href="javascript:list_generic('iam_Permission')">Permissions</a></li>
-                  <li class="divider"></li>
-                  <li class="dropdown-header">IAM config</li>
-                  <li><a href="javascript:list_generic('iam_Group')">Groups</a></li>
-                  <li><a href="javascript:list_generic('iam_PasswordPolicy')">Password policy</a></li>
-                  <li><a href="javascript:list_generic('iam_Role')">Roles</a></li>
-                  <li><a href="javascript:list_generic('iam_CredentialReport')">Root account</a></li>
-                  <li><a href="javascript:list_generic('iam_User')">Users</a></li>
-                  <li class="divider"></li>
-                  <li class="dropdown-header">Security risks</li>
-                  {{#each items}}
-                    {{> finding_menu_item}}
-                  {{/each}}
-                </script>
-              </ul>
-            </li>
-            <li class="dropdown">
-              <a href="javascript:show_rds()" class="dropdown-toggle" data-toggle="dropdown"><span id="rds_dropdown">RDS</span><b class="caret"></b></a>
-              <ul class="dropdown-menu" id="rds_violations-list">
-                <li class="dropdown-header">RDS config</li>
-                <li id="rds_load_button"><a href="javascript:load_config('rds')">Load</a></li>
-                <script id="rds_violation-list-template" type="text/x-handlebars-template">
-                  <li class="dropdown-header">Summaries</li>
-                  <li><a href="javascript:list_generic('rds_dashboard')">Dashboard</a></li>
-                  <li class="divider"></li>
-                  <li class="dropdown-header">RDS config</li>
-                  <li><a href="javascript:list_generic('rds_instance')">Instances</a></li>
-                  <li><a href="javascript:list_generic('rds_security_group')">Security Groups</a></li>
-                  <li class="divider"></li>
-                  <li class="dropdown-header">Security risks</li>
-                  {{#each items}}
-                    {{> finding_menu_item}}
-                  {{/each}}
-                </script>
-              </ul>
-            </li>
-            <!-- TODO: stop duplicating this code... automate it based on the data structure -->
-            <li class="dropdown">
-              <a href="javascript:show_redshift()" class="dropdown-toggle" data-toggle="dropdown"><span id="redshift_dropdown">Redshift</span><b class="caret"></b></a>
-              <ul class="dropdown-menu" id="redshift_violations-list">
-                <li class="dropdown-header">Redshift config</li>
-                <li><a href="javascript:load_config('redshift')">Load</a></li>
-                <script id="redshift_violation-list-template" type="text/x-handlebars-template">
-                  <li class="dropdown-header">Summaries</li>
-                  <li><a href="javascript:list_generic('redshift_dashboard')">Dashboard</a></li>
-                  <li class="divider"></li>
-                  <li class="dropdown-header">Redshift config</li>
-                  <li><a href="javascript:list_generic('redshift_cluster')">Clusters</a></li>
-                  <li><a href="javascript:list_generic('redshift_parameter_group')">Parameter Groups</a></li>
-                  <li><a href="javascript:list_generic('redshift_security_group')">Security Groups</a></li>
-                  <li class="divider"></li>
-                  <li class="dropdown-header">Security risks</li>
-                  {{#each items}}
-                    {{> finding_menu_item}}
-                  {{/each}}
-                </script>
-              </ul>
-            </li>
-            <li class="dropdown">
-              <a href="javascript:show_s3()" class="dropdown-toggle" data-toggle="dropdown"><span id="s3_dropdown">S3</span><b class="caret"></b></a>
-              <ul class="dropdown-menu" id="s3_violations-list">
-                <li class="dropdown-header">S3 config</li>
-                <li><a href="javascript:load_config('s3')">Load</a></li>
-                <script id="s3_violation-list-template" type="text/x-handlebars-template">
-                  <li class="dropdown-header">Summaries</li>
-                  <li><a href="javascript:list_generic('s3_dashboard')">Dashboard</a></li>
-                  <li class="divider"></li>
-                  <li class="dropdown-header">S3 config</li>
-                  <li><a href="javascript:list_generic('s3_bucket')">Buckets</a></li>
-                  <li class="divider"></li>
-                  <li class="dropdown-header">Security risks</li>
-                  {{#each items}}
-                    {{> finding_menu_item}}
-                  {{/each}}
-                </script>
-              </ul>
-            </li>
+                </ul>
+              </li>
+
+              {{/each}}
+            </script>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
@@ -473,10 +381,11 @@
             </li>
           </ul>
           </div>
-        </div><!--/.nav-collapse -->
+        </div>
       </div>
-
     </div>
+
+
 
     <div class="container theme-showcase" id="container-user">
 
