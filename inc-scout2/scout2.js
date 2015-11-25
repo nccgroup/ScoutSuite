@@ -545,6 +545,12 @@ function list_generic(path) {
     updateNavbar(service);
     hideAll();
     // Show stuff
+    if(path_array.lastIndexOf('dashboard') > 0) {
+        var element = document.getElementById('dashboard-row');
+        if (element) { element.style.display = 'block' }
+        var element = document.getElementById('dashboard-list');
+        if (element) { element.style.display = 'block' }
+    }
     for (var i=1;i<path_array.length;i+=2) {
         var id=path_array.slice(0,i+1).join('.');
         console.log('Id = ' + id);

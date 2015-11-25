@@ -33,18 +33,6 @@
 
   <body>
 
-    <!-- Finding menu item partial -->
-    <script id="finding_menu_item-partial" type="text/x-handlebars-template">
-      {{#if items}}
-        <li><a href="javascript:list_findings('{{service}}', '{{finding_name}}')">
-          {{description}} ({{items.length}})
-        </a></li>
-      {{/if}}
-    </script>
-    <script>
-        Handlebars.registerPartial("finding_menu_item", $("#finding_menu_item-partial").html());
-    </script>
-
     <!-- Accordion partial -->
     <script id="accordion-partial" type="text/x-handlebars-template">
         <div class="list-group-item" style="padding-bottom: 0 !important;">
@@ -66,41 +54,6 @@
     </script>
     <script>
         Handlebars.registerPartial("accordion", $("#accordion-partial").html());
-    </script>
-
-    <!-- Generic dashboard partial -->
-    <script id="dashboard-partial" type="text/x-handlebars-template">
-      <div class="row" id="{{service_name}}.dashboard-row">
-        <div class="col-sm-12" id="{{service_name}}.dashboard-list">
-          <div>Dashboard for {{service_name}}</div>
-          <div class="container">
-            {{#if violations}}
-              {{#grouped_each 3 violations}}
-                <div class="row">
-                  {{#each this}}
-                    <div class="col-sm-4">
-                      <div class="list-group-item finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
-                        <a href="javascript:list_findings('{{service}}', '{{@key}}')">
-                          {{description}}
-                        </a>
-                      </div>
-                      <div class="list-group-item">
-                        <ul>
-                          <li>{{friendly_name entity}} checked: {{checked_items}}</li>
-                          <li>{{friendly_name entity}} flagged: {{flagged_items}}</li>
-                        </ul>
-                      </div>
-                    </div>
-                  {{/each}}
-                </div>
-              {{/grouped_each}}
-            {{/if}}
-          </div>
-        </div>
-      </div>
-    </script>
-    <script>
-      Handlebars.registerPartial("dashboard", $("#dashboard-partial").html());
     </script>
 
     <!-- Generic left-menu partial for region-then-resource -->
@@ -321,32 +274,34 @@
           <ul class="nav navbar-nav" id="dropdown-list">
             <script id="dropdown-list-template" type="text/x-handlebars-template">
               {{#each items}}
-
-              <li class="dropdown">
-                <a href="javascript:show_{{@key}}()" class="dropdown-toggle" data-toggle="dropdown"><span id="cloudtrail_dropdown">{{make_title @key}}</span><b class="caret"></b></a>
-                <ul class="dropdown-menu" id="services.{{service_name}}.violations-list">
-                  <li class="dropdown-header">Summaries</li>
-                  <li><a href="javascript:list_generic('cloudtrail.dashboard')">Dashboard</a></li>
-                  {{#if summaries}}
-                    {{#each summaries}}
-                      <li>{{@key}}</li>
+                <li class="dropdown">
+                  <a href="javascript:show_{{@key}}()" class="dropdown-toggle" data-toggle="dropdown"><span id="cloudtrail_dropdown">{{make_title @key}}</span><b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li class="dropdown-header">Summaries</li>
+                    <li><a href="javascript:list_generic('{{@key}}.dashboard')">Dashboard</a></li>
+                    {{#if summaries}}
+                      {{#each summaries}}
+                        <li>{{@key}}</li>
+                      {{/each}}
+                    {{/if}}
+                    <li class="divider"></li>
+                    <li class="dropdown-header">{{make_title @key}} config</li>
+                    {{#if resources}}
+                      {{#each resources}}
+                        {{@key}}
+                      {{/each}}
+                   {{/if}}
+                    <li class="divider"></li>
+                    <li class="dropdown-header">Security risks</li>
+                    {{#each violations}}
+                      {{#if items}}
+                        <li><a href="javascript:list_findings('{{../service_name}}', '{{@key}}')">
+                          {{description}} ({{items.length}})
+                        </a></li>
+                      {{/if}}
                     {{/each}}
-                  {{/if}}
-                  <li class="divider"></li>
-                  <li class="dropdown-header">{{make_title @key}} config</li>
-                  {{#if resources}}
-                    {{#each resources}}
-                      {{@key}}
-                    {{/each}}
-                  {{/if}}
-                  <li class="divider"></li>
-                  <li class="dropdown-header">Security risks</li>
-                  {{#each violations}}
-                    {{> finding_menu_item finding_name=@key}}
-                  {{/each}}
-                </ul>
-              </li>
-
+                  </ul>
+                </li>
               {{/each}}
             </script>
           </ul>
@@ -387,8 +342,14 @@
 
 
 
+    <!--------------->
+    <!-- Container -->
+    <!--------------->
+
+
     <div class="container theme-showcase" id="container-user">
 
+      <!-- Empty header -->
       <div class="page-header">
       </div>
 
@@ -396,7 +357,7 @@
       <div id="overlay-background" class="overlay-bg"></div>
       <div id="overlay-details" class="overlay col-sm-6"></div>
 
-      <!-- Section Title -->
+      <!-- Title section -->
       <div id="section_title-div">
           <h2 id="section_title-h2"></h2>
       </div>
@@ -432,8 +393,39 @@
         </div>
       </div>
 
-      <!-- TODO : make it a per_service partial -->
-      <!-- TODO : Load all dashboards upon opening -->
+      <!-- Dasboard partial -->
+      <script id="dashboard-partial" type="text/x-handlebars-template">
+        <div class="row" id="{{service_name}}.dashboard-row">
+          <div class="col-sm-12" id="{{service_name}}.dashboard-list">
+            <div class="container">
+              {{#if violations}}
+                {{#grouped_each 3 violations}}
+                  <div class="row">
+                    {{#each this}}
+                      <div class="col-sm-4">
+                        <div class="list-group-item finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
+                          <a href="javascript:list_findings('{{service}}', '{{@key}}')">
+                            {{description}}
+                          </a>
+                        </div>
+                        <div class="list-group-item">
+                          <ul>
+                            <li>{{friendly_name entity}} checked: {{checked_items}}</li>
+                            <li>{{friendly_name entity}} flagged: {{flagged_items}}</li>
+                          </ul>
+                        </div>
+                      </div>
+                    {{/each}}
+                  </div>
+                {{/grouped_each}}
+              {{/if}}
+            </div>
+          </div>
+        </div>
+      </script>
+      <script>
+        Handlebars.registerPartial("dashboard", $("#dashboard-partial").html());
+      </script>
 
 
 
