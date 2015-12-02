@@ -1,0 +1,20 @@
+
+<!------------------------>
+<!-- CloudTrail section -->
+<!------------------------>
+
+<!-- Trail list and details -->
+<div class="row" id="services.cloudtrail.row">
+  <div id="services.cloudtrail.regions.trails.row" />
+    <div class="col-sm-4" id="services.cloudtrail.regions.trails.list" />
+      <script id="services.cloudtrail.regions.trails.list.template" type="text/x-handlebars-template">
+        {{> per_region service_name = 'cloudtrail' resource_type = 'trails' regions = items partial_name = 'per_region_link' is_menu = true}}
+      </script>
+    </div>
+    <div class="col-sm-8" id="services.cloudtrail.regions.trails.details">
+      <script id="services.cloudtrail.regions.trails.details.template" type="text/x-handlebars-template">
+        {{> per_region service_name = 'cloudtrail' resource_type = 'trails' regions = items partial_name = 'services.cloudtrail.regions.trails'}}
+      </script>
+    </div>
+  </div>
+</div>

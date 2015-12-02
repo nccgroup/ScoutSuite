@@ -1,0 +1,49 @@
+{
+    "cloudtrail": {
+        "resources": {
+            "trails": {"path": "services.cloudtrail.regions", "script": "services.cloudtrail.regions.trails", "cols": 2}
+        }
+    },
+    "ec2": {
+        "resources": {
+            "elbs": "ec2.regions.id.vpcs.id.elbs.id",
+            "instances": "",
+            "vpcs": "",
+            "security_groups": "",
+            "network_acls": ""
+        },
+        "summaries": {
+            "external attack surface": ""
+        }
+    },
+    "iam": {
+        "resources": {
+            "groups": {"path": "services.iam.Groups", "script": "services.iam.groups", "cols": 2},
+            "password_policy": { "path": "services.iam.PasswordPolicy", "script": "services.iam.password_policy", "cols": 1},
+            "root_account": { "path": "services.iam.CredentialReport.<root_account>", "script": "services.iam.root_account", "cols": 1},
+            "roles": {"path": "services.iam.Roles", "script": "services.iam.roles", "cols": 2},
+            "users": {"path": "services.iam.Users", "script": "services.iam.users", "cols": 2}
+        },
+        "summaries": {
+            "permissions": ""
+        }
+    },
+    "rds": {
+        "resources": {
+            "instances": "",
+            "security_groups": ""
+        }
+    },
+    "redshift": {
+        "resources": {
+            "clusters": "",
+            "parameter_groups": "",
+            "security_groups": ""
+        }
+    },
+    "s3": {
+        "resources": {
+            "buckets": ""
+        }
+    }
+}

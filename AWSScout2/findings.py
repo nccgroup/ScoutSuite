@@ -5,6 +5,7 @@ from AWSScout2.finding_iam import *
 from AWSScout2.finding_rds import *
 from AWSScout2.finding_redshift import *
 from AWSScout2.finding_s3 import *
+from AWSScout2.utils import *
 
 # Import opinel
 from opinel.utils import *
@@ -39,36 +40,43 @@ def change_level(level):
         return level
 
 #
-# Load rule from a JSON file
+# Load rule from a JSON config file
 #
-def load_rule(rule_metadata):
-    print rule_metadata
-    rule_filename = 'rules_new/%s' % rule_metadata['filename']
-    if not os.path.exists(rule_filename):
-        printError('Error: the file %s does not exist.' % rule_filename)
-        return None
+def load_config_from_json(rule_metadata, environment_name, ip_ranges):
+    config = None
+    config_file = 'rules_new/%s' % rule_metadata['filename']
+    config_args = rule_metadata['args'] if 'args' in rule_metadata else []
     try:
-        with open(rule_filename, 'rt') as f:
-            rule = json.load(f)
+        with open(config_file, 'rt') as f:
+            config = f.read()
+        # Replace arguments
+        for idx, argument in enumerate(config_args):
+            config = config.replace('_ARG_'+str(idx)+'_', argument.strip())
+        config = json.loads(config)
+        # Load lists from files
+        for c1 in config['conditions']:
+            if ((type(c1[2]) == str) or (type(c1[2]) == unicode)):
+                values = re_ip_ranges_from_file.match(c1[2])
+                if values:
+                    filename = values.groups()[0]
+                    conditions = json.loads(values.groups()[1])
+                    if filename == aws_ip_ranges:
+                        filename = filename.replace('_PROFILE_', environment_name)
+                        c1[2] = read_ip_ranges(filename, False, conditions, True)
+                    elif filename == ip_ranges_from_args:
+                        c1[2] = []
+                        for ip_range in ip_ranges:
+                            c1[2] = c1[2] + read_ip_ranges(ip_range, True, conditions, True)
+        # Set condition operator
+        if not 'condition_operator' in config:
+            config['condition_operator'] = 'and'
+        # Fix level if specified in ruleset
+        if 'level' in rule_metadata:
+            rule['level'] = rule_metadata['level']
     except Exception as e:
         printException(e)
-        printError('Error: rule file %s contains malformed JSON.' % rule_filename)
-        return None
-    # Set arguments values
-    if 'args' in rule_metadata:
-        rule['key'] = set_argument_values(rule['key'], rule_metadata['args']) if 'key' in rule else rule_metadata['filename']
-        conditions = []
-        for c1 in rule['conditions']:
-            condition = []
-            for c2 in c1:
-                c2 = set_argument_values(c2, rule_metadata['args'])
-                condition.append(c2)
-            conditions.append(condition)
-        rule['conditions'] = conditions
-    # Fix level
-    if 'level' in rule_metadata:
-        rule['level'] = rule_metadata['level']
-    return rule
+        printError('Error: failed to read the rule from %s' % config_file)
+    return config
 
 #
 # Load a ruleset from a JSON file
@@ -87,15 +95,15 @@ def load_ruleset(ruleset_name):
         return None
     return ruleset
 
-def init_rules(ruleset, services):
+def init_rules(ruleset, services, environment_name, ip_ranges):
     # Load rules from JSON files
     rules = {}
-    for rule in ruleset['rules']:
+    for rule_metadata in ruleset['rules']:
         # Skip disabled rules
-        if 'enabled' in rule and rule['enabled'] in ['false', 'False']:
+        if 'enabled' in rule_metadata and rule_metadata['enabled'] in ['false', 'False']:
             continue
         # Skip rules that apply to an out-of-scope service
-        rule_details = load_rule(rule)
+        rule_details = load_config_from_json(rule_metadata, environment_name, ip_ranges)
         skip_rule = True
         for service in services:
             if rule_details['entities'].startswith(service):
@@ -105,9 +113,9 @@ def init_rules(ruleset, services):
         # Build the rules dictionary
         entities = rule_details.pop('entities')
         manage_dictionary(rules, entities, {})
-        if 'level' in rule:
-            rule_details['level'] = rule['level']
-        key = rule_details['key'] if 'key' in rule_details else rule['filename']
+        if 'level' in rule_metadata:
+            rule_details['level'] = rule_metadata['level']
+        key = rule_details['key'] if 'key' in rule_details else rule_metadata['filename']
         # Set condition operator
         if not 'condition_operator' in rule_details:
             rule_details['condition_operator'] = 'and'

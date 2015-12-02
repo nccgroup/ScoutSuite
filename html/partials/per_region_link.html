@@ -1,0 +1,11 @@
+
+    <!-- Generic left-menu link partial for region-then-resource -->
+    <script id="per_region_link.partial" type="text/x-handlebars-template">
+      <div class="list-group-item-text list-sub-element" id="services.{{service_name}}.regions.{{region}}.{{resource_type}}.{{resource_key}}.">
+        <a href="#services.{{service_name}}.regions.{{region}}.{{resource_type}}.{{resource_key}}.details">{{resource_key}}</a>
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("per_region_link", $("#per_region_link\\.partial").html());
+    </script>
+

@@ -1,0 +1,20 @@
+
+    <!-- IAM managed policies partial -->
+    <script id="services.iam.managed_policies.partial" type="text/x-handlebars-template">
+        <div class="list-group-item">
+          {{#if ManagedPolicies}}
+            <h4 class="list-group-item-heading">Managed Policies <span class="badge pull-right btn-info">{{count ManagedPolicies}}</span></h4>
+          {{else}}
+            <h4 class="list-group-item-heading">Managed Policies <span class="badge pull-right">{{count ManagedPolicies}}</span></h4>
+          {{/if}}
+          <ul class="no-bullet">
+          {{#each ManagedPolicies}}
+            <li class="list-group-item-text"><a href="javascript:showIAMManagedPolicy('{{this}}')">{{policy_friendly_name this}}</a></li>
+          {{/each}}
+          </ul>
+        </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.iam.managed_policies", $("#services\\.iam\\.managed_policies\\.partial").html());
+    </script>
+

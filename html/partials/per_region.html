@@ -1,0 +1,29 @@
+
+    <!-- Generic partial for region-then-resource -->
+    <script id="per_region.partial" type="text/x-handlebars-template">
+      {{#if is_menu}}
+        <ul class="list-group">
+          <li class="list-group-item">
+            <a href="javascript:showAll('{{service_name}}_{{resource_type}}')">
+              Show all<span class="badge pull-right">{{count_in "{{service_name}}" "regions.{{resource_type}}"}}</span>
+            </a>
+          </li>
+        </ul>
+      {{/if}}
+      {{#each regions}}
+        {{#if ../is_menu}}
+          <ul class="list-group" id="services.{{../service_name}}.regions.{{@key}}.list">
+            <li class="list-group-item active">{{@key}}</li>
+        {{/if}}
+        {{#each (lookup . ../resource_type)}}
+          {{> (lookup ../.. 'partial_name') service_name = ../../service_name region = @../key resource_type = ../../resource_type resource_key = @key resource = this}}
+        {{/each}}
+        {{#if ../is_menu}}
+          </ul>
+        {{/if}}
+      {{/each}}
+    </script>
+    <script>
+      Handlebars.registerPartial("per_region", $("#per_region\\.partial").html());
+    </script>
+

@@ -1,0 +1,37 @@
+
+    <!-- IAM role partial -->
+    <script id="services.iam.roles.partial" type="text/x-handlebars-template">
+      <div class="list-group" id="servies.iam.roles.{{Name}}.details">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{Name}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text item-margin">Creation date: {{create_date}}</div>
+        </div>
+        <div class="list-group-item">
+          <div class="accordion">
+            <h4 class="list-group-item-heading accordion-heading">Instances
+              <a class="accordion-toggle" data-toggle="collapse" href="#iam_role_instances-{{Name}}"><span class="badge pull-right btn-info">{{count_role_instances instance_profiles}}</span></a>
+            </h4>
+            <div id="iam_role_instances-{{Name}}" class="accordion-body collapse">
+              <div class="accordion-inner">
+                <ul class="no-bullet">
+                  {{#each instance_profiles}}
+                    {{#each instances}}
+                      <li><a href="javascript:findAndShowEC2Object('regions.vpcs.instances', '{{this}}')">{{this}}</a></li>
+                    {{/each}}
+                  {{/each}}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{> services.iam.inline_policies entity_type = 'role'}}
+        {{> services.iam.managed_policies}}
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.iam.roles", $("#services\\.iam\\.roles\\.partial").html());
+    </script>
+

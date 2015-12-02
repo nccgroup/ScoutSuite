@@ -1,0 +1,23 @@
+
+    <!-- Accordion partial -->
+    <script id="accordion.partial" type="text/x-handlebars-template">
+        <div class="list-group-item" style="padding-bottom: 0 !important;">
+          <div class="accordion">
+            <h4 class="list-group-item-heading accordion-heading">{{make_title member_type}}
+              <a class="accordion-toggle" data-toggle="collapse" href="#{{service_name}}-{{resource_type}}-{{resource_id}}-{{member_type}}"><span class="badge pull-right btn-info">{{members.length}}</span></a>
+            </h4>
+            <div id="{{service_name}}-{{resource_type}}-{{resource_id}}-{{member_type}}" class="accordion-body collapse">
+              <div class="accordion-inner">
+                <ul>
+                  {{#each members}}
+                    <li>{{> (lookup .. 'member_partial_name')}}</li>
+                  {{/each}}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+    </script>
+    <script>
+        Handlebars.registerPartial("accordion", $("#accordion\\.partial").html());
+    </script>

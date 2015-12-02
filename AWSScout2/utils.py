@@ -10,6 +10,7 @@ import datetime
 from distutils import dir_util
 import copy
 import json
+import glob
 import os
 import re
 import shutil
@@ -250,6 +251,7 @@ def create_report_metadata(aws_config, services):
                     violation_meta = {}
                     violation_meta['checked_items'] = aws_config['services'][service]['violations'][violation]['checked_items']
                     violation_meta['flagged_items'] = aws_config['services'][service]['violations'][violation]['flagged_items']
+                    violation_meta['level'] = aws_config['services'][service]['violations'][violation]['level']
                     aws_config['metadata'][service]['violations'][description] = violation_meta
 
 
@@ -385,21 +387,31 @@ REPORT_TITLE  = 'AWS Scout2 Report'
 def create_scout_report(environment_name, aws_config, force_write, debug):
     # Save data
     save_config_to_file(environment_name, aws_config, force_write, debug)
-    # If needed, create a a new report named after environment's name
+    # Create the HTML report using all files under html/*
+    contents = ''
+    for filename in glob.glob('html/partials/*'):
+        with open('%s' % filename, 'rt') as f:
+            contents = contents + f.read()
+    for service in aws_config['services']:
+        with open('html/%s.html' % service, 'rt') as f:
+            contents = contents + f.read()
     if environment_name != 'default':
         def_report_filename, def_config_filename = get_scout2_paths('default')
         new_report_filename, new_config_filename = get_scout2_paths(environment_name)
         new_file = 'report-' + environment_name + '.html'
-        printInfo('Creating %s ...' % new_file)
-        if prompt_4_overwrite(new_file, force_write):
-            if os.path.exists(new_file):
-                os.remove(new_file)
-            with open('report.html') as f:
-                with open(new_file, 'wt') as nf:
-                    for line in f:
-                        newline = line.replace(REPORT_TITLE, REPORT_TITLE + ' [' + environment_name + ']')
-                        newline = newline.replace(def_config_filename, new_config_filename)
-                        nf.write(newline)
+    else:
+        new_file = 'report.html'
+    printInfo('Creating %s ...' % new_file)
+    if prompt_4_overwrite(new_file, force_write):
+        if os.path.exists(new_file):
+            os.remove(new_file)
+        with open('html/report.html') as f:
+            with open(new_file, 'wt') as nf:
+                for line in f:
+                    newline = line.replace(REPORT_TITLE, REPORT_TITLE + ' [' + environment_name + ']')
+                    newline = newline.replace(def_config_filename, new_config_filename)
+                    newline = newline.replace('<!-- PLACEHOLDER -->', contents)
+                    nf.write(newline)
 
 #
 # Return the filename of the Scout2 report and config
@@ -440,8 +452,10 @@ def load_from_json(environment_name, var):
 #
 # Load rule from a JSON config file
 #
-def load_config_from_json(config_file, environment_name, ip_ranges, config_args):
+def load_config_from_json(rule_metadata, environment_name, ip_ranges):
     config = None
+    config_file = 'rules_new/%s' % rule_metadata['filename']
+    config_args = rule_metadata['args'] if 'args' in rule_metadata else []
     try:
         with open(config_file, 'rt') as f:
             config = f.read()
@@ -466,6 +480,9 @@ def load_config_from_json(config_file, environment_name, ip_ranges, config_args)
         # Set condition operator
         if not 'condition_operator' in config:
             config['condition_operator'] = 'and'
+        # Fix level if specified in ruleset
+        if 'level' in rule_metadata:
+            rule['level'] = rule_metadata['level']
     except Exception as e:
         printException(e)
         printError('Error: failed to read the rule from %s' % config_file)

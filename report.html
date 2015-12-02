@@ -56,28 +56,30 @@
         Handlebars.registerPartial("accordion", $("#accordion-partial").html());
     </script>
 
+
+
     <!-- Generic left-menu partial for region-then-resource -->
     <script id="per_region-partial" type="text/x-handlebars-template">
-{{#if is_menu}}
-      <ul class="list-group">
-        <li class="list-group-item">
-          <a href="javascript:showAll('{{service_name}}_{{resource_type}}')">
-            Show all<span class="badge pull-right">{{count_in "{{service_name}}" "regions.{{resource_type}}"}}</span>
-          </a>
-        </li>
-      </ul>
-{{/if}}
-      {{#each regions}}
-{{#if ../is_menu}}
-        <ul class="list-group" id="{{../service_name}}_region-list-{{@key}}">
-          <li class="list-group-item active">{{@key}}</li>
-{{/if}}
-            {{#each (lookup . ../resource_type)}}
-              {{> (lookup ../.. 'partial_name') service_name = ../../service_name region = @../key resource_type = ../../resource_type resource_key = @key resource = this}}
-            {{/each}}
-{{#if ../is_menu}}
+      {{#if is_menu}}
+        <ul class="list-group">
+          <li class="list-group-item">
+            <a href="javascript:showAll('{{service_name}}_{{resource_type}}')">
+              Show all<span class="badge pull-right">{{count_in "{{service_name}}" "regions.{{resource_type}}"}}</span>
+            </a>
+          </li>
         </ul>
-{{/if}}
+      {{/if}}
+      {{#each regions}}
+        {{#if ../is_menu}}
+          <ul class="list-group" id="services.{{../service_name}}.regions.{{@key}}-list">
+            <li class="list-group-item active">{{@key}}</li>
+        {{/if}}
+        {{#each (lookup . ../resource_type)}}
+          {{> (lookup ../.. 'partial_name') service_name = ../../service_name region = @../key resource_type = ../../resource_type resource_key = @key resource = this}}
+        {{/each}}
+        {{#if ../is_menu}}
+          </ul>
+        {{/if}}
       {{/each}}
     </script>
     <script>
@@ -92,6 +94,8 @@
     <script>
       Handlebars.registerPartial("per_region_link", $("#per_region_link-partial").html());
     </script>
+
+
 
     <!-- Generic left-menu partial for region-then-vpc-then-resource -->
     <script id="per_vpc-partial" type="text/x-handlebars-template">
@@ -278,14 +282,14 @@
                   <a href="javascript:show_{{@key}}()" class="dropdown-toggle" data-toggle="dropdown"><span id="cloudtrail_dropdown">{{make_title @key}}</span><b class="caret"></b></a>
                   <ul class="dropdown-menu">
                     <li class="dropdown-header">Summaries</li>
-                    <li><a href="javascript:list_generic('{{@key}}.dashboard')">Dashboard</a></li>
+                    <li><a href="javascript:list_generic('metadata.{{@key}}.dashboard', '{{@key}}.dashboard', '1')">Dashboard</a></li>
                       {{#each summaries}}
                         <li><a href="javascript:list_generic('{{@../key}}', '{{@key}}')">{{make_title @key}}</a></li>
                       {{/each}}
                     <li class="divider"></li>
                     <li class="dropdown-header">{{make_title @key}} config</li>
                       {{#each resources}}
-                        <li><a href="javascript:list_generic('{{this}}')">{{make_title @key}} ({{count}})</a></li>
+                        <li><a href="javascript:list_generic('{{path}}', '{{partial}}', '{{cols}}')">{{make_title @key}} ({{count}})</a></li>
                       {{/each}}
                     <li class="divider"></li>
                     <li class="dropdown-header">Security risks</li>
@@ -391,8 +395,8 @@
 
       <!-- Dasboard partial -->
       <script id="dashboard-partial" type="text/x-handlebars-template">
-        <div class="row" id="{{service_name}}.dashboard-row">
-          <div class="col-sm-12" id="{{service_name}}.dashboard-list">
+        <div class="row" id="metadata.{{service_name}}.dashboard-row">
+          <div class="col-sm-12" id="metadata.{{service_name}}.dashboard-list">
             <div class="container">
               {{#if violations}}
                 {{#grouped_each 3 violations}}
@@ -401,7 +405,7 @@
                       <div class="col-sm-4">
                         <div class="list-group-item finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
                           <a href="javascript:list_findings('{{service}}', '{{@key}}')">
-                            {{description}}
+                            {{@key}}
                           </a>
                         </div>
                         <div class="list-group-item">

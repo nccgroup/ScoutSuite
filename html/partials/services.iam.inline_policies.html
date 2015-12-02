@@ -1,0 +1,19 @@
+
+    <!-- IAM inline policies partial -->
+    <script id="services.iam.inline_policies.partial" type="text/x-handlebars-template">
+        <div class="list-group-item">
+          {{#if Policies}}
+            <h4 class="list-group-item-heading">Inline Policies <span class="badge pull-right btn-info" id="iam_Users-user-inline-policy-{{user_name}}">{{count Policies}}</span></h4>
+          {{else}}
+            <h4 class="list-group-item-heading">Inline Policies <span class="badge pull-right">{{count Policies}}</span></h4>
+          {{/if}}
+          {{#each Policies}}
+            {{policy_report_id this entity_type ../name @key}}
+            {{> services.iam.policy PolicyName = @key}}
+          {{/each}}
+        </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.iam.inline_policies", $("#services\\.iam\\.inline_policies\\.partial").html());
+    </script>
+

@@ -2,24 +2,34 @@ var loaded_config_array = new Array();
 var violations_array = new Array();
 
 // Generic load JSON function
-function load_aws_config_from_json(list, base_id, cols) {
-    var id1 = base_id + '-list-template';
-    var id2 = base_id + '-list';
+//function load_aws_config_from_json(path, parent_id, base_id, cols) {
+//function list_generic(script_id, path, cols) {
+function load_aws_config_from_json(script_id, path, cols) {
+    list = aws_info;
+    path_array = path.split('.');   
+    for (i in path_array) {
+        list = list[path_array[i]];
+    }
+    var id1 = script_id + '.list.template';
+    var id2 = script_id + '.list';
     process_template(id1, id2, list);
     if (cols >= 2) {
-        var id3 = base_id + '-details-template';
-        var id4 = base_id + '-details';
+        var id3 = script_id + '.details.template';
+        var id4 = script_id + '.details';
         process_template(id3, id4, list);
     }
+    loaded_config_array.push(script_id);
+    console.log('Loaded data:');
+    console.log(loaded_config_array);
 }
 
 function process_template(id1, id2, list) {
-    console.log(id1);
+    console.log('Getting template script from ID = ' + id1);
     var template_to_compile = document.getElementById(id1).innerHTML;
-    console.log(id2);
     var compiled_template = Handlebars.compile(template_to_compile);
     console.log('Done compiling, starting processing...');
-    document.getElementById(id2).innerHTML = compiled_template({items: list});
+    console.log('Setting inner HTML value of ID = ' + id2);
+    document.getElementById(id2).innerHTML += compiled_template({items: list});
     console.log('Done processing template...');
 }
 
@@ -91,9 +101,11 @@ function load_region_filters(keyword, list) {
 
 // Display functions
 function hideAll() {
-    $("[id$='-row']").hide();
-    $("[id*='-details-']").hide();
-    $("[id*='-filter-']").hide();
+    $("[id$='.row']").hide();
+    $("dropdown\\.list").show();
+    $("[id*='.list']").hide();
+    $("[id*='.details']").hide();
+//    $("[id*='.filter-']").hide();
 }
 function hideRowItems(keyword) {
     $("[id*='" + keyword + "-list']").hide();
@@ -419,7 +431,7 @@ function load_config(service) {
     var info = {};
     $("#section_title-h2").text('');
     if (!(service in loaded_config_array)) {
-        hideAll();
+//        hideAll();
         $('[id="please_wait-row"]').show();
         setTimeout(function(){
             if (service == 'cloudtrail') {
@@ -477,9 +489,9 @@ function load_config(service) {
 
 // Set up dashboards and dropdown menus
 function load_dashboards() {
-    load_aws_config_from_json(aws_info['last_run'], 'about_run', 1);
-    load_aws_config_from_json(aws_info['services'], 'dashboard', 1);
-    load_aws_config_from_json(aws_info['metadata'], 'dropdown', 1);
+    load_aws_config_from_json('about_run', 'about_run', 'about_run', 1);
+    load_aws_config_from_json('services.violations', 'services', 1);
+    load_aws_config_from_json('dropdown', 'metadata', 1);
     show_main_dashboard();
 }
 
@@ -490,7 +502,7 @@ function about() {
     $('#section_title-h2').text('');
 }
 function show_main_dashboard() {
-    hideAll()
+//    hideAll()
     $('#about_run-row').show();
     $('#section_title-h2').text('');
 }
@@ -539,32 +551,46 @@ function browseTo(keyword, id) {
     window.scrollTo(0,0);
 }
 
-function list_generic(path) {
+function list_generic(script_id, path, cols) {
+    /* Load if not existing */
+    if (!(script_id in loaded_config_array)) {
+        setTimeout(function(){
+            load_aws_config_from_json(script_id, path, cols);
+        }, 50);
+    }
     path_array = path.split('.');
     service = path_array[0];
-    updateNavbar(service);
     hideAll();
+    updateNavbar(service);
+/*
     // Show stuff
-    if(path_array.lastIndexOf('dashboard') > 0) {
+    if(path_array.lastIndexOf('metadata') > 0) {
         var element = document.getElementById('dashboard-row');
         if (element) { element.style.display = 'block' }
         var element = document.getElementById('dashboard-list');
         if (element) { element.style.display = 'block' }
     }
-    for (var i=1;i<path_array.length;i+=2) {
+*/
+    var element = document.getElementById(script_id + '.row');
+    if (element) { element.style.display = 'block' }
+    var element = document.getElementById(script_id + '.list');
+    if (element) { element.style.display = 'block' }
+    var element = document.getElementById(script_id + '.details');
+    if (element) { element.style.display = 'block' }    
+    for (var i=1;i<=path_array.length;i+=2) {
         var id=path_array.slice(0,i+1).join('.');
-        console.log('Id = ' + id);
-        var element = document.getElementById(id + '-row');
+        var element = document.getElementById(id + '.row');
         if (element) { element.style.display = 'block' }
-        var element = document.getElementById(id + '-list');
+        var element = document.getElementById(id + '.list');
         if (element) { element.style.display = 'block' }
-        var element = document.getElementById(id + '-details');
+        var element = document.getElementById(id + '.details');
         if (element) { element.style.display = 'block' }
     }
 //    showRowWithDetails(keyword);
 //    prefix = keyword.split('_')[0];
 //    $('[id="' + prefix  + '_region-filter-select_all"]').hide();
-    title = (service + ' ' + path_array[path_array.length-1])
+    partial_array = script_id.split('.');
+    title = partial_array[1] + ' ' + partial_array[partial_array.length-1];
     title = title.replace(/_/g, ' ');
     title = title.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     title = title.replace("Cloudtrail","CloudTrail").replace("Ec2","EC2").replace("Iam","IAM").replace("Rds","RDS").replace("Elb", "ELB").replace("Acl","ACL");
@@ -573,7 +599,7 @@ function list_generic(path) {
 }
 function list_findings(service, finding_name) {
     updateNavbar(service);
-    hideAll();
+//    hideAll();
 //    showEmptyRow(service);
     $("#section_title-h2").text(aws_info['services'][service]['violations'][finding_name]['description']);
     return
