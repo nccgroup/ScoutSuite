@@ -58,7 +58,7 @@
                     <li class="divider"></li>
                     <li class="dropdown-header">{{make_title @key}} config</li>
                       {{#each resources}}
-                        <li><a href="javascript:list_generic('{{script}}', '{{path}}', '{{cols}}')">{{make_title @key}} ({{}})</a></li>
+                        <li><a href="javascript:list_generic('{{script}}', '{{path}}', '{{cols}}')">{{make_title @key}} ({{count}})</a></li>
                       {{/each}}
                     <li class="divider"></li>
                     <li class="dropdown-header">Security risks</li>
@@ -197,6 +197,19 @@
 
       <!-- PLACEHOLDER -->
 
+      <div class="row" id="please_wait.row">
+        <div class="list-group">
+          <div class="row list-group-item active">
+            Please wait
+          </div>
+          <div class="row list-group-item">
+            <p>&nbsp;</p>
+            <p>Loading data, this may take a while...</p>
+            <p>&nbsp;</p>
+          </div>
+        </div>
+      </div>
+
     </div> <!-- /container -->
 
     <!-- Include all AWS services configs -->
@@ -209,7 +222,7 @@
     <script>load_dashboards();</script>
 
     <!-- Hide the please wait message -->
-    <script>$('#please_wait-row').hide();</script>
+    <script>$('#please_wait.row').hide();</script>
 
   </body>
 </html>

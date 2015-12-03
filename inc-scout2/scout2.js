@@ -18,7 +18,13 @@ function load_aws_config_from_json(script_id, path, cols) {
         var id4 = script_id + '.details';
         process_template(id3, id4, list);
     }
-    loaded_config_array.push(script_id);
+    if (script_id == 'services.violations') {
+        for (service in list) {
+            loaded_config_array.push('services.' + service + '.violations');
+        }
+    } else {
+        loaded_config_array.push(script_id);
+    }
     console.log('Loaded data:');
     console.log(loaded_config_array);
 }
@@ -130,15 +136,9 @@ function hideItem(keyword, id) {
     $(id1).hide();
     $(id2).hide();
 }
-function showRow(path) {
-//    id = '[id*="' + prefix + '_region-"]';
-    id = '[id="' + path + '-row"]';
-    $(id).show();
-//    id = "#" + keyword + "-row";
-//    $(id).show();
-
-     
-
+function showRow(id) {
+    var element = document.getElementById(id + '.row');
+    if (element) { element.style.display = 'block' }
 }
 function showRowWithDetails(keyword) {
     showRow(keyword);
@@ -147,7 +147,13 @@ function showRowWithDetails(keyword) {
 function showAllNew(path) {
     $("[id^='" + path + "']").show();
 }
-function showAll(keyword) {
+function showAll(id) {
+    var element = document.getElementById(id + '.list');
+    if (element) { element.style.display = 'block' }
+    var element = document.getElementById(id + '.details');
+    if (element) { element.style.display = 'block' }
+    /* Maybe some filtering stuff too... */
+    return
     prefix = keyword.split('_')[0];
     $("[id*='" + keyword + "-list']").show();
     $("[id*='" + keyword + "-details']").show();
@@ -554,47 +560,31 @@ function browseTo(keyword, id) {
 
 function list_generic(script_id, path, cols) {
     /* Load if not existing */
-    if (!(script_id in loaded_config_array)) {
+    if (loaded_config_array.indexOf(script_id) < 0) {
+        $('[id="please_wait.row"]').show();
         setTimeout(function(){
             load_aws_config_from_json(script_id, path, cols);
         }, 50);
     }
+    /* Clear */
+    hideAll();
+    /* Display */
     path_array = path.split('.');
     service = path_array[0];
-    hideAll();
     updateNavbar(service);
-/*
-    // Show stuff
-    if(path_array.lastIndexOf('metadata') > 0) {
-        var element = document.getElementById('dashboard-row');
-        if (element) { element.style.display = 'block' }
-        var element = document.getElementById('dashboard-list');
-        if (element) { element.style.display = 'block' }
+    if (script_id.endsWith('violations')) {
+        showRowWithDetails('services.violations');
     }
-*/
-    var element = document.getElementById(script_id + '.row');
-    if (element) { element.style.display = 'block' }
-    var element = document.getElementById(script_id + '.list');
-    if (element) { element.style.display = 'block' }
-    var element = document.getElementById(script_id + '.details');
-    if (element) { element.style.display = 'block' }    
+    showRowWithDetails(script_id);
     for (var i=1;i<=path_array.length;i+=2) {
         var id=path_array.slice(0,i+1).join('.');
-        var element = document.getElementById(id + '.row');
-        if (element) { element.style.display = 'block' }
-        var element = document.getElementById(id + '.list');
-        if (element) { element.style.display = 'block' }
-        var element = document.getElementById(id + '.details');
-        if (element) { element.style.display = 'block' }
+        showRowWithDetails(id);
     }
-//    showRowWithDetails(keyword);
-//    prefix = keyword.split('_')[0];
-//    $('[id="' + prefix  + '_region-filter-select_all"]').hide();
     partial_array = script_id.split('.');
     title = partial_array[1] + ' ' + partial_array[partial_array.length-1];
     title = title.replace(/_/g, ' ');
     title = title.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-    title = title.replace("Cloudtrail","CloudTrail").replace("Ec2","EC2").replace("Iam","IAM").replace("Rds","RDS").replace("Elb", "ELB").replace("Acl","ACL");
+    title = title.replace("Cloudtrail","CloudTrail").replace("Ec2","EC2").replace("Iam","IAM").replace("Rds","RDS").replace("Elb", "ELB").replace("Acl","ACL").replace("Violations", "Dashboard");
     $("#section_title-h2").text(title);
     window.scrollTo(0,0);
 }
