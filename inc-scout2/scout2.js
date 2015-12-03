@@ -479,35 +479,38 @@ function locationHashChanged() {
 window.onhashchange = locationHashChanged;
 
 function myBrowse(anchor) {
-    path = anchor.replace('#', '').split('.');
-    var p1 = path.shift() + '.' + path.shift();
-    var p2 = '';
-    // Keep showing rows and hide other items...
-    while (resource_type = path.shift()) {
-        console.log('Resource type = ' + resource_type);
-        p1 = p1 + '.' + resource_type;
-        resource_id = path.shift();
-        if (resource_id == undefined || resource_id == 'undefined') {
-            break;
+    if (anchor.indexOf('*') > 0) {
+        /* "Show All" */
+        parts = anchor.replace('#', '').split('*');
+        $('div').filter("[id^='"+parts[0]+"']").filter("[id*='"+parts[1]+"']").show();
+        return
+    } else {
+        /* "Show one" */
+        path = anchor.replace('#', '').split('.');
+        var p1 = path.shift() + '.' + path.shift();
+        var p2 = '';
+        // Hide non-selected items
+        while (resource_type = path.shift()) {
+            console.log('Resource type = ' + resource_type);
+            p1 = p1 + '.' + resource_type;
+            resource_id = path.shift();
+            if (resource_id == undefined || resource_id == 'undefined') {
+                break;
+            }
+            p2 = p1 + '.' + resource_id;
+            $('div').filter("[id^='"+p1+"']").not("[id$='row']").not("[id$='list']").not("[id$='details']").not("[id^='"+p2+"']").hide();
+            p1 = p2;
         }
-        p2 = p1 + '.' + resource_id;
-        console.log('Hide elements matching = ' + p1);
-        console.log('Except for = ' + p2);
-        console.log('Matching elements: ' + $('div').filter("[id^='"+p1+"']").not("[id$='row']").not("[id^='"+p2+"']").length);
-        $('div').filter("[id^='"+p1+"']").not("[id$='row']").not("[id$='list']").not("[id$='details']").not("[id^='"+p2+"']").hide();
-        p1 = p2;
-    }
-    // Reverse loop to support "show all"
-    path = p1.split('.');
-    path.pop();
-    while (path.length > 0) {
-        console.log('Will show row with details for ' + path);
-        console.log('Path length = ' + path.length);
-        showRowWithDetails(path.join('.'));
+        // Show previously-hidden items
+        path = p1.split('.');
         path.pop();
-    }
-    if (! p1.endsWith('view')) {
-        $('div').filter("[id^='"+p1+"']").show();
+        while (path.length > 0) {
+            showRowWithDetails(path.join('.'));
+            path.pop();
+        }
+        if (! p1.endsWith('view')) {
+            $('div').filter("[id^='"+p1+"']").show();
+        }
     }
     // Scroll to the top
     window.scrollTo(0,0);

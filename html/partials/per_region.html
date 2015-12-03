@@ -4,9 +4,7 @@
       {{#if is_menu}}
         <ul class="list-group">
           <li class="list-group-item">
-            <a href="javascript:showAll('{{service_name}}_{{resource_type}}')">
-              Show all<span class="badge pull-right">{{count_in "{{service_name}}" "regions.{{resource_type}}"}}</span>
-            </a>
+            <a href="#services.{{service_name}}.regions.*.{{resource_type}}">Show All<span class="badge pull-right">XXX</span></a></li>
           </li>
         </ul>
       {{/if}}

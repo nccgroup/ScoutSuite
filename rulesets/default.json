@@ -157,6 +157,10 @@
         {
             "filename": "s3-bucket-logging-disabled.json",
             "enabled": "true"
+        },
+        {
+            "filename": "placeholder.json",
+            "enabled": "false"
         }
     ]
 }
