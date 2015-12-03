@@ -112,6 +112,7 @@ function hideAll() {
     $("[id*='.list']").hide();
     $("[id*='.details']").hide();
 //    $("[id*='.filter-']").hide();
+    updateNavbar();
 }
 function hideRowItems(keyword) {
     $("[id*='" + keyword + "-list']").hide();
@@ -496,27 +497,61 @@ function load_config(service) {
 
 // Set up dashboards and dropdown menus
 function load_dashboards() {
-    load_aws_config_from_json('about_run', 'about_run', 'about_run', 1);
+    load_aws_config_from_json('about_run', 'last_run', 1);
     load_aws_config_from_json('services.violations', 'services', 1);
     load_aws_config_from_json('dropdown', 'metadata', 1);
     show_main_dashboard();
 }
 
-// Browsing functions
+
+
+////////////////////////
+// Browsing functions //
+////////////////////////
+
 function about() {
     hideAll();
-    $('#about-row').show();
-    $('#section_title-h2').text('');
-}
-function show_main_dashboard() {
-//    hideAll()
-    $('#about_run-row').show();
+    showRow('about');
     $('#section_title-h2').text('');
 }
 
-//if ("onhashchange" in window) {
-//    alert("The browser supports the hashchange event!");
-//}
+function show_main_dashboard() {
+    hideAll()
+    showRowWithDetails('about_run');
+    $('#section_title-h2').text('');
+}
+
+function list_generic(script_id, path, cols) {
+    /* Load if not existing */
+    if (loaded_config_array.indexOf(script_id) < 0) {
+        $('[id="please_wait.row"]').show();
+        setTimeout(function(){
+            load_aws_config_from_json(script_id, path, cols);
+        }, 50);
+    }
+    /* Clear */
+    hideAll();
+    /* Display */
+    path_array = path.split('.');
+    service = path_array[0];
+    updateNavbar(service);
+    if (script_id.endsWith('violations')) {
+        showRowWithDetails('services.violations');
+    }
+    showRowWithDetails(script_id);
+    for (var i=1;i<=path_array.length;i+=2) {
+        var id=path_array.slice(0,i+1).join('.');
+        showRowWithDetails(id);
+    }
+    /* Update Title */
+    partial_array = script_id.split('.');
+    title = partial_array[1] + ' ' + partial_array[partial_array.length-1];
+    title = title.replace(/_/g, ' ');
+    title = title.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    title = title.replace("Cloudtrail","CloudTrail").replace("Ec2","EC2").replace("Iam","IAM").replace("Rds","RDS").replace("Elb", "ELB").replace("Acl","ACL").replace("Violations", "Dashboard");
+    $("#section_title-h2").text(title);
+    window.scrollTo(0,0);
+}
 
 function locationHashChanged() {
     myBrowse(location.hash);
@@ -558,36 +593,8 @@ function browseTo(keyword, id) {
     window.scrollTo(0,0);
 }
 
-function list_generic(script_id, path, cols) {
-    /* Load if not existing */
-    if (loaded_config_array.indexOf(script_id) < 0) {
-        $('[id="please_wait.row"]').show();
-        setTimeout(function(){
-            load_aws_config_from_json(script_id, path, cols);
-        }, 50);
-    }
-    /* Clear */
-    hideAll();
-    /* Display */
-    path_array = path.split('.');
-    service = path_array[0];
-    updateNavbar(service);
-    if (script_id.endsWith('violations')) {
-        showRowWithDetails('services.violations');
-    }
-    showRowWithDetails(script_id);
-    for (var i=1;i<=path_array.length;i+=2) {
-        var id=path_array.slice(0,i+1).join('.');
-        showRowWithDetails(id);
-    }
-    partial_array = script_id.split('.');
-    title = partial_array[1] + ' ' + partial_array[partial_array.length-1];
-    title = title.replace(/_/g, ' ');
-    title = title.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-    title = title.replace("Cloudtrail","CloudTrail").replace("Ec2","EC2").replace("Iam","IAM").replace("Rds","RDS").replace("Elb", "ELB").replace("Acl","ACL").replace("Violations", "Dashboard");
-    $("#section_title-h2").text(title);
-    window.scrollTo(0,0);
-}
+
+
 function list_findings(service, finding_name) {
     updateNavbar(service);
 //    hideAll();
@@ -613,7 +620,12 @@ function list_findings(service, finding_name) {
     window.scrollTo(0,0);
 }
 
-// Handlebars helpers
+
+
+////////////////////////
+// Handlebars helpers //
+////////////////////////
+
 Handlebars.registerHelper('displayPolicy', function(blob) {
     // this fails now that the policies are all JSON... check in chrome though
     //policy = JSON.stringify(eval("(" + blob + ")"), null, 2);

@@ -161,41 +161,30 @@
         </div>
       </div>
 
-      <!-- Dasboard partial -->
-      <script id="dashboard.partial" type="text/x-handlebars-template">
-        <div class="row" id="services.{{service_name}}.violations.row">
-          <div class="col-sm-12" id="services.{{service_name}}.violations.list">
-            <div class="container">
-              {{#if violations}}
-                {{#grouped_each 3 violations}}
-                  <div class="row">
-                    {{#each this}}
-                      <div class="col-sm-4">
-                        <div class="list-group-item finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
-                          <a href="javascript:list_findings('{{service}}', '{{@key}}')">
-                            {{description}}
-                          </a>
-                        </div>
-                        <div class="list-group-item">
-                          <ul>
-                            <li>{{friendly_name entity}} checked: {{checked_items}}</li>
-                            <li>{{friendly_name entity}} flagged: {{flagged_items}}</li>
-                          </ul>
-                        </div>
-                      </div>
-                    {{/each}}
-                  </div>
-                {{/grouped_each}}
-              {{/if}}
-            </div>
+      <!-- PLACEHOLDER -->
+
+      <div class="row" id="about.row">
+        <div class="list-group">
+          <div class="row list-group-item active">
+            About
+          </div>
+          <div class="row list-group-item">
+            <p>&nbsp;</p>
+            <p>AWS Scout2 is an open-source security tool release by <a href="https://www.nccgroup.trust" target="_blank">NCC Group</a>.</p>
+            <p>&nbsp;</p>
+            <p>Use the top navigation bar to review the configuration of the
+            supported AWS services. For more information about Scout2, please
+            check out the project's page on
+            <a href="https://github.com/iSECPartners/Scout2" target="_blank">Github</a>
+            and the project's website at
+            <a href="https://isecpartners.github.io/Scout2/" target="_blank">https://isecpartners.github.io/Scout2/</a>.
+            <p>&nbsp;</p>
+            The AWS documentation is available at
+            <a href="https://aws.amazon.com/documentation" target="_blank">https://aws.amazon.com/documentation</a>.
+            </p>
           </div>
         </div>
-      </script>
-      <script>
-        Handlebars.registerPartial("dashboard", $("#dashboard\\.partial").html());
-      </script>
-
-      <!-- PLACEHOLDER -->
+      </div>
 
       <div class="row" id="please_wait.row">
         <div class="list-group">
