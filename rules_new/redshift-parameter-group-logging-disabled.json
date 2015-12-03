@@ -1,8 +1,8 @@
 {
     "description": "User activity logging disabled",
-    "entities": "redshift.regions.id.parameter_groups",
+    "entities": "redshift.regions.id.parameter_groups.id",
     "conditions": [
-        [ "redshift.regions.id.parameter_groups.enable_user_activity_logging", "false", "" ]
+        [ "redshift.regions.id.parameters_groups.id.parameters.enable_user_activity_logging.value", "false", "" ]
     ],
     "level": "warning"
 }
