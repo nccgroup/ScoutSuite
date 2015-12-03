@@ -1,0 +1,9 @@
+
+    <!-- Redshift node partial -->
+    <script id="services.redshift.regions.vpcs.cluster_nodes.partial" type="text/x-handlebars-template">
+      {{NodeRole}}: {{PrivateIPAddress}} / {{PublicIPAddress}}
+    </script>
+    <script>
+        Handlebars.registerPartial("services.redshift.regions.vpcs.cluster_nodes", $("#services\\.redshift\\.regions\\.vpcs\\.cluster_nodes\\.partial").html());
+    </script>
+

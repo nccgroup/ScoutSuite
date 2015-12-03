@@ -51,7 +51,7 @@
                   <a href="javascript:show_{{@key}}()" class="dropdown-toggle" data-toggle="dropdown"><span id="cloudtrail_dropdown">{{make_title @key}}</span><b class="caret"></b></a>
                   <ul class="dropdown-menu">
                     <li class="dropdown-header">Summaries</li>
-                    <li><a href="javascript:list_generic('metadata.{{@key}}.dashboard', '{{@key}}.dashboard', '1')">Dashboard</a></li>
+                    <li><a href="javascript:list_generic('services.{{@key}}.violations', 'dashboard', '1')">Dashboard</a></li>
                       {{#each summaries}}
                         <li><a href="javascript:list_generic('{{@../key}}', '{{@key}}')">{{make_title @key}}</a></li>
                       {{/each}}
@@ -163,8 +163,8 @@
 
       <!-- Dasboard partial -->
       <script id="dashboard.partial" type="text/x-handlebars-template">
-        <div class="row" id="metadata.{{service_name}}.violations.row">
-          <div class="col-sm-12" id="metadata.{{service_name}}.violations.list">
+        <div class="row" id="services.{{service_name}}.violations.row">
+          <div class="col-sm-12" id="services.{{service_name}}.violations.list">
             <div class="container">
               {{#if violations}}
                 {{#grouped_each 3 violations}}

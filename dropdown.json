@@ -7,7 +7,7 @@
     "ec2": {
         "resources": {
             "elbs": "ec2.regions.id.vpcs.id.elbs.id",
-            "instances": "",
+            "instances": {"path": "services.ec2.regions.id.vpcs.id.instances.id", "script": "services.ec2.regions.vpcs.instances", "cols": 2},
             "vpcs": "",
             "security_groups": "",
             "network_acls": ""
@@ -30,15 +30,15 @@
     },
     "rds": {
         "resources": {
-            "instances": "",
-            "security_groups": ""
+            "instances": {"path": "services.rds.regions", "script": "services.rds.regions.vpcs.instances", "cols": 2},
+            "security_groups": {"path": "services.rds.regions", "script": "services.rds.regions.vpcs.security_groups", "cols": 2}
         }
     },
     "redshift": {
         "resources": {
-            "clusters": "",
-            "parameter_groups": "",
-            "security_groups": ""
+            "clusters": {"path": "services.redshift.regions", "script": "services.redshift.regions.vpcs.clusters", "cols": 2},
+            "parameter_groups": {"path": "services.redshift.regions", "script": "services.redshift.regions.parameter_groups", "cols": 2},
+            "security_groups": {"path": "services.redshift.regions", "script": "services.redshift.regions.vpcs.security_groups", "cols": 2}
         }
     },
     "s3": {
