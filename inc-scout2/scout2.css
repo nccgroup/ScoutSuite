@@ -99,3 +99,8 @@ ul.no-bullet {
     pointer-events: none;
     cursor: default;
 }
+
+.active a{
+    text-decoration: none !important;
+    color: black !important;
+}
