@@ -1,0 +1,106 @@
+
+    <!-- S3 bucket partial -->
+    <script id="services.s3.buckets.partial" type="text/x-handlebars-template">
+      <div class="list-group" id="services.s3.buckets.{{Name}}.details">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{Name}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text item-margin">Creation date: {{CreationDate}}</div>
+          <div class="list-group-item-text item-margin">Logging: <span id="services.s3.buckets-logging-disabled-{{Name}}">{{has_logging? logging}}</span></div>
+          <div class="list-group-item-text item-margin">Versioning: <span id="services.s3.buckets-versioning-disabled-{{Name}}">{{versioning_status}}</span></div>
+          <div class="list-group-item-text item-margin">MFA Delete: <span id="services.s3.buckets-version_mfa_delete-disabled-{{Name}}">{{version_mfa_delete}}</span></div>
+          <div class="list-group-item-text item-margin">Static website hosting: <span id="services.s3.buckets-static_website_hosting_enabled-{{Name}}">{{web_hosting}}</span></div>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Bucket ACLs</h4>
+          <table class="table-striped" width="100%" >
+            <tr>
+              <td width="20%"></td>
+              <td width="20%" class="text-center">List</td>
+              <td width="20%" class="test-center">Upload/Delete</td>
+              <td width="20%" class="text-center">View Permissions</td>
+              <td width="20%" class="text-center">Edit Permissions</td>
+            </tr>
+            {{#each grantees}}
+            <tr>
+              <td width="20%" class="text-center">{{DisplayName}}</td>
+              <td width="20%" class="text-center">
+                <span id="services.s3.buckets-{{@key}}-read-{{../Name}}">{{{s3_grant_2_icon permissions.read}}}</td></span>
+              </td>
+              <td width="20%" class="text-center">
+                <span id="services.s3.buckets-{{@key}}-read_acp-{{../Name}}">{{{s3_grant_2_icon permissions.write}}}</td></span>
+              </td>
+              <td width="20%" class="text-center">
+                <span id="services.s3.buckets-{{@key}}-write-{{../Name}}">{{{s3_grant_2_icon permissions.read_acp}}}</td></span>
+              </td>
+              <td width="20%" class="text-center">
+                <span id="services.s3.buckets-{{@key}}-write_acp-{{../Name}}">{{{s3_grant_2_icon permissions.write_acp}}}</td></span>
+              </td>
+            </tr>
+            {{/each}}
+          </table>
+        </div>
+        {{#if policy}}
+          <div class="list-group-item">
+            <div class="accordion">
+              <h4 class="list-group-item-heading accordion-heading">Bucket policy
+                <a class="accordion-toggle" data-toggle="collapse" href="#services.s3.buckets_policy_details-{{fixBucketName @key}}">
+                  <span class="badge pull-right btn-info">Details</span>
+                </a>
+              </h4>
+              <div id="services.s3.buckets_policy_details-{{fixBucketName @key}}" class="accordion-body item-margin collapse">
+                <div class="accordion-inner">
+                  {{{displayPolicy policy}}}
+                </div>
+              </div>
+            </div>
+          </div>
+        {{/if}}
+        {{> services.s3.bucket_iam_policies iam_type = 'Groups' iam_entities = iam_Groups}}
+        {{> services.s3.bucket_iam_policies iam_type = 'Roles' iam_entities = iam_Roles}}
+        {{> services.s3.bucket_iam_policies iam_type = 'Users' iam_entities = iam_Users}}
+        {{#if keys}}
+          <div class="list-group-item">
+            <div class="accordion">
+              <h4 class="list-group-item-heading accordion-heading">Keys
+                <a class="accordion-toggle" data-toggle="collapse" href="#services.s3.buckets_keys-{{@key}}">
+                  <span class="badge pull-right btn-info">{{count keys}}<span>
+                </a>
+              </h4>
+              <div id="services.s3.buckets_keys-{{@key}}" class="accordion-body item-margin collapse">
+                <div class="accordion-inner">
+                  <table class="table-striped" width="100%" >
+                    <tr>
+                      <td width="80%">Name</td>
+                      <td width="10%" class="text-center">Encrypted</td>
+                      <td width="10%" class="text-center">Perms</td>
+                    </tr>
+                    {{#each keys}}
+                    <tr>
+                      <td width="80%"><a href="javascript:showS3Object('{{../Name}}', '{{@key}}')">{{@key}}</a></td>
+                      <td width="10%" class="text-center">
+                        <span id="services.s3.buckets-unencrypted-s3-objects-{{../Name}}-{{@key}}">
+                          {{{good_bad_icon "unencrypted-s3-objects" ../Name @key}}}
+                        </span>
+                      </td>
+                      <td width="10%" class="text-center">
+                        <span id="services.s3.buckets-object-perms-mismatch-bucket-perms-{{../Name}}-{{@key}}">
+                          {{{good_bad_icon "object-perms-mismatch-bucket-perms" ../Name @key}}}
+                        </span>
+                      </td>
+                    </tr>
+                    {{/each}}
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        {{/if}}
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.s3.buckets", $("#services\\.s3\\.buckets\\.partial").html());
+    </script>
+

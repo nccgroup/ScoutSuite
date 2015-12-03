@@ -1,0 +1,53 @@
+
+    <!-- List of IAM policies referring a given bucket -->
+    <script id="services.s3.bucket_iam_policies.partial" type="text/x-handlebars-template">
+        {{#if iam_entities}}
+          <div class="list-group-item">
+            <div class="accordion">
+              <h4 class="list-group-item-heading accordion-heading">{{iam_type}} with access via IAM policies
+                <a class="accordion-toggle" data-toggle="collapse" href="#s3_iam_{{iam_type}}_policies_details-{{escape_special_chars ../Name}}">
+                  <span class="badge pull-right btn-info">{{count iam_entities}}</span>
+                </a>
+              </h4>
+              <div id="s3_iam_{{iam_type}}_policies_details-{{escape_special_chars ../Name}}" class="accordion-body item-margin collapse">
+                <div class="accordion-inner">
+                  <table class="table-striped" width="100%" >
+                    <tr>
+                      <td width="40%">{{make_title ../iam_type}} name</td>
+                      <td width="40%" class="text-center">Policy name</td>
+                      <td width="20%" class="text-center">Condition?</td>
+                    </tr>
+                    {{#each iam_entities}}
+                      {{#each ManagedPolicies}}
+                        <tr>
+                        <td width="40%"><a href="javascript:showObject(['services', 'iam', '{{../../iam_type}}', '{{@../key}}'])">{{@../key}}</a></td>
+                        <td width="40%" class="text-center">
+                          <a href="javascript:showIAMManagedPolicy('{{@key}}')">{{policy_friendly_name @key}}</a>
+                        </td>
+                        <td width="20%" class="text-center">
+                          {{has_condition  this}}
+                        </td>
+                        </tr>
+                      {{/each}}
+                      {{#each InlinePolicies}}
+                        <tr>
+                        <td width="40%"><a href="javascript:showObject(['services', 'iam', '{{../../iam_type}}', '{{@../key}}'])">{{@../key}}</a></td>
+                        <td width="40%" class="text-center">
+                          <a href="javascript:showIAMInlinePolicy('{{../../iam_type}}', '{{@../key}}', '{{@key}}')">{{@key}}</a>
+                        </td>
+                        <td width="20%" class="text-center">
+                          {{has_condition  this}}
+                        </td>
+                        </tr>
+                      {{/each}}
+                    {{/each}}
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        {{/if}}
+    </script>
+    <script>
+        Handlebars.registerPartial("services.s3.bucket_iam_policies", $("#services\\.s3\\.bucket_iam_policies\\.partial").html());
+    </script>

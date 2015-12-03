@@ -164,8 +164,9 @@ function toggleDetails(keyword, item) {
 }
 
 function updateNavbar(service) {
-    $('[id*="_dropdown"]').removeClass('active-dropdown');
+    $('[id*="dropdown"]').removeClass('active-dropdown');
     $('#' + service + '_dropdown').addClass('active-dropdown');
+    $('[id*="dropdown"]').show();
 }
 function toggleVisibility(id) {
     id1 = '#' + id;

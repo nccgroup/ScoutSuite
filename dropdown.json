@@ -43,7 +43,7 @@
     },
     "s3": {
         "resources": {
-            "buckets": ""
+            "buckets": {"path": "services.s3.buckets", "script": "services.s3.buckets", "cols": 2}
         }
     }
 }
