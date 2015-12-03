@@ -1,7 +1,7 @@
 
     <!-- IAM role partial -->
-    <script id="services.iam.roles.partial" type="text/x-handlebars-template">
-      <div class="list-group" id="servies.iam.roles.{{Name}}.details">
+    <script id="services.iam.Roles.partial" type="text/x-handlebars-template">
+      <div class="list-group" id="services.iam.Roles.{{Name}}.view">
         <div class="list-group-item active">
           <h4 class="list-group-item-heading">{{Name}}</h4>
         </div>
@@ -32,6 +32,6 @@
       </div>
     </script>
     <script>
-      Handlebars.registerPartial("services.iam.roles", $("#services\\.iam\\.roles\\.partial").html());
+      Handlebars.registerPartial("services.iam.Roles", $("#services\\.iam\\.Roles\\.partial").html());
     </script>
 

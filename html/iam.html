@@ -98,10 +98,10 @@
   </div><!-- /.row -->
 
   <!-- Password policy -->
-  <div class="row" id="services.iam.password_policy.row">
-    <div id="services.iam.password_policy.list"></div>
-      <script id="services.iam.password_policy.list.template" type="text/x-handlebars-template">
-        <div class="list-group" id="services.iam.password_policy.details">
+  <div class="row" id="services.iam.PasswordPolicy.row">
+    <div id="services.iam.PasswordPolicy.list"></div>
+      <script id="services.iam.PasswordPolicy.list.template" type="text/x-handlebars-template">
+        <div class="list-group" id="services.iam.PasswordPolicy.details">
           <div class="list-group-item active">
             <h4 class="list-group-item-heading">Password policy</h4>
           </div>
@@ -127,68 +127,54 @@
   </div>
 
   <!-- Group list and details -->
-  <div class="row" id="services.iam.groups.row">
+  <div class="row" id="services.iam.Groups.row">
     <div class="col-sm-4">
-      <ul class="list-group" id="services.iam.groups.list">
-        <script id="services.iam.groups.list.template" type="text/x-handlebars-template">
-        <li class="list-group-item"><a href="javascript:showAll('iam_Group')">Show all <span class="badge pull-right">{{count items}}</span></a></li>
-        {{#each items}}
-          <li class="list-group-item" id="iam_Group-list-{{Name}}">
-            <a href="javascript:browseTo('iam_Group','{{Name}}')">{{Name}}</a>
-          </li>
-        {{/each}}
+      <ul class="list-group" id="services.iam.Groups.list">
+        <script id="services.iam.Groups.list.template" type="text/x-handlebars-template">
+          {{> global_link service_name = 'iam' resource_type = 'Groups' resource_id_name = 'Name'}}
         </script>
       </ul>
     </div>
-    <div class="col-sm-8" id="services.iam.groups.details">
-      <script id="services.iam.groups.details.template" type="text/x-handlebars-template">
+    <div class="col-sm-8" id="services.iam.Groups.details">
+      <script id="services.iam.Groups.details.template" type="text/x-handlebars-template">
       {{#each items}}
-        {{> services.iam.groups}}
+        {{> services.iam.Groups}}
       {{/each}}
       </script>
     </div>
   </div>
 
   <!-- Role list and details -->
-  <div class="row" id="services.iam.roles.row">
+  <div class="row" id="services.iam.Roles.row">
     <div class="col-sm-4">
-      <ul class="list-group" id="services.iam.roles.list">
-        <script id="services.iam.roles.list.template" type="text/x-handlebars-template">
-        <li class="list-group-item"><a href="javascript:showAll('iam_Role')">Show all <span class="badge pull-right">{{count items}}</span></a></li>
-        {{#each items}}
-          <li class="list-group-item" id="iam_Role-list-{{Name}}">
-            <a href="javascript:browseTo('iam_Role','{{Name}}')">{{Name}}</a>
-          </li>
-        {{/each}}
+      <ul class="list-group" id="services.iam.Roles.list">
+        <script id="services.iam.Roles.list.template" type="text/x-handlebars-template">
+          {{> global_link service_name = 'iam' resource_type = 'Roles' resource_id_name = 'Name'}}
         </script>
       </ul>
     </div>
-    <div class="col-sm-8" id="services.iam.roles.details">
-      <script id="services.iam.roles.details.template" type="text/x-handlebars-template">
+    <div class="col-sm-8" id="services.iam.Roles.details">
+      <script id="services.iam.Roles.details.template" type="text/x-handlebars-template">
       {{#each items}}
-        {{> services.iam.roles}}
+        {{> services.iam.Roles}}
       {{/each}}
       </script>
     </div>
   </div>
 
   <!-- User list and details -->
-  <div id="services.iam.users.row" />
+  <div id="services.iam.Users.row" />
     <div class="col-sm-4">
-      <ul class="list-group" id="services.iam.users.list" />
-        <script id="services.iam.users.list.template" type="text/x-handlebars-template">
-          {{#each items}}
-            <li class="list-group-item" id="iam_User-list-{{Name}}">
-              <a href="javascript:browseTo('iam_User','{{Name}}')">{{Name}}</a>
-            </li>
-          {{/each}}
+      <ul class="list-group" id="services.iam.Users.list" />
+        <script id="services.iam.Users.list.template" type="text/x-handlebars-template">
+          {{> global_link service_name = 'iam' resource_type = 'Users' resource_id_name = 'Name'}}
         </script>
       </ul>
     </div>
-    <div class="col-sm-8" id="services.iam.users.details">
-      <script id="services.iam.users.details.template" type="text/x-handlebars-template">
+    <div class="col-sm-8" id="services.iam.Users.details">
+      <script id="services.iam.Users.details.template" type="text/x-handlebars-template">
         {{#each items}}
-          {{> services.iam.users}}
+          {{> services.iam.Users}}
         {{/each}}
       </script>
     </div>

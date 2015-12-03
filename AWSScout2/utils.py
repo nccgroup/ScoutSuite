@@ -250,7 +250,8 @@ def create_report_metadata(aws_config, services):
             if not 'full_path' in aws_config['metadata'][service]['resources'][resource]:
                 aws_config['metadata'][service]['resources'][resource]['full_path'] = aws_config['metadata'][service]['resources'][resource]['path']
             # Script is the full path minus "id"
-            aws_config['metadata'][service]['resources'][resource]['script'] = '.'.join([x for x in aws_config['metadata'][service]['resources'][resource]['full_path'].split('.') if x != 'id'])
+            if not 'script' in aws_config['metadata'][service]['resources'][resource]:
+                aws_config['metadata'][service]['resources'][resource]['script'] = '.'.join([x for x in aws_config['metadata'][service]['resources'][resource]['full_path'].split('.') if x != 'id'])
             config = {'conditions': [], 'condition_operator': 'and'}
             recurse(aws_config, aws_config, aws_config['metadata'][service]['resources'][resource]['full_path'].split('.'), [], config)
             aws_config['metadata'][service]['resources'][resource]['count'] = config['checked_items'] if 'checked_items' in config else 0
