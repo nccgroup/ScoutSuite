@@ -1,16 +1,20 @@
 {
     "cloudtrail": {
         "resources": {
-            "trails": {"path": "services.cloudtrail.regions", "script": "services.cloudtrail.regions.trails", "cols": 2}
+            "trails": {
+                "path": "services.cloudtrail.regions",
+                "full_path": "services.cloudtrail.regions.id.trails",
+                "cols": 2
+            }
         }
     },
     "ec2": {
         "resources": {
-            "elbs": {"path": "services.ec2.regions", "script": "services.ec2.regions.vpcs.elbs", "cols": 2},
-            "instances": {"path": "services.ec2.regions", "script": "services.ec2.regions.vpcs.instances", "cols": 2},
-            "vpcs": {"path": "services.ec2.regions", "script": "services.ec2.regions.vpcs", "cols": 2},
-            "security_groups": {"path": "services.ec2.regions", "script": "services.ec2.regions.vpcs.security_groups", "cols": 2},
-            "network_acls": {"path": "services.ec2.regions", "script": "services.ec2.regions.vpcs.network_acls", "cols": 2}
+            "elbs": {"path": "services.ec2.regions", "script": "services.ec2.regions.vpcs.elbs", "cols": 2, "full_path": "services.ec2.regions.id.vpcs.id.elbs"},
+            "instances": {"path": "services.ec2.regions", "script": "services.ec2.regions.vpcs.instances", "cols": 2, "full_path": "services.ec2.regions.id.vpcs.id.instances"},
+            "vpcs": {"path": "services.ec2.regions", "script": "services.ec2.regions.vpcs", "cols": 2, "full_path": "services.ec2.regions.id.vpcs"},
+            "security_groups": {"path": "services.ec2.regions", "script": "services.ec2.regions.vpcs.security_groups", "cols": 2, "full_path": "services.ec2.regions.id.vpcs.id.security_groups"},
+            "network_acls": {"path": "services.ec2.regions", "script": "services.ec2.regions.vpcs.network_acls", "cols": 2, "full_path": "services.ec2.regions.id.vpcs.id.network_acls"}
         },
         "summaries": {
             "external attack surface": ""
@@ -30,20 +34,20 @@
     },
     "rds": {
         "resources": {
-            "instances": {"path": "services.rds.regions", "script": "services.rds.regions.vpcs.instances", "cols": 2},
-            "security_groups": {"path": "services.rds.regions", "script": "services.rds.regions.vpcs.security_groups", "cols": 2}
+            "instances": {"path": "services.rds.regions", "full_path": "services.rds.regions.id.vpcs.id.instances", "cols": 2},
+            "security_groups": {"path": "services.rds.regions", "full_path": "services.rds.regions.id.vpcs.id.security_groups", "cols": 2}
         }
     },
     "redshift": {
         "resources": {
-            "clusters": {"path": "services.redshift.regions", "script": "services.redshift.regions.vpcs.clusters", "cols": 2},
-            "parameter_groups": {"path": "services.redshift.regions", "script": "services.redshift.regions.parameter_groups", "cols": 2},
-            "security_groups": {"path": "services.redshift.regions", "script": "services.redshift.regions.vpcs.security_groups", "cols": 2}
+            "clusters": {"path": "services.redshift.regions", "full_path": "services.redshift.regions.id.vpcs.id.clusters", "cols": 2},
+            "parameter_groups": {"path": "services.redshift.regions", "full_path": "services.redshift.regions.id.parameter_groups", "cols": 2},
+            "security_groups": {"path": "services.redshift.regions", "full_path": "services.redshift.regions.id.vpcs.id.security_groups", "cols": 2}
         }
     },
     "s3": {
         "resources": {
-            "buckets": {"path": "services.s3.buckets", "script": "services.s3.buckets", "cols": 2}
+            "buckets": {"path": "services.s3.buckets", "cols": 2}
         }
     }
 }

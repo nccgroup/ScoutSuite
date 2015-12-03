@@ -730,6 +730,7 @@ Handlebars.registerHelper('friendly_name', function(entity) {
     name = name.replace('_', ' ');
     return name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 });
+/*
 Handlebars.registerHelper('count', function(items) {
     var c = 0;
     for (i in items) {
@@ -737,6 +738,7 @@ Handlebars.registerHelper('count', function(items) {
     }
     return c;
 });
+*/
 Handlebars.registerHelper('count_in', function(service, path) {
     var entities = path.split('.');
     if (service == 'ec2') {
@@ -748,6 +750,23 @@ Handlebars.registerHelper('count_in', function(service, path) {
     }
     return recursive_count(input, entities);
 });
+
+Handlebars.registerHelper('count_in_new', function(path) {
+    var entities = path.split('.');
+    console.log('Counting ' + path);
+    /*
+    if (service == 'ec2') {
+        var input = aws_info['services']['ec2'];
+    } else if(service == 'cloudtrail') {
+        var input = aws_info['services']['cloudtrail'];
+    } else {
+        return 0;
+    }
+    */
+    return recursive_count(aws_info, entities);
+});
+
+
 Handlebars.registerHelper('count_ec2_in_region', function(region, path) {
     if (typeof aws_info['services']['ec2'] != 'undefined') {
         var count = 0;
@@ -787,12 +806,14 @@ Handlebars.registerHelper('count_role_instances', function(instance_profiles) {
 });
 var recursive_count = function(input, entities) {
     var count = 0;
+    console.log('Entities left: ' + entities + ' (length = ' + entities.length + ')');
     if (entities.length > 0) {
         var entity = entities.shift();
         for (i in input[entity]) {
             count = count + recursive_count(input[entity][i], eval(JSON.stringify(entities)));
         }
     } else {
+        console.log('Found one...');
         count = count + 1;
     }
     return count;

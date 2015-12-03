@@ -230,7 +230,10 @@ def process_entities(config, finding, entity_path):
         printError('Unknown error.')
 
 def process_finding(config, finding):
-    entity_path = finding.entity.split('.')
+    try:
+        entity_path = finding.entity.split('.')
+    except:
+        entity_path = finding['entity'].split('.')
     process_entities(config, finding, entity_path)
 
 
@@ -241,18 +244,43 @@ def create_report_metadata(aws_config, services):
     # Load resources and summaries metadata from file
     with open('dropdown.json', 'rt') as f:
         aws_config['metadata'] = json.load(f)
+    # Update counts here...
+    for service in aws_config['metadata']:
+        for resource in aws_config['metadata'][service]['resources']:
+            if not 'full_path' in aws_config['metadata'][service]['resources'][resource]:
+                aws_config['metadata'][service]['resources'][resource]['full_path'] = aws_config['metadata'][service]['resources'][resource]['path']
+            # Script is the full path minus "id"
+            aws_config['metadata'][service]['resources'][resource]['script'] = '.'.join([x for x in aws_config['metadata'][service]['resources'][resource]['full_path'].split('.') if x != 'id'])
+            config = {'conditions': [], 'condition_operator': 'and'}
+            recurse(aws_config, aws_config, aws_config['metadata'][service]['resources'][resource]['full_path'].split('.'), [], config)
+            aws_config['metadata'][service]['resources'][resource]['count'] = config['checked_items'] if 'checked_items' in config else 0
+            print(aws_config['metadata'][service]['resources'][resource])
+
+
+#            f = filter_dictionary[key]
+                
+#                rule_metadata = {'filename': 'placeholder.json', 'enabled': True}
+#                rule = load_config_from_json(rule_metadata, '', None)
+#                rule['entity'] = aws_config['metadata'][service]['resources'][resource]['count']
+#                rule['entities'].split('.').insert(0, 'services')
+#                rule['entities'] = '.'.join(rule['entity'].split('.').insert(0, 'services'))
+#                print('Foo: %s' % rule['entities'])
+#                print(rule)
+#                test = process_finding(aws_config, rule)
+#                print(test)
+
     # Dynamically update violations metadata
-    for service in services:
-        manage_dictionary(aws_config['metadata'][service], 'violations', {})
-        if 'violations' in aws_config['services'][service]:
-            for violation in aws_config['services'][service]['violations']:
-                description = aws_config['services'][service]['violations'][violation]['description']
-                if aws_config['services'][service]['violations'][violation]['flagged_items']:
-                    violation_meta = {}
-                    violation_meta['checked_items'] = aws_config['services'][service]['violations'][violation]['checked_items']
-                    violation_meta['flagged_items'] = aws_config['services'][service]['violations'][violation]['flagged_items']
-                    violation_meta['level'] = aws_config['services'][service]['violations'][violation]['level']
-                    aws_config['metadata'][service]['violations'][description] = violation_meta
+#    for service in services:
+#        manage_dictionary(aws_config['metadata'][service], 'violations', {})
+#        if 'violations' in aws_config['services'][service]:
+#            for violation in aws_config['services'][service]['violations']:
+#                description = aws_config['services'][service]['violations'][violation]['description']
+#                if aws_config['services'][service]['violations'][violation]['flagged_items']:
+#                    violation_meta = {}
+#                    violation_meta['checked_items'] = aws_config['services'][service]['violations'][violation]['checked_items']
+#                    violation_meta['flagged_items'] = aws_config['services'][service]['violations'][violation]['flagged_items']
+#                    violation_meta['level'] = aws_config['services'][service]['violations'][violation]['level']
+#                    aws_config['metadata'][service]['violations'][description] = violation_meta
 
 
 ########################################
@@ -319,6 +347,8 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
 #
 def pass_conditions(all_info, current_path, conditions, condition_operator):
     result = False
+    if len(conditions) == 0:
+        return True
     for condition in conditions:
         # Conditions are formed as "path to value", "type of test", "value(s) for test"
         path_to_value, test_name, test_values = condition
