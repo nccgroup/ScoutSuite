@@ -436,20 +436,20 @@ function show_main_dashboard() {
 function list_generic(script_id, path, cols) {
     path_array = path.split('.');
     service = script_id.split('.')[1];
+    /* Clear */
+    hideAll();
     /* Load if not existing */
     if (loaded_config_array.indexOf(script_id) < 0) {
-        console.log('Loading data...');
         $('[id="please_wait.row"]').show();
         setTimeout(function(){
             load_aws_config_from_json(script_id, path, cols);
             highlight_violations(service);
+            $('[id="please_wait.row"]').hide();
         }, 50);
     } else {
         /* TODO: maybe optimize by item only, not the whole service... */
         highlight_violations(service);
     }
-    /* Clear */
-    hideAll();
     /* Display */
     updateNavbar(service);
     if (script_id.endsWith('violations')) {
