@@ -6,11 +6,11 @@
     },
     "ec2": {
         "resources": {
-            "elbs": "ec2.regions.id.vpcs.id.elbs.id",
-            "instances": {"path": "services.ec2.regions.id.vpcs.id.instances.id", "script": "services.ec2.regions.vpcs.instances", "cols": 2},
-            "vpcs": "",
-            "security_groups": "",
-            "network_acls": ""
+            "elbs": {"path": "services.ec2.regions", "script": "services.ec2.regions.vpcs.elbs", "cols": 2},
+            "instances": {"path": "services.ec2.regions", "script": "services.ec2.regions.vpcs.instances", "cols": 2},
+            "vpcs": {"path": "services.ec2.regions", "script": "services.ec2.regions.vpcs", "cols": 2},
+            "security_groups": {"path": "services.ec2.regions", "script": "services.ec2.regions.vpcs.security_groups", "cols": 2},
+            "network_acls": {"path": "services.ec2.regions", "script": "services.ec2.regions.vpcs.network_acls", "cols": 2}
         },
         "summaries": {
             "external attack surface": ""

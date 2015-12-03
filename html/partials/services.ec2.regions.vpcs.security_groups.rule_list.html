@@ -1,0 +1,34 @@
+
+    <!-- EC2 security group rules partial -->
+    <script id="services.ec2.regions.vpcs.security_groups.rule_list.partial" type="text/x-handlebars-template">
+      <div class="list-group-item">
+        <h4 class="list-group-item-heading">{{make_title direction}} Rules</h4>
+        <ul>
+        {{#each protocols}}
+          <li class="list-group-item-text">{{@key}}</li>
+          <ul>
+            <li class="list-group-item-text">{{#ifEqual @key "ICMP"}}Message types{{else}}Ports{{/ifEqual}}:
+            <ul>
+            {{#each ports}}
+              <li>{{@key}}</li>
+              <ul>
+              {{#if cidrs}}
+                <li class="list-group-item-text">IP addresses:</li>
+                {{> ip_grants items = cidrs protocol = @../key ports = @key sg_id = ../../../sg_id}}
+              {{/if}}
+              {{#if security_groups}}
+                <li class="list-group-item-text">EC2 security groups:</li>
+                {{> ec2_grants items = security_groups protocol = @../key ports = @key sg_id = ../../../sg_id}}
+              {{/if}}
+              </ul>
+            {{/each}}
+            </ul>
+          </ul>
+        {{/each}}
+        </ul>
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.ec2.regions.vpcs.security_groups.rule_list", $("#services\\.ec2\\.regions\\.vpcs\\.security_groups\\.rule_list\\.partial").html());
+    </script>
+

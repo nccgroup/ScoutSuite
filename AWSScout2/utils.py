@@ -356,20 +356,22 @@ def get_value_at(all_info, current_path, key, to_string = False):
             target_path.append(key)
         target_obj = all_info
         for p in target_path:
-            # Handle lists...
             if type(target_obj) == list and type(target_obj[0]) == dict:
                 target_obj = target_obj[int(p)]
             elif type(target_obj) == list:
                 target_obj = p
             elif p == '':
                 target_obj = target_obj
-            else:
-              try:
-                target_obj = target_obj[p]
-              except:
-                print('Key = %s' % p)
-                print(target_obj)
-                raise Exception
+            else: #if type(target_obj) == dict:
+#                if target_obj == {}:
+#                    target_obj = None
+#                else:
+                  try:
+                    target_obj = target_obj[p]
+                  except:
+                    print('Key = %s' % p)
+                    print(target_obj)
+                    raise Exception
     if to_string:
         return str(target_obj)
     else:

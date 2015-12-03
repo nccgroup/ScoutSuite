@@ -1,0 +1,18 @@
+
+    <!-- IP grant -->
+    <script id="ip_grants.partial" type="text/x-handlebars-template">
+      <ul>
+        {{#each items}}
+          <span id="ec2_security_groups-{{../protocol}}-{{../ports}}-{{CIDR}}-{{../sg_id}}">
+          <span id="ec2_security_groups-ports-range-{{../sg_id}}-{{../ports}}">
+          <span id="ec2_security_groups-all-ports-open-to-self-{{../sg_id}}">
+          <span class="ec2_attack_surface_item">
+            <li class="list-group-item-text">{{CIDR}} {{#if CIDRName}}({{CIDRName}}){{/if}}</li>
+          </span></span></span>
+        {{/each}}
+      </ul>
+    </script>
+    <script>
+        Handlebars.registerPartial("ip_grants", $("#ip_grants\\.partial").html());
+    </script>
+

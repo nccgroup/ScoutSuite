@@ -1,0 +1,48 @@
+
+    <!-- EC2 ELB partial -->
+    <script id="services.ec2.regions.vpcs.elbs.partial" type="text/x-handlebars-template">
+      <div class="list-group" id="services.ec2.regions.vpcs.elbs.{{Name}}.details">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{Name}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4>Network</h4>
+          <ul>
+            <li class="list-group-item-text">VPC: {{VpcId}}</li>
+            <li class="list-group-item-text">DNS: {{DNSName}}</li>
+            <li class="list-group-item-text">Availability zones:</li>
+            <ul>
+              {{#each AvailabilityZones}}
+                <li class="list-group-item-text">{{this}}</li>
+              {{/each}}
+            </ul>
+          </ul>
+        </div>
+        <div class="list-group-item">
+          <h4>Listeners</h4>
+          <ul>
+          {{#each listeners}}
+            <li class="list-group-item-text">
+              {{LoadBalancerPort}} ({{Protocol}}) <i class="glyphicon glyphicon-arrow-right"></i> {{InstancePort}} ({{InstanceProtocol}})
+              {{#if SslCertificateId}} :
+                {{#each policy_names}}
+                  <span id="services.ec2.regions.vpcs.elbs-old-ssl-policy-{{../../../name}}-{{this}}">{{this}}</span>
+                {{/each}}
+              {{/if}}
+            </li>
+          {{/each}}
+          </ul>
+        </div>
+        <div class="list-group-item">
+          <h4>Destination</h4>
+          <ul>
+            {{> services.ec2.regions.vpcs.elbs.linked_resources resources = instances resource_type = 'instances'}}
+            {{> services.ec2.regions.vpcs.elbs.linked_resources resources = SecurityGroups resource_type = 'security_groups'}}
+            {{> services.ec2.regions.vpcs.elbs.linked_resources resources = Subnets resource_type = 'subnets'}}
+        </div>
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.ec2.regions.vpcs.elbs", $("#services\\.ec2\\.regions\\.vpcs\\.elbs\\.partial").html());
+    </script>
+

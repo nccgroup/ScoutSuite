@@ -1,0 +1,232 @@
+
+      <!----------------->
+      <!-- EC2 section -->
+      <!----------------->
+
+      <!-- Template for network attack surface -->
+      <div class="row" id="ec2_attack_surfaces.row">
+        <div id="ec2_attack_surfaces.list">
+          <script id="ec2_attack_surface.list.template" type="text/x-handlebars-template">
+            <div class="list-group">
+              <div class="row list-group-item active">
+                <div class="col-sm-4"><h4>Public IP address</h4></div>
+                <div class="col-sm-4"><h4>Open ports</h4></div>
+                <div class="col-sm-4 pull-right"><h4><form>Filter by external IP:</h4> <input type="text" id="ec2_attack_surface_item_filter" onkeyup="filter_items('span', 'ec2_attack_surface_item')"></form></div>
+              </div>
+              {{#each items}}
+                <div class="row list-group-item">
+                  <div class="col-sm-4">{{@key}}</div>
+                  <div class="col-sm-8">
+                    <ul>
+                    {{#each protocols ip = @key}}
+                      <li class="list-group-item-text">{{@key}}</li>
+                      <ul>
+                      {{#each ports}}
+                        <li>{{@key}}</li>
+                        {{> ip_grants items = cidrs}}
+                      {{/each}}
+                      </ul>
+                    {{/each}}
+                    </ul>
+                  </div>
+                </div>
+              {{/each}}
+            </div>
+          </script>
+        </div>
+      </div>
+
+      <!-- Template for EC2 ELBs -->
+      <div class="row" id="services.ec2.regions.vpcs.elbs.row">
+        <div class="col-sm-4" id="services.ec2.regions.vpcs.elbs.list">
+          <script id="services.ec2.regions.vpcs.elbs.list.template" type="text/x-handlebars-template">
+            <ul class="list-group">
+              <li class="list-group-item"><a href="javascript:showAll('services.ec2.regions.vpcs.elbs')">Show all<span class="badge pull-right">{{count_in "ec2" "regions.elbs"}}</span></a></li>
+            </ul>
+            {{#each items}}
+             {{#if elbs}}
+              <ul class="list-group">
+                <li class="list-group-item active">{{@key}}</li>
+                {{#each elbs}}
+                  <div class="list-group-item list-sub-element" id="services.ec2.regions.vpcs.elbs-list-{{@key}}"><a href="javascript:browseTo('services.ec2.regions.vpcs.elbs', '{{@key}}')">{{@key}}</a></div>
+                {{/each}}
+              </ul>
+             {{/if}}
+            {{/each}}
+            </script>
+          </ul>
+        </div>
+        <div class="col-sm-8" id="services.ec2.regions.vpcs.elbs.details">
+          <script id="services.ec2.regions.vpcs.elbs.details.template" type="text/x-handlebars-template">
+          {{#each items}}
+            {{#each elbs}}
+              {{> services.ec2.regions.vpcs.elbs Name = @key}}
+            {{/each}}
+          {{/each}}
+          </script>
+        </div><!-- /.col-sm-8 -->
+      </div><!-- /.row -->
+
+      <!-- Template for EC2 security groups -->
+      <div class="row" id="services.ec2.regions.vpcs.security_groups.row">
+        <div class="col-sm-4" id="services.ec2.regions.vpcs.security_groups.list">
+          <script id="services.ec2.regions.vpcs.security_groups.list.template" type="text/x-handlebars-template">
+            <ul class="list-group">
+              <li class="list-group-item"><a href="javascript:showAll('services.ec2.regions.vpcs.security_groups')">Show all<span class="badge pull-right">{{count_in "ec2" "regions.vpcs.security_groups"}}</span></a></li>
+            </ul>
+            {{#each items}}
+              <div id="ec2_region-list-{{@key}}">
+                {{#if vpcs}}
+                  <ul class="list-group">
+                    <li class="list-group-item active">{{@key}}</li>
+                    {{#each vpcs}}
+                      <div class="list-group-item list-sub-element">
+                        {{Name}}
+                        {{#each security_groups}}
+                          <div class="list-group-item-text list-sub-element" id="security_group-list-{{id}}"><a href="javascript:browseTo('services.ec2.regions.vpcs.security_groups', '{{id}}')">{{name}}</a></div>
+                        {{/each}}
+                      </div>
+                    {{/each}}
+                  </ul>
+                {{/if}}
+              </div>
+            {{/each}}
+            </script>
+          </ul>
+        </div>
+        <div class="col-sm-8" id="services.ec2.regions.vpcs.security_groups.details">
+          <script id="services.ec2.regions.vpcs.security_groups.details.template" type="text/x-handlebars-template">
+          {{#each items}}
+            <div id="ec2_region-details-{{@key}}">
+              {{#each vpcs}}
+                {{#each security_groups}}
+                  {{> services.ec2.regions.vpcs.security_groups region=@../../key vpc=@../key}}
+                {{/each}}
+              {{/each}}
+            </div>
+          {{/each}}
+          </script>
+        </div><!-- /.col-sm-8 -->
+      </div><!-- /.row -->
+
+      <!-- Template for EC2 network ACLs -->
+      <div class="row" id="services.ec2.regions.vpcs.network_acls.row">
+        <div class="col-sm-4" id="services.ec2.regions.vpcs.network_acls.list">
+          <script id="services.ec2.regions.vpcs.network_acls.list.template" type="text/x-handlebars-template">
+            <ul class="list-group">
+              <li class="list-group-item"><a href="javascript:showAll('services.ec2.regions.vpcs.network_acls')">Show all<span class="badge pull-right">{{count_in "ec2" "regions.vpcs.network_acls"}}</span></a></li>
+            </ul>
+            {{#each items}}
+              <div id="ec2_region-list-{{@key}}">
+                {{#if vpcs}}
+                  <ul class="list-group">
+                    <li class="list-group-item active">{{@key}}</li>
+                    {{#each vpcs}}
+                      <div class="list-group-item list-sub-element">
+                        {{Name}}
+                        {{#if network_acls}}
+                          {{#each network_acls}}
+                            <div class="list-group-item-text list-sub-element"><a href="javascript:browseTo('services.ec2.regions.vpcs.network_acls', '{{@key}}')">{{@key}}</a></div>
+                          {{/each}}
+                        {{/if}}
+                      </div>
+                    {{/each}}
+                  </ul>
+                {{/if}}
+              </div>
+            {{/each}}
+            </script>
+          </ul>
+        </div>
+        <div class="col-sm-8" id="services.ec2.regions.vpcs.network_acls.details">
+          <script id="services.ec2.regions.vpcs.network_acls.details.template" type="text/x-handlebars-template">
+          {{#each items}}
+            <div id="ec2_region-details-{{@key}}">
+              {{#each vpcs}}
+                {{#each network_acls}}
+                  {{> services.ec2.regions.vpcs.network_acls RegionName = @../../key}}
+                {{/each}}
+              {{/each}}
+            </div>
+          {{/each}}
+          </script>
+        </div><!-- /.col-sm-8 -->
+      </div><!-- /.row -->
+
+      <!-- Template for EC2 VPCs -->
+      <div class="row" id="services.ec2.regions.vpcs.row">
+        <div class="col-sm-4" id="services.ec2.regions.vpcs.list">
+          <script id="services.ec2.regions.vpcs.list.template" type="text/x-handlebars-template">
+            <ul class="list-group">
+              <li class="list-group-item"><a href="javascript:showAll('services.ec2.regions.vpcs')">Show all<span class="badge pull-right">{{count_in "ec2" "regions.vpcs"}}</span></a></li>
+            </ul>
+            {{#each items}}
+              <div id="ec2_region-list-{{@key}}">
+                {{#if vpcs}}
+                  <ul class="list-group">
+                    <li class="list-group-item active">{{@key}}</li>
+                    {{#each vpcs}}
+                        <div class="list-group-item-text list-sub-element" id="services.ec2.regions.vpcs.instances-list-{{id}}"><a href="javascript:browseTo('services.ec2.regions.vpcs', '{{id}}')">{{Name}}</a></div>
+                    {{/each}}
+                  </ul>
+                {{/if}}
+              </div>
+            {{/each}}
+            </script>
+          </ul>
+        </div>
+        <div class="col-sm-8" id="services.ec2.regions.vpcs.details">
+          <script id="services.ec2.regions.vpcs.details.template" type="text/x-handlebars-template">
+          {{#each items}}
+            <div id="ec2_region-details-{{@key}}">
+              {{#each vpcs}}
+                    {{> services.ec2.regions.vpcs region=../name}}
+              {{/each}}
+            </div>
+          {{/each}}
+          </script>
+        </div><!-- /.col-sm-8 -->
+      </div><!-- /.row -->
+
+      <!-- Template for EC2 instances -->
+      <div class="row" id="services.ec2.regions.vpcs.instances.row">
+        <div class="col-sm-4" id="services.ec2.regions.vpcs.instances.list">
+          <script id="services.ec2.regions.vpcs.instances.list.template" type="text/x-handlebars-template">
+            <ul class="list-group">
+              <li class="list-group-item"><a href="javascript:showAll('services.ec2.regions.vpcs.instances')">Show all<span class="badge pull-right">{{count_in "ec2" "regions.vpcs.instances"}}</span></a></li>
+            </ul>
+            {{#each items}}
+              <div id="ec2_region-list-{{@key}}">
+                {{#if vpcs}}
+                  <ul class="list-group">
+                    <li class="list-group-item active">{{@key}}</li>
+                    {{#each vpcs}}
+                      <div class="list-group-item list-sub-element">
+                        {{Name}}
+                        {{#each instances}}
+                          <div class="list-group-item-text list-sub-element" id="services.ec2.regions.vpcs.instances-list-{{id}}"><a href="javascript:browseTo('services.ec2.regions.vpcs.instances', '{{InstanceId}}')">{{Name}}</a></div>
+                        {{/each}}
+                      </div>
+                    {{/each}}
+                  </ul>
+                {{/if}}
+              </div>
+            {{/each}}
+            </script>
+          </ul>
+        </div>
+        <div class="col-sm-8" id="services.ec2.regions.vpcs.instances.details">
+          <script id="services.ec2.regions.vpcs.instances.details.template" type="text/x-handlebars-template">
+          {{#each items}}
+            <div id="ec2_region-details-{{@key}}">
+              {{#each vpcs}}
+                {{#each instances}}
+                  {{> services.ec2.regions.vpcs.instances region=../../name}}
+                {{/each}}
+              {{/each}}
+            </div>
+          {{/each}}
+          </script>
+        </div><!-- /.col-sm-8 -->
+      </div><!-- /.row -->
+

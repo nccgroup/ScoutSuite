@@ -1,0 +1,38 @@
+
+    <!-- EC2 security group partials -->
+    <script id="services.ec2.regions.vpcs.security_groups.partial" type="text/x-handlebars-template">
+      <div class="list-group" id="services.ec2.regions.vpcs.security_groups.{{id}}.details">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{this.name}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text item-margin">Description: {{description}}</div>
+          <div class="list-group-item-text item-margin">ID: {{id}}</div>
+        </div>
+        {{#each rules}}
+          {{> services.ec2.regions.vpcs.security_groups.rule_list this sg_name = ../name sg_id = ../id direction = @key}}
+        {{/each}}
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Usage</h4>
+          <ul>
+            {{#each used_by}}
+              {{#each resource_type}}
+                <li>{{make_title @../key}} {{make_title @key}}:</li>
+                <ul>
+                  {{#each this}}
+                    {{> services.ec2.regions.vpcs.security_groups.resource_list service=@../../key resource_type=@../key resources=this status=@key region=../../../region vpc=../../../vpc group=../../../id}}
+                  {{/each}}
+                </ul>
+              {{/each}}
+            {{/each}}
+          </ul>
+          <span id="services.ec2.regions.vpcs.security_groups-unused-{{id}}" class="finding-hidden item-margin">
+            <i class="glyphicon glyphicon-warning-sign"></i> This group is not used by either EC2, RDS, or Redshift.
+          </span>
+        </div>
+      </div>
+    </script>
+    <script>
+        Handlebars.registerPartial("services.ec2.regions.vpcs.security_groups", $("#services\\.ec2\\.regions\\.vpcs\\.security_groups\\.partial").html());
+    </script>
