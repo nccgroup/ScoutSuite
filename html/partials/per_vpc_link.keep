@@ -1,0 +1,12 @@
+
+    <!-- Generic left-menu link partial for region-then-vpc-then-resource -->
+    <!-- TODO: fix this id -->
+    <script id="per_vpc_link.partial" type="text/x-handlebars-template">
+      <div class="list-group-item-text list-sub-element" id="services.{{service_name}}.region.{{region}}.vpcs.{{vpc}}.{{resource_type}}.{{resource_key}}.list">
+        <a href="#services.{{service_name}}.region.{{region}}.vpcs.{{vpc}}.{{resource_type}}.{{resource_key}}.view">{{resource_key}}</a>
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("per_vpc_link", $("#per_vpc_link\\.partial").html());
+    </script>
+

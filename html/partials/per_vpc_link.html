@@ -1,10 +1,26 @@
 
     <!-- Generic left-menu link partial for region-then-vpc-then-resource -->
-    <!-- TODO: fix this id -->
     <script id="per_vpc_link.partial" type="text/x-handlebars-template">
-      <div class="list-group-item-text list-sub-element" id="{{service_name}}_{{resource_type}}-list-{{resource_key}}">
-        <a href="#services/{{service_name}}/regions/{{region}}/vpcs/{{vpc}}/{{resource_type}}/{{resource_key}}/details">{{resource_key}}</a>
-      </div>
+      <ul class="list-group">
+        <li class="list-group-item">
+          <a href="#services.{{service_name}}.regions.*.vpcs.*.{{resource_type}}">Show All <span class="badge pull-right">XXX</span></a></li>
+        </li>
+      </ul>
+      {{#each regions}}
+        <div class="list-group" id="services.{{../service_name}}.regions.{{@key}}.list">
+          <div class="list-group-item active"><a href="#services.{{../service_name}}.regions.{{@key}}.vpcs.*.{{resource_type}}">{{@key}}</a></div>
+          {{#each vpcs}}
+            <div class="list-group-item-text list-sub-element" id="services.{{../service_name}}.regions.{{@../key}}.vpcs.{{@key}}.list">
+              <a href="#services.{{../../service_name}}.regions.{{@../key}}.vpcs.{{@key}}">{{Name}}{{name}}</a>
+              {{#each (lookup . ../../resource_type)}}
+                <div class="list-group-item-text list-sub-element" id="services.{{service_name}}.regions.{{@../../key}}.vpcs.{{@../key}}.{{resource_type}}.{{@key}}.list">
+                  <a href="#services.{{../../../service_name}}.regions.{{@../../key}}.vpcs.{{@../key}}.{{../../../resource_type}}.{{@key}}.view">{{Name}}{{name}}</a>
+                </div>
+              {{/each}}
+            </div>
+          {{/each}}
+        </div>
+      {{/each}}
     </script>
     <script>
       Handlebars.registerPartial("per_vpc_link", $("#per_vpc_link\\.partial").html());

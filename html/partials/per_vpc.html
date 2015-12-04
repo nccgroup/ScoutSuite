@@ -1,34 +1,16 @@
 
     <!-- Generic partial for region-then-vpc-then-resource -->
     <script id="per_vpc.partial" type="text/x-handlebars-template">
-{{#if is_menu}}
-      <ul class="list-group">
-        <li class="list-group-item">
-          <a href="javascript:showAllNew('services/{{service_name}}/regions')">
-            Show all<span class="badge pull-right">{{count_in "{{service_name}}" "regions.vpcs.{{resource_type}}"}}</span>
-          </a>
-        </li>
-      </ul>
-{{/if}}
       {{#each regions}}
-{{#if ../is_menu}}
-        <ul class="list-group" id="{{../service_name}}_region-list-{{@key}}">
-          <li class="list-group-item active">{{@key}}</li>
-{{/if}}
+        <div class="list-group" id="services.{{../service_name}}.regions.{{@key}}">
           {{#each vpcs}}
-{{#if ../../is_menu}}
-            <div class="list-group-item list-sub-element">{{@key}}
-{{/if}}
+            <div class="list-group" id="services.{{../service_name}}.regions.{{@../key}}.vpcs.{{@key}}">
               {{#each (lookup . ../../resource_type)}}
                 {{> (lookup ../../.. 'partial_name') service_name = ../../../service_name region = @../../key vpc = @../key resource_type = ../../../resource_type resource_key = @key resource = this}}
               {{/each}}
-{{#if ../../is_menu}}
             </div>
-{{/if}}
           {{/each}}
-{{#if ../is_menu}}
-        </ul>
-{{/if}}
+        </div>
       {{/each}}
     </script>
     <script>

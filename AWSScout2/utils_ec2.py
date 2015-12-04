@@ -304,6 +304,7 @@ def get_vpc_info(q, params):
             for acl in acls['NetworkAcls']:
                 manage_dictionary(vpc['network_acls'], acl['NetworkAclId'], {})
                 vpc['network_acls'][acl['NetworkAclId']] = acl
+                get_name(vpc['network_acls'][acl['NetworkAclId']], acl, 'NetworkAclId')
                 manage_dictionary(vpc['network_acls'][acl['NetworkAclId']], 'rules', {})
                 vpc['network_acls'][acl['NetworkAclId']]['rules']['ingress'] = get_network_acl_entries(acl['Entries'], False)
                 vpc['network_acls'][acl['NetworkAclId']]['rules']['egress'] = get_network_acl_entries(acl['Entries'], True)
