@@ -7,14 +7,6 @@ from AWSScout2.utils import *
 from AWSScout2.filters import *
 from AWSScout2.findings import *
 
-########################################
-##### Redshift analysis
-########################################
-
-# Analysis
-def analyze_redshift_config(redshift_config, aws_account_id, force_write):
-    printInfo('Analyzing Redshift config...')
-    analyze_config(redshift_finding_dictionary, redshift_filter_dictionary, redshift_config, 'Redshift')
 
 ########################################
 ##### Redshift fetching
@@ -24,6 +16,7 @@ def analyze_redshift_config(redshift_config, aws_account_id, force_write):
 # Entry point
 #
 def get_redshift_info(key_id, secret, session_token, service_config, selected_regions, with_gov, with_cn):
+    printInfo('Fetching Redshift config...')
     manage_dictionary(service_config, 'regions', {}) 
     regions = build_region_list('redshift', selected_regions, include_gov = with_gov, include_cn = with_cn)
     for region in regions:

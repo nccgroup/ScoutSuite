@@ -254,34 +254,9 @@ def create_report_metadata(aws_config, services):
                 aws_config['metadata'][service]['resources'][resource]['script'] = '.'.join([x for x in aws_config['metadata'][service]['resources'][resource]['full_path'].split('.') if x != 'id'])
             config = {'conditions': [], 'condition_operator': 'and'}
             recurse(aws_config, aws_config, aws_config['metadata'][service]['resources'][resource]['full_path'].split('.'), [], config)
-            aws_config['metadata'][service]['resources'][resource]['count'] = config['checked_items'] if 'checked_items' in config else 0
-            print(aws_config['metadata'][service]['resources'][resource])
 
-
-#            f = filter_dictionary[key]
-                
-#                rule_metadata = {'filename': 'placeholder.json', 'enabled': True}
-#                rule = load_config_from_json(rule_metadata, '', None)
-#                rule['entity'] = aws_config['metadata'][service]['resources'][resource]['count']
-#                rule['entities'].split('.').insert(0, 'services')
-#                rule['entities'] = '.'.join(rule['entity'].split('.').insert(0, 'services'))
-#                print('Foo: %s' % rule['entities'])
-#                print(rule)
-#                test = process_finding(aws_config, rule)
-#                print(test)
-
-    # Dynamically update violations metadata
-#    for service in services:
-#        manage_dictionary(aws_config['metadata'][service], 'violations', {})
-#        if 'violations' in aws_config['services'][service]:
-#            for violation in aws_config['services'][service]['violations']:
-#                description = aws_config['services'][service]['violations'][violation]['description']
-#                if aws_config['services'][service]['violations'][violation]['flagged_items']:
-#                    violation_meta = {}
-#                    violation_meta['checked_items'] = aws_config['services'][service]['violations'][violation]['checked_items']
-#                    violation_meta['flagged_items'] = aws_config['services'][service]['violations'][violation]['flagged_items']
-#                    violation_meta['level'] = aws_config['services'][service]['violations'][violation]['level']
-#                    aws_config['metadata'][service]['violations'][description] = violation_meta
+# This is broken
+#            aws_config['metadata'][service]['resources'][resource]['count'] = config['checked_items'] if 'checked_items' in config else 0
 
 
 ########################################
@@ -374,7 +349,7 @@ def pass_conditions(all_info, current_path, conditions, condition_operator):
 def get_value_at(all_info, current_path, key, to_string = False):
     keys = key.split('.')
     if keys[-1] == 'id':
-        target_obj = keys[len(keys)-1]
+        target_obj = current_path[len(keys)-1]
     else:
         if key == 'this':
             target_path = current_path
@@ -393,7 +368,9 @@ def get_value_at(all_info, current_path, key, to_string = False):
         target_obj = all_info
         for p in target_path:
             if type(target_obj) == list and type(target_obj[0]) == dict:
-                target_obj = target_obj[int(p)]
+                target_obj = []
+                for obj in target_obj:
+                    target_obj.append(obj[p])
             elif type(target_obj) == list:
                 target_obj = p
             elif p == '':
@@ -402,6 +379,7 @@ def get_value_at(all_info, current_path, key, to_string = False):
               try:
                 target_obj = target_obj[p]
               except Exception as e:
+                print(target_obj)
                 printException(e)
                 raise Exception
     if to_string:

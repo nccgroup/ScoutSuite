@@ -13,7 +13,11 @@
             "enabled": "false"
         },
         {
-            "filename": "ec2-default-security-group-not-empty.json",
+            "filename": "ec2-default-security-group-in-use.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "ec2-default-security-group-with-rules.json",
             "enabled": "true"
         },
         {
@@ -135,7 +139,7 @@
             "enabled": "true"
         },
         {
-            "filename": "redshift-cluster-does-not-require-ssl.json",
+            "filename": "redshift-parameter-group-ssl-not-required.json",
             "enabled": "true"
         },
         {

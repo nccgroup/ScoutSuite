@@ -1,0 +1,11 @@
+{
+    "description": "Non-empty default security groups",
+    "entities": "ec2.regions.id.vpcs.id.security_groups.id",
+    "dashboard_name": "Security groups",
+    "conditions": [
+        [ "ec2.regions.id.vpcs.id.security_groups.id.name", "equal", "default" ],
+        [ "ec2.regions.id.vpcs.id.security_groups.id.", "withKey", "used_by" ]
+
+    ],
+    "level": "warning"
+}
