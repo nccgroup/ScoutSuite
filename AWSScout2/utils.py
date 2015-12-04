@@ -374,12 +374,17 @@ def pass_conditions(all_info, current_path, conditions, condition_operator):
 def get_value_at(all_info, current_path, key, to_string = False):
     keys = key.split('.')
     if keys[-1] == 'id':
-        target_obj = current_path[len(keys)-1]
+        target_obj = keys[len(keys)-1]
     else:
         if key == 'this':
             target_path = current_path
         elif '.' in key:
-            target_path = current_path[0:len(keys)-1]
+            target_path = []
+            for i, key in enumerate(keys):
+                if key == 'id':
+                    target_path.append(current_path[i])
+                else:
+                    target_path.append(key)
             if len(keys) > len(current_path):
                 target_path = target_path + keys[len(target_path):]
         else:
@@ -393,16 +398,12 @@ def get_value_at(all_info, current_path, key, to_string = False):
                 target_obj = p
             elif p == '':
                 target_obj = target_obj
-            else: #if type(target_obj) == dict:
-#                if target_obj == {}:
-#                    target_obj = None
-#                else:
-                  try:
-                    target_obj = target_obj[p]
-                  except:
-                    print('Key = %s' % p)
-                    print(target_obj)
-                    raise Exception
+            else:
+              try:
+                target_obj = target_obj[p]
+              except Exception as e:
+                printException(e)
+                raise Exception
     if to_string:
         return str(target_obj)
     else:

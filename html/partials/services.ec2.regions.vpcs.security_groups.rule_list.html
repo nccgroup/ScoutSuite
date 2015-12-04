@@ -2,7 +2,9 @@
     <!-- EC2 security group rules partial -->
     <script id="services.ec2.regions.vpcs.security_groups.rule_list.partial" type="text/x-handlebars-template">
       <div class="list-group-item">
-        <h4 class="list-group-item-heading">{{make_title direction}} Rules</h4>
+        <h4 class="list-group-item-heading">
+          <span id="ec2.regions.{{region}}.vpcs.{{vpc}}.security_groups.{{sg_id}}.rules.{{direction}}">{{make_title direction}} Rules</span>
+        </h4>
         <ul>
         {{#each protocols}}
           <li class="list-group-item-text">{{@key}}</li>

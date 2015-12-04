@@ -1,10 +1,10 @@
 {
     "description": "Non-empty default security groups",
-    "entities": "ec2.regions.id.vpcs.id.security_groups.id",
+    "entities": "ec2.regions.id.vpcs.id.security_groups.id.rules.id",
     "conditions": [
         [ "ec2.regions.id.vpcs.id.security_groups.id.name", "equal", "default" ],
-        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.ingress.protocols", "notEmpty", "" ],
-        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.egress.protocols", "notEmpty", "" ]
+        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols", "notEmpty", "" ]
+
     ],
     "level": "warning",
     "listing": {
