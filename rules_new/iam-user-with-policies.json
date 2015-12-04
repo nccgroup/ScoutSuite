@@ -2,6 +2,7 @@
     "key": "iam-user-with-_ARG_0_-policies",
     "description": "User with _ARG_0_ policies",
     "entities": "iam.Users.id",
+    "dashboard_name": "Users",
     "conditions": [
         [ "iam.Users.id.", "withKey", "_ARG_1_" ]
     ],

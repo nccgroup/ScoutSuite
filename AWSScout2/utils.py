@@ -367,10 +367,17 @@ def get_value_at(all_info, current_path, key, to_string = False):
             target_path.append(key)
         target_obj = all_info
         for p in target_path:
+          try:
+#            if type(target_obj) == list:
+#                if len(target_obj) > 0 and type(target_obj[0]) == dict:
+#                    target_obj = []
+#                    for obj in target_obj:
+#                        target_obj.append(obj[p])
+#                else:
+#                    print(target_path)
+#                    print(target_obj)
             if type(target_obj) == list and type(target_obj[0]) == dict:
-                target_obj = []
-                for obj in target_obj:
-                    target_obj.append(obj[p])
+                target_obj = target_obj(int[p])
             elif type(target_obj) == list:
                 target_obj = p
             elif p == '':
@@ -382,6 +389,8 @@ def get_value_at(all_info, current_path, key, to_string = False):
                 print(target_obj)
                 printException(e)
                 raise Exception
+          except:
+            print(target_obj)
     if to_string:
         return str(target_obj)
     else:

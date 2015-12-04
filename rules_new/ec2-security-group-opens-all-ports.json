@@ -1,6 +1,7 @@
 {
     "description": "All ports open",
     "entities": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",
+    "dashboard_name": "Rules",
     "conditions": [
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id", "containAtLeastOneOf", ["0-65535", "ALL"] ],
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id", "containAtLeastOneOf", ["ALL", "UDP", "TCP"] ],

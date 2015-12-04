@@ -1,6 +1,7 @@
 {
-    "description": "Root account used recently",
+    "description": "Lack of MFA (root account)",
     "entities": "iam.CredentialReport.<root_account>",
+    "dashboard_name": "Root account",
     "conditions": [
         [ "iam.CredentialReport.<root_account>.mfa_active", "notTrue", "" ]
     ],

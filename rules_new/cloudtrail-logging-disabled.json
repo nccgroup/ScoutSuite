@@ -1,6 +1,7 @@
 {
     "description": "Service disabled",
     "entities": "cloudtrail.regions.id.trails.id",
+    "dashboard_name": "Regions",
     "conditions": [
         [ "cloudtrail.regions.id.trails.id.IsLogging", "false", "" ]
     ],

@@ -1,6 +1,7 @@
 {
     "description": "Use of port ranges",
     "entities": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",
+    "dashboard_name": "Rules",
     "conditions": [
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id", "equal", "ingress" ],
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id", "containAtLeastOneOf", ["ALL", "UDP", "TCP"] ],

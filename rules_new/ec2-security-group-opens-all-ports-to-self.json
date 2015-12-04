@@ -1,10 +1,11 @@
 {
     "description": "Unrestricted network traffic within security group",
     "entities": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.security_groups.id",
+    "dashboard_name": "Rules",
     "conditions": [
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id", "equal", "ingress" ],
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id", "equal", "0-65535" ],
-        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.security_groups.GroupId", "equal", "_GET_VALUE_AT_(ec2.regions.id.vpcs.id.security_groups.id)" ]
+        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.security_groups.id.GroupId", "equal", "_GET_VALUE_AT_(ec2.regions.id.vpcs.id.security_groups.id)" ]
     ],
     "level": "danger",
     "listing": {

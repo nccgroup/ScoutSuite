@@ -1,5 +1,5 @@
 {
-    "description": "Non-empty default security groups",
+    "description": "Non-empty rulesets for default security groups",
     "entities": "ec2.regions.id.vpcs.id.security_groups.id.rules.id",
     "dashboard_name": "Rulesets",
     "conditions": [

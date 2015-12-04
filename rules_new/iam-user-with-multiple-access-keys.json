@@ -1,6 +1,7 @@
 {
     "description": "Multiple active keys for single user",
     "entities": "iam.Users.id",
+    "dashboard_name": "Users",
     "conditions": [
         [ "iam.Users.id.AccessKeys", "lengthMoreThan", "1" ]
     ],
