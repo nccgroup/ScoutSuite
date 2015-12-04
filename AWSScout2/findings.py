@@ -95,6 +95,9 @@ def load_ruleset(ruleset_name):
         return None
     return ruleset
 
+#
+# Initialize rules based on ruleset and services in scope
+#
 def init_rules(ruleset, services, environment_name, ip_ranges):
     # Load rules from JSON files
     rules = {}
@@ -122,72 +125,6 @@ def init_rules(ruleset, services, environment_name, ip_ranges):
         # Save details for rule
         rules[entities][key] = rule_details
     return rules
-
-    # Parse and customize rules
-    for f in findings:
-        questions = findings[f]['questions'] if 'questions' in findings[f] else []
-        if 'targets' in findings[f]:
-            for t in findings[f]['targets']:
-                name = set_argument_values(f, t)
-                description = set_argument_values(findings[f]['description'], t)
-                entity = set_argument_values(findings[f]['entity'], t)
-                callback = findings[f]['callback']
-                callback_args = set_arguments(findings[f]['callback_args'], t)
-                level = set_argument_values(findings[f]['level'], t)
-                new_questions = []
-                for q in questions:
-                    if type(q) == list:
-                        new_questions.append([set_argument_values(q[0], t)] + q[1:])
-                    else:
-                        new_questions.append(set_argument_values(q, t))
-
-                new_finding(service, customize, name,
-                    description,
-                    entity,
-                    callback,
-                    callback_args,
-                    level,
-                    new_questions)
-
-        else:
-            update_ruleset(findings[f])
-
-            new_finding(service, customize, f,
-                findings[f]['description'],
-                findings[f]['entities'],
-                findings[f]['conditions'],
-                findings[f]['level'],
-                questions)
-
-def new_finding(service, customize, key, description, entity, callback_name, level, questions):
-
-    # Based on the service name, determine the finding dictionary and class
-    finding_dictionary, finding_class = get_finding_variables(service)
-
-    # If this is a custom rule, prompt users for answers
-    if customize and questions and len(questions):
-        print('')
-        activate_rule_question = set_description(questions.pop(0), description)
-        if prompt_4_yes_no(activate_rule_question):
-            for question in questions:
-                if type(question) == list:
-                    if len(question) == 2:
-                        q, choices = question
-                        default = None
-                    elif len(question) == 3:
-                        q, choices, default = question
-                else:
-                    q = question
-                    choices = None
-                    default = None
-                answer = prompt_4_value(q, choices, default, is_question = True)
-                callback_args.append(answer)
-            level = change_level(level)
-        else:
-            return
-
-    # Save the rule in the finding dictionary
-    finding_dictionary[key] = finding_class(description, entity, callback_name, level, questions)
 
 #
 # Search for an existing ruleset that matches the environment name

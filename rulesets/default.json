@@ -135,6 +135,14 @@
             "enabled": "true"
         },
         {
+            "filename": "root-account-used-recently.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "root-account-no-mfa.json",
+            "enabled": "true"
+        },
+        {
             "filename": "redshift-cluster-database-not-encrypted.json",
             "enabled": "true"
         },

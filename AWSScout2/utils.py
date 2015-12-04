@@ -368,6 +368,7 @@ def get_value_at(all_info, current_path, key, to_string = False):
         target_obj = all_info
         for p in target_path:
           try:
+#            print('Going for %s' % p)
 #            if type(target_obj) == list:
 #                if len(target_obj) > 0 and type(target_obj[0]) == dict:
 #                    target_obj = []
@@ -377,7 +378,8 @@ def get_value_at(all_info, current_path, key, to_string = False):
 #                    print(target_path)
 #                    print(target_obj)
             if type(target_obj) == list and type(target_obj[0]) == dict:
-                target_obj = target_obj(int[p])
+#                print('Here ! %s' % target_path)
+                target_obj = target_obj[int(p)]                
             elif type(target_obj) == list:
                 target_obj = p
             elif p == '':
@@ -389,8 +391,10 @@ def get_value_at(all_info, current_path, key, to_string = False):
                 print(target_obj)
                 printException(e)
                 raise Exception
-          except:
+          except Exception as e:
             print(target_obj)
+            printException(e)
+            raise Exception
     if to_string:
         return str(target_obj)
     else:

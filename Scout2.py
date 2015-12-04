@@ -71,7 +71,7 @@ def main(args):
     # Load findings from JSON config files
     ruleset = load_ruleset(ruleset_name)
     rules = init_rules(ruleset, services, environment_name, args.ip_ranges)
-
+ 
     ##### Load local data first
     aws_config = {}
     manage_dictionary(aws_config, 'services', {})
