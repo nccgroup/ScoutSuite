@@ -14,11 +14,11 @@
               <ul>
               {{#if cidrs}}
                 <li class="list-group-item-text">IP addresses:</li>
-                {{> ip_grants items = cidrs protocol = @../key ports = @key sg_id = ../../../sg_id}}
+                {{> ip_grants items = cidrs protocol = @../key ports = @key sg_id = ../../../sg_id vpc = ../../../vpc region = ../../../region direction = ../../../direction}}
               {{/if}}
               {{#if security_groups}}
                 <li class="list-group-item-text">EC2 security groups:</li>
-                {{> ec2_grants items = security_groups protocol = @../key ports = @key sg_id = ../../../sg_id}}
+                {{> ec2_grants items = security_groups protocol = @../key ports = @key sg_id = ../../sg_id vpc = ../../vpc region = ../../region }}
               {{/if}}
               </ul>
             {{/each}}
