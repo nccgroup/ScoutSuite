@@ -542,6 +542,25 @@ function list_findings(service, violation) {
     updateNavbar();
     hideAll();
     updateTitle(aws_info['services'][service]['violations'][violation]['description']);
+    var resource_type = aws_info['services'][service]['violations'][violation]['items'][0].split('.');
+    if (resource_type[1] != 'regions') {
+        resource_type = resource_type[1].toLowerCase();
+    } else if (resource_type[3] != 'vpcs') {
+        resource_type = resource_type[3].toLowerCase();
+    } else {
+        resource_type = resource_type[5].toLowerCase();
+    }
+    console.log('Resource type = ' + resource_type);
+    var script_id = aws_info['metadata'][service]['resources'][resource_type]['script'];
+
+    if (loaded_config_array.indexOf(script_id) < 0) {
+        setTimeout(function(){
+            var path = aws_info['metadata'][service]['resources'][resource_type]['path'];
+            var cols = aws_info['metadata'][service]['resources'][resource_type]['cols'];
+            list_generic(script_id, path, cols);
+            $('[id="please_wait.row"]').hide();
+        }, 50);
+    }    
     var new_array = {};
     for (i in aws_info['services'][service]['violations'][violation]['items']) {
         path = aws_info['services'][service]['violations'][violation]['items'][i];
