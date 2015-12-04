@@ -77,9 +77,10 @@ function load_region_filters(keyword, list) {
 // Display functions
 function hideAll() {
     $("[id$='.row']").hide();
-    $("dropdown\\.list").show();
     $("[id*='.list']").hide();
+    $("dropdown\\.list").show();
     $("[id*='.details']").hide();
+    $("[id*='.view']").hide();
 //    $("[id*='.filter-']").hide();
     updateNavbar();
 }
@@ -465,12 +466,15 @@ function list_generic(script_id, path, cols) {
     partial_array = script_id.split('.');
     title = partial_array[1] + ' ' + partial_array[partial_array.length-1];
     title = title.replace(/_/g, ' ');
-    title = title.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-    title = title.replace("Cloudtrail","CloudTrail").replace("Ec2","EC2").replace("Iam","IAM").replace("Rds","RDS").replace("Elb", "ELB").replace("Acl","ACL").replace("Violations", "Dashboard");
-    $("#section_title-h2").text(title);
+    updateTitle(title);
     window.scrollTo(0,0);
 }
 
+function updateTitle(title) {
+    title = title.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    title = title.replace("Cloudtrail","CloudTrail").replace("Ec2","EC2").replace("Iam","IAM").replace("Rds","RDS").replace("Elb", "ELB").replace("Acl","ACL").replace("Violations", "Dashboard");
+    $("#section_title-h2").text(title);
+}
 
 
 function locationHashChanged() {
@@ -516,39 +520,41 @@ function myBrowse(anchor) {
     window.scrollTo(0,0);
 }
 
-function browseTo(keyword, id) {
-    // Hide similar details
-    $("[id*='" + keyword + "-details-']").hide();
-    // Show the requested details
-    $("[id='" + keyword + "-details-" + id + "']").show();
-    // Scroll to the top
-    window.scrollTo(0,0);
-}
-
-
-
-function list_findings(service, finding_name) {
-    updateNavbar(service);
-//    hideAll();
-//    showEmptyRow(service);
-    $("#section_title-h2").text(aws_info['services'][service]['violations'][finding_name]['description']);
-    return
-    if (violations[finding]['macro_items'].length == violations[finding]['items'].length ) {
-        items = [];
-        dict  = {};
-        for (mi in violations[finding]['macro_items']) {
-            if (dict.hasOwnProperty(violations[finding]['macro_items'][mi])) {
-                continue;
-            }
-            items.push(violations[finding]['macro_items'][mi]);
-            dict[violations[finding]['macro_items'][mi]] = 1;
-        }
-    } else {
-        items = violations[finding]['items'];
-    }
+function foo(items) {
+    console.log('In foo with ');
+    console.log(items);
+    var new_array = {};
     for (item in items) {
-        showItem(keyword, items[item]);
+        showRowWithDetails('services.' + item);
+        path_array = item.split('.')
+        if (path_array.length > 1) {
+            path_array.pop();
+            new_array[path_array.join('.')] = 1;
+        }
     }
+    if (Object.keys(new_array).length > 0) {
+        console.log('Will call foo with ');
+        console.log(new_array);
+        foo(new_array);
+    }
+}
+function list_findings(service, violation) {
+    updateNavbar();
+    hideAll();
+    updateTitle(aws_info['services'][service]['violations'][violation]['description']);
+    var new_array = {};
+    for (i in aws_info['services'][service]['violations'][violation]['items']) {
+        path = aws_info['services'][service]['violations'][violation]['items'][i];
+        showRowWithDetails('services.' + path);
+        path_array = path.split('.');
+        path_array.pop();
+        var tmp = path_array.join('.');
+        console.log(tmp);
+        new_array[tmp] = 1;
+    }
+    console.log('Will call foo with ');
+    console.log(new_array);
+    foo(new_array);
     window.scrollTo(0,0);
 }
 
