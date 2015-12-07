@@ -3,7 +3,6 @@
       <script id="dashboard.partial" type="text/x-handlebars-template">
         <div class="row" id="services.{{service_name}}.violations.row">
           <div class="col-sm-12" id="services.{{service_name}}.violations.list">
-            <div class="container">
               {{#if violations}}
                 {{#grouped_each 3 violations}}
                   <div class="row">
@@ -25,7 +24,6 @@
                   </div>
                 {{/grouped_each}}
               {{/if}}
-            </div>
           </div>
         </div>
       </script>

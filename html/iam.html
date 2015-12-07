@@ -3,8 +3,6 @@
 <!-- IAM section -->
 <!----------------->
 
-<div class="row" id="services.iam.row">
-
   <!-- Template for IAM permissions -->
   <div class="row" id="iam_Permissions.row">
     <div id="iam_Permissions.list"></div>
@@ -127,22 +125,18 @@
   </div>
 
   <!-- Group list and details -->
-  <div class="row" id="services.iam.Groups.row">
-    <div class="col-sm-4">
-      <ul class="list-group" id="services.iam.Groups.list">
-        <script id="services.iam.Groups.list.template" type="text/x-handlebars-template">
-          {{> global_link service_name = 'iam' resource_type = 'Groups' resource_id_name = 'Name'}}
-        </script>
-      </ul>
+  <script id="services.iam.Groups.list.template" type="text/x-handlebars-template">
+    <div class="list-group" id="services.iam.Groups.list">
+      {{> global_link service_name = 'iam' resource_type = 'Groups' resource_id_name = 'Name'}}
     </div>
-    <div class="col-sm-8" id="services.iam.Groups.details">
-      <script id="services.iam.Groups.details.template" type="text/x-handlebars-template">
+  </script>
+  <script id="services.iam.Groups.details.template" type="text/x-handlebars-template">
+    <div id="services.iam.Groups.details">
       {{#each items}}
         {{> services.iam.Groups}}
       {{/each}}
-      </script>
     </div>
-  </div>
+  </script>
 
   <!-- Role list and details -->
   <div class="row" id="services.iam.Roles.row">
@@ -179,6 +173,4 @@
       </script>
     </div>
   </div>
-
-</div><!-- services.iam.row -->
 

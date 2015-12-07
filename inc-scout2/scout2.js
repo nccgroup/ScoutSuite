@@ -3,19 +3,30 @@ var loaded_config_array = new Array();
 
 // Generic load JSON function
 function load_aws_config_from_json(script_id, path, cols) {
+
+    // Use the path to access the list of items
     list = aws_info;
     path_array = path.split('.');   
     for (i in path_array) {
         list = list[path_array[i]];
     }
-    var id1 = script_id + '.list.template';
-    var id2 = script_id + '.list';
-    process_template(id1, id2, list);
-    if (cols >= 2) {
-        var id3 = script_id + '.details.template';
-        var id4 = script_id + '.details';
-        process_template(id3, id4, list);
+
+    // Update the DOM
+    if (cols == 1) {
+        // Single-column display
+        if (script_id == 'dropdown') {
+            container_id = script_id + '.list';
+        } else {
+            container_id = 'single-column';
+        }
+        process_template(script_id + '.list.template', container_id, list);
+    } else if (cols == 2) {
+        // Double-column display
+        process_template(script_id + '.list.template', 'double-column-left', list);
+        process_template(script_id + '.details.template', 'double-column-right', list);
     }
+
+    // Maintain the list of loaded data
     if (script_id == 'services.violations') {
         for (service in list) {
             loaded_config_array.push('services.' + service + '.violations');
@@ -23,20 +34,18 @@ function load_aws_config_from_json(script_id, path, cols) {
     } else {
         loaded_config_array.push(script_id);
     }
-    console.log('Loaded data:');
-    console.log(loaded_config_array);
 }
 
-function process_template(id1, id2, list) {
+// Compile Handlebars templates and update the DOM
+function process_template(id1, container_id, list) {
     console.log('Getting template script from ID = ' + id1);
     var template_to_compile = document.getElementById(id1).innerHTML;
     var compiled_template = Handlebars.compile(template_to_compile);
     console.log('Done compiling, starting processing...');
-    console.log('Setting inner HTML value of ID = ' + id2);
-    document.getElementById(id2).innerHTML += compiled_template({items: list});
+    console.log('Setting inner HTML value of ID = ' + container_id);
+    document.getElementById(container_id).innerHTML += compiled_template({items: list});
     console.log('Done processing template...');
 }
-
 
 // Highlight violations
 function highlight_violations(service) {
@@ -58,71 +67,23 @@ function highlight_item(id, level) {
     }
 }
 
-
-// Generic list filters
-function load_filters_from_json(list) {
-    var id1 = '#filter-list-template';
-    var id2 = '#filters-list';
-    var compiler = Handlebars.compile($(id1).html());
-    $(id2).append(compiler({items: list}));
-}
-function load_region_filters(keyword, list) {
-    var id1 = '#region-filter-list-template';
-    var id2 = '#region-filters-list';
-    var compiler = Handlebars.compile($(id1).html());
-    $(id2).append(compiler({items: list, keyword: keyword}));
-    $('[id="' + keyword  + '_region-filter-select_all"]').hide();
-}
-
-// Display functions
+// Hide all items Display functions
 function hideAll() {
     $("[id$='.row']").hide();
-    $("[id*='.list']").hide();
-    $("dropdown\\.list").show();
+    $("[id*='.list']").not("[id='dropdown.list']").hide();
     $("[id*='.details']").hide();
     $("[id*='.view']").hide();
-//    $("[id*='.filter-']").hide();
     updateNavbar();
 }
-function hideRowItems(keyword) {
-    $("[id*='" + keyword + "-list']").hide();
-    $("[id*='" + keyword + "-details']").hide();
-}
-function showEmptyRow(keyword) {
-    id = '[id*="' + prefix + '_region-"]';
-    $(id).show();
-    id = "#" + keyword + "s-row";
-    $(id).show();
-    hideRowItems(keyword);
-}
-function showItem(keyword, id) {
-    var id1 = '[id="' + keyword + '-list-' + id + '"]';
-    var id2 = '[id="' + keyword + '-details-' + id+ '"]';
-    $(id1).show();
-    $(id2).show();
-}
-function hideItem(keyword, id) {
-    var id1 = '[id="' + keyword + '-list-' + id + '"]';
-    var id2 = '[id="' + keyword + '-details-' + id+ '"]';
-    $(id1).hide();
-    $(id2).hide();
-}
-function showRow(id) {
+
+// Show row and details
+function showRowWithDetails(id) {
     showElement(id + '.row');
-}
-function showRowWithDetails(keyword) {
-    showRow(keyword);
-    showAll(keyword);
-}
-function showAllNew(path) {
-    $("[id^='" + path + "']").show();
-}
-function showAll(id) {
     showElement(id + '.list');
     showElement(id + '.details');
     showElement(id + '.view');
-    /* Maybe some filtering stuff too... */
-    return
+}
+/*
     prefix = keyword.split('_')[0];
     $("[id*='" + keyword + "-list']").show();
     $("[id*='" + keyword + "-details']").show();
@@ -132,23 +93,28 @@ function showAll(id) {
     $("[id*='" + prefix + "_region-']").show();
     $("[id*='" + prefix + "_region-filtericon']").removeClass('glyphicon-unchecked');
     $("[id*='" + prefix + "_region-filtericon']").addClass('glyphicon-check');
-}
+*/
+
+// Show a DOM element given its ID
 function showElement(id) {
     var element = document.getElementById(id);
     if (element) {
         element.style.display = 'block';
     }
 }
+
 function toggleDetails(keyword, item) {
     var id = '#' + keyword + '-' + item;
     $(id).toggle();
 }
 
+// Update the navigation bar
 function updateNavbar(service) {
     $('[id*="dropdown"]').removeClass('active-dropdown');
     $('#' + service + '_dropdown').addClass('active-dropdown');
     $('[id*="dropdown"]').show();
 }
+
 function toggleVisibility(id) {
     id1 = '#' + id;
     $(id1).toggle()
@@ -453,21 +419,40 @@ function list_generic(script_id, path, cols) {
     }
     /* Display */
     updateNavbar(service);
+/*
     if (script_id.endsWith('violations')) {
         showRowWithDetails('services.violations');
     }
+*/
+    hideAll();
+    showAllResources(script_id);
+
+/*
     showRowWithDetails(script_id);
     for (var i=1;i<=path_array.length;i+=2) {
         var id=path_array.slice(0,i+1).join('.');
         console.log('ID = ' + id);
         showRowWithDetails(id);
     }
+*/
+
     /* Update Title */
     partial_array = script_id.split('.');
     title = partial_array[1] + ' ' + partial_array[partial_array.length-1];
     title = title.replace(/_/g, ' ');
     updateTitle(title);
     window.scrollTo(0,0);
+}
+
+// 
+function showAllResources(script_id) {
+    var path_array = script_id.split('.');
+    var selector = "[id^='" + path_array.shift() + "." + path_array.shift() + ".']"
+    for (p in path_array) {
+        console.log('Selector = ' + selector);
+        $(selector).show();
+        selector = selector + "[id*='." + path_array[p] + "']";
+    }
 }
 
 function updateTitle(title) {
@@ -483,6 +468,27 @@ function locationHashChanged() {
 window.onhashchange = locationHashChanged;
 
 function myBrowse(anchor) {
+    hideAll();
+    // Lazy Loading
+//    var path = anchor.replace('#', '').split('*').split('.id.')[0];
+    var path = anchor.replace('#', '').split('.id.')[0];
+    var path_array = anchor.replace('#', '').split('.');
+    var service = path_array[1];
+    var resource_type = path_array[path_array.length-1];
+    updateTitle(resource_type);
+    console.log('Service = ' + service);
+    console.log('Resource = ' + resource_type);
+    var cols = aws_info['metadata'][service]['resources'][resource_type.toLowerCase()]['cols'];
+    load_aws_config_from_json(path, path, cols);
+
+    // DOM update
+    var id = anchor.replace('#', '');
+    $('div').filter(function() {
+        return this.id.match(id)
+    }).show();
+
+    return
+
     if (anchor.indexOf('*') > 0) {
         /* "Show All" */
         parts = anchor.replace('#', '').split('*');

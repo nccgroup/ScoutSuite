@@ -1,12 +1,19 @@
 
     <!-- Generic left-menu link partial for region-then-resource -->
     <script id="global_link.partial" type="text/x-handlebars-template">
-      <li class="list-group-item"><a href="#services.{{service_name}}.{{resource_type}}">Show all <span class="badge pull-right">{{items.length}}</span></a></li>
-      {{#each items}}
-        <li class="list-group-item" id="services.{{../service_name}}.{{../resource_type}}.{{Name}}{{name}}.list">
-          <a href="#services.{{../service_name}}.{{../resource_type}}.{{Name}}{{name}}.view">{{Name}}{{name}}</a>
-        </li>
-      {{/each}}
+      <div id="services.{{service_name}}.{{resource_type}}.list">
+        <div class="list-group" >
+          <div class="list-group-item">
+            <a href="#services.{{service_name}}.{{resource_type}}">Show all <span class="badge pull-right">{{items.length}}</span></a>
+          </div>
+        </div>
+        <div class="list-group">
+        {{#each items}}
+          <div class="list-group-item" id="services.{{../service_name}}.{{../resource_type}}.{{Name}}{{name}}.list">
+            <a href="#services.{{../service_name}}.{{../resource_type}}.{{Name}}{{name}}">{{Name}}{{name}}</a>
+          </div>
+        {{/each}}
+      </div>      
     </script>
     <script>
       Handlebars.registerPartial("global_link", $("#global_link\\.partial").html());
