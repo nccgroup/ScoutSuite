@@ -20,18 +20,18 @@ def analyze_iam_config(iam_info, aws_account_id, force_write):
     analyze_config(iam_finding_dictionary, iam_filter_dictionary, iam_info, 'IAM', force_write)
 
 def get_account_password_policy(iam_client, iam_info):
-    iam_info['PasswordPolicy'] = iam_client.get_account_password_policy()['PasswordPolicy']
-    if 'PasswordReusePrevention' not in iam_info['PasswordPolicy']:
-        iam_info['PasswordPolicy']['PasswordReusePrevention'] = False
+    iam_info['password_policy'] = iam_client.get_account_password_policy()['PasswordPolicy']
+    if 'PasswordReusePrevention' not in iam_info['password_policy']:
+        iam_info['password_policy']['PasswordReusePrevention'] = False
     else:
-        iam_info['PasswordPolicy']['PreviousPasswordPrevented'] = iam_info['PasswordPolicy']['PasswordReusePrevention']
-        iam_info['PasswordPolicy']['PasswordReusePrevention'] = True
+        iam_info['password_policy']['PreviousPasswordPrevented'] = iam_info['password_policy']['PasswordReusePrevention']
+        iam_info['password_policy']['PasswordReusePrevention'] = True
     # There is a bug in the API: ExpirePasswords always returns false
-    if 'MaxPasswordAge' in iam_info['PasswordPolicy']:
-        iam_info['PasswordPolicy']['ExpirePasswords'] = True
+    if 'MaxPasswordAge' in iam_info['password_policy']:
+        iam_info['password_policy']['ExpirePasswords'] = True
 
 def get_aws_account_id(iam_info):
-    for resources in ['Groups', 'Roles', 'Users']:
+    for resources in ['groups', 'roles', 'users']:
         if resources in iam_info:
             for resource in iam_info[resources]:
                 try:
@@ -41,9 +41,9 @@ def get_aws_account_id(iam_info):
 
 def get_groups_info(iam_client, iam_info):
     groups = handle_truncated_response(iam_client.list_groups, {}, 'Marker', ['Groups'])
-    iam_info['GroupsCount'] = len(groups)
+    iam_info['groups_count'] = len(groups['Groups'])
     thread_work(groups['Groups'], get_group_info, params = {'iam_client': iam_client, 'iam_info': iam_info}, num_threads = 10)
-    show_status(iam_info, 'Groups')
+    show_status(iam_info, 'groups')
 
 def get_group_info(q, params):
     iam_client = params['iam_client']
@@ -52,14 +52,14 @@ def get_group_info(q, params):
         try:
             group = q.get()
             # When resuming upon throttling error, skip if already fetched
-            if group['GroupName'] in iam_info['Groups']:
+            if group['GroupName'] in iam_info['groups']:
                 continue
-            group['Id'] = group.pop('GroupId')
-            group['Name'] = group.pop('GroupName')
-            group['Users'] = get_group_users(iam_client, group['Name']);
-            group['Policies'] = get_inline_policies(iam_client, iam_info, 'group', group['Name'])
-            iam_info['Groups'][group['Name']] = group
-            show_status(iam_info, 'Groups', False)
+            group['id'] = group.pop('GroupId')
+            group['name'] = group.pop('GroupName')
+            group['users'] = get_group_users(iam_client, group['name']);
+            group['policies'] = get_inline_policies(iam_client, iam_info, 'group', group['name'])
+            iam_info['groups'][group['name']] = group
+            show_status(iam_info, 'groups', False)
         except Exception as e:
             printException(e)
             pass
@@ -74,10 +74,10 @@ def get_group_users(iam_client, group_name):
     return users
 
 def get_iam_info(key_id, secret, session_token, service_config):
-    manage_dictionary(service_config, 'Groups', {})
+    manage_dictionary(service_config, 'groups', {})
     manage_dictionary(service_config, 'Permissions', {})
-    manage_dictionary(service_config, 'Roles', {})
-    manage_dictionary(service_config, 'Users', {})
+    manage_dictionary(service_config, 'roles', {})
+    manage_dictionary(service_config, 'users', {})
     iam_client = connect_iam(key_id, secret, session_token)
     # Generate the report early so that download doesn't fail with "ReportInProgress".
     try:
@@ -139,9 +139,9 @@ def parse_resource(permission, resource_string, resource, effect, keyword, name,
     manage_dictionary(permission[keyword][effect][name], resource_string, {})
     manage_dictionary(permission[keyword][effect][name][resource_string], resource, {})
     if is_managed_policy:
-        policy_type = 'ManagedPolicies'
+        policy_type = 'managed_policies'
     else:
-        policy_type = 'InlinePolicies'
+        policy_type = 'inline_policies'
     manage_dictionary(permission[keyword][effect][name][resource_string][resource], policy_type, {})
     manage_dictionary(permission[keyword][effect][name][resource_string][resource][policy_type], policy_name, {})
     permission[keyword][effect][name][resource_string][resource][policy_type][policy_name]['condition'] = condition
@@ -151,11 +151,11 @@ def get_managed_policies(iam_client, iam_info):
     params = {}
     params['OnlyAttached'] = True
     policies = handle_truncated_response(iam_client.list_policies, params, 'Marker', ['Policies'])
-    manage_dictionary(iam_info, 'ManagedPolicies', {})
-    iam_info['ManagedPoliciesCount'] = len(policies['Policies'])
-    show_status(iam_info, 'ManagedPolicies', False)
+    manage_dictionary(iam_info, 'managed_policies', {})
+    iam_info['managed_policies_count'] = len(policies['Policies'])
+    show_status(iam_info, 'managed_policies', False)
     thread_work(policies['Policies'], get_managed_policy, params = {'iam_client': iam_client, 'iam_info': iam_info}, num_threads = 10)
-    show_status(iam_info, 'ManagedPolicies')
+    show_status(iam_info, 'managed_policies')
 
 def get_managed_policy(q, params):
     iam_client = params['iam_client']
@@ -163,23 +163,23 @@ def get_managed_policy(q, params):
     while True:
         try:
             policy = q.get()
-            manage_dictionary(iam_info['ManagedPolicies'], policy['Arn'], {})
-            iam_info['ManagedPolicies'][policy['Arn']]['PolicyName'] = policy['PolicyName']
-            iam_info['ManagedPolicies'][policy['Arn']]['PolicyId'] = policy['PolicyId']
+            manage_dictionary(iam_info['managed_policies'], policy['Arn'], {})
+            iam_info['managed_policies'][policy['Arn']]['name'] = policy['PolicyName']
+            iam_info['managed_policies'][policy['Arn']]['id'] = policy['PolicyId']
             # Download version and document
             policy_version = iam_client.get_policy_version(PolicyArn = policy['Arn'], VersionId = policy['DefaultVersionId'])
             policy_version = policy_version['PolicyVersion']
-            iam_info['ManagedPolicies'][policy['Arn']]['PolicyDocument'] = policy_version['Document']
+            iam_info['managed_policies'][policy['Arn']]['PolicyDocument'] = policy_version['Document']
             # Get attached IAM entities
             attached_entities = handle_truncated_response(iam_client.list_entities_for_policy, {'PolicyArn': policy['Arn']}, 'Marker', ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'])
             for entity_type in attached_entities:
-                type_field = entity_type.replace('Policy', '').title()
+                type_field = entity_type.replace('Policy', '').lower()
                 for entity in attached_entities[entity_type]:
                     name_field = entity_type.replace('Policy', '')[:-1] + 'Name'
-                    manage_dictionary(iam_info[type_field][entity[name_field]], 'ManagedPolicies', [])
-                    iam_info[type_field][entity[name_field]]['ManagedPolicies'].append(policy['Arn'])
+                    manage_dictionary(iam_info[type_field][entity[name_field]], 'managed_policies', [])
+                    iam_info[type_field][entity[name_field]]['managed_policies'].append(policy['Arn'])
                     get_permissions(policy_version['Document'], iam_info['Permissions'], type_field, entity[name_field], policy['Arn'], True)
-            show_status(iam_info, 'ManagedPolicies', False)
+            show_status(iam_info, 'managed_policies', False)
         except Exception as e:
             printException(e)
             pass
@@ -210,9 +210,9 @@ def get_inline_policies(iam_client, iam_info, keyword, name):
 
 def get_roles_info(iam_client, iam_info):
     roles = handle_truncated_response(iam_client.list_roles, {}, 'Marker', ['Roles'])
-    iam_info['RolesCount'] = len(roles)
+    iam_info['roles_count'] = len(roles['Roles'])
     thread_work(roles['Roles'], get_role_info, params = {'iam_client': iam_client, 'iam_info': iam_info}, num_threads = 10)
-    show_status(iam_info, 'Roles')
+    show_status(iam_info, 'roles')
 
 def get_role_info(q, params):
     iam_client = params['iam_client']
@@ -221,19 +221,19 @@ def get_role_info(q, params):
         try:
             role = q.get()
             # When resuming upon throttling error, skip if already fetched
-            if role['RoleName'] in iam_info['Roles']:
+            if role['RoleName'] in iam_info['roles']:
                 continue
-            role['Id'] = role.pop('RoleId')
-            role['Name'] = role.pop('RoleName')
-            role['Policies'] = get_inline_policies(iam_client, iam_info, 'role', role['Name'])
-            profiles = handle_truncated_response(iam_client.list_instance_profiles_for_role, {'RoleName': role['Name']}, 'Marker', ['InstanceProfiles'])
+            role['id'] = role.pop('RoleId')
+            role['name'] = role.pop('RoleName')
+            role['policies'] = get_inline_policies(iam_client, iam_info, 'role', role['name'])
+            profiles = handle_truncated_response(iam_client.list_instance_profiles_for_role, {'RoleName': role['name']}, 'Marker', ['InstanceProfiles'])
             manage_dictionary(role, 'InstanceProfiles', {})
             for profile in profiles['InstanceProfiles']:
                 manage_dictionary(role['InstanceProfiles'], profile['Arn'], {})
-                role['InstanceProfiles'][profile['Arn']]['Id'] = profile['InstanceProfileId']
-                role['InstanceProfiles'][profile['Arn']]['Name'] = profile['InstanceProfileName']
-            iam_info['Roles'][role['Name']] = role
-            show_status(iam_info, 'Roles', False)
+                role['InstanceProfiles'][profile['Arn']]['id'] = profile['InstanceProfileId']
+                role['InstanceProfiles'][profile['Arn']]['name'] = profile['InstanceProfileName']
+            iam_info['roles'][role['name']] = role
+            show_status(iam_info, 'roles', False)
         except Exception as e:
             printException(e)
             pass
@@ -251,16 +251,16 @@ def get_credential_report(iam_client, iam_info):
             manage_dictionary(iam_report, values[0], {})
             for key, value in zip(keys, values):
                 iam_report[values[0]][key] = value
-        iam_info['CredentialReport'] = iam_report
+        iam_info['credential_report'] = iam_report
     except Exception as e:
         printError('Failed to generate/download a credential report.')
         printException(e)
 
 def get_users_info(iam_client, iam_info):
     users = handle_truncated_response(iam_client.list_users, {}, 'Marker', ['Users'])
-    iam_info['UsersCount'] = len(users['Users'])
+    iam_info['users_count'] = len(users['Users'])
     thread_work(users['Users'], get_user_info, params = {'iam_client': iam_client, 'iam_info': iam_info}, num_threads = 10)
-    show_status(iam_info, 'Users')
+    show_status(iam_info, 'users')
 
 def get_user_info(q, params):
     iam_client = params['iam_client']
@@ -269,22 +269,25 @@ def get_user_info(q, params):
         try:
             user = q.get()
             # When resuming upon throttling error, skip if already fetched
-            if user['UserName'] in iam_info['Users']:
+            if user['UserName'] in iam_info['users']:
                 continue
-            user['Id'] = user.pop('UserId')
-            user['Name'] = user.pop('UserName')
-            policies = get_inline_policies(iam_client, iam_info, 'user', user['Name'])
-            if policies:
-                user['Policies'] = policies
-            user['Groups'] = handle_truncated_response(iam_client.list_groups_for_user, {'UserName': user['Name']}, 'Marker', ['Groups'])['Groups']
+            user['id'] = user.pop('UserId')
+            user['name'] = user.pop('UserName')
+            policies = get_inline_policies(iam_client, iam_info, 'user', user['name'])
+            if len(policies):
+                user['policies'] = policies
+            user['groups'] = []
+            groups = handle_truncated_response(iam_client.list_groups_for_user, {'UserName': user['name']}, 'Marker', ['Groups'])['Groups']
+            for group in groups:
+                user['groups'].append(group['GroupName'])
             try:
-                user['LoginProfile'] = iam_client.get_login_profile(UserName = user['Name'])['LoginProfile']
+                user['LoginProfile'] = iam_client.get_login_profile(UserName = user['name'])['LoginProfile']
             except Exception as e:
                 pass
-            user['AccessKeys'] = iam_client.list_access_keys(UserName = user['Name'])['AccessKeyMetadata']
-            user['MFADevices'] = iam_client.list_mfa_devices(UserName = user['Name'])['MFADevices']
-            iam_info['Users'][user['Name']] = user
-            show_status(iam_info, 'Users', False)
+            user['AccessKeys'] = iam_client.list_access_keys(UserName = user['name'])['AccessKeyMetadata']
+            user['MFADevices'] = iam_client.list_mfa_devices(UserName = user['name'])['MFADevices']
+            iam_info['users'][user['name']] = user
+            show_status(iam_info, 'users', False)
         except Exception as e:
             printException(e)
             pass
@@ -293,7 +296,7 @@ def get_user_info(q, params):
 
 def show_status(iam_info, entities, newline = True):
     current = len(iam_info[entities])
-    total = iam_info[entities + 'Count']
+    total = iam_info[entities + '_count']
     sys.stdout.write("\r%d/%d" % (current, total))
     sys.stdout.flush()
     if newline:

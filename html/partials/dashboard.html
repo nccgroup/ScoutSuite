@@ -1,6 +1,6 @@
 
       <!-- Dasboard partial -->
-      <script id="dashboard.partial" type="text/x-handlebars-template">
+      <script id="services.id.violations.partial" type="text/x-handlebars-template">
         <div class="row" id="services.{{service_name}}.violations.row">
           <div class="col-sm-12" id="services.{{service_name}}.violations.list">
               {{#if violations}}
@@ -28,6 +28,6 @@
         </div>
       </script>
       <script>
-        Handlebars.registerPartial("dashboard", $("#dashboard\\.partial").html());
+        Handlebars.registerPartial("dashboard", $("#services\\.id\\.violations\\.partial").html());
       </script>
 

@@ -201,10 +201,10 @@ def match_instances_and_roles(ec2_config, iam_config):
                     if arn:
                         manage_dictionary(role_instances, arn, [])
                         role_instances[arn].append(i)
-    for role in iam_config['Roles']:
-        for arn in iam_config['Roles'][role]['InstanceProfiles']:
+    for role in iam_config['roles']:
+        for arn in iam_config['roles'][role]['InstanceProfiles']:
             if arn in role_instances:
-                iam_config['Roles'][role]['InstanceProfiles'][arn]['instances'] = role_instances[arn]
+                iam_config['roles'][role]['InstanceProfiles'][arn]['instances'] = role_instances[arn]
 
 def process_entities(config, finding, entity_path):
     if len(entity_path) == 1:
@@ -243,20 +243,22 @@ def process_finding(config, finding):
 def create_report_metadata(aws_config, services):
     # Load resources and summaries metadata from file
     with open('dropdown.json', 'rt') as f:
-        aws_config['metadata'] = json.load(f)
-    # Update counts here...
+        aws_config['old_metadata'] = json.load(f)
+    with open('metadata.json', 'rt') as f:
+        aws_config['metadata'] = json.load(f)    
     for service in aws_config['metadata']:
         for resource in aws_config['metadata'][service]['resources']:
+            # full_path = path if needed
             if not 'full_path' in aws_config['metadata'][service]['resources'][resource]:
                 aws_config['metadata'][service]['resources'][resource]['full_path'] = aws_config['metadata'][service]['resources'][resource]['path']
-            # Script is the full path minus "id"
+            # Script is the full path minus "id" (TODO: change that)
             if not 'script' in aws_config['metadata'][service]['resources'][resource]:
                 aws_config['metadata'][service]['resources'][resource]['script'] = '.'.join([x for x in aws_config['metadata'][service]['resources'][resource]['full_path'].split('.') if x != 'id'])
+            # Update counts here
             config = {'conditions': [], 'condition_operator': 'and'}
             recurse(aws_config, aws_config, aws_config['metadata'][service]['resources'][resource]['full_path'].split('.'), [], config)
-
-# This is broken
-#            aws_config['metadata'][service]['resources'][resource]['count'] = config['checked_items'] if 'checked_items' in config else 0
+            # This is broken
+            aws_config['metadata'][service]['resources'][resource]['count'] = config['checked_items'] if 'checked_items' in config else 0
 
 
 ########################################
@@ -357,6 +359,7 @@ def get_value_at(all_info, current_path, key, to_string = False):
             target_path = []
             for i, key in enumerate(keys):
                 if key == 'id':
+#                    print('%s vs %s' % (len(current_path), i))
                     target_path.append(current_path[i])
                 else:
                     target_path.append(key)
@@ -417,7 +420,9 @@ def create_scout_report(environment_name, aws_config, force_write, debug):
     for filename in glob.glob('html/partials/*'):
         with open('%s' % filename, 'rt') as f:
             contents = contents + f.read()
-    for service in aws_config['services']:
+    services = [service for service in aws_config['services']]
+    services.append('global')
+    for service in services: # aws_config['services']:
         with open('html/%s.html' % service, 'rt') as f:
             contents = contents + f.read()
     if environment_name != 'default':

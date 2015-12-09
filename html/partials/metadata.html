@@ -1,0 +1,31 @@
+
+<!-- Top menu -->
+<script id="metadata.list.template" type="text/x-handlebars-template">
+  {{#each items}}
+    <li class="dropdown">
+      <a href="javascript:show_{{@key}}()" class="dropdown-toggle" data-toggle="dropdown"><span id="cloudtrail_dropdown">{{make_title @key}}</span><b class="caret"></b></a>
+      <ul class="dropdown-menu">
+        <li class="dropdown-header">Summaries</li>
+        <li><a href="#services.{{@key}}.violations">Dashboard</a></li>
+        {{#each summaries}}
+          <li><a href="#{{path}}">{{make_title @key}}</a></li>
+        {{/each}}
+        <li class="divider"></li>
+        <li class="dropdown-header">{{make_title @key}} config</li>
+        {{#each resources}}
+          <li><a href="#{{full_path}}">{{make_title @key}} ({{count}})</a></li>
+        {{/each}}
+        <li class="divider"></li>
+        <li class="dropdown-header">Security risks</li>
+        {{#each violations}}
+          {{#if flagged_items}}
+            <li><a href="javascript:list_findings('{{@../key}}', '{{@key}}')">
+              {{@key}} ({{flagged_items}})
+            </a></li>
+          {{/if}}
+        {{/each}}
+      </ul>
+    </li>
+  {{/each}}
+</script>
+

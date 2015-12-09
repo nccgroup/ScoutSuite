@@ -21,12 +21,12 @@
       <div class="row" id="services.redshift.regions.parameter_groups.row">
         <div class="col-sm-4" id="services.redshift.regions.parameter_groups.list">
           <script id="services.redshift.regions.parameter_groups.list.template" type="text/x-handlebars-template">
-            {{> per_region_link service_name = 'redshift' resource_type = 'parameter_groups' regions = items}}
+            {{> left_menu_for_region service_name = 'redshift' resource_type = 'parameter_groups' regions = items}}
           </script>
         </div>
         <div class="col-sm-8" id="services.redshift.regions.parameter_groups.details">
           <script id="services.redshift.regions.parameter_groups.details.template" type="text/x-handlebars-template">
-            {{> per_region service_name = 'redshift' resource_type = 'parameter_groups' regions = items partial_name = 'services.redshift.regions.parameter_groups'}}
+            {{> details_for_region service_name = 'redshift' resource_type = 'parameter_groups' regions = items partial_name = 'services.redshift.regions.parameter_groups'}}
           </script>
         </div>
       </div>

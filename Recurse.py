@@ -37,7 +37,7 @@ def main(cmd_args):
 
         # Load arguments from config if specified
         if len(cmd_args.config):
-            rule_metadata = {'filename': cmd_args.config[0], 'enabled': True}
+            rule_metadata = {'filename': cmd_args.config[0], 'enabled': True, 'args': cmd_args.config_args}
 #def load_config_from_json(rule_metadata, environment_name, ip_ranges):
 #            config = load_config_from_json(cmd_args.config[0], environment_name, cmd_args.ip_ranges, cmd_args.config_args)
             config = load_config_from_json(rule_metadata, environment_name, cmd_args.ip_ranges)
@@ -67,17 +67,19 @@ def main(cmd_args):
         resources = recurse(aws_config['services'], aws_config['services'], target_path, current_path, config)
 
         # Do a print here ...
-        print json.dumps(resources, indent=4)
+
         if 'listing' in config:
           for resource in resources:
             output = ''
-            current_path = resource.split('/')
+            current_path = resource.split('.')
             for key in config['listing']['keys']:
                 if not output:
                     output = get_value_at(aws_config['services'], current_path, key, True)
                 else:
                     output = output + ', ' + get_value_at(aws_config['services'], current_path, key, True)
             print output
+        else:
+            print json.dumps(resources, indent=4)
 
 
 #            service = entity.pop(0)

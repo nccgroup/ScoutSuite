@@ -2,38 +2,56 @@
 var loaded_config_array = new Array();
 
 // Generic load JSON function
-function load_aws_config_from_json(script_id, path, cols) {
+function load_aws_config_from_json(script_id, cols) {
 
-    // Use the path to access the list of items
+    // Abort if data was previously loaded
+    if (loaded_config_array.indexOf(script_id) > 0) {
+        // When the path does not contain .id.
+        return
+    }
+    path_array = script_id.split('.');
+    for (i=3; i<path_array.length; i=i+2) {
+        console.log('P[' + i + ']: ' + path_array[i]);
+        path_array[i] = 'id';
+    }
+    fixed_path = path_array.join('.');
+    if (loaded_config_array.indexOf(fixed_path) > 0) {
+        // When the loaded path contains id but browsed-to path contains a specific value
+        return
+    }
+    path_array[1] = 'id';
+    fixed_path = path_array.join('.');
+    if (loaded_config_array.indexOf(fixed_path) > 0) {
+        // Special case for services.id.violations
+        return
+    }
+
+    // Build the list based on the path, stopping at the first .id. value
     list = aws_info;
-    path_array = path.split('.');   
+    path_array = script_id.split('.id.')[0].split('.');
+    console.log('Item will be at ');
+    console.log(path_array);
     for (i in path_array) {
         list = list[path_array[i]];
     }
 
     // Update the DOM
-    if (cols == 1) {
+    if (cols == 0) {
+        // Metadata
+        process_template(script_id + '.list.template', script_id + '.list', list);
+    } else if (cols == 1) {
         // Single-column display
-        if (script_id == 'dropdown') {
-            container_id = script_id + '.list';
-        } else {
-            container_id = 'single-column';
-        }
-        process_template(script_id + '.list.template', container_id, list);
+        process_template(script_id + '.list.template', 'single-column', list);
     } else if (cols == 2) {
+        console.log('foo');
         // Double-column display
         process_template(script_id + '.list.template', 'double-column-left', list);
         process_template(script_id + '.details.template', 'double-column-right', list);
     }
 
-    // Maintain the list of loaded data
-    if (script_id == 'services.violations') {
-        for (service in list) {
-            loaded_config_array.push('services.' + service + '.violations');
-        }
-    } else {
-        loaded_config_array.push(script_id);
-    }
+    // Update the list of loaded data
+    loaded_config_array.push(script_id);
+    console.log(loaded_config_array);
 }
 
 // Compile Handlebars templates and update the DOM
@@ -70,7 +88,7 @@ function highlight_item(id, level) {
 // Hide all items Display functions
 function hideAll() {
     $("[id$='.row']").hide();
-    $("[id*='.list']").not("[id='dropdown.list']").hide();
+    $("[id*='.list']").not("[id='metadata.list']").hide();
     $("[id*='.details']").hide();
     $("[id*='.view']").hide();
     updateNavbar();
@@ -376,13 +394,29 @@ function showRegion(service_name, region_name) {
 
 // Set up dashboards and dropdown menus
 function load_dashboards() {
-    load_aws_config_from_json('about_run', 'last_run', 1);
+//    load_aws_config_from_json('about_run', 'last_run', 1);
     load_aws_config_from_json('services.violations', 'services', 1);
     load_aws_config_from_json('dropdown', 'metadata', 1);
     show_main_dashboard();
 }
 
-
+function load_metadata() {
+    load_aws_config_from_json('last_run', 1);
+    load_aws_config_from_json('metadata', 0);
+    load_aws_config_from_json('services.id.violations', 1);
+    show_main_dashboard();
+    for (service in aws_info['metadata']) {
+    if (service == 'ec2') {
+        for (section in aws_info['metadata'][service]) {
+        if (section == 'resources') {
+            for (resource_type in aws_info['metadata'][service][section]) {
+                add_templates(service, resource_type, aws_info['metadata'][service][section][resource_type]['path'], aws_info['metadata'][service][section][resource_type]['cols']);
+            }
+        }
+        }
+    }
+    }
+}
 
 ////////////////////////
 // Browsing functions //
@@ -396,7 +430,7 @@ function about() {
 
 function show_main_dashboard() {
     hideAll()
-    showRowWithDetails('about_run');
+    showRowWithDetails('last_run');
     $('#section_title-h2').text('');
 }
 
@@ -456,7 +490,7 @@ function showAllResources(script_id) {
 }
 
 function updateTitle(title) {
-    title = title.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    title = title.replace('_', ' ').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     title = title.replace("Cloudtrail","CloudTrail").replace("Ec2","EC2").replace("Iam","IAM").replace("Rds","RDS").replace("Elb", "ELB").replace("Acl","ACL").replace("Violations", "Dashboard");
     $("#section_title-h2").text(title);
 }
@@ -467,26 +501,49 @@ function locationHashChanged() {
 }
 window.onhashchange = locationHashChanged;
 
+var old_anchor = ''
 function myBrowse(anchor) {
-    hideAll();
-    // Lazy Loading
+    var old_path = old_anchor.replace('#', '').split('.id.')[0]
+    var new_path = anchor.replace('#', '').split('.id.')[0];
+    console.log('Old path = ' + old_path);
+    console.log('New path = ' + new_path);
+    // If we're hiding part of what's already there...
+    if (old_path != '' && new_path.startsWith(old_path)) {
+        $("[id^='" + old_path + "']").filter("[id$='.view']").hide();
+        $("[id^='" + new_path + "']").show();
+    } else {
+        old_anchor = anchor;
+        hideAll();
+        // Lazy Loading
 //    var path = anchor.replace('#', '').split('*').split('.id.')[0];
-    var path = anchor.replace('#', '').split('.id.')[0];
-    var path_array = anchor.replace('#', '').split('.');
-    var service = path_array[1];
-    var resource_type = path_array[path_array.length-1];
-    updateTitle(resource_type);
-    console.log('Service = ' + service);
-    console.log('Resource = ' + resource_type);
-    var cols = aws_info['metadata'][service]['resources'][resource_type.toLowerCase()]['cols'];
-    load_aws_config_from_json(path, path, cols);
+        var path = anchor.replace('#', '');
+        var path_array = path.split('.');
+        var service = path_array[1];
+        var resource_type = path_array[path_array.length-1];
+        var head = path.split('.id.')[0];
 
-    // DOM update
-    var id = anchor.replace('#', '');
-    $('div').filter(function() {
-        return this.id.match(id)
-    }).show();
+//        var path = anchor.replace('#', '').split('.id.')[0];
 
+        updateTitle(resource_type);
+        console.log('Service = ' + service);
+        console.log('Resource = ' + resource_type);
+        if (resource_type in aws_info['metadata'][service]['resources']) {
+            var cols = aws_info['metadata'][service]['resources'][resource_type]['cols'];
+        } else {
+            var cols = 1;
+        }
+        load_aws_config_from_json(path, cols);
+
+        // DOM update
+        var id = anchor.replace('#', '');
+        $('div').filter(function() {
+            return this.id.match(id)
+        }).show();
+
+    }
+
+    // Scroll to the top
+    window.scrollTo(0,0);
     return
 
     if (anchor.indexOf('*') > 0) {
@@ -630,6 +687,41 @@ var make_title = function(title) {
 
 var policy_friendly_name = function(arn) {
     return arn.split(':policy/').pop();
+}
+
+
+var add_templates = function(service, resource_type, path, cols) {
+    add_template(service, resource_type, path, 'details');
+    if (cols > 1) {
+        add_template(service, resource_type, path, 'list');
+    }
+}
+
+var add_template = function(service, resource_type, path, suffix) {
+    var template = document.createElement("script");
+    template.type = "text/x-handlebars-template";
+    template.id = path + "." + suffix + ".template";
+    if (suffix == 'list') {
+        if (path.indexOf('.vpcs.id.') > 0) {
+            partial_name = 'left_menu_for_vpc';
+        } else if (path.indexOf('.regions.id.') > 0) {
+            partial_name = 'left_menu_for_region';
+        } else {
+            console.log('Error');
+        }
+    } else if (suffix == 'details') {
+        if (path.indexOf('.vpcs.id.') > 0) {
+            partial_name = 'details_for_vpc';
+        } else if (path.indexOf('.regions.id.') > 0) {
+            partial_name = 'details_for_region';
+        } else {
+            console.log('Error');
+        }
+    }
+    template.innerHTML = "{{> " + partial_name + " service_name = '" + service + "' resource_type = '" + resource_type + "' partial_name = '" + path + "'}}";
+    $('body').append(template);
+    console.log('Appended to body:')
+    console.log(template)
 }
 
 

@@ -1,6 +1,6 @@
 
     <!-- EC2 VPC partial -->
-    <script id="services.ec2.regions.vpcs.partial" type="text/x-handlebars-template">
+    <script id="services.ec2.regions.id.vpcs.partial" type="text/x-handlebars-template">
       <div class="list-group" id="services.ec2.regions.{{region}}.vpcs.{{id}}.view">
         <div class="list-group-item active">
           <h4 class="list-group-item-heading">{{Name}}</h4>
@@ -48,6 +48,6 @@
       </div>
     </script>
     <script>
-      Handlebars.registerPartial("services.ec2.regions.vpcs", $("#services\\.ec2\\.regions\\.vpcs\\.partial").html());
+      Handlebars.registerPartial("services.ec2.regions.id.vpcs", $("#services\\.ec2\\.regions\\.id\\.vpcs\\.partial").html());
     </script>
 

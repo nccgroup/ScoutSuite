@@ -1,6 +1,6 @@
 
     <!-- EC2 instance partial -->
-    <script id="services.ec2.regions.vpcs.instances.partial" type="text/x-handlebars-template">
+    <script id="services.ec2.regions.id.vpcs.id.instances.partial" type="text/x-handlebars-template">
       <div class="list-group" id="services.ec2.regions.{{region}}.vpcs.{{vpc}}.instances.{{InstanceId}}.view">
         <div class="list-group-item active">
           <h4 class="list-group-item-heading">{{Name}}</h4>
@@ -47,6 +47,6 @@
       </div>
     </script>
     <script>
-      Handlebars.registerPartial("services.ec2.regions.vpcs.instances", $("#services\\.ec2\\.regions\\.vpcs\\.instances\\.partial").html());
+      Handlebars.registerPartial("services.ec2.regions.id.vpcs.id.instances", $("#services\\.ec2\\.regions\\.id\\.vpcs\\.id\\.instances\\.partial").html());
     </script>
 

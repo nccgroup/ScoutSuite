@@ -1,0 +1,63 @@
+
+<!-- About Scout2 -->
+<div class="row" id="about.row">
+  <div class="list-group">
+    <div class="row list-group-item active">
+      About
+    </div>
+    <div class="row list-group-item">
+      <p>&nbsp;</p>
+      <p>AWS Scout2 is an open-source security tool release by <a href="https://www.nccgroup.trust" target="_blank">NCC Group</a>.</p>
+      <p>&nbsp;</p>
+      <p>Use the top navigation bar to review the configuration of the
+      supported AWS services. For more information about Scout2, please
+      check out the project's page on
+      <a href="https://github.com/iSECPartners/Scout2" target="_blank">Github</a>
+      and the project's website at
+      <a href="https://isecpartners.github.io/Scout2/" target="_blank">https://isecpartners.github.io/Scout2/</a>.
+      <p>&nbsp;</p>
+      The AWS documentation is available at
+      <a href="https://aws.amazon.com/documentation" target="_blank">https://aws.amazon.com/documentation</a>.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Please wait -->
+<div class="row" id="please_wait.row">
+  <div class="list-group">
+    <div class="row list-group-item active">
+      Please wait
+    </div>
+    <div class="row list-group-item">
+      <p>&nbsp;</p>
+      <p>Loading data, this may take a while...</p>
+      <p>&nbsp;</p>
+    </div>
+  </div>
+</div>
+
+<!-- About-run dashboard -->
+<script id="last_run.list.template" type="text/x-handlebars-template">
+  <div class="row" id="last_run.row">
+    <div class="list-group-item active">
+      <h4 class="list-group-item-heading">Dashboard</h4>
+    </div>
+    <div class="list-group-item">
+      <div class="list-group-item-text item-margin">Last run time: {{items.time}}</div>
+      <div class="list-group-item-text item-margin">Last run command: {{items.cmd}}</div>
+    </div>
+  </div>
+</script>
+
+<!-- Service-specific dashboards -->
+<div class="row" id="services.id.violations.row">
+  <div class="col-sm-12" id="services.id.violations.list">
+    <script id="services.id.violations.list.template" type="text/x-handlebars-template">
+      {{#each items}}
+        {{> dashboard service_name = @key}}
+      {{/each}}
+    </script>
+  </div>
+</div>
+

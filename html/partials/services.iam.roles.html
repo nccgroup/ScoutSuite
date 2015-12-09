@@ -1,9 +1,9 @@
 
     <!-- IAM role partial -->
-    <script id="services.iam.Roles.partial" type="text/x-handlebars-template">
-      <div class="list-group" id="services.iam.Roles.{{Name}}.view">
+    <script id="services.iam.roles.partial" type="text/x-handlebars-template">
+      <div class="list-group" id="services.iam.roles.{{name}}.view">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{Name}}</h4>
+          <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Information</h4>
@@ -12,9 +12,9 @@
         <div class="list-group-item">
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Instances
-              <a class="accordion-toggle" data-toggle="collapse" href="#iam_role_instances-{{Name}}"><span class="badge pull-right btn-info">{{count_role_instances instance_profiles}}</span></a>
+              <a class="accordion-toggle" data-toggle="collapse" href="#iam_role_instances-{{name}}"><span class="badge pull-right btn-info">{{count_role_instances instance_profiles}}</span></a>
             </h4>
-            <div id="iam_role_instances-{{Name}}" class="accordion-body collapse">
+            <div id="iam_role_instances-{{name}}" class="accordion-body collapse">
               <div class="accordion-inner">
                 <ul class="no-bullet">
                   {{#each instance_profiles}}
@@ -32,6 +32,6 @@
       </div>
     </script>
     <script>
-      Handlebars.registerPartial("services.iam.Roles", $("#services\\.iam\\.Roles\\.partial").html());
+      Handlebars.registerPartial("services.iam.roles", $("#services\\.iam\\.roles\\.partial").html());
     </script>
 

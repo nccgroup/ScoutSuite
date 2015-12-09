@@ -45,35 +45,7 @@
         </div>
         <div class="navbar-collapse collapse">
           <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav" id="dropdown.list">
-            <script id="dropdown.list.template" type="text/x-handlebars-template">
-              {{#each items}}
-                <li class="dropdown">
-                  <a href="javascript:show_{{@key}}()" class="dropdown-toggle" data-toggle="dropdown"><span id="cloudtrail_dropdown">{{make_title @key}}</span><b class="caret"></b></a>
-                  <ul class="dropdown-menu">
-                    <li class="dropdown-header">Summaries</li>
-                    <li><a href="javascript:list_generic('services.{{@key}}.violations', 'dashboard', '1')">Dashboard</a></li>
-                      {{#each summaries}}
-                        <li><a href="javascript:list_generic('{{@../key}}', '{{@key}}')">{{make_title @key}}</a></li>
-                      {{/each}}
-                    <li class="divider"></li>
-                    <li class="dropdown-header">{{make_title @key}} config</li>
-                      {{#each resources}}
-                        <li><a href="#{{full_path}}">{{make_title @key}} ({{count}})</a></li>
-                      {{/each}}
-                    <li class="divider"></li>
-                    <li class="dropdown-header">Security risks</li>
-                    {{#each violations}}
-                      {{#if flagged_items}}
-                        <li><a href="javascript:list_findings('{{@../key}}', '{{@key}}')">
-                          {{@key}} ({{flagged_items}})
-                        </a></li>
-                      {{/if}}
-                    {{/each}}
-                  </ul>
-                </li>
-              {{/each}}
-            </script>
+          <ul class="nav navbar-nav" id="metadata.list">
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
@@ -124,7 +96,7 @@
       <div class="page-header">
       </div>
 
-      <!-- Overlay divs used to show entity details in pop up -->
+      <!-- Overlay divs used to show entity details in a pop up fashion -->
       <div id="overlay-background" class="overlay-bg"></div>
       <div id="overlay-details" class="overlay col-sm-6"></div>
 
@@ -133,76 +105,9 @@
           <h2 id="section_title-h2"></h2>
       </div>
 
-      <!------------------------>
-      <!-- Dashboards section -->
-      <!------------------------>
-
-      <!-- About-run dashboard -->
-      <div class="row" id="about_run.row">
-        <div class="col-sm-12" id="about_run.list"></div>
-        <script id="about_run.list.template" type="text/x-handlebars-template">
-          <div class="list-group-item active">
-            <h4 class="list-group-item-heading">Dashboard</h4>
-          </div>
-          <div class="list-group-item">
-            <div class="list-group-item-text item-margin">Last run time: {{items.time}}</div>
-            <div class="list-group-item-text item-margin">Last run command: {{items.cmd}}</div>
-          </div>
-        </script>
-      </div>
-
-      <!-- Service-specific dashboards -->
-      <div class="row" id="services.violations.row">
-        <div class="col-sm-12" id="services.violations.list">
-          <script id="services.violations.list.template" type="text/x-handlebars-template">
-            {{#each items}}
-              {{> dashboard service_name = @key}}
-            {{/each}}
-          </script>
-        </div>
-      </div>
-
-      <!-- About Scout2 -->
-      <div class="row" id="about.row">
-        <div class="list-group">
-          <div class="row list-group-item active">
-            About
-          </div>
-          <div class="row list-group-item">
-            <p>&nbsp;</p>
-            <p>AWS Scout2 is an open-source security tool release by <a href="https://www.nccgroup.trust" target="_blank">NCC Group</a>.</p>
-            <p>&nbsp;</p>
-            <p>Use the top navigation bar to review the configuration of the
-            supported AWS services. For more information about Scout2, please
-            check out the project's page on
-            <a href="https://github.com/iSECPartners/Scout2" target="_blank">Github</a>
-            and the project's website at
-            <a href="https://isecpartners.github.io/Scout2/" target="_blank">https://isecpartners.github.io/Scout2/</a>.
-            <p>&nbsp;</p>
-            The AWS documentation is available at
-            <a href="https://aws.amazon.com/documentation" target="_blank">https://aws.amazon.com/documentation</a>.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Please wait -->
-      <div class="row" id="please_wait.row">
-        <div class="list-group">
-          <div class="row list-group-item active">
-            Please wait
-          </div>
-          <div class="row list-group-item">
-            <p>&nbsp;</p>
-            <p>Loading data, this may take a while...</p>
-            <p>&nbsp;</p>
-          </div>
-        </div>
-      </div>
-
       <!-- One column container -->
       <div class="row">
-        <div class="col-sm-12" id="single-column">Single Column is Here</div>
+        <div class="col-sm-12" id="single-column">
       </div>
 
       <!-- Two columns container -->
@@ -222,7 +127,7 @@
     <script src="inc-bootstrap/js/bootstrap.min.js"></script>
 
     <!-- Display dashbord -->
-    <script>load_dashboards();</script>
+    <script>load_metadata();</script>
 
   </body>
 </html>

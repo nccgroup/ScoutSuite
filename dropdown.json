@@ -23,12 +23,8 @@
     "iam": {
         "resources": {
             "groups": {
-                "path": "services.iam.Groups",
+                "path": "services.iam.groups",
                 "cols": 2
-            },
-            "password_policy": {
-                "path": "services.iam.PasswordPolicy",
-                "cols": 1
             },
             "root_account": {
                 "path": "services.iam.CredentialReport.<root_account>",
@@ -36,16 +32,24 @@
                 "cols": 1
             },
             "roles": {
-                "path": "services.iam.Roles",
+                "path": "services.iam.roles",
                 "cols": 2
             },
             "users": {
-                "path": "services.iam.Users",
+                "path": "services.iam.users",
                 "cols": 2
             }
         },
         "summaries": {
-            "permissions": ""
+            "permissions": "",
+            "password_policy": {
+                "path": "services.iam.password_policy",
+                "cols": 1
+            },
+            "credential_report": {
+                "path": "services.iam.credential_report",
+                "cols": 1
+            }
         }
     },
     "rds": {
