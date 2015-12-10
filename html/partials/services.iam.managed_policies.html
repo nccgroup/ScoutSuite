@@ -2,13 +2,13 @@
     <!-- IAM managed policies partial -->
     <script id="services.iam.managed_policies.partial" type="text/x-handlebars-template">
         <div class="list-group-item">
-          {{#if ManagedPolicies}}
-            <h4 class="list-group-item-heading">Managed Policies <span class="badge pull-right btn-info">{{ManagedPolicies.length}}</span></h4>
+          {{#if managed_policies}}
+            <h4 class="list-group-item-heading">Managed Policies <span class="badge pull-right btn-info">{{managed_policies.length}}</span></h4>
           {{else}}
-            <h4 class="list-group-item-heading">Managed Policies <span class="badge pull-right">{{ManagedPolicies.length}}</span></h4>
+            <h4 class="list-group-item-heading">Managed Policies <span class="badge pull-right">{{managed_policies.length}}</span></h4>
           {{/if}}
           <ul class="no-bullet">
-          {{#each ManagedPolicies}}
+          {{#each managed_policies}}
             <li class="list-group-item-text"><a href="javascript:showIAMManagedPolicy('{{this}}')">{{policy_friendly_name this}}</a></li>
           {{/each}}
           </ul>

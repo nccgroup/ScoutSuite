@@ -57,7 +57,9 @@ def get_group_info(q, params):
             group['id'] = group.pop('GroupId')
             group['name'] = group.pop('GroupName')
             group['users'] = get_group_users(iam_client, group['name']);
-            group['policies'] = get_inline_policies(iam_client, iam_info, 'group', group['name'])
+            policies = get_inline_policies(iam_client, iam_info, 'group', group['name'])
+            if len(policies):
+                group['inline_policies'] = policies
             iam_info['groups'][group['name']] = group
             show_status(iam_info, 'groups', False)
         except Exception as e:
@@ -225,7 +227,9 @@ def get_role_info(q, params):
                 continue
             role['id'] = role.pop('RoleId')
             role['name'] = role.pop('RoleName')
-            role['policies'] = get_inline_policies(iam_client, iam_info, 'role', role['name'])
+            policies = get_inline_policies(iam_client, iam_info, 'role', role['name'])
+            if len(policies):
+                role['inline_policies'] = policies
             profiles = handle_truncated_response(iam_client.list_instance_profiles_for_role, {'RoleName': role['name']}, 'Marker', ['InstanceProfiles'])
             manage_dictionary(role, 'InstanceProfiles', {})
             for profile in profiles['InstanceProfiles']:
@@ -275,7 +279,7 @@ def get_user_info(q, params):
             user['name'] = user.pop('UserName')
             policies = get_inline_policies(iam_client, iam_info, 'user', user['name'])
             if len(policies):
-                user['policies'] = policies
+                user['inline_policies'] = policies
             user['groups'] = []
             groups = handle_truncated_response(iam_client.list_groups_for_user, {'UserName': user['name']}, 'Marker', ['Groups'])['Groups']
             for group in groups:
