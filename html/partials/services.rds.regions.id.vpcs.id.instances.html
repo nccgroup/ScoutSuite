@@ -1,6 +1,6 @@
 
     <!-- RDS instance partial -->
-    <script id="services.rds.regions.vpcs.instances.partial" type="text/x-handlebars-template">
+    <script id="services.rds.regions.id.vpcs.id.instances.partial" type="text/x-handlebars-template">
       <div class="list-group" id="services.rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{resource_key}}.view">
         <div class="list-group-item active">
           <h4 class="list-group-item-heading">{{DBInstanceIdentifier}}</h4>
@@ -33,6 +33,6 @@
       </div>
     </script>
     <script>
-      Handlebars.registerPartial("services.rds.regions.vpcs.instances", $("#services\\.rds\\.regions\\.vpcs\\.instances\\.partial").html());
+      Handlebars.registerPartial("services.rds.regions.id.vpcs.id.instances", $("#services\\.rds\\.regions\\.id\\.vpcs\\.id\\.instances\\.partial").html());
     </script>
 

@@ -1,6 +1,6 @@
     <!-- Redshift parameter group partial -->
 
-    <script id="services.redshift.regions.parameter_groups.partial" type="text/x-handlebars-template">
+    <script id="services.redshift.regions.id.parameter_groups.partial" type="text/x-handlebars-template">
       <div class="list-group" id="services.redshift.regions.{{region}}.parameter_groups.{{resource_key}}.details">
         <div class="list-group-item active">
           <h4 class="list-group-item-heading">{{resource_key}}</h4>
@@ -23,6 +23,6 @@
       </div>
     </script>
     <script>
-        Handlebars.registerPartial("services.redshift.regions.parameter_groups", $("#services\\.redshift\\.regions\\.parameter_groups\\.partial").html());
+        Handlebars.registerPartial("services.redshift.regions.id.parameter_groups", $("#services\\.redshift\\.regions\\.id\\.parameter_groups\\.partial").html());
     </script>
 

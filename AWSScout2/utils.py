@@ -423,8 +423,9 @@ def create_scout_report(environment_name, aws_config, force_write, debug):
     services = [service for service in aws_config['services']]
     services.append('global')
     for service in services: # aws_config['services']:
-        with open('html/%s.html' % service, 'rt') as f:
-            contents = contents + f.read()
+        if os.path.exists('html/%s.html' % service):
+            with open('html/%s.html' % service, 'rt') as f:
+                contents = contents + f.read()
     if environment_name != 'default':
         def_report_filename, def_config_filename = get_scout2_paths('default')
         new_report_filename, new_config_filename = get_scout2_paths(environment_name)

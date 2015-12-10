@@ -406,7 +406,7 @@ function load_metadata() {
     load_aws_config_from_json('services.id.violations', 1);
     show_main_dashboard();
     for (service in aws_info['metadata']) {
-    if (service == 'ec2') {
+    if (service != 'iam' && service != 's3') {
         for (section in aws_info['metadata'][service]) {
         if (section == 'resources') {
             for (resource_type in aws_info['metadata'][service][section]) {
