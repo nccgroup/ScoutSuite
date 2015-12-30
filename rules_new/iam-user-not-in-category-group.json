@@ -1,0 +1,9 @@
+{
+    "description": "User not in category group",
+    "entities": "iam.users.id",
+    "dashboard_name": "Users",
+    "conditions": [
+        [ "iam.users.id.groups", "containNoneOf", [ "AllHumanUser", "AllHeadlessUsers" ] ]
+    ],
+    "level": "danger"
+}

@@ -1,0 +1,10 @@
+{
+    "key": "iam-group-with-inline-policies",
+    "description": "Group with inline policies",
+    "entities": "iam.groups.id",
+    "dashboard_name": "groups",
+    "conditions": [
+        [ "iam.groups.id.", "withKey", "inline_policies" ]
+    ],
+    "level": "warning"
+}

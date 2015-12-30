@@ -1,0 +1,16 @@
+{
+    "key": "iam-human-user-with-_ARG_0_-policies",
+    "description": "Human user with _ARG_0_ policies",
+    "entities": "iam.users.id",
+    "dashboard_name": "Users",
+    "conditions": [
+        [ "iam.users.id.groups", "containNoneOf", [ "Code" ] ],
+        [ "iam.users.id.", "withKey", "_ARG_1_" ]
+    ],
+    "level": "danger",
+    "listing": {
+        "keys": [
+            "iam.users.id"
+        ]
+    }
+}

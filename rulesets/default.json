@@ -101,14 +101,30 @@
             "enabled": "true"
         },
         {
-            "filename": "iam-user-with-policies.json",
+            "filename": "iam-group-with-inline-policies.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "iam-service-user-with-password.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "iam-user-not-in-common-group.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "iam-user-not-in-category-group.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "iam-human-user-with-policies.json",
             "enabled": "true",
-            "args": [ "inline", "Policies" ]
+            "args": [ "managed", "managed_policies" ]
         },
         {
             "filename": "iam-user-with-policies.json",
             "enabled": "true",
-            "args": [ "managed", "ManagedPolicies" ]
+            "args": [ "inline", "inline_policies" ]
         },
         {
             "filename": "iam-user-with-password-and-key.json",
