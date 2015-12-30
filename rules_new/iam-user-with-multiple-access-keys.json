@@ -1,10 +1,10 @@
 {
     "description": "Multiple active keys for single user",
-    "entities": "iam.Users.id",
+    "entities": "iam.users.id",
     "dashboard_name": "Users",
     "conditions": [
-        [ "iam.Users.id.AccessKeys", "lengthMoreThan", "1" ]
+        [ "iam.users.id.AccessKeys", "lengthMoreThan", "1" ]
     ],
     "level": "warning",
-    "listing": { "keys": [ "iam.Users.id.AccessKeys" ] }
+    "listing": { "keys": [ "iam.users.id.AccessKeys" ] }
 }

@@ -74,69 +74,9 @@
       </script>
   </div><!-- /.row -->
 
-  <!-- Root account usage -->
-    <div id="services.iam.root_account.list"></div>
-      <script id="services.iam.root_account.list.template" type="text/x-handlebars-template">
-        <div class="list-group" id="services.iam.root_account.details">
-          <div class="list-group-item active">
-            <h4 class="list-group-item-heading">AWS root account</h4>
-          </div>
-          <div class="list-group-item">
-            <div class="list-group-item-text item-margin">Creation date: {{items.user_creation_time}}</div>
-            <div class="list-group-item-text item-margin">Password last used: <span id="iam_CredentialReport-root-active-password-">{{items.password_last_used}}</span></div>
-            <div class="list-group-item-text item-margin">MFA enabled: <span id="iam_CredentialReport-root-no-mfa-">{{items.mfa_active}}</span></div>
-            <div class="list-group-item-text item-margin">Access key 1 active: <span id="iam_CredentialReport-root-active-key-access_key_1_active">{{items.access_key_1_active}}</span></div>
-            <div class="list-group-item-text item-margin">Access key 2 active: <span id="iam_CredentialReport-root-active-key-access_key_2_active">{{items.access_key_2_active}}</span></div>
-            <div class="list-group-item-text item-margin">Signing cert 1 active: {{items.cert_1_active}}</div>
-            <div class="list-group-item-text item-margin">Signing cert 2 active: {{items.cert_2_active}}</div>
-          </div>
-        </div>
-      </script>
-
 <!-- Password policy -->
 <script id="services.iam.password_policy.list.template" type="text/x-handlebars-template">
  {{> services.iam.password_policy}}
 </script>
 
-<!-- Group list -->
-<script id="services.iam.groups.list.template" type="text/x-handlebars-template">
-  {{> list_of service_name = 'iam' resource_type = 'groups' resource_id_name = 'name'}}
-</script>
-
-<!-- Group details -->
-<script id="services.iam.groups.details.template" type="text/x-handlebars-template">
-  <div id="services.iam.groups.details">
-    {{#each items}}
-      {{> services.iam.groups}}
-    {{/each}}
-  </div>
-</script>
-
-<!-- Role list -->
-<script id="services.iam.roles.list.template" type="text/x-handlebars-template">
-  {{> list_of service_name = 'iam' resource_type = 'roles' resource_id_name = 'name'}}
-</script>
-
-<!-- Role details -->
-<script id="services.iam.roles.details.template" type="text/x-handlebars-template">
-  <div id="services.iam.roles.details">
-    {{#each items}}
-      {{> services.iam.roles}}
-    {{/each}}
-  </script>
-</div>
-
-<!-- User list -->
-<script id="services.iam.users.list.template" type="text/x-handlebars-template">
-  {{> list_of service_name = 'iam' resource_type = 'users' resource_id_name = 'name'}}
-</script>
-
-<!-- User details -->
-<script id="services.iam.users.details.template" type="text/x-handlebars-template">
-  <div id="services.iam.users.details">
-    {{#each items}}
-      {{> services.iam.users}}
-    {{/each}}
-  </div>
-</script>
 

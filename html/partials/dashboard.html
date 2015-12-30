@@ -9,7 +9,7 @@
                     {{#each this}}
                       <div class="col-sm-4">
                         <div class="list-group-item finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
-                          <a href="javascript:list_findings('{{service}}', '{{@key}}')">
+                          <a href="#services.{{service}}.violations.{{@key}}.items">
                             {{description}}
                           </a>
                         </div>

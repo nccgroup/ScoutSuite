@@ -14,7 +14,7 @@
           <div class="list-group-item-text list-sub-element" id="services.{{../../service_name}}.regions.{{@../key}}.vpcs.{{@key}}.list">
             <a href="#services.{{../../service_name}}.regions.{{@../key}}.vpcs.{{@key}}.{{../../resource_type}}">{{Name}}{{name}}</a>
             {{#each (lookup . ../../resource_type)}}
-              <div class="list-group-item-text list-sub-element" id="services.{{service_name}}.regions.{{@../../key}}.vpcs.{{@../key}}.{{resource_type}}.{{@key}}.list">
+              <div class="list-group-item-text list-sub-element" id="services.{{service_name}}.regions.{{@../../key}}.vpcs.{{@../key}}.{{resource_type}}.{{@key}}.link">
                 <a href="#services.{{../../../service_name}}.regions.{{@../../key}}.vpcs.{{@../key}}.{{../../../resource_type}}.{{@key}}.view">{{Name}}{{name}}</a>
               </div>
             {{/each}}

@@ -1,15 +1,15 @@
 {
     "key": "iam-user-with-_ARG_0_-policies",
     "description": "User with _ARG_0_ policies",
-    "entities": "iam.Users.id",
+    "entities": "iam.users.id",
     "dashboard_name": "Users",
     "conditions": [
-        [ "iam.Users.id.", "withKey", "_ARG_1_" ]
+        [ "iam.users.id.", "withKey", "_ARG_1_" ]
     ],
     "level": "danger",
     "listing": {
         "keys": [
-            "iam.Users.id"
+            "iam.users.id"
         ]
     }
 }

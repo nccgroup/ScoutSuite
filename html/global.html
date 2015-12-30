@@ -38,7 +38,7 @@
 </div>
 
 <!-- About-run dashboard -->
-<script id="last_run.list.template" type="text/x-handlebars-template">
+<script id="last_run.details.template" type="text/x-handlebars-template">
   <div class="row" id="last_run.row">
     <div class="list-group-item active">
       <h4 class="list-group-item-heading">Dashboard</h4>
@@ -52,8 +52,8 @@
 
 <!-- Service-specific dashboards -->
 <div class="row" id="services.id.violations.row">
-  <div class="col-sm-12" id="services.id.violations.list">
-    <script id="services.id.violations.list.template" type="text/x-handlebars-template">
+  <div class="col-sm-12" id="services.id.violations.details">
+    <script id="services.id.violations.details.template" type="text/x-handlebars-template">
       {{#each items}}
         {{> dashboard service_name = @key}}
       {{/each}}

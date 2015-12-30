@@ -6,7 +6,7 @@
             <div class="accordion">
               <h4 class="list-group-item-heading accordion-heading">{{iam_type}} with access via IAM policies
                 <a class="accordion-toggle" data-toggle="collapse" href="#s3_iam_{{iam_type}}_policies_details-{{escape_special_chars ../Name}}">
-                  <span class="badge pull-right btn-info">{{count iam_entities}}</span>
+                  <span class="badge pull-right btn-info">{{iam_entities.length}}</span>
                 </a>
               </h4>
               <div id="s3_iam_{{iam_type}}_policies_details-{{escape_special_chars ../Name}}" class="accordion-body item-margin collapse">

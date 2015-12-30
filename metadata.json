@@ -37,32 +37,27 @@
     "iam": {
         "resources": {
             "groups": {
-                "path": "services.iam.groups",
-                "cols": 2
-            },
-            "root_account": {
-                "path": "services.iam.CredentialReport.<root_account>",
-                "script": "services.iam.root_account",
-                "cols": 1
+                "cols": 2,
+                "path": "services.iam.groups"
             },
             "roles": {
-                "path": "services.iam.roles",
-                "cols": 2
+                "cols": 2,
+                "path": "services.iam.roles"
             },
             "users": {
-                "path": "services.iam.users",
-                "cols": 2
+                "cols": 2,
+                "path": "services.iam.users"
             }
         },
         "summaries": {
             "permissions": "",
             "password_policy": {
-                "path": "services.iam.password_policy",
-                "cols": 1
+                "cols": 1,
+                "path": "services.iam.password_policy"
             },
-            "credential_report": {
-                "path": "services.iam.credential_report",
-                "cols": 1
+            "root_account": {
+                "cols": 1,
+                "path": "services.iam.credential_report.root_account"
             }
         }
     },

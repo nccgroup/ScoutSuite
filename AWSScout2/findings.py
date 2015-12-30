@@ -114,7 +114,7 @@ def init_rules(ruleset, services, environment_name, ip_ranges):
         if skip_rule:
             continue
         # Build the rules dictionary
-        entities = rule_details.pop('entities')
+        entities = rule_details['entities']
         manage_dictionary(rules, entities, {})
         if 'level' in rule_metadata:
             rule_details['level'] = rule_metadata['level']
@@ -123,6 +123,7 @@ def init_rules(ruleset, services, environment_name, ip_ranges):
         if not 'condition_operator' in rule_details:
             rule_details['condition_operator'] = 'and'
         # Save details for rule
+        key = key.replace('.json', '')
         rules[entities][key] = rule_details
     return rules
 

@@ -1,6 +1,6 @@
 {
     "description": "",
-    "entities": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id",
+    "entities": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
     "dashboard_name": "Rules",
     "conditions": [
         [ "this", "inSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges.json, [])" ],
@@ -11,6 +11,8 @@
     },
     "listing": {
         "keys": [
+            "ec2.regions.id",
+            "ec2.regions.id.vpcs.id",
             "ec2.regions.id.vpcs.id.security_groups.id",
             "ec2.regions.id.vpcs.id.security_groups.id.name",
             "this"
