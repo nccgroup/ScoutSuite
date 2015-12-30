@@ -3,7 +3,7 @@
     "entities": "iam.users.id",
     "dashboard_name": "Users",
     "conditions": [
-        [ "iam.users.id.groups", "containNoneOf", [ "AllHumanUser", "AllHeadlessUsers" ] ]
+        [ "iam.users.id.groups", "containNoneOf", [ "AllHumanUsers", "AllHeadlessUsers" ] ]
     ],
     "level": "danger"
 }

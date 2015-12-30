@@ -6,11 +6,11 @@
         },
         {
             "filename": "cloudtrail-global-services-logging-disabled.json",
-            "enabled": "false"
+            "enabled": "true"
         },
         {
             "filename": "cloudtrail-global-services-logging-duplicated.json",
-            "enabled": "false"
+            "enabled": "true"
         },
         {
             "filename": "ec2-default-security-group-in-use.json",

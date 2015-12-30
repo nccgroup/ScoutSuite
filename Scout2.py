@@ -157,6 +157,8 @@ def main(args):
              aws_config['services'][service]['violations'][rule]['flagged_items'] = len(aws_config['services'][service]['violations'][rule]['items'])
              aws_config['services'][service]['violations'][rule]['service'] = service
 
+    # TODO: impelement analyzis tweaks    
+
     # Save info about run
     aws_config['last_run'] = {}
     aws_config['last_run']['time'] = datetime.datetime.now(dateutil.tz.tzlocal()).strftime("%Y-%m-%d %H:%M%S%z")

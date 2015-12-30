@@ -1,5 +1,5 @@
 {
-    "description": "Service disabled",
+    "description": "CloudTrail disabled",
     "entities": "cloudtrail.regions.id.trails.id",
     "dashboard_name": "Regions",
     "conditions": [

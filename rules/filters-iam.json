@@ -1,8 +1,0 @@
-{
-    "UnusedIAMGroup": {
-        "description": "Hide unused IAM groups",
-        "entity": "groups",
-        "callback": "HasNoMembers",
-        "callback_args": []
-    }
-}

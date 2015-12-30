@@ -1,10 +1,10 @@
 # Import AWS Scout2 finding-related classes
-from AWSScout2.finding_cloudtrail import *
-from AWSScout2.finding_ec2 import *
-from AWSScout2.finding_iam import *
-from AWSScout2.finding_rds import *
-from AWSScout2.finding_redshift import *
-from AWSScout2.finding_s3 import *
+#from AWSScout2.finding_cloudtrail import *
+#from AWSScout2.finding_ec2 import *
+#from AWSScout2.finding_iam import *
+#from AWSScout2.finding_rds import *
+#from AWSScout2.finding_redshift import *
+#from AWSScout2.finding_s3 import *
 from AWSScout2.utils import *
 
 # Import opinel

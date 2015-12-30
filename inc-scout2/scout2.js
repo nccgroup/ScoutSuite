@@ -428,7 +428,7 @@ function updateDOM(anchor) {
         hideAll();
         load_aws_config_from_json('services.' + finding_path, cols);
         hideAll();
-        updateTitle('Gne');
+        updateTitle('TODO')
         // Show findings only...
         showRow('services.' + finding_path);
         // Show items
