@@ -4,6 +4,11 @@
       <div class="list-group-item">
         <h4 class="list-group-item-heading">
           <span id="ec2.regions.{{region}}.vpcs.{{vpc}}.security_groups.{{sg_id}}.rules.{{direction}}">{{make_title direction}} Rules</span>
+          {{#ifEqual count 0}}
+            <span class="badge pull-right">{{count}}</span>
+          {{else}}
+            <span class="badge pull-right btn-info">{{count}}</span>
+          {{/ifEqual}}
         </h4>
         <ul>
         {{#each protocols}}

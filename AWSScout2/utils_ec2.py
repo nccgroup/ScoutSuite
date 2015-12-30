@@ -362,12 +362,13 @@ def parse_security_group(ec2_client, group):
     security_group['description'] = group['Description']
     security_group['owner_id'] = group['OwnerId']
     security_group['rules'] = {'ingress': {}, 'egress': {}}
-    security_group['rules']['ingress']['protocols'] = parse_security_group_rules(group['IpPermissions'])
-    security_group['rules']['egress']['protocols'] = parse_security_group_rules(group['IpPermissionsEgress'])
+    security_group['rules']['ingress']['protocols'], security_group['rules']['ingress']['count'] = parse_security_group_rules(group['IpPermissions'])
+    security_group['rules']['egress']['protocols'],  security_group['rules']['egress']['count']  = parse_security_group_rules(group['IpPermissionsEgress'])
     return security_group
 
 def parse_security_group_rules(rules):
     protocols = {}
+    rules_count = 0
     for rule in rules:
         ip_protocol = rule['IpProtocol'].upper()
         if ip_protocol == '-1':
@@ -389,10 +390,12 @@ def parse_security_group_rules(rules):
         for grant in rule['UserIdGroupPairs']:
             manage_dictionary(protocols[ip_protocol]['ports'][port_value], 'security_groups', [])
             protocols[ip_protocol]['ports'][port_value]['security_groups'].append(grant)
+            rules_count = rules_count + 1
         for grant in rule['IpRanges']:
             manage_dictionary(protocols[ip_protocol]['ports'][port_value], 'cidrs', [])
             protocols[ip_protocol]['ports'][port_value]['cidrs'].append({'CIDR': grant['CidrIp']})
-    return protocols
+            rules_count = rules_count + 1
+    return protocols, rules_count
 
 status = {}
 status['region_name'] = ''
