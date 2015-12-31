@@ -76,11 +76,12 @@ function process_template(id1, container_id, list) {
 // Hide all items Display functions
 //
 function hideAll() {
-    $("[id$='.row']").hide();
     $("[id*='.list']").not("[id='metadata.list']").hide();
-    $("[id*='.link']").hide();
     $("[id*='.details']").hide();
+/*
+    $("[id*='.link']").hide();
     $("[id*='.view']").hide();
+*/
     updateNavbar();
 }
 function showAll() {
@@ -92,21 +93,29 @@ function showAll() {
 }
 
 
-
 function showRow(path) {
-    path_array = path.split('.id.');
-    for (i in path_array) {
-        tmp = path_array.slice(0,i+1).join('.');
-        $('div').filter(function() { return this.id.match(tmp+'.*.row')}).show();
-        $('div').filter(function() { return this.id.match(tmp+'.*.list')}).show();
-        $('div').filter(function() { return this.id.match(tmp+'.*.details')}).show();
-    }
+    // Show left menu
+    $('div').filter(function() { return this.id.match(path + '.list')}).show();
+    $('div').filter(function() { return this.id.match(path + '.details')}).show();
 }
 
 function showRowWithItems(path) {
-    showRow(path);
-    $('div').filter(function() { return this.id.match(tmp+'.*.link')}).show();
-    $('div').filter(function() { return this.id.match(tmp+'.*.view')}).show();
+    console.log('ShowRowWithItems : ' + path);
+    new_path = path.replace('.id.', '.*.');
+    showRow(new_path);
+    $('div').filter(function() { return this.id.match(new_path + '.link')}).show();
+    $('div').filter(function() { return this.id.match(new_path + '.view')}).show();
+}
+
+function showSingleItem(path) {
+    $('div').filter(function() { return this.id.match('.*\.view$')}).not("[id='" + path + "']").hide();
+    $("[id='" + path + "']").show();
+}
+
+function showMultipleItems(path) {
+    path = path.replace('.id.', '.*.');
+    $('div').filter(function() { return this.id.match('.*\.view$')}).hide();
+    $('div').filter(function() { return this.id.match(path + '.*\.view$')}).show();
 }
 
 /*
@@ -400,18 +409,24 @@ function get_value_at(path) {
 //
 // Browsing
 //
-var old_anchor = ''
+var old_path = ''
 function updateDOM(anchor) {
+/*
     var old_path = old_anchor.replace('#', '').split('.id.')[0]
-    var new_path = anchor.replace('#', '').split('.id.')[0];
+    var new_path = anchor.replace('#', ''); // .split('.id.')[0];
+*/
+
     var path = anchor.replace('#', '');
     var path_array = path.split('.');
+
     var service = path_array[1];
     var resource_type = path_array[path_array.length-1];
     var finding_prefix = 'services.' + service + '.violations.'
+
     console.log('Old path = ' + old_path);
     console.log('New path = ' + new_path);
-    console.log('Finding path = ' + finding_prefix);  
+    console.log('Finding path = ' + finding_prefix); 
+/* 
     if (new_path.startsWith(finding_prefix)) {
         // Show findings...
         var finding_path = get_value_at(new_path.replace('items', 'entities'));
@@ -444,12 +459,12 @@ function updateDOM(anchor) {
 
         }
     } else if (old_path != '' && new_path.startsWith(old_path) && !new_path.startsWith(finding_path)) {
-        // If we're hiding part of what's already there...
+        // Hide part of what's already there...
         $("[id^='" + old_path + "']").filter("[id$='.view']").hide();
         $("[id^='" + new_path + "']").show();
     } else {
-        // Switching view...
-        old_anchor = anchor;
+        // Switch view...
+        console.log('Switching view...');
         hideAll();
         updateTitle(resource_type);
         console.log('Service = ' + service);
@@ -460,11 +475,51 @@ function updateDOM(anchor) {
   
           var cols = 1;
         }
+
         // Lazy loading
         load_aws_config_from_json(path, cols);
+
         // DOM update
         hideAll();
         showRowWithItems(new_path);
+
+        // Update old anchor value
+        old_anchor = anchor;
+    }
+*/
+    if (path.endsWith('.view')) {
+        // Show only one item and do not touch the left menu
+        showSingleItem(path);
+    } else if (old_path != '' && path.match(old_path) && !path.startsWith(finding_prefix)) {
+        // Restore all or multiple items, do not touch the left menu
+        showMultipleItems(path);
+    } else {
+        // Switch view...
+        console.log('Switching view...');
+        hideAll();
+        // Update title
+        if (path == finding_prefix) {
+            title = 'Dashboard';
+        } else if (path.startsWith(finding_prefix)) {
+            title = 'Findings';
+        } else {
+            title = resource_type;
+        }
+        updateTitle(title);
+
+        // Lazy loading
+        if (resource_type in aws_info['metadata'][service]['resources']) {
+            var cols = aws_info['metadata'][service]['resources'][resource_type]['cols'];
+        } else {  
+          var cols = 1;
+        }
+        load_aws_config_from_json(path, cols);
+
+        // DOM update
+        showRowWithItems(path);
+
+        // Update old anchor value
+        old_path = path.replace('.id.', '.*.');
     }
 
     // Coloring here ?

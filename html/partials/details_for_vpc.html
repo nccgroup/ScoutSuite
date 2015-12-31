@@ -3,15 +3,13 @@
   <script id="details_for_vpc.partial" type="text/x-handlebars-template">
     <div id="services.ec2.regions.id.vpcs.id.{{resource_type}}.details">
       {{#each items}}
-        <div class="list-group" id="services.{{../service_name}}.regions.{{@key}}">
-          {{#each vpcs}}
-            <div class="list-group" id="services.{{../service_name}}.regions.{{@../key}}.vpcs.{{@key}}">
-              {{#each (lookup . ../../resource_type)}}
-                {{> (lookup ../../.. 'partial_name') service_name = ../../../service_name region = @../../key vpc = @../key resource_type = ../../../resource_type resource_key = @key resource = this}}
-              {{/each}}
+        {{#each vpcs}}
+          {{#each (lookup . ../../resource_type)}}
+            <div id="services.{{../../service_name}}.regions.{{@../../key}}.vpcs.{{@../key}}.{{../../resource_type}}.{{@key}}.view">
+              {{> (lookup ../../.. 'partial_name') service_name = ../../../service_name region = @../../key vpc = @../key resource_type = ../../../resource_type resource_key = @key resource = this}}
             </div>
           {{/each}}
-        </div>
+        {{/each}}
       {{/each}}
     </div>
   </script>
