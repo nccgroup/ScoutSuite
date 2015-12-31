@@ -44,7 +44,7 @@ def change_level(level):
 #
 def load_config_from_json(rule_metadata, environment_name, ip_ranges):
     config = None
-    config_file = 'rules_new/%s' % rule_metadata['filename']
+    config_file = 'rules/%s' % rule_metadata['filename']
     config_args = rule_metadata['args'] if 'args' in rule_metadata else []
     try:
         with open(config_file, 'rt') as f:

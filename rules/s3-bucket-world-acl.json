@@ -1,0 +1,11 @@
+{
+    "key": "s3-bucket-_ARG_0_-_ARG_1_",
+    "dashboard_name": "Bucket",
+    "description": "_ARG_2_",
+    "entities": "s3.buckets.id.grantees.id",
+    "conditions": [
+        [ "s3.buckets.id.grantees.id", "equal", "http://acs.amazonaws.com/groups/global/_ARG_0_" ],
+        [ "s3.buckets.id.grantees.id.permissions._ARG_1_", "true", "" ]
+    ],
+    "level": "_ARG_3_"
+}

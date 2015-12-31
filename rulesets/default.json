@@ -187,6 +187,75 @@
             "enabled": "true"
         },
         {
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": "true",
+            "args": ["AuthenticatedUsers", "read", "Bucket world-listable", "danger"]
+        },
+        {
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": "true",
+            "args": ["AuthenticatedUsers", "write", "Bucket world-writable", "danger"]
+        },
+        {
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": "true",
+            "args": ["AuthenticatedUsers", "read_acp", "Bucket's permissions world-readable", "warning"]
+        },
+        {
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": "true",
+            "args": ["AuthenticatedUsers", "write_acp", "Bucket's permissions world-writable", "danger"]
+        },
+        {
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": "true",
+            "args": ["AllUsers", "read", "Bucket world-listable (anonymous)", "warning"]
+        },
+        {
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": "true",
+            "args": ["AllUsers", "write", "Bucket world-writable (anonymous)", "danger"]
+        },
+        {
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": "true",
+            "args": ["AllUsers", "read_acp", "Bucket's permissions world-readable (anonymous)", "warning"]
+        },
+        {
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": "true",
+            "args": ["AllUsers", "write_acp", "Bucket's permissions world-writable (anonymous)", "danger"]
+        },
+
+        {
+            "filename": "s3-bucket-world-policy.json",
+            "enabled": "true",
+            "args": ["delete", "s3:Delete*"]
+        },
+        {
+            "filename": "s3-bucket-world-policy.json",
+            "enabled": "true",
+            "args": ["get", "s3:Get*"]
+        },
+        {
+            "filename": "s3-bucket-world-policy.json",
+            "enabled": "true",
+            "args": ["list", "s3:List*"]
+        },
+        {
+            "filename": "s3-bucket-world-policy.json",
+            "enabled": "true",
+            "args": ["put", "s3:Put*"]
+        },
+        {
+            "filename": "s3-bucket-world-policy.json",
+            "enabled": "true",
+            "args": ["all", "s3:*"]
+        },
+
+
+
+        {
             "filename": "placeholder.json",
             "enabled": "false"
         }

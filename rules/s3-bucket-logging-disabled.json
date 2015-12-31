@@ -1,5 +1,6 @@
 {
-    "description": "Cluster database encryption disabled",
+    "dashboard_name": "Bucket",
+    "description": "Logging disabled",
     "entities": "s3.buckets.id",
     "conditions": [
         [ "s3.buckets.id.logging", "equal", "Disabled" ]

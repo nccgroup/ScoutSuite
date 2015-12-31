@@ -163,15 +163,6 @@ function showSingleItem(id) {
 }
 
 
-//
-// TODO: FIX 
-//
-function showMultipleItems(path) {
-    path = path.replace('.id.', '.*.');
-    $('div').filter(function() { return this.id.match('.*\.view$')}).hide();
-    $('div').filter(function() { return this.id.match(path + '.*\.view$')}).show();
-}
-
 /*
     prefix = keyword.split('_')[0];
     $("[id*='" + keyword + "-list']").show();
@@ -184,13 +175,6 @@ function showMultipleItems(path) {
     $("[id*='" + prefix + "_region-filtericon']").addClass('glyphicon-check');
 */
 
-// Show a DOM element given its ID
-function showElement(id) {
-    var element = document.getElementById(id);
-    if (element) {
-        element.style.display = 'block';
-    }
-}
 
 function toggleDetails(keyword, item) {
     var id = '#' + keyword + '-' + item;
@@ -466,24 +450,26 @@ function get_value_at(path) {
 var current_resource_path = ''
 function updateDOM(anchor) {
 
+    // Strip the # sign
     var path = anchor.replace('#', '');
-  
-    updateTitle('Foo');
 
     // Get resource path based on browsed-to path
     var resource_path = get_resource_path(path);
     console.log('Current resource path: ' + current_resource_path);
 
+    // Update title
+    updateTitle(path);
+
     // DOM Update
     if (path.endsWith('.items')) {
         // Switch view for findings
         lazy_loading(resource_path);
-            hideAll();
-            console.log('Resource path for showRow:: ' + resource_path);
-            hideItems(resource_path);
-            showRow(resource_path);
-            showFindings(path, resource_path);
-            current_resource_path = resource_path.replace(/.id./g, '\.[^.]+\.');
+        hideAll();
+        console.log('Resource path for showRow:: ' + resource_path);
+        hideItems(resource_path);
+        showRow(resource_path);
+        showFindings(path, resource_path);
+        current_resource_path = resource_path.replace(/.id./g, '\.[^.]+\.');
     } else if (lazy_loading(resource_path) == 0) {
         // 0 is returned when the data was already loaded, a DOM update is necessary then
         if (path.endsWith('.view')) {
@@ -507,43 +493,18 @@ function updateDOM(anchor) {
         current_resource_path = resource_path.replace(/.id./g, '\.[^.]+\.');
     }
 
-    // Coloring here ?
+    // TODO: Findings highlighting
 
     // Scroll to the top
     window.scrollTo(0,0);
-
-    // Done !
-    return
 }
 
+
+//
 // TODO: merge into load_aws_config_from_json...
-function lazy_loading(path) { // , service, resource_type) {
+//
+function lazy_loading(path) {
     console.log('Lazy loading from ' + path);
-/*
-    var path_array = path.split('.');
-    var service = path_array[1];
-    if (path.endsWith('.items')) {
-        var finding_path = get_value_at(path.replace('items', 'display_path'));
-        if (finding_path != undefined) {
-            console.log('Finding path (display) = ' + finding_path);          
-        } else {
-            finding_path = 'services.' + get_value_at(path.replace('items', 'entities'));
-            console.log('Finding path (entity) = ' + finding_path);
-        }
-        var finding_path_array = finding_path.split('.');
-        var resource_type = finding_path_array[finding_path_array.length-2];
-        console.log('Resource type = ' + resource_type);
-        finding_path_array.pop();
-        path = 'services.' + finding_path_array.join('.');
-        console.log('Loading from path ' + path);
-    } else if (path.endsWith('.view')) {
-        // This is a placeholder but should never happen...
-        alert('There is a bug...')
-        var resource_type = 'TBD';
-    } else {
-        var resource_type = path_array[path_array.length-1];
-    }
-*/
     var resource_path_array = path.split('.')
     var service = resource_path_array[1];
     var resource_type = resource_path_array[resource_path_array.length - 1];
@@ -555,7 +516,10 @@ function lazy_loading(path) { // , service, resource_type) {
     return load_aws_config_from_json(path, cols);
 }
 
-var old_resource_path = '';
+
+//
+// Get the resource path based on a given path
+//
 function get_resource_path(path) {
     var path_array = path.split('.');
     if (path.endsWith('.items')) {
@@ -568,15 +532,13 @@ function get_resource_path(path) {
         resource_path = 'services.' + resource_path_array.join('.');
     } else if (path.endsWith('.view')) {
         // Resource path is not changed (this may break when using `back' button in browser)
-        var resource_path = old_resource_path;
+        var resource_path = current_resource_path;
     } else {
         var resource_path = path; // path_array[path_array.length-1];
     }
     console.log('Resource path:: ' + resource_path);
-    old_resource_path = resource_path;
     return resource_path;
 }
-    
 
 
 //
