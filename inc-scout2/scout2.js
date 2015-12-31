@@ -469,14 +469,14 @@ function updateDOM(anchor) {
         hideItems(resource_path);
         showRow(resource_path);
         showFindings(path, resource_path);
-        current_resource_path = resource_path.replace(/.id./g, '\.[^.]+\.');
+        current_resource_path = resource_path; // .replace(/.id./g, '\.[^.]+\.');
     } else if (lazy_loading(resource_path) == 0) {
         // 0 is returned when the data was already loaded, a DOM update is necessary then
         if (path.endsWith('.view')) {
             // Same details, one item
             hideItems(current_resource_path);
             showSingleItem(path);
-        } else if (current_resource_path != '' && resource_path.match(current_resource_path)) {
+        } else if (current_resource_path != '' && resource_path.match(current_resource_path.replace(/.id./g, '\.[^.]+\.'))) {
             // Same details, multiple items
             console.log('Success !! path = ' + path);
             hideItems(current_resource_path);
@@ -486,11 +486,11 @@ function updateDOM(anchor) {
             console.log('Switch view');
             hideAll();
             showRowWithItems(resource_path);
-            current_resource_path = resource_path.replace(/.id./g, '\.[^.]+\.');
+            current_resource_path = resource_path; // .replace(/.id./g, '\.[^.]+\.');
         }
     } else {
         // The DOM was updated by the lazy loading function, save the current resource path
-        current_resource_path = resource_path.replace(/.id./g, '\.[^.]+\.');
+        current_resource_path = resource_path; // .replace(/.id./g, '\.[^.]+\.');
     }
 
     // TODO: Findings highlighting
