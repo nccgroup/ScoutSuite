@@ -9,6 +9,7 @@ from AWSScout2.findings import *
 
 # Import third-party packages
 import botocore.client
+import hashlib
 
 ########################################
 ##### S3 functions
@@ -200,34 +201,43 @@ def get_s3_bucket(q, params):
     while True:
         try:
             bucket = q.get()
+            bucket['name'] = bucket.pop('Name')
             s3_client = s3_clients['us-east-1']
             bucket['CreationDate'] = str(bucket['CreationDate'])
-            bucket['region'] = get_s3_bucket_location(s3_client, bucket['Name'])
+            bucket['region'] = get_s3_bucket_location(s3_client, bucket['name'])
             # h4ck :: fix issue #59, location constraint can be EU or eu-west-1 for Ireland...
             if bucket['region'] == 'EU':
                 bucket['region'] = 'eu-west-1'
             # h4ck :: need to use the right endpoint because signature scheme autochange is not working
             s3_client = s3_clients[bucket['region']]
-            get_s3_bucket_logging(s3_client, bucket['Name'], bucket)
-            get_s3_bucket_versioning(s3_client, bucket['Name'], bucket)
-            get_s3_bucket_webhosting(s3_client, bucket['Name'], bucket)
-            get_s3_acls(s3_client, bucket['Name'], bucket)
+            get_s3_bucket_logging(s3_client, bucket['name'], bucket)
+            get_s3_bucket_versioning(s3_client, bucket['name'], bucket)
+            get_s3_bucket_webhosting(s3_client, bucket['name'], bucket)
+            get_s3_acls(s3_client, bucket['name'], bucket)
             # TODO:
             # CORS
             # Lifecycle
             # Notification ?
             # Get bucket's policy
-            get_s3_bucket_policy(s3_client, bucket['Name'], bucket)
+            get_s3_bucket_policy(s3_client, bucket['name'], bucket)
             # If requested, get key properties
             if params['check_encryption'] or params['check_acls']:
-                get_s3_bucket_keys(s3_client, bucket['Name'], bucket, params['check_encryption'], params['check_acls'])
-            s3_info['buckets'][bucket['Name']] = bucket
+                get_s3_bucket_keys(s3_client, bucket['name'], bucket, params['check_encryption'], params['check_acls'])
+            # h4ck :: buckets may contain . in their name, but this would break the browsing - Use sha1(bucket_name) as keys for the dictionary
+            bucket['id'] = get_bucket_id(bucket['name'])
+            s3_info['buckets'][bucket['id']] = bucket
             show_status(s3_info, False)
         except Exception as e:
-            printError('Failed to get config for %s' % bucket['Name'])
+            printError('Failed to get config for %s' % bucket['name'])
             printException(e)
         finally:
             q.task_done()
+
+# Not the AWS standard:: bucket IDs are defined as sha1(bucket_name)
+def get_bucket_id(bucket_name):
+    m = hashlib.sha1()
+    m.update(bucket_name)
+    return m.hexdigest()
 
 # Get key-specific information (server-side encryption, acls, etc...)
 def get_s3_bucket_keys(s3_client, bucket_name, bucket, check_encryption, check_acls):
