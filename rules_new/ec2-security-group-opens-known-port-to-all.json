@@ -3,6 +3,7 @@
     "description": "_ARG_0_ port open to all",
     "dashboard_name": "Rules",
     "entities": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",
+    "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
     "conditions": [
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id", "equal", "ingress" ],
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id", "equal", "_ARG_1_" ],

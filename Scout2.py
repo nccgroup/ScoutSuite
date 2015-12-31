@@ -150,6 +150,8 @@ def main(args):
              aws_config['services'][service]['violations'][rule]['level'] = rules[finding_path][rule]['level']
              if 'id_suffix' in rules[finding_path][rule]:
                  aws_config['services'][service]['violations'][rule]['id_suffix'] = rules[finding_path][rule]['id_suffix']
+             if 'display_path' in rules[finding_path][rule]:
+                 aws_config['services'][service]['violations'][rule]['display_path'] = rules[finding_path][rule]['display_path']
              aws_config['services'][service]['violations'][rule]['items'] = recurse(aws_config['services'], aws_config['services'], path, [], rules[finding_path][rule], True)
              aws_config['services'][service]['violations'][rule]['dashboard_name'] = rules[finding_path][rule]['dashboard_name'] if 'dashboard_name' in rules[finding_path][rule] else '??'
              if 'checked_items' in rules[finding_path][rule]:

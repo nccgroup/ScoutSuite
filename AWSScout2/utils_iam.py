@@ -60,7 +60,7 @@ def get_group_info(q, params):
             policies = get_inline_policies(iam_client, iam_info, 'group', group['name'])
             if len(policies):
                 group['inline_policies'] = policies
-            iam_info['groups'][group['name']] = group
+            iam_info['groups'][group['id']] = group
             show_status(iam_info, 'groups', False)
         except Exception as e:
             printException(e)
@@ -174,19 +174,29 @@ def get_managed_policy(q, params):
             iam_info['managed_policies'][policy['Arn']]['PolicyDocument'] = policy_version['Document']
             # Get attached IAM entities
             attached_entities = handle_truncated_response(iam_client.list_entities_for_policy, {'PolicyArn': policy['Arn']}, 'Marker', ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'])
+            printInfo(json.dumps(attached_entities))
             for entity_type in attached_entities:
-                type_field = entity_type.replace('Policy', '').lower()
+                resource_type = entity_type.replace('Policy', '').lower()
                 for entity in attached_entities[entity_type]:
                     name_field = entity_type.replace('Policy', '')[:-1] + 'Name'
-                    manage_dictionary(iam_info[type_field][entity[name_field]], 'managed_policies', [])
-                    iam_info[type_field][entity[name_field]]['managed_policies'].append(policy['Arn'])
-                    get_permissions(policy_version['Document'], iam_info['Permissions'], type_field, entity[name_field], policy['Arn'], True)
+                    resource_name = entity[name_field]
+                    resource_id = get_id_for_resource(iam_info, resource_type, resource_name)
+                    manage_dictionary(iam_info[resource_type][resource_id], 'managed_policies', [])
+                    iam_info[resource_type][resource_id]['managed_policies'].append(policy['Arn'])
+                    get_permissions(policy_version['Document'], iam_info['Permissions'], resource_type, resource_id, policy['Arn'], True)
             show_status(iam_info, 'managed_policies', False)
         except Exception as e:
             printException(e)
             pass
         finally:
             q.task_done()
+
+def get_id_for_resource(iam_info, resource_type, resource_name):
+    printInfo('Getting info about IAM %s %s' % (resource_type, resource_name))
+    for resource_id in iam_info[resource_type]:
+        if iam_info[resource_type][resource_id]['name'] == resource_name:
+            return resource_id
+
 
 def get_inline_policies(iam_client, iam_info, keyword, name):
     fetched_policies = {}
@@ -236,7 +246,7 @@ def get_role_info(q, params):
                 manage_dictionary(role['InstanceProfiles'], profile['Arn'], {})
                 role['InstanceProfiles'][profile['Arn']]['id'] = profile['InstanceProfileId']
                 role['InstanceProfiles'][profile['Arn']]['name'] = profile['InstanceProfileName']
-            iam_info['roles'][role['name']] = role
+            iam_info['roles'][role['id']] = role
             show_status(iam_info, 'roles', False)
         except Exception as e:
             printException(e)
@@ -290,7 +300,7 @@ def get_user_info(q, params):
                 pass
             user['AccessKeys'] = iam_client.list_access_keys(UserName = user['name'])['AccessKeyMetadata']
             user['MFADevices'] = iam_client.list_mfa_devices(UserName = user['name'])['MFADevices']
-            iam_info['users'][user['name']] = user
+            iam_info['users'][user['id']] = user
             show_status(iam_info, 'users', False)
         except Exception as e:
             printException(e)

@@ -11,7 +11,7 @@ function load_aws_config_from_json(script_id, cols) {
     // Abort if data was previously loaded
     if (loaded_config_array.indexOf(script_id) > 0) {
         // When the path does not contain .id.
-        return
+        return 0
     }
     path_array = script_id.split('.');
     for (i=3; i<path_array.length; i=i+2) {
@@ -21,13 +21,13 @@ function load_aws_config_from_json(script_id, cols) {
     fixed_path = path_array.join('.');
     if (loaded_config_array.indexOf(fixed_path) > 0) {
         // When the loaded path contains id but browsed-to path contains a specific value
-        return
+        return 0
     }
     path_array[1] = 'id';
     fixed_path = path_array.join('.');
     if (loaded_config_array.indexOf(fixed_path) > 0) {
         // Special case for services.id.violations
-        return
+        return 0
     }
 
     // Build the list based on the path, stopping at the first .id. value
@@ -36,10 +36,12 @@ function load_aws_config_from_json(script_id, cols) {
     console.log('Item will be at ');
     console.log(path_array);
     for (i in path_array) {
+        console.log(i);
         list = list[path_array[i]];
     }
 
     // Update the DOM
+    hideAll();
     if (cols == 0) {
         // Metadata
         process_template(script_id + '.list.template', script_id + '.list', list);
@@ -56,6 +58,7 @@ function load_aws_config_from_json(script_id, cols) {
     // Update the list of loaded data
     loaded_config_array.push(script_id);
     console.log(loaded_config_array);
+    return 1;
 }
 
 
@@ -72,46 +75,97 @@ function process_template(id1, container_id, list) {
     console.log('Done processing template...');
 }
 
+
 //
-// Hide all items Display functions
+// Hide all lists and details 
 //
 function hideAll() {
     $("[id*='.list']").not("[id='metadata.list']").hide();
     $("[id*='.details']").hide();
-/*
-    $("[id*='.link']").hide();
-    $("[id*='.view']").hide();
-*/
-    updateNavbar();
-}
-function showAll() {
-//    $("[id$='.row']").show();
-    $("[id*='.list']").show();
-//    $("[id*='.details']").show();
-//    $("[id*='.view']").show();
-    updateNavbar();
 }
 
 
+//
+// Show list and details' container for a given path
+//
 function showRow(path) {
-    // Show left menu
-    $('div').filter(function() { return this.id.match(path + '.list')}).show();
-    $('div').filter(function() { return this.id.match(path + '.details')}).show();
+    // Fix ids to *
+    path = path.replace(/.id./g, '\.[^.]+\.');
+    console.log('showRow:: ' + path);
+    // Show list
+    $('div').filter(function(){ return this.id.match(path + '.list') }).show();
+    // show details' container
+    $('div').filter(function(){ return this.id.match(path + '.details') }).show();
 }
 
+function hideRow(path) {
+    path = path.replace(/.id./g, '\.[^.]+\.');
+    $('div').filter(function(){ return this.id.match(path + '.list') }).hide();
+    $('div').filter(function(){ return this.id.match(path + '.details') }).hide();
+}
+
+//
+// Show links and views for a given path
+//
+function showItems(path) {
+    path = path.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.';
+    console.log('showItems:: ' + path);
+    $('div').filter(function(){ return this.id.match(path + 'link') }).show();
+    $('div').filter(function(){ return this.id.match(path + 'view') }).show();
+}
+
+
+//
+// Hide resource views for a given path
+//
+function hideItems(resource_path) {
+    path = resource_path.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.view';
+    console.log('hideItems:: ' + path);
+    $('div').filter(function(){ return this.id.match(path) }).hide();
+}
+
+
+//
+// Show list, details' container, links, and view for a given path
+//
 function showRowWithItems(path) {
-    console.log('ShowRowWithItems : ' + path);
-    new_path = path.replace('.id.', '.*.');
-    showRow(new_path);
-    $('div').filter(function() { return this.id.match(new_path + '.link')}).show();
-    $('div').filter(function() { return this.id.match(new_path + '.view')}).show();
+    showRow(path);
+    showItems(path);
 }
 
-function showSingleItem(path) {
-    $('div').filter(function() { return this.id.match('.*\.view$')}).not("[id='" + path + "']").hide();
-    $("[id='" + path + "']").show();
+
+//
+// Show findings
+//
+function showFindings(path, resource_path) {
+    console.log('showFindings:: ' + path);
+    items = get_value_at(path);
+    resource_path_array = resource_path.split('.');
+    for (item in items) {
+        var id1 = items[item];
+        console.log('Id = ' + id1);
+        id_array = id1.split('.');
+        var id2 = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
+        showSingleItem(id2);
+    }
 }
 
+
+//
+// Show a single item
+//
+function showSingleItem(id) {
+    if (!id.endsWith('.view')) {
+        id = id + '.view';
+    }
+    console.log('showSingleItem:: ' + id);
+    $("[id='" + id + "']").show();
+}
+
+
+//
+// TODO: FIX 
+//
 function showMultipleItems(path) {
     path = path.replace('.id.', '.*.');
     $('div').filter(function() { return this.id.match('.*\.view$')}).hide();
@@ -409,117 +463,48 @@ function get_value_at(path) {
 //
 // Browsing
 //
-var old_path = ''
+var current_resource_path = ''
 function updateDOM(anchor) {
-/*
-    var old_path = old_anchor.replace('#', '').split('.id.')[0]
-    var new_path = anchor.replace('#', ''); // .split('.id.')[0];
-*/
 
     var path = anchor.replace('#', '');
-    var path_array = path.split('.');
-
-    var service = path_array[1];
-    var resource_type = path_array[path_array.length-1];
-    var finding_prefix = 'services.' + service + '.violations.'
-
-    console.log('Old path = ' + old_path);
-    console.log('New path = ' + new_path);
-    console.log('Finding path = ' + finding_prefix); 
-/* 
-    if (new_path.startsWith(finding_prefix)) {
-        // Show findings...
-        var finding_path = get_value_at(new_path.replace('items', 'entities'));
-        var id_suffix = get_value_at(new_path.replace('items', 'id_suffix'));
-        var finding_path_array = finding_path.split('.');        
-        finding_path_array.pop();
-        finding_path = finding_path_array.join('.');        
-        var finding_resource_type = finding_path_array[finding_path_array.length-1];
-        if (finding_resource_type in aws_info['metadata'][service]['resources']) {
-            var cols = aws_info['metadata'][service]['resources'][finding_resource_type]['cols'];
-        } else {
-            var cols = 1;
-        }
-        hideAll();
-        load_aws_config_from_json('services.' + finding_path, cols);
-        hideAll();
-        updateTitle('TODO')
-        // Show findings only...
-        showRow('services.' + finding_path);
-        // Show items
-        items = get_value_at(new_path);
-        for (item in items) {
-            var id = items[item];
-            if (id_suffix) {
-                id = id.replace('.' + id_suffix, '');
-            }
-            $('div').filter(function() {
-                return this.id.match(id)
-            }).show();
-
-        }
-    } else if (old_path != '' && new_path.startsWith(old_path) && !new_path.startsWith(finding_path)) {
-        // Hide part of what's already there...
-        $("[id^='" + old_path + "']").filter("[id$='.view']").hide();
-        $("[id^='" + new_path + "']").show();
-    } else {
-        // Switch view...
-        console.log('Switching view...');
-        hideAll();
-        updateTitle(resource_type);
-        console.log('Service = ' + service);
-        console.log('Resource = ' + resource_type);
-        if (resource_type in aws_info['metadata'][service]['resources']) {
-            var cols = aws_info['metadata'][service]['resources'][resource_type]['cols'];
-        } else {
   
-          var cols = 1;
-        }
+    updateTitle('Foo');
 
-        // Lazy loading
-        load_aws_config_from_json(path, cols);
+    // Get resource path based on browsed-to path
+    var resource_path = get_resource_path(path);
+    console.log('Current resource path: ' + current_resource_path);
 
-        // DOM update
-        hideAll();
-        showRowWithItems(new_path);
-
-        // Update old anchor value
-        old_anchor = anchor;
-    }
-*/
-    if (path.endsWith('.view')) {
-        // Show only one item and do not touch the left menu
-        showSingleItem(path);
-    } else if (old_path != '' && path.match(old_path) && !path.startsWith(finding_prefix)) {
-        // Restore all or multiple items, do not touch the left menu
-        showMultipleItems(path);
-    } else {
-        // Switch view...
-        console.log('Switching view...');
-        hideAll();
-        // Update title
-        if (path == finding_prefix) {
-            title = 'Dashboard';
-        } else if (path.startsWith(finding_prefix)) {
-            title = 'Findings';
+    // DOM Update
+    if (path.endsWith('.items')) {
+        // Switch view for findings
+        lazy_loading(resource_path);
+            hideAll();
+            console.log('Resource path for showRow:: ' + resource_path);
+            hideItems(resource_path);
+            showRow(resource_path);
+            showFindings(path, resource_path);
+            current_resource_path = resource_path.replace(/.id./g, '\.[^.]+\.');
+    } else if (lazy_loading(resource_path) == 0) {
+        // 0 is returned when the data was already loaded, a DOM update is necessary then
+        if (path.endsWith('.view')) {
+            // Same details, one item
+            hideItems(current_resource_path);
+            showSingleItem(path);
+        } else if (current_resource_path != '' && resource_path.match(current_resource_path)) {
+            // Same details, multiple items
+            console.log('Success !! path = ' + path);
+            hideItems(current_resource_path);
+            showItems(path);
         } else {
-            title = resource_type;
+            // Switch view for resources
+            console.log('Switch view');
+            hideAll();
+            showRowWithItems(resource_path);
+            current_resource_path = resource_path.replace(/.id./g, '\.[^.]+\.');
         }
-        updateTitle(title);
-
-        // Lazy loading
-        if (resource_type in aws_info['metadata'][service]['resources']) {
-            var cols = aws_info['metadata'][service]['resources'][resource_type]['cols'];
-        } else {  
-          var cols = 1;
-        }
-        load_aws_config_from_json(path, cols);
-
-        // DOM update
-        showRowWithItems(path);
-
-        // Update old anchor value
-        old_path = path.replace('.id.', '.*.');
+    } else {
+        // The DOM was updated by the lazy loading function, save the current resource path
+        current_resource_path = resource_path.replace(/.id./g, '\.[^.]+\.');
     }
 
     // Coloring here ?
@@ -530,6 +515,68 @@ function updateDOM(anchor) {
     // Done !
     return
 }
+
+// TODO: merge into load_aws_config_from_json...
+function lazy_loading(path) { // , service, resource_type) {
+    console.log('Lazy loading from ' + path);
+/*
+    var path_array = path.split('.');
+    var service = path_array[1];
+    if (path.endsWith('.items')) {
+        var finding_path = get_value_at(path.replace('items', 'display_path'));
+        if (finding_path != undefined) {
+            console.log('Finding path (display) = ' + finding_path);          
+        } else {
+            finding_path = 'services.' + get_value_at(path.replace('items', 'entities'));
+            console.log('Finding path (entity) = ' + finding_path);
+        }
+        var finding_path_array = finding_path.split('.');
+        var resource_type = finding_path_array[finding_path_array.length-2];
+        console.log('Resource type = ' + resource_type);
+        finding_path_array.pop();
+        path = 'services.' + finding_path_array.join('.');
+        console.log('Loading from path ' + path);
+    } else if (path.endsWith('.view')) {
+        // This is a placeholder but should never happen...
+        alert('There is a bug...')
+        var resource_type = 'TBD';
+    } else {
+        var resource_type = path_array[path_array.length-1];
+    }
+*/
+    var resource_path_array = path.split('.')
+    var service = resource_path_array[1];
+    var resource_type = resource_path_array[resource_path_array.length - 1];
+    if (resource_type in aws_info['metadata'][service]['resources']) {
+        var cols = aws_info['metadata'][service]['resources'][resource_type]['cols'];
+    } else {  
+        var cols = 1;
+    }
+    return load_aws_config_from_json(path, cols);
+}
+
+var old_resource_path = '';
+function get_resource_path(path) {
+    var path_array = path.split('.');
+    if (path.endsWith('.items')) {
+        var resource_path = get_value_at(path.replace('items', 'display_path'));
+        if (resource_path == undefined) {
+            resource_path = get_value_at(path.replace('items', 'entities'));
+        }
+        resource_path_array = resource_path.split('.');
+        resource_path_array.pop();
+        resource_path = 'services.' + resource_path_array.join('.');
+    } else if (path.endsWith('.view')) {
+        // Resource path is not changed (this may break when using `back' button in browser)
+        var resource_path = old_resource_path;
+    } else {
+        var resource_path = path; // path_array[path_array.length-1];
+    }
+    console.log('Resource path:: ' + resource_path);
+    old_resource_path = resource_path;
+    return resource_path;
+}
+    
 
 
 //

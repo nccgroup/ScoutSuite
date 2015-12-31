@@ -5,7 +5,7 @@
       {{#each items}}
         {{#each vpcs}}
           {{#each (lookup . ../../resource_type)}}
-            <div id="services.{{../../service_name}}.regions.{{@../../key}}.vpcs.{{@../key}}.{{../../resource_type}}.{{@key}}.view">
+            <div class="list-group" id="services.{{../../../service_name}}.regions.{{@../../key}}.vpcs.{{@../key}}.{{../../../resource_type}}.{{@key}}.view">
               {{> (lookup ../../.. 'partial_name') service_name = ../../../service_name region = @../../key vpc = @../key resource_type = ../../../resource_type resource_key = @key resource = this}}
             </div>
           {{/each}}
