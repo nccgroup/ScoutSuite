@@ -174,7 +174,6 @@ def get_managed_policy(q, params):
             iam_info['managed_policies'][policy['Arn']]['PolicyDocument'] = policy_version['Document']
             # Get attached IAM entities
             attached_entities = handle_truncated_response(iam_client.list_entities_for_policy, {'PolicyArn': policy['Arn']}, 'Marker', ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'])
-            printInfo(json.dumps(attached_entities))
             for entity_type in attached_entities:
                 resource_type = entity_type.replace('Policy', '').lower()
                 for entity in attached_entities[entity_type]:
@@ -192,7 +191,6 @@ def get_managed_policy(q, params):
             q.task_done()
 
 def get_id_for_resource(iam_info, resource_type, resource_name):
-    printInfo('Getting info about IAM %s %s' % (resource_type, resource_name))
     for resource_id in iam_info[resource_type]:
         if iam_info[resource_type][resource_id]['name'] == resource_name:
             return resource_id
