@@ -89,27 +89,27 @@ function hideAll() {
 // Show list and details' container for a given path
 //
 function showRow(path) {
-    // Fix ids to *
     path = path.replace(/.id./g, '\.[^.]+\.');
-    console.log('showRow:: ' + path);
-    // Show list
     $('div').filter(function(){ return this.id.match(path + '.list') }).show();
-    // show details' container
     $('div').filter(function(){ return this.id.match(path + '.details') }).show();
 }
 
+
+//
+// Hide list and details' containers for a given path
+//
 function hideRow(path) {
     path = path.replace(/.id./g, '\.[^.]+\.');
     $('div').filter(function(){ return this.id.match(path + '.list') }).hide();
     $('div').filter(function(){ return this.id.match(path + '.details') }).hide();
 }
 
+
 //
 // Show links and views for a given path
 //
 function showItems(path) {
     path = path.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.';
-    console.log('showItems:: ' + path);
     $('div').filter(function(){ return this.id.match(path + 'link') }).show();
     $('div').filter(function(){ return this.id.match(path + 'view') }).show();
 }
@@ -120,7 +120,6 @@ function showItems(path) {
 //
 function hideItems(resource_path) {
     path = resource_path.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.view';
-    console.log('hideItems:: ' + path);
     $('div').filter(function(){ return this.id.match(path) }).hide();
 }
 
@@ -129,8 +128,8 @@ function hideItems(resource_path) {
 // Hide resource links for a given path
 //
 function hideLinks(resource_path) {
+    // TODO: Handle Region and VPC hiding...
     path = resource_path.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.link';
-    console.log('hideLinks:: ' + path);
     $('div').filter(function(){ return this.id.match(path) }).hide();
 }
 
@@ -148,15 +147,12 @@ function showRowWithItems(path) {
 // Show findings
 //
 function showFindings(path, resource_path) {
-    console.log('showFindings:: ' + path);
     items = get_value_at(path);
     resource_path_array = resource_path.split('.');
     for (item in items) {
-        var id1 = items[item];
-        console.log('Id = ' + id1);
-        id_array = id1.split('.');
-        var id2 = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
-        showSingleItem(id2);
+        var id_array = items[item].split('.');
+        var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
+        showSingleItem(id);
     }
 }
 
@@ -168,7 +164,6 @@ function showSingleItem(id) {
     if (!id.endsWith('.view')) {
         id = id + '.view';
     }
-    console.log('showSingleItem:: ' + id);
     $("[id='" + id + "']").show();
     id = id.replace('.view', '.link');
     $("[id='" + id + "']").show();
