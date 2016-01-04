@@ -415,9 +415,13 @@ REPORT_TITLE  = 'AWS Scout2 Report'
 def create_scout_report(environment_name, aws_config, force_write, debug):
     # Save data
     save_config_to_file(environment_name, aws_config, force_write, debug)
-    # Create the HTML report using all files under html/*
+    # Create the HTML report using all partials under html/partials/
     contents = ''
     for filename in glob.glob('html/partials/*'):
+        with open('%s' % filename, 'rt') as f:
+            contents = contents + f.read()
+    # Use all scripts under html/summaries/
+    for filename in glob.glob('html/summaries/*'):
         with open('%s' % filename, 'rt') as f:
             contents = contents + f.read()
     services = [service for service in aws_config['services']]

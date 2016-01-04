@@ -1,12 +1,8 @@
 
-<!----------------->
-<!-- IAM section -->
-<!----------------->
-
-  <!-- Template for IAM permissions -->
-  <div class="row" id="iam_Permissions.row">
-    <div id="iam_Permissions.list"></div>
-      <script id="iam_Permission.list.template" type="text/x-handlebars-template">
+<!-- IAM permissions -->
+<script id="services.iam.permissions.details.template" type="text/x-handlebars-template">
+  <div class="list-group" id="services.iam.permissions.details">
+    <div class="list-group" id="services.iam.permissions.view">
       {{#each items}}
         <div class="list-group">
           <div class="row list-group-item active">
@@ -71,12 +67,6 @@
           {{/each}}
         </div>
       {{/each}}
-      </script>
-  </div><!-- /.row -->
-
-<!-- Password policy -->
-<script id="services.iam.password_policy.list.template" type="text/x-handlebars-template">
- {{> services.iam.password_policy}}
+    </div>
+  </div>
 </script>
-
-

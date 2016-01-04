@@ -77,7 +77,7 @@ def get_group_users(iam_client, group_name):
 
 def get_iam_info(key_id, secret, session_token, service_config):
     manage_dictionary(service_config, 'groups', {})
-    manage_dictionary(service_config, 'Permissions', {})
+    manage_dictionary(service_config, 'permissions', {})
     manage_dictionary(service_config, 'roles', {})
     manage_dictionary(service_config, 'users', {})
     iam_client = connect_iam(key_id, secret, session_token)
@@ -182,7 +182,7 @@ def get_managed_policy(q, params):
                     resource_id = get_id_for_resource(iam_info, resource_type, resource_name)
                     manage_dictionary(iam_info[resource_type][resource_id], 'managed_policies', [])
                     iam_info[resource_type][resource_id]['managed_policies'].append(policy['Arn'])
-                    get_permissions(policy_version['Document'], iam_info['Permissions'], resource_type, resource_id, policy['Arn'], True)
+                    get_permissions(policy_version['Document'], iam_info['permissions'], resource_type, resource_id, policy['Arn'], True)
             show_status(iam_info, 'managed_policies', False)
         except Exception as e:
             printException(e)
@@ -213,7 +213,7 @@ def get_inline_policies(iam_client, iam_info, keyword, name):
             policy_document = get_policy_method(**args)['PolicyDocument']
             manage_dictionary(fetched_policies, policy_name, {})
             fetched_policies[policy_name]['PolicyDocument'] = policy_document
-            get_permissions(policy_document, iam_info['Permissions'], keyword + 's', name, policy_name)
+            get_permissions(policy_document, iam_info['permissions'], keyword + 's', name, policy_name)
     except Exception as e:
         printException(e)
     return fetched_policies

@@ -50,14 +50,17 @@
             }
         },
         "summaries": {
-            "permissions": "",
+            "permissions": {
+                "cols": 1,
+                "path": "services.iam.permissions"
+            },
             "password_policy": {
                 "cols": 1,
                 "path": "services.iam.password_policy"
             },
             "root_account": {
                 "cols": 1,
-                "path": "services.iam.credential_report.root_account"
+                "path": "services.iam.credential_report.<root_account>"
             }
         }
     },

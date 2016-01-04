@@ -66,12 +66,16 @@ function load_aws_config_from_json(script_id, cols) {
 // Compile Handlebars templates and update the DOM
 //
 function process_template(id1, container_id, list) {
+    id1 = id1.replace('<', '').replace('>', '');
     console.log('Getting template script from ID = ' + id1);
     var template_to_compile = document.getElementById(id1).innerHTML;
     var compiled_template = Handlebars.compile(template_to_compile);
     console.log('Done compiling, starting processing...');
+    console.log('Creating inner HTML...');
+    var inner_html = compiled_template({items: list});
+    console.log('Done !');
     console.log('Setting inner HTML value of ID = ' + container_id);
-    document.getElementById(container_id).innerHTML += compiled_template({items: list});
+    document.getElementById(container_id).innerHTML += inner_html;
     console.log('Done processing template...');
 }
 
@@ -443,7 +447,7 @@ function showAllResources(script_id) {
 function makeTitle(resource_path) {
     service = resource_path.split('.')[1];
     resource = resource_path.split('.').pop();
-    title = (service + ' ' + resource).replace('_', ' ').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+    title = (service + ' ' + resource).replace('_', ' ').replace('<', '').replace('>', '').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     title = title.replace("Cloudtrail","CloudTrail").replace("Ec2","EC2").replace("Iam","IAM").replace("Rds","RDS").replace("Elb", "ELB").replace("Acl","ACL").replace("Violations", "Dashboard");
     return title
 }
@@ -609,9 +613,15 @@ var add_templates = function(service, section, resource_type, path, cols) {
     add_template(service, section, resource_type, path, 'details');
     if (cols > 1) {
         add_template(service, section, resource_type, path, 'list');
-    }
+    }/* else {
+        console.log('Foo !!' + service + ', ' + section + ', ' + resource_type + ', ' + path);       
+    }*/
 }
 
+
+//
+// Add resource templates
+//
 var add_template = function(service, section, resource_type, path, suffix) {
     var template = document.createElement("script");
     template.type = "text/x-handlebars-template";
@@ -637,16 +647,8 @@ var add_template = function(service, section, resource_type, path, suffix) {
             console.log('Invalid suffix (' + suffix + ') for resources template.');
         }
         template.innerHTML = "{{> " + partial_name + " service_name = '" + service + "' resource_type = '" + resource_type + "' partial_name = '" + path + "'}}";
-    } else if (section == 'summaries') {
-        template.innerHTML = "{{> " + path + "'}}";
-    } else if (section == 'risks') {
-        console.log('TBD...');
-        return;
-    } else {
-        console.log('Unsupported dropdown section: ' + section);
-        return;
+        $('body').append(template);
     }
-    $('body').append(template);
 }
 
 var add_summary_template = function(path) {
