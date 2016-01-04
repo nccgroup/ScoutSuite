@@ -31,7 +31,10 @@
             }
         },
         "summaries": {
-            "external attack surface": ""
+            "external attack surface": {
+                "cols": 1,
+                "path": "services.ec2.attack_surface"
+            }
         }
     },
     "iam": {

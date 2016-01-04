@@ -23,12 +23,11 @@ protocols_dict = load_data('protocols.json', 'protocols')
 def analyze_ec2_config(ec2_info, aws_account_id, force_write):
     try:
         printInfo('Analyzing EC2 data... ', newLine = False)
-        analyze_config(ec2_finding_dictionary, ec2_filter_dictionary, ec2_info, 'EC2', force_write)
         # Tweaks
         link_elastic_ips(ec2_info)
         add_security_group_name_to_ec2_grants(ec2_info, aws_account_id)
         # Custom EC2 analysis
-        check_for_elastic_ip(ec2_info)
+#        check_for_elastic_ip(ec2_info)
         list_network_attack_surface(ec2_info, 'attack_surface', 'PublicIpAddress')
         # TODO: make this optional, commented out for now
         # list_network_attack_surface(ec2_info, 'private_attack_surface', 'PrivateIpAddress')
