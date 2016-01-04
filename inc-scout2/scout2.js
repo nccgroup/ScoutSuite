@@ -126,6 +126,16 @@ function hideItems(resource_path) {
 
 
 //
+// Hide resource links for a given path
+//
+function hideLinks(resource_path) {
+    path = resource_path.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.link';
+    console.log('hideLinks:: ' + path);
+    $('div').filter(function(){ return this.id.match(path) }).hide();
+}
+
+
+//
 // Show list, details' container, links, and view for a given path
 //
 function showRowWithItems(path) {
@@ -159,6 +169,8 @@ function showSingleItem(id) {
         id = id + '.view';
     }
     console.log('showSingleItem:: ' + id);
+    $("[id='" + id + "']").show();
+    id = id.replace('.view', '.link');
     $("[id='" + id + "']").show();
 }
 
@@ -390,21 +402,31 @@ function load_metadata() {
     }
 }
 
+
 ////////////////////////
 // Browsing functions //
 ////////////////////////
 
+
+//
+// Show About Scout2 div
+//
 function about() {
     hideAll();
     showRow('about');
     $('#section_title-h2').text('');
 }
 
+
+//
+// Show main dashboard
+//
 function show_main_dashboard() {
     hideAll()
     showRowWithItems('last_run');
     $('#section_title-h2').text('');
 }
+
 
 //
 // Show All Resources
@@ -419,15 +441,32 @@ function showAllResources(script_id) {
     }
 }
 
-function updateTitle(title) {
-    title = title.replace('_', ' ').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+
+//
+// Make title from resource path
+//
+function makeTitle(resource_path) {
+    service = resource_path.split('.')[1];
+    resource = resource_path.split('.').pop();
+    title = (service + ' ' + resource).replace('_', ' ').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     title = title.replace("Cloudtrail","CloudTrail").replace("Ec2","EC2").replace("Iam","IAM").replace("Rds","RDS").replace("Elb", "ELB").replace("Acl","ACL").replace("Violations", "Dashboard");
+    return title
+}
+
+
+//
+// Update title div's contents
+//
+function updateTitle(title) {
     $("#section_title-h2").text(title);
 }
 
 
+//
+// Update the DOM
+//
 function locationHashChanged() {
-    updateDOM(location.hash); // .replace('#'));
+    updateDOM(location.hash);
 }
 window.onhashchange = locationHashChanged;
 
@@ -458,7 +497,13 @@ function updateDOM(anchor) {
     console.log('Current resource path: ' + current_resource_path);
 
     // Update title
-    updateTitle(path);
+    if (path.endsWith('.items')) {
+        title = get_value_at(path.replace('items', 'description'));
+        updateTitle(title);
+    } else {
+        title = makeTitle(resource_path);
+        updateTitle(title);
+    }
 
     // DOM Update
     if (path.endsWith('.items')) {
@@ -467,6 +512,7 @@ function updateDOM(anchor) {
         hideAll();
         console.log('Resource path for showRow:: ' + resource_path);
         hideItems(resource_path);
+        hideLinks(resource_path);
         showRow(resource_path);
         showFindings(path, resource_path);
         current_resource_path = resource_path; // .replace(/.id./g, '\.[^.]+\.');
