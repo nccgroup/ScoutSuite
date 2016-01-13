@@ -175,7 +175,9 @@ def get_s3_bucket_webhosting(s3_client, bucket_name, bucket_info):
     try:
         result = s3_client.get_bucket_website(Bucket = bucket_name)
         bucket_info['web_hosting'] = 'Enabled' if 'IndexDocument' in result else 'Disabled'
-    except:
+    except Exception as e:
+        # TODO: distinguish permission denied from  'NoSuchWebsiteConfiguration' errors
+        bucket_info['web_hosting'] = 'Disabled'
         pass
 
 # List all available buckets

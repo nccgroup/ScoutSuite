@@ -3,9 +3,11 @@
     "dashboard_name": "Bucket",
     "description": "_ARG_2_",
     "entities": "s3.buckets.id.grantees.id",
+    "display_path": "s3.buckets.id",
     "conditions": [
         [ "s3.buckets.id.grantees.id", "equal", "http://acs.amazonaws.com/groups/global/_ARG_0_" ],
         [ "s3.buckets.id.grantees.id.permissions._ARG_1_", "true", "" ]
     ],
+    "id_suffix": "_ARG_1_",
     "level": "_ARG_3_"
 }

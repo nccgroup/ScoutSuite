@@ -1,11 +1,12 @@
 {
-    "description": "Lack of MFA",
+    "description": "User without MFA",
     "entities": "iam.users.id",
     "dashboard_name": "Users",
     "conditions": [
         [ "iam.users.id.", "withKey", "LoginProfile" ],
         [ "iam.users.id.MFADevices", "empty", "" ]
     ],
+    "id_suffix": "mfa_enabled",
     "level": "danger",
     "listing": {
         "keys": [

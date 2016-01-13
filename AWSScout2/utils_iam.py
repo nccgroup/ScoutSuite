@@ -60,6 +60,7 @@ def get_group_info(q, params):
             policies = get_inline_policies(iam_client, iam_info, 'group', group['name'])
             if len(policies):
                 group['inline_policies'] = policies
+            group['inline_policies_count'] = policies
             iam_info['groups'][group['id']] = group
             show_status(iam_info, 'groups', False)
         except Exception as e:
@@ -181,7 +182,9 @@ def get_managed_policy(q, params):
                     resource_name = entity[name_field]
                     resource_id = get_id_for_resource(iam_info, resource_type, resource_name)
                     manage_dictionary(iam_info[resource_type][resource_id], 'managed_policies', [])
+                    manage_dictionary(iam_info[resource_type][resource_id], 'managed_policies_count', 0)
                     iam_info[resource_type][resource_id]['managed_policies'].append(policy['Arn'])
+                    iam_info[resource_type][resource_id]['managed_policies_count'] = iam_info[resource_type][resource_id]['managed_policies_count'] + 1
                     get_permissions(policy_version['Document'], iam_info['permissions'], resource_type, resource_id, policy['Arn'], True)
             show_status(iam_info, 'managed_policies', False)
         except Exception as e:
@@ -238,6 +241,7 @@ def get_role_info(q, params):
             policies = get_inline_policies(iam_client, iam_info, 'role', role['name'])
             if len(policies):
                 role['inline_policies'] = policies
+            role['inline_policies_count'] = len(policies)
             profiles = handle_truncated_response(iam_client.list_instance_profiles_for_role, {'RoleName': role['name']}, 'Marker', ['InstanceProfiles'])
             manage_dictionary(role, 'InstanceProfiles', {})
             for profile in profiles['InstanceProfiles']:
@@ -288,6 +292,7 @@ def get_user_info(q, params):
             policies = get_inline_policies(iam_client, iam_info, 'user', user['name'])
             if len(policies):
                 user['inline_policies'] = policies
+            user['inline_policies_count'] = len(policies)
             user['groups'] = []
             groups = handle_truncated_response(iam_client.list_groups_for_user, {'UserName': user['name']}, 'Marker', ['Groups'])['Groups']
             for group in groups:

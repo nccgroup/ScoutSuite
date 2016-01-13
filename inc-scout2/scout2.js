@@ -157,6 +157,13 @@ function showFindings(path, resource_path) {
         var id_array = items[item].split('.');
         var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
         showSingleItem(id);
+        if ($('[id="' + items[item] + '"]').hasClass('badge')) {
+            $('[id="' + items[item] + '"]').addClass('finding-title-danger');
+        } else {
+            console.log(items[item]);
+            $('[id="' + items[item] + '"]').addClass('finding-danger');
+        }
+        $('[id="' + items[item] + '"]').removeClass('finding-hidden');
     }
 }
 
@@ -504,17 +511,20 @@ function updateDOM(anchor) {
         updateTitle(title);
     }
 
+    // Clear findings highlighting
+    $('span').removeClass('finding-danger');
+    $('span').removeClass('finding-warning');
+
     // DOM Update
     if (path.endsWith('.items')) {
         // Switch view for findings
         lazy_loading(resource_path);
         hideAll();
-        console.log('Resource path for showRow:: ' + resource_path);
         hideItems(resource_path);
         hideLinks(resource_path);
         showRow(resource_path);
         showFindings(path, resource_path);
-        current_resource_path = resource_path; // .replace(/.id./g, '\.[^.]+\.');
+        current_resource_path = resource_path;
     } else if (lazy_loading(resource_path) == 0) {
         // 0 is returned when the data was already loaded, a DOM update is necessary then
         if (path.endsWith('.view')) {
@@ -523,22 +533,23 @@ function updateDOM(anchor) {
             showSingleItem(path);
         } else if (current_resource_path != '' && resource_path.match(current_resource_path.replace(/.id./g, '\.[^.]+\.'))) {
             // Same details, multiple items
-            console.log('Success !! path = ' + path);
             hideItems(current_resource_path);
             showItems(path);
         } else {
             // Switch view for resources
-            console.log('Switch view');
             hideAll();
             showRowWithItems(resource_path);
-            current_resource_path = resource_path; // .replace(/.id./g, '\.[^.]+\.');
+            current_resource_path = resource_path;
         }
+        // TODO: Highlight all findings...
+        
     } else {
         // The DOM was updated by the lazy loading function, save the current resource path
-        current_resource_path = resource_path; // .replace(/.id./g, '\.[^.]+\.');
+        current_resource_path = resource_path;
     }
 
-    // TODO: Findings highlighting
+
+
 
     // Scroll to the top
     window.scrollTo(0,0);

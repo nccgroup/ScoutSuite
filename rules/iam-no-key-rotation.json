@@ -3,6 +3,7 @@
     "key": "iam-no-_ARG_0_key-rotation.json",
     "entities": "iam.users.id.AccessKeys.id",
     "dashboard_name": "Access keys",
+    "display_path": "iam.users.id",
     "conditions": [
         [ "iam.users.id.AccessKeys.id.CreateDate", "dateOlderThan", "90" ],
         [ "iam.users.id.AccessKeys.id.Status", "equal", "_ARG_0_" ]

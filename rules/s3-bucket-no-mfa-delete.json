@@ -1,0 +1,10 @@
+{
+    "dashboard_name": "Bucket",
+    "description": "Bucket without MFA delete",
+    "entities": "s3.buckets.id",
+    "conditions": [
+        [ "s3.buckets.id.version_mfa_delete", "equal", "Disabled" ]
+    ],
+    "id_suffix": "mfa_delete",
+    "level": "warning"
+}

@@ -1,10 +1,11 @@
 {
-    "description": "Multiple active keys for single user",
+    "description": "User with multiple API keys",
     "entities": "iam.users.id",
     "dashboard_name": "Users",
     "conditions": [
         [ "iam.users.id.AccessKeys", "lengthMoreThan", "1" ]
     ],
     "level": "warning",
+    "id_suffix": "multiple_api_keys",
     "listing": { "keys": [ "iam.users.id.AccessKeys" ] }
 }

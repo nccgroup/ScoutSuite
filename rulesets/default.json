@@ -183,7 +183,19 @@
             "enabled": "true"
         },
         {
-            "filename": "s3-bucket-logging-disabled.json",
+            "filename": "s3-bucket-no-logging.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "s3-bucket-no-mfa-delete.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "s3-bucket-no-versioning.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "s3-bucket-website-enabled.json",
             "enabled": "true"
         },
         {

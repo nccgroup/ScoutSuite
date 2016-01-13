@@ -5,5 +5,6 @@
     "conditions": [
         [ "iam.users.id.groups", "containNoneOf", [ "AllHumanUsers", "AllHeadlessUsers" ] ]
     ],
+    "id_suffix": "member_of_category_group",
     "level": "danger"
 }
