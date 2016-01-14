@@ -57,10 +57,10 @@ def get_group_info(q, params):
             group['id'] = group.pop('GroupId')
             group['name'] = group.pop('GroupName')
             group['users'] = get_group_users(iam_client, group['name']);
-            policies = get_inline_policies(iam_client, iam_info, 'group', group['name'])
+            policies = get_inline_policies(iam_client, iam_info, 'group', group['id'], group['name'])
             if len(policies):
                 group['inline_policies'] = policies
-            group['inline_policies_count'] = policies
+            group['inline_policies_count'] = len(policies)
             iam_info['groups'][group['id']] = group
             show_status(iam_info, 'groups', False)
         except Exception as e:
@@ -100,54 +100,53 @@ def get_iam_info(key_id, secret, session_token, service_config):
     printInfo('Fetching IAM password policy...')
     get_account_password_policy(iam_client, service_config)
 
-def get_permissions(policy_document, permissions, keyword, name, policy_name, is_managed_policy = False):
+def get_permissions(policy_document, permissions, resource_type, name, policy_name, is_managed_policy = False):
     manage_dictionary(permissions, 'Action', {})
     manage_dictionary(permissions, 'NotAction', {})
     if type(policy_document['Statement']) != list:
-        parse_statement(policy_document, permissions, keyword, name, policy_name, is_managed_policy, policy_document['Statement'])
+        parse_statement(policy_document, permissions, resource_type, name, policy_name, is_managed_policy, policy_document['Statement'])
     else:
         for statement in policy_document['Statement']:
-            parse_statement(policy_document, permissions, keyword, name, policy_name, is_managed_policy, statement)
+            parse_statement(policy_document, permissions, resource_type, name, policy_name, is_managed_policy, statement)
 
-def parse_statement(policy_document, permissions, keyword, name, policy_name, is_managed_policy, statement):
+def parse_statement(policy_document, permissions, resource_type, name, policy_name, is_managed_policy, statement):
         effect = str(statement['Effect'])
         action_string = 'Action' if 'Action' in statement else 'NotAction'
         resource_string = 'Resource' if 'Resource' in statement else 'NotResource'
         condition = statement['Condition'] if 'Condition' in statement else None
-        parse_actions(permissions[action_string], statement[action_string], resource_string, statement[resource_string], effect, keyword, name, policy_name, is_managed_policy, condition)
+        parse_actions(permissions[action_string], statement[action_string], resource_string, statement[resource_string], effect, resource_type, name, policy_name, is_managed_policy, condition)
 
-def parse_actions(permissions, actions, resource_string, resources, effect, keyword, name, policy_name, is_managed_policy, condition):
+def parse_actions(permissions, actions, resource_string, resources, effect, resource_type, name, policy_name, is_managed_policy, condition):
     if type(actions) == list:
         for action in actions:
-            parse_action(permissions, action, resource_string, resources, effect, keyword, name, policy_name, is_managed_policy, condition)
+            parse_action(permissions, action, resource_string, resources, effect, resource_type, name, policy_name, is_managed_policy, condition)
     else:
-        parse_action(permissions, actions, resource_string, resources, effect, keyword, name, policy_name, is_managed_policy, condition)
+        parse_action(permissions, actions, resource_string, resources, effect, resource_type, name, policy_name, is_managed_policy, condition)
 
-def parse_action(permissions, action, resource_string, resources, effect, keyword, name, policy_name, is_managed_policy, condition):
+def parse_action(permissions, action, resource_string, resources, effect, resource_type, name, policy_name, is_managed_policy, condition):
     manage_dictionary(permissions, action, {})
-    parse_resources(permissions[action], resource_string, resources, effect, keyword, name, policy_name, is_managed_policy, condition)
+    parse_resources(permissions[action], resource_string, resources, effect, resource_type, name, policy_name, is_managed_policy, condition)
 
-def parse_resources(permission, resource_string, resources, effect, keyword, name, policy_name, is_managed_policy, condition):
+def parse_resources(permission, resource_string, resources, effect, resource_type, name, policy_name, is_managed_policy, condition):
     if type(resources) == list:
         for resource in resources:
-            parse_resource(permission, resource_string, resource, effect, keyword, name, policy_name, is_managed_policy, condition)
+            parse_resource(permission, resource_string, resource, effect, resource_type, name, policy_name, is_managed_policy, condition)
     else:
-        parse_resource(permission, resource_string, resources, effect, keyword, name, policy_name, is_managed_policy, condition)
+        parse_resource(permission, resource_string, resources, effect, resource_type, name, policy_name, is_managed_policy, condition)
 
-def parse_resource(permission, resource_string, resource, effect, keyword, name, policy_name, is_managed_policy, condition):
-    keyword = keyword.title()
-    manage_dictionary(permission, keyword, {})
-    manage_dictionary(permission[keyword], effect, {})
-    manage_dictionary(permission[keyword][effect], name, {})
-    manage_dictionary(permission[keyword][effect][name], resource_string, {})
-    manage_dictionary(permission[keyword][effect][name][resource_string], resource, {})
+def parse_resource(permission, resource_string, resource, effect, resource_type, name, policy_name, is_managed_policy, condition):
+    manage_dictionary(permission, resource_type, {})
+    manage_dictionary(permission[resource_type], effect, {})
+    manage_dictionary(permission[resource_type][effect], name, {})
+    manage_dictionary(permission[resource_type][effect][name], resource_string, {})
+    manage_dictionary(permission[resource_type][effect][name][resource_string], resource, {})
     if is_managed_policy:
         policy_type = 'managed_policies'
     else:
         policy_type = 'inline_policies'
-    manage_dictionary(permission[keyword][effect][name][resource_string][resource], policy_type, {})
-    manage_dictionary(permission[keyword][effect][name][resource_string][resource][policy_type], policy_name, {})
-    permission[keyword][effect][name][resource_string][resource][policy_type][policy_name]['condition'] = condition
+    manage_dictionary(permission[resource_type][effect][name][resource_string][resource], policy_type, {})
+    manage_dictionary(permission[resource_type][effect][name][resource_string][resource][policy_type], policy_name, {})
+    permission[resource_type][effect][name][resource_string][resource][policy_type][policy_name]['condition'] = condition
 
 def get_managed_policies(iam_client, iam_info):
     policies = []
@@ -199,12 +198,15 @@ def get_id_for_resource(iam_info, resource_type, resource_name):
             return resource_id
 
 
-def get_inline_policies(iam_client, iam_info, keyword, name):
+#
+# Get inline policies for a group, role, or user
+#
+def get_inline_policies(iam_client, iam_info, resource_type, resource_id, resource_name):
     fetched_policies = {}
-    get_policy_method = getattr(iam_client, 'get_' + keyword + '_policy')
-    list_policy_method = getattr(iam_client, 'list_' + keyword + '_policies')
+    get_policy_method = getattr(iam_client, 'get_' + resource_type + '_policy')
+    list_policy_method = getattr(iam_client, 'list_' + resource_type + '_policies')
     args = {}
-    args[keyword.title() + 'Name'] = name
+    args[resource_type.title() + 'Name'] = resource_name
     try:
         policy_names = list_policy_method(**args)['PolicyNames']
     except Exception as e:
@@ -216,7 +218,7 @@ def get_inline_policies(iam_client, iam_info, keyword, name):
             policy_document = get_policy_method(**args)['PolicyDocument']
             manage_dictionary(fetched_policies, policy_name, {})
             fetched_policies[policy_name]['PolicyDocument'] = policy_document
-            get_permissions(policy_document, iam_info['permissions'], keyword + 's', name, policy_name)
+            get_permissions(policy_document, iam_info['permissions'], resource_type + 's', resource_id, policy_name)
     except Exception as e:
         printException(e)
     return fetched_policies
@@ -238,7 +240,7 @@ def get_role_info(q, params):
                 continue
             role['id'] = role.pop('RoleId')
             role['name'] = role.pop('RoleName')
-            policies = get_inline_policies(iam_client, iam_info, 'role', role['name'])
+            policies = get_inline_policies(iam_client, iam_info, 'role', role['id'], role['name'])
             if len(policies):
                 role['inline_policies'] = policies
             role['inline_policies_count'] = len(policies)
@@ -289,7 +291,7 @@ def get_user_info(q, params):
                 continue
             user['id'] = user.pop('UserId')
             user['name'] = user.pop('UserName')
-            policies = get_inline_policies(iam_client, iam_info, 'user', user['name'])
+            policies = get_inline_policies(iam_client, iam_info, 'user', user['id'], user['name'])
             if len(policies):
                 user['inline_policies'] = policies
             user['inline_policies_count'] = len(policies)

@@ -259,3 +259,11 @@ Handlebars.registerHelper('escape_special_chars', function(value) {
     return value.replace(/\./g, 'nccdot').replace(/,/g, 'ncccoma');
 });
 
+Handlebars.registerHelper('get_value_at', function() {
+    var path = arguments[0];
+    for (var i = 1; i < arguments.length -1; i++) {
+        path = path + '.' + arguments[i];
+    }
+    console.log('Path = ' + path);
+    return get_value_at(path);
+});

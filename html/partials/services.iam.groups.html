@@ -21,14 +21,14 @@
               <div class="accordion-inner">
                 <ul class="no-bullet">
                   {{#each Users}}
-                    <li><a href="javascript:showObject(['services', 'iam', 'Users', '{{this}}'])">{{this}}</a></li>
+                    <li><a href="javascript:showObject('services.iam.users.{{this}}')">{{this}}</a></li>
                   {{/each}}
                 </ul>
               </div>
             </div>
           </div>
         </div>
-        {{> services.iam.inline_policies entity_type = 'group'}}
+        {{> services.iam.inline_policies resource_type = 'groups' resource_id = @key}}
         {{> services.iam.managed_policies}}
     </script>
     <script>

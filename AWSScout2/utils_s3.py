@@ -20,38 +20,41 @@ def analyze_s3_config(s3_info, aws_account_id, force_write):
     analyze_config(s3_finding_dictionary, s3_filter_dictionary, s3_info, 'S3', force_write)
 
 def match_iam_policies_and_buckets(s3_info, iam_info):
-    if 'Action' in iam_info['Permissions']:
-        for action in (x for x in iam_info['Permissions']['Action'] if ((x.startswith('s3:') and x != 's3:ListAllMyBuckets') or (x == '*'))):
-            for iam_entity in iam_info['Permissions']['Action'][action]:
-                if 'Allow' in iam_info['Permissions']['Action'][action][iam_entity]:
-                    for allowed_iam_entity in iam_info['Permissions']['Action'][action][iam_entity]['Allow']:
+    if 'Action' in iam_info['permissions']:
+        for action in (x for x in iam_info['permissions']['Action'] if ((x.startswith('s3:') and x != 's3:ListAllMyBuckets') or (x == '*'))):
+            for iam_entity in iam_info['permissions']['Action'][action]:
+                if 'Allow' in iam_info['permissions']['Action'][action][iam_entity]:
+                    for allowed_iam_entity in iam_info['permissions']['Action'][action][iam_entity]['Allow']:
                         # For resource statements, we can easily rely on the existing permissions structure
-                        if 'Resource' in iam_info['Permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]:
-                            for full_path in (x for x in iam_info['Permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['Resource'] if x.startswith('arn:aws:s3:') or x == '*'):
+                        if 'Resource' in iam_info['permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]:
+                            for full_path in (x for x in iam_info['permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['Resource'] if x.startswith('arn:aws:s3:') or x == '*'):
                                 parts = full_path.split('/')
                                 bucket_name = parts[0].split(':')[-1]
-                                update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entity, iam_info['Permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['Resource'][full_path])
+                                update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entity, iam_info['permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['Resource'][full_path])
                         # For notresource statements, we must fetch the policy document to determine which buckets are not protected
-                        if 'NotResource' in iam_info['Permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]:
-                            for full_path in (x for x in iam_info['Permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['NotResource'] if x.startswith('arn:aws:s3:') or x == '*'):
+                        if 'NotResource' in iam_info['permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]:
+                            for full_path in (x for x in iam_info['permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['NotResource'] if x.startswith('arn:aws:s3:') or x == '*'):
                                 for policy_type in ['InlinePolicies', 'ManagedPolicies']:
-                                    if policy_type in iam_info['Permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['NotResource'][full_path]:
-                                        for policy in iam_info['Permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['NotResource'][full_path][policy_type]:
+                                    if policy_type in iam_info['permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['NotResource'][full_path]:
+                                        for policy in iam_info['permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['NotResource'][full_path][policy_type]:
                                             update_bucket_permissions(s3_info, iam_info, action, iam_entity, allowed_iam_entity, full_path, policy_type, policy)
 
 
 def update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entity, policy_info):
     if bucket_name != '*' and bucket_name in s3_info['buckets']:
         bucket = s3_info['buckets'][bucket_name]
-        iam_entity = 'iam_' + iam_entity
         manage_dictionary(bucket, iam_entity, {})
-        manage_dictionary(bucket[iam_entity], allowed_iam_entity, {})
-        if 'InlinePolicies' in policy_info:
-            manage_dictionary(bucket[iam_entity][allowed_iam_entity], 'InlinePolicies', {})
-            bucket[iam_entity][allowed_iam_entity]['InlinePolicies'].update(policy_info['InlinePolicies'])
-        if 'ManagedPolicies' in policy_info:
-            manage_dictionary(bucket[iam_entity][allowed_iam_entity], 'ManagedPolicies', {})
-            bucket[iam_entity][allowed_iam_entity]['ManagedPolicies'].update(policy_info['ManagedPolicies'])
+        manage_dictionary(bucket, iam_entity + '_count', 0)
+        if not allowed_iam_entity in bucket[iam_entity]:
+            bucket[iam_entity][allowed_iam_entity] = {}
+            bucket[iam_entity + '_count'] = bucket[iam_entity + '_count'] + 1
+
+        if 'inline_policies' in policy_info:
+            manage_dictionary(bucket[iam_entity][allowed_iam_entity], 'inline_policies', {})
+            bucket[iam_entity][allowed_iam_entity]['inline_policies'].update(policy_info['inline_policies'])
+        if 'managed_policies' in policy_info:
+            manage_dictionary(bucket[iam_entity][allowed_iam_entity], 'managed_policies', {})
+            bucket[iam_entity][allowed_iam_entity]['managed_policies'].update(policy_info['managed_policies'])
     elif bucket_name == '*':
         for bucket in s3_info['buckets']:
             update_iam_permissions(s3_info, bucket, iam_entity, allowed_iam_entity, policy_info)
@@ -83,7 +86,7 @@ def update_bucket_permissions(s3_info, iam_info, action, iam_entity, allowed_iam
                 allowed_buckets = []
     policy_info = {}
     policy_info[policy_type] = {}
-    policy_info[policy_type][policy_name] = iam_info['Permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['NotResource'][full_path][policy_type][policy_name]
+    policy_info[policy_type][policy_name] = iam_info['permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['NotResource'][full_path][policy_type][policy_name]
     for bucket_name in allowed_buckets:
         update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entity, policy_info)
 

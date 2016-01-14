@@ -152,16 +152,17 @@ function showRowWithItems(path) {
 //
 function showFindings(path, resource_path) {
     items = get_value_at(path);
+    level = get_value_at(path.replace('items', 'level'));
     resource_path_array = resource_path.split('.');
     for (item in items) {
         var id_array = items[item].split('.');
         var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
         showSingleItem(id);
         if ($('[id="' + items[item] + '"]').hasClass('badge')) {
-            $('[id="' + items[item] + '"]').addClass('finding-title-danger');
+            $('[id="' + items[item] + '"]').addClass('finding-title-' + level);
         } else {
             console.log(items[item]);
-            $('[id="' + items[item] + '"]').addClass('finding-danger');
+            $('[id="' + items[item] + '"]').addClass('finding-' + level);
         }
         $('[id="' + items[item] + '"]').removeClass('finding-hidden');
     }
@@ -320,20 +321,23 @@ function showEC2SecurityGroup(region, vpc, id) {
     showPopup();
 }
 function showObject(path) {
-    var plen = path.length
+    var path_array = path.split('.');
+    var path_length = path_array.length;
     var data = aws_info;
-    for (var i = 0; i < plen; i++) {
-        data = data[path[i]];
+    for (var i = 0; i < path_length; i++) {
+        console.log('Getting data[' + path_array[i] + ']...');
+        data = data[path_array[i]];
     }
-    var resource_type = path[1] + '_' + path[plen-2];
+    console.log(data);
+    var resource_type = path_array[1] + '_' + path_array[path_length-2];
     switch(resource_type) {
-        case "iam_Groups":
+        case "iam_groups":
             $('#overlay-details').html(single_iam_group_template(data));
         break;
-        case "iam_Roles":
+        case "iam_roles":
             $('#overlay-details').html(single_iam_role_template(data));
         break;
-        case "iam_Users":
+        case "iam_users":
             $('#overlay-details').html(single_iam_user_template(data));
         break;
         case "ec2_instances":

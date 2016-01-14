@@ -23,7 +23,7 @@
                         <ul>
                           {{#each this}}
                             {{addMember 'name' @key}}
-                            <li class="list-group-item-text"><a href="javascript:showObject(['services', 'iam', '{{../../../type}}', '{{@key}}'])">{{@key}}</a></li>
+                            <li class="list-group-item-text"><a href="javascript:showObject('services.iam.{{../../../type}}.{{@key}}')">{{get_value_at 'services.iam' ../../../type @key 'name'}}</a></li>
                             <ul>
                               {{#each this}}
                                 {{#ifShow @key 'name'}}
