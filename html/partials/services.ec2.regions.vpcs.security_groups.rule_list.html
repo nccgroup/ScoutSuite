@@ -25,7 +25,7 @@
               {{/if}}
               {{#if security_groups}}
                 <li class="list-group-item-text">EC2 security groups:</li>
-                {{> ec2_grants items = security_groups protocol = @../key ports = @key sg_id = ../../sg_id vpc = ../../vpc region = ../../region }}
+                {{> ec2_grants region = ../../../region vpc = ../../../vpc sg_id = ../../../sg_id direction = ../../../direction protocol = @../key ports = @key items = security_groups}}
               {{/if}}
               </ul>
             {{/each}}
