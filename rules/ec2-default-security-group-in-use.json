@@ -7,5 +7,6 @@
         [ "ec2.regions.id.vpcs.id.security_groups.id.", "withKey", "used_by" ]
 
     ],
+    "id_suffix": "default_in_use",
     "level": "warning"
 }

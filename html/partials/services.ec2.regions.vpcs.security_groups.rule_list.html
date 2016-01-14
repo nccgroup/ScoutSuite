@@ -3,7 +3,7 @@
     <script id="services.ec2.regions.vpcs.security_groups.rule_list.partial" type="text/x-handlebars-template">
       <div class="list-group-item">
         <h4 class="list-group-item-heading">
-          <span id="ec2.regions.{{region}}.vpcs.{{vpc}}.security_groups.{{sg_id}}.rules.{{direction}}">{{make_title direction}} Rules</span>
+          {{make_title direction}} Rules
           {{#ifEqual count 0}}
             <span class="badge pull-right">{{count}}</span>
           {{else}}
@@ -33,6 +33,11 @@
           </ul>
         {{/each}}
         </ul>
+        {{#ifEqual sg_name 'default'}}
+          <span id="ec2.regions.{{region}}.vpcs.{{vpc}}.security_groups.{{sg_id}}.rules.{{direction}}.default_with_rules" class="finding-hidden item-margin">
+            <i class="glyphicon glyphicon-warning-sign"></i> Default security groups should have no rules.
+          </span>
+        {{/ifEqual}}
       </div>
     </script>
     <script>
