@@ -17,7 +17,7 @@
             <li class="list-group-item-text">{{#ifEqual @key "ICMP"}}Message types{{else}}Ports{{/ifEqual}}:
             <ul>
             {{#each ports}}
-              <li>{{@key}}</li>
+              <li><span id="ec2.regions.{{../../region}}.vpcs.{{../../vpc}}.security_groups.{{../../sg_id}}.rules.{{../../direction}}.protocols.{{@../key}}.ports.{{@key}}">{{@key}}<span></li>
               <ul>
               {{#if cidrs}}
                 <li class="list-group-item-text">IP addresses:</li>

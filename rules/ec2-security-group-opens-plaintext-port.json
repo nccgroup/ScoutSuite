@@ -9,5 +9,6 @@
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id", "equal", "_ARG_2_" ]
     ],
     "level": "danger",
+    "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
     "questions": "equal or inRange ?"
 }
