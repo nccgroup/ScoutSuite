@@ -4,7 +4,7 @@
     "entities": "iam.users.id",
     "dashboard_name": "Users",
     "conditions": [
-        [ "iam.users.id.groups", "containNoneOf", [ "Code" ] ],
+        [ "iam.users.id.groups", "containNoneOf", [ "AllHeadlessUsers" ] ],
         [ "iam.users.id.", "withKey", "_ARG_1_" ]
     ],
     "id_suffix": "_ARG_1_",
