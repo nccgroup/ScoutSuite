@@ -40,45 +40,6 @@ def change_level(level):
         return level
 
 #
-# Load rule from a JSON config file
-#
-def load_config_from_json(rule_metadata, environment_name, ip_ranges):
-    config = None
-    config_file = 'rules/%s' % rule_metadata['filename']
-    config_args = rule_metadata['args'] if 'args' in rule_metadata else []
-    try:
-        with open(config_file, 'rt') as f:
-            config = f.read()
-        # Replace arguments
-        for idx, argument in enumerate(config_args):
-            config = config.replace('_ARG_'+str(idx)+'_', argument.strip())
-        config = json.loads(config)
-        # Load lists from files
-        for c1 in config['conditions']:
-            if ((type(c1[2]) == str) or (type(c1[2]) == unicode)):
-                values = re_ip_ranges_from_file.match(c1[2])
-                if values:
-                    filename = values.groups()[0]
-                    conditions = json.loads(values.groups()[1])
-                    if filename == aws_ip_ranges:
-                        filename = filename.replace('_PROFILE_', environment_name)
-                        c1[2] = read_ip_ranges(filename, False, conditions, True)
-                    elif filename == ip_ranges_from_args:
-                        c1[2] = []
-                        for ip_range in ip_ranges:
-                            c1[2] = c1[2] + read_ip_ranges(ip_range, True, conditions, True)
-        # Set condition operator
-        if not 'condition_operator' in config:
-            config['condition_operator'] = 'and'
-        # Fix level if specified in ruleset
-        if 'level' in rule_metadata:
-            rule['level'] = rule_metadata['level']
-    except Exception as e:
-        printException(e)
-        printError('Error: failed to read the rule from %s' % config_file)
-    return config
-
-#
 # Load a ruleset from a JSON file
 #
 def load_ruleset(ruleset_name):
