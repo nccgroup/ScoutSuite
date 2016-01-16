@@ -1,0 +1,12 @@
+{
+    "description": "Global service logging duplicated",
+    "entities": "cloudtrail.regions.id.trails.id",
+    "dashboard_name": "Trails",
+    "conditions": [ "and",
+        [ "cloudtrail.regions.id.trails.id.", "withKey", "IncludeGlobalServiceEvents" ],
+        [ "cloudtrail.regions.id.trails.id.IncludeGlobalServiceEvents", "true", ""],
+        [ "cloudtrail.regions.id.trails.id.IsLogging", "true", ""]
+    ],
+    "level": "warning",
+    "id_suffix": "IncludeGlobalServiceEvents"
+}

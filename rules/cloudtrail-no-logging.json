@@ -1,9 +1,9 @@
 {
-    "description": "CloudTrail disabled",
+    "description": "Logging disabled",
     "entities": "cloudtrail.regions.id.trails.id",
-    "dashboard_name": "Regions",
-    "conditions": [
-        [ "cloudtrail.regions.id.trails.id", "withKey", "IsLogging" ],
+    "dashboard_name": "Trails",
+    "conditions": [ "and",
+        [ "cloudtrail.regions.id.trails.id.", "withKey", "IsLogging" ],
         [ "cloudtrail.regions.id.trails.id.IsLogging", "false", "" ]
     ],
     "level": "danger",

@@ -1,15 +1,19 @@
 {
     "rules": [
         {
-            "filename": "cloudtrail-logging-disabled.json",
+            "filename": "cloudtrail-no-logging.json",
             "enabled": "true"
         },
         {
-            "filename": "cloudtrail-global-services-logging-disabled.json",
+            "filename": "cloudtrail-no-log-file-validation.json",
             "enabled": "true"
         },
         {
-            "filename": "cloudtrail-global-services-logging-duplicated.json",
+            "filename": "cloudtrail-no-global-services-logging.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "cloudtrail-duplicated-global-services-logging.json",
             "enabled": "true"
         },
         {

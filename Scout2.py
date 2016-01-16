@@ -161,7 +161,9 @@ def main(args):
              aws_config['services'][service]['violations'][rule]['flagged_items'] = len(aws_config['services'][service]['violations'][rule]['items'])
              aws_config['services'][service]['violations'][rule]['service'] = service
 
-    # TODO: impelement analyzis tweaks    
+    # TODO: impelement analyzis tweaks
+    if 'cloudtrail' in services:
+        tweak_cloudtrail_findings(aws_config)
 
     # Save info about run
     aws_config['last_run'] = {}

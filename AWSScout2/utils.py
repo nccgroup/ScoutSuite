@@ -39,6 +39,7 @@ for filename in os.listdir(scout2_utils_dir):
         supported_services.append(service.groups()[0])
 
 ec2_classic = 'EC2-Classic'
+condition_operators = [ 'and', 'or' ]
 
 
 #re_profile = re.compile(r'.*?_PROFILE_.*?')
@@ -272,7 +273,7 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
         manage_dictionary(config, 'checked_items', 0)
         config['checked_items'] = config['checked_items'] + 1
         # Test for conditions...
-        if pass_conditions(all_info, current_path, config['conditions'], config['condition_operator']):
+        if pass_conditions(all_info, current_path, copy.deepcopy(config['conditions'])):
             if add_suffix and 'id_suffix' in config:
                 current_path.append(config['id_suffix'])
             results.append('.'.join(current_path))
@@ -323,11 +324,15 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
 #
 # Pass all conditions?
 #
-def pass_conditions(all_info, current_path, conditions, condition_operator):
+def pass_conditions(all_info, current_path, conditions):
     result = False
     if len(conditions) == 0:
         return True
+    condition_operator = conditions.pop(0)
     for condition in conditions:
+      if condition[0] in condition_operators:
+        res = pass_conditions(all_info, current_path, condition)
+      else:
         # Conditions are formed as "path to value", "type of test", "value(s) for test"
         path_to_value, test_name, test_values = condition
         target_obj = get_value_at(all_info, current_path, path_to_value)
@@ -336,12 +341,17 @@ def pass_conditions(all_info, current_path, conditions, condition_operator):
             if dynamic_value:
                 test_values = get_value_at(all_info, current_path, dynamic_value.groups()[0], True)
         res = pass_condition(target_obj, test_name, test_values)
-        if condition_operator == 'and' and not res:
-            return False
-        if condition_operator == 'or':
-            result = result or res
+      # Quick exit and + false
+      if condition_operator == 'and' and not res:
+          return False
+      # Quick exit or + true
+      if condition_operator == 'or' and res:
+          return True
+    # Still here ?
+    # or -> false
+    # and -> true
     if condition_operator == 'or':
-        return result
+        return False
     else:
         return True
 
@@ -359,7 +369,6 @@ def get_value_at(all_info, current_path, key, to_string = False):
             target_path = []
             for i, key in enumerate(keys):
                 if key == 'id':
-#                    print('%s vs %s' % (len(current_path), i))
                     target_path.append(current_path[i])
                 else:
                     target_path.append(key)
@@ -500,6 +509,8 @@ def load_config_from_json(rule_metadata, environment_name, ip_ranges):
         config = json.loads(config)
         # Load lists from files
         for c1 in config['conditions']:
+            if c1 in condition_operators:
+                continue
             if ((type(c1[2]) == str) or (type(c1[2]) == unicode)):
                 values = re_ip_ranges_from_file.match(c1[2])
                 if values:
@@ -512,9 +523,6 @@ def load_config_from_json(rule_metadata, environment_name, ip_ranges):
                         c1[2] = []
                         for ip_range in ip_ranges:
                             c1[2] = c1[2] + read_ip_ranges(ip_range, True, conditions, True)
-        # Set condition operator
-        if not 'condition_operator' in config:
-            config['condition_operator'] = 'and'
         # Fix level if specified in ruleset
         if 'level' in rule_metadata:
             rule['level'] = rule_metadata['level']

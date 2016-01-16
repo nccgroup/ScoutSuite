@@ -13,7 +13,11 @@
         <div class="list-group-item list-sub-element">
           {{#each (lookup . ../resource_type)}}
             <div class="list-group-item-text" id="services.{{../../service_name}}.regions.{{@../key}}.{{../../resource_type}}.{{@key}}.link">
-              <a href="#services.{{../../service_name}}.regions.{{@../key}}.{{../../resource_type}}.{{@key}}.view">{{Name}}{{name}}</a>
+              {{#if scout2_link}}
+                <a href="#{{scout2_link}}.view">{{Name}}{{name}}</a>
+              {{else}}
+                <a href="#services.{{../../../service_name}}.regions.{{@../key}}.{{../../../resource_type}}.{{@key}}.view">{{Name}}{{name}}</a>
+              {{/if}}
             </div>
           {{/each}}
         </div>
