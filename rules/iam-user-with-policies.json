@@ -3,7 +3,7 @@
     "description": "User with _ARG_0_ policies",
     "entities": "iam.users.id",
     "dashboard_name": "Users",
-    "conditions": [
+    "conditions": [ "and",
         [ "iam.users.id.", "withKey", "_ARG_1_" ]
     ],
     "level": "danger",

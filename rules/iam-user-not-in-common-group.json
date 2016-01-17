@@ -2,7 +2,7 @@
     "description": "User not in common group",
     "entities": "iam.users.id",
     "dashboard_name": "Users",
-    "conditions": [
+    "conditions": [ "and",
         [ "iam.users.id.groups", "containNoneOf", [ "AllUsers" ] ]
     ],
     "id_suffix": "member_of_common_group",

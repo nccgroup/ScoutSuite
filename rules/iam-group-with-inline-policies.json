@@ -3,7 +3,7 @@
     "description": "Group with inline policies",
     "entities": "iam.groups.id",
     "dashboard_name": "groups",
-    "conditions": [
+    "conditions": [ "and",
         [ "iam.groups.id.", "withKey", "inline_policies" ]
     ],
     "id_suffix": "inline_policies",
