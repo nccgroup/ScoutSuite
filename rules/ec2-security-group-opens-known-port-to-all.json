@@ -4,7 +4,7 @@
     "dashboard_name": "Rules",
     "entities": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
     "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
-    "conditions": [
+    "conditions": [ "and",
         [ "this", "equal", "0.0.0.0/0" ],
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id", "equal", "ingress" ],
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id", "equal", "_ARG_1_" ],

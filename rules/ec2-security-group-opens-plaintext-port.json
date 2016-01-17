@@ -3,7 +3,7 @@
     "description": "_ARG_0_ port open",
     "entities": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",
     "dashboard_name": "Rules",
-    "conditions": [
+    "conditions": [ "and",
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id", "equal", "ingress" ],
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id", "equal", "_ARG_1_" ],
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id", "equal", "_ARG_2_" ]

@@ -2,7 +2,7 @@
     "description": "Default security groups in use",
     "entities": "ec2.regions.id.vpcs.id.security_groups.id",
     "dashboard_name": "Security groups",
-    "conditions": [
+    "conditions": [ "and",
         [ "ec2.regions.id.vpcs.id.security_groups.id.name", "equal", "default" ],
         [ "ec2.regions.id.vpcs.id.security_groups.id.", "withKey", "used_by" ]
 
