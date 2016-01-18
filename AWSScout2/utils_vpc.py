@@ -26,6 +26,11 @@ def analyze_vpc_config(aws_config, ip_ranges, ip_ranges_name_key):
     if len(ip_ranges):
         callback_args = {'ip_ranges': ip_ranges, 'ip_ranges_name_key': ip_ranges_name_key}
         go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports'], ['services', 'ec2'], put_cidr_name, callback_args)
+    # Propagate VPC names outside EC2
+    vpc_services = [ 'rds', 'redshift' ]
+    for service in vpc_services:
+        go_to_and_do(aws_config, aws_config['services'][service], ['regions', 'vpcs'], ['services', service], propagate_vpc_names, {})
+
 
 #
 # List the resources associated with a given VPC security group (e.g. ec2 instances, redshift clusters, ...)
@@ -88,3 +93,17 @@ def get_cidr_name(cidr, ip_ranges_files, ip_ranges_name_key):
             if cidr in ip_prefix:
                 return ip_range[ip_ranges_name_key]
     return 'Unknown CIDR'
+
+#
+# Propagate VPC names in VPC-related services (info only fetched during EC2 calls)
+#
+def propagate_vpc_names(aws_config, current_config, path, current_path, resource_id, callback_args):
+    if resource_id == ec2_classic:
+        current_config['name'] = ec2_classic
+    else:
+        target_path = copy.deepcopy(current_path)
+        target_path[1] = 'ec2'
+        target_path.append(resource_id)
+        target_path.append('Name')
+        target_path = '.'.join(target_path)
+        current_config['name'] = get_value_at(aws_config, target_path, target_path)

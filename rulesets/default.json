@@ -277,7 +277,7 @@
             "enabled": "true"
         },
         {
-            "filename": "rds-instance-publicly-accessible.json",
+            "filename": "rds-security-group-allows-all.json",
             "enabled": "true"
         },
         {

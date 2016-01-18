@@ -35,7 +35,7 @@ re_service_utils = re.compile(r'^utils_(.*?).py$')
 scout2_utils_dir, foo = os.path.split(__file__)
 for filename in os.listdir(scout2_utils_dir):
     service = re_service_utils.match(filename)
-    if service and service.groups()[0] != 'vpc':
+    if service: # and service.groups()[0] != 'vpc':
         supported_services.append(service.groups()[0])
 
 ec2_classic = 'EC2-Classic'
@@ -380,17 +380,7 @@ def get_value_at(all_info, current_path, key, to_string = False):
         target_obj = all_info
         for p in target_path:
           try:
-#            print('Going for %s' % p)
-#            if type(target_obj) == list:
-#                if len(target_obj) > 0 and type(target_obj[0]) == dict:
-#                    target_obj = []
-#                    for obj in target_obj:
-#                        target_obj.append(obj[p])
-#                else:
-#                    print(target_path)
-#                    print(target_obj)
             if type(target_obj) == list and type(target_obj[0]) == dict:
-#                print('Here ! %s' % target_path)
                 target_obj = target_obj[int(p)]                
             elif type(target_obj) == list:
                 target_obj = p

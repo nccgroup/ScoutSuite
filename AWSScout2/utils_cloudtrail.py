@@ -17,11 +17,9 @@ def analyze_cloudtrail_config(cloudtrail_info, aws_account_id, force_write):
 def tweak_cloudtrail_findings(aws_config):
     cloudtrail_config = aws_config['services']['cloudtrail']
     # Global services logging duplicated
-    printInfo(str(aws_config['services']['cloudtrail']['violations']['cloudtrail-duplicated-global-services-logging']['items']))
     if len(aws_config['services']['cloudtrail']['violations']['cloudtrail-duplicated-global-services-logging']['items']) < 2:
         aws_config['services']['cloudtrail']['violations']['cloudtrail-duplicated-global-services-logging']['items'] = []
         aws_config['services']['cloudtrail']['violations']['cloudtrail-duplicated-global-services-logging']['flagged_items'] = 0
-    printInfo(str(aws_config['services']['cloudtrail']['violations']['cloudtrail-duplicated-global-services-logging']['items']))
     # Global services logging disabled
     if len(aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['items']) != aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['checked_items']:
         aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['items'] = []
