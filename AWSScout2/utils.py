@@ -256,7 +256,7 @@ def create_report_metadata(aws_config, services):
             if not 'script' in aws_config['metadata'][service]['resources'][resource]:
                 aws_config['metadata'][service]['resources'][resource]['script'] = '.'.join([x for x in aws_config['metadata'][service]['resources'][resource]['full_path'].split('.') if x != 'id'])
             # Update counts here
-            config = {'conditions': [], 'condition_operator': 'and'}
+            config = {'conditions': []}
             recurse(aws_config, aws_config, aws_config['metadata'][service]['resources'][resource]['full_path'].split('.'), [], config)
             # This is broken
             aws_config['metadata'][service]['resources'][resource]['count'] = config['checked_items'] if 'checked_items' in config else 0

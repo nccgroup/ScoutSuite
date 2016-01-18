@@ -1,8 +1,10 @@
 {
     "description": "Version upgrade disabled",
     "entities": "redshift.regions.id.vpcs.id.clusters.id",
-    "conditions": [
+    "dashboard_name": "Clusters",
+    "conditions": [ "and",
         [ "redshift.regions.id.vpcs.id.clusters.id.AllowVersionUpgrade", "false", "" ]
     ],
+    "id_suffix": "AllowVersionUpgrade",
     "level": "danger"
 }

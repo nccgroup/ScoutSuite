@@ -293,6 +293,30 @@
             "enabled": "true"
         },
         {
+            "filename": "redshift-cluster-database-not-encrypted.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "redshift-cluster-no-version-upgrade.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "redshift-cluster-publicly-accessible.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "redshift-parameter-group-logging-disabled.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "redshift-parameter-group-ssl-not-required.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "redshift-security-group-whitelists-all.json",
+            "enabled": "true"
+        },
+        {
             "filename": "placeholder.json",
             "enabled": "false"
         }
