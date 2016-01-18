@@ -56,8 +56,9 @@ def get_redshift_clusters(redshift_client, region_config):
         vpc_id = cluster.pop('VpcId') if 'VpcId' in cluster else ec2_classic
         manage_dictionary(region_config['vpcs'], vpc_id, {})
         manage_dictionary(region_config['vpcs'][vpc_id], 'clusters', {})
-        cluster_id = cluster.pop('ClusterIdentifier')
-        region_config['vpcs'][vpc_id]['clusters'][cluster_id] = cluster
+        name = cluster.pop('ClusterIdentifier')
+        cluster['name'] = name
+        region_config['vpcs'][vpc_id]['clusters'][name] = cluster
 
 #
 # Parameter groups
