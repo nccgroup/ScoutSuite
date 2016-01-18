@@ -83,7 +83,8 @@ def get_instances_info(rds_client, region_info):
         manage_dictionary(region_info['vpcs'][vpc_id], 'instances', {})
         dbi_info = {}
         total = total + len(dbinstances)
-        for key in ['DBInstanceIdentifier', 'InstanceCreateTime', 'Engine', 'DBInstanceStatus', 'AutoMinorVersionUpgrade', 'DBInstanceClass', 'MultiAZ', 'Endpoint', 'BackupRetentionPeriod', 'PubliclyAccessible', 'StorageEncrypted', 'VpcSecurityGroups', 'DBSecurityGroups', 'DBParameterGroups']:
+        dbi_info['name'] = dbi.pop('DBInstanceIdentifier')
+        for key in [ 'InstanceCreateTime', 'Engine', 'DBInstanceStatus', 'AutoMinorVersionUpgrade', 'DBInstanceClass', 'MultiAZ', 'Endpoint', 'BackupRetentionPeriod', 'PubliclyAccessible', 'StorageEncrypted', 'VpcSecurityGroups', 'DBSecurityGroups', 'DBParameterGroups']:
             # parameter_groups , security_groups, vpc_security_gropus
-            dbi_info[key] = dbi[key]
-        region_info['vpcs'][vpc_id]['instances'][dbi['DBInstanceIdentifier']] = dbi_info
+            dbi_info[key] = dbi[key] if key in dbi else None
+        region_info['vpcs'][vpc_id]['instances'][dbi_info['name']] = dbi_info

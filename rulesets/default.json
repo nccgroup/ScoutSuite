@@ -268,9 +268,30 @@
             "enabled": "true",
             "args": ["all", "s3:*"]
         },
-
-
-
+        {
+            "filename": "rds-instance-backup-disabled.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "rds-instance-no-minor-upgrade.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "rds-instance-publicly-accessible.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "rds-instance-short-backup-retention-period.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "rds-instance-single-az.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "rds-postgres-instance-with-invalid-certificate.json",
+            "enabled": "true"
+        },
         {
             "filename": "placeholder.json",
             "enabled": "false"

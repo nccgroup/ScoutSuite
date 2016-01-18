@@ -1,7 +1,7 @@
 
   <!-- Generic partial for region-then-vpc-then-resource -->
   <script id="details_for_vpc.partial" type="text/x-handlebars-template">
-    <div id="services.ec2.regions.id.vpcs.id.{{resource_type}}.details">
+    <div id="services.{{service_name}}.regions.id.vpcs.id.{{resource_type}}.details">
       {{#each items}}
         {{#each vpcs}}
           {{#each (lookup . ../../resource_type)}}
