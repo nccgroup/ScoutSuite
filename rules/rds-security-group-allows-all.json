@@ -1,7 +1,8 @@
 {
     "description": "Security group allows all IP addresses",
     "entities": "rds.regions.id.vpcs.id.security_groups.id.ip_ranges",
-    "dashboard_name": "Instances",
+    "dashboard_name": "Security Groups",
+    "display_path": "rds.regions.id.vpcs.id.security_groups.id",
     "conditions": [ "and",
         [ "rds.regions.id.vpcs.id.security_groups.id.ip_ranges", "containAtLeastOneOf", ["0.0.0.0/0"] ]
     ],
