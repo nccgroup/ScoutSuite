@@ -4,7 +4,7 @@
     "description": "_ARG_2_",
     "entities": "s3.buckets.id.grantees.id",
     "display_path": "s3.buckets.id",
-    "conditions": [
+    "conditions": [ "and",
         [ "s3.buckets.id.grantees.id", "equal", "http://acs.amazonaws.com/groups/global/_ARG_0_" ],
         [ "s3.buckets.id.grantees.id.permissions._ARG_1_", "true", "" ]
     ],

@@ -2,7 +2,7 @@
     "dashboard_name": "Bucket",
     "description": "Bucket without versioning",
     "entities": "s3.buckets.id",
-    "conditions": [
+    "conditions": [ "and",
         [ "s3.buckets.id.versioning_status", "equal", "Disabled" ]
     ],
     "id_suffix": "versioning",

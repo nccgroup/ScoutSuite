@@ -2,7 +2,7 @@
     "dashboard_name": "Bucket",
     "description": "Bucket access logging disabled",
     "entities": "s3.buckets.id",
-    "conditions": [
+    "conditions": [ "and",
         [ "s3.buckets.id.logging", "equal", "Disabled" ]
     ],
     "id_suffix": "logging",
