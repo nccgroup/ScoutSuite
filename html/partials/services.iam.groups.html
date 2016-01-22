@@ -11,16 +11,16 @@
         <div class="list-group-item" style="padding-bottom: 0 !important;">
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Members
-              {{#if Users}}
-                <a class="accordion-toggle" data-toggle="collapse" href="#iam_Group-{{name}}"><span class="badge pull-right btn-info">{{Users.length}}</span></a>
+              {{#if users}}
+                <a class="accordion-toggle" data-toggle="collapse" href="#iam_Group-{{name}}"><span class="badge pull-right btn-info">{{users.length}}</span></a>
               {{else}}
-                <span class="badge pull-right">{{Users.length}}</span>
+                <span class="badge pull-right">{{users.length}}</span>
               {{/if}}
             </h4>
             <div id="iam_Group-{{name}}" class="accordion-body collapse">
               <div class="accordion-inner">
                 <ul class="no-bullet">
-                  {{#each Users}}
+                  {{#each users}}
                     <li><a href="javascript:showObject('services.iam.users.{{this}}')">{{this}}</a></li>
                   {{/each}}
                 </ul>

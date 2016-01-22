@@ -25,6 +25,10 @@
             "enabled": "true"
         },
         {
+            "filename": "ec2-unused-security-group.json",
+            "enabled": "true"
+        },
+        {
             "filename": "ec2-security-group-opens-all-ports.json",
             "enabled": "true"
         },

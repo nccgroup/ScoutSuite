@@ -40,6 +40,7 @@ def analyze_ec2_config(ec2_info, aws_account_id, force_write):
 # Github issue #24: display the security group names in the list of grants (added here to have ligher JS code)
 #
 def add_security_group_name_to_ec2_grants(ec2_config, aws_account_id):
+    return
     go_to_and_do(ec2_config, None, ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports', 'security_groups'], [], add_security_group_name_to_ec2_grants_callback, {'AWSAccountId': aws_account_id})
 #
 # Callback
@@ -85,12 +86,14 @@ def check_for_elastic_ip(ec2_info):
 # Link EIP with instances (looks like this might be no longer needed with boto3)
 #
 def link_elastic_ips(ec2_config):
+    return
     go_to_and_do(ec2_config, None, ['regions', 'elastic_ips'], None, link_elastic_ips_callback1, {})
 
 def link_elastic_ips_callback1(ec2_config, current_config, path, current_path, elastic_ip, callback_args):
     if not 'InstanceId' in current_config:
         return
     instance_id = current_config['InstanceId']
+    return
     go_to_and_do(ec2_config, None, ['regions', 'vpcs', 'instances'], None, link_elastic_ips_callback2, {'instance_id': instance_id, 'elastic_ip': elastic_ip})
 
 def link_elastic_ips_callback2(ec2_config, current_config, path, current_path, instance_id, callback_args):
@@ -204,8 +207,11 @@ def get_elb_info(q, params):
             elb = {}
             elb_name = lb['LoadBalancerName']
             elb['VpcId'] = lb['VpcId'] if 'VpcId' in lb and lb['VpcId'] else ec2_classic
-            for key in ['DNSName', 'CreatedTime', 'AvailabilityZones', 'LoadBalancerName', 'SecurityGroups', 'Subnets', 'Policies']:
+            for key in ['DNSName', 'CreatedTime', 'AvailabilityZones', 'LoadBalancerName', 'Subnets', 'Policies']:
                 elb[key] = lb[key] if key in lb else None
+            elb['security_groups'] = []
+            for sg in lb['SecurityGroups']:
+                elb['security_groups'].append({'GroupId': sg})
             manage_dictionary(elb, 'listeners', {})
             for l in lb['ListenerDescriptions']:
                 listener = l['Listener']
@@ -243,8 +249,12 @@ def get_instance_info(q, params):
             instance = {}
             vpc_id = i['VpcId'] if 'VpcId' in i and i['VpcId'] else ec2_classic
             instance['reservation_id'] = reservation_id
-            for key in ['InstanceId', 'PublicDnsName', 'PrivateDnsName', 'KeyName', 'LaunchTime', 'PrivateIpAddress', 'PublicIpAddress', 'InstanceType', 'State', 'IamInstanceProfile']:
+            for key in ['InstanceId', 'PublicDnsName', 'PrivateDnsName', 'KeyName', 'LaunchTime', 'PrivateIpAddress', 'PublicIpAddress', 'InstanceType', 'State']:
                 instance[key] = i[key] if key in i else None
+            if 'IamInstanceProfile' in i:
+                instance['iam_instance_profile'] = {}
+                get_keys(i['IamInstanceProfile'], instance['iam_instance_profile'], ['Id', 'Arn'])
+
             get_name(instance, i, 'InstanceId')
             manage_dictionary(instance, 'security_groups', [])
             for sg in i['SecurityGroups']:

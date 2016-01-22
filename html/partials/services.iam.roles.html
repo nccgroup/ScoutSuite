@@ -11,9 +11,9 @@
         <div class="list-group-item">
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Instances
-              <a class="accordion-toggle" data-toggle="collapse" href="#iam_role_instances-{{name}}"><span class="badge pull-right btn-info">{{count_role_instances instance_profiles}}</span></a>
+              <a class="accordion-toggle" data-toggle="collapse" href="#iam\.roles\.{{id}}\.instances"><span class="badge pull-right btn-info">{{instances_count}}</span></a>
             </h4>
-            <div id="iam_role_instances-{{name}}" class="accordion-body collapse">
+            <div id="iam.roles.{{id}}.instances" class="accordion-body collapse">
               <div class="accordion-inner">
                 <ul class="no-bullet">
                   {{#each instance_profiles}}

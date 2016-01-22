@@ -158,6 +158,20 @@ class Scout2Encoder(json.JSONEncoder):
         else:
             return o.__dict__
 
+#
+# Copies the value of keys from source object to dest object
+#
+def get_keys(src, dst, keys):
+    for key in keys:
+        dst[no_camel(key)] = src[key] if key in src else None
+
+#
+# Converts CamelCase to camel_case
+#
+def no_camel(name):
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()                                                                                                                                 
+
 
 ########################################
 # Violations search functions
@@ -198,14 +212,17 @@ def match_instances_and_roles(ec2_config, iam_config):
         for v in ec2_config['regions'][r]['vpcs']:
             if 'instances' in ec2_config['regions'][r]['vpcs'][v]:
                 for i in ec2_config['regions'][r]['vpcs'][v]['instances']:
-                    arn = ec2_config['regions'][r]['vpcs'][v]['instances'][i]['IAMInstanceProfile']['Arn'] if 'IAMInstanceProfile' in ec2_config['regions'][r]['vpcs'][v]['instances'][i] else None
-                    if arn:
-                        manage_dictionary(role_instances, arn, [])
-                        role_instances[arn].append(i)
-    for role in iam_config['roles']:
-        for arn in iam_config['roles'][role]['InstanceProfiles']:
-            if arn in role_instances:
-                iam_config['roles'][role]['InstanceProfiles'][arn]['instances'] = role_instances[arn]
+                    instance_profile_id = ec2_config['regions'][r]['vpcs'][v]['instances'][i]['iam_instance_profile']['id'] if 'iam_instance_profile' in ec2_config['regions'][r]['vpcs'][v]['instances'][i] else None
+                    if instance_profile_id:
+                        manage_dictionary(role_instances, instance_profile_id, [])
+                        role_instances[instance_profile_id].append(i)
+    printInfo(json.dumps(role_instances, indent = 4))
+    for role_id in iam_config['roles']:
+        iam_config['roles'][role_id]['instances_count'] = 0
+        for instance_profile_id in iam_config['roles'][role_id]['instance_profiles']:
+            if instance_profile_id in role_instances:
+                iam_config['roles'][role_id]['instance_profiles'][instance_profile_id]['instances'] = role_instances[instance_profile_id]
+                iam_config['roles'][role_id]['instances_count'] += len(role_instances[instance_profile_id])
 
 def process_entities(config, finding, entity_path):
     if len(entity_path) == 1:

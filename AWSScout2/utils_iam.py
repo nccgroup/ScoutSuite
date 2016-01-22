@@ -245,11 +245,11 @@ def get_role_info(q, params):
                 role['inline_policies'] = policies
             role['inline_policies_count'] = len(policies)
             profiles = handle_truncated_response(iam_client.list_instance_profiles_for_role, {'RoleName': role['name']}, 'Marker', ['InstanceProfiles'])
-            manage_dictionary(role, 'InstanceProfiles', {})
+            manage_dictionary(role, 'instance_profiles', {})
             for profile in profiles['InstanceProfiles']:
-                manage_dictionary(role['InstanceProfiles'], profile['Arn'], {})
-                role['InstanceProfiles'][profile['Arn']]['id'] = profile['InstanceProfileId']
-                role['InstanceProfiles'][profile['Arn']]['name'] = profile['InstanceProfileName']
+                manage_dictionary(role['instance_profiles'], profile['InstanceProfileId'], {})
+                role['instance_profiles'][profile['InstanceProfileId']]['arn'] = profile['Arn']
+                role['instance_profiles'][profile['InstanceProfileId']]['name'] = profile['InstanceProfileName']
             iam_info['roles'][role['id']] = role
             show_status(iam_info, 'roles', False)
         except Exception as e:
