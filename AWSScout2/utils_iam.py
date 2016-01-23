@@ -13,10 +13,6 @@ import urllib
 ##### IAM functions
 ########################################
 
-def analyze_iam_config(iam_info, aws_account_id, force_write):
-    printInfo('Analyzing IAM data...')
-    analyze_config(iam_finding_dictionary, iam_filter_dictionary, iam_info, 'IAM', force_write)
-
 def get_account_password_policy(iam_client, iam_info):
     iam_info['password_policy'] = iam_client.get_account_password_policy()['PasswordPolicy']
     if 'PasswordReusePrevention' not in iam_info['password_policy']:

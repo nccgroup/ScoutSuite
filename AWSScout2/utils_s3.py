@@ -12,10 +12,6 @@ import botocore.client
 ##### S3 functions
 ########################################
 
-def analyze_s3_config(s3_info, aws_account_id, force_write):
-    printInfo('Analyzing S3 data...')
-    analyze_config(s3_finding_dictionary, s3_filter_dictionary, s3_info, 'S3', force_write)
-
 def match_iam_policies_and_buckets(s3_info, iam_info):
     if 'Action' in iam_info['permissions']:
         for action in (x for x in iam_info['permissions']['Action'] if ((x.startswith('s3:') and x != 's3:ListAllMyBuckets') or (x == '*'))):
@@ -264,7 +260,7 @@ def get_s3_info(key_id, secret, session_token, service_config, selected_regions,
     for region in build_region_list('s3', selected_regions, include_gov = with_gov, include_cn = with_cn):
         config = botocore.client.Config(signature_version = 's3v4')
         s3_clients[region] = connect_s3(key_id, secret, session_token, region_name = region, config = config)
-    printInfo('Fetching S3 buckets data...')
+    printInfo('Fetching S3 buckets config...')
     get_s3_buckets(s3_clients, service_config, s3_params)
 
 def show_status(s3_info, newline = True):

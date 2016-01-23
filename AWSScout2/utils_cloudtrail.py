@@ -9,9 +9,6 @@ from AWSScout2.utils import *
 ##### CloudTrails functions
 ########################################
 
-def analyze_cloudtrail_config(cloudtrail_info, aws_account_id, force_write):
-    analyze_config(cloudtrail_finding_dictionary, cloudtrail_filter_dictionary, cloudtrail_info, 'CloudTrail', force_write)
-
 def tweak_cloudtrail_findings(aws_config):
     cloudtrail_config = aws_config['services']['cloudtrail']
     # Global services logging duplicated
@@ -25,7 +22,7 @@ def tweak_cloudtrail_findings(aws_config):
 
 def get_cloudtrail_info(key_id, secret, session_token, service_config, selected_regions, with_gov, with_cn):
     manage_dictionary(service_config, 'regions', {})
-    printInfo('Fetching CloudTrail data...')
+    printInfo('Fetching CloudTrail config...')
     for region in build_region_list('cloudtrail', selected_regions, include_gov = with_gov, include_cn = with_cn):
         manage_dictionary(service_config['regions'], region, {})
         service_config['regions'][region]['name'] = region

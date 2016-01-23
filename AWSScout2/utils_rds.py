@@ -10,19 +10,6 @@ from AWSScout2.utils import *
 ##### RDS functions
 ########################################
 
-def analyze_rds_config(rds_info, aws_account_id, force_write):
-    printInfo('Analyzing RDS data...')
-    analyze_config(rds_finding_dictionary, rds_filter_dictionary, rds_info, 'RDS', force_write)
-    # Custom RDS analysis
-    check_for_duplicate(rds_info)
-
-def check_for_duplicate(rds_info):
-    # Backup disabled also triggers short-backup-retention, remove duplicates
-    if 'short-backup-retention-period' in rds_info['violations']:
-        if 'backup-disabled' in rds_info['violations']:
-            for instance_id in rds_info['violations']['backup-disabled'].items:
-                rds_info['violations']['short-backup-retention-period'].removeItem(instance_id)
-
 def get_rds_info(key_id, secret, session_token, service_config, selected_regions, with_gov, with_cn):
     printInfo('Fetching RDS config...')
     manage_dictionary(service_config, 'regions', {})
