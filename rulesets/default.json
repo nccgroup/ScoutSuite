@@ -95,6 +95,10 @@
             "enabled": "true"
         },
         {
+            "filename": "iam-ec2-role-without-instances.json",
+            "enabled": "true"
+        },
+        {
             "filename": "iam-no-key-rotation.json",
             "enabled": "true",
             "args": [ "Active", "danger" ]

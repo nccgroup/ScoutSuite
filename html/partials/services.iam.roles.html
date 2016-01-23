@@ -8,10 +8,28 @@
           <h4 class="list-group-item-heading">Information</h4>
           <div class="list-group-item-text item-margin">Creation date: {{create_date}}</div>
         </div>
+        <div class="list-group-item accordion">
+          <div class="accordion">
+            <h4 class="list-group-item-heading accordion-heading">Assume Role Policy
+              <a class="accordion-toggle" data-toggle="collapse" href="#iam\.roles\.{{id}}\.assume_role_policy">
+                <span class="badge pull-right btn-info">Details</span>
+              </a>
+            </h4>
+            <div id="iam.roles.{{id}}.assume_role_policy" class="accordion-body collapse">
+              <div class="accordion-inner">
+                {{{displayPolicy assume_role_policy}}}
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="list-group-item">
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Instances
-              <a class="accordion-toggle" data-toggle="collapse" href="#iam\.roles\.{{id}}\.instances"><span class="badge pull-right btn-info">{{instances_count}}</span></a>
+             {{#ifEqual instances_count 0}}
+               <span class="badge pull-right">0</span>
+             {{else}}
+               <a class="accordion-toggle" data-toggle="collapse" href="#iam\.roles\.{{id}}\.instances"><span class="badge pull-right btn-info">{{instances_count}}</span></a>
+             {{/ifEqual}}
             </h4>
             <div id="iam.roles.{{id}}.instances" class="accordion-body collapse">
               <div class="accordion-inner">

@@ -234,22 +234,32 @@ def get_role_info(q, params):
     iam_info = params['iam_info']
     while True:
         try:
-            role = q.get()
+            # Initialize role
+            role = {}
+            role['instances_count'] = 'N/A'
+            fetched_role = q.get()
             # When resuming upon throttling error, skip if already fetched
-            if role['RoleName'] in iam_info['roles']:
+            if fetched_role['RoleName'] in iam_info['roles']:
                 continue
-            role['id'] = role.pop('RoleId')
-            role['name'] = role.pop('RoleName')
+            # Get name, ID, and various other keys
+            role['id'] = fetched_role.pop('RoleId')
+            role['name'] = fetched_role.pop('RoleName')
+            get_keys(fetched_role, role, ['Arn', 'CreateDate', 'Path'])
+            # Get role policies
             policies = get_inline_policies(iam_client, iam_info, 'role', role['id'], role['name'])
             if len(policies):
                 role['inline_policies'] = policies
             role['inline_policies_count'] = len(policies)
+            # Get instance profiles
             profiles = handle_truncated_response(iam_client.list_instance_profiles_for_role, {'RoleName': role['name']}, 'Marker', ['InstanceProfiles'])
             manage_dictionary(role, 'instance_profiles', {})
             for profile in profiles['InstanceProfiles']:
                 manage_dictionary(role['instance_profiles'], profile['InstanceProfileId'], {})
                 role['instance_profiles'][profile['InstanceProfileId']]['arn'] = profile['Arn']
                 role['instance_profiles'][profile['InstanceProfileId']]['name'] = profile['InstanceProfileName']
+            # Get trust relationship
+            role['assume_role_policy'] = fetched_role.pop('AssumeRolePolicyDocument')
+            # Save role
             iam_info['roles'][role['id']] = role
             show_status(iam_info, 'roles', False)
         except Exception as e:
