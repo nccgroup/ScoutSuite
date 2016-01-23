@@ -340,6 +340,12 @@ function showObject(path) {
         case "iam_users":
             $('#overlay-details').html(single_iam_user_template(data));
         break;
+        case "iam_managed_policies":
+            $('#overlay-details').html(single_iam_managed_policy_template(data));
+        break;
+        case "iam_inline_policies":
+            $('#overlay-details').html(single_iam_managed_policy_template(data));
+        break;
         case "ec2_instances":
             $('#overlay-details').html(single_ec2_instance_template(data));
         break;

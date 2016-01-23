@@ -7,7 +7,6 @@ from AWSScout2.utils import *
 
 # Import third-party packages
 import botocore.client
-import hashlib
 
 ########################################
 ##### S3 functions
@@ -227,7 +226,7 @@ def get_s3_bucket(q, params):
             if params['check_encryption'] or params['check_acls']:
                 get_s3_bucket_keys(s3_client, bucket['name'], bucket, params['check_encryption'], params['check_acls'])
             # h4ck :: buckets may contain . in their name, but this would break the browsing - Use sha1(bucket_name) as keys for the dictionary
-            bucket['id'] = get_bucket_id(bucket['name'])
+            bucket['id'] = get_non_aws_id(bucket['name'])
             s3_info['buckets'][bucket['id']] = bucket
             show_status(s3_info, False)
         except Exception as e:
@@ -235,12 +234,6 @@ def get_s3_bucket(q, params):
             printException(e)
         finally:
             q.task_done()
-
-# Not the AWS standard:: bucket IDs are defined as sha1(bucket_name)
-def get_bucket_id(bucket_name):
-    m = hashlib.sha1()
-    m.update(bucket_name)
-    return m.hexdigest()
 
 # Get key-specific information (server-side encryption, acls, etc...)
 def get_s3_bucket_keys(s3_client, bucket_name, bucket, check_encryption, check_acls):

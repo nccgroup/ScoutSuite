@@ -43,6 +43,10 @@
                 "cols": 2,
                 "path": "services.iam.groups"
             },
+            "managed_policies": {
+                "cols": 2,
+                "path": "services.iam.managed_policies"
+            },
             "roles": {
                 "cols": 2,
                 "path": "services.iam.roles"

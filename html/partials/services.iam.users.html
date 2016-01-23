@@ -55,9 +55,17 @@
       </ul>
     </div>
     {{> services.iam.inline_policies resource_type = 'users' resource_id = id}}
-    {{> services.iam.managed_policies resource_type = 'users' resource_id = id}}
+    {{> services.iam.managed_policies_list resource_type = 'users' resource_id = id}}
   </script>
   <script>
     Handlebars.registerPartial("services.iam.users", $("#services\\.iam\\.users\\.partial").html());
   </script>
 
+    <!-- Single IAM user template -->
+    <script id="services.iam.users.template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.iam.users}}
+    </script>
+    <script>
+        var single_iam_user_template = Handlebars.compile($("#services\\.iam\\.users\\.template").html());
+    </script>

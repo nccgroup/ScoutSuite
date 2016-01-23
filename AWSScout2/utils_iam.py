@@ -162,16 +162,17 @@ def get_managed_policy(q, params):
     iam_info = params['iam_info']
     while True:
         try:
-            policy = q.get()
-            manage_dictionary(iam_info['managed_policies'], policy['Arn'], {})
-            iam_info['managed_policies'][policy['Arn']]['name'] = policy['PolicyName']
-            iam_info['managed_policies'][policy['Arn']]['id'] = policy['PolicyId']
+            policy = {}
+            fetched_policy = q.get()
+            policy['name'] = fetched_policy.pop('PolicyName')
+            policy['id'] = fetched_policy.pop('PolicyId')
+            policy['arn'] = fetched_policy.pop('Arn')
             # Download version and document
-            policy_version = iam_client.get_policy_version(PolicyArn = policy['Arn'], VersionId = policy['DefaultVersionId'])
+            policy_version = iam_client.get_policy_version(PolicyArn = policy['arn'], VersionId = fetched_policy['DefaultVersionId'])
             policy_version = policy_version['PolicyVersion']
-            iam_info['managed_policies'][policy['Arn']]['PolicyDocument'] = policy_version['Document']
+            policy['PolicyDocument'] = policy_version['Document']
             # Get attached IAM entities
-            attached_entities = handle_truncated_response(iam_client.list_entities_for_policy, {'PolicyArn': policy['Arn']}, 'Marker', ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'])
+            attached_entities = handle_truncated_response(iam_client.list_entities_for_policy, {'PolicyArn': policy['arn']}, 'Marker', ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'])
             for entity_type in attached_entities:
                 resource_type = entity_type.replace('Policy', '').lower()
                 for entity in attached_entities[entity_type]:
@@ -180,9 +181,11 @@ def get_managed_policy(q, params):
                     resource_id = get_id_for_resource(iam_info, resource_type, resource_name)
                     manage_dictionary(iam_info[resource_type][resource_id], 'managed_policies', [])
                     manage_dictionary(iam_info[resource_type][resource_id], 'managed_policies_count', 0)
-                    iam_info[resource_type][resource_id]['managed_policies'].append(policy['Arn'])
+                    iam_info[resource_type][resource_id]['managed_policies'].append(policy['id'])
                     iam_info[resource_type][resource_id]['managed_policies_count'] = iam_info[resource_type][resource_id]['managed_policies_count'] + 1
-                    get_permissions(policy_version['Document'], iam_info['permissions'], resource_type, resource_id, policy['Arn'], True)
+                    get_permissions(policy_version['Document'], iam_info['permissions'], resource_type, resource_id, policy['id'], True)
+            # Save policy
+            iam_info['managed_policies'][policy['id']] = policy
             show_status(iam_info, 'managed_policies', False)
         except Exception as e:
             printException(e)
@@ -214,9 +217,11 @@ def get_inline_policies(iam_client, iam_info, resource_type, resource_id, resour
         for policy_name in policy_names:
             args['PolicyName'] = policy_name
             policy_document = get_policy_method(**args)['PolicyDocument']
-            manage_dictionary(fetched_policies, policy_name, {})
-            fetched_policies[policy_name]['PolicyDocument'] = policy_document
-            get_permissions(policy_document, iam_info['permissions'], resource_type + 's', resource_id, policy_name)
+            policy_id = get_non_aws_id(policy_name)
+            manage_dictionary(fetched_policies, policy_id, {})
+            fetched_policies[policy_id]['PolicyDocument'] = policy_document
+            fetched_policies[policy_id]['name'] = policy_name
+            get_permissions(policy_document, iam_info['permissions'], resource_type + 's', resource_id, policy_id)
     except Exception as e:
         printException(e)
     return fetched_policies

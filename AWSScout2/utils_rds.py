@@ -51,6 +51,8 @@ def get_security_groups_info(rds_client, region_info):
     manage_dictionary(region_info, 'vpcs', {})
     manage_dictionary(region_info['vpcs'], ec2_classic, {})
     manage_dictionary(region_info['vpcs'][ec2_classic], 'security_groups', {})
+    manage_dictionary(region_info, 'security_groups_count', 0)
+    region_info['security_groups_count'] += len(groups)
     for group in groups:
         region_info['vpcs'][ec2_classic]['security_groups'][group['DBSecurityGroupName']] = parse_security_group(group)
 
@@ -74,6 +76,8 @@ def parse_security_group(group):
 def get_instances_info(rds_client, region_info):
     manage_dictionary(region_info, 'vpcs', {})
     dbinstances = rds_client.describe_db_instances()['DBInstances']
+    manage_dictionary(region_info, 'instances_count', 0)
+    region_info['instances_count'] += len(dbinstances)
     total = 0
     for dbi in dbinstances:
         vpc_id = dbi['DBSubnetGroup']['VpcId'] if 'DBSubnetGroup' in dbi and 'VpcId' in dbi['DBSubnetGroup'] and dbi['DBSubnetGroup']['VpcId'] else ec2_classic

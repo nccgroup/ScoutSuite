@@ -43,43 +43,6 @@
         var single_ec2_security_group_template = Handlebars.compile($("#single_ec2_security_group-template").html());
     </script>
 
-    <!-- Single IAM group template -->
-    <script id="single_iam_Group-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.iam.groups}}
-    </script>
-    <script>
-        var single_iam_group_template = Handlebars.compile($("#single_iam_Group-template").html());
-    </script>
-
-    <!-- Single IAM policy template -->
-    <script id="single_iam_policy-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.iam.policy}}
-        <hr>
-    </script>
-    <script>
-        var single_iam_policy_template = Handlebars.compile($("#single_iam_policy-template").html());
-    </script>
-
-    <!-- Single IAM role template -->
-    <script id="single_iam_Role-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.iam.roles}}
-    </script>
-    <script>
-        var single_iam_role_template = Handlebars.compile($("#single_iam_Role-template").html());
-    </script>
-
-    <!-- Single IAM user template -->
-    <script id="single_iam_User-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.iam.users}}
-    </script>
-    <script>
-        var single_iam_user_template = Handlebars.compile($("#single_iam_User-template").html());
-    </script>
-
     <!-- Single RDS instance template -->
     <script id="single_rds_instance-template" type="text/x-handlebars-template">
         <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>

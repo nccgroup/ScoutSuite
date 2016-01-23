@@ -11,6 +11,7 @@ from distutils import dir_util
 import copy
 import json
 import glob
+import hashlib
 import os
 import re
 import shutil
@@ -207,11 +208,9 @@ def match_instances_and_roles(ec2_config, iam_config):
 #
 def create_report_metadata(aws_config, services):
     # Load resources and summaries metadata from file
-    with open('dropdown.json', 'rt') as f:
-        aws_config['old_metadata'] = json.load(f)
     with open('metadata.json', 'rt') as f:
         aws_config['metadata'] = json.load(f)    
-    for service in aws_config['metadata']:
+    for service in services:
         for resource in aws_config['metadata'][service]['resources']:
             # full_path = path if needed
             if not 'full_path' in aws_config['metadata'][service]['resources'][resource]:
@@ -219,9 +218,15 @@ def create_report_metadata(aws_config, services):
             # Script is the full path minus "id" (TODO: change that)
             if not 'script' in aws_config['metadata'][service]['resources'][resource]:
                 aws_config['metadata'][service]['resources'][resource]['script'] = '.'.join([x for x in aws_config['metadata'][service]['resources'][resource]['full_path'].split('.') if x != 'id'])
-            # Update counts here
-#            config = {'conditions': []}
-#            recurse(aws_config, aws_config, aws_config['metadata'][service]['resources'][resource]['full_path'].split('.'), [], config)
+            # Update counts
+            if 'regions' in aws_config['services'][service]:
+                aws_config['metadata'][service]['resources'][resource]['count'] = 0
+                for region in aws_config['services'][service]['regions']:
+                    count = '%s_count' % resource
+                    if count in aws_config['services'][service]['regions'][region]:
+                        aws_config['metadata'][service]['resources'][resource]['count'] += aws_config['services'][service]['regions'][region]['%s_count' % resource]
+            else:
+                aws_config['metadata'][service]['resources'][resource]['count'] = aws_config['services'][service]['%s_count' % resource]
 
 
 ########################################
@@ -363,6 +368,15 @@ def get_value_at(all_info, current_path, key, to_string = False):
         return str(target_obj)
     else:
         return target_obj
+
+#
+# Not all AWS resources have an ID
+# Use SHA1(name) when the resource name is used
+#
+def get_non_aws_id(name):
+    m = hashlib.sha1()
+    m.update(name)
+    return m.hexdigest()
 
 
 ########################################

@@ -40,7 +40,7 @@
                                       {{addMember 'Resource' @key}}
                                       {{#each inline_policies}}
                                         <li>
-                                          {{../Resource}} granted in <a href="javascript:showIAMInlinePolicy('{{../../../../../../../type}}', '{{../../../../name}}', '{{@key}}')">{{@key}}</a>
+                                          {{../Resource}} granted in <a href="javascript:showObject('services.iam.{{../../../../../../../type}}.{{../../../../name}}.inline_policies.{{@key}}')">{{get_value_at 'services.iam' ../../../../../../../type ../../../../name 'inline_policies' @key 'name'}}</a>
                                           {{#if condition}}
                                             <ul class="no-bullet">
                                               <li class="list-group-item-text">Condition: {{condition}}</li>
@@ -50,7 +50,7 @@
                                       {{/each}}
                                       {{#each managed_policies}}
                                         <li>
-                                          {{../Resource}} granted in <a href="javascript:showIAMManagedPolicy('{{@key}}')">{{policy_friendly_name @key}}</a>
+                                          {{../Resource}} granted in <a href="javascript:showObject('services.iam.managed_policies.{{@key}}')">{{get_value_at 'services.iam.managed_policies' @key 'name'}}</a>
                                           {{#if condition}}
                                             <ul class="no-bullet">
                                               <li class="list-group-item-text">Condition: {{condition}}</li>

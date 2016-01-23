@@ -45,9 +45,18 @@
           </div>
         </div>
         {{> services.iam.inline_policies entity_type = 'role'}}
-        {{> services.iam.managed_policies}}
+        {{> services.iam.managed_policies_list}}
     </script>
     <script>
       Handlebars.registerPartial("services.iam.roles", $("#services\\.iam\\.roles\\.partial").html());
+    </script>
+
+    <!-- Single IAM role template -->
+    <script id="services.iam.roles.template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.iam.roles}}
+    </script>
+    <script>
+        var single_iam_role_template = Handlebars.compile($("#services\\.iam\\.roles\\.template").html());
     </script>
 

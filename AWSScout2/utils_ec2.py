@@ -305,8 +305,10 @@ def get_vpc_info(q, params):
         try:
             vpc = q.get()
             manage_dictionary(region_info['vpcs'], vpc['VpcId'], {})
+            manage_dictionary(region_info, 'network_acls_count', 0)
             get_name(vpc, vpc, 'VpcId')
             acls = ec2_client.describe_network_acls(Filters = [{'Name': 'vpc-id', 'Values': [vpc['VpcId']]}])
+            region_info['network_acls_count'] += len(acls['NetworkAcls'])
             vpc['network_acls'] = {}
             for acl in acls['NetworkAcls']:
                 manage_dictionary(vpc['network_acls'], acl['NetworkAclId'], {})

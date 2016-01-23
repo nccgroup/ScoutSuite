@@ -29,9 +29,18 @@
           </div>
         </div>
         {{> services.iam.inline_policies resource_type = 'groups' resource_id = @key}}
-        {{> services.iam.managed_policies}}
+        {{> services.iam.managed_policies_list}}
     </script>
     <script>
       Handlebars.registerPartial("services.iam.groups", $("#services\\.iam\\.groups\\.partial").html());
+    </script>
+
+    <!-- Single IAM group template -->
+    <script id="services.iam.groups.template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.iam.groups}}
+    </script>
+    <script>
+        var single_iam_group_template = Handlebars.compile($("#services\\.iam\\.groups\\.template").html());
     </script>
 
