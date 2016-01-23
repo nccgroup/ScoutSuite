@@ -18,7 +18,6 @@ except Exception as e:
     sys.exit()
 
 # Import Scout2 tools
-from AWSScout2.filters import *
 from AWSScout2.findings import *
 from AWSScout2.utils_cloudtrail import *
 from AWSScout2.utils_ec2 import *
@@ -97,6 +96,9 @@ def main(args):
                 method_args['secret'] = secret
                 method_args['session_token'] = token
                 method_args['service_config'] = aws_config['services'][service]
+                # Temp h4ck
+                if service == 'vpc':
+                    continue
                 if service != 'iam':
                     method_args['selected_regions'] = args.regions
                     method_args['with_gov'] = args.with_gov

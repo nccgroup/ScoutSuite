@@ -4,8 +4,6 @@ from opinel.utils_redshift import *
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
-from AWSScout2.filters import *
-from AWSScout2.findings import *
 
 
 ########################################

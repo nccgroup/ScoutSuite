@@ -177,28 +177,6 @@ def no_camel(name):
 # Violations search functions
 ########################################
 
-def analyze_config(finding_dictionary, filter_dictionary, config, keyword, force_write = False):
-    # Filters
-    try:
-        for key in filter_dictionary:
-            f = filter_dictionary[key]
-            entity_path = f.entity.split('.')
-            process_finding(config, f)
-        config['filters'] = filter_dictionary
-    except Exception as e:
-        printException(e)
-        pass
-    # Violations
-    try:
-        for key in finding_dictionary:
-            finding = finding_dictionary[key]
-            entity_path = finding.entity.split('.')
-            process_finding(config, finding)
-        config['violations'] = finding_dictionary
-    except Exception as e:
-        printException(e)
-        pass
-
 def has_instances(ec2_region):
     count = 0
     for v in ec2_region['vpcs']:
@@ -224,36 +202,6 @@ def match_instances_and_roles(ec2_config, iam_config):
                 iam_config['roles'][role_id]['instance_profiles'][instance_profile_id]['instances'] = role_instances[instance_profile_id]
                 iam_config['roles'][role_id]['instances_count'] += len(role_instances[instance_profile_id])
 
-def process_entities(config, finding, entity_path):
-    if len(entity_path) == 1:
-        entities = entity_path.pop(0)
-        if entities in config or entities == '':
-            if finding.callback:
-                callback = getattr(finding, finding.callback)
-                if entities in config:
-                    for key in config[entities]:
-                        # Dashboard: count the number of processed entities here
-                        finding.checked_items = finding.checked_items + 1
-                        callback(key, config[entities][key])
-                else:
-                    # Special case when performing a check that requires access to the whole config, leave entities empty
-                    callback('foo', config)
-            else:
-                return
-    elif len(entity_path) != 0:
-        entities = entity_path.pop(0)
-        for key in config[entities]:
-            process_entities(config[entities][key], finding, copy.deepcopy(entity_path))
-    else:
-        printError('Unknown error.')
-
-def process_finding(config, finding):
-    try:
-        entity_path = finding.entity.split('.')
-    except:
-        entity_path = finding['entity'].split('.')
-    process_entities(config, finding, entity_path)
-
 
 #
 # Create dashboard metadata
@@ -273,10 +221,8 @@ def create_report_metadata(aws_config, services):
             if not 'script' in aws_config['metadata'][service]['resources'][resource]:
                 aws_config['metadata'][service]['resources'][resource]['script'] = '.'.join([x for x in aws_config['metadata'][service]['resources'][resource]['full_path'].split('.') if x != 'id'])
             # Update counts here
-            config = {'conditions': []}
-            recurse(aws_config, aws_config, aws_config['metadata'][service]['resources'][resource]['full_path'].split('.'), [], config)
-            # This is broken
-            aws_config['metadata'][service]['resources'][resource]['count'] = config['checked_items'] if 'checked_items' in config else 0
+#            config = {'conditions': []}
+#            recurse(aws_config, aws_config, aws_config['metadata'][service]['resources'][resource]['full_path'].split('.'), [], config)
 
 
 ########################################

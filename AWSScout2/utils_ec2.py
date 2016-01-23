@@ -5,8 +5,6 @@ from opinel.utils_ec2 import *
 # Import Scout2 tools
 from AWSScout2.utils import *
 from AWSScout2.utils_ec2 import *
-from AWSScout2.filters import *
-from AWSScout2.findings import *
 
 
 ########################################

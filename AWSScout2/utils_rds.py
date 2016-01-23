@@ -5,8 +5,6 @@ from opinel.utils_rds import *
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
-from AWSScout2.filters import *
-from AWSScout2.findings import *
 
 ########################################
 ##### RDS functions

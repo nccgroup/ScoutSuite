@@ -500,7 +500,7 @@ var current_resource_path = ''
 function updateDOM(anchor) {
 
     // Strip the # sign
-    var path = anchor.replace('#', '');
+    var path = decodeURIComponent(anchor.replace('#', ''));
 
     // Get resource path based on browsed-to path
     var resource_path = get_resource_path(path);

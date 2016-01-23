@@ -3,8 +3,6 @@ from opinel.utils_iam import *
 
 # Import Scout2 tools
 from AWSScout2.utils import *
-from AWSScout2.filters import *
-from AWSScout2.findings import *
 
 # Import stock packages
 import base64
