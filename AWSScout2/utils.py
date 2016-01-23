@@ -211,6 +211,9 @@ def create_report_metadata(aws_config, services):
     with open('metadata.json', 'rt') as f:
         aws_config['metadata'] = json.load(f)    
     for service in services:
+        # tmp h4ck
+        if service == 'vpc':
+            continue
         for resource in aws_config['metadata'][service]['resources']:
             # full_path = path if needed
             if not 'full_path' in aws_config['metadata'][service]['resources'][resource]:
