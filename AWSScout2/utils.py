@@ -194,7 +194,6 @@ def match_instances_and_roles(ec2_config, iam_config):
                     if instance_profile_id:
                         manage_dictionary(role_instances, instance_profile_id, [])
                         role_instances[instance_profile_id].append(i)
-    printInfo(json.dumps(role_instances, indent = 4))
     for role_id in iam_config['roles']:
         iam_config['roles'][role_id]['instances_count'] = 0
         for instance_profile_id in iam_config['roles'][role_id]['instance_profiles']:
