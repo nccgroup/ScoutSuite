@@ -96,9 +96,6 @@ def main(args):
                 method_args['secret'] = secret
                 method_args['session_token'] = token
                 method_args['service_config'] = aws_config['services'][service]
-                # Temp h4ck
-                if service == 'vpc':
-                    continue
                 if service != 'iam':
                     method_args['selected_regions'] = args.regions
                     method_args['with_gov'] = args.with_gov
@@ -143,9 +140,10 @@ def main(args):
             printException(e)
 
     # Single service analyzis
+    printInfo('Analyzing AWS config...')
     for finding_path in rules:
         for rule in rules[finding_path]:
-             printInfo('Processing %s rule: "%s"' % (finding_path.split('.')[0], rules[finding_path][rule]['description']))
+             printDebug('Processing %s rule: "%s"' % (finding_path.split('.')[0], rules[finding_path][rule]['description']))
              path = finding_path.split('.')
              service = path[0]
              aws_config['services'][service]['violations'][rule] = {}

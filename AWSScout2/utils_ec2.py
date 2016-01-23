@@ -38,7 +38,6 @@ def analyze_ec2_config(ec2_info, aws_account_id, force_write):
 # Github issue #24: display the security group names in the list of grants (added here to have ligher JS code)
 #
 def add_security_group_name_to_ec2_grants(ec2_config, aws_account_id):
-    return
     go_to_and_do(ec2_config, None, ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports', 'security_groups'], [], add_security_group_name_to_ec2_grants_callback, {'AWSAccountId': aws_account_id})
 #
 # Callback

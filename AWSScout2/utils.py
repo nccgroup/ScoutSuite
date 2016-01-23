@@ -36,7 +36,7 @@ re_service_utils = re.compile(r'^utils_(.*?).py$')
 scout2_utils_dir, foo = os.path.split(__file__)
 for filename in os.listdir(scout2_utils_dir):
     service = re_service_utils.match(filename)
-    if service: # and service.groups()[0] != 'vpc':
+    if service and service.groups()[0] != 'vpc':
         supported_services.append(service.groups()[0])
 
 ec2_classic = 'EC2-Classic'
@@ -211,9 +211,6 @@ def create_report_metadata(aws_config, services):
     with open('metadata.json', 'rt') as f:
         aws_config['metadata'] = json.load(f)    
     for service in services:
-        # tmp h4ck
-        if service == 'vpc':
-            continue
         for resource in aws_config['metadata'][service]['resources']:
             # full_path = path if needed
             if not 'full_path' in aws_config['metadata'][service]['resources'][resource]:
