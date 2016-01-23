@@ -49,3 +49,12 @@
       Handlebars.registerPartial("services.ec2.regions.id.vpcs", $("#services\\.ec2\\.regions\\.id\\.vpcs\\.partial").html());
     </script>
 
+    <!-- Single EC2 VPC template -->
+    <script id="single_ec2_vpc-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.ec2.regions.id.vpcs}}
+    </script>
+    <script>
+        var single_ec2_vpc_template = Handlebars.compile($("#single_ec2_vpc-template").html());
+    </script>
+

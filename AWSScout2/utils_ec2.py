@@ -87,9 +87,9 @@ def link_elastic_ips(ec2_config):
     go_to_and_do(ec2_config, None, ['regions', 'elastic_ips'], None, link_elastic_ips_callback1, {})
 
 def link_elastic_ips_callback1(ec2_config, current_config, path, current_path, elastic_ip, callback_args):
-    if not 'InstanceId' in current_config:
+    if not 'id' in current_config:
         return
-    instance_id = current_config['InstanceId']
+    instance_id = current_config['id']
     return
     go_to_and_do(ec2_config, None, ['regions', 'vpcs', 'instances'], None, link_elastic_ips_callback2, {'instance_id': instance_id, 'elastic_ip': elastic_ip})
 
@@ -246,13 +246,14 @@ def get_instance_info(q, params):
             instance = {}
             vpc_id = i['VpcId'] if 'VpcId' in i and i['VpcId'] else ec2_classic
             instance['reservation_id'] = reservation_id
-            for key in ['InstanceId', 'PublicDnsName', 'PrivateDnsName', 'KeyName', 'LaunchTime', 'PrivateIpAddress', 'PublicIpAddress', 'InstanceType', 'State']:
+            instance['id'] = i['InstanceId']
+            get_name(instance, i, 'InstanceId')
+            # TODO: use get_keys() here
+            for key in ['PublicDnsName', 'PrivateDnsName', 'KeyName', 'LaunchTime', 'PrivateIpAddress', 'PublicIpAddress', 'InstanceType', 'State']:
                 instance[key] = i[key] if key in i else None
             if 'IamInstanceProfile' in i:
                 instance['iam_instance_profile'] = {}
                 get_keys(i['IamInstanceProfile'], instance['iam_instance_profile'], ['Id', 'Arn'])
-
-            get_name(instance, i, 'InstanceId')
             manage_dictionary(instance, 'security_groups', [])
             for sg in i['SecurityGroups']:
                 instance['security_groups'].append(sg)

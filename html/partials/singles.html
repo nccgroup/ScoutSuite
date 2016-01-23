@@ -7,42 +7,6 @@
       var close_button_template = Handlebars.compile($("#close_button-template").html());
     </script>
 
-    <!-- Single EC2 instance template -->
-    <script id="single_ec2_instance-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> ec2_instance}}
-    </script>
-    <script>
-        var single_ec2_instance_template = Handlebars.compile($("#single_ec2_instance-template").html());
-    </script>
-
-    <!-- Single EC2 VPC template -->
-    <script id="single_ec2_vpc-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> ec2_vpc}}
-    </script>
-    <script>
-        var single_ec2_vpc_template = Handlebars.compile($("#single_ec2_vpc-template").html());
-    </script>
-
-    <!-- Single EC2 Network ACL template -->
-    <script id="single_ec2_network_acl-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> ec2_network_acl}}
-    </script>
-    <script>
-        var single_ec2_network_acl_template = Handlebars.compile($("#single_ec2_network_acl-template").html());
-    </script>
-
-    <!-- Single EC2 security group template -->
-    <script id="single_ec2_security_group-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> ec2_security_group}}
-    </script>
-    <script>
-        var single_ec2_security_group_template = Handlebars.compile($("#single_ec2_security_group-template").html());
-    </script>
-
     <!-- Single RDS instance template -->
     <script id="single_rds_instance-template" type="text/x-handlebars-template">
         <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>

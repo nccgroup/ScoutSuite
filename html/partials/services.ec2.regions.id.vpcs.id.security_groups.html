@@ -38,3 +38,12 @@
     Handlebars.registerPartial("services.ec2.regions.id.vpcs.id.security_groups", $("#services\\.ec2\\.regions\\.id\\.vpcs\\.id\\.security_groups\\.partial").html());
 </script>
 
+    <!-- Single EC2 security group template -->
+    <script id="single_ec2_security_group-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.ec2.regions.id.vpcs.id.security_groups}}
+    </script>
+    <script>
+        var single_ec2_security_group_template = Handlebars.compile($("#single_ec2_security_group-template").html());
+    </script>
+

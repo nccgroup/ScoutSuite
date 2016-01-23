@@ -12,7 +12,7 @@
             <div class="accordion-inner">
               <ul>
               {{#each resources}}
-                <li class="list-group-item-text"><a href="javascript:showObject(['services', '{{../service}}', 'regions', '{{../region}}', 'vpcs', '{{../vpc}}', '{{../resource_type}}', '{{this}}'])">{{this}}</a></li>
+                <li class="list-group-item-text"><a href="javascript:showObject('services.{{../service}}.regions.{{../region}}.vpcs.{{../vpc}}.{{../resource_type}}.{{this}}')">{{this}}</a></li>
               {{/each}}
               </ul>
             </div>

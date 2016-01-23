@@ -32,3 +32,12 @@
       Handlebars.registerPartial("services.ec2.regions.id.vpcs.id.network_acls", $("#services\\.ec2\\.regions\\.id\\.vpcs\\.id\\.network_acls\\.partial").html());
     </script>
 
+    <!-- Single EC2 Network ACL template -->
+    <script id="single_ec2_network_acl-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.ec2.regions.id.vpcs.id.network_acls}}
+    </script>
+    <script>
+        var single_ec2_network_acl_template = Handlebars.compile($("#single_ec2_network_acl-template").html());
+    </script>
+
