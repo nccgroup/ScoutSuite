@@ -98,11 +98,14 @@ def add_scout2_argument(parser, default_args, argument_name):
 #
 # Return the list of services to iterate over
 #
-def build_services_list(services = supported_services, skipped_services = []):
-    enabled_services = []
-    for s in services:
-        if s in supported_services and s not in skipped_services:
-            enabled_services.append(s)
+def build_services_list(services = supported_services, skipped_services = [], aws_config = None):
+    if aws_config:
+        enabled_services = [s for s in aws_config['services'] if (aws_config['services'][s].keys() != [] and aws_config['services'][s].keys() != ['violations'])]
+    else:
+        enabled_services = []
+        for s in services:
+            if s in supported_services and s not in skipped_services:
+                enabled_services.append(s)
     return enabled_services
 
 #

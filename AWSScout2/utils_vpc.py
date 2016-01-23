@@ -15,7 +15,7 @@ def analyze_vpc_config(aws_config, ip_ranges, ip_ranges_name_key):
     printInfo('Analyzing VPC config...')
     # Security group usage: EC2 instances and ELBS
     callback_args = {'status_path': ['State', 'Name'], 'sg_list_attribute_name': 'security_groups', 'sg_id_attribute_name': 'GroupId'}
-#    go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'instances'], ['services', 'ec2'], list_resources_in_security_group, callback_args)
+    go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'instances'], ['services', 'ec2'], list_resources_in_security_group, callback_args)
     callback_args = {'status_path': ['State', 'Name'], 'sg_list_attribute_name': 'SecurityGroups', 'sg_id_attribute_name': 'GroupId'}
     go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'elbs'], ['services', 'ec2'], list_resources_in_security_group, callback_args)
     # Security group usage: Redshift clusters

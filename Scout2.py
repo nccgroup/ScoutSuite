@@ -61,16 +61,6 @@ def main(args):
     # Set the environment name
     environment_name = get_environment_name(args)[0]
 
-    # Search for an existing ruleset if the environment is set
-    if environment_name and args.ruleset_name == 'default':
-        ruleset_name = search_ruleset(environment_name)
-    else:
-        ruleset_name = args.ruleset_name
-
-    # Load findings from JSON config files
-    ruleset = load_ruleset(ruleset_name)
-    rules = init_rules(ruleset, services, environment_name, args.ip_ranges)
- 
     ##### Load local data first
     aws_config = {}
     manage_dictionary(aws_config, 'services', {})
@@ -120,6 +110,19 @@ def main(args):
     else:
         manage_dictionary(aws_config, 'account_id', None)
 
+    # For analyzis purposes, update the list of services to be the union of the fetched and loaded configurations
+    services = build_services_list(args.services, args.skipped_services, aws_config)
+
+    # Search for an existing ruleset if the environment is set
+    if environment_name and args.ruleset_name == 'default':
+        ruleset_name = search_ruleset(environment_name)
+    else:
+        ruleset_name = args.ruleset_name
+
+    # Load findings from JSON config files
+    ruleset = load_ruleset(ruleset_name)
+    rules = init_rules(ruleset, services, environment_name, args.ip_ranges)
+
     ##### VPC analyzis
     analyze_vpc_config(aws_config, args.ip_ranges, args.ip_ranges_key_name)
     if 'ec2' in services:
@@ -146,6 +149,7 @@ def main(args):
              printDebug('Processing %s rule: "%s"' % (finding_path.split('.')[0], rules[finding_path][rule]['description']))
              path = finding_path.split('.')
              service = path[0]
+             manage_dictionary(aws_config['services'][service], 'violations', {})
              aws_config['services'][service]['violations'][rule] = {}
              aws_config['services'][service]['violations'][rule]['description'] =  rules[finding_path][rule]['description']
              aws_config['services'][service]['violations'][rule]['entities'] = rules[finding_path][rule]['entities']
