@@ -73,7 +73,7 @@ def get_group_users(iam_client, group_name):
     users = []
     fetched_users = iam_client.get_group(GroupName = group_name)['Users']
     for user in fetched_users:
-        users.append(user['UserName'])
+        users.append(user['UserId'])
     return users
 
 def get_iam_info(key_id, secret, session_token, service_config):
@@ -308,7 +308,7 @@ def get_user_info(q, params):
             user['groups'] = []
             groups = handle_truncated_response(iam_client.list_groups_for_user, {'UserName': user['name']}, 'Marker', ['Groups'])['Groups']
             for group in groups:
-                user['groups'].append(group['GroupName'])
+                user['groups'].append(group['GroupId'])
             try:
                 user['LoginProfile'] = iam_client.get_login_profile(UserName = user['name'])['LoginProfile']
             except Exception as e:

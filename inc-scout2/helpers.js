@@ -247,6 +247,14 @@ Handlebars.registerHelper('ifEqual', function(v1, v2, options) {
     }
 });
 
+Handlebars.registerHelper('ifPositive', function(v1, options) {
+    if (v1 === 'N/A' || v1 === 0) {
+        return options.inverse(this);
+    } else {
+        return options.fn(this);
+    }
+});
+
 Handlebars.registerHelper('has_condition', function(policy_info) {
     if (('condition' in policy_info) && (policy_info['condition'] != null)) {
         return true;
