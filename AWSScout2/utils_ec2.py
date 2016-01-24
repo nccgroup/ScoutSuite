@@ -20,7 +20,7 @@ protocols_dict = load_data('protocols.json', 'protocols')
 
 def analyze_ec2_config(ec2_info, aws_account_id, force_write):
     try:
-        printInfo('Analyzing EC2 data... ', newLine = False)
+        printInfo('Analyzing EC2 config... ', newLine = False)
         # Tweaks
         link_elastic_ips(ec2_info)
         add_security_group_name_to_ec2_grants(ec2_info, aws_account_id)
@@ -144,7 +144,7 @@ def get_ec2_info(key_id, secret, session_token, service_config, selected_regions
     for region in all_regions:
         manage_dictionary(service_config['regions'], region, {})
         service_config['regions'][region]['name'] = region
-    printInfo('Fetching EC2 data...')
+    printInfo('Fetching EC2 config...')
     formatted_status('region', 'Elastic LBs', 'Elastic IPs', 'VPCs', 'Sec. Groups', 'Instances', True)
     ec2_targets = ['elastic_ips', 'elbs', 'vpcs', 'security_groups', 'instances']
     for region in all_regions:
