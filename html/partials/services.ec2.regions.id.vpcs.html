@@ -2,26 +2,28 @@
     <!-- EC2 VPC partial -->
     <script id="services.ec2.regions.id.vpcs.partial" type="text/x-handlebars-template">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{Name}}</h4>
+          <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
           <h4>Information</h4>
           <ul>
             <li class="list-group-item-text">Region: {{region}}</li>
             <li class="list-group-item-text">ID: {{id}}</li>
-            <li class="list-group-item-text">Name: {{Name}}</li>
+            <li class="list-group-item-text">name: {{name}}</li>
           </ul>
         </div>
         <div class="list-group-item" style="padding-bottom: 0 !important;">
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Network ACLs
-              <a class="accordion-toggle" data-toggle="collapse" href="#services.ec2.regions.vpcs-{{id}}-network_acls"><span class="badge pull-right btn-info">{{count_vpc_network_acls network_acls}}</span></a>
+              <a class="accordion-toggle" data-toggle="collapse" href="#services\.ec2\.regions\.{{region}}\.vpcs\.{{id}}\.network_acls">
+                <span class="badge pull-right btn-info">{{count_vpc_network_acls network_acls}}</span>
+              </a>
             </h4>
-            <div id="services.ec2.regions.vpcs-{{id}}-network_acls" class="accordion-body collapse">
+            <div id="services.ec2.regions.{{region}}.vpcs.{{id}}.network_acls" class="accordion-body collapse">
               <div class="accordion-inner">
                 <ul class="no-bullet">
                   {{#each network_acls}}
-                    <li><a href="javascript:findAndShowEC2Object('regions.vpcs.network_acls', '{{@key}}')">{{@key}}</a></li>
+                    <li><a href="javascript:showObject('services.ec2.regions.{{../region}}.vpcs.{{../id}}.network_acls.{{@key}}')">{{@key}}</a></li>
                   {{/each}}
                 </ul>
               </div>
@@ -31,13 +33,15 @@
         <div class="list-group-item" style="padding-bottom: 0 !important;">
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Instances
-              <a class="accordion-toggle" data-toggle="collapse" href="#services.ec2.regions.vpcs-{{id}}-instances"><span class="badge pull-right btn-info">{{count_vpc_instances instances}}</span></a>
+              <a class="accordion-toggle" data-toggle="collapse" href="#services\.ec2\.regions\.{{region}}\.vpcs\.{{id}}\.instances">
+                <span class="badge pull-right btn-info">{{count_vpc_instances instances}}</span>
+              </a>
             </h4>
-            <div id="services.ec2.regions.vpcs-{{id}}-instances" class="accordion-body collapse">
+            <div id="services.ec2.regions.{{region}}.vpcs.{{id}}.instances" class="accordion-body collapse">
               <div class="accordion-inner">
                 <ul class="no-bullet">
                   {{#each instances}}
-                    <li><a href="javascript:findAndShowEC2Object('regions.vpcs.instances', '{{@key}}')">{{@key}}</a></li>
+                    <li><a href="javascript:showObject('services.ec2.regions.{{../region}}.vpcs.{{../id}}.instances.{{@key}}')">{{@key}}</a></li>
                   {{/each}}
                 </ul>
               </div>
