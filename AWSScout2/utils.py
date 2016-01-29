@@ -378,7 +378,7 @@ def get_value_at(all_info, current_path, key, to_string = False):
 #
 def get_non_aws_id(name):
     m = hashlib.sha1()
-    m.update(name)
+    m.update(name.encode('utf-8'))
     return m.hexdigest()
 
 
