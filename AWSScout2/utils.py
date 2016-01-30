@@ -1,5 +1,6 @@
-# Import future print
+# Import future stuff...
 from __future__ import print_function
+from __future__ import unicode_literals
 
 # Import opinel
 from opinel.utils import *
@@ -480,7 +481,7 @@ def load_config_from_json(rule_metadata, environment_name, ip_ranges):
         for c1 in config['conditions']:
             if c1 in condition_operators:
                 continue
-            if ((type(c1[2]) == str) or (type(c1[2]) == unicode)):
+            if (type(c1[2]) == str):
                 values = re_ip_ranges_from_file.match(c1[2])
                 if values:
                     filename = values.groups()[0]
