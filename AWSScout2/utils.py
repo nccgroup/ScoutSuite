@@ -388,7 +388,7 @@ def get_non_aws_id(name):
 ########################################
 
 AWSCONFIG_DIR = 'inc-awsconfig'
-AWSCONFIG_FILE = 'aws_config.js'
+AWSCONFIG_FILE = 'aws_config'
 REPORT_TITLE  = 'AWS Scout2 Report'
 
 def create_scout_report(environment_name, aws_config, force_write, debug):
@@ -423,7 +423,8 @@ def create_scout_report(environment_name, aws_config, force_write, debug):
             with open(new_file, 'wt') as nf:
                 for line in f:
                     newline = line.replace(REPORT_TITLE, REPORT_TITLE + ' [' + environment_name + ']')
-                    newline = newline.replace(def_config_filename, new_config_filename)
+                    if environment_name != 'default':
+                        newline = newline.replace(def_config_filename, new_config_filename)
                     newline = newline.replace('<!-- PLACEHOLDER -->', contents)
                     nf.write(newline)
 
@@ -433,10 +434,10 @@ def create_scout_report(environment_name, aws_config, force_write, debug):
 def get_scout2_paths(environment_name):
     if environment_name == 'default':
         report_filename = 'report.html'
-        config_filename = AWSCONFIG_DIR + '/' + AWSCONFIG_FILE
+        config_filename = AWSCONFIG_DIR + '/' + AWSCONFIG_FILE + '.js'
     else:
         report_filename = ('report-%s.html' % environment_name)
-        config_filename = ('%s-%s/%s' % (AWSCONFIG_DIR, environment_name, AWSCONFIG_FILE))
+        config_filename = ('%s/%s-%s.js' % (AWSCONFIG_DIR, AWSCONFIG_FILE, environment_name))
     return report_filename, config_filename
 
 def load_info_from_json(service, environment_name):
