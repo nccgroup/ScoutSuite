@@ -133,7 +133,7 @@ def get_s3_acls(s3_client, bucket_name, bucket, key_name = None):
         manage_dictionary(grantees[grantee], 'permissions', init_s3_permissions())
         set_s3_permissions(grantees[grantee]['permissions'], permission)
     if key_name:
-        bucket['keys'][key_name]['grantees'] = grantees
+        bucket['keys'][get_non_aws_id(key_name)]['grantees'] = grantees
     else:
         bucket['grantees'] = grantees
   except Exception as e:
@@ -234,23 +234,25 @@ def get_s3_bucket(q, params):
 # Get key-specific information (server-side encryption, acls, etc...)
 def get_s3_bucket_keys(s3_client, bucket_name, bucket, check_encryption, check_acls):
     bucket['keys'] = {}
-    keys = handle_truncated_response(s3_client.list_objects, {'Bucket': bucket_name}, ['Contents'])
+    keys = handle_truncated_response(s3_client.list_objects, {'Bucket': bucket_name}, 'Marker', ['Contents'])
+    bucket['keys_count'] = len(keys['Contents'])
     for key in keys['Contents']:
-        key_name = key.pop('Key')
+        key['name'] = key.pop('Key')
+        key_id = get_non_aws_id(key['name'])
         key['LastModified'] = str(key['LastModified'])
-        bucket['keys'][key_name] = key
+        bucket['keys'][key_id] = key
         if check_encryption:
             try:
                 # The encryption configuration is only accessible via an HTTP header, only returned when requesting one object at a time...
-                k = s3_client.get_object(Bucket = bucket_name, Key = key_name) # ['ServerSideEncryption']
-                bucket['keys'][key_name]['ServerSideEncryption'] = k['ServerSideEncryption'] if 'ServerSideEncryption' in k else None
-                bucket['keys'][key_name]['SSEKMSKeyId'] = k['SSEKMSKeyId'] if 'SSEKMSKeyId' in k else None
+                k = s3_client.get_object(Bucket = bucket_name, Key = key['name'])
+                bucket['keys'][key_id]['ServerSideEncryption'] = k['ServerSideEncryption'] if 'ServerSideEncryption' in k else None
+                bucket['keys'][key_id]['SSEKMSKeyId'] = k['SSEKMSKeyId'] if 'SSEKMSKeyId' in k else None
             except Exception as e:
                 printException(e)
                 continue
         if check_acls:
             try:
-                get_s3_acls(s3_client, bucket_name, bucket, key_name = key_name)
+                get_s3_acls(s3_client, bucket_name, bucket, key_name = key['name'])
             except Exception as e:
                 continue
 

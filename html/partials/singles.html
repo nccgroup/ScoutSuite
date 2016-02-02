@@ -25,21 +25,3 @@
         var single_redshift_cluster_template = Handlebars.compile($("#single_redshift_cluster-template").html());
     </script>
 
-    <!-- Single S3 bucket template -->
-    <script id="single_s3_bucket-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> s3_bucket}}
-    </script>
-    <script>
-        var single_s3_bucket_template = Handlebars.compile($("#single_s3_bucket-template").html());
-    </script>
-
-    <!-- Single S3 object template -->
-    <script id="single_s3_object-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> s3_object}}
-    </script>
-    <script>
-      var single_s3_object_template = Handlebars.compile($("#single_s3_object-template").html());
-    </script>
-

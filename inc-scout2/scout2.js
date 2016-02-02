@@ -325,7 +325,6 @@ function showObject(path) {
     var path_length = path_array.length;
     var data = aws_info;
     for (var i = 0; i < path_length; i++) {
-        console.log('Getting data[' + path_array[i] + ']...');
         data = data[path_array[i]];
     }
     console.log(data);
@@ -358,6 +357,13 @@ function showObject(path) {
         case "redshift_clusters":
             $('#overlay-details').html(single_redshift_cluster_template(data));
         break;
+        // TODO: make this automated...
+        case "s3_buckets":
+            $('#overlay-details').html(single_s3_bucket_template(data));
+        break;
+        case "s3_keys":
+            $('#overlay-details').html(single_s3_object_template(data));
+        break;
     }
     showPopup();
 }
@@ -384,10 +390,10 @@ function showS3Bucket(bucket_name) {
     $('#overlay-details').html(single_s3_bucket_template(data));
     showPopup();
 }
-function showS3Object(bucket_name, object_name) {
-    var data = aws_info['services']['s3']['buckets'][bucket_name]['keys'][object_name];
-    data['name'] = object_name;
-    data['bucket_name'] = bucket_name;
+function showS3Object(bucket_id, key_id) {
+    var data = aws_info['services']['s3']['buckets'][bucket_id]['keys'][key_id];
+    data['key_id'] = key_id;
+    data['bucket_id'] = bucket_id;
     $('#overlay-details').html(single_s3_object_template(data));
     showPopup();
 }

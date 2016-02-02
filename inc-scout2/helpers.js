@@ -50,21 +50,14 @@ Handlebars.registerHelper('s3_grant_2_icon', function(value) {
     return '<i class="' + ((value == true) ? 'glyphicon glyphicon-ok' : '') +'"></i>';
 });
 
-Handlebars.registerHelper('good_bad_icon', function(violation, bucket_name, item) {
-    index = -1;
-    /* TODO: this shouldn't happen in JS... will take forever on buckets that contain many files */
-    for (i in aws_info['services']['s3']['violations'][violation]['macro_items']) {
-        if (aws_info['services']['s3']['violations'][violation]['macro_items'][i] == bucket_name) {
-            if (aws_info['services']['s3']['violations'][violation]['items'][i] == item) {
-                index = i;
-                break;
-            }
-        }
-    }
+Handlebars.registerHelper('good_bad_icon', function(violation, bucket_id, key_id, suffix) {
+    var key_path = 's3.buckets.' + bucket_id + '.keys.' + key_id + '.' + suffix;
+    var index = aws_info['services']['s3']['violations'][violation]['items'].indexOf(key_path);
+    var level = aws_info['services']['s3']['violations'][violation]['level'];
     if (index > -1) {
-        return '<i class="glyphicon glyphicon-remove"></i>';
+        return '<i class="glyphicon glyphicon-remove finding-' + level +'"></i>';
     } else {
-        var key_details = aws_info['services']['s3']['buckets'][bucket_name]['keys'][item];
+        var key_details = aws_info['services']['s3']['buckets'][bucket_id]['keys'][key_id];
         if (((violation == 'object-perms-mismatch-bucket-perms') && !('grantees' in key_details))
             ||((violation == 'unencrypted-s3-objects') && !('ServerSideEncryption' in key_details))) {
             /* Say that we don't know if there's no corresponding attribute for the key */
@@ -272,6 +265,13 @@ Handlebars.registerHelper('get_value_at', function() {
     for (var i = 1; i < arguments.length -1; i++) {
         path = path + '.' + arguments[i];
     }
-    console.log('Path = ' + path);
     return get_value_at(path);
+});
+
+Handlebars.registerHelper('concat', function() {
+    var path = arguments[0];
+    for (var i = 1; i < arguments.length -1; i++) {
+        path = path + '.' + arguments[i];
+    }
+    return path;
 });

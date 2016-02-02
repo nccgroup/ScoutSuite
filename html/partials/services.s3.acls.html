@@ -1,0 +1,36 @@
+
+    <script id="services.s3.acls.partial" type="text/x-handlebars-template">
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">{{make_title resource_type}} ACLs</h4>
+          <table class="table-striped" width="100%" >
+            <tr>
+              <td width="20%"></td>
+              <td width="20%" class="text-center">List</td>
+              <td width="20%" class="test-center">Upload/Delete</td>
+              <td width="20%" class="text-center">View Permissions</td>
+              <td width="20%" class="text-center">Edit Permissions</td>
+            </tr>
+            {{#each grantees}}
+            <tr>
+              <td width="20%" class="text-center">{{DisplayName}}</td>
+              <td width="20%" class="text-center">
+                <span id="{{../resource_path}}.grantees.{{@key}}.read">{{{s3_grant_2_icon permissions.read}}}</td></span>
+              </td>
+              <td width="20%" class="text-center">
+                <span id="{{../resource_path}}.grantees.{{@key}}.write">{{{s3_grant_2_icon permissions.write}}}</td></span>
+              </td>
+              <td width="20%" class="text-center">
+                <span id="{{../resource_path}}.grantees.{{@key}}.read_acp">{{{s3_grant_2_icon permissions.read_acp}}}</td></span>
+              </td>
+              <td width="20%" class="text-center">
+                <span id="{{../resource_path}}.grantees.{{@key}}.write_acp">{{{s3_grant_2_icon permissions.write_acp}}}</td></span>
+              </td>
+            </tr>
+            {{/each}}
+          </table>
+        </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.s3.acls", $("#services\\.s3\\.acls\\.partial").html());
+    </script>
+

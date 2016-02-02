@@ -3,49 +3,30 @@
     <script id="services.s3.buckets.objects.partial" type="text/x-handlebars-template">
       <div class="list-group" id="services.s3.buckets.objects.{{Name}}.details">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{bucket_name}}/{{Name}}</h4>
+          <h4 class="list-group-item-heading">{{get_value_at 'services.s3.buckets' bucket_id 'name'}}/{{get_value_at 'services.s3.buckets' bucket_id 'keys' key_id 'name'}}</h4>
         </div>
-        <div class="list-gorup-item">
+        <div class="list-group-item">
           <h4 class="list-group-item-heading">Information</h4>
           <div class="list-group-item-text">
             <ul class="no-bullet">
-              <li>Server-side encryption: {{{good_bad_icon "unencrypted-s3-objects" bucket_name name}}}</li>
-              <li>Permissions match bucket's: {{{good_bad_icon "object-perms-mismatch-bucket-perms" bucket_name name}}}</li>
+              <li>Server-side encryption: {{{good_bad_icon 's3-object-unencrypted' bucket_id key_id 'ServerSideEncryption'}}}</li>                          
+              <li>Permissions match bucket's: {{{good_bad_icon 's3-object-acls-mismatch-bucket' bucket_id key_id 'grantees'}}}</li>
             </ul>
           </div>
         </div>
-        <div class="list-group-item">
-          <h4 class="list-group-item-heading">Permissions</h4>
-          <table class="table-striped" width="100%" >
-            <tr>
-              <td width="20%"></td>
-              <td width="20%" class="text-center">Read access</td>
-              <td width="20%" class="text-center">Read permissions</td>
-              <td width="20%" class="text-center">Write access</td>
-              <td width="20%" class="text-center">Write permissions</td>
-            </tr>
-            {{#each grants}}
-              <tr>
-                <td width="20%">{{@key}}</td>
-                <td width="20%" class="text-center">
-                  <span id="s3_buckets-{{Name}}-read-{{../name}}">{{{s3_grant_2_icon this.read}}}</td></span>
-                </td>
-                <td width="20%" class="text-center">
-                  <span id="s3_buckets-{{Name}}-read_acp-{{../name}}">{{{s3_grant_2_icon this.read_acp}}}</td></span>
-                </td>
-                <td width="20%" class="text-center">
-                  <span id="s3_buckets-{{Name}}-write-{{../name}}">{{{s3_grant_2_icon this.write}}}</td></span>
-                </td>
-                <td width="20%" class="text-center">
-                  <span id="s3_buckets-{{Name}}-write_acp-{{../name}}">{{{s3_grant_2_icon this.write_acp}}}</td></span>
-                </td>
-              </tr>
-            {{/each}}
-          </table>
-        </div>
+        {{> services.s3.acls resource_type = 'object' resource_path = (concat 's3.buckets' bucket_id 'keys' key_id)}}
       </div>
     </script>
     <script>
       Handlebars.registerPartial("services.s3.buckets.objects", $("#services\\.s3\\.buckets\\.objects\\.partial").html());
+    </script>
+
+    <!-- Single S3 object template -->
+    <script id="single_s3_object-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.s3.buckets.objects}}
+    </script>
+    <script>
+      var single_s3_object_template = Handlebars.compile($("#single_s3_object-template").html());
     </script>
 
