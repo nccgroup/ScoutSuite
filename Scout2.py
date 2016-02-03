@@ -71,7 +71,7 @@ def main(args):
             # Reload data in specific cases...
             if service == 's3' and (args.bucket_name or args.skipped_bucket_name):
                 aws_config['services'][service] = load_info_from_json(service, environment_name)
-            # TODO: when working on a subset of available regions, reload data for other regions (reload all and kill selected regions)
+            # TODO: when working on a subset of available regions, reload data for other regions (reload all and kill selected regions) 
 
     ##### Fetch all requested services' configuration
     for service in services:
