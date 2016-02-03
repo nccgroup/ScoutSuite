@@ -233,7 +233,10 @@ def get_s3_bucket_keys(s3_client, bucket_name, bucket, check_encryption, check_a
     bucket['keys'] = []
     keys = handle_truncated_response(s3_client.list_objects, {'Bucket': bucket_name}, 'Marker', ['Contents'])
     bucket['keys_count'] = len(keys['Contents'])
+    key_count = 0
+    update_status(key_count, bucket['keys_count'], 'keys')
     for key in keys['Contents']:
+        key_count += 1
         key['name'] = key.pop('Key')
         key['LastModified'] = str(key['LastModified'])
         if check_encryption:
@@ -252,6 +255,8 @@ def get_s3_bucket_keys(s3_client, bucket_name, bucket, check_encryption, check_a
                 continue
         # Save it
         bucket['keys'].append(key)
+        update_status(key_count, bucket['keys_count'], 'keys')
+
 
 def get_s3_info(key_id, secret, session_token, service_config, selected_regions, with_gov, with_cn, s3_params):
     # h4ck :: Create multiple clients here to avoid propagation of credentials. This is necessary because s3 is a global service that requires to access the API via the right region endpoints...
