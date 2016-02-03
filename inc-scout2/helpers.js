@@ -58,15 +58,14 @@ Handlebars.registerHelper('good_bad_icon', function(violation, bucket_id, key_id
         return '<i class="glyphicon glyphicon-remove finding-' + level +'"></i>';
     } else {
         var key_details = aws_info['services']['s3']['buckets'][bucket_id]['keys'][key_id];
-        if (((violation == 'object-perms-mismatch-bucket-perms') && !('grantees' in key_details))
-            ||((violation == 'unencrypted-s3-objects') && !('ServerSideEncryption' in key_details))) {
-            /* Say that we don't know if there's no corresponding attribute for the key */
-            return '<i class="glyphicon glyphicon-question-sign"></i>';
-        } else {
-            /* Mark as good */
+        if ((violation == 's3-object-acls-mismatch-bucket') && ('grantees' in key_details)) {
             return '<i class="glyphicon glyphicon-ok finding-good"></i>';
+        } else if ((violation == 's3-object-unencrypted') && ('ServerSideEncryption' in key_details)) {
+            return '<i class="glyphicon glyphicon-ok finding-good"></i>';
+        } else {
+            return '<i class="glyphicon glyphicon-question-sign"></i>';
         }
-    }
+    } 
 });
 
 Handlebars.registerHelper('has_logging?', function(logging) {
