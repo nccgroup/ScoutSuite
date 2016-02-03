@@ -49,7 +49,7 @@
         {
             "filename": "ec2-security-group-opens-known-port-to-all.json",
             "enabled": "true",
-            "args": ["MsSQL", "TCP", "1433"]                
+            "args": ["MsSQL", "TCP", "1433"]
         },
         {
             "filename": "ec2-security-group-opens-known-port-to-all.json",
