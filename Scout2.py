@@ -146,23 +146,27 @@ def main(args):
     printInfo('Analyzing AWS config...')
     for finding_path in rules:
         for rule in rules[finding_path]:
-             printDebug('Processing %s rule: "%s"' % (finding_path.split('.')[0], rules[finding_path][rule]['description']))
-             path = finding_path.split('.')
-             service = path[0]
-             manage_dictionary(aws_config['services'][service], 'violations', {})
-             aws_config['services'][service]['violations'][rule] = {}
-             aws_config['services'][service]['violations'][rule]['description'] =  rules[finding_path][rule]['description']
-             aws_config['services'][service]['violations'][rule]['entities'] = rules[finding_path][rule]['entities']
-             aws_config['services'][service]['violations'][rule]['level'] = rules[finding_path][rule]['level']
-             if 'id_suffix' in rules[finding_path][rule]:
-                 aws_config['services'][service]['violations'][rule]['id_suffix'] = rules[finding_path][rule]['id_suffix']
-             if 'display_path' in rules[finding_path][rule]:
-                 aws_config['services'][service]['violations'][rule]['display_path'] = rules[finding_path][rule]['display_path']
-             aws_config['services'][service]['violations'][rule]['items'] = recurse(aws_config['services'], aws_config['services'], path, [], rules[finding_path][rule], True)
-             aws_config['services'][service]['violations'][rule]['dashboard_name'] = rules[finding_path][rule]['dashboard_name'] if 'dashboard_name' in rules[finding_path][rule] else '??'
-             aws_config['services'][service]['violations'][rule]['checked_items'] = rules[finding_path][rule]['checked_items'] if 'checked_items' in rules[finding_path][rule] else 0
-             aws_config['services'][service]['violations'][rule]['flagged_items'] = len(aws_config['services'][service]['violations'][rule]['items'])
-             aws_config['services'][service]['violations'][rule]['service'] = service
+            printDebug('Processing %s rule: "%s"' % (finding_path.split('.')[0], rules[finding_path][rule]['description']))
+            path = finding_path.split('.')
+            service = path[0]
+            manage_dictionary(aws_config['services'][service], 'violations', {})
+            aws_config['services'][service]['violations'][rule] = {}
+            aws_config['services'][service]['violations'][rule]['description'] =  rules[finding_path][rule]['description']
+            aws_config['services'][service]['violations'][rule]['entities'] = rules[finding_path][rule]['entities']
+            aws_config['services'][service]['violations'][rule]['level'] = rules[finding_path][rule]['level']
+            if 'id_suffix' in rules[finding_path][rule]:
+                aws_config['services'][service]['violations'][rule]['id_suffix'] = rules[finding_path][rule]['id_suffix']
+            if 'display_path' in rules[finding_path][rule]:
+                aws_config['services'][service]['violations'][rule]['display_path'] = rules[finding_path][rule]['display_path']
+            try:
+                aws_config['services'][service]['violations'][rule]['items'] = recurse(aws_config['services'], aws_config['services'], path, [], rules[finding_path][rule], True)
+            except Exception as e:
+                printError('Failed to process rule defined in %s.json' % rule)
+                printException(e)
+            aws_config['services'][service]['violations'][rule]['dashboard_name'] = rules[finding_path][rule]['dashboard_name'] if 'dashboard_name' in rules[finding_path][rule] else '??'
+            aws_config['services'][service]['violations'][rule]['checked_items'] = rules[finding_path][rule]['checked_items'] if 'checked_items' in rules[finding_path][rule] else 0
+            aws_config['services'][service]['violations'][rule]['flagged_items'] = len(aws_config['services'][service]['violations'][rule]['items'])
+            aws_config['services'][service]['violations'][rule]['service'] = service
 
     # Tweaks
     if 'cloudtrail' in services:

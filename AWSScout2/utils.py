@@ -251,20 +251,6 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
         # Return the flagged items...
         config['flagged_items'] = len(results)
         return results
-            # 
-            # Will need to pass a mode
-#            if False:
-#                pass
-#            elif True:
-#                # Print mode
-#                output = ''
-#                for key in config['listing']['keys']:
-#                    if not output:
-#                        output = get_value_at(all_info, current_path, key, True)
-#                    else:
-#                        output = output + ', ' + get_value_at(all_info, current_path, key, True)
-#                print output
-
     target_path = copy.deepcopy(target_path)
     current_path = copy.deepcopy(current_path)
     attribute = target_path.pop(0)
@@ -289,6 +275,7 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
     else:
         printError('Error: unhandled case, typeof(current_info) = %s' % type(current_info))
         printError(str(current_info))
+        raise Exception
     return results
 
 
