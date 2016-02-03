@@ -223,14 +223,14 @@ def create_report_metadata(aws_config, services):
             if not 'script' in aws_config['metadata'][service]['resources'][resource]:
                 aws_config['metadata'][service]['resources'][resource]['script'] = '.'.join([x for x in aws_config['metadata'][service]['resources'][resource]['full_path'].split('.') if x != 'id'])
             # Update counts
+            count = '%s_count' % resource
             if 'regions' in aws_config['services'][service]:
                 aws_config['metadata'][service]['resources'][resource]['count'] = 0
                 for region in aws_config['services'][service]['regions']:
-                    count = '%s_count' % resource
                     if count in aws_config['services'][service]['regions'][region]:
-                        aws_config['metadata'][service]['resources'][resource]['count'] += aws_config['services'][service]['regions'][region]['%s_count' % resource]
+                        aws_config['metadata'][service]['resources'][resource]['count'] += aws_config['services'][service]['regions'][region][count]
             else:
-                aws_config['metadata'][service]['resources'][resource]['count'] = aws_config['services'][service]['%s_count' % resource]
+                aws_config['metadata'][service]['resources'][resource]['count'] = aws_config['services'][service][count]
 
 
 ########################################
