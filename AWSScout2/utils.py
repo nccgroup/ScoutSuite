@@ -288,7 +288,7 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
             results = results + recurse(all_info, split_current_info, copy.deepcopy(target_path), split_current_path, config, add_suffix)
     else:
         printError('Error: unhandled case, typeof(current_info) = %s' % type(current_info))
-        printError(current_info)
+        printError(str(current_info))
     return results
 
 
