@@ -132,10 +132,7 @@ def get_s3_acls(s3_client, bucket_name, bucket, key_name = None):
         grantees[grantee]['DisplayName'] = display_name
         manage_dictionary(grantees[grantee], 'permissions', init_s3_permissions())
         set_s3_permissions(grantees[grantee]['permissions'], permission)
-    if key_name:
-        bucket['keys'][get_non_aws_id(key_name)]['grantees'] = grantees
-    else:
-        bucket['grantees'] = grantees
+    return grantees
   except Exception as e:
     printException(e)
 
@@ -211,7 +208,7 @@ def get_s3_bucket(q, params):
             get_s3_bucket_logging(s3_client, bucket['name'], bucket)
             get_s3_bucket_versioning(s3_client, bucket['name'], bucket)
             get_s3_bucket_webhosting(s3_client, bucket['name'], bucket)
-            get_s3_acls(s3_client, bucket['name'], bucket)
+            bucket['grantees'] = get_s3_acls(s3_client, bucket['name'], bucket)
             # TODO:
             # CORS
             # Lifecycle
@@ -233,28 +230,28 @@ def get_s3_bucket(q, params):
 
 # Get key-specific information (server-side encryption, acls, etc...)
 def get_s3_bucket_keys(s3_client, bucket_name, bucket, check_encryption, check_acls):
-    bucket['keys'] = {}
+    bucket['keys'] = []
     keys = handle_truncated_response(s3_client.list_objects, {'Bucket': bucket_name}, 'Marker', ['Contents'])
     bucket['keys_count'] = len(keys['Contents'])
     for key in keys['Contents']:
         key['name'] = key.pop('Key')
-        key_id = get_non_aws_id(key['name'])
         key['LastModified'] = str(key['LastModified'])
-        bucket['keys'][key_id] = key
         if check_encryption:
             try:
                 # The encryption configuration is only accessible via an HTTP header, only returned when requesting one object at a time...
                 k = s3_client.get_object(Bucket = bucket_name, Key = key['name'])
-                bucket['keys'][key_id]['ServerSideEncryption'] = k['ServerSideEncryption'] if 'ServerSideEncryption' in k else None
-                bucket['keys'][key_id]['SSEKMSKeyId'] = k['SSEKMSKeyId'] if 'SSEKMSKeyId' in k else None
+                key['ServerSideEncryption'] = k['ServerSideEncryption'] if 'ServerSideEncryption' in k else None
+                key['SSEKMSKeyId'] = k['SSEKMSKeyId'] if 'SSEKMSKeyId' in k else None
             except Exception as e:
                 printException(e)
                 continue
         if check_acls:
             try:
-                get_s3_acls(s3_client, bucket_name, bucket, key_name = key['name'])
+                key['grantees'] = get_s3_acls(s3_client, bucket_name, bucket, key_name = key['name'])
             except Exception as e:
                 continue
+        # Save it
+        bucket['keys'].append(key)
 
 def get_s3_info(key_id, secret, session_token, service_config, selected_regions, with_gov, with_cn, s3_params):
     # h4ck :: Create multiple clients here to avoid propagation of credentials. This is necessary because s3 is a global service that requires to access the API via the right region endpoints...
