@@ -129,6 +129,7 @@ function hideLinks(resource_path) {
 // Show list, details' container, links, and view for a given path
 //
 function showRowWithItems(path) {
+    path = path.replace('>', '').replace('<', '');
     showRow(path);
     showItems(path);
 }
