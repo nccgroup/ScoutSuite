@@ -14,7 +14,6 @@ function load_aws_config_from_json(script_id, cols) {
     }
     path_array = script_id.split('.');
     for (i=3; i<path_array.length; i=i+2) {
-        console.log('P[' + i + ']: ' + path_array[i]);
         path_array[i] = 'id';
     }
     fixed_path = path_array.join('.');
@@ -33,7 +32,6 @@ function load_aws_config_from_json(script_id, cols) {
     list = aws_info;
     path_array = script_id.split('.id.')[0].split('.');
     for (i in path_array) {
-        console.log(i);
         list = list[path_array[i]];
     }
 
@@ -46,7 +44,6 @@ function load_aws_config_from_json(script_id, cols) {
         // Single-column display
         process_template(script_id + '.details.template', 'single-column', list);
     } else if (cols == 2) {
-        console.log('foo');
         // Double-column display
         process_template(script_id + '.list.template', 'double-column-left', list);
         process_template(script_id + '.details.template', 'double-column-right', list);
@@ -132,6 +129,7 @@ function hideLinks(resource_path) {
 // Show list, details' container, links, and view for a given path
 //
 function showRowWithItems(path) {
+    path = path.replace('>', '').replace('<', '');
     showRow(path);
     showItems(path);
 }
@@ -355,16 +353,14 @@ function showObject(path) {
     }
     showPopup();
 }
-function showIAMManagedPolicy(policy_arn) {
-    var data = aws_info['services']['iam']['ManagedPolicies'][policy_arn];
-    data['PolicyName'] = policy_friendly_name(policy_arn);
-    data['ReportId'] = policy_arn.replace(/:/g, '-').replace(/\//g, '-');
+function showIAMManagedPolicy(policy_id) {
+    var data = aws_info['services']['iam']['managed_policies'][policy_id];
+    data['policy_id'] = policy_id;
     showIAMPolicy(data);
 }
-function showIAMInlinePolicy(iam_entity_type, iam_entity_name, policy_name) {
-    var data = aws_info['services']['iam'][make_title(iam_entity_type)][iam_entity_name]['Policies'][policy_name];
-    data['PolicyName'] = policy_name;
-    data['ReportId'] = iam_entity_type + '-' + iam_entity_name + '-' + policy_name;
+function showIAMInlinePolicy(iam_entity_type, iam_entity_name, policy_id) {
+    var data = aws_info['services']['iam'][iam_entity_type][iam_entity_name]['inline_policies'][policy_id];
+    data['policy_id'] = policy_id;
     showIAMPolicy(data);
 }
 function showIAMPolicy(data) {

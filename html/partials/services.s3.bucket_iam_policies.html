@@ -20,9 +20,11 @@
                     {{#each (lookup . resource_type)}}
                       {{#each managed_policies}}
                         <tr>
-                        <td width="40%"><a href="javascript:showObject('services.iam.{{../../resource_type}}.{{@../key}}')">{{get_value_at 'services.iam' ../../resource_type @../key 'name'}}</a></td>
+                        <td width="40%"><a href="javascript:showObject('services.iam.{{../../resource_type}}.{{@../key}}')">
+                          {{get_value_at 'services.iam' ../../resource_type @../key 'name'}}
+                        </a></td>
                         <td width="40%" class="text-center">
-                          <a href="javascript:showIAMManagedPolicy('{{@key}}')">{{policy_friendly_name @key}}</a>
+                          <a href="javascript:showIAMManagedPolicy('{{@key}}')">{{get_value_at 'services.iam.managed_policies' @key 'name'}}</a>
                         </td>
                         <td width="20%" class="text-center">
                           {{has_condition  this}}
@@ -31,9 +33,13 @@
                       {{/each}}
                       {{#each inline_policies}}
                         <tr>
-                        <td width="40%"><a href="javascript:showObject('services.iam.{{../../resource_type}}.{{@../key}}')">{{@../key}}</a></td>
+                        <td width="40%"><a href="javascript:showObject('services.iam.{{../../resource_type}}.{{@../key}}')">
+                          {{get_value_at 'services.iam' ../../resource_type @../key 'name'}}
+                        </a></td>
                         <td width="40%" class="text-center">
-                          <a href="javascript:showIAMInlinePolicy('{{../../resource_type}}', '{{@../key}}', '{{@key}}')">{{@key}}</a>
+                          <a href="javascript:showIAMInlinePolicy('{{../../resource_type}}', '{{@../key}}', '{{@key}}')">
+                            {{get_value_at 'services.iam' ../../resource_type @../key 'inline_policies' @key 'name'}}
+                          </a>
                         </td>
                         <td width="20%" class="text-center">
                           {{has_condition  this}}
