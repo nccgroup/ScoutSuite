@@ -2,7 +2,6 @@
 // Globals
 var loaded_config_array = new Array();
 
-
 //
 // Generic load JSON function
 //
@@ -33,8 +32,6 @@ function load_aws_config_from_json(script_id, cols) {
     // Build the list based on the path, stopping at the first .id. value
     list = aws_info;
     path_array = script_id.split('.id.')[0].split('.');
-    console.log('Item will be at ');
-    console.log(path_array);
     for (i in path_array) {
         console.log(i);
         list = list[path_array[i]];
@@ -57,7 +54,6 @@ function load_aws_config_from_json(script_id, cols) {
 
     // Update the list of loaded data
     loaded_config_array.push(script_id);
-    console.log(loaded_config_array);
     return 1;
 }
 
@@ -67,16 +63,10 @@ function load_aws_config_from_json(script_id, cols) {
 //
 function process_template(id1, container_id, list) {
     id1 = id1.replace('<', '').replace('>', '');
-    console.log('Getting template script from ID = ' + id1);
     var template_to_compile = document.getElementById(id1).innerHTML;
     var compiled_template = Handlebars.compile(template_to_compile);
-    console.log('Done compiling, starting processing...');
-    console.log('Creating inner HTML...');
     var inner_html = compiled_template({items: list});
-    console.log('Done !');
-    console.log('Setting inner HTML value of ID = ' + container_id);
     document.getElementById(container_id).innerHTML += inner_html;
-    console.log('Done processing template...');
 }
 
 
@@ -161,7 +151,6 @@ function showFindings(path, resource_path) {
         if ($('[id="' + items[item] + '"]').hasClass('badge')) {
             $('[id="' + items[item] + '"]').addClass('finding-title-' + level);
         } else {
-            console.log(items[item]);
             $('[id="' + items[item] + '"]').addClass('finding-' + level);
         }
         $('[id="' + items[item] + '"]').removeClass('finding-hidden');
@@ -327,7 +316,6 @@ function showObject(path) {
     for (var i = 0; i < path_length; i++) {
         data = data[path_array[i]];
     }
-    console.log(data);
     var resource_type = path_array[1] + '_' + path_array[path_length-2];
     switch(resource_type) {
         case "iam_groups":
@@ -457,7 +445,6 @@ function showAllResources(script_id) {
     var path_array = script_id.split('.');
     var selector = "[id^='" + path_array.shift() + "." + path_array.shift() + ".']"
     for (p in path_array) {
-        console.log('Selector = ' + selector);
         $(selector).show();
         selector = selector + "[id*='." + path_array[p] + "']";
     }
@@ -516,7 +503,6 @@ function updateDOM(anchor) {
 
     // Get resource path based on browsed-to path
     var resource_path = get_resource_path(path);
-    console.log('Current resource path: ' + current_resource_path);
 
     // Update title
     if (path.endsWith('.items')) {
@@ -576,7 +562,6 @@ function updateDOM(anchor) {
 // TODO: merge into load_aws_config_from_json...
 //
 function lazy_loading(path) {
-    console.log('Lazy loading from ' + path);
     var resource_path_array = path.split('.')
     var service = resource_path_array[1];
     var resource_type = resource_path_array[resource_path_array.length - 1];
@@ -608,7 +593,6 @@ function get_resource_path(path) {
     } else {
         var resource_path = path; // path_array[path_array.length-1];
     }
-    console.log('Resource path:: ' + resource_path);
     return resource_path;
 }
 
@@ -640,9 +624,7 @@ var add_templates = function(service, section, resource_type, path, cols) {
     add_template(service, section, resource_type, path, 'details');
     if (cols > 1) {
         add_template(service, section, resource_type, path, 'list');
-    }/* else {
-        console.log('Foo !!' + service + ', ' + section + ', ' + resource_type + ', ' + path);       
-    }*/
+    }
 }
 
 
