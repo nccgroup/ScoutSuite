@@ -10,7 +10,7 @@ class TestScout2Class:
     #
     def test_scout2_help(self):
         command = './Scout2.py --help'
-        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+        process = subprocess.Popen(command, shell=True, stdout=None) #subprocess.PIPE)
         process.wait()
         assert process.returncode == 0
 
@@ -19,7 +19,7 @@ class TestScout2Class:
     #
     def test_scout2_default_run(self):
         command = './Scout2.py --force --debug'
-        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+        process = subprocess.Popen(command, shell=True, stdout=None) #subprocess.PIPE)
         process.wait()
         assert process.returncode == 0
 
@@ -28,7 +28,7 @@ class TestScout2Class:
     #
     def test_scout2_default_run(self):
         command = './Scout2.py --force --services s3 --check-s3-acls --bucket-name misconfigured-bucket-objectacls-mismatch'
-        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+        process = subprocess.Popen(command, shell=True, stdout=None) #subprocess.PIPE)
         process.wait()
         assert process.returncode == 0
 
@@ -37,6 +37,6 @@ class TestScout2Class:
     #
     def test_scout2_default_run(self):
         command = './Scout2.py --force --services s3 --check-s3-encryption --bucket-name misconfigured-bucket-unencrypted-objects'
-        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
+        process = subprocess.Popen(command, shell=True, stdout=None) #subprocess.PIPE)
         process.wait()
         assert process.returncode == 0

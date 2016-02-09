@@ -174,7 +174,7 @@ def main(args):
 
     # Save info about run
     aws_config['last_run'] = {}
-    aws_config['last_run']['time'] = datetime.datetime.now(dateutil.tz.tzlocal()).strftime("%Y-%m-%d %H:%M%S%z")
+    aws_config['last_run']['time'] = datetime.datetime.now(dateutil.tz.tzlocal()).strftime("%Y-%m-%d %H:%M:%S%z")
     aws_config['last_run']['cmd'] = ' '.join(sys.argv)
 
     # Generate dashboard metadata

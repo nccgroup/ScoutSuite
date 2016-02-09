@@ -1,10 +1,4 @@
-# Import AWS Scout2 finding-related classes
-#from AWSScout2.finding_cloudtrail import *
-#from AWSScout2.finding_ec2 import *
-#from AWSScout2.finding_iam import *
-#from AWSScout2.finding_rds import *
-#from AWSScout2.finding_redshift import *
-#from AWSScout2.finding_s3 import *
+#
 from AWSScout2.utils import *
 
 # Import opinel
@@ -16,16 +10,6 @@ import fnmatch
 import os
 import re
 
-
-########################################
-# Finding dictionaries
-########################################
-cloudtrail_finding_dictionary = {}
-iam_finding_dictionary = {}
-ec2_finding_dictionary = {}
-rds_finding_dictionary = {}
-redshift_finding_dictionary = {}
-s3_finding_dictionary = {}
 
 finding_levels = ['danger', 'warning']
 
@@ -124,18 +108,3 @@ def set_description(string, description):
             printError('The field %s is not supported yet for injection in the questions')
     return string
 
-def get_finding_variables(keyword):
-    if keyword == 'ec2':
-        return ec2_finding_dictionary, Ec2Finding
-    elif keyword == 'iam':
-        return iam_finding_dictionary, IamFinding
-    elif keyword == 's3':
-        return s3_finding_dictionary, S3Finding
-    elif keyword == 'cloudtrail':
-        return cloudtrail_finding_dictionary, CloudTrailFinding
-    elif keyword == 'rds':
-        return rds_finding_dictionary, RdsFinding
-    elif keyword == 'redshift':
-        return redshift_finding_dictionary, RedshiftFinding
-    else:
-        return None, None

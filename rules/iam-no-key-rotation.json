@@ -8,5 +8,6 @@
         [ "iam.users.id.AccessKeys.id.CreateDate", "dateOlderThan", "90" ],
         [ "iam.users.id.AccessKeys.id.Status", "equal", "_ARG_0_" ]
     ],
-    "level": "_ARG_1_"
+    "level": "_ARG_1_",
+    "listing": { "keys": [ "iam.users.id.name", "iam.users.id.AccessKeys.id.AccessKeyId", "iam.users.id.AccessKeys.id.CreateDate" ] }
 }
