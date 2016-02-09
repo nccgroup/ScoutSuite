@@ -48,6 +48,7 @@ def get_region_trails(q, params):
             else:
                 for key in trail:
                     trail_info[key] = trail[key]
+                trail_info['bucket_id'] = get_non_aws_id(trail_info.pop('S3BucketName'))
                 for key in ['IsMultiRegionTrail', 'LogFileValidationEnabled']:
                     if key not in trail_info:
                         trail_info[key] = False

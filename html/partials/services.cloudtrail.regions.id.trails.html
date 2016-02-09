@@ -25,7 +25,7 @@
           </span>
         </li>
         <li class="list-group-item-text">Log File Validation Enabled: <span id="cloudtrail.regions.{{region}}.trails.{{Name}}.LogFileValidationDisabled">{{LogFileValidationEnabled}}</span></li>
-        <li class="list-group-item-text">Destination S3 bucket name: <a href="javascript:showS3Bucket('{{S3BucketName}}')">{{S3BucketName}}</a>/{{S3KeyPrefix}}</li>
+        <li class="list-group-item-text">Destination S3 bucket name: <a href="javascript:showObject('services.s3.buckets.{{bucket_id}}')">{{get_value_at 'services.s3.buckets' bucket_id 'name'}}</a>/{{S3KeyPrefix}}</li>
       </ul>
     </div>
   {{/unless}}
