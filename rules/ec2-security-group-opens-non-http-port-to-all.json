@@ -1,0 +1,12 @@
+{
+    "key": "ec2-security-group-opens-_ARG_0_-port-to-all",
+    "description": "_ARG_0_ port open to all",
+    "entities": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",
+    "dashboard_name": "Rules",
+    "conditions": [ "and",
+        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id", "equal", "ingress" ],
+        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id", "equal", "_ARG_1_" ],
+        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id", "containNoneOf", [ "80", "443" ] ]
+    ],
+    "level": "danger"
+}

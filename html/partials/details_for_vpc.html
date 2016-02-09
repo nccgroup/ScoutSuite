@@ -1,0 +1,19 @@
+
+  <!-- Generic partial for region-then-vpc-then-resource -->
+  <script id="details_for_vpc.partial" type="text/x-handlebars-template">
+    <div id="services.{{service_name}}.regions.id.vpcs.id.{{resource_type}}.details">
+      {{#each items}}
+        {{#each vpcs}}
+          {{#each (lookup . ../../resource_type)}}
+            <div class="list-group" id="services.{{../../../service_name}}.regions.{{@../../key}}.vpcs.{{@../key}}.{{../../../resource_type}}.{{@key}}.view">
+              {{> (lookup ../../.. 'partial_name') service_name = ../../../service_name region = @../../key vpc = @../key resource_type = ../../../resource_type resource_key = @key resource = this}}
+            </div>
+          {{/each}}
+        {{/each}}
+      {{/each}}
+    </div>
+  </script>
+  <script>
+    Handlebars.registerPartial("details_for_vpc", $("#details_for_vpc\\.partial").html());
+  </script>
+

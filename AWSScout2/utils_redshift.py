@@ -4,17 +4,7 @@ from opinel.utils_redshift import *
 
 # Import AWS Scout2 tools
 from AWSScout2.utils import *
-from AWSScout2.filters import *
-from AWSScout2.findings import *
 
-########################################
-##### Redshift analysis
-########################################
-
-# Analysis
-def analyze_redshift_config(redshift_config, aws_account_id, force_write):
-    printInfo('Analyzing Redshift config...')
-    analyze_config(redshift_finding_dictionary, redshift_filter_dictionary, redshift_config, 'Redshift')
 
 ########################################
 ##### Redshift fetching
@@ -24,6 +14,7 @@ def analyze_redshift_config(redshift_config, aws_account_id, force_write):
 # Entry point
 #
 def get_redshift_info(key_id, secret, session_token, service_config, selected_regions, with_gov, with_cn):
+    printInfo('Fetching Redshift config...')
     manage_dictionary(service_config, 'regions', {}) 
     regions = build_region_list('redshift', selected_regions, include_gov = with_gov, include_cn = with_cn)
     for region in regions:
@@ -63,8 +54,9 @@ def get_redshift_clusters(redshift_client, region_config):
         vpc_id = cluster.pop('VpcId') if 'VpcId' in cluster else ec2_classic
         manage_dictionary(region_config['vpcs'], vpc_id, {})
         manage_dictionary(region_config['vpcs'][vpc_id], 'clusters', {})
-        cluster_id = cluster.pop('ClusterIdentifier')
-        region_config['vpcs'][vpc_id]['clusters'][cluster_id] = cluster
+        name = cluster.pop('ClusterIdentifier')
+        cluster['name'] = name
+        region_config['vpcs'][vpc_id]['clusters'][name] = cluster
 
 #
 # Parameter groups
@@ -73,15 +65,16 @@ def get_redshift_cluster_parameter_groups(redshift_client, region_config):
     region_config['parameter_groups'] = {}
     parameter_groups = handle_truncated_response(redshift_client.describe_cluster_parameter_groups, {}, 'Marker', ['ParameterGroups'])
     for parameter_group in parameter_groups['ParameterGroups']:
-        parameter_group_name = parameter_group.pop('ParameterGroupName')
-        region_config['parameter_groups'][parameter_group_name] = parameter_group
-        parameters = handle_truncated_response(redshift_client.describe_cluster_parameters, {'ParameterGroupName': parameter_group_name}, 'Marker', ['Parameters'])
-        region_config['parameter_groups'][parameter_group_name]['parameters'] = {}
+        name = parameter_group.pop('ParameterGroupName')
+        region_config['parameter_groups'][name] = parameter_group
+        region_config['parameter_groups'][name]['name'] = name
+        parameters = handle_truncated_response(redshift_client.describe_cluster_parameters, {'ParameterGroupName': name}, 'Marker', ['Parameters'])
+        region_config['parameter_groups'][name]['parameters'] = {}
         for parameter in parameters['Parameters']:
             param = {}
             param['value'] = parameter['ParameterValue']
             param['source'] = parameter['Source']
-            region_config['parameter_groups'][parameter_group_name]['parameters'][parameter['ParameterName']] = param
+            region_config['parameter_groups'][name]['parameters'][parameter['ParameterName']] = param
 
 #
 # Security groups
@@ -91,8 +84,9 @@ def get_redshift_cluster_security_groups(redshift_client, region_config):
         region_config['security_groups'] = {}
         security_groups = handle_truncated_response(redshift_client.describe_cluster_security_groups, {}, 'Marker', ['ClusterSecurityGroups'])
         for security_group in security_groups['ClusterSecurityGroups']:
-            security_group_name = security_group.pop('ClusterSecurityGroupName')
-            region_config['security_groups'][security_group_name] = security_group
+            name = security_group.pop('ClusterSecurityGroupName')
+            region_config['security_groups'][name] = security_group
+            region_config['security_groups'][name]['name'] = name
     except Exception as e:
         # An exception occurs when VPC-by-default customers make this call, silently pass
         pass

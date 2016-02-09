@@ -1,0 +1,8 @@
+{
+    "description": "Security group allows all",
+    "entities": "redshift.regions.id.vpcs.id.security_groups.id.IPRanges",
+    "display_path": "redshift.regions.id.vpcs.id.security_groups.id",
+    "dashboard_name": "Security Groups",
+    "conditions": [],
+    "level": "danger"
+}

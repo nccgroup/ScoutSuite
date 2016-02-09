@@ -12,5 +12,5 @@ class TestAWSScout2UtilsClass:
     #
     def test_get_scout2_paths(self):
         assert type(get_scout2_paths('')) == tuple
-        assert get_scout2_paths('default') == ('report.html', AWSCONFIG_DIR + '/' + AWSCONFIG_FILE)
-        assert get_scout2_paths('test') == ('report-test.html', AWSCONFIG_DIR + '-test/' + AWSCONFIG_FILE)
+        assert get_scout2_paths('default') == ('report.html', AWSCONFIG_DIR + '/' + AWSCONFIG_FILE + '.js')
+        assert get_scout2_paths('test') == ('report-test.html', AWSCONFIG_DIR + '/' + AWSCONFIG_FILE + '-test.js')

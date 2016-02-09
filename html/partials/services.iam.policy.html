@@ -1,0 +1,33 @@
+
+    <!-- IAM policy partial -->
+    <script id="services.iam.policy.partial" type="text/x-handlebars-template">
+      <hr>
+      <div>
+        <div class="accordion item-margin">
+          <h5 class="list-group-item-heading accordion-heading">{{name}}
+            <a class="accordion-toggle" data-toggle="collapse" href="#iam_policy_details-{{escape_special_chars ReportId}}">
+              <span class="badge pull-right btn-info">Details</span>
+            </a>
+          </h5>
+          <div id="iam_policy_details-{{escape_special_chars ReportId}}" class="accordion-body collapse">
+            <div class="accordion-inner">
+              {{{displayPolicy PolicyDocument}}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.iam.policy", $("#services\\.iam\\.policy\\.partial").html());
+    </script>
+
+    <!-- Single IAM policy template -->
+    <script id="single_iam_policy-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.iam.policy}}
+        <hr>
+    </script>
+    <script>
+        var single_iam_policy_template = Handlebars.compile($("#single_iam_policy-template").html());
+    </script>
+

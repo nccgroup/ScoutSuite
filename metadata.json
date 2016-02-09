@@ -1,0 +1,110 @@
+{
+    "cloudtrail": {
+        "resources": {
+            "trails": {
+                "cols": 2,
+                "path": "services.cloudtrail.regions.id.trails"
+            }
+        }
+    },
+    "ec2": {
+        "resources": {
+            "elbs": {
+                "cols": 2,
+                "path": "services.ec2.regions.id.vpcs.id.elbs"
+            },
+            "instances": {
+                "cols": 2,
+                "path": "services.ec2.regions.id.vpcs.id.instances"
+            },
+            "network_acls": {
+                "cols": 2,
+                "path": "services.ec2.regions.id.vpcs.id.network_acls"
+            },
+            "security_groups": {
+                "cols": 2,
+                "path": "services.ec2.regions.id.vpcs.id.security_groups"
+            },
+            "vpcs": {
+                "cols": 2,
+                "path": "services.ec2.regions.id.vpcs"
+            }
+        },
+        "summaries": {
+            "external attack surface": {
+                "cols": 1,
+                "path": "services.ec2.attack_surface"
+            }
+        }
+    },
+    "iam": {
+        "resources": {
+            "groups": {
+                "cols": 2,
+                "path": "services.iam.groups"
+            },
+            "managed_policies": {
+                "cols": 2,
+                "path": "services.iam.managed_policies"
+            },
+            "roles": {
+                "cols": 2,
+                "path": "services.iam.roles"
+            },
+            "users": {
+                "cols": 2,
+                "path": "services.iam.users"
+            }
+        },
+        "summaries": {
+            "permissions": {
+                "cols": 1,
+                "path": "services.iam.permissions"
+            },
+            "password_policy": {
+                "cols": 1,
+                "path": "services.iam.password_policy"
+            },
+            "root_account": {
+                "cols": 1,
+                "path": "services.iam.credential_report.<root_account>"
+            }
+        }
+    },
+    "rds": {
+        "resources": {
+            "instances": {
+                "cols": 2,
+                "path": "services.rds.regions.id.vpcs.id.instances"
+            },
+            "security_groups": {
+                "cols": 2,
+                "path": "services.rds.regions.id.vpcs.id.security_groups"
+            }
+        }
+    },
+    "redshift": {
+        "resources": {
+            "clusters": {
+                "cols": 2,
+                "path": "services.redshift.regions.id.vpcs.id.clusters"
+            },
+            "parameter_groups": {
+                "cols": 2,
+                "path": "services.redshift.regions.id.parameter_groups"
+            },
+            "security_groups": {
+                "cols": 2,
+                "path": "services.redshift.regions.id.vpcs.id.security_groups"
+            }
+        }
+    },
+    "s3": {
+        "resources": {
+            "buckets": {
+                "cols": 2,
+                "path": "services.s3.buckets"
+            }
+        }
+    }
+}

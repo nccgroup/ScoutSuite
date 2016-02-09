@@ -18,7 +18,6 @@ except Exception as e:
     sys.exit()
 
 # Import Scout2 tools
-from AWSScout2.filters import *
 from AWSScout2.findings import *
 from AWSScout2.utils_cloudtrail import *
 from AWSScout2.utils_ec2 import *
@@ -50,9 +49,10 @@ def main(args):
         return 42
 
     # Search for AWS credentials
-    key_id, secret, token = read_creds(args.profile[0], args.csv_credentials[0], args.mfa_serial[0], args.mfa_code[0])
-    if not args.fetch_local and key_id is None:
-        return 42
+    if not args.fetch_local:
+        key_id, secret, token = read_creds(args.profile[0], args.csv_credentials[0], args.mfa_serial[0], args.mfa_code[0])
+        if key_id is None:
+            return 42
 
     # If local analysis, overwrite results
     if args.fetch_local:
@@ -60,17 +60,6 @@ def main(args):
 
     # Set the environment name
     environment_name = get_environment_name(args)[0]
-
-    # Search for an existing ruleset if the environment is set
-    if environment_name and args.ruleset_name == 'default':
-        ruleset_name = search_ruleset(environment_name)
-    else:
-        ruleset_name = args.ruleset_name
-
-    # Load findings from JSON config files
-    for service in services:
-        load_findings(service, ruleset_name)
-        load_filters(service)
 
     ##### Load local data first
     aws_config = {}
@@ -88,6 +77,7 @@ def main(args):
     for service in services:
         method = globals()['get_' + service + '_info']
         manage_dictionary(aws_config['services'], service, {})
+        manage_dictionary(aws_config['services'][service], 'violations', {})
         try:
             if not args.fetch_local:
                 # Fetch data from AWS API
@@ -120,13 +110,23 @@ def main(args):
     else:
         manage_dictionary(aws_config, 'account_id', None)
 
+    # For analyzis purposes, update the list of services to be the union of the fetched and loaded configurations
+    services = build_services_list(args.services, args.skipped_services, aws_config)
+
+    # Search for an existing ruleset if the environment is set
+    if environment_name and args.ruleset_name == 'default':
+        ruleset_name = search_ruleset(environment_name)
+    else:
+        ruleset_name = args.ruleset_name
+
+    # Load findings from JSON config files
+    ruleset = load_ruleset(ruleset_name)
+    rules = init_rules(ruleset, services, environment_name, args.ip_ranges)
+
     ##### VPC analyzis
     analyze_vpc_config(aws_config, args.ip_ranges, args.ip_ranges_key_name)
-
-    ##### Single service analyzis
-    for service in services:
-        method = globals()['analyze_' + service + '_config']
-        method(aws_config['services'][service], aws_config['account_id'], args.force_write)
+    if 'ec2' in services:
+        analyze_ec2_config(aws_config['services']['ec2'], aws_config['account_id'], args.force_write)
 
     ##### Multiple service analyzis
     if 'ec2' in services and 'iam' in services:
@@ -142,10 +142,43 @@ def main(args):
             printError('Error: s3 or IAM configuration is missing.')
             printException(e)
 
+    # Single service analyzis
+    printInfo('Analyzing AWS config...')
+    for finding_path in rules:
+        for rule in rules[finding_path]:
+            printDebug('Processing %s rule: "%s"' % (finding_path.split('.')[0], rules[finding_path][rule]['description']))
+            path = finding_path.split('.')
+            service = path[0]
+            manage_dictionary(aws_config['services'][service], 'violations', {})
+            aws_config['services'][service]['violations'][rule] = {}
+            aws_config['services'][service]['violations'][rule]['description'] =  rules[finding_path][rule]['description']
+            aws_config['services'][service]['violations'][rule]['entities'] = rules[finding_path][rule]['entities']
+            aws_config['services'][service]['violations'][rule]['level'] = rules[finding_path][rule]['level']
+            if 'id_suffix' in rules[finding_path][rule]:
+                aws_config['services'][service]['violations'][rule]['id_suffix'] = rules[finding_path][rule]['id_suffix']
+            if 'display_path' in rules[finding_path][rule]:
+                aws_config['services'][service]['violations'][rule]['display_path'] = rules[finding_path][rule]['display_path']
+            try:
+                aws_config['services'][service]['violations'][rule]['items'] = recurse(aws_config['services'], aws_config['services'], path, [], rules[finding_path][rule], True)
+            except Exception as e:
+                printError('Failed to process rule defined in %s.json' % rule)
+                printException(e)
+            aws_config['services'][service]['violations'][rule]['dashboard_name'] = rules[finding_path][rule]['dashboard_name'] if 'dashboard_name' in rules[finding_path][rule] else '??'
+            aws_config['services'][service]['violations'][rule]['checked_items'] = rules[finding_path][rule]['checked_items'] if 'checked_items' in rules[finding_path][rule] else 0
+            aws_config['services'][service]['violations'][rule]['flagged_items'] = len(aws_config['services'][service]['violations'][rule]['items'])
+            aws_config['services'][service]['violations'][rule]['service'] = service
+
+    # Tweaks
+    if 'cloudtrail' in services:
+        tweak_cloudtrail_findings(aws_config)
+
     # Save info about run
     aws_config['last_run'] = {}
-    aws_config['last_run']['time'] = datetime.datetime.now(dateutil.tz.tzlocal()).strftime("%Y-%m-%d %H:%M%S%z")
+    aws_config['last_run']['time'] = datetime.datetime.now(dateutil.tz.tzlocal()).strftime("%Y-%m-%d %H:%M:%S%z")
     aws_config['last_run']['cmd'] = ' '.join(sys.argv)
+
+    # Generate dashboard metadata
+    create_report_metadata(aws_config, services)
 
     # Save data
     create_scout_report(environment_name, aws_config, args.force_write, args.debug)

@@ -1,5 +1,6 @@
-# Import future print
+# Import future stuff...
 from __future__ import print_function
+from __future__ import unicode_literals
 
 # Import opinel
 from opinel.utils import *
@@ -10,6 +11,8 @@ import datetime
 from distutils import dir_util
 import copy
 import json
+import glob
+import hashlib
 import os
 import re
 import shutil
@@ -38,6 +41,14 @@ for filename in os.listdir(scout2_utils_dir):
         supported_services.append(service.groups()[0])
 
 ec2_classic = 'EC2-Classic'
+condition_operators = [ 'and', 'or' ]
+
+
+#re_profile = re.compile(r'.*?_PROFILE_.*?')
+re_ip_ranges_from_file = re.compile(r'_IP_RANGES_FROM_FILE_\((.*?),\s*(.*?)\)')
+re_get_value_at = re.compile(r'_GET_VALUE_AT_\((.*?)\)')
+aws_ip_ranges = 'ip-ranges.json'
+ip_ranges_from_args = 'ip-ranges-from-args'
 
 ########################################
 ##### Argument parser
@@ -56,7 +67,7 @@ def add_scout2_argument(parser, default_args, argument_name):
     elif argument_name == 'ruleset-name':
         parser.add_argument('--ruleset-name',
                             dest='ruleset_name',
-                            default='default',
+                            default=['default'],
                             nargs='+',
                             help='Customized set of rules')
     elif argument_name == 'services':
@@ -88,11 +99,14 @@ def add_scout2_argument(parser, default_args, argument_name):
 #
 # Return the list of services to iterate over
 #
-def build_services_list(services = supported_services, skipped_services = []):
-    enabled_services = []
-    for s in services:
-        if s in supported_services and s not in skipped_services:
-            enabled_services.append(s)
+def build_services_list(services = supported_services, skipped_services = [], aws_config = None):
+    if aws_config:
+        enabled_services = [s for s in aws_config['services'] if (aws_config['services'][s].keys() != [] and aws_config['services'][s].keys() != ['violations'])]
+    else:
+        enabled_services = []
+        for s in services:
+            if s in supported_services and s not in skipped_services:
+                enabled_services.append(s)
     return enabled_services
 
 #
@@ -149,32 +163,24 @@ class Scout2Encoder(json.JSONEncoder):
         else:
             return o.__dict__
 
+#
+# Copies the value of keys from source object to dest object
+#
+def get_keys(src, dst, keys):
+    for key in keys:
+        dst[no_camel(key)] = src[key] if key in src else None
+
+#
+# Converts CamelCase to camel_case
+#
+def no_camel(name):
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()                                                                                                                                 
+
 
 ########################################
 # Violations search functions
 ########################################
-
-def analyze_config(finding_dictionary, filter_dictionary, config, keyword, force_write = False):
-    # Filters
-    try:
-        for key in filter_dictionary:
-            f = filter_dictionary[key]
-            entity_path = f.entity.split('.')
-            process_finding(config, f)
-        config['filters'] = filter_dictionary
-    except Exception as e:
-        printException(e)
-        pass
-    # Violations
-    try:
-        for key in finding_dictionary:
-            finding = finding_dictionary[key]
-            entity_path = finding.entity.split('.')
-            process_finding(config, finding)
-        config['violations'] = finding_dictionary
-    except Exception as e:
-        printException(e)
-        pass
 
 def has_instances(ec2_region):
     count = 0
@@ -189,41 +195,179 @@ def match_instances_and_roles(ec2_config, iam_config):
         for v in ec2_config['regions'][r]['vpcs']:
             if 'instances' in ec2_config['regions'][r]['vpcs'][v]:
                 for i in ec2_config['regions'][r]['vpcs'][v]['instances']:
-                    arn = ec2_config['regions'][r]['vpcs'][v]['instances'][i]['IAMInstanceProfile']['Arn'] if 'IAMInstanceProfile' in ec2_config['regions'][r]['vpcs'][v]['instances'][i] else None
-                    if arn:
-                        manage_dictionary(role_instances, arn, [])
-                        role_instances[arn].append(i)
-    for role in iam_config['Roles']:
-        for arn in iam_config['Roles'][role]['InstanceProfiles']:
-            if arn in role_instances:
-                iam_config['Roles'][role]['InstanceProfiles'][arn]['instances'] = role_instances[arn]
+                    instance_profile_id = ec2_config['regions'][r]['vpcs'][v]['instances'][i]['iam_instance_profile']['id'] if 'iam_instance_profile' in ec2_config['regions'][r]['vpcs'][v]['instances'][i] else None
+                    if instance_profile_id:
+                        manage_dictionary(role_instances, instance_profile_id, [])
+                        role_instances[instance_profile_id].append(i)
+    for role_id in iam_config['roles']:
+        iam_config['roles'][role_id]['instances_count'] = 0
+        for instance_profile_id in iam_config['roles'][role_id]['instance_profiles']:
+            if instance_profile_id in role_instances:
+                iam_config['roles'][role_id]['instance_profiles'][instance_profile_id]['instances'] = role_instances[instance_profile_id]
+                iam_config['roles'][role_id]['instances_count'] += len(role_instances[instance_profile_id])
 
-def process_entities(config, finding, entity_path):
-    if len(entity_path) == 1:
-        entities = entity_path.pop(0)
-        if entities in config or entities == '':
-            if finding.callback:
-                callback = getattr(finding, finding.callback)
-                if entities in config:
-                    for key in config[entities]:
-                        # Dashboard: count the number of processed entities here
-                        finding.checked_items = finding.checked_items + 1
-                        callback(key, config[entities][key])
-                else:
-                    # Special case when performing a check that requires access to the whole config, leave entities empty
-                    callback('foo', config)
+
+#
+# Create dashboard metadata
+#
+def create_report_metadata(aws_config, services):
+    # Load resources and summaries metadata from file
+    with open('metadata.json', 'rt') as f:
+        aws_config['metadata'] = json.load(f)    
+    for service in services:
+        for resource in aws_config['metadata'][service]['resources']:
+            # full_path = path if needed
+            if not 'full_path' in aws_config['metadata'][service]['resources'][resource]:
+                aws_config['metadata'][service]['resources'][resource]['full_path'] = aws_config['metadata'][service]['resources'][resource]['path']
+            # Script is the full path minus "id" (TODO: change that)
+            if not 'script' in aws_config['metadata'][service]['resources'][resource]:
+                aws_config['metadata'][service]['resources'][resource]['script'] = '.'.join([x for x in aws_config['metadata'][service]['resources'][resource]['full_path'].split('.') if x != 'id'])
+            # Update counts
+            count = '%s_count' % resource
+            if 'regions' in aws_config['services'][service]:
+                aws_config['metadata'][service]['resources'][resource]['count'] = 0
+                for region in aws_config['services'][service]['regions']:
+                    if count in aws_config['services'][service]['regions'][region]:
+                        aws_config['metadata'][service]['resources'][resource]['count'] += aws_config['services'][service]['regions'][region][count]
             else:
-                return
-    elif len(entity_path) != 0:
-        entities = entity_path.pop(0)
-        for key in config[entities]:
-            process_entities(config[entities][key], finding, copy.deepcopy(entity_path))
-    else:
-        printError('Unknown error.')
+                aws_config['metadata'][service]['resources'][resource]['count'] = aws_config['services'][service][count]
 
-def process_finding(config, finding):
-    entity_path = finding.entity.split('.')
-    process_entities(config, finding, entity_path)
+
+########################################
+##### Recursion
+########################################
+
+def recurse(all_info, current_info, target_path, current_path, config, add_suffix = False):
+    results = []
+    if len(target_path) == 0:
+        # Dashboard: count the number of processed entities here
+        manage_dictionary(config, 'checked_items', 0)
+        config['checked_items'] = config['checked_items'] + 1
+        # Test for conditions...
+        if pass_conditions(all_info, current_path, copy.deepcopy(config['conditions'])):
+            if add_suffix and 'id_suffix' in config:
+                current_path.append(config['id_suffix'])
+            results.append('.'.join(current_path))
+        # Return the flagged items...
+        config['flagged_items'] = len(results)
+        return results
+    target_path = copy.deepcopy(target_path)
+    current_path = copy.deepcopy(current_path)
+    attribute = target_path.pop(0)
+    if type(current_info) == dict:
+        if attribute in current_info:
+            split_path = copy.deepcopy(current_path)
+            split_path.append(attribute)
+            results = results + recurse(all_info, current_info[attribute], target_path, split_path, config, add_suffix)
+        elif attribute == 'id':
+            for key in current_info:
+                split_target_path = copy.deepcopy(target_path)
+                split_current_path = copy.deepcopy(current_path)
+                split_current_path.append(key)
+                split_current_info = current_info[key]
+                results = results + recurse(all_info, split_current_info, split_target_path, split_current_path, config, add_suffix)
+    # To handle lists properly, I would have to make sure the list is properly ordered and I can use the index to consistently access an object... Investigate (or do not use lists)
+    elif type(current_info) == list:
+        for index, split_current_info in enumerate(current_info):
+            split_current_path = copy.deepcopy(current_path)
+            split_current_path.append(str(index))
+            results = results + recurse(all_info, split_current_info, copy.deepcopy(target_path), split_current_path, config, add_suffix)
+    else:
+        printError('Error: unhandled case, typeof(current_info) = %s' % type(current_info))
+        printError(str(current_info))
+        raise Exception
+    return results
+
+
+#
+# Pass all conditions?
+#
+def pass_conditions(all_info, current_path, conditions):
+    result = False
+    if len(conditions) == 0:
+        return True
+    condition_operator = conditions.pop(0)
+    for condition in conditions:
+      if condition[0] in condition_operators:
+        res = pass_conditions(all_info, current_path, condition)
+      else:
+        # Conditions are formed as "path to value", "type of test", "value(s) for test"
+        path_to_value, test_name, test_values = condition
+        target_obj = get_value_at(all_info, current_path, path_to_value)
+        if type(test_values) != list:
+            dynamic_value = re_get_value_at.match(test_values)
+            if dynamic_value:
+                test_values = get_value_at(all_info, current_path, dynamic_value.groups()[0], True)
+        res = pass_condition(target_obj, test_name, test_values)
+      # Quick exit and + false
+      if condition_operator == 'and' and not res:
+          return False
+      # Quick exit or + true
+      if condition_operator == 'or' and res:
+          return True
+    # Still here ?
+    # or -> false
+    # and -> true
+    if condition_operator == 'or':
+        return False
+    else:
+        return True
+
+#
+# Get value located at a given path
+#
+def get_value_at(all_info, current_path, key, to_string = False):
+    keys = key.split('.')
+    if keys[-1] == 'id':
+        target_obj = current_path[len(keys)-1]
+    else:
+        if key == 'this':
+            target_path = current_path
+        elif '.' in key:
+            target_path = []
+            for i, key in enumerate(keys):
+                if key == 'id':
+                    target_path.append(current_path[i])
+                else:
+                    target_path.append(key)
+            if len(keys) > len(current_path):
+                target_path = target_path + keys[len(target_path):]
+        else:
+            target_path = copy.deepcopy(current_path)
+            target_path.append(key)
+        target_obj = all_info
+        for p in target_path:
+          try:
+            if type(target_obj) == list and type(target_obj[0]) == dict:
+                target_obj = target_obj[int(p)]                
+            elif type(target_obj) == list:
+                target_obj = p
+            elif p == '':
+                target_obj = target_obj
+            else:
+              try:
+                target_obj = target_obj[p]
+              except Exception as e:
+                print(target_obj)
+                printException(e)
+                raise Exception
+          except Exception as e:
+            print(target_obj)
+            printException(e)
+            raise Exception
+    if to_string:
+        return str(target_obj)
+    else:
+        return target_obj
+
+#
+# Not all AWS resources have an ID
+# Use SHA1(name) when the resource name is used
+#
+def get_non_aws_id(name):
+    m = hashlib.sha1()
+    m.update(name.encode('utf-8'))
+    return m.hexdigest()
 
 
 ########################################
@@ -231,27 +375,45 @@ def process_finding(config, finding):
 ########################################
 
 AWSCONFIG_DIR = 'inc-awsconfig'
-AWSCONFIG_FILE = 'aws_config.js'
+AWSCONFIG_FILE = 'aws_config'
 REPORT_TITLE  = 'AWS Scout2 Report'
 
 def create_scout_report(environment_name, aws_config, force_write, debug):
     # Save data
     save_config_to_file(environment_name, aws_config, force_write, debug)
-    # If needed, create a a new report named after environment's name
+    # Create the HTML report using all partials under html/partials/
+    contents = ''
+    for filename in glob.glob('html/partials/*'):
+        with open('%s' % filename, 'rt') as f:
+            contents = contents + f.read()
+    # Use all scripts under html/summaries/
+    for filename in glob.glob('html/summaries/*'):
+        with open('%s' % filename, 'rt') as f:
+            contents = contents + f.read()
+    services = [service for service in aws_config['services']]
+    services.append('global')
+    for service in services: # aws_config['services']:
+        if os.path.exists('html/%s.html' % service):
+            with open('html/%s.html' % service, 'rt') as f:
+                contents = contents + f.read()
     if environment_name != 'default':
         def_report_filename, def_config_filename = get_scout2_paths('default')
         new_report_filename, new_config_filename = get_scout2_paths(environment_name)
         new_file = 'report-' + environment_name + '.html'
-        printInfo('Creating %s ...' % new_file)
-        if prompt_4_overwrite(new_file, force_write):
-            if os.path.exists(new_file):
-                os.remove(new_file)
-            with open('report.html') as f:
-                with open(new_file, 'wt') as nf:
-                    for line in f:
-                        newline = line.replace(REPORT_TITLE, REPORT_TITLE + ' [' + environment_name + ']')
+    else:
+        new_file = 'report.html'
+    printInfo('Creating %s ...' % new_file)
+    if prompt_4_overwrite(new_file, force_write):
+        if os.path.exists(new_file):
+            os.remove(new_file)
+        with open('html/report.html') as f:
+            with open(new_file, 'wt') as nf:
+                for line in f:
+                    newline = line.replace(REPORT_TITLE, REPORT_TITLE + ' [' + environment_name + ']')
+                    if environment_name != 'default':
                         newline = newline.replace(def_config_filename, new_config_filename)
-                        nf.write(newline)
+                    newline = newline.replace('<!-- PLACEHOLDER -->', contents)
+                    nf.write(newline)
 
 #
 # Return the filename of the Scout2 report and config
@@ -259,10 +421,10 @@ def create_scout_report(environment_name, aws_config, force_write, debug):
 def get_scout2_paths(environment_name):
     if environment_name == 'default':
         report_filename = 'report.html'
-        config_filename = AWSCONFIG_DIR + '/' + AWSCONFIG_FILE
+        config_filename = AWSCONFIG_DIR + '/' + AWSCONFIG_FILE + '.js'
     else:
         report_filename = ('report-%s.html' % environment_name)
-        config_filename = ('%s-%s/%s' % (AWSCONFIG_DIR, environment_name, AWSCONFIG_FILE))
+        config_filename = ('%s/%s-%s.js' % (AWSCONFIG_DIR, AWSCONFIG_FILE, environment_name))
     return report_filename, config_filename
 
 def load_info_from_json(service, environment_name):
@@ -288,6 +450,44 @@ def load_from_json(environment_name, var):
         json_payload.pop(0)
         json_payload = ''.join(json_payload)
         return json.loads(json_payload)
+
+#
+# Load rule from a JSON config file
+#
+def load_config_from_json(rule_metadata, environment_name, ip_ranges):
+    config = None
+    config_file = 'rules/%s' % rule_metadata['filename']
+    config_args = rule_metadata['args'] if 'args' in rule_metadata else []
+    try:
+        with open(config_file, 'rt') as f:
+            config = f.read()
+        # Replace arguments
+        for idx, argument in enumerate(config_args):
+            config = config.replace('_ARG_'+str(idx)+'_', argument.strip())
+        config = json.loads(config)
+        # Load lists from files
+        for c1 in config['conditions']:
+            if c1 in condition_operators:
+                continue
+            if (type(c1[2]) == str):
+                values = re_ip_ranges_from_file.match(c1[2])
+                if values:
+                    filename = values.groups()[0]
+                    conditions = json.loads(values.groups()[1])
+                    if filename == aws_ip_ranges:
+                        filename = filename.replace('_PROFILE_', environment_name)
+                        c1[2] = read_ip_ranges(filename, False, conditions, True)
+                    elif filename == ip_ranges_from_args:
+                        c1[2] = []
+                        for ip_range in ip_ranges:
+                            c1[2] = c1[2] + read_ip_ranges(ip_range, True, conditions, True)
+        # Fix level if specified in ruleset
+        if 'level' in rule_metadata:
+            rule['level'] = rule_metadata['level']
+    except Exception as e:
+        printException(e)
+        printError('Error: failed to read the rule from %s' % config_file)
+    return config
 
 def open_file(environment_name, force_write):
     printInfo('Saving AWS config...')

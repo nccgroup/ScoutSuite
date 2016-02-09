@@ -1,0 +1,49 @@
+
+    <!-- Redshift cluster partial -->
+    <script id="services.redshift.regions.id.vpcs.id.clusters.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{resource_key}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <ul>
+            <li class="list-group-item-text">Node Type: {{NodeType}}</li>
+            <li class="list-group-item-text">Allow Version Upgrade: <span id="redshift.regions.{{region}}.vpcs.{{vpc}}.clusters.{{resource_key}}.AllowVersionUpgrade">{{AllowVersionUpgrade}}</span><li>
+            <li class="list-group-item-text">Automated Snapshot Retention Period: {{AutomatedSnapshotRetentionPeriod}}</li>
+            <li class="list-group-item-text">Created at: {{ClusterCreateTime}}</li>
+            <li class="list-group-item-text">Availability Zone: {{AvailabilityZone}}</li>
+            <li class="list-group-item-text">Encrypted: <span id="redshift.regions.{{region}}.vpcs.{{vpc}}.clusters.{{resource_key}}.Encrypted">{{Encrypted}}</span></li>
+            <li class="list-group-item-text">Cluster Parameter Groups:
+              <ul>
+                {{#each ClusterParameterGroups}}
+                  <li>{{ParameterGroupName}}</li>
+                {{/each}}
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Network</h4>
+          <ul>
+            <li class="list-group-item-text">Endpoint: {{Endpoint.Address}}:{{Endpoint.Port}}</li>
+            <li class="list-group-item-text">Publicly accessible: <span id="redshift.regions.{{region}}.vpcs.{{vpc}}.clusters.{{resource_key}}.PubliclyAccessible">{{PubliclyAccessible}}</span></li>
+            <li class="list-group-item-text">VPC: {{VpcId}}</li>
+            <li class="list-group-item-text">Subnet: {{ClusterSubnetGroupName}}</li>
+            <li class="list-group-item-text">Security groups:
+              <ul>
+                {{#each VpcSecurityGroups}}
+                  <li>{{VpcSecurityGroupId}}: {{Status}}</li>
+                {{/each}}
+                {{#each ClusterSecurityGroups}}
+                  <li>{{ClusterSecurityGroupName}}: {{Status}}</li>
+                {{/each}}
+              </ul>
+            </li>
+          </ul>
+        </div>
+        {{> accordion service_name = 'redshift' resource_type = 'clusters' resource_id = resource_key member_type = 'Nodes' members = ClusterNodes member_partial_name = 'services.redshift.regions.vpcs.cluster_nodes'}}
+    </script>
+    <script>
+        Handlebars.registerPartial("services.redshift.regions.id.vpcs.id.clusters", $("#services\\.redshift\\.regions\\.id\\.vpcs\\.id\\.clusters\\.partial").html());
+    </script>
+

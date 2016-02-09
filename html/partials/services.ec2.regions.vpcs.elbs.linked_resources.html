@@ -1,0 +1,27 @@
+
+    <!-- EC2 ELB partial -->
+    <script id="services.ec2.regions.vpcs.elbs.linked_resources.partial" type="text/x-handlebars-template">
+      {{#if resources.length}}
+        <div class="accordion">
+          <li><h5 class="list-group-item-heading accordion-heading">{{make_title resource_type}}:
+            <a class="accordion-toggle" data-toggle="collapse" href="#services.ec2.regions.vpcs.elbs-{{Name}}-{{resource_type}}">
+              <span class="badge pull-right btn-info">{{resources.length}}</span>
+            </a>
+          </h5></li>
+          <div id="services.ec2.regions.vpcs.elbs-{{Name}}-{{resource_type}}" class="accordion-body collapse">
+            <div class="accordion-inner">
+              <ul>
+              {{#each resources}}
+                <li class="list-group-item-text"><a href="javascript:findAndShowEC2Object('regions.vpcs.{{../resource_type}}',%20'{{this}}')">{{this}}</a></li>
+              {{/each}}
+              </ul>
+            </div>
+          </div>
+        </div>
+      {{else}}
+        <h5 class="list-group-item-heading item-margin accordion-heading">{{make_title resource_type}}:<span class="badge pull-right">{{resources.length}}</span></h5>
+      {{/if}}
+    </script>
+    <script>
+        Handlebars.registerPartial("services.ec2.regions.vpcs.elbs.linked_resources", $("#services\\.ec2\\.regions\\.vpcs\\.elbs\\.linked_resources\\.partial").html());
+    </script>

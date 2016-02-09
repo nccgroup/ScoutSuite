@@ -1,0 +1,33 @@
+
+      <!-- Dasboard partial -->
+      <script id="services.id.violations.partial" type="text/x-handlebars-template">
+        <div class="row" id="services.{{service_name}}.violations.row">
+          <div class="col-sm-12" id="services.{{service_name}}.violations.list">
+              {{#if violations}}
+                {{#grouped_each 3 violations}}
+                  <div class="row">
+                    {{#each this}}
+                      <div class="col-sm-4">
+                        <div class="list-group-item finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
+                          <a href="#services.{{service}}.violations.{{@key}}.items">
+                            {{description}}
+                          </a>
+                        </div>
+                        <div class="list-group-item">
+                          <ul>
+                            <li>{{dashboard_name}} checked: {{checked_items}}</li>
+                            <li>{{dashboard_name}} flagged: {{flagged_items}}</li>
+                          </ul>
+                        </div>
+                      </div>
+                    {{/each}}
+                  </div>
+                {{/grouped_each}}
+              {{/if}}
+          </div>
+        </div>
+      </script>
+      <script>
+        Handlebars.registerPartial("dashboard", $("#services\\.id\\.violations\\.partial").html());
+      </script>
+

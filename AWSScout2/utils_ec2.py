@@ -5,8 +5,6 @@ from opinel.utils_ec2 import *
 # Import Scout2 tools
 from AWSScout2.utils import *
 from AWSScout2.utils_ec2 import *
-from AWSScout2.filters import *
-from AWSScout2.findings import *
 
 
 ########################################
@@ -22,13 +20,12 @@ protocols_dict = load_data('protocols.json', 'protocols')
 
 def analyze_ec2_config(ec2_info, aws_account_id, force_write):
     try:
-        printInfo('Analyzing EC2 data... ', newLine = False)
-        analyze_config(ec2_finding_dictionary, ec2_filter_dictionary, ec2_info, 'EC2', force_write)
+        printInfo('Analyzing EC2 config... ', newLine = False)
         # Tweaks
         link_elastic_ips(ec2_info)
         add_security_group_name_to_ec2_grants(ec2_info, aws_account_id)
         # Custom EC2 analysis
-        check_for_elastic_ip(ec2_info)
+#        check_for_elastic_ip(ec2_info)
         list_network_attack_surface(ec2_info, 'attack_surface', 'PublicIpAddress')
         # TODO: make this optional, commented out for now
         # list_network_attack_surface(ec2_info, 'private_attack_surface', 'PrivateIpAddress')
@@ -86,12 +83,14 @@ def check_for_elastic_ip(ec2_info):
 # Link EIP with instances (looks like this might be no longer needed with boto3)
 #
 def link_elastic_ips(ec2_config):
+    return
     go_to_and_do(ec2_config, None, ['regions', 'elastic_ips'], None, link_elastic_ips_callback1, {})
 
 def link_elastic_ips_callback1(ec2_config, current_config, path, current_path, elastic_ip, callback_args):
-    if not 'InstanceId' in current_config:
+    if not 'id' in current_config:
         return
-    instance_id = current_config['InstanceId']
+    instance_id = current_config['id']
+    return
     go_to_and_do(ec2_config, None, ['regions', 'vpcs', 'instances'], None, link_elastic_ips_callback2, {'instance_id': instance_id, 'elastic_ip': elastic_ip})
 
 def link_elastic_ips_callback2(ec2_config, current_config, path, current_path, instance_id, callback_args):
@@ -145,7 +144,7 @@ def get_ec2_info(key_id, secret, session_token, service_config, selected_regions
     for region in all_regions:
         manage_dictionary(service_config['regions'], region, {})
         service_config['regions'][region]['name'] = region
-    printInfo('Fetching EC2 data...')
+    printInfo('Fetching EC2 config...')
     formatted_status('region', 'Elastic LBs', 'Elastic IPs', 'VPCs', 'Sec. Groups', 'Instances', True)
     ec2_targets = ['elastic_ips', 'elbs', 'vpcs', 'security_groups', 'instances']
     for region in all_regions:
@@ -205,8 +204,11 @@ def get_elb_info(q, params):
             elb = {}
             elb_name = lb['LoadBalancerName']
             elb['VpcId'] = lb['VpcId'] if 'VpcId' in lb and lb['VpcId'] else ec2_classic
-            for key in ['DNSName', 'CreatedTime', 'AvailabilityZones', 'LoadBalancerName', 'SecurityGroups', 'Subnets', 'Policies']:
+            for key in ['DNSName', 'CreatedTime', 'AvailabilityZones', 'LoadBalancerName', 'Subnets', 'Policies']:
                 elb[key] = lb[key] if key in lb else None
+            elb['security_groups'] = []
+            for sg in lb['SecurityGroups']:
+                elb['security_groups'].append({'GroupId': sg})
             manage_dictionary(elb, 'listeners', {})
             for l in lb['ListenerDescriptions']:
                 listener = l['Listener']
@@ -244,9 +246,14 @@ def get_instance_info(q, params):
             instance = {}
             vpc_id = i['VpcId'] if 'VpcId' in i and i['VpcId'] else ec2_classic
             instance['reservation_id'] = reservation_id
-            for key in ['InstanceId', 'PublicDnsName', 'PrivateDnsName', 'KeyName', 'LaunchTime', 'PrivateIpAddress', 'PublicIpAddress', 'InstanceType', 'State', 'IamInstanceProfile']:
-                instance[key] = i[key] if key in i else None
+            instance['id'] = i['InstanceId']
             get_name(instance, i, 'InstanceId')
+            # TODO: use get_keys() here
+            for key in ['PublicDnsName', 'PrivateDnsName', 'KeyName', 'LaunchTime', 'PrivateIpAddress', 'PublicIpAddress', 'InstanceType', 'State']:
+                instance[key] = i[key] if key in i else None
+            if 'IamInstanceProfile' in i:
+                instance['iam_instance_profile'] = {}
+                get_keys(i['IamInstanceProfile'], instance['iam_instance_profile'], ['Id', 'Arn'])
             manage_dictionary(instance, 'security_groups', [])
             for sg in i['SecurityGroups']:
                 instance['security_groups'].append(sg)
@@ -298,12 +305,15 @@ def get_vpc_info(q, params):
         try:
             vpc = q.get()
             manage_dictionary(region_info['vpcs'], vpc['VpcId'], {})
+            manage_dictionary(region_info, 'network_acls_count', 0)
             get_name(vpc, vpc, 'VpcId')
             acls = ec2_client.describe_network_acls(Filters = [{'Name': 'vpc-id', 'Values': [vpc['VpcId']]}])
+            region_info['network_acls_count'] += len(acls['NetworkAcls'])
             vpc['network_acls'] = {}
             for acl in acls['NetworkAcls']:
                 manage_dictionary(vpc['network_acls'], acl['NetworkAclId'], {})
                 vpc['network_acls'][acl['NetworkAclId']] = acl
+                get_name(vpc['network_acls'][acl['NetworkAclId']], acl, 'NetworkAclId')
                 manage_dictionary(vpc['network_acls'][acl['NetworkAclId']], 'rules', {})
                 vpc['network_acls'][acl['NetworkAclId']]['rules']['ingress'] = get_network_acl_entries(acl['Entries'], False)
                 vpc['network_acls'][acl['NetworkAclId']]['rules']['egress'] = get_network_acl_entries(acl['Entries'], True)
@@ -361,12 +371,13 @@ def parse_security_group(ec2_client, group):
     security_group['description'] = group['Description']
     security_group['owner_id'] = group['OwnerId']
     security_group['rules'] = {'ingress': {}, 'egress': {}}
-    security_group['rules']['ingress']['protocols'] = parse_security_group_rules(group['IpPermissions'])
-    security_group['rules']['egress']['protocols'] = parse_security_group_rules(group['IpPermissionsEgress'])
+    security_group['rules']['ingress']['protocols'], security_group['rules']['ingress']['count'] = parse_security_group_rules(group['IpPermissions'])
+    security_group['rules']['egress']['protocols'],  security_group['rules']['egress']['count']  = parse_security_group_rules(group['IpPermissionsEgress'])
     return security_group
 
 def parse_security_group_rules(rules):
     protocols = {}
+    rules_count = 0
     for rule in rules:
         ip_protocol = rule['IpProtocol'].upper()
         if ip_protocol == '-1':
@@ -388,10 +399,12 @@ def parse_security_group_rules(rules):
         for grant in rule['UserIdGroupPairs']:
             manage_dictionary(protocols[ip_protocol]['ports'][port_value], 'security_groups', [])
             protocols[ip_protocol]['ports'][port_value]['security_groups'].append(grant)
+            rules_count = rules_count + 1
         for grant in rule['IpRanges']:
             manage_dictionary(protocols[ip_protocol]['ports'][port_value], 'cidrs', [])
             protocols[ip_protocol]['ports'][port_value]['cidrs'].append({'CIDR': grant['CidrIp']})
-    return protocols
+            rules_count = rules_count + 1
+    return protocols, rules_count
 
 status = {}
 status['region_name'] = ''

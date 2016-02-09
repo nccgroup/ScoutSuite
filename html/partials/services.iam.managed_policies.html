@@ -1,0 +1,23 @@
+
+    <!-- IAM managed policy partial -->
+    <script id="services.iam.managed_policies.partial" type="text/x-handlebars-template">
+      <div class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+      </div>
+      <div class="list-group-item">
+        {{{displayPolicy PolicyDocument}}}
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.iam.managed_policies", $("#services\\.iam\\.managed_policies\\.partial").html());
+    </script>
+
+    <!-- Single IAM managed policy template -->
+    <script id="services.iam.managed_policy.template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.iam.managed_policies}}
+    </script>
+    <script>
+        var single_iam_managed_policy_template = Handlebars.compile($("#services\\.iam\\.managed_policy\\.template").html());
+    </script>
+

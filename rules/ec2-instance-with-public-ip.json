@@ -1,0 +1,14 @@
+{
+    "entities": [
+        "ec2.regions.id.vpcs.id.instances.id.PublicIpAddress"
+    ],
+    "dashboard_name": "Instances",
+    "conditions": [ "and",
+        [ "this", "notNull", "" ]
+    ],
+    "listing": {
+        "keys": [
+            "this"
+        ]
+    }
+}
