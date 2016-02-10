@@ -18,6 +18,7 @@ except Exception as e:
     sys.exit()
 
 # Import Scout2 tools
+from AWSScout2 import __version__
 from AWSScout2.findings import *
 from AWSScout2.utils_cloudtrail import *
 from AWSScout2.utils_ec2 import *
@@ -176,6 +177,7 @@ def main(args):
     aws_config['last_run'] = {}
     aws_config['last_run']['time'] = datetime.datetime.now(dateutil.tz.tzlocal()).strftime("%Y-%m-%d %H:%M:%S%z")
     aws_config['last_run']['cmd'] = ' '.join(sys.argv)
+    aws_config['last_run']['version'] = __version__
 
     # Generate dashboard metadata
     create_report_metadata(aws_config, services)
