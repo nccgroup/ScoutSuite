@@ -231,6 +231,22 @@ def create_report_metadata(aws_config, services):
                         aws_config['metadata'][service]['resources'][resource]['count'] += aws_config['services'][service]['regions'][region][count]
             else:
                 aws_config['metadata'][service]['resources'][resource]['count'] = aws_config['services'][service][count]
+    # Security risks dropdown on a per-resource basis
+    for s in aws_config['services']:
+        for v in aws_config['services'][s]['violations']:
+            # Finding resource
+            resource_path = aws_config['services'][s]['violations'][v]['display_path'] if 'display_path' in aws_config['services'][s]['violations'][v] else aws_config['services'][s]['violations'][v]['entities']
+            resource = resource_path.split('.')[-2]
+            # h4ck...
+            if resource == 'credential_report':
+                resource = resource_path.split('.')[-1].replace('>', '').replace('<', '')
+            if aws_config['services'][s]['violations'][v]['flagged_items'] > 0:
+                try:
+                    manage_dictionary(aws_config['metadata'][s]['resources'][resource], 'risks', [])
+                    aws_config['metadata'][s]['resources'][resource]['risks'].append(v)
+                except Exception as e:
+                    manage_dictionary(aws_config['metadata'][s]['summaries'][resource], 'risks', [])
+                    aws_config['metadata'][s]['summaries'][resource]['risks'].append(v)
 
 
 ########################################
