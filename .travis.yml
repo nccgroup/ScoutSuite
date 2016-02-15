@@ -9,7 +9,7 @@ python:
 install: "pip install -r requirements.txt"
 # command to run tests
 script:
-  - '[ "${TRAVIS_SECURE_ENV_VARS}" = "false" ] && nosetests tests/test-listall.py tests/test-listitems.py tests/test-rulesgenerator.py tests/test-utils.py || false'
-  - 'nosetests tests/test-scout2.py'
+  - 'nosetests tests/test-listall.py tests/test-listitems.py tests/test-rulesgenerator.py tests/test-utils.py || false'
+  - '[ "${TRAVIS_SECURE_ENV_VARS}" = "false" ] && nosetests tests/test-scout2.py || false'
 # use container-base infrastructure
 sudo: false
