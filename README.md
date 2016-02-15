@@ -63,7 +63,7 @@ To run Scout2 using an access key downloaded from AWS, run the following command
 To run Scout2 when MFA-Protected API Access is configured, add the following
 parameters to your command:
 
-    --mfa_serial <ARN_MFA_SERIAL_NUMBER> --mfa_code <MFA CODE>
+    --mfa-serial <ARN_MFA_SERIAL_NUMBER> --mfa-code <MFA CODE>
 
 To view the report, simply open report.html in your browser.
 
