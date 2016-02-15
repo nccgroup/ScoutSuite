@@ -8,6 +8,8 @@ python:
 # command to install dependencies
 install: "pip install -r requirements.txt"
 # command to run tests
-script: nosetests tests/test-listall.py tests/test-listitems.py tests/test-rulesgenerator.py tests/test-scout2.py tests/test-utils.py
+script:
+  - '[ "${TRAVIS_SECURE_ENV_VARS}" = "false" ] && nosetests tests/test-listall.py tests/test-listitems.py tests/test-rulesgenerator.py tests/test-utils.py || false'
+  - 'nosetests tests/test-scout2.py'
 # use container-base infrastructure
 sudo: false
