@@ -129,7 +129,6 @@ function hideLinks(resource_path) {
 // Show list, details' container, links, and view for a given path
 //
 function showRowWithItems(path) {
-    path = path.replace('>', '').replace('<', '');
     showRow(path);
     showItems(path);
 }
@@ -581,8 +580,12 @@ function get_resource_path(path) {
             resource_path = get_value_at(path.replace('items', 'entities'));
         }
         resource_path_array = resource_path.split('.');
-        resource_path_array.pop();
+        last_value = resource_path_array.pop();
         resource_path = 'services.' + resource_path_array.join('.');
+        // Fix for issue #79
+        if (last_value == '<root_account>') {
+            resource_path += '.' + last_value;
+        }
     } else if (path.endsWith('.view')) {
         // Resource path is not changed (this may break when using `back' button in browser)
         var resource_path = current_resource_path;
