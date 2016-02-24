@@ -6,5 +6,6 @@
         [ "iam.credential_report.<root_account>.mfa_active", "notTrue", "" ]
     ],
     "level": "danger",
+    "id_suffix": "mfa_active",
     "listing": { "keys": [ "this" ] }
 }
