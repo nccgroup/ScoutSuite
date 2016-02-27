@@ -472,7 +472,9 @@ def load_from_json(environment_name, var):
 #
 def load_config_from_json(rule_metadata, environment_name, ip_ranges):
     config = None
-    config_file = 'rules/%s' % rule_metadata['filename']
+    config_file = rule_metadata['filename']
+    if not config_file.startswith('rules/'):
+        config_file = 'rules/%s' % config_file
     config_args = rule_metadata['args'] if 'args' in rule_metadata else []
     try:
         with open(config_file, 'rt') as f:

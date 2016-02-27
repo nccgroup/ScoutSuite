@@ -38,8 +38,6 @@ def main(cmd_args):
         # Load arguments from config if specified
         if len(cmd_args.config):
             rule_metadata = {'filename': cmd_args.config[0], 'enabled': True, 'args': cmd_args.config_args}
-#def load_config_from_json(rule_metadata, environment_name, ip_ranges):
-#            config = load_config_from_json(cmd_args.config[0], environment_name, cmd_args.ip_ranges, cmd_args.config_args)
             config = load_config_from_json(rule_metadata, environment_name, cmd_args.ip_ranges)
             if config:
                 args = Bunch(config)
@@ -67,7 +65,6 @@ def main(cmd_args):
         resources = recurse(aws_config['services'], aws_config['services'], target_path, current_path, config)
 
         # Do a print here ...
-
         if 'keys' in config:
           for resource in resources:
             output = ''
@@ -80,7 +77,6 @@ def main(cmd_args):
             print output
         else:
             print json.dumps(resources, indent=4)
-
 
 #            service = entity.pop(0)
 #            if output_format != 'csv':
