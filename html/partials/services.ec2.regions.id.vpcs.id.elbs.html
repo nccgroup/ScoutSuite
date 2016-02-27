@@ -2,12 +2,12 @@
     <!-- EC2 ELB partial -->
     <script id="services.ec2.regions.id.vpcs.id.elbs.partial" type="text/x-handlebars-template">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{Name}}</h4>
+          <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
           <h4>Network</h4>
           <ul>
-            <li class="list-group-item-text">VPC: {{VpcId}}</li>
+            <li class="list-group-item-text">VPC: {{get_value_at 'services.ec2.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</li>
             <li class="list-group-item-text">DNS: {{DNSName}}</li>
             <li class="list-group-item-text">Availability zones:</li>
             <ul>
@@ -32,12 +32,27 @@
           {{/each}}
           </ul>
         </div>
+        <div class="list-group-item" style="padding-bottom: 0 !important;">
+          <div class="accordion">
+            <h4 class="list-group-item-heading accordion-heading">Security groups
+              <a class="accordion-toggle" data-toggle="collapse" href="#services\.ec2\.regions\.{{region}}\.vpcs\.{{vpc}}\.elbs\.{{@key}}\.security_groups"><span class="badge pull-right btn-info">{{security_groups.length}}</span></a>
+            </h4>
+            <div id="services.ec2.regions.{{region}}.vpcs.{{vpc}}.elbs.{{@key}}.security_groups" class="accordion-body collapse">
+              <div class="accordion-inner">
+                <ul class="no-bullet">
+                  {{#each security_groups}}
+                    <li><a href="javascript:showObject('services.ec2.regions.{{../region}}.vpcs.{{../vpc}}.security_groups.{{GroupId}}')">{{GroupId}}</a></li>
+                  {{/each}}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="list-group-item">
           <h4>Destination</h4>
           <ul>
-            {{> services.ec2.regions.vpcs.elbs.linked_resources resources = instances resource_type = 'instances'}}
-            {{> services.ec2.regions.vpcs.elbs.linked_resources resources = SecurityGroups resource_type = 'security_groups'}}
-            {{> services.ec2.regions.vpcs.elbs.linked_resources resources = Subnets resource_type = 'subnets'}}
+            {{> services.ec2.regions.vpcs.elbs.linked_resources region = region vpc = vpc resources = instances resource_type = 'instances'}}
+            {{> services.ec2.regions.vpcs.elbs.linked_resources region = region vpc = vpc resources = Subnets resource_type = 'subnets'}}
         </div>
     </script>
     <script>

@@ -204,7 +204,7 @@ def get_elb_info(q, params):
             elb = {}
             elb['name'] = lb.pop('LoadBalancerName')
             vpc_id = lb['VPCId'] if 'VPCId' in lb and lb['VPCId'] else ec2_classic
-            for key in ['DNSName', 'CreatedTime', 'AvailabilityZones', 'Subnets', 'Policies']:
+            for key in ['DNSName', 'CreatedTime', 'AvailabilityZones', 'Subnets', 'Policies', 'Scheme']:
                 elb[key] = lb[key] if key in lb else None
             elb['security_groups'] = []
             for sg in lb['SecurityGroups']:

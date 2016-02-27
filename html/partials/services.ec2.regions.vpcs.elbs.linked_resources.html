@@ -4,15 +4,15 @@
       {{#if resources.length}}
         <div class="accordion">
           <li><h5 class="list-group-item-heading accordion-heading">{{make_title resource_type}}:
-            <a class="accordion-toggle" data-toggle="collapse" href="#services.ec2.regions.vpcs.elbs-{{Name}}-{{resource_type}}">
+            <a class="accordion-toggle" data-toggle="collapse" href="#services\.ec2\.regions\.{{region}}\.vpcs\.{{vpc}}\.elbs\.{{@key}}\.{{resource_type}}">
               <span class="badge pull-right btn-info">{{resources.length}}</span>
             </a>
           </h5></li>
-          <div id="services.ec2.regions.vpcs.elbs-{{Name}}-{{resource_type}}" class="accordion-body collapse">
+          <div id="services.ec2.regions.{{region}}.vpcs.{{vpc}}.elbs.{{@key}}.{{resource_type}}" class="accordion-body collapse">
             <div class="accordion-inner">
               <ul>
               {{#each resources}}
-                <li class="list-group-item-text"><a href="javascript:findAndShowEC2Object('regions.vpcs.{{../resource_type}}',%20'{{this}}')">{{this}}</a></li>
+                <li class="list-group-item-text"><a href="javascript:showObject('services.ec2.regions.{{../region}}.vpcs.{{../vpc}}.{{../resource_type}}.{{this}}')">{{this}}</a></li>
               {{/each}}
               </ul>
             </div>
