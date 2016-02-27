@@ -6,5 +6,8 @@
         [ "iam.users.id.groups", "containNoneOf", [ "AllUsers" ] ]
     ],
     "id_suffix": "member_of_common_group",
-    "level": "danger"
+    "level": "danger",
+    "keys": [
+        "iam.users.id.name"
+    ]
 }
