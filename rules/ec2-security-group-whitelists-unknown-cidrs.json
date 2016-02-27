@@ -9,9 +9,7 @@
     "finding": {
         "level": "danger"
     },
-    "listing": {
-        "keys": [
-            "this"
-        ]
-    }
+    "keys": [
+        "this"
+    ]
 }

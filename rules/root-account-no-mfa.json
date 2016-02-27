@@ -7,5 +7,5 @@
     ],
     "level": "danger",
     "id_suffix": "mfa_active",
-    "listing": { "keys": [ "this" ] }
+    "keys": [ "this" ]
 }

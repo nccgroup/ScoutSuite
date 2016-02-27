@@ -7,5 +7,8 @@
     ],
     "level": "warning",
     "id_suffix": "multiple_api_keys",
-    "listing": { "keys": [ "iam.users.id.AccessKeys" ] }
+    "keys": [
+        "iam.users.id.name",
+        "iam.users.id.AccessKeys"
+    ]
 }

@@ -8,10 +8,7 @@
     ],
     "id_suffix": "mfa_enabled",
     "level": "danger",
-    "listing": {
-        "keys": [
-            "iam.users.id",
-            "iam.users.id.MFADevices"
-        ]
-    }
+    "keys": [
+        "iam.users.id.name"
+    ]
 }

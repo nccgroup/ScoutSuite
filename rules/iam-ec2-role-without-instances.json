@@ -10,5 +10,8 @@
     ],
     "id_suffix": "instances",
     "level": "warning",
-    "listing": { "keys": [ "iam.roles.id", "this" ] }
+    "keys": [
+        "iam.roles.id.name",
+        "this"
+    ]
 }

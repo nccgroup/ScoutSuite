@@ -12,11 +12,9 @@
         [ "s3.buckets.id.policy.Statement.id.Action", "containOneMatching", "_ARG_1_" ]
     ],
     "level": "danger",
-    "listing": {
-        "keys": [
-            "s3.buckets.id",
-            "this",
-            "s3.buckets.id.policy.Statement.id.Principal"
-        ]
-    }
+    "keys": [
+        "s3.buckets.id",
+        "this",
+        "s3.buckets.id.policy.Statement.id.Principal"
+    ]
 }

@@ -9,9 +9,7 @@
     ],
     "id_suffix": "_ARG_1_",
     "level": "danger",
-    "listing": {
-        "keys": [
-            "iam.users.id"
-        ]
-    }
+    "keys": [
+        "iam.users.id.name"
+    ]
 }
