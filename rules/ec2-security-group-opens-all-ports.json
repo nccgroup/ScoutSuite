@@ -1,6 +1,6 @@
 {
     "description": "All ports open",
-    "entities": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",
+    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",
     "dashboard_name": "Rules",
     "conditions": [ "and",
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id", "containAtLeastOneOf", ["0-65535", "ALL"] ],
@@ -10,12 +10,10 @@
     ],
     "level": "danger",
     "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
-    "listing": {
-        "keys": [
-            "ec2.regions.id",
-            "ec2.regions.id.vpcs.id",
-            "ec2.regions.id.vpcs.id.security_groups.id",
-            "ec2.regions.id.vpcs.id.security_groups.id.name"
-        ]
-    }
+    "keys": [
+        "ec2.regions.id",
+        "ec2.regions.id.vpcs.id",
+        "ec2.regions.id.vpcs.id.security_groups.id",
+        "ec2.regions.id.vpcs.id.security_groups.id.name"
+    ]
 }

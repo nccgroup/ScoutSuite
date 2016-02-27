@@ -40,11 +40,12 @@ def get_region_trails(q, params):
         cloudtrail_info['regions'][region]['trails_count'] = len(trails['trailList'])
         for trail in trails['trailList']:
             trail_info = {}
+            trail_info['name'] = trail.pop('Name')
             # Do not duplicate entries for multiregion trails
             if 'IsMultiRegionTrail' in trail and trail['IsMultiRegionTrail'] and trail['HomeRegion'] != region:
-                for key in ['Name', 'HomeRegion', 'TrailARN']:
+                for key in ['HomeRegion', 'TrailARN']:
                     trail_info[key] = trail[key]
-                trail_info['scout2_link'] = 'services.cloudtrail.regions.%s.trails.%s' % (trail['HomeRegion'], trail['Name'])
+                trail_info['scout2_link'] = 'services.cloudtrail.regions.%s.trails.%s' % (trail['HomeRegion'], get_non_aws_id(trail_info['name']))
             else:
                 for key in trail:
                     trail_info[key] = trail[key]
@@ -55,7 +56,7 @@ def get_region_trails(q, params):
                 trail_details = cloudtrail_client.get_trail_status(Name = trail['TrailARN'])
                 for key in ['IsLogging', 'LatestDeliveryTime', 'LatestDeliveryError', 'StartLoggingTime', 'StopLoggingTime', 'LatestNotificationTime', 'LatestNotificationError', 'LatestCloudWatchLogsDeliveryError', 'LatestCloudWatchLogsDeliveryTime']:
                     trail_info[key] = trail_details[key] if key in trail_details else None
-            cloudtrail_info['regions'][region]['trails'][trail['Name']] = trail_info
+            cloudtrail_info['regions'][region]['trails'][get_non_aws_id(trail_info['name'])] = trail_info
       except Exception as e:
           printException(e)
       finally:

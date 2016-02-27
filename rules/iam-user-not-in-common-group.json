@@ -1,10 +1,13 @@
 {
     "description": "User not in common group",
-    "entities": "iam.users.id",
+    "path": "iam.users.id",
     "dashboard_name": "Users",
     "conditions": [ "and",
         [ "iam.users.id.groups", "containNoneOf", [ "AllUsers" ] ]
     ],
     "id_suffix": "member_of_common_group",
-    "level": "danger"
+    "level": "danger",
+    "keys": [
+        "iam.users.id.name"
+    ]
 }

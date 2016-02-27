@@ -1,6 +1,6 @@
 {
     "description": "Unused role for EC2",
-    "entities": "iam.roles.id.assume_role_policy.Statement.id.Principal",
+    "path": "iam.roles.id.assume_role_policy.Statement.id.Principal",
     "display_path": "iam.roles.id",
     "dashboard_name": "Roles",
     "conditions": [ "and",
@@ -10,5 +10,8 @@
     ],
     "id_suffix": "instances",
     "level": "warning",
-    "listing": { "keys": [ "iam.roles.id", "this" ] }
+    "keys": [
+        "iam.roles.id.name",
+        "this"
+    ]
 }

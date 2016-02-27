@@ -1,6 +1,6 @@
 {
     "description": "Log file validation disabled",
-    "entities": "cloudtrail.regions.id.trails.id",
+    "path": "cloudtrail.regions.id.trails.id",
     "dashboard_name": "Trails",
     "conditions": [ "and",
         [ "cloudtrail.regions.id.trails.id.", "withKey", "LogFileValidationEnabled" ],

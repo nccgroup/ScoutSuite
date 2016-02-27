@@ -14,9 +14,9 @@
           {{#each (lookup . ../resource_type)}}
             <div class="list-group-item-text" id="services.{{../../service_name}}.regions.{{@../key}}.{{../../resource_type}}.{{@key}}.link">
               {{#if scout2_link}}
-                <a href="#{{scout2_link}}.view">{{Name}}{{name}}</a>
+                <a href="#{{scout2_link}}.view">{{name}}</a>
               {{else}}
-                <a href="#services.{{../../../service_name}}.regions.{{@../key}}.{{../../../resource_type}}.{{@key}}.view">{{Name}}{{name}}</a>
+                <a href="#services.{{../../../service_name}}.regions.{{@../key}}.{{../../../resource_type}}.{{@key}}.view">{{name}}</a>
               {{/if}}
             </div>
           {{/each}}

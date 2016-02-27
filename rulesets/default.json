@@ -99,17 +99,17 @@
             "enabled": "true"
         },
         {
-            "filename": "iam-no-key-rotation.json",
+            "filename": "iam-user-no-key-rotation.json",
             "enabled": "true",
             "args": [ "Active", "danger" ]
         },
         {
-            "filename": "iam-no-key-rotation.json",
+            "filename": "iam-user-no-key-rotation.json",
             "enabled": "true",
             "args": [ "Inactive", "warning" ]
         },
         {
-            "filename": "iam-no-mfa.json",
+            "filename": "iam-user-without-mfa.json",
             "enabled": "true"
         },
         {

@@ -235,7 +235,7 @@ def create_report_metadata(aws_config, services):
     for s in aws_config['services']:
         for v in aws_config['services'][s]['violations']:
             # Finding resource
-            resource_path = aws_config['services'][s]['violations'][v]['display_path'] if 'display_path' in aws_config['services'][s]['violations'][v] else aws_config['services'][s]['violations'][v]['entities']
+            resource_path = aws_config['services'][s]['violations'][v]['display_path'] if 'display_path' in aws_config['services'][s]['violations'][v] else aws_config['services'][s]['violations'][v]['path']
             resource = resource_path.split('.')[-2]
             # h4ck...
             if resource == 'credential_report':
@@ -256,7 +256,7 @@ def create_report_metadata(aws_config, services):
 def recurse(all_info, current_info, target_path, current_path, config, add_suffix = False):
     results = []
     if len(target_path) == 0:
-        # Dashboard: count the number of processed entities here
+        # Dashboard: count the number of processed resources here
         manage_dictionary(config, 'checked_items', 0)
         config['checked_items'] = config['checked_items'] + 1
         # Test for conditions...
@@ -472,7 +472,9 @@ def load_from_json(environment_name, var):
 #
 def load_config_from_json(rule_metadata, environment_name, ip_ranges):
     config = None
-    config_file = 'rules/%s' % rule_metadata['filename']
+    config_file = rule_metadata['filename']
+    if not config_file.startswith('rules/'):
+        config_file = 'rules/%s' % config_file
     config_args = rule_metadata['args'] if 'args' in rule_metadata else []
     try:
         with open(config_file, 'rt') as f:

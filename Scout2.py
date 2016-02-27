@@ -153,7 +153,7 @@ def main(args):
             manage_dictionary(aws_config['services'][service], 'violations', {})
             aws_config['services'][service]['violations'][rule] = {}
             aws_config['services'][service]['violations'][rule]['description'] =  rules[finding_path][rule]['description']
-            aws_config['services'][service]['violations'][rule]['entities'] = rules[finding_path][rule]['entities']
+            aws_config['services'][service]['violations'][rule]['path'] = rules[finding_path][rule]['path']
             aws_config['services'][service]['violations'][rule]['level'] = rules[finding_path][rule]['level']
             if 'id_suffix' in rules[finding_path][rule]:
                 aws_config['services'][service]['violations'][rule]['id_suffix'] = rules[finding_path][rule]['id_suffix']

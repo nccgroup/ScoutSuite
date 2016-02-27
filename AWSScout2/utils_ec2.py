@@ -202,9 +202,9 @@ def get_elb_info(q, params):
         try:
             lb = q.get()
             elb = {}
-            elb_name = lb['LoadBalancerName']
-            elb['VpcId'] = lb['VpcId'] if 'VpcId' in lb and lb['VpcId'] else ec2_classic
-            for key in ['DNSName', 'CreatedTime', 'AvailabilityZones', 'LoadBalancerName', 'Subnets', 'Policies']:
+            elb['name'] = lb.pop('LoadBalancerName')
+            vpc_id = lb['VPCId'] if 'VPCId' in lb and lb['VPCId'] else ec2_classic
+            for key in ['DNSName', 'CreatedTime', 'AvailabilityZones', 'Subnets', 'Policies', 'Scheme']:
                 elb[key] = lb[key] if key in lb else None
             elb['security_groups'] = []
             for sg in lb['SecurityGroups']:
@@ -220,9 +220,10 @@ def get_elb_info(q, params):
             for i in lb['Instances']:
                 elb['instances'].append(i['InstanceId'])
             # Save
-            manage_dictionary(region_info, 'elbs', {})
-            manage_dictionary(region_info['elbs'], elb_name, {})
-            region_info['elbs'][elb_name] = elb
+            manage_dictionary(region_info, 'vpcs', {})
+            manage_dictionary(region_info['vpcs'], vpc_id, {})
+            manage_dictionary(region_info['vpcs'][vpc_id], 'elbs', {})
+            manage_dictionary(region_info['vpcs'][vpc_id]['elbs'], get_non_aws_id(elb['name']), elb)
         except Exception as e:
             printException(e)
             pass

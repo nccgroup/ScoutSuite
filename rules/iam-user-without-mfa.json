@@ -1,6 +1,6 @@
 {
     "description": "User without MFA",
-    "entities": "iam.users.id",
+    "path": "iam.users.id",
     "dashboard_name": "Users",
     "conditions": [ "and",
         [ "iam.users.id.", "withKey", "LoginProfile" ],
@@ -8,10 +8,7 @@
     ],
     "id_suffix": "mfa_enabled",
     "level": "danger",
-    "listing": {
-        "keys": [
-            "iam.users.id",
-            "iam.users.id.MFADevices"
-        ]
-    }
+    "keys": [
+        "iam.users.id.name"
+    ]
 }

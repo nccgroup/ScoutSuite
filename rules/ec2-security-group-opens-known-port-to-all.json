@@ -2,7 +2,7 @@
     "key": "ec2-security-group-opens-_ARG_0_-port-to-all",
     "description": "_ARG_0_ port open to all",
     "dashboard_name": "Rules",
-    "entities": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
+    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
     "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
     "conditions": [ "and",
         [ "this", "equal", "0.0.0.0/0" ],

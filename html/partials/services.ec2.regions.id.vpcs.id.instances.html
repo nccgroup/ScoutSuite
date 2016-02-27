@@ -2,13 +2,13 @@
     <!-- EC2 instance partial -->
     <script id="services.ec2.regions.id.vpcs.id.instances.partial" type="text/x-handlebars-template">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{Name}}</h4>
+          <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
           <h4>Information</h4>
           <ul>
             <li class="list-group-item-text">Region: {{region}}</li>
-            <li class="list-group-item-text">VPC: {{vpc}}</li>
+            <li class="list-group-item-text">VPC: {{get_value_at 'services.ec2.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</li>
             <li class="list-group-item-text">ID: {{id}}</li>
             <li class="list-group-item-text">Reservation ID: {{reservation_id}}</li>
             <li class="list-group-item-text">Access Key name: {{KeyName}}</li>
