@@ -78,9 +78,9 @@ def main(cmd_args):
                     output = get_value_at(aws_config['services'], current_path, key, True)
                 else:
                     output = output + ', ' + get_value_at(aws_config['services'], current_path, key, True)
-            print output
+            printInfo(output)
         else:
-            print json.dumps(resources, indent=4)
+            printInfo(json.dumps(resources, indent=4))
 
 #            service = entity.pop(0)
 #            if output_format != 'csv':
