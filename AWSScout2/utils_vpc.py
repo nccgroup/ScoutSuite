@@ -16,11 +16,11 @@ def analyze_vpc_config(aws_config, ip_ranges, ip_ranges_name_key):
     # Security group usage: EC2 instances and ELBS
     callback_args = {'status_path': ['State', 'Name'], 'sg_list_attribute_name': 'security_groups', 'sg_id_attribute_name': 'GroupId'}
     go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'instances'], ['services', 'ec2'], list_resources_in_security_group, callback_args)
-    callback_args = {'status_path': ['State', 'Name'], 'sg_list_attribute_name': 'SecurityGroups', 'sg_id_attribute_name': 'GroupId'}
+    callback_args = {'sg_list_attribute_name': 'security_groups', 'sg_id_attribute_name': 'GroupId'}
     go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'elbs'], ['services', 'ec2'], list_resources_in_security_group, callback_args)
     # Security group usage: Redshift clusters
     callback_args = {'status_path': ['ClusterStatus'], 'sg_list_attribute_name': 'VpcSecurityGroups', 'sg_id_attribute_name': 'VpcSecurityGroupId'}
-#    go_to_and_do(aws_config, aws_config['services']['redshift'], ['regions', 'vpcs', 'clusters'], ['services', 'redshift'], list_resources_in_security_group, callback_args)
+    go_to_and_do(aws_config, aws_config['services']['redshift'], ['regions', 'vpcs', 'clusters'], ['services', 'redshift'], list_resources_in_security_group, callback_args)
     # Security group usage: RDS instances
     callback_args = {'status_path': ['DBInstanceStatus'], 'sg_list_attribute_name': 'VpcSecurityGroups', 'sg_id_attribute_name': 'VpcSecurityGroupId'}
     go_to_and_do(aws_config, aws_config['services']['rds'], ['regions', 'vpcs', 'instances'], ['services', 'rds'], list_resources_in_security_group, callback_args)
@@ -42,7 +42,6 @@ def list_resources_in_security_group(aws_config, current_config, path, current_p
     # Retrieve service and resource type from current path
     service = current_path[1]
     resource_type = current_path[-1]
-    printInfo('Resources : %s' % resource_type)
     # Get resource
     resource_path = copy.deepcopy(current_path)
     resource_path.append(resource_id)
@@ -56,8 +55,6 @@ def list_resources_in_security_group(aws_config, current_config, path, current_p
     sg_base_path.pop()
     sg_base_path[1] = 'ec2'
     sg_base_path.append('security_groups')
-    if resource_type == 'elbs':
-        printInfo('AAa')
     for resource_sg in resource[callback_args['sg_list_attribute_name']]:
         # Get security group
         sg_path = copy.deepcopy(sg_base_path)
@@ -67,7 +64,7 @@ def list_resources_in_security_group(aws_config, current_config, path, current_p
         manage_dictionary(sg, 'used_by', {})
         manage_dictionary(sg['used_by'], service, {})
         manage_dictionary(sg['used_by'][service], 'resource_type', {})
-        manage_dictionary(sg['used_by'][service]['resource_type'], resource_type, {})
+        manage_dictionary(sg['used_by'][service]['resource_type'], resource_type, {} if resource_status else [])
         if resource_status:
             manage_dictionary(sg['used_by'][service]['resource_type'][resource_type], resource_status, [])
             if not resource_id in sg['used_by'][service]['resource_type'][resource_type][resource_status]:
