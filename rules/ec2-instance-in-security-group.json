@@ -1,5 +1,5 @@
 {
-    "entities": [
+    "path": [
         "ec2.regions.id.vpcs.id.instances.id"
     ],
     "conditions": [ "and",

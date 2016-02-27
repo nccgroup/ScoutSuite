@@ -1,7 +1,7 @@
 {
     "description": "Lack of key rotation (_ARG_0_)",
     "key": "iam-no-_ARG_0_key-rotation.json",
-    "entities": "iam.users.id.AccessKeys.id",
+    "path": "iam.users.id.AccessKeys.id",
     "dashboard_name": "Access keys",
     "display_path": "iam.users.id",
     "conditions": [ "and",

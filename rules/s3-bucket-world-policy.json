@@ -2,7 +2,7 @@
     "key": "s3-bucket-world-_ARG_0_-policy",
     "dashboard_name": "Bucket",
     "description": "Internet accessible bucket (_ARG_0_ policy)",
-    "entities": "s3.buckets.id.policy.Statement.id.Action",
+    "path": "s3.buckets.id.policy.Statement.id.Action",
     "display_path": "s3.buckets.id",
     "conditions": [ "and",
         [ "s3.buckets.id", "withKey", "policy" ],

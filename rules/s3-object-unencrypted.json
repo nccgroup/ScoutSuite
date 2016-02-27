@@ -1,7 +1,7 @@
 {
     "dashboard_name": "Objects",
     "description": "Object lacking server-side encryption",
-    "entities": "s3.buckets.id.keys.id.ServerSideEncryption",
+    "path": "s3.buckets.id.keys.id.ServerSideEncryption",
     "display_path": "s3.buckets.id",
     "conditions": [ "and",
         [ "this", "null", "" ]

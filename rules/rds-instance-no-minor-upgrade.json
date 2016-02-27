@@ -1,6 +1,6 @@
 {
     "description": "Single AZ RDS instance",
-    "entities": "rds.regions.id.vpcs.id.instances.id",
+    "path": "rds.regions.id.vpcs.id.instances.id",
     "dashboard_name": "Instances",
     "conditions": [ "and",
         [ "rds.regions.id.vpcs.id.instances.id.AutoMinorVersionUpgrade", "false", "" ]

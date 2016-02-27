@@ -1,6 +1,6 @@
 {
     "description": "Unrestricted network traffic within security group",
-    "entities": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.security_groups.id",
+    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.security_groups.id",
     "dashboard_name": "Rules",
     "conditions": [ "and",
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id", "equal", "ingress" ],

@@ -1,6 +1,6 @@
 {
     "description": "Global services logging disabled",
-    "entities": "cloudtrail.regions.id.trails.id",
+    "path": "cloudtrail.regions.id.trails.id",
     "dashboard_name": "Trails",
     "conditions": [ "or",
         [ "cloudtrail.regions.id.trails.id.HomeRegion", "notEqual", "_GET_VALUE_AT_(cloudtrail.regions.id)" ],

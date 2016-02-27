@@ -54,13 +54,13 @@ def init_rules(ruleset, services, environment_name, ip_ranges):
         rule_details = load_config_from_json(rule_metadata, environment_name, ip_ranges)
         skip_rule = True
         for service in services:
-            if rule_details['entities'].startswith(service):
+            if rule_details['path'].startswith(service):
                 skip_rule = False
         if skip_rule:
             continue
         # Build the rules dictionary
-        entities = rule_details['entities']
-        manage_dictionary(rules, entities, {})
+        path = rule_details['path']
+        manage_dictionary(rules, path, {})
         if 'level' in rule_metadata:
             rule_details['level'] = rule_metadata['level']
         key = rule_details['key'] if 'key' in rule_details else rule_metadata['filename']
@@ -69,7 +69,7 @@ def init_rules(ruleset, services, environment_name, ip_ranges):
             rule_details['condition_operator'] = 'and'
         # Save details for rule
         key = key.replace('.json', '')
-        rules[entities][key] = rule_details
+        rules[path][key] = rule_details
     return rules
 
 #

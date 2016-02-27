@@ -1,6 +1,6 @@
 {
     "description": "Root account has active keys",
-    "entities": "iam.credential_report.<root_account>",
+    "path": "iam.credential_report.<root_account>",
     "dashboard_name": "Root account",
     "conditions": [ "or",
         [ "iam.credential_report.<root_account>.access_key_1_active", "true", "" ],

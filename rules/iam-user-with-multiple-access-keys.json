@@ -1,6 +1,6 @@
 {
     "description": "User with multiple API keys",
-    "entities": "iam.users.id",
+    "path": "iam.users.id",
     "dashboard_name": "Users",
     "conditions": [ "and",
         [ "iam.users.id.AccessKeys", "lengthMoreThan", "1" ]

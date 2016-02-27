@@ -45,10 +45,10 @@ def main(cmd_args):
                 return 42
         else:
             args = cmd_args
-
-        # Conditions and mapping are optional
-        conditions = args.conditions if hasattr(args, 'conditions') else None
-        mapping = args.mapping if hasattr(args, 'mapping') else []
+            config = {}
+            config['conditions'] = args.conditions if hasattr(args, 'conditions') else []
+            config['mapping'] = args.mapping if hasattr(args, 'mapping') else []
+            config['keys'] = args.keys
 
         # Load the data
         aws_config = {}
@@ -60,7 +60,11 @@ def main(cmd_args):
                 printException(e)
 
         # Recursion
-        target_path = args.entities.split('.')
+        if type(args.path) == list:
+            config['path'] = args.path[0]
+        else:
+            config['path'] = args.path
+        target_path = config['path'].split('.')
         current_path = []
         resources = recurse(aws_config['services'], aws_config['services'], target_path, current_path, config)
 
@@ -98,20 +102,20 @@ parser.add_argument('--config',
                     dest='config',
                     default=[],
                     nargs='+',
-                    help='Config file that sets the entities and keys to be listed.')
+                    help='Config file that sets the path and keys to be listed.')
 parser.add_argument('--format',
                     dest='format',
                     default=['csv'],
                     nargs='+',
                     help='Bleh.')
-parser.add_argument('--entities',
-                    dest='entities',
+parser.add_argument('--path',
+                    dest='path',
                     default=[],
                     nargs='+',
-                    help='Path of the entities to list (e.g. iam.users or ec2.regions.vpcs)')
+                    help='Path of the resources to list (e.g. iam.users.id or ec2.regions.id.vpcs.id)')
 parser.add_argument('--keys',
                     dest='keys',
-                    default=[],
+                    default=[ 'this' ],
                     nargs='+',
                     help='Keys to be printed for the given object.')
 parser.add_argument('--ip-ranges',
