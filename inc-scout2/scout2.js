@@ -59,7 +59,8 @@ function load_aws_config_from_json(script_id, cols) {
 // Compile Handlebars templates and update the DOM
 //
 function process_template(id1, container_id, list) {
-    id1 = id1.replace('<', '').replace('>', '');
+//    id1 = id1.replace('<', '').replace('>', '');
+    id1 = id1.replace(/<|>/g, '');
     var template_to_compile = document.getElementById(id1).innerHTML;
     var compiled_template = Handlebars.compile(template_to_compile);
     var inner_html = compiled_template({items: list});
@@ -577,7 +578,7 @@ function get_resource_path(path) {
     if (path.endsWith('.items')) {
         var resource_path = get_value_at(path.replace('items', 'display_path'));
         if (resource_path == undefined) {
-            resource_path = get_value_at(path.replace('items', 'entities'));
+            resource_path = get_value_at(path.replace('items', 'path'));
         }
         resource_path_array = resource_path.split('.');
         last_value = resource_path_array.pop();
@@ -600,6 +601,10 @@ function get_resource_path(path) {
 // Format title
 //
 var make_title = function(title) {
+    if (typeof(title) != "string") {
+        console.log("Error: received title " + title + " (string expected).");
+        return title.toString();
+    }
     title = title.toLowerCase();
     if (title == 'cloudtrail') {
         return 'CloudTrail';
