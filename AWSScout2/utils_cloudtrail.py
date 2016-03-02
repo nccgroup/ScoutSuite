@@ -12,13 +12,15 @@ from AWSScout2.utils import *
 def tweak_cloudtrail_findings(aws_config):
     cloudtrail_config = aws_config['services']['cloudtrail']
     # Global services logging duplicated
-    if len(aws_config['services']['cloudtrail']['violations']['cloudtrail-duplicated-global-services-logging']['items']) < 2:
-        aws_config['services']['cloudtrail']['violations']['cloudtrail-duplicated-global-services-logging']['items'] = []
-        aws_config['services']['cloudtrail']['violations']['cloudtrail-duplicated-global-services-logging']['flagged_items'] = 0
+    if 'cloudtrail-duplicated-global-services-logging' in aws_config['services']['cloudtrail']['violations']:
+        if len(aws_config['services']['cloudtrail']['violations']['cloudtrail-duplicated-global-services-logging']['items']) < 2:
+            aws_config['services']['cloudtrail']['violations']['cloudtrail-duplicated-global-services-logging']['items'] = []
+            aws_config['services']['cloudtrail']['violations']['cloudtrail-duplicated-global-services-logging']['flagged_items'] = 0
     # Global services logging disabled
-    if len(aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['items']) != aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['checked_items']:
-        aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['items'] = []
-        aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['flagged_items'] = 0
+    if 'cloudtrail-no-global-services-logging' in aws_config['services']['cloudtrail']['violations']:
+        if len(aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['items']) != aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['checked_items']:
+            aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['items'] = []
+            aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['flagged_items'] = 0
 
 def get_cloudtrail_info(key_id, secret, session_token, service_config, selected_regions, with_gov, with_cn):
     manage_dictionary(service_config, 'regions', {})
