@@ -50,7 +50,7 @@
       <h4 class="list-group-item-heading">Groups<span class="badge pull-right {{#if groups.length}}btn-info{{/if}}">{{groups.length}}</span></h4>
       <ul class="no-bullet">
       {{#each groups}}
-        <li class="list-group-item-text"><a href="javascript:showObject('services.iam.groups.{{this}}')">{{get_value_at 'services.iam.groups' this 'name'}}</a></li>
+        <li class="list-group-item-text"><a href="javascript:showObject('services.iam.groups', 'name', '{{this}}')">{{this}}</a></li>
       {{/each}}
       </ul>
     </div>

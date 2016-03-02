@@ -307,14 +307,33 @@ function showEC2SecurityGroup(region, vpc, id) {
     $('#overlay-details').html(single_ec2_security_group_template(data));
     showPopup();
 }
-function showObject(path) {
+function showObject() {
+    var path = arguments[0];
     var path_array = path.split('.');
     var path_length = path_array.length;
     var data = aws_info;
     for (var i = 0; i < path_length; i++) {
         data = data[path_array[i]];
     }
-    var resource_type = path_array[1] + '_' + path_array[path_length-2];
+    // Filter if ...
+    console.log('Arguments:');
+    console.log(arguments);
+    if (arguments.length > 1) {
+        var attr_name = arguments[1];
+        var attr_value = arguments[2];
+        console.log('Attr = ' + attr_name);
+        console.log('Value = ' + attr_value);
+        for(resource in data) {
+            if (data[resource][attr_name] == attr_value) {
+                data = data[resource];
+                console.log(data);
+                break;
+            }
+        }
+        var resource_type = path_array[1] + '_' + path_array[path_length-1];
+    } else {
+        var resource_type = path_array[1] + '_' + path_array[path_length-2];
+    }
     switch(resource_type) {
         case "iam_groups":
             $('#overlay-details').html(single_iam_group_template(data));

@@ -118,20 +118,23 @@
         },
         {
             "filename": "iam-service-user-with-password.json",
-            "enabled": "true"
+            "enabled": "true",
+            "args": [ "_LIST_(AllHeadlessUsers)" ]
         },
         {
             "filename": "iam-user-not-in-common-group.json",
-            "enabled": "true"
+            "enabled": "true",
+            "args": [ "_LIST_(AllUsers)" ]
         },
         {
             "filename": "iam-user-not-in-category-group.json",
-            "enabled": "true"
+            "enabled": "true",
+            "args": [ "_LIST_(AllHumanUsers, AllHeadlessUsers, AllMisconfiguredUsers)" ]
         },
         {
             "filename": "iam-human-user-with-policies.json",
             "enabled": "true",
-            "args": [ "managed", "managed_policies" ]
+            "args": [ "managed", "managed_policies", "_LIST_(AllHeadlessUsers)" ]
         },
         {
             "filename": "iam-user-with-policies.json",

@@ -47,6 +47,7 @@ condition_operators = [ 'and', 'or' ]
 #re_profile = re.compile(r'.*?_PROFILE_.*?')
 re_ip_ranges_from_file = re.compile(r'_IP_RANGES_FROM_FILE_\((.*?),\s*(.*?)\)')
 re_get_value_at = re.compile(r'_GET_VALUE_AT_\((.*?)\)')
+re_list_value = re.compile(r'_LIST_\((.*?)\)')
 aws_ip_ranges = 'ip-ranges.json'
 ip_ranges_from_args = 'ip-ranges-from-args'
 
@@ -481,7 +482,7 @@ def load_config_from_json(rule_metadata, environment_name, ip_ranges):
             config = f.read()
         # Replace arguments
         for idx, argument in enumerate(config_args):
-            config = config.replace('_ARG_'+str(idx)+'_', argument.strip())
+            config = config.replace('_ARG_'+str(idx)+'_', str(argument).strip())
         config = json.loads(config)
         # Load lists from files
         for c1 in config['conditions']:
@@ -499,6 +500,13 @@ def load_config_from_json(rule_metadata, environment_name, ip_ranges):
                         c1[2] = []
                         for ip_range in ip_ranges:
                             c1[2] = c1[2] + read_ip_ranges(ip_range, True, conditions, True)
+            # Set lists
+            list_value = re_list_value.match(c1[2])
+            if list_value:
+                values = []
+                for v in list_value.groups()[0].split(','):
+                    values.append(v.strip())
+                c1[2] = values
         # Fix level if specified in ruleset
         if 'level' in rule_metadata:
             rule['level'] = rule_metadata['level']
