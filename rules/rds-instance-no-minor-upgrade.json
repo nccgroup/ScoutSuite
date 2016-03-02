@@ -1,5 +1,5 @@
 {
-    "description": "Single AZ RDS instance",
+    "description": "Auto minor version upgrade disabled",
     "path": "rds.regions.id.vpcs.id.instances.id",
     "dashboard_name": "Instances",
     "conditions": [ "and",
