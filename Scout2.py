@@ -111,9 +111,6 @@ def main(args):
     else:
         manage_dictionary(aws_config, 'account_id', None)
 
-    # For analyzis purposes, update the list of services to be the union of the fetched and loaded configurations
-    services = build_services_list(args.services, args.skipped_services, aws_config)
-
     # Search for an existing ruleset if the environment is set
     if environment_name and args.ruleset_name == 'default':
         ruleset_name = search_ruleset(environment_name)
