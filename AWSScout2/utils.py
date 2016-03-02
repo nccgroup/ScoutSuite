@@ -500,13 +500,13 @@ def load_config_from_json(rule_metadata, environment_name, ip_ranges):
                         c1[2] = []
                         for ip_range in ip_ranges:
                             c1[2] = c1[2] + read_ip_ranges(ip_range, True, conditions, True)
-            # Set lists
-            list_value = re_list_value.match(c1[2])
-            if list_value:
-                values = []
-                for v in list_value.groups()[0].split(','):
-                    values.append(v.strip())
-                c1[2] = values
+                # Set lists
+                list_value = re_list_value.match(c1[2])
+                if list_value:
+                    values = []
+                    for v in list_value.groups()[0].split(','):
+                        values.append(v.strip())
+                    c1[2] = values
         # Fix level if specified in ruleset
         if 'level' in rule_metadata:
             rule['level'] = rule_metadata['level']
