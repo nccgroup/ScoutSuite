@@ -3,7 +3,7 @@
     "path": "cloudtrail.regions.id.trails.id",
     "dashboard_name": "Trails",
     "conditions": [ "or",
-        [ "cloudtrail.regions.id.trails.id.HomeRegion", "notEqual", "_GET_VALUE_AT_(cloudtrail.regions.id)" ],
+        [ "and", [ "cloudtrail.regions.id.trails.id.", "withKey", "HomeRegion" ], [ "cloudtrail.regions.id.trails.id.HomeRegion", "notEqual", "_GET_VALUE_AT_(cloudtrail.regions.id)" ] ],
         [ "and", [ "cloudtrail.regions.id.trails.id.", "withKey", "IncludeGlobalServiceEvents" ], [ "cloudtrail.regions.id.trails.id.IncludeGlobalServiceEvents", "false", "" ] ],
         [ "and", [ "cloudtrail.regions.id.trails.id.", "withKey", "IsLogging" ], [ "cloudtrail.regions.id.trails.id.IsLogging", "false", "" ] ]
     ],

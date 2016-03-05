@@ -123,12 +123,12 @@
         },
         {
             "filename": "iam-user-not-in-common-group.json",
-            "enabled": "false",
+            "enabled": "true",
             "args": [ "_LIST_(AllUsers)" ]
         },
         {
             "filename": "iam-user-not-in-category-group.json",
-            "enabled": "false",
+            "enabled": "true",
             "args": [ "_LIST_(AllHumanUsers, AllHeadlessUsers, AllMisconfiguredUsers)" ]
         },
         {

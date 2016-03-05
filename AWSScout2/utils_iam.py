@@ -307,7 +307,7 @@ def get_user_info(q, params):
             user['groups'] = []
             groups = handle_truncated_response(iam_client.list_groups_for_user, {'UserName': user['name']}, 'Marker', ['Groups'])['Groups']
             for group in groups:
-                user['groups'].append(group['GroupId'])
+                user['groups'].append(group['GroupName'])
             try:
                 user['LoginProfile'] = iam_client.get_login_profile(UserName = user['name'])['LoginProfile']
             except Exception as e:
