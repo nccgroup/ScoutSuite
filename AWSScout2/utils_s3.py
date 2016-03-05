@@ -188,6 +188,7 @@ def get_s3_buckets(s3_client, s3_info, s3_params):
     s3_params['s3_info'] = s3_info
     thread_work(targets, get_s3_bucket, params = s3_params, num_threads = 30)
     show_status(s3_info)
+    s3_info['buckets_count'] = len(s3_info['buckets'])
     return s3_info
 
 def get_s3_bucket(q, params):
@@ -203,24 +204,29 @@ def get_s3_bucket(q, params):
             # h4ck :: fix issue #59, location constraint can be EU or eu-west-1 for Ireland...
             if bucket['region'] == 'EU':
                 bucket['region'] = 'eu-west-1'
-            # h4ck :: need to use the right endpoint because signature scheme autochange is not working
-            s3_client = s3_clients[bucket['region']]
-            get_s3_bucket_logging(s3_client, bucket['name'], bucket)
-            get_s3_bucket_versioning(s3_client, bucket['name'], bucket)
-            get_s3_bucket_webhosting(s3_client, bucket['name'], bucket)
-            bucket['grantees'] = get_s3_acls(s3_client, bucket['name'], bucket)
-            # TODO:
-            # CORS
-            # Lifecycle
-            # Notification ?
-            # Get bucket's policy
-            get_s3_bucket_policy(s3_client, bucket['name'], bucket)
-            # If requested, get key properties
-            if params['check_encryption'] or params['check_acls']:
-                get_s3_bucket_keys(s3_client, bucket['name'], bucket, params['check_encryption'], params['check_acls'])
-            # h4ck :: buckets may contain . in their name, but this would break the browsing - Use sha1(bucket_name) as keys for the dictionary
-            bucket['id'] = get_non_aws_id(bucket['name'])
-            s3_info['buckets'][bucket['id']] = bucket
+            # h4ck :: S3 is global but region-aware... 
+            if params['selected_regions'] != [] and bucket['region'] not in params['selected_regions']:
+                printInfo('Skipping bucket %s (region %s outside of scope)' % (bucket['name'], bucket['region']))
+                s3_info['buckets_count'] = s3_info['buckets_count'] - 1
+            else:
+                # h4ck :: need to use the right endpoint because signature scheme autochange is not working
+                s3_client = s3_clients[bucket['region']]
+                get_s3_bucket_logging(s3_client, bucket['name'], bucket)
+                get_s3_bucket_versioning(s3_client, bucket['name'], bucket)
+                get_s3_bucket_webhosting(s3_client, bucket['name'], bucket)
+                bucket['grantees'] = get_s3_acls(s3_client, bucket['name'], bucket)
+                # TODO:
+                # CORS
+                # Lifecycle
+                # Notification ?
+                # Get bucket's policy
+                get_s3_bucket_policy(s3_client, bucket['name'], bucket)
+                # If requested, get key properties
+                if params['check_encryption'] or params['check_acls']:
+                    get_s3_bucket_keys(s3_client, bucket['name'], bucket, params['check_encryption'], params['check_acls'])
+                # h4ck :: buckets may contain . in their name, but this would break the browsing - Use sha1(bucket_name) as keys for the dictionary
+                bucket['id'] = get_non_aws_id(bucket['name'])
+                s3_info['buckets'][bucket['id']] = bucket
             show_status(s3_info, False)
         except Exception as e:
             printError('Failed to get config for %s' % bucket['name'])
@@ -261,9 +267,15 @@ def get_s3_bucket_keys(s3_client, bucket_name, bucket, check_encryption, check_a
 def get_s3_info(key_id, secret, session_token, service_config, selected_regions, with_gov, with_cn, s3_params):
     # h4ck :: Create multiple clients here to avoid propagation of credentials. This is necessary because s3 is a global service that requires to access the API via the right region endpoints...
     s3_clients = {}
-    for region in build_region_list('s3', selected_regions, include_gov = with_gov, include_cn = with_cn):
+    if selected_regions != []:
+        client_regions = copy.deepcopy(selected_regions)
+        client_regions.append('us-east-1')
+    else:
+        client_regions = selected_regions
+    for region in build_region_list('s3', client_regions, include_gov = with_gov, include_cn = with_cn):
         config = botocore.client.Config(signature_version = 's3v4')
         s3_clients[region] = connect_s3(key_id, secret, session_token, region_name = region, config = config)
+    s3_params['selected_regions'] = selected_regions
     printInfo('Fetching S3 buckets config...')
     get_s3_buckets(s3_clients, service_config, s3_params)
 

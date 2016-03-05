@@ -66,13 +66,13 @@ def main(args):
     aws_config = {}
     manage_dictionary(aws_config, 'services', {})
     for service in build_services_list():
-        if service not in services or args.fetch_local or args.resume:
+        if service not in services or args.fetch_local or args.resume or args.update or (service == 's3' and (args.bucket_name or args.skipped_bucket_name)):
             aws_config['services'][service] = load_info_from_json(service, environment_name)
-        else:
-            # Reload data in specific cases...
-            if service == 's3' and (args.bucket_name or args.skipped_bucket_name):
-                aws_config['services'][service] = load_info_from_json(service, environment_name)
-            # TODO: when working on a subset of available regions, reload data for other regions (reload all and kill selected regions)
+            # Kill region-specific data except for S3 because it's "global"...
+            if 'regions' in aws_config['services'][service]:
+                for region in aws_config['services'][service]['regions']:
+                    if args.regions == [] or region in args.regions:
+                        aws_config['services'][service]['regions'][region] = {}
 
     ##### Fetch all requested services' configuration
     for service in services:
@@ -225,6 +225,11 @@ parser.add_argument('--resume',
                     default=False,
                     action='store_true',
                     help='Complete a partial (throttled) run')
+parser.add_argument('--update',
+                    dest='update',
+                    default=False,
+                    action='store_true',
+                    help='Reload all the existing data and only overwrite data in scope for this run')
 
 args = parser.parse_args()
 
