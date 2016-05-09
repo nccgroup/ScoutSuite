@@ -89,6 +89,24 @@ def add_scout2_argument(parser, default_args, argument_name):
                             default=[],
                             nargs='+',
                             help='AWS environment name (used when working with multiple reports)')
+    elif argument_name == 'scout2-path':
+        parser.add_argument('--scout2-path',
+                            dest='scout2_path',
+                            default=None,
+                            nargs='+',
+                            help='Path to Scout2 tool')
+    elif argument_name == 'format':
+        parser.add_argument('--format',
+                            dest='format',
+                            default=['csv'],
+                            nargs='+',
+                            help='Listall output format')
+    elif argument_name == 'format-file':
+        parser.add_argument('--format-file',
+                            dest='format_file',
+                            default=None,
+                            nargs='+',
+                            help='Listall output format file')
     else:
         raise Exception('Invalid parameter name %s' % argument_name)
 
@@ -436,17 +454,54 @@ def create_scout_report(environment_name, aws_config, force_write, debug):
 #
 # Return the filename of the Scout2 report and config
 #
-def get_scout2_paths(environment_name):
+def get_scout2_paths(environment_name, scout2_folder = None):
     if environment_name == 'default':
         report_filename = 'report.html'
         config_filename = AWSCONFIG_DIR + '/' + AWSCONFIG_FILE + '.js'
     else:
         report_filename = ('report-%s.html' % environment_name)
         config_filename = ('%s/%s-%s.js' % (AWSCONFIG_DIR, AWSCONFIG_FILE, environment_name))
+    if scout2_folder:
+        report_filename = os.path.join(scout2_folder[0], report_filename)
+        config_filename = os.path.join(scout2_folder[0], config_filename)
     return report_filename, config_filename
 
-def load_info_from_json(service, environment_name):
-    report_filename, config_filename = get_scout2_paths(environment_name)
+#
+# Prepare listall output template
+#
+def format_listall_output(format_file, format_item_dir, format, config):
+        # Set the list of keys if printing from a file spec
+        # _LINE_(whatever)_EOL_
+        # _ITEM_(resource)_METI_
+        # _KEY_(path_to_value)
+        if format_file and os.path.isfile(format_file):
+            with open(format_file, 'rt') as f:
+                template = f.read()
+            # Include files if needed
+            re_file = re.compile(r'(_FILE_\((.*?)\)_ELIF_)')
+            requested_files = re_file.findall(template)
+            available_files = os.listdir(format_item_dir)
+            for requested_file in requested_files:
+                if requested_file[1].strip() in available_files:
+                    with open(os.path.join(format_item_dir, requested_file[1].strip()), 'rt') as f:
+                        contents = f.read()
+                        template = template.replace(requested_file[0].strip(), contents)
+            # Find items and keys to be printed
+            re_line = re.compile(r'(_ITEM_\((.*?)\)_METI_)')
+            re_key = re.compile(r'_KEY_\(*(.*?)\)', re.DOTALL|re.MULTILINE)
+            format_item_mappings = os.listdir(format_item_dir)
+            lines = re_line.findall(template)
+            for (i, line) in enumerate(lines):
+                lines[i] = line + (re_key.findall(line[1]),)
+        elif format[0] == 'csv':
+            keys = config['keys']
+            line = ', '.join('_KEY_(%s)' % k for k in keys)
+            lines = [ (line, line, keys) ]
+            template = line
+        return (lines, template)
+
+def load_info_from_json(service, environment_name, scout2_folder = None):
+    report_filename, config_filename = get_scout2_paths(environment_name, scout2_folder)
     try:
         if os.path.isfile(config_filename):
             with open(config_filename) as f:
@@ -529,6 +584,23 @@ def open_file(environment_name, force_write):
            printException(e)
     else:
         return None
+
+#
+# Format and print the output of ListAll 
+#
+def generate_listall_output(lines, resources, aws_config, template, arguments):
+    for line in lines:
+        output = ''
+        for resource in resources:
+            current_path = resource.split('.')
+            outline = line[1]
+            for key in line[2]:
+                outline = outline.replace('_KEY_('+key+')', get_value_at(aws_config['services'], current_path, key, True))
+            output = output + outline + '\n'
+        template = template.replace(line[0], output)
+    for (i, argument) in enumerate(arguments):
+        template = template.replace('_ARG_%d_' % i, argument)
+    return template
 
 def prompt_4_yes_no(question):
     while True:

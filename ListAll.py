@@ -68,26 +68,12 @@ def main(cmd_args):
         current_path = []
         resources = recurse(aws_config['services'], aws_config['services'], target_path, current_path, config)
 
-        # Do a print here ...
-        if 'keys' in config:
-          for resource in resources:
-            output = ''
-            current_path = resource.split('.')
-            for key in config['keys']:
-                if not output:
-                    output = get_value_at(aws_config['services'], current_path, key, True)
-                else:
-                    output = output + ', ' + get_value_at(aws_config['services'], current_path, key, True)
-            printInfo(output)
-        else:
-            printInfo(json.dumps(resources, indent=4))
+        # Prepare the output format
+        (lines, template) = format_listall_output(cmd_args.format_file, cmd_args.format, config)
 
-#            service = entity.pop(0)
-#            if output_format != 'csv':
-#                printInfo(output_format['header'])
-#            list_all(aws_config, aws_config[service], entity, [ service ], args.keys, conditions, output_format, mapping)
-#            if output_format != 'csv':
-#                printInfo(output_format['footer'])
+        # Print the output
+        printInfo(generate_listall_output(lines, resources, aws_config, template))
+
 
 
 ########################################
@@ -97,17 +83,14 @@ def main(cmd_args):
 default_args = read_profile_default_args(parser.prog)
 
 add_scout2_argument(parser, default_args, 'env')
+add_scout2_argument(parser, default_args, 'format')
+add_scout2_argument(parser, default_args, 'format-file')
 
 parser.add_argument('--config',
                     dest='config',
                     default=[],
                     nargs='+',
                     help='Config file that sets the path and keys to be listed.')
-parser.add_argument('--format',
-                    dest='format',
-                    default=['csv'],
-                    nargs='+',
-                    help='Bleh.')
 parser.add_argument('--path',
                     dest='path',
                     default=[],
