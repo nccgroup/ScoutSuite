@@ -469,14 +469,22 @@ def get_scout2_paths(environment_name, scout2_folder = None):
 #
 # Prepare listall output template
 #
-def format_listall_output(format_file, format_item_dir, format, config):
+def format_listall_output(format_file, format_item_dir, format, config, option_prefix = None, template = None):
         # Set the list of keys if printing from a file spec
         # _LINE_(whatever)_EOL_
         # _ITEM_(resource)_METI_
         # _KEY_(path_to_value)
         if format_file and os.path.isfile(format_file):
-            with open(format_file, 'rt') as f:
-                template = f.read()
+            if not template:
+                with open(format_file, 'rt') as f:
+                    template = f.read()
+            # Optional files
+            re_option = re.compile(r'(%_OPTION_\((.*?)\)_NOITPO_)')
+            optional_files = re_option.findall(template)
+            for optional_file in optional_files:
+                if optional_file[1].startswith(option_prefix + '-'):
+                    with open(os.path.join(format_item_dir, optional_file[1].strip()), 'rt') as f:
+                        template = template.replace(optional_file[0].strip(), f.read())
             # Include files if needed
             re_file = re.compile(r'(_FILE_\((.*?)\)_ELIF_)')
             requested_files = re_file.findall(template)
@@ -484,16 +492,15 @@ def format_listall_output(format_file, format_item_dir, format, config):
             for requested_file in requested_files:
                 if requested_file[1].strip() in available_files:
                     with open(os.path.join(format_item_dir, requested_file[1].strip()), 'rt') as f:
-                        contents = f.read()
-                        template = template.replace(requested_file[0].strip(), contents)
+                        template = template.replace(requested_file[0].strip(), f.read())
             # Find items and keys to be printed
             re_line = re.compile(r'(_ITEM_\((.*?)\)_METI_)')
-            re_key = re.compile(r'_KEY_\(*(.*?)\)', re.DOTALL|re.MULTILINE)
+            re_key = re.compile(r'_KEY_\(*(.*?)\)', re.DOTALL|re.MULTILINE) # REmove the multiline ?
             format_item_mappings = os.listdir(format_item_dir)
             lines = re_line.findall(template)
             for (i, line) in enumerate(lines):
                 lines[i] = line + (re_key.findall(line[1]),)
-        elif format[0] == 'csv':
+        elif format and format[0] == 'csv':
             keys = config['keys']
             line = ', '.join('_KEY_(%s)' % k for k in keys)
             lines = [ (line, line, keys) ]
