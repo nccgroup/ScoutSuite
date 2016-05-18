@@ -211,7 +211,7 @@
         },
         {
             "filename": "s3-bucket-website-enabled.json",
-            "enabled": "true"
+            "enabled": "false"
         },
         {
             "filename": "s3-bucket-world-acl.json",
