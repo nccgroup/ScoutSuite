@@ -6,8 +6,8 @@
             Inline Policies <span id="iam.{{resource_type}}.{{resource_id}}.inline_policies" class="badge pull-right btn-info">{{inline_policies_count}}</span>
           </h4>
           {{#each inline_policies}}
-            {{policy_report_id this entity_type ../name @key}}
-            {{> services.iam.policy PolicyName = @key}}
+            {{policy_report_id this ../resource_type ../resource_id @key}}
+            {{> services.iam.policy}}
           {{/each}}
         </div>
     </script>
