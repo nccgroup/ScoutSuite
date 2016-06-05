@@ -1,8 +1,10 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 # Import stock packages
 import datetime
 import dateutil
+import json
 import sys
 
 # Import opinel
@@ -121,6 +123,10 @@ def main(args):
     ruleset = load_ruleset(ruleset_name)
     rules = init_rules(ruleset, services, environment_name, args.ip_ranges)
 
+    # Reset violations
+    for service in services:
+        aws_config['services'][service]['violations'] = {}
+
     ##### VPC analyzis
     analyze_vpc_config(aws_config, args.ip_ranges, args.ip_ranges_key_name)
     if 'ec2' in services:
@@ -169,6 +175,20 @@ def main(args):
     # Tweaks
     if 'cloudtrail' in services:
         tweak_cloudtrail_findings(aws_config)
+
+    # Exceptions
+    exceptions = {}
+    if args.exceptions[0]:
+        with open(args.exceptions[0], 'rt') as f:
+            exceptions = json.load(f)
+        for service in exceptions['services']:
+            for rule in exceptions['services'][service]['exceptions']:
+                filtered_items = []
+                for item in aws_config['services'][service]['violations'][rule]['items']:
+                    if item not in exceptions['services'][service]['exceptions'][rule]:
+                        filtered_items.append(item)
+                aws_config['services'][service]['violations'][rule]['items'] = filtered_items
+                aws_config['services'][service]['violations'][rule]['flagged_items'] = len(aws_config['services'][service]['violations'][rule]['items'])
 
     # Save info about run
     aws_config['last_run'] = {}
@@ -230,6 +250,12 @@ parser.add_argument('--update',
                     default=False,
                     action='store_true',
                     help='Reload all the existing data and only overwrite data in scope for this run')
+parser.add_argument('--exceptions',
+                    dest='exceptions',
+                    default=[ None ],
+                    nargs='+',
+                    help='')
+
 
 args = parser.parse_args()
 
