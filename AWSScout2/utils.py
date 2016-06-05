@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # Import future stuff...
 from __future__ import print_function
 from __future__ import unicode_literals
@@ -44,11 +46,10 @@ ec2_classic = 'EC2-Classic'
 condition_operators = [ 'and', 'or' ]
 
 
-#re_profile = re.compile(r'.*?_PROFILE_.*?')
 re_ip_ranges_from_file = re.compile(r'_IP_RANGES_FROM_FILE_\((.*?),\s*(.*?)\)')
 re_get_value_at = re.compile(r'_GET_VALUE_AT_\((.*?)\)')
 re_list_value = re.compile(r'_LIST_\((.*?)\)')
-aws_ip_ranges = 'ip-ranges.json'
+aws_ip_ranges_filename = 'ip-ranges.json'
 ip_ranges_from_args = 'ip-ranges-from-args'
 
 ########################################
@@ -495,7 +496,7 @@ def format_listall_output(format_file, format_item_dir, format, config, option_p
                         template = template.replace(requested_file[0].strip(), f.read())
             # Find items and keys to be printed
             re_line = re.compile(r'(_ITEM_\((.*?)\)_METI_)')
-            re_key = re.compile(r'_KEY_\(*(.*?)\)', re.DOTALL|re.MULTILINE) # REmove the multiline ?
+            re_key = re.compile(r'_KEY_\(*(.*?)\)', re.DOTALL|re.MULTILINE) # Remove the multiline ?
             format_item_mappings = os.listdir(format_item_dir)
             lines = re_line.findall(template)
             for (i, line) in enumerate(lines):
@@ -551,20 +552,20 @@ def load_config_from_json(rule_metadata, environment_name, ip_ranges):
         for c1 in config['conditions']:
             if c1 in condition_operators:
                 continue
-            if (type(c1[2]) == str):
+            if type(c1[2]) == unicode:
                 values = re_ip_ranges_from_file.match(c1[2])
                 if values:
                     filename = values.groups()[0]
                     conditions = json.loads(values.groups()[1])
-                    if filename == aws_ip_ranges:
-                        filename = filename.replace('_PROFILE_', environment_name)
-                        c1[2] = read_ip_ranges(filename, False, conditions, True)
+                    if filename == aws_ip_ranges_filename:
+                         #filename = filename.replace('_PROFILE_', environment_name)
+                         c1[2] = read_ip_ranges(aws_ip_ranges_filename, False, conditions, True)
                     elif filename == ip_ranges_from_args:
                         c1[2] = []
                         for ip_range in ip_ranges:
                             c1[2] = c1[2] + read_ip_ranges(ip_range, True, conditions, True)
                 # Set lists
-                list_value = re_list_value.match(c1[2])
+                list_value = re_list_value.match(str(c1[2]))
                 if list_value:
                     values = []
                     for v in list_value.groups()[0].split(','):

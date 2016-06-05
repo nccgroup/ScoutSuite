@@ -27,7 +27,7 @@ def analyze_vpc_config(aws_config, ip_ranges, ip_ranges_name_key):
     # Add friendly name for CIDRs
     if len(ip_ranges):
         callback_args = {'ip_ranges': ip_ranges, 'ip_ranges_name_key': ip_ranges_name_key}
-#        go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports'], ['services', 'ec2'], put_cidr_name, callback_args)
+        go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports'], ['services', 'ec2'], put_cidr_name, callback_args)
     # Propagate VPC names outside EC2
     vpc_services = [ 'rds', 'redshift' ]
 #    for service in vpc_services:
@@ -93,6 +93,7 @@ def put_cidr_name(aws_config, current_config, path, current_path, resource_id, c
 #
 # Read display name for CIDRs from ip-ranges files
 #
+aws_ip_ranges = read_ip_ranges(aws_ip_ranges_filename, False)
 def get_cidr_name(cidr, ip_ranges_files, ip_ranges_name_key):
     for filename in ip_ranges_files:
         ip_ranges = read_ip_ranges(filename, local_file = True)
@@ -101,6 +102,11 @@ def get_cidr_name(cidr, ip_ranges_files, ip_ranges_name_key):
             cidr = netaddr.IPNetwork(cidr)
             if cidr in ip_prefix:
                 return ip_range[ip_ranges_name_key]
+    for ip_range in aws_ip_ranges:
+        ip_prefix = netaddr.IPNetwork(ip_range['ip_prefix'])
+        cidr = netaddr.IPNetwork(cidr)
+        if cidr in ip_prefix:
+            return 'Unknown CIDR in %s %s' % (ip_range['service'], ip_range['region'])
     return 'Unknown CIDR'
 
 #
