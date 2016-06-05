@@ -1,6 +1,6 @@
 {
     "key": "s3-bucket-_ARG_0_-_ARG_1_",
-    "dashboard_name": "Bucket",
+    "dashboard_name": "Bucket ACLs",
     "description": "_ARG_2_",
     "path": "s3.buckets.id.grantees.id",
     "display_path": "s3.buckets.id",

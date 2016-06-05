@@ -301,7 +301,7 @@
         },
         {
             "filename": "rds-postgres-instance-with-invalid-certificate.json",
-            "enabled": "true"
+            "enabled": "false"
         },
         {
             "filename": "redshift-cluster-database-not-encrypted.json",
