@@ -187,7 +187,7 @@
         },
         {
             "filename": "redshift-cluster-publicly-accessible.json",
-            "enabled": "true"
+            "enabled": "false"
         },
         {
             "filename": "redshift-parameter-group-logging-disabled.json",
