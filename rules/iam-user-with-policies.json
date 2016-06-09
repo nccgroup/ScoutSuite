@@ -8,7 +8,7 @@
     ],
     "level": "danger",
     "id_suffix": "_ARG_1_",
-    "keys": [
-        "iam.users.id.name"
+    "questions": [
+        [ "What type of policies cannot users have", [ "(\"inline\", \"inline_policies\")", "(\"managed\", \"managed_policies\")" ], "inline" ]
     ]
 }

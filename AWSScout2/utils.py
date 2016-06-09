@@ -537,6 +537,8 @@ def load_from_json(environment_name, var):
 #
 def load_config_from_json(rule_metadata, environment_name, ip_ranges):
     config = None
+    if not rule_metadata['filename'].startswith('iam'):
+        return config
     config_file = rule_metadata['filename']
     if not config_file.startswith('rules/'):
         config_file = 'rules/%s' % config_file
@@ -548,6 +550,9 @@ def load_config_from_json(rule_metadata, environment_name, ip_ranges):
         for idx, argument in enumerate(config_args):
             config = config.replace('_ARG_'+str(idx)+'_', str(argument).strip())
         config = json.loads(config)
+        config['filename'] = rule_metadata['filename']
+        if 'args' in rule_metadata:
+            config['args'] = rule_metadata['args']
         # Load lists from files
         for c1 in config['conditions']:
             if c1 in condition_operators:
@@ -558,7 +563,6 @@ def load_config_from_json(rule_metadata, environment_name, ip_ranges):
                     filename = values.groups()[0]
                     conditions = json.loads(values.groups()[1])
                     if filename == aws_ip_ranges_filename:
-                         #filename = filename.replace('_PROFILE_', environment_name)
                          c1[2] = read_ip_ranges(aws_ip_ranges_filename, False, conditions, True)
                     elif filename == ip_ranges_from_args:
                         c1[2] = []

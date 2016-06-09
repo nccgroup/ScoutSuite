@@ -1,9 +1,9 @@
 {
-    "path": [
-        "ec2.regions.id.vpcs.id.instances.id.PublicIpAddress"
-    ],
+    "description": "EC2 instance with a public IP",
+    "path": "ec2.regions.id.vpcs.id.instances.id.PublicIpAddress",
     "dashboard_name": "Instances",
     "conditions": [ "and",
         [ "this", "notNull", "" ]
-    ]
+    ],
+    "display_path": "ec2.regions.id.vpcs.id.instances.id"
 }

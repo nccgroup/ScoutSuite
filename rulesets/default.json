@@ -134,7 +134,7 @@
         {
             "filename": "iam-human-user-with-policies.json",
             "enabled": "true",
-            "args": [ "managed", "managed_policies", "_LIST_(AllHeadlessUsers)" ]
+            "args": [ "_LIST_(AllHumanUsers)", "managed", "managed_policies" ]
         },
         {
             "filename": "iam-user-with-policies.json",

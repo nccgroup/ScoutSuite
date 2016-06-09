@@ -1,14 +1,12 @@
 {
-    "description": "",
+    "description": "Security group whitelists IP addreses in unused regions",
     "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id",
     "dashboard_name": "Rules",
     "conditions": [ "and",
         [ "this", "inSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges.json, [])" ],
-        [ "this", "notInSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges.json, [[\"region\", \"inList\", [\"us-east-1\", \"us-west-2\"] ]])" ]
+        [ "this", "notInSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges.json, [[\"region\", \"containAtLeastOneOf\", [\"us-east-1\", \"us-west-2\"] ]])" ]
     ],
-    "finding": {
-        "level": "danger"
-    },
+    "level": "danger",
     "keys": [
         "ec2.regions.id.vpcs.id.security_groups.id",
         "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id",

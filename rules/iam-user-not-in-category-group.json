@@ -7,7 +7,7 @@
     ],
     "id_suffix": "member_of_category_group",
     "level": "danger",
-    "keys": [
-        "iam.users.id.name"
+    "questions": [
+        [ "What are the names your category groups", [], "" ]
     ]
 }

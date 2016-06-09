@@ -31,10 +31,11 @@ def change_level(level):
 #
 # Load a ruleset from a JSON file
 #
-def load_ruleset(ruleset_name):
+def load_ruleset(ruleset_name, quiet = False):
     ruleset_filename = 'rulesets/%s.json' % ruleset_name[0]
     if not os.path.exists(ruleset_filename):
-        printError('Error: the ruleset name entered (%s) does not match an existing configuration.' % ruleset_name[0])
+        if not quiet:
+            printError('Error: the ruleset name entered (%s) does not match an existing configuration.' % ruleset_name[0])
         return None
     try:
         with open(ruleset_filename, 'rt') as f:
@@ -48,15 +49,19 @@ def load_ruleset(ruleset_name):
 #
 # Initialize rules based on ruleset and services in scope
 #
-def init_rules(ruleset, services, environment_name, ip_ranges):
+def init_rules(ruleset, services, environment_name, ip_ranges, generator = False):
     # Load rules from JSON files
     rules = {}
     for rule_metadata in ruleset['rules']:
         # Skip disabled rules
-        if 'enabled' in rule_metadata and rule_metadata['enabled'] in ['false', 'False']:
+        if 'enabled' in rule_metadata and rule_metadata['enabled'] in ['false', 'False', False] and not generator:
             continue
         # Skip rules that apply to an out-of-scope service
         rule_details = load_config_from_json(rule_metadata, environment_name, ip_ranges)
+        if not rule_details:
+            continue
+        if 'enabled' in rule_metadata and rule_metadata['enabled']:
+            rule_details['enabled'] = True
         skip_rule = True
         for service in services:
             if rule_details['path'].startswith(service):

@@ -7,7 +7,7 @@
     ],
     "id_suffix": "member_of_common_group",
     "level": "danger",
-    "keys": [
-        "iam.users.id.name"
+    "questions": [
+        [ "What is the name of your common/global group", [], "" ]
     ]
 }
