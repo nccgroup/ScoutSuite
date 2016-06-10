@@ -57,7 +57,7 @@ def init_rules(ruleset, services, environment_name, ip_ranges, generator = False
         if 'enabled' in rule_metadata and rule_metadata['enabled'] in ['false', 'False', False] and not generator:
             continue
         # Skip rules that apply to an out-of-scope service
-        rule_details = load_config_from_json(rule_metadata, environment_name, ip_ranges)
+        rule_details = load_config_from_json(rule_metadata, ip_ranges)
         if not rule_details:
             continue
         if 'enabled' in rule_metadata and rule_metadata['enabled']:

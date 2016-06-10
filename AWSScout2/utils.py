@@ -535,10 +535,8 @@ def load_from_json(environment_name, var):
 #
 # Load rule from a JSON config file
 #
-def load_config_from_json(rule_metadata, environment_name, ip_ranges):
+def load_config_from_json(rule_metadata, ip_ranges):
     config = None
-    if not rule_metadata['filename'].startswith('iam'):
-        return config
     config_file = rule_metadata['filename']
     if not config_file.startswith('rules/'):
         config_file = 'rules/%s' % config_file

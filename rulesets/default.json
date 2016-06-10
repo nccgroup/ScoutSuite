@@ -101,12 +101,12 @@
         {
             "filename": "iam-user-no-key-rotation.json",
             "enabled": "true",
-            "args": [ "Active", "danger" ]
+            "args": [ "Active", "90", "danger" ]
         },
         {
             "filename": "iam-user-no-key-rotation.json",
             "enabled": "true",
-            "args": [ "Inactive", "warning" ]
+            "args": [ "Inactive", "90", "warning" ]
         },
         {
             "filename": "iam-user-without-mfa.json",

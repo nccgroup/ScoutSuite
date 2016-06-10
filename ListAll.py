@@ -38,7 +38,7 @@ def main(cmd_args):
         # Load arguments from config if specified
         if len(cmd_args.config):
             rule_metadata = {'filename': cmd_args.config[0], 'enabled': True, 'args': cmd_args.config_args}
-            config = load_config_from_json(rule_metadata, environment_name, cmd_args.ip_ranges)
+            config = load_config_from_json(rule_metadata, cmd_args.ip_ranges)
             if config:
                 args = Bunch(config)
             else:
