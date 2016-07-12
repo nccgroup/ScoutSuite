@@ -598,15 +598,16 @@ def open_file(environment_name, force_write):
 #
 # Format and print the output of ListAll 
 #
-def generate_listall_output(lines, resources, aws_config, template, arguments):
+def generate_listall_output(lines, resources, aws_config, template, arguments, nodup = False):
     for line in lines:
-        output = ''
+        output = []
         for resource in resources:
             current_path = resource.split('.')
             outline = line[1]
             for key in line[2]:
                 outline = outline.replace('_KEY_('+key+')', get_value_at(aws_config['services'], current_path, key, True))
-            output = output + outline + '\n'
+            output.append(outline)
+        output = '\n'.join(line for line in sorted(set(output)))
         template = template.replace(line[0], output)
     for (i, argument) in enumerate(arguments):
         template = template.replace('_ARG_%d_' % i, argument)
