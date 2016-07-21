@@ -21,7 +21,7 @@ or send a pull request.
 To install Scout2:
 
 	# Clone this repository.
-	$ git clone git@github.com:iSECPartners/Scout2.git
+	$ git clone https://github.com/nccgroup/Scout2
 
 	# install required packages:
 	$ pip install -r requirements.txt
@@ -40,7 +40,7 @@ resources in the following services:
 * Simple Storage Service (S3)
 
 If you are not sure what permissions to grant, the
-[Scout2-Default](https://github.com/iSECPartners/AWS-recipes/blob/master/IAM-Policies/Scout2-Default.json)
+[Scout2-Default](https://github.com/nccgroup/AWS-recipes/blob/master/IAM-Policies/Scout2-Default.json)
 IAM policy lists the permissions necessary for a default run of Scout2.
 
 ## Usage
