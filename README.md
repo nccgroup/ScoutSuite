@@ -1,7 +1,7 @@
 AWS Scout2
 ==========
 
-[![Build Status](https://travis-ci.org/iSECPartners/Scout2.svg?branch=master)](https://travis-ci.org/iSECPartners/Scout2)
+[![Build Status](https://travis-ci.org/nccgroup/Scout2.svg?branch=master)](https://travis-ci.org/nccgroup/Scout2)
 
 ## Description
 
