@@ -11,7 +11,12 @@ import sys
 from AWSScout2 import __version__
 from AWSScout2.findings import *
 
-
+# Setup variables
+(scout2_dir, tool_name) = os.path.split(__file__)
+scout2_dir = os.path.abspath(scout2_dir)
+scout2_rules_dir = '%s/%s' % (scout2_dir, RULES_DIR)
+scout2_rulesets_dir = '%s/%s' % (scout2_dir, RULESETS_DIR)
+ruleset_creator_path = '%s/ruleset-creator.html' % (scout2_dir)
 
 
 ########################################
@@ -19,6 +24,13 @@ from AWSScout2.findings import *
 ########################################
 
 def main(args):
+
+    # Setup variables
+    available_rules = {}
+    parameterized_rules = []
+    services = []
+    base_ruleset = args.base_ruleset[0]
+    ruleset_name = args.ruleset_name[0]
 
     # Configure the debug level
     configPrintException(args.debug)
@@ -28,19 +40,9 @@ def main(args):
     if not check_opinel_version(min_opinel):
         return 42
 
-    # Setup variables
-    (scout2_dir, tool_name) = os.path.split(__file__)
-    scout2_dir = os.path.abspath(scout2_dir)
-    scout2_rules_dir = '%s/rules' % scout2_dir
-    scout2_rulesets_dir = '%s/rulesets' % scout2_dir
-    ruleset_creator_path = '%s/ruleset-creator.html' % (scout2_dir)
-    ruleset_filename = args.ruleset[0]
-    available_rules = {}
-    parameterized_rules = []
-    services = []
-
     # Load base ruleset
-    ruleset = load_ruleset(ruleset_filename)
+    printInfo('Loading settings from the base ruleset (%s)...' % base_ruleset)
+    ruleset = load_ruleset(base_ruleset)
     for rule in ruleset['rules']:
         rule['filename'] = rule['filename'].replace('rules/', '')
         if not 'args' in rule:
@@ -49,6 +51,7 @@ def main(args):
             parameterized_rules.append(rule)
 
     # Load all available rules
+    printInfo('Loading all available rules...')
     rules = [ f for f in os.listdir(scout2_rules_dir) if os.path.isfile(os.path.join(scout2_rules_dir, f)) ]
     for rule_filename in rules:
         services.append(rule_filename.split('-')[0].lower())
@@ -81,14 +84,15 @@ def main(args):
                             prule['args'].append({'arg_name': arg_name, 'arg_value': arg_value})
                          available_rules[key] = prule
 
-    environment_name = 'default'
     ruleset = {}
+    ruleset['name'] = ruleset_name
     ruleset['available_rules'] = available_rules
     ruleset['services'] = list(sorted(set(services)))
-    save_config_to_file(environment_name, ruleset, force_write = True, debug = True, js_filename = AWSRULESET_FILE)
+    printInfo('Preparing the HTML ruleset generator...')
+    save_config_to_file('default', ruleset, force_write = True, debug = True, js_filename = AWSRULESET_FILE, quiet = True)
 
     # Open the HTML ruleset generator in a browser
-    print('Opening your browser...')
+    printInfo('Starting the HTML ruleset generator...')
     url = 'file://%s' % ruleset_creator_path
     webbrowser.open(url, new = 2)
 
@@ -99,9 +103,18 @@ def main(args):
 
 default_args = read_profile_default_args(parser.prog)
 
-add_scout2_argument(parser, default_args, 'force')
-add_scout2_argument(parser, default_args, 'ruleset')
-add_scout2_argument(parser, default_args, 'env')
+parser.add_argument('--base-ruleset',
+                    dest='base_ruleset',
+                    default=[ '%s/%s/default.json' % (scout2_dir, RULESETS_DIR) ],
+                    nargs='+',
+                    help='Load settings from an existing ruleset.')
+
+parser.add_argument('--ruleset-name',
+                    dest='ruleset_name',
+                    default=None,
+                    required=True,
+                    help='Name of the ruleset to be generated.')
+
 
 args = parser.parse_args()
 

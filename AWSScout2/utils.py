@@ -53,6 +53,7 @@ aws_ip_ranges_filename = 'ip-ranges.json'
 ip_ranges_from_args = 'ip-ranges-from-args'
 
 
+RULES_DIR = 'rules'
 RULESETS_DIR = 'rulesets'
 DEFAULT_RULESET = '%s/default.json' % RULESETS_DIR
 
@@ -585,8 +586,9 @@ def load_config_from_json(rule_metadata, ip_ranges):
         printError('Error: failed to read the rule from %s' % config_file)
     return config
 
-def open_file(environment_name, force_write, js_filename):
-    printInfo('Saving config...')
+def open_file(environment_name, force_write, js_filename, quiet = False):
+    if not quiet:
+        printInfo('Saving config...')
     report_filename, config_filename = get_scout2_paths(environment_name, js_filename = js_filename)
     if prompt_4_overwrite(config_filename, force_write):
        try:
@@ -649,9 +651,9 @@ def save_blob_to_file(filename, blob, force_write, debug):
 #
 # Save AWS configuration (python dictionary) as JSON
 #
-def save_config_to_file(environment_name, config, force_write = False, debug = False, js_filename = AWSCONFIG_FILE):
+def save_config_to_file(environment_name, config, force_write = False, debug = False, js_filename = AWSCONFIG_FILE, quiet = False):
     try:
-        with open_file(environment_name, force_write, js_filename) as f:
+        with open_file(environment_name, force_write, js_filename, quiet) as f:
             print('aws_info =', file = f)
             write_data_to_file(f, config, force_write, debug)
     except Exception as e:
