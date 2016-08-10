@@ -734,7 +734,7 @@ var generate_ruleset = function() {
     var uriContent = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(ruleset, null, 4));
     var dlAnchorElem = document.getElementById('downloadAnchorElem');
     dlAnchorElem.setAttribute("href", uriContent);
-    dlAnchorElem.setAttribute("download", "custom-ruleset.json");
+    dlAnchorElem.setAttribute("download", aws_info['name'] + '.json');
     dlAnchorElem.click();
 
     //var uriContent = "data:application/octet-stream;charset=utf-16le;base64,//5mAG8AbwAgAGIAYQByAAoA";

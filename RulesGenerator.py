@@ -23,17 +23,15 @@ ruleset_generator_path = '%s/ruleset-generator.html' % (scout2_dir)
 ##### Main
 ########################################
 
-def main(args):
+def main(cmd_args):
 
     # Setup variables
     available_rules = {}
     parameterized_rules = []
     services = []
-    base_ruleset = args.base_ruleset[0]
-    ruleset_name = args.ruleset_name[0]
 
     # Configure the debug level
-    configPrintException(args.debug)
+    configPrintException(cmd_args.debug)
 
     # Check version of opinel
     min_opinel, max_opinel = get_opinel_requirement()
@@ -41,8 +39,8 @@ def main(args):
         return 42
 
     # Load base ruleset
-    printInfo('Loading settings from the base ruleset (%s)...' % base_ruleset)
-    ruleset = load_ruleset(base_ruleset)
+    printInfo('Loading settings from the base ruleset (%s)...' % cmd_args.base_ruleset)
+    ruleset = load_ruleset(cmd_args.base_ruleset)
     for rule in ruleset['rules']:
         rule['filename'] = rule['filename'].replace('rules/', '')
         if not 'args' in rule:
@@ -85,7 +83,7 @@ def main(args):
                          available_rules[key] = prule
 
     ruleset = {}
-    ruleset['name'] = ruleset_name
+    ruleset['name'] = cmd_args.ruleset_name
     ruleset['available_rules'] = available_rules
     ruleset['services'] = list(sorted(set(services)))
     printInfo('Preparing the HTML ruleset generator...')
@@ -105,8 +103,7 @@ default_args = read_profile_default_args(parser.prog)
 
 parser.add_argument('--base-ruleset',
                     dest='base_ruleset',
-                    default=[ '%s/%s/default.json' % (scout2_dir, RULESETS_DIR) ],
-                    nargs='+',
+                    default='%s/%s/default.json' % (scout2_dir, RULESETS_DIR),
                     help='Load settings from an existing ruleset.')
 
 parser.add_argument('--ruleset-name',
