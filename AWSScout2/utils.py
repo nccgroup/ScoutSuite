@@ -27,8 +27,6 @@ try:
 except ImportError:
     import urllib.request as urllib2
 
-# Import third-party packages
-import requests
 
 ########################################
 # Globals
