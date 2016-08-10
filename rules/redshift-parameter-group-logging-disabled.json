@@ -5,6 +5,5 @@
     "conditions": [ "and",
         [ "redshift.regions.id.parameter_groups.id.parameters.enable_user_activity_logging.value", "false", "" ]
     ],
-    "id_suffix": "enable_user_activity_logging",
-    "level": "warning"
+    "id_suffix": "enable_user_activity_logging"
 }

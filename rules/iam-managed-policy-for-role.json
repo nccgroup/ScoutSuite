@@ -17,7 +17,6 @@
         [ "iam.managed_policies.id.PolicyDocument.Statement.id.", "containAction", "_ARG_0_:_ARG_1_" ],
         [ "iam.managed_policies.id.PolicyDocument.Statement.id.Resource", "containAtLeastOneOf", [ "*" ] ]
     ],
-    "level": "danger",
     "keys": [
         "iam.managed_policies.id.name"
     ]

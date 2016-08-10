@@ -55,7 +55,7 @@ def main(cmd_args):
         services.append(rule_filename.split('-')[0].lower())
         with open('%s/%s' % (scout2_rules_dir, rule_filename), 'rt') as f:
             rule = json.load(f)
-            if not 'key' in rule:
+            if not 'key' in rule and not 'arg_names' in rule:
                 # Non-parameterized rule, save it
                 if rule_filename in available_rules:
                     available_rules[rule_filename].update(rule)
@@ -64,23 +64,27 @@ def main(cmd_args):
                     available_rules[rule_filename]['enabled'] = False
             else:
                 # Parameterized rules, find all occurences and save N times
+                parameterized_rule_found = False
                 for prule in parameterized_rules:
                     if prule['filename'] == rule_filename:
-                         for k in rule:
-                             prule[k] = set_argument_values(rule[k], prule['args'], convert = True) if k != 'conditions' else rule[k]
-                         key = prule.pop('key')
-                         args = prule.pop('args')
-                         if not 'arg_names' in prule:
-                             printError('No arg names key in %s' % rule_filename)
-                             continue
-                         arg_names = prule.pop('arg_names')
-                         if len(args) != len(arg_names):
-                             printError('Error: rule %s expects %d arguments but was provided %d.' % (rule_filename, len(arg_names), len(args)))
-                             continue
-                         prule['args'] = []
-                         for (arg_name, arg_value) in zip(arg_names, args):
-                            prule['args'].append({'arg_name': arg_name, 'arg_value': arg_value})
-                         available_rules[key] = prule
+                        parameterized_rule_found = True
+                        for k in rule:
+                            prule[k] = set_argument_values(rule[k], prule['args'], convert = True) if k != 'conditions' else rule[k]
+                        key = prule.pop('key') if 'key' in prule else prule['filename']
+                        args = prule.pop('args')
+                        if not 'arg_names' in prule:
+                            printError('No arg names key in %s' % rule_filename)
+                            continue
+                        arg_names = prule.pop('arg_names')
+                        if len(args) != len(arg_names):
+                            printError('Error: rule %s expects %d arguments but was provided %d.' % (rule_filename, len(arg_names), len(args)))
+                            continue
+                        prule['args'] = []
+                        for (arg_name, arg_value) in zip(arg_names, args):
+                           prule['args'].append({'arg_name': arg_name, 'arg_value': arg_value})
+                        available_rules[key] = prule
+                if not parameterized_rule_found:
+                    printError('Error: the rule %s lacks parameters in the ruleset.' % rule_filename)
 
     ruleset = {}
     ruleset['name'] = cmd_args.ruleset_name

@@ -5,6 +5,5 @@
     "conditions": [ "and",
         [ "rds.regions.id.vpcs.id.instances.id.MultiAZ", "false", "" ]
     ],
-    "id_suffix": "MultiAZ",
-    "level": "danger"
+    "id_suffix": "MultiAZ"
 }

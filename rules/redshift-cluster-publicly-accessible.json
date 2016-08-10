@@ -5,6 +5,5 @@
     "conditions": [ "and",
         [ "redshift.regions.id.vpcs.id.clusters.id.PubliclyAccessible", "true", "" ]
     ],
-    "id_suffix": "PubliclyAccessible",
-    "level": "warning"
+    "id_suffix": "PubliclyAccessible"
 }

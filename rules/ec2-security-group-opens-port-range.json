@@ -8,6 +8,5 @@
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id", "match", "[0-9]+-[0-9]+" ],
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id", "notEqual", "0-65535" ]
     ],
-    "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
-    "level": "warning"
+    "display_path": "ec2.regions.id.vpcs.id.security_groups.id"
 }

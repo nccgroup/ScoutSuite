@@ -5,6 +5,5 @@
     "conditions": [ "and",
         [ "iam.credential_report.<root_account>.password_last_used", "dateNotOlderThan", "90" ]
     ],
-    "level": "danger",
     "id_suffix": "password_last_used"
 }

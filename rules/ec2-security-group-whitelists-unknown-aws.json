@@ -6,6 +6,5 @@
     "conditions": [ "and",
         [ "this", "inSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges.json, [])" ],
         [ "this", "notInSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges-from-args, [])" ]
-    ],
-    "level": "danger"
+    ]
 }

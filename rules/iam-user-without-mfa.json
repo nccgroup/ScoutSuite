@@ -7,7 +7,6 @@
         [ "iam.users.id.MFADevices", "empty", "" ]
     ],
     "id_suffix": "mfa_enabled",
-    "level": "danger",
     "keys": [
         "iam.users.id.name"
     ]

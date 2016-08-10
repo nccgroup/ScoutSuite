@@ -5,6 +5,5 @@
     "dashboard_name": "Rules",
     "conditions": [ "and",
         [ "this", "inSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges.json, [])" ]
-    ],
-    "level": "danger"
+    ]
 }

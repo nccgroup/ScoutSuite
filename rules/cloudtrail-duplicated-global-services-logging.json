@@ -8,6 +8,5 @@
         [ "cloudtrail.regions.id.trails.id.IncludeGlobalServiceEvents", "true", ""],
         [ "cloudtrail.regions.id.trails.id.IsLogging", "true", ""]
     ],
-    "level": "warning",
     "id_suffix": "IncludeGlobalServiceEvents"
 }

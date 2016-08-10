@@ -7,7 +7,6 @@
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id", "equal", "0-65535" ],
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.security_groups.id.GroupId", "equal", "_GET_VALUE_AT_(ec2.regions.id.vpcs.id.security_groups.id)" ]
     ],
-    "level": "danger",
     "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
     "keys": [
         "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.security_groups.id.GroupId",

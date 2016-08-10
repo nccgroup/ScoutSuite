@@ -6,6 +6,5 @@
         [ "rds.regions.id.vpcs.id.instances.id.AutoMinorVersionUpgrade", "false", "" ],
         [ "rds.regions.id.vpcs.id.instances.id.Engine", "containAtLeastOneOf", ["mariadb", "mysql", "postgres" ] ]
     ],
-    "id_suffix": "AutoMinorVersionUpgrade",
-    "level": "danger"
+    "id_suffix": "AutoMinorVersionUpgrade"
 }

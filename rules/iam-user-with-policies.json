@@ -7,9 +7,5 @@
     "conditions": [ "and",
         [ "iam.users.id.", "withKey", "_ARG_1_" ]
     ],
-    "level": "danger",
-    "id_suffix": "_ARG_1_",
-    "questions": [
-        [ "What type of policies cannot users have", [ "(\"inline\", \"inline_policies\")", "(\"managed\", \"managed_policies\")" ], "inline" ]
-    ]
+    "id_suffix": "_ARG_1_"
 }

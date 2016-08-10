@@ -9,6 +9,5 @@
         [ "s3.buckets.id.grantees.id", "equal", "http://acs.amazonaws.com/groups/global/_ARG_0_" ],
         [ "s3.buckets.id.grantees.id.permissions._ARG_1_", "true", "" ]
     ],
-    "id_suffix": "_ARG_1_",
-    "level": "_ARG_3_"
+    "id_suffix": "_ARG_1_"
 }

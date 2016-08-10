@@ -5,6 +5,5 @@
     "conditions": [ "and",
         [ "redshift.regions.id.parameter_groups.id.parameters.require_ssl.value", "false", "" ]
     ],
-    "id_suffix": "require_ssl",
-    "level": "danger"
+    "id_suffix": "require_ssl"
 }

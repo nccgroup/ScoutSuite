@@ -1,13 +1,10 @@
 {
+    "arg_names": [ "Common group" ],
     "description": "User not in common group",
     "path": "iam.users.id",
     "dashboard_name": "Users",
     "conditions": [ "and",
         [ "iam.users.id.groups", "containNoneOf", "_ARG_0_" ]
     ],
-    "id_suffix": "member_of_common_group",
-    "level": "danger",
-    "questions": [
-        [ "What is the name of your common/global group", [], "" ]
-    ]
+    "id_suffix": "member_of_common_group"
 }

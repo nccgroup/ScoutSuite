@@ -5,6 +5,5 @@
     "conditions": [ "and",
         [ "redshift.regions.id.vpcs.id.clusters.id.Encrypted", "false", "" ]
     ],
-    "id_suffix": "Encrypted",
-    "level": "warning"
+    "id_suffix": "Encrypted"
 }

@@ -5,6 +5,5 @@
     "conditions": [ "and",
         [ "s3.buckets.id.logging", "equal", "Disabled" ]
     ],
-    "id_suffix": "logging",
-    "level": "warning"
+    "id_suffix": "logging"
 }

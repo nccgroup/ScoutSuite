@@ -7,6 +7,5 @@
         [ "cloudtrail.regions.id.trails.id.", "withKey", "LogFileValidationEnabled" ],
         [ "cloudtrail.regions.id.trails.id.LogFileValidationEnabled", "false", "" ]
     ],
-    "level": "danger",
     "id_suffix": "LogFileValidationDisabled"
 }

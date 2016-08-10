@@ -8,10 +8,5 @@
         [ "iam.users.id.groups", "containAtLeastOneOf", "_ARG_0_" ],
         [ "iam.users.id.", "withKey", "_ARG_2_" ]
     ],
-    "id_suffix": "_ARG_1_",
-    "level": "danger",
-    "questions": [
-        [ "What is the name of your group for used-by-human accounts", [], "" ],
-        [ "What type of policies cannot used-by-human users have", [ "(\"inline\", \"inline_policies\")", "(\"managed\", \"managed_policies\")" ], "" ]
-    ]
+    "id_suffix": "_ARG_1_"
 }

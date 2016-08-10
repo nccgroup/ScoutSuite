@@ -70,8 +70,7 @@ def init_rules(ruleset, services, environment_name, ip_ranges, generator = False
         # Build the rules dictionary
         path = rule_details['path']
         manage_dictionary(rules, path, {})
-        if 'level' in rule_metadata:
-            rule_details['level'] = rule_metadata['level']
+        rule_details['level'] = rule_metadata['level']
         key = rule_details['key'] if 'key' in rule_details else rule_metadata['filename']
         # Set condition operator
         if not 'condition_operator' in rule_details:

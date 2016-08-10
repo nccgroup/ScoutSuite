@@ -8,7 +8,6 @@
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id", "equal", "ingress" ],
         [ "ec2.regions.id.vpcs.id.security_groups.id.", "withKey", "used_by" ]
     ],
-    "level": "danger",
     "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
     "keys": [
         "ec2.regions.id",

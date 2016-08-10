@@ -5,6 +5,5 @@
     "conditions": [ "and",
         [ "s3.buckets.id.versioning_status", "equal", "Disabled" ]
     ],
-    "id_suffix": "versioning",
-    "level": "warning"
+    "id_suffix": "versioning"
 }

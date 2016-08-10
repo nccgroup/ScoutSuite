@@ -6,6 +6,5 @@
         [ "rds.regions.id.vpcs.id.instances.id.BackupRetentionPeriod", "moreThan", "1" ],
         [ "rds.regions.id.vpcs.id.instances.id.BackupRetentionPeriod", "lessThan", "30" ]
     ],
-    "id_suffix": "BackupRetentionPeriod",
-    "level": "warning"
+    "id_suffix": "BackupRetentionPeriod"
 }
