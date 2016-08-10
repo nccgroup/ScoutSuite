@@ -31,11 +31,10 @@ def change_level(level):
 #
 # Load a ruleset from a JSON file
 #
-def load_ruleset(ruleset_name, quiet = False):
-    ruleset_filename = 'rulesets/%s.json' % ruleset_name[0]
+def load_ruleset(ruleset_filename, quiet = False):
     if not os.path.exists(ruleset_filename):
         if not quiet:
-            printError('Error: the ruleset name entered (%s) does not match an existing configuration.' % ruleset_name[0])
+            printError('Error: the file %s does not exist.' % ruleset_filename)
         return None
     try:
         with open(ruleset_filename, 'rt') as f:
@@ -85,15 +84,18 @@ def init_rules(ruleset, services, environment_name, ip_ranges, generator = False
 #
 # Search for an existing ruleset that matches the environment name
 #
-def search_ruleset(environment_name):
+def search_ruleset(scout2_dir, environment_name):
+    scout2_rulesets_ditr = '%s/%s' % (scout2_dir, RULESETS_DIR)
     if environment_name != 'default':
         ruleset_found = False
-        for f in os.listdir('rulesets'):
+        for f in os.listdir(scout2_rulesets_dir):
             if fnmatch.fnmatch(f, '*.' + environment_name + '.json'):
                 ruleset_found = True
         if ruleset_found and prompt_4_yes_no("A ruleset whose name matches your environment name (%s) was found. Would you like to use it instead of the default one" % environment_name):
-            return environment_name
-    return 'default'
+            pass
+        else:
+            environment_name = default
+    return '%s/%s.json' % (scout2_rulesets_dir, environment_name)
 
 def set_arguments(arg_names, t):
     real_args = []

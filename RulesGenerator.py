@@ -34,15 +34,15 @@ def main(args):
     scout2_rules_dir = '%s/rules' % scout2_dir
     scout2_rulesets_dir = '%s/rulesets' % scout2_dir
     ruleset_creator_path = '%s/ruleset-creator.html' % (scout2_dir)
-    ruleset_name = args.ruleset_name[0]
+    ruleset_filename = args.ruleset[0]
     available_rules = {}
     parameterized_rules = []
     services = []
 
     # Load base ruleset
-    with open('%s/%s.json' % (scout2_rulesets_dir, ruleset_name), 'rt') as f:
-        ruleset = json.load(f)
+    ruleset = load_ruleset(ruleset_filename)
     for rule in ruleset['rules']:
+        rule['filename'] = rule['filename'].replace('rules/', '')
         if not 'args' in rule:
             available_rules[rule['filename']] = rule
         else:
@@ -90,7 +90,7 @@ def main(args):
     # Open the HTML ruleset generator in a browser
     print('Opening your browser...')
     url = 'file://%s' % ruleset_creator_path
-    #webbrowser.open(url, new = 2)
+    webbrowser.open(url, new = 2)
 
 
 ########################################
@@ -100,7 +100,7 @@ def main(args):
 default_args = read_profile_default_args(parser.prog)
 
 add_scout2_argument(parser, default_args, 'force')
-add_scout2_argument(parser, default_args, 'ruleset-name')
+add_scout2_argument(parser, default_args, 'ruleset')
 add_scout2_argument(parser, default_args, 'env')
 
 args = parser.parse_args()

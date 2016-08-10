@@ -37,6 +37,10 @@ from AWSScout2.utils_vpc import *
 
 def main(args):
 
+    # Setup variables
+    (scout2_dir, tool_name) = os.path.split(__file__)
+    scout2_dir = os.path.abspath(scout2_dir)
+
     # Configure the debug level
     configPrintException(args.debug)
 
@@ -114,13 +118,13 @@ def main(args):
         manage_dictionary(aws_config, 'account_id', None)
 
     # Search for an existing ruleset if the environment is set
-    if environment_name and args.ruleset_name == 'default':
-        ruleset_name = search_ruleset(environment_name)
+    if environment_name and args.ruleset == DEFAULT_RULESET: 
+        ruleset = search_ruleset(scout2_dir, environment_name)
     else:
-        ruleset_name = args.ruleset_name
+        ruleset = args.ruleset[0]
 
     # Load findings from JSON config files
-    ruleset = load_ruleset(ruleset_name)
+    ruleset = load_ruleset(ruleset)
     rules = init_rules(ruleset, services, environment_name, args.ip_ranges)
 
     # Reset violations
@@ -220,7 +224,7 @@ add_iam_argument(parser, default_args, 'csv-credentials')
 add_s3_argument(parser, default_args, 'bucket-name')
 add_s3_argument(parser, default_args, 'skipped-bucket-name')
 add_scout2_argument(parser, default_args, 'force')
-add_scout2_argument(parser, default_args, 'ruleset-name')
+add_scout2_argument(parser, default_args, 'ruleset')
 add_scout2_argument(parser, default_args, 'services')
 add_scout2_argument(parser, default_args, 'skip')
 add_scout2_argument(parser, default_args, 'env')

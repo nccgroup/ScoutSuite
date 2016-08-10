@@ -52,6 +52,10 @@ re_list_value = re.compile(r'_LIST_\((.*?)\)')
 aws_ip_ranges_filename = 'ip-ranges.json'
 ip_ranges_from_args = 'ip-ranges-from-args'
 
+
+RULESETS_DIR = 'rulesets'
+DEFAULT_RULESET = '%s/default.json' % RULESETS_DIR
+
 ########################################
 ##### Argument parser
 ########################################
@@ -66,10 +70,10 @@ def add_scout2_argument(parser, default_args, argument_name):
                             default=False,
                             action='store_true',
                             help='Overwrite existing json files')
-    elif argument_name == 'ruleset-name':
-        parser.add_argument('--ruleset-name',
-                            dest='ruleset_name',
-                            default=['default'],
+    elif argument_name == 'ruleset':
+        parser.add_argument('--ruleset',
+                            dest='ruleset',
+                            default=[ DEFAULT_RULESET ],
                             nargs='+',
                             help='Customized set of rules')
     elif argument_name == 'services':
@@ -576,9 +580,6 @@ def load_config_from_json(rule_metadata, ip_ranges):
                     for v in list_value.groups()[0].split(','):
                         values.append(v.strip())
                     c1[2] = values
-        # Fix level if specified in ruleset
-        if 'level' in rule_metadata:
-            rule['level'] = rule_metadata['level']
     except Exception as e:
         printException(e)
         printError('Error: failed to read the rule from %s' % config_file)

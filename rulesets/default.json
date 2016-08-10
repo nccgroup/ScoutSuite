@@ -42,7 +42,7 @@
         },
         {
             "filename": "cloudtrail-disabled.json",
-            "enabled": "true"
+            "enabled": "false"
         },
         {
             "filename": "cloudtrail-no-logging.json",
