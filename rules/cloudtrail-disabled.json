@@ -1,0 +1,11 @@
+{
+    "description": "Not configured",
+    "rationale": "CloudTrail is not configured, which means that API activity is not logged.",
+    "path": "cloudtrail.regions.id.trails.id", 
+    "dashboard_name": "Trails",
+    "conditions": [ "and",
+        [ "cloudtrail.trails_count", "equal", "0" ]
+    ],
+    "level": "danger",
+    "id_suffix": "IsLogging"
+}
