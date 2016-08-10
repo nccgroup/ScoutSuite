@@ -1,10 +1,18 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-# Import AWS Scout2 tools
-from AWSScout2.utils import *
+# Import stock packages
+import json
+import os
+import webbrowser
+import sys
+
+# Import Scout2 tools
+from AWSScout2 import __version__
 from AWSScout2.findings import *
 
-import json
+
+
 
 ########################################
 ##### Main
@@ -15,107 +23,74 @@ def main(args):
     # Configure the debug level
     configPrintException(args.debug)
 
-    # Check arguments
-    if args.ruleset_name[0] == 'default':
-        printError('Error, you need to provide a name for your custom ruleset.')
-        return
+    # Check version of opinel
+    min_opinel, max_opinel = get_opinel_requirement()
+    if not check_opinel_version(min_opinel):
+        return 42
 
-    # Create the list of services to customize
-    services = build_services_list(args.services, args.skipped_services)
-    if not len(services):
-        printError('Error: list of Amazon Web Services to be analyzed is empty.')
-        return
+    # Setup variables
+    (scout2_dir, tool_name) = os.path.split(__file__)
+    scout2_dir = os.path.abspath(scout2_dir)
+    scout2_rules_dir = '%s/rules' % scout2_dir
+    scout2_rulesets_dir = '%s/rulesets' % scout2_dir
+    ruleset_creator_path = '%s/ruleset-creator.html' % (scout2_dir)
+    ruleset_name = args.ruleset_name[0]
+    available_rules = {}
+    parameterized_rules = []
+    services = []
 
-    # Load existing ruleset if editing one
-    ruleset = load_ruleset(args.ruleset_name, quiet =  True)
-    if not ruleset and False: # load default optionally
-        ruleset = load_ruleset(['default'])
-        printInfo('Creating a new ruleset, initiated with the default set.')
-    elif not ruleset:
-        # Initiate a new ruleset with all rules
-        ruleset = {}
-        ruleset['rules'] = []
-        for rule in os.listdir('rules'):
-            ruleset['rules'].append({'filename': rule})
-
-    # Load rules metadata
-    rules = init_rules(ruleset, services, args.ruleset_name[0], args.ip_ranges, generator = True)
-
-    ruleset_new = {}
-    ruleset_new['rules'] = []
-    for resource_path in rules:
-        for rule in rules[resource_path]:
-
-            # Initialize rule metadata
-            rule_metadata = {'filename': rules[resource_path][rule]['filename']}
-
-            # Enable the rule ?
-            verb = 'disable' if ('enabled' in rules[resource_path][rule] and rules[resource_path][rule]['enabled']) else 'enable'
-            if prompt_4_yes_no('Do you want to %s the following rule:\n\t%s' % (verb, rules[resource_path][rule]['description'])):
-                enabled = True if verb == 'enable' else False
-            else:
-                enabled = False if verb == 'enable' else True
-
-            # Set the rule's arguments
-            if enabled and verb == 'disable' and 'questions' in rules[resource_path][rule]:
-                configure = prompt_4_yes_no('Do you want to change the parameters for this rule')
-                if not configure:
-                    rule_metadata['args'] = rules[resource_path][rule]['args']
-            elif enabled and verb == 'enable' and 'questions' in rules[resource_path][rule]:
-                configure = True
-            else:
-                configure = False
-            rule_metadata['enabled'] = enabled
-            if configure:
-                question_args = []
-                for question_id, question in enumerate(rules[resource_path][rule]['questions']):
-                    try:
-                        choices = []
-                        all_choices = []
-                        for choice in rules[resource_path][rule]['questions'][question_id][1]:
-                            choice = ast.literal_eval(choice)
-                            if type(choice) == tuple:
-                                choices.append(choice[0])
-                                all_choices.append(choice)
-                                answer_next = True
-                    except:
-                        choices = rules[resource_path][rule]['questions'][question_id][1]
-                    arg_value = prompt_4_value(rules[resource_path][rule]['questions'][question_id][0], choices = choices, default = rules[resource_path][rule]['questions'][question_id][2], is_question = True)             
-                    if answer_next:
-                        for choice in all_choices:
-                            if choice[0] == arg_value:
-                                for i, v in enumerate(choice):
-                                    question_args.append(v)
-                                break
-                    else:
-                        question_args.append(arg_value)
-                rule_metadata['args'] = question_args
-            ruleset_new['rules'].append(rule_metadata) 
-
-
-    # Save ruleset
-    with open('rulesets/%s.json' % args.ruleset_name[0], 'wt') as f:
-        f.write(json.dumps(ruleset_new, indent = 4, sort_keys = True))
-
-    return
-
-
-    for service in services:
-        if not args.review_defaults:
-            # By default, enable all default rules
-            load_findings(service, 'default')
+    # Load base ruleset
+    with open('%s/%s.json' % (scout2_rulesets_dir, ruleset_name), 'rt') as f:
+        ruleset = json.load(f)
+    for rule in ruleset['rules']:
+        if not 'args' in rule:
+            available_rules[rule['filename']] = rule
         else:
-            # Otherwise, all rules that have "questions" key will be reviewed
-            load_findings(service, 'default', True)
+            parameterized_rules.append(rule)
 
-        # Select custom rules
-        load_findings(service, 'custom')
+    # Load all available rules
+    rules = [ f for f in os.listdir(scout2_rules_dir) if os.path.isfile(os.path.join(scout2_rules_dir, f)) ]
+    for rule_filename in rules:
+        services.append(rule_filename.split('-')[0].lower())
+        with open('%s/%s' % (scout2_rules_dir, rule_filename), 'rt') as f:
+            rule = json.load(f)
+            if not 'key' in rule:
+                # Non-parameterized rule, save it
+                if rule_filename in available_rules:
+                    available_rules[rule_filename].update(rule)
+                else:
+                    available_rules[rule_filename] = rule
+                    available_rules[rule_filename]['enabled'] = False
+            else:
+                # Parameterized rules, find all occurences and save N times
+                for prule in parameterized_rules:
+                    if prule['filename'] == rule_filename:
+                         for k in rule:
+                             prule[k] = set_argument_values(rule[k], prule['args'], convert = True) if k != 'conditions' else rule[k]
+                         key = prule.pop('key')
+                         args = prule.pop('args')
+                         if not 'arg_names' in prule:
+                             printError('No arg names key in %s' % rule_filename)
+                             continue
+                         arg_names = prule.pop('arg_names')
+                         if len(args) != len(arg_names):
+                             printError('Error: rule %s expects %d arguments but was provided %d.' % (rule_filename, len(arg_names), len(args)))
+                             continue
+                         prule['args'] = []
+                         for (arg_name, arg_value) in zip(arg_names, args):
+                            prule['args'].append({'arg_name': arg_name, 'arg_value': arg_value})
+                         available_rules[key] = prule
 
-    # Save new ruleset
-    for service in supported_services:
-        ruleset = globals()[service + '_finding_dictionary']
-        filename = 'rules/findings-' + service + '.' + args.ruleset_name[0] + '.json'
-        save_blob_to_file(filename, ruleset, args.force_write, args.debug)
+    environment_name = 'default'
+    ruleset = {}
+    ruleset['available_rules'] = available_rules
+    ruleset['services'] = list(sorted(set(services)))
+    save_config_to_file(environment_name, ruleset, force_write = True, debug = True, js_filename = AWSRULESET_FILE)
+
+    # Open the HTML ruleset generator in a browser
+    print('Opening your browser...')
+    url = 'file://%s' % ruleset_creator_path
+    #webbrowser.open(url, new = 2)
 
 
 ########################################
@@ -126,17 +101,9 @@ default_args = read_profile_default_args(parser.prog)
 
 add_scout2_argument(parser, default_args, 'force')
 add_scout2_argument(parser, default_args, 'ruleset-name')
-add_scout2_argument(parser, default_args, 'services')
-add_scout2_argument(parser, default_args, 'skip')
-add_common_argument(parser, default_args, 'ip-ranges')
-
-parser.add_argument('--all',
-                    dest='review_defaults',
-                    default=False,
-                    action='store_true',
-                    help='review and customize all rules, including the default ruleset')
+add_scout2_argument(parser, default_args, 'env')
 
 args = parser.parse_args()
 
 if __name__ == '__main__':
-    main(args)
+    sys.exit(main(args))

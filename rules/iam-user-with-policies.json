@@ -1,4 +1,5 @@
 {
+    "arg_names": [ "Type of policy", "Path to policies" ],
     "key": "iam-user-with-_ARG_0_-policies",
     "description": "User with _ARG_0_ policies",
     "path": "iam.users.id",

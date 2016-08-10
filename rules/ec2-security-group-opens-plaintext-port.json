@@ -1,4 +1,5 @@
 {
+    "arg_names": [ "Network protocol name", "Transport protocol name", "Port number" ],
     "key": "ec2-security-group-opens-plaintext-port-_ARG_0_",
     "description": "_ARG_0_ port open",
     "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",

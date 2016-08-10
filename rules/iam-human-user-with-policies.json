@@ -1,4 +1,5 @@
 {
+    "arg_names": [ "Name of IAM group", "Type of policy", "Path to policies" ],
     "key": "iam-human-user-with-_ARG_1_-policies",
     "description": "Human user with _ARG_1_ policies",
     "path": "iam.users.id",

@@ -1,5 +1,4 @@
 {
-    "key": "iam-role-with-inline-policies",
     "description": "Role with inline policies",
     "path": "iam.roles.id",
     "dashboard_name": "Roles",

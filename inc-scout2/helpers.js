@@ -76,13 +76,6 @@ Handlebars.registerHelper('finding_entity', function(prefix, entity) {
     return finding_entity(prefix, entity);
 });
 
-Handlebars.registerHelper('friendly_name', function(entity) {
-    return 'friendly_name';
-    var name = entity.split('.').pop();
-    name = name.replace('_', ' ');
-    return name.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-});
-
 Handlebars.registerHelper('count_in', function(service, path) {
     var entities = path.split('.');
     if (service == 'ec2') {
@@ -223,10 +216,6 @@ Handlebars.registerHelper('dashboard_color', function(level, checked, flagged) {
     }
 });
 
-Handlebars.registerHelper('policy_friendly_name', function(arn) {
-    return policy_friendly_name(arn);
-});
-
 Handlebars.registerHelper('policy_report_id', function(policy, a, b, c) {
     policy['ReportId'] = a + '-' + b + '-' + c;
 });
@@ -273,4 +262,33 @@ Handlebars.registerHelper('concat', function() {
         path = path + '.' + arguments[i];
     }
     return path;
+});
+
+Handlebars.registerHelper('json_stringify', function() {
+    body = arguments[0];
+    delete body['description'];
+    delete body['args'];
+    return JSON.stringify(body, null, 4)
+});
+
+Handlebars.registerHelper('get_key', function() {
+    rule = arguments[1];
+    if (rule['key']) {
+        key = rule['key'];
+    } else {
+        key = arguments[0];
+    }
+    return key.replace('.', '');
+});
+
+Handlebars.registerHelper('other_level', function() {
+    if (arguments[0] == 'warning') {
+        return 'danger';
+    } else {
+        return 'warning';
+    }
+});
+
+Handlebars.registerHelper('get_service', function() {
+    return getService(arguments[0]);
 });

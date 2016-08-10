@@ -101,12 +101,14 @@ def set_arguments(arg_names, t):
         real_args.append(set_argument_values(a, t))
     return real_args
 
-def set_argument_values(string, target):
-    args = re.findall(r'(_ARG_(\w+)_)', string)
+def set_argument_values(parameterized_input, target, convert = False):
+    if convert:
+        parameterized_input = json.dumps(parameterized_input)
+    args = re.findall(r'(_ARG_(\w+)_)', parameterized_input)
     for arg in args:
         index = int(arg[1])
-        string = string.replace(arg[0], target[index])
-    return string
+        parameterized_input = parameterized_input.replace(arg[0], target[index])
+    return json.loads(parameterized_input) if convert else parameterized_input
 
 def set_description(string, description):
     attributes = re.findall(r'(_(\w+)_)', string)

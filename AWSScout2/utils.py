@@ -413,6 +413,7 @@ def get_non_aws_id(name):
 
 AWSCONFIG_DIR = 'inc-awsconfig'
 AWSCONFIG_FILE = 'aws_config'
+AWSRULESET_FILE = 'aws_ruleset'
 REPORT_TITLE  = 'AWS Scout2 Report'
 
 def create_scout_report(environment_name, aws_config, force_write, debug):
@@ -455,13 +456,15 @@ def create_scout_report(environment_name, aws_config, force_write, debug):
 #
 # Return the filename of the Scout2 report and config
 #
-def get_scout2_paths(environment_name, scout2_folder = None):
+def get_scout2_paths(environment_name, scout2_folder = None, js_filename = None):
+    if not js_filename:
+        js_filename = AWSCONFIG_FILE
     if environment_name == 'default':
         report_filename = 'report.html'
-        config_filename = AWSCONFIG_DIR + '/' + AWSCONFIG_FILE + '.js'
+        config_filename = AWSCONFIG_DIR + '/' + js_filename + '.js'
     else:
         report_filename = ('report-%s.html' % environment_name)
-        config_filename = ('%s/%s-%s.js' % (AWSCONFIG_DIR, AWSCONFIG_FILE, environment_name))
+        config_filename = ('%s/%s-%s.js' % (AWSCONFIG_DIR, js_filename, environment_name))
     if scout2_folder:
         report_filename = os.path.join(scout2_folder[0], report_filename)
         config_filename = os.path.join(scout2_folder[0], config_filename)
@@ -509,7 +512,7 @@ def format_listall_output(format_file, format_item_dir, format, config, option_p
         return (lines, template)
 
 def load_info_from_json(service, environment_name, scout2_folder = None):
-    report_filename, config_filename = get_scout2_paths(environment_name, scout2_folder)
+    report_filename, config_filename = get_scout2_paths(environment_name, scout2_folder = scout2_folder)
     try:
         if os.path.isfile(config_filename):
             with open(config_filename) as f:
@@ -581,9 +584,9 @@ def load_config_from_json(rule_metadata, ip_ranges):
         printError('Error: failed to read the rule from %s' % config_file)
     return config
 
-def open_file(environment_name, force_write):
-    printInfo('Saving AWS config...')
-    report_filename, config_filename = get_scout2_paths(environment_name)
+def open_file(environment_name, force_write, js_filename):
+    printInfo('Saving config...')
+    report_filename, config_filename = get_scout2_paths(environment_name, js_filename = js_filename)
     if prompt_4_overwrite(config_filename, force_write):
        try:
            config_dirname = os.path.dirname(config_filename)
@@ -645,11 +648,11 @@ def save_blob_to_file(filename, blob, force_write, debug):
 #
 # Save AWS configuration (python dictionary) as JSON
 #
-def save_config_to_file(environment_name, aws_config, force_write, debug):
+def save_config_to_file(environment_name, config, force_write = False, debug = False, js_filename = AWSCONFIG_FILE):
     try:
-        with open_file(environment_name, force_write) as f:
+        with open_file(environment_name, force_write, js_filename) as f:
             print('aws_info =', file = f)
-            write_data_to_file(f, aws_config, force_write, debug)
+            write_data_to_file(f, config, force_write, debug)
     except Exception as e:
         printException(e)
         pass

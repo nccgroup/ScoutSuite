@@ -1,4 +1,5 @@
 {
+    "arg_names" : [ "Action shortname", "Service:Action" ],
     "key": "s3-bucket-world-_ARG_0_-policy",
     "dashboard_name": "Bucket",
     "description": "Internet accessible bucket (_ARG_0_ policy)",

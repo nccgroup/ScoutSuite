@@ -59,7 +59,6 @@ function load_aws_config_from_json(script_id, cols) {
 // Compile Handlebars templates and update the DOM
 //
 function process_template(id1, container_id, list) {
-//    id1 = id1.replace('<', '').replace('>', '');
     id1 = id1.replace(/<|>/g, '');
     var template_to_compile = document.getElementById(id1).innerHTML;
     var compiled_template = Handlebars.compile(template_to_compile);
@@ -470,13 +469,21 @@ function showAllResources(script_id) {
 // Make title from resource path
 //
 function makeTitle(resource_path) {
-    service = resource_path.split('.')[1];
+    service = getService(resource_path);
     resource = resource_path.split('.').pop();
-    title = (service + ' ' + resource).replace('_', ' ').replace('<', '').replace('>', '').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-    title = title.replace("Cloudtrail","CloudTrail").replace("Ec2","EC2").replace("Iam","IAM").replace("Rds","RDS").replace("Elb", "ELB").replace("Acl","ACL").replace("Violations", "Dashboard");
-    return title
+    resource = resource.replace('_', ' ').replace('<', '').replace('>', '').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}).replace("Acl","ACL").replace("Violations", "Dashboard");
+    return service + ' ' + resource;
 }
-
+   
+function getService(resource_path) {
+    if (resource_path.startsWith('services')) {
+        service = resource_path.split('.')[1];
+    } else {
+        service = resource_path.split('.')[0];
+    }
+    service = service.toUpperCase().replace('CLOUDTRAIL', 'CloudTrail').replace('REDSHIFT', 'RedShift');
+    return service;
+}
 
 //
 // Update title div's contents
@@ -638,10 +645,6 @@ var make_title = function(title) {
     }
 }
 
-var policy_friendly_name = function(arn) {
-    return arn.split(':policy/').pop();
-}
-
 // Add one or
 var add_templates = function(service, section, resource_type, path, cols) {
     add_template(service, section, resource_type, path, 'details');
@@ -691,4 +694,50 @@ var add_summary_template = function(path) {
     $('body').append(template);
 }
 
+// Rules generator
+var filter_rules = function(service) {
+    if (service == undefined) {
+        $("[id*='rule-']").show();
+    } else {
+        $("[id*='rule-']").not("[id*='rule-" + service + "']").hide();
+        $("[id*='rule-" + service + "']").show();
+    }
+}
+
+var generate_ruleset = function() {
+    var ruleset = new Object();
+    ruleset['rules'] = new Array();
+    // Find all the rules
+    var rules = $("*[id^='rule-']");
+    for (var i=0; i < rules.length; i++) {
+        var rule = new Object()
+        rule['level'] = $(rules[i]).find('#level').val();
+        rule['filename'] = $(rules[i]).find('#filename').val();
+        rule['enabled'] = $(rules[i]).find('#enabled').is(':checked');
+        args = $(rules[i]).find("[id^='parameter_']")
+        if (args.length > 0) {
+            tmp = new Object();
+            for (var j=0; j < args.length; j++) {
+                id = $(args[j]).attr('id').replace('parameter_', '');
+                val = $(args[j]).val();
+                tmp[id] = val;
+            }
+            rule['args'] = new Array();
+            for (k in tmp) {
+                rule['args'].push(tmp[k]);
+            }
+        }     
+        ruleset['rules'].push(rule);
+    }
+    console.log(ruleset)
+    
+    var uriContent = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(ruleset, null, 4));
+    var dlAnchorElem = document.getElementById('downloadAnchorElem');
+    dlAnchorElem.setAttribute("href", uriContent);
+    dlAnchorElem.setAttribute("download", "custom-ruleset.json");
+    dlAnchorElem.click();
+
+    //var uriContent = "data:application/octet-stream;charset=utf-16le;base64,//5mAG8AbwAgAGIAYQByAAoA";
+    //newWindow = window.open(uriContent, 'custom-ruleset.json');
+}
 

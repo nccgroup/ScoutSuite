@@ -1,6 +1,50 @@
 {
     "rules": [
         {
+            "filename": "iam-inline-policy-for-role.json",
+            "enabled": "true",
+            "args": [ "user", "iam", "PassRole" ]
+        },
+        {
+            "filename": "iam-inline-policy-for-role.json",
+            "enabled": "true",
+            "args": [ "user", "sts", "AssumeRole" ]
+        },
+        {
+            "filename": "iam-inline-policy-for-role.json",
+            "enabled": "true",
+            "args": [ "group", "iam", "PassRole" ]
+        },
+        {
+            "filename": "iam-inline-policy-for-role.json",
+            "enabled": "true",
+            "args": [ "group", "sts", "AssumeRole" ]
+        },
+        {
+            "filename": "iam-inline-policy-for-role.json",
+            "enabled": "true",
+            "args": [ "role", "iam", "PassRole" ]
+        },
+        {
+            "filename": "iam-inline-policy-for-role.json",
+            "enabled": "true",
+            "args": [ "role", "sts", "AssumeRole" ]
+        },
+        {
+            "filename": "iam-managed-policy-for-role.json",
+            "enabled": "true",
+            "args": [ "iam", "PassRole" ]
+        },
+        {
+            "filename": "iam-managed-policy-for-role.json",
+            "enabled": "true",
+            "args": [ "sts", "AssumeRole" ]
+        },
+        {
+            "filename": "cloudtrail-disabled.json",
+            "enabled": "true"
+        },
+        {
             "filename": "cloudtrail-no-logging.json",
             "enabled": "true"
         },
@@ -117,6 +161,10 @@
             "enabled": "true"
         },
         {
+            "filename": "iam-role-with-inline-policies.json",
+            "enabled": "true"
+        },
+        {
             "filename": "iam-service-user-with-password.json",
             "enabled": "true",
             "args": [ "_LIST_(AllHeadlessUsers)" ]
@@ -162,15 +210,15 @@
             "enabled": "true"
         },
         {
-            "filename": "root-account-with-active-keys.json",
+            "filename": "iam-root-account-with-active-keys.json",
             "enabled": "true"
         },
         {
-            "filename": "root-account-used-recently.json",
+            "filename": "iam-root-account-used-recently.json",
             "enabled": "true"
         },
         {
-            "filename": "root-account-no-mfa.json",
+            "filename": "iam-root-account-no-mfa.json",
             "enabled": "true"
         },
         {
@@ -334,10 +382,6 @@
         {
             "filename": "s3-object-unencrypted.json",
             "enabled": "true"
-        },
-        {
-            "filename": "placeholder.json",
-            "enabled": "false"
         }
     ]
 }

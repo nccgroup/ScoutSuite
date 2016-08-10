@@ -1,5 +1,4 @@
 {
-    "key": "iam-group-with-inline-policies",
     "description": "Group with inline policies",
     "path": "iam.groups.id",
     "dashboard_name": "groups",
