@@ -16,7 +16,7 @@ from AWSScout2.findings import *
 scout2_dir = os.path.abspath(scout2_dir)
 scout2_rules_dir = '%s/%s' % (scout2_dir, RULES_DIR)
 scout2_rulesets_dir = '%s/%s' % (scout2_dir, RULESETS_DIR)
-ruleset_creator_path = '%s/ruleset-creator.html' % (scout2_dir)
+ruleset_generator_path = '%s/ruleset-generator.html' % (scout2_dir)
 
 
 ########################################
@@ -93,7 +93,7 @@ def main(args):
 
     # Open the HTML ruleset generator in a browser
     printInfo('Starting the HTML ruleset generator...')
-    url = 'file://%s' % ruleset_creator_path
+    url = 'file://%s' % ruleset_generator_path
     webbrowser.open(url, new = 2)
 
 
