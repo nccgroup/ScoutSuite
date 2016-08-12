@@ -561,7 +561,7 @@ def load_config_from_json(rule_metadata, ip_ranges):
         for c1 in config['conditions']:
             if c1 in condition_operators:
                 continue
-            if type(c1[2]) == unicode:
+            if type(c1[2]) == str: # unicode:
                 values = re_ip_ranges_from_file.match(c1[2])
                 if values:
                     filename = values.groups()[0]
