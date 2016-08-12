@@ -2,8 +2,8 @@
     "rules": [
         {
             "level": "danger",
-            "filename": "cloudtrail-disabled.json",
-            "enabled": false
+            "filename": "cloudtrail-not-configured.json",
+            "enabled": true
         },
         {
             "level": "warning",
