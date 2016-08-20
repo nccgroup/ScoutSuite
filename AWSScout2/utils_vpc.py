@@ -79,8 +79,11 @@ def list_resources_in_security_group(aws_config, current_config, path, current_p
         else:
                 sg['used_by'][service]['resource_type'][resource_type].append(resource_id)
     except Exception as e:
-        printInfo('Exception caught.')
-        printException(e)
+        vpc_id = current_path[5]
+        if vpc_id == ec2_classic and resource_type == 'elbs':
+            pass
+        else:
+            printException(e)
 
 #
 # Add a display name for all known CIDRs
