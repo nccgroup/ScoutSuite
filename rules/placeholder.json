@@ -1,6 +1,0 @@
-{
-    "description": "Description",
-    "path": "service_name.regions.id.resource_type.id",
-    "conditions": [],
-    "level": "warning"
-}

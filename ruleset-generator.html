@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Scout2 Ruleset Generator</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="inc-bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="inc-bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script src="inc-jquery/jquery-1.11.2.min.js"></script>
+
+    <!-- Handlebars -->
+    <script src="inc-handlebars/handlebars-v3.0.0.js"></script>
+
+    <!-- Scout2 -->
+    <script src="inc-scout2/scout2.js"></script>
+    <script src="inc-scout2/helpers.js"></script>
+    <link href="inc-scout2/scout2.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <!------------------>
+    <!-- Fixed navbar -->
+    <!------------------>
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <span class="navbar-brand"><a href="javascript:filter_rules()">Scout2 Ruleset Generator</a></span>
+        </div>
+        <div class="navbar-collapse collapse">
+          <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav" id="metadata.list">
+            <li><a href="javascript:filter_rules('cloudtrail')"><span id="iam_filter">CloudTrail</span></a></li>
+            <li><a href="javascript:filter_rules('ec2')"><span id="iam_filter">EC2</span></a></li>
+            <li><a href="javascript:filter_rules('iam')"><span id="iam_filter">IAM</span></a></li>
+            <li><a href="javascript:filter_rules('rds')"><span id="iam_filter">RDS</span></a></li>
+            <li><a href="javascript:filter_rules('redshift')"><span id="iam_filter">Redshift</span></a></li>
+            <li><a href="javascript:filter_rules('s3')"><span id="iam_filter">S3</span></a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="javascript:generate_ruleset()"><span id="iam_filter">Generate Ruleset</span></a><a id="downloadAnchorElem" style="display:none"></a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Help<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="javascript:about()">About</a></li>
+              </ul>
+            </li>
+          </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menu -->
+    
+
+    <!--------------->
+    <!-- Container -->
+    <!--------------->
+
+    <div class="container theme-showcase" id="container-user">
+
+      <!-- Empty header -->
+      <div class="page-header">
+      </div>
+
+      <!-- Overlay divs used to show entity details in a pop up fashion -->
+      <div id="overlay-background" class="overlay-bg"></div>
+      <div id="overlay-details" class="overlay col-sm-6"></div>
+
+      <!-- Title section -->
+      <div id="section_title-div">
+          <h2 id="section_title-h2"></h2>
+      </div>
+
+      <!-- One column container -->
+      <div class="row">
+        <div class="col-sm-12" id="single-column">
+        </div>
+      </div>
+
+      <!-- Two columns container -->
+      <div class="row">
+        <div class="col-sm-4" id="double-column-left"></div>
+        <div class="col-sm-8" id="double-column-right"></div>
+      </div>
+
+      <!-- Rule -->
+      <script id="available_rules.details.template" type="text/x-handlebars-template">
+      {{#each items}}
+        <div class="list-group" id="rule-{{@key}}">
+        <form>
+          <input type="hidden" id="filename" value="{{filename}}" />
+          <div class="list-group-item active">
+            <h4 class="list-group-item-heading">{{get_service path}}: {{description}}</h4>
+          </div>
+          <div class="list-group-item">
+            <div class="list-group-item-text item-margin"><h4>{{rationale}}</h4></div>
+            <div class="row" style="margin-top: 15px !important">
+              <div class="col-sm-6 text-center">
+                Enabled: <input type="checkbox" id="enabled" {{#if enabled}} checked {{/if}} />
+              </div>
+              <div class="col-sm-6 text-center hello">
+                Level: <select id="level"><option>{{level}}</option><option>{{other_level level}}</option></select>
+              </div>
+            </div>
+          </div>
+          {{#if args}}
+            <div class="list-group-item">
+              <h4 class="list-group-item-heading">Parameters</h4>
+              {{#each args}}
+                <div class="list-group-item-text item-margin">{{arg_name}}: <input type="text" id="parameter_{{@index}}" value="{{arg_value}}" /></div>
+              {{/each}}
+            </div>
+          {{/if}}
+          <div class="list-group-item">      
+            <div class="accordion">
+              <h4 class="accordion-heading">Raw JSON
+                <a class="accordion-toggle" data-toggle="collapse" href="#rawjson-{{get_key @key this}}">
+                  <span class="badge pull-right btn-info">Details</span>
+                </a>
+              </h4>
+              <div id="rawjson-{{get_key @key this}}" class="item-margin accordion-body collapse">
+                <div class="accordion-inner">
+                  <pre>{{json_stringify this}}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        </div>
+      {{/each}}
+      </script>
+
+    </div> <!-- /container -->
+
+    <!-- Include all AWS services configs -->
+    <script src="inc-awsconfig/aws_ruleset.js"></script>
+
+    <!-- Bootstrap core JavaScript, placed at the end of the document so the pages load faster -->
+    <script src="inc-bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Display dashbord -->
+    <script>load_aws_config_from_json('available_rules', 1)</script>
+
+  </body>
+</html>

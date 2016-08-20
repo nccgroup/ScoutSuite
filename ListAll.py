@@ -38,7 +38,7 @@ def main(cmd_args):
         # Load arguments from config if specified
         if len(cmd_args.config):
             rule_metadata = {'filename': cmd_args.config[0], 'enabled': True, 'args': cmd_args.config_args}
-            config = load_config_from_json(rule_metadata, environment_name, cmd_args.ip_ranges)
+            config = load_config_from_json(rule_metadata, cmd_args.ip_ranges)
             if config:
                 args = Bunch(config)
             else:
@@ -48,7 +48,26 @@ def main(cmd_args):
             config = {}
             config['conditions'] = args.conditions if hasattr(args, 'conditions') else []
             config['mapping'] = args.mapping if hasattr(args, 'mapping') else []
-            config['keys'] = args.keys
+
+        # Set the keys to output
+        if len(cmd_args.keys):
+            # 1. Explicitly provided on the CLI
+            config['keys'] = cmd_args.keys
+        elif len(cmd_args.keys_file):
+            # 2. Explicitly provided files that contain the list of keys
+            config['keys'] = []
+            for filename in cmd_args.keys_file:
+                with open(filename, 'rt') as f:
+                    config['keys'] += json.load(f)['keys']
+        else:
+            try:
+            # 3. Load default set of keys based on path
+                target_path = config['display_path'] if 'display_path' in config else config['path']
+                with open('listall-configs/%s.json' % target_path) as f:
+                    config['keys'] = json.load(f)['keys']
+            except:
+            # 4. Print the whole object
+                config['keys'] = [ 'this' ]
 
         # Load the data
         aws_config = {}
@@ -66,28 +85,15 @@ def main(cmd_args):
             config['path'] = args.path
         target_path = config['path'].split('.')
         current_path = []
+
         resources = recurse(aws_config['services'], aws_config['services'], target_path, current_path, config)
 
-        # Do a print here ...
-        if 'keys' in config:
-          for resource in resources:
-            output = ''
-            current_path = resource.split('.')
-            for key in config['keys']:
-                if not output:
-                    output = get_value_at(aws_config['services'], current_path, key, True)
-                else:
-                    output = output + ', ' + get_value_at(aws_config['services'], current_path, key, True)
-            printInfo(output)
-        else:
-            printInfo(json.dumps(resources, indent=4))
+        # Prepare the output format
+        (lines, template) = format_listall_output(cmd_args.format_file, 'foo', cmd_args.format, config)
 
-#            service = entity.pop(0)
-#            if output_format != 'csv':
-#                printInfo(output_format['header'])
-#            list_all(aws_config, aws_config[service], entity, [ service ], args.keys, conditions, output_format, mapping)
-#            if output_format != 'csv':
-#                printInfo(output_format['footer'])
+        # Print the output
+        printInfo(generate_listall_output(lines, resources, aws_config, template, []))
+
 
 
 ########################################
@@ -97,17 +103,14 @@ def main(cmd_args):
 default_args = read_profile_default_args(parser.prog)
 
 add_scout2_argument(parser, default_args, 'env')
+add_scout2_argument(parser, default_args, 'format')
+add_scout2_argument(parser, default_args, 'format-file')
 
 parser.add_argument('--config',
                     dest='config',
                     default=[],
                     nargs='+',
                     help='Config file that sets the path and keys to be listed.')
-parser.add_argument('--format',
-                    dest='format',
-                    default=['csv'],
-                    nargs='+',
-                    help='Bleh.')
 parser.add_argument('--path',
                     dest='path',
                     default=[],
@@ -115,9 +118,14 @@ parser.add_argument('--path',
                     help='Path of the resources to list (e.g. iam.users.id or ec2.regions.id.vpcs.id)')
 parser.add_argument('--keys',
                     dest='keys',
-                    default=[ 'this' ],
+                    default=[],
                     nargs='+',
                     help='Keys to be printed for the given object.')
+parser.add_argument('--keys-from-file',
+                    dest='keys_file',
+                    default=[],
+                    nargs='+',
+                    help='Keys to be printed for the given object (read values from file.')
 parser.add_argument('--ip-ranges',
                     dest='ip_ranges',
                     default=[],

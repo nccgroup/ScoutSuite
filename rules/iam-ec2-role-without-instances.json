@@ -9,7 +9,6 @@
         [ "iam.roles.id.assume_role_policy.Statement.id.Principal.Service", "equal", "ec2.amazonaws.com" ]
     ],
     "id_suffix": "instances",
-    "level": "warning",
     "keys": [
         "iam.roles.id.name",
         "this"

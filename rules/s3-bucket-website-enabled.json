@@ -5,6 +5,5 @@
     "conditions": [ "and",
         [ "s3.buckets.id.web_hosting", "equal", "Enabled" ]
     ],
-    "id_suffix": "web_hosting",
-    "level": "warning"
+    "id_suffix": "web_hosting"
 }

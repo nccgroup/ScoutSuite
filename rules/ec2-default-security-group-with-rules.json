@@ -8,6 +8,5 @@
 
     ],
     "id_suffix": "default_with_rules",
-    "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
-    "level": "warning"
+    "display_path": "ec2.regions.id.vpcs.id.security_groups.id"
 }

@@ -5,6 +5,5 @@
     "conditions": [ "and",
         [ "rds.regions.id.vpcs.id.instances.id.BackupRetentionPeriod", "lessThan", "1" ]
     ],
-    "id_suffix": "BackupRetentionPeriod",
-    "level": "danger"
+    "id_suffix": "BackupRetentionPeriod"
 }

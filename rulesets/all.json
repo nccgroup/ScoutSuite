@@ -38,7 +38,7 @@
         {
             "level": "warning",
             "filename": "ec2-instance-in-security-group.json",
-            "enabled": false,
+            "enabled": true,
             "args": [
                 "_LIST_(BannedSecurityGroup)"
             ]
@@ -46,7 +46,7 @@
         {
             "level": "warning",
             "filename": "ec2-instance-with-public-ip.json",
-            "enabled": false
+            "enabled": true
         },
         {
             "level": "danger",
@@ -129,7 +129,7 @@
             ]
         },
         {
-            "level": "warning",
+            "level": "danger",
             "filename": "ec2-security-group-opens-non-http-port-to-all.json",
             "enabled": true,
             "args": [
@@ -137,7 +137,7 @@
             ]
         },
         {
-            "level": "warning",
+            "level": "danger",
             "filename": "ec2-security-group-opens-non-http-port-to-all.json",
             "enabled": true,
             "args": [
@@ -208,7 +208,7 @@
             "enabled": false
         },
         {
-            "level": "warning",
+            "level": "danger",
             "filename": "ec2-unused-security-group.json",
             "enabled": true
         },
@@ -225,7 +225,7 @@
         {
             "level": "danger",
             "filename": "iam-human-user-with-policies.json",
-            "enabled": false,
+            "enabled": true,
             "args": [
                 "_LIST_(AllHumanUsers)",
                 "managed",
@@ -343,7 +343,7 @@
         {
             "level": "warning",
             "filename": "iam-service-user-with-password.json",
-            "enabled": false,
+            "enabled": true,
             "args": [
                 "_LIST_(AllHeadlessUsers)"
             ]
@@ -369,7 +369,7 @@
         {
             "level": "danger",
             "filename": "iam-user-not-in-category-group.json",
-            "enabled": false,
+            "enabled": true,
             "args": [
                 "_LIST_(AllHumanUsers, AllHeadlessUsers)"
             ]
@@ -377,7 +377,7 @@
         {
             "level": "danger",
             "filename": "iam-user-not-in-common-group.json",
-            "enabled": false,
+            "enabled": true,
             "args": [
                 "_LIST_(AllUsers)"
             ]
@@ -399,7 +399,7 @@
         {
             "level": "warning",
             "filename": "iam-user-with-password-and-key.json",
-            "enabled": false
+            "enabled": true
         },
         {
             "level": "danger",
@@ -429,7 +429,7 @@
         {
             "level": "warning",
             "filename": "rds-postgres-instance-with-invalid-certificate.json",
-            "enabled": false
+            "enabled": true
         },
         {
             "level": "danger",

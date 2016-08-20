@@ -1,8 +1,10 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 # Import stock packages
 import datetime
 import dateutil
+import json
 import sys
 
 # Import opinel
@@ -34,6 +36,10 @@ from AWSScout2.utils_vpc import *
 ########################################
 
 def main(args):
+
+    # Setup variables
+    (scout2_dir, tool_name) = os.path.split(__file__)
+    scout2_dir = os.path.abspath(scout2_dir)
 
     # Configure the debug level
     configPrintException(args.debug)
@@ -112,14 +118,18 @@ def main(args):
         manage_dictionary(aws_config, 'account_id', None)
 
     # Search for an existing ruleset if the environment is set
-    if environment_name and args.ruleset_name == 'default':
-        ruleset_name = search_ruleset(environment_name)
+    if environment_name and args.ruleset == DEFAULT_RULESET: 
+        ruleset = search_ruleset(scout2_dir, environment_name)
     else:
-        ruleset_name = args.ruleset_name
+        ruleset = args.ruleset[0]
 
     # Load findings from JSON config files
-    ruleset = load_ruleset(ruleset_name)
+    ruleset = load_ruleset(ruleset)
     rules = init_rules(ruleset, services, environment_name, args.ip_ranges)
+
+    # Reset violations
+    for service in services:
+        aws_config['services'][service]['violations'] = {}
 
     ##### VPC analyzis
     analyze_vpc_config(aws_config, args.ip_ranges, args.ip_ranges_key_name)
@@ -170,6 +180,20 @@ def main(args):
     if 'cloudtrail' in services:
         tweak_cloudtrail_findings(aws_config)
 
+    # Exceptions
+    exceptions = {}
+    if args.exceptions[0]:
+        with open(args.exceptions[0], 'rt') as f:
+            exceptions = json.load(f)
+        for service in exceptions['services']:
+            for rule in exceptions['services'][service]['exceptions']:
+                filtered_items = []
+                for item in aws_config['services'][service]['violations'][rule]['items']:
+                    if item not in exceptions['services'][service]['exceptions'][rule]:
+                        filtered_items.append(item)
+                aws_config['services'][service]['violations'][rule]['items'] = filtered_items
+                aws_config['services'][service]['violations'][rule]['flagged_items'] = len(aws_config['services'][service]['violations'][rule]['items'])
+
     # Save info about run
     aws_config['last_run'] = {}
     aws_config['last_run']['time'] = datetime.datetime.now(dateutil.tz.tzlocal()).strftime("%Y-%m-%d %H:%M:%S%z")
@@ -200,7 +224,7 @@ add_iam_argument(parser, default_args, 'csv-credentials')
 add_s3_argument(parser, default_args, 'bucket-name')
 add_s3_argument(parser, default_args, 'skipped-bucket-name')
 add_scout2_argument(parser, default_args, 'force')
-add_scout2_argument(parser, default_args, 'ruleset-name')
+add_scout2_argument(parser, default_args, 'ruleset')
 add_scout2_argument(parser, default_args, 'services')
 add_scout2_argument(parser, default_args, 'skip')
 add_scout2_argument(parser, default_args, 'env')
@@ -230,6 +254,12 @@ parser.add_argument('--update',
                     default=False,
                     action='store_true',
                     help='Reload all the existing data and only overwrite data in scope for this run')
+parser.add_argument('--exceptions',
+                    dest='exceptions',
+                    default=[ None ],
+                    nargs='+',
+                    help='')
+
 
 args = parser.parse_args()
 

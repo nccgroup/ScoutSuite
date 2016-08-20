@@ -1,4 +1,5 @@
 {
+    "arg_names": [ "Network protocol name", "Transport protocol name", "Port number" ],
     "key": "ec2-security-group-opens-_ARG_0_-port-to-all",
     "description": "_ARG_0_ port open to all",
     "dashboard_name": "Rules",
@@ -9,6 +10,5 @@
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id", "equal", "ingress" ],
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id", "equal", "_ARG_1_" ],
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id", "inRange", "_ARG_2_" ]
-    ],
-    "level": "danger"
+    ]
 }

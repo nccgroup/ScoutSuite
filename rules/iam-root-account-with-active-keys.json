@@ -5,6 +5,5 @@
     "conditions": [ "or",
         [ "iam.credential_report.<root_account>.access_key_1_active", "true", "" ],
         [ "iam.credential_report.<root_account>.access_key_2_active", "true", "" ]
-    ],
-    "level": "danger"
+    ]
 }

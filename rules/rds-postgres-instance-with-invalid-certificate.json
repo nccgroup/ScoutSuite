@@ -7,6 +7,5 @@
         [ "rds.regions.id.vpcs.id.instances.id.DBInstanceStatus", "notEqual", "creating" ],
         [ "rds.regions.id.vpcs.id.instances.id.InstanceCreateTime", "datePriorTo", "08/05/2014" ]
     ],
-    "id_suffix": "pgsslcert",
-    "level": "warning"
+    "id_suffix": "pgsslcert"
 }

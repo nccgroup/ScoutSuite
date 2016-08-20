@@ -5,6 +5,5 @@
     "conditions": [ "and",
         [ "redshift.regions.id.vpcs.id.clusters.id.AllowVersionUpgrade", "false", "" ]
     ],
-    "id_suffix": "AllowVersionUpgrade",
-    "level": "danger"
+    "id_suffix": "AllowVersionUpgrade"
 }

@@ -1,4 +1,5 @@
 {
+    "arg_names" : [ "Action shortname", "Service:Action" ],
     "key": "s3-bucket-world-_ARG_0_-policy",
     "dashboard_name": "Bucket",
     "description": "Internet accessible bucket (_ARG_0_ policy)",
@@ -11,7 +12,6 @@
         [ "s3.buckets.id.policy.Statement.id.Principal", "containAtLeastOneOf", [ "*" ] ],
         [ "s3.buckets.id.policy.Statement.id.Action", "containOneMatching", "_ARG_1_" ]
     ],
-    "level": "danger",
     "keys": [
         "s3.buckets.id",
         "this",

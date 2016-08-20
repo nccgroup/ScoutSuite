@@ -1,5 +1,4 @@
 {
-    "key": "iam-group-with-inline-policies",
     "description": "Group with inline policies",
     "path": "iam.groups.id",
     "dashboard_name": "groups",
@@ -7,7 +6,6 @@
         [ "iam.groups.id.", "withKey", "inline_policies" ]
     ],
     "id_suffix": "inline_policies",
-    "level": "warning",
     "keys": [
         "iam.groups.id.name"
     ]

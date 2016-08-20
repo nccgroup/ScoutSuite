@@ -21,6 +21,13 @@ def tweak_cloudtrail_findings(aws_config):
         if len(aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['items']) != aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['checked_items']:
             aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['items'] = []
             aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['flagged_items'] = 0
+    # CloudTrail not enabled at all...
+    if not sum(aws_config['services']['cloudtrail']['regions'][r]['trails_count'] for r in aws_config['services']['cloudtrail']['regions']):
+        for r in aws_config['services']['cloudtrail']['regions']:
+            aws_config['services']['cloudtrail']['violations']['cloudtrail-no-logging']['items'].append('cloudtrail.regions.%s' % r)
+            aws_config['services']['cloudtrail']['violations']['cloudtrail-no-logging']['checked_items'] += 1
+            aws_config['services']['cloudtrail']['violations']['cloudtrail-no-logging']['flagged_items'] += 1
+            aws_config['services']['cloudtrail']['violations']['cloudtrail-no-logging']['dashboard_name'] = 'Regions'
 
 def get_cloudtrail_info(key_id, secret, session_token, service_config, selected_regions, with_gov, with_cn):
     manage_dictionary(service_config, 'regions', {})
