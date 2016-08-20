@@ -25,6 +25,15 @@ To install Scout2:
 
 ## Requirements
 
+### Python                                                                                           
+
+Scout2 is written in Python and supports the following versions:
+ * 2.7
+ * 3.3
+ * 3.4
+ * 3.5
+
+### AWS Credentials                                                                                  
 To run Scout2, you will need valid AWS credentials (Access Key). The role, or
 user account, associated with this Access Key requires read-only access for all
 resources in a number of services, including but not limited to CloudTrail, EC2,
