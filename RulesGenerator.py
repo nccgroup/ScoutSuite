@@ -40,13 +40,17 @@ def main(cmd_args):
 
     # Load base ruleset
     printInfo('Loading settings from the base ruleset (%s)...' % cmd_args.base_ruleset)
-    ruleset = load_ruleset(cmd_args.base_ruleset)
-    for rule in ruleset['rules']:
-        rule['filename'] = rule['filename'].replace('rules/', '')
-        if not 'args' in rule:
-            available_rules[rule['filename']] = rule
-        else:
-            parameterized_rules.append(rule)
+    try:
+        ruleset = load_ruleset(cmd_args.base_ruleset)
+        for rule in ruleset['rules']:
+            rule['filename'] = rule['filename'].replace('rules/', '')
+            if not 'args' in rule:
+                available_rules[rule['filename']] = rule
+            else:
+                parameterized_rules.append(rule)
+    except Exception as e:
+        printException(e)
+        return 42
 
     # Load all available rules
     printInfo('Loading all available rules...')
@@ -62,6 +66,9 @@ def main(cmd_args):
                 else:
                     available_rules[rule_filename] = rule
                     available_rules[rule_filename]['enabled'] = False
+                    if 'level' not in available_rules[rule_filename]:
+                        available_rules[rule_filename]['level'] = 'danger'
+                    available_rules[rule_filename]['filename'] = rule_filename
             else:
                 # Parameterized rules, find all occurences and save N times
                 parameterized_rule_found = False
@@ -82,6 +89,8 @@ def main(cmd_args):
                         prule['args'] = []
                         for (arg_name, arg_value) in zip(arg_names, args):
                            prule['args'].append({'arg_name': arg_name, 'arg_value': arg_value})
+                        if 'level' not in prule:
+                            prule['level'] = 'danger'
                         available_rules[key] = prule
                 if not parameterized_rule_found:
                     printError('Error: the rule %s lacks parameters in the ruleset.' % rule_filename)
