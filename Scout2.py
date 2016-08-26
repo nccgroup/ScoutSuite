@@ -135,6 +135,8 @@ def main(args):
     analyze_vpc_config(aws_config, args.ip_ranges, args.ip_ranges_key_name)
     if 'ec2' in services:
         analyze_ec2_config(aws_config['services']['ec2'], aws_config['account_id'], args.force_write)
+    if 'iam' in services:
+        analyze_iam_config(aws_config)
 
     ##### Multiple service analyzis
     if 'ec2' in services and 'iam' in services:
