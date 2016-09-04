@@ -1,11 +1,6 @@
 {
     "rules": [
         {
-            "level": "danger",
-            "filename": "cloudtrail-not-configured.json",
-            "enabled": true
-        },
-        {
             "level": "warning",
             "filename": "cloudtrail-duplicated-global-services-logging.json",
             "enabled": true
@@ -26,6 +21,11 @@
             "enabled": true
         },
         {
+            "level": "danger",
+            "filename": "cloudtrail-not-configured.json",
+            "enabled": true
+        },
+        {
             "level": "warning",
             "filename": "ec2-default-security-group-in-use.json",
             "enabled": true
@@ -38,7 +38,7 @@
         {
             "level": "warning",
             "filename": "ec2-instance-in-security-group.json",
-            "enabled": true,
+            "enabled": false,
             "args": [
                 "_LIST_(BannedSecurityGroup)"
             ]
@@ -129,7 +129,7 @@
             ]
         },
         {
-            "level": "danger",
+            "level": "warning",
             "filename": "ec2-security-group-opens-non-http-port-to-all.json",
             "enabled": true,
             "args": [
@@ -137,7 +137,7 @@
             ]
         },
         {
-            "level": "danger",
+            "level": "warning",
             "filename": "ec2-security-group-opens-non-http-port-to-all.json",
             "enabled": true,
             "args": [
@@ -208,7 +208,7 @@
             "enabled": false
         },
         {
-            "level": "danger",
+            "level": "warning",
             "filename": "ec2-unused-security-group.json",
             "enabled": true
         },
@@ -225,7 +225,7 @@
         {
             "level": "danger",
             "filename": "iam-human-user-with-policies.json",
-            "enabled": true,
+            "enabled": false,
             "args": [
                 "_LIST_(AllHumanUsers)",
                 "managed",
@@ -240,6 +240,14 @@
                 "group",
                 "iam",
                 "PassRole"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-inline-policy-allows-notActions.json",
+            "enabled": true,
+            "args": [
+                "group"
             ]
         },
         {
@@ -260,6 +268,14 @@
                 "role",
                 "iam",
                 "PassRole"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-inline-policy-allows-notActions.json",
+            "enabled": true,
+            "args": [
+                "role"
             ]
         },
         {
@@ -280,6 +296,14 @@
                 "user",
                 "iam",
                 "PassRole"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-inline-policy-allows-notActions.json",
+            "enabled": true,
+            "args": [
+                "user"
             ]
         },
         {
@@ -300,6 +324,11 @@
                 "iam",
                 "PassRole"
             ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-managed-policy-allows-notActions.json",
+            "enabled": true
         },
         {
             "level": "danger",
@@ -343,7 +372,7 @@
         {
             "level": "warning",
             "filename": "iam-service-user-with-password.json",
-            "enabled": true,
+            "enabled": false,
             "args": [
                 "_LIST_(AllHeadlessUsers)"
             ]
@@ -369,7 +398,7 @@
         {
             "level": "danger",
             "filename": "iam-user-not-in-category-group.json",
-            "enabled": true,
+            "enabled": false,
             "args": [
                 "_LIST_(AllHumanUsers, AllHeadlessUsers)"
             ]
@@ -377,7 +406,7 @@
         {
             "level": "danger",
             "filename": "iam-user-not-in-common-group.json",
-            "enabled": true,
+            "enabled": false,
             "args": [
                 "_LIST_(AllUsers)"
             ]
@@ -399,7 +428,7 @@
         {
             "level": "warning",
             "filename": "iam-user-with-password-and-key.json",
-            "enabled": true
+            "enabled": false
         },
         {
             "level": "danger",
@@ -429,7 +458,7 @@
         {
             "level": "warning",
             "filename": "rds-postgres-instance-with-invalid-certificate.json",
-            "enabled": true
+            "enabled": false
         },
         {
             "level": "danger",

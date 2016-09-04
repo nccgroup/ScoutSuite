@@ -13,6 +13,20 @@ import urllib
 ##### IAM functions
 ########################################
 
+def analyze_iam_config(aws_config):
+    go_to_and_do(aws_config, aws_config['services']['iam'], ['users', 'inline_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of_statements)
+
+#
+# Github issue #99 - We expect a list of statements but policies with a single statement that is a dictionary are valid, make it a list locally
+#
+def enforce_list_of_statements(aws_config, current_config, path, current_path, resource_id, callback_args):
+    if resource_id == 'Statement' and not type(current_config) == list:
+        # Current config is a copied structure, need to go back to the original and update
+        target = aws_config
+        for p in current_path:
+            target = target[p]
+        target['Statement'] = [ target['Statement'] ]
+
 def get_account_password_policy(iam_client, iam_info):
     iam_info['password_policy'] = iam_client.get_account_password_policy()['PasswordPolicy']
     if 'PasswordReusePrevention' not in iam_info['password_policy']:

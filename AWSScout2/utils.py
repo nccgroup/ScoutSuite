@@ -155,7 +155,7 @@ def get_object_at(dictionary, path, attribute_name = None):
 #
 # Recursively go to a target and execute a callback
 #
-def go_to_and_do(aws_config, current_config, path, current_path, callback, callback_args):
+def go_to_and_do(aws_config, current_config, path, current_path, callback, callback_args = None):
     key = path.pop(0)
     if not current_config:
         current_config = aws_config

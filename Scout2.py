@@ -135,6 +135,8 @@ def main(args):
     analyze_vpc_config(aws_config, args.ip_ranges, args.ip_ranges_key_name)
     if 'ec2' in services:
         analyze_ec2_config(aws_config['services']['ec2'], aws_config['account_id'], args.force_write)
+    if 'iam' in services:
+        analyze_iam_config(aws_config)
 
     ##### Multiple service analyzis
     if 'ec2' in services and 'iam' in services:
@@ -168,13 +170,13 @@ def main(args):
                 aws_config['services'][service]['violations'][rule]['display_path'] = rules[finding_path][rule]['display_path']
             try:
                 aws_config['services'][service]['violations'][rule]['items'] = recurse(aws_config['services'], aws_config['services'], path, [], rules[finding_path][rule], True)
+                aws_config['services'][service]['violations'][rule]['dashboard_name'] = rules[finding_path][rule]['dashboard_name'] if 'dashboard_name' in rules[finding_path][rule] else '??'
+                aws_config['services'][service]['violations'][rule]['checked_items'] = rules[finding_path][rule]['checked_items'] if 'checked_items' in rules[finding_path][rule] else 0
+                aws_config['services'][service]['violations'][rule]['flagged_items'] = len(aws_config['services'][service]['violations'][rule]['items'])
+                aws_config['services'][service]['violations'][rule]['service'] = service
             except Exception as e:
                 printError('Failed to process rule defined in %s.json' % rule)
                 printException(e)
-            aws_config['services'][service]['violations'][rule]['dashboard_name'] = rules[finding_path][rule]['dashboard_name'] if 'dashboard_name' in rules[finding_path][rule] else '??'
-            aws_config['services'][service]['violations'][rule]['checked_items'] = rules[finding_path][rule]['checked_items'] if 'checked_items' in rules[finding_path][rule] else 0
-            aws_config['services'][service]['violations'][rule]['flagged_items'] = len(aws_config['services'][service]['violations'][rule]['items'])
-            aws_config['services'][service]['violations'][rule]['service'] = service
 
     # Tweaks
     if 'cloudtrail' in services:
