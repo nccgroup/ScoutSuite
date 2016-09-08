@@ -176,6 +176,9 @@ def main(args):
                 aws_config['services'][service]['violations'][rule]['service'] = service
             except Exception as e:
                 printError('Failed to process rule defined in %s.json' % rule)
+                # Fallback if process rule failed to ensure report creation and data dump still happen
+                aws_config['services'][service]['violations'][rule]['checked_items'] = 0
+                aws_config['services'][service]['violations'][rule]['flagged_items'] = 0
                 printException(e)
 
     # Tweaks
