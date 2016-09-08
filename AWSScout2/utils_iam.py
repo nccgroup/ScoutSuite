@@ -14,7 +14,10 @@ import urllib
 ########################################
 
 def analyze_iam_config(aws_config):
+    go_to_and_do(aws_config, aws_config['services']['iam'], ['groups', 'inline_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of_statements)
+    go_to_and_do(aws_config, aws_config['services']['iam'], ['roles', 'inline_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of_statements)
     go_to_and_do(aws_config, aws_config['services']['iam'], ['users', 'inline_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of_statements)
+    go_to_and_do(aws_config, aws_config['services']['iam'], ['managed_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of_statements)
 
 #
 # Github issue #99 - We expect a list of statements but policies with a single statement that is a dictionary are valid, make it a list locally
