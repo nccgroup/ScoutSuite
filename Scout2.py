@@ -206,7 +206,11 @@ def main(args):
     aws_config['last_run']['version'] = __version__
 
     # Generate dashboard metadata
-    create_report_metadata(aws_config, services)
+    try:
+        create_report_metadata(aws_config, services)
+    except Exception as e:
+        printError('Failed to create the report\'s dashboard metadata.')
+        printException(e)
 
     # Save data
     create_scout_report(environment_name, aws_config, args.force_write, args.debug)

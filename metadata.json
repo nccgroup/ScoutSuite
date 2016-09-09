@@ -1,6 +1,10 @@
 {
     "cloudtrail": {
         "resources": {
+            "regions": {
+                "cols": 2,
+                "path": "services.cloudtrail.regions"
+            },
             "trails": {
                 "cols": 2,
                 "path": "services.cloudtrail.regions.id.trails"

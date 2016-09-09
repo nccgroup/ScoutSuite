@@ -334,6 +334,9 @@ function showObject() {
         var resource_type = path_array[1] + '_' + path_array[path_length-2];
     }
     switch(resource_type) {
+        case "cloudtrail_trails":
+            $('#overlay-details').html(single_cloudtrail_trail_template(data));
+        break;
         case "iam_groups":
             $('#overlay-details').html(single_iam_group_template(data));
         break;
@@ -367,6 +370,9 @@ function showObject() {
         break;
         case "s3_keys":
             $('#overlay-details').html(single_s3_object_template(data));
+        break;
+        default:
+            console.log('Unhandled case for ' + resource_type + '. Update the showObject function.')
         break;
     }
     showPopup();

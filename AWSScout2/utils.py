@@ -247,7 +247,7 @@ def create_report_metadata(aws_config, services):
                 aws_config['metadata'][service]['resources'][resource]['script'] = '.'.join([x for x in aws_config['metadata'][service]['resources'][resource]['full_path'].split('.') if x != 'id'])
             # Update counts
             count = '%s_count' % resource
-            if 'regions' in aws_config['services'][service]:
+            if 'regions' in aws_config['services'][service] and resource != 'regions':
                 aws_config['metadata'][service]['resources'][resource]['count'] = 0
                 for region in aws_config['services'][service]['regions']:
                     if count in aws_config['services'][service]['regions'][region]:
@@ -269,8 +269,13 @@ def create_report_metadata(aws_config, services):
                         manage_dictionary(aws_config['metadata'][s]['resources'][resource], 'risks', [])
                         aws_config['metadata'][s]['resources'][resource]['risks'].append(v)
                     except Exception as e:
-                        manage_dictionary(aws_config['metadata'][s]['summaries'][resource], 'risks', [])
-                        aws_config['metadata'][s]['summaries'][resource]['risks'].append(v)
+                        try:
+                            manage_dictionary(aws_config['metadata'][s]['summaries'][resource], 'risks', [])
+                            aws_config['metadata'][s]['summaries'][resource]['risks'].append(v)
+                        except Exception as e:
+                            printError('Service: %s' % s)
+                            printError('Resource: %s' % resource)
+                            printException(e)
 
 
 ########################################
