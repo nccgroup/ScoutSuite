@@ -36,6 +36,7 @@ def get_cloudtrail_info(key_id, secret, session_token, service_config, selected_
         manage_dictionary(service_config['regions'], region, {})
         service_config['regions'][region]['name'] = region
     thread_work(service_config['regions'], get_region_trails, params = {'creds': (key_id, secret, session_token), 'cloudtrail_info': service_config})
+    service_config['regions_count'] = len(service_config['regions'])
 
 def get_region_trails(q, params):
     key_id, secret, session_token = params['creds']

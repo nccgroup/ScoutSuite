@@ -34,3 +34,11 @@
   Handlebars.registerPartial("services.cloudtrail.regions.id.trails", $("#services\\.cloudtrail\\.regions\\.id\\.trails\\.partial").html());
 </script>
 
+<!-- Single EC2 instance template -->
+<script id="single_cloudtrail_trail-template" type="text/x-handlebars-template">
+    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+    {{> services.cloudtrail.regions.id.trails}}
+</script>
+<script>
+    var single_cloudtrail_trail_template = Handlebars.compile($("#single_cloudtrail_trail-template").html());
+</script>
