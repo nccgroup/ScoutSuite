@@ -1,7 +1,7 @@
 {
     "arg_names" : [ "Action shortname", "Service:Action" ],
     "key": "s3-bucket-world-_ARG_0_-policy",
-    "dashboard_name": "Bucket",
+    "dashboard_name": "Buckets",
     "description": "Internet accessible bucket (_ARG_0_ policy)",
     "path": "s3.buckets.id.policy.Statement.id.Action",
     "display_path": "s3.buckets.id",

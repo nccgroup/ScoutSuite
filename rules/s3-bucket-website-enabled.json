@@ -1,5 +1,5 @@
 {
-    "dashboard_name": "Bucket",
+    "dashboard_name": "Buckets",
     "description": "Bucket with static website enabled",
     "path": "s3.buckets.id",
     "conditions": [ "and",
