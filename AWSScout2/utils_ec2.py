@@ -48,8 +48,14 @@ def add_security_group_name_to_ec2_grants_callback(ec2_config, current_config, p
         target = current_path[:(current_path.index(sg_id)+1)]
         ec2_grant['GroupName'] = get_attribute_at(ec2_config, target, 'name')
     elif ec2_grant['UserId'] == callback_args['AWSAccountId']:
-        target = current_path[:(current_path.index('security_groups')+1)]
-        target.append(sg_id)
+        if 'VpcId' in ec2_grant:
+            target = current_path[:(current_path.index('vpcs')+1)]
+            target.append(ec2_grant['VpcId'])
+            target.append('security_groups')
+            target.append(sg_id)
+        else:
+            target = current_path[:(current_path.index('security_groups')+1)]
+            target.append(sg_id)
         ec2_grant['GroupName'] = get_attribute_at(ec2_config, target, 'name')
 
 #
