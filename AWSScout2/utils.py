@@ -425,6 +425,8 @@ AWSRULESET_FILE = 'aws_ruleset'
 REPORT_TITLE  = 'AWS Scout2 Report'
 
 def create_scout_report(environment_name, aws_config, force_write, debug):
+    # Fix bug mentioned in #111
+    environment_name = environment_name.replace('/', '_').replace('\\', '_')
     # Save data
     save_config_to_file(environment_name, aws_config, force_write, debug)
     # Create the HTML report using all partials under html/partials/
