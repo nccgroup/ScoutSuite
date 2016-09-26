@@ -4,13 +4,43 @@
 ////////////////////////
 
 Handlebars.registerHelper('displayPolicy', function(blob) {
-    // this fails now that the policies are all JSON... check in chrome though
-    //policy = JSON.stringify(eval("(" + blob + ")"), null, 2);
-    var policy = JSON.stringify(blob, null, 2);
-    policy = policy.replace(/ /g, '&nbsp;');
-    policy = policy.replace(/\n/g, '<br />');
+    var policy = '{<br/>';
+    for (attr in blob) {
+        if (attr == 'Statement') {
+            policy += '&nbsp;&nbsp;"Statement": [<br/>';
+            for (sid in blob['Statement']) {
+                policy += '<span id="foobar">' + JSON.stringify(blob['Statement'][sid], null, 2) + '</span>,\n';
+            }
+            policy += '  ]';
+        } else {
+            policy += '  "' + attr + '": ' + JSON.stringify(blob[attr], null, 2);
+        }
+        policy += ',\n';
+        
+    }
+    policy += '}'
     return policy;
 });
+
+Handlebars.registerHelper('add_policy_path', function() {
+    var policy = arguments[0];
+    var path = arguments[1];
+    for (var i = 2; i < arguments.length -1; i++) {
+        path = path + '\\.' + arguments[i];
+    }
+    console.log(arguments);
+    console.log('policy_path:' + path);
+    policy['policy_path'] = path;
+    policy['policy_spath'] = path.replace(/\\/g, '');
+});
+
+Handlebars.registerHelper('displayKey', function(key_name, blob) {
+    var key = JSON.stringify(blob, null, 2);
+    key = key.replace(/ /g, '&nbsp;');
+    key = key.replace(/\n/g, '<br/>');
+    return key;
+});
+
 
 Handlebars.registerHelper("has_profiles?", function(logins) {
     if(typeof logins != 'undefined' && logins != '') {
@@ -216,12 +246,16 @@ Handlebars.registerHelper('dashboard_color', function(level, checked, flagged) {
     }
 });
 
-Handlebars.registerHelper('policy_report_id', function(policy, a, b, c) {
-    policy['ReportId'] = a + '-' + b + '-' + c;
-});
-
 Handlebars.registerHelper('ifEqual', function(v1, v2, options) {
     if (v1 === v2) {
+        return options.fn(this);
+    } else {
+        return options.inverse(this);
+    }
+});
+
+Handlebars.registerHelper('unlessEqual', function(v1, v2, options) {
+    if (v1 !== v2) {
         return options.fn(this);
     } else {
         return options.inverse(this);

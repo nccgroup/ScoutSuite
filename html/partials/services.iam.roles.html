@@ -44,8 +44,8 @@
             </div>
           </div>
         </div>
-        {{> services.iam.inline_policies entity_type = 'role'}}
-        {{> services.iam.managed_policies_list}}
+        {{> services.iam.inline_policies resource_type = 'roles' resource_id = id}}
+        {{> services.iam.managed_policies_list resource_type = 'roles' resource_id = id}}
     </script>
     <script>
       Handlebars.registerPartial("services.iam.roles", $("#services\\.iam\\.roles\\.partial").html());
