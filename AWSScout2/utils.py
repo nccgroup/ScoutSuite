@@ -424,11 +424,12 @@ AWSCONFIG_FILE = 'aws_config'
 AWSRULESET_FILE = 'aws_ruleset'
 REPORT_TITLE  = 'AWS Scout2 Report'
 
-def create_scout_report(environment_name, aws_config, force_write, debug):
+def create_scout_report(environment_name, aws_config, exceptions, force_write, debug):
     # Fix bug mentioned in #111
     environment_name = environment_name.replace('/', '_').replace('\\', '_')
     # Save data
     save_config_to_file(environment_name, aws_config, force_write, debug)
+    save_config_to_file(environment_name, exceptions, force_write, debug, js_filename = 'exceptions', js_varname = 'exceptions')
     # Create the HTML report using all partials under html/partials/
     contents = ''
     for filename in glob.glob('html/partials/*'):
@@ -446,7 +447,9 @@ def create_scout_report(environment_name, aws_config, force_write, debug):
                 contents = contents + f.read()
     if environment_name != 'default':
         def_report_filename, def_config_filename = get_scout2_paths('default')
+        foo, def_exceptions_filename = get_scout2_paths('default', js_filename = 'exceptions')
         new_report_filename, new_config_filename = get_scout2_paths(environment_name)
+        foo, new_exceptions_filename = get_scout2_paths(environment_name, js_filename = 'exceptions')
         new_file = 'report-' + environment_name + '.html'
     else:
         new_file = 'report.html'
@@ -460,6 +463,7 @@ def create_scout_report(environment_name, aws_config, force_write, debug):
                     newline = line.replace(REPORT_TITLE, REPORT_TITLE + ' [' + environment_name + ']')
                     if environment_name != 'default':
                         newline = newline.replace(def_config_filename, new_config_filename)
+                        newline = newline.replace(def_exceptions_filename, new_exceptions_filename)
                     newline = newline.replace('<!-- PLACEHOLDER -->', contents)
                     nf.write(newline)
 
@@ -656,10 +660,10 @@ def save_blob_to_file(filename, blob, force_write, debug):
 #
 # Save AWS configuration (python dictionary) as JSON
 #
-def save_config_to_file(environment_name, config, force_write = False, debug = False, js_filename = AWSCONFIG_FILE, quiet = False):
+def save_config_to_file(environment_name, config, force_write = False, debug = False, js_filename = AWSCONFIG_FILE, js_varname = 'aws_info', quiet = False):
     try:
         with open_file(environment_name, force_write, js_filename, quiet) as f:
-            print('aws_info =', file = f)
+            print('%s =' % js_varname, file = f)
             write_data_to_file(f, config, force_write, debug)
     except Exception as e:
         printException(e)

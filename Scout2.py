@@ -213,7 +213,7 @@ def main(args):
         printException(e)
 
     # Save data
-    create_scout_report(environment_name, aws_config, args.force_write, args.debug)
+    create_scout_report(environment_name, aws_config, exceptions, args.force_write, args.debug)
 
 
 ########################################
