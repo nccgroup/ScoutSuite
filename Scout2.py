@@ -40,6 +40,10 @@ def main(args):
     # Setup variables
     (scout2_dir, tool_name) = os.path.split(__file__)
     scout2_dir = os.path.abspath(scout2_dir)
+    current_time = datetime.datetime.now(dateutil.tz.tzlocal())
+    timestamp = args.timestamp
+    if timestamp != False:
+        timestamp = args.timestamp if args.timestamp else current_time.strftime("%Y-%m-%d_%Hh%M%z")
 
     # Configure the debug level
     configPrintException(args.debug)
@@ -201,7 +205,7 @@ def main(args):
 
     # Save info about run
     aws_config['last_run'] = {}
-    aws_config['last_run']['time'] = datetime.datetime.now(dateutil.tz.tzlocal()).strftime("%Y-%m-%d %H:%M:%S%z")
+    aws_config['last_run']['time'] = current_time.strftime("%Y-%m-%d %H:%M:%S%z")
     aws_config['last_run']['cmd'] = ' '.join(sys.argv)
     aws_config['last_run']['version'] = __version__
 
@@ -213,7 +217,7 @@ def main(args):
         printException(e)
 
     # Save data
-    create_scout_report(environment_name, aws_config, exceptions, args.force_write, args.debug)
+    create_scout_report(environment_name, timestamp, aws_config, exceptions, args.force_write, args.debug)
 
 
 ########################################
@@ -268,6 +272,11 @@ parser.add_argument('--exceptions',
                     default=[ None ],
                     nargs='+',
                     help='')
+parser.add_argument('--timestamp',
+                    dest='timestamp',
+                    default=False,
+                    nargs='?',
+                    help='Add a timestamp to the name of the report (default is current time in UTC)')
 
 
 args = parser.parse_args()

@@ -424,7 +424,9 @@ AWSCONFIG_FILE = 'aws_config'
 AWSRULESET_FILE = 'aws_ruleset'
 REPORT_TITLE  = 'AWS Scout2 Report'
 
-def create_scout_report(environment_name, aws_config, exceptions, force_write, debug):
+def create_scout_report(environment_name, timestamp, aws_config, exceptions, force_write, debug):
+    if timestamp:
+        environment_name = '%s-%s' % (environment_name, timestamp)
     # Fix bug mentioned in #111
     environment_name = environment_name.replace('/', '_').replace('\\', '_')
     # Save data
