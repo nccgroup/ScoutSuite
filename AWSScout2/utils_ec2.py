@@ -325,6 +325,11 @@ def get_vpc_info(q, params):
                 vpc['network_acls'][acl['NetworkAclId']]['rules']['ingress'] = get_network_acl_entries(acl['Entries'], False)
                 vpc['network_acls'][acl['NetworkAclId']]['rules']['egress'] = get_network_acl_entries(acl['Entries'], True)
                 vpc['network_acls'][acl['NetworkAclId']].pop('Entries')
+            flow_logs = ec2_client.describe_flow_logs(Filters = [{'Name': 'resource-id', 'Values': [vpc['VpcId']]}])['FlowLogs']
+            vpc['flow_logs'] = {}
+            for fl in flow_logs:
+                flid = fl.pop('FlowLogId')
+                vpc['flow_logs'][flid] = fl
             region_info['vpcs'][vpc['VpcId']].update(vpc)
             show_status(region_info, 'vpcs', False, True)
         except Exception as e:
