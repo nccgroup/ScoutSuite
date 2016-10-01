@@ -64,9 +64,12 @@
         },
         {
             "level": "danger",
-            "filename": "iam-password-policy-no-expiration.json",
+            "filename": "iam-password-policy-expiration-threshold.json",
             "enabled": true,
-            "comment": "Partial recommendation1.11"
+            "args": [
+                "90"
+            ],
+            "comment": "recommendation1.11"
         },
         {
             "level": "danger",
@@ -78,7 +81,7 @@
             "level": "danger",
             "filename": "iam-root-account-no-mfa.json",
             "enabled": true,
-            "comment": "Partial recommendation1.13"
+            "comment": "recommendation1.13 (partial: no check for hardware vs software)"
         },
         {
             "level": "danger",

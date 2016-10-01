@@ -286,6 +286,8 @@ def create_report_metadata(aws_config, services):
                 # h4ck...
                 if resource == 'credential_report':
                     resource = resource_path.split('.')[-1].replace('>', '').replace('<', '')
+                elif resource == s:
+                    resource = resource_path.split('.')[-1]
                 if aws_config['services'][s]['violations'][v]['flagged_items'] > 0:
                     try:
                         manage_dictionary(aws_config['metadata'][s]['resources'][resource], 'risks', [])
