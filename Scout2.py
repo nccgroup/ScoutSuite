@@ -123,12 +123,12 @@ def main(args):
 
     # Search for an existing ruleset if the environment is set
     if environment_name and args.ruleset == DEFAULT_RULESET: 
-        ruleset = search_ruleset(scout2_dir, environment_name)
+        ruleset_filename = search_ruleset(scout2_dir, environment_name)
     else:
-        ruleset = args.ruleset[0]
+        ruleset_filename = args.ruleset[0]
 
     # Load findings from JSON config files
-    ruleset = load_ruleset(ruleset)
+    ruleset = load_ruleset(ruleset_filename)
     rules = init_rules(ruleset, services, environment_name, args.ip_ranges, aws_config['account_id'])
 
     # Reset violations
@@ -208,6 +208,8 @@ def main(args):
     aws_config['last_run']['time'] = current_time.strftime("%Y-%m-%d %H:%M:%S%z")
     aws_config['last_run']['cmd'] = ' '.join(sys.argv)
     aws_config['last_run']['version'] = __version__
+    aws_config['last_run']['ruleset_name'] = ruleset_filename.replace('rulesets/', '').replace('.json', '')
+    aws_config['last_run']['ruleset_about'] = ruleset['about'] if 'about' in ruleset else ''
 
     # Generate dashboard metadata
     try:
