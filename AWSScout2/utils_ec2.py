@@ -151,8 +151,8 @@ def get_ec2_info(key_id, secret, session_token, service_config, selected_regions
         manage_dictionary(service_config['regions'], region, {})
         service_config['regions'][region]['name'] = region
     printInfo('Fetching EC2 config...')
-    formatted_status('region', 'Elastic LBs', 'Elastic IPs', 'VPCs', 'Sec. Groups', 'Instances', True)
-    ec2_targets = ['elastic_ips', 'elbs', 'vpcs', 'security_groups', 'instances']
+    formatted_status('region', 'Elastic LBs', 'Elastic IPs', 'VPCs', 'Flow Logs', 'Sec. Groups', 'Instances', True)
+    ec2_targets = ['elastic_ips', 'elbs', 'vpcs', 'flow_logs', 'security_groups', 'instances']
     for region in all_regions:
          status['region_name'] = region
          manage_dictionary(service_config['regions'][region], 'vpcs', {})
@@ -242,6 +242,39 @@ def get_elbs_info(elb_client, region_info):
     show_status(region_info, 'elbs', False)
     thread_work(elbs, get_elb_info, params = {'elb_client': elb_client, 'region_info': region_info}, num_threads = 5)
     show_status(region_info, 'elbs', False)
+
+def get_flow_log_info(q, params):
+    ec2_client = params['ec2_client']
+    region_info = params['region_info']
+    while True:
+        try:
+            fl = q.get()
+            fl_id = fl.pop('FlowLogId')
+            resource_id = fl.pop('ResourceId')
+            if resource_id.startswith('vpc-'):
+                manage_dictionary(region_info['vpcs'], resource_id, {})
+                manage_dictionary(region_info['vpcs'][resource_id], 'flow_logs', {})
+                region_info['vpcs'][resource_id]['flow_logs'][fl_id] = fl
+            elif resource_id.startswith('subnet-'):
+                # Temporary save within the region, once subnets are fetched too, do an update at the end of the run
+                manage_dictionary(region_info, 'subnets', {})
+                manage_dictionary(region_info['subnets'], resource_id, {})
+                manage_dictionary(region_info['subnets'][resource_id], 'flow_logs', {})
+                region_info['subnets'][resource_id]['flow_logs'][fl_id] = fl
+            # Status update
+            show_status(region_info['vpcs'], 'flow_logs', False)
+        except Exception as e:
+            printException(e)
+            pass
+        finally:
+            q.task_done()
+
+def get_flow_logs_info(ec2_client, region_info):
+    flow_logs = handle_truncated_response(ec2_client.describe_flow_logs, {}, 'NextToken', ['FlowLogs'])['FlowLogs']
+    region_info['flow_logs_count'] = len(flow_logs)
+    show_status(region_info['vpcs'], 'flow_logs', False)
+    thread_work(flow_logs, get_flow_log_info, params = {'ec2_client': ec2_client, 'region_info': region_info}, num_threads = 5)
+    show_status(region_info['vpcs'], 'flow_logs', False)
 
 def get_instance_info(q, params):
     ec2_client = params['ec2_client']
@@ -422,6 +455,7 @@ status = {}
 status['region_name'] = ''
 status['elastic_ips'] = 0
 status['elbs'] = 0
+status['flow_logs'] = 0
 status['vpcs'] = 0
 status['security_groups'] = 0
 status['instances'] = 0
@@ -444,10 +478,10 @@ def show_status(info = None, entities = None, newline = True, count_self = False
                     current = current + len(subset[key][entities])
         count = entities + '_count'
         status[entities] = '%d/%d' % (current, info[count]) if count in info else '%d' % current
-    formatted_status(status['region_name'], status['elbs'], status['elastic_ips'], status['vpcs'], status['security_groups'], status['instances'], newline)
+    formatted_status(status['region_name'], status['elbs'], status['elastic_ips'], status['vpcs'], status['flow_logs'], status['security_groups'], status['instances'], newline)
 
-def formatted_status(region, elbs, eips, vpcs, sgs, instances, newline = False):
-    sys.stdout.write('\r{:>20} {:>13} {:>13} {:>13} {:>13} {:>13}'.format(region, elbs, eips, vpcs, sgs, instances))
+def formatted_status(region, elbs, eips, vpcs, flow_logs, sgs, instances, newline = False):
+    sys.stdout.write('\r{:>20} {:>13} {:>13} {:>13} {:>13} {:>13} {:>13}'.format(region, elbs, eips, vpcs, flow_logs, sgs, instances))
     sys.stdout.flush()
     if newline:
         sys.stdout.write('\n')
@@ -470,6 +504,10 @@ def thread_region(q, ec2_params):
                 if region_info['name'] in ec2_params['vpc_regions']:
                     ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
                     get_vpcs_info(ec2_client, region_info)
+            elif target == 'flow_logs':
+                if region_info['name'] in ec2_params['vpc_regions']:
+                    ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
+                    get_flow_logs_info(ec2_client, region_info)
             elif target == 'security_groups':
                 if region_info['name'] in ec2_params['ec2_regions']:
                     ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
