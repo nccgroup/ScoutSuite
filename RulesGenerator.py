@@ -57,6 +57,7 @@ def main(cmd_args):
     rules = [ f for f in os.listdir(scout2_rules_dir) if os.path.isfile(os.path.join(scout2_rules_dir, f)) ]
     for rule_filename in rules:
         services.append(rule_filename.split('-')[0].lower())
+        printDebug('Loading %s' % rule_filename)
         with open('%s/%s' % (scout2_rules_dir, rule_filename), 'rt') as f:
             rule = json.load(f)
             if not 'key' in rule and not 'arg_names' in rule:
