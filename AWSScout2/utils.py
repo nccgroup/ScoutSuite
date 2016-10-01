@@ -156,14 +156,23 @@ def get_object_at(dictionary, path, attribute_name = None):
 # Recursively go to a target and execute a callback
 #
 def go_to_and_do(aws_config, current_config, path, current_path, callback, callback_args = None):
+  try:
     key = path.pop(0)
     if not current_config:
         current_config = aws_config
     if not current_path:
         current_path = []
+    keys = key.split('.')
+    if len(keys) > 1:
+        while True:
+            key = keys.pop(0)
+            if not len(keys):
+                break
+            current_path.append(key)
+            current_config = current_config[key]
     if key in current_config:
         current_path.append(key)
-        for value in current_config[key]:
+        for (i, value) in enumerate(current_config[key]):
             if len(path) == 0:
                 if type(current_config[key] == dict) and type(value) != dict and type(value) != list:
                     callback(aws_config, current_config[key][value], path, current_path, value, callback_args)
@@ -171,10 +180,23 @@ def go_to_and_do(aws_config, current_config, path, current_path, callback, callb
                     # TODO: the current_config value passed here is not correct...
                     callback(aws_config, current_config, path, current_path, value, callback_args)
             else:
-                # keep track of where we are...
                 tmp = copy.deepcopy(current_path)
-                tmp.append(value)
-                go_to_and_do(aws_config, current_config[key][value], copy.deepcopy(path), tmp, callback, callback_args)
+                try:
+                    tmp.append(value)
+                    go_to_and_do(aws_config, current_config[key][value], copy.deepcopy(path), tmp, callback, callback_args)
+                except:
+                    tmp.pop()
+                    tmp.append(i)
+                    go_to_and_do(aws_config, current_config[key][i], copy.deepcopy(path), tmp, callback, callback_args)
+
+  except Exception as e:
+    printException(e)
+    printInfo('Index: %s' % str(i))
+    printInfo('Path: %s' % str(current_path))
+#    printInfo('Config: %s' % str(current_config))
+    printInfo('Key = %s' % str(key))
+    printInfo('Value = %s' % str(value))
+    printInfo('Path = %s' % path)
 
 #
 # JSON encoder class
