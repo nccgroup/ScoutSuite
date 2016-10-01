@@ -129,7 +129,7 @@ def main(args):
 
     # Load findings from JSON config files
     ruleset = load_ruleset(ruleset)
-    rules = init_rules(ruleset, services, environment_name, args.ip_ranges)
+    rules = init_rules(ruleset, services, environment_name, args.ip_ranges, aws_config['account_id'])
 
     # Reset violations
     for service in services:

@@ -48,7 +48,7 @@ def load_ruleset(ruleset_filename, quiet = False):
 #
 # Initialize rules based on ruleset and services in scope
 #
-def init_rules(ruleset, services, environment_name, ip_ranges, generator = False):
+def init_rules(ruleset, services, environment_name, ip_ranges, aws_account_id, generator = False):
     # Load rules from JSON files
     rules = {}
     for rule_metadata in ruleset['rules']:
@@ -56,7 +56,7 @@ def init_rules(ruleset, services, environment_name, ip_ranges, generator = False
         if 'enabled' in rule_metadata and rule_metadata['enabled'] in ['false', 'False', False] and not generator:
             continue
         # Skip rules that apply to an out-of-scope service
-        rule_details = load_config_from_json(rule_metadata, ip_ranges)
+        rule_details = load_config_from_json(rule_metadata, ip_ranges, aws_account_id)
         if not rule_details:
             continue
         if 'enabled' in rule_metadata and rule_metadata['enabled']:

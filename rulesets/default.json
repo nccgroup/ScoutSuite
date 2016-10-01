@@ -214,6 +214,11 @@
         },
         {
             "level": "danger",
+            "filename": "iam-assume-role-lacks-external-id.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
             "filename": "iam-assume-role-policy-allows-all.json",
             "enabled": true
         },

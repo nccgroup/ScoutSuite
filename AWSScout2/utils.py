@@ -576,7 +576,7 @@ def load_from_json(environment_name, var):
 #
 # Load rule from a JSON config file
 #
-def load_config_from_json(rule_metadata, ip_ranges):
+def load_config_from_json(rule_metadata, ip_ranges, aws_account_id):
     config = None
     config_file = rule_metadata['filename']
     if not config_file.startswith('rules/'):
@@ -596,7 +596,7 @@ def load_config_from_json(rule_metadata, ip_ranges):
         for c1 in config['conditions']:
             if c1 in condition_operators:
                 continue
-            if type(c1[2]) == str: # unicode:
+            if not type(c1[2]) == list and not type(c1[2]) == dict:
                 values = re_ip_ranges_from_file.match(c1[2])
                 if values:
                     filename = values.groups()[0]
@@ -607,6 +607,7 @@ def load_config_from_json(rule_metadata, ip_ranges):
                         c1[2] = []
                         for ip_range in ip_ranges:
                             c1[2] = c1[2] + read_ip_ranges(ip_range, True, conditions, True)
+                c1[2] = c1[2].replace('_AWS_ACCOUNT_ID_', aws_account_id)
                 # Set lists
                 list_value = re_list_value.match(str(c1[2]))
                 if list_value:
