@@ -8,19 +8,10 @@
           <h4 class="list-group-item-heading">Information</h4>
           <div class="list-group-item-text item-margin">Creation date: {{create_date}}</div>
         </div>
-        <div class="list-group-item accordion">
-          <div class="accordion">
-            <h4 class="list-group-item-heading accordion-heading">Assume Role Policy
-              <a class="accordion-toggle" data-toggle="collapse" href="#iam\.roles\.{{id}}\.assume_role_policy">
-                <span class="badge pull-right btn-info">Details</span>
-              </a>
-            </h4>
-            <div id="iam.roles.{{id}}.assume_role_policy" class="accordion-body collapse">
-              <div class="accordion-inner">
-                {{{displayPolicy assume_role_policy}}}
-              </div>
-            </div>
-          </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Trusted Entities</h4>
+          {{add_policy_path assume_role_policy "roles" @key 'assume_role_policy'}}
+          {{> services.iam.policy assume_role_policy name = "AssumeRole Policy"}}
         </div>
         <div class="list-group-item">
           <div class="accordion">

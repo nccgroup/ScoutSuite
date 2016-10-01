@@ -16,6 +16,7 @@ import urllib
 def analyze_iam_config(aws_config):
     go_to_and_do(aws_config, aws_config['services']['iam'], ['groups', 'inline_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of_statements)
     go_to_and_do(aws_config, aws_config['services']['iam'], ['roles', 'inline_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of_statements)
+    go_to_and_do(aws_config, aws_config['services']['iam'], ['roles', 'assume_role_policy'], ['services', 'iam'], enforce_list_of_statements)
     go_to_and_do(aws_config, aws_config['services']['iam'], ['users', 'inline_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of_statements)
     go_to_and_do(aws_config, aws_config['services']['iam'], ['managed_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of_statements)
 
@@ -274,7 +275,8 @@ def get_role_info(q, params):
                 role['instance_profiles'][profile['InstanceProfileId']]['arn'] = profile['Arn']
                 role['instance_profiles'][profile['InstanceProfileId']]['name'] = profile['InstanceProfileName']
             # Get trust relationship
-            role['assume_role_policy'] = fetched_role.pop('AssumeRolePolicyDocument')
+            role['assume_role_policy'] = {}
+            role['assume_role_policy']['PolicyDocument'] = fetched_role.pop('AssumeRolePolicyDocument')
             # Save role
             iam_info['roles'][role['id']] = role
             show_status(iam_info, 'roles', False)

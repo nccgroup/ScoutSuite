@@ -6,11 +6,11 @@
       <div>
         <div class="accordion item-margin">
           <h5 class="list-group-item-heading accordion-heading">{{name}}
-            <a class="accordion-toggle" data-toggle="collapse" href="#iam_policy_details\.{{policy_path}}\.{{policy_id}}">
+            <a class="accordion-toggle" data-toggle="collapse" href="#iam_policy_details\.{{policy_path}}">
               <span class="badge pull-right btn-info">Details</span>
             </a>
           </h5>
-          <div id="iam_policy_details.{{policy_spath}}.{{policy_id}}" class="accordion-body collapse">
+          <div id="iam_policy_details.{{policy_spath}}" class="accordion-body collapse">
             <div class="accordion-inner">
 {{else}}
       <div>
@@ -21,7 +21,7 @@
                   &nbsp;&nbsp;"{{@key}}":&nbsp; [<br/>
                   {{#each this}}
                     <div class="item-margin">
-                      <span id="iam.{{../../../policy_spath}}.{{../../../policy_id}}.PolicyDocument.Statement.{{@key}}">{{{displayKey @key this}}}</span>
+                      <span id="iam.{{../../../policy_spath}}.PolicyDocument.Statement.{{@key}}">{{{displayKey @key this}}}</span>
                       {{#unless @last}},{{/unless}}
                     </div>
                   {{/each}}                  

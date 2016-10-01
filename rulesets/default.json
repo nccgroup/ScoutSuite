@@ -213,6 +213,11 @@
             "enabled": true
         },
         {
+            "level": "danger",
+            "filename": "iam-assume-role-policy-allows-all.json",
+            "enabled": true
+        },
+        {
             "level": "warning",
             "filename": "iam-ec2-role-without-instances.json",
             "enabled": true
@@ -244,16 +249,6 @@
         },
         {
             "level": "danger",
-            "filename": "iam-inline-policy-for-role.json",
-            "enabled": true,
-            "args": [
-                "group",
-                "sts",
-                "AssumeRole"
-            ]
-        },
-        {
-            "level": "danger",
             "filename": "iam-inline-policy-allows-notActions.json",
             "enabled": true,
             "args": [
@@ -265,9 +260,9 @@
             "filename": "iam-inline-policy-for-role.json",
             "enabled": true,
             "args": [
-                "role",
-                "iam",
-                "PassRole"
+                "group",
+                "sts",
+                "AssumeRole"
             ]
         },
         {
@@ -276,8 +271,8 @@
             "enabled": true,
             "args": [
                 "role",
-                "sts",
-                "AssumeRole"
+                "iam",
+                "PassRole"
             ]
         },
         {
@@ -293,9 +288,27 @@
             "filename": "iam-inline-policy-for-role.json",
             "enabled": true,
             "args": [
+                "role",
+                "sts",
+                "AssumeRole"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-inline-policy-for-role.json",
+            "enabled": true,
+            "args": [
                 "user",
                 "iam",
                 "PassRole"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-inline-policy-allows-notActions.json",
+            "enabled": true,
+            "args": [
+                "user"
             ]
         },
         {
@@ -306,14 +319,6 @@
                 "user",
                 "sts",
                 "AssumeRole"
-            ]
-        },
-        {
-            "level": "danger",
-            "filename": "iam-inline-policy-allows-notActions.json",
-            "enabled": true,
-            "args": [
-                "user"
             ]
         },
         {

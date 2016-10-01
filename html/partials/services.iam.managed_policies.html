@@ -5,8 +5,8 @@
         <h4 class="list-group-item-heading">{{name}}</h4>
       </div>
       <div class="list-group-item">
-        {{add_policy_path this 'managed_policies'}}
-        {{> services.iam.policy policy_id = @key}}
+        {{add_policy_path this 'managed_policies' @key}}
+        {{> services.iam.policy}}
       </div>
     </script>
     <script>
