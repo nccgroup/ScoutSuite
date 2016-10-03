@@ -435,38 +435,6 @@ def new_get_vpc_info(q, ec2_params):
         finally:
             q.task_done()
 
-def get_vpc_info(q, params):
-    ec2_client = params['ec2_client']
-    region_info = params['region_info']
-    while True:
-        try:
-            vpc = q.get()
-            manage_dictionary(region_info['vpcs'], vpc['VpcId'], {})
-            manage_dictionary(region_info, 'network_acls_count', 0)
-            get_name(vpc, vpc, 'VpcId')
-            acls = ec2_client.describe_network_acls(Filters = [{'Name': 'vpc-id', 'Values': [vpc['VpcId']]}])
-            region_info['network_acls_count'] += len(acls['NetworkAcls'])
-            vpc['network_acls'] = {}
-            for acl in acls['NetworkAcls']:
-                manage_dictionary(vpc['network_acls'], acl['NetworkAclId'], {})
-                vpc['network_acls'][acl['NetworkAclId']] = acl
-                get_name(vpc['network_acls'][acl['NetworkAclId']], acl, 'NetworkAclId')
-                manage_dictionary(vpc['network_acls'][acl['NetworkAclId']], 'rules', {})
-                vpc['network_acls'][acl['NetworkAclId']]['rules']['ingress'] = get_network_acl_entries(acl['Entries'], False)
-                vpc['network_acls'][acl['NetworkAclId']]['rules']['egress'] = get_network_acl_entries(acl['Entries'], True)
-                vpc['network_acls'][acl['NetworkAclId']].pop('Entries')
-#            flow_logs = ec2_client.describe_flow_logs(Filters = [{'Name': 'resource-id', 'Values': [vpc['VpcId']]}])['FlowLogs']
-#            vpc['flow_logs'] = {}
-#            for fl in flow_logs:
-#                flid = fl.pop('FlowLogId')
-#                vpc['flow_logs'][flid] = fl
-            region_info['vpcs'][vpc['VpcId']].update(vpc)
-            show_status(region_info, 'vpcs', False, True)
-        except Exception as e:
-            printException(e)
-        finally:
-            q.task_done()
-
 #
 # Parse and save one security group
 #
@@ -589,6 +557,9 @@ def formatted_status(region, eips, elbs, flow_logs, instances, network_acls, sgs
     if newline:
         sys.stdout.write('\n')
 
+#
+# Per-region thread helper
+#
 def thread_region(q, ec2_params):
     key_id, secret, session_token = ec2_params['creds']
     ec2_client = ec2_params['ec2_client']
