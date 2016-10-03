@@ -109,6 +109,7 @@ def link_elastic_ips_callback2(ec2_config, current_config, path, current_path, i
 
 #
 # List the publicly available IPs/Ports
+# TODO use go_to_and_do for that, then add elbs as target too
 #
 def list_network_attack_surface(ec2_info, attack_surface_attribute_name, ip_attribute_name):
     ec2_info[attack_surface_attribute_name] = {}
@@ -488,7 +489,7 @@ def get_security_group_info(q, params):
             security_group['rules']['ingress']['protocols'], security_group['rules']['ingress']['count'] = parse_security_group_rules(group['IpPermissions'])
             security_group['rules']['egress']['protocols'],  security_group['rules']['egress']['count']  = parse_security_group_rules(group['IpPermissionsEgress'])
 
-            region_info['vpcs'][vpc_id]['security_groups'][group['GroupId']] = security_group # () # parse_security_group(ec2_client, group)
+            region_info['vpcs'][vpc_id]['security_groups'][group['GroupId']] = security_group
             show_status(region_info['vpcs'], 'security_groups', False)
         except Exception as e:
             printException(e)
@@ -513,20 +514,6 @@ def manage_vpc(vpc_info, vpc_id):
     vpc_info[vpc_id]['id'] = vpc_id
     if not 'name' in vpc_info[vpc_id]:
         vpc_info[vpc_id]['name'] = vpc_id
-
-#
-# TODO: confirm and remove
-#
-def parse_security_group(ec2_client, group):
-    security_group = {}
-    security_group['name'] = group['GroupName']
-    security_group['id'] = group['GroupId']
-    security_group['description'] = group['Description']
-    security_group['owner_id'] = group['OwnerId']
-    security_group['rules'] = {'ingress': {}, 'egress': {}}
-    security_group['rules']['ingress']['protocols'], security_group['rules']['ingress']['count'] = parse_security_group_rules(group['IpPermissions'])
-    security_group['rules']['egress']['protocols'],  security_group['rules']['egress']['count']  = parse_security_group_rules(group['IpPermissionsEgress'])
-    return security_group
 
 #
 # Parse one security group's rules
@@ -610,33 +597,21 @@ def thread_region(q, ec2_params):
         try:
             target = q.get()
             if target == 'elastic_ips':
-#                if region_info['name'] in ec2_params['ec2_regions']:
-#                    ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
-                    get_elastic_ips_info(ec2_client, region_info)
+                get_elastic_ips_info(ec2_client, region_info)
             elif target == 'elbs':
-#                if region_info['name'] in ec2_params['elb_regions']:
-                    elb_client = connect_elb(key_id, secret, session_token, region_info['name'])
-                    get_elbs_info(elb_client, region_info)
+                elb_client = connect_elb(key_id, secret, session_token, region_info['name'])
+                get_elbs_info(elb_client, region_info)
             elif target == 'flow_logs':
-#                if region_info['name'] in ec2_params['vpc_regions']:
-#                    ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
-                    get_flow_logs_info(ec2_client, region_info)
+                get_flow_logs_info(ec2_client, region_info)
             elif target == 'instances':
-#                if region_info['name'] in ec2_params['ec2_regions']:
-#                    ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
-                    get_instances_info(ec2_client, region_info)
+                get_instances_info(ec2_client, region_info)
             elif target == 'network_acls':
-#                    ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
-                    get_network_acls_info(ec2_client, region_info)
+                get_network_acls_info(ec2_client, region_info)
             elif target == 'security_groups':
-#                if region_info['name'] in ec2_params['ec2_regions']:
-#                    ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
-                    get_security_groups_info(ec2_client, region_info)
+                get_security_groups_info(ec2_client, region_info)
             elif target == 'subnets':
-                    pass
-#                if region_info['name'] in ec2_params['ec2_regions']:
-                    #ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
-                    #get_subnets_info(ec2_client, region_info)
+                pass
+                #get_subnets_info(ec2_client, region_info)
             else:
                 printError('Error: %s are not supported yet.' % target)
         except Exception as e:
