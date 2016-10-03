@@ -152,7 +152,6 @@ def get_ec2_info(key_id, secret, session_token, service_config, selected_regions
     params['service_config'] = service_config
     thread_work(all_regions, new_get_vpc_info, params = params)
     # Fetch VPC/EC2 objects
-    # TODO :: add network aCLs here
     printInfo('Fetching EC2 and VPC config...')
     ec2_targets = ['elastic_ips', 'elbs', 'flow_logs', 'instances', 'network_acls', 'security_groups', 'subnets']
     formatted_status('region', 'Elastic IPs', 'Elastic LBs', 'Flow Logs', 'Instances', 'Network ACLs', 'Sec. Groups', 'Subnets', True)
@@ -196,7 +195,6 @@ def get_elastic_ip_info(q, params):
             show_status(region_info, 'elastic_ips', False)
         except Exception as e:
             printException(e)
-            pass
         finally:
             q.task_done()
 
@@ -249,7 +247,6 @@ def get_elb_info(q, params):
             manage_dictionary(region_info['vpcs'][vpc_id]['elbs'], get_non_aws_id(elb['name']), elb)
         except Exception as e:
             printException(e)
-            pass
         finally:
             q.task_done()
 
@@ -288,7 +285,6 @@ def get_flow_log_info(q, params):
             show_status(region_info['vpcs'], 'flow_logs', False)
         except Exception as e:
             printException(e)
-            pass
         finally:
             q.task_done()
 
@@ -334,7 +330,6 @@ def get_instance_info(q, params):
             show_status(region_info['vpcs'], 'instances', False)
         except Exception as e:
             printException(e)
-            pass
         finally:
             q.task_done()
 
@@ -354,6 +349,32 @@ def get_instances_info(ec2_client, region_info):
 
 #
 # Parse and save one network ACL
+#
+def get_network_acl_info(q, params):
+    ec2_client = params['ec2_client']
+    region_info = params['region_info']
+    while True:
+        try:
+            network_acl = q.get()
+            vpc_id = network_acl['VpcId']
+            vpc = region_info['vpcs'][vpc_id]
+            acl_id = network_acl['NetworkAclId']
+            manage_dictionary(vpc['network_acls'], acl_id, {})
+            vpc['network_acls'][acl_id] = network_acl
+            get_name(vpc['network_acls'][acl_id], network_acl, 'NetworkAclId')
+            manage_dictionary(vpc['network_acls'][acl_id], 'rules', {})
+            vpc['network_acls'][acl_id]['rules']['ingress'] = get_network_acl_entries(network_acl['Entries'], False)
+            vpc['network_acls'][acl_id]['rules']['egress'] = get_network_acl_entries(network_acl['Entries'], True)
+            vpc['network_acls'][acl_id].pop('Entries')
+            # Status update
+            show_status(region_info['network_acls'], 'network_acls', False)
+        except Exception as e:
+            printException(e)
+        finally:
+            q.task_done()
+
+#
+# Parse one network ACL's entries
 #
 def get_network_acl_entries(entries, egress):
     acl_list = []
@@ -375,7 +396,18 @@ def get_network_acl_entries(entries, egress):
 
 #
 # Fetch all network ACLs
-# TODO
+#
+def get_network_acls_info(ec2_client, region_info):
+    network_acls = handle_truncated_response(ec2_client.describe_network_acls, {}, 'NextToken', ['NetworkAcls'])['NetworkAcls']
+    region_info['network_acls'] = {}
+    region_info['network_acls_count'] = len(network_acls)
+    show_status(region_info['network_acls'], 'network_acls', False)
+    thread_work(network_acls, get_network_acl_info, params = {'ec2_client': ec2_client, 'region_info': region_info}, num_threads = 5)
+    show_status(region_info['network_acls'], 'network_acls', False)
+
+#
+# Fetch all VPCs
+# 
 def new_get_vpc_info(q, ec2_params):
     key_id, secret, session_token = ec2_params['creds']
     while True:
@@ -391,12 +423,14 @@ def new_get_vpc_info(q, ec2_params):
                 manage_dictionary(region_info['vpcs'], vpc_id, {})
                 get_name(vpc, vpc, 'VpcId')
                 manage_vpc(region_info['vpcs'][vpc_id], vpc_id)
+                manage_dictionary(region_info['vpcs'][vpc_id], 'instances', {})
+                manage_dictionary(region_info['vpcs'][vpc_id], 'network_acls', {})
+                manage_dictionary(region_info['vpcs'][vpc_id], 'security_groups', {})
 
             # By default, create a place holder for EC2-Classic that will be removed in empty at the end of the run
             manage_dictionary(region_info['vpcs'], ec2_classic, {})
         except Exception as e:
             printException(e)
-            pass
         finally:
             q.task_done()
 
@@ -429,7 +463,6 @@ def get_vpc_info(q, params):
             show_status(region_info, 'vpcs', False, True)
         except Exception as e:
             printException(e)
-            pass
         finally:
             q.task_done()
 
@@ -459,7 +492,6 @@ def get_security_group_info(q, params):
             show_status(region_info['vpcs'], 'security_groups', False)
         except Exception as e:
             printException(e)
-            pass
         finally:
             q.task_done()
 
@@ -595,8 +627,7 @@ def thread_region(q, ec2_params):
                     get_instances_info(ec2_client, region_info)
             elif target == 'network_acls':
 #                    ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
-                    #get_nacls_info(ec2_client, region_info)
-                    pass
+                    get_network_acls_info(ec2_client, region_info)
             elif target == 'security_groups':
 #                if region_info['name'] in ec2_params['ec2_regions']:
 #                    ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
@@ -610,6 +641,5 @@ def thread_region(q, ec2_params):
                 printError('Error: %s are not supported yet.' % target)
         except Exception as e:
             printException(e)
-            pass
         finally:
             q.task_done()
