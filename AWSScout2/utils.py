@@ -9,6 +9,7 @@ from opinel.utils import *
 
 # Import stock packages
 import argparse
+import botocore
 import datetime
 from distutils import dir_util
 import copy

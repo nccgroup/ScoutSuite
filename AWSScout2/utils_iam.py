@@ -38,15 +38,31 @@ def enforce_list_of(aws_config, current_config, path, current_path, resource_id,
 #
 #
 def get_account_password_policy(iam_client, iam_info):
-    iam_info['password_policy'] = iam_client.get_account_password_policy()['PasswordPolicy']
-    if 'PasswordReusePrevention' not in iam_info['password_policy']:
-        iam_info['password_policy']['PasswordReusePrevention'] = False
-    else:
-        iam_info['password_policy']['PreviousPasswordPrevented'] = iam_info['password_policy']['PasswordReusePrevention']
-        iam_info['password_policy']['PasswordReusePrevention'] = True
-    # There is a bug in the API: ExpirePasswords always returns false
-    if 'MaxPasswordAge' in iam_info['password_policy']:
-        iam_info['password_policy']['ExpirePasswords'] = True
+    try:
+        iam_info['password_policy'] = iam_client.get_account_password_policy()['PasswordPolicy']
+        if 'PasswordReusePrevention' not in iam_info['password_policy']:
+            iam_info['password_policy']['PasswordReusePrevention'] = False
+        else:
+            iam_info['password_policy']['PreviousPasswordPrevented'] = iam_info['password_policy']['PasswordReusePrevention']
+            iam_info['password_policy']['PasswordReusePrevention'] = True
+        # There is a bug in the API: ExpirePasswords always returns false
+        if 'MaxPasswordAge' in iam_info['password_policy']:
+            iam_info['password_policy']['ExpirePasswords'] = True
+    except Exception as e:
+        if type(e) == botocore.exceptions.ClientError:
+            if e.response['Error']['Code'] == 'NoSuchEntity':
+                iam_info['password_policy'] = {}
+                iam_info['password_policy']['MinimumPasswordLength'] = '1' # As of 10/10/2016, 1-character passwords were authorized when no policy exists even though the console displays 6
+                iam_info['password_policy']['RequireUppercaseCharacters'] = False
+                iam_info['password_policy']['RequireLowercaseCharacters'] = False
+                iam_info['password_policy']['RequireNumbers'] = False
+                iam_info['password_policy']['RequireSymbols'] = False
+                iam_info['password_policy']['PasswordReusePrevention'] = False
+                iam_info['password_policy']['ExpirePasswords'] = False
+            else:
+                printError("Unexpected error: %s" % e)
+        else:
+            printError(e)
 
 def get_aws_account_id(iam_info):
     for resources in ['groups', 'roles', 'users']:
