@@ -418,11 +418,13 @@ def get_value_at(all_info, current_path, key, to_string = False):
               try:
                 target_obj = target_obj[p]
               except Exception as e:
-                print(target_obj)
+                printError('Current path: %s' % str(current_path))
+                #print(target_obj)
                 printException(e)
                 raise Exception
           except Exception as e:
-            print(target_obj)
+            printError('Current path: %s' % str(current_path))
+            #print(target_obj)
             printException(e)
             raise Exception
     if to_string:
@@ -514,7 +516,7 @@ def get_scout2_paths(environment_name, scout2_folder = None, js_filename = None)
 #
 # Prepare listall output template
 #
-def format_listall_output(format_file, format_item_dir, format, config, option_prefix = None, template = None):
+def format_listall_output(format_file, format_item_dir, format, config, option_prefix = None, template = None, skip_options = False):
         # Set the list of keys if printing from a file spec
         # _LINE_(whatever)_EOL_
         # _ITEM_(resource)_METI_
@@ -524,27 +526,32 @@ def format_listall_output(format_file, format_item_dir, format, config, option_p
                 with open(format_file, 'rt') as f:
                     template = f.read()
             # Optional files
-            re_option = re.compile(r'(%_OPTION_\((.*?)\)_NOITPO_)')
-            optional_files = re_option.findall(template)
-            for optional_file in optional_files:
-                if optional_file[1].startswith(option_prefix + '-'):
-                    with open(os.path.join(format_item_dir, optional_file[1].strip()), 'rt') as f:
-                        template = template.replace(optional_file[0].strip(), f.read())
+            if not skip_options:
+                re_option = re.compile(r'(%_OPTION_\((.*?)\)_NOITPO_)')
+                optional_files = re_option.findall(template)
+                for optional_file in optional_files:
+                    if optional_file[1].startswith(option_prefix + '-'):
+                        with open(os.path.join(format_item_dir, optional_file[1].strip()), 'rt') as f:
+                            template = template.replace(optional_file[0].strip(), f.read())
             # Include files if needed
             re_file = re.compile(r'(_FILE_\((.*?)\)_ELIF_)')
-            requested_files = re_file.findall(template)
-            available_files = os.listdir(format_item_dir)
-            for requested_file in requested_files:
-                if requested_file[1].strip() in available_files:
-                    with open(os.path.join(format_item_dir, requested_file[1].strip()), 'rt') as f:
-                        template = template.replace(requested_file[0].strip(), f.read())
-            # Find items and keys to be printed
-            re_line = re.compile(r'(_ITEM_\((.*?)\)_METI_)')
-            re_key = re.compile(r'_KEY_\(*(.*?)\)', re.DOTALL|re.MULTILINE) # Remove the multiline ?
-            format_item_mappings = os.listdir(format_item_dir)
-            lines = re_line.findall(template)
-            for (i, line) in enumerate(lines):
-                lines[i] = line + (re_key.findall(line[1]),)
+            while True:
+                requested_files = re_file.findall(template)
+                available_files = os.listdir(format_item_dir)
+                for requested_file in requested_files:
+                    if requested_file[1].strip() in available_files:
+                        with open(os.path.join(format_item_dir, requested_file[1].strip()), 'rt') as f:
+                            template = template.replace(requested_file[0].strip(), f.read())
+                # Find items and keys to be printed
+                re_line = re.compile(r'(_ITEM_\((.*?)\)_METI_)')
+                re_key = re.compile(r'_KEY_\(*(.*?)\)', re.DOTALL|re.MULTILINE) # Remove the multiline ?
+                format_item_mappings = os.listdir(format_item_dir)
+                lines = re_line.findall(template)
+                for (i, line) in enumerate(lines):
+                    lines[i] = line + (re_key.findall(line[1]),)
+                requested_files = re_file.findall(template)
+                if len(requested_files) == 0:
+                    break
         elif format and format[0] == 'csv':
             keys = config['keys']
             line = ', '.join('_KEY_(%s)' % k for k in keys)
@@ -552,7 +559,7 @@ def format_listall_output(format_file, format_item_dir, format, config, option_p
             template = line
         return (lines, template)
 
-def load_info_from_json(service, environment_name, scout2_folder = None):
+def load_info_from_json(service, environment_name, scout2_folder = None, full_config = False):
     report_filename, config_filename = get_scout2_paths(environment_name, scout2_folder = scout2_folder)
     try:
         if os.path.isfile(config_filename):
@@ -566,7 +573,10 @@ def load_info_from_json(service, environment_name, scout2_folder = None):
     except Exception as e:
         printException(e)
         return {}
-    return aws_config['services'][service] if 'services' in aws_config and service in aws_config['services'] else {}
+    if full_config:
+        return aws_config
+    else:
+        return aws_config['services'][service] if 'services' in aws_config and service in aws_config['services'] else {}
 
 def load_from_json(environment_name, var):
     report_filename, config_filename = get_scout2_paths(environment_name)

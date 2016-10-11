@@ -255,7 +255,7 @@
         },
         {
             "level": "danger",
-            "filename": "iam-inline-policy-allows-notActions.json",
+            "filename": "iam-inline-policy-allows-NotActions.json",
             "enabled": true,
             "args": [
                 "group"
@@ -283,7 +283,7 @@
         },
         {
             "level": "danger",
-            "filename": "iam-inline-policy-allows-notActions.json",
+            "filename": "iam-inline-policy-allows-NotActions.json",
             "enabled": true,
             "args": [
                 "role"
@@ -311,7 +311,7 @@
         },
         {
             "level": "danger",
-            "filename": "iam-inline-policy-allows-notActions.json",
+            "filename": "iam-inline-policy-allows-NotActions.json",
             "enabled": true,
             "args": [
                 "user"
@@ -338,7 +338,7 @@
         },
         {
             "level": "danger",
-            "filename": "iam-managed-policy-allows-notActions.json",
+            "filename": "iam-managed-policy-allows-NotActions.json",
             "enabled": true
         },
         {
@@ -423,7 +423,7 @@
             ]
         },
         {
-            "level": "danger",
+            "level": "warning",
             "filename": "iam-user-with-policies.json",
             "enabled": true,
             "args": [

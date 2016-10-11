@@ -5,8 +5,5 @@
     "conditions": [ "and",
         [ "iam.groups.id.", "withKey", "inline_policies" ]
     ],
-    "id_suffix": "inline_policies",
-    "keys": [
-        "iam.groups.id.name"
-    ]
+    "id_suffix": "inline_policies"
 }
