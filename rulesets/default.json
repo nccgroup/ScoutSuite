@@ -2,6 +2,14 @@
     "about": "This ruleset consists of numerous rules that are considered standard by the project's mainteners in an effort to avoid false-positive warnings. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of AWS-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configurded, and some of them being applicable to a limited number of users. Consider using the RulesetGenerator tool to make the most of Scout2.",
     "rules": [
         {
+            "level": "danger",
+            "filename": "iam-password-policy-minimum-length.json",
+            "enabled": true,
+            "args": [
+                "8"
+            ]
+        },
+        {
             "level": "warning",
             "filename": "cloudtrail-duplicated-global-services-logging.json",
             "enabled": true
