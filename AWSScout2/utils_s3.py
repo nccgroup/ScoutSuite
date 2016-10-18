@@ -123,13 +123,15 @@ def get_s3_acls(s3_client, bucket_name, bucket, key_name = None):
             grantee = grant['Grantee']['ID']
             display_name = grant['Grantee']['DisplayName'] if 'DisplayName' in grant['Grantee'] else grant['Grantee']['ID']
         elif 'URI' in grant['Grantee']:
-            grantee = grant['Grantee']['URI']
-            display_name = s3_group_to_string(grantee)
+            grantee = grant['Grantee']['URI'].split('/')[-1]
+            display_name = s3_group_to_string(grant['Grantee']['URI'])
         else:
             grantee = display_name = 'Unknown'
         permission = grant['Permission']
         manage_dictionary(grantees, grantee, {})
         grantees[grantee]['DisplayName'] = display_name
+        if 'URI' in grant['Grantee']:
+            grantees[grantee]['URI'] = grant['Grantee']['URI']
         manage_dictionary(grantees[grantee], 'permissions', init_s3_permissions())
         set_s3_permissions(grantees[grantee]['permissions'], permission)
     return grantees
