@@ -39,6 +39,7 @@ function load_aws_config_from_json(script_id, cols) {
     hideAll();
     if (cols == 0) {
         // Metadata
+        script_id = script_id.replace('services.id.', '');
         process_template(script_id + '.list.template', script_id + '.list', list);
     } else if (cols == 1) {
         // Single-column display
@@ -71,7 +72,7 @@ function process_template(id1, container_id, list) {
 // Hide all lists and details 
 //
 function hideAll() {
-    $("[id*='.list']").not("[id='metadata.list']").hide();
+    $("[id*='.list']").not("[id='metadata.list']").not("[id='filters.list']").hide();
     $("[id*='.details']").hide();
 }
 
@@ -133,6 +134,11 @@ function showRowWithItems(path) {
     showItems(path);
 }
 
+
+function showFilters(resource_path) {
+    $('[id*=".id.filters"]').hide();
+    $('[id="' + resource_path + '.id.filters"]').show()
+}
 
 //
 // Show findings
@@ -315,17 +321,12 @@ function showObject() {
         data = data[path_array[i]];
     }
     // Filter if ...
-    console.log('Arguments:');
-    console.log(arguments);
     if (arguments.length > 1) {
         var attr_name = arguments[1];
         var attr_value = arguments[2];
-        console.log('Attr = ' + attr_name);
-        console.log('Value = ' + attr_value);
         for(resource in data) {
             if (data[resource][attr_name] == attr_value) {
                 data = data[resource];
-                console.log(data);
                 break;
             }
         }
@@ -422,6 +423,7 @@ function load_metadata() {
     load_aws_config_from_json('last_run', 1);
     load_aws_config_from_json('metadata', 0);
     load_aws_config_from_json('services.id.violations', 1);
+    load_aws_config_from_json('services.id.filters', 0);
     show_main_dashboard();
     for (service in aws_info['metadata']) {
         for (section in aws_info['metadata'][service]) {
@@ -452,7 +454,7 @@ function about() {
 // Show main dashboard
 //
 function show_main_dashboard() {
-    hideAll()
+    hideAll();
     showRowWithItems('last_run');
     $('#section_title-h2').text('');
 }
@@ -555,6 +557,7 @@ function updateDOM(anchor) {
         showRow(resource_path);
         showFindings(path, resource_path);
         current_resource_path = resource_path;
+        showFilters(resource_path);
     } else if (lazy_loading(resource_path) == 0) {
         // 0 is returned when the data was already loaded, a DOM update is necessary then
         if (path.endsWith('.view')) {
@@ -569,12 +572,14 @@ function updateDOM(anchor) {
             // Switch view for resources
             hideAll();
             showRowWithItems(resource_path);
+            showFilters(resource_path);
             current_resource_path = resource_path;
         }
         // TODO: Highlight all findings...
         
     } else {
         // The DOM was updated by the lazy loading function, save the current resource path
+        showFilters(resource_path);
         current_resource_path = resource_path;
     }
 

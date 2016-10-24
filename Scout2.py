@@ -16,6 +16,7 @@ try:
 except Exception as e:
     print('Error: Scout2 now depends on the opinel package (previously AWSUtils submodule). Install all the requirements with the following command:')
     print('  $ pip install -r requirements.txt')
+    print(e)
 
     sys.exit()
 
@@ -29,6 +30,14 @@ from AWSScout2.utils_rds import *
 from AWSScout2.utils_redshift import *
 from AWSScout2.utils_s3 import *
 from AWSScout2.utils_vpc import *
+
+# Setup variables
+(scout2_dir, tool_name) = os.path.split(__file__)
+scout2_dir = os.path.abspath(scout2_dir)
+scout2_rules_dir = '%s/%s' % (scout2_dir, RULES_DIR)
+scout2_rulesets_dir = '%s/%s' % (scout2_dir, RULESETS_DIR)
+ruleset_generator_path = '%s/ruleset-generator.html' % (scout2_dir)
+scout2_filters_dir = '%s/%s' % (scout2_dir, FILTERS_DIR)
 
 
 ########################################
@@ -131,9 +140,14 @@ def main(args):
     ruleset = load_ruleset(ruleset_filename)
     rules = init_rules(ruleset, services, environment_name, args.ip_ranges, aws_config['account_id'])
 
-    # Reset violations
+    # Load filters from JSON config files
+    filters = load_ruleset('rulesets/filters.json')
+    filters = init_rules(filters, services, environment_name, args.ip_ranges, aws_config['account_id'], rule_type = 'filters')
+ 
+    # Reset filters & violations
     for service in services:
         aws_config['services'][service]['violations'] = {}
+        aws_config['services'][service]['filters'] = {}
 
     ##### VPC analyzis
     analyze_vpc_config(aws_config, args.ip_ranges, args.ip_ranges_key_name)
@@ -188,6 +202,32 @@ def main(args):
     # Tweaks
     if 'cloudtrail' in services:
         tweak_cloudtrail_findings(aws_config)
+
+    # Filters
+    for filter_path in filters:
+        for filter in filters[filter_path]:
+            printDebug('Processing %s filter: "%s"' % (filter_path.split('.')[0], filters[filter_path][filter]['description']))
+            path = filter_path.split('.')
+            service = path[0]
+            manage_dictionary(aws_config['services'][service], 'filters', {})
+            aws_config['services'][service]['filters'][filter] = {}
+            aws_config['services'][service]['filters'][filter]['description'] = filters[filter_path][filter]['description']
+            aws_config['services'][service]['filters'][filter]['path'] = filters[filter_path][filter]['path']
+            if 'id_suffix' in filters[filter_path][filter]:
+                aws_config['services'][service]['filters'][filter]['id_suffix'] = filters[filter_path][filter]['id_suffix']
+            if 'display_path' in filters[filter_path][filter]:
+                aws_config['services'][service]['filters'][filter]['display_path'] = filters[filter_path][filter]['display_path']
+            try:
+                aws_config['services'][service]['filters'][filter]['items'] = recurse(aws_config['services'], aws_config['services'], path, [], filters[filter_path][filter], True)
+                aws_config['services'][service]['filters'][filter]['dashboard_name'] = filters[filter_path][filter]['dashboard_name'] if 'dashboard_name' in filters[filter_path][filter] else '??'
+                aws_config['services'][service]['filters'][filter]['flagged_items'] = len(aws_config['services'][service]['filters'][filter]['items'])
+                aws_config['services'][service]['filters'][filter]['service'] = service
+            except Exception as e:
+                printError('Failed to process filter defined in %s.json' % filter)
+                # Fallback if process filter failed to ensure report creation and data dump still happen
+                aws_config['services'][service]['filters'][filter]['checked_items'] = 0
+                aws_config['services'][service]['filters'][filter]['flagged_items'] = 0
+                printException(e)
 
     # Exceptions
     exceptions = {}

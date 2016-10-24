@@ -48,7 +48,7 @@ def load_ruleset(ruleset_filename, quiet = False):
 #
 # Initialize rules based on ruleset and services in scope
 #
-def init_rules(ruleset, services, environment_name, ip_ranges, aws_account_id, generator = False):
+def init_rules(ruleset, services, environment_name, ip_ranges, aws_account_id, generator = False, rule_type = 'rules'):
     # Load rules from JSON files
     rules = {}
     for rule_metadata in ruleset['rules']:
@@ -56,7 +56,7 @@ def init_rules(ruleset, services, environment_name, ip_ranges, aws_account_id, g
         if 'enabled' in rule_metadata and rule_metadata['enabled'] in ['false', 'False', False] and not generator:
             continue
         # Skip rules that apply to an out-of-scope service
-        rule_details = load_config_from_json(rule_metadata, ip_ranges, aws_account_id)
+        rule_details = load_config_from_json(rule_metadata, ip_ranges, aws_account_id, rule_type)
         if not rule_details:
             continue
         if 'enabled' in rule_metadata and rule_metadata['enabled']:
@@ -70,7 +70,8 @@ def init_rules(ruleset, services, environment_name, ip_ranges, aws_account_id, g
         # Build the rules dictionary
         path = rule_details['path']
         manage_dictionary(rules, path, {})
-        rule_details['level'] = rule_metadata['level']
+        if 'level' in rule_metadata:
+            rule_details['level'] = rule_metadata['level']
         key = rule_details['key'] if 'key' in rule_details else rule_metadata['filename']
         # Set condition operator
         if not 'condition_operator' in rule_details:

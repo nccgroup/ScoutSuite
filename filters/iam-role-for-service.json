@@ -1,0 +1,13 @@
+{
+    "description": "Role for _ARG_0_",
+    "key": "iam-role-for-_ARG_0_",
+    "path": "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id",
+    "display_path": "iam.roles.id",
+    "dashboard_name": "Roles",
+    "conditions": [ "and",
+        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Effect", "equal", "Allow" ],
+        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.", "containAction", "sts:AssumeRole" ],
+        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Principal", "withKey", "Service" ],
+        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Principal.Service", "equal", "_ARG_1_" ]
+    ]
+}

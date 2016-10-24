@@ -45,42 +45,24 @@
         </div>
         <div class="navbar-collapse collapse">
           <div class="navbar-collapse collapse">
-          <ul class="nav navbar-nav" id="metadata.list">
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Regions<b class="caret"></b></a>
-              <ul class="dropdown-menu" id="region-filters.list">
-                <script id="region-filter.list.template" type="text/x-handlebars-template">
-                  <li id="{{finding_entity keyword "region"}}-filter-select_none"><a href="javascript:clear_all_regions('{{keyword}}')">Hide all</a></li>
-                  <li id="{{finding_entity keyword "region"}}-filter-select_all"><a href="javascript:select_all_regions('{{keyword}}')">Select all</a></li>
-                  {{#each items}}
-                    <li id="{{finding_entity ../keyword "region"}}-filter-{{@key}}">
-                      <a href="javascript:toggle_region('{{../keyword}}', '{{@key}}')"><i id="{{finding_entity ../keyword "region"}}-filtericon-{{@key}}" class="glyphicon glyphicon-check""></i> {{@key}}</a>
-                    </li>
-                  {{/each}}
-                </script>
-              </ul>
-            </li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filters<b class="caret"></b></a>
-              <ul class="dropdown-menu" id="filters.list">
-                <script id="filter.list.template" type="text/x-handlebars-template">
-                  {{#each items}}
-                    <li id="{{finding_entity keyword_prefix entity}}-filter-{{@key}}">
-                      <a href="javascript:toggle_filter(aws_info['services']['{{keyword_prefix}}'], '{{@key}}')"><i id="{{finding_entity keyword_prefix entity}}-filtericon-{{@key}}" class="glyphicon glyphicon-unchecked""></i> {{description}} ({{items.length}})</a>
-                    </li>
-                  {{/each}}
-                </script>
-              </ul>
-            </li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Help<b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="javascript:about()">About Scout2</a></li>
-              </ul>
-            </li>
-          </ul>
+            <ul class="nav navbar-nav" id="metadata.list">
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Regions<b class="caret"></b></a>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filters<b class="caret"></b></a>
+                <ul class="dropdown-menu" id="filters.list">
+                </ul>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Help<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="javascript:about()">About Scout2</a></li>
+                </ul>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

@@ -51,10 +51,11 @@ re_list_value = re.compile(r'_LIST_\((.*?)\)')
 aws_ip_ranges_filename = 'ip-ranges.json'
 ip_ranges_from_args = 'ip-ranges-from-args'
 
-
+FILTERS_DIR = 'filters'
 RULES_DIR = 'rules'
 RULESETS_DIR = 'rulesets'
 DEFAULT_RULESET = '%s/default.json' % RULESETS_DIR
+
 
 ########################################
 ##### Argument parser
@@ -589,11 +590,11 @@ def load_from_json(environment_name, var):
 #
 # Load rule from a JSON config file
 #
-def load_config_from_json(rule_metadata, ip_ranges, aws_account_id):
+def load_config_from_json(rule_metadata, ip_ranges, aws_account_id, rule_type = 'rules'):
     config = None
     config_file = rule_metadata['filename']
-    if not config_file.startswith('rules/'):
-        config_file = 'rules/%s' % config_file
+    if not config_file.startswith('rules/') and not config_file.startswith('filters/'):
+        config_file = '%s/%s' % (rule_type, config_file)
     config_args = rule_metadata['args'] if 'args' in rule_metadata else []
     try:
         with open(config_file, 'rt') as f:

@@ -1,0 +1,8 @@
+<!-- Filters -->
+<script id="filters.list.template" type="text/x-handlebars-template">
+  {{#each items}}
+    {{#each filters}}   
+      <li id="services.{{display_path}}.filters"><a href="#services.{{@../key}}.filters.{{@key}}.items">{{description}}</a></li>
+    {{/each}}
+  {{/each}}
+</script>
