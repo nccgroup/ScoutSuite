@@ -46,7 +46,7 @@ IAM policy lists the permissions necessary for a default run of Scout2.
 TO CREATE YOUR OWN CSV FILE**. Instead, configure your computer using the
 [aws_recipes_configure_iam tool](https://github.com/nccgroup/AWS-recipes/blob/master/Python/aws_recipes_configure_iam.py)
 or refer to
-[the AWS documenation](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-quick-configuration)
+[the AWS documentation](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-quick-configuration)
 for information about configuring credentials for the AWS CLI.
 
 ## Usage
