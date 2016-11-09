@@ -49,6 +49,9 @@ or refer to
 [the AWS documentation](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-quick-configuration)
 for information about configuring credentials for the AWS CLI.
 
+### Compliant with AWS' Acceptable Use Policy
+Use of Scout2 does not require AWS users to complete and submit the AWS Vulnerability / Penetration Testing Request Form. Scout2 only performs AWS API calls to fetch configuration data and identify security gaps, which is not considered security scanning as it does not impact AWS' network and applications.
+
 ## Usage
 
 ### From an EC2 instance with an appropriate IAM role
