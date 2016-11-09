@@ -8,6 +8,6 @@
     "conditions": [ "and",
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id", "equal", "ingress" ],
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id", "equal", "_ARG_0_" ],
-        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id", "containNoneOf", [ "80", "443" ] ]
+        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id", "containNoneOf", [ "22", "80", "443", "1433", "1521", "3306", "3389", "5432", "27017" ] ]
     ]
 }

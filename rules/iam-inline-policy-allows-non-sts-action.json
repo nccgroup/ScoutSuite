@@ -1,0 +1,15 @@
+{
+    "arg_names": [ "IAM entity type", "Service", "Action" ],
+    "description": "Inline _ARG_0_ policy allows non STS action",
+    "key": "iam-inline-_ARG_0_-policy-allows-non-sts-action",
+    "path": "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id",
+    "display_path": "iam._ARG_0_s.id",
+    "dashboard_name": "Policies",
+    "conditions": [ "and",
+        [ "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id.Effect", "equal", "Allow" ],
+        [ "or",
+            [ "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id.", "withoutKey", "Action" ],
+            [ "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id.Action", "containAtLeastOneDifferentFrom", "sts:AssumeRole" ]
+        ]
+    ]
+}

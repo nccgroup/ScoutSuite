@@ -17,6 +17,8 @@ scout2_dir = os.path.abspath(scout2_dir)
 scout2_rules_dir = '%s/%s' % (scout2_dir, RULES_DIR)
 scout2_rulesets_dir = '%s/%s' % (scout2_dir, RULESETS_DIR)
 ruleset_generator_path = '%s/ruleset-generator.html' % (scout2_dir)
+scout2_filters_dir = '%s/%s' % (scout2_dir, FILTERS_DIR)
+
 
 
 ########################################

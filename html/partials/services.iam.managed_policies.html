@@ -8,6 +8,19 @@
         {{add_policy_path this 'managed_policies' @key}}
         {{> services.iam.policy}}
       </div>
+      <div class="list-group-item">
+        <h4 class="list-group-item-heading">Attached entities</h4>
+        <ul>
+          {{#each attached_to}}
+            <li>{{make_title @key}}</li>
+            <ul>
+              {{#each this}}
+                <li><a href="javascript:showObject('services.iam.{{@../key}}.{{id}}')">{{name}}</a></li>
+              {{/each}}
+            </ul>
+          {{/each}}
+        </ul>
+      </div>
     </script>
     <script>
       Handlebars.registerPartial("services.iam.managed_policies", $("#services\\.iam\\.managed_policies\\.partial").html());

@@ -71,6 +71,10 @@ def get_aws_account_id(iam_info):
                 try:
                     return iam_info[resources][resource]['Arn'].split(':')[4]
                 except:
+                    try:
+                        return iam_info[resources][resource]['arn'].split(':')[4]
+                    except:
+                        pass
                     pass
 
 def get_groups_info(iam_client, iam_info):
@@ -208,13 +212,17 @@ def get_managed_policy(q, params):
             policy_version = policy_version['PolicyVersion']
             policy['PolicyDocument'] = policy_version['Document']
             # Get attached IAM entities
+            policy['attached_to'] = {}
             attached_entities = handle_truncated_response(iam_client.list_entities_for_policy, {'PolicyArn': policy['arn']}, 'Marker', ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'])
             for entity_type in attached_entities:
                 resource_type = entity_type.replace('Policy', '').lower()
+                if len(attached_entities[entity_type]):
+                    policy['attached_to'][resource_type] = []
                 for entity in attached_entities[entity_type]:
                     name_field = entity_type.replace('Policy', '')[:-1] + 'Name'
                     resource_name = entity[name_field]
                     resource_id = get_id_for_resource(iam_info, resource_type, resource_name)
+                    policy['attached_to'][resource_type].append({'id': resource_id, 'name': resource_name})
                     manage_dictionary(iam_info[resource_type][resource_id], 'managed_policies', [])
                     manage_dictionary(iam_info[resource_type][resource_id], 'managed_policies_count', 0)
                     iam_info[resource_type][resource_id]['managed_policies'].append(policy['id'])

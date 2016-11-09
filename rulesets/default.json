@@ -114,7 +114,7 @@
             "args": [
                 "PostgreSQL",
                 "TCP",
-                "54322"
+                "5432"
             ]
         },
         {
@@ -154,13 +154,18 @@
             ]
         },
         {
-            "level": "danger",
+            "level": "warning",
             "filename": "ec2-security-group-opens-all-ports-to-self.json",
             "enabled": true
         },
         {
-            "level": "danger",
+            "level": "warning",
             "filename": "ec2-security-group-opens-all-ports.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-opens-all-ports-to-all.json",
             "enabled": true
         },
         {

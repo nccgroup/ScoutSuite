@@ -326,3 +326,36 @@ Handlebars.registerHelper('other_level', function() {
 Handlebars.registerHelper('get_service', function() {
     return getService(arguments[0]);
 });
+
+
+// http://funkjedi.com/technology/412-every-nth-item-in-handlebars, slightly tweaked to work with a dictionary
+Handlebars.registerHelper('grouped_each', function(every, context, options) {
+    var out = "", subcontext = [], i;
+    var keys = Object.keys(context);
+    var count = keys.length;
+    var subcontext = {};
+    if (context && count > 0) {
+        for (i = 0; i < count; i++) {
+            if (i > 0 && i % every === 0) {
+                out += options.fn(subcontext);
+                subcontext = {};
+            }
+            subcontext[keys[i]] = context[keys[i]];
+        }
+        out += options.fn(subcontext);
+    }
+    return out;
+});
+
+
+Handlebars.registerHelper('sorted_each', function(array, key, opts) {
+    newarray = array.sort(function(a, b) {
+        if (a[key] < b[key]) return -1
+        if (a[key] > b[key]) return 1;
+        return 0;
+    });
+    return opts.fn(newarray);
+});
+
+
+
