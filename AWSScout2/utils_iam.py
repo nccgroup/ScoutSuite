@@ -114,12 +114,12 @@ def get_group_users(iam_client, group_name):
         users.append(user['UserId'])
     return users
 
-def get_iam_info(key_id, secret, session_token, service_config):
+def get_iam_info(credentials, service_config):
     manage_dictionary(service_config, 'groups', {})
     manage_dictionary(service_config, 'permissions', {})
     manage_dictionary(service_config, 'roles', {})
     manage_dictionary(service_config, 'users', {})
-    iam_client = connect_iam(key_id, secret, session_token)
+    iam_client = connect_iam(credentials)
     # Generate the report early so that download doesn't fail with "ReportInProgress".
     try:
         iam_client.generate_credential_report()

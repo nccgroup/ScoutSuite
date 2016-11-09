@@ -29,23 +29,22 @@ def tweak_cloudtrail_findings(aws_config):
             aws_config['services']['cloudtrail']['violations']['cloudtrail-no-logging']['flagged_items'] += 1
             aws_config['services']['cloudtrail']['violations']['cloudtrail-no-logging']['dashboard_name'] = 'Regions'
 
-def get_cloudtrail_info(key_id, secret, session_token, service_config, selected_regions, with_gov, with_cn):
+def get_cloudtrail_info(credentials, service_config, selected_regions, with_gov, with_cn):
     manage_dictionary(service_config, 'regions', {})
     printInfo('Fetching CloudTrail config...')
     for region in build_region_list('cloudtrail', selected_regions, include_gov = with_gov, include_cn = with_cn):
         manage_dictionary(service_config['regions'], region, {})
         service_config['regions'][region]['name'] = region
-    thread_work(service_config['regions'], get_region_trails, params = {'creds': (key_id, secret, session_token), 'cloudtrail_info': service_config})
+    thread_work(service_config['regions'], get_region_trails, params = {'creds': credentials, 'cloudtrail_info': service_config})
     service_config['regions_count'] = len(service_config['regions'])
 
 def get_region_trails(q, params):
-    key_id, secret, session_token = params['creds']
     cloudtrail_info = params['cloudtrail_info']
     while True:
       try:
         region = q.get()
         manage_dictionary(cloudtrail_info['regions'][region], 'trails', {})
-        cloudtrail_client = connect_cloudtrail(key_id, secret, session_token, region)
+        cloudtrail_client = connect_cloudtrail(params['creds'], region)
         trails = cloudtrail_client.describe_trails()
         cloudtrail_info['regions'][region]['trails_count'] = len(trails['trailList'])
         for trail in trails['trailList']:
