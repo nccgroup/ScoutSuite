@@ -1,5 +1,14 @@
 {
+    "about": "This ruleset consists of numerous rules that are considered standard by the project's mainteners in an effort to avoid false-positive warnings. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of AWS-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configurded, and some of them being applicable to a limited number of users. Consider using the RulesetGenerator tool to make the most of Scout2.",
     "rules": [
+        {
+            "level": "danger",
+            "filename": "iam-password-policy-minimum-length.json",
+            "enabled": true,
+            "args": [
+                "8"
+            ]
+        },
         {
             "level": "warning",
             "filename": "cloudtrail-duplicated-global-services-logging.json",
@@ -105,7 +114,7 @@
             "args": [
                 "PostgreSQL",
                 "TCP",
-                "54322"
+                "5432"
             ]
         },
         {
@@ -145,13 +154,18 @@
             ]
         },
         {
-            "level": "danger",
+            "level": "warning",
             "filename": "ec2-security-group-opens-all-ports-to-self.json",
             "enabled": true
         },
         {
-            "level": "danger",
+            "level": "warning",
             "filename": "ec2-security-group-opens-all-ports.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-opens-all-ports-to-all.json",
             "enabled": true
         },
         {
@@ -213,6 +227,16 @@
             "enabled": true
         },
         {
+            "level": "danger",
+            "filename": "iam-assume-role-lacks-external-id.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "iam-assume-role-policy-allows-all.json",
+            "enabled": true
+        },
+        {
             "level": "warning",
             "filename": "iam-ec2-role-without-instances.json",
             "enabled": true
@@ -244,17 +268,7 @@
         },
         {
             "level": "danger",
-            "filename": "iam-inline-policy-for-role.json",
-            "enabled": true,
-            "args": [
-                "group",
-                "sts",
-                "AssumeRole"
-            ]
-        },
-        {
-            "level": "danger",
-            "filename": "iam-inline-policy-allows-notActions.json",
+            "filename": "iam-inline-policy-allows-NotActions.json",
             "enabled": true,
             "args": [
                 "group"
@@ -265,9 +279,9 @@
             "filename": "iam-inline-policy-for-role.json",
             "enabled": true,
             "args": [
-                "role",
-                "iam",
-                "PassRole"
+                "group",
+                "sts",
+                "AssumeRole"
             ]
         },
         {
@@ -276,13 +290,13 @@
             "enabled": true,
             "args": [
                 "role",
-                "sts",
-                "AssumeRole"
+                "iam",
+                "PassRole"
             ]
         },
         {
             "level": "danger",
-            "filename": "iam-inline-policy-allows-notActions.json",
+            "filename": "iam-inline-policy-allows-NotActions.json",
             "enabled": true,
             "args": [
                 "role"
@@ -293,9 +307,27 @@
             "filename": "iam-inline-policy-for-role.json",
             "enabled": true,
             "args": [
+                "role",
+                "sts",
+                "AssumeRole"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-inline-policy-for-role.json",
+            "enabled": true,
+            "args": [
                 "user",
                 "iam",
                 "PassRole"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-inline-policy-allows-NotActions.json",
+            "enabled": true,
+            "args": [
+                "user"
             ]
         },
         {
@@ -306,14 +338,6 @@
                 "user",
                 "sts",
                 "AssumeRole"
-            ]
-        },
-        {
-            "level": "danger",
-            "filename": "iam-inline-policy-allows-notActions.json",
-            "enabled": true,
-            "args": [
-                "user"
             ]
         },
         {
@@ -327,7 +351,7 @@
         },
         {
             "level": "danger",
-            "filename": "iam-managed-policy-allows-notActions.json",
+            "filename": "iam-managed-policy-allows-NotActions.json",
             "enabled": true
         },
         {
@@ -412,7 +436,7 @@
             ]
         },
         {
-            "level": "danger",
+            "level": "warning",
             "filename": "iam-user-with-policies.json",
             "enabled": true,
             "args": [

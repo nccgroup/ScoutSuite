@@ -1,0 +1,13 @@
+{
+    "description": "AssumeRole policy allows all principals",
+    "rationale": "Setting the AssumeRole policy's principal attribute to AWS:* means that anyone is authorized to assume the role and access the AWS account.",
+    "path": "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id",
+    "display_path": "iam.roles.id",
+    "dashboard_name": "Roles",
+    "conditions": [ "and",
+        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Effect", "equal", "Allow" ],
+        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.", "containAction", "sts:AssumeRole" ],
+        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Principal", "withKey", "AWS" ],
+        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Principal.AWS", "containAtLeastOneOf", "*" ]
+    ]
+}

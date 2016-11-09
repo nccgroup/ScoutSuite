@@ -123,13 +123,15 @@ def get_s3_acls(s3_client, bucket_name, bucket, key_name = None):
             grantee = grant['Grantee']['ID']
             display_name = grant['Grantee']['DisplayName'] if 'DisplayName' in grant['Grantee'] else grant['Grantee']['ID']
         elif 'URI' in grant['Grantee']:
-            grantee = grant['Grantee']['URI']
-            display_name = s3_group_to_string(grantee)
+            grantee = grant['Grantee']['URI'].split('/')[-1]
+            display_name = s3_group_to_string(grant['Grantee']['URI'])
         else:
             grantee = display_name = 'Unknown'
         permission = grant['Permission']
         manage_dictionary(grantees, grantee, {})
         grantees[grantee]['DisplayName'] = display_name
+        if 'URI' in grant['Grantee']:
+            grantees[grantee]['URI'] = grant['Grantee']['URI']
         manage_dictionary(grantees[grantee], 'permissions', init_s3_permissions())
         set_s3_permissions(grantees[grantee]['permissions'], permission)
     return grantees
@@ -264,7 +266,7 @@ def get_s3_bucket_keys(s3_client, bucket_name, bucket, check_encryption, check_a
         update_status(key_count, bucket['keys_count'], 'keys')
 
 
-def get_s3_info(key_id, secret, session_token, service_config, selected_regions, with_gov, with_cn, s3_params):
+def get_s3_info(credentials, service_config, selected_regions, with_gov, with_cn, s3_params):
     # h4ck :: Create multiple clients here to avoid propagation of credentials. This is necessary because s3 is a global service that requires to access the API via the right region endpoints...
     s3_clients = {}
     if selected_regions != []:
@@ -274,7 +276,7 @@ def get_s3_info(key_id, secret, session_token, service_config, selected_regions,
         client_regions = selected_regions
     for region in build_region_list('s3', client_regions, include_gov = with_gov, include_cn = with_cn):
         config = botocore.client.Config(signature_version = 's3v4')
-        s3_clients[region] = connect_s3(key_id, secret, session_token, region_name = region, config = config)
+        s3_clients[region] = connect_s3(credentials, region_name = region, config = config)
     s3_params['selected_regions'] = selected_regions
     printInfo('Fetching S3 buckets config...')
     get_s3_buckets(s3_clients, service_config, s3_params)

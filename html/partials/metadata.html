@@ -37,15 +37,6 @@
             <li><a href="#{{full_path}}">{{make_title @key}} ({{count}})</a></li>
           {{/if}}
         {{/each}}
-        <li class="divider"></li>
-        <li class="dropdown-header">Security risks</li>
-        {{#each violations}}
-          {{#if flagged_items}}
-            <li><a href="javascript:list_findings('{{@../key}}', '{{@key}}')">
-              {{@key}} ({{flagged_items}})
-            </a></li>
-          {{/if}}
-        {{/each}}
       </ul>
     </li>
   {{/each}}

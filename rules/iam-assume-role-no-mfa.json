@@ -1,0 +1,18 @@
+{
+    "description": "AssumeRole policy lacks MFA",
+    "rationale": "",
+    "path": "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id",
+    "display_path": "iam.roles.id",
+    "dashboard_name": "Roles",
+    "conditions": [ "and",
+        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Effect", "equal", "Allow" ],
+        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.", "containAction", "sts:AssumeRole" ],
+        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Principal", "withKey", "AWS" ],
+        [ "or", 
+            [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.", "withoutKey", "Condition" ],
+            [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition", "withoutKey", "Bool" ],
+            [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.Bool.", "withoutKey", "aws:MultiFactorAuthPresent" ],
+            [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.Bool.aws:MultiFactorAuthPresent", "notTrue", "" ]
+        ]
+    ]
+}

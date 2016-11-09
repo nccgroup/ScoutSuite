@@ -14,32 +14,55 @@ import urllib
 ########################################
 
 def analyze_iam_config(aws_config):
-    go_to_and_do(aws_config, aws_config['services']['iam'], ['groups', 'inline_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of_statements)
-    go_to_and_do(aws_config, aws_config['services']['iam'], ['roles', 'inline_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of_statements)
-    go_to_and_do(aws_config, aws_config['services']['iam'], ['users', 'inline_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of_statements)
-    go_to_and_do(aws_config, aws_config['services']['iam'], ['managed_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of_statements)
+    # Github issue #99 - We expect a list of statements but policies with a single statement that is a dictionary are valid, make it a list locally
+    go_to_and_do(aws_config, aws_config['services']['iam'], ['groups', 'inline_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of, {'attribute_name': 'Statement'})
+    go_to_and_do(aws_config, aws_config['services']['iam'], ['roles', 'inline_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of, {'attribute_name': 'Statement'})
+    go_to_and_do(aws_config, aws_config['services']['iam'], ['roles', 'assume_role_policy.PolicyDocument' ], ['services', 'iam'], enforce_list_of, {'attribute_name': 'Statement'})
+    go_to_and_do(aws_config, aws_config['services']['iam'], ['roles', 'assume_role_policy.PolicyDocument.Statement', 'Principal' ], ['services', 'iam'], enforce_list_of, {'attribute_name': 'AWS'})
+    go_to_and_do(aws_config, aws_config['services']['iam'], ['users', 'inline_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of, {'attribute_name': 'Statement'})
+    go_to_and_do(aws_config, aws_config['services']['iam'], ['managed_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of, {'attribute_name': 'Statement'})
 
 #
-# Github issue #99 - We expect a list of statements but policies with a single statement that is a dictionary are valid, make it a list locally
+# If necessary, allows reformatting of attributes into a list
 #
-def enforce_list_of_statements(aws_config, current_config, path, current_path, resource_id, callback_args):
-    if resource_id == 'Statement' and not type(current_config) == list:
+def enforce_list_of(aws_config, current_config, path, current_path, resource_id, callback_args):
+    attribute_name = callback_args['attribute_name']
+    if resource_id == attribute_name and not type(current_config) == list:
         # Current config is a copied structure, need to go back to the original and update
         target = aws_config
         for p in current_path:
             target = target[p]
-        target['Statement'] = [ target['Statement'] ]
+        target[attribute_name] = [ target[attribute_name] ]
 
+#
+#
+#
 def get_account_password_policy(iam_client, iam_info):
-    iam_info['password_policy'] = iam_client.get_account_password_policy()['PasswordPolicy']
-    if 'PasswordReusePrevention' not in iam_info['password_policy']:
-        iam_info['password_policy']['PasswordReusePrevention'] = False
-    else:
-        iam_info['password_policy']['PreviousPasswordPrevented'] = iam_info['password_policy']['PasswordReusePrevention']
-        iam_info['password_policy']['PasswordReusePrevention'] = True
-    # There is a bug in the API: ExpirePasswords always returns false
-    if 'MaxPasswordAge' in iam_info['password_policy']:
-        iam_info['password_policy']['ExpirePasswords'] = True
+    try:
+        iam_info['password_policy'] = iam_client.get_account_password_policy()['PasswordPolicy']
+        if 'PasswordReusePrevention' not in iam_info['password_policy']:
+            iam_info['password_policy']['PasswordReusePrevention'] = False
+        else:
+            iam_info['password_policy']['PreviousPasswordPrevented'] = iam_info['password_policy']['PasswordReusePrevention']
+            iam_info['password_policy']['PasswordReusePrevention'] = True
+        # There is a bug in the API: ExpirePasswords always returns false
+        if 'MaxPasswordAge' in iam_info['password_policy']:
+            iam_info['password_policy']['ExpirePasswords'] = True
+    except Exception as e:
+        if type(e) == botocore.exceptions.ClientError:
+            if e.response['Error']['Code'] == 'NoSuchEntity':
+                iam_info['password_policy'] = {}
+                iam_info['password_policy']['MinimumPasswordLength'] = '1' # As of 10/10/2016, 1-character passwords were authorized when no policy exists even though the console displays 6
+                iam_info['password_policy']['RequireUppercaseCharacters'] = False
+                iam_info['password_policy']['RequireLowercaseCharacters'] = False
+                iam_info['password_policy']['RequireNumbers'] = False
+                iam_info['password_policy']['RequireSymbols'] = False
+                iam_info['password_policy']['PasswordReusePrevention'] = False
+                iam_info['password_policy']['ExpirePasswords'] = False
+            else:
+                printError("Unexpected error: %s" % e)
+        else:
+            printError(e)
 
 def get_aws_account_id(iam_info):
     for resources in ['groups', 'roles', 'users']:
@@ -48,6 +71,10 @@ def get_aws_account_id(iam_info):
                 try:
                     return iam_info[resources][resource]['Arn'].split(':')[4]
                 except:
+                    try:
+                        return iam_info[resources][resource]['arn'].split(':')[4]
+                    except:
+                        pass
                     pass
 
 def get_groups_info(iam_client, iam_info):
@@ -87,12 +114,12 @@ def get_group_users(iam_client, group_name):
         users.append(user['UserId'])
     return users
 
-def get_iam_info(key_id, secret, session_token, service_config):
+def get_iam_info(credentials, service_config):
     manage_dictionary(service_config, 'groups', {})
     manage_dictionary(service_config, 'permissions', {})
     manage_dictionary(service_config, 'roles', {})
     manage_dictionary(service_config, 'users', {})
-    iam_client = connect_iam(key_id, secret, session_token)
+    iam_client = connect_iam(credentials)
     # Generate the report early so that download doesn't fail with "ReportInProgress".
     try:
         iam_client.generate_credential_report()
@@ -185,13 +212,17 @@ def get_managed_policy(q, params):
             policy_version = policy_version['PolicyVersion']
             policy['PolicyDocument'] = policy_version['Document']
             # Get attached IAM entities
+            policy['attached_to'] = {}
             attached_entities = handle_truncated_response(iam_client.list_entities_for_policy, {'PolicyArn': policy['arn']}, 'Marker', ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'])
             for entity_type in attached_entities:
                 resource_type = entity_type.replace('Policy', '').lower()
+                if len(attached_entities[entity_type]):
+                    policy['attached_to'][resource_type] = []
                 for entity in attached_entities[entity_type]:
                     name_field = entity_type.replace('Policy', '')[:-1] + 'Name'
                     resource_name = entity[name_field]
                     resource_id = get_id_for_resource(iam_info, resource_type, resource_name)
+                    policy['attached_to'][resource_type].append({'id': resource_id, 'name': resource_name})
                     manage_dictionary(iam_info[resource_type][resource_id], 'managed_policies', [])
                     manage_dictionary(iam_info[resource_type][resource_id], 'managed_policies_count', 0)
                     iam_info[resource_type][resource_id]['managed_policies'].append(policy['id'])
@@ -274,7 +305,8 @@ def get_role_info(q, params):
                 role['instance_profiles'][profile['InstanceProfileId']]['arn'] = profile['Arn']
                 role['instance_profiles'][profile['InstanceProfileId']]['name'] = profile['InstanceProfileName']
             # Get trust relationship
-            role['assume_role_policy'] = fetched_role.pop('AssumeRolePolicyDocument')
+            role['assume_role_policy'] = {}
+            role['assume_role_policy']['PolicyDocument'] = fetched_role.pop('AssumeRolePolicyDocument')
             # Save role
             iam_info['roles'][role['id']] = role
             show_status(iam_info, 'roles', False)

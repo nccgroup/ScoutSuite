@@ -1,5 +1,5 @@
 {
-    "dashboard_name": "Bucket",
+    "dashboard_name": "Buckets",
     "description": "Bucket without versioning",
     "path": "s3.buckets.id",
     "conditions": [ "and",

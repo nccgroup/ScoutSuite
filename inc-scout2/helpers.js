@@ -4,13 +4,43 @@
 ////////////////////////
 
 Handlebars.registerHelper('displayPolicy', function(blob) {
-    // this fails now that the policies are all JSON... check in chrome though
-    //policy = JSON.stringify(eval("(" + blob + ")"), null, 2);
-    var policy = JSON.stringify(blob, null, 2);
-    policy = policy.replace(/ /g, '&nbsp;');
-    policy = policy.replace(/\n/g, '<br />');
+    var policy = '{<br/>';
+    for (attr in blob) {
+        if (attr == 'Statement') {
+            policy += '&nbsp;&nbsp;"Statement": [<br/>';
+            for (sid in blob['Statement']) {
+                policy += '<span id="foobar">' + JSON.stringify(blob['Statement'][sid], null, 2) + '</span>,\n';
+            }
+            policy += '  ]';
+        } else {
+            policy += '  "' + attr + '": ' + JSON.stringify(blob[attr], null, 2);
+        }
+        policy += ',\n';
+        
+    }
+    policy += '}'
     return policy;
 });
+
+Handlebars.registerHelper('add_policy_path', function() {
+    var policy = arguments[0];
+    var path = arguments[1];
+    for (var i = 2; i < arguments.length -1; i++) {
+        path = path + '\\.' + arguments[i];
+    }
+    console.log(arguments);
+    console.log('policy_path:' + path);
+    policy['policy_path'] = path;
+    policy['policy_spath'] = path.replace(/\\/g, '');
+});
+
+Handlebars.registerHelper('displayKey', function(key_name, blob) {
+    var key = JSON.stringify(blob, null, 2);
+    key = key.replace(/ /g, '&nbsp;');
+    key = key.replace(/\n/g, '<br/>');
+    return key;
+});
+
 
 Handlebars.registerHelper("has_profiles?", function(logins) {
     if(typeof logins != 'undefined' && logins != '') {
@@ -216,12 +246,16 @@ Handlebars.registerHelper('dashboard_color', function(level, checked, flagged) {
     }
 });
 
-Handlebars.registerHelper('policy_report_id', function(policy, a, b, c) {
-    policy['ReportId'] = a + '-' + b + '-' + c;
-});
-
 Handlebars.registerHelper('ifEqual', function(v1, v2, options) {
     if (v1 === v2) {
+        return options.fn(this);
+    } else {
+        return options.inverse(this);
+    }
+});
+
+Handlebars.registerHelper('unlessEqual', function(v1, v2, options) {
+    if (v1 !== v2) {
         return options.fn(this);
     } else {
         return options.inverse(this);
@@ -292,3 +326,36 @@ Handlebars.registerHelper('other_level', function() {
 Handlebars.registerHelper('get_service', function() {
     return getService(arguments[0]);
 });
+
+
+// http://funkjedi.com/technology/412-every-nth-item-in-handlebars, slightly tweaked to work with a dictionary
+Handlebars.registerHelper('grouped_each', function(every, context, options) {
+    var out = "", subcontext = [], i;
+    var keys = Object.keys(context);
+    var count = keys.length;
+    var subcontext = {};
+    if (context && count > 0) {
+        for (i = 0; i < count; i++) {
+            if (i > 0 && i % every === 0) {
+                out += options.fn(subcontext);
+                subcontext = {};
+            }
+            subcontext[keys[i]] = context[keys[i]];
+        }
+        out += options.fn(subcontext);
+    }
+    return out;
+});
+
+
+Handlebars.registerHelper('sorted_each', function(array, key, opts) {
+    newarray = array.sort(function(a, b) {
+        if (a[key] < b[key]) return -1
+        if (a[key] > b[key]) return 1;
+        return 0;
+    });
+    return opts.fn(newarray);
+});
+
+
+

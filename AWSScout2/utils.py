@@ -9,6 +9,7 @@ from opinel.utils import *
 
 # Import stock packages
 import argparse
+import botocore
 import datetime
 from distutils import dir_util
 import copy
@@ -50,10 +51,11 @@ re_list_value = re.compile(r'_LIST_\((.*?)\)')
 aws_ip_ranges_filename = 'ip-ranges.json'
 ip_ranges_from_args = 'ip-ranges-from-args'
 
-
+FILTERS_DIR = 'filters'
 RULES_DIR = 'rules'
 RULESETS_DIR = 'rulesets'
 DEFAULT_RULESET = '%s/default.json' % RULESETS_DIR
+
 
 ########################################
 ##### Argument parser
@@ -156,14 +158,23 @@ def get_object_at(dictionary, path, attribute_name = None):
 # Recursively go to a target and execute a callback
 #
 def go_to_and_do(aws_config, current_config, path, current_path, callback, callback_args = None):
+  try:
     key = path.pop(0)
     if not current_config:
         current_config = aws_config
     if not current_path:
         current_path = []
+    keys = key.split('.')
+    if len(keys) > 1:
+        while True:
+            key = keys.pop(0)
+            if not len(keys):
+                break
+            current_path.append(key)
+            current_config = current_config[key]
     if key in current_config:
         current_path.append(key)
-        for value in current_config[key]:
+        for (i, value) in enumerate(current_config[key]):
             if len(path) == 0:
                 if type(current_config[key] == dict) and type(value) != dict and type(value) != list:
                     callback(aws_config, current_config[key][value], path, current_path, value, callback_args)
@@ -171,10 +182,23 @@ def go_to_and_do(aws_config, current_config, path, current_path, callback, callb
                     # TODO: the current_config value passed here is not correct...
                     callback(aws_config, current_config, path, current_path, value, callback_args)
             else:
-                # keep track of where we are...
                 tmp = copy.deepcopy(current_path)
-                tmp.append(value)
-                go_to_and_do(aws_config, current_config[key][value], copy.deepcopy(path), tmp, callback, callback_args)
+                try:
+                    tmp.append(value)
+                    go_to_and_do(aws_config, current_config[key][value], copy.deepcopy(path), tmp, callback, callback_args)
+                except:
+                    tmp.pop()
+                    tmp.append(i)
+                    go_to_and_do(aws_config, current_config[key][i], copy.deepcopy(path), tmp, callback, callback_args)
+
+  except Exception as e:
+    printException(e)
+    printInfo('Index: %s' % str(i))
+    printInfo('Path: %s' % str(current_path))
+#    printInfo('Config: %s' % str(current_config))
+    printInfo('Key = %s' % str(key))
+    printInfo('Value = %s' % str(value))
+    printInfo('Path = %s' % path)
 
 #
 # JSON encoder class
@@ -264,6 +288,8 @@ def create_report_metadata(aws_config, services):
                 # h4ck...
                 if resource == 'credential_report':
                     resource = resource_path.split('.')[-1].replace('>', '').replace('<', '')
+                elif resource == s:
+                    resource = resource_path.split('.')[-1]
                 if aws_config['services'][s]['violations'][v]['flagged_items'] > 0:
                     try:
                         manage_dictionary(aws_config['metadata'][s]['resources'][resource], 'risks', [])
@@ -393,11 +419,13 @@ def get_value_at(all_info, current_path, key, to_string = False):
               try:
                 target_obj = target_obj[p]
               except Exception as e:
-                print(target_obj)
+                printError('Current path: %s' % str(current_path))
+                #print(target_obj)
                 printException(e)
                 raise Exception
           except Exception as e:
-            print(target_obj)
+            printError('Current path: %s' % str(current_path))
+            #print(target_obj)
             printException(e)
             raise Exception
     if to_string:
@@ -424,9 +452,14 @@ AWSCONFIG_FILE = 'aws_config'
 AWSRULESET_FILE = 'aws_ruleset'
 REPORT_TITLE  = 'AWS Scout2 Report'
 
-def create_scout_report(environment_name, aws_config, force_write, debug):
+def create_scout_report(environment_name, timestamp, aws_config, exceptions, force_write, debug):
+    if timestamp:
+        environment_name = '%s-%s' % (environment_name, timestamp)
+    # Fix bug mentioned in #111
+    environment_name = environment_name.replace('/', '_').replace('\\', '_')
     # Save data
     save_config_to_file(environment_name, aws_config, force_write, debug)
+    save_config_to_file(environment_name, exceptions, force_write, debug, js_filename = 'exceptions', js_varname = 'exceptions')
     # Create the HTML report using all partials under html/partials/
     contents = ''
     for filename in glob.glob('html/partials/*'):
@@ -444,7 +477,9 @@ def create_scout_report(environment_name, aws_config, force_write, debug):
                 contents = contents + f.read()
     if environment_name != 'default':
         def_report_filename, def_config_filename = get_scout2_paths('default')
+        foo, def_exceptions_filename = get_scout2_paths('default', js_filename = 'exceptions')
         new_report_filename, new_config_filename = get_scout2_paths(environment_name)
+        foo, new_exceptions_filename = get_scout2_paths(environment_name, js_filename = 'exceptions')
         new_file = 'report-' + environment_name + '.html'
     else:
         new_file = 'report.html'
@@ -458,6 +493,7 @@ def create_scout_report(environment_name, aws_config, force_write, debug):
                     newline = line.replace(REPORT_TITLE, REPORT_TITLE + ' [' + environment_name + ']')
                     if environment_name != 'default':
                         newline = newline.replace(def_config_filename, new_config_filename)
+                        newline = newline.replace(def_exceptions_filename, new_exceptions_filename)
                     newline = newline.replace('<!-- PLACEHOLDER -->', contents)
                     nf.write(newline)
 
@@ -481,7 +517,7 @@ def get_scout2_paths(environment_name, scout2_folder = None, js_filename = None)
 #
 # Prepare listall output template
 #
-def format_listall_output(format_file, format_item_dir, format, config, option_prefix = None, template = None):
+def format_listall_output(format_file, format_item_dir, format, config, option_prefix = None, template = None, skip_options = False):
         # Set the list of keys if printing from a file spec
         # _LINE_(whatever)_EOL_
         # _ITEM_(resource)_METI_
@@ -491,27 +527,32 @@ def format_listall_output(format_file, format_item_dir, format, config, option_p
                 with open(format_file, 'rt') as f:
                     template = f.read()
             # Optional files
-            re_option = re.compile(r'(%_OPTION_\((.*?)\)_NOITPO_)')
-            optional_files = re_option.findall(template)
-            for optional_file in optional_files:
-                if optional_file[1].startswith(option_prefix + '-'):
-                    with open(os.path.join(format_item_dir, optional_file[1].strip()), 'rt') as f:
-                        template = template.replace(optional_file[0].strip(), f.read())
+            if not skip_options:
+                re_option = re.compile(r'(%_OPTION_\((.*?)\)_NOITPO_)')
+                optional_files = re_option.findall(template)
+                for optional_file in optional_files:
+                    if optional_file[1].startswith(option_prefix + '-'):
+                        with open(os.path.join(format_item_dir, optional_file[1].strip()), 'rt') as f:
+                            template = template.replace(optional_file[0].strip(), f.read())
             # Include files if needed
             re_file = re.compile(r'(_FILE_\((.*?)\)_ELIF_)')
-            requested_files = re_file.findall(template)
-            available_files = os.listdir(format_item_dir)
-            for requested_file in requested_files:
-                if requested_file[1].strip() in available_files:
-                    with open(os.path.join(format_item_dir, requested_file[1].strip()), 'rt') as f:
-                        template = template.replace(requested_file[0].strip(), f.read())
-            # Find items and keys to be printed
-            re_line = re.compile(r'(_ITEM_\((.*?)\)_METI_)')
-            re_key = re.compile(r'_KEY_\(*(.*?)\)', re.DOTALL|re.MULTILINE) # Remove the multiline ?
-            format_item_mappings = os.listdir(format_item_dir)
-            lines = re_line.findall(template)
-            for (i, line) in enumerate(lines):
-                lines[i] = line + (re_key.findall(line[1]),)
+            while True:
+                requested_files = re_file.findall(template)
+                available_files = os.listdir(format_item_dir)
+                for requested_file in requested_files:
+                    if requested_file[1].strip() in available_files:
+                        with open(os.path.join(format_item_dir, requested_file[1].strip()), 'rt') as f:
+                            template = template.replace(requested_file[0].strip(), f.read())
+                # Find items and keys to be printed
+                re_line = re.compile(r'(_ITEM_\((.*?)\)_METI_)')
+                re_key = re.compile(r'_KEY_\(*(.*?)\)', re.DOTALL|re.MULTILINE) # Remove the multiline ?
+                format_item_mappings = os.listdir(format_item_dir)
+                lines = re_line.findall(template)
+                for (i, line) in enumerate(lines):
+                    lines[i] = line + (re_key.findall(line[1]),)
+                requested_files = re_file.findall(template)
+                if len(requested_files) == 0:
+                    break
         elif format and format[0] == 'csv':
             keys = config['keys']
             line = ', '.join('_KEY_(%s)' % k for k in keys)
@@ -519,7 +560,7 @@ def format_listall_output(format_file, format_item_dir, format, config, option_p
             template = line
         return (lines, template)
 
-def load_info_from_json(service, environment_name, scout2_folder = None):
+def load_info_from_json(service, environment_name, scout2_folder = None, full_config = False):
     report_filename, config_filename = get_scout2_paths(environment_name, scout2_folder = scout2_folder)
     try:
         if os.path.isfile(config_filename):
@@ -533,7 +574,10 @@ def load_info_from_json(service, environment_name, scout2_folder = None):
     except Exception as e:
         printException(e)
         return {}
-    return aws_config['services'][service] if 'services' in aws_config and service in aws_config['services'] else {}
+    if full_config:
+        return aws_config
+    else:
+        return aws_config['services'][service] if 'services' in aws_config and service in aws_config['services'] else {}
 
 def load_from_json(environment_name, var):
     report_filename, config_filename = get_scout2_paths(environment_name)
@@ -546,11 +590,11 @@ def load_from_json(environment_name, var):
 #
 # Load rule from a JSON config file
 #
-def load_config_from_json(rule_metadata, ip_ranges):
+def load_config_from_json(rule_metadata, ip_ranges, aws_account_id, rule_type = 'rules'):
     config = None
     config_file = rule_metadata['filename']
-    if not config_file.startswith('rules/'):
-        config_file = 'rules/%s' % config_file
+    if not config_file.startswith('rules/') and not config_file.startswith('filters/'):
+        config_file = '%s/%s' % (rule_type, config_file)
     config_args = rule_metadata['args'] if 'args' in rule_metadata else []
     try:
         with open(config_file, 'rt') as f:
@@ -566,7 +610,7 @@ def load_config_from_json(rule_metadata, ip_ranges):
         for c1 in config['conditions']:
             if c1 in condition_operators:
                 continue
-            if type(c1[2]) == str: # unicode:
+            if not type(c1[2]) == list and not type(c1[2]) == dict:
                 values = re_ip_ranges_from_file.match(c1[2])
                 if values:
                     filename = values.groups()[0]
@@ -577,6 +621,8 @@ def load_config_from_json(rule_metadata, ip_ranges):
                         c1[2] = []
                         for ip_range in ip_ranges:
                             c1[2] = c1[2] + read_ip_ranges(ip_range, True, conditions, True)
+                if c1[2] and aws_account_id:
+                    c1[2] = c1[2].replace('_AWS_ACCOUNT_ID_', aws_account_id)
                 # Set lists
                 list_value = re_list_value.match(str(c1[2]))
                 if list_value:
@@ -654,10 +700,10 @@ def save_blob_to_file(filename, blob, force_write, debug):
 #
 # Save AWS configuration (python dictionary) as JSON
 #
-def save_config_to_file(environment_name, config, force_write = False, debug = False, js_filename = AWSCONFIG_FILE, quiet = False):
+def save_config_to_file(environment_name, config, force_write = False, debug = False, js_filename = AWSCONFIG_FILE, js_varname = 'aws_info', quiet = False):
     try:
         with open_file(environment_name, force_write, js_filename, quiet) as f:
-            print('aws_info =', file = f)
+            print('%s =' % js_varname, file = f)
             write_data_to_file(f, config, force_write, debug)
     except Exception as e:
         printException(e)

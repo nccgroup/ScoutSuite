@@ -12,12 +12,11 @@ try:
     from opinel.utils import *
     from opinel.utils_ec2 import *
     from opinel.utils_iam import *
-    from opinel.utils_sts import *
 except Exception as e:
     print('Error: Scout2 now depends on the opinel package (previously AWSUtils submodule). Install all the requirements with the following command:')
     print('  $ pip install -r requirements.txt')
-
-    sys.exit()
+    print(e)
+    sys.exit(42)
 
 # Import Scout2 tools
 from AWSScout2 import __version__
@@ -30,6 +29,14 @@ from AWSScout2.utils_redshift import *
 from AWSScout2.utils_s3 import *
 from AWSScout2.utils_vpc import *
 
+# Setup variables
+(scout2_dir, tool_name) = os.path.split(__file__)
+scout2_dir = os.path.abspath(scout2_dir)
+scout2_rules_dir = '%s/%s' % (scout2_dir, RULES_DIR)
+scout2_rulesets_dir = '%s/%s' % (scout2_dir, RULESETS_DIR)
+ruleset_generator_path = '%s/ruleset-generator.html' % (scout2_dir)
+scout2_filters_dir = '%s/%s' % (scout2_dir, FILTERS_DIR)
+
 
 ########################################
 ##### Main
@@ -40,6 +47,10 @@ def main(args):
     # Setup variables
     (scout2_dir, tool_name) = os.path.split(__file__)
     scout2_dir = os.path.abspath(scout2_dir)
+    current_time = datetime.datetime.now(dateutil.tz.tzlocal())
+    timestamp = args.timestamp
+    if timestamp != False:
+        timestamp = args.timestamp if args.timestamp else current_time.strftime("%Y-%m-%d_%Hh%M%z")
 
     # Configure the debug level
     configPrintException(args.debug)
@@ -57,8 +68,8 @@ def main(args):
 
     # Search for AWS credentials
     if not args.fetch_local:
-        key_id, secret, token = read_creds(args.profile[0], args.csv_credentials[0], args.mfa_serial[0], args.mfa_code[0])
-        if key_id is None:
+        credentials = read_creds(args.profile[0], args.csv_credentials[0], args.mfa_serial, args.mfa_code)
+        if credentials['AccessKeyId'] is None:
             return 42
 
     # If local analysis, overwrite results
@@ -89,9 +100,7 @@ def main(args):
             if not args.fetch_local:
                 # Fetch data from AWS API
                 method_args = {}
-                method_args['key_id'] = key_id
-                method_args['secret'] = secret
-                method_args['session_token'] = token
+                method_args['credentials'] = credentials
                 method_args['service_config'] = aws_config['services'][service]
                 if service != 'iam':
                     method_args['selected_regions'] = args.regions
@@ -119,17 +128,22 @@ def main(args):
 
     # Search for an existing ruleset if the environment is set
     if environment_name and args.ruleset == DEFAULT_RULESET: 
-        ruleset = search_ruleset(scout2_dir, environment_name)
+        ruleset_filename = search_ruleset(scout2_dir, environment_name)
     else:
-        ruleset = args.ruleset[0]
+        ruleset_filename = args.ruleset[0]
 
     # Load findings from JSON config files
-    ruleset = load_ruleset(ruleset)
-    rules = init_rules(ruleset, services, environment_name, args.ip_ranges)
+    ruleset = load_ruleset(ruleset_filename)
+    rules = init_rules(ruleset, services, environment_name, args.ip_ranges, aws_config['account_id'])
 
-    # Reset violations
+    # Load filters from JSON config files
+    filters = load_ruleset('rulesets/filters.json')
+    filters = init_rules(filters, services, environment_name, args.ip_ranges, aws_config['account_id'], rule_type = 'filters')
+ 
+    # Reset filters & violations
     for service in services:
         aws_config['services'][service]['violations'] = {}
+        aws_config['services'][service]['filters'] = {}
 
     ##### VPC analyzis
     analyze_vpc_config(aws_config, args.ip_ranges, args.ip_ranges_key_name)
@@ -185,6 +199,32 @@ def main(args):
     if 'cloudtrail' in services:
         tweak_cloudtrail_findings(aws_config)
 
+    # Filters
+    for filter_path in filters:
+        for filter in filters[filter_path]:
+            printDebug('Processing %s filter: "%s"' % (filter_path.split('.')[0], filters[filter_path][filter]['description']))
+            path = filter_path.split('.')
+            service = path[0]
+            manage_dictionary(aws_config['services'][service], 'filters', {})
+            aws_config['services'][service]['filters'][filter] = {}
+            aws_config['services'][service]['filters'][filter]['description'] = filters[filter_path][filter]['description']
+            aws_config['services'][service]['filters'][filter]['path'] = filters[filter_path][filter]['path']
+            if 'id_suffix' in filters[filter_path][filter]:
+                aws_config['services'][service]['filters'][filter]['id_suffix'] = filters[filter_path][filter]['id_suffix']
+            if 'display_path' in filters[filter_path][filter]:
+                aws_config['services'][service]['filters'][filter]['display_path'] = filters[filter_path][filter]['display_path']
+            try:
+                aws_config['services'][service]['filters'][filter]['items'] = recurse(aws_config['services'], aws_config['services'], path, [], filters[filter_path][filter], True)
+                aws_config['services'][service]['filters'][filter]['dashboard_name'] = filters[filter_path][filter]['dashboard_name'] if 'dashboard_name' in filters[filter_path][filter] else '??'
+                aws_config['services'][service]['filters'][filter]['flagged_items'] = len(aws_config['services'][service]['filters'][filter]['items'])
+                aws_config['services'][service]['filters'][filter]['service'] = service
+            except Exception as e:
+                printError('Failed to process filter defined in %s.json' % filter)
+                # Fallback if process filter failed to ensure report creation and data dump still happen
+                aws_config['services'][service]['filters'][filter]['checked_items'] = 0
+                aws_config['services'][service]['filters'][filter]['flagged_items'] = 0
+                printException(e)
+
     # Exceptions
     exceptions = {}
     if args.exceptions[0]:
@@ -201,9 +241,11 @@ def main(args):
 
     # Save info about run
     aws_config['last_run'] = {}
-    aws_config['last_run']['time'] = datetime.datetime.now(dateutil.tz.tzlocal()).strftime("%Y-%m-%d %H:%M:%S%z")
+    aws_config['last_run']['time'] = current_time.strftime("%Y-%m-%d %H:%M:%S%z")
     aws_config['last_run']['cmd'] = ' '.join(sys.argv)
     aws_config['last_run']['version'] = __version__
+    aws_config['last_run']['ruleset_name'] = ruleset_filename.replace('rulesets/', '').replace('.json', '')
+    aws_config['last_run']['ruleset_about'] = ruleset['about'] if 'about' in ruleset else ''
 
     # Generate dashboard metadata
     try:
@@ -213,7 +255,7 @@ def main(args):
         printException(e)
 
     # Save data
-    create_scout_report(environment_name, aws_config, args.force_write, args.debug)
+    create_scout_report(environment_name, timestamp, aws_config, exceptions, args.force_write, args.debug)
 
 
 ########################################
@@ -268,6 +310,11 @@ parser.add_argument('--exceptions',
                     default=[ None ],
                     nargs='+',
                     help='')
+parser.add_argument('--timestamp',
+                    dest='timestamp',
+                    default=False,
+                    nargs='?',
+                    help='Add a timestamp to the name of the report (default is current time in UTC)')
 
 
 args = parser.parse_args()

@@ -35,10 +35,19 @@ def main(cmd_args):
     # Support multiple environments
     for environment_name in environment_names:
 
+        # Load the data
+        aws_config = {}
+        aws_config['services'] = {}
+        for service in supported_services:
+            try:
+                aws_config['services'][service] = load_info_from_json(service, environment_name)
+            except Exception as e:
+                printException(e)
+
         # Load arguments from config if specified
         if len(cmd_args.config):
             rule_metadata = {'filename': cmd_args.config[0], 'enabled': True, 'args': cmd_args.config_args}
-            config = load_config_from_json(rule_metadata, cmd_args.ip_ranges)
+            config = load_config_from_json(rule_metadata, cmd_args.ip_ranges, aws_config['aws_account_id'])
             if config:
                 args = Bunch(config)
             else:
@@ -68,15 +77,6 @@ def main(cmd_args):
             except:
             # 4. Print the whole object
                 config['keys'] = [ 'this' ]
-
-        # Load the data
-        aws_config = {}
-        aws_config['services'] = {}
-        for service in supported_services:
-            try:
-                aws_config['services'][service] = load_info_from_json(service, environment_name)
-            except Exception as e:
-                printException(e)
 
         # Recursion
         if type(args.path) == list:
