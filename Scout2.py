@@ -12,7 +12,6 @@ try:
     from opinel.utils import *
     from opinel.utils_ec2 import *
     from opinel.utils_iam import *
-    from opinel.utils_sts import *
 except Exception as e:
     print('Error: Scout2 now depends on the opinel package (previously AWSUtils submodule). Install all the requirements with the following command:')
     print('  $ pip install -r requirements.txt')
