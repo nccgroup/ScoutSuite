@@ -61,8 +61,8 @@ def main(args):
 
     # Search for AWS credentials
     if not args.fetch_local:
-        key_id, secret, token = read_creds(args.profile[0], args.csv_credentials[0], args.mfa_serial[0], args.mfa_code[0])
-        if key_id is None:
+        credentials = read_creds(args.profile[0], args.csv_credentials[0], args.mfa_serial, args.mfa_code)
+        if credentials['AccessKeyId'] is None:
             return 42
 
     # If local analysis, overwrite results
@@ -93,9 +93,7 @@ def main(args):
             if not args.fetch_local:
                 # Fetch data from AWS API
                 method_args = {}
-                method_args['key_id'] = key_id
-                method_args['secret'] = secret
-                method_args['session_token'] = token
+                method_args['credentials'] = credentials
                 method_args['service_config'] = aws_config['services'][service]
                 if service != 'iam':
                     method_args['selected_regions'] = args.regions

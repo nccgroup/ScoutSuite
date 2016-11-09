@@ -139,7 +139,7 @@ def list_network_attack_surface(ec2_info, attack_surface_attribute_name, ip_attr
 ##### EC2 fetch functions
 ########################################
 
-def get_ec2_info(key_id, secret, session_token, service_config, selected_regions, with_gov, with_cn):
+def get_ec2_info(credentials, service_config, selected_regions, with_gov, with_cn):
     # Prep regions
     all_regions = build_region_list('ec2', selected_regions, include_gov = with_gov, include_cn = with_cn)
     manage_dictionary(service_config, 'regions', {})
@@ -149,7 +149,7 @@ def get_ec2_info(key_id, secret, session_token, service_config, selected_regions
     # Fetch VPCs first, then thread on the other objects
     printInfo('Fetching basic VPC information...')
     params = {}
-    params['creds'] = (key_id, secret, session_token)
+    params['creds'] = credentials
     params['service_config'] = service_config
     thread_work(all_regions, new_get_vpc_info, params = params)
     # Fetch VPC/EC2 objects
@@ -160,8 +160,8 @@ def get_ec2_info(key_id, secret, session_token, service_config, selected_regions
          status['region_name'] = region
          manage_dictionary(service_config['regions'][region], 'vpcs', {})
          params = {}
-         params['creds'] = (key_id, secret, session_token)
-         params['ec2_client'] = connect_ec2(key_id, secret, session_token, region)
+         params['creds'] = credentials
+         params['ec2_client'] = connect_ec2(credentials, region)
          params['region_info'] = service_config['regions'][region]
          thread_work(ec2_targets, thread_region, params = params)
          show_status()
@@ -410,13 +410,12 @@ def get_network_acls_info(ec2_client, region_info):
 # Fetch all VPCs
 # 
 def new_get_vpc_info(q, ec2_params):
-    key_id, secret, session_token = ec2_params['creds']
     while True:
         try:
             region = q.get()
             region_info = ec2_params['service_config']['regions'][region]
             region_info['vpcs'] = {}
-            ec2_client = connect_ec2(key_id, secret, session_token, region_info['name'])
+            ec2_client = connect_ec2(ec2_params['creds'], region_info['name'])
             vpcs = ec2_client.describe_vpcs()['Vpcs']
             region_info['vpcs_count'] = len(vpcs)
             for vpc in vpcs:
@@ -561,7 +560,6 @@ def formatted_status(region, eips, elbs, flow_logs, instances, network_acls, sgs
 # Per-region thread helper
 #
 def thread_region(q, ec2_params):
-    key_id, secret, session_token = ec2_params['creds']
     ec2_client = ec2_params['ec2_client']
     region_info = ec2_params['region_info']
     while True:
@@ -570,7 +568,7 @@ def thread_region(q, ec2_params):
             if target == 'elastic_ips':
                 get_elastic_ips_info(ec2_client, region_info)
             elif target == 'elbs':
-                elb_client = connect_elb(key_id, secret, session_token, region_info['name'])
+                elb_client = connect_elb(ec2_params['creds'], region_info['name'])
                 get_elbs_info(elb_client, region_info)
             elif target == 'flow_logs':
                 get_flow_logs_info(ec2_client, region_info)

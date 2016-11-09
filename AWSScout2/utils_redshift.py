@@ -13,14 +13,14 @@ from AWSScout2.utils import *
 #
 # Entry point
 #
-def get_redshift_info(key_id, secret, session_token, service_config, selected_regions, with_gov, with_cn):
+def get_redshift_info(credentials, service_config, selected_regions, with_gov, with_cn):
     printInfo('Fetching Redshift config...')
     manage_dictionary(service_config, 'regions', {}) 
     regions = build_region_list('redshift', selected_regions, include_gov = with_gov, include_cn = with_cn)
     for region in regions:
         manage_dictionary(service_config['regions'], region, {})
         manage_dictionary(service_config['regions'][region], 'vpcs', {})
-    thread_work(service_config['regions'], get_redshift_region, params = {'creds': (key_id, secret, session_token), 'redshift_config': service_config})
+    thread_work(service_config['regions'], get_redshift_region, params = {'creds': credentials, 'redshift_config': service_config})
     for region in regions:
        if len(service_config['regions'][region]['security_groups']):
            manage_dictionary(service_config['regions'][region]['vpcs'], ec2_classic, {})
@@ -30,12 +30,11 @@ def get_redshift_info(key_id, secret, session_token, service_config, selected_re
 # Region threading
 #
 def get_redshift_region(q, params):
-    key_id, secret, session_token = params['creds']
     redshift_config = params['redshift_config']
     while True:
         try:
             region = q.get()
-            redshift_client = connect_redshift(key_id, secret, session_token, region)
+            redshift_client = connect_redshift(params['creds'], region)
             get_redshift_clusters(redshift_client, redshift_config['regions'][region])
             get_redshift_cluster_parameter_groups(redshift_client, redshift_config['regions'][region])
             get_redshift_cluster_security_groups(redshift_client, redshift_config['regions'][region])
