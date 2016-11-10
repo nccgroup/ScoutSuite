@@ -178,7 +178,7 @@ def get_s3_bucket_webhosting(s3_client, bucket_name, bucket_info):
 # List all available buckets
 def get_s3_buckets(s3_client, s3_info, s3_params):
     manage_dictionary(s3_info, 'buckets', {})
-    buckets = s3_client['us-east-1'].list_buckets()['Buckets']
+    buckets = s3_client[get_s3_list_region(s3_params['selected_regions'])].list_buckets()['Buckets']
     targets = []
     for b in buckets:
         # Abort if bucket is not of interest
@@ -200,7 +200,7 @@ def get_s3_bucket(q, params):
         try:
             bucket = q.get()
             bucket['name'] = bucket.pop('Name')
-            s3_client = s3_clients['us-east-1']
+            s3_client = s3_clients[get_s3_list_region(params['selected_regions'])]
             bucket['CreationDate'] = str(bucket['CreationDate'])
             bucket['region'] = get_s3_bucket_location(s3_client, bucket['name'])
             # h4ck :: fix issue #59, location constraint can be EU or eu-west-1 for Ireland...
@@ -271,7 +271,8 @@ def get_s3_info(credentials, service_config, selected_regions, with_gov, with_cn
     s3_clients = {}
     if selected_regions != []:
         client_regions = copy.deepcopy(selected_regions)
-        client_regions.append('us-east-1')
+        if 'us-east-1' not in client_regions and 'us-gov-west-1' not in client_regions and 'cn-north-1' not in client_regions:
+            client_regions.append('us-east-1')
     else:
         client_regions = selected_regions
     for region in build_region_list('s3', client_regions, include_gov = with_gov, include_cn = with_cn):
@@ -280,6 +281,17 @@ def get_s3_info(credentials, service_config, selected_regions, with_gov, with_cn
     s3_params['selected_regions'] = selected_regions
     printInfo('Fetching S3 buckets config...')
     get_s3_buckets(s3_clients, service_config, s3_params)
+
+#
+# Return region to be used for global calls such as list bucket and get bucket location
+#
+def get_s3_list_region(selected_regions):
+    if 'us-gov-west-1' in selected_regions:
+        return 'us-gov-west-1'
+    elif 'cn-north-1' in selected_regions:
+        return 'cn-north-1'
+    else:
+        return 'us-east-1'
 
 def show_status(s3_info, newline = True):
     current = len(s3_info['buckets'])
