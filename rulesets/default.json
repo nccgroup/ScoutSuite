@@ -138,6 +138,26 @@
             ]
         },
         {
+            "level": "danger",
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": "true",
+            "args": [
+                "NFS",
+                "TCP",
+                "2049"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": "true",
+            "args": [
+                "SMTP",
+                "TCP",
+                "25"
+            ]
+        },
+        {
             "level": "warning",
             "filename": "ec2-security-group-opens-non-http-port-to-all.json",
             "enabled": true,
