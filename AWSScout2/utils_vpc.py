@@ -37,7 +37,15 @@ def analyze_vpc_config(aws_config, ip_ranges, ip_ranges_name_key):
     vpc_services = [ 'rds', 'redshift' ]
 #    for service in vpc_services:
 #        go_to_and_do(aws_config, aws_config['services'][service], ['regions', 'vpcs'], ['services', service], propagate_vpc_names, {})
+    # Remove empty EC2-classic VPC placeholders
+    go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions'], ['services', 'ec2'], remove_empty_ec2_placeholders, {})
 
+#
+# EC2-Classic placeholders were automatically created - remove if empty after fetching all the data
+#
+def remove_empty_ec2_placeholders(aws_config, current_config, path, current_path, resource_id, callback_args):
+    if ec2_classic in current_config and current_config['vpcs'][ec2_classic] == {}:
+        current_config['vpcs'].pop(ec2_classic)
 
 #
 # List the resources associated with a given VPC security group (e.g. ec2 instances, redshift clusters, ...)
