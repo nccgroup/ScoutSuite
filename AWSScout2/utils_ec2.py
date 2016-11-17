@@ -151,7 +151,7 @@ def get_ec2_info(credentials, service_config, selected_regions, with_gov, with_c
     params = {}
     params['creds'] = credentials
     params['service_config'] = service_config
-    thread_work(all_regions, new_get_vpc_info, params = params)
+    thread_work(all_regions, get_vpc_info, params = params)
     # Fetch VPC/EC2 objects
     printInfo('Fetching EC2 and VPC config...')
     ec2_targets = ['elastic_ips', 'elbs', 'flow_logs', 'instances', 'network_acls', 'security_groups', 'subnets']
@@ -409,7 +409,7 @@ def get_network_acls_info(ec2_client, region_info):
 #
 # Fetch all VPCs
 # 
-def new_get_vpc_info(q, ec2_params):
+def get_vpc_info(q, ec2_params):
     while True:
         try:
             region = q.get()
