@@ -77,7 +77,7 @@ def init_rules(ruleset, services, environment_name, ip_ranges, aws_account_id, g
         if not 'condition_operator' in rule_details:
             rule_details['condition_operator'] = 'and'
         # Save details for rule
-        key = key.replace('.json', '')
+        key = key.replace('.json', '').replace(' ', '')
         rules[path][key] = rule_details
     return rules
 
