@@ -32,7 +32,16 @@ function load_aws_config_from_json(script_id, cols) {
     list = aws_info;
     path_array = script_id.split('.id.')[0].split('.');
     for (i in path_array) {
+        // Allows for creation of regions-filter etc...
+        if (i.endsWith('-filters')) {
+            i = i.replace('-filters', '');
+        }
         list = list[path_array[i]];
+    }
+
+    // Filters
+    if (path_array[i] == 'items' && i > 3 && path_array[i-2] == 'filters') {
+        return 1;
     }
 
     // Update the DOM
@@ -72,7 +81,7 @@ function process_template(id1, container_id, list) {
 // Hide all lists and details 
 //
 function hideAll() {
-    $("[id*='.list']").not("[id='metadata.list']").not("[id='filters.list']").hide();
+    $("[id*='.list']").not("[id='metadata.list']").not("[id*='filters.list']").hide();
     $("[id*='.details']").hide();
 }
 
@@ -424,6 +433,7 @@ function load_metadata() {
     load_aws_config_from_json('metadata', 0);
     load_aws_config_from_json('services.id.violations', 1);
     load_aws_config_from_json('services.id.filters', 0);
+    load_aws_config_from_json('services.id.regions-filters', 0);
     show_main_dashboard();
     for (service in aws_info['metadata']) {
         for (section in aws_info['metadata'][service]) {

@@ -1,0 +1,26 @@
+<!-- Regions filters -->
+<script id="regions-filters.list.template" type="text/x-handlebars-template">
+  {{#each items}}
+    {{#ifEqual @key 'ec2'}}
+      {{#each regions}}
+        <li class="dropdown-submenu"><a href="#">{{name}}</a>
+          <ul class="dropdown-menu">
+            {{#each vpcs}}
+              {{#if subnets}}
+              <li class="dropdown-submenu"><a href="#">{{name}}</a>
+                <ul class="dropdown-menu">
+                  {{#each subnets}}
+                    <li><a href="#">{{name}}</a></li>
+                  {{/each}}
+                </ul>
+              </li>
+              {{else}}
+                <li class=""><a href="#">{{name}}</a></li>
+              {{/if}}
+            {{/each}}
+          </ul>
+        </li>
+      {{/each}}
+    {{/ifEqual}}
+  {{/each}}
+</script>
