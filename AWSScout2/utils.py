@@ -622,7 +622,8 @@ def load_config_from_json(rule_metadata, ip_ranges, aws_account_id, rule_type = 
                         for ip_range in ip_ranges:
                             c1[2] = c1[2] + read_ip_ranges(ip_range, True, conditions, True)
                 if c1[2] and aws_account_id:
-                    c1[2] = c1[2].replace('_AWS_ACCOUNT_ID_', aws_account_id)
+                    if type(c1[2]) == str:
+                        c1[2] = c1[2].replace('_AWS_ACCOUNT_ID_', aws_account_id)
                 # Set lists
                 list_value = re_list_value.match(str(c1[2]))
                 if list_value:
