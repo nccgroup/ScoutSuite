@@ -43,6 +43,8 @@ def main(cmd_args):
                 aws_config['services'][service] = load_info_from_json(service, environment_name)
             except Exception as e:
                 printException(e)
+        if not 'aws_account_id' in aws_config:
+            aws_config['aws_account_id'] = None
 
         # Load arguments from config if specified
         if len(cmd_args.config):
