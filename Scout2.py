@@ -68,7 +68,7 @@ def main(args):
 
     # Search for AWS credentials
     if not args.fetch_local:
-        credentials = read_creds(args.profile[0], args.csv_credentials[0], args.mfa_serial, args.mfa_code)
+        credentials = read_creds(args.profile[0], args.csv_credentials, args.mfa_serial, args.mfa_code)
         if credentials['AccessKeyId'] is None:
             return 42
 
