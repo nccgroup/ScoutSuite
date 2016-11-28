@@ -108,7 +108,7 @@ def put_cidr_name(aws_config, current_config, path, current_path, resource_id, c
             if cidr in known_cidrs:
                 cidr_name = known_cidrs[cidr]
             else:
-                cidr_name = get_cidr_name(cidr, callback_args['ip_ranges'], callback_args['ip_ranges_name_key'][0])
+                cidr_name = get_cidr_name(cidr, callback_args['ip_ranges'], callback_args['ip_ranges_name_key'])
                 known_cidrs[cidr] = cidr_name
             cidr_list.append({'CIDR': cidr, 'CIDRName': cidr_name})
         current_config['cidrs'] = cidr_list
