@@ -15,6 +15,9 @@
             <li class="list-group-item-text">Instance Class: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{name}}.DBInstanceClass"> {{DBInstanceClass}}<span></li>
             <li class="list-group-item-text">Created on: {{InstanceCreateTime}}</li>
             <li class="list-group-item-tex">Backup retention period in days: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{name}}.BackupRetentionPeriod">{{BackupRetentionPeriod}}</span>
+            <li class="list-group-item-tex">Enhanced Monitoring:
+              <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{name}}.EnhancedMonitoringResourceArn">{{#if EnhancedMonitoringResourceArn}} Enabled {{else}} Disabled {{/if}}</span>
+            </li>
           </ul>
           <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{name}}.pgsslcert" class="finding-hidden item-margin">
            <i class="glyphicon glyphicon-warning-sign"></i> SSL/TLS certificates on PostgreSQL instances created before August 8, 2014, cannot be verified.
