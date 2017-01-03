@@ -72,7 +72,7 @@ def get_instances_info(rds_client, region_info):
         dbi_info = {}
         total = total + len(dbinstances)
         dbi_info['name'] = dbi.pop('DBInstanceIdentifier')
-        for key in [ 'InstanceCreateTime', 'Engine', 'DBInstanceStatus', 'AutoMinorVersionUpgrade', 'DBInstanceClass', 'MultiAZ', 'Endpoint', 'BackupRetentionPeriod', 'PubliclyAccessible', 'StorageEncrypted', 'VpcSecurityGroups', 'DBSecurityGroups', 'DBParameterGroups']:
-            # parameter_groups , security_groups, vpc_security_gropus
+        for key in [ 'InstanceCreateTime', 'Engine', 'DBInstanceStatus', 'AutoMinorVersionUpgrade', 'DBInstanceClass', 'MultiAZ', 'Endpoint', 'BackupRetentionPeriod', 'PubliclyAccessible', 'StorageEncrypted', 'VpcSecurityGroups', 'DBSecurityGroups', 'DBParameterGroups', 'EnhancedMonitoringResourceArn']:
+            # parameter_groups , security_groups, vpc_security_groups
             dbi_info[key] = dbi[key] if key in dbi else None
         region_info['vpcs'][vpc_id]['instances'][get_non_aws_id(dbi_info['name'])] = dbi_info
