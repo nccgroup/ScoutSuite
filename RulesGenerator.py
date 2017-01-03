@@ -96,7 +96,17 @@ def main(cmd_args):
                             prule['level'] = 'danger'
                         available_rules[key] = prule
                 if not parameterized_rule_found:
-                    printError('Error: the rule %s lacks parameters in the ruleset.' % rule_filename)
+                    # Save once with no parameters
+                    available_rules[rule_filename] = rule
+                    available_rules[rule_filename]['enabled'] = False
+                    if 'level' not in available_rules[rule_filename]:
+                        available_rules[rule_filename]['level'] = 'danger'
+                    available_rules[rule_filename]['filename'] = rule_filename
+                    args = []
+                    for a in rule['arg_names']:
+                        args.append({'arg_name': a, 'arg_value': ''})
+                    available_rules[rule_filename]['args'] = args
+                    printDebug('Saving rule without parameter value: %s' % rule_filename)
 
     ruleset = {}
     ruleset['name'] = cmd_args.ruleset_name
