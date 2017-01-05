@@ -10,10 +10,10 @@ from AWSScout2.utils import *
 ##### RDS functions
 ########################################
 
-def get_rds_info(credentials, service_config, selected_regions, with_gov, with_cn):
+def get_rds_info(credentials, service_config, selected_regions, partition_name):
     printInfo('Fetching RDS config...')
     manage_dictionary(service_config, 'regions', {})
-    for region in build_region_list('rds', selected_regions, include_gov = with_gov, include_cn = with_cn):
+    for region in build_region_list('rds', selected_regions, partition_name):
         manage_dictionary(service_config['regions'], region, {})
         service_config['regions'][region]['name'] = region
     thread_work(service_config['regions'], get_rds_region, params = {'creds': credentials, 'rds_info': service_config})
@@ -72,7 +72,7 @@ def get_instances_info(rds_client, region_info):
         dbi_info = {}
         total = total + len(dbinstances)
         dbi_info['name'] = dbi.pop('DBInstanceIdentifier')
-        for key in [ 'InstanceCreateTime', 'Engine', 'DBInstanceStatus', 'AutoMinorVersionUpgrade', 'DBInstanceClass', 'MultiAZ', 'Endpoint', 'BackupRetentionPeriod', 'PubliclyAccessible', 'StorageEncrypted', 'VpcSecurityGroups', 'DBSecurityGroups', 'DBParameterGroups']:
-            # parameter_groups , security_groups, vpc_security_gropus
+        for key in [ 'InstanceCreateTime', 'Engine', 'DBInstanceStatus', 'AutoMinorVersionUpgrade', 'DBInstanceClass', 'MultiAZ', 'Endpoint', 'BackupRetentionPeriod', 'PubliclyAccessible', 'StorageEncrypted', 'VpcSecurityGroups', 'DBSecurityGroups', 'DBParameterGroups', 'EnhancedMonitoringResourceArn']:
+            # parameter_groups , security_groups, vpc_security_groups
             dbi_info[key] = dbi[key] if key in dbi else None
         region_info['vpcs'][vpc_id]['instances'][get_non_aws_id(dbi_info['name'])] = dbi_info

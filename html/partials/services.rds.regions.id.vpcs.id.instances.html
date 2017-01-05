@@ -10,13 +10,16 @@
             <li class="list-group-item-text">Region: {{region}}</li>
             <li class="list-group-item-text">Engine: {{Engine}}</li>
             <li class="list-group-item-text">Status: {{make_title DBInstanceStatus}}</li>
-            <li class="list-group-item-text">Auto Minor Version Upgrade: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{name}}.AutoMinorVersionUpgrade">{{#if AutoMinorVersionUpgrade}} Enabled {{else}} Disabled {{/if}}</span></li>
-            <li class="list-group-item-text">Multi Availability Zones: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{name}}.MultiAZ">{{#if MultiAZ}} Enabled {{else}} Disabled {{/if}}</span></li>
-            <li class="list-group-item-text">Instance Class: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{name}}.DBInstanceClass"> {{DBInstanceClass}}<span></li>
+            <li class="list-group-item-text">Auto Minor Version Upgrade: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.AutoMinorVersionUpgrade">{{#if AutoMinorVersionUpgrade}} Enabled {{else}} Disabled {{/if}}</span></li>
+            <li class="list-group-item-text">Multi Availability Zones: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.MultiAZ">{{#if MultiAZ}} Enabled {{else}} Disabled {{/if}}</span></li>
+            <li class="list-group-item-text">Instance Class: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.DBInstanceClass"> {{DBInstanceClass}}<span></li>
             <li class="list-group-item-text">Created on: {{InstanceCreateTime}}</li>
-            <li class="list-group-item-tex">Backup retention period in days: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{name}}.BackupRetentionPeriod">{{BackupRetentionPeriod}}</span>
+            <li class="list-group-item-tex">Backup retention period in days: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.BackupRetentionPeriod">{{BackupRetentionPeriod}}</span>
+            <li class="list-group-item-tex">Enhanced Monitoring:
+              <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.EnhancedMonitoringResourceArn">{{#if EnhancedMonitoringResourceArn}} Enabled {{else}} Disabled {{/if}}</span>
+            </li>
           </ul>
-          <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{name}}.pgsslcert" class="finding-hidden item-margin">
+          <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.pgsslcert" class="finding-hidden item-margin">
            <i class="glyphicon glyphicon-warning-sign"></i> SSL/TLS certificates on PostgreSQL instances created before August 8, 2014, cannot be verified.
           </span>
         </div>
