@@ -10,10 +10,10 @@ from AWSScout2.utils import *
 ##### RDS functions
 ########################################
 
-def get_rds_info(credentials, service_config, selected_regions, with_gov, with_cn):
+def get_rds_info(credentials, service_config, selected_regions, partition_name):
     printInfo('Fetching RDS config...')
     manage_dictionary(service_config, 'regions', {})
-    for region in build_region_list('rds', selected_regions, include_gov = with_gov, include_cn = with_cn):
+    for region in build_region_list('rds', selected_regions, partition_name):
         manage_dictionary(service_config['regions'], region, {})
         service_config['regions'][region]['name'] = region
     thread_work(service_config['regions'], get_rds_region, params = {'creds': credentials, 'rds_info': service_config})

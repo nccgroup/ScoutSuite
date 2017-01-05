@@ -139,9 +139,9 @@ def list_network_attack_surface(ec2_info, attack_surface_attribute_name, ip_attr
 ##### EC2 fetch functions
 ########################################
 
-def get_ec2_info(credentials, service_config, selected_regions, with_gov, with_cn):
+def get_ec2_info(credentials, service_config, selected_regions, partition_name):
     # Prep regions
-    all_regions = build_region_list('ec2', selected_regions, include_gov = with_gov, include_cn = with_cn)
+    all_regions = build_region_list('ec2', selected_regions, partition_name)
     manage_dictionary(service_config, 'regions', {})
     for region in all_regions:
         manage_dictionary(service_config['regions'], region, {})

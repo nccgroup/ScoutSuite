@@ -29,10 +29,10 @@ def tweak_cloudtrail_findings(aws_config):
             aws_config['services']['cloudtrail']['violations']['cloudtrail-no-logging']['flagged_items'] += 1
             aws_config['services']['cloudtrail']['violations']['cloudtrail-no-logging']['dashboard_name'] = 'Regions'
 
-def get_cloudtrail_info(credentials, service_config, selected_regions, with_gov, with_cn):
+def get_cloudtrail_info(credentials, service_config, selected_regions, partition_name):
     manage_dictionary(service_config, 'regions', {})
     printInfo('Fetching CloudTrail config...')
-    for region in build_region_list('cloudtrail', selected_regions, include_gov = with_gov, include_cn = with_cn):
+    for region in build_region_list('cloudtrail', selected_regions, partition_name):
         manage_dictionary(service_config['regions'], region, {})
         service_config['regions'][region]['name'] = region
     thread_work(service_config['regions'], get_region_trails, params = {'creds': credentials, 'cloudtrail_info': service_config})

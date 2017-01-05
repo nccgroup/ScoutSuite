@@ -13,10 +13,10 @@ from AWSScout2.utils import *
 #
 # Entry point
 #
-def get_redshift_info(credentials, service_config, selected_regions, with_gov, with_cn):
+def get_redshift_info(credentials, service_config, selected_regions, partition_name):
     printInfo('Fetching Redshift config...')
     manage_dictionary(service_config, 'regions', {}) 
-    regions = build_region_list('redshift', selected_regions, include_gov = with_gov, include_cn = with_cn)
+    regions = build_region_list('redshift', selected_regions, partition_name)
     for region in regions:
         manage_dictionary(service_config['regions'], region, {})
         manage_dictionary(service_config['regions'][region], 'vpcs', {})

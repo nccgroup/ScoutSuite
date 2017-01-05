@@ -104,8 +104,7 @@ def main(args):
                 method_args['service_config'] = aws_config['services'][service]
                 if service != 'iam':
                     method_args['selected_regions'] = args.regions
-                    method_args['with_gov'] = args.with_gov
-                    method_args['with_cn'] = args.with_cn
+                    method_args['partition_name'] = args.partition_name
                 if service == 's3':
                     method_args['s3_params'] = {}
                     method_args['s3_params']['check_encryption'] = args.check_s3_encryption
@@ -267,8 +266,7 @@ default_args = read_profile_default_args(parser.prog)
 add_sts_argument(parser, 'mfa-serial')
 add_sts_argument(parser, 'mfa-code')
 add_common_argument(parser, default_args, 'regions')
-add_common_argument(parser, default_args, 'with-gov')
-add_common_argument(parser, default_args, 'with-cn')
+add_common_argument(parser, default_args, 'partition-name')
 add_common_argument(parser, default_args, 'ip-ranges')
 add_common_argument(parser, default_args, 'ip-ranges-key-name')
 add_iam_argument(parser, default_args, 'csv-credentials')
