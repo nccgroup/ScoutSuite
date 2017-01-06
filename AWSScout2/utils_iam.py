@@ -125,17 +125,14 @@ def get_iam_info(credentials, service_config):
         iam_client.generate_credential_report()
     except Exception as e:
         pass
-    printInfo('Fetching IAM users...')
+    printInfo('Fetching IAM config...')
     get_users_info(iam_client, service_config)
-    printInfo('Fetching IAM groups...')
     get_groups_info(iam_client, service_config)
-    printInfo('Fetching IAM roles...')
     get_roles_info(iam_client, service_config)
-    printInfo('Fetching IAM policies...')
     get_managed_policies(iam_client, service_config)
-    printInfo('Fetching IAM credential report...')
+    printInfo(' Credential report: 1/1')
     get_credential_report(iam_client, service_config)
-    printInfo('Fetching IAM password policy...')
+    printInfo(' Password policy: 1/1')
     get_account_password_policy(iam_client, service_config)
 
 def get_permissions(policy_document, permissions, resource_type, name, policy_name, is_managed_policy = False):
@@ -374,7 +371,7 @@ def get_user_info(q, params):
 def show_status(iam_info, entities, newline = True):
     current = len(iam_info[entities])
     total = iam_info[entities + '_count']
-    sys.stdout.write("\r%d/%d" % (current, total))
+    sys.stdout.write("\r %s: %d/%d" % (entities.title(), current, total))
     sys.stdout.flush()
     if newline:
         sys.stdout.write('\n')
