@@ -25,6 +25,29 @@
             {{> accordion_policy name = 'Effective delivery policy' path = (concat 'sns.regions' region 'topics' @key 'EffectiveDeliveryPolicy') document = EffectiveDeliveryPolicy}}
           </div>
         {{/if}}
+        <div class="list-group-item">
+          <div class="accordion">
+            <h4 class="list-group-item-heading accordion-heading">Subscriptions
+              {{#unlessEqual subscriptions_count 0}}<a class="accordion-toggle" data-toggle="collapse" href="#sns\.regions\.{{region}}\.topics\.{{@key}}\.subscriptions">{{/unlessEqual}}
+              <span class="badge pull-right {{#unlessEqual subscriptions_count 0}}btn-info{{/unlessEqual}}">{{subscriptions_count}}</span>
+              {{#unlessEqual subscriptions_count 0}}</a>{{/unlessEqual}}
+            </h4>
+            <div id="sns.regions.{{region}}.topics.{{@key}}.subscriptions" class="accordion-body collapse">
+              <div class="accordion-inner">
+                <ul>
+                {{#each subscriptions.protocol}}
+                  <li>{{make_title @key}}</li>
+                  <ul>
+                    {{#each this}}
+                       <li>Endpoint: {{Endpoint}}</li>
+                    {{/each}}
+                  </ul>
+                {{/each}}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
     </script>
     <script>
       Handlebars.registerPartial("services.sns.regions.id.topics", $("#services\\.sns\\.regions\\.id\\.topics\\.partial").html());
