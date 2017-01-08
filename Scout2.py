@@ -26,6 +26,7 @@ from AWSScout2.utils_ec2 import *
 from AWSScout2.utils_iam import *
 from AWSScout2.utils_rds import *
 from AWSScout2.utils_redshift import *
+from AWSScout2.utils_sns import get_sns_info
 from AWSScout2.utils_s3 import *
 from AWSScout2.utils_vpc import *
 

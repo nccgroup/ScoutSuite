@@ -581,7 +581,7 @@ def load_info_from_json(service, environment_name, scout2_folder = None, full_co
 
 def load_from_json(environment_name, var):
     report_filename, config_filename = get_scout2_paths(environment_name)
-    with open(report_filename) as f:
+    with open(config_filename) as f:
         json_payload = f.readlines()
         json_payload.pop(0)
         json_payload = ''.join(json_payload)
@@ -622,8 +622,9 @@ def load_config_from_json(rule_metadata, ip_ranges, aws_account_id, rule_type = 
                         for ip_range in ip_ranges:
                             c1[2] = c1[2] + read_ip_ranges(ip_range, True, conditions, True)
                 if c1[2] and aws_account_id:
-                    if type(c1[2]) == str:
+                    if not type(c1[2]) == list:
                         c1[2] = c1[2].replace('_AWS_ACCOUNT_ID_', aws_account_id)
+
                 # Set lists
                 list_value = re_list_value.match(str(c1[2]))
                 if list_value:

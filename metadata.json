@@ -11,6 +11,14 @@
             }
         }
     },
+    "sns": {
+        "resources": {
+            "topics": {
+                "cols": 2,
+                "path": "services.sns.regions.id.topics"
+            }
+        }
+    },
     "ec2": {
         "resources": {
             "elbs": {
