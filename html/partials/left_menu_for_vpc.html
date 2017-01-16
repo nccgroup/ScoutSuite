@@ -4,7 +4,7 @@
   <div id="services.{{service_name}}.regions.id.vpcs.id.{{resource_type}}.list">
     <div class="list-group" >
       <div class="list-group-item">
-        <a href="#services.{{service_name}}.regions.id.vpcs.id.{{resource_type}}">Show all <span class="badge pull-right">{{get_value_at 'metadata' service_name 'resources' resource_type 'count'}}</span></a>
+        <a href="#services.{{service_name}}.regions.id.vpcs.id.{{resource_type}}">Show all <span class="badge pull-right">{{get_value_at 'metadata' service_group service_name 'resources' resource_type 'count'}}</span></a>
       </div>
     </div>
     {{#each items}}

@@ -258,26 +258,30 @@ def match_instances_and_roles(ec2_config, iam_config):
 # Create dashboard metadata
 #
 def create_report_metadata(aws_config, services):
+    service_map = {}
     # Load resources and summaries metadata from file
     with open('metadata.json', 'rt') as f:
-        aws_config['metadata'] = json.load(f)    
-    for service in services:
-        for resource in aws_config['metadata'][service]['resources']:
-            # full_path = path if needed
-            if not 'full_path' in aws_config['metadata'][service]['resources'][resource]:
-                aws_config['metadata'][service]['resources'][resource]['full_path'] = aws_config['metadata'][service]['resources'][resource]['path']
-            # Script is the full path minus "id" (TODO: change that)
-            if not 'script' in aws_config['metadata'][service]['resources'][resource]:
-                aws_config['metadata'][service]['resources'][resource]['script'] = '.'.join([x for x in aws_config['metadata'][service]['resources'][resource]['full_path'].split('.') if x != 'id'])
-            # Update counts
-            count = '%s_count' % resource
-            if 'regions' in aws_config['services'][service] and resource != 'regions':
-                aws_config['metadata'][service]['resources'][resource]['count'] = 0
-                for region in aws_config['services'][service]['regions']:
-                    if count in aws_config['services'][service]['regions'][region]:
-                        aws_config['metadata'][service]['resources'][resource]['count'] += aws_config['services'][service]['regions'][region][count]
-            else:
-                aws_config['metadata'][service]['resources'][resource]['count'] = aws_config['services'][service][count]
+        aws_config['metadata'] = json.load(f)
+    for service_group in aws_config['metadata']:
+        for service in aws_config['metadata'][service_group]:        
+            service_map[service] = service_group
+            for resource in aws_config['metadata'][service_group][service]['resources']:
+                # full_path = path if needed
+                if not 'full_path' in aws_config['metadata'][service_group][service]['resources'][resource]:
+                    aws_config['metadata'][service_group][service]['resources'][resource]['full_path'] = aws_config['metadata'][service_group][service]['resources'][resource]['path']
+                # Script is the full path minus "id" (TODO: change that)
+                if not 'script' in aws_config['metadata'][service_group][service]['resources'][resource]:
+                    aws_config['metadata'][service_group][service]['resources'][resource]['script'] = '.'.join([x for x in aws_config['metadata'][service_group][service]['resources'][resource]['full_path'].split('.') if x != 'id'])
+                # Update counts
+                count = '%s_count' % resource
+                if 'regions' in aws_config['services'][service] and resource != 'regions':
+                    aws_config['metadata'][service_group][service]['resources'][resource]['count'] = 0
+                    for region in aws_config['services'][service]['regions']:
+                        if count in aws_config['services'][service]['regions'][region]:
+                            aws_config['metadata'][service_group][service]['resources'][resource]['count'] += aws_config['services'][service]['regions'][region][count]
+                else:
+                    aws_config['metadata'][service_group][service]['resources'][resource]['count'] = aws_config['services'][service][count]
+
     # Security risks dropdown on a per-resource basis
     for s in aws_config['services']:
         if 'violations' in aws_config['services'][s]:
@@ -292,12 +296,12 @@ def create_report_metadata(aws_config, services):
                     resource = resource_path.split('.')[-1]
                 if aws_config['services'][s]['violations'][v]['flagged_items'] > 0:
                     try:
-                        manage_dictionary(aws_config['metadata'][s]['resources'][resource], 'risks', [])
-                        aws_config['metadata'][s]['resources'][resource]['risks'].append(v)
+                        manage_dictionary(aws_config['metadata'][service_map[s]][s]['resources'][resource], 'risks', [])
+                        aws_config['metadata'][service_map[s]][s]['resources'][resource]['risks'].append(v)
                     except Exception as e:
                         try:
-                            manage_dictionary(aws_config['metadata'][s]['summaries'][resource], 'risks', [])
-                            aws_config['metadata'][s]['summaries'][resource]['risks'].append(v)
+                            manage_dictionary(aws_config['metadata'][service_map[s]][s]['summaries'][resource], 'risks', [])
+                            aws_config['metadata'][service_map[s]][s]['summaries'][resource]['risks'].append(v)
                         except Exception as e:
                             printError('Service: %s' % s)
                             printError('Resource: %s' % resource)

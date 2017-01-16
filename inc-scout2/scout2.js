@@ -81,7 +81,7 @@ function process_template(id1, container_id, list) {
 // Hide all lists and details 
 //
 function hideAll() {
-    $("[id*='.list']").not("[id='metadata.list']").not("[id*='filters.list']").hide();
+    $("[id*='.list']").not("[id*='metadata.list']").not("[id*='filters.list']").hide();
     $("[id*='.details']").hide();
 }
 
@@ -435,12 +435,14 @@ function load_metadata() {
     load_aws_config_from_json('services.id.filters', 0);
     load_aws_config_from_json('services.id.regions-filters', 0);
     show_main_dashboard();
-    for (service in aws_info['metadata']) {
-        for (section in aws_info['metadata'][service]) {
-            for (resource_type in aws_info['metadata'][service][section]) {
-                add_templates(service, section, resource_type, aws_info['metadata'][service][section][resource_type]['path'], aws_info['metadata'][service][section][resource_type]['cols']);
+    for (group in aws_info['metadata']) {
+      for (service in aws_info['metadata'][group]) {
+        for (section in aws_info['metadata'][group][service]) {
+            for (resource_type in aws_info['metadata'][group][service][section]) {
+                add_templates(group, service, section, resource_type, aws_info['metadata'][group][service][section][resource_type]['path'], aws_info['metadata'][group][service][section][resource_type]['cols']);
             }
         }
+      }
     }
 }
 
@@ -535,6 +537,7 @@ function get_value_at(path) {
 //
 // Browsing
 //
+var current_service_group = ''
 var current_resource_path = ''
 function updateDOM(anchor) {
 
@@ -543,6 +546,19 @@ function updateDOM(anchor) {
 
     // Get resource path based on browsed-to path
     var resource_path = get_resource_path(path);
+
+    // Sub navbar..
+    $("*[id^='groups.']").hide();
+    if (path.startsWith('groups.')) {
+        id = '#metadata\\.' + current_service_group;
+        $(id).removeClass('active-dropdown');
+        current_service_group = path.replace('groups\.', '').replace('.list', '');
+        id = '#metadata\\.' + current_service_group;
+        $(id).addClass('active-dropdown');
+        id = '#groups\\.' + current_service_group + '\\.list';
+        $(id).show();
+        return;
+    }
 
     // Update title
     if (path.endsWith('.items')) {
@@ -593,9 +609,6 @@ function updateDOM(anchor) {
         current_resource_path = resource_path;
     }
 
-
-
-
     // Scroll to the top
     window.scrollTo(0,0);
 }
@@ -605,13 +618,17 @@ function updateDOM(anchor) {
 // TODO: merge into load_aws_config_from_json...
 //
 function lazy_loading(path) {
+    var cols = 1;
     var resource_path_array = path.split('.')
     var service = resource_path_array[1];
     var resource_type = resource_path_array[resource_path_array.length - 1];
-    if (resource_type in aws_info['metadata'][service]['resources']) {
-        var cols = aws_info['metadata'][service]['resources'][resource_type]['cols'];
-    } else {  
-        var cols = 1;
+    for (group in aws_info['metadata']) {
+        if (service in aws_info['metadata'][group]) {
+            if (resource_type in aws_info['metadata'][group][service]['resources']) {
+                var cols = aws_info['metadata'][group][service]['resources'][resource_type]['cols'];
+            }
+            break
+        }
     }
     return load_aws_config_from_json(path, cols);
 }
@@ -663,10 +680,10 @@ var make_title = function(title) {
 }
 
 // Add one or
-var add_templates = function(service, section, resource_type, path, cols) {
-    add_template(service, section, resource_type, path, 'details');
+var add_templates = function(group, service, section, resource_type, path, cols) {
+    add_template(group, service, section, resource_type, path, 'details');
     if (cols > 1) {
-        add_template(service, section, resource_type, path, 'list');
+        add_template(group, service, section, resource_type, path, 'list');
     }
 }
 
@@ -674,7 +691,7 @@ var add_templates = function(service, section, resource_type, path, cols) {
 //
 // Add resource templates
 //
-var add_template = function(service, section, resource_type, path, suffix) {
+var add_template = function(group, service, section, resource_type, path, suffix) {
     var template = document.createElement("script");
     template.type = "text/x-handlebars-template";
     template.id = path + "." + suffix + ".template";
@@ -698,7 +715,7 @@ var add_template = function(service, section, resource_type, path, suffix) {
         } else {
             console.log('Invalid suffix (' + suffix + ') for resources template.');
         }
-        template.innerHTML = "{{> " + partial_name + " service_name = '" + service + "' resource_type = '" + resource_type + "' partial_name = '" + path + "'}}";
+        template.innerHTML = "{{> " + partial_name + " service_group = '" + group  + "' service_name = '" + service + "' resource_type = '" + resource_type + "' partial_name = '" + path + "'}}";
         $('body').append(template);
     }
 }
