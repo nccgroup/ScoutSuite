@@ -48,6 +48,7 @@ def get_account_password_policy(iam_client, iam_info):
         # There is a bug in the API: ExpirePasswords always returns false
         if 'MaxPasswordAge' in iam_info['password_policy']:
             iam_info['password_policy']['ExpirePasswords'] = True
+        show_status(iam_info, 'Password policy', True, 1, 1)
     except Exception as e:
         if type(e) == botocore.exceptions.ClientError:
             if e.response['Error']['Code'] == 'NoSuchEntity':
@@ -130,9 +131,7 @@ def get_iam_info(credentials, service_config):
     get_groups_info(iam_client, service_config)
     get_roles_info(iam_client, service_config)
     get_managed_policies(iam_client, service_config)
-    printInfo(' Credential report: 1/1')
     get_credential_report(iam_client, service_config)
-    printInfo(' Password policy: 1/1')
     get_account_password_policy(iam_client, service_config)
 
 def get_permissions(policy_document, permissions, resource_type, name, policy_name, is_managed_policy = False):
@@ -325,6 +324,7 @@ def get_credential_report(iam_client, iam_info):
             for key, value in zip(keys, values):
                 iam_report[values[0]][key] = value
         iam_info['credential_report'] = iam_report
+        show_status(iam_info, 'Credential report', True, 1, 1)
     except Exception as e:
         printError('Failed to generate/download a credential report.')
         printException(e)
@@ -368,10 +368,12 @@ def get_user_info(q, params):
         finally:
             q.task_done()
 
-def show_status(iam_info, entities, newline = True):
-    current = len(iam_info[entities])
-    total = iam_info[entities + '_count']
-    sys.stdout.write("\r %s: %d/%d" % (entities.title(), current, total))
+def show_status(iam_info, entities, newline = True, current = None, total = None):
+    if not current:
+        current = len(iam_info[entities])
+    if not total:
+        total = iam_info[entities + '_count']
+    sys.stdout.write('\r {:<20} {:>15}'.format(entities.title(), '%d/%d' % (current, total)))
     sys.stdout.flush()
     if newline:
         sys.stdout.write('\n')
