@@ -264,6 +264,8 @@ def create_report_metadata(aws_config, services):
         aws_config['metadata'] = json.load(f)
     for service_group in aws_config['metadata']:
         for service in aws_config['metadata'][service_group]:        
+            if 'resources' not in aws_config['metadata'][service_group][service]:
+                continue
             service_map[service] = service_group
             for resource in aws_config['metadata'][service_group][service]['resources']:
                 # full_path = path if needed
