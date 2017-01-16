@@ -670,10 +670,12 @@ var make_title = function(title) {
         return title.toString();
     }
     title = title.toLowerCase();
-    if (['ec2', 'iam', 'rds', 'sns', 'sms'].indexOf(title) != -1) {
+    if (['ec2', 'iam', 'rds', 'sns', 'ses', 'sqs'].indexOf(title) != -1) {
         return title.toUpperCase();
     } else if (title == 'cloudtrail') {
         return 'CloudTrail';
+    } else if (title == 'cloudwatch') {
+        return 'CloudWatch';
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
     }

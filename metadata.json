@@ -11,6 +11,24 @@
                     "path": "services.cloudtrail.regions.id.trails"
                 }
             }
+        },
+        "cloudwatch": {
+            "resources": {
+                "metrics": {
+                    "cols": 2,
+                    "path": "services.cloudwatch.regions.id.metrics"
+                },
+                "alarms": {
+                    "cols": 2,
+                    "path": "services.cloudwatch.regions.id.alarms"
+                }
+            },
+            "summaries": {
+                "statistics": {
+                    "cols": 1,
+                    "path": "services.cloudwatch.statistics"
+                }
+            }
         }
     },
     "messaging": {
