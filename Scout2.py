@@ -22,6 +22,7 @@ except Exception as e:
 from AWSScout2 import __version__
 from AWSScout2.findings import *
 from AWSScout2.utils_cloudtrail import *
+from AWSScout2.utils_cloudwatch import get_cloudwatch_info
 from AWSScout2.utils_ec2 import *
 from AWSScout2.utils_iam import *
 from AWSScout2.utils_rds import *
@@ -228,8 +229,7 @@ def main(args):
     # Exceptions
     exceptions = {}
     if args.exceptions[0]:
-        with open(args.exceptions[0], 'rt') as f:
-            exceptions = json.load(f)
+        exceptions = load_from_json('', '' args.exceptions[0])
         for service in exceptions['services']:
             for rule in exceptions['services'][service]['exceptions']:
                 filtered_items = []
