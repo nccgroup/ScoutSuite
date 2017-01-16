@@ -11,6 +11,7 @@ script:
   - 'nosetests tests/test-listall.py'
   - 'nosetests tests/test-rulesgenerator.py'
   - 'nosetests tests/test-utils.py'
+  - '[ "${TRAVIS_SECURE_ENV_VARS}" = "true" ] && nosetests test/test-utils_sns.py || false'
   - '[ "${TRAVIS_SECURE_ENV_VARS}" = "true" ] && nosetests tests/test-scout2.py || false'
 # use container-base infrastructure
 sudo: false
