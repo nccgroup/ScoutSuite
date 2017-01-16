@@ -229,7 +229,7 @@ def main(args):
     # Exceptions
     exceptions = {}
     if args.exceptions[0]:
-        exceptions = load_from_json('', '' args.exceptions[0])
+        exceptions = load_from_json('', '', args.exceptions[0])
         for service in exceptions['services']:
             for rule in exceptions['services'][service]['exceptions']:
                 filtered_items = []
