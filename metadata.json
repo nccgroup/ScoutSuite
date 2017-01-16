@@ -39,6 +39,16 @@
                     "path": "services.sns.regions.id.topics"
                 }
             }
+        },
+        "ses": {
+        },
+        "sqs" : {
+        }
+    },
+    "network": {
+        "vpc": {
+        },
+        "route53": {
         }
     },
     "compute": {
@@ -71,6 +81,8 @@
                     "path": "services.ec2.attack_surface"
                 }
             }
+        },
+        "lambda": {
         }
     },
     "security": {
