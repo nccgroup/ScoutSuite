@@ -58,26 +58,30 @@ def get_sns_region(params):
             topic[k] = json.loads(attributes[k]) if k in attributes else None
         topic['name'] = topic['arn'].split(':')[-1]
         manage_dictionary(topic, 'subscriptions', {})
-        manage_dictionary(topic, 'subscriptions_count', 0)
+        manage_dictionary(topic, 'subscriptions_count', attributes['SubscriptionsConfirmed'])
         sns_config['regions'][region]['topics'][topic['name']] = topic
         fetched_topics += 1
         sns_status()
     # Get subscriptions and discard those for external topics
-    subscriptions = handle_truncated_response(sns_client.list_subscriptions, {}, 'NextToken', ['Subscriptions'])['Subscriptions']
-    discovered_subscriptions += len(subscriptions)
-    sns_status()
-    for s in subscriptions:
-        topic_arn = s.pop('TopicArn')
-        topic_name = topic_arn.split(':')[-1]
-        if topic_name in sns_config['regions'][region]['topics']:
-            topic = sns_config['regions'][region]['topics'][topic_name]
-            manage_dictionary(topic['subscriptions'], 'protocol', {})
-            protocol = s.pop('Protocol')
-            manage_dictionary(topic['subscriptions']['protocol'], protocol, [])
-            topic['subscriptions']['protocol'][protocol].append(s)
-            topic['subscriptions_count'] += 1
-        fetched_subscriptions += 1
+    try:
+        subscriptions = handle_truncated_response(sns_client.list_subscriptions, {}, 'NextToken', ['Subscriptions'])['Subscriptions']
+        discovered_subscriptions += len(subscriptions)
         sns_status()
+        for s in subscriptions:
+            topic_arn = s.pop('TopicArn')
+            topic_name = topic_arn.split(':')[-1]
+            if topic_name in sns_config['regions'][region]['topics']:
+                topic = sns_config['regions'][region]['topics'][topic_name]
+                manage_dictionary(topic['subscriptions'], 'protocol', {})
+                protocol = s.pop('Protocol')
+                manage_dictionary(topic['subscriptions']['protocol'], protocol, [])
+                topic['subscriptions']['protocol'][protocol].append(s)
+                topic['subscriptions_count'] += 1
+            fetched_subscriptions += 1
+            sns_status()
+    except Exception as e:
+        # Do not complain if subscriptions aren't available -- exposing the list of endpoints is not always desirable
+        pass
 
 
 ########################################
