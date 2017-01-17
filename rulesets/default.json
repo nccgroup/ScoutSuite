@@ -701,6 +701,27 @@
             "level": "warning",
             "filename": "s3-object-unencrypted.json",
             "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "sns-topic-with-open-policy.json",
+            "enabled": true,
+            "args": [
+                "publish"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sns-topic-with-open-policy.json",
+            "enabled": true,
+            "args": [
+                "subscribe"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sns-topic-with-open-mgmt-policy.json",
+            "enabled": true
         }
     ]
 }
