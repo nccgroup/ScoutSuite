@@ -1,0 +1,10 @@
+{
+    "description": "SNS topic without subscriptions",
+    "rationale": "",
+    "path": "sns.regions.id.topics.id",
+    "dashboard_name": "Topics",
+    "id_suffix": "subscriptions_count",
+    "conditions": [ "and",
+        [ "sns.regions.id.topics.id.subscriptions_count", "equal", "0" ]
+    ]
+}

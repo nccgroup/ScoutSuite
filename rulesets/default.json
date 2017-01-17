@@ -722,6 +722,11 @@
             "level": "danger",
             "filename": "sns-topic-with-open-mgmt-policy.json",
             "enabled": true
+        },
+        {
+            "level": "warning",
+            "filename": "sns-topic-without-subscriptions.json",
+            "enabled": true
         }
     ]
 }
