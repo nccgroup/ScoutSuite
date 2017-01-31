@@ -22,14 +22,15 @@ except Exception as e:
 from AWSScout2 import __version__
 from AWSScout2.findings import *
 from AWSScout2.utils_cloudtrail import *
-from AWSScout2.utils_cloudwatch import get_cloudwatch_info
+from AWSScout2.utils_cloudwatch import *
 from AWSScout2.utils_ec2 import *
 from AWSScout2.utils_iam import *
 from AWSScout2.utils_rds import *
 from AWSScout2.utils_redshift import *
-from AWSScout2.utils_sns import get_sns_info
+#from AWSScout2.utils_sns import get_sns_info
 from AWSScout2.utils_s3 import *
 from AWSScout2.utils_vpc import *
+from AWSScout2.Scout2Config import Scout2Config
 
 # Setup variables
 (scout2_dir, tool_name) = os.path.split(__file__)
@@ -57,12 +58,17 @@ def main(args):
     # Configure the debug level
     configPrintException(args.debug)
 
+    new_config = Scout2Config()
+    new_config.load_metadata()
+    printInfo(json.dumps(new_config, cls = Scout2Encoder, sort_keys = True))
+
     # Check version of opinel
     min_opinel, max_opinel = get_opinel_requirement()
     if not check_opinel_version(min_opinel):
         return 42
 
     # Create the list of services to analyze
+    # TODO : fix this if switch to new style
     services = build_services_list(args.services, args.skipped_services)
     if not len(services):
         printError('Error: list of Amazon Web Services to be analyzed is empty.')
@@ -79,22 +85,47 @@ def main(args):
         args.force_write = True
 
     # Set the environment name
+    # TODO FIX this as read-creds happens before
     environment_name = get_environment_name(args)[0]
 
     ##### Load local data first
     aws_config = {}
     manage_dictionary(aws_config, 'services', {})
-    for service in build_services_list():
-        if service not in services or args.fetch_local or args.resume or args.update or (service == 's3' and (args.bucket_name or args.skipped_bucket_name)):
-            aws_config['services'][service] = load_info_from_json(service, environment_name)
-            # Kill region-specific data except for S3 because it's "global"...
-            if 'regions' in aws_config['services'][service]:
-                for region in aws_config['services'][service]['regions']:
-                    if args.regions == [] or region in args.regions:
-                        aws_config['services'][service]['regions'][region] = {}
+#    for service in build_services_list():
+#        if service not in services or args.fetch_local or args.resume or args.update or (service == 's3' and (args.bucket_name or args.skipped_bucket_name)):
+#            aws_config['services'][service] = load_info_from_json(service, environment_name)
+#            # Kill region-specific data except for S3 because it's "global"...
+#            if 'regions' in aws_config['services'][service]:
+#                for region in aws_config['services'][service]['regions']:
+#                    if args.regions == [] or region in args.regions:
+#                        aws_config['services'][service]['regions'][region] = {}
 
-    ##### Fetch all requested services' configuration
-    for service in services:
+    if not args.fetch_local:
+      for service in vars(new_config.services):
+        print service
+        service_config = getattr(new_config.services, service)
+        if 'fetch_all' in dir(service_config):
+            # Fetch data from AWS API
+            method_args = {}
+            method_args['credentials'] = credentials
+            if service != 'iam':
+                method_args['service'] = service
+                method_args['selected_regions'] = args.regions
+                method_args['partition_name'] = args.partition_name
+            if service == 's3':
+                method_args['s3_params'] = {}
+                method_args['s3_params']['check_encryption'] = args.check_s3_encryption
+                method_args['s3_params']['check_acls'] = args.check_s3_acls
+                method_args['s3_params']['checked_buckets'] = args.bucket_name
+                method_args['s3_params']['skipped_buckets'] = args.skipped_bucket_name
+            service_config.fetch_all(**method_args)
+
+    if not args.fetch_local:
+      ##### Fetch all requested services' configuration
+      for service in services:
+        if service in ['iam', 'sns', 'sqs']:
+            aws_config['services'][service] = getattr(new_config.services, service)
+            continue
         method = globals()['get_' + service + '_info']
         manage_dictionary(aws_config['services'], service, {})
         manage_dictionary(aws_config['services'][service], 'violations', {})
@@ -114,16 +145,24 @@ def main(args):
                     method_args['s3_params']['checked_buckets'] = args.bucket_name
                     method_args['s3_params']['skipped_buckets'] = args.skipped_bucket_name
                 method(**method_args)
+                # Save service config
+                #update_
             else:
                 # Fetch data from a local file
                 aws_config['services'][service] = load_info_from_json(service, environment_name)
         except Exception as e:
             printError('Error: could not fetch %s configuration.' % service)
             printException(e)
+        setattr(new_config.services, service, aws_config['services'][service])
+
+      # Write and reload to flatten everything into a python dictionary
+      new_config.save_to_file(environment_name, args.force_write, args.debug)
+
+    aws_config = load_from_json('default')
 
     ##### Save this AWS account ID
     if 'iam' in services and (not 'account_id' in aws_config or not aws_config['account_id']):
-        aws_config['account_id'] = get_aws_account_id(aws_config['services']['iam'])
+        aws_config['account_id'] = '123456789012' # TODO get_aws_account_id(aws_config['services']['iam'])
     else:
         manage_dictionary(aws_config, 'account_id', None)
 
@@ -147,25 +186,25 @@ def main(args):
         aws_config['services'][service]['filters'] = {}
 
     ##### VPC analyzis
-    analyze_vpc_config(aws_config, args.ip_ranges, args.ip_ranges_key_name)
-    if 'ec2' in services:
-        analyze_ec2_config(aws_config['services']['ec2'], aws_config['account_id'], args.force_write)
-    if 'iam' in services:
-        analyze_iam_config(aws_config)
-
-    ##### Multiple service analyzis
-    if 'ec2' in services and 'iam' in services:
-        try:
-            match_instances_and_roles(aws_config['services']['ec2'], aws_config['services']['iam'])
-        except Exception as e:
-            printError('Error: EC2 or IAM configuration is missing.')
-            printException(e)
-    if 's3' in services and 'iam' in services:
-        try:
-            match_iam_policies_and_buckets(aws_config['services']['s3'], aws_config['services']['iam'])
-        except Exception as e:
-            printError('Error: s3 or IAM configuration is missing.')
-            printException(e)
+#    analyze_vpc_config(aws_config, args.ip_ranges, args.ip_ranges_key_name)
+#    if 'ec2' in services:
+#        analyze_ec2_config(aws_config['services']['ec2'], aws_config['account_id'], args.force_write)
+#    if 'iam' in services:
+#        analyze_iam_config(aws_config)
+#
+#    ##### Multiple service analyzis
+#    if 'ec2' in services and 'iam' in services:
+#        try:
+#            match_instances_and_roles(aws_config['services']['ec2'], aws_config['services']['iam'])
+#        except Exception as e:
+#            printError('Error: EC2 or IAM configuration is missing.')
+#            printException(e)
+#    if 's3' in services and 'iam' in services:
+#        try:
+#            match_iam_policies_and_buckets(aws_config['services']['s3'], aws_config['services']['iam'])
+#        except Exception as e:
+#            printError('Error: s3 or IAM configuration is missing.')
+#            printException(e)
 
     # Single service analyzis
     printInfo('Analyzing AWS config...')
@@ -229,7 +268,8 @@ def main(args):
     # Exceptions
     exceptions = {}
     if args.exceptions[0]:
-        exceptions = load_from_json('', '', args.exceptions[0])
+        with open(args.exceptions[0], 'rt') as f:
+            exceptions = json.load(f)
         for service in exceptions['services']:
             for rule in exceptions['services'][service]['exceptions']:
                 filtered_items = []
