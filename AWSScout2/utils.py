@@ -208,7 +208,7 @@ class Scout2Encoder(json.JSONEncoder):
         if type(o) == datetime.datetime:
             return str(o)
         else:
-            return o.__dict__
+            return vars(o)
 
 #
 # Copies the value of keys from source object to dest object
@@ -585,7 +585,7 @@ def load_info_from_json(service, environment_name, scout2_folder = None, full_co
     else:
         return aws_config['services'][service] if 'services' in aws_config and service in aws_config['services'] else {}
 
-def load_from_json(environment_name, var, config_filename = None):
+def load_from_json(environment_name, config_filename = None):
     if not config_filename:
         report_filename, config_filename = get_scout2_paths(environment_name)
     with open(config_filename) as f:
