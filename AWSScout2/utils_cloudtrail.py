@@ -24,7 +24,7 @@ class CloudTrailRegionConfig(RegionConfig):
         self.trails = {}
         self.trails_count = 0
 
-    def _fetch_trail(self, global_params, region, trail):
+    def parse_trail(self, global_params, region, trail):
         """
         Parse a single CloudTrail trail
 

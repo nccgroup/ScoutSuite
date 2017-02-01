@@ -30,7 +30,7 @@ class RedshiftRegionConfig(RegionConfig):
         self.security_groups_count = 0
 
 
-    def _fetch_cluster(self, global_params, region, cluster):
+    def parse_cluster(self, global_params, region, cluster):
         """
         Parse a single Redshift cluster
 
@@ -45,7 +45,7 @@ class RedshiftRegionConfig(RegionConfig):
         cluster['name'] = name
         self.clusters[name] = cluster
 
-    def _fetch_parameter_group(self, global_params, region, parameter_group):
+    def parse_parameter_group(self, global_params, region, parameter_group):
         """
         Parse a single Redshift parameter group and fetch all of its parameters
 
@@ -66,7 +66,7 @@ class RedshiftRegionConfig(RegionConfig):
             parameter_group['parameters'][parameter['ParameterName']] = param
         (self).parameter_groups[pg_id] = parameter_group
 
-    def _fetch_security_group(self, global_params, region, security_group):
+    def parse_security_group(self, global_params, region, security_group):
         """
         Parse a single Redsfhit security group
 

@@ -139,7 +139,7 @@ class RegionalServiceConfig(object):
                 try:
                     method, region, target = q.get()
                     method(params, region, target)
-                    target = method.__name__.replace('_fetch_', '') + 's'
+                    target = method.__name__.replace('parse_', '') + 's'
                     #print('Adding one to %s' % target)
                     status['counts'][target]['fetched'] += 1
                     if region not in status['regions']:
@@ -205,7 +205,7 @@ class RegionConfig(object):
         region = api_client._client_config.region_name
         # Queue resources
         for target in targets:
-            callback = getattr(self, '_fetch_%s' % target_type[0:-1])
+            callback = getattr(self, 'parse_%s' % target_type[0:-1])
             if q:
                 # Add to the queue
                 q.put((callback, region, target))

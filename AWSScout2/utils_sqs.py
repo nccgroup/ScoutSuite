@@ -28,7 +28,7 @@ class SQSRegionConfig(RegionConfig):
         self.queues_count = 0
 
 
-    def _fetch_queue(self, global_params, region, queue_url):
+    def parse_queue(self, global_params, region, queue_url):
         """
         Parse a single queue and fetch additional attributes
 

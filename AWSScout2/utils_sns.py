@@ -31,7 +31,7 @@ class SNSRegionConfig(RegionConfig):
         self.topics_count = 0
 
 
-    def _fetch_subscription(self, params, region, subscription):
+    def parse_subscription(self, params, region, subscription):
         """
         Parse a single subscription and reference it in its corresponding topic
 
@@ -49,7 +49,7 @@ class SNSRegionConfig(RegionConfig):
             topic['subscriptions_count'] += 1
 
 
-    def _fetch_topic(self, params, region, topic):
+    def parse_topic(self, params, region, topic):
         """
         Parse a single topic and fetch additional attributes
 
