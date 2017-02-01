@@ -58,6 +58,15 @@ class RegionalServiceConfig(object):
         self.regions = {}
         self.service = type(self).__name__.replace('Config', '').lower() # TODO: use regex with EOS instead of plain replace
 
+    def init_region_config(self, region):
+        """
+        Initialize the region's configuration
+
+        :param region:                  Name of the region
+        """
+        self.regions[region] = self.region_config_class()
+
+
     def fetch_all(self, credentials, regions = [], partition_name = 'aws', targets = None):
         """
         Fetch all the SNS configuration supported by Scout2
@@ -173,44 +182,30 @@ class RegionConfig(object):
             targets = tuple(['%s' % method.replace('fetch_','').title() for method in methods])
         status_init(targets)
         for target in targets:
-            target_name = target[0] if type(target) == tuple else target
-            target_name = self.camel_case_to_snake(target_name)
-            manage_dictionary(status['counts'], target_name, {})
-            manage_dictionary(status['counts'][target_name], 'fetched', 0)
-            manage_dictionary(status['counts'][target_name], 'discovered', 0)
+            target_type = target[0]
+            manage_dictionary(status['counts'], target_type, {})
+            manage_dictionary(status['counts'][target_type], 'fetched', 0)
+            manage_dictionary(status['counts'][target_type], 'discovered', 0)
             self._fetch_targets(api_client, q, target, {})
 
 
-    def _fetch_targets(self, api_client, q, target_type, list_params):
+    def _fetch_targets(self, api_client, q, target, list_params):
         global counts
         # Handle & format the target type
-        target_prefix = None
-        if type(target_type) == tuple:
-            if len(target_type) == 3:
-                target_prefix = target_type[2] # because describe_cluster_security_groups instead of just describe_security_groups ...
-            lower_target = target_type[0]
-            target_type = target_type[1]
-        else:
-            lower_target = target_type #.lower()
-        lower_target = self.camel_case_to_snake(lower_target)
-        # Methods to get the resources are either list_* or target_*, try both...
-        method_suffix = '%s_%s' % (target_prefix, lower_target) if target_prefix else lower_target
+        target_type, response_attribute, list_method_name, ignore_list_error = target
+        list_method = getattr(api_client, list_method_name)
         try:
-            list_method = getattr(api_client, 'list_' + method_suffix)
-        except:
-            list_method = getattr(api_client, 'describe_' + method_suffix)
-        # List resources
-        try:
-            targets = handle_truncated_response(list_method, list_params, [target_type])[target_type]
+            targets = handle_truncated_response(list_method, list_params, [response_attribute])[response_attribute]
         except Exception as e:
+            if not ignore_list_error:
+                printException(e)
             targets = []
-            pass
-        setattr(self, '%s_count' % lower_target, len(targets))
-        status['counts'][lower_target]['discovered'] += len(targets)
+        setattr(self, '%s_count' % target_type, len(targets))
+        status['counts'][target_type]['discovered'] += len(targets)
         region = api_client._client_config.region_name
         # Queue resources
         for target in targets:
-            callback = getattr(self, '_fetch_%s' % lower_target[0:-1])
+            callback = getattr(self, '_fetch_%s' % target_type[0:-1])
             if q:
                 # Add to the queue
                 q.put((callback, region, target))
