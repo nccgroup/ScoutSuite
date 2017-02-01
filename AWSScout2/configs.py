@@ -4,10 +4,15 @@ Base classes and functions for region-specific services
 """
 
 from opinel.utils import printException, printInfo, manage_dictionary, connect_service
-from AWSScout2.utils import handle_truncated_response, build_region_list
+from AWSScout2.utils import handle_truncated_response
+from AWSScout2.utils import build_region_list
 
 
 # Import stock packages
+import re
+from hashlib import sha1
+
+
 import sys
 from threading import Event, Thread
 # Python2 vs Python3
@@ -33,7 +38,8 @@ formatted_service_name = {
     'redshift': 'RedShift',
     'route53': 'Route53'
 }
-
+first_cap_re = re.compile('(.)([A-Z][a-z]+)')
+all_caps_re = re.compile('([a-z0-9])([A-Z])')
 
 
 ########################################
@@ -67,8 +73,6 @@ class RegionalServiceConfig(object):
         # Initialize targets
         if not targets:
             targets = type(self).targets
-        printInfo('Test:')
-        printInfo(str(targets))
         printInfo('Fetching %s config...' % self._format_service_name(self.service))
         counts = {}
         status = {'counts': {}, 'regions': [], 'regions_count': 0}
@@ -127,6 +131,7 @@ class RegionalServiceConfig(object):
                     method, region, target = q.get()
                     method(params, region, target)
                     target = method.__name__.replace('_fetch_', '') + 's'
+                    #print('Adding one to %s' % target)
                     status['counts'][target]['fetched'] += 1
                     if region not in status['regions']:
                         status['regions'].append(region)
@@ -161,33 +166,49 @@ class RegionConfig(object):
         if targets != None:
             # Ensure targets is a tuple
             if type(targets) != list and type(targets) != tuple:
-                targets = tuple([targets])
+                targets = tuple(targets,)
             elif type(targets) != tuple:
                 targets = tuple(targets)
         else:
             targets = tuple(['%s' % method.replace('fetch_','').title() for method in methods])
         status_init(targets)
         for target in targets:
-            manage_dictionary(status['counts'], target.lower(), {})
-            status['counts'][target.lower()]['fetched'] = 0
-            status['counts'][target.lower()]['discovered'] = 0
+            target_name = target[0] if type(target) == tuple else target
+            target_name = self.camel_case_to_snake(target_name)
+            manage_dictionary(status['counts'], target_name, {})
+            manage_dictionary(status['counts'][target_name], 'fetched', 0)
+            manage_dictionary(status['counts'][target_name], 'discovered', 0)
             self._fetch_targets(api_client, q, target, {})
 
 
     def _fetch_targets(self, api_client, q, target_type, list_params):
-        # If q : put targets to queue
-        # else : callback directly
         global counts
+        # Handle & format the target type
+        target_prefix = None
         if type(target_type) == tuple:
-            lower_target = target_type[0].lower()
+            if len(target_type) == 3:
+                target_prefix = target_type[2] # because describe_cluster_security_groups instead of just describe_security_groups ...
+            lower_target = target_type[0]
             target_type = target_type[1]
         else:
-            lower_target = target_type.lower()
-        list_method = getattr(api_client, 'list_' + lower_target)
-        targets = handle_truncated_response(list_method, list_params, 'NextToken', [target_type])[target_type]
+            lower_target = target_type #.lower()
+        lower_target = self.camel_case_to_snake(lower_target)
+        # Methods to get the resources are either list_* or target_*, try both...
+        method_suffix = '%s_%s' % (target_prefix, lower_target) if target_prefix else lower_target
+        try:
+            list_method = getattr(api_client, 'list_' + method_suffix)
+        except:
+            list_method = getattr(api_client, 'describe_' + method_suffix)
+        # List resources
+        try:
+            targets = handle_truncated_response(list_method, list_params, [target_type])[target_type]
+        except Exception as e:
+            targets = []
+            pass
         setattr(self, '%s_count' % lower_target, len(targets))
         status['counts'][lower_target]['discovered'] += len(targets)
         region = api_client._client_config.region_name
+        # Queue resources
         for target in targets:
             callback = getattr(self, '_fetch_%s' % lower_target[0:-1])
             if q:
@@ -197,6 +218,22 @@ class RegionConfig(object):
             status['regions'].append(region)
 
 
+    def camel_case_to_snake(self, camel_case_string):
+        s1 = first_cap_re.sub(r'\1_\2', camel_case_string)
+        return all_caps_re.sub(r'\1_\2', s1).lower()
+
+    def get_non_aws_id(self, name):
+        """
+        Not all AWS resources have an ID and some services allow the use of "." in names, which break's Scout2's
+        recursion scheme if name is used as an ID. Use SHA1(name) instead.
+
+        :param name:                    Name of the resource to
+        :return:                        SHA1(name)
+        """
+        m = sha1()
+        m.update(name.encode('utf-8'))
+        return m.hexdigest()
+
 
 ########################################
 # Status updates
@@ -204,14 +241,19 @@ class RegionConfig(object):
 
 def status_init(targets):
     global formatted_string
+    target_names = ()
     if formatted_string == None:
         formatted_string = '\r %15s'
         for t in targets:
+            if type(t) == tuple:
+                t = t[0]
+            target_names += (t,)
             formatted_string += ' %15s'
-        status_out(('Regions', ) + targets, True)
+        status_out(('Regions', ) + target_names, True)
 
 def status_show(newline = False):
     global counts
+    #TODO: fix target order mismatch between init and show
     targets = ('%d/%d' % (len(status['regions']), status['regions_count']), )
     for t in status['counts']:
         tmp = '%d/%d' % (status['counts'][t]['fetched'], status['counts'][t]['discovered'])

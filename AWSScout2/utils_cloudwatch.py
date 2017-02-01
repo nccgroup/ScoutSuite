@@ -45,7 +45,7 @@ def get_cloudwatch_region(params):
     cloudwatch_client = connect_service('cloudwatch', params['creds'], region)
     metrics = {}
     cloudwatch_config['regions'][region]['alarms'] = {}
-    alarms = handle_truncated_response(cloudwatch_client.describe_alarms, {}, 'NextToken', ['MetricAlarms'])['MetricAlarms']
+    alarms = handle_truncated_response(cloudwatch_client.describe_alarms, {}, ['MetricAlarms'])['MetricAlarms']
     cloudwatch_config['regions'][region]['alarms_count'] = len(alarms)
     discovered_alarms += len(alarms)
     cloudwatch_status()
@@ -67,7 +67,7 @@ def get_cloudwatch_region(params):
     return
 
 #    printInfo('Fetching metrics in %s...' % region)
-#    metrics = handle_truncated_response(cloudwatch_client.list_metrics, {}, 'NextToken', ['Metrics'])['Metrics']
+#    metrics = handle_truncated_response(cloudwatch_client.list_metrics, {}, ['Metrics'])['Metrics']
 #    for metric in metrics:
 
     cloudwatch_config['regions'][region]['metrics_count'] = len(metrics)

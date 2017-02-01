@@ -21,7 +21,7 @@ class SQSConfig(RegionalServiceConfig):
 
     :cvar targets:                      Tuple with all SQS resource names that may be fetched
     """
-    targets = ('Queues')
+    targets = (('Queues', 'QueueUrls'),)
 
     def init_region_config(self, region):
         """

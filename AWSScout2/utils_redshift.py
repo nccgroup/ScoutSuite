@@ -1,92 +1,105 @@
+# -*- coding: utf-8 -*-
+"""
+Redshift-related classes and functions
+"""
 
-# Import opinel
-from opinel.utils_redshift import *
-
-# Import AWS Scout2 tools
-from AWSScout2.utils import *
+# Import AWSScout2
+from AWSScout2.configs import RegionalServiceConfig, RegionConfig, api_clients
+from AWSScout2.utils import handle_truncated_response
 
 
 ########################################
-##### Redshift fetching
+# RedshiftConfig
 ########################################
 
-#
-# Entry point
-#
-def get_redshift_info(credentials, service_config, selected_regions, partition_name):
-    printInfo('Fetching Redshift config...')
-    manage_dictionary(service_config, 'regions', {}) 
-    regions = build_region_list('redshift', selected_regions, partition_name)
-    for region in regions:
-        manage_dictionary(service_config['regions'], region, {})
-        manage_dictionary(service_config['regions'][region], 'vpcs', {})
-    thread_work(service_config['regions'], get_redshift_region, params = {'creds': credentials, 'redshift_config': service_config})
-    for region in regions:
-       if len(service_config['regions'][region]['security_groups']):
-           manage_dictionary(service_config['regions'][region]['vpcs'], ec2_classic, {})
-           service_config['regions'][region]['vpcs'][ec2_classic]['security_groups'] = service_config['regions'][region].pop('security_groups')
+class RedshiftConfig(RegionalServiceConfig):
+    """
+    Redshift configuration for all AWS regions
 
-#
-# Region threading
-#
-def get_redshift_region(q, params):
-    redshift_config = params['redshift_config']
-    while True:
-        try:
-            region = q.get()
-            redshift_client = connect_redshift(params['creds'], region)
-            get_redshift_clusters(redshift_client, redshift_config['regions'][region])
-            get_redshift_cluster_parameter_groups(redshift_client, redshift_config['regions'][region])
-            get_redshift_cluster_security_groups(redshift_client, redshift_config['regions'][region])
-        except Exception as e:
-            printException(e)
-            pass
-        finally:
-            q.task_done()
+    :cvar targets:                      Tuple with all Redshift resource names that may be fetched
+    """
+    targets = (
+        'Clusters',
+        ('ParameterGroups', 'ParameterGroups', 'cluster'),
+        ('SecurityGroups', 'SecurityGroups', 'cluster')
+    ) # TODO: add support for Redshift subnet groups?
+    # TODO: consider following scheme for all ('snake_case', 'CamelCaseResponseName', 'list_method', 'ignore_not_authorized') ?
 
-#
-# Clusters
-#
-def get_redshift_clusters(redshift_client, region_config):
-    clusters = handle_truncated_response(redshift_client.describe_clusters, {}, 'Marker', ['Clusters'])
-    for cluster in clusters['Clusters']:
+    def init_region_config(self, region):
+        """
+        Initialize the region's configuration
+
+        :param region:                  Name of the region
+        """
+        self.regions[region] = RedshiftRegionConfig()
+
+
+
+########################################
+# RedshiftRegionConfig
+########################################
+
+class RedshiftRegionConfig(RegionConfig):
+    """
+    Redshift configuration for a single AWS region
+
+    :ivar queues:                       Dictionary of queues [name]
+    :ivar queues_count:                 Number of queues in the region
+    """
+
+    def __init__(self):
+        self.clusters = {}
+        self.clusters_count = 0
+        self.parameter_groups = {}
+        self.parameter_groups_count = 0
+        self.security_groups = {}
+        self.security_groups_count = 0
+
+
+    def _fetch_cluster(self, global_params, region, cluster):
+        """
+        Parse a single Redshift cluster
+
+        :param global_params:           Parameters shared for all regions
+        :param region:                  Name of the AWS region
+        :param cluster:                 Cluster
+        """
         vpc_id = cluster.pop('VpcId') if 'VpcId' in cluster else ec2_classic
         manage_dictionary(region_config['vpcs'], vpc_id, {})
         manage_dictionary(region_config['vpcs'][vpc_id], 'clusters', {})
         name = cluster.pop('ClusterIdentifier')
         cluster['name'] = name
-        region_config['vpcs'][vpc_id]['clusters'][name] = cluster
+        self.clusters[name] = cluster
 
-#
-# Parameter groups
-#
-def get_redshift_cluster_parameter_groups(redshift_client, region_config):
-    region_config['parameter_groups'] = {}
-    parameter_groups = handle_truncated_response(redshift_client.describe_cluster_parameter_groups, {}, 'Marker', ['ParameterGroups'])
-    for parameter_group in parameter_groups['ParameterGroups']:
-        name = parameter_group.pop('ParameterGroupName')
-        pg_id = get_non_aws_id(name)
-        region_config['parameter_groups'][pg_id] = parameter_group
-        region_config['parameter_groups'][pg_id]['name'] = name
-        parameters = handle_truncated_response(redshift_client.describe_cluster_parameters, {'ParameterGroupName': name}, 'Marker', ['Parameters'])
-        region_config['parameter_groups'][pg_id]['parameters'] = {}
-        for parameter in parameters['Parameters']:
+    def _fetch_parameter_group(self, global_params, region, parameter_group):
+        """
+        Parse a single Redshift parameter group and fetch all of its parameters
+
+        :param global_params:           Parameters shared for all regions
+        :param region:                  Name of the AWS region
+        :param parameter_group:         Parameter group
+        """
+        pg_name = parameter_group.pop('ParameterGroupName')
+        pg_id = self.get_non_aws_id(pg_name) # Name could be used as only letters digits or hyphens
+        parameter_group['name'] = pg_name
+        parameter_group['parameters'] = {}
+        api_client = api_clients[region]
+        parameters = handle_truncated_response(api_client.describe_cluster_parameters, {'ParameterGroupName': pg_name}, ['Parameters'])['Parameters']
+        for parameter in parameters:
             param = {}
             param['value'] = parameter['ParameterValue']
             param['source'] = parameter['Source']
-            region_config['parameter_groups'][pg_id]['parameters'][parameter['ParameterName']] = param
+            parameter_group['parameters'][parameter['ParameterName']] = param
+        (self).parameter_groups[pg_id] = parameter_group
 
-#
-# Security groups
-#
-def get_redshift_cluster_security_groups(redshift_client, region_config):
-    try:
-        region_config['security_groups'] = {}
-        security_groups = handle_truncated_response(redshift_client.describe_cluster_security_groups, {}, 'Marker', ['ClusterSecurityGroups'])
-        for security_group in security_groups['ClusterSecurityGroups']:
-            name = security_group.pop('ClusterSecurityGroupName')
-            region_config['security_groups'][name] = security_group
-            region_config['security_groups'][name]['name'] = name
-    except Exception as e:
-        # An exception occurs when VPC-by-default customers make this call, silently pass
-        pass
+    def _fetch_security_group(self, global_params, region, security_group):
+        """
+        Parse a single Redsfhit security group
+
+        :param global_params:           Parameters shared for all regions
+        :param region:                  Name of the AWS region
+        :param security)_group:         Security group
+        """
+        name = security_group.pop('ClusterSecurityGroupName')
+        security_group['name'] = name
+        self.security_groups['name'] = security_group

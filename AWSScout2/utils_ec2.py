@@ -293,7 +293,7 @@ def get_flow_log_info(q, params):
 # Fetch all flow logs
 #
 def get_flow_logs_info(ec2_client, region_info):
-    flow_logs = handle_truncated_response(ec2_client.describe_flow_logs, {}, 'NextToken', ['FlowLogs'])['FlowLogs']
+    flow_logs = handle_truncated_response(ec2_client.describe_flow_logs, {}, ['FlowLogs'])['FlowLogs']
     region_info['flow_logs_count'] = len(flow_logs)
     show_status(region_info['vpcs'], 'flow_logs', False)
     thread_work(flow_logs, get_flow_log_info, params = {'ec2_client': ec2_client, 'region_info': region_info}, num_threads = 5)
@@ -399,7 +399,7 @@ def get_network_acl_entries(entries, egress):
 # Fetch all network ACLs
 #
 def get_network_acls_info(ec2_client, region_info):
-    network_acls = handle_truncated_response(ec2_client.describe_network_acls, {}, 'NextToken', ['NetworkAcls'])['NetworkAcls']
+    network_acls = handle_truncated_response(ec2_client.describe_network_acls, {}, ['NetworkAcls'])['NetworkAcls']
     region_info['network_acls'] = {}
     region_info['network_acls_count'] = len(network_acls)
     show_status(region_info['network_acls'], 'network_acls', False)

@@ -181,7 +181,7 @@ class IAMConfig(object):
         policy['PolicyDocument'] = policy_version['Document']
         # Get attached IAM entities
         policy['attached_to'] = {}
-        attached_entities = handle_truncated_response(iam_client.list_entities_for_policy, {'PolicyArn': policy['arn']}, 'Marker', ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'])
+        attached_entities = handle_truncated_response(iam_client.list_entities_for_policy, {'PolicyArn': policy['arn']}, ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'])
         for entity_type in attached_entities:
             resource_type = entity_type.replace('Policy', '').lower()
             if len(attached_entities[entity_type]):
@@ -233,7 +233,7 @@ class IAMConfig(object):
                 else:
                     printError("Unexpected error: %s" % e)
             else:
-                printError(e)
+                printError(str(e))
 
 
 
@@ -268,7 +268,7 @@ class IAMConfig(object):
             role['inline_policies'] = policies
         role['inline_policies_count'] = len(policies)
         # Get instance profiles
-        profiles = handle_truncated_response(iam_client.list_instance_profiles_for_role, {'RoleName': role['name']}, 'Marker', ['InstanceProfiles'])
+        profiles = handle_truncated_response(iam_client.list_instance_profiles_for_role, {'RoleName': role['name']}, ['InstanceProfiles'])
         manage_dictionary(role, 'instance_profiles', {})
         for profile in profiles['InstanceProfiles']:
             manage_dictionary(role['instance_profiles'], profile['InstanceProfileId'], {})
@@ -308,7 +308,7 @@ class IAMConfig(object):
             user['inline_policies'] = policies
         user['inline_policies_count'] = len(policies)
         user['groups'] = []
-        groups = handle_truncated_response(iam_client.list_groups_for_user, {'UserName': user['name']}, 'Marker', ['Groups'])['Groups']
+        groups = handle_truncated_response(iam_client.list_groups_for_user, {'UserName': user['name']}, ['Groups'])['Groups']
         for group in groups:
             user['groups'].append(group['GroupName'])
         try:
@@ -341,7 +341,7 @@ class IAMConfig(object):
     def __fetch_targets(self, iam_client, target_type, list_params = {}):
         lower_target = target_type.lower()
         list_method = getattr(iam_client, 'list_' + lower_target)
-        targets = handle_truncated_response(list_method, list_params, 'Marker', [target_type])[target_type]
+        targets = handle_truncated_response(list_method, list_params, [target_type])[target_type]
         setattr(self, '%s_count' % lower_target, len(targets))
         thread_work(targets, self.__fetch_target, params = {'iam_client': iam_client, 'target_type': lower_target[0:-1]}, num_threads = 10)
         self.__show_status(lower_target, True)
