@@ -1,73 +1,94 @@
-# Import opinel
-from opinel.utils import *
-from opinel.utils_cloudtrail import *
+# -*- coding: utf-8 -*-
+"""
+CloudTrail-related classes and functions
+"""
 
-# Import Scout2 tools
-from AWSScout2.utils import *
+# Import AWSScout2
+from AWSScout2.configs import RegionalServiceConfig, RegionConfig, api_clients
+
+
+
+
 
 ########################################
-##### CloudTrails functions
+# CloudTrailRegionConfig
 ########################################
 
-def tweak_cloudtrail_findings(aws_config):
-    cloudtrail_config = aws_config['services']['cloudtrail']
-    # Global services logging duplicated
-    if 'cloudtrail-duplicated-global-services-logging' in aws_config['services']['cloudtrail']['violations']:
-        if len(aws_config['services']['cloudtrail']['violations']['cloudtrail-duplicated-global-services-logging']['items']) < 2:
-            aws_config['services']['cloudtrail']['violations']['cloudtrail-duplicated-global-services-logging']['items'] = []
-            aws_config['services']['cloudtrail']['violations']['cloudtrail-duplicated-global-services-logging']['flagged_items'] = 0
-    # Global services logging disabled
-    if 'cloudtrail-no-global-services-logging' in aws_config['services']['cloudtrail']['violations']:
-        if len(aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['items']) != aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['checked_items']:
-            aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['items'] = []
-            aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['flagged_items'] = 0
-    # CloudTrail not enabled at all...
-    if not sum(aws_config['services']['cloudtrail']['regions'][r]['trails_count'] for r in aws_config['services']['cloudtrail']['regions']):
-        for r in aws_config['services']['cloudtrail']['regions']:
-            aws_config['services']['cloudtrail']['violations']['cloudtrail-no-logging']['items'].append('cloudtrail.regions.%s' % r)
-            aws_config['services']['cloudtrail']['violations']['cloudtrail-no-logging']['checked_items'] += 1
-            aws_config['services']['cloudtrail']['violations']['cloudtrail-no-logging']['flagged_items'] += 1
-            aws_config['services']['cloudtrail']['violations']['cloudtrail-no-logging']['dashboard_name'] = 'Regions'
+class CloudTrailRegionConfig(RegionConfig):
+    """
+    CloudTrail configuration for a single AWS region
 
-def get_cloudtrail_info(credentials, service_config, selected_regions, partition_name):
-    manage_dictionary(service_config, 'regions', {})
-    printInfo('Fetching CloudTrail config...')
-    for region in build_region_list('cloudtrail', selected_regions, partition_name):
-        manage_dictionary(service_config['regions'], region, {})
-        service_config['regions'][region]['name'] = region
-    thread_work(service_config['regions'], get_region_trails, params = {'creds': credentials, 'cloudtrail_info': service_config})
-    service_config['regions_count'] = len(service_config['regions'])
+    :ivar trails:                       Dictionary of trails [name]
+    :ivar trails_count:                 Number of trails in the region
+    """
 
-def get_region_trails(q, params):
-    cloudtrail_info = params['cloudtrail_info']
-    while True:
-      try:
-        region = q.get()
-        manage_dictionary(cloudtrail_info['regions'][region], 'trails', {})
-        cloudtrail_client = connect_cloudtrail(params['creds'], region)
-        trails = cloudtrail_client.describe_trails()
-        cloudtrail_info['regions'][region]['trails_count'] = len(trails['trailList'])
-        for trail in trails['trailList']:
-            trail_info = {}
-            trail_info['name'] = trail.pop('Name')
-            # Do not duplicate entries for multiregion trails
-            if 'IsMultiRegionTrail' in trail and trail['IsMultiRegionTrail'] and trail['HomeRegion'] != region:
-                for key in ['HomeRegion', 'TrailARN']:
-                    trail_info[key] = trail[key]
-                trail_info['scout2_link'] = 'services.cloudtrail.regions.%s.trails.%s' % (trail['HomeRegion'], get_non_aws_id(trail_info['name']))
-            else:
-                for key in trail:
-                    trail_info[key] = trail[key]
-                trail_info['bucket_id'] = get_non_aws_id(trail_info.pop('S3BucketName'))
-                for key in ['IsMultiRegionTrail', 'LogFileValidationEnabled']:
-                    if key not in trail_info:
-                        trail_info[key] = False
-                trail_details = cloudtrail_client.get_trail_status(Name = trail['TrailARN'])
-                for key in ['IsLogging', 'LatestDeliveryTime', 'LatestDeliveryError', 'StartLoggingTime', 'StopLoggingTime', 'LatestNotificationTime', 'LatestNotificationError', 'LatestCloudWatchLogsDeliveryError', 'LatestCloudWatchLogsDeliveryTime']:
-                    trail_info[key] = trail_details[key] if key in trail_details else None
-            cloudtrail_info['regions'][region]['trails'][get_non_aws_id(trail_info['name'])] = trail_info
-      except Exception as e:
-          printException(e)
-      finally:
-        q.task_done()
+    def __init__(self):
+        self.trails = {}
+        self.trails_count = 0
 
+    def _fetch_trail(self, global_params, region, trail):
+        """
+        Parse a single CloudTrail trail
+
+        :param global_params:           Parameters shared for all regions
+        :param region:                  Name of the AWS region
+        :param cluster:                 Trail
+        """
+        trail_config = {}
+        trail_config['name'] = trail.pop('Name')
+        trail_id = self.get_non_aws_id(trail_config['name'])
+        # Do not duplicate entries for multiregion trails
+        if 'IsMultiRegionTrail' in trail and trail['IsMultiRegionTrail'] and trail['HomeRegion'] != region:
+            for key in ['HomeRegion', 'TrailARN']:
+                trail_config[key] = trail[key]
+            trail_config['scout2_link'] = 'services.cloudtrail.regions.%s.trails.%s' % (trail['HomeRegion'], trail_id)
+        else:
+            for key in trail:
+                trail_config[key] = trail[key]
+            trail_config['bucket_id'] = self.get_non_aws_id(trail_config.pop('S3BucketName'))
+            for key in ['IsMultiRegionTrail', 'LogFileValidationEnabled']:
+                if key not in trail_config:
+                    trail_config[key] = False
+            trail_details = api_clients[region].get_trail_status(Name=trail['TrailARN'])
+            for key in ['IsLogging', 'LatestDeliveryTime', 'LatestDeliveryError', 'StartLoggingTime', 'StopLoggingTime', 'LatestNotificationTime', 'LatestNotificationError', 'LatestCloudWatchLogsDeliveryError', 'LatestCloudWatchLogsDeliveryTime']:
+                trail_config[key] = trail_details[key] if key in trail_details else None
+        self.trails[trail_id] = trail_config
+
+
+#       TODO
+#    def finalize(self):
+#        cloudtrail_config = aws_config['services']['cloudtrail']
+#        # Global services logging duplicated
+#        if 'cloudtrail-duplicated-global-services-logging' in aws_config['services']['cloudtrail']['violations']:
+#            if len(aws_config['services']['cloudtrail']['violations']['cloudtrail-duplicated-global-services-logging']['items']) < 2:
+#                aws_config['services']['cloudtrail']['violations']['cloudtrail-duplicated-global-services-logging']['items'] = []
+#                aws_config['services']['cloudtrail']['violations']['cloudtrail-duplicated-global-services-logging']['flagged_items'] = 0
+#        # Global services logging disabled
+#        if 'cloudtrail-no-global-services-logging' in aws_config['services']['cloudtrail']['violations']:
+#            if len(aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['items']) != aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['checked_items']:
+#                aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['items'] = []
+#                aws_config['services']['cloudtrail']['violations']['cloudtrail-no-global-services-logging']['flagged_items'] = 0
+#        # CloudTrail not enabled at all...
+#        if not sum(aws_config['services']['cloudtrail']['regions'][r]['trails_count'] for r in aws_config['services']['cloudtrail']['regions']):
+#            for r in aws_config['services']['cloudtrail']['regions']:
+#                aws_config['services']['cloudtrail']['violations']['cloudtrail-no-logging']['items'].append('cloudtrail.regions.%s' % r)
+#                aws_config['services']['cloudtrail']['violations']['cloudtrail-no-logging']['checked_items'] += 1
+#                aws_config['services']['cloudtrail']['violations']['cloudtrail-no-logging']['flagged_items'] += 1
+#                aws_config['services']['cloudtrail']['violations']['cloudtrail-no-logging']['dashboard_name'] = 'Regions'
+
+########################################
+# CloudTrailConfig
+########################################
+
+class CloudTrailConfig(RegionalServiceConfig):
+    """
+    CloudTrail configuration for all AWS regions
+
+    :cvar targets:                      Tuple with all CloudTrail resource names that may be fetched
+    :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
+    """
+    targets = (
+        ('trails', 'trailList', 'describe_trails', 'False'),
+        #'Trails', # TODO: consider following scheme for all ('snake_case', 'CamelCaseResponseName', 'list_method', 'ignore_not_authorized') ?
+    )
+    region_config_class = CloudTrailRegionConfig
