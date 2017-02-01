@@ -8,8 +8,6 @@ from AWSScout2.configs import RegionalServiceConfig, RegionConfig, api_clients
 
 
 
-
-
 ########################################
 # CloudTrailRegionConfig
 ########################################
@@ -88,7 +86,6 @@ class CloudTrailConfig(RegionalServiceConfig):
     :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
     """
     targets = (
-        ('trails', 'trailList', 'describe_trails', 'False'),
-        #'Trails', # TODO: consider following scheme for all ('snake_case', 'CamelCaseResponseName', 'list_method', 'ignore_not_authorized') ?
+        ('trails', 'trailList', 'describe_trails', False),
     )
     region_config_class = CloudTrailRegionConfig

@@ -15,28 +15,6 @@ import json
 
 
 ########################################
-# SNSConfig
-########################################
-
-class SNSConfig(RegionalServiceConfig):
-    """
-    SNS configuration for all AWS regions
-
-    :cvar targets:                      Tuple with all SNS resource names that may be fetched
-    """
-    targets = ('Topics', 'Subscriptions')
-
-    def init_region_config(self, region):
-        """
-        Initialize the region's configuration
-
-        :param region:                  Name of the region
-        """
-        self.regions[region] = SNSRegionConfig()
-
-
-
-########################################
 # SNSRegionConfig
 ########################################
 
@@ -91,3 +69,22 @@ class SNSRegionConfig(RegionConfig):
         manage_dictionary(topic, 'subscriptions', {})
         manage_dictionary(topic, 'subscriptions_count', 0)
         self.topics[topic['name']] = topic
+
+
+
+########################################
+# SNSConfig
+########################################
+
+class SNSConfig(RegionalServiceConfig):
+    """
+    SNS configuration for all AWS regions
+
+    :cvar targets:                      Tuple with all SNS resource names that may be fetched
+    :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
+    """
+    targets = (
+        ('topics', 'Topics', 'list_topics', False),
+        ('subscriptions', 'Subscriptions', 'list_subscriptions', True),
+    )
+    region_config_class = SNSRegionConfig

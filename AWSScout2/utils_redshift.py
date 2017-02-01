@@ -8,32 +8,6 @@ from AWSScout2.configs import RegionalServiceConfig, RegionConfig, api_clients
 from AWSScout2.utils import handle_truncated_response
 
 
-########################################
-# RedshiftConfig
-########################################
-
-class RedshiftConfig(RegionalServiceConfig):
-    """
-    Redshift configuration for all AWS regions
-
-    :cvar targets:                      Tuple with all Redshift resource names that may be fetched
-    """
-    targets = (
-        'Clusters',
-        ('ParameterGroups', 'ParameterGroups', 'cluster'),
-        ('SecurityGroups', 'SecurityGroups', 'cluster')
-    ) # TODO: add support for Redshift subnet groups?
-    # TODO: consider following scheme for all ('snake_case', 'CamelCaseResponseName', 'list_method', 'ignore_not_authorized') ?
-
-    def init_region_config(self, region):
-        """
-        Initialize the region's configuration
-
-        :param region:                  Name of the region
-        """
-        self.regions[region] = RedshiftRegionConfig()
-
-
 
 ########################################
 # RedshiftRegionConfig
@@ -103,3 +77,23 @@ class RedshiftRegionConfig(RegionConfig):
         name = security_group.pop('ClusterSecurityGroupName')
         security_group['name'] = name
         self.security_groups['name'] = security_group
+
+
+
+########################################
+# RedshiftConfig
+########################################
+
+class RedshiftConfig(RegionalServiceConfig):
+    """
+    Redshift configuration for all AWS regions
+
+    :cvar targets:                      Tuple with all Redshift resource names that may be fetched
+    :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
+    """
+    targets = (
+        ('clusters', 'Clusters', 'describe_clusters', False),
+        ('parameter_groups', 'ParameterGroups', 'describe_cluster_parameter_groups', False),
+        ('security_groups', 'SecurityGroups', 'describe_cluster_security_groups', True),
+    ) # TODO: add support for Redshift subnet groups?
+    region_config_class = RedshiftRegionConfig

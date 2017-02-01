@@ -12,28 +12,6 @@ import json
 
 
 ########################################
-# SQSConfig
-########################################
-
-class SQSConfig(RegionalServiceConfig):
-    """
-    SQS configuration for all AWS regions
-
-    :cvar targets:                      Tuple with all SQS resource names that may be fetched
-    """
-    targets = (('Queues', 'QueueUrls'),)
-
-    def init_region_config(self, region):
-        """
-        Initialize the region's configuration
-
-        :param region:                  Name of the region
-        """
-        self.regions[region] = SQSRegionConfig()
-
-
-
-########################################
 # SQSRegionConfig
 ########################################
 
@@ -67,3 +45,21 @@ class SQSRegionConfig(RegionConfig):
             queue[k] = json.loads(attributes[k]) if k in attributes else None
         queue['name'] = queue['arn'].split(':')[-1]
         self.queues[queue['name']] = queue
+
+
+
+########################################
+# SQSConfig
+########################################
+
+class SQSConfig(RegionalServiceConfig):
+    """
+    SQS configuration for all AWS regions
+
+    :cvar targets:                      Tuple with all SQS resource names that may be fetched
+    :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
+    """
+    targets = (
+        ('queues', 'QueueUrls', 'list_queues', False),
+    )
+    region_config_class = SQSRegionConfig
