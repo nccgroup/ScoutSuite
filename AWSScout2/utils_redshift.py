@@ -5,7 +5,7 @@ Redshift-related classes and functions
 
 # Import AWSScout2
 from AWSScout2.configs import RegionalServiceConfig, RegionConfig, api_clients
-from AWSScout2.utils import handle_truncated_response
+from AWSScout2.utils import handle_truncated_response, manage_dictionary
 
 
 
@@ -17,12 +17,16 @@ class RedshiftRegionConfig(RegionConfig):
     """
     Redshift configuration for a single AWS region
 
-    :ivar queues:                       Dictionary of queues [name]
-    :ivar queues_count:                 Number of queues in the region
+    :ivar vpcs:                         Dictionary of VPCs [id]
+    :ivar clusters_count:               Number of clusters in the region
+    :ivar parameter_groups:             Dictionary of parameter groups [id]
+    :ivar parameter_groups_count:       Number of parameter groups in the region
+    :ivar security_groups:              Dictionary of security groups [id]
+    :ivar security_groups_count:        Number of security groups in the region
     """
 
     def __init__(self):
-        self.clusters = {}
+        self.vpcs = {}
         self.clusters_count = 0
         self.parameter_groups = {}
         self.parameter_groups_count = 0
@@ -39,11 +43,11 @@ class RedshiftRegionConfig(RegionConfig):
         :param cluster:                 Cluster
         """
         vpc_id = cluster.pop('VpcId') if 'VpcId' in cluster else ec2_classic
-        manage_dictionary(region_config['vpcs'], vpc_id, {})
-        manage_dictionary(region_config['vpcs'][vpc_id], 'clusters', {})
+        manage_dictionary(self.vpcs, vpc_id, RedshiftVPCConfig())
         name = cluster.pop('ClusterIdentifier')
         cluster['name'] = name
-        self.clusters[name] = cluster
+        self.vpcs[vpc_id].clusters[name] = cluster
+
 
     def parse_parameter_group(self, global_params, region, parameter_group):
         """
@@ -65,6 +69,7 @@ class RedshiftRegionConfig(RegionConfig):
             param['source'] = parameter['Source']
             parameter_group['parameters'][parameter['ParameterName']] = param
         (self).parameter_groups[pg_id] = parameter_group
+
 
     def parse_security_group(self, global_params, region, security_group):
         """
@@ -89,11 +94,28 @@ class RedshiftConfig(RegionalServiceConfig):
     Redshift configuration for all AWS regions
 
     :cvar targets:                      Tuple with all Redshift resource names that may be fetched
-    :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
+    :cvar config_class:                 Class to be used when initiating the service's configuration in a new region/VPC
     """
     targets = (
         ('clusters', 'Clusters', 'describe_clusters', False),
         ('parameter_groups', 'ParameterGroups', 'describe_cluster_parameter_groups', False),
         ('security_groups', 'SecurityGroups', 'describe_cluster_security_groups', True),
-    ) # TODO: add support for Redshift subnet groups?
+        # TODO ('subnets')
+    )
     region_config_class = RedshiftRegionConfig
+
+
+
+########################################
+# RedshiftVPCConfig
+########################################
+
+class RedshiftVPCConfig(object):
+    """
+    Redshift configuration for a single VPC
+
+    :ivar clusters:                     Dictionary of clusters [name]
+    """
+
+    def __init__(self):
+        self.clusters = {}

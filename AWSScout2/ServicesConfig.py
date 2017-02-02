@@ -1,5 +1,6 @@
 from AWSScout2.utils_cloudtrail import CloudTrailConfig
 from AWSScout2.utils_iam import IAMConfig
+from AWSScout2.utils_rds import RDSConfig
 from AWSScout2.utils_redshift import RedshiftConfig
 from AWSScout2.utils_sns import SNSConfig
 from AWSScout2.utils_sqs import SQSConfig
@@ -19,9 +20,9 @@ class ServicesConfig(object):
         self.cloudtrail = CloudTrailConfig()
         self.cloudwatch = None
         self.ec2 = None
-#        self.iam = IAMConfig()
+        self.iam = IAMConfig()
         self.redshift = RedshiftConfig()
-        self.rds = None
+        self.rds = RDSConfig()
         self.s3 = None
         self.ses = None
         self.sns = SNSConfig()

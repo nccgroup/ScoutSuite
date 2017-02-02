@@ -28,6 +28,7 @@ except ImportError:
 ########################################
 
 api_clients = dict()
+ec2_classic = 'EC2-Classic'
 status = None
 regions = None
 formatted_string = None
@@ -211,11 +212,6 @@ class RegionConfig(object):
                 q.put((callback, region, target))
         if not len(targets) and region not in status['regions']:
             status['regions'].append(region)
-
-
-    def camel_case_to_snake(self, camel_case_string):
-        s1 = first_cap_re.sub(r'\1_\2', camel_case_string)
-        return all_caps_re.sub(r'\1_\2', s1).lower()
 
     def get_non_aws_id(self, name):
         """
