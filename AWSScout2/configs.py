@@ -234,17 +234,18 @@ def status_init(targets):
     global formatted_string
     target_names = ()
     if formatted_string == None:
-        formatted_string = '\r %15s'
+        formatted_string = '\r %18s'
         for t in targets:
             if type(t) == tuple:
                 t = t[0]
             target_names += (t,)
-            formatted_string += ' %15s'
+            formatted_string += ' %18s'
         status_out(('Regions', ) + target_names, True)
 
 def status_show(newline = False):
     global counts
     #TODO: fix target order mismatch between init and show
+    #TODO: fix target not initialized at first prints (when large number of targets)
     targets = ('%d/%d' % (len(status['regions']), status['regions_count']), )
     for t in status['counts']:
         tmp = '%d/%d' % (status['counts'][t]['fetched'], status['counts'][t]['discovered'])
@@ -252,8 +253,11 @@ def status_show(newline = False):
     status_out(targets, newline)
 
 def status_out(targets, newline):
-    global formatted_string
-    sys.stdout.write(formatted_string % targets)
-    sys.stdout.flush()
-    if newline:
-        sys.stdout.write('\n')
+    try:
+        global formatted_string
+        sys.stdout.write(formatted_string % targets)
+        sys.stdout.flush()
+        if newline:
+            sys.stdout.write('\n')
+    except:
+        pass
