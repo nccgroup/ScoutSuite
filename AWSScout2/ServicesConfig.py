@@ -3,6 +3,7 @@ from AWSScout2.utils_ec2 import EC2Config
 from AWSScout2.utils_iam import IAMConfig
 from AWSScout2.utils_rds import RDSConfig
 from AWSScout2.utils_redshift import RedshiftConfig
+from AWSScout2.utils_s3 import S3Config
 from AWSScout2.utils_sns import SNSConfig
 from AWSScout2.utils_sqs import SQSConfig
 
@@ -29,7 +30,7 @@ class ServicesConfig(object):
         self.iam = IAMConfig()
         self.redshift = RedshiftConfig()
         self.rds = RDSConfig()
-        self.s3 = None
+        self.s3 = S3Config()
         self.ses = None
         self.sns = SNSConfig()
         self.sqs = SQSConfig()

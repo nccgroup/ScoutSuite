@@ -13,6 +13,7 @@ try:
     from opinel.utils_ec2 import *
     from opinel.utils_iam import *
 except Exception as e:
+    print(e)
     print('Error: Scout2 now depends on the opinel package (previously AWSUtils submodule). Install all the requirements with the following command:')
     print('  $ pip install -r requirements.txt')
     print(e)
@@ -109,23 +110,25 @@ def main(args):
             method_args = {}
             method_args['credentials'] = credentials
             if service != 'iam':
-                method_args['service'] = service
-                method_args['selected_regions'] = args.regions
+                method_args['regions'] = args.regions
                 method_args['partition_name'] = args.partition_name
-            if service == 's3':
-                method_args['s3_params'] = {}
-                method_args['s3_params']['check_encryption'] = args.check_s3_encryption
-                method_args['s3_params']['check_acls'] = args.check_s3_acls
-                method_args['s3_params']['checked_buckets'] = args.bucket_name
-                method_args['s3_params']['skipped_buckets'] = args.skipped_bucket_name
+            #if service == 's3':
+            #    method_args['s3_params'] = {}
+            #    method_args['s3_params']['check_encryption'] = args.check_s3_encryption
+            #    method_args['s3_params']['check_acls'] = args.check_s3_acls
+            #    method_args['s3_params']['checked_buckets'] = args.bucket_name
+            #    method_args['s3_params']['skipped_buckets'] = args.skipped_bucket_name
             service_config.fetch_all(**method_args)
 
     if not args.fetch_local:
       ##### Fetch all requested services' configuration
       for service in services:
-        if service in ['iam', 'sns', 'sqs']:
+#        if service in ['iam', 'sns', 'sqs', 'red:
+        if hasattr(new_config.services, service):
             aws_config['services'][service] = getattr(new_config.services, service)
-            continue
+        else:
+            aws_config['services'][service] = {}
+        continue
         method = globals()['get_' + service + '_info']
         manage_dictionary(aws_config['services'], service, {})
         manage_dictionary(aws_config['services'][service], 'violations', {})
@@ -180,6 +183,8 @@ def main(args):
     filters = load_ruleset('rulesets/filters.json')
     filters = init_rules(filters, services, environment_name, args.ip_ranges, aws_config['account_id'], rule_type = 'filters')
  
+    return
+
     # Reset filters & violations
     for service in services:
         aws_config['services'][service]['violations'] = {}
@@ -311,8 +316,8 @@ add_common_argument(parser, default_args, 'partition-name')
 add_common_argument(parser, default_args, 'ip-ranges')
 add_common_argument(parser, default_args, 'ip-ranges-key-name')
 add_iam_argument(parser, default_args, 'csv-credentials')
-add_s3_argument(parser, default_args, 'bucket-name')
-add_s3_argument(parser, default_args, 'skipped-bucket-name')
+#add_s3_argument(parser, default_args, 'bucket-name')
+#add_s3_argument(parser, default_args, 'skipped-bucket-name')
 add_scout2_argument(parser, default_args, 'force')
 add_scout2_argument(parser, default_args, 'ruleset')
 add_scout2_argument(parser, default_args, 'services')

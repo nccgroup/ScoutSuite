@@ -1,16 +1,73 @@
+# -*- coding: utf-8 -*-
+"""
+S3-related classes and functions
+"""
 
-# Import opinel
-from opinel.utils_s3 import *
+from opinel.utils_s3 import get_s3_bucket_location
 
-# Import AWS Scout2 tools
-from AWSScout2.utils import *
 
-# Import third-party packages
-import botocore.client
+# Import AWSScout2
+from AWSScout2.BaseConfig import BaseConfig
+from opinel.utils import printException, printInfo, connect_service, manage_dictionary
+
 
 ########################################
-##### S3 functions
+# S3Config
 ########################################
+
+class S3Config(BaseConfig):
+    """
+    S3 configuration for all AWS regions
+
+    :cvar targets:                      Tuple with all S3 resource names that may be fetched
+    """
+    targets = (
+        ('buckets', 'Buckets', 'list_buckets', {}, False),
+    )
+
+    def __init__(self):
+        self.buckets = {}
+        self.buckets_count = 0
+        super(S3Config, self).__init__()
+
+    def parse_buckets(self, bucket, params):
+        """
+        Parse a single S3 bucket TODO
+        """
+        bucket['name'] = bucket.pop('Name')
+        api_client = params['api_clients']['us-east-1']
+
+        bucket['CreationDate'] = str(bucket['CreationDate'])
+        bucket['region'] = get_s3_bucket_location(api_client, bucket['name'])
+        # h4ck :: fix issue #59, location constraint can be EU or eu-west-1 for Ireland...
+        if bucket['region'] == 'EU':
+            bucket['region'] = 'eu-west-1'
+        # h4ck :: S3 is global but region-aware...
+        if bucket['region'] not in params['api_clients']:
+            printInfo('Skipping bucket %s (region %s outside of scope)' % (bucket['name'], bucket['region']))
+            self.buckets_count -= 1
+            return
+
+        api_client = params['api_clients'][bucket['region']]
+        get_s3_bucket_logging(api_client, bucket['name'], bucket)
+        get_s3_bucket_versioning(api_client, bucket['name'], bucket)
+        get_s3_bucket_webhosting(api_client, bucket['name'], bucket)
+        bucket['grantees'] = get_s3_acls(api_client, bucket['name'], bucket)
+        # TODO:
+        # CORS
+        # Lifecycle
+        # Notification ?
+        # Get bucket's policy
+        get_s3_bucket_policy(api_client, bucket['name'], bucket)
+        # If requested, get key properties
+        #if params['check_encryption'] or params['check_acls']:
+        #    get_s3_bucket_keys(api_client, bucket['name'], bucket, params['check_encryption'],
+        #                       params['check_acls'])
+        bucket['id'] = self.get_non_aws_id(bucket['name'])
+        self.buckets[bucket['id']] = bucket
+
+
+
 
 def match_iam_policies_and_buckets(s3_info, iam_info):
     if 'Action' in iam_info['permissions']:
@@ -111,13 +168,13 @@ def s3_group_to_string(uri):
     else:
         return uri
 
-def get_s3_acls(s3_client, bucket_name, bucket, key_name = None):
+def get_s3_acls(api_client, bucket_name, bucket, key_name = None):
   try:
     grantees = {}
     if key_name:
-        grants = s3_client.get_object_acl(Bucket = bucket_name, Key = key_name)
+        grants = api_client.get_object_acl(Bucket = bucket_name, Key = key_name)
     else:
-        grants = s3_client.get_bucket_acl(Bucket = bucket_name)
+        grants = api_client.get_bucket_acl(Bucket = bucket_name)
     for grant in grants['Grants']:
         if 'ID' in grant['Grantee']:
             grantee = grant['Grantee']['ID']
@@ -138,24 +195,24 @@ def get_s3_acls(s3_client, bucket_name, bucket, key_name = None):
   except Exception as e:
     printException(e)
 
-def get_s3_bucket_policy(s3_client, bucket_name, bucket_info):
+def get_s3_bucket_policy(api_client, bucket_name, bucket_info):
     try:
-        bucket_info['policy'] = json.loads(s3_client.get_bucket_policy(Bucket = bucket_name)['Policy'])
+        bucket_info['policy'] = json.loads(api_client.get_bucket_policy(Bucket = bucket_name)['Policy'])
     except Exception as e:
         pass
 
-def get_s3_bucket_versioning(s3_client, bucket_name, bucket_info):
+def get_s3_bucket_versioning(api_client, bucket_name, bucket_info):
     try:
-        versioning = s3_client.get_bucket_versioning(Bucket = bucket_name)
+        versioning = api_client.get_bucket_versioning(Bucket = bucket_name)
         bucket_info['versioning_status'] = versioning['Status'] if 'Status' in versioning else 'Disabled'
         bucket_info['version_mfa_delete'] = versioning['MFADelete'] if 'MFADelete' in versioning else 'Disabled'
     except Exception as e:
         bucket_info['versioning_status'] = 'Unknown'
         bucket_info['version_mfa_delete'] = 'Unknown'
 
-def get_s3_bucket_logging(s3_client, bucket_name, bucket_info):
+def get_s3_bucket_logging(api_client, bucket_name, bucket_info):
     try:
-        logging = s3_client.get_bucket_logging(Bucket = bucket_name)
+        logging = api_client.get_bucket_logging(Bucket = bucket_name)
         if 'LoggingEnabled' in logging:
             bucket_info['logging'] = logging['LoggingEnabled']['TargetBucket'] + '/' + logging['LoggingEnabled']['TargetPrefix']
             bucket_info['logging_stuff'] = logging
@@ -166,19 +223,20 @@ def get_s3_bucket_logging(s3_client, bucket_name, bucket_info):
         printException(e)
         bucket_info['logging'] = 'Unknown'
 
-def get_s3_bucket_webhosting(s3_client, bucket_name, bucket_info):
+def get_s3_bucket_webhosting(api_client, bucket_name, bucket_info):
     try:
-        result = s3_client.get_bucket_website(Bucket = bucket_name)
+        result = api_client.get_bucket_website(Bucket = bucket_name)
         bucket_info['web_hosting'] = 'Enabled' if 'IndexDocument' in result else 'Disabled'
     except Exception as e:
         # TODO: distinguish permission denied from  'NoSuchWebsiteConfiguration' errors
         bucket_info['web_hosting'] = 'Disabled'
         pass
 
+
 # List all available buckets
-def get_s3_buckets(s3_client, s3_info, s3_params):
+def get_s3_buckets(api_client, s3_info, s3_params):
     manage_dictionary(s3_info, 'buckets', {})
-    buckets = s3_client[get_s3_list_region(s3_params['selected_regions'])].list_buckets()['Buckets']
+    buckets = api_client[get_s3_list_region(s3_params['selected_regions'])].list_buckets()['Buckets']
     targets = []
     for b in buckets:
         # Abort if bucket is not of interest
@@ -186,60 +244,20 @@ def get_s3_buckets(s3_client, s3_info, s3_params):
             continue
         targets.append(b)
     s3_info['buckets_count'] = len(targets)
-    s3_params['s3_clients'] = s3_client
+    s3_params['api_clients'] = api_client
     s3_params['s3_info'] = s3_info
     thread_work(targets, get_s3_bucket, params = s3_params, num_threads = 30)
     show_status(s3_info)
     s3_info['buckets_count'] = len(s3_info['buckets'])
     return s3_info
 
-def get_s3_bucket(q, params):
-    s3_clients = params['s3_clients']
-    s3_info = params['s3_info']
-    while True:
-        try:
-            bucket = q.get()
-            bucket['name'] = bucket.pop('Name')
-            s3_client = s3_clients[get_s3_list_region(params['selected_regions'])]
-            bucket['CreationDate'] = str(bucket['CreationDate'])
-            bucket['region'] = get_s3_bucket_location(s3_client, bucket['name'])
-            # h4ck :: fix issue #59, location constraint can be EU or eu-west-1 for Ireland...
-            if bucket['region'] == 'EU':
-                bucket['region'] = 'eu-west-1'
-            # h4ck :: S3 is global but region-aware... 
-            if params['selected_regions'] != [] and bucket['region'] not in params['selected_regions']:
-                printInfo('Skipping bucket %s (region %s outside of scope)' % (bucket['name'], bucket['region']))
-                s3_info['buckets_count'] = s3_info['buckets_count'] - 1
-            else:
-                # h4ck :: need to use the right endpoint because signature scheme autochange is not working
-                s3_client = s3_clients[bucket['region']]
-                get_s3_bucket_logging(s3_client, bucket['name'], bucket)
-                get_s3_bucket_versioning(s3_client, bucket['name'], bucket)
-                get_s3_bucket_webhosting(s3_client, bucket['name'], bucket)
-                bucket['grantees'] = get_s3_acls(s3_client, bucket['name'], bucket)
-                # TODO:
-                # CORS
-                # Lifecycle
-                # Notification ?
-                # Get bucket's policy
-                get_s3_bucket_policy(s3_client, bucket['name'], bucket)
-                # If requested, get key properties
-                if params['check_encryption'] or params['check_acls']:
-                    get_s3_bucket_keys(s3_client, bucket['name'], bucket, params['check_encryption'], params['check_acls'])
-                # h4ck :: buckets may contain . in their name, but this would break the browsing - Use sha1(bucket_name) as keys for the dictionary
-                bucket['id'] = get_non_aws_id(bucket['name'])
-                s3_info['buckets'][bucket['id']] = bucket
-            show_status(s3_info, False)
-        except Exception as e:
-            printError('Failed to get config for %s' % bucket['name'])
-            printException(e)
-        finally:
-            q.task_done()
+
+
 
 # Get key-specific information (server-side encryption, acls, etc...)
-def get_s3_bucket_keys(s3_client, bucket_name, bucket, check_encryption, check_acls):
+def get_s3_bucket_keys(api_client, bucket_name, bucket, check_encryption, check_acls):
     bucket['keys'] = []
-    keys = handle_truncated_response(s3_client.list_objects, {'Bucket': bucket_name}, ['Contents'])
+    keys = handle_truncated_response(api_client.list_objects, {'Bucket': bucket_name}, ['Contents'])
     bucket['keys_count'] = len(keys['Contents'])
     key_count = 0
     update_status(key_count, bucket['keys_count'], 'keys')
@@ -250,7 +268,7 @@ def get_s3_bucket_keys(s3_client, bucket_name, bucket, check_encryption, check_a
         if check_encryption:
             try:
                 # The encryption configuration is only accessible via an HTTP header, only returned when requesting one object at a time...
-                k = s3_client.get_object(Bucket = bucket_name, Key = key['name'])
+                k = api_client.get_object(Bucket = bucket_name, Key = key['name'])
                 key['ServerSideEncryption'] = k['ServerSideEncryption'] if 'ServerSideEncryption' in k else None
                 key['SSEKMSKeyId'] = k['SSEKMSKeyId'] if 'SSEKMSKeyId' in k else None
             except Exception as e:
@@ -258,7 +276,7 @@ def get_s3_bucket_keys(s3_client, bucket_name, bucket, check_encryption, check_a
                 continue
         if check_acls:
             try:
-                key['grantees'] = get_s3_acls(s3_client, bucket_name, bucket, key_name = key['name'])
+                key['grantees'] = get_s3_acls(api_client, bucket_name, bucket, key_name = key['name'])
             except Exception as e:
                 continue
         # Save it
@@ -266,37 +284,13 @@ def get_s3_bucket_keys(s3_client, bucket_name, bucket, check_encryption, check_a
         update_status(key_count, bucket['keys_count'], 'keys')
 
 
-def get_s3_info(credentials, service_config, selected_regions, partition_name, s3_params):
-    # h4ck :: Create multiple clients here to avoid propagation of credentials. This is necessary because s3 is a global service that requires to access the API via the right region endpoints...
-    s3_clients = {}
-    if selected_regions != []:
-        client_regions = copy.deepcopy(selected_regions)
-        if 'us-east-1' not in client_regions and 'us-gov-west-1' not in client_regions and 'cn-north-1' not in client_regions:
-            client_regions.append('us-east-1')
-    else:
-        client_regions = selected_regions
-    for region in build_region_list('s3', client_regions, partition_name):
-        config = botocore.client.Config(signature_version = 's3v4')
-        s3_clients[region] = connect_s3(credentials, region_name = region, config = config)
-    s3_params['selected_regions'] = selected_regions
-    printInfo('Fetching S3 buckets config...')
-    get_s3_buckets(s3_clients, service_config, s3_params)
-
 #
 # Return region to be used for global calls such as list bucket and get bucket location
 #
-def get_s3_list_region(selected_regions):
-    if 'us-gov-west-1' in selected_regions:
+def get_s3_list_region(region):
+    if region.startswith('us-gov-'):
         return 'us-gov-west-1'
-    elif 'cn-north-1' in selected_regions:
+    elif region.startswith('cn-'):
         return 'cn-north-1'
     else:
         return 'us-east-1'
-
-def show_status(s3_info, newline = True):
-    current = len(s3_info['buckets'])
-    total = s3_info['buckets_count']
-    sys.stdout.write("\r%d/%d" % (current, total))
-    sys.stdout.flush()
-    if newline:
-        sys.stdout.write('\n')

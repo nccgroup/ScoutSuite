@@ -7,6 +7,7 @@ IAM-related classes and functions
 #from opinel.utils_iam import *
 
 # Import Scout2 tools
+from AWSScout2.BaseConfig import BaseConfig
 from AWSScout2.utils import *
 
 # Import stock packages
@@ -14,8 +15,7 @@ import base64
 import json
 import urllib
 
-
-class IAMConfig(object):
+class IAMConfig(BaseConfig):
     """
     Object that holds the IAM configuration
 
@@ -32,6 +32,13 @@ class IAMConfig(object):
     :ivar users_count:          len(users)
     """
 
+    targets = (
+        ('groups', 'Groups', 'list_groups', {}, False),
+        ('policies', 'Policies', 'list_policies', {'OnlyAttached': True}, False),
+        ('roles', 'Roles', 'list_roles', {}, False),
+        ('users', 'Users', 'list_users', {}, False),
+    )
+
     def __init__(self):
         self.credential_report = {}
         self.groups = {}
@@ -44,39 +51,25 @@ class IAMConfig(object):
         self.roles_count = 0
         self.users = {}
         self.users_count = 0
-
-    #def fetch_all(self, credentials, service, selected_regions, partition_name):
-    def fetch_all(self, credentials):
-        """
-        Fetch all the IAM configuration supported by Scout2
-        """
-        printInfo('Fetching IAM config...')
-        iam_client = connect_service('iam', credentials)
-        self.fetch_credential_report(iam_client, True)
-        methods = [method for method in dir(self) if callable(getattr(self, method)) and str(method).startswith('fetch_') and str(method) != 'fetch_all']
-        for method in methods:
-            if str(method) != 'fetch_credential_report':
-                method = getattr(self, method)
-                method(iam_client)
-        self.fetch_credential_report(iam_client)
+        super(IAMConfig, self).__init__()
 
 
 
     ########################################
     ##### Credential report
     ########################################
-    def fetch_credential_report(self, iam_client, ignore_exception = False):
+    def fetch_credential_report(self, api_client, ignore_exception = False):
         """
         Fetch the credential report
 
-        :param: iam_client
+        :param: api_client
         :type: FOO
         :param: ignore_exception : initiate credential report creation as not  always ready
         :type: Boolean
         """
         iam_report = {}
         try:
-            report = iam_client.get_credential_report()['Content']
+            report = api_client.get_credential_report()['Content']
             lines = report.splitlines()
             keys = lines[0].decode('utf-8').split(',')
             for line in lines[1:]:
@@ -94,47 +87,37 @@ class IAMConfig(object):
             printException(e)
 
 
-
-    ########################################
-    ##### Groups
-    ########################################
-    def fetch_groups(self, iam_client):
-        """
-        Fetch all IAM groups
-        """
-        self.__fetch_targets(iam_client, 'Groups')
-
-    def parse_group(self, params, group):
+    def parse_groups(self, group, params):
         """
         Parse a single IAM group and fetch additional information
         """
         # When resuming upon throttling error, skip if already fetched
+        api_client = params['api_client']
         if group['GroupName'] in self.groups:
             return
-        iam_client = params['iam_client']
+        api_client = params['api_client']
         # Ensure consistent attribute names across resource types
         group['id'] = group.pop('GroupId')
         group['name'] = group.pop('GroupName')
         group['arn'] = group.pop('Arn')
         # Get group's members
-        group['users'] = self.__fetch_group_users(iam_client, group['name']);
+        group['users'] = self.__fetch_group_users(api_client, group['name']);
         # Get inline policies
-        policies = self.__get_inline_policies(iam_client, 'group', group['id'], group['name'])
+        policies = self.__get_inline_policies(api_client, 'group', group['id'], group['name'])
         if len(policies):
             group['inline_policies'] = policies
         group['inline_policies_count'] = len(policies)
         self.groups[group['id']] = group
-        self.__show_status('groups')
 
 
 
     ########################################
     ##### Inline policies
     ########################################
-    def __get_inline_policies(self, iam_client, resource_type, resource_id, resource_name):
+    def __get_inline_policies(self, api_client, resource_type, resource_id, resource_name):
         fetched_policies = {}
-        get_policy_method = getattr(iam_client, 'get_' + resource_type + '_policy')
-        list_policy_method = getattr(iam_client, 'list_' + resource_type + '_policies')
+        get_policy_method = getattr(api_client, 'get_' + resource_type + '_policy')
+        list_policy_method = getattr(api_client, 'list_' + resource_type + '_policies')
         args = {}
         args[resource_type.title() + 'Name'] = resource_name
         try:
@@ -160,28 +143,22 @@ class IAMConfig(object):
     ########################################
     ##### Managed policies
     ########################################
-    def fetch_policies(self, iam_client):
-        """
-        Fetch all IAM managed policies
-        """
-        self.__fetch_targets(iam_client, 'Policies', list_params = {'OnlyAttached': True})
-
-    def parse_policie(self, params, fetched_policy):
+    def parse_policies(self, fetched_policy, params):
         """
         Parse a single IAM policy and fetch additional information
         """
-        iam_client = params['iam_client']
+        api_client = params['api_client']
         policy = {}
         policy['name'] = fetched_policy.pop('PolicyName')
         policy['id'] = fetched_policy.pop('PolicyId')
         policy['arn'] = fetched_policy.pop('Arn')
         # Download version and document
-        policy_version = iam_client.get_policy_version(PolicyArn = policy['arn'], VersionId = fetched_policy['DefaultVersionId'])
+        policy_version = api_client.get_policy_version(PolicyArn = policy['arn'], VersionId = fetched_policy['DefaultVersionId'])
         policy_version = policy_version['PolicyVersion']
         policy['PolicyDocument'] = policy_version['Document']
         # Get attached IAM entities
         policy['attached_to'] = {}
-        attached_entities = handle_truncated_response(iam_client.list_entities_for_policy, {'PolicyArn': policy['arn']}, ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'])
+        attached_entities = handle_truncated_response(api_client.list_entities_for_policy, {'PolicyArn': policy['arn']}, ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'])
         for entity_type in attached_entities:
             resource_type = entity_type.replace('Policy', '').lower()
             if len(attached_entities[entity_type]):
@@ -198,19 +175,18 @@ class IAMConfig(object):
 #                get_permissions(policy_version['Document'], iam_info['permissions'], resource_type, resource_id, policy['id'], True)
         # Save policy
         self.policies[policy['id']] = policy
-        self.__show_status('policies')
 
 
 
     ########################################
     ##### Password policy
     ########################################
-    def fetch_password_policy(self, iam_client):
+    def fetch_password_policy(self, api_client):
         """
         Fetch the password policy that applies to all IAM users within the AWS account
         """
         try:
-            self.password_policy = iam_client.get_account_password_policy()['PasswordPolicy']
+            self.password_policy = api_client.get_account_password_policy()['PasswordPolicy']
             if 'PasswordReusePrevention' not in self.password_policy:
                 self.password_policy['PasswordReusePrevention'] = False
             else:
@@ -240,13 +216,7 @@ class IAMConfig(object):
     ########################################
     ##### Roles
     ########################################
-    def fetch_roles(self, iam_client):
-        """
-        Fetch all IAM roles
-        """
-        self.__fetch_targets(iam_client, 'Roles')
-
-    def parse_role(self, params, fetched_role):
+    def parse_roles(self, fetched_role, params):
         """
         Parse a single IAM role and fetch additional data
         """
@@ -255,7 +225,7 @@ class IAMConfig(object):
         # When resuming upon throttling error, skip if already fetched
         if fetched_role['RoleName'] in self.roles:
             return
-        iam_client = params['iam_client']
+        api_client = params['api_client']
         # Ensure consistent attribute names across resource types
         role['id'] = fetched_role.pop('RoleId')
         role['name'] = fetched_role.pop('RoleName')
@@ -263,12 +233,12 @@ class IAMConfig(object):
         # Get other attributes
         get_keys(fetched_role, role, [ 'CreateDate', 'Path'])
         # Get role policies
-        policies = self.__get_inline_policies(iam_client, 'role', role['id'], role['name'])
+        policies = self.__get_inline_policies(api_client, 'role', role['id'], role['name'])
         if len(policies):
             role['inline_policies'] = policies
         role['inline_policies_count'] = len(policies)
         # Get instance profiles
-        profiles = handle_truncated_response(iam_client.list_instance_profiles_for_role, {'RoleName': role['name']}, ['InstanceProfiles'])
+        profiles = handle_truncated_response(api_client.list_instance_profiles_for_role, {'RoleName': role['name']}, ['InstanceProfiles'])
         manage_dictionary(role, 'instance_profiles', {})
         for profile in profiles['InstanceProfiles']:
             manage_dictionary(role['instance_profiles'], profile['InstanceProfileId'], {})
@@ -279,46 +249,38 @@ class IAMConfig(object):
         role['assume_role_policy']['PolicyDocument'] = fetched_role.pop('AssumeRolePolicyDocument')
         # Save role
         self.roles[role['id']] = role
-        self.__show_status('roles')
 
 
 
     ########################################
     ##### Users
     ########################################
-    def fetch_users(self, iam_client):
-        """
-        Fetch all IAM users
-        """
-        self.__fetch_targets(iam_client, 'Users')
-
-    def parse_user(self, params, user):
+    def parse_users(self, user, params):
         """
         Parse a single IAM user and fetch additional data
         """
         if user['UserName'] in self.users:
             return
-        iam_client = params['iam_client']
+        api_client = params['api_client']
         # Ensure consistent attribute names across resource types
         user['id'] = user.pop('UserId')
         user['name'] = user.pop('UserName')
         user['arn'] = user.pop('Arn')
-        policies = self.__get_inline_policies(iam_client, 'user', user['id'], user['name'])
+        policies = self.__get_inline_policies(api_client, 'user', user['id'], user['name'])
         if len(policies):
             user['inline_policies'] = policies
         user['inline_policies_count'] = len(policies)
         user['groups'] = []
-        groups = handle_truncated_response(iam_client.list_groups_for_user, {'UserName': user['name']}, ['Groups'])['Groups']
+        groups = handle_truncated_response(api_client.list_groups_for_user, {'UserName': user['name']}, ['Groups'])['Groups']
         for group in groups:
             user['groups'].append(group['GroupName'])
         try:
-            user['LoginProfile'] = iam_client.get_login_profile(UserName = user['name'])['LoginProfile']
+            user['LoginProfile'] = api_client.get_login_profile(UserName = user['name'])['LoginProfile']
         except Exception as e:
             pass
-        user['AccessKeys'] = iam_client.list_access_keys(UserName = user['name'])['AccessKeyMetadata']
-        user['MFADevices'] = iam_client.list_mfa_devices(UserName = user['name'])['MFADevices']
+        user['AccessKeys'] = api_client.list_access_keys(UserName = user['name'])['AccessKeyMetadata']
+        user['MFADevices'] = api_client.list_mfa_devices(UserName = user['name'])['MFADevices']
         self.users[user['id']] = user
-        self.__show_status('users')
 
 
 
@@ -331,23 +293,24 @@ class IAMConfig(object):
             if getattr(self, resource_type)[resource_id]['name'] == resource_name:
                 return resource_id
 
-    def __fetch_group_users(self, iam_client, group_name):
+    def __fetch_group_users(self, api_client, group_name):
         users = []
-        fetched_users = iam_client.get_group(GroupName = group_name)['Users']
+        fetched_users = api_client.get_group(GroupName = group_name)['Users']
         for user in fetched_users:
             users.append(user['UserId'])
         return users
 
-    def __fetch_targets(self, iam_client, target_type, list_params = {}):
+    # TODO make this code shared (either for all classes or at least for global S3 and IAM)
+    def __fetch_targets(self, api_client, target_type, list_params = {}):
         lower_target = target_type.lower()
-        list_method = getattr(iam_client, 'list_' + lower_target)
+        list_method = getattr(api_client, 'list_' + lower_target)
         targets = handle_truncated_response(list_method, list_params, [target_type])[target_type]
         setattr(self, '%s_count' % lower_target, len(targets))
-        thread_work(targets, self.__fetch_target, params = {'iam_client': iam_client, 'target_type': lower_target[0:-1]}, num_threads = 10)
+        thread_work(targets, self.__fetch_target, params = {'api_client': api_client, 'target_type': lower_target[0:-1]}, num_threads = 10)
         self.__show_status(lower_target, True)
 
     def __fetch_target(self, q, params):
-        iam_client = params['iam_client']
+        api_client = params['api_client']
         method = getattr(self, 'parse_%s' % params['target_type'])
         while True:
             try:

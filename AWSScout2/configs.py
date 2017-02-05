@@ -90,6 +90,7 @@ class RegionalServiceConfig(object):
         api_service = self.service.lower() # TODO : handle EC2/VPC/ELB weirdness maybe ?
         # Init regions
         regions = build_region_list(api_service, regions, partition_name) # TODO: move this code within this class
+        # TODO : skip multi regions for S3 because list bucket gets all buckets across regions (or overwrite fetch_all in S3 like for IAM)
         status['regions_count'] = len(regions)
         # Threading to fetch & parse resources (queue consumer)
         q = self._init_threading(self._fetch_target, {}, 20)
@@ -141,7 +142,6 @@ class RegionalServiceConfig(object):
                     method, region, target = q.get()
                     method(params, region, target)
                     target = method.__name__.replace('parse_', '') + 's'
-                    #print('Adding one to %s' % target)
                     status['counts'][target]['fetched'] += 1
                     if region not in status['regions']:
                         status['regions'].append(region)
@@ -156,6 +156,8 @@ class RegionalServiceConfig(object):
 
     def _format_service_name(self, service):
         return formatted_service_name[service] if service in formatted_service_name else service.upper()
+
+
 
 
 
