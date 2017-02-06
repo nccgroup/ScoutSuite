@@ -115,11 +115,6 @@ def main(args):
                         method_args['regions'] = args.regions
                         method_args['partition_name'] = args.partition_name
                     service_config.fetch_all(**method_args)
-                    try:
-                        service_config.finalize()
-                    except Exception as e:
-                        printException(e)
-                        pass
             except Exception as e:
                 printError('Error: could not fetch %s configuration.' % service)
                 printException(e)

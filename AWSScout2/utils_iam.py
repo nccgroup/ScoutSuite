@@ -35,6 +35,7 @@ class IAMConfig(BaseConfig):
         ('policies', 'Policies', 'list_policies', {'OnlyAttached': True}, False),
         ('roles', 'Roles', 'list_roles', {}, False),
         ('users', 'Users', 'list_users', {}, False),
+        ('credential_report', '', '', {}, False),
         # TODO: Federations
         # TODO: KMS ?
         # TODO: credential report
@@ -57,9 +58,19 @@ class IAMConfig(BaseConfig):
 
 
     ########################################
+    ##### Overload to fetch credentials report before and after
+    ########################################
+    def fetch_all(self, credentials, regions=[], partition_name='aws', targets=None):
+        self.fetch_credential_report(credentials, True)
+        super(IAMConfig, self).fetch_all(credentials, regions, partition_name, targets)
+        self.fetch_credential_report(credentials)
+        self.finalize()
+
+
+    ########################################
     ##### Credential report
     ########################################
-    def fetch_credential_report(self, api_client, ignore_exception = False):
+    def fetch_credential_report(self, credentials, ignore_exception = False):
         """
         Fetch the credential report
 
@@ -70,6 +81,8 @@ class IAMConfig(BaseConfig):
         """
         iam_report = {}
         try:
+            api_client = connect_service('iam', credentials)
+            manage_dictionary(self.counts, 'credential_report', {'discovered': 1, 'fetched': 0})
             report = api_client.get_credential_report()['Content']
             lines = report.splitlines()
             keys = lines[0].decode('utf-8').split(',')
@@ -79,11 +92,10 @@ class IAMConfig(BaseConfig):
                 for key, value in zip(keys, values):
                     iam_report[values[0]][key] = value
             self.credential_report = iam_report
-            if not ignore_exception:
-                printInfo(' Credential report: 1/1')
+            self.counts['credentials_report']['fetched'] = 1
         except Exception as e:
             if ignore_exception:
-                pass
+                return
             printError('Failed to generate/download a credential report.')
             printException(e)
 
