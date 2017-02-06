@@ -101,27 +101,14 @@ def main(args):
 #                    if args.regions == [] or region in args.regions:
 #                        aws_config['services'][service]['regions'][region] = {}
 
-    if not args.fetch_local:
-        for service in vars(new_config.services):
-            try:
-                if service not in services:
-                    continue
-                service_config = getattr(new_config.services, service)
-                if 'fetch_all' in dir(service_config):
-                    # Fetch data from AWS API
-                    method_args = {}
-                    method_args['credentials'] = credentials
-                    if service != 'iam':
-                        method_args['regions'] = args.regions
-                        method_args['partition_name'] = args.partition_name
-                    service_config.fetch_all(**method_args)
-            except Exception as e:
-                printError('Error: could not fetch %s configuration.' % service)
-                printException(e)
 
-        # Write and reload to flatten everything into a python dictionary
+    if not args.fetch_local:
+        # Fetch data from AWS APIs
+        new_config.services.fetch(credentials, services, args.regions, args.partition_name)
+        # Save config file
         new_config.save_to_file(environment_name, args.force_write, args.debug)
 
+    # Reload to flatten everything into a python dictionary
     aws_config = load_from_json(environment_name)
 
     return

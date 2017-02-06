@@ -34,3 +34,23 @@ class ServicesConfig(object):
         self.ses = None
         self.sns = SNSConfig()
         self.sqs = SQSConfig()
+
+
+    def fetch(self, credentials, services, regions, partition_name):
+        for service in vars(self):
+            try:
+                if service not in services:
+                    continue
+                service_config = getattr(self, service)
+                if 'fetch_all' in dir(service_config):
+                    method_args = {}
+                    method_args['credentials'] = credentials
+                    if service != 'iam':
+                        method_args['regions'] = regions
+                        method_args['partition_name'] = partition_name
+                    service_config.fetch_all(**method_args)
+            except Exception as e:
+                printError('Error: could not fetch %s configuration.' % service)
+                printException(e)
+
+
