@@ -102,66 +102,29 @@ def main(args):
 #                        aws_config['services'][service]['regions'][region] = {}
 
     if not args.fetch_local:
-      for service in vars(new_config.services):
-        print service
-        service_config = getattr(new_config.services, service)
-        if 'fetch_all' in dir(service_config):
-            # Fetch data from AWS API
-            method_args = {}
-            method_args['credentials'] = credentials
-            if service != 'iam':
-                method_args['regions'] = args.regions
-                method_args['partition_name'] = args.partition_name
-            #if service == 's3':
-            #    method_args['s3_params'] = {}
-            #    method_args['s3_params']['check_encryption'] = args.check_s3_encryption
-            #    method_args['s3_params']['check_acls'] = args.check_s3_acls
-            #    method_args['s3_params']['checked_buckets'] = args.bucket_name
-            #    method_args['s3_params']['skipped_buckets'] = args.skipped_bucket_name
-            service_config.fetch_all(**method_args)
+        for service in vars(new_config.services):
+            try:
+                if service not in services:
+                    continue
+                service_config = getattr(new_config.services, service)
+                if 'fetch_all' in dir(service_config):
+                    # Fetch data from AWS API
+                    method_args = {}
+                    method_args['credentials'] = credentials
+                    if service != 'iam':
+                        method_args['regions'] = args.regions
+                        method_args['partition_name'] = args.partition_name
+                    service_config.fetch_all(**method_args)
+            except Exception as e:
+                printError('Error: could not fetch %s configuration.' % service)
+                printException(e)
 
-    if not args.fetch_local:
-      ##### Fetch all requested services' configuration
-      for service in services:
-#        if service in ['iam', 'sns', 'sqs', 'red:
-        if hasattr(new_config.services, service):
-            aws_config['services'][service] = getattr(new_config.services, service)
-        else:
-            aws_config['services'][service] = {}
-        continue
-        method = globals()['get_' + service + '_info']
-        manage_dictionary(aws_config['services'], service, {})
-        manage_dictionary(aws_config['services'][service], 'violations', {})
-        try:
-            if not args.fetch_local:
-                # Fetch data from AWS API
-                method_args = {}
-                method_args['credentials'] = credentials
-                method_args['service_config'] = aws_config['services'][service]
-                if service != 'iam':
-                    method_args['selected_regions'] = args.regions
-                    method_args['partition_name'] = args.partition_name
-                if service == 's3':
-                    method_args['s3_params'] = {}
-                    method_args['s3_params']['check_encryption'] = args.check_s3_encryption
-                    method_args['s3_params']['check_acls'] = args.check_s3_acls
-                    method_args['s3_params']['checked_buckets'] = args.bucket_name
-                    method_args['s3_params']['skipped_buckets'] = args.skipped_bucket_name
-                method(**method_args)
-                # Save service config
-                #update_
-            else:
-                # Fetch data from a local file
-                aws_config['services'][service] = load_info_from_json(service, environment_name)
-        except Exception as e:
-            printError('Error: could not fetch %s configuration.' % service)
-            printException(e)
-        setattr(new_config.services, service, aws_config['services'][service])
+        # Write and reload to flatten everything into a python dictionary
+        new_config.save_to_file(environment_name, args.force_write, args.debug)
 
-      # Write and reload to flatten everything into a python dictionary
-      new_config.save_to_file(environment_name, args.force_write, args.debug)
+    aws_config = load_from_json(environment_name)
 
-    aws_config = load_from_json('default')
+    return
 
     ##### Save this AWS account ID
     if 'iam' in services and (not 'account_id' in aws_config or not aws_config['account_id']):
