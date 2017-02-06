@@ -10,10 +10,7 @@ IAM-related classes and functions
 from AWSScout2.BaseConfig import BaseConfig
 from AWSScout2.utils import *
 
-# Import stock packages
-import base64
-import json
-import urllib
+
 
 class IAMConfig(BaseConfig):
     """
@@ -33,10 +30,14 @@ class IAMConfig(BaseConfig):
     """
 
     targets = (
+
         ('groups', 'Groups', 'list_groups', {}, False),
         ('policies', 'Policies', 'list_policies', {'OnlyAttached': True}, False),
         ('roles', 'Roles', 'list_roles', {}, False),
         ('users', 'Users', 'list_users', {}, False),
+        # TODO: Federations
+        # TODO: KMS ?
+        # TODO: credential report
     )
 
     def __init__(self):
@@ -87,6 +88,10 @@ class IAMConfig(BaseConfig):
             printException(e)
 
 
+
+    ########################################
+    ##### Groups
+    ########################################
     def parse_groups(self, group, params):
         """
         Parse a single IAM group and fetch additional information
@@ -108,35 +113,6 @@ class IAMConfig(BaseConfig):
             group['inline_policies'] = policies
         group['inline_policies_count'] = len(policies)
         self.groups[group['id']] = group
-
-
-
-    ########################################
-    ##### Inline policies
-    ########################################
-    def __get_inline_policies(self, api_client, resource_type, resource_id, resource_name):
-        fetched_policies = {}
-        get_policy_method = getattr(api_client, 'get_' + resource_type + '_policy')
-        list_policy_method = getattr(api_client, 'list_' + resource_type + '_policies')
-        args = {}
-        args[resource_type.title() + 'Name'] = resource_name
-        try:
-            policy_names = list_policy_method(**args)['PolicyNames']
-        except Exception as e:
-            printException(e)
-            return fetched_policies
-        try:
-            for policy_name in policy_names:
-                args['PolicyName'] = policy_name
-                policy_document = get_policy_method(**args)['PolicyDocument']
-                policy_id = get_non_aws_id(policy_name)
-                manage_dictionary(fetched_policies, policy_id, {})
-                fetched_policies[policy_id]['PolicyDocument'] = policy_document
-                fetched_policies[policy_id]['name'] = policy_name
-#                get_permissions(policy_document, iam_info['permissions'], resource_type + 's', resource_id, policy_id)
-        except Exception as e:
-            printException(e)
-        return fetched_policies
 
 
 
@@ -166,13 +142,7 @@ class IAMConfig(BaseConfig):
             for entity in attached_entities[entity_type]:
                 name_field = entity_type.replace('Policy', '')[:-1] + 'Name'
                 resource_name = entity[name_field]
-                resource_id = self.get_id_for_resource(resource_type, resource_name)
-#                policy['attached_to'][resource_type].append({'id': resource_id, 'name': resource_name})
-#                manage_dictionary(iam_info[resource_type][resource_id], 'managed_policies', [])
-#                manage_dictionary(iam_info[resource_type][resource_id], 'managed_policies_count', 0)
-#                iam_info[resource_type][resource_id]['managed_policies'].append(policy['id'])
-#                iam_info[resource_type][resource_id]['managed_policies_count'] = iam_info[resource_type][resource_id]['managed_policies_count'] + 1
-#                get_permissions(policy_version['Document'], iam_info['permissions'], resource_type, resource_id, policy['id'], True)
+                policy['attached_to'][resource_type].append({'name': resource_name})
         # Save policy
         self.policies[policy['id']] = policy
 
@@ -280,7 +250,28 @@ class IAMConfig(BaseConfig):
             pass
         user['AccessKeys'] = api_client.list_access_keys(UserName = user['name'])['AccessKeyMetadata']
         user['MFADevices'] = api_client.list_mfa_devices(UserName = user['name'])['MFADevices']
+        # TODO: Users signing certss
         self.users[user['id']] = user
+
+
+
+    ########################################
+    ##### Finalize IAM config
+    ########################################
+    def finalize(self):
+        # Update permissions for manged policies
+        for policy_id in self.policies:
+            for entity_type in self.policies[policy_id]['attached_to']:
+                for entity in self.policies[policy_id]['attached_to'][entity_type]:
+                    entity['id'] = self.get_id_for_resource(entity_type, entity['name'])
+                    entities = getattr(self, entity_type)
+                    manage_dictionary(entities[entity['id']], 'managed_policies', [])
+                    manage_dictionary(entities[entity['id']], 'managed_policies_counts', 0)
+                    entities[entity['id']]['managed_policies'].append(policy_id)
+                    entities[entity['id']]['managed_policies_counts'] += 1
+                    self.__parse_permissions(policy_id, self.policies[policy_id]['PolicyDocument'], 'managed_policies', entity_type, entity['id'])
+        # Fetch the credentials report
+        # Remove tmp variables that should not be dumped to JSON -- Probably common and move to BaseConfig and call super()
 
 
 
@@ -293,6 +284,7 @@ class IAMConfig(BaseConfig):
             if getattr(self, resource_type)[resource_id]['name'] == resource_name:
                 return resource_id
 
+
     def __fetch_group_users(self, api_client, group_name):
         users = []
         fetched_users = api_client.get_group(GroupName = group_name)['Users']
@@ -300,121 +292,77 @@ class IAMConfig(BaseConfig):
             users.append(user['UserId'])
         return users
 
-    # TODO make this code shared (either for all classes or at least for global S3 and IAM)
-    def __fetch_targets(self, api_client, target_type, list_params = {}):
-        lower_target = target_type.lower()
-        list_method = getattr(api_client, 'list_' + lower_target)
-        targets = handle_truncated_response(list_method, list_params, [target_type])[target_type]
-        setattr(self, '%s_count' % lower_target, len(targets))
-        thread_work(targets, self.__fetch_target, params = {'api_client': api_client, 'target_type': lower_target[0:-1]}, num_threads = 10)
-        self.__show_status(lower_target, True)
 
-    def __fetch_target(self, q, params):
-        api_client = params['api_client']
-        method = getattr(self, 'parse_%s' % params['target_type'])
-        while True:
-            try:
-                target = q.get()
-                method(params, target)
-            except Exception as e:
-                printException(e)
-            finally:
-                q.task_done()
-
-    def __show_status(self, target_type, newline = False):
-        """
-        Display fetching status to stdout
-        """
-        current = len(getattr(self, target_type))
-        total = getattr(self, '%s_count' % target_type)
-        sys.stdout.write("\r %s: %d/%d" % (target_type.title(), current, total))
-        sys.stdout.flush()
-        if newline:
-            sys.stdout.write('\n')
+    ########################################
+    ##### Inline policies
+    ########################################
+    def __get_inline_policies(self, api_client, resource_type, resource_id, resource_name):
+        fetched_policies = {}
+        get_policy_method = getattr(api_client, 'get_' + resource_type + '_policy')
+        list_policy_method = getattr(api_client, 'list_' + resource_type + '_policies')
+        args = {}
+        args[resource_type.title() + 'Name'] = resource_name
+        try:
+            policy_names = list_policy_method(**args)['PolicyNames']
+        except Exception as e:
+            printException(e)
+            return fetched_policies
+        try:
+            for policy_name in policy_names:
+                args['PolicyName'] = policy_name
+                policy_document = get_policy_method(**args)['PolicyDocument']
+                policy_id = get_non_aws_id(policy_name)
+                manage_dictionary(fetched_policies, policy_id, {})
+                fetched_policies[policy_id]['PolicyDocument'] = policy_document
+                fetched_policies[policy_id]['name'] = policy_name
+                self.__parse_permissions(policy_id, policy_document, 'inline_policies', resource_type + 's', resource_id)
+        except Exception as e:
+            printException(e)
+        return fetched_policies
 
 
-
-    def finalize(self):
-        """
-        Formatting
-        """
-        # Github issue #99 - We expect a list of statements but policies with a single statement that is a dictionary are valid, make it a list locally
-#        go_to_and_do(aws_config, aws_config['services']['iam'], ['groups', 'inline_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of, {'attribute_name': 'Statement'})
-#        go_to_and_do(aws_config, aws_config['services']['iam'], ['roles', 'inline_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of, {'attribute_name': 'Statement'})
-#        go_to_and_do(aws_config, aws_config['services']['iam'], ['roles', 'assume_role_policy.PolicyDocument' ], ['services', 'iam'], enforce_list_of, {'attribute_name': 'Statement'})
-#        go_to_and_do(aws_config, aws_config['services']['iam'], ['roles', 'assume_role_policy.PolicyDocument.Statement', 'Principal' ], ['services', 'iam'], enforce_list_of, {'attribute_name': 'AWS'})
-#        go_to_and_do(aws_config, aws_config['services']['iam'], ['users', 'inline_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of, {'attribute_name': 'Statement'})
-#        go_to_and_do(aws_config, aws_config['services']['iam'], ['managed_policies', 'PolicyDocument'], ['services', 'iam'], enforce_list_of, {'attribute_name': 'Statement'})
-
-
-########################################
-##### IAM functions
-########################################
-
-
-#
-# If necessary, allows reformatting of attributes into a list
-#
-#def enforce_list_of(aws_config, current_config, path, current_path, resource_id, callback_args):
-#    attribute_name = callback_args['attribute_name']
-#    if resource_id == attribute_name and not type(current_config) == list:
-#        # Current config is a copied structure, need to go back to the original and update
-#        target = aws_config
-#        for p in current_path:
-#            target = target[p]
-#        target[attribute_name] = [ target[attribute_name] 
-
-
-
-def get_permissions(policy_document, permissions, resource_type, name, policy_name, is_managed_policy = False):
-    manage_dictionary(permissions, 'Action', {})
-    manage_dictionary(permissions, 'NotAction', {})
-    if type(policy_document['Statement']) != list:
-        parse_statement(policy_document, permissions, resource_type, name, policy_name, is_managed_policy, policy_document['Statement'])
-    else:
+    def __parse_permissions(self, policy_name, policy_document, policy_type, resource_type, resource_name):
+        # Enforce list of statements
+        if type(policy_document['Statement']) != list:
+            policy_document['Statement'] = [ policy_document['Statement'] ]
         for statement in policy_document['Statement']:
-            parse_statement(policy_document, permissions, resource_type, name, policy_name, is_managed_policy, statement)
+            self.__parse_statement(policy_name, statement, policy_type, resource_type, resource_name)
 
-def parse_statement(policy_document, permissions, resource_type, name, policy_name, is_managed_policy, statement):
-        effect = str(statement['Effect'])
-        action_string = 'Action' if 'Action' in statement else 'NotAction'
-        resource_string = 'Resource' if 'Resource' in statement else 'NotResource'
-        condition = statement['Condition'] if 'Condition' in statement else None
-        parse_actions(permissions[action_string], statement[action_string], resource_string, statement[resource_string], effect, resource_type, name, policy_name, is_managed_policy, condition)
 
-def parse_actions(permissions, actions, resource_string, resources, effect, resource_type, name, policy_name, is_managed_policy, condition):
-    if type(actions) == list:
+    def __parse_statement(self, policy_name, statement, policy_type, resource_type, resource_name):
+            # Effect
+            effect = str(statement['Effect'])
+            # Action or NotAction
+            action_string = 'Action' if 'Action' in statement else 'NotAction'
+            if type(statement[action_string]) != list:
+                statement[action_string] = [ statement[action_string] ]
+            # Resource or NotResource
+            resource_string = 'Resource' if 'Resource' in statement else 'NotResource'
+            if type(statement[resource_string]) != list:
+                statement[resource_string] = [ statement[resource_string] ]
+            # Condition
+            condition = statement['Condition'] if 'Condition' in statement else None
+            manage_dictionary(self.permissions, action_string, {})
+            manage_dictionary(self.permissions[action_string], resource_type, {})
+            manage_dictionary(self.permissions[action_string][resource_type], effect, {})
+            self.__parse_actions(effect, action_string, statement[action_string], resource_string, statement[resource_string], resource_type, resource_name, policy_name, policy_type, condition)
+
+
+    def __parse_actions(self, effect, action_string, actions, resource_string, resources, resource_type, resource_name, policy_name, policy_type, condition):
         for action in actions:
-            parse_action(permissions, action, resource_string, resources, effect, resource_type, name, policy_name, is_managed_policy, condition)
-    else:
-        parse_action(permissions, actions, resource_string, resources, effect, resource_type, name, policy_name, is_managed_policy, condition)
+            self.__parse_action(effect, action_string, action, resource_string, resources, resource_type, resource_name, policy_name, policy_type, condition)
 
-def parse_action(permissions, action, resource_string, resources, effect, resource_type, name, policy_name, is_managed_policy, condition):
-    manage_dictionary(permissions, action, {})
-    parse_resources(permissions[action], resource_string, resources, effect, resource_type, name, policy_name, is_managed_policy, condition)
 
-def parse_resources(permission, resource_string, resources, effect, resource_type, name, policy_name, is_managed_policy, condition):
-    if type(resources) == list:
+    def __parse_action(self, effect, action_string, action, resource_string, resources, resource_type, resource_name, policy_name, policy_type, condition):
+        manage_dictionary(self.permissions[action_string][resource_type][effect], action, {})
         for resource in resources:
-            parse_resource(permission, resource_string, resource, effect, resource_type, name, policy_name, is_managed_policy, condition)
-    else:
-        parse_resource(permission, resource_string, resources, effect, resource_type, name, policy_name, is_managed_policy, condition)
-
-def parse_resource(permission, resource_string, resource, effect, resource_type, name, policy_name, is_managed_policy, condition):
-    manage_dictionary(permission, resource_type, {})
-    manage_dictionary(permission[resource_type], effect, {})
-    manage_dictionary(permission[resource_type][effect], name, {})
-    manage_dictionary(permission[resource_type][effect][name], resource_string, {})
-    manage_dictionary(permission[resource_type][effect][name][resource_string], resource, {})
-    if is_managed_policy:
-        policy_type = 'managed_policies'
-    else:
-        policy_type = 'inline_policies'
-    manage_dictionary(permission[resource_type][effect][name][resource_string][resource], policy_type, {})
-    manage_dictionary(permission[resource_type][effect][name][resource_string][resource][policy_type], policy_name, {})
-    permission[resource_type][effect][name][resource_string][resource][policy_type][policy_name]['condition'] = condition
+            self.__parse_resource(effect, action_string, action, resource_string, resource, resource_type, resource_name, policy_name, policy_type, condition)
 
 
-
-
-
+    def __parse_resource(self, effect, action_string, action, resource_string, resource, resource_type, resource_name, policy_name, policy_type, condition):
+        manage_dictionary(self.permissions[action_string][resource_type][effect][action], resource_name, {})
+        manage_dictionary(self.permissions[action_string][resource_type][effect][action][resource_name], resource_string, {})
+        manage_dictionary(self.permissions[action_string][resource_type][effect][action][resource_name][resource_string], resource, {})
+        manage_dictionary(self.permissions[action_string][resource_type][effect][action][resource_name][resource_string][resource], policy_type, {})
+        manage_dictionary(self.permissions[action_string][resource_type][effect][action][resource_name][resource_string][resource][policy_type], policy_name, {})
+        self.permissions[action_string][resource_type][effect][action][resource_name][resource_string][resource][policy_type][policy_name]['condition'] = condition
