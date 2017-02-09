@@ -6,6 +6,9 @@
     "conditions": [ "and",
         [ "this", "equal", "0.0.0.0/0" ],
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id", "equal", "ingress" ],
-        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id", "equal", "0-65535" ]
+        [ "or",
+            [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id", "equal", "0-65535" ],
+            [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id", "equal", "ALL" ]
+        ]
     ]
 }
