@@ -60,7 +60,7 @@ class BaseConfig(object):
         # Initialize targets
         if not targets:
             targets = type(self).targets
-        printInfo('Fetching %s config...' % self._format_service_name(self.service))
+        printInfo('Fetching %s config...' % format_service_name(self.service))
         formatted_string = None
         #self.status_init(targets)
         api_service = self.service.lower() # TODO : handle EC2/VPC/ELB weirdness maybe ?
@@ -167,10 +167,6 @@ class BaseConfig(object):
             pass
 
 
-    def _format_service_name(self, service):
-        return formatted_service_name[service] if service in formatted_service_name else service.upper()
-
-
     def get_non_aws_id(self, name):
         """
         Not all AWS resources have an ID and some services allow the use of "." in names, which break's Scout2's
@@ -214,3 +210,8 @@ class BaseConfig(object):
                 sys.stdout.write('\n')
         except:
             pass
+
+
+
+def format_service_name(service):
+    return formatted_service_name[service] if service in formatted_service_name else service.upper()

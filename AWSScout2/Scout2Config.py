@@ -107,3 +107,4 @@ class Scout2Config(object):
         #aws_config['last_run']['ruleset_name'] = ruleset_filename.replace('rulesets/', '').replace('.json', '')
         #aws_config['last_run']['ruleset_about'] = ruleset['about'] if 'about' in ruleset else ''
 
+

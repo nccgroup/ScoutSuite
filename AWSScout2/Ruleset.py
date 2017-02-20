@@ -182,6 +182,7 @@ class Ruleset(object):
         :param aws_config:
         """
         printInfo('Analyzing AWS config...')
+        # TODO: reset violations for all services in scope (maybe this can be done somewhere else (e.g. loading)
         for finding_path in self.rules:
             for rule in self.rules[finding_path]:
                 printDebug('Processing %s rule[%s]: "%s"' % (finding_path.split('.')[0], self.rule_type[:-1], self.rules[finding_path][rule]['description']))

@@ -1,4 +1,5 @@
-from AWSScout2.utils_cloudtrail import CloudTrailConfig
+from AWSScout2.BaseConfig import format_service_name
+from AWSScout2.utils_cloudtrail import CloudTrailConfig, cloudtrail_postprocessing
 from AWSScout2.utils_ec2 import EC2Config
 from AWSScout2.utils_iam import IAMConfig
 from AWSScout2.utils_rds import RDSConfig
@@ -7,7 +8,7 @@ from AWSScout2.utils_s3 import S3Config
 from AWSScout2.utils_sns import SNSConfig
 from AWSScout2.utils_sqs import SQSConfig
 from AWSScout2.configs import formatted_service_name
-from opinel.utils import printError, printException
+from opinel.utils import printError, printException, printInfo
 
 class ServicesConfig(object):
     """
@@ -68,4 +69,22 @@ class ServicesConfig(object):
 
     def multi_service_pass(self):
         pass
+
+
+
+
+
+def postprocessing(aws_config):
+    for service in aws_config['services']:
+        method_name = '%s_postprocessing' % service
+        if method_name in globals():
+            try:
+                printInfo('Post-processing %s config...' % format_service_name(service))
+                method = globals()[method_name]
+                method(aws_config)
+            except Exception as e:
+                printException(e)
+                pass
+
+
 

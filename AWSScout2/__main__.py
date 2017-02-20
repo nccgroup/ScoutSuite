@@ -22,7 +22,8 @@ except Exception as e:
 from AWSScout2 import __version__
 from AWSScout2.utils_vpc import *
 from AWSScout2.Ruleset import Ruleset
-from AWSScout2.Scout2Config import Scout2Config # , update_metadata, finalize
+from AWSScout2.Scout2Config import Scout2Config
+from AWSScout2.ServicesConfig import postprocessing
 
 
 ########################################
@@ -81,6 +82,8 @@ def main(args):
     filters.analyze(aws_config)
     #   filters = init_rules(filters, services, environment_name, args.ip_ranges, aws_config['account_id'],                         rule_type='filters')
 
+    # Finalize
+    postprocessing(aws_config)
 
     # Foobar
 
@@ -94,11 +97,6 @@ def main(args):
 
 
     return
-
-    # Reset filters & violations
-    for service in services:
-        aws_config['services'][service]['violations'] = {}
-        aws_config['services'][service]['filters'] = {}
 
         ##### VPC analyzis
     #    analyze_vpc_config(aws_config, args.ip_ranges, args.ip_ranges_key_name)
@@ -126,40 +124,7 @@ def main(args):
     if 'cloudtrail' in services:
         tweak_cloudtrail_findings(aws_config)
 
-    # Filters
-    for filter_path in filters:
-        for filter in filters[filter_path]:
-            printDebug(
-                'Processing %s filter: "%s"' % (filter_path.split('.')[0], filters[filter_path][filter]['description']))
-            path = filter_path.split('.')
-            service = path[0]
-            manage_dictionary(aws_config['services'][service], 'filters', {})
-            aws_config['services'][service]['filters'][filter] = {}
-            aws_config['services'][service]['filters'][filter]['description'] = filters[filter_path][filter][
-                'description']
-            aws_config['services'][service]['filters'][filter]['path'] = filters[filter_path][filter]['path']
-            if 'id_suffix' in filters[filter_path][filter]:
-                aws_config['services'][service]['filters'][filter]['id_suffix'] = filters[filter_path][filter][
-                    'id_suffix']
-            if 'display_path' in filters[filter_path][filter]:
-                aws_config['services'][service]['filters'][filter]['display_path'] = filters[filter_path][filter][
-                    'display_path']
-            try:
-                aws_config['services'][service]['filters'][filter]['items'] = recurse(aws_config['services'],
-                                                                                      aws_config['services'], path, [],
-                                                                                      filters[filter_path][filter],
-                                                                                      True)
-                aws_config['services'][service]['filters'][filter]['dashboard_name'] = filters[filter_path][filter][
-                    'dashboard_name'] if 'dashboard_name' in filters[filter_path][filter] else '??'
-                aws_config['services'][service]['filters'][filter]['flagged_items'] = len(
-                    aws_config['services'][service]['filters'][filter]['items'])
-                aws_config['services'][service]['filters'][filter]['service'] = service
-            except Exception as e:
-                printError('Failed to process filter defined in %s.json' % filter)
-                # Fallback if process filter failed to ensure report creation and data dump still happen
-                aws_config['services'][service]['filters'][filter]['checked_items'] = 0
-                aws_config['services'][service]['filters'][filter]['flagged_items'] = 0
-                printException(e)
+
 
     # Exceptions
     exceptions = {}
