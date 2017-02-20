@@ -96,6 +96,14 @@ class BaseConfig(object):
         q.join()
         # Show completion and force newline
         self.status_show(True)
+        # Remove temporary counters and update service config
+        try:
+            for t in self.counts:
+                count = '%s_count' % t
+                setattr(self, count, self.counts[t]['fetched'])
+            self.__delattr__(counts)
+        except:
+            pass
 
 
     def _init_threading(self, function, params={}, num_threads=10):
@@ -158,8 +166,10 @@ class BaseConfig(object):
             printException(e)
             pass
 
+
     def _format_service_name(self, service):
         return formatted_service_name[service] if service in formatted_service_name else service.upper()
+
 
     def get_non_aws_id(self, name):
         """
