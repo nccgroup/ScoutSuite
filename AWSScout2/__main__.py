@@ -21,6 +21,7 @@ except Exception as e:
 # Import Scout2 tools
 from AWSScout2 import __version__
 from AWSScout2.utils_vpc import *
+from AWSScout2.exceptions import process_exceptions
 from AWSScout2.Ruleset import Ruleset
 from AWSScout2.Scout2Config import Scout2Config
 from AWSScout2.ServicesConfig import postprocessing
@@ -88,9 +89,8 @@ def main(args):
     postprocessing(aws_config)
     do_postprocessing(aws_config)
 
-    # Foobar
-
-    #finalize(aws_config, current_time, sys.argv)
+    # TODO:this needs to happen between tweaks and metadata update (in do_postprocessing...)
+    process_exceptions(aws_config, args.exceptions[0])
 
     # h4ck
     save_config_to_file(environment_name, aws_config, args.force_write, args.debug)
@@ -99,42 +99,12 @@ def main(args):
     return
 
 
-
-    return
-
         ##### VPC analyzis
     #    analyze_vpc_config(aws_config, args.ip_ranges, args.ip_ranges_key_name)
     #    if 'ec2' in services:
     #        analyze_ec2_config(aws_config['services']['ec2'], aws_config['account_id'], args.force_write)
     #
 
-
-
-
-
-
-    # Exceptions
-    exceptions = {}
-    if args.exceptions[0]:
-        with open(args.exceptions[0], 'rt') as f:
-            exceptions = json.load(f)
-        for service in exceptions['services']:
-            for rule in exceptions['services'][service]['exceptions']:
-                filtered_items = []
-                for item in aws_config['services'][service]['violations'][rule]['items']:
-                    if item not in exceptions['services'][service]['exceptions'][rule]:
-                        filtered_items.append(item)
-                aws_config['services'][service]['violations'][rule]['items'] = filtered_items
-                aws_config['services'][service]['violations'][rule]['flagged_items'] = len(
-                    aws_config['services'][service]['violations'][rule]['items'])
-
-
-    # Generate dashboard metadata
-    try:
-        create_report_metadata(aws_config, services)
-    except Exception as e:
-        printError('Failed to create the report\'s dashboard metadata.')
-        printException(e)
 
 
 ########################################

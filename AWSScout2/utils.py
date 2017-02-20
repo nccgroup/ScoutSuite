@@ -143,51 +143,7 @@ def get_object_at(dictionary, path, attribute_name = None):
     else:
         return o
 
-#
-# Recursively go to a target and execute a callback
-#
-def go_to_and_do(aws_config, current_config, path, current_path, callback, callback_args = None):
-  try:
-    key = path.pop(0)
-    if not current_config:
-        current_config = aws_config
-    if not current_path:
-        current_path = []
-    keys = key.split('.')
-    if len(keys) > 1:
-        while True:
-            key = keys.pop(0)
-            if not len(keys):
-                break
-            current_path.append(key)
-            current_config = current_config[key]
-    if key in current_config:
-        current_path.append(key)
-        for (i, value) in enumerate(current_config[key]):
-            if len(path) == 0:
-                if type(current_config[key] == dict) and type(value) != dict and type(value) != list:
-                    callback(aws_config, current_config[key][value], path, current_path, value, callback_args)
-                else:
-                    # TODO: the current_config value passed here is not correct...
-                    callback(aws_config, current_config, path, current_path, value, callback_args)
-            else:
-                tmp = copy.deepcopy(current_path)
-                try:
-                    tmp.append(value)
-                    go_to_and_do(aws_config, current_config[key][value], copy.deepcopy(path), tmp, callback, callback_args)
-                except:
-                    tmp.pop()
-                    tmp.append(i)
-                    go_to_and_do(aws_config, current_config[key][i], copy.deepcopy(path), tmp, callback, callback_args)
 
-  except Exception as e:
-    printException(e)
-    printInfo('Index: %s' % str(i))
-    printInfo('Path: %s' % str(current_path))
-#    printInfo('Config: %s' % str(current_config))
-    printInfo('Key = %s' % str(key))
-    printInfo('Value = %s' % str(value))
-    printInfo('Path = %s' % path)
 
 #
 # JSON encoder class
@@ -225,53 +181,6 @@ def has_instances(ec2_region):
             count = count + len(ec2_region['vpcs'][v]['instances'])
     return False if count == 0 else True
 
-def match_instances_and_roles(ec2_config, iam_config):
-    role_instances = {}
-    for r in ec2_config['regions']:
-        for v in ec2_config['regions'][r]['vpcs']:
-            if 'instances' in ec2_config['regions'][r]['vpcs'][v]:
-                for i in ec2_config['regions'][r]['vpcs'][v]['instances']:
-                    instance_profile_id = ec2_config['regions'][r]['vpcs'][v]['instances'][i]['iam_instance_profile']['id'] if 'iam_instance_profile' in ec2_config['regions'][r]['vpcs'][v]['instances'][i] else None
-                    if instance_profile_id:
-                        manage_dictionary(role_instances, instance_profile_id, [])
-                        role_instances[instance_profile_id].append(i)
-    for role_id in iam_config['roles']:
-        iam_config['roles'][role_id]['instances_count'] = 0
-        for instance_profile_id in iam_config['roles'][role_id]['instance_profiles']:
-            if instance_profile_id in role_instances:
-                iam_config['roles'][role_id]['instance_profiles'][instance_profile_id]['instances'] = role_instances[instance_profile_id]
-                iam_config['roles'][role_id]['instances_count'] += len(role_instances[instance_profile_id])
-
-
-#
-# Create dashboard metadata
-#
-def create_report_metadata(aws_config, services):
-
-    # Security risks dropdown on a per-resource basis
-    for s in aws_config['services']:
-        if 'violations' in aws_config['services'][s]:
-            for v in aws_config['services'][s]['violations']:
-                # Finding resource
-                resource_path = aws_config['services'][s]['violations'][v]['display_path'] if 'display_path' in aws_config['services'][s]['violations'][v] else aws_config['services'][s]['violations'][v]['path']
-                resource = resource_path.split('.')[-2]
-                # h4ck...
-                if resource == 'credential_report':
-                    resource = resource_path.split('.')[-1].replace('>', '').replace('<', '')
-                elif resource == s:
-                    resource = resource_path.split('.')[-1]
-                if aws_config['services'][s]['violations'][v]['flagged_items'] > 0:
-                    try:
-                        manage_dictionary(aws_config['metadata'][service_map[s]][s]['resources'][resource], 'risks', [])
-                        aws_config['metadata'][service_map[s]][s]['resources'][resource]['risks'].append(v)
-                    except Exception as e:
-                        try:
-                            manage_dictionary(aws_config['metadata'][service_map[s]][s]['summaries'][resource], 'risks', [])
-                            aws_config['metadata'][service_map[s]][s]['summaries'][resource]['risks'].append(v)
-                        except Exception as e:
-                            printError('Service: %s' % s)
-                            printError('Resource: %s' % resource)
-                            printException(e)
 
 
 ########################################

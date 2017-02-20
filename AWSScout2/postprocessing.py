@@ -4,11 +4,19 @@ Multi-service post-processing functions
 """
 
 from opinel.utils import manage_dictionary, printInfo, printError, printException
+from AWSScout2.configs import ec2_classic
+from AWSScout2.utils import get_object_at
+
+import copy
 
 def do_postprocessing(aws_config):
     match_instances_and_roles(aws_config)
     match_iam_policies_and_buckets(aws_config)
+    vpc_postprocessing(aws_config)
+    # final
     update_metadata(aws_config)
+
+
 
 
 
@@ -160,3 +168,144 @@ def __update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entit
     else:
         # Could be an error or cross-account access, ignore...
         pass
+
+
+
+########################################
+# VPC
+########################################
+
+def vpc_postprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
+    printInfo('Post-processing VPC config...')
+    # Security group usage: EC2 instances
+#    printInfo('Parsing EC2 instances...')
+    callback_args = {'status_path': ['State', 'Name'], 'sg_list_attribute_name': 'security_groups', 'sg_id_attribute_name': 'GroupId'}
+    go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'instances'], ['services', 'ec2'], list_resources_in_security_group, callback_args)
+    # Security group usage: ELBs
+#    printInfo('Parsing ELBs...')
+    callback_args = {'status_path': ['Scheme'], 'sg_list_attribute_name': 'security_groups', 'sg_id_attribute_name': 'GroupId'}
+    go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'elbs'], ['services', 'ec2'], list_resources_in_security_group, callback_args)
+    # Security group usage: Redshift clusters
+#    printInfo('Parsing Redshift clusters...')
+    callback_args = {'status_path': ['ClusterStatus'], 'sg_list_attribute_name': 'VpcSecurityGroups', 'sg_id_attribute_name': 'VpcSecurityGroupId'}
+    go_to_and_do(aws_config, aws_config['services']['redshift'], ['regions', 'vpcs', 'clusters'], ['services', 'redshift'], list_resources_in_security_group, callback_args)
+    # Security group usage: RDS instances
+#    printInfo('Parsing RDS instances...')
+    callback_args = {'status_path': ['DBInstanceStatus'], 'sg_list_attribute_name': 'VpcSecurityGroups', 'sg_id_attribute_name': 'VpcSecurityGroupId'}
+    go_to_and_do(aws_config, aws_config['services']['rds'], ['regions', 'vpcs', 'instances'], ['services', 'rds'], list_resources_in_security_group, callback_args)
+    # Add friendly name for CIDRs
+    if len(ip_ranges):
+        callback_args = {'ip_ranges': ip_ranges, 'ip_ranges_name_key': ip_ranges_name_key}
+        go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports'], ['services', 'ec2'], put_cidr_name, callback_args)
+    # Propagate VPC names outside EC2
+    vpc_services = [ 'rds', 'redshift' ]
+#    for service in vpc_services:
+#        go_to_and_do(aws_config, aws_config['services'][service], ['regions', 'vpcs'], ['services', service], propagate_vpc_names, {})
+    # Remove empty EC2-classic VPC placeholders
+    go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions'], ['services', 'ec2'], remove_empty_ec2_placeholders, {})
+
+
+#
+# Recursively go to a target and execute a callback
+#
+def go_to_and_do(aws_config, current_config, path, current_path, callback, callback_args = None):
+  try:
+    key = path.pop(0)
+    if not current_config:
+        current_config = aws_config
+    if not current_path:
+        current_path = []
+    keys = key.split('.')
+    if len(keys) > 1:
+        while True:
+            key = keys.pop(0)
+            if not len(keys):
+                break
+            current_path.append(key)
+            current_config = current_config[key]
+    if key in current_config:
+        current_path.append(key)
+        for (i, value) in enumerate(current_config[key]):
+            if len(path) == 0:
+                if type(current_config[key] == dict) and type(value) != dict and type(value) != list:
+                    callback(aws_config, current_config[key][value], path, current_path, value, callback_args)
+                else:
+                    # TODO: the current_config value passed here is not correct...
+                    callback(aws_config, current_config, path, current_path, value, callback_args)
+            else:
+                tmp = copy.deepcopy(current_path)
+                try:
+                    tmp.append(value)
+                    go_to_and_do(aws_config, current_config[key][value], copy.deepcopy(path), tmp, callback, callback_args)
+                except:
+                    tmp.pop()
+                    tmp.append(i)
+                    go_to_and_do(aws_config, current_config[key][i], copy.deepcopy(path), tmp, callback, callback_args)
+
+  except Exception as e:
+    printException(e)
+    printInfo('Index: %s' % str(i))
+    printInfo('Path: %s' % str(current_path))
+#    printInfo('Config: %s' % str(current_config))
+    printInfo('Key = %s' % str(key))
+    printInfo('Value = %s' % str(value))
+    printInfo('Path = %s' % path)
+
+
+#
+# EC2-Classic placeholders were automatically created - remove if empty after fetching all the data
+#
+def remove_empty_ec2_placeholders(aws_config, current_config, path, current_path, resource_id, callback_args):
+    if ec2_classic in current_config and current_config['vpcs'][ec2_classic] == {}:
+        current_config['vpcs'].pop(ec2_classic)
+
+
+
+
+#
+# List the resources associated with a given VPC security group (e.g. ec2 instances, redshift clusters, ...)
+# TODO: fix it when single region is fetched but more region data exist...
+#
+def list_resources_in_security_group(aws_config, current_config, path, current_path, resource_id, callback_args):
+    # Retrieve service and resource type from current path
+    service = current_path[1]
+    resource_type = current_path[-1]
+    # Get resource
+    resource_path = copy.deepcopy(current_path)
+    resource_path.append(resource_id)
+    resource = get_object_at(aws_config, resource_path)
+    if 'status_path' in callback_args:
+        resource_status = get_object_at(resource, callback_args['status_path'])
+    else:
+        resource_status = None
+    # Get list of VPC security groups for the resource
+    sg_base_path = copy.deepcopy(current_path)
+    sg_base_path.pop()
+    sg_base_path[1] = 'ec2'
+    sg_base_path.append('security_groups')
+    # Issue 89 & 91 : can instances have no security group?
+    try:
+      for resource_sg in resource[callback_args['sg_list_attribute_name']]:
+        # Get security group
+        sg_path = copy.deepcopy(sg_base_path)
+        sg_path.append(resource_sg[callback_args['sg_id_attribute_name']])
+        sg = get_object_at(aws_config, sg_path)
+        # Add usage information
+        manage_dictionary(sg, 'used_by', {})
+        manage_dictionary(sg['used_by'], service, {})
+        manage_dictionary(sg['used_by'][service], 'resource_type', {})
+        manage_dictionary(sg['used_by'][service]['resource_type'], resource_type, {} if resource_status else [])
+        if resource_status:
+            manage_dictionary(sg['used_by'][service]['resource_type'][resource_type], resource_status, [])
+            if not resource_id in sg['used_by'][service]['resource_type'][resource_type][resource_status]:
+                sg['used_by'][service]['resource_type'][resource_type][resource_status].append(resource_id)
+        else:
+                sg['used_by'][service]['resource_type'][resource_type].append(resource_id)
+    except Exception as e:
+        region = current_path[3]
+        vpc_id = current_path[5]
+        if vpc_id == ec2_classic and resource_type == 'elbs':
+            pass
+        else:
+            printError('Failed to parse %s in %s in %s' % (resource_type, vpc_id, region))
+            printException(e)
