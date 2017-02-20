@@ -291,9 +291,9 @@ class IAMConfig(BaseConfig):
     ##### Class helpers
     ########################################
 
-    def get_id_for_resource(self, resource_type, resource_name):
-        for resource_id in getattr(self, resource_type):
-            if getattr(self, resource_type)[resource_id]['name'] == resource_name:
+    def get_id_for_resource(self, iam_resource_type, resource_name):
+        for resource_id in getattr(self, iam_resource_type):
+            if getattr(self, iam_resource_type)[resource_id]['name'] == resource_name:
                 return resource_id
 
 
@@ -308,12 +308,12 @@ class IAMConfig(BaseConfig):
     ########################################
     ##### Inline policies
     ########################################
-    def __get_inline_policies(self, api_client, resource_type, resource_id, resource_name):
+    def __get_inline_policies(self, api_client, iam_resource_type, resource_id, resource_name):
         fetched_policies = {}
-        get_policy_method = getattr(api_client, 'get_' + resource_type + '_policy')
-        list_policy_method = getattr(api_client, 'list_' + resource_type + '_policies')
+        get_policy_method = getattr(api_client, 'get_' + iam_resource_type + '_policy')
+        list_policy_method = getattr(api_client, 'list_' + iam_resource_type + '_policies')
         args = {}
-        args[resource_type.title() + 'Name'] = resource_name
+        args[iam_resource_type.title() + 'Name'] = resource_name
         try:
             policy_names = list_policy_method(**args)['PolicyNames']
         except Exception as e:
@@ -327,21 +327,21 @@ class IAMConfig(BaseConfig):
                 manage_dictionary(fetched_policies, policy_id, {})
                 fetched_policies[policy_id]['PolicyDocument'] = policy_document
                 fetched_policies[policy_id]['name'] = policy_name
-                self.__parse_permissions(policy_id, policy_document, 'inline_policies', resource_type + 's', resource_id)
+                self.__parse_permissions(policy_id, policy_document, 'inline_policies', iam_resource_type + 's', resource_id)
         except Exception as e:
             printException(e)
         return fetched_policies
 
 
-    def __parse_permissions(self, policy_name, policy_document, policy_type, resource_type, resource_name):
-        # Enforce list of statements
+    def __parse_permissions(self, policy_name, policy_document, policy_type, iam_resource_type, resource_name):
+        # Enforce list of statements (Github issue #99)
         if type(policy_document['Statement']) != list:
             policy_document['Statement'] = [ policy_document['Statement'] ]
         for statement in policy_document['Statement']:
-            self.__parse_statement(policy_name, statement, policy_type, resource_type, resource_name)
+            self.__parse_statement(policy_name, statement, policy_type, iam_resource_type, resource_name)
 
 
-    def __parse_statement(self, policy_name, statement, policy_type, resource_type, resource_name):
+    def __parse_statement(self, policy_name, statement, policy_type, iam_resource_type, resource_name):
             # Effect
             effect = str(statement['Effect'])
             # Action or NotAction
@@ -355,26 +355,26 @@ class IAMConfig(BaseConfig):
             # Condition
             condition = statement['Condition'] if 'Condition' in statement else None
             manage_dictionary(self.permissions, action_string, {})
-            manage_dictionary(self.permissions[action_string], resource_type, {})
-            manage_dictionary(self.permissions[action_string][resource_type], effect, {})
-            self.__parse_actions(effect, action_string, statement[action_string], resource_string, statement[resource_string], resource_type, resource_name, policy_name, policy_type, condition)
+            self.__parse_actions(effect, action_string, statement[action_string], resource_string, statement[resource_string], iam_resource_type, resource_name, policy_name, policy_type, condition)
 
 
-    def __parse_actions(self, effect, action_string, actions, resource_string, resources, resource_type, resource_name, policy_name, policy_type, condition):
+    def __parse_actions(self, effect, action_string, actions, resource_string, resources, iam_resource_type, iam_resource_name, policy_name, policy_type, condition):
         for action in actions:
-            self.__parse_action(effect, action_string, action, resource_string, resources, resource_type, resource_name, policy_name, policy_type, condition)
+            manage_dictionary(self.permissions[action_string], action, {})
+            manage_dictionary(self.permissions[action_string][action], iam_resource_type, {})
+            manage_dictionary(self.permissions[action_string][action][iam_resource_type], effect, {})
+            manage_dictionary(self.permissions[action_string][action][iam_resource_type][effect], iam_resource_name, {})
+            self.__parse_action(effect, action_string, action, resource_string, resources, iam_resource_type, iam_resource_name, policy_name, policy_type, condition)
 
 
-    def __parse_action(self, effect, action_string, action, resource_string, resources, resource_type, resource_name, policy_name, policy_type, condition):
-        manage_dictionary(self.permissions[action_string][resource_type][effect], action, {})
+    def __parse_action(self, effect, action_string, action, resource_string, resources, iam_resource_type, iam_resource_name, policy_name, policy_type, condition):
         for resource in resources:
-            self.__parse_resource(effect, action_string, action, resource_string, resource, resource_type, resource_name, policy_name, policy_type, condition)
+            self.__parse_resource(effect, action_string, action, resource_string, resource, iam_resource_type, iam_resource_name, policy_name, policy_type, condition)
 
 
-    def __parse_resource(self, effect, action_string, action, resource_string, resource, resource_type, resource_name, policy_name, policy_type, condition):
-        manage_dictionary(self.permissions[action_string][resource_type][effect][action], resource_name, {})
-        manage_dictionary(self.permissions[action_string][resource_type][effect][action][resource_name], resource_string, {})
-        manage_dictionary(self.permissions[action_string][resource_type][effect][action][resource_name][resource_string], resource, {})
-        manage_dictionary(self.permissions[action_string][resource_type][effect][action][resource_name][resource_string][resource], policy_type, {})
-        manage_dictionary(self.permissions[action_string][resource_type][effect][action][resource_name][resource_string][resource][policy_type], policy_name, {})
-        self.permissions[action_string][resource_type][effect][action][resource_name][resource_string][resource][policy_type][policy_name]['condition'] = condition
+    def __parse_resource(self, effect, action_string, action, resource_string, resource, iam_resource_type, iam_resource_name, policy_name, policy_type, condition):
+        manage_dictionary(self.permissions[action_string][action][iam_resource_type][effect][iam_resource_name], resource_string, {})
+        manage_dictionary(self.permissions[action_string][action][iam_resource_type][effect][iam_resource_name][resource_string], resource, {})
+        manage_dictionary(self.permissions[action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][resource], policy_type, {})
+        manage_dictionary(self.permissions[action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][resource][policy_type], policy_name, {})
+        self.permissions[action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][resource][policy_type][policy_name]['condition'] = condition

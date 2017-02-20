@@ -24,6 +24,8 @@ from AWSScout2.utils_vpc import *
 from AWSScout2.Ruleset import Ruleset
 from AWSScout2.Scout2Config import Scout2Config
 from AWSScout2.ServicesConfig import postprocessing
+from AWSScout2.postprocessing import do_postprocessing
+from AWSScout2.utils import create_scout_report
 
 
 ########################################
@@ -84,6 +86,7 @@ def main(args):
 
     # Finalize
     postprocessing(aws_config)
+    do_postprocessing(aws_config)
 
     # Foobar
 
@@ -92,6 +95,7 @@ def main(args):
     # h4ck
     save_config_to_file(environment_name, aws_config, args.force_write, args.debug)
 
+    create_scout_report(environment_name, timestamp, aws_config, {}, args.force_write, args.debug)
     return
 
 
@@ -102,16 +106,8 @@ def main(args):
     #    analyze_vpc_config(aws_config, args.ip_ranges, args.ip_ranges_key_name)
     #    if 'ec2' in services:
     #        analyze_ec2_config(aws_config['services']['ec2'], aws_config['account_id'], args.force_write)
-    #    if 'iam' in services:
-    #        analyze_iam_config(aws_config)
     #
-    #    ##### Multiple service analyzis
-    #    if 'ec2' in services and 'iam' in services:
-    #        try:
-    #            match_instances_and_roles(aws_config['services']['ec2'], aws_config['services']['iam'])
-    #        except Exception as e:
-    #            printError('Error: EC2 or IAM configuration is missing.')
-    #            printException(e)
+
     #    if 's3' in services and 'iam' in services:
     #        try:
     #            match_iam_policies_and_buckets(aws_config['services']['s3'], aws_config['services']['iam'])
@@ -120,9 +116,7 @@ def main(args):
     #            printException(e)
 
 
-    # Tweaks
-    if 'cloudtrail' in services:
-        tweak_cloudtrail_findings(aws_config)
+
 
 
 

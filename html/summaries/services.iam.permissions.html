@@ -51,7 +51,7 @@
                                       {{/each}}
                                       {{#each managed_policies}}
                                         <li>
-                                          {{../Resource}} granted in <a href="javascript:showObject('services.iam.managed_policies.{{@key}}')">{{get_value_at 'services.iam.managed_policies' @key 'name'}}</a>
+                                          {{../Resource}} granted in <a href="javascript:showObject('services.iam.policies.{{@key}}')">{{get_value_at 'services.iam.policies' @key 'name'}}</a>
                                           {{#if condition}}
                                             <ul class="no-bullet">
                                               <li class="list-group-item-text">Condition: {{condition}}</li>
