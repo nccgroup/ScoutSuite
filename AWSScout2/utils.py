@@ -247,31 +247,6 @@ def match_instances_and_roles(ec2_config, iam_config):
 # Create dashboard metadata
 #
 def create_report_metadata(aws_config, services):
-    service_map = {}
-    # Load resources and summaries metadata from file
-    with open('metadata.json', 'rt') as f:
-        aws_config['metadata'] = json.load(f)
-    for service_group in aws_config['metadata']:
-        for service in aws_config['metadata'][service_group]:        
-            if 'resources' not in aws_config['metadata'][service_group][service]:
-                continue
-            service_map[service] = service_group
-            for resource in aws_config['metadata'][service_group][service]['resources']:
-                # full_path = path if needed
-                if not 'full_path' in aws_config['metadata'][service_group][service]['resources'][resource]:
-                    aws_config['metadata'][service_group][service]['resources'][resource]['full_path'] = aws_config['metadata'][service_group][service]['resources'][resource]['path']
-                # Script is the full path minus "id" (TODO: change that)
-                if not 'script' in aws_config['metadata'][service_group][service]['resources'][resource]:
-                    aws_config['metadata'][service_group][service]['resources'][resource]['script'] = '.'.join([x for x in aws_config['metadata'][service_group][service]['resources'][resource]['full_path'].split('.') if x != 'id'])
-                # Update counts
-                count = '%s_count' % resource
-                if 'regions' in aws_config['services'][service] and resource != 'regions':
-                    aws_config['metadata'][service_group][service]['resources'][resource]['count'] = 0
-                    for region in aws_config['services'][service]['regions']:
-                        if count in aws_config['services'][service]['regions'][region]:
-                            aws_config['metadata'][service_group][service]['resources'][resource]['count'] += aws_config['services'][service]['regions'][region][count]
-                else:
-                    aws_config['metadata'][service_group][service]['resources'][resource]['count'] = aws_config['services'][service][count]
 
     # Security risks dropdown on a per-resource basis
     for s in aws_config['services']:

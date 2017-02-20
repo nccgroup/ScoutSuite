@@ -38,7 +38,7 @@ class Ruleset(object):
     TODO
     """
 
-    def __init__(self, environment_name = 'default', ruleset_filename = None, services = [], load_ruleset = True, load_rules = True):
+    def __init__(self, environment_name = 'default', ruleset_filename = None, services = [], load_ruleset = True, load_rules = True, rule_type = 'violations'):
         # Ruleset filename
         self.filename = ruleset_filename
         if not self.filename:
@@ -47,23 +47,14 @@ class Ruleset(object):
         self.ruleset = {}
         if load_ruleset:
             self.load_ruleset()
+        # Rules or filters ?
+        self.rule_type = rule_type
         # Load rules
         self.rules = {}
         if load_rules:
             ip_ranges = {}
             aws_account_id = ''
-            self.init_rules(services, ip_ranges, aws_account_id, False, 'rules')
-
-
-
-    # Load findings from JSON config files
-#    ruleset = load_ruleset(ruleset_filename)
-#    rules = init_rules(ruleset, services, environment_name, args.ip_ranges, aws_config['account_id'])
-
-    # Load filters from JSON config files
-#    filters = load_ruleset('rulesets/filters.json')
-#    filters = init_rules(filters, services, environment_name, args.ip_ranges, aws_config['account_id'],
- #                        rule_type='filters')
+            self.init_rules(services, ip_ranges, aws_account_id, False)
 
 
     def load_ruleset(self, quiet = False):
@@ -101,16 +92,14 @@ class Ruleset(object):
     #
     # Initialize rules based on ruleset and services in scope
     #
-    def init_rules(self, ruleset, services, ip_ranges, aws_account_id, generator = False, rule_type = 'rules'):
-        ruleset_targets = getattr(self, rule_type)
-        print(ruleset_targets)
+    def init_rules(self, ruleset, services, ip_ranges, aws_account_id, generator = False):
         # Load rules from JSON files
         for rule_metadata in self.ruleset['rules']:
             # Skip disabled rules
             if 'enabled' in rule_metadata and rule_metadata['enabled'] in ['false', 'False', False] and not generator:
                 continue
             # Skip rules that apply to an out-of-scope service
-            rule_details = self.load_json_rule(rule_metadata, ip_ranges, aws_account_id, rule_type)
+            rule_details = self.load_json_rule(rule_metadata, ip_ranges, aws_account_id)
             if not rule_details:
                 continue
             if 'enabled' in rule_metadata and rule_metadata['enabled']:
@@ -131,21 +120,19 @@ class Ruleset(object):
                 rule_details['condition_operator'] = 'and'
             # Save details for rule
             key = key.replace('.json', '').replace(' ', '')
-            manage_dictionary(ruleset_targets, path, {})
-            ruleset_targets[path][key] = rule_details
-
-
+            manage_dictionary(self.rules, path, {})
+            self.rules[path][key] = rule_details
 
 
 
     #
     # Load rule from a JSON config file
     #
-    def load_json_rule(self, rule_metadata, ip_ranges, aws_account_id, rule_type = 'rules'):
+    def load_json_rule(self, rule_metadata, ip_ranges, aws_account_id):
         config = None
         config_file = rule_metadata['filename']
         if not config_file.startswith('rules/') and not config_file.startswith('filters/'):
-            config_file = '%s/%s' % (rule_type, config_file)
+            config_file = '%s/%s' % (self.rule_type, config_file)
         config_args = rule_metadata['args'] if 'args' in rule_metadata else []
         try:
             with open(config_file, 'rt') as f:
@@ -197,27 +184,28 @@ class Ruleset(object):
         printInfo('Analyzing AWS config...')
         for finding_path in self.rules:
             for rule in self.rules[finding_path]:
-                printDebug('Processing %s rule: "%s"' % (finding_path.split('.')[0], self.rules[finding_path][rule]['description']))
+                printDebug('Processing %s rule[%s]: "%s"' % (finding_path.split('.')[0], self.rule_type[:-1], self.rules[finding_path][rule]['description']))
                 path = finding_path.split('.')
                 service = path[0]
-                manage_dictionary(aws_config['services'][service], 'violations', {})
-                aws_config['services'][service]['violations'][rule] = {}
-                aws_config['services'][service]['violations'][rule]['description'] = self.rules[finding_path][rule]['description']
-                aws_config['services'][service]['violations'][rule]['path'] = self.rules[finding_path][rule]['path']
-                aws_config['services'][service]['violations'][rule]['level'] = self.rules[finding_path][rule]['level']
+                manage_dictionary(aws_config['services'][service], self.rule_type, {})
+                aws_config['services'][service][self.rule_type][rule] = {}
+                aws_config['services'][service][self.rule_type][rule]['description'] = self.rules[finding_path][rule]['description']
+                aws_config['services'][service][self.rule_type][rule]['path'] = self.rules[finding_path][rule]['path']
+                if self.rule_type == 'violations':
+                    aws_config['services'][service][self.rule_type][rule]['level'] = self.rules[finding_path][rule]['level']
                 if 'id_suffix' in self.rules[finding_path][rule]:
-                    aws_config['services'][service]['violations'][rule]['id_suffix'] = self.rules[finding_path][rule]['id_suffix']
+                    aws_config['services'][service][self.rule_type][rule]['id_suffix'] = self.rules[finding_path][rule]['id_suffix']
                 if 'display_path' in self.rules[finding_path][rule]:
-                    aws_config['services'][service]['violations'][rule]['display_path'] = self.rules[finding_path][rule]['display_path']
+                    aws_config['services'][service][self.rule_type][rule]['display_path'] = self.rules[finding_path][rule]['display_path']
                 try:
-                    aws_config['services'][service]['violations'][rule]['items'] = recurse(aws_config['services'], aws_config['services'], path, [], self.rules[finding_path][rule], True)
-                    aws_config['services'][service]['violations'][rule]['dashboard_name'] = self.rules[finding_path][rule]['dashboard_name'] if 'dashboard_name' in self.rules[finding_path][rule] else '??'
-                    aws_config['services'][service]['violations'][rule]['checked_items'] = self.rules[finding_path][rule]['checked_items'] if 'checked_items' in self.rules[finding_path][rule] else 0
-                    aws_config['services'][service]['violations'][rule]['flagged_items'] = len(aws_config['services'][service]['violations'][rule]['items'])
-                    aws_config['services'][service]['violations'][rule]['service'] = service
+                    aws_config['services'][service][self.rule_type][rule]['items'] = recurse(aws_config['services'], aws_config['services'], path, [], self.rules[finding_path][rule], True)
+                    aws_config['services'][service][self.rule_type][rule]['dashboard_name'] = self.rules[finding_path][rule]['dashboard_name'] if 'dashboard_name' in self.rules[finding_path][rule] else '??'
+                    aws_config['services'][service][self.rule_type][rule]['checked_items'] = self.rules[finding_path][rule]['checked_items'] if 'checked_items' in self.rules[finding_path][rule] else 0
+                    aws_config['services'][service][self.rule_type][rule]['flagged_items'] = len(aws_config['services'][service][self.rule_type][rule]['items'])
+                    aws_config['services'][service][self.rule_type][rule]['service'] = service
                 except Exception as e:
                     printError('Failed to process rule defined in %s.json' % rule)
                     # Fallback if process rule failed to ensure report creation and data dump still happen
-                    aws_config['services'][service]['violations'][rule]['checked_items'] = 0
-                    aws_config['services'][service]['violations'][rule]['flagged_items'] = 0
+                    aws_config['services'][service][self.rule_type][rule]['checked_items'] = 0
+                    aws_config['services'][service][self.rule_type][rule]['flagged_items'] = 0
                     printException(e)

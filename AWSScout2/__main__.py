@@ -22,7 +22,7 @@ except Exception as e:
 from AWSScout2 import __version__
 from AWSScout2.utils_vpc import *
 from AWSScout2.Ruleset import Ruleset
-from AWSScout2.Scout2Config import Scout2Config
+from AWSScout2.Scout2Config import Scout2Config # , update_metadata, finalize
 
 
 ########################################
@@ -65,6 +65,7 @@ def main(args):
     if not args.fetch_local:
         # Fetch data from AWS APIs
         new_config.fetch(credentials, regions=args.regions, partition_name=args.partition_name)
+        new_config.update_metadata()
         # Save config file
         new_config.save_to_file(environment_name, args.force_write, args.debug)
 
@@ -75,21 +76,22 @@ def main(args):
     ruleset = Ruleset(environment_name)
     ruleset.analyze(aws_config)
 
+    # Filters
+    filters = Ruleset(ruleset_filename = 'rulesets/filters.json', rule_type = 'filters')
+    filters.analyze(aws_config)
+    #   filters = init_rules(filters, services, environment_name, args.ip_ranges, aws_config['account_id'],                         rule_type='filters')
+
+
+    # Foobar
+
+    #finalize(aws_config, current_time, sys.argv)
+
     # h4ck
     save_config_to_file(environment_name, aws_config, args.force_write, args.debug)
 
     return
 
-    ##### Save this AWS account ID
-    if 'iam' in services and (not 'account_id' in aws_config or not aws_config['account_id']):
-        aws_config['account_id'] = '123456789012'  # TODO get_aws_account_id(aws_config['services']['iam'])
-    else:
-        manage_dictionary(aws_config, 'account_id', None)
 
-    # Load filters from JSON config files
-    filters = load_ruleset('rulesets/filters.json')
-    filters = init_rules(filters, services, environment_name, args.ip_ranges, aws_config['account_id'],
-                         rule_type='filters')
 
     return
 
@@ -174,13 +176,6 @@ def main(args):
                 aws_config['services'][service]['violations'][rule]['flagged_items'] = len(
                     aws_config['services'][service]['violations'][rule]['items'])
 
-    # Save info about run
-    aws_config['last_run'] = {}
-    aws_config['last_run']['time'] = current_time.strftime("%Y-%m-%d %H:%M:%S%z")
-    aws_config['last_run']['cmd'] = ' '.join(sys.argv)
-    aws_config['last_run']['version'] = __version__
-    aws_config['last_run']['ruleset_name'] = ruleset_filename.replace('rulesets/', '').replace('.json', '')
-    aws_config['last_run']['ruleset_about'] = ruleset['about'] if 'about' in ruleset else ''
 
     # Generate dashboard metadata
     try:

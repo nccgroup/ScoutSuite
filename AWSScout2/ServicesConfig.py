@@ -7,6 +7,7 @@ from AWSScout2.utils_s3 import S3Config
 from AWSScout2.utils_sns import SNSConfig
 from AWSScout2.utils_sqs import SQSConfig
 from AWSScout2.configs import formatted_service_name
+from opinel.utils import printError, printException
 
 class ServicesConfig(object):
     """

@@ -28,7 +28,7 @@ class Scout2Config(object):
         for group in self.metadata:
             for service in self.metadata[group]:
                 supported_services.append(service)
-        self.service_list = self.build_services_list(supported_services, services, skipped_services)
+        self.service_list = self.__build_services_list(supported_services, services, skipped_services)
         self.services = ServicesConfig()
 
 
@@ -63,6 +63,47 @@ class Scout2Config(object):
             printException(e)
             pass
 
-    def build_services_list(self, supported_services, services, skipped_services):
+    def __build_services_list(self, supported_services, services, skipped_services):
         return [s for s in supported_services if (services == [] or s in services) and s not in skipped_services]
+
+    def update_metadata(self):
+        service_map = {}
+        for service_group in self.metadata:
+            for service in self.metadata[service_group]:
+                if service not in self.service_list:
+                    continue
+                if 'resources' not in self.metadata[service_group][service]:
+                    continue
+                service_map[service] = service_group
+                for resource in self.metadata[service_group][service]['resources']:
+                    # full_path = path if needed
+                    if not 'full_path' in self.metadata[service_group][service]['resources'][resource]:
+                        self.metadata[service_group][service]['resources'][resource]['full_path'] = self.metadata[service_group][service]['resources'][resource]['path']
+                    # Script is the full path minus "id" (TODO: change that)
+                    if not 'script' in self.metadata[service_group][service]['resources'][resource]:
+                        self.metadata[service_group][service]['resources'][resource]['script'] = '.'.join([x for x in self.metadata[service_group][service]['resources'][resource]['full_path'].split('.') if x != 'id'])
+                    # Update counts
+                    count = '%s_count' % resource
+                    service_config = getattr(self.services, service)
+
+                    if service_config and resource != 'regions':
+                      if hasattr(service_config, 'regions'):
+                        self.metadata[service_group][service]['resources'][resource]['count'] = 0
+                        for region in service_config.regions:
+                            if hasattr(service_config.regions[region], count):
+                                self.metadata[service_group][service]['resources'][resource]['count'] += getattr(service_config.regions[region], count)
+                      else:
+                        self.metadata[service_group][service]['resources'][resource]['count'] = getattr(service_config, count)
+
+
+    def finalize(self, aws_config, current_time, args):
+        # Set AWS account ID
+        aws_config['account_id'] = 'TODO' # get_aws_account_id(self.services['iam'])
+        # Save info about run
+        aws_config['last_run'] = {}
+        aws_config['last_run']['time'] = current_time.strftime("%Y-%m-%d %H:%M:%S%z")
+        aws_config['last_run']['cmd'] = ' '.join(args)
+        aws_config['last_run']['version'] = __version__
+        #aws_config['last_run']['ruleset_name'] = ruleset_filename.replace('rulesets/', '').replace('.json', '')
+        #aws_config['last_run']['ruleset_about'] = ruleset['about'] if 'about' in ruleset else ''
 
