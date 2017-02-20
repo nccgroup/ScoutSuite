@@ -108,13 +108,6 @@ def main(args):
     #        analyze_ec2_config(aws_config['services']['ec2'], aws_config['account_id'], args.force_write)
     #
 
-    #    if 's3' in services and 'iam' in services:
-    #        try:
-    #            match_iam_policies_and_buckets(aws_config['services']['s3'], aws_config['services']['iam'])
-    #        except Exception as e:
-    #            printError('Error: s3 or IAM configuration is missing.')
-    #            printException(e)
-
 
 
 
@@ -142,9 +135,6 @@ def main(args):
     except Exception as e:
         printError('Failed to create the report\'s dashboard metadata.')
         printException(e)
-
-    # Save data
-    create_scout_report(environment_name, timestamp, aws_config, exceptions, args.force_write, args.debug)
 
 
 ########################################
