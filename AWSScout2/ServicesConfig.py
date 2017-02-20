@@ -6,6 +6,7 @@ from AWSScout2.utils_redshift import RedshiftConfig
 from AWSScout2.utils_s3 import S3Config
 from AWSScout2.utils_sns import SNSConfig
 from AWSScout2.utils_sqs import SQSConfig
+from AWSScout2.configs import formatted_service_name
 
 class ServicesConfig(object):
     """
@@ -36,10 +37,18 @@ class ServicesConfig(object):
         self.sqs = SQSConfig()
 
 
-    def fetch(self, credentials, services, regions, partition_name):
+    def fetch(self, credentials, services = [], regions = [], partition_name = ''):
+        """
+
+        :param credentials:
+        :param services:
+        :param regions:
+        :param partition_name:
+        :return:
+        """
         for service in vars(self):
             try:
-                if service not in services:
+                if services != [] and service not in services:
                     continue
                 service_config = getattr(self, service)
                 if 'fetch_all' in dir(service_config):
@@ -53,4 +62,9 @@ class ServicesConfig(object):
                 printError('Error: could not fetch %s configuration.' % service)
                 printException(e)
 
+    def single_service_pass(self):
+        pass
+
+    def multi_service_pass(self):
+        pass
 

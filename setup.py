@@ -24,10 +24,17 @@ setup(
     author='l01cd3v',
     author_email='l01cd3v@gmail.com',
     url='https://github.com/iSECPartners/Scout2',
+    entry_points={
+        'console_scripts': [
+            'Scout2 = AWSScout2.__main__:main',
+        ]
+    },
     packages=find_packages(exclude=['tests*']),
     package_data={
         NAME: [
             'data/*.json',
+            'data/rulesets/*.json',
+            'data/html/*.html'
         ]
     },
     include_package_data=True,

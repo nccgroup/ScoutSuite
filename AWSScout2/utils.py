@@ -121,18 +121,7 @@ def add_scout2_argument(parser, default_args, argument_name):
 # Common functions
 ########################################
 
-#
-# Return the list of services to iterate over
-#
-def build_services_list(services = supported_services, skipped_services = [], aws_config = None):
-    if aws_config:
-        enabled_services = [s for s in aws_config['services'] if (aws_config['services'][s].keys() != [] and aws_config['services'][s].keys() != ['violations'])]
-    else:
-        enabled_services = []
-        for s in services:
-            if s in supported_services and s not in skipped_services:
-                enabled_services.append(s)
-    return enabled_services
+
 
 #
 # Return attribute value at a given path
@@ -594,55 +583,6 @@ def load_from_json(environment_name, config_filename = None):
         json_payload = ''.join(json_payload)
         return json.loads(json_payload)
 
-#
-# Load rule from a JSON config file
-#
-def load_config_from_json(rule_metadata, ip_ranges, aws_account_id, rule_type = 'rules'):
-    config = None
-    config_file = rule_metadata['filename']
-    if not config_file.startswith('rules/') and not config_file.startswith('filters/'):
-        config_file = '%s/%s' % (rule_type, config_file)
-    config_args = rule_metadata['args'] if 'args' in rule_metadata else []
-    try:
-        with open(config_file, 'rt') as f:
-            config = f.read()
-        # Replace arguments
-        for idx, argument in enumerate(config_args):
-            config = config.replace('_ARG_'+str(idx)+'_', str(argument).strip())
-        config = json.loads(config)
-        config['filename'] = rule_metadata['filename']
-        if 'args' in rule_metadata:
-            config['args'] = rule_metadata['args']
-        # Load lists from files
-        for c1 in config['conditions']:
-            if c1 in condition_operators:
-                continue
-            if not type(c1[2]) == list and not type(c1[2]) == dict:
-                values = re_ip_ranges_from_file.match(c1[2])
-                if values:
-                    filename = values.groups()[0]
-                    conditions = json.loads(values.groups()[1])
-                    if filename == aws_ip_ranges_filename:
-                         c1[2] = read_ip_ranges(aws_ip_ranges_filename, False, conditions, True)
-                    elif filename == ip_ranges_from_args:
-                        c1[2] = []
-                        for ip_range in ip_ranges:
-                            c1[2] = c1[2] + read_ip_ranges(ip_range, True, conditions, True)
-                if c1[2] and aws_account_id:
-                    if not type(c1[2]) == list:
-                        c1[2] = c1[2].replace('_AWS_ACCOUNT_ID_', aws_account_id)
-
-                # Set lists
-                list_value = re_list_value.match(str(c1[2]))
-                if list_value:
-                    values = []
-                    for v in list_value.groups()[0].split(','):
-                        values.append(v.strip())
-                    c1[2] = values
-    except Exception as e:
-        printException(e)
-        printError('Error: failed to read the rule from %s' % config_file)
-    return config
 
 def open_file(environment_name, force_write, js_filename, quiet = False):
     if not quiet:
@@ -721,31 +661,3 @@ def save_config_to_file(environment_name, config, force_write = False, debug = F
 def write_data_to_file(f, aws_config, force_write, debug):
     print('%s' % json.dumps(aws_config, indent = 4 if debug else None, separators=(',', ': '), sort_keys=True, cls=Scout2Encoder), file = f)
 
-
-########################################
-# Status update functions
-########################################
-
-def init_status(items, keyword=None, fetched=0):
-    count = fetched
-    total = 0
-    if items:
-        total = len(items)
-    update_status(0, total, keyword)
-    return count, total
-
-def update_status(current, total, keyword=None):
-    if keyword:
-        keyword = keyword + ':'
-    else:
-        keyword = ''
-    if total != 0:
-        sys.stdout.write("\r%s %d/%d" % (keyword , current, total))
-    else:
-        sys.stdout.write("\r%s %d" % (keyword, current))
-    sys.stdout.flush()
-    return current + 1
-
-def close_status(current, total, keyword=None):
-    update_status(current, total, keyword)
-    sys.stdout.write('\n')

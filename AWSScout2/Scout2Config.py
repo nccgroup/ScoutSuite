@@ -20,14 +20,35 @@ class Scout2Config(object):
     :services           AWS configuration sorted by service
     """
 
-    def __init__(self):
+    def __init__(self, services = [], skipped_services = []):
         self.account_id = None
         self.last_run = None
-        self.metadata = None
+        self.__load_metadata()
+        supported_services = []
+        for group in self.metadata:
+            for service in self.metadata[group]:
+                supported_services.append(service)
+        self.service_list = self.build_services_list(supported_services, services, skipped_services)
         self.services = ServicesConfig()
-        self.ruleset = None
 
-    def load_metadata(self):
+
+    def fetch(self, credentials, regions = [], skipped_regions = [], partition_name = 'aws'):
+        """
+
+        :param credentials:
+        :param services:
+        :param skipped_services:
+        :param regions:
+        :param skipped_regions:
+        :param partition_name:
+        :return:
+        """
+        # TODO: determine partition name based on regions and warn if multiple partitions...
+
+        self.services.fetch(credentials, self.service_list, regions, partition_name)
+
+
+    def __load_metadata(self):
         # Load metadata
         with open('metadata.json', 'rt') as f:
             self.metadata = json.load(f)
@@ -42,6 +63,6 @@ class Scout2Config(object):
             printException(e)
             pass
 
-
-
+    def build_services_list(self, supported_services, services, skipped_services):
+        return [s for s in supported_services if (services == [] or s in services) and s not in skipped_services]
 
