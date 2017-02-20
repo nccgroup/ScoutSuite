@@ -80,7 +80,7 @@ def main(args):
     ruleset = Ruleset(environment_name)
     ruleset.analyze(aws_config)
 
-    # Filters
+    # Create display filters
     filters = Ruleset(ruleset_filename = 'rulesets/filters.json', rule_type = 'filters')
     filters.analyze(aws_config)
     #   filters = init_rules(filters, services, environment_name, args.ip_ranges, aws_config['account_id'],                         rule_type='filters')
@@ -89,21 +89,11 @@ def main(args):
     postprocessing(aws_config)
     do_postprocessing(aws_config)
 
-    # TODO:this needs to happen between tweaks and metadata update (in do_postprocessing...)
+    # Handle exceptions
     process_exceptions(aws_config, args.exceptions[0])
 
-    # h4ck
-    save_config_to_file(environment_name, aws_config, args.force_write, args.debug)
-
+    # Save config and create HTML report
     create_scout_report(environment_name, timestamp, aws_config, {}, args.force_write, args.debug)
-    return
-
-
-        ##### VPC analyzis
-    #    analyze_vpc_config(aws_config, args.ip_ranges, args.ip_ranges_key_name)
-    #    if 'ec2' in services:
-    #        analyze_ec2_config(aws_config['services']['ec2'], aws_config['account_id'], args.force_write)
-    #
 
 
 
