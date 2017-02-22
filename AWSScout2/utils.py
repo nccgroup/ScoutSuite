@@ -331,7 +331,10 @@ AWSCONFIG_FILE = 'aws_config'
 AWSRULESET_FILE = 'aws_ruleset'
 REPORT_TITLE  = 'AWS Scout2 Report'
 
-def create_scout_report(environment_name, timestamp, aws_config, exceptions, force_write, debug):
+
+def create_scout_report(report_dir, environment_name, timestamp, aws_config, exceptions, force_write, debug):
+    # Mkdir
+
     if timestamp:
         environment_name = '%s-%s' % (environment_name, timestamp)
     # Fix bug mentioned in #111
@@ -389,8 +392,8 @@ def get_scout2_paths(environment_name, scout2_folder = None, js_filename = None)
         report_filename = ('report-%s.html' % environment_name)
         config_filename = ('%s/%s-%s.js' % (AWSCONFIG_DIR, js_filename, environment_name))
     if scout2_folder:
-        report_filename = os.path.join(scout2_folder[0], report_filename)
-        config_filename = os.path.join(scout2_folder[0], config_filename)
+        report_filename = os.path.join('%s/%s' % ('scout2-report', scout2_folder[0]), report_filename)
+        config_filename = os.path.join('%s/%s' % ('scout2-report', scout2_folder[0]), config_filename)
     return report_filename, config_filename
 
 #
@@ -468,20 +471,7 @@ def load_from_json(environment_name, config_filename = None):
         return json.loads(json_payload)
 
 
-def open_file(environment_name, force_write, js_filename, quiet = False):
-    if not quiet:
-        printInfo('Saving config...')
-    report_filename, config_filename = get_scout2_paths(environment_name, js_filename = js_filename)
-    if prompt_4_overwrite(config_filename, force_write):
-       try:
-           config_dirname = os.path.dirname(config_filename)
-           if not os.path.isdir(config_dirname):
-               os.makedirs(config_dirname)
-           return open(config_filename, 'wt')
-       except Exception as e:
-           printException(e)
-    else:
-        return None
+
 
 #
 # Format and print the output of ListAll 

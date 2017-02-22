@@ -27,13 +27,19 @@ from AWSScout2.Scout2Config import Scout2Config
 from AWSScout2.ServicesConfig import postprocessing
 from AWSScout2.postprocessing import do_postprocessing
 from AWSScout2.utils import create_scout_report
+from AWSScout2.cli_parser import Scout2ArgumentParser
+from AWSScout2.fs import Scout2Report
 
 
 ########################################
 ##### Main
 ########################################
 
-def main(args):
+def main():
+
+    parser = Scout2ArgumentParser()
+    args = parser.parse_args()
+
     # Configure the debug level
     configPrintException(args.debug)
 
@@ -42,10 +48,6 @@ def main(args):
     timestamp = args.timestamp
     if timestamp != False:
         timestamp = args.timestamp if args.timestamp else current_time.strftime("%Y-%m-%d_%Hh%M%z")
-
-    # If local analysis, overwrite results
-    if args.fetch_local:
-        args.force_write = True
 
     # Check version of opinel
     min_opinel, max_opinel = get_opinel_requirement()
@@ -63,18 +65,19 @@ def main(args):
     environment_name = get_environment_name(args)[0]
 
     # Create a new Scout2 config
-    new_config = Scout2Config(args.services, args.skipped_services)
+    report = Scout2Report(environment_name, args.report_dir, timestamp)
+    aws_config = Scout2Config(args.services, args.skipped_services)
 
     # Blah
     if not args.fetch_local:
         # Fetch data from AWS APIs
-        new_config.fetch(credentials, regions=args.regions, partition_name=args.partition_name)
-        new_config.update_metadata()
-        # Save config file
-        new_config.save_to_file(environment_name, args.force_write, args.debug)
+        aws_config.fetch(credentials, regions=args.regions, partition_name=args.partition_name)
+        aws_config.update_metadata()
+        # Create a report
+        report.save(aws_config, {}, args.force_write, args.debug)
 
     # Reload to flatten everything into a python dictionary
-    aws_config = load_from_json(environment_name)
+    aws_config = report.load()
 
     # Analyze config
     ruleset = Ruleset(environment_name)
@@ -93,56 +96,4 @@ def main(args):
     process_exceptions(aws_config, args.exceptions[0])
 
     # Save config and create HTML report
-    create_scout_report(environment_name, timestamp, aws_config, {}, args.force_write, args.debug)
-
-
-
-########################################
-##### Argument parser
-########################################
-
-default_args = read_profile_default_args(parser.prog)
-
-add_sts_argument(parser, 'mfa-serial')
-add_sts_argument(parser, 'mfa-code')
-add_common_argument(parser, default_args, 'regions')
-add_common_argument(parser, default_args, 'partition-name')
-add_common_argument(parser, default_args, 'ip-ranges')
-add_common_argument(parser, default_args, 'ip-ranges-key-name')
-add_iam_argument(parser, default_args, 'csv-credentials')
-add_scout2_argument(parser, default_args, 'force')
-add_scout2_argument(parser, default_args, 'ruleset')
-add_scout2_argument(parser, default_args, 'services')
-add_scout2_argument(parser, default_args, 'skip')
-add_scout2_argument(parser, default_args, 'env')
-
-parser.add_argument('--local',
-                    dest='fetch_local',
-                    default=False,
-                    action='store_true',
-                    help='use local data previously fetched to feed the analyzer')
-parser.add_argument('--resume',
-                    dest='resume',
-                    default=False,
-                    action='store_true',
-                    help='Complete a partial (throttled) run')
-parser.add_argument('--update',
-                    dest='update',
-                    default=False,
-                    action='store_true',
-                    help='Reload all the existing data and only overwrite data in scope for this run')
-parser.add_argument('--exceptions',
-                    dest='exceptions',
-                    default=[None],
-                    nargs='+',
-                    help='')
-parser.add_argument('--timestamp',
-                    dest='timestamp',
-                    default=False,
-                    nargs='?',
-                    help='Add a timestamp to the name of the report (default is current time in UTC)')
-
-args = parser.parse_args()
-
-if __name__ == '__main__':
-    sys.exit(main(args))
+    report.save(aws_config, {}, args.force_write, args.debug)

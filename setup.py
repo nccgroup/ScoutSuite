@@ -32,9 +32,12 @@ setup(
     packages=find_packages(exclude=['tests*']),
     package_data={
         NAME: [
-            'data/*.json',
+            'data/includes.zip',
+            'data/rules/*.json',
             'data/rulesets/*.json',
-            'data/html/*.html'
+            'data/html/*.html',
+            'data/html/partials/*.html',
+            'data/html/summaries/*.html'
         ]
     },
     include_package_data=True,
