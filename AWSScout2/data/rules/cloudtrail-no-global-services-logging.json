@@ -1,0 +1,12 @@
+{
+    "description": "Global services logging disabled",
+    "rationale": "API activity for global services such as IAM and STS is not logged. Investigation of incidents will be incomplete due to the lack of information.",
+    "path": "cloudtrail.regions.id.trails.id",
+    "dashboard_name": "Trails",
+    "conditions": [ "or",
+        [ "and", [ "cloudtrail.regions.id.trails.id.", "withKey", "HomeRegion" ], [ "cloudtrail.regions.id.trails.id.HomeRegion", "notEqual", "_GET_VALUE_AT_(cloudtrail.regions.id)" ] ],
+        [ "and", [ "cloudtrail.regions.id.trails.id.", "withKey", "IncludeGlobalServiceEvents" ], [ "cloudtrail.regions.id.trails.id.IncludeGlobalServiceEvents", "false", "" ] ],
+        [ "and", [ "cloudtrail.regions.id.trails.id.", "withKey", "IsLogging" ], [ "cloudtrail.regions.id.trails.id.IsLogging", "false", "" ] ]
+    ],
+    "id_suffix": "IncludeGlobalServiceEvents"
+}

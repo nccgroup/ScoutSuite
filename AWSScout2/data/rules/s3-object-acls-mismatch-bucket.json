@@ -1,0 +1,9 @@
+{
+    "dashboard_name": "Objects",
+    "description": "Object ACLs not matching bucket's",
+    "path": "s3.buckets.id.keys.id.grantees",
+    "display_path": "s3.buckets.id",
+    "conditions": [ "and",
+        [ "this", "notEqual", "_GET_VALUE_AT_(s3.buckets.id.grantees)" ]
+    ]
+}

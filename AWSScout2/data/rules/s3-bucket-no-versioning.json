@@ -1,0 +1,9 @@
+{
+    "dashboard_name": "Buckets",
+    "description": "Bucket without versioning",
+    "path": "s3.buckets.id",
+    "conditions": [ "and",
+        [ "s3.buckets.id.versioning_status", "equal", "Disabled" ]
+    ],
+    "id_suffix": "versioning"
+}

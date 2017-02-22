@@ -1,0 +1,11 @@
+{
+    "description": "Default security groups in use",
+    "path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "dashboard_name": "Security groups",
+    "conditions": [ "and",
+        [ "ec2.regions.id.vpcs.id.security_groups.id.name", "equal", "default" ],
+        [ "ec2.regions.id.vpcs.id.security_groups.id.", "withKey", "used_by" ]
+
+    ],
+    "id_suffix": "default_in_use"
+}

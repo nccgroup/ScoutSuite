@@ -1,0 +1,9 @@
+{
+    "description": "Single AZ RDS instance",
+    "path": "rds.regions.id.vpcs.id.instances.id",
+    "dashboard_name": "Instances",
+    "conditions": [ "and",
+        [ "rds.regions.id.vpcs.id.instances.id.MultiAZ", "false", "" ]
+    ],
+    "id_suffix": "MultiAZ"
+}

@@ -1,0 +1,25 @@
+{
+    "description": "Cross-account AssumeRole policy lacks external ID and MFA",
+    "rationale": "When authorizing cross-account role assumption, an external ID or MFA should be required.",
+    "path": "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id",
+    "display_path": "iam.roles.id",
+    "dashboard_name": "Roles",
+    "conditions": [ "and",
+        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Effect", "equal", "Allow" ],
+        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.", "containAction", "sts:AssumeRole" ],
+        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Principal", "withKey", "AWS" ],
+        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Principal.AWS", "isCrossAccount", "_AWS_ACCOUNT_ID_" ],
+        [ "or",
+            [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.", "withoutKey", "Condition" ],
+            [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition", "withoutKey", "Bool" ],
+            [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.Bool.", "withoutKey", "aws:MultiFactorAuthPresent" ],
+            [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.Bool.aws:MultiFactorAuthPresent", "notTrue", "" ]
+        ],
+        [ "or",
+            [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.", "withoutKey", "Condition" ],
+            [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition", "withoutKey", "StringEquals" ],
+            [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.StringEquals.", "withoutKey", "sts:ExternalId" ],
+            [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.StringEquals.sts:ExternalId", "empty", "" ]
+        ]
+    ]
+}

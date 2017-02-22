@@ -1,0 +1,9 @@
+{
+    "description": "Security group allows all",
+    "path": "redshift.regions.id.vpcs.id.security_groups.id.IPRanges.id.CIDRIP",
+    "display_path": "redshift.regions.id.vpcs.id.security_groups.id",
+    "dashboard_name": "Security Groups",
+    "conditions": [ "and",
+        [ "this", "equal", "0.0.0.0/0" ]
+    ]
+}

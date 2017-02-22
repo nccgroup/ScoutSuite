@@ -1,0 +1,9 @@
+{
+    "description": "Role with inline policies",
+    "path": "iam.roles.id",
+    "dashboard_name": "Roles",
+    "conditions": [ "and",
+        [ "iam.roles.id.", "withKey", "inline_policies" ]
+    ],
+    "id_suffix": "inline_policies"
+}

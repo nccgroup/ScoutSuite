@@ -1,0 +1,9 @@
+{
+    "description": "SSL not required",
+    "path": "redshift.regions.id.parameter_groups.id",
+    "dashboard_name": "Parameter Groups",
+    "conditions": [ "and",
+        [ "redshift.regions.id.parameter_groups.id.parameters.require_ssl.value", "false", "" ]
+    ],
+    "id_suffix": "require_ssl"
+}

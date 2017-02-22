@@ -1,0 +1,10 @@
+{
+    "description": "Security group whitelists unknown AWS CIDRs",
+    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
+    "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "dashboard_name": "Rules",
+    "conditions": [ "and",
+        [ "this", "inSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges.json, [])" ],
+        [ "this", "notInSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges-from-args, [])" ]
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "description": "Log file validation disabled",
+    "rationale": "The lack of log file validation prevents one from verifying the integrity of the log files.",
+    "path": "cloudtrail.regions.id.trails.id",
+    "dashboard_name": "Trails",
+    "conditions": [ "and",
+        [ "cloudtrail.regions.id.trails.id.", "withKey", "LogFileValidationEnabled" ],
+        [ "cloudtrail.regions.id.trails.id.LogFileValidationEnabled", "false", "" ]
+    ],
+    "id_suffix": "LogFileValidationDisabled"
+}

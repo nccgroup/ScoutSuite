@@ -1,0 +1,12 @@
+{
+    "description": "Non-empty rulesets for default security groups",
+    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id",
+    "dashboard_name": "Rulesets",
+    "conditions": [ "and",
+        [ "ec2.regions.id.vpcs.id.security_groups.id.name", "equal", "default" ],
+        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols", "notEmpty", "" ]
+
+    ],
+    "id_suffix": "default_with_rules",
+    "display_path": "ec2.regions.id.vpcs.id.security_groups.id"
+}

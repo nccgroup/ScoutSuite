@@ -1,0 +1,13 @@
+{
+    "description": "Security group whitelists non elastic IP addresses",
+    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id",
+    "dashboard_name": "Rules",
+    "conditions": [ "and",
+        [ "this", "inSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges-from-args, [])" ],
+        [ "this", "inSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges-from-args, [[\"is_elastic\", \"false\", \"\"]])" ]
+    ],
+    "keys": [
+        "ec2.regions.id.vpcs.id.security_groups.id",
+        "this"
+    ]
+}

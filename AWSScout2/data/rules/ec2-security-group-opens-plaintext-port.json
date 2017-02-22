@@ -1,0 +1,13 @@
+{
+    "arg_names": [ "Network protocol name", "Transport protocol name", "Port number" ],
+    "key": "ec2-security-group-opens-plaintext-port-_ARG_0_",
+    "description": "_ARG_0_ port open",
+    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",
+    "dashboard_name": "Rules",
+    "conditions": [ "and",
+        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id", "equal", "ingress" ],
+        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id", "equal", "_ARG_1_" ],
+        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id", "equal", "_ARG_2_" ]
+    ],
+    "display_path": "ec2.regions.id.vpcs.id.security_groups.id"
+}

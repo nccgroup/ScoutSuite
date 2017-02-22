@@ -1,0 +1,14 @@
+{
+    "arg_names": [ "Grantee", "Permission", "Description", "Level" ],
+    "key": "s3-bucket-_ARG_0_-_ARG_1_",
+    "dashboard_name": "Bucket ACLs",
+    "description": "_ARG_2_",
+    "path": "s3.buckets.id.grantees.id",
+    "display_path": "s3.buckets.id",
+    "conditions": [ "and",
+        [ "s3.buckets.id.grantees.id.", "withKey", "URI" ],
+        [ "s3.buckets.id.grantees.id.URI", "equal", "http://acs.amazonaws.com/groups/global/_ARG_0_" ],
+        [ "s3.buckets.id.grantees.id.permissions._ARG_1_", "true", "" ]
+    ],
+    "id_suffix": "_ARG_1_"
+}

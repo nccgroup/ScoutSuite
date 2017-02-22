@@ -1,0 +1,11 @@
+{
+    "description": "Instance with a public IP",
+    "rationale": "Foo Bar",
+    "path": "ec2.regions.id.vpcs.id.instances.id.PublicIpAddress",
+    "dashboard_name": "Instances",
+    "conditions": [ "and",
+        [ "this", "notNull", "" ]
+    ],
+    "enabled": "true",
+    "display_path": "ec2.regions.id.vpcs.id.instances.id"
+}

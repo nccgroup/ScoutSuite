@@ -1,0 +1,9 @@
+{
+    "description": "Version upgrade disabled",
+    "path": "redshift.regions.id.vpcs.id.clusters.id",
+    "dashboard_name": "Clusters",
+    "conditions": [ "and",
+        [ "redshift.regions.id.vpcs.id.clusters.id.AllowVersionUpgrade", "false", "" ]
+    ],
+    "id_suffix": "AllowVersionUpgrade"
+}

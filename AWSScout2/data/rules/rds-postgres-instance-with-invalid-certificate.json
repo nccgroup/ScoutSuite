@@ -1,0 +1,11 @@
+{
+    "description": "Invalid SSL certificate (PostgreSQL)",
+    "path": "rds.regions.id.vpcs.id.instances.id",
+    "dashboard_name": "Instances",
+    "conditions": [ "and",
+        [ "rds.regions.id.vpcs.id.instances.id.Engine", "equal", "postgres" ],
+        [ "rds.regions.id.vpcs.id.instances.id.DBInstanceStatus", "notEqual", "creating" ],
+        [ "rds.regions.id.vpcs.id.instances.id.InstanceCreateTime", "datePriorTo", "08/05/2014" ]
+    ],
+    "id_suffix": "pgsslcert"
+}

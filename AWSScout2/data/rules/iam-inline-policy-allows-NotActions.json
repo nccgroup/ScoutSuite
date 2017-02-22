@@ -1,0 +1,13 @@
+{
+    "arg_names": [ "IAM entity type" ],
+    "description": "Inline _ARG_0_ policy allows NotActions",
+    "rationale": "The combination of \"effect = allow\" and \"NotAction\" results in the policy allowing every action except those listed in the statement. The target policy does not follow the principle of least privilege because thousands of actions exist in AWS and because this policy automatically authorizes users to perform new actions created, regardless of their nature.",
+    "key": "iam-inline-_ARG_0_-policy-allows-NotActions",
+    "path": "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id",
+    "display_path": "iam._ARG_0_s.id",
+    "dashboard_name": "Policies",
+    "conditions": [ "and",
+        [ "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id.Effect", "equal", "Allow" ],
+        [ "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id.", "withKey", "NotAction" ]
+    ]
+}

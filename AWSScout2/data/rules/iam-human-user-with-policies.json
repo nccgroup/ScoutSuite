@@ -1,0 +1,12 @@
+{
+    "arg_names": [ "Name of IAM group", "Type of policy", "Path to policies" ],
+    "key": "iam-human-user-with-_ARG_1_-policies",
+    "description": "Human user with _ARG_1_ policies",
+    "path": "iam.users.id",
+    "dashboard_name": "Users",
+    "conditions": [ "and",
+        [ "iam.users.id.groups", "containAtLeastOneOf", "_ARG_0_" ],
+        [ "iam.users.id.", "withKey", "_ARG_2_" ]
+    ],
+    "id_suffix": "_ARG_1_"
+}

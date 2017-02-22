@@ -1,0 +1,10 @@
+{
+    "description": "Auto minor version upgrade disabled",
+    "path": "rds.regions.id.vpcs.id.instances.id",
+    "dashboard_name": "Instances",
+    "conditions": [ "and",
+        [ "rds.regions.id.vpcs.id.instances.id.AutoMinorVersionUpgrade", "false", "" ],
+        [ "rds.regions.id.vpcs.id.instances.id.Engine", "containAtLeastOneOf", ["mariadb", "mysql", "postgres" ] ]
+    ],
+    "id_suffix": "AutoMinorVersionUpgrade"
+}

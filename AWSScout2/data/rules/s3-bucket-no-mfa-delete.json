@@ -1,0 +1,10 @@
+{
+    "dashboard_name": "Buckets",
+    "description": "Versioned bucket without MFA delete",
+    "path": "s3.buckets.id",
+    "conditions": [ "and",
+        [ "s3.buckets.id.versioning_status", "equal", "Enabled" ],
+        [ "s3.buckets.id.version_mfa_delete", "equal", "Disabled" ]
+    ],
+    "id_suffix": "mfa_delete"
+}

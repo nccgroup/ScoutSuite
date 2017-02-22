@@ -1,0 +1,16 @@
+{
+    "description": "Unused role for EC2",
+    "path": "iam.roles.id.assume_role_policy.Statement.id.Principal",
+    "display_path": "iam.roles.id",
+    "dashboard_name": "Roles",
+    "conditions": [ "and",
+        [ "iam.roles.id.instances_count", "equal", "0" ],
+        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Principal.", "withKey", "Service" ],
+        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Principal.Service", "equal", "ec2.amazonaws.com" ]
+    ],
+    "id_suffix": "instances",
+    "keys": [
+        "iam.roles.id.name",
+        "this"
+    ]
+}

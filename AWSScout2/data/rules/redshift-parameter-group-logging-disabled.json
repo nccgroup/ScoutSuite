@@ -1,0 +1,9 @@
+{
+    "description": "User activity logging disabled",
+    "path": "redshift.regions.id.parameter_groups.id",
+    "dashboard_name": "Parameter Groups",
+    "conditions": [ "and",
+        [ "redshift.regions.id.parameter_groups.id.parameters.enable_user_activity_logging.value", "false", "" ]
+    ],
+    "id_suffix": "enable_user_activity_logging"
+}

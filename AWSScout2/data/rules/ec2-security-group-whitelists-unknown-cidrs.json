@@ -1,0 +1,12 @@
+{
+    "description": "Security group whitelists unknown CIDRs",
+    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
+    "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "dashboard_name": "Rules",
+    "conditions": [ "and",
+        [ "this", "notEqual", "0.0.0.0/0" ],
+        [ "this", "notInSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges.json, [])" ],
+        [ "this", "notInSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges-from-args, [])" ],
+        [ "this", "notInSubnets", [ "10.0.0.0/8", "172.16.0.0/16", "192.168.0.0/24" ] ]
+    ]
+}

@@ -1,0 +1,9 @@
+{
+    "description": "Group with inline policies",
+    "path": "iam.groups.id",
+    "dashboard_name": "groups",
+    "conditions": [ "and",
+        [ "iam.groups.id.", "withKey", "inline_policies" ]
+    ],
+    "id_suffix": "inline_policies"
+}

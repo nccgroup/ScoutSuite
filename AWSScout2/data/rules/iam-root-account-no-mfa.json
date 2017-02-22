@@ -1,0 +1,10 @@
+{
+    "description": "Lack of MFA (root account)",
+    "path": "iam.credential_report.<root_account>",
+    "dashboard_name": "Root account",
+    "conditions": [ "and",
+        [ "iam.credential_report.<root_account>.mfa_active", "notTrue", "" ]
+    ],
+    "id_suffix": "mfa_active",
+    "keys": [ "this" ]
+}

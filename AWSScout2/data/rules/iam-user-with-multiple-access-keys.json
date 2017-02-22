@@ -1,0 +1,15 @@
+{
+    "description": "User with multiple API keys",
+    "path": "iam.users.id",
+    "dashboard_name": "Users",
+    "conditions": [ "and",
+        [ "iam.users.id.AccessKeys", "lengthMoreThan", "1" ],
+        [ "iam.users.id.AccessKeys.0.Status", "equal", "Active" ],
+        [ "iam.users.id.AccessKeys.1.Status", "equal", "Active" ]
+    ],
+    "id_suffix": "multiple_api_keys",
+    "keys": [
+        "iam.users.id.name",
+        "iam.users.id.AccessKeys"
+    ]
+}
