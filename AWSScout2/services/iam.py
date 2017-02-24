@@ -7,7 +7,7 @@ IAM-related classes and functions
 #from opinel.utils_iam import *
 
 # Import Scout2 tools
-from AWSScout2.BaseConfig import BaseConfig
+from AWSScout2.configs.base import BaseConfig
 from AWSScout2.utils import *
 
 

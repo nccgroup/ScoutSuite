@@ -23,7 +23,10 @@ class Scout2Report(object):
     def __init__(self, environment_name, report_dir = None, timestamp = None, exceptions = {}):
         self.report_dir = report_dir if report_dir else DEFAULT_REPORT_DIR
         self.environment_name = environment_name.replace('/', '_').replace('\\', '_') # Issue 111
-        if timestamp:
+        if timestamp != False:
+            if not timestamp:
+                current_time = datetime.datetime.now(dateutil.tz.tzlocal())
+                timestamp = current_time.strftime("%Y-%m-%d_%Hh%M%z")
             self.environment_name = '%s-%s' % (self.environment_name, timestamp)
         self.exceptions = exceptions
         self.scout2_path = os.path.dirname(os.path.realpath(__file__))

@@ -4,7 +4,7 @@ RDS-related classes and functions
 """
 
 # Import AWSScout2
-from AWSScout2.configs import RegionalServiceConfig, RegionConfig, api_clients
+from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 from AWSScout2.utils import handle_truncated_response, manage_dictionary, ec2_classic
 
 

@@ -70,11 +70,6 @@ class Scout2ArgumentParser(OpinelArgumentParser):
                                 default=[],
                                 nargs='+',
                                 help='Name of services you want to ignore')
-        self.parser.add_argument('--env',
-                                dest='environment_name',
-                                default=[],
-                                nargs='+',
-                                help='AWS environment name (used when working with multiple reports)')
 
     def parse_args(self):
         args = super(Scout2ArgumentParser, self).parse_args()

@@ -19,6 +19,7 @@ except ImportError:
     from queue import Queue
 
 
+from AWSScout2.new_utils import format_service_name
 
 ########################################
 # Globals
@@ -26,14 +27,6 @@ except ImportError:
 
 status = None
 formatted_string = None
-formatted_service_name = {
-    'cloudtrail': 'CloudTrail',
-    'cloudwatch': 'CloudWatch',
-    'lambda': 'Lambda',
-    'redshift': 'RedShift',
-    'route53': 'Route53'
-}
-
 
 class BaseConfig(object):
     """
@@ -211,7 +204,3 @@ class BaseConfig(object):
         except:
             pass
 
-
-
-def format_service_name(service):
-    return formatted_service_name[service] if service in formatted_service_name else service.upper()

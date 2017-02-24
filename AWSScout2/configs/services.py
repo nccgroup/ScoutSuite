@@ -1,12 +1,12 @@
-from AWSScout2.BaseConfig import format_service_name
-from AWSScout2.utils_cloudtrail import CloudTrailConfig, cloudtrail_postprocessing
-from AWSScout2.utils_ec2 import EC2Config
-from AWSScout2.utils_iam import IAMConfig
-from AWSScout2.utils_rds import RDSConfig
-from AWSScout2.utils_redshift import RedshiftConfig
-from AWSScout2.utils_s3 import S3Config
-from AWSScout2.utils_sns import SNSConfig
-from AWSScout2.utils_sqs import SQSConfig
+from AWSScout2.configs.base import format_service_name
+from AWSScout2.services.cloudtrail import CloudTrailConfig
+from AWSScout2.services.ec2 import EC2Config
+from AWSScout2.services.iam import IAMConfig
+from AWSScout2.services.rds import RDSConfig
+from AWSScout2.services.redshift import RedshiftConfig
+from AWSScout2.services.s3 import S3Config
+from AWSScout2.services.sns import SNSConfig
+from AWSScout2.services.sqs import SQSConfig
 from opinel.utils import printError, printException, printInfo
 
 class ServicesConfig(object):

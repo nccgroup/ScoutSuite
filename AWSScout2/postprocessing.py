@@ -4,7 +4,7 @@ Multi-service post-processing functions
 """
 
 from opinel.utils import manage_dictionary, printInfo, printError, printException
-from AWSScout2.configs import ec2_classic
+from AWSScout2.configs.regions import ec2_classic
 from AWSScout2.utils import get_object_at
 
 import copy

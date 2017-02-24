@@ -5,7 +5,6 @@ from __future__ import unicode_literals
 
 from opinel.utils import printException, printError, printInfo, printDebug, connect_service, manage_dictionary, read_ip_ranges
 from AWSScout2.utils import recurse
-from opinel.load_data import load_data
 import json
 import os
 import re
@@ -82,11 +81,6 @@ class Ruleset(object):
         if not ruleset_found:
             self.filename = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data/rulesets/default.json')
             printInfo(self.filename)
-            printInfo('A')
-
-
-            #load_data(sel, key_name=None, local_file=False):
-
 
 
     #

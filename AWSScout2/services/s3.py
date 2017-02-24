@@ -7,7 +7,7 @@ from opinel.utils_s3 import get_s3_bucket_location
 
 
 # Import AWSScout2
-from AWSScout2.BaseConfig import BaseConfig
+from AWSScout2.configs.base import BaseConfig
 from opinel.utils import printException, printInfo, connect_service, manage_dictionary
 
 
