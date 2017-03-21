@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 import json
 
 from AWSScout2.configs.services import ServicesConfig
-from AWSScout2.utils import *
+#from AWSScout2.utils import *
 
 class Scout2Config(object):
     """
