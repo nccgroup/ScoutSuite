@@ -29,7 +29,7 @@ class Scout2Report(object):
                 timestamp = current_time.strftime("%Y-%m-%d_%Hh%M%z")
             self.environment_name = '%s-%s' % (self.environment_name, timestamp)
         self.exceptions = exceptions
-        self.scout2_path = os.path.dirname(os.path.realpath(__file__))
+        self.scout2_report_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
 
     def __prepare_scout2_report_dir(self):
         if not os.path.isdir(self.report_dir):
@@ -38,8 +38,8 @@ class Scout2Report(object):
         if not os.path.isdir(aws_config_dir):
             os.makedirs(aws_config_dir)
         # Copy static files
-        scout2_data_path = os.path.join(self.scout2_path, 'data')
-        archive = os.path.join(scout2_data_path, 'includes.zip')
+        print('Data path = %s' % self.scout2_report_data_path)
+        archive = os.path.join(self.scout2_report_data_path, 'includes.zip')
         zip_ref = zipfile.ZipFile(archive)
         zip_ref.extractall(self.report_dir)
         zip_ref.close()
@@ -54,7 +54,7 @@ class Scout2Report(object):
 
     def __get_content_from(self, templates_type):
         contents = ''
-        template_path = os.path.join(self.scout2_path, 'data/html')
+        template_path = os.path.join(self.scout2_report_data_path, 'html')
         template_dir  = os.path.join(template_path, templates_type)
         template_files = [os.path.join(template_dir, f) for f in os.listdir(template_dir) if os.path.isfile(os.path.join(template_dir, f))]
         for filename in template_files:
@@ -64,7 +64,7 @@ class Scout2Report(object):
 
 
     def create_html_report(self, force_write):
-        templates_path = os.path.join(self.scout2_path, 'data/html')
+        templates_path = os.path.join(self.scout2_report_data_path, 'html')
         contents = ''
         # Use all scripts under html/partials/
         contents += self.__get_content_from('partials')

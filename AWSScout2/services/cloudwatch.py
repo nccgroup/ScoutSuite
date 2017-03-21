@@ -64,36 +64,8 @@ def get_cloudwatch_region(params):
     cloudwatch_config['regions'][region]['alarms'] = alarms
     cloudwatch_config['regions'][region]['metrics'] = metrics
     cloudwatch_config['regions'][region]['metrics_count'] = len(metrics)
-    return
-
-#    printInfo('Fetching metrics in %s...' % region)
-#    metrics = handle_truncated_response(cloudwatch_client.list_metrics, {}, ['Metrics'])['Metrics']
-#    for metric in metrics:
-
-    cloudwatch_config['regions'][region]['metrics_count'] = len(metrics)
-    cloudwatch_config['regions'][region]['metrics'] = metrics
-    printInfo('Done in %s' % region)
-
-
-
-
-
-
-########################################
-##### Status display
-########################################
-
-def cloudwatch_status_init():
-    formatted_status('Metrics', 'Alarms', True)
-
-def cloudwatch_status(newline = False):
-    global fetched_alarms, discovered_alarms, fetched_metrics, discovered_metrics
-    a = '%d/%d' % (fetched_alarms, discovered_alarms)
-    b = '%d/%d' % (fetched_metrics, discovered_metrics)
-    formatted_status(a, b, newline)
-
-def formatted_status(a, b, newline):
-    sys.stdout.write('\r {:>15} {:>15}'.format(a, b))
-    sys.stdout.flush()
-    if newline:
-        sys.stdout.write('\n')
+    #printInfo('Fetching metrics in %s...' % region)
+    #metrics = handle_truncated_response(cloudwatch_client.list_metrics, {}, ['Metrics'])['Metrics']
+    #for metric in metrics:
+    #cloudwatch_config['regions'][region]['metrics_count'] = len(metrics)
+    #cloudwatch_config['regions'][region]['metrics'] = metrics

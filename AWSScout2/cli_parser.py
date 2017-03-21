@@ -72,7 +72,9 @@ class Scout2ArgumentParser(OpinelArgumentParser):
                                 help='Name of services you want to ignore')
 
     def parse_args(self):
-        args = super(Scout2ArgumentParser, self).parse_args()
+        args = self.parser.parse_args()
+
+        #args = super(Scout2ArgumentParser, self).parser.parse_args()
         # If local analysis, overwrite results
         if args.fetch_local:
             args.force_write = True
