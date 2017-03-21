@@ -3,8 +3,7 @@
 
 from __future__ import print_function
 
-from opinel.utils import printException, printError, printInfo, printDebug, prompt_4_overwrite
-from AWSScout2.utils import Scout2Encoder
+from opinel.utils import printException, printInfo, prompt_4_overwrite
 
 import glob
 import json
@@ -17,6 +16,20 @@ EXCEPTIONS_FILE = 'inc-awsconfig/exceptions.js'
 REPORT_FILE = 'report.html'
 
 REPORT_TITLE  = 'AWS Scout2 Report'
+
+
+
+class Scout2Encoder(json.JSONEncoder):
+    """
+    JSON encoder class
+    """
+    def default(self, o):
+        if type(o) == datetime.datetime:
+            return str(o)
+        else:
+            return vars(o)
+
+
 
 class Scout2Report(object):
 

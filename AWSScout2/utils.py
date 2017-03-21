@@ -91,15 +91,6 @@ def get_object_at(dictionary, path, attribute_name = None):
     else:
         return o
 
-#
-# JSON encoder class
-#
-class Scout2Encoder(json.JSONEncoder):
-    def default(self, o):
-        if type(o) == datetime.datetime:
-            return str(o)
-        else:
-            return vars(o)
 
 
 def get_keys(src, dst, keys):
