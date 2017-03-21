@@ -2,9 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from opinel.cli_parser import OpinelArgumentParser
-import os
-import zipfile
-
 
 
 class Scout2ArgumentParser(OpinelArgumentParser):

@@ -3,6 +3,8 @@
 SQS-related classes and functions
 """
 
+# Import opinel
+
 # Import AWSScout2
 from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 

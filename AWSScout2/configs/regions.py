@@ -3,9 +3,8 @@
 Base classes and functions for region-specific services
 """
 
-from opinel.utils import printException, printInfo, manage_dictionary, connect_service
-from AWSScout2.utils import handle_truncated_response
-from AWSScout2.utils import build_region_list
+from opinel.utils import printException, printInfo, manage_dictionary, connect_service, handle_truncated_response, build_region_list
+from AWSScout2.configs.base import GlobalConfig
 
 
 # Import stock packages
@@ -165,7 +164,7 @@ class RegionalServiceConfig(object):
 # RegionConfig
 ########################################
 
-class RegionConfig(object):
+class RegionConfig(GlobalConfig):
     """
     Base class for ...
     """
@@ -214,18 +213,6 @@ class RegionConfig(object):
                 q.put((callback, region, target))
         if not len(targets) and region not in status['regions']:
             status['regions'].append(region)
-
-    def get_non_aws_id(self, name):
-        """
-        Not all AWS resources have an ID and some services allow the use of "." in names, which break's Scout2's
-        recursion scheme if name is used as an ID. Use SHA1(name) instead.
-
-        :param name:                    Name of the resource to
-        :return:                        SHA1(name)
-        """
-        m = sha1()
-        m.update(name.encode('utf-8'))
-        return m.hexdigest()
 
 
 ########################################

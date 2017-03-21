@@ -3,14 +3,16 @@
 EC2-related classes and functions
 """
 
-# import opinel
+# Import opinel
+from opinel.utils import manage_dictionary, printException, printInfo
 from opinel.utils_ec2 import get_name
 from opinel.load_data import load_data
 
 # Import AWSScout2
 from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig
-from AWSScout2.utils import manage_dictionary, get_keys, ec2_classic
+from AWSScout2.utils import get_keys, ec2_classic
 
+import copy
 
 
 ########################################

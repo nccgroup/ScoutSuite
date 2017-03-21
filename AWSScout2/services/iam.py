@@ -4,7 +4,7 @@ IAM-related classes and functions
 """
 
 # Import opinel
-#from opinel.utils_iam import *
+from opinel.utils import connect_service, handle_truncated_response, manage_dictionary, printError, printException
 
 # Import Scout2 tools
 from AWSScout2.configs.base import BaseConfig
@@ -323,7 +323,7 @@ class IAMConfig(BaseConfig):
             for policy_name in policy_names:
                 args['PolicyName'] = policy_name
                 policy_document = get_policy_method(**args)['PolicyDocument']
-                policy_id = get_non_aws_id(policy_name)
+                policy_id = self.get_non_aws_id(policy_name)
                 manage_dictionary(fetched_policies, policy_id, {})
                 fetched_policies[policy_id]['PolicyDocument'] = policy_document
                 fetched_policies[policy_id]['name'] = policy_name

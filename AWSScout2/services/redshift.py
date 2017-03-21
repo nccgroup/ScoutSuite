@@ -3,9 +3,11 @@
 Redshift-related classes and functions
 """
 
+# Import opinel
+from opinel.utils import handle_truncated_response, manage_dictionary
+
 # Import AWSScout2
 from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
-from AWSScout2.utils import handle_truncated_response, manage_dictionary
 
 
 

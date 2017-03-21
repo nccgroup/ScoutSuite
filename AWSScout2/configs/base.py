@@ -3,8 +3,7 @@
 TODO
 """
 
-from opinel.utils import printException, printInfo, connect_service, manage_dictionary
-from AWSScout2.utils import handle_truncated_response
+from opinel.utils import printException, printInfo, connect_service, manage_dictionary, handle_truncated_response
 from opinel.utils import build_region_list
 
 
@@ -28,7 +27,23 @@ from AWSScout2.utils import format_service_name
 status = None
 formatted_string = None
 
-class BaseConfig(object):
+
+class GlobalConfig(object):
+
+    def get_non_aws_id(self, name):
+        """
+        Not all AWS resources have an ID and some services allow the use of "." in names, which break's Scout2's
+        recursion scheme if name is used as an ID. Use SHA1(name) instead.
+
+        :param name:                    Name of the resource to
+        :return:                        SHA1(name)
+        """
+        m = sha1()
+        m.update(name.encode('utf-8'))
+        return m.hexdigest()
+
+
+class BaseConfig(GlobalConfig):
     """
     FooBar
     """
@@ -160,17 +175,7 @@ class BaseConfig(object):
             pass
 
 
-    def get_non_aws_id(self, name):
-        """
-        Not all AWS resources have an ID and some services allow the use of "." in names, which break's Scout2's
-        recursion scheme if name is used as an ID. Use SHA1(name) instead.
 
-        :param name:                    Name of the resource to
-        :return:                        SHA1(name)
-        """
-        m = sha1()
-        m.update(name.encode('utf-8'))
-        return m.hexdigest()
 
 
     ########################################

@@ -5,7 +5,7 @@ from __future__ import print_function
 
 from opinel.utils import printException, printInfo, prompt_4_overwrite
 
-import glob
+import datetime
 import json
 import os
 import zipfile
@@ -178,3 +178,37 @@ def open_file(config_filename, force_write, quiet = False):
 
 
 
+
+def prompt_4_yes_no(question):
+    """
+    Ask a question and prompt for yes or no
+
+    :param question:                    Question to ask; answer is yes/no
+    :return:                            :boolean
+    """
+    while True:
+        sys.stdout.write(question + ' (y/n)? ')
+        try:
+            choice = raw_input().lower()
+        except:
+            choice = input().lower()
+        if choice == 'yes' or choice == 'y':
+            return True
+        elif choice == 'no' or choice == 'n':
+            return False
+        else:
+            printError('\'%s\' is not a valid answer. Enter \'yes\'(y) or \'no\'(n).' % choice)
+
+
+def prompt_4_overwrite(filename, force_write):
+    """
+    Confirm before overwriting existing files. Do not prompt if the file does not exist or force_write is set
+
+    :param filename:                    Name of the file to be overwritten
+    :param force_write:                 Do not ask for confirmation and automatically return True if set
+    :return:                            :boolean
+    """
+    #
+    if not os.path.exists(filename) or force_write:
+        return True
+    return prompt_4_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename))

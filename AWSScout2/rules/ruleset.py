@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 
 from opinel.utils import printException, printError, printInfo, printDebug, connect_service, manage_dictionary, read_ip_ranges
-from AWSScout2.utils import recurse
+from AWSScout2.rules.utils import recurse
 from AWSScout2.rules import condition_operators
 import json
 import os

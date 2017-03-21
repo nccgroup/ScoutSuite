@@ -3,6 +3,8 @@
 S3-related classes and functions
 """
 
+# Import opinel
+from opinel.utils import handle_truncated_response, printError
 from opinel.utils_s3 import get_s3_bucket_location
 
 

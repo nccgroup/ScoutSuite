@@ -4,6 +4,8 @@ from opinel.utils import *
 # Import Scout2 tools
 from AWSScout2.utils import *
 
+import copy
+
 ########################################
 ##### VPC analysis functions
 ########################################
