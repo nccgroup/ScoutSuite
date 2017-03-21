@@ -28,7 +28,7 @@ except ImportError:
 ########################################
 
 api_clients = dict()
-ec2_classic = 'EC2-Classic'
+
 status = None
 regions = None
 formatted_string = None

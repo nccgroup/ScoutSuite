@@ -6,21 +6,16 @@ from __future__ import unicode_literals
 
 # Import opinel
 from opinel.utils import *
+from AWSScout2.rules import condition_operators
 
 # Import stock packages
-import argparse
-import botocore
 import datetime
-from distutils import dir_util
 import copy
 import json
-import glob
 import hashlib
 import os
 import re
-import shutil
 import sys
-import traceback
 
 # Python2 vs Python3
 try:
@@ -33,108 +28,61 @@ except ImportError:
 # Globals
 ########################################
 
-supported_services = []
-re_service_utils = re.compile(r'^utils_(.*?).py$')
-scout2_utils_dir, foo = os.path.split(__file__)
-for filename in os.listdir(scout2_utils_dir):
-    service = re_service_utils.match(filename)
-    if service and service.groups()[0] != 'vpc':
-        supported_services.append(service.groups()[0])
-
-ec2_classic = 'EC2-Classic'
-condition_operators = [ 'and', 'or' ]
-
-
 re_ip_ranges_from_file = re.compile(r'_IP_RANGES_FROM_FILE_\((.*?),\s*(.*?)\)')
 re_get_value_at = re.compile(r'_GET_VALUE_AT_\((.*?)\)')
 re_list_value = re.compile(r'_LIST_\((.*?)\)')
 aws_ip_ranges_filename = 'ip-ranges.json'
 ip_ranges_from_args = 'ip-ranges-from-args'
 
-FILTERS_DIR = 'filters'
-RULES_DIR = 'rules'
-RULESETS_DIR = 'rulesets'
-DEFAULT_RULESET = '%s/default.json' % RULESETS_DIR
+ec2_classic = 'EC2-Classic'
+
+formatted_service_name = {
+    'cloudtrail': 'CloudTrail',
+    'cloudwatch': 'CloudWatch',
+    'lambda': 'Lambda',
+    'redshift': 'RedShift',
+    'route53': 'Route53'
+}
 
 
 ########################################
-##### Argument parser
-########################################
-
-#
-# Add a shared argument to a Scout2 utility
-#
-def add_scout2_argument(parser, default_args, argument_name):
-    if argument_name == 'force':
-        parser.add_argument('--force',
-                            dest='force_write',
-                            default=False,
-                            action='store_true',
-                            help='Overwrite existing json files')
-    elif argument_name == 'ruleset':
-        parser.add_argument('--ruleset',
-                            dest='ruleset',
-                            default=[ DEFAULT_RULESET ],
-                            nargs='+',
-                            help='Customized set of rules')
-    elif argument_name == 'services':
-        parser.add_argument('--services',
-                            dest='services',
-                            default=supported_services,
-                            nargs='+',
-                            help='Name of the Amazon Web Services you want to work with')
-    elif argument_name == 'skip':
-        parser.add_argument('--skip',
-                            dest='skipped_services',
-                            default=[],
-                            nargs='+',
-                            help='Name of services you want to ignore')
-    elif argument_name == 'env':
-        parser.add_argument('--env',
-                            dest='environment_name',
-                            default=[],
-                            nargs='+',
-                            help='AWS environment name (used when working with multiple reports)')
-    elif argument_name == 'scout2-path':
-        parser.add_argument('--scout2-path',
-                            dest='scout2_path',
-                            default=None,
-                            nargs='+',
-                            help='Path to Scout2 tool')
-    elif argument_name == 'format':
-        parser.add_argument('--format',
-                            dest='format',
-                            default=['csv'],
-                            nargs='+',
-                            help='Listall output format')
-    elif argument_name == 'format-file':
-        parser.add_argument('--format-file',
-                            dest='format_file',
-                            default=None,
-                            nargs='+',
-                            help='Listall output format file')
-    else:
-        raise Exception('Invalid parameter name %s' % argument_name)
-
-
-########################################
-# Common functions
+# Functions
 ########################################
 
 
+def format_service_name(service):
+    """
 
-#
-# Return attribute value at a given path
-#
+    :param service:
+    :return:
+    """
+    return formatted_service_name[service] if service in formatted_service_name else service.upper()
+
+
 def get_attribute_at(config, target_path, key, default_value = None):
+    """
+    Return attribute value at a given path
+
+    :param config:
+    :param target_path:
+    :param key:
+    :param default_value:
+    :return:
+    """
     for target in target_path:
         config = config[target]
     return config[key] if key in config else default_value
 
-#
-# Get arbitrary object given a dictionary and path (list of keys)
-#
+
 def get_object_at(dictionary, path, attribute_name = None):
+    """
+    Get arbitrary object given a dictionary and path (list of keys)
+
+    :param dictionary:
+    :param path:
+    :param attribute_name:
+    :return:
+    """
     o = dictionary
     for p in path:
         o = o[p]
@@ -142,8 +90,6 @@ def get_object_at(dictionary, path, attribute_name = None):
         return o[attribute_name]
     else:
         return o
-
-
 
 #
 # JSON encoder class
@@ -155,39 +101,42 @@ class Scout2Encoder(json.JSONEncoder):
         else:
             return vars(o)
 
-#
-# Copies the value of keys from source object to dest object
-#
+
 def get_keys(src, dst, keys):
+    """
+    Copies the value of keys from source object to dest object
+
+    :param src:
+    :param dst:
+    :param keys:
+    :return:
+    """
     for key in keys:
         dst[no_camel(key)] = src[key] if key in src else None
 
-#
-# Converts CamelCase to camel_case
-#
+
 def no_camel(name):
+    """
+    Converts CamelCase to camel_case
+
+    :param name:
+    :return:
+    """
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()                                                                                                                                 
 
 
-########################################
-# Violations search functions
-########################################
-
-def has_instances(ec2_region):
-    count = 0
-    for v in ec2_region['vpcs']:
-        if 'instances' in ec2_region['vpcs'][v]:
-            count = count + len(ec2_region['vpcs'][v]['instances'])
-    return False if count == 0 else True
-
-
-
-########################################
-##### Recursion
-########################################
-
 def recurse(all_info, current_info, target_path, current_path, config, add_suffix = False):
+    """
+
+    :param all_info:
+    :param current_info:
+    :param target_path:
+    :param current_path:
+    :param config:
+    :param add_suffix:
+    :return:
+    """
     results = []
     if len(target_path) == 0:
         # Dashboard: count the number of processed resources here
@@ -229,10 +178,15 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
     return results
 
 
-#
-# Pass all conditions?
-#
 def pass_conditions(all_info, current_path, conditions):
+    """
+    Pass all conditions?
+
+    :param all_info:
+    :param current_path:
+    :param conditions:
+    :return:
+    """
     result = False
     if len(conditions) == 0:
         return True
@@ -263,10 +217,17 @@ def pass_conditions(all_info, current_path, conditions):
     else:
         return True
 
-#
-# Get value located at a given path
-#
+
 def get_value_at(all_info, current_path, key, to_string = False):
+    """
+    Get value located at a given path
+
+    :param all_info:
+    :param current_path:
+    :param key:
+    :param to_string:
+    :return:
+    """
     keys = key.split('.')
     if keys[-1] == 'id':
         target_obj = current_path[len(keys)-1]
@@ -312,171 +273,87 @@ def get_value_at(all_info, current_path, key, to_string = False):
     else:
         return target_obj
 
-#
-# Not all AWS resources have an ID
-# Use SHA1(name) when the resource name is used
-#
+
 def get_non_aws_id(name):
+    """
+    Not all AWS resources have an ID, use SHA1(name) when the resource name is used
+
+    :param name:
+    :return:
+    """
     m = hashlib.sha1()
     m.update(name.encode('utf-8'))
     return m.hexdigest()
 
 
-########################################
-# File read/write functions
-########################################
-
-AWSCONFIG_DIR = 'inc-awsconfig'
-AWSCONFIG_FILE = 'aws_config'
-AWSRULESET_FILE = 'aws_ruleset'
-REPORT_TITLE  = 'AWS Scout2 Report'
-
-
-def create_scout_report(report_dir, environment_name, timestamp, aws_config, exceptions, force_write, debug):
-    # Mkdir
-
-    if timestamp:
-        environment_name = '%s-%s' % (environment_name, timestamp)
-    # Fix bug mentioned in #111
-    environment_name = environment_name.replace('/', '_').replace('\\', '_')
-    # Save data
-    save_config_to_file(environment_name, aws_config, force_write, debug)
-    save_config_to_file(environment_name, exceptions, force_write, debug, js_filename = 'exceptions', js_varname = 'exceptions')
-    # Create the HTML report using all partials under html/partials/
-    contents = ''
-    for filename in glob.glob('html/partials/*'):
-        with open('%s' % filename, 'rt') as f:
-            contents = contents + f.read()
-    # Use all scripts under html/summaries/
-    for filename in glob.glob('html/summaries/*'):
-        with open('%s' % filename, 'rt') as f:
-            contents = contents + f.read()
-    services = [service for service in aws_config['services']]
-    services.append('global')
-    for service in services: # aws_config['services']:
-        if os.path.exists('html/%s.html' % service):
-            with open('html/%s.html' % service, 'rt') as f:
-                contents = contents + f.read()
-    if environment_name != 'default':
-        def_report_filename, def_config_filename = get_scout2_paths('default')
-        foo, def_exceptions_filename = get_scout2_paths('default', js_filename = 'exceptions')
-        new_report_filename, new_config_filename = get_scout2_paths(environment_name)
-        foo, new_exceptions_filename = get_scout2_paths(environment_name, js_filename = 'exceptions')
-        new_file = 'report-' + environment_name + '.html'
-    else:
-        new_file = 'report.html'
-    printInfo('Creating %s ...' % new_file)
-    if prompt_4_overwrite(new_file, force_write):
-        if os.path.exists(new_file):
-            os.remove(new_file)
-        with open('html/report.html') as f:
-            with open(new_file, 'wt') as nf:
-                for line in f:
-                    newline = line.replace(REPORT_TITLE, REPORT_TITLE + ' [' + environment_name + ']')
-                    if environment_name != 'default':
-                        newline = newline.replace(def_config_filename, new_config_filename)
-                        newline = newline.replace(def_exceptions_filename, new_exceptions_filename)
-                    newline = newline.replace('<!-- PLACEHOLDER -->', contents)
-                    nf.write(newline)
-
-#
-# Return the filename of the Scout2 report and config
-#
-def get_scout2_paths(environment_name, scout2_folder = None, js_filename = None):
-    if not js_filename:
-        js_filename = AWSCONFIG_FILE
-    if environment_name == 'default':
-        report_filename = 'report.html'
-        config_filename = AWSCONFIG_DIR + '/' + js_filename + '.js'
-    else:
-        report_filename = ('report-%s.html' % environment_name)
-        config_filename = ('%s/%s-%s.js' % (AWSCONFIG_DIR, js_filename, environment_name))
-    if scout2_folder:
-        report_filename = os.path.join('%s/%s' % ('scout2-report', scout2_folder[0]), report_filename)
-        config_filename = os.path.join('%s/%s' % ('scout2-report', scout2_folder[0]), config_filename)
-    return report_filename, config_filename
-
-#
-# Prepare listall output template
-#
 def format_listall_output(format_file, format_item_dir, format, config, option_prefix = None, template = None, skip_options = False):
-        # Set the list of keys if printing from a file spec
-        # _LINE_(whatever)_EOL_
-        # _ITEM_(resource)_METI_
-        # _KEY_(path_to_value)
-        if format_file and os.path.isfile(format_file):
-            if not template:
-                with open(format_file, 'rt') as f:
-                    template = f.read()
-            # Optional files
-            if not skip_options:
-                re_option = re.compile(r'(%_OPTION_\((.*?)\)_NOITPO_)')
-                optional_files = re_option.findall(template)
-                for optional_file in optional_files:
-                    if optional_file[1].startswith(option_prefix + '-'):
-                        with open(os.path.join(format_item_dir, optional_file[1].strip()), 'rt') as f:
-                            template = template.replace(optional_file[0].strip(), f.read())
-            # Include files if needed
-            re_file = re.compile(r'(_FILE_\((.*?)\)_ELIF_)')
-            while True:
-                requested_files = re_file.findall(template)
-                available_files = os.listdir(format_item_dir)
-                for requested_file in requested_files:
-                    if requested_file[1].strip() in available_files:
-                        with open(os.path.join(format_item_dir, requested_file[1].strip()), 'rt') as f:
-                            template = template.replace(requested_file[0].strip(), f.read())
-                # Find items and keys to be printed
-                re_line = re.compile(r'(_ITEM_\((.*?)\)_METI_)')
-                re_key = re.compile(r'_KEY_\(*(.*?)\)', re.DOTALL|re.MULTILINE) # Remove the multiline ?
-                format_item_mappings = os.listdir(format_item_dir)
-                lines = re_line.findall(template)
-                for (i, line) in enumerate(lines):
-                    lines[i] = line + (re_key.findall(line[1]),)
-                requested_files = re_file.findall(template)
-                if len(requested_files) == 0:
-                    break
-        elif format and format[0] == 'csv':
-            keys = config['keys']
-            line = ', '.join('_KEY_(%s)' % k for k in keys)
-            lines = [ (line, line, keys) ]
-            template = line
-        return (lines, template)
+    """
+    Prepare listall output template
 
-def load_info_from_json(service, environment_name, scout2_folder = None, full_config = False):
-    report_filename, config_filename = get_scout2_paths(environment_name, scout2_folder = scout2_folder)
-    try:
-        if os.path.isfile(config_filename):
-            with open(config_filename) as f:
-                json_payload = f.readlines()
-                json_payload.pop(0)
-                json_payload = ''.join(json_payload)
-                aws_config = json.loads(json_payload)
-        else:
-            aws_config = {}
-    except Exception as e:
-        printException(e)
-        return {}
-    if full_config:
-        return aws_config
-    else:
-        return aws_config['services'][service] if 'services' in aws_config and service in aws_config['services'] else {}
-
-def load_from_json(environment_name, config_filename = None):
-    if not config_filename:
-        report_filename, config_filename = get_scout2_paths(environment_name)
-    with open(config_filename) as f:
-        json_payload = f.readlines()
-        json_payload.pop(0)
-        json_payload = ''.join(json_payload)
-        return json.loads(json_payload)
+    :param format_file:
+    :param format_item_dir:
+    :param format:
+    :param config:
+    :param option_prefix:
+    :param template:
+    :param skip_options:
+    :return:
+    """
+    # Set the list of keys if printing from a file spec
+    # _LINE_(whatever)_EOL_
+    # _ITEM_(resource)_METI_
+    # _KEY_(path_to_value)
+    if format_file and os.path.isfile(format_file):
+        if not template:
+            with open(format_file, 'rt') as f:
+                template = f.read()
+        # Optional files
+        if not skip_options:
+            re_option = re.compile(r'(%_OPTION_\((.*?)\)_NOITPO_)')
+            optional_files = re_option.findall(template)
+            for optional_file in optional_files:
+                if optional_file[1].startswith(option_prefix + '-'):
+                    with open(os.path.join(format_item_dir, optional_file[1].strip()), 'rt') as f:
+                        template = template.replace(optional_file[0].strip(), f.read())
+        # Include files if needed
+        re_file = re.compile(r'(_FILE_\((.*?)\)_ELIF_)')
+        while True:
+            requested_files = re_file.findall(template)
+            available_files = os.listdir(format_item_dir)
+            for requested_file in requested_files:
+                if requested_file[1].strip() in available_files:
+                    with open(os.path.join(format_item_dir, requested_file[1].strip()), 'rt') as f:
+                        template = template.replace(requested_file[0].strip(), f.read())
+            # Find items and keys to be printed
+            re_line = re.compile(r'(_ITEM_\((.*?)\)_METI_)')
+            re_key = re.compile(r'_KEY_\(*(.*?)\)', re.DOTALL|re.MULTILINE) # Remove the multiline ?
+            format_item_mappings = os.listdir(format_item_dir)
+            lines = re_line.findall(template)
+            for (i, line) in enumerate(lines):
+                lines[i] = line + (re_key.findall(line[1]),)
+            requested_files = re_file.findall(template)
+            if len(requested_files) == 0:
+                break
+    elif format and format[0] == 'csv':
+        keys = config['keys']
+        line = ', '.join('_KEY_(%s)' % k for k in keys)
+        lines = [ (line, line, keys) ]
+        template = line
+    return (lines, template)
 
 
-
-
-#
-# Format and print the output of ListAll 
-#
 def generate_listall_output(lines, resources, aws_config, template, arguments, nodup = False):
+    """
+    Format and print the output of ListAll
+
+    :param lines:
+    :param resources:
+    :param aws_config:
+    :param template:
+    :param arguments:
+    :param nodup:
+    :return:
+    """
     for line in lines:
         output = []
         for resource in resources:
@@ -491,7 +368,14 @@ def generate_listall_output(lines, resources, aws_config, template, arguments, n
         template = template.replace('_ARG_%d_' % i, argument)
     return template
 
+
 def prompt_4_yes_no(question):
+    """
+    Ask a question and prompt for yes or no
+
+    :param question:                    Question to ask; answer is yes/no
+    :return:                            :boolean
+    """
     while True:
         sys.stdout.write(question + ' (y/n)? ')
         try:
@@ -505,33 +389,16 @@ def prompt_4_yes_no(question):
         else:
             printError('\'%s\' is not a valid answer. Enter \'yes\'(y) or \'no\'(n).' % choice)
 
+
 def prompt_4_overwrite(filename, force_write):
-    # Do not prompt if the file does not exist or force_write is set
+    """
+    Confirm before overwriting existing files. Do not prompt if the file does not exist or force_write is set
+
+    :param filename:                    Name of the file to be overwritten
+    :param force_write:                 Do not ask for confirmation and automatically return True if set
+    :return:                            :boolean
+    """
+    #
     if not os.path.exists(filename) or force_write:
         return True
     return prompt_4_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename))
-
-def save_blob_to_file(filename, blob, force_write, debug):
-    try:
-        if prompt_4_overwrite(filename, force_write):
-            with open(filename, 'wt') as f:
-                write_data_to_file(f, blob, force_write, debug)
-    except Exception as e:
-        printException(e)
-        pass
-
-#
-# Save AWS configuration (python dictionary) as JSON
-#
-def save_config_to_file(environment_name, config, force_write = False, debug = False, js_filename = AWSCONFIG_FILE, js_varname = 'aws_info', quiet = False):
-    try:
-        with open_file(environment_name, force_write, js_filename, quiet) as f:
-            print('%s =' % js_varname, file = f)
-            write_data_to_file(f, config, force_write, debug)
-    except Exception as e:
-        printException(e)
-        pass
-
-def write_data_to_file(f, aws_config, force_write, debug):
-    print('%s' % json.dumps(aws_config, indent = 4 if debug else None, separators=(',', ': '), sort_keys=True, cls=Scout2Encoder), file = f)
-

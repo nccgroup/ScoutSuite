@@ -19,7 +19,7 @@ except ImportError:
     from queue import Queue
 
 
-from AWSScout2.new_utils import format_service_name
+from AWSScout2.utils import format_service_name
 
 ########################################
 # Globals

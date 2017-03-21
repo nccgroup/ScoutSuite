@@ -8,8 +8,8 @@ from opinel.utils_ec2 import get_name
 from opinel.load_data import load_data
 
 # Import AWSScout2
-from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients, ec2_classic
-from AWSScout2.utils import handle_truncated_response, manage_dictionary, get_keys
+from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig
+from AWSScout2.utils import manage_dictionary, get_keys, ec2_classic
 
 
 

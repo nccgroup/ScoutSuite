@@ -71,6 +71,20 @@ class Scout2ArgumentParser(OpinelArgumentParser):
                                 nargs='+',
                                 help='Name of services you want to ignore')
 
+#        elif argument_name == 'format':
+#        parser.add_argument('--format',
+#                            dest='format',
+#                            default=['csv'],
+#                            nargs='+',
+#                            help='Listall output format')
+#
+#    elif argument_name == 'format-file':
+#    parser.add_argument('--format-file',
+#                        dest='format_file',
+#                        default=None,
+#                        nargs='+',
+#                        help='Listall output format file')
+
     def parse_args(self):
         args = self.parser.parse_args()
 
