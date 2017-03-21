@@ -31,6 +31,7 @@ class Scout2Report(object):
         self.exceptions = exceptions
         self.scout2_report_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
 
+
     def __prepare_scout2_report_dir(self):
         if not os.path.isdir(self.report_dir):
             os.makedirs(self.report_dir)
