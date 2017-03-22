@@ -21,7 +21,7 @@ from AWSScout2.configs.scout2 import  Scout2Config
 from AWSScout2.configs.services import postprocessing
 from AWSScout2.rules.postprocessing import do_postprocessing
 from AWSScout2.cli_parser import Scout2ArgumentParser
-from AWSScout2.report.fs import Scout2Report
+from AWSScout2.report.html import Scout2Report
 from AWSScout2 import __version__ as scout2_version
 
 

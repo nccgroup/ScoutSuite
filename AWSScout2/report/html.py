@@ -43,6 +43,9 @@ class Scout2Encoder(json.JSONEncoder):
 
 
 class Scout2Report(object):
+    """
+    HTML report
+    """
 
     def __init__(self, environment_name, report_dir = None, timestamp = None, exceptions = {}):
         self.report_dir = report_dir if report_dir else DEFAULT_REPORT_DIR
@@ -158,41 +161,11 @@ class Scout2Report(object):
             json_payload = ''.join(json_payload)
         return json.loads(json_payload)
 
-        #save_config_to_file(self.report_dir, self.environment_name, 'config', aws_config, force_write, debug)
-
 
 
 ########################################
 # Functions
 ########################################
-
-
-def load_from_json(environment_name, config_filename = None):
-    if not config_filename:
-        report_filename, config_filename = get_scout2_paths(environment_name)
-    with open(config_filename) as f:
-        json_payload = f.readlines()
-        json_payload.pop(0)
-        json_payload = ''.join(json_payload)
-        return json.loads(json_payload)
-
-
-#
-# Return the filename of the Scout2 report and config
-#
-def get_scout2_paths(environment_name, scout2_folder = None, js_filename = None):
-    if not js_filename:
-        js_filename = AWSCONFIG_FILE
-    if environment_name == 'default':
-        report_filename = 'report.html'
-        config_filename = AWSCONFIG_DIR + '/' + js_filename + '.js'
-    else:
-        report_filename = ('report-%s.html' % environment_name)
-        config_filename = ('%s/%s-%s.js' % (AWSCONFIG_DIR, js_filename, environment_name))
-    if scout2_folder:
-        report_filename = os.path.join(scout2_folder[0], report_filename)
-        config_filename = os.path.join(scout2_folder[0], config_filename)
-    return report_filename, config_filename
 
 
 def open_file(config_filename, force_write, quiet = False):
@@ -208,10 +181,6 @@ def open_file(config_filename, force_write, quiet = False):
            printException(e)
     else:
         return None
-
-
-
-
 
 
 def prompt_4_yes_no(question):
