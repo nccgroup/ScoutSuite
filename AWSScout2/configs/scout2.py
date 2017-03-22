@@ -6,7 +6,6 @@ from __future__ import unicode_literals
 import json
 
 from AWSScout2.configs.services import ServicesConfig
-#from AWSScout2.utils import *
 
 class Scout2Config(object):
     """
@@ -95,16 +94,5 @@ class Scout2Config(object):
                       else:
                         self.metadata[service_group][service]['resources'][resource]['count'] = getattr(service_config, count)
 
-
-    def finalize(self, aws_config, current_time, args):
-        # Set AWS account ID
-        aws_config['account_id'] = 'TODO' # get_aws_account_id(self.services['iam'])
-        # Save info about run
-        aws_config['last_run'] = {}
-        aws_config['last_run']['time'] = current_time.strftime("%Y-%m-%d %H:%M:%S%z")
-        aws_config['last_run']['cmd'] = ' '.join(args)
-        aws_config['last_run']['version'] = __version__
-        #aws_config['last_run']['ruleset_name'] = ruleset_filename.replace('rulesets/', '').replace('.json', '')
-        #aws_config['last_run']['ruleset_about'] = ruleset['about'] if 'about' in ruleset else ''
 
 

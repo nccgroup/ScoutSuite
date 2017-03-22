@@ -6,6 +6,7 @@ from __future__ import print_function
 from opinel.utils import printException, printInfo, prompt_4_overwrite
 
 import datetime
+import dateutil
 import json
 import os
 import zipfile
@@ -36,11 +37,10 @@ class Scout2Report(object):
     def __init__(self, environment_name, report_dir = None, timestamp = None, exceptions = {}):
         self.report_dir = report_dir if report_dir else DEFAULT_REPORT_DIR
         self.environment_name = environment_name.replace('/', '_').replace('\\', '_') # Issue 111
+        self.current_time = datetime.datetime.now(dateutil.tz.tzlocal())
         if timestamp != False:
-            if not timestamp:
-                current_time = datetime.datetime.now(dateutil.tz.tzlocal())
-                timestamp = current_time.strftime("%Y-%m-%d_%Hh%M%z")
-            self.environment_name = '%s-%s' % (self.environment_name, timestamp)
+            self.timestamp = self.current_time.strftime("%Y-%m-%d_%Hh%M%z") if not timestamp else timestamp
+            self.environment_name = '%s-%s' % (self.environment_name, self.timestamp)
         self.exceptions = exceptions
         self.scout2_report_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
 
@@ -59,7 +59,8 @@ class Scout2Report(object):
         zip_ref.close()
 
 
-    def save(self, aws_config, exceptions, force_write = False, debug = False):
+    def save(self, aws_config, exceptions, last_run, force_write = False, debug = False):
+        aws_config['last_run'] = last_run
         self.__prepare_scout2_report_dir()
         self.__save_config_to_file(aws_config, 'config', force_write, debug)
         self.__save_config_to_file(exceptions, 'exceptions', force_write, debug)

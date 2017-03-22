@@ -41,6 +41,7 @@ class Ruleset(object):
         self.filename = ruleset_filename
         if not self.filename:
             self.search_ruleset(environment_name)
+        self.name = os.path.basename(self.filename).replace('.json','')
         # Load ruleset
         self.ruleset = {}
         if load_ruleset:

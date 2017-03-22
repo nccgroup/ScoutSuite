@@ -3,6 +3,7 @@
 
 # Import stock packages
 import sys
+import json
 
 # Import opinel
 try:
@@ -21,6 +22,7 @@ from AWSScout2.configs.services import postprocessing
 from AWSScout2.rules.postprocessing import do_postprocessing
 from AWSScout2.cli_parser import Scout2ArgumentParser
 from AWSScout2.report.fs import Scout2Report
+from AWSScout2 import __version__ as scout2_version
 
 
 ########################################
@@ -58,7 +60,7 @@ def main():
     if not args.fetch_local:
         aws_config.fetch(credentials, regions=args.regions, partition_name=args.partition_name)
         aws_config.update_metadata()
-        report.save(aws_config, {}, args.force_write, args.debug)
+        report.save(aws_config, {}, None, args.force_write, args.debug)
 
     # Reload to flatten everything into a python dictionary
     aws_config = report.load()
@@ -66,6 +68,7 @@ def main():
     # Analyze config
     ruleset = Ruleset(profile_name)
     ruleset.analyze(aws_config)
+
 
     # Create display filters
     filters = Ruleset(ruleset_filename = 'rulesets/filters.json', rule_type = 'filters')
@@ -75,8 +78,15 @@ def main():
     postprocessing(aws_config)
     do_postprocessing(aws_config)
 
+
     # Handle exceptions
     process_exceptions(aws_config, args.exceptions[0])
 
     # Save config and create HTML report
-    report.save(aws_config, {}, args.force_write, args.debug)
+    last_run = {}
+    last_run['time'] = report.current_time.strftime("%Y-%m-%d %H:%M:%S%z")
+    last_run['cmd'] = ' '.join(sys.argv)
+    last_run['version'] = scout2_version
+    last_run['ruleset_name'] = ruleset.name
+    last_run['ruleset_about'] = ruleset.ruleset['about'] if 'about' in ruleset.ruleset else ''
+    report.save(aws_config, {}, last_run, args.force_write, args.debug)
