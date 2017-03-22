@@ -1,9 +1,0 @@
-{
-    "description": "Lack of Enhanced Monitoring",
-    "path": "rds.regions.id.vpcs.id.instances.id",
-    "dashboard_name": "Instances",
-    "conditions": [ "and",
-        [ "rds.regions.id.vpcs.id.instances.id.EnhancedMonitoringResourceArn", "null", "" ]
-    ],
-    "id_suffix": "EnhancedMonitoringResourceArn"
-}
