@@ -9,7 +9,14 @@ import datetime
 import dateutil
 import json
 import os
+import sys
 import zipfile
+
+
+
+########################################
+# Globals
+########################################
 
 DEFAULT_REPORT_DIR = 'scout2-report'
 AWSCONFIG_FILE = 'inc-awsconfig/aws_config.js'
@@ -20,6 +27,10 @@ REPORT_TITLE  = 'AWS Scout2 Report'
 
 
 
+########################################
+# Classes
+########################################
+
 class Scout2Encoder(json.JSONEncoder):
     """
     JSON encoder class
@@ -29,7 +40,6 @@ class Scout2Encoder(json.JSONEncoder):
             return str(o)
         else:
             return vars(o)
-
 
 
 class Scout2Report(object):
@@ -60,7 +70,8 @@ class Scout2Report(object):
 
 
     def save(self, aws_config, exceptions, last_run, force_write = False, debug = False):
-        aws_config['last_run'] = last_run
+        if type(aws_config) == dict:
+            aws_config['last_run'] = last_run
         self.__prepare_scout2_report_dir()
         self.__save_config_to_file(aws_config, 'config', force_write, debug)
         self.__save_config_to_file(exceptions, 'exceptions', force_write, debug)
@@ -95,8 +106,10 @@ class Scout2Report(object):
                     for line in f:
                         newline = line.replace(REPORT_TITLE, REPORT_TITLE + ' [' + self.environment_name + ']')
                         if self.environment_name != 'default':
-                            newline = newline.replace(def_config_filename, new_config_filename)
-                            newline = newline.replace(def_exceptions_filename, new_exceptions_filename)
+                            new_config_filename = AWSCONFIG_FILE.replace('.js', '-%s.js' % self.environment_name)
+                            new_exceptions_filename = EXCEPTIONS_FILE.replace('.js', '-%s.js' % self.environment_name)
+                            newline = newline.replace(AWSCONFIG_FILE, new_config_filename)
+                            newline = newline.replace(EXCEPTIONS_FILE, new_exceptions_filename)
                         newline = newline.replace('<!-- PLACEHOLDER -->', contents)
                         nf.write(newline)
 
@@ -149,6 +162,11 @@ class Scout2Report(object):
 
 
 
+########################################
+# Functions
+########################################
+
+
 def load_from_json(environment_name, config_filename = None):
     if not config_filename:
         report_filename, config_filename = get_scout2_paths(environment_name)
@@ -159,6 +177,22 @@ def load_from_json(environment_name, config_filename = None):
         return json.loads(json_payload)
 
 
+#
+# Return the filename of the Scout2 report and config
+#
+def get_scout2_paths(environment_name, scout2_folder = None, js_filename = None):
+    if not js_filename:
+        js_filename = AWSCONFIG_FILE
+    if environment_name == 'default':
+        report_filename = 'report.html'
+        config_filename = AWSCONFIG_DIR + '/' + js_filename + '.js'
+    else:
+        report_filename = ('report-%s.html' % environment_name)
+        config_filename = ('%s/%s-%s.js' % (AWSCONFIG_DIR, js_filename, environment_name))
+    if scout2_folder:
+        report_filename = os.path.join(scout2_folder[0], report_filename)
+        config_filename = os.path.join(scout2_folder[0], config_filename)
+    return report_filename, config_filename
 
 
 def open_file(config_filename, force_write, quiet = False):
