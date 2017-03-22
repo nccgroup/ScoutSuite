@@ -1,15 +1,15 @@
 
       <!-- Dasboard partial -->
-      <script id="services.id.violations.partial" type="text/x-handlebars-template">
-        <div class="row" id="services.{{service_name}}.violations.row">
-          <div class="col-sm-12" id="services.{{service_name}}.violations.list">
-              {{#if violations}}
-                {{#grouped_each 3 violations}}
+      <script id="services.id.findings.partial" type="text/x-handlebars-template">
+        <div class="row" id="services.{{service_name}}.findings.row">
+          <div class="col-sm-12" id="services.{{service_name}}.findings.list">
+              {{#if findings}}
+                {{#grouped_each 3 findings}}
                   <div class="row">
                     {{#each this}}
                       <div class="col-sm-4">
                         <div class="list-group-item finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
-                          <a href="#services.{{service}}.violations.{{@key}}.items">
+                          <a href="#services.{{service}}.findings.{{@key}}.items">
                             {{description}}
                           </a>
                         </div>
@@ -28,6 +28,6 @@
         </div>
       </script>
       <script>
-        Handlebars.registerPartial("dashboard", $("#services\\.id\\.violations\\.partial").html());
+        Handlebars.registerPartial("dashboard", $("#services\\.id\\.findings\\.partial").html());
       </script>
 

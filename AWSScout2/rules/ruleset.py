@@ -28,7 +28,7 @@ aws_ip_ranges_filename = 'ip-ranges.json'
 ip_ranges_from_args = 'ip-ranges-from-args'
 
 FILTERS_DIR = 'filters'
-RULES_DIR = 'rules'
+FINDINGS_DIR = 'findings'
 RULESETS_DIR = 'rulesets'
 DEFAULT_RULESET = '%s/default.json' % RULESETS_DIR
 
@@ -38,9 +38,10 @@ class Ruleset(object):
     TODO
     """
 
-    def __init__(self, environment_name = 'default', ruleset_filename = None, services = [], load_ruleset = True, load_rules = True, rule_type = 'violations'):
+    def __init__(self, environment_name = 'default', ruleset_filename = None, services = [], load_ruleset = True, load_rules = True, rule_type = 'findings'):
+        self.rules_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
         # Ruleset filename
-        self.filename = ruleset_filename
+        self.filename = self.find_file(ruleset_filename)
         if not self.filename:
             self.search_ruleset(environment_name)
         self.name = os.path.basename(self.filename).replace('.json','')
@@ -59,17 +60,18 @@ class Ruleset(object):
 
 
     def load_ruleset(self, quiet = False):
-        if not self.filename or not os.path.exists(self.filename):
+        if self.filename and os.path.exists(self.filename):
+            try:
+                with open(self.filename, 'rt') as f:
+                    self.ruleset = json.load(f)
+            except Exception as e:
+                printException(e)
+                printError('Error: ruleset file %s contains malformed JSON.' % self.filename)
+                self.ruleset = {}
+        else:
+            self.ruleset = {}
             if not quiet:
                 printError('Error: the file %s does not exist.' % self.filename)
-            return None
-        try:
-            with open(self.filename, 'rt') as f:
-                self.ruleset = json.load(f)
-        except Exception as e:
-            printException(e)
-            printError('Error: ruleset file %s contains malformed JSON.' % self.filename)
-            return None
 
 
     def search_ruleset(self, environment_name):
@@ -127,10 +129,17 @@ class Ruleset(object):
     def load_json_rule(self, rule_metadata, ip_ranges, aws_account_id):
         config = None
         config_file = rule_metadata['filename']
-        if not config_file.startswith('rules/') and not config_file.startswith('filters/'):
-            config_file = '%s/%s' % (self.rule_type, config_file)
         config_args = rule_metadata['args'] if 'args' in rule_metadata else []
+        # Determine the file path
+        if not os.path.isfile(config_file):
+            # Not a valid relative / absolute path, check locally under findings/ or filters/
+            if not config_file.startswith('findings/') and not config_file.startswith('filters/'):
+                config_file = '%s/%s' % (self.rule_type, config_file)
+            if not os.path.isfile(config_file):
+                config_file = os.path.join(self.rules_data_path, config_file)
+        # Read the file
         try:
+            #print('Reading %s' % config_file)
             with open(config_file, 'rt') as f:
                 config = f.read()
             # Replace arguments
@@ -188,7 +197,7 @@ class Ruleset(object):
                 aws_config['services'][service][self.rule_type][rule] = {}
                 aws_config['services'][service][self.rule_type][rule]['description'] = self.rules[finding_path][rule]['description']
                 aws_config['services'][service][self.rule_type][rule]['path'] = self.rules[finding_path][rule]['path']
-                if self.rule_type == 'violations':
+                if self.rule_type == 'findings':
                     aws_config['services'][service][self.rule_type][rule]['level'] = self.rules[finding_path][rule]['level']
                 if 'id_suffix' in self.rules[finding_path][rule]:
                     aws_config['services'][service][self.rule_type][rule]['id_suffix'] = self.rules[finding_path][rule]['id_suffix']
@@ -206,3 +215,21 @@ class Ruleset(object):
                     aws_config['services'][service][self.rule_type][rule]['checked_items'] = 0
                     aws_config['services'][service][self.rule_type][rule]['flagged_items'] = 0
                     printException(e)
+
+
+    def find_file(self, filename, filetype = 'rulesets'):
+        """
+
+        :param filename:
+        :param filetype:
+        :return:
+        """
+        if filename and not os.path.isfile(filename):
+            # Not a valid relative / absolute path, check Scout2's data under findings/ or filters/
+            if not filename.startswith('findings/') and not filename.startswith('filters/'):
+                filename = '%s/%s' % (filetype, filename)
+            if not os.path.isfile(filename):
+                filename = os.path.join(self.rules_data_path, filename)
+            if not os.path.isfile(filename):
+                filename = None
+        return filename

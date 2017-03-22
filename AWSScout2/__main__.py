@@ -69,9 +69,8 @@ def main():
     ruleset = Ruleset(profile_name)
     ruleset.analyze(aws_config)
 
-
     # Create display filters
-    filters = Ruleset(ruleset_filename = 'rulesets/filters.json', rule_type = 'filters')
+    filters = Ruleset(ruleset_filename = 'filters.json', rule_type = 'filters')
     filters.analyze(aws_config)
 
     # Finalize

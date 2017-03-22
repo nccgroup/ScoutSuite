@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 
 import json
+import os
 
 from AWSScout2.configs.services import ServicesConfig
 
@@ -49,7 +50,8 @@ class Scout2Config(object):
 
     def __load_metadata(self):
         # Load metadata
-        with open('metadata.json', 'rt') as f:
+        scout2_configs_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
+        with open(os.path.join(scout2_configs_data_path, 'metadata.json'), 'rt') as f:
             self.metadata = json.load(f)
 
     def save_to_file(self, environment_name, force_write = False, debug = False, js_filename = 'aws_config', js_varname = 'aws_info', quiet = False):
@@ -93,6 +95,3 @@ class Scout2Config(object):
                                 self.metadata[service_group][service]['resources'][resource]['count'] += getattr(service_config.regions[region], count)
                       else:
                         self.metadata[service_group][service]['resources'][resource]['count'] = getattr(service_config, count)
-
-
-

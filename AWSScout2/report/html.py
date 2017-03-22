@@ -9,6 +9,7 @@ import datetime
 import dateutil
 import json
 import os
+import shutil
 import sys
 import zipfile
 
@@ -64,12 +65,17 @@ class Scout2Report(object):
         aws_config_dir = os.path.join(self.report_dir, 'inc-awsconfig')
         if not os.path.isdir(aws_config_dir):
             os.makedirs(aws_config_dir)
-        # Copy static files
-        print('Data path = %s' % self.scout2_report_data_path)
+        # Copy static 3rd-party files
         archive = os.path.join(self.scout2_report_data_path, 'includes.zip')
         zip_ref = zipfile.ZipFile(archive)
         zip_ref.extractall(self.report_dir)
         zip_ref.close()
+        # Copy static files
+        inc_scout2_dir = os.path.join(self.report_dir, 'inc-scout2')
+        src_inc_scout2_dir = os.path.join(self.scout2_report_data_path, 'inc-scout2')
+        if os.path.isdir(inc_scout2_dir):
+            shutil.rmtree(inc_scout2_dir)
+        shutil.copytree(src_inc_scout2_dir, inc_scout2_dir)
 
 
     def save(self, aws_config, exceptions, last_run, force_write = False, debug = False):
