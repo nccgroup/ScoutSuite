@@ -47,7 +47,7 @@ class Scout2ArgumentParser(OpinelArgumentParser):
                                 default=False,
                                 nargs='?',
                                 help='Add a timestamp to the name of the report (default is current time in UTC)')
-        self.parser.add_argument('--report-dir',
+        self.parser.add_argument('--output-dir',
                                 dest='report_dir',
                                 default=None,
                                 nargs='?',

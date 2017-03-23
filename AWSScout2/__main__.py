@@ -9,7 +9,7 @@ import json
 try:
     from opinel.utils import check_opinel_version, configPrintException, get_opinel_requirement, read_creds
 except Exception as e:
-    print('Error: Scout2 now depends on the opinel package (previously AWSUtils submodule). Install all the requirements with the following command:')
+    print('Error: Scout2 depends on the opinel package. Install all the requirements with the following command:')
     print('  $ pip install -r requirements.txt')
     print(e)
     sys.exit(42)

@@ -6,11 +6,13 @@ from __future__ import unicode_literals
 from opinel.utils import printException, printError, printInfo, printDebug, connect_service, manage_dictionary, read_ip_ranges
 from AWSScout2.rules.utils import recurse
 from AWSScout2.rules import condition_operators
+from AWSScout2.fs.utils import prepare_html_output_dir, save_config_to_file
 
 import fnmatch
 import json
 import os
 import re
+import shutil
 
 finding_levels = ['danger', 'warning']
 
@@ -38,8 +40,9 @@ class Ruleset(object):
     TODO
     """
 
-    def __init__(self, environment_name = 'default', ruleset_filename = None, services = [], load_ruleset = True, load_rules = True, rule_type = 'findings'):
+    def __init__(self, environment_name = 'default', ruleset_filename = None, services = [], load_ruleset = True, load_rules = True, rule_type = 'findings', rules_dir = None):
         self.rules_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
+        self.environment_name = environment_name
         # Ruleset filename
         self.filename = self.find_file(ruleset_filename)
         if not self.filename:
@@ -49,6 +52,7 @@ class Ruleset(object):
         self.ruleset = {}
         if load_ruleset:
             self.load_ruleset()
+        self.update_ruleset(rules_dir)
         # Rules or filters ?
         self.rule_type = rule_type
         # Load rules
@@ -73,6 +77,95 @@ class Ruleset(object):
             if not quiet:
                 printError('Error: the file %s does not exist.' % self.filename)
 
+    def update_ruleset(self, rules_dir):
+        if rules_dir == None:
+            return
+        self.available_rules = {}
+        parameterized_rules = []
+        self.services = []
+        for rule in self.ruleset['rules']:
+            rule['filename'] = rule['filename'].replace('rules/', '')
+            if not 'args' in rule:
+                self.available_rules[rule['filename']] = rule
+            else:
+                parameterized_rules.append(rule)
+        # Add default location
+        rules_dir.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data/findings'))
+        for dir in rules_dir:
+            rule_filenames = [f for f in os.listdir(dir) if os.path.isfile(os.path.join(dir, f))]
+            for rule_filename in rule_filenames:
+                self.services.append(rule_filename.split('-')[0].lower())
+                printDebug('Loading %s' % rule_filename)
+                with open('%s/%s' % (dir, rule_filename), 'rt') as f:
+                    rule = json.load(f)
+                    if not 'key' in rule and not 'arg_names' in rule:
+                        # Non-parameterized rule, save it
+                        if rule_filename in self.available_rules:
+                            self.available_rules[rule_filename].update(rule)
+                        else:
+                            self.available_rules[rule_filename] = rule
+                            self.available_rules[rule_filename]['enabled'] = False
+                            if 'level' not in self.available_rules[rule_filename]:
+                                self.available_rules[rule_filename]['level'] = 'danger'
+                                self.available_rules[rule_filename]['filename'] = rule_filename
+                    else:
+                        # Parameterized rules, find all occurences and save N times
+                        parameterized_rule_found = False
+                        for prule in parameterized_rules:
+                            if prule['filename'] == rule_filename:
+                                parameterized_rule_found = True
+                                for k in rule:
+                                    prule[k] = set_argument_values(rule[k], prule['args'],
+                                                                   convert=True) if k != 'conditions' else rule[k]
+                                key = prule.pop('key') if 'key' in prule else prule['filename']
+                                args = prule.pop('args')
+                                if not 'arg_names' in prule:
+                                    printError('No arg names key in %s' % rule_filename)
+                                    continue
+                                arg_names = prule.pop('arg_names')
+                                if len(args) != len(arg_names):
+                                    printError('Error: rule %s expects %d arguments but was provided %d.' % (
+                                    rule_filename, len(arg_names), len(args)))
+                                    continue
+                                prule['args'] = []
+                                for (arg_name, arg_value) in zip(arg_names, args):
+                                    prule['args'].append({'arg_name': arg_name, 'arg_value': arg_value})
+                                if 'level' not in prule:
+                                    prule['level'] = 'danger'
+                                    self.available_rules[key] = prule
+                        if not parameterized_rule_found:
+                            # Save once with no parameters
+                            self.available_rules[rule_filename] = rule
+                            self.available_rules[rule_filename]['enabled'] = False
+                            if 'level' not in self.available_rules[rule_filename]:
+                                self.available_rules[rule_filename]['level'] = 'danger'
+                                self.available_rules[rule_filename]['filename'] = rule_filename
+                            args = []
+                            for a in rule['arg_names']:
+                                args.append({'arg_name': a, 'arg_value': ''})
+                                self.available_rules[rule_filename]['args'] = args
+                            printDebug('Saving rule without parameter value: %s' % rule_filename)
+
+
+    def html_generator(self, output_dir, force_write, debug):
+        # Prepare the output directories
+        prepare_html_output_dir(output_dir)
+        # Create the JS include file
+        printInfo('Preparing the HTML ruleset generator...')
+        js_ruleset = {}
+        js_ruleset['name'] = self.name
+        js_ruleset['available_rules'] = self.available_rules
+        js_ruleset['services'] = list(sorted(set(self.services)))
+        save_config_to_file(self.environment_name, js_ruleset, 'ruleset', output_dir, force_write, debug)
+        # Create the HTML generator
+        html_generator = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../rules/data/ruleset-generator.html')
+        dst_html_generator = os.path.join(output_dir, 'ruleset-generator.html')
+        shutil.copyfile(html_generator, dst_html_generator)
+        return dst_html_generator
+
+
+
+
 
     def search_ruleset(self, environment_name):
         ruleset_found = False
@@ -84,7 +177,8 @@ class Ruleset(object):
                 self.filename = f
         if not ruleset_found:
             self.filename = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data/rulesets/default.json')
-            printInfo(self.filename)
+
+
 
 
     #
@@ -230,6 +324,17 @@ class Ruleset(object):
                 filename = '%s/%s' % (filetype, filename)
             if not os.path.isfile(filename):
                 filename = os.path.join(self.rules_data_path, filename)
-            if not os.path.isfile(filename):
-                filename = None
+            if not os.path.isfile(filename) and not filename.endswith('.json'):
+                filename = self.find_file('%s.json' % filename, filetype)
         return filename
+
+
+def set_argument_values(parameterized_input, target, convert = False):
+    if convert:
+        parameterized_input = json.dumps(parameterized_input)
+    args = re.findall(r'(_ARG_(\w+)_)', parameterized_input)
+    for arg in args:
+        index = int(arg[1])
+        parameterized_input = parameterized_input.replace(arg[0], target[index])
+    return json.loads(parameterized_input) if convert else parameterized_input
+

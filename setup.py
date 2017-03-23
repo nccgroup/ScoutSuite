@@ -27,10 +27,11 @@ setup(
     entry_points={
         'console_scripts': [
             'Scout2 = AWSScout2.__main__:main',
+            'Scout2RulesGenerator = AWSScout2.__rules_generator__:main'
         ]
     },
     packages=[
-        'AWSScout2', 'AWSScout2.configs', 'AWSScout2.report', 'AWSScout2.rules', 'AWSScout2.services'
+        'AWSScout2', 'AWSScout2.configs', 'AWSScout2.fs', 'AWSScout2.report', 'AWSScout2.rules', 'AWSScout2.services'
     ],
     package_data={
         'AWSScout2.configs': [
