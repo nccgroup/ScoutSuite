@@ -9,7 +9,7 @@ import re
 from opinel.utils import manage_dictionary, pass_condition
 
 from AWSScout2.rules import condition_operators
-from AWSScout2.report.output import get_value_at
+from AWSScout2.configs.browser import get_value_at
 
 
 

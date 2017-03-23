@@ -29,15 +29,25 @@ setup(
             'Scout2 = AWSScout2.__main__:main',
         ]
     },
-    packages=find_packages(exclude=['tests*']),
+    packages=[
+        'AWSScout2', 'AWSScout2.configs', 'AWSScout2.report', 'AWSScout2.rules', 'AWSScout2.services'
+    ],
     package_data={
-        NAME: [
-            'data/includes.zip',
-            'data/rules/*.json',
-            'data/rulesets/*.json',
+        'AWSScout2.configs': [
+            'data/*.json'
+        ],
+        'AWSScout2.report': [
             'data/html/*.html',
             'data/html/partials/*.html',
-            'data/html/summaries/*.html'
+            'data/html/summaries/*.html',
+            'data/includes.zip',
+            'data/inc-scout2/*.js',
+            'data/inc-scout2/*.css'
+        ],
+        'AWSScout2.rules': [
+            'data/filters/*.json',
+            'data/findings/*.json',
+            'data/rulesets/*.json'
         ]
     },
     include_package_data=True,
