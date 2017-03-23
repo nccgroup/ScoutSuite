@@ -46,6 +46,7 @@ setup(
             'data/inc-scout2/*.css'
         ],
         'AWSScout2.rules': [
+            'data/*.html',
             'data/filters/*.json',
             'data/findings/*.json',
             'data/rulesets/*.json'
