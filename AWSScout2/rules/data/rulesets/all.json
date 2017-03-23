@@ -643,16 +643,6 @@
                 "put",
                 "s3:PutObject*"
             ]
-        },
-        {
-            "level": "warning",
-            "filename": "s3-object-acls-mismatch-bucket.json",
-            "enabled": true
-        },
-        {
-            "level": "warning",
-            "filename": "s3-object-unencrypted.json",
-            "enabled": true
         }
     ]
 }
