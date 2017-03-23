@@ -1,0 +1,14 @@
+{
+    "arg_names" : [ "Action shortname", "Service:Action" ],
+    "dashboard_name": "Buckets",
+    "description": "All actions authorized to all principals",
+    "path": "s3.buckets.id.policy.Statement.id",
+    "display_path": "s3.buckets.id",
+    "conditions": [ "and",
+        [ "s3.buckets.id.", "withKey", "policy" ],
+        [ "s3.buckets.id.policy.Statement.id.Effect", "equal", "Allow" ],
+        [ "s3.buckets.id.policy.Statement.id", "withoutKey", "Condition" ],
+        [ "s3.buckets.id.policy.Statement.id.Principal", "containAtLeastOneOf", [ "*" ] ],
+        [ "s3.buckets.id.policy.Statement.id.Action", "containAtLeastOneOf", [ "s3:*", "*" ] ]
+    ]
+}

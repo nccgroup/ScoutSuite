@@ -16,7 +16,7 @@
         {{> services.s3.acls resource_type = 'bucket' resource_path = (concat 's3.buckets' @key)}}
         {{#if policy}}
           <div class="list-group-item">
-            {{> accordion_policy name = 'Bucket policy' document = policy policy_path = (concat 's3' @key 'policy')}}
+            {{> accordion_policy name = 'Bucket policy' document = policy policy_path = (concat 's3.buckets' @key 'policy')}}
           </div>
         {{/if}}
         {{> services.s3.bucket_iam_policies resource_type = 'groups' resource_count = groups_count}}

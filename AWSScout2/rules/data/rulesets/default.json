@@ -649,46 +649,51 @@
         },
         {
             "level": "danger",
-            "filename": "s3-bucket-world-policy.json",
-            "enabled": true,
-            "args": [
-                "all",
-                "s3:*"
-            ]
+            "filename": "s3-bucket-world-policy-star.json",
+            "enabled": true
         },
         {
             "level": "danger",
-            "filename": "s3-bucket-world-policy.json",
+            "filename": "s3-bucket-world-policy-arg.json",
             "enabled": true,
             "args": [
-                "delete",
+                "Delete",
                 "s3:Delete*"
             ]
         },
         {
             "level": "danger",
-            "filename": "s3-bucket-world-policy.json",
+            "filename": "s3-bucket-world-policy-arg.json",
             "enabled": true,
             "args": [
-                "get",
-                "s3:Get*"
+                "Get",
+                "s3:GetObject*"
             ]
         },
         {
             "level": "danger",
-            "filename": "s3-bucket-world-policy.json",
+            "filename": "s3-bucket-world-policy-arg.json",
             "enabled": true,
             "args": [
-                "list",
-                "s3:List*"
+                "List",
+                "s3:ListBucket*"
             ]
         },
         {
             "level": "danger",
-            "filename": "s3-bucket-world-policy.json",
+            "filename": "s3-bucket-world-policy-arg.json",
             "enabled": true,
             "args": [
-                "put",
+                "Put",
+                "s3:PutObject*"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "s3-bucket-world-policy-arg.json",
+            "enabled": true,
+            "args": [
+                "Manage",
                 "s3:Put*"
             ]
         },
