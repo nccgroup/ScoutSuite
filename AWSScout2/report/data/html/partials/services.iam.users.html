@@ -55,7 +55,7 @@
       </ul>
     </div>
     {{> services.iam.inline_policies resource_type = 'users' resource_id = id}}
-    {{> services.iam.managed_policies_list resource_type = 'users' resource_id = id}}
+    {{> services.iam.policies_list resource_type = 'users' resource_id = id}}
   </script>
   <script>
     Handlebars.registerPartial("services.iam.users", $("#services\\.iam\\.users\\.partial").html());

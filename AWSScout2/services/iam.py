@@ -277,11 +277,11 @@ class IAMConfig(BaseConfig):
                 for entity in self.policies[policy_id]['attached_to'][entity_type]:
                     entity['id'] = self.get_id_for_resource(entity_type, entity['name'])
                     entities = getattr(self, entity_type)
-                    manage_dictionary(entities[entity['id']], 'managed_policies', [])
-                    manage_dictionary(entities[entity['id']], 'managed_policies_counts', 0)
-                    entities[entity['id']]['managed_policies'].append(policy_id)
-                    entities[entity['id']]['managed_policies_counts'] += 1
-                    self.__parse_permissions(policy_id, self.policies[policy_id]['PolicyDocument'], 'managed_policies', entity_type, entity['id'])
+                    manage_dictionary(entities[entity['id']], 'policies', [])
+                    manage_dictionary(entities[entity['id']], 'policies_counts', 0)
+                    entities[entity['id']]['policies'].append(policy_id)
+                    entities[entity['id']]['policies_counts'] += 1
+                    self.__parse_permissions(policy_id, self.policies[policy_id]['PolicyDocument'], 'policies', entity_type, entity['id'])
         # Fetch the credentials report
         # Remove tmp variables that should not be dumped to JSON -- Probably common and move to BaseConfig and call super()
 

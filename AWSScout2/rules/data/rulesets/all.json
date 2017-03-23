@@ -229,7 +229,7 @@
             "args": [
                 "_LIST_(AllHumanUsers)",
                 "managed",
-                "managed_policies"
+                "policies"
             ]
         },
         {

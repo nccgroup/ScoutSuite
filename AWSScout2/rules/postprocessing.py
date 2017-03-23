@@ -159,9 +159,9 @@ def __update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entit
         if 'inline_policies' in policy_info:
             manage_dictionary(bucket[iam_entity][allowed_iam_entity], 'inline_policies', {})
             bucket[iam_entity][allowed_iam_entity]['inline_policies'].update(policy_info['inline_policies'])
-        if 'managed_policies' in policy_info:
-            manage_dictionary(bucket[iam_entity][allowed_iam_entity], 'managed_policies', {})
-            bucket[iam_entity][allowed_iam_entity]['managed_policies'].update(policy_info['managed_policies'])
+        if 'policies' in policy_info:
+            manage_dictionary(bucket[iam_entity][allowed_iam_entity], 'policies', {})
+            bucket[iam_entity][allowed_iam_entity]['policies'].update(policy_info['policies'])
     elif bucket_name == '*':
         for bucket in s3_info['buckets']:
             __update_iam_permissions(s3_info, bucket, iam_entity, allowed_iam_entity, policy_info)

@@ -6,8 +6,7 @@
             Inline Policies <span id="iam.{{resource_type}}.{{resource_id}}.inline_policies" class="badge pull-right btn-info">{{inline_policies_count}}</span>
           </h4>
           {{#each inline_policies}}
-            {{add_policy_path this ../resource_type ../resource_id 'inline_policies' @key}}
-            {{> services.iam.policy}}
+            {{> accordion_policy name = name document = PolicyDocument policy_path = (concat 'iam' ../resource_type ../resource_id 'inline_policies' @key 'PolicyDocument')}}
           {{/each}}
         </div>
     </script>

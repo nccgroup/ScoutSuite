@@ -29,7 +29,7 @@
           </div>
         </div>
         {{> services.iam.inline_policies resource_type = 'groups' resource_id = @key}}
-        {{> services.iam.managed_policies_list}}
+        {{> services.iam.policies_list}}
     </script>
     <script>
       Handlebars.registerPartial("services.iam.groups", $("#services\\.iam\\.groups\\.partial").html());

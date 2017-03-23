@@ -1,12 +1,11 @@
     <!-- Policy partial -->
     <script id="policy.partial" type="text/x-handlebars-template">
-      {{#each this}}
-        {{#unlessEqual @key 'policy_path'}}
+      {{#each document}}
           {{#ifEqual @key "Statement"}}
             &nbsp;&nbsp;"{{@key}}":&nbsp; [<br/>
             {{#each this}}
               <div class="item-margin">
-                <span id="{{../../../../policy_path}}.Statement.{{@key}}">{{{displayKey @key this}}}</span>
+                <span id="{{../../../policy_path}}.Statement.{{@key}}">{{{displayKey @key this}}}</span>
                 {{#unless @last}},{{/unless}}
               </div>
             {{/each}}                  
@@ -16,7 +15,6 @@
           {{/ifEqual}}
           {{#unless @last}},{{/unless}}
           <br/>
-        {{/unlessEqual}}
       {{/each}}
     </script>
     <script>

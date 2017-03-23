@@ -16,18 +16,7 @@
         {{> services.s3.acls resource_type = 'bucket' resource_path = (concat 's3.buckets' @key)}}
         {{#if policy}}
           <div class="list-group-item">
-            <div class="accordion">
-              <h4 class="list-group-item-heading accordion-heading">Bucket policy
-                <a class="accordion-toggle collapsed" data-toggle="collapse" href="#s3\.buckets\.{{@key}}\.policy">
-                  <span class="badge pull-right btn-info">Details</span>
-                </a>
-              </h4>
-              <div id="s3.buckets.{{@key}}.policy" class="accordion-body item-margin collapse">
-                <div class="accordion-inner">
-                  {{{displayPolicy policy}}}
-                </div>
-              </div>
-            </div>
+            {{> accordion_policy name = 'Bucket policy' document = policy policy_path = (concat 's3' @key 'policy')}}
           </div>
         {{/if}}
         {{> services.s3.bucket_iam_policies resource_type = 'groups' resource_count = groups_count}}

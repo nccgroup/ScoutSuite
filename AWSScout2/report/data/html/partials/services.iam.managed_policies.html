@@ -1,12 +1,11 @@
 
     <!-- IAM managed policy partial -->
-    <script id="services.iam.managed_policies.partial" type="text/x-handlebars-template">
+    <script id="services.iam.policies.partial" type="text/x-handlebars-template">
       <div class="list-group-item active">
         <h4 class="list-group-item-heading">{{name}}</h4>
       </div>
       <div class="list-group-item">
-        {{add_policy_path this 'managed_policies' @key}}
-        {{> services.iam.policy}}
+        {{> accordion_policy document = PolicyDocument policy_path = (concat 'iam.policies' @key 'PolicyDocument')}}
       </div>
       <div class="list-group-item">
         <h4 class="list-group-item-heading">Attached entities</h4>
@@ -23,15 +22,15 @@
       </div>
     </script>
     <script>
-      Handlebars.registerPartial("services.iam.managed_policies", $("#services\\.iam\\.managed_policies\\.partial").html());
+      Handlebars.registerPartial("services.iam.policies", $("#services\\.iam\\.policies\\.partial").html());
     </script>
 
     <!-- Single IAM managed policy template -->
-    <script id="services.iam.managed_policy.template" type="text/x-handlebars-template">
+    <script id="services.iam.policy.template" type="text/x-handlebars-template">
         <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.iam.managed_policies}}
+        {{> services.iam.policies}}
     </script>
     <script>
-        var single_iam_managed_policy_template = Handlebars.compile($("#services\\.iam\\.managed_policy\\.template").html());
+        var single_iam_policy_template = Handlebars.compile($("#services\\.iam\\.policy\\.template").html());
     </script>
 

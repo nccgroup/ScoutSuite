@@ -3,6 +3,9 @@
 S3-related classes and functions
 """
 
+import json
+from botocore.exceptions import ClientError
+
 # Import opinel
 from opinel.utils import handle_truncated_response, printError
 from opinel.utils_s3 import get_s3_bucket_location
@@ -104,9 +107,9 @@ def update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entity,
         if 'inline_policies' in policy_info:
             manage_dictionary(bucket[iam_entity][allowed_iam_entity], 'inline_policies', {})
             bucket[iam_entity][allowed_iam_entity]['inline_policies'].update(policy_info['inline_policies'])
-        if 'managed_policies' in policy_info:
-            manage_dictionary(bucket[iam_entity][allowed_iam_entity], 'managed_policies', {})
-            bucket[iam_entity][allowed_iam_entity]['managed_policies'].update(policy_info['managed_policies'])
+        if 'policies' in policy_info:
+            manage_dictionary(bucket[iam_entity][allowed_iam_entity], 'policies', {})
+            bucket[iam_entity][allowed_iam_entity]['policies'].update(policy_info['policies'])
     elif bucket_name == '*':
         for bucket in s3_info['buckets']:
             update_iam_permissions(s3_info, bucket, iam_entity, allowed_iam_entity, policy_info)
@@ -201,7 +204,11 @@ def get_s3_bucket_policy(api_client, bucket_name, bucket_info):
     try:
         bucket_info['policy'] = json.loads(api_client.get_bucket_policy(Bucket = bucket_name)['Policy'])
     except Exception as e:
-        pass
+        if type(e) == ClientError and e.response['Error']['Code'] == 'NoSuchBucketPolicy':
+            pass
+        else:
+            printException(e)
+
 
 def get_s3_bucket_versioning(api_client, bucket_name, bucket_info):
     try:

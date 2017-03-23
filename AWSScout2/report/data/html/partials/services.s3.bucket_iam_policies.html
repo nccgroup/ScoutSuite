@@ -18,13 +18,13 @@
                       <td width="20%" class="text-center">Condition?</td>
                     </tr>
                     {{#each (lookup . resource_type)}}
-                      {{#each managed_policies}}
+                      {{#each policies}}
                         <tr>
                         <td width="40%"><a href="javascript:showObject('services.iam.{{../../resource_type}}.{{@../key}}')">
                           {{get_value_at 'services.iam' ../../resource_type @../key 'name'}}
                         </a></td>
                         <td width="40%" class="text-center">
-                          <a href="javascript:showIAMManagedPolicy('{{@key}}')">{{get_value_at 'services.iam.managed_policies' @key 'name'}}</a>
+                          <a href="javascript:showIAMManagedPolicy('{{@key}}')">{{get_value_at 'services.iam.policies' @key 'name'}}</a>
                         </td>
                         <td width="20%" class="text-center">
                           {{has_condition  this}}

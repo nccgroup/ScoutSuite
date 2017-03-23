@@ -1,14 +1,14 @@
 {
     "arg_names": [ "Service", "Action" ],
     "description": "Managed policy allows non STS action",
-    "path": "iam.managed_policies.id.PolicyDocument.Statement.id",
-    "display_path": "iam.managed_policies.id",
+    "path": "iam.policies.id.PolicyDocument.Statement.id",
+    "display_path": "iam.policies.id",
     "dashboard_name": "Policies",
     "conditions": [ "and",
-        [ "iam.managed_policies.id.PolicyDocument.Statement.id.Effect", "equal", "Allow" ],
+        [ "iam.policies.id.PolicyDocument.Statement.id.Effect", "equal", "Allow" ],
         [ "or",
-            [ "iam.managed_policies.id.PolicyDocument.Statement.id.", "withoutKey", "Action" ],
-            [ "iam.managed_policies.id.PolicyDocument.Statement.id.Action", "containAtLeastOneDifferentFrom", "sts:AssumeRole" ]
+            [ "iam.policies.id.PolicyDocument.Statement.id.", "withoutKey", "Action" ],
+            [ "iam.policies.id.PolicyDocument.Statement.id.Action", "containAtLeastOneDifferentFrom", "sts:AssumeRole" ]
         ]
     ]
 }

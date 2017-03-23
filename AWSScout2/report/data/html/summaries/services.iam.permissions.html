@@ -49,7 +49,7 @@
                                           {{/if}}
                                         </li>
                                       {{/each}}
-                                      {{#each managed_policies}}
+                                      {{#each policies}}
                                         <li>
                                           {{../Resource}} granted in <a href="javascript:showObject('services.iam.policies.{{@key}}')">{{get_value_at 'services.iam.policies' @key 'name'}}</a>
                                           {{#if condition}}

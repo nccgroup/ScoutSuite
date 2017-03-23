@@ -99,7 +99,7 @@
             "enabled": true,
             "args": [
                 "managed",
-                "managed_policies"
+                "policies"
             ],
             "comment": "Recommendation1.15 (part 2/2)"
         },
