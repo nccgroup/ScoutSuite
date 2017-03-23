@@ -77,8 +77,7 @@ class BaseConfig(GlobalConfig):
             api_clients = {}
             for region in build_region_list(self.service, regions, partition_name):
                 api_clients[region] = connect_service('s3', credentials, region)
-
-            api_client = api_clients['us-east-1'] # TODO fix to be main region for each partition
+            api_client = api_clients[api_clients.keys()[0]]
         else:
             api_client = connect_service(self.service, credentials)
         # Threading to fetch & parse resources (queue consumer)
