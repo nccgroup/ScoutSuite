@@ -27,7 +27,8 @@ setup(
     entry_points={
         'console_scripts': [
             'Scout2 = AWSScout2.__main__:main',
-            'Scout2RulesGenerator = AWSScout2.__rules_generator__:main'
+            'Scout2RulesGenerator = AWSScout2.__rules_generator__:main',
+            'Scout2Listall = AWSScout2.__listall__:main'
         ]
     },
     packages=[

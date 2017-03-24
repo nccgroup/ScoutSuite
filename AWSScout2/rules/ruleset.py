@@ -184,7 +184,7 @@ class Ruleset(object):
     #
     # Initialize rules based on ruleset and services in scope
     #
-    def init_rules(self, ruleset, services, ip_ranges, aws_account_id, generator = False):
+    def init_rules(self, services, ip_ranges, aws_account_id, generator = False):
         # Load rules from JSON files
         for rule_metadata in self.ruleset['rules']:
             # Skip disabled rules

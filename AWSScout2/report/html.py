@@ -4,6 +4,7 @@
 from __future__ import print_function
 
 from opinel.utils import printException, printInfo, prompt_4_overwrite
+from AWSScout2.fs.utils import open_file, Scout2Encoder
 
 import datetime
 import dateutil

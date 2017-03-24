@@ -2,6 +2,72 @@
 # -*- coding: utf-8 -*-
 
 from opinel.cli_parser import OpinelArgumentParser
+from AWSScout2.fs.utils import DEFAULT_REPORT_DIR
+
+class ListallArgumentParser(OpinelArgumentParser):
+    """
+
+    """
+
+    def __init__(self, default_args = None):
+        super(ListallArgumentParser, self).__init__()
+        self.add_argument('debug', default_args)
+        self.add_argument('profile', default_args)
+
+        self.parser.add_argument('--format',
+                                    dest='format',
+                                    default=['csv'],
+                                    nargs='+',
+                                    help='Listall output format')
+        self.parser.add_argument('--format-file',
+                                dest='format_file',
+                                default=None,
+                                nargs='+',
+                                help='Listall output format file')
+        self.parser.add_argument('--timestamp',
+                                 dest='timestamp',
+                                 default=False,
+                                 nargs='?',
+                                 help='Add a timestamp to the name of the report (default is current time in UTC)')
+
+        self.parser.add_argument('--config',
+                            dest='config',
+                            default=None,
+                            help='Config file that sets the path and keys to be listed.')
+        self.parser.add_argument('--path',
+                            dest='path',
+                            default=[],
+                            nargs='+',
+                            help='Path of the resources to list (e.g. iam.users.id or ec2.regions.id.vpcs.id)')
+        self.parser.add_argument('--keys',
+                            dest='keys',
+                            default=[],
+                            nargs='+',
+                            help='Keys to be printed for the given object.')
+        self.parser.add_argument('--keys-from-file',
+                            dest='keys_file',
+                            default=[],
+                            nargs='+',
+                            help='Keys to be printed for the given object (read values from file.')
+        self.parser.add_argument('--ip-ranges',
+                            dest='ip_ranges',
+                            default=[],
+                            nargs='+',
+                            help='Config file(s) that contain your own IP ranges.')
+        self.parser.add_argument('--config-args',
+                            dest='config_args',
+                            default=[],
+                            nargs='+',
+                            help='Arguments to be passed to the config file.')
+        self.parser.add_argument('--report-dir',
+                                 dest='report_dir',
+                                 default=DEFAULT_REPORT_DIR,
+                                 help='Name / Path')
+
+    def parse_args(self):
+        args = self.parser.parse_args()
+        return args
+
 
 
 class Scout2ArgumentParser(OpinelArgumentParser):
@@ -68,19 +134,7 @@ class Scout2ArgumentParser(OpinelArgumentParser):
                                 nargs='+',
                                 help='Name of services you want to ignore')
 
-#        elif argument_name == 'format':
-#        parser.add_argument('--format',
-#                            dest='format',
-#                            default=['csv'],
-#                            nargs='+',
-#                            help='Listall output format')
-#
-#    elif argument_name == 'format-file':
-#    parser.add_argument('--format-file',
-#                        dest='format_file',
-#                        default=None,
-#                        nargs='+',
-#                        help='Listall output format file')
+
 
     def parse_args(self):
         args = self.parser.parse_args()
