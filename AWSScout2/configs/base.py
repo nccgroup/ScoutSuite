@@ -1,13 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-TODO
-"""
 
-from opinel.utils import printException, printInfo, connect_service, manage_dictionary, handle_truncated_response
-from opinel.utils import build_region_list
-
-
-# Import stock packages
 from hashlib import sha1
 import sys
 from threading import Event, Thread
@@ -17,6 +9,7 @@ try:
 except ImportError:
     from queue import Queue
 
+from opinel.utils import build_region_list, connect_service, handle_truncated_response, manage_dictionary, printException, printInfo
 
 from AWSScout2.utils import format_service_name
 

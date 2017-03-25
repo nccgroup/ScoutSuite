@@ -151,8 +151,6 @@ class RegionalServiceConfig(object):
 
 
 
-
-
 ########################################
 # RegionConfig
 ########################################
@@ -206,6 +204,7 @@ class RegionConfig(GlobalConfig):
                 q.put((callback, region, target))
         if not len(targets) and region not in status['regions']:
             status['regions'].append(region)
+
 
 
 ########################################

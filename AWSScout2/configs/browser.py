@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Import stock packages
 import copy
-
 
 
 ########################################
