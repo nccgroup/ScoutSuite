@@ -62,6 +62,9 @@ class HTMLReport(object):
 
 
 class Scout2Report(HTMLReport):
+    """
+    Scout2 HTML report
+    """
 
     def __init__(self, profile, report_dir = None, timestamp = False, exceptions = {}):
         self.html_root = HTMLREPORT_FILE
@@ -100,12 +103,15 @@ class Scout2Report(HTMLReport):
 
 
 
-class RulesGenerator(HTMLReport):
+class RulesetGenerator(HTMLReport):
+    """
+    HTML ruleset generator for Scout2
+    """
 
     def __init__(self, ruleset_name, report_dir = None, timestamp = False, exceptions = {}):
         self.html_root = GENERATOR_FILE
         self.ruleset_name = ruleset_name
-        super(RulesGenerator, self).__init__(ruleset_name, report_dir, timestamp, exceptions)
+        super(RulesetGenerator, self).__init__(ruleset_name, report_dir, timestamp, exceptions)
 
     def create_html_report(self, force_write):
         src_rule_generator = os.path.join(self.html_data_path, GENERATOR_FILE)
@@ -117,4 +123,3 @@ class RulesGenerator(HTMLReport):
         self.prepare_html_report_dir()
         self.jsrw.save_to_file(config, AWSRULESET, force_write, debug)
         return self.create_html_report(force_write)
-

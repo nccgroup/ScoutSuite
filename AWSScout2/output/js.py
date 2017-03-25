@@ -6,9 +6,9 @@ import dateutil
 import json
 import os
 
-from opinel.utils import printException, printError, printInfo
+from opinel.utils import printException, printInfo
 
-from AWSScout2 import AWSCONFIG, EXCEPTIONS, HTMLREPORT, AWSCONFIG_FILE, EXCEPTIONS_FILE, HTMLREPORT_FILE, DEFAULT_REPORT_DIR
+from AWSScout2 import DEFAULT_REPORT_DIR
 from AWSScout2.output.utils import get_filename, prompt_4_overwrite
 
 

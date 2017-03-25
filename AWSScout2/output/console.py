@@ -2,12 +2,6 @@
 
 from AWSScout2.configs.browser import get_value_at
 
-########################################
-# Globals
-########################################
-
-
-
 
 ########################################
 # Functions
@@ -94,5 +88,3 @@ def generate_listall_output(lines, resources, aws_config, template, arguments, n
     for (i, argument) in enumerate(arguments):
         template = template.replace('_ARG_%d_' % i, argument)
     return template
-
-
