@@ -1,18 +1,17 @@
-# Import future stuff...
+# -*- coding: utf-8 -*-
 from __future__ import print_function
 from __future__ import unicode_literals
-
-
-from opinel.utils import printException, printError, printInfo, printDebug, connect_service, manage_dictionary, read_ip_ranges
-from AWSScout2.rules.utils import recurse
-from AWSScout2.rules import condition_operators
-from AWSScout2.fs.utils import prepare_html_output_dir, save_config_to_file
 
 import fnmatch
 import json
 import os
 import re
 import shutil
+
+#from AWSScout2.output.utils import prepare_html_output_dir, save_config_to_file
+from AWSScout2.rules import condition_operators
+from AWSScout2.rules.utils import recurse
+from opinel.utils import printException, printError, printInfo, printDebug, manage_dictionary, read_ip_ranges
 
 finding_levels = ['danger', 'warning']
 
@@ -40,11 +39,11 @@ class Ruleset(object):
     TODO
     """
 
-    def __init__(self, environment_name = 'default', ruleset_filename = None, services = [], load_ruleset = True, load_rules = True, rule_type = 'findings', rules_dir = None):
+    def __init__(self, environment_name = 'default', filename = None, name = None, services = [], load_ruleset = True, load_rules = True, rule_type = 'findings', rules_dir = None):
         self.rules_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
         self.environment_name = environment_name
         # Ruleset filename
-        self.filename = self.find_file(ruleset_filename)
+        self.filename = self.find_file(filename)
         if not self.filename:
             self.search_ruleset(environment_name)
         self.name = os.path.basename(self.filename).replace('.json','')
@@ -61,6 +60,7 @@ class Ruleset(object):
             ip_ranges = {}
             aws_account_id = ''
             self.init_rules(services, ip_ranges, aws_account_id, False)
+        self.name = name
 
 
     def load_ruleset(self, quiet = False):

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from opinel.cli_parser import OpinelArgumentParser
-from AWSScout2.fs.utils import DEFAULT_REPORT_DIR
+from AWSScout2 import DEFAULT_REPORT_DIR
 
 class ListallArgumentParser(OpinelArgumentParser):
     """
@@ -115,7 +115,7 @@ class Scout2ArgumentParser(OpinelArgumentParser):
                                 help='Add a timestamp to the name of the report (default is current time in UTC)')
         self.parser.add_argument('--output-dir',
                                 dest='report_dir',
-                                default=None,
+                                default=DEFAULT_REPORT_DIR,
                                 nargs='?',
                                 help='Name / Path')
         self.parser.add_argument('--ruleset',

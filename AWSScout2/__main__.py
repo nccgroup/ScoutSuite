@@ -3,7 +3,6 @@
 
 # Import stock packages
 import sys
-import json
 
 # Import opinel
 try:
@@ -21,8 +20,9 @@ from AWSScout2.configs.scout2 import  Scout2Config
 from AWSScout2.configs.services import postprocessing
 from AWSScout2.rules.postprocessing import do_postprocessing
 from AWSScout2.cli_parser import Scout2ArgumentParser
-from AWSScout2.report.html import Scout2Report
+from AWSScout2.output.html import Scout2Report
 from AWSScout2 import __version__ as scout2_version
+from AWSScout2 import AWSCONFIG
 
 
 ########################################
@@ -54,23 +54,24 @@ def main():
 
     # Create a new Scout2 config
     report = Scout2Report(profile_name, args.report_dir, args.timestamp)
-    aws_config = Scout2Config(args.services, args.skipped_services)
+    aws_config = Scout2Config(profile_name, args.report_dir, args.timestamp, args.services, args.skipped_services)
 
     # Fetch data from AWS APIs if not running a local analysis
     if not args.fetch_local:
+
         aws_config.fetch(credentials, regions=args.regions, partition_name=args.partition_name)
         aws_config.update_metadata()
         report.save(aws_config, {}, None, args.force_write, args.debug)
 
     # Reload to flatten everything into a python dictionary
-    aws_config = report.load()
+    aws_config = report.jsrw.load_from_file(AWSCONFIG)
 
     # Analyze config
     ruleset = Ruleset(profile_name)
     ruleset.analyze(aws_config)
 
     # Create display filters
-    filters = Ruleset(ruleset_filename = 'filters.json', rule_type = 'filters')
+    filters = Ruleset(filename = 'filters.json', rule_type = 'filters')
     filters.analyze(aws_config)
 
     # Finalize

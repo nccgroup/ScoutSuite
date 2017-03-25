@@ -1,7 +1,6 @@
-# Import future stuff...
+# -*- coding: utf-8 -*-
 from __future__ import print_function
 from __future__ import unicode_literals
-
 
 import json
 import os
@@ -20,7 +19,7 @@ class Scout2Config(object):
     :services           AWS configuration sorted by service
     """
 
-    def __init__(self, services = [], skipped_services = []):
+    def __init__(self, profile, report_dir = None, timestamp = None, services= [], skipped_services = []):
         self.account_id = None
         self.last_run = None
         self.__load_metadata()
@@ -44,7 +43,6 @@ class Scout2Config(object):
         :return:
         """
         # TODO: determine partition name based on regions and warn if multiple partitions...
-
         self.services.fetch(credentials, self.service_list, regions, partition_name)
 
 
@@ -54,18 +52,10 @@ class Scout2Config(object):
         with open(os.path.join(scout2_configs_data_path, 'metadata.json'), 'rt') as f:
             self.metadata = json.load(f)
 
-    def save_to_file(self, environment_name, force_write = False, debug = False, js_filename = 'aws_config', js_varname = 'aws_info', quiet = False):
-        print('Saving config to %s' % js_filename)
-        try:
-            with open_file(environment_name, force_write, js_filename, quiet) as f:
-                print('%s =' % js_varname, file = f)
-                print('%s' % json.dumps(vars(self), indent=4 if debug else None, separators=(',', ': '), sort_keys=True, cls=Scout2Encoder), file = f)
-        except Exception as e:
-            printException(e)
-            pass
 
     def __build_services_list(self, supported_services, services, skipped_services):
         return [s for s in supported_services if (services == [] or s in services) and s not in skipped_services]
+
 
     def update_metadata(self):
         service_map = {}

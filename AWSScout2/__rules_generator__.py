@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Import stock packages
 import os
 import webbrowser
 
-# Import opinel
 try:
     from opinel.utils import check_opinel_version, configPrintException, get_opinel_requirement, printInfo
 except Exception as e:
@@ -14,9 +12,9 @@ except Exception as e:
     print(e)
     sys.exit(42)
 
-# Import Scout2 tools
 from AWSScout2.rules.cli_parser import RulesArgumentParser
 from AWSScout2.rules.ruleset import Ruleset
+from AWSScout2.output.html import RulesGenerator
 
 
 ########################################
@@ -38,8 +36,11 @@ def main():
     #    return 42
 
     # Load ruleset
-    ruleset = Ruleset(ruleset_filename = args.base_ruleset, load_rules = False, rules_dir = args.rules_dir)
-    ruleset_generator_path = ruleset.html_generator(args.output_dir, args.force_write, args.debug)
+    ruleset = Ruleset(filename = args.base_ruleset, name = args.ruleset_name, load_rules = False, rules_dir = args.rules_dir)
+
+    # Generate the HTML generator
+    ruleset_generator = RulesGenerator(args.ruleset_name, args.output_dir)
+    ruleset_generator_path = ruleset_generator.save(ruleset, args.force_write, args.debug)
 
     # Open the HTML ruleset generator in a browser
     printInfo('Starting the HTML ruleset generator...')

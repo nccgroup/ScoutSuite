@@ -13,10 +13,10 @@ except Exception as e:
     print(e)
     sys.exit(42)
 
-# Import Scout2 tools
+from AWSScout2 import AWSCONFIG
 from AWSScout2.cli_parser import ListallArgumentParser
 from AWSScout2.output.console import format_listall_output, generate_listall_output
-from AWSScout2.report.html import Scout2Report
+from AWSScout2.output.html import Scout2Report
 from AWSScout2.rules.ruleset import Ruleset
 from AWSScout2.rules.utils import recurse
 
@@ -42,12 +42,12 @@ def main():
 
         # Load the config
         report = Scout2Report(profile_name, args.report_dir, args.timestamp)
-        aws_config = report.load()
+        aws_config = report.jsrw.load_from_file(AWSCONFIG)
         services = aws_config['service_list']
 
         # Create a ruleset with only whatever rules were specified...
         if args.config:
-            ruleset = Ruleset(ruleset_filename = 'sample', load_rules = False)
+            ruleset = Ruleset(filename = 'sample', load_rules = False)
             ruleset.ruleset['rules'][0]['filename'] = args.config
             ruleset.init_rules(services, args.ip_ranges, '', False) # aws_config['aws_account_id, False)
             # Need to set the arguments values args.config_args
