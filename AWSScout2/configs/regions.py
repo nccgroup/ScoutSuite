@@ -4,6 +4,8 @@ Base classes and functions for region-specific services
 """
 
 from opinel.utils import printException, printInfo, manage_dictionary, connect_service, handle_truncated_response, build_region_list
+
+from AWSScout2.utils import format_service_name
 from AWSScout2.configs.base import GlobalConfig
 
 
@@ -31,13 +33,7 @@ api_clients = dict()
 status = None
 regions = None
 formatted_string = None
-formatted_service_name = {
-    'cloudtrail': 'CloudTrail',
-    'cloudwatch': 'CloudWatch',
-    'lambda': 'Lambda',
-    'redshift': 'RedShift',
-    'route53': 'Route53'
-}
+
 first_cap_re = re.compile('(.)([A-Z][a-z]+)')
 all_caps_re = re.compile('([a-z0-9])([A-Z])')
 
@@ -82,7 +78,7 @@ class RegionalServiceConfig(object):
         # Initialize targets
         if not targets:
             targets = type(self).targets
-        printInfo('Fetching %s config...' % self._format_service_name(self.service))
+        printInfo('Fetching %s config...' % format_service_name(self.service))
         counts = {}
         status = {'counts': {}, 'regions': [], 'regions_count': 0}
         formatted_string = None
@@ -152,9 +148,6 @@ class RegionalServiceConfig(object):
         except Exception as e:
             printException(e)
             pass
-
-    def _format_service_name(self, service):
-        return formatted_service_name[service] if service in formatted_service_name else service.upper()
 
 
 

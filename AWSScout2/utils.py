@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
-
-# Import future stuff...
 from __future__ import print_function
-from __future__ import unicode_literals
 
-# Import stock packages
 import re
 
 

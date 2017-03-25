@@ -1,4 +1,4 @@
-from AWSScout2.configs.base import format_service_name
+from AWSScout2.utils import format_service_name
 from AWSScout2.services.cloudtrail import CloudTrailConfig
 from AWSScout2.services.ec2 import EC2Config
 from AWSScout2.services.iam import IAMConfig
