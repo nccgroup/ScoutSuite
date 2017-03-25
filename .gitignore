@@ -43,6 +43,6 @@ nosetests.xml
 *.csv
 
 # Data folder and files
-scout2-report
+scout2-report*
 inc-awsconfig*
 report-*

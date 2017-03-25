@@ -23,7 +23,7 @@ setup(
     long_description=open('README.md').read(),
     author='l01cd3v',
     author_email='l01cd3v@gmail.com',
-    url='https://github.com/iSECPartners/Scout2',
+    url='https://github.com/nccgroup/Scout2',
     entry_points={
         'console_scripts': [
             'Scout2 = AWSScout2.__main__:main',
