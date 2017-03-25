@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # Import stock packages
+import os
 import sys
 
 # Import opinel
@@ -39,7 +40,7 @@ def main():
     configPrintException(args.debug)
 
     # Check version of opinel
-    min_opinel, max_opinel = get_opinel_requirement()
+    min_opinel, max_opinel = get_opinel_requirement(os.path.realpath(__file__))
     if not check_opinel_version(min_opinel):
         return 42
 

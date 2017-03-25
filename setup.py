@@ -32,13 +32,16 @@ setup(
         ]
     },
     packages=[
-        'AWSScout2', 'AWSScout2.configs', 'AWSScout2.fs', 'AWSScout2.report', 'AWSScout2.rules', 'AWSScout2.services'
+        'AWSScout2', 'AWSScout2.configs', 'AWSScout2.output', 'AWSScout2.rules', 'AWSScout2.services'
     ],
     package_data={
+        'AWSScout2': [
+            'data/requirements.txt'
+        ],
         'AWSScout2.configs': [
             'data/*.json'
         ],
-        'AWSScout2.report': [
+        'AWSScout2.output': [
             'data/html/*.html',
             'data/html/partials/*.html',
             'data/html/summaries/*.html',
