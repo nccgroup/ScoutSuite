@@ -15,6 +15,8 @@ attack surface automatically.
 
 ## Installation
 
+TODO: pip
+
 To install Scout2:
 
 	# Clone this repository.
