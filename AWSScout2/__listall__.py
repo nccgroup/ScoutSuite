@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Import stock packages
 import json
+import os
+import sys
 
-# Import opinel
 try:
-    from opinel.utils import check_opinel_version, configPrintException, get_opinel_requirement, printInfo, printException, printError
+    from opinel.utils import check_opinel_version, configPrintException, get_opinel_requirement, printInfo
 except Exception as e:
     print('Error: Scout2 depends on the opinel package. Install all the requirements with the following command:')
     print('  $ pip install -r requirements.txt')
@@ -34,8 +34,10 @@ def main():
     # Configure the debug level
     configPrintException(args.debug)
 
-    # List of services
-
+    # Check version of opinel
+    min_opinel, max_opinel = get_opinel_requirement(os.path.realpath(__file__))
+    if not check_opinel_version(min_opinel):
+        return 42
 
     # Support multiple environments
     for profile_name in args.profile:

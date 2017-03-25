@@ -1,29 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Import stock packages
 import os
 import sys
 
-# Import opinel
 try:
-    from opinel.utils import check_opinel_version, configPrintException, get_opinel_requirement, read_creds
+    from opinel.utils import check_opinel_version, configPrintException, get_opinel_requirement, printInfo, read_creds
 except Exception as e:
     print('Error: Scout2 depends on the opinel package. Install all the requirements with the following command:')
     print('  $ pip install -r requirements.txt')
     print(e)
     sys.exit(42)
 
-# Import Scout2 tools
-from AWSScout2.rules.exceptions import process_exceptions
-from AWSScout2.rules.ruleset import Ruleset
+from AWSScout2 import AWSCONFIG, __version__ as scout2_version
+from AWSScout2.cli_parser import Scout2ArgumentParser
 from AWSScout2.configs.scout2 import  Scout2Config
 from AWSScout2.configs.services import postprocessing
-from AWSScout2.rules.postprocessing import do_postprocessing
-from AWSScout2.cli_parser import Scout2ArgumentParser
 from AWSScout2.output.html import Scout2Report
-from AWSScout2 import __version__ as scout2_version
-from AWSScout2 import AWSCONFIG
+from AWSScout2.rules.exceptions import process_exceptions
+from AWSScout2.rules.ruleset import Ruleset
+from AWSScout2.rules.postprocessing import do_postprocessing
 
 
 ########################################

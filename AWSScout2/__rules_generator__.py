@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import sys
 import webbrowser
 
 try:
@@ -12,7 +13,7 @@ except Exception as e:
     print(e)
     sys.exit(42)
 
-from AWSScout2.rules.cli_parser import RulesArgumentParser
+from AWSScout2.cli_parser import RulesArgumentParser
 from AWSScout2.rules.ruleset import Ruleset
 from AWSScout2.output.html import RulesGenerator
 
@@ -31,15 +32,15 @@ def main():
     configPrintException(args.debug)
 
     # Check version of opinel
-    #min_opinel, max_opinel = get_opinel_requirement()
-    #if not check_opinel_version(min_opinel):
-    #    return 42
+    min_opinel, max_opinel = get_opinel_requirement(os.path.realpath(__file__))
+    if not check_opinel_version(min_opinel):
+        return 42
 
     # Load ruleset
     ruleset = Ruleset(filename = args.base_ruleset, name = args.ruleset_name, load_rules = False, rules_dir = args.rules_dir)
 
     # Generate the HTML generator
-    ruleset_generator = RulesGenerator(args.ruleset_name, args.output_dir)
+    ruleset_generator = RulesGenerator(args.ruleset_name, args.generator_dir)
     ruleset_generator_path = ruleset_generator.save(ruleset, args.force_write, args.debug)
 
     # Open the HTML ruleset generator in a browser
