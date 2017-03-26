@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
-RDS-related classes and functions
-"""
 
-# Import opinel
 from opinel.utils import handle_truncated_response, manage_dictionary
 
-# Import AWSScout2
 from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 from AWSScout2.utils import ec2_classic
 
@@ -50,7 +45,7 @@ class RDSRegionConfig(RegionConfig):
         for key in ['InstanceCreateTime', 'Engine', 'DBInstanceStatus', 'AutoMinorVersionUpgrade',
                     'DBInstanceClass', 'MultiAZ', 'Endpoint', 'BackupRetentionPeriod', 'PubliclyAccessible',
                     'StorageEncrypted', 'VpcSecurityGroups', 'DBSecurityGroups', 'DBParameterGroups',
-                    'EnhancedMonitoringResourceArn']:
+                    'EnhancedMonitoringResourceArn', 'StorageEncrypted']:
                     # parameter_groups , security_groups, vpc_security_groups
             instance[key] = dbi[key] if key in dbi else None
         self.vpcs[vpc_id].instances[self.get_non_aws_id(instance['name'])] = instance
