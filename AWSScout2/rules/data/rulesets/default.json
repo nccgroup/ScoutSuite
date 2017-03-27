@@ -762,6 +762,64 @@
             "args": [
                 "DeleteTopic"
             ]
+        },
+        {
+            "level": "danger",
+            "filename": "sqs-queue-world-policy.json",
+            "enabled": true,
+            "args": [
+                "SendMessage"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sqs-queue-world-policy.json",
+            "enabled": true,
+            "args": [
+                "ReceiveMessage"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sqs-queue-world-policy.json",
+            "enabled": true,
+            "args": [
+                "PurgeQueue"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sqs-queue-world-policy.json",
+            "enabled": true,
+            "args": [
+                "DeleteMessage"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sqs-queue-world-policy.json",
+            "enabled": true,
+            "args": [
+                "ChangeMessageVisibility"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "sqs-queue-world-policy.json",
+            "enabled": true,
+            "args": [
+                "GetQueueAttributes"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "sqs-queue-world-policy.json",
+            "enabled": true,
+            "args": [
+                "GetQueueUrl"
+            ]
         }
+
+
     ]
 }

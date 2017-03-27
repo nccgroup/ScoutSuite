@@ -1,15 +1,8 @@
 # -*- coding: utf-8 -*-
-"""
-SQS-related classes and functions
-"""
 
-# Import opinel
-
-# Import AWSScout2
-from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
-
-# Import stock packages
 import json
+
+from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 
 
 

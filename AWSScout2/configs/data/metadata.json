@@ -43,6 +43,12 @@
         "ses": {
         },
         "sqs" : {
+            "resources": {
+                "queues": {
+                    "cols": 2,
+                    "path": "services.sqs.regions.id.queues"
+                }
+            }
         }
     },
     "network": {
