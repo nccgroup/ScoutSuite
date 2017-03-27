@@ -2,6 +2,7 @@
 
 import copy
 
+from opinel.utils import printError, printException
 
 ########################################
 # Functions

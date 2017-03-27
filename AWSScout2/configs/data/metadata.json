@@ -131,6 +131,10 @@
                 "security_groups": {
                     "cols": 2,
                     "path": "services.rds.regions.id.vpcs.id.security_groups"
+                },
+                "snapshots": {
+                    "cols": 2,
+                    "path": "services.rds.regions.id.vpcs.id.snapshots"
                 }
             }
         },

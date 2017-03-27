@@ -371,6 +371,9 @@ function showObject() {
         case "rds_instances":
             $('#overlay-details').html(single_rds_instance_template(data));
         break;
+        case "rds_snapshots":
+            $('#overlay-datails').html(single_rds_snapshot_template(data));
+        break;
         case "redshift_clusters":
             $('#overlay-details').html(single_redshift_cluster_template(data));
         break;

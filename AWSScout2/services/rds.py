@@ -36,7 +36,7 @@ class RDSRegionConfig(RegionConfig):
 
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
-        :param instance:                 Cluster
+        :param instance:                Instance
         """
         vpc_id = dbi['DBSubnetGroup']['VpcId'] if 'DBSubnetGroup' in dbi and 'VpcId' in dbi['DBSubnetGroup'] and dbi['DBSubnetGroup']['VpcId'] else ec2_classic
         manage_dictionary(self.vpcs, vpc_id, RDSVPCConfig())
@@ -48,12 +48,37 @@ class RDSRegionConfig(RegionConfig):
                     'EnhancedMonitoringResourceArn', 'StorageEncrypted']:
                     # parameter_groups , security_groups, vpc_security_groups
             instance[key] = dbi[key] if key in dbi else None
-        self.vpcs[vpc_id].instances[self.get_non_aws_id(instance['name'])] = instance
+        self.vpcs[vpc_id].instances[instance['name']] = instance
+
+
+    def parse_snapshot(self, global_params, region, dbs):
+        """
+
+        :param global_params:           Parameters shared for all regions
+        :param region:                  Name of the AWS region
+        :param dbs:                     Snapshot
+        :return:
+        """
+        vpc_id = dbs['VpcId'] if 'VpcId' in dbs else ec2_classic
+        snapshot_id = dbs.pop('DBSnapshotIdentifier')
+        snapshot = {'arn': dbs.pop('DBSnapshotArn'), 'id': snapshot_id, 'name': snapshot_id, 'vpc_id': vpc_id}
+        attributes = [
+            'DBInstanceIdentifier',
+            'SnapshotCreateTime',
+            'Encrypted',
+            'OptionGroupName'
+        ]
+        for attribute in attributes:
+            snapshot[attribute] = dbs[attribute] if attribute in dbs else None
+        api_client = api_clients[region]
+        attributes = api_client.describe_db_snapshot_attributes(DBSnapshotIdentifier = snapshot_id)['DBSnapshotAttributesResult']
+        snapshot['attributes'] = attributes['DBSnapshotAttributes'] if 'DBSnapshotAttributes' in attributes else {}
+        self.vpcs[vpc_id].snapshots[snapshot_id] = snapshot
+
 
     def parse_parameter_group(self, global_params, region, parameter_group):
         parameter_group['arn'] = parameter_group.pop('DBParameterGroupArn')
         parameter_group['name'] = parameter_group.pop('DBParameterGroupName')
-        parameter_group['id'] = self.get_non_aws_id(parameter_group['name']) # INFO: could use name as limited to letters, digits, and hyphen
         api_client = api_clients[region]
         parameters = handle_truncated_response(api_client.describe_db_parameters, {'DBParameterGroupName': parameter_group['name']}, ['Parameters'])['Parameters']
         for parameter in parameters:
@@ -61,7 +86,7 @@ class RDSRegionConfig(RegionConfig):
             param['value'] = parameter['ParameterValue']
             param['source'] = parameter['Source']
             parameter_group['parameters'][parameter['ParameterName']] = param
-        (self).parameter_groups[parameter_group['id']] = parameter_group
+        (self).parameter_groups[parameter_group['name']] = parameter_group
 
 
     def parse_security_group(self, global_params, region, security_group):
@@ -93,6 +118,7 @@ class RDSConfig(RegionalServiceConfig):
     """
     targets = (
         ('instances', 'DBInstances', 'describe_db_instances', False),
+        ('snapshots', 'DBSnapshots', 'describe_db_snapshots', False),
         ('parameter_groups', 'DBClusterParameterGroups', 'describe_db_cluster_parameter_groups', False),
         ('security_groups', 'DBSecurityGroups', 'describe_db_security_groups', True),
         # TODO ('subnets', 'DBSubnetGroups', 'describe_db_subnet_group', False),
@@ -116,6 +142,7 @@ class RDSVPCConfig(object):
     def __init__(self):
         self.instances = {}
         self.security_groups = {}
+        self.snapshots = {}
 
 
 

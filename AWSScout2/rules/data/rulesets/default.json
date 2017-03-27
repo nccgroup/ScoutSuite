@@ -701,6 +701,11 @@
             "level": "warning",
             "filename": "rds-instance-storage-not-encrypted.json",
             "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "rds-snapshot-public.json",
+            "enabled": true
         }
     ]
 }
