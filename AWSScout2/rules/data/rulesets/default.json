@@ -706,6 +706,62 @@
             "level": "danger",
             "filename": "rds-snapshot-public.json",
             "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "sns-topic-world-policy.json",
+            "enabled": true,
+            "args": [
+                "Publish"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sns-topic-world-policy.json",
+            "enabled": true,
+            "args": [
+                "Subscribe"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sns-topic-world-policy.json",
+            "enabled": true,
+            "args": [
+                "Receive"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sns-topic-world-policy.json",
+            "enabled": true,
+            "args": [
+                "AddPermission"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sns-topic-world-policy.json",
+            "enabled": true,
+            "args": [
+                "RemovePermission"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sns-topic-world-policy.json",
+            "enabled": true,
+            "args": [
+                "SetTopicAttributes"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sns-topic-world-policy.json",
+            "enabled": true,
+            "args": [
+                "DeleteTopic"
+            ]
         }
     ]
 }
