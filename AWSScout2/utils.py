@@ -43,7 +43,8 @@ def get_keys(src, dst, keys):
     :return:
     """
     for key in keys:
-        dst[no_camel(key)] = src[key] if key in src else None
+        #dst[no_camel(key)] = src[key] if key in src else None
+        dst[key] = src[key] if key in src else None
 
 
 def no_camel(name):

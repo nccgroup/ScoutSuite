@@ -1,6 +1,9 @@
 .item-margin {
     margin-left: 25px;
 }
+.no-margin {
+    margin-left: -25px !important;
+}
 
 .finding-hidden {
     display: none;

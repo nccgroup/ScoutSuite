@@ -137,6 +137,12 @@ class EC2RegionConfig(RegionConfig):
             if 'IamInstanceProfile' in i:
                 instance['iam_instance_profile'] = {}
                 get_keys(i['IamInstanceProfile'], instance['iam_instance_profile'], ['Id', 'Arn'])
+            # Network interfaces
+            manage_dictionary(instance, 'network_interfaces', {})
+            for eni in i['NetworkInterfaces']:
+                nic = {}
+                get_keys(eni, nic, ['Association', 'Groups', 'PrivateIpAddresses'])
+                instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
             manage_dictionary(instance, 'security_groups', [])
             for sg in i['SecurityGroups']:
                 instance['security_groups'].append(sg)
