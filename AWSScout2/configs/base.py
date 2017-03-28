@@ -200,4 +200,3 @@ class BaseConfig(GlobalConfig):
                 sys.stdout.write('\n')
         except:
             pass
-

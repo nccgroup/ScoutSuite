@@ -131,21 +131,13 @@ class EC2RegionConfig(RegionConfig):
             instance['reservation_id'] = reservation['ReservationId']
             instance['id'] = i['InstanceId']
             get_name(instance, i, 'InstanceId')
-            # TODO: use get_keys() here
-            for key in ['PublicDnsName', 'PrivateDnsName', 'KeyName', 'LaunchTime', 'PrivateIpAddress', 'PublicIpAddress', 'InstanceType', 'State']:
-                instance[key] = i[key] if key in i else None
-            if 'IamInstanceProfile' in i:
-                instance['iam_instance_profile'] = {}
-                get_keys(i['IamInstanceProfile'], instance['iam_instance_profile'], ['Id', 'Arn'])
-            # Network interfaces
+            get_keys(i, instance, ['PublicDnsName', 'PrivateDnsName', 'KeyName', 'LaunchTime', 'PrivateIpAddress', 'PublicIpAddress', 'InstanceType', 'State', 'IamInstanceProfile'])
+            # Network interfaces & security groups
             manage_dictionary(instance, 'network_interfaces', {})
             for eni in i['NetworkInterfaces']:
                 nic = {}
                 get_keys(eni, nic, ['Association', 'Groups', 'PrivateIpAddresses'])
                 instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
-            manage_dictionary(instance, 'security_groups', [])
-            for sg in i['SecurityGroups']:
-                instance['security_groups'].append(sg)
             self.vpcs[vpc_id].instances[i['InstanceId']] = instance
 
 
