@@ -1,0 +1,18 @@
+{
+    "key": "ses-identity-world-_ARG_0_-policy",
+    "dashboard_name": "Statements",
+    "description": "_ARG_0_ authorized to all principals",
+    "path": "ses.regions.id.identities.id.policies.id.Statement.id",
+    "display_path": "ses.regions.id.identities.id",
+    "conditions": [ "and",
+        [ "ses.regions.id.identities.id.policies.id.Statement.id.Effect", "equal", "Allow" ],
+        [ "ses.regions.id.identities.id.policies.id.Statement.id.", "containAction", "ses:_ARG_0_" ],
+        [ "or",
+            [ "ses.regions.id.identities.id.policies.id.Statement.id.Principal", "containAtLeastOneOf", "*" ],
+            [ "and",
+                [ "ses.regions.id.identities.id.policies.id.Statement.id.Principal", "withKey", "AWS" ],
+                [ "ses.regions.id.identities.id.policies.id.Statement.id.Principal.AWS", "containAtLeastOneOf", "*" ]
+            ]
+        ]
+    ]
+}

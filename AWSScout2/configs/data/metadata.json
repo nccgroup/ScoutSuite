@@ -41,6 +41,12 @@
             }
         },
         "ses": {
+            "resources": {
+                "identities": {
+                    "cols": 2,
+                    "path": "services.ses.regions.id.identities"
+                }
+            }
         },
         "sqs" : {
             "resources": {

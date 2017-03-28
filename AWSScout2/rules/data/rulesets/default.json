@@ -818,8 +818,22 @@
             "args": [
                 "GetQueueUrl"
             ]
+        },
+        {
+            "level": "danger",
+            "filename": "ses-identity-world-policy.json",
+            "enabled": true,
+            "args": [
+                "SendEmail"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "ses-identity-world-policy.json",
+            "enabled": true,
+            "args": [
+                "SendRawEmail"
+            ]
         }
-
-
     ]
 }
