@@ -131,7 +131,7 @@ class EC2RegionConfig(RegionConfig):
             instance['reservation_id'] = reservation['ReservationId']
             instance['id'] = i['InstanceId']
             get_name(instance, i, 'InstanceId')
-            get_keys(i, instance, ['PublicDnsName', 'PrivateDnsName', 'KeyName', 'LaunchTime', 'PrivateIpAddress', 'PublicIpAddress', 'InstanceType', 'State', 'IamInstanceProfile'])
+            get_keys(i, instance, ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile'])
             # Network interfaces & security groups
             manage_dictionary(instance, 'network_interfaces', {})
             for eni in i['NetworkInterfaces']:
