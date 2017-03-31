@@ -130,7 +130,7 @@ class EC2RegionConfig(RegionConfig):
             manage_dictionary(self.vpcs, vpc_id, EC2VPCConfig())
             instance['reservation_id'] = reservation['ReservationId']
             instance['id'] = i['InstanceId']
-            get_name(instance, i, 'InstanceId')
+            get_name(i, instance, 'InstanceId')
             get_keys(i, instance, ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile'])
             # Network interfaces & security groups
             manage_dictionary(instance, 'network_interfaces', {})
@@ -184,6 +184,13 @@ class EC2RegionConfig(RegionConfig):
 
                 acl_list.append(acl)
         return acl_list
+
+    def parse_route_table(self, global_params, region, rt):
+        route_table = {}
+        vpc_id = rt['VpcId']
+        get_name(rt, route_table, 'VpcId') # TODO: change get_name to have src then dst
+        get_keys(rt, route_table, ['Routes', 'Associations', 'PropagatingVgws'])
+        self.vpcs[vpc_id].route_tables[rt['RouteTableId']] = route_table
 
 
     def parse_security_group(self, global_params, region, group):
@@ -255,6 +262,7 @@ class EC2RegionConfig(RegionConfig):
         """
         vpc_id = subnet['VpcId']
         subnet_id = subnet['SubnetId']
+        get_name(subnet, subnet, 'SubnetId')
         self.vpcs[vpc_id].subnets[subnet_id] = subnet
 
 
@@ -267,9 +275,9 @@ class EC2RegionConfig(RegionConfig):
         :return:
         """
         vpc_id = vpc['VpcId']
-        manage_dictionary(self.vpcs, vpc_id, EC2VPCConfig())
-        get_name(vpc, vpc, 'VpcId')
-        #for
+        tmp = {}
+        get_name(vpc, tmp, 'VpcId')
+        manage_dictionary(self.vpcs, vpc_id, EC2VPCConfig(tmp['name']))
 
 
         # By default, create a place holder for EC2-Classic that will be removed in empty at the end of the run
@@ -304,6 +312,7 @@ class EC2Config(RegionalServiceConfig):
         ('security_groups', 'SecurityGroups', 'describe_security_groups', False),
         ('flow_logs', 'FlowLogs', 'describe_flow_logs', False),
         ('instances', 'Reservations', 'describe_instances', False),
+        ('route_tables', 'RouteTables', 'describe_route_tables', False)
     )
     region_config_class = EC2RegionConfig
 
@@ -321,11 +330,13 @@ class EC2VPCConfig(object):
     :ivar instances:                    Dictionary of instances [id]
     """
 
-    def __init__(self):
+    def __init__(self, name = None):
+        self.name = name
         #self.elbs = {}
         self.flow_logs = {}
         self.instances = {}
         self.network_acls = {}
+        self.route_tables = {}
         self.security_groups = {}
         self.subnets = {}
 
