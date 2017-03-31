@@ -82,6 +82,11 @@ class IAMConfig(BaseConfig):
         iam_report = {}
         try:
             api_client = connect_service('iam', credentials)
+            response = api_client.generate_credential_report()
+            if response['State'] != 'COMPLETE':
+                if not ignore_exception:
+                    printError('Failed to generate a credential report.')
+                return
             manage_dictionary(self.counts, 'credential_report', {'discovered': 1, 'fetched': 0})
             report = api_client.get_credential_report()['Content']
             lines = report.splitlines()
@@ -92,11 +97,11 @@ class IAMConfig(BaseConfig):
                 for key, value in zip(keys, values):
                     iam_report[values[0]][key] = value
             self.credential_report = iam_report
-            self.counts['credentials_report']['fetched'] = 1
+            self.counts['credential_report']['fetched'] = 1
         except Exception as e:
             if ignore_exception:
                 return
-            printError('Failed to generate/download a credential report.')
+            printError('Failed to download a credential report.')
             printException(e)
 
 
