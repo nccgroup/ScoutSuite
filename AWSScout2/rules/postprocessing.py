@@ -179,19 +179,15 @@ def __update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entit
 def vpc_postprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     printInfo('Post-processing VPC config...')
     # Security group usage: EC2 instances
-#    printInfo('Parsing EC2 instances...')
-    callback_args = {'status_path': ['State', 'Name'], 'sg_list_attribute_name': 'security_groups', 'sg_id_attribute_name': 'GroupId'}
-    go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'instances'], ['services', 'ec2'], list_resources_in_security_group, callback_args)
+    callback_args = {'status_path': [], 'sg_list_attribute_name': 'Groups', 'sg_id_attribute_name': 'GroupId'}
+    go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'instances', 'network_interfaces'], ['services', 'ec2'], list_resources_in_security_group, callback_args)
     # Security group usage: ELBs
-#    printInfo('Parsing ELBs...')
     callback_args = {'status_path': ['Scheme'], 'sg_list_attribute_name': 'security_groups', 'sg_id_attribute_name': 'GroupId'}
     go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'elbs'], ['services', 'ec2'], list_resources_in_security_group, callback_args)
     # Security group usage: Redshift clusters
-#    printInfo('Parsing Redshift clusters...')
     callback_args = {'status_path': ['ClusterStatus'], 'sg_list_attribute_name': 'VpcSecurityGroups', 'sg_id_attribute_name': 'VpcSecurityGroupId'}
     go_to_and_do(aws_config, aws_config['services']['redshift'], ['regions', 'vpcs', 'clusters'], ['services', 'redshift'], list_resources_in_security_group, callback_args)
     # Security group usage: RDS instances
-#    printInfo('Parsing RDS instances...')
     callback_args = {'status_path': ['DBInstanceStatus'], 'sg_list_attribute_name': 'VpcSecurityGroups', 'sg_id_attribute_name': 'VpcSecurityGroupId'}
     go_to_and_do(aws_config, aws_config['services']['rds'], ['regions', 'vpcs', 'instances'], ['services', 'rds'], list_resources_in_security_group, callback_args)
     # Add friendly name for CIDRs
@@ -280,9 +276,11 @@ def list_resources_in_security_group(aws_config, current_config, path, current_p
     else:
         resource_status = None
     # Get list of VPC security groups for the resource
+    # TODO: create EC2 classic SG and see how it differs from a VPC SG ... same for RDS Etc...
     sg_base_path = copy.deepcopy(current_path)
     sg_base_path.pop()
     sg_base_path[1] = 'ec2'
+    #sg_base_path.append(callback_args)
     sg_base_path.append('security_groups')
     # Issue 89 & 91 : can instances have no security group?
     try:
@@ -290,6 +288,7 @@ def list_resources_in_security_group(aws_config, current_config, path, current_p
         # Get security group
         sg_path = copy.deepcopy(sg_base_path)
         sg_path.append(resource_sg[callback_args['sg_id_attribute_name']])
+        print('SG path: %s' % sg_path)
         sg = get_object_at(aws_config, sg_path)
         # Add usage information
         manage_dictionary(sg, 'used_by', {})
