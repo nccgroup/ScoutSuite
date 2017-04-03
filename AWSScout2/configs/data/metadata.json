@@ -99,8 +99,6 @@
                     "path": "services.ec2.attack_surface"
                 }
             }
-        },
-        "lambda": {
         }
     },
     "security": {
