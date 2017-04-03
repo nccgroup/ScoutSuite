@@ -1,4 +1,1 @@
-boto3>=1.4.4
-python-dateutil>=2.2
-netaddr>=0.7.11
-opinel>=3.0.3,<4.0.0
+AWSScout2/data/requirements.txt
