@@ -6,13 +6,22 @@ Multi-service post-processing functions
 from opinel.utils import manage_dictionary, printInfo, printError, printException
 from AWSScout2.utils import ec2_classic
 
-from AWSScout2.configs.browser import get_object_at
+from AWSScout2.configs.browser import get_object_at, get_value_at
 
 
 import copy
 
 def do_postprocessing(aws_config):
+    for rt in ['groups', 'policies', 'roles', 'users']:
+        for r in aws_config['services']['iam'][rt]:
+            if 'aws_account_id' not in aws_config or aws_config['aws_account_id'] == None:
+                if 'arn' in aws_config['services']['iam'][rt][r]:
+                    aws_config['aws_account_id'] = aws_config['services']['iam'][rt][r]['arn'].split(':')[4]
+        if 'aws_account_id' in aws_config and aws_config['aws_account_id'] != None:
+            break
+
     list_network_attack_surface(aws_config['services']['ec2'])
+    add_security_group_name_to_ec2_grants(aws_config['services']['ec2'], aws_config['aws_account_id'])
     match_instances_and_roles(aws_config)
     match_iam_policies_and_buckets(aws_config)
     vpc_postprocessing(aws_config)
@@ -47,7 +56,30 @@ def list_network_attack_surface_callback(ec2_config, current_config, path, curre
                     ingress_rules['protocols'].pop(p)
             ec2_config['attack_surface'][public_ip]['protocols'].update(ingress_rules['protocols'])
 
+#
+# Github issue #24: display the security group names in the list of grants (added here to have ligher JS code)
+#
+def add_security_group_name_to_ec2_grants(ec2_config, aws_account_id):
+    go_to_and_do(ec2_config, None, ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports', 'security_groups'], [], add_security_group_name_to_ec2_grants_callback, {'AWSAccountId': aws_account_id})
 
+#
+# Callback
+#
+def add_security_group_name_to_ec2_grants_callback(ec2_config, current_config, path, current_path, ec2_grant, callback_args):
+    sg_id = ec2_grant['GroupId']
+    if sg_id in current_path:
+        target = current_path[:(current_path.index(sg_id) + 1)]
+        ec2_grant['GroupName'] = get_value_at(ec2_config, target, 'name')
+    elif ec2_grant['UserId'] == callback_args['AWSAccountId']:
+        if 'VpcId' in ec2_grant:
+            target = current_path[:(current_path.index('vpcs') + 1)]
+            target.append(ec2_grant['VpcId'])
+            target.append('security_groups')
+            target.append(sg_id)
+        else:
+            target = current_path[:(current_path.index('security_groups') + 1)]
+            target.append(sg_id)
+        ec2_grant['GroupName'] = get_value_at(ec2_config, target, 'name')
 
 
 
