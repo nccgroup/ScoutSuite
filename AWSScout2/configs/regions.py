@@ -82,7 +82,7 @@ class RegionalServiceConfig(object):
         counts = {}
         status = {'counts': {}, 'regions': [], 'regions_count': 0}
         formatted_string = None
-        api_service = self.service.lower() # TODO : handle EC2/VPC/ELB weirdness maybe ?
+        api_service = 'ec2' if self.service.lower() == 'vpc' else self.service.lower()
         # Init regions
         regions = build_region_list(api_service, regions, partition_name) # TODO: move this code within this class
         # TODO : skip multi regions for S3 because list bucket gets all buckets across regions (or overwrite fetch_all in S3 like for IAM)

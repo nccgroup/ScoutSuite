@@ -59,6 +59,20 @@
     },
     "network": {
         "vpc": {
+            "resources": {
+                "network_acls": {
+                    "cols": 2,
+                    "path": "services.vpc.regions.id.vpcs.id.network_acls"
+                },
+                "vpcs": {
+                    "cols": 2,
+                    "path": "services.vpc.regions.id.vpcs"
+                },
+                "subnets": {
+                    "cols": 2,
+                    "path": "services.vpc.regions.id.vpcs.id.subnets"
+                }
+            }
         },
         "route53": {
         }
@@ -74,17 +88,9 @@
                     "cols": 2,
                     "path": "services.ec2.regions.id.vpcs.id.instances"
                 },
-                "network_acls": {
-                    "cols": 2,
-                    "path": "services.ec2.regions.id.vpcs.id.network_acls"
-                },
                 "security_groups": {
                     "cols": 2,
                     "path": "services.ec2.regions.id.vpcs.id.security_groups"
-                },
-                "vpcs": {
-                    "cols": 2,
-                    "path": "services.ec2.regions.id.vpcs"
                 }
             },
             "summaries": {

@@ -1,8 +1,8 @@
 
-    <!-- EC2 Network ACL partial -->
-    <script id="services.ec2.regions.id.vpcs.id.network_acls.partial" type="text/x-handlebars-template">
+    <!-- VPC Network ACL partial -->
+    <script id="services.vpc.regions.id.vpcs.id.network_acls.partial" type="text/x-handlebars-template">
             <div class="list-group-item active">
-                <h4 class="list-group-item-heading">{{NetworkAclId}}</h4>
+                <h4 class="list-group-item-heading">{{name}}</h4>
             </div>
             {{#each rules}}
               <div class="list-group-item">
@@ -29,15 +29,15 @@
             {{/each}}
     </script>
     <script>
-      Handlebars.registerPartial("services.ec2.regions.id.vpcs.id.network_acls", $("#services\\.ec2\\.regions\\.id\\.vpcs\\.id\\.network_acls\\.partial").html());
+      Handlebars.registerPartial("services.vpc.regions.id.vpcs.id.network_acls", $("#services\\.vpc\\.regions\\.id\\.vpcs\\.id\\.network_acls\\.partial").html());
     </script>
 
-    <!-- Single EC2 Network ACL template -->
-    <script id="single_ec2_network_acl-template" type="text/x-handlebars-template">
+    <!-- Single VPC Network ACL template -->
+    <script id="single_vpc_network_acl-template" type="text/x-handlebars-template">
         <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.ec2.regions.id.vpcs.id.network_acls}}
+        {{> services.vpc.regions.id.vpcs.id.network_acls}}
     </script>
     <script>
-        var single_ec2_network_acl_template = Handlebars.compile($("#single_ec2_network_acl-template").html());
+        var single_vpc_network_acl_template = Handlebars.compile($("#single_vpc_network_acl-template").html());
     </script>
 

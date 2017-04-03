@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+
+from opinel.utils import printError, printException, printInfo
+
 from AWSScout2.utils import format_service_name
 from AWSScout2.services.cloudtrail import CloudTrailConfig
 from AWSScout2.services.ec2 import EC2Config
@@ -8,7 +12,8 @@ from AWSScout2.services.s3 import S3Config
 from AWSScout2.services.ses import SESConfig
 from AWSScout2.services.sns import SNSConfig
 from AWSScout2.services.sqs import SQSConfig
-from opinel.utils import printError, printException, printInfo
+from AWSScout2.services.vpc import VPCConfig
+
 
 class ServicesConfig(object):
     """
@@ -27,16 +32,19 @@ class ServicesConfig(object):
     """
 
     def __init__(self):
+        self.cloudformation = None
         self.cloudtrail = CloudTrailConfig()
         self.cloudwatch = None
         self.ec2 = EC2Config()
         self.iam = IAMConfig()
         self.redshift = RedshiftConfig()
         self.rds = RDSConfig()
+        self.route53 = None
         self.s3 = S3Config()
         self.ses = SESConfig()
         self.sns = SNSConfig()
         self.sqs = SQSConfig()
+        self.vpc = VPCConfig()
 
 
     def fetch(self, credentials, services = [], regions = [], partition_name = ''):

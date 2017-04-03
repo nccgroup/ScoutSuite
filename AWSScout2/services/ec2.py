@@ -96,28 +96,6 @@ class EC2RegionConfig(RegionConfig):
         self.elastic_ips[eip['PublicIp']] = eip
 
 
-    def parse_flow_log(self, global_params, region, fl):
-        """
-
-        :param global_params:
-        :param region:
-        :param fl:
-        :return:
-        """
-        fl_id = fl.pop('FlowLogId')
-        resource_id = fl.pop('ResourceId')
-        if resource_id.startswith('vpc-'):
-            manage_dictionary(region_info['vpcs'], resource_id, {})
-            manage_dictionary(region_info['vpcs'][resource_id], 'flow_logs', {})
-            self.vpcs[resource_id]['flow_logs'][fl_id] = fl
-        elif resource_id.startswith('subnet-'):
-            # Temporary save within the region, once subnets are fetched too, do an update at the end of the run
-            manage_dictionary(region_info, 'subnets', {})
-            manage_dictionary(region_info['subnets'], resource_id, {})
-            manage_dictionary(region_info['subnets'][resource_id], 'flow_logs', {})
-            self.subnets[resource_id]['flow_logs'][fl_id] = fl
-
-
     def parse_instance(self, global_params, region, reservation):
         """
         Parse a single EC2 instance
@@ -141,58 +119,6 @@ class EC2RegionConfig(RegionConfig):
                 get_keys(eni, nic, ['Association', 'Groups', 'PrivateIpAddresses'])
                 instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
             self.vpcs[vpc_id].instances[i['InstanceId']] = instance
-
-
-    def parse_network_acl(self, global_params, region, network_acl):
-        """
-
-        :param global_params:
-        :param region:
-        :param network_acl:
-        :return:
-        """
-        vpc_id = network_acl['VpcId']
-        manage_dictionary(self.vpcs, vpc_id, EC2VPCConfig())
-        acl_id = network_acl['NetworkAclId']
-        network_acl['id'] = network_acl.pop('NetworkAclId')
-        # TODO: getname
-        manage_dictionary(network_acl, 'rules', {})
-        network_acl['rules']['ingress'] = self.__parse_network_acl_entries(network_acl['Entries'], False)
-        network_acl['rules']['egress'] = self.__parse_network_acl_entries(network_acl['Entries'], True)
-        network_acl.pop('Entries')
-        self.vpcs[vpc_id].network_acls[acl_id] = network_acl
-
-
-    def __parse_network_acl_entries(self, entries, egress):
-        """
-
-        :param entries:
-        :param egress:
-        :return:
-        """
-        acl_list = []
-        for entry in entries:
-            if entry['Egress'] == egress:
-                acl = {}
-                for key in ['CidrBlock', 'RuleAction', 'RuleNumber']:
-                    acl[key] = entry[key]
-                acl['protocol'] = protocols_dict[entry['Protocol']]
-                if 'PortRange' in entry:
-                    from_port = entry['PortRange']['From'] if entry['PortRange']['From'] else 1
-                    to_port = entry['PortRange']['To'] if entry['PortRange']['To'] else 65535
-                    acl['port_range'] = from_port if from_port == to_port else str(from_port) + '-' + str(to_port)
-                else:
-                    acl['port_range'] = '1-65535'
-
-                acl_list.append(acl)
-        return acl_list
-
-    def parse_route_table(self, global_params, region, rt):
-        route_table = {}
-        vpc_id = rt['VpcId']
-        get_name(rt, route_table, 'VpcId') # TODO: change get_name to have src then dst
-        get_keys(rt, route_table, ['Routes', 'Associations', 'PropagatingVgws'])
-        self.vpcs[vpc_id].route_tables[rt['RouteTableId']] = route_table
 
 
     def parse_security_group(self, global_params, region, group):
@@ -254,40 +180,10 @@ class EC2RegionConfig(RegionConfig):
         return protocols, rules_count
 
 
-    def parse_subnet(self, global_params, region, subnet):
-        """
-
-        :param global_params:
-        :param region:
-        :param subnet:
-        :return:
-        """
-        vpc_id = subnet['VpcId']
-        subnet_id = subnet['SubnetId']
-        get_name(subnet, subnet, 'SubnetId')
-        self.vpcs[vpc_id].subnets[subnet_id] = subnet
-
-
-    def parse_vpc(self, global_params, region_name, vpc):
-        """
-
-        :param global_params:
-        :param region_name:
-        :param vpc:
-        :return:
-        """
-        vpc_id = vpc['VpcId']
-        tmp = {}
-        get_name(vpc, tmp, 'VpcId')
-        manage_dictionary(self.vpcs, vpc_id, EC2VPCConfig(tmp['name']))
-
-
-        # By default, create a place holder for EC2-Classic that will be removed in empty at the end of the run
-        # manage_dictionary(self.vpcs, ec2_classic, EC2VPCConfig())
-
     def finalize(self):
         # Do all the tweaks here....
-        print('Hello !')
+        pass
+        # print('Hello !')
         #link_elastic_ips(ec2_info)
         #add_security_group_name_to_ec2_grants(ec2_info, aws_account_id)
         # Custom EC2 analysis
@@ -308,13 +204,8 @@ class EC2Config(RegionalServiceConfig):
     :cvar config_class:                 Class to be used when initiating the service's configuration in a new region/VPC
     """
     targets = (
-        ('vpcs', 'Vpcs', 'describe_vpcs', False),
-        ('subnets', 'Subnets', 'describe_subnets', False),
-        ('network_acls', 'NetworkAcls', 'describe_network_acls', False),
         ('security_groups', 'SecurityGroups', 'describe_security_groups', False),
-        ('flow_logs', 'FlowLogs', 'describe_flow_logs', False),
-        ('instances', 'Reservations', 'describe_instances', False),
-        ('route_tables', 'RouteTables', 'describe_route_tables', False)
+        ('instances', 'Reservations', 'describe_instances', False)
     )
     region_config_class = EC2RegionConfig
 
