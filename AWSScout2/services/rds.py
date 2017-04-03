@@ -39,7 +39,6 @@ class RDSRegionConfig(RegionConfig):
         :param instance:                Instance
         """
         vpc_id = dbi['DBSubnetGroup']['VpcId'] if 'DBSubnetGroup' in dbi and 'VpcId' in dbi['DBSubnetGroup'] and dbi['DBSubnetGroup']['VpcId'] else ec2_classic
-        manage_dictionary(self.vpcs, vpc_id, RDSVPCConfig())
         instance = {}
         instance['name'] = dbi.pop('DBInstanceIdentifier')
         for key in ['InstanceCreateTime', 'Engine', 'DBInstanceStatus', 'AutoMinorVersionUpgrade',
@@ -48,6 +47,8 @@ class RDSRegionConfig(RegionConfig):
                     'EnhancedMonitoringResourceArn', 'StorageEncrypted']:
                     # parameter_groups , security_groups, vpc_security_groups
             instance[key] = dbi[key] if key in dbi else None
+        # Save
+        manage_dictionary(self.vpcs, vpc_id,RDSVPCConfig())
         self.vpcs[vpc_id].instances[instance['name']] = instance
 
 
@@ -73,6 +74,8 @@ class RDSRegionConfig(RegionConfig):
         api_client = api_clients[region]
         attributes = api_client.describe_db_snapshot_attributes(DBSnapshotIdentifier = snapshot_id)['DBSnapshotAttributesResult']
         snapshot['attributes'] = attributes['DBSnapshotAttributes'] if 'DBSnapshotAttributes' in attributes else {}
+        # Save
+        manage_dictionary(self.vpcs, vpc_id,RDSVPCConfig())
         self.vpcs[vpc_id].snapshots[snapshot_id] = snapshot
 
 
@@ -86,6 +89,8 @@ class RDSRegionConfig(RegionConfig):
             param['value'] = parameter['ParameterValue']
             param['source'] = parameter['Source']
             parameter_group['parameters'][parameter['ParameterName']] = param
+        # Save
+        manage_dictionary(self.vpcs, vpc_id,RDSVPCConfig())
         (self).parameter_groups[parameter_group['name']] = parameter_group
 
 
@@ -101,6 +106,8 @@ class RDSRegionConfig(RegionConfig):
         manage_dictionary(self.vpcs, vpc_id, RDSVPCConfig())
         security_group['arn'] = security_group.pop('DBSecurityGroupArn')
         security_group['name'] = security_group.pop('DBSecurityGroupName')
+        # Save
+        manage_dictionary(self.vpcs, vpc_id,RDSVPCConfig())
         self.vpcs[vpc_id].security_groups['name'] = security_group
 
 
