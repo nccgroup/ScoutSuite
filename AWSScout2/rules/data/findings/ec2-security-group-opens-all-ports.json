@@ -7,8 +7,7 @@
             [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id", "equal", "0-65535" ],
             [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id", "equal", "ALL" ]
         ],
-        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id", "equal", "ingress" ],
-        [ "ec2.regions.id.vpcs.id.security_groups.id.", "withKey", "used_by" ]
+        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id", "equal", "ingress" ]
     ],
     "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
     "keys": [
