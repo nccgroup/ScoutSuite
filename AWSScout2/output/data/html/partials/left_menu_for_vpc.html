@@ -12,7 +12,7 @@
         <div class="list-group-item active"><a href="#services.{{../service_name}}.regions.{{@key}}.vpcs.id.{{../resource_type}}">{{@key}}</a></div>
         {{#each vpcs}}
           <div class="list-group-item list-sub-element" id="services.{{../../service_name}}.regions.{{@../key}}.vpcs.{{@key}}.{{../../resource_type}}.list">
-            <a href="#services.{{../../service_name}}.regions.{{@../key}}.vpcs.{{@key}}.{{../../resource_type}}">{{name}}</a>
+            <a href="#services.{{../../service_name}}.regions.{{@../key}}.vpcs.{{@key}}.{{../../resource_type}}">{{get_value_at 'services.vpc.regions' @../key 'vpcs' @key 'name'}}</a>
             {{#each (lookup . ../../resource_type)}}
               <div class="list-group-item-text list-sub-element" id="services.{{../../../service_name}}.regions.{{@../../key}}.vpcs.{{@../key}}.{{../../../resource_type}}.{{@key}}.link">
                 <a href="#services.{{../../../service_name}}.regions.{{@../../key}}.vpcs.{{@../key}}.{{../../../resource_type}}.{{@key}}.view">{{name}}</a>
