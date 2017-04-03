@@ -8,15 +8,44 @@ from AWSScout2.utils import ec2_classic
 
 from AWSScout2.configs.browser import get_object_at
 
+
 import copy
 
 def do_postprocessing(aws_config):
+    list_network_attack_surface(aws_config['services']['ec2'])
     match_instances_and_roles(aws_config)
     match_iam_policies_and_buckets(aws_config)
     vpc_postprocessing(aws_config)
     # final
     update_metadata(aws_config)
 
+
+def list_network_attack_surface(ec2_config):
+    go_to_and_do(ec2_config, None, ['regions', 'vpcs', 'instances', 'network_interfaces', 'PrivateIpAddresses'], [], list_network_attack_surface_callback, {})
+
+def list_network_attack_surface_callback(ec2_config, current_config, path, current_path, privateip_id, callback_args):
+    if 'Association' in current_config:
+        public_ip = current_config['Association']['PublicIp']
+        manage_dictionary(ec2_config, 'attack_surface', {})
+        manage_dictionary(ec2_config['attack_surface'], public_ip, {})
+        manage_dictionary(ec2_config['attack_surface'][public_ip], 'protocols', {})
+        for sg_info in current_config['Groups']:
+            sg_id = sg_info['GroupId']
+            sg_path = copy.deepcopy(current_path[0:4])
+            sg_path.append('security_groups')
+            sg_path.append(sg_id)
+            sg_path.append('rules')
+            sg_path.append('ingress')
+            ingress_rules = copy.deepcopy(get_object_at(ec2_config, sg_path))
+            for p in ingress_rules['protocols']:
+                for port in ingress_rules['protocols'][p]['ports']:
+                    if not 'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
+                        ingress_rules['protocols'][p]['ports'].pop(port, None)
+                    elif 'security_groups' in ingress_rules['protocols'][p]['ports'][port]:
+                        ingress_rules['protocols'][p]['ports'][port].pop('security_groups', None)
+                if not ingress_rules['protocols'][p]['ports']:
+                    ingress_rules['protocols'].pop(p)
+            ec2_config['attack_surface'][public_ip]['protocols'].update(ingress_rules['protocols'])
 
 
 
