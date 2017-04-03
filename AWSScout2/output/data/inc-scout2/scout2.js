@@ -291,10 +291,10 @@ function findAndShowEC2Object(path, id) {
     } else if(etype == 'security_groups') {
         $('#overlay-details').html(single_ec2_security_group_template(object));
     } else if (etype == 'vpcs') {
-        $('#overlay-details').html(single_ec2_vpc_template(object));
+        $('#overlay-details').html(single_vpc_template(object));
     } else if (etype == 'network_acls') {
         object['name']=id;
-        $('#overlay-details').html(single_ec2_network_acl_template(object));
+        $('#overlay-details').html(single_vpc_network_acl_template(object));
     }
     showPopup();
 }
@@ -383,6 +383,9 @@ function showObject() {
         break;
         case "s3_keys":
             $('#overlay-details').html(single_s3_object_template(data));
+        break;
+        case "vpc_network_acls":
+            $('#overlay-details').html(single_vpc_network_acl_template(data));
         break;
         default:
             console.log('Unhandled case for ' + resource_type + '. Update the showObject function.')
