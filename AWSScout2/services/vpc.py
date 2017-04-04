@@ -121,6 +121,7 @@ class VPCRegionConfig(RegionConfig):
         manage_dictionary(self.vpcs, vpc_id, SingleVPCConfig())
         subnet_id = subnet['SubnetId']
         get_name(subnet, subnet, 'SubnetId')
+        subnet['flow_logs'] = []
         # Save
         manage_dictionary(self.vpcs, vpc_id, SingleVPCConfig())
         self.vpcs[vpc_id].subnets[subnet_id] = subnet
