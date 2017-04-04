@@ -17,10 +17,10 @@
                 <h4 class="list-group-item-heading">Flow logs<span id="vpc.regions.{{region}}.vpcs.{{vpc}}.subnets.{{@key}}.NoFlowLog" class="badge pull-right {{#if flow_logs_count}}btn-info{{/if}}">{{flow_logs_count}}</span></h4>
                 <ul>
                     {{#each flow_logs}}
-                        <li><a href="javascript:showObject('services.vpc.regions.{{../region}}.vpcs.{{../vpc}}.subnets.{{@../key}}.flow_logs.{{@key}}')">{{@key}}</a></li>
+                        <li><a href="javascript:showObject('services.vpc.regions.{{../region}}.flow_logs.{{this}}')">{{this}}</a></li>
                     {{/each}}
                     {{#each vpc_flow_logs}}
-                        <li><a href="javascript:showObject('services.vpc.regions.{{../region}}.vpcs.{{../vpc}}.flow_logs.{{this}}')">{{this}}</a></li>
+                        <li><a href="javascript:showObject('services.vpc.regions.{{../region}}.flow_logs.{{this}}')">{{this}}</a></li>
                     {{/each}}
                 </ul>
             </div>

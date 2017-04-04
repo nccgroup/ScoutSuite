@@ -5,10 +5,15 @@
             <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
+            <div class="list-group-item-text">Attached resource: {{ResourceId}}</div>
             <div class="list-group-item-text">Traffic type: {{TrafficType}}</div>
             <div class="list-group-item-text">Status: {{FlowLogStatus}}</div>
             <div class="list-group-item-text">Log group: {{LogGroupName}}</div>
-            <div class="list-group-item-text">Delivery role: {{DeliverLogsPermissionArn}}</div>
+            {{#if delivery_role}}
+                <div class="list-group-item-text">Delivery role: <a href="javascript:showObject('services.iam.roles.{{delivery_role.id}}')">{{delivery_role.name}}</a></div>
+            {{else}}
+                <div class="list-group-item-text">Delivery role: {{DeliverLogsPermissionArn}}</div>
+            {{/if}}
         </div>
     </script>
     <script>

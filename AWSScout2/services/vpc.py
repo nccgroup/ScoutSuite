@@ -34,10 +34,9 @@ class VPCRegionConfig(RegionConfig):
     """
 
     def __init__(self):
+        self.flow_logs = {}
         self.flow_logs_count = 0
         self.network_acls_count = 0
-        self.subnets = {}               # Temporary artifact
-        self.subnets_count = 0
         self.vpcs = {}
         # Gateways etc... (vpn, internet, nat, ...)
 
@@ -52,10 +51,7 @@ class VPCRegionConfig(RegionConfig):
         """
         get_name(fl, fl, 'FlowLogId')
         fl_id = fl.pop('FlowLogId')
-        resource_id = fl.pop('ResourceId')
-        #if resource_id.startswith('vpc-'):
-        manage_dictionary(self.vpcs, resource_id, SingleVPCConfig())
-        self.vpcs[resource_id].flow_logs[fl_id] = fl                # Temporary save within the region, once subnets are fetched too, do an update at the end of the run
+        self.flow_logs[fl_id] = fl
 
 
     def parse_network_acl(self, global_params, region, network_acl):
@@ -181,7 +177,6 @@ class SingleVPCConfig(object):
 
     def __init__(self, name = None):
         self.name = name
-        self.flow_logs = {}
         self.network_acls = {}
         self.route_tables = {}
         self.subnets = {}

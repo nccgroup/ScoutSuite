@@ -18,10 +18,10 @@ def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     """
     set_aws_account_id(aws_config)
     sort_vpc_flow_logs(aws_config['services']['vpc'])
-    link_vpc_flow_logs_with_subnets(aws_config['services']['vpc'])
     list_ec2_network_attack_surface(aws_config['services']['ec2'])
     add_security_group_name_to_ec2_grants(aws_config['services']['ec2'], aws_config['aws_account_id'])
     match_instances_and_roles(aws_config)
+    match_roles_and_vpc_flowlogs(aws_config)
     match_iam_policies_and_buckets(aws_config)
     match_security_groups_and_resources(aws_config)
     add_cidr_display_name(aws_config, ip_ranges, ip_ranges_name_key)
@@ -60,22 +60,6 @@ def add_security_group_name_to_ec2_grants_callback(ec2_config, current_config, p
             target = current_path[:(current_path.index('security_groups') + 1)]
             target.append(sg_id)
         ec2_grant['GroupName'] = get_value_at(ec2_config, target, 'name')
-
-
-def link_vpc_flow_logs_with_subnets(vpc_config):
-    go_to_and_do(vpc_config, None, ['regions', 'vpcs', 'subnets'], [], link_vpc_flow_logs_with_subnets_callback, {})
-
-
-def link_vpc_flow_logs_with_subnets_callback(vpc_config, current_config, path, current_path, subnet_id, callback_args):
-    manage_dictionary(current_config, 'flow_logs', {})
-    manage_dictionary(current_config, 'vpc_flow_logs', [])
-    vpc_path = current_path[0:4]
-    vpc = get_object_at(vpc_config, vpc_path)
-    if 'flow_logs' in vpc and len(vpc['flow_logs']):
-        for flow_id in vpc['flow_logs']:
-            if flow_id not in current_config['vpc_flow_logs']:
-                current_config['vpc_flow_logs'].append(flow_id)
-    current_config['flow_logs_count'] =  len(current_config['vpc_flow_logs']) + len(current_config['flow_logs'])
 
 
 def list_ec2_network_attack_surface(ec2_config):
@@ -206,6 +190,21 @@ def match_instances_and_roles(aws_config):
                 iam_config['roles'][role_id]['instances_count'] += len(role_instances[instance_profile_id])
 
 
+def match_roles_and_vpc_flowlogs(aws_config):
+    go_to_and_do(aws_config, aws_config['services']['vpc'], ['regions', 'flow_logs'], [], match_roles_and_vpc_flowlogs_callback, {})
+
+
+def match_roles_and_vpc_flowlogs_callback(aws_config, current_config, path, current_path, flowlog_id, callback_args):
+    if 'DeliverLogsPermissionArn' not in current_config:
+        return
+    delivery_role_name = current_config['DeliverLogsPermissionArn'].split(':')[-1].replace('role/', '')
+    for role_id in aws_config['services']['iam']['roles']:
+        if aws_config['services']['iam']['roles'][role_id]['name'] == delivery_role_name:
+            current_config['delivery_role'] = {'name': delivery_role_name, 'id': role_id}
+            current_config.pop('DeliverLogsPermissionArn')
+            break
+
+
 def match_security_groups_and_resources(aws_config):
     # EC2 instances
     callback_args = {'status_path': [ '..', '..', 'State', 'Name' ], 'resource_id_path': ['..'], 'sg_list_attribute_name': 'Groups', 'sg_id_attribute_name': 'GroupId'}
@@ -286,19 +285,30 @@ def set_aws_account_id(aws_config):
 
 
 def sort_vpc_flow_logs(vpc_config):
-    go_to_and_do(vpc_config, None, ['regions', 'vpcs', 'flow_logs'], [], sort_vpc_flow_logs_callback, {})
+    go_to_and_do(vpc_config, None, ['regions', 'flow_logs'], [], sort_vpc_flow_logs_callback, {})
 
 
 def sort_vpc_flow_logs_callback(vpc_config, current_config, path, current_path, flow_log_id, callback_args):
-    attached_resource = current_path[-2]
-    if not attached_resource.startswith('vpc-'):
-        all_vpcs = get_object_at(vpc_config, current_path[0:3])
+    attached_resource = current_config['ResourceId']
+    if attached_resource.startswith('vpc-'):
+        vpc_path = combine_paths(current_path[0:2], ['vpcs', attached_resource])
+        attached_vpc = get_object_at(vpc_config, vpc_path)
+        manage_dictionary(attached_vpc, 'flow_logs', [])
+        attached_vpc['flow_logs'].append(flow_log_id)
+        for subnet_id in attached_vpc['subnets']:
+            manage_dictionary(attached_vpc['subnets'][subnet_id], 'flow_logs', [])
+            attached_vpc['subnets'][subnet_id]['flow_logs'].append(flow_log_id)
+            attached_vpc['subnets'][subnet_id]['flow_logs_count'] = len(attached_vpc['subnets'][subnet_id]['flow_logs'])
+    elif attached_resource.startswith('subnet-'):
+        all_vpcs = get_object_at(vpc_config, combine_paths(current_path[0:2], ['vpcs']))
         for vpc in all_vpcs:
             if attached_resource in all_vpcs[vpc]['subnets']:
-                manage_dictionary(all_vpcs[vpc]['subnets'][attached_resource], 'flow_logs', {})
-                all_vpcs[vpc]['subnets'][attached_resource]['flow_logs'][flow_log_id] = copy.deepcopy(current_config)
-                all_vpcs.pop(attached_resource)
+                manage_dictionary(all_vpcs[vpc]['subnets'][attached_resource], 'flow_logs', [])
+                all_vpcs[vpc]['subnets'][attached_resource]['flow_logs'].append(flow_log_id)
+                all_vpcs[vpc]['subnets'][attached_resource]['flow_logs_count'] = len(all_vpcs[vpc]['subnets'][attached_resource]['flow_logs'])
                 break
+    else:
+        printError('Resource %s attached to flow logs is not handled' % attached_resource)
 
 
 def go_to_and_do(aws_config, current_config, path, current_path, callback, callback_args = None):
