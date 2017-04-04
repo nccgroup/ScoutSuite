@@ -68,6 +68,8 @@ class ServicesConfig(object):
                         method_args['regions'] = regions
                         method_args['partition_name'] = partition_name
                     service_config.fetch_all(**method_args)
+                    if hasattr(service_config, 'finalize'):
+                        service_config.finalize()
             except Exception as e:
                 printError('Error: could not fetch %s configuration.' % service)
                 printException(e)

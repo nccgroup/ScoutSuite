@@ -20,6 +20,7 @@ from AWSScout2.output.html import Scout2Report
 from AWSScout2.rules.exceptions import process_exceptions
 from AWSScout2.rules.ruleset import Ruleset
 from AWSScout2.rules.postprocessing import do_postprocessing
+from AWSScout2.rules.processing import preprocessing
 
 
 ########################################
@@ -62,6 +63,9 @@ def main():
 
     # Reload to flatten everything into a python dictionary
     aws_config = report.jsrw.load_from_file(AWSCONFIG)
+
+    # Pre processing
+    preprocessing(aws_config)
 
     # Analyze config
     ruleset = Ruleset(profile_name)

@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils import manage_dictionary
+import netaddr
 
+from opinel.utils import manage_dictionary
+from opinel.utils import read_ip_ranges
 from opinel.utils import load_data
 from opinel.utils_ec2 import get_name
 
@@ -50,18 +52,9 @@ class VPCRegionConfig(RegionConfig):
         """
         fl_id = fl.pop('FlowLogId')
         resource_id = fl.pop('ResourceId')
-        if resource_id.startswith('vpc-'):
-            # TODO TODO TODO region_info no longer works
-            manage_dictionary(region_info['vpcs'], resource_id, {})
-            manage_dictionary(region_info['vpcs'][resource_id], 'flow_logs', {})
-            manage_dictionary(self.vpcs, resource_id, SingleVPCConfig())
-            self.vpcs[resource_id]['flow_logs'][fl_id] = fl
-        elif resource_id.startswith('subnet-'):
-            # Temporary save within the region, once subnets are fetched too, do an update at the end of the run
-            manage_dictionary(region_info, 'subnets', {})
-            manage_dictionary(region_info['subnets'], resource_id, {})
-            manage_dictionary(region_info['subnets'][resource_id], 'flow_logs', {})
-            self.subnets[resource_id]['flow_logs'][fl_id] = fl
+        #if resource_id.startswith('vpc-'):
+        manage_dictionary(self.vpcs, resource_id, SingleVPCConfig())
+        self.vpcs[resource_id].flow_logs[fl_id] = fl                # Temporary save within the region, once subnets are fetched too, do an update at the end of the run
 
 
     def parse_network_acl(self, global_params, region, network_acl):
@@ -238,7 +231,7 @@ def put_cidr_name(aws_config, current_config, path, current_path, resource_id, c
 #
 # Read display name for CIDRs from ip-ranges files
 #
-#aws_ip_ranges = read_ip_ranges(aws_ip_ranges_filename, False)
+aws_ip_ranges = {} # read_ip_ranges(aws_ip_ranges_filename, False)
 def get_cidr_name(cidr, ip_ranges_files, ip_ranges_name_key):
     for filename in ip_ranges_files:
         ip_ranges = read_ip_ranges(filename, local_file = True)

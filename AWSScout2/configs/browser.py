@@ -8,6 +8,15 @@ from opinel.utils import printError, printException
 # Functions
 ########################################
 
+def combine_paths(path1, path2):
+    path = path1
+    for p in path2:
+        if p == '..':
+            del(path[-1])
+        else:
+            path.append(p)
+    return path
+
 def get_attribute_at(config, target_path, key, default_value = None):
     """
     Return attribute value at a given path
