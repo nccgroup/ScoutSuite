@@ -343,54 +343,8 @@ function showObject() {
     } else {
         var resource_type = path_array[1] + '_' + path_array[path_length-2];
     }
-    switch(resource_type) {
-        case "cloudtrail_trails":
-            $('#overlay-details').html(single_cloudtrail_trail_template(data));
-        break;
-        case "iam_groups":
-            $('#overlay-details').html(single_iam_group_template(data));
-        break;
-        case "iam_roles":
-            $('#overlay-details').html(single_iam_role_template(data));
-        break;
-        case "iam_users":
-            $('#overlay-details').html(single_iam_user_template(data));
-        break;
-        case "iam_policies":
-            $('#overlay-details').html(single_iam_policy_template(data));
-        break;
-        case "iam_inline_policies":
-            $('#overlay-details').html(single_iam_policy_template(data));
-        break;
-        case "ec2_instances":
-            $('#overlay-details').html(single_ec2_instance_template(data));
-        break;
-        case "ec2_security_groups":
-            $('#overlay-details').html(single_ec2_security_group_template(data));
-        break;
-        case "rds_instances":
-            $('#overlay-details').html(single_rds_instance_template(data));
-        break;
-        case "rds_snapshots":
-            $('#overlay-datails').html(single_rds_snapshot_template(data));
-        break;
-        case "redshift_clusters":
-            $('#overlay-details').html(single_redshift_cluster_template(data));
-        break;
-        // TODO: make this automated...
-        case "s3_buckets":
-            $('#overlay-details').html(single_s3_bucket_template(data));
-        break;
-        case "s3_keys":
-            $('#overlay-details').html(single_s3_object_template(data));
-        break;
-        case "vpc_network_acls":
-            $('#overlay-details').html(single_vpc_network_acl_template(data));
-        break;
-        default:
-            console.log('Unhandled case for ' + resource_type + '. Update the showObject function.')
-        break;
-    }
+    template = 'single_' + resource_type.substring(0,resource_type.length -1) + '_template';
+    $('#overlay-details').html(window[template](data));
     showPopup();
 }
 function showIAMManagedPolicy(policy_id) {
