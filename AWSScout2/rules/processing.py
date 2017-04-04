@@ -18,6 +18,7 @@ def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     """
     set_aws_account_id(aws_config)
     sort_vpc_flow_logs(aws_config['services']['vpc'])
+    link_vpc_flow_logs_with_subnets(aws_config['services']['vpc'])
     list_ec2_network_attack_surface(aws_config['services']['ec2'])
     add_security_group_name_to_ec2_grants(aws_config['services']['ec2'], aws_config['aws_account_id'])
     match_instances_and_roles(aws_config)
@@ -59,6 +60,22 @@ def add_security_group_name_to_ec2_grants_callback(ec2_config, current_config, p
             target = current_path[:(current_path.index('security_groups') + 1)]
             target.append(sg_id)
         ec2_grant['GroupName'] = get_value_at(ec2_config, target, 'name')
+
+
+def link_vpc_flow_logs_with_subnets(vpc_config):
+    go_to_and_do(vpc_config, None, ['regions', 'vpcs', 'subnets'], [], link_vpc_flow_logs_with_subnets_callback, {})
+
+
+def link_vpc_flow_logs_with_subnets_callback(vpc_config, current_config, path, current_path, subnet_id, callback_args):
+    #print(subnet_id)
+    if 'flow_logs' not in current_config:
+        vpc_path = current_path[0:4]
+        vpc = get_object_at(vpc_config, vpc_path)
+        if 'flow_logs' in vpc and len(vpc['flow_logs']):
+            manage_dictionary(current_config, 'vpc_flow_logs', [])
+            for flow_id in vpc['flow_logs']:
+                if flow_id not in current_config['vpc_flow_logs']:
+                    current_config['vpc_flow_logs'].append(flow_id)
 
 
 def list_ec2_network_attack_surface(ec2_config):
@@ -254,9 +271,6 @@ def match_security_groups_and_resources_callback(aws_config, current_config, pat
         else:
             printError('Failed to parse %s in %s in %s' % (resource_type, vpc_id, region))
             printException(e)
-
-
-
 
 
 def set_aws_account_id(aws_config):
