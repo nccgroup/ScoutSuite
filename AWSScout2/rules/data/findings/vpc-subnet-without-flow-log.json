@@ -1,0 +1,9 @@
+{
+    "description": "Subnet without a flow log",
+    "path": "vpc.regions.id.vpcs.id.subnets.id",
+    "dashboard_name": "Subnets",
+    "id_suffix": "NoFlowLog",
+    "conditions": [ "and",
+        [ "flow_logs_count", "equal", "0" ]
+    ]
+}

@@ -834,6 +834,11 @@
             "args": [
                 "SendRawEmail"
             ]
+        },
+        {
+            "level": "warning",
+            "filename": "vpc-subnet-without-flow-log.json",
+            "enabled": true
         }
     ]
 }
