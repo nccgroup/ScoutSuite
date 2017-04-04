@@ -50,6 +50,7 @@ class VPCRegionConfig(RegionConfig):
         :param fl:
         :return:
         """
+        get_name(fl, fl, 'FlowLogId')
         fl_id = fl.pop('FlowLogId')
         resource_id = fl.pop('ResourceId')
         #if resource_id.startswith('vpc-'):

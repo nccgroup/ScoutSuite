@@ -67,15 +67,15 @@ def link_vpc_flow_logs_with_subnets(vpc_config):
 
 
 def link_vpc_flow_logs_with_subnets_callback(vpc_config, current_config, path, current_path, subnet_id, callback_args):
-    #print(subnet_id)
-    if 'flow_logs' not in current_config:
-        vpc_path = current_path[0:4]
-        vpc = get_object_at(vpc_config, vpc_path)
-        if 'flow_logs' in vpc and len(vpc['flow_logs']):
-            manage_dictionary(current_config, 'vpc_flow_logs', [])
-            for flow_id in vpc['flow_logs']:
-                if flow_id not in current_config['vpc_flow_logs']:
-                    current_config['vpc_flow_logs'].append(flow_id)
+    manage_dictionary(current_config, 'flow_logs', {})
+    manage_dictionary(current_config, 'vpc_flow_logs', [])
+    vpc_path = current_path[0:4]
+    vpc = get_object_at(vpc_config, vpc_path)
+    if 'flow_logs' in vpc and len(vpc['flow_logs']):
+        for flow_id in vpc['flow_logs']:
+            if flow_id not in current_config['vpc_flow_logs']:
+                current_config['vpc_flow_logs'].append(flow_id)
+    current_config['flow_logs_count'] =  len(current_config['vpc_flow_logs']) + len(current_config['flow_logs'])
 
 
 def list_ec2_network_attack_surface(ec2_config):
@@ -295,7 +295,8 @@ def sort_vpc_flow_logs_callback(vpc_config, current_config, path, current_path, 
         all_vpcs = get_object_at(vpc_config, current_path[0:3])
         for vpc in all_vpcs:
             if attached_resource in all_vpcs[vpc]['subnets']:
-                all_vpcs[vpc]['subnets'][attached_resource]['flow_logs'] = copy.deepcopy(current_config)
+                manage_dictionary(all_vpcs[vpc]['subnets'][attached_resource], 'flow_logs', {})
+                all_vpcs[vpc]['subnets'][attached_resource]['flow_logs'][flow_log_id] = copy.deepcopy(current_config)
                 all_vpcs.pop(attached_resource)
                 break
 

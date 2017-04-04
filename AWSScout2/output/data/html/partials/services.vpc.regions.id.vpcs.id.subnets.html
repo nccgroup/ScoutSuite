@@ -13,6 +13,17 @@
                 <div class="list-group-item-text">Ipv6 CIDR Block: {{Ipv6CidrBlockAssociationSet}}</div>
                 <div class="list-group-item-text">Public IP on launch: {{MapPublicIpOnLaunch}}</div>
             </div>
+            <div class="list-group-item">
+                <h4 class="list-group-item-heading">Flow logs<span class="badge pull-right {{#if flow_logs_count}}btn-info{{/if}}">{{flow_logs_count}}</span></h4>
+                <ul>
+                    {{#each flow_logs}}
+                        <li><a href="javascript:showObject('services.vpc.regions.{{../region}}.vpcs.{{../vpc}}.subnets.{{@../key}}.flow_logs.{{@key}}')">{{@key}}</a></li>
+                    {{/each}}
+                    {{#each vpc_flow_logs}}
+                        <li><a href="javascript:showObject('services.vpc.regions.{{../region}}.vpcs.{{../vpc}}.flow_logs.{{this}}')">{{this}}</a></li>
+                    {{/each}}
+                </ul>
+            </div>
     </script>
     <script>
       Handlebars.registerPartial("services.vpc.regions.id.vpcs.id.subnets", $("#services\\.vpc\\.regions\\.id\\.vpcs\\.id\\.subnets\\.partial").html());
