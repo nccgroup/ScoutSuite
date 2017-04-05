@@ -1,20 +1,40 @@
 # -*- coding: utf-8 -*-
-"""
-Multi-service post-processing functions
-"""
+
+import sys
 
 from opinel.utils import manage_dictionary, printInfo, printError, printException
 
+from AWSScout2 import __version__ as scout2_version
 from AWSScout2.services.vpc import get_cidr_name, put_cidr_name
 
 
 
-def do_postprocessing(aws_config):
+def postprocessing(aws_config, current_time, ruleset):
 
-
-    # final
     update_metadata(aws_config)
+    update_last_run(aws_config, current_time, ruleset)
 
+
+def update_last_run(aws_config, current_time, ruleset):
+    last_run = {}
+    last_run['time'] = current_time.strftime("%Y-%m-%d %H:%M:%S%z")
+    last_run['cmd'] = ' '.join(sys.argv)
+    last_run['version'] = scout2_version
+    last_run['ruleset_name'] = ruleset.name
+    last_run['ruleset_about'] = ruleset.ruleset['about'] if 'about' in ruleset.ruleset else ''
+    last_run['summary'] = {}
+    for service in aws_config['services']:
+        last_run['summary'][service] = {'checked_items': 0, 'flagged_items': 0, 'max_level': 'warning'}
+        if aws_config['services'][service] == None:
+            # Not supported yet
+            continue
+        elif 'findings' in aws_config['services'][service]:
+            for finding in aws_config['services'][service]['findings']:
+                last_run['summary'][service]['checked_items'] += aws_config['services'][service]['findings'][finding]['checked_items']
+                last_run['summary'][service]['flagged_items'] += aws_config['services'][service]['findings'][finding]['flagged_items']
+                if last_run['summary'][service]['max_level'] != 'danger':
+                    last_run['summary'][service]['max_level'] = aws_config['services'][service]['findings'][finding]['level']
+    aws_config['last_run'] = last_run
 
 
 

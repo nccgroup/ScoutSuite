@@ -70,9 +70,7 @@ class Scout2Report(HTMLReport):
         self.html_root = HTMLREPORT_FILE
         super(Scout2Report, self).__init__(profile, report_dir, timestamp, exceptions)
 
-    def save(self, config, exceptions, last_run, force_write = False, debug = False):
-        if type(config) == dict:
-            config['last_run'] = last_run
+    def save(self, config, exceptions, force_write = False, debug = False):
         self.prepare_html_report_dir()
         self.jsrw.save_to_file(config, AWSCONFIG, force_write, debug)
         self.jsrw.save_to_file(exceptions, EXCEPTIONS, force_write, debug)

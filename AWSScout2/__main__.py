@@ -19,8 +19,8 @@ from AWSScout2.configs.services import postprocessing
 from AWSScout2.output.html import Scout2Report
 from AWSScout2.rules.exceptions import process_exceptions
 from AWSScout2.rules.ruleset import Ruleset
-from AWSScout2.rules.postprocessing import do_postprocessing
 from AWSScout2.rules.processing import preprocessing
+from AWSScout2.rules.postprocessing import postprocessing
 
 
 ########################################
@@ -59,7 +59,7 @@ def main():
 
         aws_config.fetch(credentials, regions=args.regions, partition_name=args.partition_name)
         aws_config.update_metadata()
-        report.save(aws_config, {}, None, args.force_write, args.debug)
+        report.save(aws_config, None, args.force_write, args.debug)
 
     # Reload to flatten everything into a python dictionary
     aws_config = report.jsrw.load_from_file(AWSCONFIG)
@@ -75,19 +75,11 @@ def main():
     filters = Ruleset(filename = 'filters.json', rule_type = 'filters')
     filters.analyze(aws_config)
 
-    # Finalize
-    postprocessing(aws_config)
-    do_postprocessing(aws_config)
-
-
     # Handle exceptions
     process_exceptions(aws_config, args.exceptions[0])
 
+    # Finalize
+    postprocessing(aws_config, report.current_time, ruleset)
+
     # Save config and create HTML report
-    last_run = {}
-    last_run['time'] = report.current_time.strftime("%Y-%m-%d %H:%M:%S%z")
-    last_run['cmd'] = ' '.join(sys.argv)
-    last_run['version'] = scout2_version
-    last_run['ruleset_name'] = ruleset.name
-    last_run['ruleset_about'] = ruleset.ruleset['about'] if 'about' in ruleset.ruleset else ''
-    report.save(aws_config, {}, last_run, args.force_write, args.debug)
+    report.save(aws_config, {}, args.force_write, args.debug)

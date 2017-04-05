@@ -113,20 +113,45 @@
 
       <!-- About-run dashboard -->
       <script id="last_run.details.template" type="text/x-handlebars-template">
-        <div class="row" id="last_run.details">
-          <div class="list-group-item active">
-            <h4 class="list-group-item-heading">Dashboard</h4>
+        <h4>
+          <div class="row" id="last_run.details">
+            <div class="list-group-item active">
+             <div class="list-group-item-heading">Dashboard</div>
+            </div>
+            <div class="list-group-item">
+              <div class="list-group-item-text item-margin">Summary:</div>
+              <div class="list-group-item-text item-margin">
+                <div class="list-group-item-text" style="text-align: center">&nbsp;</div>
+                <div class="list-group-item">Service
+                  <div class="col-sm-4 pull-right" style="text-align: center"># of Checks</div>
+                  <div class="col-sm-4 pull-right" style="text-align: center"># of Findings</div>
+                </div>
+                {{#each items.summary}}
+                  <a href="#services.{{@key}}.findings" style="color: black !important;">
+                    <div class="list-group-item finding-title-{{dashboard_color max_level checked_items flagged_items}}">{{make_title @key}}
+                      <div class="col-sm-4 pull-right" style="text-align: center">{{checked_items}}</div>
+                      <div class="col-sm-4 pull-right" style="text-align: center">{{flagged_items}}</div>
+                    </div>
+                  </a>
+                {{/each}}
+              </div>
+              <div class="list-group-item-text item-margin">&nbsp;</div>
+              <div class="list-group-item-text item-margin">&nbsp;</div>
+              <div class="list-group-item-text item-margin">Last run:
+                  <div class="list-group-item-text item-margin">&nbsp;</div>
+                  <div class="list-group-item-text item-margin">Time: {{items.time}}</div>
+                  <div class="list-group-item-text item-margin">Command: {{items.cmd}}</div>
+              </div>
+              <div class="list-group-item-text item-margin">&nbsp;</div>
+              <div class="list-group-item-text item-margin">Report generated with Scout2 version {{items.version}}</div>
+              <div class="list-group-item-text item-margin">&nbsp;</div>
+              <div class="list-group-item-text item-margin">Ruleset used: {{items.ruleset_name}}</div>
+              <div class="list-group-item-text item-margin">&nbsp;</div>
+              <div class="list-group-item-text item-margin">About the ruleset: {{items.ruleset_about}}</div>
+              <div class="list-group-item-text item-margin">&nbsp;</div>
+            </div>
           </div>
-          <div class="list-group-item">
-            <div class="list-group-item-text item-margin">Last run time: {{items.time}}</div>
-            <div class="list-group-item-text item-margin">Last run command: {{items.cmd}}</div>
-            <div class="list-group-item-text item-margin">&nbsp;</div>
-            <div class="list-group-item-text item-margin">Report generated with Scout2 version {{items.version}}</div>
-            <div class="list-group-item-text item-margin">&nbsp;</div>
-            <div class="list-group-item-text item-margin">Ruleset used: {{items.ruleset_name}}</div>
-            <div class="list-group-item-text item-margin">About the ruleset: {{items.ruleset_about}}</div>
-          </div>
-        </div>
+        </h4>
       </script>
 
       <!-- Service-specific dashboards -->
