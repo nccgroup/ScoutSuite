@@ -33,9 +33,9 @@ class ServicesConfig(object):
     """
 
     def __init__(self):
-        self.cloudformation = None
+        #self.cloudformation = None
         self.cloudtrail = CloudTrailConfig()
-        self.cloudwatch = None
+        #self.cloudwatch = None
         self.ec2 = EC2Config()
         self.iam = IAMConfig()
         self.redshift = RedshiftConfig()

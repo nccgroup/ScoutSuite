@@ -1,0 +1,40 @@
+
+    <!-- Route53 hosted_zone partial -->
+    <script id="services.route53.hosted_zones.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+            <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+            <h4 class="list-group-item-heading">Information</h4>
+            <div class="list-group-item-text item-margin">Private Hosted Zone: {{Config.PrivateZone}}</div>
+            <div class="list-group-item-text item-margin">Comment: {{Config.Comment}}</div>
+        </div>
+        <div class="list-group-item">
+            <h4 class="list-group-item-heading">Record Sets</h4>
+            {{#each ResourceRecordSets}}
+            <div class="row item-margin">
+                <hr style="margin: 5px !important">
+                <div class="col-sm-7 pull-right" style="text-align: center">
+                    {{#each ResourceRecords}}
+                        <div class="list-group-item-text">{{Value}}</div>
+                    {{/each}}
+                </div>
+                <div class="col-sm-1 pull-right" style="text-align: center">{{Type}}</div>
+                <div class="list-group-item-text">{{Name}}</div>
+                </div>
+                {{#if @last}}<hr style="margin: 5px !important">{{/if}}
+            {{/each}}
+        </div>
+      </script>
+    <script>
+        Handlebars.registerPartial("services.route53.hosted_zones", $("#services\\.route53\\.hosted_zones\\.partial").html());
+    </script>
+
+    <!-- Single Route53 hosted_zone template -->
+    <script id="services.route53.hosted_zones.template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.route53.hosted_zones}}
+    </script>
+    <script>
+        var single_route53_hosted_zone_template = Handlebars.compile($("#services\\.route53\\.hosted_zones\\.template").html());
+    </script>

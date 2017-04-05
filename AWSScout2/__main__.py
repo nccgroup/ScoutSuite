@@ -57,7 +57,6 @@ def main():
     if not args.fetch_local:
 
         aws_config.fetch(credentials, regions=args.regions, partition_name=args.partition_name)
-        aws_config.update_metadata()
         report.save(aws_config, None, args.force_write, args.debug)
 
     # Reload to flatten everything into a python dictionary

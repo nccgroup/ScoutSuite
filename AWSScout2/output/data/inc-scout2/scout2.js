@@ -451,7 +451,8 @@ function showAllResources(script_id) {
 function makeTitle(resource_path) {
     service = getService(resource_path);
     resource = resource_path.split('.').pop();
-    resource = resource.replace('_', ' ').replace('<', '').replace('>', '').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}).replace("Acl","ACL").replace("Violations", "Dashboard");
+    resource = resource.replace('_', ' ').replace('<', '').replace('>',
+    '').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}).replace("Acl","ACL").replace("Findings", "Dashboard");
     return service + ' ' + resource;
 }
    
@@ -461,7 +462,8 @@ function getService(resource_path) {
     } else {
         service = resource_path.split('.')[0];
     }
-    service = service.toUpperCase().replace('CLOUDTRAIL', 'CloudTrail').replace('REDSHIFT', 'RedShift');
+    service = make_title(service);
+//    service = service.toUpperCase().replace('CLOUDTRAIL', 'CloudTrail').replace('REDSHIFT', 'RedShift').replace('ROUTE53', 'Route53');
     return service;
 }
 

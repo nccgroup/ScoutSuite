@@ -839,6 +839,16 @@
             "level": "warning",
             "filename": "vpc-subnet-without-flow-log.json",
             "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "route53-domain-no-autorenew.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "route53-domain-no-transferlock.json",
+            "enabled": true
         }
     ]
 }

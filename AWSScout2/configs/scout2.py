@@ -5,6 +5,8 @@ from __future__ import unicode_literals
 import json
 import os
 
+from opinel.utils import printException
+
 from AWSScout2.configs.services import ServicesConfig
 
 class Scout2Config(object):
@@ -73,7 +75,6 @@ class Scout2Config(object):
                     # Update counts
                     count = '%s_count' % resource
                     service_config = getattr(self.services, service)
-
                     if service_config and resource != 'regions':
                       if hasattr(service_config, 'regions'):
                         self.metadata[service_group][service]['resources'][resource]['count'] = 0
@@ -81,4 +82,8 @@ class Scout2Config(object):
                             if hasattr(service_config.regions[region], count):
                                 self.metadata[service_group][service]['resources'][resource]['count'] += getattr(service_config.regions[region], count)
                       else:
-                        self.metadata[service_group][service]['resources'][resource]['count'] = getattr(service_config, count)
+                          try:
+                              self.metadata[service_group][service]['resources'][resource]['count'] = getattr(service_config, count)
+                          except Exception as e:
+                              printException(e)
+                              print(vars(service_config))

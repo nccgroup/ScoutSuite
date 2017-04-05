@@ -17,7 +17,7 @@ def postprocessing(aws_config, current_time, ruleset):
     :param ruleset:
     :return:
     """
-    update_metadata(aws_config)
+    new_update_metadata(aws_config)
     update_last_run(aws_config, current_time, ruleset)
 
 
@@ -76,3 +76,36 @@ def update_metadata(aws_config):
                             printError('Service: %s' % s)
                             printError('Resource: %s' % resource)
                             printException(e)
+
+
+def new_update_metadata(aws_config):
+        service_map = {}
+        for service_group in aws_config['metadata']:
+            for service in aws_config['metadata'][service_group]:
+                if service not in aws_config['service_list']:
+                    continue
+                if 'resources' not in aws_config['metadata'][service_group][service]:
+                    continue
+                service_map[service] = service_group
+                for resource in aws_config['metadata'][service_group][service]['resources']:
+                    # full_path = path if needed
+                    if not 'full_path' in aws_config['metadata'][service_group][service]['resources'][resource]:
+                        aws_config['metadata'][service_group][service]['resources'][resource]['full_path'] = aws_config['metadata'][service_group][service]['resources'][resource]['path']
+                    # Script is the full path minus "id" (TODO: change that)
+                    if not 'script' in aws_config['metadata'][service_group][service]['resources'][resource]:
+                        aws_config['metadata'][service_group][service]['resources'][resource]['script'] = '.'.join([x for x in aws_config['metadata'][service_group][service]['resources'][resource]['full_path'].split('.') if x != 'id'])
+                    # Update counts
+                    count = '%s_count' % resource
+                    service_config = aws_config['services'][service]
+                    if service_config and resource != 'regions':
+                      if 'regions' in service_config.keys(): # hasattr(service_config, 'regions'):
+                        aws_config['metadata'][service_group][service]['resources'][resource]['count'] = 0
+                        for region in service_config['regions']:
+                            if count in service_config['regions'][region].keys():
+                                aws_config['metadata'][service_group][service]['resources'][resource]['count'] += service_config['regions'][region][count]
+                      else:
+                          try:
+                            aws_config['metadata'][service_group][service]['resources'][resource]['count'] = service_config[count]
+                          except Exception as e:
+
+                              printException(e)
