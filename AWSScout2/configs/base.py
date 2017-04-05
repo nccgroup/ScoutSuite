@@ -103,7 +103,7 @@ class BaseConfig(GlobalConfig):
             for t in self.counts:
                 count = '%s_count' % t
                 setattr(self, count, self.counts[t]['fetched'])
-            self.__delattr__(counts)
+            self.__delattr__('counts')
         except:
             pass
 
