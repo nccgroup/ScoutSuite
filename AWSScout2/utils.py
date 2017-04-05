@@ -16,7 +16,8 @@ formatted_service_name = {
     'cloudwatch': 'CloudWatch',
     'lambda': 'Lambda',
     'redshift': 'RedShift',
-    'route53': 'Route53'
+    'route53': 'Route53',
+    'route53domains': 'Route53Domains'
 }
 
 

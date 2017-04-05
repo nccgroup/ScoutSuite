@@ -23,12 +23,9 @@ class Scout2Config(object):
         self.account_id = None
         self.last_run = None
         self.__load_metadata()
-        supported_services = []
-        for group in self.metadata:
-            for service in self.metadata[group]:
-                supported_services.append(service)
-        self.service_list = self.__build_services_list(supported_services, services, skipped_services)
         self.services = ServicesConfig()
+        supported_services = vars(self.services).keys()
+        self.service_list = self.__build_services_list(supported_services, services, skipped_services)
 
 
     def fetch(self, credentials, regions = [], skipped_regions = [], partition_name = 'aws'):

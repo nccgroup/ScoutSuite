@@ -64,13 +64,15 @@ class BaseConfig(GlobalConfig):
         printInfo('Fetching %s config...' % format_service_name(self.service))
         formatted_string = None
         #self.status_init(targets)
-        api_service = self.service.lower() # TODO : handle EC2/VPC/ELB weirdness maybe ?
+        api_service = self.service.lower()
         # Connect to the service
-        if self.service in [ 's3' ]: # grmbl
+        if self.service in [ 's3' ]: # S3 namespace is global but APIs aren't....
             api_clients = {}
             for region in build_region_list(self.service, regions, partition_name):
                 api_clients[region] = connect_service('s3', credentials, region)
             api_client = api_clients[api_clients.keys()[0]]
+        elif self.service == 'route53domains':
+            api_client = connect_service(self.service, credentials, 'us-east-1') # TODO: use partition's default region
         else:
             api_client = connect_service(self.service, credentials)
         # Threading to fetch & parse resources (queue consumer)
@@ -90,7 +92,7 @@ class BaseConfig(GlobalConfig):
             manage_dictionary(self.counts[target_type], 'fetched', 0)
             manage_dictionary(self.counts[target_type], 'discovered', 0)
             qt.put(target)
-        self.status_init() # targets)
+        self.status_init()
         # Join
         qt.join()
         q.join()
@@ -120,7 +122,6 @@ class BaseConfig(GlobalConfig):
 
     def __fetch_service(self, q, params):
         api_client = params['api_client']
-        #printInfo(str(params))
         try:
             while True:
                 try:
@@ -128,6 +129,7 @@ class BaseConfig(GlobalConfig):
                     try:
                         method = getattr(api_client, list_method_name)
                     except:
+                        printException(e)
                         continue
                     try:
                         targets = handle_truncated_response(method, list_params, [response_attribute])[
