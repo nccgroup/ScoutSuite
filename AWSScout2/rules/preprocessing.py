@@ -26,6 +26,7 @@ def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     match_iam_policies_and_buckets(aws_config)
     match_security_groups_and_resources(aws_config)
     add_cidr_display_name(aws_config, ip_ranges, ip_ranges_name_key)
+    merge_route53_and_route53domains(aws_config)
 
 
 
@@ -271,6 +272,13 @@ def match_security_groups_and_resources_callback(aws_config, current_config, pat
         else:
             printError('Failed to parse %s in %s in %s' % (resource_type, vpc_id, region))
             printException(e)
+
+
+def merge_route53_and_route53domains(aws_config):
+    if 'route53domains' not in aws_config['services']:
+        return
+    aws_config['services']['route53'].update(aws_config['services']['route53domains'])
+    aws_config['services'].pop('route53domains')
 
 
 def set_aws_account_id(aws_config):

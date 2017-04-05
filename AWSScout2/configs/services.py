@@ -8,7 +8,7 @@ from AWSScout2.services.ec2 import EC2Config
 from AWSScout2.services.iam import IAMConfig
 from AWSScout2.services.rds import RDSConfig
 from AWSScout2.services.redshift import RedshiftConfig
-from AWSScout2.services.route53 import Route53DomainsConfig
+from AWSScout2.services.route53 import Route53Config, Route53DomainsConfig
 from AWSScout2.services.s3 import S3Config
 from AWSScout2.services.ses import SESConfig
 from AWSScout2.services.sns import SNSConfig
@@ -40,6 +40,7 @@ class ServicesConfig(object):
         self.iam = IAMConfig()
         self.redshift = RedshiftConfig()
         self.rds = RDSConfig()
+        self.route53 = Route53Config()
         self.route53domains = Route53DomainsConfig()
         self.s3 = S3Config()
         self.ses = SESConfig()
