@@ -10,7 +10,13 @@ from AWSScout2.services.vpc import get_cidr_name, put_cidr_name
 
 
 def postprocessing(aws_config, current_time, ruleset):
+    """
 
+    :param aws_config:
+    :param current_time:
+    :param ruleset:
+    :return:
+    """
     update_metadata(aws_config)
     update_last_run(aws_config, current_time, ruleset)
 
@@ -38,13 +44,7 @@ def update_last_run(aws_config, current_time, ruleset):
     aws_config['last_run'] = last_run
 
 
-
-#
-# Create dashboard metadata
-#
 def update_metadata(aws_config):
-    # Security risks dropdown on a per-resource basis
-
     service_map = {}
     for service_group in aws_config['metadata']:
         for service in aws_config['metadata'][service_group]:
@@ -76,25 +76,3 @@ def update_metadata(aws_config):
                             printError('Service: %s' % s)
                             printError('Resource: %s' % resource)
                             printException(e)
-
-
-
-
-########################################
-# VPC
-########################################
-
-def vpc_postprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
-
-    # Add friendly name for CIDRs
-    if len(ip_ranges):
-        callback_args = {'ip_ranges': ip_ranges, 'ip_ranges_name_key': ip_ranges_name_key}
-        go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports'], ['services', 'ec2'], put_cidr_name, callback_args)
-
-    # Propagate VPC names outside EC2
-    vpc_services = [ 'rds', 'redshift' ]
-#    for service in vpc_services:
-#        go_to_and_do(aws_config, aws_config['services'][service], ['regions', 'vpcs'], ['services', service], propagate_vpc_names, {})
-
-
-

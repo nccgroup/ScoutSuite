@@ -9,6 +9,7 @@ from AWSScout2.utils import ec2_classic
 from AWSScout2.services.vpc import put_cidr_name
 
 
+
 def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     """
     Tweak the AWS config to match cross-service resources and clean any fetching artifacts
