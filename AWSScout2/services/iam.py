@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
-IAM-related classes and functions
-"""
 
-# Import opinel
 from opinel.utils import connect_service, handle_truncated_response, manage_dictionary, printError, printException
 
-# Import Scout2 tools
 from AWSScout2.configs.base import BaseConfig
 from AWSScout2.utils import *
 
@@ -114,7 +109,6 @@ class IAMConfig(BaseConfig):
         Parse a single IAM group and fetch additional information
         """
         # When resuming upon throttling error, skip if already fetched
-        api_client = params['api_client']
         if group['GroupName'] in self.groups:
             return
         api_client = params['api_client']
