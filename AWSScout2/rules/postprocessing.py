@@ -24,12 +24,13 @@ def update_last_run(aws_config, current_time, ruleset):
     last_run['ruleset_about'] = ruleset.ruleset['about'] if 'about' in ruleset.ruleset else ''
     last_run['summary'] = {}
     for service in aws_config['services']:
-        last_run['summary'][service] = {'checked_items': 0, 'flagged_items': 0, 'max_level': 'warning'}
+        last_run['summary'][service] = {'checked_items': 0, 'flagged_items': 0, 'max_level': 'warning', 'rules_count': 0}
         if aws_config['services'][service] == None:
             # Not supported yet
             continue
         elif 'findings' in aws_config['services'][service]:
             for finding in aws_config['services'][service]['findings']:
+                last_run['summary'][service]['rules_count'] += 1
                 last_run['summary'][service]['checked_items'] += aws_config['services'][service]['findings'][finding]['checked_items']
                 last_run['summary'][service]['flagged_items'] += aws_config['services'][service]['findings'][finding]['flagged_items']
                 if last_run['summary'][service]['max_level'] != 'danger':
