@@ -30,7 +30,7 @@ class IAMConfig(BaseConfig):
         ('policies', 'Policies', 'list_policies', {'OnlyAttached': True}, False),
         ('roles', 'Roles', 'list_roles', {}, False),
         ('users', 'Users', 'list_users', {}, False),
-        ('credential_report', '', '', {}, False),
+        #('credential_report', '', '', {}, False),
         # TODO: Federations
         # TODO: KMS ?
         # TODO: credential report
@@ -281,8 +281,7 @@ class IAMConfig(BaseConfig):
                     entities[entity['id']]['policies'].append(policy_id)
                     entities[entity['id']]['policies_counts'] += 1
                     self.__parse_permissions(policy_id, self.policies[policy_id]['PolicyDocument'], 'policies', entity_type, entity['id'])
-        # Fetch the credentials report
-        # Remove tmp variables that should not be dumped to JSON -- Probably common and move to BaseConfig and call super()
+        super(IAMConfig, self).finalize()
 
 
 

@@ -98,7 +98,9 @@ class BaseConfig(GlobalConfig):
         q.join()
         # Show completion and force newline
         self.status_show(True)
-        # Remove temporary counters and update service config
+
+
+    def finalize(self):
         try:
             for t in self.counts:
                 count = '%s_count' % t
@@ -128,7 +130,7 @@ class BaseConfig(GlobalConfig):
                     target_type, response_attribute, list_method_name, list_params, ignore_list_error = q.get()
                     try:
                         method = getattr(api_client, list_method_name)
-                    except:
+                    except Exception as e:
                         printException(e)
                         continue
                     try:
