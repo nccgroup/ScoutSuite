@@ -236,7 +236,7 @@ def get_cidr_name(cidr, ip_ranges_files, ip_ranges_name_key):
             ip_prefix = netaddr.IPNetwork(ip_range['ip_prefix'])
             cidr = netaddr.IPNetwork(cidr)
             if cidr in ip_prefix:
-                return ip_range[ip_ranges_name_key]
+                return ip_range[ip_ranges_name_key].strip()
     for ip_range in aws_ip_ranges:
         ip_prefix = netaddr.IPNetwork(ip_range['ip_prefix'])
         cidr = netaddr.IPNetwork(cidr)

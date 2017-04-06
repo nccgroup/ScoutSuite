@@ -63,7 +63,7 @@ def main():
     aws_config = report.jsrw.load_from_file(AWSCONFIG)
 
     # Pre processing
-    preprocessing(aws_config)
+    preprocessing(aws_config, args.ip_ranges, args.ip_ranges_name_key)
 
     # Analyze config
     ruleset = Ruleset(profile_name)

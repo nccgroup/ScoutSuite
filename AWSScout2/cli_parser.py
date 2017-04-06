@@ -129,7 +129,7 @@ class Scout2ArgumentParser(SharedArgumentParser):
         self.add_argument('partition-name', default_args)
         self.add_argument('vpc', default_args)
         self.add_argument('ip-ranges', default_args)
-        self.add_argument('ip-ranges-key-name', default_args)
+        self.add_argument('ip-ranges-name-key', default_args)
         self.add_argument('mfa-serial')
         self.add_argument('mfa-code')
         self.add_argument('csv-credentials')
