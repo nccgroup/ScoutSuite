@@ -39,7 +39,7 @@ class Ruleset(object):
     TODO
     """
 
-    def __init__(self, environment_name = 'default', filename = None, name = None, services = [], load_ruleset = True, load_rules = True, rule_type = 'findings', rules_dir = None):
+    def __init__(self, environment_name = 'default', filename = None, name = None, services = [], load_ruleset = True, load_rules = True, rule_type = 'findings', rules_dir = None, ip_ranges = []):
         self.rules_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
         self.environment_name = environment_name
         # Ruleset filename
@@ -57,7 +57,6 @@ class Ruleset(object):
         # Load rules
         self.rules = {}
         if load_rules:
-            ip_ranges = {}
             aws_account_id = ''
             self.init_rules(services, ip_ranges, aws_account_id, False)
 

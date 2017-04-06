@@ -66,7 +66,7 @@ def main():
     preprocessing(aws_config, args.ip_ranges, args.ip_ranges_name_key)
 
     # Analyze config
-    ruleset = Ruleset(profile_name)
+    ruleset = Ruleset(profile_name, filename = args.ruleset, ip_ranges = args.ip_ranges)
     ruleset.analyze(aws_config)
 
     # Create display filters
