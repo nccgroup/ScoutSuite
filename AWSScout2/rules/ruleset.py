@@ -46,7 +46,7 @@ class Ruleset(object):
         self.filename = self.find_file(filename)
         if not self.filename:
             self.search_ruleset(environment_name)
-        self.name = os.path.basename(self.filename).replace('.json','')
+        self.name = os.path.basename(self.filename).replace('.json','') if not name else name
         # Load ruleset
         self.ruleset = {}
         if load_ruleset:
@@ -60,7 +60,6 @@ class Ruleset(object):
             ip_ranges = {}
             aws_account_id = ''
             self.init_rules(services, ip_ranges, aws_account_id, False)
-        self.name = name
 
 
     def load_ruleset(self, quiet = False):
