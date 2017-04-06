@@ -17,7 +17,7 @@ def postprocessing(aws_config, current_time, ruleset):
     :param ruleset:
     :return:
     """
-    new_update_metadata(aws_config)
+    update_metadata(aws_config)
     update_last_run(aws_config, current_time, ruleset)
 
 
@@ -45,40 +45,6 @@ def update_last_run(aws_config, current_time, ruleset):
 
 
 def update_metadata(aws_config):
-    service_map = {}
-    for service_group in aws_config['metadata']:
-        for service in aws_config['metadata'][service_group]:
-            if service not in aws_config['service_list']:
-                continue
-            if 'resources' not in aws_config['metadata'][service_group][service]:
-                continue
-            service_map[service] = service_group
-    for s in aws_config['services']:
-        if aws_config['services'][s] and 'violations' in aws_config['services'][s]:
-            for v in aws_config['services'][s]['violations']:
-                # Finding resource
-                resource_path = aws_config['services'][s]['violations'][v]['display_path'] if 'display_path' in aws_config['services'][s]['violations'][v] else aws_config['services'][s]['violations'][v]['path']
-                resource = resource_path.split('.')[-2]
-                # h4ck...
-                if resource == 'credential_report':
-                    resource = resource_path.split('.')[-1].replace('>', '').replace('<', '')
-                elif resource == s:
-                    resource = resource_path.split('.')[-1]
-                if aws_config['services'][s]['violations'][v]['flagged_items'] > 0:
-                    try:
-                        manage_dictionary(aws_config['metadata'][service_map[s]][s]['resources'][resource], 'risks', [])
-                        aws_config['metadata'][service_map[s]][s]['resources'][resource]['risks'].append(v)
-                    except Exception as e:
-                        try:
-                            manage_dictionary(aws_config['metadata'][service_map[s]][s]['summaries'][resource], 'risks', [])
-                            aws_config['metadata'][service_map[s]][s]['summaries'][resource]['risks'].append(v)
-                        except Exception as e:
-                            printError('Service: %s' % s)
-                            printError('Resource: %s' % resource)
-                            printException(e)
-
-
-def new_update_metadata(aws_config):
         service_map = {}
         for service_group in aws_config['metadata']:
             for service in aws_config['metadata'][service_group]:
