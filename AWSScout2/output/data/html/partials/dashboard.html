@@ -12,6 +12,8 @@
                           <a href="#services.{{service}}.findings.{{@key}}.items">
                             {{description}}
                           </a>
+                          <i class="glyphicon glyphicon-info-sign pull-right" onmouseover="javascript:$('#{{@key}}\\.rationale').show()" onmouseleave="javascript:$('#{{@key}}\\.rationale').hide()"></i>
+                          <div id="{{@key}}.rationale" class="list-group-item rationale-overlay finding-title-unknown">{{rationale}}</div>
                         </div>
                         <div class="list-group-item">
                           <ul>

@@ -301,6 +301,7 @@ class Ruleset(object):
                     aws_config['services'][service][self.rule_type][rule]['checked_items'] = self.rules[finding_path][rule]['checked_items'] if 'checked_items' in self.rules[finding_path][rule] else 0
                     aws_config['services'][service][self.rule_type][rule]['flagged_items'] = len(aws_config['services'][service][self.rule_type][rule]['items'])
                     aws_config['services'][service][self.rule_type][rule]['service'] = service
+                    aws_config['services'][service][self.rule_type][rule]['rationale'] = self.rules[finding_path][rule]['rationale'] if 'rationale' in self.rules[finding_path][rule] else 'N/A'
                 except Exception as e:
                     printError('Failed to process rule defined in %s.json' % rule)
                     # Fallback if process rule failed to ensure report creation and data dump still happen
