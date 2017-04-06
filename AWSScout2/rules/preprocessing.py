@@ -69,7 +69,7 @@ def list_ec2_network_attack_surface(ec2_config):
 
 
 def list_ec2_network_attack_surface_callback(ec2_config, current_config, path, current_path, privateip_id, callback_args):
-    if 'Association' in current_config:
+    if 'Association' in current_config and current_config['Association']:
         public_ip = current_config['Association']['PublicIp']
         manage_dictionary(ec2_config, 'attack_surface', {})
         manage_dictionary(ec2_config['attack_surface'], public_ip, {})
