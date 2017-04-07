@@ -59,7 +59,7 @@ def main():
         try:
             aws_config.fetch(credentials, regions=args.regions, partition_name=args.partition_name)
         except KeyboardInterrupt:
-            print "\nCancelled by user"
+            printInfo('\nCancelled by user')
             return 130
         aws_config = report.jsrw.to_dict(aws_config)
 
