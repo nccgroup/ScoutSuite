@@ -53,18 +53,20 @@ def main():
     report = Scout2Report(profile_name, args.report_dir, args.timestamp)
     aws_config = Scout2Config(profile_name, args.report_dir, args.timestamp, args.services, args.skipped_services)
 
-    # Fetch data from AWS APIs if not running a local analysis
     if not args.fetch_local:
 
+        # Fetch data from AWS APIs if not running a local analysis
         try:
             aws_config.fetch(credentials, regions=args.regions, partition_name=args.partition_name)
         except KeyboardInterrupt:
             print "\nCancelled by user"
             return 130
-        report.save(aws_config, None, args.force_write, args.debug)
+        aws_config = report.jsrw.to_dict(aws_config)
 
-    # Reload to flatten everything into a python dictionary
-    aws_config = report.jsrw.load_from_file(AWSCONFIG)
+    else:
+
+        # Reload to flatten everything into a python dictionary
+        aws_config = report.jsrw.load_from_file(AWSCONFIG)
 
     # Pre processing
     preprocessing(aws_config, args.ip_ranges, args.ip_ranges_name_key)

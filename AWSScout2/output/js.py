@@ -62,6 +62,10 @@ class JavaScriptReaderWriter(object):
             printException(e)
 
 
+    def to_dict(self, config):
+        return json.loads(json.dumps(config, separators=(',', ': '), cls=Scout2Encoder))
+
+
     def __open_file(self, config_filename, force_write, quiet=False):
         """
 
