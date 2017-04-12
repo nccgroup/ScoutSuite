@@ -54,37 +54,6 @@ class EC2RegionConfig(RegionConfig):
         self.subnets_count = 0
 
 
-    # TODO: move into utils_elb to handle the weird elb vs ec2 client thing...
-    def parse_elb(self, global_params, region, elb):
-        """
-
-        :param global_params:
-        :param region:
-        :param elb:
-        :return:
-        """
-        elb = {}
-        elb['name'] = lb.pop('LoadBalancerName')
-        vpc_id = lb['VPCId'] if 'VPCId' in lb and lb['VPCId'] else ec2_classic
-        manage_dictionary(self.vpcs, vpc_id, EC2VPCConfig())
-        for key in ['DNSName', 'CreatedTime', 'AvailabilityZones', 'Subnets', 'Policies', 'Scheme']:
-            elb[key] = lb[key] if key in lb else None
-        elb['security_groups'] = []
-        for sg in lb['SecurityGroups']:
-            elb['security_groups'].append({'GroupId': sg})
-        manage_dictionary(elb, 'listeners', {})
-        for l in lb['ListenerDescriptions']:
-            listener = l['Listener']
-            manage_dictionary(listener, 'policies', {})
-            for policy_name in l['PolicyNames']:
-                manage_dictionary(listener['policies'], policy_name, {})
-            elb['listeners'][l['Listener']['LoadBalancerPort']] = listener
-        manage_dictionary(elb, 'instances', [])
-        for i in lb['Instances']:
-            elb['instances'].append(i['InstanceId'])
-        self.vpcs[vpc_id].elbs[get_non_aws_id(elb['name'])] = elb
-
-
     def parse_elastic_ip(self, global_params, region, eip):
         """
 
@@ -198,9 +167,6 @@ class EC2Config(RegionalServiceConfig):
     )
     region_config_class = EC2RegionConfig
 
-    def finalize(self):
-        pass
-
 
 
 ########################################
@@ -217,7 +183,6 @@ class EC2VPCConfig(object):
 
     def __init__(self, name = None):
         self.name = name
-        #self.elbs = {}
         self.flow_logs = {}
         self.instances = {}
         self.network_acls = {}
