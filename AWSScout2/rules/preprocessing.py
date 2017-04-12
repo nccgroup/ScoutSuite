@@ -22,6 +22,7 @@ def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     list_ec2_network_attack_surface(aws_config['services']['ec2'])
     add_security_group_name_to_ec2_grants(aws_config['services']['ec2'], aws_config['aws_account_id'])
     match_instances_and_roles(aws_config)
+    match_roles_and_cloudformation_stacks(aws_config)
     match_roles_and_vpc_flowlogs(aws_config)
     match_iam_policies_and_buckets(aws_config)
     match_security_groups_and_resources(aws_config)
@@ -190,6 +191,28 @@ def match_instances_and_roles(aws_config):
             if instance_profile_id in role_instances:
                 iam_config['roles'][role_id]['instance_profiles'][instance_profile_id]['instances'] = role_instances[instance_profile_id]
                 iam_config['roles'][role_id]['instances_count'] += len(role_instances[instance_profile_id])
+
+
+def match_roles_and_cloudformation_stacks(aws_config):
+    go_to_and_do(aws_config, aws_config['services']['cloudformation'], ['regions', 'stacks'], [], match_roles_and_cloudformation_stacks_callback, {})
+
+
+def match_roles_and_cloudformation_stacks_callback(aws_config, current_config, path, current_path, stack_id, callback_args):
+    if 'RoleARN' not in current_config:
+        return
+    role_arn = current_config.pop('RoleARN')
+    current_config['iam_role'] = get_role_info(aws_config, 'arn', role_arn)
+
+
+def get_role_info(aws_config, attribute_name, attribute_value):
+    iam_role_info = {'name': None, 'id': None}
+    for role_id in aws_config['services']['iam']['roles']:
+        print('Checking %s == %s' % (aws_config['services']['iam']['roles'][role_id][attribute_name], attribute_value))
+        if aws_config['services']['iam']['roles'][role_id][attribute_name] == attribute_value:
+            iam_role_info['name'] = aws_config['services']['iam']['roles'][role_id]['name']
+            iam_role_info['id'] = role_id
+            break
+    return iam_role_info
 
 
 def match_roles_and_vpc_flowlogs(aws_config):

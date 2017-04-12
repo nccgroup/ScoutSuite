@@ -12,6 +12,7 @@ import re
 ec2_classic = 'EC2-Classic'
 
 formatted_service_name = {
+    'cloudformation': 'CloudFormation',
     'cloudtrail': 'CloudTrail',
     'cloudwatch': 'CloudWatch',
     'lambda': 'Lambda',

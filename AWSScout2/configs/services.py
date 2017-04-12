@@ -3,6 +3,7 @@
 from opinel.utils import printError, printException, printInfo
 
 from AWSScout2.utils import format_service_name
+from AWSScout2.services.cloudformation import CloudFormationConfig
 from AWSScout2.services.cloudtrail import CloudTrailConfig
 from AWSScout2.services.ec2 import EC2Config
 from AWSScout2.services.elb import ELBConfig
@@ -35,6 +36,7 @@ class ServicesConfig(object):
     """
 
     def __init__(self):
+        self.cloudformation = CloudFormationConfig()
         self.cloudtrail = CloudTrailConfig()
         #self.cloudwatch = None
         self.ec2 = EC2Config()

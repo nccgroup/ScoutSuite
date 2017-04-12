@@ -1,5 +1,13 @@
 {
     "management": {
+        "cloudformation": {
+            "resources": {
+                "stacks": {
+                    "cols": 2,
+                    "path": "services.cloudformation.regions.id.stacks"
+                }
+            }
+        },
         "cloudtrail": {
             "resources": {
                 "regions": {
