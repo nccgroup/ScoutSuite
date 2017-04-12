@@ -86,11 +86,11 @@ class RDSRegionConfig(RegionConfig):
         parameters = handle_truncated_response(api_client.describe_db_parameters, {'DBParameterGroupName': parameter_group['name']}, ['Parameters'])['Parameters']
         for parameter in parameters:
             param = {}
-            param['value'] = parameter['ParameterValue']
+            param['value'] = parameter['ParameterValue'] if 'ParameterValue' in parameter else None
             param['source'] = parameter['Source']
+            manage_dictionary(parameter_group, 'parameters', {})
             parameter_group['parameters'][parameter['ParameterName']] = param
         # Save
-        manage_dictionary(self.vpcs, vpc_id,RDSVPCConfig())
         (self).parameter_groups[parameter_group['name']] = parameter_group
 
 
@@ -126,7 +126,7 @@ class RDSConfig(RegionalServiceConfig):
     targets = (
         ('instances', 'DBInstances', 'describe_db_instances', False),
         ('snapshots', 'DBSnapshots', 'describe_db_snapshots', False),
-        ('parameter_groups', 'DBClusterParameterGroups', 'describe_db_cluster_parameter_groups', False),
+        ('parameter_groups', 'DBParameterGroups', 'describe_db_parameter_groups', False),
         ('security_groups', 'DBSecurityGroups', 'describe_db_security_groups', True),
         # TODO ('subnets', 'DBSubnetGroups', 'describe_db_subnet_group', False),
     )
