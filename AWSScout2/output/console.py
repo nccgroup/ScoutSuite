@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 
+import os
+import re
+import sys
+
+from opinel.utils import manage_dictionary
+
 from AWSScout2.configs.browser import get_value_at
 
 
@@ -88,3 +94,47 @@ def generate_listall_output(lines, resources, aws_config, template, arguments, n
     for (i, argument) in enumerate(arguments):
         template = template.replace('_ARG_%d_' % i, argument)
     return template
+
+
+
+########################################
+# Status updates
+########################################
+
+class FetchStatusLogger():
+
+    def __init__(self, targets, add_regions = False):
+        self.targets = []
+        self.formatted_string = '\r '
+        self.counts = {}
+        target_names = ()
+        if add_regions:
+            targets = ('regions',) + targets
+        for target in targets:
+            target_type = target[0] if type(target) == tuple else target
+            self.targets.append(target_type)
+            manage_dictionary(self.counts, target_type, {'discovered': 0, 'fetched': 0})
+            # h4ck for credential report....
+            if target_type == 'credential_report':
+                self.counts[target_type]['discovered'] = 1
+            target_names += (target_type,)
+            self.formatted_string += ' %18s'
+        self.__out(target_names, True)
+
+
+    def show(self, new_line = False):
+        values = ()
+        for target in self.targets:
+            v = '%s/%s' % (self.counts[target]['fetched'], self.counts[target]['discovered'])
+            values += (v,)
+        self.__out(values, new_line)
+
+
+    def __out(self, values, new_line):
+        try:
+            sys.stdout.write(self.formatted_string % values)
+            sys.stdout.flush()
+            if new_line:
+                sys.stdout.write('\n')
+        except:
+            pass

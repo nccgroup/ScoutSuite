@@ -7,6 +7,7 @@ from opinel.utils import printException, printInfo, manage_dictionary, connect_s
 
 from AWSScout2.utils import format_service_name
 from AWSScout2.configs.base import GlobalConfig
+from AWSScout2.output.console import FetchStatusLogger
 
 
 # Import stock packages
@@ -74,7 +75,7 @@ class RegionalServiceConfig(object):
         if not targets:
             targets = type(self).targets
         printInfo('Fetching %s config...' % format_service_name(self.service))
-        self.fetchstatuslogger = FetchStatusLogger(targets)
+        self.fetchstatuslogger = FetchStatusLogger(targets, True)
         api_service = 'ec2' if self.service.lower() == 'vpc' else self.service.lower()
         # Init regions
         regions = build_region_list(api_service, regions, partition_name) # TODO: move this code within this class
@@ -139,6 +140,11 @@ class RegionalServiceConfig(object):
             printException(e)
             pass
 
+    def finalize(self):
+        for t in self.fetchstatuslogger.counts:
+            setattr(self, '%s_count' % t, self.fetchstatuslogger.counts[t]['fetched'])
+        self.__delattr__('fetchstatuslogger')
+
 
 
 ########################################
@@ -179,7 +185,6 @@ class RegionConfig(GlobalConfig):
             targets = []
         setattr(self, '%s_count' % target_type, len(targets))
         self.fetchstatuslogger.counts[target_type]['discovered'] += len(targets)
-
         region = api_client._client_config.region_name
         # Queue resources
         for target in targets:
@@ -187,44 +192,3 @@ class RegionConfig(GlobalConfig):
             if q:
                 # Add to the queue
                 q.put((callback, region, target))
-
-
-
-########################################
-# Status updates
-########################################
-
-class FetchStatusLogger():
-
-    def __init__(self, targets):
-        self.targets = []
-        self.formatted_string = '\r '
-        self.counts = {}
-        target_names = ()
-        for target in ('regions',) + targets:
-            target_type = target[0] if type(target) == tuple else target
-            self.targets.append(target_type)
-            manage_dictionary(self.counts, target_type, {})
-            manage_dictionary(self.counts[target_type], 'fetched', 0)
-            manage_dictionary(self.counts[target_type], 'discovered', 0)
-            target_names += (target_type,)
-            self.formatted_string += ' %18s'
-        self.__out(target_names, True)
-
-
-    def show(self, new_line = False):
-        values = ()
-        for target in self.targets:
-            v = '%s/%s' % (self.counts[target]['fetched'], self.counts[target]['discovered'])
-            values += (v,)
-        self.__out(values, new_line)
-
-
-    def __out(self, values, new_line):
-        try:
-            sys.stdout.write(self.formatted_string % values)
-            sys.stdout.flush()
-            if new_line:
-                sys.stdout.write('\n')
-        except:
-            pass

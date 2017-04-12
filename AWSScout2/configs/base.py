@@ -11,6 +11,7 @@ except ImportError:
 
 from opinel.utils import build_region_list, connect_service, handle_truncated_response, manage_dictionary, printException, printInfo
 
+from AWSScout2.output.console import FetchStatusLogger
 from AWSScout2.utils import format_service_name
 
 ########################################
@@ -43,7 +44,6 @@ class BaseConfig(GlobalConfig):
     
     def __init__(self):
         self.service = type(self).__name__.replace('Config', '').lower()  # TODO: use regex with EOS instead of plain replace
-        self.counts = {}
 
 
     def fetch_all(self, credentials, regions = [], partition_name = 'aws', targets = None):
@@ -63,7 +63,6 @@ class BaseConfig(GlobalConfig):
             targets = type(self).targets
         printInfo('Fetching %s config...' % format_service_name(self.service))
         formatted_string = None
-        #self.status_init(targets)
         api_service = self.service.lower()
         # Connect to the service
         if self.service in [ 's3' ]: # S3 namespace is global but APIs aren't....
@@ -85,29 +84,23 @@ class BaseConfig(GlobalConfig):
         if self.service in ['s3']:
             params['api_clients'] = api_clients
         qt = self._init_threading(self.__fetch_service, params, 10)
+        # Init display
+        self.fetchstatuslogger = FetchStatusLogger(targets)
         # Go
         for target in targets:
-            target_type = target[0]
-            manage_dictionary(self.counts, target_type, {})
-            manage_dictionary(self.counts[target_type], 'fetched', 0)
-            manage_dictionary(self.counts[target_type], 'discovered', 0)
             qt.put(target)
-        self.status_init()
         # Join
         qt.join()
         q.join()
         # Show completion and force newline
-        self.status_show(True)
+        if self.service != 'iam':
+            self.fetchstatuslogger.show(True)
 
 
     def finalize(self):
-        try:
-            for t in self.counts:
-                count = '%s_count' % t
-                setattr(self, count, self.counts[t]['fetched'])
-            self.__delattr__('counts')
-        except:
-            pass
+        for t in self.fetchstatuslogger.counts:
+            setattr(self, '%s_count' % t, self.fetchstatuslogger.counts[t]['fetched'])
+        self.__delattr__('fetchstatuslogger')
 
 
     def _init_threading(self, function, params={}, num_threads=10):
@@ -128,6 +121,8 @@ class BaseConfig(GlobalConfig):
             while True:
                 try:
                     target_type, response_attribute, list_method_name, list_params, ignore_list_error = q.get()
+                    if not list_method_name:
+                        continue
                     try:
                         method = getattr(api_client, list_method_name)
                     except Exception as e:
@@ -140,7 +135,7 @@ class BaseConfig(GlobalConfig):
                         if not ignore_list_error:
                             printException(e)
                         targets = []
-                    self.counts[target_type]['discovered'] += len(targets)
+                    self.fetchstatuslogger.counts[target_type]['discovered'] += len(targets)
                     for target in targets:
                         params['q'].put((target_type, target),)
                 except Exception as e:
@@ -160,47 +155,12 @@ class BaseConfig(GlobalConfig):
                     target_type, target = q.get()
                     method = getattr(self, 'parse_%s' % target_type)
                     method(target, params)
-                    self.counts[target_type]['fetched'] += 1
-                    self.status_show()
+                    self.fetchstatuslogger.counts[target_type]['fetched'] += 1
+                    self.fetchstatuslogger.show()
                 except Exception as e:
                     printException(e)
                 finally:
                     q.task_done()
         except Exception as e:
             printException(e)
-            pass
-
-
-
-
-
-    ########################################
-    # Status updates
-    ########################################
-    
-    def status_init(self): # , targets):
-        global formatted_string
-        target_names = ()
-        if formatted_string == None:
-            formatted_string = '\r'
-            for t in self.counts:
-                target_names += (t,)
-                formatted_string += ' %18s'
-            self.status_out(target_names, True)
-    
-    def status_show(self, newline = False):
-        targets = ()
-        for t in self.counts:
-            tmp = '%d/%d' % (self.counts[t]['fetched'], self.counts[t]['discovered'])
-            targets += (tmp,)
-        self.status_out(targets, newline)
-    
-    def status_out(selft, targets, newline):
-        try:
-            global formatted_string
-            sys.stdout.write(formatted_string % targets)
-            sys.stdout.flush()
-            if newline:
-                sys.stdout.write('\n')
-        except:
             pass
