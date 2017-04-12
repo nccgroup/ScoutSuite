@@ -8,7 +8,6 @@ import os
 import re
 import shutil
 
-#from AWSScout2.output.utils import prepare_html_output_dir, save_config_to_file
 from AWSScout2.rules import condition_operators
 from AWSScout2.rules.utils import recurse
 from opinel.utils import printException, printError, printInfo, printDebug, manage_dictionary, read_ip_ranges
