@@ -30,7 +30,7 @@ class IAMConfig(BaseConfig):
         ('policies', 'Policies', 'list_policies', {'OnlyAttached': True}, False),
         ('roles', 'Roles', 'list_roles', {}, False),
         ('users', 'Users', 'list_users', {}, False),
-        #('credential_report', '', '', {}, False),
+        ('credential_report', '', '', {}, False),
         # TODO: Federations
         # TODO: KMS ?
         # TODO: credential report
@@ -39,15 +39,11 @@ class IAMConfig(BaseConfig):
     def __init__(self):
         self.credential_report = {}
         self.groups = {}
-        self.groups_count = 0
         self.password_policy = {}
         self.permissions = {}
         self.policies = {}
-        self.policies_count = 0
         self.roles = {}
-        self.roles_count = 0
         self.users = {}
-        self.users_count = 0
         super(IAMConfig, self).__init__()
 
 
@@ -59,7 +55,8 @@ class IAMConfig(BaseConfig):
         self.fetch_credential_report(credentials, True)
         super(IAMConfig, self).fetch_all(credentials, regions, partition_name, targets)
         self.fetch_credential_report(credentials)
-        self.finalize()
+        self.fetchstatuslogger.show(True)
+
 
 
     ########################################
@@ -82,7 +79,6 @@ class IAMConfig(BaseConfig):
                 if not ignore_exception:
                     printError('Failed to generate a credential report.')
                 return
-            manage_dictionary(self.counts, 'credential_report', {'discovered': 1, 'fetched': 0})
             report = api_client.get_credential_report()['Content']
             lines = report.splitlines()
             keys = lines[0].decode('utf-8').split(',')
@@ -92,7 +88,7 @@ class IAMConfig(BaseConfig):
                 for key, value in zip(keys, values):
                     iam_report[values[0]][key] = value
             self.credential_report = iam_report
-            self.counts['credential_report']['fetched'] = 1
+            self.fetchstatuslogger.counts['credential_report']['fetched'] = 1
         except Exception as e:
             if ignore_exception:
                 return
