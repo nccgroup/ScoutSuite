@@ -32,9 +32,10 @@ class SESRegionConfig(RegionConfig):
         """
         identity = {'name': identity_name, 'policies': {}}
         policy_names = api_clients[region].list_identity_policies(Identity = identity_name)['PolicyNames']
-        policies = api_clients[region].get_identity_policies(Identity = identity_name, PolicyNames = policy_names)['Policies']
-        for policy_name in policies:
-            identity['policies'][policy_name] = json.loads(policies[policy_name])
+        if len(policy_names):
+            policies = api_clients[region].get_identity_policies(Identity = identity_name, PolicyNames = policy_names)['Policies']
+            for policy_name in policies:
+                identity['policies'][policy_name] = json.loads(policies[policy_name])
         self.identities[self.get_non_aws_id(identity_name)] = identity
 
 
