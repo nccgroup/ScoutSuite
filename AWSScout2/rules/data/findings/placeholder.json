@@ -1,0 +1,11 @@
+{
+    "description": "",
+    "rationale": "",
+    "path": "service.regions.id.resources.id",
+    "dashboard_name": "Resources",
+    "id_suffix": "SpanIdSuffix",
+    "conditions": [ "or",
+        [ "this", "withoutKey", "foobar"]
+        [ "foobar", "empty", "" ]
+    ]
+}

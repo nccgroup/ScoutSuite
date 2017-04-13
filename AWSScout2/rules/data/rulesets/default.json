@@ -849,6 +849,11 @@
             "level": "danger",
             "filename": "route53-domain-no-transferlock.json",
             "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "cloudformation-stack-with-role.json",
+            "enabled": true
         }
     ]
 }
