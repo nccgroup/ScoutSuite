@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import json
+
 from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 
 
@@ -31,6 +33,9 @@ class CloudFormationRegionConfig(RegionConfig):
         """
         stack['id'] = stack.pop('StackId')
         stack['name'] = stack.pop('StackName')
+        stack_policy = api_clients[region].get_stack_policy(StackName = stack['name'])
+        if 'StackPolicyBody' in stack_policy:
+            stack['policy'] = json.loads(stack_policy['StackPolicyBody'])
         self.stacks[stack['name']] = stack
 
 

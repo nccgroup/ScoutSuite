@@ -22,6 +22,11 @@
             {{/each}}
             </ul>
         </div>
+        {{#if policy}}
+        <div class="list-group-item">
+          {{> accordion_policy name = 'Stack Policy' policy_path = (concat 'cloudformation.regions' region 'stacks' @key 'policy') document = policy}}
+        </div>
+        {{/if}}
     </script>
     <script>
       Handlebars.registerPartial("services.cloudformation.regions.id.stacks", $("#services\\.cloudformation\\.regions\\.id\\.stacks\\.partial").html());
