@@ -219,7 +219,6 @@ def match_roles_and_vpc_flowlogs_callback(aws_config, current_config, path, curr
 def __get_role_info(aws_config, attribute_name, attribute_value):
     iam_role_info = {'name': None, 'id': None}
     for role_id in aws_config['services']['iam']['roles']:
-        print('Checking %s == %s' % (aws_config['services']['iam']['roles'][role_id][attribute_name], attribute_value))
         if aws_config['services']['iam']['roles'][role_id][attribute_name] == attribute_value:
             iam_role_info['name'] = aws_config['services']['iam']['roles'][role_id]['name']
             iam_role_info['id'] = role_id
@@ -335,7 +334,7 @@ def sort_elbs(aws_config):
 def sort_elbs_callback(aws_config, current_config, path, current_path, elb_id, callback_args):
     vpc_config = get_object_at(aws_config, ['services', 'ec2'] + current_path[:-1])
     manage_dictionary(vpc_config, 'elbs', {})
-    vpc_config['elbs'][elb_id] = current_config # '.update(current_config)
+    vpc_config['elbs'][elb_id] = current_config
 
 
 
