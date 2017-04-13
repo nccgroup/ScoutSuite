@@ -201,18 +201,7 @@ def match_roles_and_cloudformation_stacks_callback(aws_config, current_config, p
     if 'RoleARN' not in current_config:
         return
     role_arn = current_config.pop('RoleARN')
-    current_config['iam_role'] = get_role_info(aws_config, 'arn', role_arn)
-
-
-def get_role_info(aws_config, attribute_name, attribute_value):
-    iam_role_info = {'name': None, 'id': None}
-    for role_id in aws_config['services']['iam']['roles']:
-        print('Checking %s == %s' % (aws_config['services']['iam']['roles'][role_id][attribute_name], attribute_value))
-        if aws_config['services']['iam']['roles'][role_id][attribute_name] == attribute_value:
-            iam_role_info['name'] = aws_config['services']['iam']['roles'][role_id]['name']
-            iam_role_info['id'] = role_id
-            break
-    return iam_role_info
+    current_config['iam_role'] = __get_role_info(aws_config, 'arn', role_arn)
 
 
 def match_roles_and_vpc_flowlogs(aws_config):
@@ -222,12 +211,19 @@ def match_roles_and_vpc_flowlogs(aws_config):
 def match_roles_and_vpc_flowlogs_callback(aws_config, current_config, path, current_path, flowlog_id, callback_args):
     if 'DeliverLogsPermissionArn' not in current_config:
         return
-    delivery_role_name = current_config['DeliverLogsPermissionArn'].split(':')[-1].replace('role/', '')
+    delivery_role_arn = current_config.pop('DeliverLogsPermissionArn')
+    current_config['delivery_role'] = __get_role_info(aws_config, 'arn', delivery_role_arn)
+
+
+def __get_role_info(aws_config, attribute_name, attribute_value):
+    iam_role_info = {'name': None, 'id': None}
     for role_id in aws_config['services']['iam']['roles']:
-        if aws_config['services']['iam']['roles'][role_id]['name'] == delivery_role_name:
-            current_config['delivery_role'] = {'name': delivery_role_name, 'id': role_id}
-            current_config.pop('DeliverLogsPermissionArn')
+        print('Checking %s == %s' % (aws_config['services']['iam']['roles'][role_id][attribute_name], attribute_value))
+        if aws_config['services']['iam']['roles'][role_id][attribute_name] == attribute_value:
+            iam_role_info['name'] = aws_config['services']['iam']['roles'][role_id]['name']
+            iam_role_info['id'] = role_id
             break
+    return iam_role_info
 
 
 def match_security_groups_and_resources(aws_config):
