@@ -143,7 +143,10 @@ class RegionalServiceConfig(object):
     def finalize(self):
         for t in self.fetchstatuslogger.counts:
             setattr(self, '%s_count' % t, self.fetchstatuslogger.counts[t]['fetched'])
-        self.__delattr__('fetchstatuslogger')
+        delattr(self, 'fetchstatuslogger')
+        for r in self.regions:
+            if hasattr(self.regions[r], 'fetchstatuslogger'):
+                delattr(self.regions[r], 'fetchstatuslogger')
 
 
 
