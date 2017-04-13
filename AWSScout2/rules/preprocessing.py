@@ -19,6 +19,7 @@ def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     """
     set_aws_account_id(aws_config)
     sort_vpc_flow_logs(aws_config['services']['vpc'])
+    sort_elbs(aws_config)
     list_ec2_network_attack_surface(aws_config['services']['ec2'])
     add_security_group_name_to_ec2_grants(aws_config['services']['ec2'], aws_config['aws_account_id'])
     match_instances_and_roles(aws_config)
@@ -314,6 +315,28 @@ def set_aws_account_id(aws_config):
 
 def sort_vpc_flow_logs(vpc_config):
     go_to_and_do(vpc_config, None, ['regions', 'flow_logs'], [], sort_vpc_flow_logs_callback, {})
+
+
+def sort_elbs(aws_config):
+    """
+    ELB and ELBv2 are different services, but for consistency w/ the console move them to the EC2 config
+
+    :param aws_config:
+    :return:
+    """
+    if 'elb' in aws_config['services']:
+        go_to_and_do(aws_config, aws_config['services']['elb'], ['regions', 'vpcs', 'elbs'], [], sort_elbs_callback, {})
+        aws_config['services'].pop('elb')
+    if 'elbv2' in aws_config['services']:
+        go_to_and_do(aws_config, aws_config['services']['elbv2'], ['regions', 'vpcs', 'elbs'], [], sort_elbs_callback, {})
+        aws_config['services'].pop('elbv2')
+
+
+def sort_elbs_callback(aws_config, current_config, path, current_path, elb_id, callback_args):
+    vpc_config = get_object_at(aws_config, ['services', 'ec2'] + current_path[:-1])
+    manage_dictionary(vpc_config, 'elbs', {})
+    vpc_config['elbs'][elb_id] = current_config # '.update(current_config)
+
 
 
 def sort_vpc_flow_logs_callback(vpc_config, current_config, path, current_path, flow_log_id, callback_args):
