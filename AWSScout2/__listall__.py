@@ -36,8 +36,7 @@ def main():
     configPrintException(args.debug)
 
     # Check version of opinel
-    min_opinel, max_opinel = get_opinel_requirement(os.path.realpath(__file__))
-    if not check_opinel_version(min_opinel):
+    if not check_requirements(os.path.realpath(__file__)):
         return 42
 
     # Support multiple environments
