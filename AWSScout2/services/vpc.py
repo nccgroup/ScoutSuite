@@ -2,14 +2,13 @@
 
 import netaddr
 
-from opinel.utils import manage_dictionary
-from opinel.utils import read_ip_ranges
-from opinel.utils import load_data
-from opinel.utils_ec2 import get_name
+from opinel.utils.aws import get_name
+from opinel.utils.globals import manage_dictionary
+from opinel.utils.fs import load_data, read_ip_ranges
 
-#from AWSScout2.utils import *
+
 from AWSScout2.utils import ec2_classic, get_keys
-from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
+from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig
 
 
 

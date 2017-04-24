@@ -4,7 +4,7 @@ import os
 import re
 import sys
 
-from opinel.utils import manage_dictionary
+from opinel.utils.globals import manage_dictionary
 
 from AWSScout2.configs.browser import get_value_at
 

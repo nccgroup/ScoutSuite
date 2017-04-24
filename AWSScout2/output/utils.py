@@ -4,7 +4,7 @@ from __future__ import print_function
 import os
 import sys
 
-from opinel.utils import printError
+from opinel.utils.console import printError
 
 from AWSScout2 import AWSCONFIG, EXCEPTIONS, HTMLREPORT, AWSRULESET, AWSCONFIG_FILE, EXCEPTIONS_FILE, HTMLREPORT_FILE, AWSRULESET_FILE
 

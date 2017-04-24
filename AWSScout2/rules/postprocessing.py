@@ -2,10 +2,9 @@
 
 import sys
 
-from opinel.utils import manage_dictionary, printInfo, printError, printException
+from opinel.utils.console import printException
 
 from AWSScout2 import __version__ as scout2_version
-from AWSScout2.services.vpc import get_cidr_name, put_cidr_name
 
 
 

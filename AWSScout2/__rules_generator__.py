@@ -6,7 +6,8 @@ import sys
 import webbrowser
 
 try:
-    from opinel.utils import check_opinel_version, configPrintException, get_opinel_requirement, printInfo
+    from opinel.utils.console import configPrintException, printInfo
+    from opinel.utils.globals import check_requirements
 except Exception as e:
     print('Error: Scout2 depends on the opinel package. Install all the requirements with the following command:')
     print('  $ pip install -r requirements.txt')
@@ -32,8 +33,7 @@ def main():
     configPrintException(args.debug)
 
     # Check version of opinel
-    min_opinel, max_opinel = get_opinel_requirement(os.path.realpath(__file__))
-    if not check_opinel_version(min_opinel):
+    if not check_requirements(os.path.realpath(__file__)):
         return 42
 
     # Load ruleset

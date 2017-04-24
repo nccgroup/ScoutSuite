@@ -6,7 +6,9 @@ Single-service rule processing functions
 import copy
 import re
 
-from opinel.utils import manage_dictionary, pass_condition, printError
+from opinel.utils.conditions import pass_condition
+from opinel.utils.console import printError
+from opinel.utils.globals import manage_dictionary
 
 from AWSScout2.rules import condition_operators
 from AWSScout2.configs.browser import get_value_at

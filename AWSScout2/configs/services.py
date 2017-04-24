@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils import printError, printException, printInfo
+from opinel.utils.console import printError, printException, printInfo
 
 from AWSScout2.utils import format_service_name
 from AWSScout2.services.cloudformation import CloudFormationConfig

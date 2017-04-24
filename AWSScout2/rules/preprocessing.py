@@ -2,7 +2,8 @@
 
 import copy
 
-from opinel.utils import manage_dictionary, printInfo, printError, printException
+from opinel.utils.console import printError, printException, printInfo
+from opinel.utils.globals import manage_dictionary
 
 from AWSScout2.configs.browser import combine_paths, get_object_at, get_value_at
 from AWSScout2.utils import ec2_classic

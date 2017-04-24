@@ -3,25 +3,23 @@
 Base classes and functions for region-specific services
 """
 
-from opinel.utils import printException, printInfo, manage_dictionary, connect_service, handle_truncated_response, build_region_list
-
-from AWSScout2.utils import format_service_name
-from AWSScout2.configs.base import GlobalConfig
-from AWSScout2.output.console import FetchStatusLogger
-
-
-# Import stock packages
 import re
-from hashlib import sha1
 
-
-import sys
 from threading import Event, Thread
 # Python2 vs Python3
 try:
     from Queue import Queue
 except ImportError:
     from queue import Queue
+
+from opinel.utils.aws import build_region_list, connect_service, handle_truncated_response
+from opinel.utils.console import printException, printInfo
+
+from AWSScout2.utils import format_service_name
+from AWSScout2.configs.base import GlobalConfig
+from AWSScout2.output.console import FetchStatusLogger
+
+
 
 
 

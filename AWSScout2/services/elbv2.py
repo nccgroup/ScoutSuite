@@ -3,7 +3,7 @@
 ELBv2-related classes and functions
 """
 
-from opinel.utils import manage_dictionary
+from opinel.utils.globals import manage_dictionary
 
 from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig
 from AWSScout2.utils import ec2_classic, get_keys

@@ -3,15 +3,11 @@
 SNS-related classes and functions
 """
 
-# Import opinel
-from opinel.utils import manage_dictionary
-
-# Import AWSScout2
-from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
-
-# Import stock packages
 import json
 
+from opinel.utils.globals import manage_dictionary
+
+from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 
 
 ########################################

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from opinel.cli_parser import OpinelArgumentParser
+from opinel.utils.cli_parser import OpinelArgumentParser
 
 from AWSScout2 import DEFAULT_REPORT_DIR
 

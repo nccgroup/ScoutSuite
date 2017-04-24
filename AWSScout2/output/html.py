@@ -7,7 +7,7 @@ import os
 import shutil
 import zipfile
 
-from opinel.utils import printInfo
+from opinel.utils.console import printInfo
 
 from AWSScout2 import AWSCONFIG, EXCEPTIONS, HTMLREPORT, AWSRULESET, AWSCONFIG_FILE, EXCEPTIONS_FILE, HTMLREPORT_FILE, GENERATOR_FILE, REPORT_TITLE
 from AWSScout2.output.utils import get_filename, prompt_4_overwrite

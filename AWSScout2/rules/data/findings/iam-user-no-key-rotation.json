@@ -8,6 +8,6 @@
     "display_path": "iam.users.id",
     "conditions": [ "and",
         [ "iam.users.id.AccessKeys.id.Status", "equal", "_ARG_0_" ],
-        [ "iam.users.id.AccessKeys.id.CreateDate", "dateOlderThan", "_ARG_1_" ]
+        [ "iam.users.id.AccessKeys.id.CreateDate", "olderThan", ["_ARG_1_", "days"] ]
     ]
 }

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from hashlib import sha1
-import sys
 from threading import Event, Thread
 # Python2 vs Python3
 try:
@@ -9,7 +8,8 @@ try:
 except ImportError:
     from queue import Queue
 
-from opinel.utils import build_region_list, connect_service, handle_truncated_response, manage_dictionary, printException, printInfo
+from opinel.utils.aws import build_region_list, connect_service, handle_truncated_response
+from opinel.utils.console import printException, printInfo
 
 from AWSScout2.output.console import FetchStatusLogger
 from AWSScout2.utils import format_service_name

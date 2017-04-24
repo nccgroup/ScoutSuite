@@ -8,13 +8,14 @@ import os
 import re
 import shutil
 
+from opinel.utils.console import printDebug, printError, printException, printInfo
+from opinel.utils.fs import read_ip_ranges
+from opinel.utils.globals import manage_dictionary
+
 from AWSScout2.rules import condition_operators
 from AWSScout2.rules.utils import recurse
-from opinel.utils import printException, printError, printInfo, printDebug, manage_dictionary, read_ip_ranges
 
 finding_levels = ['danger', 'warning']
-
-DEFAULT_RULESET = 'lol'
 
 # First search local under ./rules and ./rulesets
 # Then search from package files

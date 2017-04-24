@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 import json
 import os
 
-from opinel.utils import printException
+from opinel.utils.console import printException
 
 from AWSScout2.configs.services import ServicesConfig
 

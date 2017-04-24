@@ -5,7 +5,9 @@ import os
 import sys
 
 try:
-    from opinel.utils import check_requirements, configPrintException, printInfo, read_creds
+    from opinel.utils.console import configPrintException, printInfo
+    from opinel.utils.credentials import read_creds
+    from opinel.utils.globals import check_requirements
 except Exception as e:
     print('Error: Scout2 depends on the opinel package. Install all the requirements with the following command:')
     print('  $ pip install -r requirements.txt')
