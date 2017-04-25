@@ -141,3 +141,5 @@ License
 *******
 
 GPLv2: See LICENSE.
+
+.. _pip: https://pip.pypa.io/en/stable/index.html
