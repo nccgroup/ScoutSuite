@@ -74,7 +74,7 @@ class Scout2Report(HTMLReport):
         self.prepare_html_report_dir()
         self.jsrw.save_to_file(config, AWSCONFIG, force_write, debug)
         self.jsrw.save_to_file(exceptions, EXCEPTIONS, force_write, debug)
-        self.create_html_report(force_write)
+        return self.create_html_report(force_write)
 
     def create_html_report(self, force_write):
         contents = ''
@@ -98,6 +98,7 @@ class Scout2Report(HTMLReport):
                             newline = newline.replace(EXCEPTIONS_FILE, new_exceptions_filename)
                         newline = newline.replace('<!-- PLACEHOLDER -->', contents)
                         nf.write(newline)
+        return new_file
 
 
 

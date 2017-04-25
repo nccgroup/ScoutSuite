@@ -158,6 +158,11 @@ class Scout2ArgumentParser(SharedArgumentParser):
                                 default=None,
                                 nargs='?',
                                 help='Set of rules to be used during the analysis.')
+        self.parser.add_argument('--no-browser',
+                                 dest='no_browser',
+                                 default=False,
+                                 action='store_true',
+                                 help='Do not automatically open the report in the browser.')
 
     def parse_args(self):
         args = self.parser.parse_args()

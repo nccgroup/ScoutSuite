@@ -3,6 +3,7 @@
 
 import os
 import sys
+import webbrowser
 
 try:
     from opinel.utils.console import configPrintException, printInfo
@@ -87,4 +88,11 @@ def main():
     postprocessing(aws_config, report.current_time, ruleset)
 
     # Save config and create HTML report
-    report.save(aws_config, {}, args.force_write, args.debug)
+    html_report_path = report.save(aws_config, {}, args.force_write, args.debug)
+
+    # Open the report by default
+    if not args.no_browser:
+        printInfo('Opening the HTML report...')
+        url = 'file://%s' % os.path.abspath(html_report_path)
+        webbrowser.open(url, new=2)
+
