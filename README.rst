@@ -85,12 +85,13 @@ applications.
 Usage
 -----
 
+After performing a number of AWS API calls, Scout2 will create a local HTML report and open it in the default browser.
+
 Using a computer already configured to use the AWS CLI, boto3, or another AWS SDK, you may use Scout2 using the following command:
 
 ::
 
     $ Scout2
-    $ # open scout2-report/report.html
 
 **Note:** EC2 instances with an IAM role fit in this category.
 
@@ -99,14 +100,12 @@ If multiple profiles are configured in your .aws/credentials and .aws/config fil
 ::
 
     $ Scout2 --profile <PROFILE_NAME>
-    $ # open scout2-report/report-<PROFILE_NAME>.html
 
 If you have a CSV file containing the API access key ID and secret, you may run Scout2 with the following command:
 
 ::
 
     $ Scout2 --csv-credentials <CREDENTIALS.CSV>
-    $ # open scout2-report/report.html
 
 **********************
 Advanced documentation
