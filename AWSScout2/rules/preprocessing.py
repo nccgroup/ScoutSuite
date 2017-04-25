@@ -75,8 +75,7 @@ def list_ec2_network_attack_surface_callback(ec2_config, current_config, path, c
     if 'Association' in current_config and current_config['Association']:
         public_ip = current_config['Association']['PublicIp']
         manage_dictionary(ec2_config, 'attack_surface', {})
-        manage_dictionary(ec2_config['attack_surface'], public_ip, {})
-        manage_dictionary(ec2_config['attack_surface'][public_ip], 'protocols', {})
+        manage_dictionary(ec2_config['attack_surface'], public_ip, {'protocols': {}})
         for sg_info in current_config['Groups']:
             sg_id = sg_info['GroupId']
             sg_path = copy.deepcopy(current_path[0:4])
@@ -84,16 +83,16 @@ def list_ec2_network_attack_surface_callback(ec2_config, current_config, path, c
             sg_path.append(sg_id)
             sg_path.append('rules')
             sg_path.append('ingress')
-            ingress_rules = copy.deepcopy(get_object_at(ec2_config, sg_path))
+            ingress_rules = get_object_at(ec2_config, sg_path)
+            public_ip_grants = {}
             for p in ingress_rules['protocols']:
                 for port in ingress_rules['protocols'][p]['ports']:
-                    if not 'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
-                        ingress_rules['protocols'][p]['ports'].pop(port, None)
-                    elif 'security_groups' in ingress_rules['protocols'][p]['ports'][port]:
-                        ingress_rules['protocols'][p]['ports'][port].pop('security_groups', None)
-                if not ingress_rules['protocols'][p]['ports']:
-                    ingress_rules['protocols'].pop(p)
-            ec2_config['attack_surface'][public_ip]['protocols'].update(ingress_rules['protocols'])
+                    if 'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
+                        manage_dictionary(public_ip_grants, 'protocols', {})
+                        manage_dictionary(public_ip_grants['protocols'], p, {'ports': {}})
+                        manage_dictionary(public_ip_grants['protocols'][p]['ports'], port, {'cidrs': []})
+                        public_ip_grants['protocols'][p]['ports'][port]['cidrs'] += ingress_rules['protocols'][p]['ports'][port]['cidrs']
+            ec2_config['attack_surface'][public_ip]['protocols'].update(public_ip_grants)
 
 
 def match_iam_policies_and_buckets(aws_config):
