@@ -70,8 +70,7 @@ Secret Access Key). The role, or user account, associated with these credentials
 requires read-only access for all resources in a number of services, including
 but not limited to CloudTrail, EC2, IAM, RDS, Redshift, and S3.
 
-If you are not sure what permissions to grant, the (Scout2-Default
-https://github.com/nccgroup/AWS-recipes/blob/master/IAM-Policies/Scout2-Default.json)
+If you are not sure what permissions to grant, the `Scout2-Default`
 IAM policy lists the permissions necessary for a default run of Scout2.
 
 Compliance with AWS' Acceptable Use Policy
@@ -143,3 +142,4 @@ License
 GPLv2: See LICENSE.
 
 .. _pip: https://pip.pypa.io/en/stable/index.html
+.. _Scout2-Default: https://github.com/nccgroup/AWS-recipes/blob/master/IAM-Policies/Scout2-Default.json
