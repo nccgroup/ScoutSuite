@@ -70,7 +70,7 @@ Secret Access Key). The role, or user account, associated with these credentials
 requires read-only access for all resources in a number of services, including
 but not limited to CloudTrail, EC2, IAM, RDS, Redshift, and S3.
 
-If you are not sure what permissions to grant, the `Scout2-Default`
+If you are not sure what permissions to grant, the `Scout2-Default`_
 IAM policy lists the permissions necessary for a default run of Scout2.
 
 Compliance with AWS' Acceptable Use Policy
@@ -85,43 +85,28 @@ applications.
 Usage
 -----
 
-### From an EC2 instance with an appropriate IAM role
+Using a computer already configured to use the AWS CLI, boto3, or another AWS SDK, you may use Scout2 using the following command:
 
 ::
 
     $ Scout2
+    $ # open scout2-report/report.html
 
-### From a computer configured to use the AWS CLI, boto, or another AWS SDK (default profile)
+**Note:** EC2 instances with an IAM role fit in this category.
 
-::
-
-    $ Scout2
-
-### From a computer configured to use the AWS CLI, boto, or another AWS SDK (other profile)
+If multiple profiles are configured in your .aws/credentials and .aws/config files, you may specify which credentials to use with the following command:
 
 ::
 
     $ Scout2 --profile <PROFILE_NAME>
+    $ # open scout2-report/report-<PROFILE_NAME>.html
 
-### From a computer not configured to use the AWS CLI, using a CSV file downloaded from AWS
+If you have a CSV file containing the API access key ID and secret, you may run Scout2 with the following command:
 
 ::
 
     $ Scout2 --csv-credentials <CREDENTIALS.CSV>
-
-### When MFA-Protected API Access is Enforced
-
-::
-    $ 
-Initiate an STS session using the [aws_recipes_init_sts_session tool](https://github.com/nccgroup/AWS-recipes/blob/master/Python/aws_recipes_init_sts_session.py)
-**OR**
-Add the following parameters to your command:
-
-::
-
-    --mfa-serial <ARN_MFA_SERIAL_NUMBER> --mfa-code <MFA CODE>
-
-To view the report, simply open scout2-report/report.html in your browser.
+    $ # open scout2-report/report.html
 
 **********************
 Advanced documentation
