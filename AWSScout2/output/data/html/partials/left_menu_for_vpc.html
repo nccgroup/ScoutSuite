@@ -1,0 +1,30 @@
+
+<!-- Generic left-menu link partial for region-then-vpc-then-resource -->
+<script id="left_menu_for_vpc.partial" type="text/x-handlebars-template">
+  <div id="services.{{service_name}}.regions.id.vpcs.id.{{resource_type}}.list">
+    <div class="list-group" >
+      <div class="list-group-item">
+        <a href="#services.{{service_name}}.regions.id.vpcs.id.{{resource_type}}">Show all <span class="badge pull-right">{{get_value_at 'metadata' service_group service_name 'resources' resource_type 'count'}}</span></a>
+      </div>
+    </div>
+    {{#each items}}
+      <div class="list-group" id="services.{{../service_name}}.regions.{{@key}}.vpcs.id.{{../resource_type}}.list">
+        <div class="list-group-item active"><a href="#services.{{../service_name}}.regions.{{@key}}.vpcs.id.{{../resource_type}}">{{@key}}</a></div>
+        {{#each vpcs}}
+          <div class="list-group-item list-sub-element" id="services.{{../../service_name}}.regions.{{@../key}}.vpcs.{{@key}}.{{../../resource_type}}.list">
+            <a href="#services.{{../../service_name}}.regions.{{@../key}}.vpcs.{{@key}}.{{../../resource_type}}">{{get_value_at 'services.vpc.regions' @../key 'vpcs' @key 'name'}}</a>
+            {{#each (lookup . ../../resource_type)}}
+              <div class="list-group-item-text list-sub-element" id="services.{{../../../service_name}}.regions.{{@../../key}}.vpcs.{{@../key}}.{{../../../resource_type}}.{{@key}}.link">
+                <a href="#services.{{../../../service_name}}.regions.{{@../../key}}.vpcs.{{@../key}}.{{../../../resource_type}}.{{@key}}.view">{{name}}</a>
+              </div>
+            {{/each}}
+          </div>
+        {{/each}}
+      </div>
+    {{/each}}
+  </div>
+</script>
+<script>
+  Handlebars.registerPartial("left_menu_for_vpc", $("#left_menu_for_vpc\\.partial").html());
+</script>
+

@@ -1,0 +1,23 @@
+{
+    "arg_names": [ "Service", "Action" ],
+    "description": "Managed policy allows _ARG_0_:_ARG_1_ *",
+    "key": "iam-managed-policy-allows-_ARG_0_-_ARG_1_",
+    "path": "iam.policies.id.PolicyDocument.Statement.id",
+    "display_path": "iam.policies.id",
+    "dashboard_name": "Policies",
+    "conditions": [ "and",
+        [ "iam.policies.id.PolicyDocument.Statement.id.Effect", "equal", "Allow" ],
+        [ "or",
+            [ "and",
+                [ "iam.policies.id.PolicyDocument.Statement.id.", "withKey", "Action" ],
+                [ "iam.policies.id.PolicyDocument.Statement.id.Action", "containNoneOf", [ "*", "*:*" ] ]
+            ],
+            [ "iam.policies.id.PolicyDocument.Statement.id.", "withKey", "NotAction" ]
+        ],
+        [ "iam.policies.id.PolicyDocument.Statement.id.", "containAction", "_ARG_0_:_ARG_1_" ],
+        [ "iam.policies.id.PolicyDocument.Statement.id.Resource", "containAtLeastOneOf", [ "*" ] ]
+    ],
+    "keys": [
+        "iam.policies.id.name"
+    ]
+}

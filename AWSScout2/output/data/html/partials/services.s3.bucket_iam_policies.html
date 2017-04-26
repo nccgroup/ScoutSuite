@@ -1,0 +1,59 @@
+
+    <!-- List of IAM policies referring a given bucket -->
+    <script id="services.s3.bucket_iam_policies.partial" type="text/x-handlebars-template">
+        {{#if resource_type}}
+          <div class="list-group-item">
+            <div class="accordion">
+              <h4 class="list-group-item-heading accordion-heading">{{make_title resource_type}} with access via IAM policies
+                <a class="accordion-toggle" data-toggle="collapse" href="#s3_iam_{{resource_type}}_policies_details-{{escape_special_chars ../name}}">
+                  <span class="badge pull-right btn-info">{{resource_count}}</span>
+                </a>
+              </h4>
+              <div id="s3_iam_{{resource_type}}_policies_details-{{escape_special_chars ../name}}" class="accordion-body item-margin collapse">
+                <div class="accordion-inner">
+                  <table class="table-striped" width="100%" >
+                    <tr>
+                      <td width="40%">{{make_title ../resource_type}} name</td>
+                      <td width="40%" class="text-center">Policy name</td>
+                      <td width="20%" class="text-center">Condition?</td>
+                    </tr>
+                    {{#each (lookup . resource_type)}}
+                      {{#each policies}}
+                        <tr>
+                        <td width="40%"><a href="javascript:showObject('services.iam.{{../../resource_type}}.{{@../key}}')">
+                          {{get_value_at 'services.iam' ../../resource_type @../key 'name'}}
+                        </a></td>
+                        <td width="40%" class="text-center">
+                          <a href="javascript:showIAMManagedPolicy('{{@key}}')">{{get_value_at 'services.iam.policies' @key 'name'}}</a>
+                        </td>
+                        <td width="20%" class="text-center">
+                          {{has_condition  this}}
+                        </td>
+                        </tr>
+                      {{/each}}
+                      {{#each inline_policies}}
+                        <tr>
+                        <td width="40%"><a href="javascript:showObject('services.iam.{{../../resource_type}}.{{@../key}}')">
+                          {{get_value_at 'services.iam' ../../resource_type @../key 'name'}}
+                        </a></td>
+                        <td width="40%" class="text-center">
+                          <a href="javascript:showIAMInlinePolicy('{{../../resource_type}}', '{{@../key}}', '{{@key}}')">
+                            {{get_value_at 'services.iam' ../../resource_type @../key 'inline_policies' @key 'name'}}
+                          </a>
+                        </td>
+                        <td width="20%" class="text-center">
+                          {{has_condition  this}}
+                        </td>
+                        </tr>
+                      {{/each}}
+                    {{/each}}
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        {{/if}}
+    </script>
+    <script>
+        Handlebars.registerPartial("services.s3.bucket_iam_policies", $("#services\\.s3\\.bucket_iam_policies\\.partial").html());
+    </script>

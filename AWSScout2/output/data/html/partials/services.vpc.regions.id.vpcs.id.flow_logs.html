@@ -1,0 +1,30 @@
+
+    <!-- VPC Flow log partial -->
+    <script id="services.vpc.regions.id.vpcs.id.flow_logs.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+            <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+            <div class="list-group-item-text">Attached resource: {{ResourceId}}</div>
+            <div class="list-group-item-text">Traffic type: {{TrafficType}}</div>
+            <div class="list-group-item-text">Status: {{FlowLogStatus}}</div>
+            <div class="list-group-item-text">Log group: {{LogGroupName}}</div>
+            {{#if delivery_role}}
+                <div class="list-group-item-text">Delivery role: <a href="javascript:showObject('services.iam.roles.{{delivery_role.id}}')">{{delivery_role.name}}</a></div>
+            {{else}}
+                <div class="list-group-item-text">Delivery role: {{DeliverLogsPermissionArn}}</div>
+            {{/if}}
+        </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.vpc.regions.id.vpcs.id.flow_logs", $("#services\\.vpc\\.regions\\.id\\.vpcs\\.id\\.flow_logs\\.partial").html());
+    </script>
+
+    <!-- Single VPC Subnet template -->
+    <script id="single_vpc_flow_log-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.vpc.regions.id.vpcs.id.flow_logs}}
+    </script>
+    <script>
+        var single_vpc_flow_log_template = Handlebars.compile($("#single_vpc_flow_log-template").html());
+    </script>

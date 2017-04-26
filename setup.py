@@ -11,7 +11,7 @@ VERSION = __import__(NAME).__version__
 
 # Requirements
 requirements = []
-with open('requirements.txt') as f:
+with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'AWSScout2', 'data', 'requirements.txt')) as f:
     for r in f.readlines():
         requirements.append(r.strip())
 
@@ -20,14 +20,40 @@ setup(
     name=NAME,
     version=VERSION,
     description='Scout2, TODO',
-    long_description=open('README.md').read(),
+    long_description=open('README.rst').read(),
     author='l01cd3v',
     author_email='l01cd3v@gmail.com',
-    url='https://github.com/iSECPartners/Scout2',
-    packages=find_packages(exclude=['tests*']),
+    url='https://github.com/nccgroup/Scout2',
+    entry_points={
+        'console_scripts': [
+            'Scout2 = AWSScout2.__main__:main',
+            'Scout2RulesGenerator = AWSScout2.__rules_generator__:main',
+            'Scout2Listall = AWSScout2.__listall__:main'
+        ]
+    },
+    packages=[
+        'AWSScout2', 'AWSScout2.configs', 'AWSScout2.output', 'AWSScout2.rules', 'AWSScout2.services'
+    ],
     package_data={
-        NAME: [
-            'data/*.json',
+        'AWSScout2': [
+            'data/requirements.txt'
+        ],
+        'AWSScout2.configs': [
+            'data/*.json'
+        ],
+        'AWSScout2.output': [
+            'data/html/*.html',
+            'data/html/partials/*.html',
+            'data/html/summaries/*.html',
+            'data/includes.zip',
+            'data/inc-scout2/*.js',
+            'data/inc-scout2/*.css'
+        ],
+        'AWSScout2.rules': [
+            'data/*.html',
+            'data/filters/*.json',
+            'data/findings/*.json',
+            'data/rulesets/*.json'
         ]
     },
     include_package_data=True,

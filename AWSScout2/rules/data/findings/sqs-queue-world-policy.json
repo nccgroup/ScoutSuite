@@ -1,0 +1,18 @@
+{
+    "key": "sqs-queue-world-_ARG_0_-policy",
+    "dashboard_name": "Statements",
+    "description": "_ARG_0_ authorized to all principals",
+    "path": "sqs.regions.id.queues.id.Policy.Statement.id",
+    "display_path": "sqs.regions.id.queues.id",
+    "conditions": [ "and",
+        [ "sqs.regions.id.queues.id.Policy.Statement.id.Effect", "equal", "Allow" ],
+        [ "sqs.regions.id.queues.id.Policy.Statement.id.", "containAction", "sqs:_ARG_0_" ],
+        [ "or",
+            [ "sqs.regions.id.queues.id.Policy.Statement.id.Principal", "containAtLeastOneOf", "*" ],
+            [ "and",
+                [ "sqs.regions.id.queues.id.Policy.Statement.id.Principal", "withKey", "AWS" ],
+                [ "sqs.regions.id.queues.id.Policy.Statement.id.Principal.AWS", "containAtLeastOneOf", "*" ]
+            ]
+        ]
+    ]
+}

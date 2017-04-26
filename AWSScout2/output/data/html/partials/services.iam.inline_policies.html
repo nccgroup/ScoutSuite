@@ -1,0 +1,16 @@
+
+    <!-- IAM inline policies partial -->
+    <script id="services.iam.inline_policies.partial" type="text/x-handlebars-template">
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">
+            Inline Policies <span id="iam.{{resource_type}}.{{resource_id}}.inline_policies" class="badge pull-right btn-info">{{inline_policies_count}}</span>
+          </h4>
+          {{#each inline_policies}}
+            {{> accordion_policy name = name document = PolicyDocument policy_path = (concat 'iam' ../resource_type ../resource_id 'inline_policies' @key 'PolicyDocument')}}
+          {{/each}}
+        </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.iam.inline_policies", $("#services\\.iam\\.inline_policies\\.partial").html());
+    </script>
+

@@ -1,0 +1,46 @@
+
+    <!-- IAM group partial -->
+    <script id="services.iam.groups.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text item-margin">Creation date: {{CreateDate}}</div>
+        </div>
+        <div class="list-group-item" style="padding-bottom: 0 !important;">
+          <div class="accordion">
+            <h4 class="list-group-item-heading accordion-heading">Members
+              {{#if users}}
+                <a class="accordion-toggle" data-toggle="collapse" href="#iam\.groups\.{{id}}\.users"><span class="badge pull-right btn-info">{{users.length}}</span></a>
+              {{else}}
+                <span class="badge pull-right">{{users.length}}</span>
+              {{/if}}
+            </h4>
+            <div id="iam.groups.{{id}}.users" class="accordion-body collapse">
+              <div class="accordion-inner">
+                <ul class="no-bullet">
+                  {{#each users}}
+                    <li><a href="javascript:showObject('services.iam.users.{{this}}')">{{get_value_at 'services.iam.users' this 'name'}}</a></li>
+                  {{/each}}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{> services.iam.inline_policies resource_type = 'groups' resource_id = @key}}
+        {{> services.iam.policies_list}}
+    </script>
+    <script>
+      Handlebars.registerPartial("services.iam.groups", $("#services\\.iam\\.groups\\.partial").html());
+    </script>
+
+    <!-- Single IAM group template -->
+    <script id="services.iam.groups.template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.iam.groups}}
+    </script>
+    <script>
+        var single_iam_group_template = Handlebars.compile($("#services\\.iam\\.groups\\.template").html());
+    </script>
+

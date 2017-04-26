@@ -1,0 +1,35 @@
+    <!-- Network interface partial -->
+    <script id="network_interface.partial" type="text/x-handlebars-template">
+        <div class="accordion">
+            <div class="list-group-item-heading accordion-heading">
+                {{@key}}
+                <a class="accordion-toggle collapsed" data-toggle="collapse" href="#{{escape_dots (concat 'ec2.regions' region 'vpcs' vpc_id 'instances' instance_id 'network_interfaces' @key)}}">
+                    <span class="badge pull-right btn-info">Details</span>
+                </a>
+            </div>
+            <div id="{{concat 'ec2.regions' region 'vpcs' vpc_id 'instances' instance_id 'network_interfaces' @key}}" class="accordion-body item-margin collapse">
+                <div class="accordion-inner">
+                    <ul>
+                        {{#if Description}}<li class="list-group-item-text no-margin">Description: {{Description}}</li>{{/if}}
+                        {{#if Association}}
+                            <li class="list-group-item-text no-margin">Public IP: {{Association.PublicIp}}</li>
+                            {{#if Association.PublicDnsName}}<li class="list-group-item-text no-margin">Public DNS: {{Association.PublicDnsName}}</li>{{/if}}
+                        {{/if}}
+                        {{#each PrivateIpAddresses}}
+                            <li class="list-group-item-text no-margin">{{#if Primary}}Primary {{/if}}Private IP: {{PrivateIpAddress}}</li>
+                        {{/each}}
+                        <li class="list-group-item-text no-margin">Security groups:
+                            <ul>
+                                {{#each Groups}}
+                                    <li><a href="javascript:showObject('services.ec2.regions.{{../region}}.vpcs.{{../vpc_id}}.security_groups.{{GroupId}}')">{{GroupName}}</a></li>
+                                {{/each}}
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </script>
+    <script>
+        Handlebars.registerPartial("network_interface", $("#network_interface\\.partial").html());
+    </script>

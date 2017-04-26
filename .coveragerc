@@ -1,0 +1,6 @@
+[report]
+include =   AWSScout2/*.py
+            AWSScout2/configs/*.py
+            AWSScout2/output/*.py
+            AWSScout2/rules/*.py
+            AWSScout2/services/*.py

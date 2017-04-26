@@ -1,0 +1,52 @@
+
+    <!-- IAM role partial -->
+    <script id="services.iam.roles.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text item-margin">Creation date: {{CreateDate}}</div>
+          <div class="list-group-item-text item-margin">ARN: {{arn}}</div>
+        </div>
+        <div class="list-group-item">
+          {{> accordion_policy name = 'Assume Role Policy' policy_path = (concat 'iam.roles' @key 'assume_role_policy.PolicyDocument')  document = assume_role_policy.PolicyDocument}}
+        </div>
+        <div class="list-group-item">
+          <div class="accordion">
+            <h4 class="list-group-item-heading accordion-heading">Instances
+              {{#ifPositive instances_count}}
+                <a class="accordion-toggle" data-toggle="collapse" href="#iam\.roles\.{{id}}\.instances"><span class="badge pull-right btn-info">{{instances_count}}</span></a>
+              {{else}}
+                <span class="badge pull-right">{{instances_count}}</span>
+              {{/ifPositive}}
+            </h4>
+            <div id="iam.roles.{{id}}.instances" class="accordion-body collapse">
+              <div class="accordion-inner">
+                <ul class="no-bullet">
+                  {{#each instance_profiles}}
+                    {{#each instances}}
+                      <li><a href="javascript:findAndShowEC2Object('regions.vpcs.instances', '{{this}}')">{{this}}</a></li>
+                    {{/each}}
+                  {{/each}}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        {{> services.iam.inline_policies resource_type = 'roles' resource_id = id}}
+        {{> services.iam.policies_list resource_type = 'roles' resource_id = id}}
+    </script>
+    <script>
+      Handlebars.registerPartial("services.iam.roles", $("#services\\.iam\\.roles\\.partial").html());
+    </script>
+
+    <!-- Single IAM role template -->
+    <script id="services.iam.roles.template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.iam.roles}}
+    </script>
+    <script>
+        var single_iam_role_template = Handlebars.compile($("#services\\.iam\\.roles\\.template").html());
+    </script>
+

@@ -1,0 +1,28 @@
+
+    <!-- RDS snapshot partial -->
+    <script id="services.rds.regions.id.vpcs.id.snapshots.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4>Information</h4>
+          <ul>
+            <li class="list-group-item-text">RDS Instance: <a href="javascript:showObject('services.rds.regions.{{region}}.vpcs.{{vpc_id}}.instances.{{DBInstanceIdentifier}}')">{{DBInstanceIdentifier}}</a></li>
+            <li class="list-group-item-text">Created on: {{SnapshotCreateTime}}</li>
+            <li class="list-group-item-text">Encrypted: {{Encrypted}}</li>
+            <li class="list-group-item-text">Option group: {{OptionGroupName}}</li>
+          </ul>
+        </div>
+        <div class="list-group-item">
+          <h4>Attributes</h4>
+          <ul>
+            {{#each attributes}}
+              <li class="list-group-item-text">{{AttributeName}}: <span id="rds.regions.{{../region}}.vpcs.{{../vpc_id}}.snapshots.{{@../key}}.attributes.{{@index}}">{{AttributeValues}}</span></li>
+            {{/each}}
+          </ul>
+        </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.rds.regions.id.vpcs.id.snapshots", $("#services\\.rds\\.regions\\.id\\.vpcs\\.id\\.snapshots\\.partial").html());
+    </script>
+

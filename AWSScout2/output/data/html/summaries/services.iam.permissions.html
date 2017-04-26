@@ -1,0 +1,81 @@
+
+<!-- IAM permissions -->
+<script id="services.iam.permissions.details.template" type="text/x-handlebars-template">
+  <div class="list-group" id="services.iam.permissions.details">
+    <div class="list-group" id="services.iam.permissions.view">
+      {{#each items}}
+        <!-- Action / NotAction -->
+        <div class="list-group">
+          <div class="row list-group-item active">
+            <div class="col-sm-4"><h4>{{@key}} Permission</h4></div>
+            <div class="col-sm-8"><h4>Details</h4></div>
+          </div>
+          {{#each this}}
+            <!-- Action value -->
+            <div class="row list-group-item" id="services.iam.permissions">
+              <div class="col-sm-4">{{@key}}</div>
+              <div class="col-sm-8">
+                {{#each this}}
+                  <!-- IAM Resource type -->
+                  {{addMember 'type' @key}}
+                  <div class="list-group-item-text">{{make_title @key}}:</div>
+                  <ul>
+                    {{#each this}}
+                      <!-- Effect -->
+                      {{#ifShow @key 'type'}}
+                        <li class="list-group-item-text">{{make_title @key}}:</li>
+                        <ul>
+                          {{#each this}}
+                            <div id="services.iam.permissions.{{../../../type}}.{{@key}}"> <!-- filter -->
+                            <!-- IAM Resource ID -->
+                            {{addMember 'name' @key}}
+                            <li class="list-group-item-text"><a href="javascript:showObject('services.iam.{{../../../type}}.{{@key}}')">{{get_value_at 'services.iam' ../../../type @key 'name'}}</a></li>
+                            <ul>
+                              {{#each this}}
+                                <!-- Resource / NotResource -->
+                                {{#ifShow @key 'name'}}
+                                  <li class="list-group-item-text">{{make_title @key}}s</li>
+                                  <ul class="no-bullet">
+                                    {{#each this}}
+                                      <!-- Resource ARN -->
+                                      {{addMember 'Resource' @key}}
+                                      {{#each inline_policies}}
+                                        <li>
+                                          {{../Resource}} granted in <a href="javascript:showObject('services.iam.{{../../../../../../../type}}.{{../../../../name}}.inline_policies.{{@key}}')">{{get_value_at 'services.iam' ../../../../../../../type ../../../../name 'inline_policies' @key 'name'}}</a>
+                                          {{#if condition}}
+                                            <ul class="no-bullet">
+                                              <li class="list-group-item-text">Condition: {{condition}}</li>
+                                            </ul>
+                                          {{/if}}
+                                        </li>
+                                      {{/each}}
+                                      {{#each policies}}
+                                        <li>
+                                          {{../Resource}} granted in <a href="javascript:showObject('services.iam.policies.{{@key}}')">{{get_value_at 'services.iam.policies' @key 'name'}}</a>
+                                          {{#if condition}}
+                                            <ul class="no-bullet">
+                                              <li class="list-group-item-text">Condition: {{condition}}</li>
+                                            </ul>
+                                          {{/if}}
+                                        </li>
+                                      {{/each}}
+                                    {{/each}}
+                                  </ul>
+                                {{/ifShow}}
+                              {{/each}}
+                            </ul>
+                            </div>
+                          {{/each}}
+                        </ul>
+                      {{/ifShow}}
+                    {{/each}}
+                  </ul>
+                {{/each}}
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      {{/each}}
+    </div>
+  </div>
+</script>

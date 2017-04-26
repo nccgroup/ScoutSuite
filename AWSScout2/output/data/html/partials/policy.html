@@ -1,0 +1,22 @@
+    <!-- Policy partial -->
+    <script id="policy.partial" type="text/x-handlebars-template">
+      {{#each document}}
+          {{#ifEqual @key "Statement"}}
+            &nbsp;&nbsp;"{{@key}}":&nbsp; [<br/>
+            {{#each this}}
+              <div class="item-margin">
+                <span id="{{../../../policy_path}}.Statement.{{@key}}">{{{displayKey @key this}}}</span>
+                {{#unless @last}},{{/unless}}
+              </div>
+            {{/each}}                  
+            &nbsp;&nbsp;]
+          {{else}}
+            &nbsp;&nbsp;"{{@key}}":&nbsp; {{{displayKey @key this}}}
+          {{/ifEqual}}
+          {{#unless @last}},{{/unless}}
+          <br/>
+      {{/each}}
+    </script>
+    <script>
+      Handlebars.registerPartial("policy", $("#policy\\.partial").html());
+    </script>

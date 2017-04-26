@@ -1,0 +1,202 @@
+{
+    "management": {
+        "cloudformation": {
+            "resources": {
+                "stacks": {
+                    "cols": 2,
+                    "path": "services.cloudformation.regions.id.stacks"
+                }
+            }
+        },
+        "cloudtrail": {
+            "resources": {
+                "regions": {
+                    "cols": 2,
+                    "path": "services.cloudtrail.regions"
+                },
+                "trails": {
+                    "cols": 2,
+                    "path": "services.cloudtrail.regions.id.trails"
+                }
+            }
+        },
+        "cloudwatch": {
+            "resources": {
+                "metrics": {
+                    "cols": 2,
+                    "path": "services.cloudwatch.regions.id.metrics"
+                },
+                "alarms": {
+                    "cols": 2,
+                    "path": "services.cloudwatch.regions.id.alarms"
+                }
+            },
+            "summaries": {
+                "statistics": {
+                    "cols": 1,
+                    "path": "services.cloudwatch.statistics"
+                }
+            }
+        }
+    },
+    "messaging": {
+        "sns": {
+            "resources": {
+                "topics": {
+                    "cols": 2,
+                    "path": "services.sns.regions.id.topics"
+                }
+            }
+        },
+        "ses": {
+            "resources": {
+                "identities": {
+                    "cols": 2,
+                    "path": "services.ses.regions.id.identities"
+                }
+            }
+        },
+        "sqs" : {
+            "resources": {
+                "queues": {
+                    "cols": 2,
+                    "path": "services.sqs.regions.id.queues"
+                }
+            }
+        }
+    },
+    "network": {
+        "vpc": {
+            "resources": {
+                "network_acls": {
+                    "cols": 2,
+                    "path": "services.vpc.regions.id.vpcs.id.network_acls"
+                },
+                "vpcs": {
+                    "cols": 2,
+                    "path": "services.vpc.regions.id.vpcs"
+                },
+                "subnets": {
+                    "cols": 2,
+                    "path": "services.vpc.regions.id.vpcs.id.subnets"
+                }
+            }
+        },
+        "route53": {
+            "resources": {
+                "domains": {
+                    "cols": 2,
+                    "path": "services.route53.domains"
+                },
+                "hosted_zones": {
+                    "cols": 2,
+                    "path": "services.route53.hosted_zones"
+                }
+            }
+        }
+    },
+    "compute": {
+        "ec2": {
+            "resources": {
+                "elbs": {
+                    "cols": 2,
+                    "path": "services.ec2.regions.id.vpcs.id.elbs"
+                },
+                "instances": {
+                    "cols": 2,
+                    "path": "services.ec2.regions.id.vpcs.id.instances"
+                },
+                "security_groups": {
+                    "cols": 2,
+                    "path": "services.ec2.regions.id.vpcs.id.security_groups"
+                }
+            },
+            "summaries": {
+                "external attack surface": {
+                    "cols": 1,
+                    "path": "services.ec2.attack_surface"
+                }
+            }
+        }
+    },
+    "security": {
+        "iam": {
+            "resources": {
+                "groups": {
+                    "cols": 2,
+                    "path": "services.iam.groups"
+                },
+                "policies": {
+                    "cols": 2,
+                    "path": "services.iam.policies"
+                },
+                "roles": {
+                    "cols": 2,
+                    "path": "services.iam.roles"
+                },
+                "users": {
+                    "cols": 2,
+                    "path": "services.iam.users"
+                }
+            },
+            "summaries": {
+                "permissions": {
+                    "cols": 1,
+                    "path": "services.iam.permissions"
+                },
+                "password_policy": {
+                    "cols": 1,
+                    "path": "services.iam.password_policy"
+                },
+                "root_account": {
+                    "cols": 1,
+                    "path": "services.iam.credential_report.<root_account>"
+                }
+            }
+        }
+    },
+    "database": {
+        "rds": {
+            "resources": {
+                "instances": {
+                    "cols": 2,
+                    "path": "services.rds.regions.id.vpcs.id.instances"
+                },
+                "security_groups": {
+                    "cols": 2,
+                    "path": "services.rds.regions.id.vpcs.id.security_groups"
+                },
+                "snapshots": {
+                    "cols": 2,
+                    "path": "services.rds.regions.id.vpcs.id.snapshots"
+                }
+            }
+        },
+        "redshift": {
+            "resources": {
+                "clusters": {
+                    "cols": 2,
+                    "path": "services.redshift.regions.id.vpcs.id.clusters"
+                },
+                "parameter_groups": {
+                    "cols": 2,
+                    "path": "services.redshift.regions.id.parameter_groups"
+                },
+                "security_groups": {
+                    "cols": 2,
+                    "path": "services.redshift.regions.id.vpcs.id.security_groups"
+                }
+            }
+        }
+    },
+    "storage": {
+        "s3": {
+            "resources": {
+                "buckets": {
+                    "cols": 2,
+                    "path": "services.s3.buckets"
+                }
+            }
+        }
+    }
+}

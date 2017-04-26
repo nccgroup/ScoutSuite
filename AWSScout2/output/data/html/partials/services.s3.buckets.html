@@ -1,0 +1,75 @@
+
+    <!-- S3 bucket partial -->
+    <script id="services.s3.buckets.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text item-margin">Region: {{region}}</div>
+          <div class="list-group-item-text item-margin">Creation date: {{CreationDate}}</div>
+          <div class="list-group-item-text item-margin">Logging: <span id="s3.buckets.{{@key}}.logging">{{has_logging? logging}}</span></div>
+          <div class="list-group-item-text item-margin">Versioning: <span id="s3.buckets.{{@key}}.versioning">{{versioning_status}}</span></div>
+          <div class="list-group-item-text item-margin">MFA Delete: <span id="s3.buckets.{{@key}}.mfa_delete">{{version_mfa_delete}}</span></div>
+          <div class="list-group-item-text item-margin">Static website hosting: <span id="s3.buckets.{{@key}}.web_hosting">{{web_hosting}}</span></div>
+        </div>
+        {{> services.s3.acls resource_type = 'bucket' resource_path = (concat 's3.buckets' @key)}}
+        {{#if policy}}
+          <div class="list-group-item">
+            {{> accordion_policy name = 'Bucket policy' document = policy policy_path = (concat 's3.buckets' @key 'policy')}}
+          </div>
+        {{/if}}
+        {{> services.s3.bucket_iam_policies resource_type = 'groups' resource_count = groups_count}}
+        {{> services.s3.bucket_iam_policies resource_type = 'roles' resource_count = roles_count}}
+        {{> services.s3.bucket_iam_policies resource_type = 'users' resource_count = users_count}}
+        {{#if keys}}
+          <div class="list-group-item">
+            <div class="accordion">
+              <h4 class="list-group-item-heading accordion-heading">Keys
+                <a class="accordion-toggle" data-toggle="collapse" href="#services\.s3\.buckets\.{{@key}}\.keys">
+                  <span class="badge pull-right btn-info">{{keys_count}}<span>
+                </a>
+              </h4>
+              <div id="services.s3.buckets.{{@key}}.keys" class="accordion-body item-margin collapse">
+                <div class="accordion-inner">
+                  <table class="table-striped" width="100%" >
+                    <tr>
+                      <td width="80%">Name</td>
+                      <td width="10%" class="text-center">Encrypted</td>
+                      <td width="10%" class="text-center">Perms</td>
+                    </tr>
+                    {{#each keys}}
+                    <tr>
+                      <td width="80%"><a href="javascript:showS3Object('{{@../key}}', '{{@key}}')">{{name}}</a></td>
+                      <td width="10%" class="text-center">
+                        <span id="s3.buckets.{{@../key}}.keys.{{@key}}.unencrypted">
+                          {{{good_bad_icon 's3-object-unencrypted' @../key @key 'ServerSideEncryption'}}}
+                        </span>
+                      </td>
+                      <td width="10%" class="text-center">
+                        <span id="s3.buckets.{{@../key}}.keys.{{@key}}.grantees">
+                          {{{good_bad_icon 's3-object-acls-mismatch-bucket' @../key @key 'grantees'}}}
+                        </span>
+                      </td>
+                    </tr>
+                    {{/each}}
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        {{/if}}
+    </script>
+    <script>
+      Handlebars.registerPartial("services.s3.buckets", $("#services\\.s3\\.buckets\\.partial").html());
+    </script>
+
+    <!-- Single S3 bucket template -->
+    <script id="single_s3_bucket-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.s3.buckets}}
+    </script>
+    <script>
+        var single_s3_bucket_template = Handlebars.compile($("#single_s3_bucket-template").html());
+    </script>
+

@@ -1,0 +1,335 @@
+{
+    "rules": [
+        {
+            "filename": "cloudtrail-no-logging.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "cloudtrail-no-log-file-validation.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "cloudtrail-no-global-services-logging.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "cloudtrail-duplicated-global-services-logging.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "ec2-default-security-group-in-use.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "ec2-default-security-group-with-rules.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "ec2-unused-security-group.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "ec2-security-group-opens-all-ports.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "ec2-security-group-opens-port-range.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": "true",
+            "args": ["SSH", "TCP", "22"]
+        },
+        {
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": "true",
+            "args": ["RDP", "TCP", "3389"]
+        },
+        {
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": "true",
+            "args": ["MsSQL", "TCP", "1433"]
+        },
+        {
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": "true",
+            "args": ["MySQL", "TCP", "3306"]
+        },
+        {
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": "true",
+            "args": ["MongoDB", "TCP", "27017"]
+        },
+        {
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": "true",
+            "args": ["PostgreSQL", "TCP", "54322"]
+        },
+        {
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": "true",
+            "args": ["Oracle DB", "TCP", "1521"]
+        },
+        {
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": "true",
+            "args": ["DNS", "UDP", "53"]
+        },
+        {
+            "filename": "ec2-security-group-opens-plaintext-port.json",
+            "enabled": "true",
+            "args": ["FTP", "TCP", "21"]
+        },
+        {
+            "filename": "ec2-security-group-opens-plaintext-port.json",
+            "enabled": "true",
+            "args": ["Telnet", "TCP", "23"]
+        },
+        {
+            "filename": "ec2-security-group-opens-port-range.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "ec2-security-group-opens-all-ports-to-self.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "iam-ec2-role-without-instances.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "iam-user-no-key-rotation.json",
+            "enabled": "true",
+            "args": [ "Active", "danger" ]
+        },
+        {
+            "filename": "iam-user-no-key-rotation.json",
+            "enabled": "true",
+            "args": [ "Inactive", "warning" ]
+        },
+        {
+            "filename": "iam-user-without-mfa.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "iam-group-with-inline-policies.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "iam-service-user-with-password.json",
+            "enabled": "true",
+            "args": [ "_LIST_(AllHeadlessUsers)" ]
+        },
+        {
+            "filename": "iam-user-not-in-common-group.json",
+            "enabled": "true",
+            "args": [ "_LIST_(AllUsers)" ]
+        },
+        {
+            "filename": "iam-user-not-in-category-group.json",
+            "enabled": "true",
+            "args": [ "_LIST_(AllHumanUsers, AllHeadlessUsers, AllMisconfiguredUsers)" ]
+        },
+        {
+            "filename": "iam-human-user-with-policies.json",
+            "enabled": "true",
+            "args": [ "managed", "policies", "_LIST_(AllHeadlessUsers)" ]
+        },
+        {
+            "filename": "iam-user-with-policies.json",
+            "enabled": "true",
+            "args": [ "inline", "inline_policies" ]
+        },
+        {
+            "filename": "iam-user-with-password-and-key.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "iam-user-with-multiple-access-keys.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "iam-password-policy-no-expiration.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "iam-password-policy-reuse-enabled.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "iam-user-with-password-and-key.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "root-account-with-active-keys.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "root-account-used-recently.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "root-account-no-mfa.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "redshift-cluster-database-not-encrypted.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "redshift-parameter-group-ssl-not-required.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "redshift-cluster-no-version-upgrade.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "redshift-cluster-publicly-accessible.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "redshift-parameter-group-logging-disabled.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "redshift-security-group-whitelists-all.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "s3-bucket-no-logging.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "s3-bucket-no-mfa-delete.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "s3-bucket-no-versioning.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "s3-bucket-website-enabled.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": "true",
+            "args": ["AuthenticatedUsers", "read", "Bucket world-listable", "danger"]
+        },
+        {
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": "true",
+            "args": ["AuthenticatedUsers", "write", "Bucket world-writable", "danger"]
+        },
+        {
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": "true",
+            "args": ["AuthenticatedUsers", "read_acp", "Bucket's permissions world-readable", "warning"]
+        },
+        {
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": "true",
+            "args": ["AuthenticatedUsers", "write_acp", "Bucket's permissions world-writable", "danger"]
+        },
+        {
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": "true",
+            "args": ["AllUsers", "read", "Bucket world-listable (anonymous)", "warning"]
+        },
+        {
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": "true",
+            "args": ["AllUsers", "write", "Bucket world-writable (anonymous)", "danger"]
+        },
+        {
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": "true",
+            "args": ["AllUsers", "read_acp", "Bucket's permissions world-readable (anonymous)", "warning"]
+        },
+        {
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": "true",
+            "args": ["AllUsers", "write_acp", "Bucket's permissions world-writable (anonymous)", "danger"]
+        },
+
+        {
+            "filename": "s3-bucket-world-policy.json",
+            "enabled": "true",
+            "args": ["delete", "s3:Delete*"]
+        },
+        {
+            "filename": "s3-bucket-world-policy.json",
+            "enabled": "true",
+            "args": ["get", "s3:Get*"]
+        },
+        {
+            "filename": "s3-bucket-world-policy.json",
+            "enabled": "true",
+            "args": ["list", "s3:List*"]
+        },
+        {
+            "filename": "s3-bucket-world-policy.json",
+            "enabled": "true",
+            "args": ["put", "s3:Put*"]
+        },
+        {
+            "filename": "s3-bucket-world-policy.json",
+            "enabled": "true",
+            "args": ["all", "s3:*"]
+        },
+        {
+            "filename": "rds-instance-backup-disabled.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "rds-instance-no-minor-upgrade.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "rds-security-group-allows-all.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "rds-instance-short-backup-retention-period.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "rds-instance-single-az.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "rds-postgres-instance-with-invalid-certificate.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "redshift-cluster-database-not-encrypted.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "redshift-cluster-no-version-upgrade.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "redshift-cluster-publicly-accessible.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "redshift-parameter-group-logging-disabled.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "redshift-parameter-group-ssl-not-required.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "redshift-security-group-whitelists-all.json",
+            "enabled": "true"
+        },
+        {
+            "filename": "placeholder.json",
+            "enabled": "false"
+        }
+    ]
+}

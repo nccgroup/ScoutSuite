@@ -1,0 +1,33 @@
+
+<!-- Template for network attack surface -->
+<script id="services.ec2.attack_surface.details.template" type="text/x-handlebars-template">
+  <div class="list-group" id="services.ec2.attack_surface.details">
+    <div class="list-group" id="services.ec2.attack_surface.view">
+       <div "list-group" id="ec2_attack_surfaces.list">
+         <div class="row list-group-item active">
+           <div class="col-sm-4"><h4>Public IP address</h4></div>
+           <div class="col-sm-8"><h4>Open ports</h4></div>
+         </div>
+         {{#each items}}
+           <div class="row list-group-item">
+             <div class="col-sm-4">{{@key}}</div>
+             <div class="col-sm-8">
+               <ul>
+               {{#each protocols ip = @key}}
+                 <li class="list-group-item-text">{{@key}}</li>
+                 <ul>
+                 {{#each ports}}
+                   <li>{{@key}}</li>
+                   {{> ip_grants items = cidrs}}
+                 {{/each}}
+                 </ul>
+               {{/each}}
+               </ul>
+             </div>
+           </div>
+         {{/each}}
+       </div>
+    </div>
+  </div>
+</script>
+

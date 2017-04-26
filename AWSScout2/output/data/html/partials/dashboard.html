@@ -1,0 +1,35 @@
+
+      <!-- Dasboard partial -->
+      <script id="services.id.findings.partial" type="text/x-handlebars-template">
+        <div class="row" id="services.{{service_name}}.findings.row">
+          <div class="col-sm-12" id="services.{{service_name}}.findings.list">
+              {{#if findings}}
+                {{#grouped_each 3 findings}}
+                  <div class="row">
+                    {{#each this}}
+                      <div class="col-sm-4">
+                        <div class="list-group-item finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
+                          <a href="#services.{{service}}.findings.{{@key}}.items">
+                            {{description}}
+                          </a>
+                          <i class="glyphicon glyphicon-info-sign pull-right" onmouseover="javascript:$('#{{@key}}\\.rationale').show()" onmouseleave="javascript:$('#{{@key}}\\.rationale').hide()"></i>
+                          <div id="{{@key}}.rationale" class="list-group-item rationale-overlay finding-title-unknown">{{rationale}}</div>
+                        </div>
+                        <div class="list-group-item">
+                          <ul>
+                            <li>{{dashboard_name}} checked: {{checked_items}}</li>
+                            <li>{{dashboard_name}} flagged: {{flagged_items}}</li>
+                          </ul>
+                        </div>
+                      </div>
+                    {{/each}}
+                  </div>
+                {{/grouped_each}}
+              {{/if}}
+          </div>
+        </div>
+      </script>
+      <script>
+        Handlebars.registerPartial("dashboard", $("#services\\.id\\.findings\\.partial").html());
+      </script>
+

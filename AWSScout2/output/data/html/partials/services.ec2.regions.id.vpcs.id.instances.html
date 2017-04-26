@@ -1,0 +1,45 @@
+
+    <!-- EC2 instance partial -->
+    <script id="services.ec2.regions.id.vpcs.id.instances.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+            <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+            <h4>Information</h4>
+            <ul>
+                <li class="list-group-item-text">Region: {{region}}</li>
+                <li class="list-group-item-text">VPC: {{get_value_at 'services.ec2.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</li>
+                <li class="list-group-item-text">ID: {{id}}</li>
+                <li class="list-group-item-text">Reservation ID: {{reservation_id}}</li>
+                <li class="list-group-item-text">Access Key name: {{KeyName}}</li>
+                <li class="list-group-item-text">State: {{make_title State.Name}}</li>
+                <li class="list-group-item-text">Instance Type:
+                    <span id="services.ec2.regions.vpcs.instances-unscannable-instance-types-{{id}}"> {{InstanceType}}<span>
+                </li>
+                <li class="list-group-item-text">Up since: {{LaunchTime}}</li>
+            </ul>
+        </div>
+        <div class="list-group-item" style="padding-bottom: 0 !important;">
+            <h4>Network interfaces</h4>
+            <ul>
+                {{#each network_interfaces}}
+                    <li class="list-group-item-text">
+                        {{> network_interface region = ../region vpc_id = ../vpc instance_id = @../key}}
+                    </li>
+                {{/each}}
+            </ul>
+        </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.ec2.regions.id.vpcs.id.instances", $("#services\\.ec2\\.regions\\.id\\.vpcs\\.id\\.instances\\.partial").html());
+    </script>
+
+    <!-- Single EC2 instance template -->
+    <script id="single_ec2_instance-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.ec2.regions.id.vpcs.id.instances}}
+    </script>
+    <script>
+        var single_ec2_instance_template = Handlebars.compile($("#single_ec2_instance-template").html());
+    </script>
+

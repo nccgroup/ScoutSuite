@@ -1,0 +1,18 @@
+    <!-- Policy partial -->
+    <script id="accordion_policy.partial" type="text/x-handlebars-template">
+      <div class="accordion">
+        <h4 class="list-group-item-heading accordion-heading">{{name}}
+          <a class="accordion-toggle collapsed" data-toggle="collapse" href="#{{escape_dots policy_path}}">
+            <span class="badge pull-right btn-info">Details</span>
+          </a>
+        </h4>
+        <div id="{{policy_path}}" class="accordion-body item-margin collapse">
+          <div class="accordion-inner">
+            {{> policy}}
+          </div>
+        </div>
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("accordion_policy", $("#accordion_policy\\.partial").html());
+    </script>

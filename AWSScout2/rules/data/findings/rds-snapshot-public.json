@@ -1,0 +1,10 @@
+{
+    "description": "Publicly accessible snapshot",
+    "path": "rds.regions.id.vpcs.id.snapshots.id.attributes.id",
+    "dashboard_name": "Snapshots",
+    "display_path": "rds.regions.id.vpcs.id.snapshots.id",
+    "conditions": [ "and",
+        [ "rds.regions.id.vpcs.id.snapshots.id.attributes.id.AttributeName", "equal", "restore" ],
+        [ "rds.regions.id.vpcs.id.snapshots.id.attributes.id.AttributeValues", "containAtLeastOneOf", "all" ]
+    ]
+}

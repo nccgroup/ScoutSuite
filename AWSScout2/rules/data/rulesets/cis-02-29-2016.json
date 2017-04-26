@@ -1,0 +1,147 @@
+{
+    "about": "This ruleset attempts to cover as many recommendations from the CIS Amazon Web Services Foundation v1.0.0 - 02-29-2016. However, Scout2 does not fetch data from CloudWatch. As a result, no recommendations from section 3 \"Monitoring\" are assessed. Furthermore, this ruleset is a work in progress and coverage of sections 1, 2, and 4 is incomplete.",
+    "rules": [
+        {
+            "level": "danger",
+            "filename": "iam-root-account-used-recently.json",
+            "enabled": true,
+            "comment": "recommendation1.1"
+        },
+        {
+            "level": "danger",
+            "filename": "iam-user-without-mfa.json",
+            "enabled": true,
+            "comment": "recommendation1.2"
+        },
+        {
+            "level": "danger",
+            "filename": "iam-user-no-key-rotation.json",
+            "enabled": true,
+            "args": [
+                "Active",
+                "90"
+            ],
+            "comment": "recommendation1.4"
+        },
+        {
+            "level": "danger",
+            "filename": "iam-password-policy-no-uppercase-required.json",
+            "enabled": true,
+            "comment": "recommendation1.5"
+        },
+        {
+            "level": "danger",
+            "filename": "iam-password-policy-no-lowercase-required.json",
+            "enabled": true,
+            "comment": "recommendation1.6"
+        },
+        {
+            "level": "danger",
+            "filename": "iam-password-policy-no-symbol-required.json",
+            "enabled": true,
+            "comment": "recommendation1.7"
+        },
+        {
+            "level": "danger",
+            "filename": "iam-password-policy-no-number-required.json",
+            "enabled": true,
+            "comment": "recommendation1.8"
+        },
+        {
+            "level": "danger",
+            "filename": "iam-password-policy-minimum-length.json",
+            "enabled": true,
+            "args": [
+                "14"
+            ],
+            "comment": "recommendation1.9"
+        },
+        {
+            "level": "danger",
+            "filename": "iam-password-policy-reuse-enabled.json",
+            "enabled": true,
+            "comment": "recommendation1.10"
+        },
+        {
+            "level": "danger",
+            "filename": "iam-password-policy-expiration-threshold.json",
+            "enabled": true,
+            "args": [
+                "90"
+            ],
+            "comment": "recommendation1.11"
+        },
+        {
+            "level": "danger",
+            "filename": "iam-root-account-with-active-keys.json",
+            "enabled": true,
+            "comment": "recommendation1.12"
+        },
+        {
+            "level": "danger",
+            "filename": "iam-root-account-no-mfa.json",
+            "enabled": true,
+            "comment": "recommendation1.13 (partial: no check for hardware vs software)"
+        },
+        {
+            "level": "danger",
+            "filename": "iam-user-with-policies.json",
+            "enabled": true,
+            "args": [
+                "inline",
+                "inline_policies"
+            ],
+            "comment": "Recommendation1.15 (part 1/2)"
+        },
+        {
+            "level": "danger",
+            "filename": "iam-user-with-policies.json",
+            "enabled": true,
+            "args": [
+                "managed",
+                "policies"
+            ],
+            "comment": "Recommendation1.15 (part 2/2)"
+        },
+        {
+            "level": "danger",
+            "filename": "cloudtrail-not-configured.json",
+            "enabled": true,
+            "comment": "Recommendation2.1 (part 1/2)"
+        },
+        {
+            "level": "danger",
+            "filename": "cloudtrail-no-logging.json",
+            "enabled": true,
+            "comment": "Recommendation2,1 (part 2/2)"
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": true,
+            "args": [
+                "SSH",
+                "TCP",
+                "22"
+            ],
+            "comment": "Recommendation4.1"
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": true,
+            "args": [
+                "RDP",
+                "TCP",
+                "3389"
+            ],
+            "comment": "Recommendation4.2"
+        },
+        {
+            "level": "warning",
+            "filename": "ec2-default-security-group-with-rules.json",
+            "enabled": true,
+            "comment": "Recommendation4.4"
+        }
+    ]
+}

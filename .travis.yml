@@ -1,16 +1,22 @@
 language: python
+
 python:
   - "2.7"
   - "3.3"
   - "3.4"
   - "3.5"
+  - "3.6"
+
 # command to install dependencies
 install: "pip install -r requirements.txt"
+
 # command to run tests
 script:
-  - 'nosetests tests/test-listall.py'
-  - 'nosetests tests/test-rulesgenerator.py'
-  - 'nosetests tests/test-utils.py'
-  - '[ "${TRAVIS_SECURE_ENV_VARS}" = "true" ] && nosetests tests/test-scout2.py || false'
+#  - 'nosetests tests/test-listall.py'
+#  - 'nosetests tests/test-rulesgenerator.py'
+#  - 'nosetests tests/test-utils.py'
+#  - '[ "${TRAVIS_SECURE_ENV_VARS}" = "true" ] && nosetests tests/test-utils_sns.py || false'
+  - '[ "${TRAVIS_SECURE_ENV_VARS}" = "true" ] && nosetests --with-coverage tests/test-scout2.py || false'
+
 # use container-base infrastructure
 sudo: false

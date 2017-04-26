@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Scout2 Report</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="inc-bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="inc-bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery -->
+    <script src="inc-jquery/jquery-1.11.2.min.js"></script>
+
+    <!-- Handlebars -->
+    <script src="inc-handlebars/handlebars-v3.0.0.js"></script>
+
+    <!-- Scout2 -->
+    <script src="inc-scout2/scout2.js"></script>
+    <script src="inc-scout2/helpers.js"></script>
+    <link href="inc-scout2/scout2.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <!------------------>
+    <!-- Fixed navbar -->
+    <!------------------>
+
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="metadata.list">
+    </div>
+
+    <!--------------->
+    <!-- Container -->
+    <!--------------->
+
+    <div class="container theme-showcase" id="container-user">
+
+      <!-- Empty header -->
+      <div class="page-header">
+      </div>
+
+      <!-- Overlay divs used to show entity details in a pop up fashion -->
+      <div id="overlay-background" class="overlay-bg"></div>
+      <div id="overlay-details" class="overlay col-sm-6"></div>
+
+      <!-- Title section -->
+      <div id="section_title-div">
+          <h2 id="section_title-h2"></h2>
+      </div>
+
+      <!-- One column container -->
+      <div class="row">
+        <div class="col-sm-12" id="single-column">
+      </div>
+
+      <!-- Two columns container -->
+      <div class="row">
+        <div class="col-sm-4" id="double-column-left"></div>
+        <div class="col-sm-8" id="double-column-right"></div>
+      </div>
+
+      <!-- PLACEHOLDER -->
+
+      <!-- About Scout2 -->
+      <div class="row" id="about.details">
+        <div class="list-group">
+          <div class="row list-group-item active">
+            About
+          </div>
+          <div class="row list-group-item">
+            <p>&nbsp;</p>
+            <p>AWS Scout2 is an open-source security tool released by <a href="https://www.nccgroup.trust" target="_blank">NCC Group</a>.</p>
+            <p>&nbsp;</p>
+            <p>Use the top navigation bar to review the configuration of the
+            supported AWS services. For more information about Scout2, please
+            check out the project's page on
+            <a href="https://github.com/iSECPartners/Scout2" target="_blank">Github</a>
+            and the project's website at
+            <a href="https://nccgroup.github.io/Scout2/" target="_blank">https://nccgroup.github.io/Scout2/</a>.
+            <p>&nbsp;</p>
+            The AWS documentation is available at
+            <a href="https://aws.amazon.com/documentation" target="_blank">https://aws.amazon.com/documentation</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Please wait -->
+      <div class="row" id="please_wait.details">
+        <div class="list-group">
+          <div class="row list-group-item active">
+            Please wait
+          </div>
+          <div class="row list-group-item">
+            <p>&nbsp;</p>
+            <p>Loading data, this may take a while...</p>
+            <p>&nbsp;</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- About-run dashboard -->
+      <script id="last_run.details.template" type="text/x-handlebars-template">
+        <h4>
+          <div class="row" id="last_run.details">
+            <div class="list-group-item active">
+             <div class="list-group-item-heading">Dashboard</div>
+            </div>
+            <div class="list-group-item">
+              <div class="list-group-item-text item-margin">Summary:</div>
+              <div class="list-group-item-text item-margin">
+                <div class="list-group-item-text" style="text-align: center">&nbsp;</div>
+                <div class="list-group-item">Service
+                  <div class="col-sm-3 pull-right" style="text-align: center"># of Checks</div>
+                  <div class="col-sm-3 pull-right" style="text-align: center"># of Findings</div>
+                    <div class="col-sm-3 pull-right" style="text-align: center"># of Rules</div>
+                </div>
+                {{#each items.summary}}
+                  <a href="#services.{{@key}}.findings" style="color: black !important;">
+                    <div class="list-group-item finding-title-{{dashboard_color max_level checked_items flagged_items}}">{{make_title @key}}
+                      <div class="col-sm-3 pull-right" style="text-align: center">{{checked_items}}</div>
+                      <div class="col-sm-3 pull-right" style="text-align: center">{{flagged_items}}</div>
+                        <div class="col-sm-3 pull-right" style="text-align: center">{{rules_count}}</div>
+                    </div>
+                  </a>
+                {{/each}}
+              </div>
+              <div class="list-group-item-text item-margin">&nbsp;</div>
+              <div class="list-group-item-text item-margin">&nbsp;</div>
+              <div class="list-group-item-text item-margin">Last run:
+                  <div class="list-group-item-text item-margin">&nbsp;</div>
+                  <div class="list-group-item-text item-margin">Time: {{items.time}}</div>
+                  <div class="list-group-item-text item-margin">Command: {{items.cmd}}</div>
+              </div>
+              <div class="list-group-item-text item-margin">&nbsp;</div>
+              <div class="list-group-item-text item-margin">Report generated with Scout2 version {{items.version}}</div>
+              <div class="list-group-item-text item-margin">&nbsp;</div>
+              <div class="list-group-item-text item-margin">Ruleset used: {{items.ruleset_name}}</div>
+              <div class="list-group-item-text item-margin">&nbsp;</div>
+              <div class="list-group-item-text item-margin">{{items.ruleset_about}}</div>
+              <div class="list-group-item-text item-margin">&nbsp;</div>
+            </div>
+          </div>
+        </h4>
+      </script>
+
+      <!-- Service-specific dashboards -->
+      <div class="row">
+        <div class="col-sm-12" id="services.id.findings.details">
+          <script id="services.id.findings.details.template" type="text/x-handlebars-template">
+            {{#each items}}
+              {{> dashboard service_name = @key}}
+            {{/each}}
+          </script>
+        </div>
+      </div>
+
+    </div> <!-- /container -->
+
+    <!-- Include all AWS services configs -->
+    <script src="inc-awsconfig/aws_config.js"></script>
+    <script src="inc-awsconfig/exceptions.js"></script>
+
+    <!-- Bootstrap core JavaScript, placed at the end of the document so the pages load faster -->
+    <script src="inc-bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Display dashbord -->
+    <script>load_metadata();</script>
+
+  </body>
+</html>

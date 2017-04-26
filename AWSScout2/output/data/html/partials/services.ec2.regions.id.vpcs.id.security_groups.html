@@ -1,0 +1,51 @@
+
+<!-- EC2 security group partial -->
+<script id="services.ec2.regions.id.vpcs.id.security_groups.partial" type="text/x-handlebars-template">
+    <div class="list-group-item active">
+      <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+      <h4 class="list-group-item-heading">Information</h4>
+      <div class="list-group-item-text">Description: {{description}}</div>
+      <div class="list-group-item-text">Region: {{region}}</div>
+      <div class="list-group-item-text">VPC: {{get_value_at 'services.vpc.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</div>
+      <div class="list-group-item-text">ID: {{id}}</div>
+    </div>
+    {{#each rules}}
+      {{> services.ec2.regions.vpcs.security_groups.rule_list this sg_name = ../name sg_id = ../id direction = @key vpc = ../vpc region = ../region }}
+    {{/each}}
+    <div class="list-group-item">
+      <h4 class="list-group-item-heading">Usage</h4>
+      <ul>
+        {{#each used_by}}
+          {{#each resource_type}}
+            <li>{{make_title @../key}} {{make_title @key}}:</li>
+            <ul>
+              {{#each this}}
+                {{> services.ec2.regions.vpcs.security_groups.resource_list service=@../../key resource_type=@../key resources=this status=@key region=../../../region vpc=../../../vpc group=../../../id}}
+              {{/each}}
+            </ul>
+          {{/each}}
+        {{/each}}
+      </ul>
+      <span id="services.ec2.regions.vpcs.security_groups-unused-{{id}}" class="finding-hidden item-margin">
+        <i class="glyphicon glyphicon-warning-sign"></i> This group is not used by either EC2, RDS, or Redshift.
+      </span>
+      <span id="ec2.regions.{{region}}.vpcs.{{vpc}}.security_groups.{{id}}.default_in_use" class="finding-hidden item-margin">
+        <i class="glyphicon glyphicon-warning-sign"></i> Default security groups should not be used.
+      </span>
+    </div>
+</script>
+<script>
+    Handlebars.registerPartial("services.ec2.regions.id.vpcs.id.security_groups", $("#services\\.ec2\\.regions\\.id\\.vpcs\\.id\\.security_groups\\.partial").html());
+</script>
+
+    <!-- Single EC2 security group template -->
+    <script id="single_ec2_security_group-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.ec2.regions.id.vpcs.id.security_groups}}
+    </script>
+    <script>
+        var single_ec2_security_group_template = Handlebars.compile($("#single_ec2_security_group-template").html());
+    </script>
+

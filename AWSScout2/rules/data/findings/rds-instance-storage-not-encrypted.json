@@ -1,0 +1,9 @@
+{
+    "description": "Instance storage not encrypted",
+    "path": "rds.regions.id.vpcs.id.instances.id",
+    "dashboard_name": "Instances",
+    "conditions": [ "and",
+        [ "rds.regions.id.vpcs.id.instances.id.StorageEncrypted", "false", "" ]
+    ],
+    "id_suffix": "StorageEncrypted"
+}

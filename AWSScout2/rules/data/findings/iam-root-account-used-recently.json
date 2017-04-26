@@ -1,0 +1,9 @@
+{
+    "description": "Root account used recently",
+    "path": "iam.credential_report.<root_account>",
+    "dashboard_name": "Root account",
+    "conditions": [ "and",
+        [ "iam.credential_report.<root_account>.password_last_used", "newerThan", ["90", "days"] ]
+    ],
+    "id_suffix": "password_last_used"
+}

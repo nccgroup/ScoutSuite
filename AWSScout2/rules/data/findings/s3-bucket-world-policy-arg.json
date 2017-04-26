@@ -1,0 +1,21 @@
+{
+    "arg_names" : [ "Action shortname", "Service:Action" ],
+    "key": "s3-bucket-world-_ARG_0_-policy",
+    "dashboard_name": "Buckets",
+    "description": "_ARG_0_ actions authorized to all principals",
+    "path": "s3.buckets.id.policy.Statement.id",
+    "display_path": "s3.buckets.id",
+    "conditions": [ "and",
+        [ "s3.buckets.id.", "withKey", "policy" ],
+        [ "s3.buckets.id.policy.Statement.id.Effect", "equal", "Allow" ],
+        [ "s3.buckets.id.policy.Statement.id", "withoutKey", "Condition" ],
+        [ "s3.buckets.id.policy.Statement.id.Principal", "containAtLeastOneOf", [ "*" ] ],
+        [ "s3.buckets.id.policy.Statement.id.", "containAction", "_ARG_1_" ],
+        [ "s3.buckets.id.policy.Statement.id.Action", "containNoneOf", [ "s3:*", "*" ] ]
+    ],
+    "keys": [
+        "s3.buckets.id",
+        "this",
+        "s3.buckets.id.policy.Statement.id.Principal"
+    ]
+}

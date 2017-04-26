@@ -1,0 +1,63 @@
+
+    <!-- SNS topic partial -->
+    <script id="services.sns.regions.id.topics.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text item-margin">Region: {{region}}</div>
+          <div class="list-group-item-text item-margin">ARN: {{arn}}</div>
+          <div class="list-group-item-text item-margin">Display name: {{DisplayName}}</div>
+        </div>
+        {{#if Policy}}
+          <div class="list-group-item">
+            {{> accordion_policy name = 'Access control policy' policy_path = (concat 'sns.regions' region 'topics' @key 'Policy') document = Policy}}
+          </div>
+        {{/if}}
+        {{#if DeliveryPolicy}}
+          <div class="list-group-item">
+            {{> accordion_policy name = 'Delivery policy' policy_path = (concat 'sns.regions' region 'topics' @key 'DeliveryPolicy') document = DeliveryPolicy}}
+          </div>
+        {{/if}}
+        {{#if EffectiveDeliveryPolicy}}
+          <div class="list-group-item">
+            {{> accordion_policy name = 'Effective delivery policy' policy_path = (concat 'sns.regions' region 'topics' @key 'EffectiveDeliveryPolicy') document = EffectiveDeliveryPolicy}}
+          </div>
+        {{/if}}
+        <div class="list-group-item">
+          <div class="accordion">
+            <h4 class="list-group-item-heading accordion-heading">Subscriptions
+              {{#unlessEqual subscriptions_count 0}}<a class="accordion-toggle" data-toggle="collapse" href="#sns\.regions\.{{region}}\.topics\.{{@key}}\.subscriptions">{{/unlessEqual}}
+              <span id="sns.regions.{{region}}.topics.{{@key}}.subscriptions_count" class="badge pull-right {{#unlessEqual subscriptions_count 0}}btn-info{{/unlessEqual}}">{{subscriptions_count}}</span>
+              {{#unlessEqual subscriptions_count 0}}</a>{{/unlessEqual}}
+            </h4>
+            <div id="sns.regions.{{region}}.topics.{{@key}}.subscriptions" class="accordion-body collapse">
+              <div class="accordion-inner">
+                <ul>
+                {{#each subscriptions.protocol}}
+                  <li>{{make_title @key}}</li>
+                  <ul>
+                    {{#each this}}
+                       <li>Endpoint: {{Endpoint}}</li>
+                    {{/each}}
+                  </ul>
+                {{/each}}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.sns.regions.id.topics", $("#services\\.sns\\.regions\\.id\\.topics\\.partial").html());
+    </script>
+
+    <!-- Single SNS topic template -->
+    <script id="single_sns_topic-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.sns.regions.id.topics}}
+    </script>
+    <script>
+        var single_sns_topic_template = Handlebars.compile($("#single_sns_topic-template").html());
+    </script>

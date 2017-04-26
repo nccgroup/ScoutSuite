@@ -1,0 +1,87 @@
+
+  <!-- Per Service Type navigation bar -->
+  <script id="metadata.list.template" type="text/x-handlebars-template">
+      <div class="container">
+        <div class="navbar-header">
+          <span class="navbar-brand"><a href="javascript:show_main_dashboard()">Scout2</a></span>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              {{#each items}}
+                <li class="dropdown">
+                  <a href="#groups.{{@key}}.list"><span id="metadata.{{@key}}">{{make_title @key}}</span><b class="caret"></b></a>
+                </li>
+              {{/each}}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Regions<b class="caret"></b></a>
+                <ul class="dropdown-menu" id="regions-filters.list">
+                </ul>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filters<b class="caret"></b></a>
+                <ul class="dropdown-menu" id="filters.list">
+                </ul>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Help<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="javascript:about()">About Scout2</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+      </div>
+      {{#each items}}
+      <div class="container" id="groups.{{@key}}.list">
+        <div class="navbar-header">
+          <span class="navbar-brand"></span>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              {{#each this}}
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{make_title @key}}<b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li class="dropdown-header">Summaries</li>
+                    <li><a href="#services.{{@key}}.findings">Dashboard</a></li>
+                    {{#each summaries}}
+                      {{#if risks}}
+                        <li class="dropdown-submenu"><a href="#{{path}}">{{make_title @key}}</a>
+                          <ul class="dropdown-menu">
+                            <li class="dropdown-header">Security risks</li>
+                            {{#each risks}}
+                              <li><a href="#services.{{@../../key}}.findings.{{this}}.items">{{get_value_at 'services' @../../key 'findings' this 'description'}}</a></li>
+                            {{/each}}
+                          </ul>
+                        </li>
+                      {{else}}
+                        <li><a href="#{{path}}">{{make_title @key}}</a></li>
+                      {{/if}}
+                    {{/each}}
+                    <li class="divider"></li>
+                    <li class="dropdown-header">{{make_title @key}} config</li>
+                    {{#each resources}}
+                      {{#if risks}}
+                        <li class="dropdown-submenu"><a href="#{{full_path}}">{{make_title @key}} ({{count}})</a>
+                          <ul class="dropdown-menu">
+                            <li class="dropdown-header">Security risks</li>
+                            {{#each risks}}
+                              <li><a href="#services.{{@../../key}}.findings.{{this}}.items">{{get_value_at 'services' @../../key 'findings' this 'description'}}</a></li>
+                            {{/each}}
+                          </ul>
+                        </li>
+                      {{else}}
+                        <li><a href="#{{full_path}}">{{make_title @key}} ({{count}})</a></li>
+                      {{/if}}
+                    {{/each}}
+                  </ul>
+                </li>
+              {{/each}}
+            </ul>
+          </div>
+      </div>
+      {{/each}}
+  </script>
+

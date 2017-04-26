@@ -1,0 +1,18 @@
+
+    <!-- Close popup button -->
+    <script id="close_button-template" type="text/x-handlebars-template">
+      <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+    </script>
+    <script>
+      var close_button_template = Handlebars.compile($("#close_button-template").html());
+    </script>
+
+    <!-- Single Redshift cluster template -->
+    <script id="single_redshift_cluster-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> redshift_cluster}}
+    </script>
+    <script>
+        var single_redshift_cluster_template = Handlebars.compile($("#single_redshift_cluster-template").html());
+    </script>
+

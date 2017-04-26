@@ -1,0 +1,859 @@
+{
+    "about": "This ruleset consists of numerous rules that are considered standard by the project's maintainers in an effort to avoid false-positive warnings. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of AWS-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configured, and some of them being applicable to a limited number of users. Consider using the RulesetGenerator tool to make the most of Scout2.",
+    "rules": [
+        {
+            "level": "danger",
+            "filename": "iam-password-policy-minimum-length.json",
+            "enabled": true,
+            "args": [
+                "8"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "cloudtrail-duplicated-global-services-logging.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "cloudtrail-no-global-services-logging.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "cloudtrail-no-log-file-validation.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "cloudtrail-no-logging.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "cloudtrail-not-configured.json",
+            "enabled": true
+        },
+        {
+            "level": "warning",
+            "filename": "ec2-default-security-group-in-use.json",
+            "enabled": true
+        },
+        {
+            "level": "warning",
+            "filename": "ec2-default-security-group-with-rules.json",
+            "enabled": true
+        },
+        {
+            "level": "warning",
+            "filename": "ec2-instance-in-security-group.json",
+            "enabled": false,
+            "args": [
+                "_LIST_(BannedSecurityGroup)"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "ec2-instance-with-public-ip.json",
+            "enabled": false
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": true,
+            "args": [
+                "DNS",
+                "UDP",
+                "53"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": true,
+            "args": [
+                "MongoDB",
+                "TCP",
+                "27017"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": true,
+            "args": [
+                "MsSQL",
+                "TCP",
+                "1433"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": true,
+            "args": [
+                "MySQL",
+                "TCP",
+                "3306"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": true,
+            "args": [
+                "Oracle DB",
+                "TCP",
+                "1521"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": true,
+            "args": [
+                "PostgreSQL",
+                "TCP",
+                "5432"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": true,
+            "args": [
+                "RDP",
+                "TCP",
+                "3389"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": true,
+            "args": [
+                "SSH",
+                "TCP",
+                "22"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": "true",
+            "args": [
+                "NFS",
+                "TCP",
+                "2049"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-opens-known-port-to-all.json",
+            "enabled": "true",
+            "args": [
+                "SMTP",
+                "TCP",
+                "25"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "ec2-security-group-opens-non-http-port-to-all.json",
+            "enabled": true,
+            "args": [
+                "TCP"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "ec2-security-group-opens-non-http-port-to-all.json",
+            "enabled": true,
+            "args": [
+                "UDP"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "ec2-security-group-opens-all-ports-to-self.json",
+            "enabled": true
+        },
+        {
+            "level": "warning",
+            "filename": "ec2-security-group-opens-all-ports.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-opens-all-ports-to-all.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-opens-plaintext-port.json",
+            "enabled": true,
+            "args": [
+                "FTP",
+                "TCP",
+                "21"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-opens-plaintext-port.json",
+            "enabled": true,
+            "args": [
+                "Telnet",
+                "TCP",
+                "23"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "ec2-security-group-opens-port-range.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-whitelists-aws-ip-from-unused-region.json",
+            "enabled": false,
+            "args": [
+                "_LIST_(us-east-1, us-east-1)"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-whitelists-aws.json",
+            "enabled": false
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-whitelists-non-elastic-ips.json",
+            "enabled": false
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-whitelists-unknown-aws.json",
+            "enabled": false
+        },
+        {
+            "level": "danger",
+            "filename": "ec2-security-group-whitelists-unknown-cidrs.json",
+            "enabled": false
+        },
+        {
+            "level": "warning",
+            "filename": "ec2-unused-security-group.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "iam-assume-role-lacks-external-id.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "iam-assume-role-policy-allows-all.json",
+            "enabled": true
+        },
+        {
+            "level": "warning",
+            "filename": "iam-ec2-role-without-instances.json",
+            "enabled": true
+        },
+        {
+            "level": "warning",
+            "filename": "iam-group-with-inline-policies.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "iam-human-user-with-policies.json",
+            "enabled": false,
+            "args": [
+                "_LIST_(AllHumanUsers)",
+                "managed",
+                "policies"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-inline-policy-for-role.json",
+            "enabled": true,
+            "args": [
+                "group",
+                "iam",
+                "PassRole"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-inline-policy-allows-NotActions.json",
+            "enabled": true,
+            "args": [
+                "group"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-inline-policy-for-role.json",
+            "enabled": true,
+            "args": [
+                "group",
+                "sts",
+                "AssumeRole"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-inline-policy-for-role.json",
+            "enabled": true,
+            "args": [
+                "role",
+                "iam",
+                "PassRole"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-inline-policy-allows-NotActions.json",
+            "enabled": true,
+            "args": [
+                "role"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-inline-policy-for-role.json",
+            "enabled": true,
+            "args": [
+                "role",
+                "sts",
+                "AssumeRole"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-inline-policy-for-role.json",
+            "enabled": true,
+            "args": [
+                "user",
+                "iam",
+                "PassRole"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-inline-policy-allows-NotActions.json",
+            "enabled": true,
+            "args": [
+                "user"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-inline-policy-for-role.json",
+            "enabled": true,
+            "args": [
+                "user",
+                "sts",
+                "AssumeRole"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-managed-policy-for-role.json",
+            "enabled": true,
+            "args": [
+                "iam",
+                "PassRole"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-managed-policy-allows-NotActions.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "iam-managed-policy-for-role.json",
+            "enabled": true,
+            "args": [
+                "sts",
+                "AssumeRole"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-password-policy-no-expiration.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "iam-password-policy-reuse-enabled.json",
+            "enabled": true
+        },
+        {
+            "level": "warning",
+            "filename": "iam-role-with-inline-policies.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "iam-root-account-no-mfa.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "iam-root-account-used-recently.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "iam-root-account-with-active-keys.json",
+            "enabled": true
+        },
+        {
+            "level": "warning",
+            "filename": "iam-service-user-with-password.json",
+            "enabled": false,
+            "args": [
+                "_LIST_(AllHeadlessUsers)"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-user-no-key-rotation.json",
+            "enabled": true,
+            "args": [
+                "Active",
+                "90"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "iam-user-no-key-rotation.json",
+            "enabled": true,
+            "args": [
+                "Inactive",
+                "90"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-user-not-in-category-group.json",
+            "enabled": false,
+            "args": [
+                "_LIST_(AllHumanUsers, AllHeadlessUsers)"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "iam-user-not-in-common-group.json",
+            "enabled": false,
+            "args": [
+                "_LIST_(AllUsers)"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "iam-user-with-policies.json",
+            "enabled": true,
+            "args": [
+                "inline",
+                "inline_policies"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "iam-user-with-multiple-access-keys.json",
+            "enabled": true
+        },
+        {
+            "level": "warning",
+            "filename": "iam-user-with-password-and-key.json",
+            "enabled": false
+        },
+        {
+            "level": "danger",
+            "filename": "iam-user-without-mfa.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "rds-instance-backup-disabled.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "rds-instance-no-minor-upgrade.json",
+            "enabled": true
+        },
+        {
+            "level": "warning",
+            "filename": "rds-instance-short-backup-retention-period.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "rds-instance-single-az.json",
+            "enabled": true
+        },
+        {
+            "level": "warning",
+            "filename": "rds-postgres-instance-with-invalid-certificate.json",
+            "enabled": false
+        },
+        {
+            "level": "danger",
+            "filename": "rds-security-group-allows-all.json",
+            "enabled": true
+        },
+        {
+            "level": "warning",
+            "filename": "redshift-cluster-database-not-encrypted.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "redshift-cluster-no-version-upgrade.json",
+            "enabled": true
+        },
+        {
+            "level": "warning",
+            "filename": "redshift-cluster-publicly-accessible.json",
+            "enabled": true
+        },
+        {
+            "level": "warning",
+            "filename": "redshift-parameter-group-logging-disabled.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "redshift-parameter-group-ssl-not-required.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "redshift-security-group-whitelists-all.json",
+            "enabled": true
+        },
+        {
+            "level": "warning",
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": true,
+            "args": [
+                "AllUsers",
+                "read",
+                "Bucket world-listable (anonymous)",
+                "warning"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": true,
+            "args": [
+                "AllUsers",
+                "read_acp",
+                "Bucket's permissions world-readable (anonymous)",
+                "warning"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": true,
+            "args": [
+                "AllUsers",
+                "write",
+                "Bucket world-writable (anonymous)",
+                "danger"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": true,
+            "args": [
+                "AllUsers",
+                "write_acp",
+                "Bucket's permissions world-writable (anonymous)",
+                "danger"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": true,
+            "args": [
+                "AuthenticatedUsers",
+                "read",
+                "Bucket world-listable",
+                "danger"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": true,
+            "args": [
+                "AuthenticatedUsers",
+                "read_acp",
+                "Bucket's permissions world-readable",
+                "warning"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": true,
+            "args": [
+                "AuthenticatedUsers",
+                "write",
+                "Bucket world-writable",
+                "danger"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "s3-bucket-world-acl.json",
+            "enabled": true,
+            "args": [
+                "AuthenticatedUsers",
+                "write_acp",
+                "Bucket's permissions world-writable",
+                "danger"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "s3-bucket-no-logging.json",
+            "enabled": true
+        },
+        {
+            "level": "warning",
+            "filename": "s3-bucket-no-mfa-delete.json",
+            "enabled": true
+        },
+        {
+            "level": "warning",
+            "filename": "s3-bucket-no-versioning.json",
+            "enabled": true
+        },
+        {
+            "level": "warning",
+            "filename": "s3-bucket-website-enabled.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "s3-bucket-world-policy-star.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "s3-bucket-world-policy-arg.json",
+            "enabled": true,
+            "args": [
+                "Delete",
+                "s3:Delete*"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "s3-bucket-world-policy-arg.json",
+            "enabled": true,
+            "args": [
+                "Get",
+                "s3:GetObject*"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "s3-bucket-world-policy-arg.json",
+            "enabled": true,
+            "args": [
+                "List",
+                "s3:ListBucket*"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "s3-bucket-world-policy-arg.json",
+            "enabled": true,
+            "args": [
+                "Put",
+                "s3:PutObject*"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "s3-bucket-world-policy-arg.json",
+            "enabled": true,
+            "args": [
+                "Manage",
+                "s3:Put*"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "rds-instance-storage-not-encrypted.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "rds-snapshot-public.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "sns-topic-world-policy.json",
+            "enabled": true,
+            "args": [
+                "Publish"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sns-topic-world-policy.json",
+            "enabled": true,
+            "args": [
+                "Subscribe"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sns-topic-world-policy.json",
+            "enabled": true,
+            "args": [
+                "Receive"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sns-topic-world-policy.json",
+            "enabled": true,
+            "args": [
+                "AddPermission"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sns-topic-world-policy.json",
+            "enabled": true,
+            "args": [
+                "RemovePermission"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sns-topic-world-policy.json",
+            "enabled": true,
+            "args": [
+                "SetTopicAttributes"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sns-topic-world-policy.json",
+            "enabled": true,
+            "args": [
+                "DeleteTopic"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sqs-queue-world-policy.json",
+            "enabled": true,
+            "args": [
+                "SendMessage"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sqs-queue-world-policy.json",
+            "enabled": true,
+            "args": [
+                "ReceiveMessage"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sqs-queue-world-policy.json",
+            "enabled": true,
+            "args": [
+                "PurgeQueue"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sqs-queue-world-policy.json",
+            "enabled": true,
+            "args": [
+                "DeleteMessage"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "sqs-queue-world-policy.json",
+            "enabled": true,
+            "args": [
+                "ChangeMessageVisibility"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "sqs-queue-world-policy.json",
+            "enabled": true,
+            "args": [
+                "GetQueueAttributes"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "sqs-queue-world-policy.json",
+            "enabled": true,
+            "args": [
+                "GetQueueUrl"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "ses-identity-world-policy.json",
+            "enabled": true,
+            "args": [
+                "SendEmail"
+            ]
+        },
+        {
+            "level": "danger",
+            "filename": "ses-identity-world-policy.json",
+            "enabled": true,
+            "args": [
+                "SendRawEmail"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "vpc-subnet-without-flow-log.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "route53-domain-no-autorenew.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "route53-domain-no-transferlock.json",
+            "enabled": true
+        },
+        {
+            "level": "danger",
+            "filename": "cloudformation-stack-with-role.json",
+            "enabled": true
+        }
+    ]
+}
