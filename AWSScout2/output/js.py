@@ -37,7 +37,6 @@ class JavaScriptReaderWriter(object):
         self.current_time = datetime.datetime.now(dateutil.tz.tzlocal())
         if timestamp != False:
             self.timestamp = self.current_time.strftime("%Y-%m-%d_%Hh%M%z") if not timestamp else timestamp
-            self.profile = '%s-%s' % (self.profile, self.timestamp)
 
 
     def load_from_file(self, config_type):
