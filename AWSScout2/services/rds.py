@@ -48,6 +48,11 @@ class RDSRegionConfig(RegionConfig):
                     'EnhancedMonitoringResourceArn', 'StorageEncrypted']:
                     # parameter_groups , security_groups, vpc_security_groups
             instance[key] = dbi[key] if key in dbi else None
+        # If part of a cluster, multi AZ information is only available via cluster information
+        if 'DBClusterIdentifier' in dbi:
+            api_client = api_clients[region]
+            cluster = api_client.describe_db_clusters(DBClusterIdentifier = dbi['DBClusterIdentifier'])['DBClusters'][0]
+            instance['MultiAZ'] = cluster['MultiAZ']
         # Save
         manage_dictionary(self.vpcs, vpc_id,RDSVPCConfig())
         self.vpcs[vpc_id].instances[instance['name']] = instance
