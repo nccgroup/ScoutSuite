@@ -20,7 +20,7 @@ setup(
     name=NAME,
     version=VERSION,
     description='Scout2, TODO',
-    long_description=open('README.md').read(),
+    long_description=open('README.rst').read(),
     author='l01cd3v',
     author_email='l01cd3v@gmail.com',
     url='https://github.com/nccgroup/Scout2',
