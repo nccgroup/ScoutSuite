@@ -2,11 +2,11 @@
 AWS Scout2
 ##########
 
-.. image:: https://travis-ci.org/nccgroup/AWSScout2.svg?branch=master
-        :target: https://travis-ci.org/nccgroup/AWSScout2
+.. image:: https://travis-ci.org/nccgroup/Scout2.svg?branch=master
+        :target: https://travis-ci.org/nccgroup/Scout2
 
-.. image:: https://coveralls.io/repos/github/nccgroup/AWSScout2/badge.svg
-        :target: https://coveralls.io/github/nccgroup/AWSScout2
+.. image:: https://coveralls.io/repos/github/nccgroup/Scout2/badge.svg
+        :target: https://coveralls.io/github/nccgroup/Scout2
 
 .. image:: https://badge.fury.io/py/AWSScout2.svg
     :target: https://badge.fury.io/py/AWSScout2
