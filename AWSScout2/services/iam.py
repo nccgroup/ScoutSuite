@@ -33,9 +33,9 @@ class IAMConfig(BaseConfig):
         ('roles', 'Roles', 'list_roles', {}, False),
         ('users', 'Users', 'list_users', {}, False),
         ('credential_report', '', '', {}, False),
+        ('password_policy', '', '', {}, False)
         # TODO: Federations
         # TODO: KMS ?
-        # TODO: credential report
     )
 
     def __init__(self):
@@ -56,6 +56,7 @@ class IAMConfig(BaseConfig):
     def fetch_all(self, credentials, regions=[], partition_name='aws', targets=None):
         self.fetch_credential_report(credentials, True)
         super(IAMConfig, self).fetch_all(credentials, regions, partition_name, targets)
+        self.fetch_password_policy(credentials)
         self.fetch_credential_report(credentials)
         self.fetchstatuslogger.show(True)
 
@@ -160,11 +161,14 @@ class IAMConfig(BaseConfig):
     ########################################
     ##### Password policy
     ########################################
-    def fetch_password_policy(self, api_client):
+    def fetch_password_policy(self, credentials):
         """
         Fetch the password policy that applies to all IAM users within the AWS account
         """
+        self.fetchstatuslogger.counts['password_policy']['discovered'] = 0
+        self.fetchstatuslogger.counts['password_policy']['fetched'] = 0
         try:
+            api_client = connect_service('iam', credentials)
             self.password_policy = api_client.get_account_password_policy()['PasswordPolicy']
             if 'PasswordReusePrevention' not in self.password_policy:
                 self.password_policy['PasswordReusePrevention'] = False
@@ -174,6 +178,8 @@ class IAMConfig(BaseConfig):
             # There is a bug in the API: ExpirePasswords always returns false
             if 'MaxPasswordAge' in self.password_policy:
                 self.password_policy['ExpirePasswords'] = True
+            self.fetchstatuslogger.counts['password_policy']['discovered'] = 1
+            self.fetchstatuslogger.counts['password_policy']['fetched'] = 1
         except Exception as e:
             if type(e) == botocore.exceptions.ClientError:
                 if e.response['Error']['Code'] == 'NoSuchEntity':
