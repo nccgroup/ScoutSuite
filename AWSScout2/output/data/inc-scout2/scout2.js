@@ -343,7 +343,8 @@ function showObject() {
     } else {
         var resource_type = path_array[1] + '_' + path_array[path_length-2];
     }
-    template = 'single_' + resource_type.substring(0,resource_type.length -1) + '_template';
+    resource = resource_type.substring(0,resource_type.length - 1).replace(/\.?ie$/, "y");
+    template = 'single_' + resource + '_template';
     $('#overlay-details').html(window[template](data));
     showPopup();
 }

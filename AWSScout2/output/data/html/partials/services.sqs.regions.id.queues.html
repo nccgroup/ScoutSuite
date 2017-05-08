@@ -10,7 +10,7 @@
           <div class="list-group-item-text item-margin">ARN: {{arn}}</div>
           <div class="list-group-item-text item-margin">Created on: {{CreatedTimestamp}}</div>
         </div>
-        {{#if Policy}}
+        {{#if Policy.Statement.length}}
           <div class="list-group-item">
             {{> accordion_policy name = 'Access control policy' policy_path = (concat 'sqs.regions' region 'queues' @key 'Policy') document = Policy}}
           </div>

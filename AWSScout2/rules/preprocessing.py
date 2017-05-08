@@ -2,7 +2,7 @@
 
 import copy
 
-from opinel.utils.console import printError, printException, printInfo
+from opinel.utils.console import printDebug, printError, printException, printInfo
 from opinel.utils.globals import manage_dictionary
 
 from AWSScout2.configs.browser import combine_paths, get_object_at, get_value_at
@@ -23,6 +23,9 @@ def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     sort_elbs(aws_config)
     list_ec2_network_attack_surface(aws_config['services']['ec2'])
     add_security_group_name_to_ec2_grants(aws_config['services']['ec2'], aws_config['aws_account_id'])
+    process_cloudtrail_trails(aws_config['services']['cloudtrail'])
+    process_network_acls(aws_config['services']['vpc'])
+    match_network_acls_and_subnets(aws_config['services']['vpc'])
     match_instances_and_roles(aws_config)
     match_roles_and_cloudformation_stacks(aws_config)
     match_roles_and_vpc_flowlogs(aws_config)
@@ -67,6 +70,54 @@ def add_security_group_name_to_ec2_grants_callback(ec2_config, current_config, p
         ec2_grant['GroupName'] = get_value_at(ec2_config, target, 'name')
 
 
+def process_cloudtrail_trails(cloudtrail_config):
+    printInfo('Processing CloudTrail config...')
+    global_events_logging = []
+    for region in cloudtrail_config['regions']:
+        for trail_id in cloudtrail_config['regions'][region]['trails']:
+            trail = cloudtrail_config['regions'][region]['trails'][trail_id]
+            if 'HomeRegion' in trail and trail['HomeRegion'] != region:
+                # Part of a multi-region trail, skip until we find the whole object
+                continue
+            if trail['IncludeGlobalServiceEvents'] == True and trail['IsLogging'] == True:
+                global_events_logging.append((region, trail_id,))
+    cloudtrail_config['IncludeGlobalServiceEvents'] = False if (len(global_events_logging) == 0) else True
+    cloudtrail_config['DuplicatedGlobalServiceEvents'] = True if (len(global_events_logging) > 1) else False
+
+
+def process_network_acls(vpc_config):
+    printInfo('Analyzing VPC Network ACLs...')
+    go_to_and_do(vpc_config, None, ['regions', 'vpcs', 'network_acls'], [], process_network_acls_callback, {})
+
+
+def process_network_acls_callback(vpc_config, current_config, path, current_path, privateip_id, callback_args):
+    # Check if the network ACL allows all traffic from all IP addresses
+    process_network_acls_check_for_allow_all(current_config, 'ingress')
+    process_network_acls_check_for_allow_all(current_config, 'egress')
+    # Check if the network ACL only has the default rules
+    process_network_acls_check_for_default(current_config, 'ingress')
+    process_network_acls_check_for_default(current_config, 'egress')
+
+
+def process_network_acls_check_for_allow_all(network_acl, direction):
+    network_acl['allow_all_%s_traffic' % direction] = False
+    for rule in network_acl['rules'][direction]:
+        if rule['RuleAction'] == 'deny':
+            # If a deny rule appears before an allow all, do not raise the flag
+            break
+        if (rule['CidrBlock'] == '0.0.0.0/0') and (rule['RuleAction'] == 'allow') and (rule['port_range'] == '1-65535') and (rule['protocol'] == 'ALL'):
+            network_acl['allow_all_%s_traffic' % direction] = True
+            break
+
+
+def process_network_acls_check_for_default(network_acl, direction):
+    if len(network_acl['rules'][direction]) != 2 and network_acl['allow_all_%s_traffic' % direction] != False:
+        network_acl['use_default_%s_rules' % direction] = False
+    else:
+        # Assume it's the default rules because 2 rules and there's an allow all
+        network_acl['use_default_%s_rules' % direction] = True
+
+
 def list_ec2_network_attack_surface(ec2_config):
     go_to_and_do(ec2_config, None, ['regions', 'vpcs', 'instances', 'network_interfaces', 'PrivateIpAddresses'], [], list_ec2_network_attack_surface_callback, {})
 
@@ -88,11 +139,9 @@ def list_ec2_network_attack_surface_callback(ec2_config, current_config, path, c
             for p in ingress_rules['protocols']:
                 for port in ingress_rules['protocols'][p]['ports']:
                     if 'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
-                        manage_dictionary(public_ip_grants, 'protocols', {})
-                        manage_dictionary(public_ip_grants['protocols'], p, {'ports': {}})
-                        manage_dictionary(public_ip_grants['protocols'][p]['ports'], port, {'cidrs': []})
-                        public_ip_grants['protocols'][p]['ports'][port]['cidrs'] += ingress_rules['protocols'][p]['ports'][port]['cidrs']
-            ec2_config['attack_surface'][public_ip]['protocols'].update(public_ip_grants)
+                        manage_dictionary(ec2_config['attack_surface'][public_ip]['protocols'], p, {'ports': {}})
+                        manage_dictionary(ec2_config['attack_surface'][public_ip]['protocols'][p]['ports'], port, {'cidrs': []})
+                        ec2_config['attack_surface'][public_ip]['protocols'][p]['ports'][port]['cidrs'] += ingress_rules['protocols'][p]['ports'][port]['cidrs']
 
 
 def match_iam_policies_and_buckets(aws_config):
@@ -166,6 +215,18 @@ def __update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entit
     else:
         # Could be an error or cross-account access, ignore...
         pass
+
+
+def match_network_acls_and_subnets(vpc_config):
+    printInfo('Matching VPC network ACLs and subnets...')
+    go_to_and_do(vpc_config, vpc_config, ['regions', 'vpcs', 'network_acls'], [], match_network_acls_and_subnets_callback, {})
+
+
+def match_network_acls_and_subnets_callback(vpc_config, current_config, path, current_path, acl_id, callback_args):
+    for association in current_config['Associations']:
+        subnet_path = current_path[:-1] + ['subnets', association['SubnetId']]
+        subnet = get_object_at(vpc_config, subnet_path)
+        subnet['network_acl'] = acl_id
 
 
 def match_instances_and_roles(aws_config):
@@ -312,10 +373,6 @@ def set_aws_account_id(aws_config):
         aws_config['aws_account_id'] = None
 
 
-def sort_vpc_flow_logs(vpc_config):
-    go_to_and_do(vpc_config, None, ['regions', 'flow_logs'], [], sort_vpc_flow_logs_callback, {})
-
-
 def sort_elbs(aws_config):
     """
     ELB and ELBv2 are different services, but for consistency w/ the console move them to the EC2 config
@@ -337,12 +394,19 @@ def sort_elbs_callback(aws_config, current_config, path, current_path, elb_id, c
     vpc_config['elbs'][elb_id] = current_config
 
 
+def sort_vpc_flow_logs(vpc_config):
+    go_to_and_do(vpc_config, None, ['regions', 'flow_logs'], [], sort_vpc_flow_logs_callback, {})
+
 
 def sort_vpc_flow_logs_callback(vpc_config, current_config, path, current_path, flow_log_id, callback_args):
     attached_resource = current_config['ResourceId']
     if attached_resource.startswith('vpc-'):
         vpc_path = combine_paths(current_path[0:2], ['vpcs', attached_resource])
-        attached_vpc = get_object_at(vpc_config, vpc_path)
+        try:
+            attached_vpc = get_object_at(vpc_config, vpc_path)
+        except Exception as e:
+            printDebug('It appears that the flow log %s is attached to a resource that was previously deleted (%s).' % (flow_log_id, attached_resource))
+            return
         manage_dictionary(attached_vpc, 'flow_logs', [])
         if flow_log_id not in attached_vpc['flow_logs']:
             attached_vpc['flow_logs'].append(flow_log_id)

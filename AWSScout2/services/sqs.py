@@ -36,8 +36,11 @@ class SQSRegionConfig(RegionConfig):
         queue['arn'] = attributes.pop('QueueArn')
         for k in ['CreatedTimestamp']:
             queue[k] = attributes[k] if k in attributes else None
-        for k in ['Policy']:
-            queue[k] = json.loads(attributes[k]) if k in attributes else None
+        if 'Policy' in attributes:
+            queue['Policy'] = json.loads(attributes[k]) # if k in attributes else None
+        else:
+            queue['Policy'] = {'Statement': []}
+
         queue['name'] = queue['arn'].split(':')[-1]
         self.queues[queue['name']] = queue
 

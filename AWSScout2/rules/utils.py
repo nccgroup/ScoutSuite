@@ -43,6 +43,7 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
         config['flagged_items'] = len(results)
         return results
     target_path = copy.deepcopy(target_path)
+    dbg_target_path = copy.deepcopy(target_path)
     current_path = copy.deepcopy(current_path)
     attribute = target_path.pop(0)
     if type(current_info) == dict:
@@ -65,7 +66,9 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
             results = results + recurse(all_info, split_current_info, copy.deepcopy(target_path), split_current_path, config, add_suffix)
     else:
         printError('Error: unhandled case, typeof(current_info) = %s' % type(current_info))
-        printError(str(current_info))
+        printError('Path: %s' % current_path)
+        printError('Object: %s' % str(current_info))
+        printError('Entry target path: %s' % str(dbg_target_path))
         raise Exception
     return results
 
@@ -89,6 +92,11 @@ def pass_conditions(all_info, current_path, conditions):
       else:
         # Conditions are formed as "path to value", "type of test", "value(s) for test"
         path_to_value, test_name, test_values = condition
+        dynamic_path = re_get_value_at.findall(path_to_value)
+        if dynamic_path:
+            for dp in dynamic_path:
+                dv = get_value_at(all_info, current_path, dp)
+                path_to_value = path_to_value.replace('_GET_VALUE_AT_(%s)' % dp, dv)
         target_obj = get_value_at(all_info, current_path, path_to_value)
         if type(test_values) != list:
             dynamic_value = re_get_value_at.match(test_values)

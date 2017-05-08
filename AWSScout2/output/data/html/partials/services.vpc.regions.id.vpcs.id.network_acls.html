@@ -1,32 +1,38 @@
 
     <!-- VPC Network ACL partial -->
     <script id="services.vpc.regions.id.vpcs.id.network_acls.partial" type="text/x-handlebars-template">
-            <div class="list-group-item active">
-                <h4 class="list-group-item-heading">{{name}}</h4>
-            </div>
-            {{#each rules}}
-              <div class="list-group-item">
+        <div class="list-group-item active">
+            <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        {{#each rules}}
+            <div class="list-group-item">
                 <h4 class="list-group-item-heading">{{make_title @key}} rules</h4>
                 <table class="table-striped" width="100%">
-                  <tr>
-                    <td width="20%" class="text-center">Rule number</td>
-                    <td width="20%" class="text-center">Port</td>
-                    <td width="20%" class="text-center">Protocol</td>
-                    <td width="20%" class="text-center">IP address</td>
-                    <td width="20%" class="text-center">Action</td>
-                  </tr>
-                  {{#each this}}
                     <tr>
-                      <td width="20%" class="text-center">{{RuleNumber}}</td>
-                      <td width="20%" class="text-center">{{port_range}}</td>
-                      <td width="20%" class="text-center">{{protocol}}</td>
-                      <td width="20%" class="text-center">{{CidrBlock}}</td>
-                      <td width="20%" class="text-center">{{RuleAction}}</td>
+                        <td width="20%" class="text-center">Rule number</td>
+                        <td width="20%" class="text-center">Port</td>
+                        <td width="20%" class="text-center">Protocol</td>
+                        <td width="20%" class="text-center">IP address</td>
+                        <td width="20%" class="text-center">Action</td>
                     </tr>
-                  {{/each}}
+                    {{#each this}}
+                        <tr>
+                            <td width="20%" class="text-center">{{RuleNumber}}</td>
+                            <td width="20%" class="text-center">{{port_range}}</td>
+                            <td width="20%" class="text-center">{{protocol}}</td>
+                            <td width="20%" class="text-center">{{CidrBlock}}</td>
+                            <td width="20%" class="text-center">{{RuleAction}}</td>
+                        </tr>
+                    {{/each}}
                 </table>
-              </div>
+            </div>
+        {{/each}}
+        <div class="list-group-item">
+            <h4 class="list-group-item-heading">Subnets</h4>
+            {{#each Associations}}
+                <div class="list-group-item-tex item-margin">{{SubnetId}}</div>
             {{/each}}
+        </div>
     </script>
     <script>
       Handlebars.registerPartial("services.vpc.regions.id.vpcs.id.network_acls", $("#services\\.vpc\\.regions\\.id\\.vpcs\\.id\\.network_acls\\.partial").html());

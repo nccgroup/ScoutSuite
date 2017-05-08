@@ -5,6 +5,7 @@
     "path": "sqs.regions.id.queues.id.Policy.Statement.id",
     "display_path": "sqs.regions.id.queues.id",
     "conditions": [ "and",
+        [ "sqs.regions.id.queues.id.Policy", "notNull", ""],
         [ "sqs.regions.id.queues.id.Policy.Statement.id.Effect", "equal", "Allow" ],
         [ "sqs.regions.id.queues.id.Policy.Statement.id.", "containAction", "sqs:_ARG_0_" ],
         [ "or",

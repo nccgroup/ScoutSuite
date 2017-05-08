@@ -854,6 +854,42 @@
             "level": "danger",
             "filename": "cloudformation-stack-with-role.json",
             "enabled": true
+        },
+        {
+            "level": "warning",
+            "filename": "vpc-subnet-with-default-acls.json",
+            "enabled": true,
+            "args": [
+                "ingress",
+                "source"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "vpc-subnet-with-default-acls.json",
+            "enabled": true,
+            "args": [
+                "egress",
+                "destination"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "vpc-subnet-with-allow-all-acls.json",
+            "enabled": true,
+            "args": [
+                "ingress",
+                "source"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "vpc-subnet-with-allow-all-acls.json",
+            "enabled": true,
+            "args": [
+                "egress",
+                "destination"
+            ]
         }
     ]
 }

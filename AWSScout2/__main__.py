@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import copy
 import os
 import sys
 import webbrowser
@@ -64,6 +65,14 @@ def main():
             printInfo('\nCancelled by user')
             return 130
         aws_config = report.jsrw.to_dict(aws_config)
+
+        # Update means we reload the whole config and overwrite part of it
+        if args.update == True:
+            new_aws_config = copy.deepcopy(aws_config)
+            aws_config = report.jsrw.load_from_file(AWSCONFIG)
+            for service in new_aws_config['service_list']:
+                # Per service only for now, may add per region & per VPC later...
+                aws_config['services'][service] = new_aws_config['services'][service]
 
     else:
 
