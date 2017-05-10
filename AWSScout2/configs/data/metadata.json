@@ -22,10 +22,6 @@
         },
         "cloudwatch": {
             "resources": {
-                "metrics": {
-                    "cols": 2,
-                    "path": "services.cloudwatch.regions.id.metrics"
-                },
                 "alarms": {
                     "cols": 2,
                     "path": "services.cloudwatch.regions.id.alarms"

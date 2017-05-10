@@ -3,7 +3,8 @@
 CloudWatch-related classes and functions
 """
 
-# Import AWSScout2
+from opinel.utils.globals import manage_dictionary
+
 from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 
 
@@ -24,6 +25,7 @@ class CloudWatchRegionConfig(RegionConfig):
         self.alarms = {}
         self.alarms_count = 0
         self.metrics = {}
+        self.metrics_count = 0
 
 
     def parse_alarm(self, global_params, region, alarm):
@@ -37,13 +39,10 @@ class CloudWatchRegionConfig(RegionConfig):
         alarm['arn'] = alarm.pop('AlarmArn')
         alarm['name'] = alarm.pop('AlarmName')
         # Drop some data
-        for k in ['AlarmConfigurationUpdatedTimestamp', 'StateReason', 'StateReasonData', 'Statistic', 'ComparisonOperator', 'Threshold', 'StateUpdatedTimestamp']:
+        for k in ['AlarmConfigurationUpdatedTimestamp', 'StateReason', 'StateReasonData', 'StateUpdatedTimestamp']:
             foo = alarm.pop(k) if k in alarm else None
         alarm_id = self.get_non_aws_id(alarm['arn'])
-        metric_id = self.get_non_aws_id('%s/%s' % (alarm['Namespace'], alarm['MetricName']))
         self.alarms[alarm_id] = alarm
-        #self.metrics[me]
-        #manage_dictionary(metrics, metric_id, {'name': alarm['MetricName'], 'namespace': alarm['Namespace']})
 
 
 
