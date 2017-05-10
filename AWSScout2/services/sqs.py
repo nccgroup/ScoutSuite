@@ -37,7 +37,7 @@ class SQSRegionConfig(RegionConfig):
         for k in ['CreatedTimestamp']:
             queue[k] = attributes[k] if k in attributes else None
         if 'Policy' in attributes:
-            queue['Policy'] = json.loads(attributes[k]) # if k in attributes else None
+            queue['Policy'] = json.loads(attributes['Policy'])
         else:
             queue['Policy'] = {'Statement': []}
 
