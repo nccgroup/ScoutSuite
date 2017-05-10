@@ -5,7 +5,7 @@ CloudWatch-related classes and functions
 
 from opinel.utils.globals import manage_dictionary
 
-from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
+from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig
 
 
 
