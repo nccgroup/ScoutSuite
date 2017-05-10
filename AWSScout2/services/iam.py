@@ -7,6 +7,7 @@ from opinel.utils.globals import manage_dictionary
 from AWSScout2.configs.base import BaseConfig
 from AWSScout2.utils import *
 
+from botocore.exceptions import ClientError
 
 
 class IAMConfig(BaseConfig):
@@ -180,9 +181,9 @@ class IAMConfig(BaseConfig):
                 self.password_policy['ExpirePasswords'] = True
             self.fetchstatuslogger.counts['password_policy']['discovered'] = 1
             self.fetchstatuslogger.counts['password_policy']['fetched'] = 1
-        except Exception as e:
-            if type(e) == botocore.exceptions.ClientError:
-                if e.response['Error']['Code'] == 'NoSuchEntity':
+
+        except ClientError as e:
+            if e.response['Error']['Code'] == 'NoSuchEntity':
                     self.password_policy = {}
                     self.password_policy['MinimumPasswordLength'] = '1' # As of 10/10/2016, 1-character passwords were authorized when no policy exists, even though the console displays 6
                     self.password_policy['RequireUppercaseCharacters'] = False
@@ -191,10 +192,10 @@ class IAMConfig(BaseConfig):
                     self.password_policy['RequireSymbols'] = False
                     self.password_policy['PasswordReusePrevention'] = False
                     self.password_policy['ExpirePasswords'] = False
-                else:
-                    printError("Unexpected error: %s" % e)
             else:
-                printError(str(e))
+                raise e
+        except Exception as e:
+            printError(str(e))
 
 
 
