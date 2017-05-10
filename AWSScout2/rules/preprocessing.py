@@ -292,8 +292,8 @@ def match_security_groups_and_resources(aws_config):
     callback_args = {'status_path': [ '..', '..', 'State', 'Name' ], 'resource_id_path': ['..'], 'sg_list_attribute_name': 'Groups', 'sg_id_attribute_name': 'GroupId'}
     go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'instances', 'network_interfaces'], ['services', 'ec2'], match_security_groups_and_resources_callback, callback_args)
     # ELBs
-    #callback_args = {'status_path': ['Scheme'], 'sg_list_attribute_name': 'security_groups',                     'sg_id_attribute_name': 'GroupId'}
-    # go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'elbs'], ['services', 'ec2'], list_resources_in_security_group, callback_args)
+    callback_args = {'status_path': ['Scheme'], 'sg_list_attribute_name': 'security_groups', 'sg_id_attribute_name': 'GroupId'}
+    go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'elbs'], ['services', 'ec2'], match_security_groups_and_resources_callback, callback_args)
     # Redshift clusters
     callback_args = {'status_path': ['ClusterStatus'], 'sg_list_attribute_name': 'VpcSecurityGroups', 'sg_id_attribute_name': 'VpcSecurityGroupId'}
     go_to_and_do(aws_config, aws_config['services']['redshift'], ['regions', 'vpcs', 'clusters'], ['services', 'redshift'], match_security_groups_and_resources_callback, callback_args)
