@@ -19,6 +19,7 @@ def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     :return:
     """
     set_aws_account_id(aws_config)
+    set_emr_vpc_ids(aws_config)
     sort_vpc_flow_logs(aws_config['services']['vpc'])
     sort_elbs(aws_config)
     list_ec2_network_attack_surface(aws_config['services']['ec2'])
@@ -289,21 +290,25 @@ def __get_role_info(aws_config, attribute_name, attribute_value):
 
 def match_security_groups_and_resources(aws_config):
     # EC2 instances
-    callback_args = {'status_path': [ '..', '..', 'State', 'Name' ], 'resource_id_path': ['..'], 'sg_list_attribute_name': 'Groups', 'sg_id_attribute_name': 'GroupId'}
+    callback_args = {'status_path': [ '..', '..', 'State', 'Name' ], 'resource_id_path': ['..'], 'sg_list_attribute_name': ['Groups'], 'sg_id_attribute_name': 'GroupId'}
     go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'instances', 'network_interfaces'], ['services', 'ec2'], match_security_groups_and_resources_callback, callback_args)
     # ELBs
-    callback_args = {'status_path': ['Scheme'], 'sg_list_attribute_name': 'security_groups', 'sg_id_attribute_name': 'GroupId'}
+    callback_args = {'status_path': ['Scheme'], 'sg_list_attribute_name': ['security_groups'], 'sg_id_attribute_name': 'GroupId'}
     go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'elbs'], ['services', 'ec2'], match_security_groups_and_resources_callback, callback_args)
     # Redshift clusters
-    callback_args = {'status_path': ['ClusterStatus'], 'sg_list_attribute_name': 'VpcSecurityGroups', 'sg_id_attribute_name': 'VpcSecurityGroupId'}
+    callback_args = {'status_path': ['ClusterStatus'], 'sg_list_attribute_name': ['VpcSecurityGroups'], 'sg_id_attribute_name': 'VpcSecurityGroupId'}
     go_to_and_do(aws_config, aws_config['services']['redshift'], ['regions', 'vpcs', 'clusters'], ['services', 'redshift'], match_security_groups_and_resources_callback, callback_args)
     # RDS instances
-    callback_args = {'status_path': ['DBInstanceStatus'], 'sg_list_attribute_name': 'VpcSecurityGroups', 'sg_id_attribute_name': 'VpcSecurityGroupId'}
+    callback_args = {'status_path': ['DBInstanceStatus'], 'sg_list_attribute_name': ['VpcSecurityGroups'], 'sg_id_attribute_name': 'VpcSecurityGroupId'}
     go_to_and_do(aws_config, aws_config['services']['rds'], ['regions', 'vpcs', 'instances'], ['services', 'rds'], match_security_groups_and_resources_callback, callback_args)
     # ElastiCache clusters
-    callback_args = {'status_path': ['CacheClusterStatus'], 'sg_list_attribute_name': 'SecurityGroups', 'sg_id_attribute_name': 'SecurityGroupId'}
+    callback_args = {'status_path': ['CacheClusterStatus'], 'sg_list_attribute_name': ['SecurityGroups'], 'sg_id_attribute_name': 'SecurityGroupId'}
     go_to_and_do(aws_config, aws_config['services']['elasticache'], ['regions', 'vpcs', 'clusters'], ['services', 'elasticache'], match_security_groups_and_resources_callback, callback_args)
-
+    # EMR clusters
+    callback_args = {'status_path': ['Status', 'State'], 'sg_list_attribute_name': ['Ec2InstanceAttributes', 'EmrManagedMasterSecurityGroup'], 'sg_id_attribute_name': ''}
+    go_to_and_do(aws_config, aws_config['services']['emr'], ['regions', 'vpcs', 'clusters'], ['services', 'emr'], match_security_groups_and_resources_callback, callback_args)
+    callback_args = {'status_path': ['Status', 'State'], 'sg_list_attribute_name': ['Ec2InstanceAttributes', 'EmrManagedSlaveSecurityGroup'], 'sg_id_attribute_name': ''}
+    go_to_and_do(aws_config, aws_config['services']['emr'], ['regions', 'vpcs', 'clusters'], ['services', 'emr'], match_security_groups_and_resources_callback, callback_args)
 
 def match_security_groups_and_resources_callback(aws_config, current_config, path, current_path, resource_id, callback_args):
     service = current_path[1]
@@ -331,8 +336,17 @@ def match_security_groups_and_resources_callback(aws_config, current_config, pat
     sg_base_path.append('security_groups')
     # Issue 89 & 91 : can instances have no security group?
     try:
-        for resource_sg in resource[callback_args['sg_list_attribute_name']]:
-            sg_id = resource_sg[callback_args['sg_id_attribute_name']]
+        try:
+            sg_attribute = get_object_at(resource, callback_args['sg_list_attribute_name'])
+        except:
+            return
+        if type(sg_attribute) != list:
+            sg_attribute = [ sg_attribute ]
+        for resource_sg in sg_attribute:
+            if type(resource_sg) == dict:
+                sg_id = resource_sg[callback_args['sg_id_attribute_name']]
+            else:
+                sg_id = resource_sg
             sg_path = copy.deepcopy(sg_base_path)
             sg_path.append(sg_id)
             sg = get_object_at(aws_config, sg_path)
@@ -374,6 +388,29 @@ def set_aws_account_id(aws_config):
             break
     if 'aws_account_id' not in aws_config:
         aws_config['aws_account_id'] = None
+
+
+def set_emr_vpc_ids(aws_config):
+    go_to_and_do(aws_config, aws_config['services']['emr'], ['regions', 'vpcs', 'clusters'], ['services', 'emr'], set_emr_vpc_ids_callback, {})
+    for r in aws_config['services']['emr']['regions']:
+        if 'TODO' in aws_config['services']['emr']['regions'][r]['vpcs']:
+            aws_config['services']['emr']['regions'][r]['vpcs'].pop('TODO')
+
+
+def set_emr_vpc_ids_callback(aws_config, current_config, path, current_path, cluster_id, callback_args):
+    if current_path[-2] == 'TODO':
+        try:
+            subnet_id = current_config['Ec2InstanceAttributes']['Ec2SubnetId']
+        except:
+            subnet_id = current_config['Ec2InstanceAttributes']['RequestedEc2SubnetIds'][0]
+        for region in aws_config['services']['vpc']['regions']:
+            for vpc in aws_config['services']['vpc']['regions'][region]['vpcs']:
+                test = [k for k in aws_config['services']['vpc']['regions'][region]['vpcs'][vpc]['subnets']]
+                if subnet_id in aws_config['services']['vpc']['regions'][region]['vpcs'][vpc]['subnets']:
+                    vpc_id = vpc
+                    manage_dictionary(aws_config['services']['emr']['regions'][region]['vpcs'], vpc_id, {})
+                    manage_dictionary(aws_config['services']['emr']['regions'][region]['vpcs'][vpc_id], 'clusters', {})
+                    aws_config['services']['emr']['regions'][region]['vpcs'][vpc_id]['clusters'][cluster_id] = current_config
 
 
 def sort_elbs(aws_config):

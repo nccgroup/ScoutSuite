@@ -10,6 +10,7 @@ from AWSScout2.services.ec2 import EC2Config
 from AWSScout2.services.elasticache import ElastiCacheConfig
 from AWSScout2.services.elb import ELBConfig
 from AWSScout2.services.elbv2 import ELBv2Config
+from AWSScout2.services.emr import EMRConfig
 from AWSScout2.services.iam import IAMConfig
 from AWSScout2.services.rds import RDSConfig
 from AWSScout2.services.redshift import RedshiftConfig
@@ -45,6 +46,7 @@ class ServicesConfig(object):
         self.elasticache = ElastiCacheConfig()
         self.elb = ELBConfig()
         self.elbv2 = ELBv2Config()
+        self.emr = EMRConfig()
         self.iam = IAMConfig()
         self.redshift = RedshiftConfig()
         self.rds = RDSConfig()
