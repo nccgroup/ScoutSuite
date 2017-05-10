@@ -7,6 +7,7 @@ from AWSScout2.services.cloudformation import CloudFormationConfig
 from AWSScout2.services.cloudtrail import CloudTrailConfig
 from AWSScout2.services.cloudwatch import CloudWatchConfig
 from AWSScout2.services.ec2 import EC2Config
+from AWSScout2.services.elasticache import ElastiCacheConfig
 from AWSScout2.services.elb import ELBConfig
 from AWSScout2.services.elbv2 import ELBv2Config
 from AWSScout2.services.iam import IAMConfig
@@ -41,6 +42,7 @@ class ServicesConfig(object):
         self.cloudtrail = CloudTrailConfig()
         self.cloudwatch = CloudWatchConfig()
         self.ec2 = EC2Config()
+        self.elasticache = ElastiCacheConfig()
         self.elb = ELBConfig()
         self.elbv2 = ELBv2Config()
         self.iam = IAMConfig()

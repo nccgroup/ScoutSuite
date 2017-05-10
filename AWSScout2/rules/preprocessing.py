@@ -300,6 +300,9 @@ def match_security_groups_and_resources(aws_config):
     # RDS instances
     callback_args = {'status_path': ['DBInstanceStatus'], 'sg_list_attribute_name': 'VpcSecurityGroups', 'sg_id_attribute_name': 'VpcSecurityGroupId'}
     go_to_and_do(aws_config, aws_config['services']['rds'], ['regions', 'vpcs', 'instances'], ['services', 'rds'], match_security_groups_and_resources_callback, callback_args)
+    # ElastiCache clusters
+    callback_args = {'status_path': ['CacheClusterStatus'], 'sg_list_attribute_name': 'SecurityGroups', 'sg_id_attribute_name': 'SecurityGroupId'}
+    go_to_and_do(aws_config, aws_config['services']['elasticache'], ['regions', 'vpcs', 'clusters'], ['services', 'elasticache'], match_security_groups_and_resources_callback, callback_args)
 
 
 def match_security_groups_and_resources_callback(aws_config, current_config, path, current_path, resource_id, callback_args):
@@ -472,7 +475,8 @@ def go_to_and_do(aws_config, current_config, path, current_path, callback, callb
 
     except Exception as e:
         printException(e)
-        printInfo('Index: %s' % str(i))
+        if i:
+            printInfo('Index: %s' % str(i))
         printInfo('Path: %s' % str(current_path))
         printInfo('Key = %s' % str(key))
         printInfo('Value = %s' % str(value))
