@@ -244,7 +244,8 @@ def match_instances_and_roles(aws_config):
         for v in ec2_config['regions'][r]['vpcs']:
             if 'instances' in ec2_config['regions'][r]['vpcs'][v]:
                 for i in ec2_config['regions'][r]['vpcs'][v]['instances']:
-                    instance_profile_id = ec2_config['regions'][r]['vpcs'][v]['instances'][i]['iam_instance_profile']['id'] if 'iam_instance_profile' in ec2_config['regions'][r]['vpcs'][v]['instances'][i] else None
+                    instance_profile = ec2_config['regions'][r]['vpcs'][v]['instances'][i]['IamInstanceProfile']
+                    instance_profile_id = instance_profile['Id'] if instance_profile else None
                     if instance_profile_id:
                         manage_dictionary(role_instances, instance_profile_id, [])
                         role_instances[instance_profile_id].append(i)
