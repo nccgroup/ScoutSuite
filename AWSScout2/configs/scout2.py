@@ -14,7 +14,7 @@ class Scout2Config(object):
     Root object that holds all of the necessary AWS resources and Scout2
     configuration items.
 
-    :account_id         AWS account ID
+    :aws_account_id     AWS account ID
     :last_run           Information about the last run
     :metadata           Metadata used to generate the HTML report
     :ruleset            Ruleset used to perform the analysis
@@ -22,7 +22,7 @@ class Scout2Config(object):
     """
 
     def __init__(self, profile, report_dir = None, timestamp = None, services= [], skipped_services = []):
-        self.account_id = None
+        self.aws_account_id = None
         self.last_run = None
         self.__load_metadata()
         self.services = ServicesConfig()

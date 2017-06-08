@@ -18,7 +18,6 @@ def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     :param aws_config:
     :return:
     """
-    set_aws_account_id(aws_config)
     set_emr_vpc_ids(aws_config)
     sort_vpc_flow_logs(aws_config['services']['vpc'])
     sort_elbs(aws_config)
@@ -377,18 +376,6 @@ def merge_route53_and_route53domains(aws_config):
         return
     aws_config['services']['route53'].update(aws_config['services']['route53domains'])
     aws_config['services'].pop('route53domains')
-
-
-def set_aws_account_id(aws_config):
-    for rt in ['groups', 'policies', 'roles', 'users']:
-        for r in aws_config['services']['iam'][rt]:
-            if 'aws_account_id' not in aws_config or aws_config['aws_account_id'] == None:
-                if 'arn' in aws_config['services']['iam'][rt][r]:
-                    aws_config['aws_account_id'] = aws_config['services']['iam'][rt][r]['arn'].split(':')[4]
-        if 'aws_account_id' in aws_config and aws_config['aws_account_id'] != None:
-            break
-    if 'aws_account_id' not in aws_config:
-        aws_config['aws_account_id'] = None
 
 
 def set_emr_vpc_ids(aws_config):

@@ -7,6 +7,7 @@ import sys
 import webbrowser
 
 try:
+    from opinel.utils.aws import get_aws_account_id
     from opinel.utils.console import configPrintException, printInfo
     from opinel.utils.credentials import read_creds
     from opinel.utils.globals import check_requirements
@@ -65,6 +66,9 @@ def main():
             printInfo('\nCancelled by user')
             return 130
         aws_config = report.jsrw.to_dict(aws_config)
+
+        # Set the account ID
+        aws_config['aws_account_id'] = get_aws_account_id(credentials)
 
         # Update means we reload the whole config and overwrite part of it
         if args.update == True:
