@@ -5,7 +5,7 @@
     "dashboard_name": "Resources",
     "id_suffix": "SpanIdSuffix",
     "conditions": [ "or",
-        [ "this", "withoutKey", "foobar"]
+        [ "this", "withoutKey", "foobar"],
         [ "foobar", "empty", "" ]
     ]
 }
