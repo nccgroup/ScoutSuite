@@ -1,11 +1,11 @@
 {
     "description": "Instance with a public IP",
-    "rationale": "Foo Bar",
-    "path": "ec2.regions.id.vpcs.id.instances.id.PublicIpAddress",
-    "dashboard_name": "Instances",
+    "rationale": "It is good practice to maintain a list of known, publicly accessible instances and flag all other instances thay meet this criteria.",
+    "path": "ec2.regions.id.vpcs.id.instances.id.network_interfaces.id",
+    "dashboard_name": "Network interfaces",
     "conditions": [ "and",
-        [ "this", "notNull", "" ]
+        [ "Association", "notNull", "" ],
+        [ "ec2.regions.id.vpcs.id.instances.id.network_interfaces.id.Association.PublicIp", "notNull", "" ]
     ],
-    "enabled": "true",
     "display_path": "ec2.regions.id.vpcs.id.instances.id"
 }
