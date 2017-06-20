@@ -8,7 +8,7 @@
     "conditions": [ "and",
         [ "s3.buckets.id.", "withKey", "policy" ],
         [ "s3.buckets.id.policy.Statement.id.Effect", "equal", "Allow" ],
-        [ "s3.buckets.id.policy.Statement.id", "withoutKey", "Condition" ],
+        [ "s3.buckets.id.policy.Statement.id.", "withoutKey", "Condition" ],
         [ "s3.buckets.id.policy.Statement.id.Principal", "containAtLeastOneOf", [ "*" ] ],
         [ "s3.buckets.id.policy.Statement.id.", "containAction", "_ARG_1_" ],
         [ "s3.buckets.id.policy.Statement.id.Action", "containNoneOf", [ "s3:*", "*" ] ]
