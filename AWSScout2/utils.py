@@ -15,11 +15,12 @@ formatted_service_name = {
     'cloudformation': 'CloudFormation',
     'cloudtrail': 'CloudTrail',
     'cloudwatch': 'CloudWatch',
+    'directconnect': 'Direct Connect',
+    'elasticache': 'ElastiCache',
     'lambda': 'Lambda',
     'redshift': 'RedShift',
     'route53': 'Route53',
-    'route53domains': 'Route53Domains',
-    'elasticache': 'ElastiCache'
+    'route53domains': 'Route53Domains'
 }
 
 
