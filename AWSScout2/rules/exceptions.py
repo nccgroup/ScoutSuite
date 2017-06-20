@@ -3,6 +3,7 @@
 Exceptions handling
 """
 
+import json
 
 
 def process_exceptions(aws_config, exceptions_filename = None):
@@ -24,8 +25,8 @@ def process_exceptions(aws_config, exceptions_filename = None):
         for service in exceptions['services']:
             for rule in exceptions['services'][service]['exceptions']:
                 filtered_items = []
-                for item in aws_config['services'][service]['violations'][rule]['items']:
+                for item in aws_config['services'][service]['findings'][rule]['items']:
                     if item not in exceptions['services'][service]['exceptions'][rule]:
                         filtered_items.append(item)
-                aws_config['services'][service]['violations'][rule]['items'] = filtered_items
-                aws_config['services'][service]['violations'][rule]['flagged_items'] = len(aws_config['services'][service]['violations'][rule]['items'])
+                aws_config['services'][service]['findings'][rule]['items'] = filtered_items
+                aws_config['services'][service]['findings'][rule]['flagged_items'] = len(aws_config['services'][service]['findings'][rule]['items'])
