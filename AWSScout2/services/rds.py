@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from opinel.utils.aws import handle_truncated_response
+from opinel.utils.console import printError, printException
 from opinel.utils.globals import manage_dictionary
 
 from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
@@ -89,13 +90,17 @@ class RDSRegionConfig(RegionConfig):
         parameter_group['arn'] = parameter_group.pop('DBParameterGroupArn')
         parameter_group['name'] = parameter_group.pop('DBParameterGroupName')
         api_client = api_clients[region]
-        parameters = handle_truncated_response(api_client.describe_db_parameters, {'DBParameterGroupName': parameter_group['name']}, ['Parameters'])['Parameters']
-        for parameter in parameters:
-            param = {}
-            param['value'] = parameter['ParameterValue'] if 'ParameterValue' in parameter else None
-            param['source'] = parameter['Source']
-            manage_dictionary(parameter_group, 'parameters', {})
-            parameter_group['parameters'][parameter['ParameterName']] = param
+        try:
+            parameters = handle_truncated_response(api_client.describe_db_parameters, {'DBParameterGroupName': parameter_group['name']}, ['Parameters'])['Parameters']
+            for parameter in parameters:
+                param = {}
+                param['value'] = parameter['ParameterValue'] if 'ParameterValue' in parameter else None
+                param['source'] = parameter['Source']
+                manage_dictionary(parameter_group, 'parameters', {})
+                parameter_group['parameters'][parameter['ParameterName']] = param
+        except Exception as e:
+            printException(e)
+            printError('Failed fetching DB parameters for %s' % parameter_group['name'])
         # Save
         (self).parameter_groups[parameter_group['name']] = parameter_group
 
