@@ -48,7 +48,7 @@ class BaseConfig(GlobalConfig):
 
     def fetch_all(self, credentials, regions = [], partition_name = 'aws', targets = None):
         """
-        Fetch all the SNS configuration supported by Scout2
+        Generic fetching function that iterates through all of the service's targets
 
         :param credentials:             F
         :param service:                 Name of the service
