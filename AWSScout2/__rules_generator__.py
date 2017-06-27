@@ -15,6 +15,7 @@ except Exception as e:
     sys.exit(42)
 
 from AWSScout2.cli_parser import RulesArgumentParser
+from AWSScout2.configs.scout2 import Scout2Config
 from AWSScout2.rules.ruleset import Ruleset
 from AWSScout2.output.html import RulesetGenerator
 
@@ -41,6 +42,7 @@ def main():
 
     # Generate the HTML generator
     ruleset_generator = RulesetGenerator(args.ruleset_name, args.generator_dir)
+    ruleset.ruleset_generator_metadata = Scout2Config('default', None, None, [], []).metadata
     ruleset_generator_path = ruleset_generator.save(ruleset, args.force_write, args.debug)
 
     # Open the HTML ruleset generator in a browser

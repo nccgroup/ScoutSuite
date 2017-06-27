@@ -145,7 +145,7 @@ class Ruleset(object):
                             printDebug('Saving rule without parameter value: %s' % rule_filename)
 
 
-    def html_generator(self, output_dir, force_write, debug):
+    def html_generator(self, output_dir, metadata, force_write, debug):
         # Prepare the output directories
         prepare_html_output_dir(output_dir)
         # Create the JS include file
@@ -154,6 +154,7 @@ class Ruleset(object):
         js_ruleset['name'] = self.name
         js_ruleset['available_rules'] = self.available_rules
         js_ruleset['services'] = list(sorted(set(self.services)))
+        js_ruleset['ruleset_generator_metadata'] = metadata
         save_config_to_file(self.environment_name, js_ruleset, 'ruleset', output_dir, force_write, debug)
         # Create the HTML generator
         html_generator = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../rules/data/ruleset-generator.html')

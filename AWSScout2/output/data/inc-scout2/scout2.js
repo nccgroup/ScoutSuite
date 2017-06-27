@@ -698,13 +698,15 @@ var add_summary_template = function(path) {
 }
 
 // Rules generator
-var filter_rules = function(service) {
+var filter_rules = function(group, service) {
     if (service == undefined) {
         $("[id*='rule-']").show();
     } else {
         $("[id*='rule-']").not("[id*='rule-" + service + "']").hide();
         $("[id*='rule-" + service + "']").show();
     }
+    var id = "groups." + group + ".list";
+    $("[id='" + id + "']").hide();
 }
 
 var generate_ruleset = function() {
