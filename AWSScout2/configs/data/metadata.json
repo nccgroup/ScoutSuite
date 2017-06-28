@@ -1,4 +1,14 @@
 {
+    "analytics": {
+        "emr": {
+            "resources": {
+                "clusters": {
+                    "cols": 2,
+                    "path": "services.emr.regions.id.vpcs.id.clusters"
+                }
+            }
+        }
+    },
     "management": {
         "cloudformation": {
             "resources": {
@@ -75,6 +85,18 @@
                 "subnets": {
                     "cols": 2,
                     "path": "services.vpc.regions.id.vpcs.id.subnets"
+                },
+                "customer_gateways": {
+                    "cols": 2,
+                    "path": "services.vpc.regions.id.customer_gateways"
+                },
+                "vpn_gateways": {
+                    "cols": 2,
+                    "path": "services.vpc.regions.id.vpn_gateways"
+                },
+                "vpn_connections": {
+                    "cols": 2,
+                    "path": "services.vpc.regions.id.vpn_connections"
                 }
             }
         },
@@ -105,6 +127,14 @@
                 "security_groups": {
                     "cols": 2,
                     "path": "services.ec2.regions.id.vpcs.id.security_groups"
+                },
+                "ebs_volumes": {
+                    "cols": 2,
+                    "path": "services.ec2.regions.id.volumes"
+                },
+                "snapshots": {
+                    "cols": 2,
+                    "path": "services.ec2.regions.id.snapshots"
                 }
             },
             "summaries": {
@@ -152,6 +182,22 @@
         }
     },
     "database": {
+        "elasticache": {
+            "resources": {
+                "clusters": {
+                    "cols": 2,
+                    "path": "services.elasticache.regions.id.vpcs.id.clusters"
+                },
+                "security_groups": {
+                    "cols": 2,
+                    "path": "services.elasticache.regions.id.security_groups"
+                },
+                "subnet_groups": {
+                    "cols": 2,
+                    "path": "services.elasticache.regions.id.vpcs.id.subnet_groups"
+                }
+            }
+        },
         "rds": {
             "resources": {
                 "instances": {
