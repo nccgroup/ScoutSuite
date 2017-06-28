@@ -37,6 +37,8 @@ class EC2RegionConfig(RegionConfig):
     :ivar parameter_groups_count:       Number of parameter groups in the region
     :ivar security_groups:              Dictionary of security groups [id]
     :ivar security_groups_count:        Number of security groups in the region
+    :ivar snapshots:                    Dictionary of snapshots
+    :ivar snapshots_count:              Number of snapshots in the region
     :ivar volumes:                      Dictionary of EBS volumes
     :ivar volumes_count:                Number of volumes in the region
     """
@@ -51,6 +53,8 @@ class EC2RegionConfig(RegionConfig):
         self.security_groups_count = 0
         self.subnets = {}               # This is a temporary artifact that is removed in the finalize() calls
         self.subnets_count = 0
+        self.snapshots = {}
+        self.snapshots_count = 0
         self.volumes = {}
         self.volumes_count = 0
 
@@ -150,6 +154,19 @@ class EC2RegionConfig(RegionConfig):
         return protocols, rules_count
 
 
+    def parse_snapshot(self, global_params, region, snapshot):
+        """
+
+        :param global_params:           Parameters shared for all regions
+        :param region:                  Name of the AWS region
+        :param snapshot:                  Single snapshot
+        :return:
+        """
+        snapshot['id'] = snapshot.pop('SnapshotId')
+        snapshot['name'] = get_name(snapshot, snapshot, 'id')
+        self.snapshots[snapshot['id']] = snapshot
+
+
     def parse_volume(self, global_params, region, volume):
         """
 
@@ -178,7 +195,7 @@ class EC2Config(RegionalServiceConfig):
     targets = (
         ('security_groups', 'SecurityGroups', 'describe_security_groups', {}, False),
         ('instances', 'Reservations', 'describe_instances', {}, False),
-#        ('snapshots', 'Snapshots', 'describe_snapshots', {'OwnerId': }, False), # TODO: need account ID
+        ('snapshots', 'Snapshots', 'describe_snapshots', {'OwnerIds': [ '_AWS_ACCOUNT_ID_' ]}, False),
         ('volumes', 'Volumes', 'describe_volumes', {}, False )
     )
     region_config_class = EC2RegionConfig

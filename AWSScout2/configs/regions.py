@@ -12,7 +12,7 @@ try:
 except ImportError:
     from queue import Queue
 
-from opinel.utils.aws import build_region_list, connect_service, handle_truncated_response
+from opinel.utils.aws import build_region_list, connect_service, get_aws_account_id, handle_truncated_response
 from opinel.utils.console import printException, printInfo
 
 from AWSScout2.utils import format_service_name
@@ -72,6 +72,12 @@ class RegionalServiceConfig(object):
         # Initialize targets
         if not targets:
             targets = type(self).targets
+        # Tweak params
+        realtargets = ()
+        for i, target in enumerate(targets):
+            params = self.tweak_params(target[3], credentials)
+            realtargets = realtargets + ((target[0], target[1], target[2], params, target[4]),)
+        targets = realtargets
         printInfo('Fetching %s config...' % format_service_name(self.service))
         self.fetchstatuslogger = FetchStatusLogger(targets, True)
         api_service = 'ec2' if self.service.lower() == 'vpc' else self.service.lower()
@@ -145,6 +151,21 @@ class RegionalServiceConfig(object):
         for r in self.regions:
             if hasattr(self.regions[r], 'fetchstatuslogger'):
                 delattr(self.regions[r], 'fetchstatuslogger')
+
+
+    def tweak_params(self, params, credentials):
+        if type(params) == dict:
+            for k in params:
+                params[k] = self.foobar(params[k])
+        elif type(params) == list:
+            newparams = []
+            for v in params:
+                newparams.append(self.foobar(v))
+            params = newparams
+        else:
+            if params == '_AWS_ACCOUNT_ID_':
+                params = get_aws_account_id(credentials)
+        return params
 
 
 
