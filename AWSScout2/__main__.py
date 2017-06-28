@@ -77,6 +77,8 @@ def main():
             for service in new_aws_config['service_list']:
                 # Per service only for now, may add per region & per VPC later...
                 aws_config['services'][service] = new_aws_config['services'][service]
+            # Update the metadata too
+            aws_config['metadata'] = Scout2Config('default', None, None, [], []).metadata
 
     else:
 
