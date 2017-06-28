@@ -37,6 +37,8 @@ class EC2RegionConfig(RegionConfig):
     :ivar parameter_groups_count:       Number of parameter groups in the region
     :ivar security_groups:              Dictionary of security groups [id]
     :ivar security_groups_count:        Number of security groups in the region
+    :ivar volumes:                      Dictionary of EBS volumes
+    :ivar volumes_count:                Number of volumes in the region
     """
 
     def __init__(self):
@@ -49,6 +51,8 @@ class EC2RegionConfig(RegionConfig):
         self.security_groups_count = 0
         self.subnets = {}               # This is a temporary artifact that is removed in the finalize() calls
         self.subnets_count = 0
+        self.volumes = {}
+        self.volumes_count = 0
 
 
     def parse_elastic_ip(self, global_params, region, eip):
@@ -146,6 +150,19 @@ class EC2RegionConfig(RegionConfig):
         return protocols, rules_count
 
 
+    def parse_volume(self, global_params, region, volume):
+        """
+
+        :param global_params:           Parameters shared for all regions
+        :param region:                  Name of the AWS region
+        :param volume:                  Single EBS volume
+        :return:
+        """
+        volume['id'] = volume.pop('VolumeId')
+        volume['name'] = get_name(volume, volume, 'id')
+        self.volumes[volume['id']] = volume
+
+
 
 ########################################
 # EC2Config
@@ -161,8 +178,8 @@ class EC2Config(RegionalServiceConfig):
     targets = (
         ('security_groups', 'SecurityGroups', 'describe_security_groups', {}, False),
         ('instances', 'Reservations', 'describe_instances', {}, False),
-#        ('snapshots', 'Snapshots', 'describe_snapshots', {}, False), # TODO: need account ID
-#        ('volumes', 'Volumes', 'describe_volumes', {}, False )
+#        ('snapshots', 'Snapshots', 'describe_snapshots', {'OwnerId': }, False), # TODO: need account ID
+        ('volumes', 'Volumes', 'describe_volumes', {}, False )
     )
     region_config_class = EC2RegionConfig
 
