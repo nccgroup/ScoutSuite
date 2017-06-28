@@ -47,6 +47,6 @@ class DirectConnectConfig(RegionalServiceConfig):
     :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
     """
     targets = (
-        ('connections', 'connections', 'describe_connections', False),
+        ('connections', 'connections', 'describe_connections', {}, False),
     )
     region_config_class = DirectConnectRegionConfig

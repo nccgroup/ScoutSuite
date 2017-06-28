@@ -135,10 +135,10 @@ class RDSConfig(RegionalServiceConfig):
     :cvar config_class:                 Class to be used when initiating the service's configuration in a new region/VPC
     """
     targets = (
-        ('instances', 'DBInstances', 'describe_db_instances', False),
-        ('snapshots', 'DBSnapshots', 'describe_db_snapshots', False),
-        ('parameter_groups', 'DBParameterGroups', 'describe_db_parameter_groups', False),
-        ('security_groups', 'DBSecurityGroups', 'describe_db_security_groups', True),
+        ('instances', 'DBInstances', 'describe_db_instances', {}, False),
+        ('snapshots', 'DBSnapshots', 'describe_db_snapshots', {}, False),
+        ('parameter_groups', 'DBParameterGroups', 'describe_db_parameter_groups', {}, False),
+        ('security_groups', 'DBSecurityGroups', 'describe_db_security_groups', {}, True),
         # TODO ('subnets', 'DBSubnetGroups', 'describe_db_subnet_group', False),
     )
     region_config_class = RDSRegionConfig

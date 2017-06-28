@@ -58,6 +58,6 @@ class CloudWatchConfig(RegionalServiceConfig):
     :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
     """
     targets = (
-        ('alarms', 'MetricAlarms', 'describe_alarms', False),
+        ('alarms', 'MetricAlarms', 'describe_alarms', {}, False),
     )
     region_config_class = CloudWatchRegionConfig

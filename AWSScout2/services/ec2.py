@@ -159,8 +159,10 @@ class EC2Config(RegionalServiceConfig):
     :cvar config_class:                 Class to be used when initiating the service's configuration in a new region/VPC
     """
     targets = (
-        ('security_groups', 'SecurityGroups', 'describe_security_groups', False),
-        ('instances', 'Reservations', 'describe_instances', False)
+        ('security_groups', 'SecurityGroups', 'describe_security_groups', {}, False),
+        ('instances', 'Reservations', 'describe_instances', {}, False),
+#        ('snapshots', 'Snapshots', 'describe_snapshots', {}, False), # TODO: need account ID
+#        ('volumes', 'Volumes', 'describe_volumes', {}, False )
     )
     region_config_class = EC2RegionConfig
 

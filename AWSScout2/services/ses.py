@@ -52,6 +52,6 @@ class SESConfig(RegionalServiceConfig):
     :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
     """
     targets = (
-        ('identities', 'Identities', 'list_identities', False),
+        ('identities', 'Identities', 'list_identities', {}, False),
     )
     region_config_class = SESRegionConfig

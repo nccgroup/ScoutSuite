@@ -170,14 +170,14 @@ class VPCConfig(RegionalServiceConfig):
     :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
     """
     targets = (
-        ('vpcs', 'Vpcs', 'describe_vpcs', False),
-        ('flow_logs', 'FlowLogs', 'describe_flow_logs', False),
-        ('network_acls', 'NetworkAcls', 'describe_network_acls', False),
-        ('route_tables', 'RouteTables', 'describe_route_tables', False),
-        ('subnets', 'Subnets', 'describe_subnets', False),
-        ('vpn_connections', 'VpnConnections', 'describe_vpn_connections', False),
-        ('vpn_gateways', 'VpnGateways', 'describe_vpn_gateways', False),
-        ('customer_agteways', 'CustomerGateways', 'describe_customer_gateways', False)
+        ('vpcs', 'Vpcs', 'describe_vpcs', {}, False),
+        ('flow_logs', 'FlowLogs', 'describe_flow_logs', {}, False),
+        ('network_acls', 'NetworkAcls', 'describe_network_acls', {}, False),
+        ('route_tables', 'RouteTables', 'describe_route_tables', {}, False),
+        ('subnets', 'Subnets', 'describe_subnets', {}, False),
+        ('vpn_connections', 'VpnConnections', 'describe_vpn_connections', {}, False),
+        ('vpn_gateways', 'VpnGateways', 'describe_vpn_gateways', {}, False),
+        ('customer_agteways', 'CustomerGateways', 'describe_customer_gateways', {}, False)
     )
     region_config_class = VPCRegionConfig
 

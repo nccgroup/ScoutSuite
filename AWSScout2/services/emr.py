@@ -55,7 +55,7 @@ class EMRConfig(RegionalServiceConfig):
     :cvar config_class:                 Class to be used when initiating the service's configuration in a new region/VPC
     """
     targets = (
-        ('clusters', 'Clusters', 'list_clusters', False),
+        ('clusters', 'Clusters', 'list_clusters', {}, False),
     )
     region_config_class = EMRRegionConfig
 

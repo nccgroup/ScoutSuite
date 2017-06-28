@@ -98,9 +98,9 @@ class RedshiftConfig(RegionalServiceConfig):
     :cvar config_class:                 Class to be used when initiating the service's configuration in a new region/VPC
     """
     targets = (
-        ('clusters', 'Clusters', 'describe_clusters', False),
-        ('parameter_groups', 'ParameterGroups', 'describe_cluster_parameter_groups', False),
-        ('security_groups', 'SecurityGroups', 'describe_cluster_security_groups', True),
+        ('clusters', 'Clusters', 'describe_clusters', {}, False),
+        ('parameter_groups', 'ParameterGroups', 'describe_cluster_parameter_groups', {}, False),
+        ('security_groups', 'SecurityGroups', 'describe_cluster_security_groups', {}, True),
         # TODO ('subnets')
     )
     region_config_class = RedshiftRegionConfig

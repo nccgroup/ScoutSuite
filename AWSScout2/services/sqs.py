@@ -58,6 +58,6 @@ class SQSConfig(RegionalServiceConfig):
     :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
     """
     targets = (
-        ('queues', 'QueueUrls', 'list_queues', False),
+        ('queues', 'QueueUrls', 'list_queues', {}, False),
     )
     region_config_class = SQSRegionConfig

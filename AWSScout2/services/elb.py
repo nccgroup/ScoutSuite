@@ -67,7 +67,7 @@ class ELBConfig(RegionalServiceConfig):
     :cvar config_class:                 Class to be used when initiating the service's configuration in a new region/VPC
     """
     targets = (
-        ('elbs', 'LoadBalancerDescriptions', 'describe_load_balancers', False),
+        ('elbs', 'LoadBalancerDescriptions', 'describe_load_balancers', {}, False),
     )
     region_config_class = ELBRegionConfig
 

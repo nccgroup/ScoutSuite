@@ -176,7 +176,7 @@ class RegionConfig(GlobalConfig):
 
     def _fetch_targets(self, api_client, q, target, list_params):
         # Handle & format the target type
-        target_type, response_attribute, list_method_name, ignore_list_error = target
+        target_type, response_attribute, list_method_name, list_params, ignore_list_error = target
         list_method = getattr(api_client, list_method_name)
         try:
             targets = handle_truncated_response(list_method, list_params, [response_attribute])[response_attribute]

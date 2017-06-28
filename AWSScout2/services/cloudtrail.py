@@ -66,7 +66,7 @@ class CloudTrailConfig(RegionalServiceConfig):
     :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
     """
     targets = (
-        ('trails', 'trailList', 'describe_trails', False),
+        ('trails', 'trailList', 'describe_trails', {}, False),
     )
     region_config_class = CloudTrailRegionConfig
 

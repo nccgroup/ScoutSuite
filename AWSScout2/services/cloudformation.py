@@ -52,6 +52,6 @@ class CloudFormationConfig(RegionalServiceConfig):
     :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
     """
     targets = (
-        ('stacks', 'Stacks', 'describe_stacks', False),
+        ('stacks', 'Stacks', 'describe_stacks', {}, False),
     )
     region_config_class = CloudFormationRegionConfig

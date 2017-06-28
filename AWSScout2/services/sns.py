@@ -80,7 +80,7 @@ class SNSConfig(RegionalServiceConfig):
     :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
     """
     targets = (
-        ('topics', 'Topics', 'list_topics', False),
-        ('subscriptions', 'Subscriptions', 'list_subscriptions', True),
+        ('topics', 'Topics', 'list_topics', {}, False),
+        ('subscriptions', 'Subscriptions', 'list_subscriptions', {}, True),
     )
     region_config_class = SNSRegionConfig

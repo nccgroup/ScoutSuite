@@ -79,8 +79,8 @@ class ElastiCacheConfig(RegionalServiceConfig):
     :cvar config_class:                 Class to be used when initiating the service's configuration in a new region/VPC
     """
     targets = (
-        ('clusters', 'CacheClusters', 'describe_cache_clusters', False),
-        ('security_groups', 'CacheSecurityGroups', 'describe_cache_security_groups', True)      # Do not throw errors as this is disabled in newer regions
+        ('clusters', 'CacheClusters', 'describe_cache_clusters', {}, False),
+        ('security_groups', 'CacheSecurityGroups', 'describe_cache_security_groups', {}, True)      # Do not throw errors as this is disabled in newer regions
         #('parameter_groups', 'DBParameterGroups', 'describe_db_parameter_groups', False),
     )
     region_config_class = ElastiCacheRegionConfig
