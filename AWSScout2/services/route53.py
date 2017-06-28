@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.aws import connect_service, handle_truncated_response
+from opinel.utils.aws import handle_truncated_response
 from opinel.utils.console import printError, printException
 from opinel.utils.globals import manage_dictionary
 
