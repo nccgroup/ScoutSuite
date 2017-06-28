@@ -156,11 +156,11 @@ class RegionalServiceConfig(object):
     def tweak_params(self, params, credentials):
         if type(params) == dict:
             for k in params:
-                params[k] = self.foobar(params[k])
+                params[k] = self.tweak_params(params[k], credentials)
         elif type(params) == list:
             newparams = []
             for v in params:
-                newparams.append(self.foobar(v))
+                newparams.append(self.tweak_params(v, credentials))
             params = newparams
         else:
             if params == '_AWS_ACCOUNT_ID_':

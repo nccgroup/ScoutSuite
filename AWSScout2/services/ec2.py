@@ -10,7 +10,7 @@ from opinel.utils.console import printException, printInfo
 from opinel.utils.fs import load_data
 from opinel.utils.globals import manage_dictionary
 
-from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig
+from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 from AWSScout2.utils import get_keys, ec2_classic
 
 
@@ -165,6 +165,8 @@ class EC2RegionConfig(RegionConfig):
         snapshot['id'] = snapshot.pop('SnapshotId')
         snapshot['name'] = get_name(snapshot, snapshot, 'id')
         self.snapshots[snapshot['id']] = snapshot
+        # Get snapshot attribute
+        snapshot['createVolumPermission'] = api_clients[region].describe_snapshot_attribute(Attribute = 'createVolumePermission', SnapshotId = snapshot['id'])['CreateVolumePermissions']
 
 
     def parse_volume(self, global_params, region, volume):
