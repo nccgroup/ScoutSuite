@@ -68,12 +68,12 @@ class BaseConfig(GlobalConfig):
         if self.service in [ 's3' ]: # S3 namespace is global but APIs aren't....
             api_clients = {}
             for region in build_region_list(self.service, regions, partition_name):
-                api_clients[region] = connect_service('s3', credentials, region)
+                api_clients[region] = connect_service('s3', credentials, region, silent = True)
             api_client = api_clients[list(api_clients.keys())[0]]
         elif self.service == 'route53domains':
-            api_client = connect_service(self.service, credentials, 'us-east-1') # TODO: use partition's default region
+            api_client = connect_service(self.service, credentials, 'us-east-1', silent = True) # TODO: use partition's default region
         else:
-            api_client = connect_service(self.service, credentials)
+            api_client = connect_service(self.service, credentials, silent = True)
         # Threading to fetch & parse resources (queue consumer)
         params = {'api_client': api_client}
         if self.service in ['s3']:

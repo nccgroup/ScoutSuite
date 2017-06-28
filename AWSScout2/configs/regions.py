@@ -109,7 +109,7 @@ class RegionalServiceConfig(object):
                 try:
                     region = q.get()
                     self.init_region_config(region)
-                    api_client = connect_service(params['api_service'], params['credentials'], region)
+                    api_client = connect_service(params['api_service'], params['credentials'], region, silent = True)
                     api_clients[region] = api_client
                     self.regions[region].fetch_all(api_client, self.fetchstatuslogger, params['q'], params['targets'])
                     self.fetchstatuslogger.counts['regions']['fetched'] += 1

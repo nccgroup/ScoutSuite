@@ -77,7 +77,7 @@ class IAMConfig(BaseConfig):
         """
         iam_report = {}
         try:
-            api_client = connect_service('iam', credentials)
+            api_client = connect_service('iam', credentials, silent = True)
             response = api_client.generate_credential_report()
             if response['State'] != 'COMPLETE':
                 if not ignore_exception:
@@ -169,7 +169,7 @@ class IAMConfig(BaseConfig):
         self.fetchstatuslogger.counts['password_policy']['discovered'] = 0
         self.fetchstatuslogger.counts['password_policy']['fetched'] = 0
         try:
-            api_client = connect_service('iam', credentials)
+            api_client = connect_service('iam', credentials, silent = True)
             self.password_policy = api_client.get_account_password_policy()['PasswordPolicy']
             if 'PasswordReusePrevention' not in self.password_policy:
                 self.password_policy['PasswordReusePrevention'] = False
