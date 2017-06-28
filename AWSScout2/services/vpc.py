@@ -33,12 +33,19 @@ class VPCRegionConfig(RegionConfig):
     """
 
     def __init__(self):
+        self.customer_gateways = {}
         self.flow_logs = {}
         self.flow_logs_count = 0
         self.network_acls_count = 0
         self.vpcs = {}
+        self.vpn_gateways = {}
+        self.vpn_connections = {}
         # Gateways etc... (vpn, internet, nat, ...)
 
+
+    def parse_customer_gateway(self, global_params, region, cgw):
+        cgw['id'] = cgw.pop('CustomerGatewayId')
+        self.customer_gateways[cgw['id']] = cgw
 
     def parse_flow_log(self, global_params, region, fl):
         """
@@ -140,6 +147,16 @@ class VPCRegionConfig(RegionConfig):
         self.vpcs[vpc_id].name = get_name(vpc, {}, 'VpcId')
 
 
+    def parse_vpn_connection(self, global_params, region_name, vpnc):
+        vpnc['id'] = vpnc.pop('VpnConnectionid')
+        self.vpn_connections[vpnc['id']] = vpnc
+
+
+    def parse_vpn_gateway(self, global_params, region_name, vpng):
+        vpng['id'] = vpng.pop('VpcGatewayId')
+        self.vpn_gateways[vpng['id']] = vpng
+
+
 
 ########################################
 # VPCConfig
@@ -157,7 +174,10 @@ class VPCConfig(RegionalServiceConfig):
         ('flow_logs', 'FlowLogs', 'describe_flow_logs', False),
         ('network_acls', 'NetworkAcls', 'describe_network_acls', False),
         ('route_tables', 'RouteTables', 'describe_route_tables', False),
-        ('subnets', 'Subnets', 'describe_subnets', False)
+        ('subnets', 'Subnets', 'describe_subnets', False),
+        ('vpn_connections', 'VpnConnections', 'describe_vpn_connections', False),
+        ('vpn_gateways', 'VpnGateways', 'describe_vpn_gateways', False),
+        ('customer_agteways', 'CustomerGateways', 'describe_customer_gateways', False)
     )
     region_config_class = VPCRegionConfig
 
