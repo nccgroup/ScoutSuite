@@ -19,6 +19,7 @@ def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     :return:
     """
     map_all_sgs(aws_config)
+    map_all_subnets(aws_config)
     set_emr_vpc_ids(aws_config)
     sort_vpc_flow_logs(aws_config['services']['vpc'])
     sort_elbs(aws_config)
@@ -144,16 +145,22 @@ def list_ec2_network_attack_surface_callback(ec2_config, current_config, path, c
                         ec2_config['attack_surface'][public_ip]['protocols'][p]['ports'][port]['cidrs'] += ingress_rules['protocols'][p]['ports'][port]['cidrs']
 
 
-def map_all_sgs(aws_config):
-    go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'security_groups'], ['services', 'ec2'], map_sg, {})
-
-
 sg_map = {}
-def map_sg(ec2_config, current_config, path, current_path, sg, callback_args):
-    if sg not in sg_map:
-        sg_map[sg] = {}
-        sg_map[sg]['vpc_id'] = current_path[5]
-        sg_map[sg]['region'] = current_path[3]
+def map_all_sgs(aws_config):
+    go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'security_groups'], ['services', 'ec2'], map_resource, {'map': sg_map})
+
+
+subnet_map = {}
+def map_all_subnets(aws_config):
+    go_to_and_do(aws_config, aws_config['services']['vpc'], ['regions', 'vpcs', 'subnets'], ['services', 'vpc'], map_resource, {'map': subnet_map})
+
+
+def map_resource(ec2_config, current_config, path, current_path, resource_id, callback_args):
+    map = callback_args['map']
+    if resource_id not in map:
+        map[resource_id] = {'region': current_path[3]}
+        if len(current_path) > 5:
+            map[resource_id]['vpc_id'] = current_path[5]
 
 
 def match_iam_policies_and_buckets(aws_config):
@@ -401,13 +408,32 @@ def set_emr_vpc_ids_callback(aws_config, current_config, path, current_path, vpc
     if vpc_id != 'TODO':
         return
     region = current_path[3]
+    vpc_id = sg_id = subnet_id = None
     pop_list = []
     for cluster_id in current_config['clusters']:
         cluster = current_config['clusters'][cluster_id]
-        sg_id = cluster['Ec2InstanceAttributes']['EmrManagedMasterSecurityGroup']
+        if 'EmrManagedMasterSecurityGroup' in cluster['Ec2InstanceAttributes']:
+            sg_id = cluster['Ec2InstanceAttributes']['EmrManagedMasterSecurityGroup']
+        elif 'RequestedEc2SubnetIds' in cluster['Ec2InstanceAttributes']:
+            subnet_id = cluster['Ec2InstanceAttributes']['RequestedEc2SubnetIds']
+        else:
+            printError('Unable to determine VPC id for EMR cluster %s' % str(cluster_id))
+            continue
         if sg_id in sg_map:
             vpc_id = sg_map[sg_id]['vpc_id']
             pop_list.append(cluster_id)
+        else:
+            sid_found = False
+            if subnet_id:
+                for sid in subnet_id:
+                    if sid in subnet_map:
+                        vpc_id = subnet_map[sid]['vpc_id']
+                        pop_list.append(cluster_id)
+                        sid_found = True
+            if not sid_found:
+                printError('Unable to determine VPC id for %s' % (str(subnet_id) if subnet_id else str(sg_id)))
+                continue
+        if vpc_id:
             region_vpcs_config = get_object_at(aws_config, current_path)
             manage_dictionary(region_vpcs_config, vpc_id, {'clusters': {}})
             region_vpcs_config[vpc_id]['clusters'][cluster_id] = cluster

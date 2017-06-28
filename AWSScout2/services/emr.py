@@ -32,13 +32,11 @@ class EMRRegionConfig(RegionConfig):
         :param region:                  Name of the AWS region
         :param cluster:                 EMR cluster
         """
-        cluster_id = cluster['Id']
+        cluster_id = cluster.pop('Id')
+        cluster['id'] = cluster_id
         cluster = api_clients[region].describe_cluster(ClusterId = cluster_id)['Cluster']
         cluster['name'] = cluster.pop('Name')
-        if 'RequestedEc2SubnetIds' in cluster['Ec2InstanceAttributes'] and cluster['Ec2InstanceAttributes']['RequestedEc2SubnetIds'] == []:
-            vpc_id = ec2_classic
-        else:
-            vpc_id = 'TODO' # The EMR API won't disclose the VPC ID, so wait until all configs have been fetch and look up the VPC based on the subnet ID
+        vpc_id = 'TODO' # The EMR API won't disclose the VPC ID, so wait until all configs have been fetch and look up the VPC based on the subnet ID
         manage_dictionary(self.vpcs, vpc_id, EMRVPCConfig())
         self.vpcs[vpc_id].clusters[cluster_id] = cluster
 
