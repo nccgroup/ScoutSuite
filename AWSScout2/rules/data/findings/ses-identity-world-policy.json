@@ -1,4 +1,5 @@
 {
+    "arg_names": [ "SES action" ],
     "key": "ses-identity-world-_ARG_0_-policy",
     "dashboard_name": "Statements",
     "description": "_ARG_0_ authorized to all principals",

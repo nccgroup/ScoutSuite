@@ -1,4 +1,5 @@
 {
+    "arg_names": [ "SQS action" ],
     "key": "sqs-queue-world-_ARG_0_-policy",
     "dashboard_name": "Statements",
     "description": "_ARG_0_ authorized to all principals",

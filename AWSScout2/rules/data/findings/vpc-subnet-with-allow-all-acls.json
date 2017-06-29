@@ -1,4 +1,5 @@
 {
+    "arg_names": [ "Direction of traffic (ingress or egress)", "Corresponding target (source or destination)" ],
     "description": "Subnet with allow all _ARG_0_ NACLs",
     "rationale": "Network ACLs are designed to provide a secondary layer of security. Adding a rule that allows all network traffic (all protocols, IPs, and _ARG_1_) prior to any deny rule defeats the purpose of network ACLs.",
     "key": "vpc-subnet-with-allow-all-_ARG_0_-acls",
