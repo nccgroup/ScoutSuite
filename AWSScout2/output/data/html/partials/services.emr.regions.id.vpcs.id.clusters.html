@@ -9,7 +9,7 @@
             <ul>
                 <li class="list-group-item-text">Region: {{region}}</li>
                 <li class="list-group-item-text">VPC: {{get_value_at 'services.ec2.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</li>
-                <li class="list-group-item-text">ID: {{id}}</li>
+                <li class="list-group-item-text">Id: {{id}}</li>
                 <li class="list-group-item-text">Availability zone: {{Ec2InstanceAttributes.Ec2AvailabilityZone}}</li>
                 <li class="list-group-item-text">Status: {{Status.State}}</li>
                 <li class="list-group-item-text">Instance profile: {{Ec2InstanceAttributes.IamInstanceProfile}}</li>
