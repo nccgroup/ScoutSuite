@@ -148,12 +148,12 @@ class VPCRegionConfig(RegionConfig):
 
 
     def parse_vpn_connection(self, global_params, region_name, vpnc):
-        vpnc['id'] = vpnc.pop('VpnConnectionid')
+        vpnc['id'] = vpnc.pop('VpnConnectionId')
         self.vpn_connections[vpnc['id']] = vpnc
 
 
     def parse_vpn_gateway(self, global_params, region_name, vpng):
-        vpng['id'] = vpng.pop('VpcGatewayId')
+        vpng['id'] = vpng.pop('VpnGatewayId')
         self.vpn_gateways[vpng['id']] = vpng
 
 
@@ -177,7 +177,7 @@ class VPCConfig(RegionalServiceConfig):
         ('subnets', 'Subnets', 'describe_subnets', {}, False),
         ('vpn_connections', 'VpnConnections', 'describe_vpn_connections', {}, False),
         ('vpn_gateways', 'VpnGateways', 'describe_vpn_gateways', {}, False),
-        ('customer_agteways', 'CustomerGateways', 'describe_customer_gateways', {}, False)
+        ('customer_gateways', 'CustomerGateways', 'describe_customer_gateways', {}, False)
     )
     region_config_class = VPCRegionConfig
 
