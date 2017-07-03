@@ -1,0 +1,10 @@
+{
+    "dashboard_name": "Domains",
+    "description": "Domain transfer lock not supported by TLD",
+    "rationale": "",
+    "path": "route53.domains.id",
+    "conditions": [ "and",
+        [ "name", "match", [".*\\.io", ".*\\.co.nz"] ]
+    ],
+    "id_suffix": "TransferLockNotAuthorized"
+}
