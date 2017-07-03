@@ -332,7 +332,7 @@ class Ruleset(object):
 def set_argument_values(parameterized_input, target, convert = False):
     if convert:
         parameterized_input = json.dumps(parameterized_input)
-    args = re.findall(r'(_ARG_(\w+)_)', parameterized_input)
+    args = re.findall(r'(_ARG_([a-zA-Z0-9]+)_)', parameterized_input)
     for arg in args:
         index = int(arg[1])
         parameterized_input = parameterized_input.replace(arg[0], target[index])
