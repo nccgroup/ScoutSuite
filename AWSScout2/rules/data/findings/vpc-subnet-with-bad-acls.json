@@ -1,0 +1,12 @@
+{
+    "arg_names": [ "Direction of traffic (ingress or egress)", "Corresponding target (source or destination)" ],
+    "description": "Subnet with allow all _ARG_0_ NACLs",
+    "rationale": "Network ACLs associated with subnets and VPCs should not allow all _ARG_0_ traffic.",
+    "key": "vpc-subnet-with-allow-all-_ARG_0_-acls",
+    "path": "vpc.regions.id.vpcs.id.subnets.id",
+    "dashboard_name": "Subnets",
+    "id_suffix": "bad_nacls",
+    "conditions": [ "and",
+        [ "vpc.regions.id.vpcs.id.network_acls._GET_VALUE_AT_(vpc.regions.id.vpcs.id.subnets.id.network_acl).allow_all__ARG_0__traffic", "notEqual", "0" ]
+    ]
+}

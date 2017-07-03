@@ -856,22 +856,27 @@
             "enabled": true
         },
         {
-            "level": "warning",
-            "filename": "vpc-subnet-with-default-acls.json",
-            "enabled": false,
+            "level": "danger",
+            "filename": "vpc-subnet-with-bad-acls.json",
+            "enabled": true,
             "args": [
                 "ingress",
                 "source"
             ]
         },
         {
-            "level": "warning",
-            "filename": "vpc-subnet-with-default-acls.json",
-            "enabled": false,
+            "level": "danger",
+            "filename": "vpc-subnet-with-bad-acls.json",
+            "enabled": true,
             "args": [
                 "egress",
                 "destination"
             ]
+        },
+        {
+            "level": "warning",
+            "filename": "vpc-network-acl-not-used.json",
+            "enabled": true
         },
         {
             "level": "warning",

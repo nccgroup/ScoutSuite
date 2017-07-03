@@ -36,6 +36,9 @@
                 </li>
             {{/each}}
             </ul>
+            <span id="vpc.regions.{{region}}.vpcs.{{vpc}}.network_acls.{{@key}}.unused" class="finding-hidden item-margin">
+                <i class="glyphicon glyphicon-warning-sign"></i> This network ACL is not the VPC's default NACL and is not associated with any existing VPC.
+            </span>
         </div>
     </script>
     <script>
