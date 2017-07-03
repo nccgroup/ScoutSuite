@@ -1,7 +1,6 @@
 {
     "description": "Unused network ACLs",
     "rationale": "Maintaining unused resources increases risks of misconfigurations and increases the difficulty of audits.",
-    "key": "vpc-custom-network-acls-allow-all-_ARG_0_",
     "path": "vpc.regions.id.vpcs.id.network_acls.id",
     "dashboard_name": "Network ACLs",
     "id_suffix": "unused",
