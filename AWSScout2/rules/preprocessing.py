@@ -10,7 +10,6 @@ from AWSScout2.utils import ec2_classic
 from AWSScout2.services.vpc import put_cidr_name
 
 
-
 def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     """
     Tweak the AWS config to match cross-service resources and clean any fetching artifacts
@@ -96,27 +95,28 @@ def process_network_acls_callback(vpc_config, current_config, path, current_path
     process_network_acls_check_for_allow_all(current_config, 'ingress')
     process_network_acls_check_for_allow_all(current_config, 'egress')
     # Check if the network ACL only has the default rules
-    process_network_acls_check_for_default(current_config, 'ingress')
-    process_network_acls_check_for_default(current_config, 'egress')
+    process_network_acls_check_for_aws_default(current_config, 'ingress')
+    process_network_acls_check_for_aws_default(current_config, 'egress')
 
 
 def process_network_acls_check_for_allow_all(network_acl, direction):
-    network_acl['allow_all_%s_traffic' % direction] = False
-    for rule in network_acl['rules'][direction]:
+    network_acl['allow_all_%s_traffic' % direction] = 0
+    for rule_number in network_acl['rules'][direction]:
+        rule = network_acl['rules'][direction][rule_number]
         if rule['RuleAction'] == 'deny':
             # If a deny rule appears before an allow all, do not raise the flag
             break
         if (rule['CidrBlock'] == '0.0.0.0/0') and (rule['RuleAction'] == 'allow') and (rule['port_range'] == '1-65535') and (rule['protocol'] == 'ALL'):
-            network_acl['allow_all_%s_traffic' % direction] = True
-            break
+                network_acl['allow_all_%s_traffic' % direction] = rule_number
+                break
 
 
-def process_network_acls_check_for_default(network_acl, direction):
-    if len(network_acl['rules'][direction]) != 2 and network_acl['allow_all_%s_traffic' % direction] != False:
-        network_acl['use_default_%s_rules' % direction] = False
-    else:
-        # Assume it's the default rules because 2 rules and there's an allow all
+def process_network_acls_check_for_aws_default(network_acl, direction):
+    if len(network_acl['rules'][direction]) == 2 and network_acl['allow_all_%s_traffic' % direction] > 0 and '100' in network_acl['rules'][direction]:
+        # Assume it is AWS' default rules because there are 2 rules (100 and 65535) and the first rule allows all traffic
         network_acl['use_default_%s_rules' % direction] = True
+    else:
+        network_acl['use_default_%s_rules' % direction] = False
 
 
 def list_ec2_network_attack_surface(ec2_config):

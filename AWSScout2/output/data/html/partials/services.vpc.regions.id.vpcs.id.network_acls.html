@@ -16,8 +16,8 @@
                         <td width="20%" class="text-center">Action</td>
                     </tr>
                     {{#each this}}
-                        <tr>
-                            <td width="20%" class="text-center">{{RuleNumber}}</td>
+                        <tr id="vpc.regions.{{../../region}}.vpcs.{{../../vpc}}.network_acls.{{@../../key}}.{{@../key}}.{{@key}}">
+                            <td width="20%" class="text-center">{{@key}}</td>
                             <td width="20%" class="text-center">{{port_range}}</td>
                             <td width="20%" class="text-center">{{protocol}}</td>
                             <td width="20%" class="text-center">{{CidrBlock}}</td>
@@ -28,10 +28,14 @@
             </div>
         {{/each}}
         <div class="list-group-item">
-            <h4 class="list-group-item-heading">Subnets</h4>
+            <h4 class="list-group-item-heading">Associated Subnets</h4>
+            <ul>
             {{#each Associations}}
-                <div class="list-group-item-tex item-margin">{{SubnetId}}</div>
+                <li class="list-group-item-text">
+                    {{> resource_link resource_path = (concat 'services.vpc.regions' ../region 'vpcs' ../vpc 'subnets' SubnetId)}}
+                </li>
             {{/each}}
+            </ul>
         </div>
     </script>
     <script>

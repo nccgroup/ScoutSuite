@@ -87,7 +87,7 @@ class VPCRegionConfig(RegionConfig):
         :param egress:
         :return:
         """
-        acl_list = []
+        acl_dict = {}
         for entry in entries:
             if entry['Egress'] == egress:
                 acl = {}
@@ -101,8 +101,8 @@ class VPCRegionConfig(RegionConfig):
                 else:
                     acl['port_range'] = '1-65535'
 
-                acl_list.append(acl)
-        return acl_list
+                acl_dict[acl.pop('RuleNumber')] = acl
+        return acl_dict
 
 
     def parse_route_table(self, global_params, region, rt):

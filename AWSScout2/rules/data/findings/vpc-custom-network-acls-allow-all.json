@@ -1,0 +1,13 @@
+{
+    "arg_names": [ "Direction of traffic (ingress or egress)", "Corresponding target (source or destination)" ],
+    "description": "Network ACLs allow all _ARG_0_ traffic (custom)",
+    "rationale": "Network ACLs are designed to provide a secondary layer of security. Adding a rule that allows all network traffic (all protocols, IPs, and _ARG_1_) prior to any deny rule defeats the purpose of network ACLs.",
+    "key": "vpc-custom-network-acls-allow-all-_ARG_0_",
+    "path": "vpc.regions.id.vpcs.id.network_acls.id",
+    "dashboard_name": "Network ACLs",
+    "id_suffix": "_ARG_0_._GET_VALUE_AT_(vpc.regions.id.vpcs.id.network_acls.id.allow_all__ARG_0__traffic)",
+    "conditions": [ "and",
+        [ "allow_all__ARG_0__traffic", "notEqual", "0" ],
+        [ "use_default__ARG_0__rules", "false", ""]
+    ]
+}

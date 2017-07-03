@@ -858,7 +858,7 @@
         {
             "level": "warning",
             "filename": "vpc-subnet-with-default-acls.json",
-            "enabled": true,
+            "enabled": false,
             "args": [
                 "ingress",
                 "source"
@@ -867,7 +867,7 @@
         {
             "level": "warning",
             "filename": "vpc-subnet-with-default-acls.json",
-            "enabled": true,
+            "enabled": false,
             "args": [
                 "egress",
                 "destination"
@@ -875,7 +875,7 @@
         },
         {
             "level": "warning",
-            "filename": "vpc-subnet-with-allow-all-acls.json",
+            "filename": "vpc-custom-network-acls-allow-all.json",
             "enabled": true,
             "args": [
                 "ingress",
@@ -884,7 +884,25 @@
         },
         {
             "level": "warning",
-            "filename": "vpc-subnet-with-allow-all-acls.json",
+            "filename": "vpc-custom-network-acls-allow-all.json",
+            "enabled": true,
+            "args": [
+                "egress",
+                "destination"
+            ]
+        },
+                {
+            "level": "warning",
+            "filename": "vpc-default-network-acls-allow-all.json",
+            "enabled": true,
+            "args": [
+                "ingress",
+                "source"
+            ]
+        },
+        {
+            "level": "warning",
+            "filename": "vpc-default-network-acls-allow-all.json",
             "enabled": true,
             "args": [
                 "egress",
