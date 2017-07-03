@@ -10,21 +10,18 @@
 }
 .finding-danger {
     color:  red !important;
-    display: inline !important;
 }
 .finding-title-danger {
     background: red!important;
 }
 .finding-warning {
     color: orange !important;
-    display: inline !important;
 }
 .finding-title-warning {
     background: orange !important;
 }
 .finding-good {
     color: green !important;
-    display: inline !important;
 }
 .finding-title-good {
     background: green !important;
