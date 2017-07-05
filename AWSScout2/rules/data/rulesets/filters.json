@@ -1,37 +1,37 @@
 {
-    "about": "Default set of filters for Scout2",
-    "rules": [
-        {
-            "filename": "iam-role-for-service.json",
-            "enabled": true,
-            "args": [
-                "EC2",
-                "ec2.amazonaws.com"
-            ]
-        },
-        {
-            "filename": "iam-role-for-service.json",
-            "enabled": true,
-            "args": [
-                "Lambda",
-                "lambda.amazonaws.com"
-            ]
-        },
-        {
-            "filename": "iam-role-for-aws-account.json",
-            "enabled": true,
-            "args": [
-                "same",
-                "isSameAccount"
-            ]
-        },
-        {
-            "filename": "iam-role-for-aws-account.json",
-            "enabled": true,
-            "args": [
-                "cross",
-                "isCrossAccount"
-            ]
-        }
-   ]
+    "rules": {
+        "iam-role-for-service.json": [
+            {
+                "args": [
+                    "EC2", 
+                    "ec2.amazonaws.com"
+                ], 
+                "enabled": true
+            }, 
+            {
+                "args": [
+                    "Lambda", 
+                    "lambda.amazonaws.com"
+                ], 
+                "enabled": true
+            }
+        ], 
+        "iam-role-for-aws-account.json": [
+            {
+                "args": [
+                    "same", 
+                    "isSameAccount"
+                ], 
+                "enabled": true
+            }, 
+            {
+                "args": [
+                    "cross", 
+                    "isCrossAccount"
+                ], 
+                "enabled": true
+            }
+        ]
+    }, 
+    "about": "Default set of filters for Scout2"
 }

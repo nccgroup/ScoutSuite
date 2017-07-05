@@ -323,10 +323,6 @@ Handlebars.registerHelper('other_level', function() {
     }
 });
 
-Handlebars.registerHelper('get_service', function() {
-    return getService(arguments[0]);
-});
-
 // http://funkjedi.com/technology/412-every-nth-item-in-handlebars, slightly tweaked to work with a dictionary
 Handlebars.registerHelper('grouped_each', function(every, context, options) {
     var out = "", subcontext = [], i;
@@ -359,3 +355,24 @@ Handlebars.registerHelper('escape_dots', function() {
     return arguments[0].replace(/\./g, '\\.');
 });
 
+
+/*********************/
+/* Ruleset generator */
+/*********************/
+
+Handlebars.registerHelper('get_rule', function(rule_filename, attribute) {
+    if (attribute == 'service') {
+        return rule_filename.split('-')[0];
+    } else {
+        rule = aws_info['rule_definitions'][rule_filename];
+        if (attribute == '') {
+            return rule;
+        } else {
+            return rule[attribute];
+        }
+    }
+});
+
+Handlebars.registerHelper('get_arg_name', function(rule_filename, arg_index) {
+    return aws_info['rule_definitions'][rule_filename]['arg_names'][arg_index];
+});

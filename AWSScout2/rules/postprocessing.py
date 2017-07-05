@@ -26,7 +26,7 @@ def update_last_run(aws_config, current_time, ruleset):
     last_run['cmd'] = ' '.join(sys.argv)
     last_run['version'] = scout2_version
     last_run['ruleset_name'] = ruleset.name
-    last_run['ruleset_about'] = ruleset.ruleset['about'] if 'about' in ruleset.ruleset else ''
+    last_run['ruleset_about'] = ruleset.about
     last_run['summary'] = {}
     for service in aws_config['services']:
         last_run['summary'][service] = {'checked_items': 0, 'flagged_items': 0, 'max_level': 'warning', 'rules_count': 0, 'resources_count': 0}

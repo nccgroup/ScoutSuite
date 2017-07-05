@@ -71,6 +71,11 @@ class RulesArgumentParser(SharedArgumentParser):
                                  dest='generator_dir',
                                  default=DEFAULT_REPORT_DIR,
                                  help='Path of the Scout2 rules generator.')
+        self.parser.add_argument('--no-browser',
+                                 dest='no_browser',
+                                 default=False,
+                                 action='store_true',
+                                 help='Do not automatically open the report in the browser.')
 
 
 

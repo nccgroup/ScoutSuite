@@ -13,6 +13,8 @@ from opinel.utils.fs import read_ip_ranges
 from opinel.utils.globals import manage_dictionary
 
 from AWSScout2.rules import condition_operators
+from AWSScout2.rules.rule_definition import RuleDefinition
+from AWSScout2.rules.rule import Rule
 from AWSScout2.rules.utils import recurse
 
 finding_levels = ['danger', 'warning']
@@ -37,43 +39,80 @@ DEFAULT_RULESET = '%s/default.json' % RULESETS_DIR
 class Ruleset(object):
     """
     TODO
+
+    :ivar rules:                        List of rules defined in the ruleset
+    :ivar rule_definitions:             Definition of all rules found
+    :ivar ??
     """
 
-    def __init__(self, environment_name = 'default', filename = None, name = None, services = [], load_ruleset = True, load_rules = True, rule_type = 'findings', rules_dir = None, ip_ranges = []):
+    def __init__(self, environment_name = 'default', filename = None, name = None, services = [], rule_type = 'findings', rules_dir = None, ip_ranges = [], ruleset_generator = False):
         self.rules_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
         self.environment_name = environment_name
+        self.rule_type = rule_type
         # Ruleset filename
         self.filename = self.find_file(filename)
         if not self.filename:
             self.search_ruleset(environment_name)
         self.name = os.path.basename(self.filename).replace('.json','') if not name else name
+
         # Load ruleset
-        self.ruleset = {}
-        if load_ruleset:
-            self.load_ruleset()
-        self.update_ruleset(rules_dir)
-        # Rules or filters ?
-        self.rule_type = rule_type
-        # Load rules
-        self.rules = {}
-        if load_rules:
-            aws_account_id = ''
-            self.init_rules(services, ip_ranges, aws_account_id, False)
+        self.load(self.rule_type)
+
+        # Load rule definitions
+        self.load_rule_definitions(ruleset_generator)
+
+        # Prepare the rules
+        if ruleset_generator:
+            self.prepare_rules(attributes =  ['description', 'key', 'rationale'])
+        else:
+            self.prepare_rules()
+
+        # This should be moved into its own call from Scout2....
+        #aws_account_id = ''
+        #self.init_rules(services, ip_ranges, aws_account_id, False)
 
 
-    def load_ruleset(self, quiet = False):
+    def load(self, rule_type, quiet = False):
+        """
+        Open a JSON file definiting a ruleset and load it into a Ruleset object
+
+        :param quiet:
+        :return:
+        """
         if self.filename and os.path.exists(self.filename):
             try:
                 with open(self.filename, 'rt') as f:
-                    self.ruleset = json.load(f)
+                    ruleset = json.load(f)
+                    self.about = ruleset['about']
+                    self.rules = {}
+                    for filename in ruleset['rules']:
+                        self.rules[filename] = []
+                        for rule in ruleset['rules'][filename]:
+                            self.rules[filename].append(Rule(filename, rule_type, rule['enabled'], rule['level'] if 'level' in rule else '', rule['args'] if 'args' in rule else []))
             except Exception as e:
                 printException(e)
                 printError('Error: ruleset file %s contains malformed JSON.' % self.filename)
-                self.ruleset = {}
+                self.rules = []
+                self.about = ''
         else:
-            self.ruleset = {}
+            self.rules = []
             if not quiet:
                 printError('Error: the file %s does not exist.' % self.filename)
+
+
+    def prepare_rules(self, attributes = []):
+        """
+        Update the ruleset's rules by duplicating fields as required by the HTML ruleset generator
+
+        :return:
+        """
+        for filename in self.rule_definitions:
+            if filename in self.rules:
+                for rule in self.rules[filename]:
+                    rule.set_definition(self.rule_definitions, attributes)
+
+        # TODO : this is missing handling of the ip ranges and AWS account ID
+
 
     def update_ruleset(self, rules_dir):
         if rules_dir == None:
@@ -113,7 +152,7 @@ class Ruleset(object):
                             if prule['filename'] == rule_filename:
                                 parameterized_rule_found = True
                                 for k in rule:
-                                    prule[k] = set_argument_values(rule[k], prule['args'],
+                                    prule[k] = self.set_argument_values(rule[k], prule['args'],
                                                                    convert=True) if k != 'conditions' else rule[k]
                                 key = prule.pop('key') if 'key' in prule else prule['filename']
                                 args = prule.pop('args')
@@ -146,6 +185,14 @@ class Ruleset(object):
 
 
     def html_generator(self, output_dir, metadata, force_write, debug):
+        """
+
+        :param output_dir:
+        :param metadata:
+        :param force_write:
+        :param debug:
+        :return:
+        """
         # Prepare the output directories
         prepare_html_output_dir(output_dir)
         # Create the JS include file
@@ -163,6 +210,33 @@ class Ruleset(object):
         return dst_html_generator
 
 
+    def load_rule_definitions(self, ruleset_generator = False, rule_dirs = []):
+        """
+        Load definition of rules declared in the ruleset
+
+        :param services:
+        :param ip_ranges:
+        :param aws_account_id:
+        :param generator:
+        :return:
+        """
+
+        # Load rules from JSON files
+        self.rule_definitions = {}
+        for rule_filename in self.rules:
+            for rule in self.rules[rule_filename]:
+                if not rule.enabled and not ruleset_generator:
+                    continue
+            self.rule_definitions[os.path.basename(rule_filename)] = RuleDefinition(rule_filename, rule_dirs = rule_dirs)
+        # In case of the ruleset generator, list all available built-in rules
+        if ruleset_generator:
+            rule_dirs.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data/findings'))
+            rule_filenames = []
+            for rule_dir in rule_dirs:
+                rule_filenames += [f for f in os.listdir(rule_dir) if os.path.isfile(os.path.join(rule_dir, f))]
+            for rule_filename in rule_filenames:
+                if rule_filename not in self.rule_definitions:
+                    self.rule_definitions[os.path.basename(rule_filename)] = RuleDefinition(rule_filename)
 
 
 
@@ -178,41 +252,6 @@ class Ruleset(object):
             self.filename = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data/rulesets/default.json')
 
 
-
-
-    #
-    # Initialize rules based on ruleset and services in scope
-    #
-    def init_rules(self, services, ip_ranges, aws_account_id, generator = False):
-        # Load rules from JSON files
-        for rule_metadata in self.ruleset['rules']:
-            # Skip disabled rules
-            if 'enabled' in rule_metadata and rule_metadata['enabled'] in ['false', 'False', False] and not generator:
-                continue
-            # Skip rules that apply to an out-of-scope service
-            rule_details = self.load_json_rule(rule_metadata, ip_ranges, aws_account_id)
-            if not rule_details:
-                continue
-            if 'enabled' in rule_metadata and rule_metadata['enabled']:
-                rule_details['enabled'] = True
-            skip_rule = True
-            for service in services:
-                if rule_details['path'].startswith(service):
-                    skip_rule = False
-#            if skip_rule:
-#                continues
-            #  Build the rules dictionary
-            path = rule_details['path']
-            if 'level' in rule_metadata:
-                rule_details['level'] = rule_metadata['level']
-            key = rule_details['key'] if 'key' in rule_details else rule_metadata['filename']
-            # Set condition operator
-            if not 'condition_operator' in rule_details:
-                rule_details['condition_operator'] = 'and'
-            # Save details for rule
-            key = key.replace('.json', '').replace(' ', '')
-            manage_dictionary(self.rules, path, {})
-            self.rules[path][key] = rule_details
 
 
 
@@ -274,43 +313,6 @@ class Ruleset(object):
         return config
 
 
-    def analyze(self, aws_config):
-        """
-
-        :param aws_config:
-        """
-        printInfo('Analyzing AWS config...')
-        # TODO: reset violations for all services in scope (maybe this can be done somewhere else (e.g. loading)
-        for finding_path in self.rules:
-            for rule in self.rules[finding_path]:
-                printDebug('Processing %s rule[%s]: "%s"' % (finding_path.split('.')[0], self.rule_type[:-1], self.rules[finding_path][rule]['description']))
-                path = finding_path.split('.')
-                service = path[0]
-                manage_dictionary(aws_config['services'][service], self.rule_type, {})
-                aws_config['services'][service][self.rule_type][rule] = {}
-                aws_config['services'][service][self.rule_type][rule]['description'] = self.rules[finding_path][rule]['description']
-                aws_config['services'][service][self.rule_type][rule]['path'] = self.rules[finding_path][rule]['path']
-                if self.rule_type == 'findings':
-                    aws_config['services'][service][self.rule_type][rule]['level'] = self.rules[finding_path][rule]['level']
-                if 'id_suffix' in self.rules[finding_path][rule]:
-                    aws_config['services'][service][self.rule_type][rule]['id_suffix'] = self.rules[finding_path][rule]['id_suffix']
-                if 'display_path' in self.rules[finding_path][rule]:
-                    aws_config['services'][service][self.rule_type][rule]['display_path'] = self.rules[finding_path][rule]['display_path']
-                try:
-                    aws_config['services'][service][self.rule_type][rule]['items'] = recurse(aws_config['services'], aws_config['services'], path, [], self.rules[finding_path][rule], True)
-                    aws_config['services'][service][self.rule_type][rule]['dashboard_name'] = self.rules[finding_path][rule]['dashboard_name'] if 'dashboard_name' in self.rules[finding_path][rule] else '??'
-                    aws_config['services'][service][self.rule_type][rule]['checked_items'] = self.rules[finding_path][rule]['checked_items'] if 'checked_items' in self.rules[finding_path][rule] else 0
-                    aws_config['services'][service][self.rule_type][rule]['flagged_items'] = len(aws_config['services'][service][self.rule_type][rule]['items'])
-                    aws_config['services'][service][self.rule_type][rule]['service'] = service
-                    aws_config['services'][service][self.rule_type][rule]['rationale'] = self.rules[finding_path][rule]['rationale'] if 'rationale' in self.rules[finding_path][rule] else 'N/A'
-                except Exception as e:
-                    printError('Failed to process rule defined in %s.json' % rule)
-                    # Fallback if process rule failed to ensure report creation and data dump still happen
-                    aws_config['services'][service][self.rule_type][rule]['checked_items'] = 0
-                    aws_config['services'][service][self.rule_type][rule]['flagged_items'] = 0
-                    printException(e)
-
-
     def find_file(self, filename, filetype = 'rulesets'):
         """
 
@@ -327,14 +329,4 @@ class Ruleset(object):
             if not os.path.isfile(filename) and not filename.endswith('.json'):
                 filename = self.find_file('%s.json' % filename, filetype)
         return filename
-
-
-def set_argument_values(parameterized_input, target, convert = False):
-    if convert:
-        parameterized_input = json.dumps(parameterized_input)
-    args = re.findall(r'(_ARG_([a-zA-Z0-9]+)_)', parameterized_input)
-    for arg in args:
-        index = int(arg[1])
-        parameterized_input = parameterized_input.replace(arg[0], target[index])
-    return json.loads(parameterized_input) if convert else parameterized_input
 
