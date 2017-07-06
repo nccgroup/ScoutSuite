@@ -5,35 +5,15 @@ from __future__ import unicode_literals
 import fnmatch
 import json
 import os
-import re
 import shutil
 
 from opinel.utils.console import printDebug, printError, printException, printInfo
-from opinel.utils.fs import read_ip_ranges
-from opinel.utils.globals import manage_dictionary
 
-from AWSScout2.rules import condition_operators
 from AWSScout2.rules.rule_definition import RuleDefinition
 from AWSScout2.rules.rule import Rule
-from AWSScout2.rules.utils import recurse
 
-finding_levels = ['danger', 'warning']
-
-# First search local under ./rules and ./rulesets
-# Then search from package files
-# Then error
-
-
-re_ip_ranges_from_file = re.compile(r'_IP_RANGES_FROM_FILE_\((.*?),\s*(.*?)\)')
-re_get_value_at = re.compile(r'_GET_VALUE_AT_\((.*?)\)')
-re_list_value = re.compile(r'_LIST_\((.*?)\)')
 aws_ip_ranges_filename = 'ip-ranges.json'
 ip_ranges_from_args = 'ip-ranges-from-args'
-
-FILTERS_DIR = 'filters'
-FINDINGS_DIR = 'findings'
-RULESETS_DIR = 'rulesets'
-DEFAULT_RULESET = '%s/default.json' % RULESETS_DIR
 
 
 class Ruleset(object):
@@ -65,11 +45,8 @@ class Ruleset(object):
         if ruleset_generator:
             self.prepare_rules(attributes =  ['description', 'key', 'rationale'])
         else:
-            self.prepare_rules()
-
-        # This should be moved into its own call from Scout2....
-        #aws_account_id = ''
-        #self.init_rules(services, ip_ranges, aws_account_id, False)
+            # aws_account_id = '' ... # TODO
+            self.prepare_rules(ip_ranges = ip_ranges, params = {})
 
 
     def load(self, rule_type, quiet = False):
@@ -100,7 +77,7 @@ class Ruleset(object):
                 printError('Error: the file %s does not exist.' % self.filename)
 
 
-    def prepare_rules(self, attributes = []):
+    def prepare_rules(self, attributes = [], ip_ranges = [], params = []):
         """
         Update the ruleset's rules by duplicating fields as required by the HTML ruleset generator
 
@@ -109,79 +86,7 @@ class Ruleset(object):
         for filename in self.rule_definitions:
             if filename in self.rules:
                 for rule in self.rules[filename]:
-                    rule.set_definition(self.rule_definitions, attributes)
-
-        # TODO : this is missing handling of the ip ranges and AWS account ID
-
-
-    def update_ruleset(self, rules_dir):
-        if rules_dir == None:
-            return
-        self.available_rules = {}
-        parameterized_rules = []
-        self.services = []
-        for rule in self.ruleset['rules']:
-            rule['filename'] = rule['filename'].replace('rules/', '')
-            if not 'args' in rule:
-                self.available_rules[rule['filename']] = rule
-            else:
-                parameterized_rules.append(rule)
-        # Add default location
-        rules_dir.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data/findings'))
-        for dir in rules_dir:
-            rule_filenames = [f for f in os.listdir(dir) if os.path.isfile(os.path.join(dir, f))]
-            for rule_filename in rule_filenames:
-                self.services.append(rule_filename.split('-')[0].lower())
-                printDebug('Loading %s' % rule_filename)
-                with open('%s/%s' % (dir, rule_filename), 'rt') as f:
-                    rule = json.load(f)
-                    if not 'key' in rule and not 'arg_names' in rule:
-                        # Non-parameterized rule, save it
-                        if rule_filename in self.available_rules:
-                            self.available_rules[rule_filename].update(rule)
-                        else:
-                            self.available_rules[rule_filename] = rule
-                            self.available_rules[rule_filename]['enabled'] = False
-                            if 'level' not in self.available_rules[rule_filename]:
-                                self.available_rules[rule_filename]['level'] = 'danger'
-                                self.available_rules[rule_filename]['filename'] = rule_filename
-                    else:
-                        # Parameterized rules, find all occurences and save N times
-                        parameterized_rule_found = False
-                        for prule in parameterized_rules:
-                            if prule['filename'] == rule_filename:
-                                parameterized_rule_found = True
-                                for k in rule:
-                                    prule[k] = self.set_argument_values(rule[k], prule['args'],
-                                                                   convert=True) if k != 'conditions' else rule[k]
-                                key = prule.pop('key') if 'key' in prule else prule['filename']
-                                args = prule.pop('args')
-                                if not 'arg_names' in prule:
-                                    printError('No arg names key in %s' % rule_filename)
-                                    continue
-                                arg_names = prule.pop('arg_names')
-                                if len(args) != len(arg_names):
-                                    printError('Error: rule %s expects %d arguments but was provided %d.' % (
-                                    rule_filename, len(arg_names), len(args)))
-                                    continue
-                                prule['args'] = []
-                                for (arg_name, arg_value) in zip(arg_names, args):
-                                    prule['args'].append({'arg_name': arg_name, 'arg_value': arg_value})
-                                if 'level' not in prule:
-                                    prule['level'] = 'danger'
-                                    self.available_rules[key] = prule
-                        if not parameterized_rule_found:
-                            # Save once with no parameters
-                            self.available_rules[rule_filename] = rule
-                            self.available_rules[rule_filename]['enabled'] = False
-                            if 'level' not in self.available_rules[rule_filename]:
-                                self.available_rules[rule_filename]['level'] = 'danger'
-                                self.available_rules[rule_filename]['filename'] = rule_filename
-                            args = []
-                            for a in rule['arg_names']:
-                                args.append({'arg_name': a, 'arg_value': ''})
-                                self.available_rules[rule_filename]['args'] = args
-                            printDebug('Saving rule without parameter value: %s' % rule_filename)
+                    rule.set_definition(self.rule_definitions, attributes, ip_ranges, params)
 
 
     def html_generator(self, output_dir, metadata, force_write, debug):
@@ -239,8 +144,12 @@ class Ruleset(object):
                     self.rule_definitions[os.path.basename(rule_filename)] = RuleDefinition(rule_filename)
 
 
-
     def search_ruleset(self, environment_name):
+        """
+
+        :param environment_name:
+        :return:
+        """
         ruleset_found = False
         if environment_name != 'default':
             for f in os.listdir(os.getcwd()):
@@ -251,66 +160,6 @@ class Ruleset(object):
         if not ruleset_found:
             self.filename = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data/rulesets/default.json')
 
-
-
-
-
-    #
-    # Load rule from a JSON config file
-    #
-    def load_json_rule(self, rule_metadata, ip_ranges, aws_account_id):
-        config = None
-        config_file = rule_metadata['filename']
-        config_args = rule_metadata['args'] if 'args' in rule_metadata else []
-        # Determine the file path
-        if not os.path.isfile(config_file):
-            # Not a valid relative / absolute path, check locally under findings/ or filters/
-            if not config_file.startswith('findings/') and not config_file.startswith('filters/'):
-                config_file = '%s/%s' % (self.rule_type, config_file)
-            if not os.path.isfile(config_file):
-                config_file = os.path.join(self.rules_data_path, config_file)
-        # Read the file
-        try:
-            #print('Reading %s' % config_file)
-            with open(config_file, 'rt') as f:
-                config = f.read()
-            # Replace arguments
-            for idx, argument in enumerate(config_args):
-                config = config.replace('_ARG_'+str(idx)+'_', str(argument).strip())
-            config = json.loads(config)
-            config['filename'] = rule_metadata['filename']
-            if 'args' in rule_metadata:
-                config['args'] = rule_metadata['args']
-            # Load lists from files
-            for c1 in config['conditions']:
-                if c1 in condition_operators:
-                    continue
-                if not type(c1[2]) == list and not type(c1[2]) == dict:
-                    values = re_ip_ranges_from_file.match(c1[2])
-                    if values:
-                        filename = values.groups()[0]
-                        conditions = json.loads(values.groups()[1])
-                        if filename == aws_ip_ranges_filename:
-                             c1[2] = read_ip_ranges(aws_ip_ranges_filename, False, conditions, True)
-                        elif filename == ip_ranges_from_args:
-                            c1[2] = []
-                            for ip_range in ip_ranges:
-                                c1[2] = c1[2] + read_ip_ranges(ip_range, True, conditions, True)
-                    if c1[2] and aws_account_id:
-                        if not type(c1[2]) == list:
-                            c1[2] = c1[2].replace('_AWS_ACCOUNT_ID_', aws_account_id)
-    
-                    # Set lists
-                    list_value = re_list_value.match(str(c1[2]))
-                    if list_value:
-                        values = []
-                        for v in list_value.groups()[0].split(','):
-                            values.append(v.strip())
-                        c1[2] = values
-        except Exception as e:
-            printException(e)
-            printError('Error: failed to read the rule from %s' % config_file)
-        return config
 
 
     def find_file(self, filename, filetype = 'rulesets'):
