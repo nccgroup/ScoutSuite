@@ -142,7 +142,7 @@ class Scout2ArgumentParser(SharedArgumentParser):
                                 dest='fetch_local',
                                 default=False,
                                 action='store_true',
-                                help='Use local data previously fetched and re-run the analyzis.')
+                                help='Use local data previously fetched and re-run the analysis.')
         self.parser.add_argument('--resume',
                                 dest='resume',
                                 default=False,
