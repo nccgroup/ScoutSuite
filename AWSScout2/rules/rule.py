@@ -72,7 +72,7 @@ class Rule(object):
                         condition[2] = read_ip_ranges(filename, local_file = local_file, ip_only = True)
                     break
                 else:
-                    condition[2] = params[testcase]['name']
+                    condition[2] = testcase['regex']
                     break
 
         if len(attributes) == 0:
