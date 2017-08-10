@@ -256,7 +256,7 @@
         ],
         "s3-bucket-website-enabled.json": [
             {
-                "enabled": true,
+                "enabled": false,
                 "level": "warning"
             }
         ],

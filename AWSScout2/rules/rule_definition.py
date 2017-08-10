@@ -45,8 +45,9 @@ class RuleDefinition(object):
         if not file_name_valid:
             for rule_type in self.rule_types:
                 if self.file_name.startswith(rule_type):
-                    self.file_path = os.path.join(self.rules_data_path, self.file_path)
+                    self.file_path = os.path.join(self.rules_data_path, self.file_name)
                     rule_type_valid = True
+                    file_name_valid = True
                     break
             if not rule_type_valid:
                 for rule_type in self.rule_types:

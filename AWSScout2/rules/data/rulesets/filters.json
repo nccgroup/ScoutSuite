@@ -31,6 +31,11 @@
                 ], 
                 "enabled": true
             }
+        ],
+        "s3-bucket-website-enabled.json": [
+            {
+                "enabled": true
+            }
         ]
     }, 
     "about": "Default set of filters for Scout2"
