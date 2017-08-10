@@ -12,6 +12,7 @@ install: "pip install -r requirements.txt"
 
 # command to run tests
 script:
+
 #  - 'nosetests tests/test-listall.py'
 #  - 'nosetests tests/test-rulesgenerator.py'
 #  - 'nosetests tests/test-utils.py'
