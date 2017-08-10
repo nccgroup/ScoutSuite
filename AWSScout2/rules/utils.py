@@ -7,7 +7,7 @@ import copy
 import re
 
 from opinel.utils.conditions import pass_condition
-from opinel.utils.console import printError
+from opinel.utils.console import printError, printException
 from opinel.utils.globals import manage_dictionary
 
 from AWSScout2.rules import condition_operators
@@ -81,13 +81,14 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
     return results
 
 
-def pass_conditions(all_info, current_path, conditions):
+def pass_conditions(all_info, current_path, conditions, unknown_as_pass_condition = False):
     """
     Pass all conditions?
 
     :param all_info:
     :param current_path:
     :param conditions:
+    :param unknown_as_pass_condition:   Consider an undetermined condition as passed
     :return:
     """
     result = False
@@ -96,7 +97,7 @@ def pass_conditions(all_info, current_path, conditions):
     condition_operator = conditions.pop(0)
     for condition in conditions:
       if condition[0] in condition_operators:
-        res = pass_conditions(all_info, current_path, condition)
+        res = pass_conditions(all_info, current_path, condition, unknown_as_pass_condition)
       else:
         # Conditions are formed as "path to value", "type of test", "value(s) for test"
         path_to_value, test_name, test_values = condition
@@ -106,7 +107,12 @@ def pass_conditions(all_info, current_path, conditions):
             dynamic_value = re_get_value_at.match(test_values)
             if dynamic_value:
                 test_values = get_value_at(all_info, current_path, dynamic_value.groups()[0], True)
-        res = pass_condition(target_obj, test_name, test_values)
+        try:
+            res = pass_condition(target_obj, test_name, test_values)
+        except Exception as e:
+            res = True if unknown_as_pass_condition else False
+            printError('Unable to process testcase \'%s\' on value \'%s\', interpreted as %s.' % (test_name, str(target_obj), res))
+            printException(e, True)
       # Quick exit and + false
       if condition_operator == 'and' and not res:
           return False
