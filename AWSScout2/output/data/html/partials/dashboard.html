@@ -9,7 +9,7 @@
                     {{#each this}}
                       <div class="col-sm-4">
                         <div class="list-group-item finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
-                          <a href="#services.{{service}}.findings.{{@key}}.items">
+                          <a href="#services.{{../../service_name}}.findings.{{@key}}.items">
                             {{description}}
                           </a>
                           <i class="glyphicon glyphicon-info-sign pull-right" onmouseover="javascript:$('#{{@key}}\\.rationale').show()" onmouseleave="javascript:$('#{{@key}}\\.rationale').hide()"></i>
