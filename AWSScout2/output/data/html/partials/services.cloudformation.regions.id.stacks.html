@@ -12,7 +12,14 @@
             <h4 class="list-group-item-heading">Information</h4>
             <div class="list-group-item-text item-margin">Region: {{region}}</div>
             <div class="list-group-item-text item-margin">Created on: {{CreationTime}}</div>
-            <div class="list-group-item-text item-margin">Role: <a href="javascript:showObject('services.iam.roles.{{iam_role.id}}')">{{iam_role.name}}</a></div>
+            <div class="list-group-item-text item-margin" id="">Role:
+                {{#if iam_role}}
+                    <a href="javascript:showObject('services.iam.roles.{{iam_role.id}}')">{{iam_role.name}}</a>
+                    <span id="cloudformation.regions.{{region}}.stacks.{{name}}"><i class="glyphicon glyphicon-warning-sign"></i></span>
+                {{else}}
+                    None
+                {{/if}}
+            </div>
         </div>
         <div class="list-group-item">
             <h4 class="list-group-item-heading">Capabilities <span class="badge pull-right">{{#if Capabilities}}{{Capabilities.length}}{{else}}0{{/if}}</span></h4>
