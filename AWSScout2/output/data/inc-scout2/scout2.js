@@ -3,6 +3,14 @@
 var loaded_config_array = new Array();
 
 //
+// Display the account ID -- use of the generic function + templates result in the div not being at the top of the page
+//
+var load_aws_account_id = function() {
+    var element = document.getElementById('aws_account_id');
+    element.textContent = aws_info['aws_account_id'];
+}
+
+//
 // Generic load JSON function
 //
 function load_aws_config_from_json(script_id, cols) {
@@ -83,6 +91,10 @@ function process_template(id1, container_id, list) {
 function hideAll() {
     $("[id*='.list']").not("[id*='metadata.list']").not("[id*='filters.list']").hide();
     $("[id*='.details']").hide();
+    var element = document.getElementById('scout2_display_account_id_on_all_pages');
+    if ((element != undefined) && (element.checked == true)) {
+        showRow('aws_account_id');
+    }
 }
 
 
@@ -390,7 +402,7 @@ function hidePopup() {
 // Set up dashboards and dropdown menus
 //
 function load_metadata() {
-    load_aws_config_from_json('aws_account_id', 1);
+    load_aws_account_id();
     load_aws_config_from_json('last_run', 1);
     load_aws_config_from_json('metadata', 0);
     load_aws_config_from_json('services.id.findings', 1);
@@ -748,3 +760,20 @@ var generate_ruleset = function() {
     //newWindow = window.open(uriContent, 'custom-ruleset.json');
 }
 
+
+var show_element = function(element_id) {
+//    document.getElementById(element_id).style.display = 'block';
+    $('#' + element_id).show();
+}
+
+var hide_element = function(element_id) {
+//    var id = '#' + element_id;
+    $('#' + element_id).hide();
+//    document.getElementById(element_id).style.display = 'none';
+}
+
+var toggle_element = function(element_id) {
+//    var id = '#' + element_id;
+//    $(id).toggle();
+    $('#' + element_id).toggle();
+}

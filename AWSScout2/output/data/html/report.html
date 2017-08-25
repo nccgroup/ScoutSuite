@@ -55,6 +55,18 @@
       <div id="overlay-background" class="overlay-bg"></div>
       <div id="overlay-details" class="overlay col-sm-6"></div>
 
+      <!-- AWS account ID -->
+      <div class="row" id="aws_account_id.details" style="margin-bottom: -10px">
+          <h4>
+              <div class="list-group-item-text center" style="text-align: center" onclick="javascript:toggle_element('scout2_display_account_id_on_all_pages_form')" >
+                  Account ID: <span id="aws_account_id"></span>
+              </div>
+              <div id="scout2_display_account_id_on_all_pages_form" class="list-group-item-text center" style="text-align: center; display: none">
+                  <label><input id="scout2_display_account_id_on_all_pages" type="checkbox" value="">Display account ID on all pages</label>
+              </div>
+          </h4>
+      </div>
+
       <!-- Title section -->
       <div id="section_title-div">
           <h2 id="section_title-h2"></h2>
@@ -110,15 +122,6 @@
           </div>
         </div>
       </div>
-
-      <!-- AWS account ID -->
-      <script id="aws_account_id.details.template" type="text/x-handlebars-template">
-          <h4>
-              <div class="row" id="aws_account_id.details">
-                  <div style="margin-bottom: 15px"><center>Account ID:  <span>{{items}}<span></center></div>
-              </div>
-          </h4>
-      </script>
 
       <!-- About-run dashboard -->
       <script id="last_run.details.template" type="text/x-handlebars-template">
