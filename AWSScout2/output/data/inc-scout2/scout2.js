@@ -390,6 +390,7 @@ function hidePopup() {
 // Set up dashboards and dropdown menus
 //
 function load_metadata() {
+    load_aws_config_from_json('aws_account_id', 1);
     load_aws_config_from_json('last_run', 1);
     load_aws_config_from_json('metadata', 0);
     load_aws_config_from_json('services.id.findings', 1);
@@ -428,6 +429,7 @@ function about() {
 //
 function show_main_dashboard() {
     hideAll();
+    showRowWithItems('aws_account_id');
     showRowWithItems('last_run');
     $('#section_title-h2').text('');
 }
