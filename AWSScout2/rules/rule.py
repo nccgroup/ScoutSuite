@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import os
 import re
 
 from opinel.utils.fs import read_ip_ranges
@@ -48,6 +49,24 @@ class Rule(object):
         :return:
         """
         string_definition = rule_definitions[self.filename].string_definition
+        # Load condition dependencies
+        definition = json.loads(string_definition)
+        loaded_conditions = []
+        for condition in definition['conditions']:
+            if condition[0].startswith('_INCLUDE_('):
+                include = re.findall(r'_INCLUDE_\((.*?)\)', condition[0])[0]
+                #new_conditions = load_data(include, key_name = 'conditions')
+                with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data/%s' % include), 'rt') as f:
+                    new_conditions = f.read()
+                    for (i, value) in enumerate(condition[1]):
+                        new_conditions = re.sub(condition[1][i], condition[2][i], new_conditions)
+                    new_conditions = json.loads(new_conditions)['conditions']
+                loaded_conditions.append(new_conditions)
+            else:
+                loaded_conditions.append(condition)
+        definition['conditions'] = loaded_conditions
+        string_definition = json.dumps(definition)
+        # Set parameters
         parameters = re.findall(r'(_ARG_([a-zA-Z0-9]+)_)', string_definition)
         for param in parameters:
             index = int(param[1])

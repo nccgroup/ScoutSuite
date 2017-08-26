@@ -1,0 +1,16 @@
+{
+    "conditions": [ "or",
+        [ "_STATEMENT_.", "withoutKey", "Condition" ],
+        [ "and",
+            [ "_STATEMENT_.Condition.", "withoutKey", "ArnEquals" ],
+            [ "or",
+                [ "_STATEMENT_.Condition.", "withoutKey", "StringEquals" ],
+                [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "aws:SourceOwner" ],
+                [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "aws:SourceArn" ]
+            ],
+            [ "or",
+                [ "_STATEMENT_.Condition.", "withoutKey", "ArnLike" ]
+            ]
+        ]
+    ]
+}

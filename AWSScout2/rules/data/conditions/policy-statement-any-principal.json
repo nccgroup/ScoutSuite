@@ -1,0 +1,9 @@
+{
+    "conditions": [ "or",
+        [ "_STATEMENT_.Principal", "containAtLeastOneOf", "*" ],
+        [ "and",
+            [ "_STATEMENT_.Principal", "withKey", "AWS" ],
+            [ "_STATEMENT_.Principal.AWS", "containAtLeastOneOf", "*" ]
+        ]
+    ]
+}

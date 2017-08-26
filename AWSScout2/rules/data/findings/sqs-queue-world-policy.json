@@ -9,12 +9,7 @@
         [ "sqs.regions.id.queues.id.Policy", "notNull", ""],
         [ "sqs.regions.id.queues.id.Policy.Statement.id.Effect", "equal", "Allow" ],
         [ "sqs.regions.id.queues.id.Policy.Statement.id.", "containAction", "sqs:_ARG_0_" ],
-        [ "or",
-            [ "sqs.regions.id.queues.id.Policy.Statement.id.Principal", "containAtLeastOneOf", "*" ],
-            [ "and",
-                [ "sqs.regions.id.queues.id.Policy.Statement.id.Principal", "withKey", "AWS" ],
-                [ "sqs.regions.id.queues.id.Policy.Statement.id.Principal.AWS", "containAtLeastOneOf", "*" ]
-            ]
-        ]
+        [ "_INCLUDE_(conditions/policy-statement-any-principal.json)", [ "_STATEMENT_" ], [ "sqs.regions.id.queues.id.Policy.Statement.id" ] ],
+        [ "_INCLUDE_(conditions/policy-statement-poor-condition.json)", [ "_STATEMENT_" ], [ "sqs.regions.id.queues.id.Policy.Statement.id" ] ]
     ]
 }
