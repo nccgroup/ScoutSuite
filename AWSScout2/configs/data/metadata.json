@@ -116,10 +116,6 @@
     "compute": {
         "ec2": {
             "resources": {
-                "elbs": {
-                    "cols": 2,
-                    "path": "services.ec2.regions.id.vpcs.id.elbs"
-                },
                 "instances": {
                     "cols": 2,
                     "path": "services.ec2.regions.id.vpcs.id.instances"
@@ -141,6 +137,14 @@
                 "external attack surface": {
                     "cols": 1,
                     "path": "services.ec2.attack_surface"
+                }
+            }
+        },
+        "elb": {
+            "resources": {
+                "elbs": {
+                    "cols": 2,
+                    "path": "services.elb.regions.id.vpcs.id.elbs"
                 }
             }
         }

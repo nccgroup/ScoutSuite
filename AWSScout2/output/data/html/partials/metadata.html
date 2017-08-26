@@ -64,7 +64,7 @@
                     <li class="dropdown-header">{{make_title @key}} config</li>
                     {{#each resources}}
                       {{#if risks}}
-                        <li class="dropdown-submenu"><a href="#{{full_path}}">{{make_title @key}} ({{count}})</a>
+                        <li class="dropdown-submenu"><a href="#{{path}}">{{make_title @key}} ({{count}})</a>
                           <ul class="dropdown-menu">
                             <li class="dropdown-header">Security risks</li>
                             {{#each risks}}
@@ -73,7 +73,7 @@
                           </ul>
                         </li>
                       {{else}}
-                        <li><a href="#{{full_path}}">{{make_title @key}} ({{count}})</a></li>
+                        <li><a href="#{{path}}">{{make_title @key}} ({{count}})</a></li>
                       {{/if}}
                     {{/each}}
                   </ul>

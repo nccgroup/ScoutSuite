@@ -21,7 +21,7 @@ def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     map_all_subnets(aws_config)
     set_emr_vpc_ids(aws_config)
     sort_vpc_flow_logs(aws_config['services']['vpc'])
-    sort_elbs(aws_config)
+    parse_elb_policies(aws_config)
     list_ec2_network_attack_surface(aws_config['services']['ec2'])
     add_security_group_name_to_ec2_grants(aws_config['services']['ec2'], aws_config['aws_account_id'])
     process_cloudtrail_trails(aws_config['services']['cloudtrail'])
@@ -443,25 +443,44 @@ def set_emr_vpc_ids_callback(aws_config, current_config, path, current_path, vpc
         callback_args['clear_list'].append(region)
 
 
-def sort_elbs(aws_config):
+def parse_elb_policies(aws_config):
     """
-    ELB and ELBv2 are different services, but for consistency w/ the console move them to the EC2 config
+    TODO
 
     :param aws_config:
     :return:
     """
     if 'elb' in aws_config['services']:
-        go_to_and_do(aws_config, aws_config['services']['elb'], ['regions', 'vpcs', 'elbs'], [], sort_elbs_callback, {})
-        aws_config['services'].pop('elb')
-    if 'elbv2' in aws_config['services']:
-        go_to_and_do(aws_config, aws_config['services']['elbv2'], ['regions', 'vpcs', 'elbs'], [], sort_elbs_callback, {})
-        aws_config['services'].pop('elbv2')
+        go_to_and_do(aws_config, aws_config['services']['elb'], ['regions'], [], parse_elb_policies_callback, {})
+
+    #if 'elbv2' in aws_config['services']:
+        # Do something too here...
 
 
-def sort_elbs_callback(aws_config, current_config, path, current_path, elb_id, callback_args):
-    vpc_config = get_object_at(aws_config, ['services', 'ec2'] + current_path[:-1])
-    manage_dictionary(vpc_config, 'elbs', {})
-    vpc_config['elbs'][elb_id] = current_config
+def parse_elb_policies_callback(aws_config, current_config, path, current_path, region_id, callback_args):
+    region_config = get_object_at(aws_config, [ 'services', 'elb', ] + current_path + [ region_id ])
+    region_config['elb_policies'] = current_config['elb_policies']
+    for policy_id in region_config['elb_policies']:
+        if region_config['elb_policies'][policy_id]['PolicyTypeName'] != 'SSLNegotiationPolicyType':
+            continue
+        # protocols, options, ciphers
+        policy = region_config['elb_policies'][policy_id]
+        protocols = {}
+        options = {}
+        ciphers = {}
+        for attribute in policy['PolicyAttributeDescriptions']:
+            if attribute['AttributeName'] in [ 'Protocol-SSLv3', 'Protocol-TLSv1', 'Protocol-TLSv1.1', 'Protocol-TLSv1.2' ]:
+                protocols[attribute['AttributeName']] = attribute['AttributeValue']
+            elif attribute['AttributeName'] in [ 'Server-Defined-Cipher-Order' ]:
+                options[attribute['AttributeName']] = attribute['AttributeValue']
+            elif attribute['AttributeName'] == 'Reference-Security-Policy':
+                policy['reference_security_policy'] = attribute['AttributeValue']
+            else:
+                ciphers[attribute['AttributeName']] = attribute['AttributeValue']
+            policy['protocols'] = protocols
+            policy['options'] = options
+            policy['ciphers'] = ciphers
+            # TODO: pop ?
 
 
 def sort_vpc_flow_logs(vpc_config):
