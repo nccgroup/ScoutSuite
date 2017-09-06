@@ -81,9 +81,6 @@ class ELBConfig(RegionalServiceConfig):
     )
     region_config_class = ELBRegionConfig
 
-    def finalize(self):
-        pass
-
 
 
 ########################################

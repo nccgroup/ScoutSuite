@@ -314,6 +314,8 @@ def match_security_groups_and_resources(aws_config):
     # ELBs
     callback_args = {'status_path': ['Scheme'], 'sg_list_attribute_name': ['security_groups'], 'sg_id_attribute_name': 'GroupId'}
     go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'elbs'], ['services', 'ec2'], match_security_groups_and_resources_callback, callback_args)
+    callback_args = {'status_path': ['State', 'Code'], 'sg_list_attribute_name': ['security_groups'], 'sg_id_attribute_name': 'GroupId'}
+    go_to_and_do(aws_config, aws_config['services']['elbv2'], ['regions', 'vpcs', 'lbs'], ['services', 'elbv2'], match_security_groups_and_resources_callback, callback_args)
     # Redshift clusters
     callback_args = {'status_path': ['ClusterStatus'], 'sg_list_attribute_name': ['VpcSecurityGroups'], 'sg_id_attribute_name': 'VpcSecurityGroupId'}
     go_to_and_do(aws_config, aws_config['services']['redshift'], ['regions', 'vpcs', 'clusters'], ['services', 'redshift'], match_security_groups_and_resources_callback, callback_args)
@@ -328,6 +330,9 @@ def match_security_groups_and_resources(aws_config):
     go_to_and_do(aws_config, aws_config['services']['emr'], ['regions', 'vpcs', 'clusters'], ['services', 'emr'], match_security_groups_and_resources_callback, callback_args)
     callback_args = {'status_path': ['Status', 'State'], 'sg_list_attribute_name': ['Ec2InstanceAttributes', 'EmrManagedSlaveSecurityGroup'], 'sg_id_attribute_name': ''}
     go_to_and_do(aws_config, aws_config['services']['emr'], ['regions', 'vpcs', 'clusters'], ['services', 'emr'], match_security_groups_and_resources_callback, callback_args)
+
+
+
 
 def match_security_groups_and_resources_callback(aws_config, current_config, path, current_path, resource_id, callback_args):
     service = current_path[1]

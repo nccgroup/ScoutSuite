@@ -3,9 +3,10 @@
 ELBv2-related classes and functions
 """
 
+from opinel.utils.aws import handle_truncated_response
 from opinel.utils.globals import manage_dictionary
 
-from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig
+from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 from AWSScout2.utils import ec2_classic, get_keys
 
 
@@ -25,33 +26,36 @@ class ELBv2RegionConfig(RegionConfig):
         self.vpcs = {}
 
 
-    def parse_elb(self, global_params, region, lb):
+    def parse_lb(self, global_params, region, lb):
         """
 
         :param global_params:
         :param region:
-        :param elb:
+        :param source:
         :return:
         """
-        elb = {}
-        elb['name'] = lb.pop('LoadBalancerName')
-        vpc_id = lb['VPCId'] if 'VPCId' in lb and lb['VPCId'] else ec2_classic
+        lb['arn'] = lb.pop('LoadBalancerArn')
+        lb['name'] = lb.pop('LoadBalancerName')
+        vpc_id = lb.pop('VpcId') if 'VpcId' in lb and lb['VpcId'] else ec2_classic
         manage_dictionary(self.vpcs, vpc_id, ELBv2VPCConfig())
-        get_keys(lb, elb, ['DNSName', 'CreatedTime', 'AvailabilityZones', 'Subnets', 'Policies', 'Scheme'])
-        elb['security_groups'] = []
+        lb['security_groups'] = []
         for sg in lb['SecurityGroups']:
-            elb['security_groups'].append({'GroupId': sg})
-        #manage_dictionary(elb, 'listeners', {})
-        #for l in lb['ListenerDescriptions']:
-        #    listener = l['Listener']
-        #    manage_dictionary(listener, 'policies', {})
-        #    for policy_name in l['PolicyNames']:
-        #        manage_dictionary(listener['policies'], policy_name, {})
-        #    elb['listeners'][l['Listener']['LoadBalancerPort']] = listener
-        #manage_dictionary(elb, 'instances', [])
-        #for i in lb['Instances']:
-        #    elb['instances'].append(i['InstanceId'])
-        self.vpcs[vpc_id].elbs[self.get_non_aws_id(elb['name'])] = elb
+            lb['security_groups'].append({'GroupId': sg})
+        lb.pop('SecurityGroups')
+        lb['listeners'] = {}
+        # Get listeners
+        listeners = handle_truncated_response(api_clients[region].describe_listeners, {'LoadBalancerArn': lb['arn']}, ['Listeners'])['Listeners']
+        for listener in listeners:
+            listener.pop('ListenerArn')
+            listener.pop('LoadBalancerArn')
+            port = listener.pop('Port')
+            lb['listeners'][port] = listener
+        # Get attributes
+        lb['attributes'] = api_clients[region].describe_load_balancer_attributes(LoadBalancerArn = lb['arn'])['Attributes']
+        # TOD: describe_ssl_policies
+
+
+        self.vpcs[vpc_id].lbs[self.get_non_aws_id(lb['name'])] = lb
 
 
 
@@ -67,12 +71,9 @@ class ELBv2Config(RegionalServiceConfig):
     :cvar config_class:                 Class to be used when initiating the service's configuration in a new region/VPC
     """
     targets = (
-        ('elbs', 'LoadBalancers', 'describe_load_balancers', {}, False),
+        ('lbs', 'LoadBalancers', 'describe_load_balancers', {}, False),
     )
     region_config_class = ELBv2RegionConfig
-
-    def finalize(self):
-        pass
 
 
 
@@ -90,5 +91,4 @@ class ELBv2VPCConfig(object):
 
     def __init__(self, name = None):
         self.name = name
-        self.elbs = {}
-
+        self.lbs = {}

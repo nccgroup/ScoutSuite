@@ -1,0 +1,11 @@
+{
+    "description": "Lack of deletion protection",
+    "rationale": "Enabling deletion protection on load balancers mitigates risks of accidental deletion.",
+    "path": "elbv2.regions.id.vpcs.id.lbs.id.attributes.id",
+    "dashboard_name": "Load Balancer Attributes",
+    "display_path": "elbv2.regions.id.vpcs.id.lbs.id",
+    "conditions": [ "and",
+        [ "Key", "equal", "deletion_protection.enabled" ],
+        [ "Value", "equal", "false"]
+    ]
+}

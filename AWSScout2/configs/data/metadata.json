@@ -147,6 +147,14 @@
                     "path": "services.elb.regions.id.vpcs.id.elbs"
                 }
             }
+        },
+        "elbv2": {
+            "resources": {
+                "lbs": {
+                    "cols": 2,
+                    "path": "services.elbv2.regions.id.vpcs.id.lbs"
+                }
+            }
         }
     },
     "security": {

@@ -1,0 +1,11 @@
+{
+    "description": "Lack of access logs",
+    "rationale": "Access logs enable traffic analysis and identification of security issues.",
+    "path": "elbv2.regions.id.vpcs.id.lbs.id.attributes.id",
+    "dashboard_name": "Load Balancer Attributes",
+    "display_path": "elbv2.regions.id.vpcs.id.lbs.id",
+    "conditions": [ "and",
+        [ "Key", "equal", "access_logs.s3.enabled" ],
+        [ "Value", "equal", "false"]
+    ]
+}
