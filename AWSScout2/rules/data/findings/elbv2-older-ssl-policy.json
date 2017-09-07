@@ -1,0 +1,10 @@
+{
+    "description": "Older SSL/TLS policy",
+    "rationale": "Use of AWS latest TLS policy is best practice.",
+    "path": "elbv2.regions.id.vpcs.id.lbs.id.listeners.id.SslPolicy",
+    "dashboard_name": "Load Balancer Listeners",
+    "display_path": "elbv2.regions.id.vpcs.id.lbs.id",
+    "conditions": [ "and",
+        [ "this", "containNoneOf", [ "ELBSecurityPolicy-2016-08", "ELBSecurityPolicy-TLS-1-2-2017-01", "ELBSecurityPolicy-TLS-1-1-2017-01" ] ]
+    ]
+}
