@@ -8,6 +8,7 @@ from AWSScout2.services.cloudtrail import CloudTrailConfig
 from AWSScout2.services.cloudwatch import CloudWatchConfig
 from AWSScout2.services.directconnect import DirectConnectConfig
 from AWSScout2.services.ec2 import EC2Config
+from AWSScout2.services.efs import EFSConfig
 from AWSScout2.services.elasticache import ElastiCacheConfig
 from AWSScout2.services.elb import ELBConfig
 from AWSScout2.services.elbv2 import ELBv2Config
@@ -39,12 +40,14 @@ class ServicesConfig(object):
     :ivar sqs:                          SQS configuration
     """
 
-    def __init__(self):
+    def __init__(self, metadata):
+
         self.cloudformation = CloudFormationConfig()
         self.cloudtrail = CloudTrailConfig()
         self.cloudwatch = CloudWatchConfig()
         self.directconnect = DirectConnectConfig()
         self.ec2 = EC2Config()
+        self.efs = EFSConfig(service_metadata = metadata['storage']['efs'])
         self.elasticache = ElastiCacheConfig()
         self.elb = ELBConfig()
         self.elbv2 = ELBv2Config()

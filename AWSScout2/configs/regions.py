@@ -45,9 +45,14 @@ class RegionalServiceConfig(object):
     :ivar service:                      Name of the service
     """
 
-    def __init__(self):
+    def __init__(self, service_metadata = {}):
         self.regions = {}
         self.service = type(self).__name__.replace('Config', '').lower() # TODO: use regex with EOS instead of plain replace
+        if service_metadata != {}:
+            self.targets = ()
+            for resource in service_metadata['resources']:
+                resource_metadata = service_metadata['resources'][resource]
+                self.targets += ((resource, resource_metadata['response'], resource_metadata['api_call'], {}, False),)
 
     def init_region_config(self, region):
         """
@@ -71,7 +76,10 @@ class RegionalServiceConfig(object):
         """
         # Initialize targets
         if not targets:
-            targets = type(self).targets
+            try:
+                targets = type(self).targets # TODO: remove this case eventually
+            except:
+                targets = self.targets
         # Tweak params
         realtargets = ()
         for i, target in enumerate(targets):
@@ -178,8 +186,12 @@ class RegionConfig(GlobalConfig):
     Base class for ...
     """
 
-    def __init__(self, region_name):
+    def __init__(self, region_name, resource_types = []):
         self.region = region_name
+        for resource_type in resource_types:
+            setattr(self, resource_type, {})
+            setattr(self, '%s_count' % resource_type, 0)
+
 
     def fetch_all(self, api_client, fetchstatuslogger, q, targets):
         self.fetchstatuslogger = fetchstatuslogger

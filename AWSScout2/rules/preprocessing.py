@@ -311,6 +311,9 @@ def match_security_groups_and_resources(aws_config):
     # EC2 instances
     callback_args = {'status_path': [ '..', '..', 'State', 'Name' ], 'resource_id_path': ['..'], 'sg_list_attribute_name': ['Groups'], 'sg_id_attribute_name': 'GroupId'}
     go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'instances', 'network_interfaces'], ['services', 'ec2'], match_security_groups_and_resources_callback, callback_args)
+    # EFS
+    callback_args = {'status_path': ['LifeCycleState'], 'sg_list_attribute_name': ['security_groups']}
+    go_to_and_do(aws_config, aws_config['services']['efs'], ['regions', 'file_systems', 'mount_targets'], ['services', 'efs'], match_security_groups_and_resources_callback, callback_args)
     # ELBs
     callback_args = {'status_path': ['Scheme'], 'sg_list_attribute_name': ['security_groups'], 'sg_id_attribute_name': 'GroupId'}
     go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'elbs'], ['services', 'ec2'], match_security_groups_and_resources_callback, callback_args)
@@ -346,18 +349,12 @@ def match_security_groups_and_resources_callback(aws_config, current_config, pat
         resource_path = combine_paths(copy.deepcopy(current_path), callback_args['resource_id_path'])
         resource_id = resource_path[-1]
         resource_type = resource_path[-2]
-    #print('Resource path: %s' % resource_path)
-    #print('Resource type: %s' % resource_type)
-    #print('Resource id: %s' % resource_id)
     if 'status_path' in callback_args:
         status_path = combine_paths(copy.deepcopy(original_resource_path), callback_args['status_path'])
-        #print('Status path: %s' % status_path)
         resource_status = get_object_at(aws_config, status_path)
     else:
         resource_status = None
-    sg_base_path = copy.deepcopy(current_path[0:6])
-    sg_base_path[1] = 'ec2'
-    sg_base_path.append('security_groups')
+    unknown_vpc_id = True if current_path[4] != 'vpcs' else False
     # Issue 89 & 91 : can instances have no security group?
     try:
         try:
@@ -371,6 +368,15 @@ def match_security_groups_and_resources_callback(aws_config, current_config, pat
                 sg_id = resource_sg[callback_args['sg_id_attribute_name']]
             else:
                 sg_id = resource_sg
+            if unknown_vpc_id:
+                vpc_id = sg_map[sg_id]['vpc_id']
+                sg_base_path = copy.deepcopy(current_path[0:4])
+                sg_base_path[1] = 'ec2'
+                sg_base_path = sg_base_path + [ 'vpcs', vpc_id, 'security_groups' ]
+            else:
+                sg_base_path = copy.deepcopy(current_path[0:6])
+                sg_base_path[1] = 'ec2'
+                sg_base_path.append('security_groups')
             sg_path = copy.deepcopy(sg_base_path)
             sg_path.append(sg_id)
             sg = get_object_at(aws_config, sg_path)

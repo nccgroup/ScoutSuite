@@ -53,6 +53,8 @@ def update_metadata(aws_config):
             for service in aws_config['metadata'][service_group]:
                 if service not in aws_config['service_list']:
                     continue
+                if 'hidden' in aws_config['metadata'][service_group][service] and aws_config['metadata'][service_group][service]['hidden'] == True:
+                    continue
                 if 'resources' not in aws_config['metadata'][service_group][service]:
                     continue
                 service_map[service] = service_group

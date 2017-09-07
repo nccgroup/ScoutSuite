@@ -244,6 +244,15 @@
         }
     },
     "storage": {
+        "efs": {
+            "hidden": true,
+            "resources": {
+                "file_systems": {
+                    "api_call": "describe_file_systems",
+                    "response": "FileSystems"
+                }
+            }
+        },
         "s3": {
             "resources": {
                 "buckets": {

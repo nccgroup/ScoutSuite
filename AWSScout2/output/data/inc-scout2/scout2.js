@@ -651,7 +651,7 @@ var make_title = function(title) {
         return title.toString();
     }
     title = title.toLowerCase();
-    if (['ec2', 'iam', 'rds', 'sns', 'ses', 'sqs', 'vpc'].indexOf(title) != -1) {
+    if (['ec2', 'efs', 'iam', 'rds', 'sns', 'ses', 'sqs', 'vpc'].indexOf(title) != -1) {
         return title.toUpperCase();
     } else if (title == 'cloudtrail') {
         return 'CloudTrail';

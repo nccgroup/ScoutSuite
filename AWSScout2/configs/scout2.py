@@ -25,7 +25,7 @@ class Scout2Config(object):
         self.aws_account_id = None
         self.last_run = None
         self.__load_metadata()
-        self.services = ServicesConfig()
+        self.services = ServicesConfig(self.metadata)
         supported_services = vars(self.services).keys()
         self.service_list = self.__build_services_list(supported_services, services, skipped_services)
 
