@@ -13,6 +13,7 @@ ip_ranges_from_args = 'ip-ranges-from-args'
 re_aws_account_id = re.compile(r'_AWS_ACCOUNT_ID_')
 re_ip_ranges_from_file = re.compile(r'_IP_RANGES_FROM_FILE_\((.*?)\)')
 re_ip_ranges_from_local_file = re.compile(r'_IP_RANGES_FROM_LOCAL_FILE`_\((.*?)\)')
+re_strip_dots = re.compile(r'(_STRIPDOTS_\((.*?)\))')
 
 testcases = [
     {
@@ -71,6 +72,10 @@ class Rule(object):
         for param in parameters:
             index = int(param[1])
             string_definition = string_definition.replace(param[0], self.args[index])
+        # Strip dots if necessary
+        stripdots = re_strip_dots.findall(string_definition)
+        for value in stripdots:
+            string_definition = string_definition.replace(value[0], value[1].replace('.', ''))
         definition = json.loads(string_definition)
         # Set special values (IP ranges, AWS account ID, ...)
         if len(attributes):
