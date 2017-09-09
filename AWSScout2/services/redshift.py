@@ -7,6 +7,7 @@ from opinel.utils.aws import handle_truncated_response
 from opinel.utils.globals import manage_dictionary
 
 from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
+from AWSScout2.configs.vpc import VPCConfig
 from AWSScout2.utils import ec2_classic
 
 
@@ -17,23 +18,7 @@ from AWSScout2.utils import ec2_classic
 class RedshiftRegionConfig(RegionConfig):
     """
     Redshift configuration for a single AWS region
-
-    :ivar vpcs:                         Dictionary of VPCs [id]
-    :ivar clusters_count:               Number of clusters in the region
-    :ivar parameter_groups:             Dictionary of parameter groups [id]
-    :ivar parameter_groups_count:       Number of parameter groups in the region
-    :ivar security_groups:              Dictionary of security groups [id]
-    :ivar security_groups_count:        Number of security groups in the region
     """
-
-    def __init__(self):
-        self.vpcs = {}
-        self.clusters_count = 0
-        self.parameter_groups = {}
-        self.parameter_groups_count = 0
-        self.security_groups = {}
-        self.security_groups_count = 0
-
 
     def parse_cluster(self, global_params, region, cluster):
         """
@@ -44,7 +29,7 @@ class RedshiftRegionConfig(RegionConfig):
         :param cluster:                 Cluster
         """
         vpc_id = cluster.pop('VpcId') if 'VpcId' in cluster else ec2_classic
-        manage_dictionary(self.vpcs, vpc_id, RedshiftVPCConfig())
+        manage_dictionary(self.vpcs, vpc_id, VPCConfig())
         name = cluster.pop('ClusterIdentifier')
         cluster['name'] = name
         self.vpcs[vpc_id].clusters[name] = cluster
@@ -93,30 +78,9 @@ class RedshiftRegionConfig(RegionConfig):
 class RedshiftConfig(RegionalServiceConfig):
     """
     Redshift configuration for all AWS regions
-
-    :cvar targets:                      Tuple with all Redshift resource names that may be fetched
-    :cvar config_class:                 Class to be used when initiating the service's configuration in a new region/VPC
     """
-    targets = (
-        ('clusters', 'Clusters', 'describe_clusters', {}, False),
-        ('parameter_groups', 'ParameterGroups', 'describe_cluster_parameter_groups', {}, False),
-        ('security_groups', 'SecurityGroups', 'describe_cluster_security_groups', {}, True),
-        # TODO ('subnets')
-    )
+
     region_config_class = RedshiftRegionConfig
 
-
-
-########################################
-# RedshiftVPCConfig
-########################################
-
-class RedshiftVPCConfig(object):
-    """
-    Redshift configuration for a single VPC
-
-    :ivar clusters:                     Dictionary of clusters [name]
-    """
-
-    def __init__(self):
-        self.clusters = {}
+    def __init__(self, service_metadata):
+        super(RedshiftConfig, self).__init__(service_metadata)

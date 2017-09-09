@@ -53,7 +53,7 @@ class ServicesConfig(object):
         self.elbv2 = ELBv2Config(metadata['compute']['elbv2'])
         self.emr = EMRConfig(metadata['analytics']['emr'])
         self.iam = IAMConfig()
-        #self.redshift = RedshiftConfig(metadata['database']['redshift'])
+        self.redshift = RedshiftConfig(metadata['database']['redshift'])
         self.rds = RDSConfig(metadata['database']['rds'])
         self.route53 = Route53Config()
         self.route53domains = Route53DomainsConfig()
