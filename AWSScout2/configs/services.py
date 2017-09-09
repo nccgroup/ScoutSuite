@@ -58,9 +58,9 @@ class ServicesConfig(object):
         self.route53 = Route53Config()
         self.route53domains = Route53DomainsConfig()
         self.s3 = S3Config()
-        self.ses = SESConfig()
-        self.sns = SNSConfig()
-        self.sqs = SQSConfig()
+        self.ses = SESConfig(metadata['messaging']['ses'])
+        self.sns = SNSConfig(metadata['messaging']['sns'])
+        self.sqs = SQSConfig(metadata['messaging']['sqs'])
         self.vpc = VPCConfig()
 
 

@@ -13,15 +13,7 @@ from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_c
 class SQSRegionConfig(RegionConfig):
     """
     SQS configuration for a single AWS region
-
-    :ivar queues:                       Dictionary of queues [name]
-    :ivar queues_count:                 Number of queues in the region
     """
-
-    def __init__(self):
-        self.queues = {}
-        self.queues_count = 0
-
 
     def parse_queue(self, global_params, region, queue_url):
         """
@@ -53,11 +45,9 @@ class SQSRegionConfig(RegionConfig):
 class SQSConfig(RegionalServiceConfig):
     """
     SQS configuration for all AWS regions
-
-    :cvar targets:                      Tuple with all SQS resource names that may be fetched
-    :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
     """
-    targets = (
-        ('queues', 'QueueUrls', 'list_queues', {}, False),
-    )
+
     region_config_class = SQSRegionConfig
+
+    def __init__(self, service_metadata):
+        super(SQSConfig, self).__init__(service_metadata)

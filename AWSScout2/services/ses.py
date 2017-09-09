@@ -13,15 +13,7 @@ from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_c
 class SESRegionConfig(RegionConfig):
     """
     SES configuration for a single AWS region
-
-    :ivar identities:                       Dictionary of identities [name]
-    :ivar identities_count:                 Number of identities in the region
     """
-
-    def __init__(self):
-        self.identities = {}
-        self.identities_count = 0
-
 
     def parse_identitie(self, global_params, region, identity_name):
         """
@@ -47,11 +39,9 @@ class SESRegionConfig(RegionConfig):
 class SESConfig(RegionalServiceConfig):
     """
     SES configuration for all AWS regions
-
-    :cvar targets:                      Tuple with all SES resource names that may be fetched
-    :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
     """
-    targets = (
-        ('identities', 'Identities', 'list_identities', {}, False),
-    )
+
     region_config_class = SESRegionConfig
+
+    def __init__(self, service_metadata):
+        super(SESConfig, self).__init__(service_metadata)

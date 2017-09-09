@@ -17,15 +17,7 @@ from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_c
 class SNSRegionConfig(RegionConfig):
     """
     SNS configuration for a single AWS region
-
-    :ivar topics:                       Dictionary of topics [name]
-    :ivar topics_count:                 Number of topics in the region
     """
-
-    def __init__(self):
-        self.topics = {}
-        self.topics_count = 0
-
 
     def parse_subscription(self, params, region, subscription):
         """
@@ -75,12 +67,9 @@ class SNSRegionConfig(RegionConfig):
 class SNSConfig(RegionalServiceConfig):
     """
     SNS configuration for all AWS regions
-
-    :cvar targets:                      Tuple with all SNS resource names that may be fetched
-    :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
     """
-    targets = (
-        ('topics', 'Topics', 'list_topics', {}, False),
-        ('subscriptions', 'Subscriptions', 'list_subscriptions', {}, True),
-    )
+
     region_config_class = SNSRegionConfig
+
+    def __init__(self, service_metadata):
+        super(SNSConfig, self).__init__(service_metadata)
