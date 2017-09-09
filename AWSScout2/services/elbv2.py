@@ -7,6 +7,7 @@ from opinel.utils.aws import handle_truncated_response
 from opinel.utils.globals import manage_dictionary
 
 from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
+from AWSScout2.configs.vpc import VPCConfig
 from AWSScout2.utils import ec2_classic, get_keys
 
 
@@ -37,7 +38,7 @@ class ELBv2RegionConfig(RegionConfig):
         lb['arn'] = lb.pop('LoadBalancerArn')
         lb['name'] = lb.pop('LoadBalancerName')
         vpc_id = lb.pop('VpcId') if 'VpcId' in lb and lb['VpcId'] else ec2_classic
-        manage_dictionary(self.vpcs, vpc_id, ELBv2VPCConfig(resource_types = self.vpc_resource_types))
+        manage_dictionary(self.vpcs, vpc_id, VPCConfig(resource_types = self.vpc_resource_types))
         lb['security_groups'] = []
         for sg in lb['SecurityGroups']:
             lb['security_groups'].append({'GroupId': sg})
@@ -71,22 +72,3 @@ class ELBv2Config(RegionalServiceConfig):
 
     def __init__(self, service_metadata):
         super(ELBv2Config, self).__init__(service_metadata)
-
-
-
-########################################
-# ELBv2VPCConfig
-########################################
-
-class ELBv2VPCConfig(object):
-    """
-    ELBv2 configuration for a single VPC
-
-    :ivar flow_logs:                    Dictionary of flow logs [id]
-    :ivar instances:                    Dictionary of instances [id]
-    """
-
-    def __init__(self, name = None, resource_types = []):
-        self.name = name
-        for resource_type in resource_types:
-            setattr(self, resource_type, {})
