@@ -13,15 +13,7 @@ from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_c
 class CloudFormationRegionConfig(RegionConfig):
     """
     CloudFormation configuration for a single AWS region
-
-    :ivar stacks:                       Dictionary of stacks [name]
-    :ivar stacks_count:                 Number of stacks in the region
     """
-
-    def __init__(self):
-        self.stacks = {}
-        self.stacks_count = 0
-
 
     def parse_stack(self, global_params, region, stack):
         """
@@ -47,11 +39,9 @@ class CloudFormationRegionConfig(RegionConfig):
 class CloudFormationConfig(RegionalServiceConfig):
     """
     CloudFormation configuration for all AWS regions
-
-    :cvar targets:                      Tuple with all CloudFormation resource names that may be fetched
-    :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
     """
-    targets = (
-        ('stacks', 'Stacks', 'describe_stacks', {}, False),
-    )
+
     region_config_class = CloudFormationRegionConfig
+
+    def __init__(self, service_metadata):
+        super(CloudFormationConfig, self).__init__(service_metadata)

@@ -13,6 +13,8 @@
         "cloudformation": {
             "resources": {
                 "stacks": {
+                    "api_call": "describe_stacks",
+                    "response": "Stacks",
                     "cols": 2,
                     "path": "services.cloudformation.regions.id.stacks"
                 }
