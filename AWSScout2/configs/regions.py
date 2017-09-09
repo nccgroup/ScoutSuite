@@ -68,6 +68,8 @@ class RegionalServiceConfig(object):
                     self.resource_types['global'].append(resource)
 
                 resource_metadata = service_metadata['resources'][resource]
+                if 'api_call' not in resource_metadata:
+                    continue
                 if not only_first_region:
                     self.newtargets['other_regions'] += ((resource, resource_metadata['response'], resource_metadata['api_call'], resource_metadata['params'] if 'params' in resource_metadata else {}, False),)
                 self.newtargets['first_region'] += ((resource, resource_metadata['response'], resource_metadata['api_call'], resource_metadata['params'] if 'params' in resource_metadata else {}, False),)

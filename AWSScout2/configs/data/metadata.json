@@ -27,6 +27,8 @@
                     "path": "services.cloudtrail.regions"
                 },
                 "trails": {
+                    "api_call": "describe_trails",
+                    "response": "trailList",
                     "cols": 2,
                     "path": "services.cloudtrail.regions.id.trails"
                 }

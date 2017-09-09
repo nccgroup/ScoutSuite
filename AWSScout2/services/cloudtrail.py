@@ -3,7 +3,6 @@
 CloudTrail-related classes and functions
 """
 
-# Import AWSScout2
 from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 
 
@@ -15,14 +14,7 @@ from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_c
 class CloudTrailRegionConfig(RegionConfig):
     """
     CloudTrail configuration for a single AWS region
-
-    :ivar trails:                       Dictionary of trails [name]
-    :ivar trails_count:                 Number of trails in the region
     """
-
-    def __init__(self):
-        self.trails = {}
-        self.trails_count = 0
 
     def parse_trail(self, global_params, region, trail):
         """
@@ -61,14 +53,12 @@ class CloudTrailRegionConfig(RegionConfig):
 class CloudTrailConfig(RegionalServiceConfig):
     """
     CloudTrail configuration for all AWS regions
-
-    :cvar targets:                      Tuple with all CloudTrail resource names that may be fetched
-    :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
     """
-    targets = (
-        ('trails', 'trailList', 'describe_trails', {}, False),
-    )
+
     region_config_class = CloudTrailRegionConfig
+
+    def __init__(self, service_metadata):
+        super(CloudTrailConfig, self).__init__(service_metadata)
 
 
 
