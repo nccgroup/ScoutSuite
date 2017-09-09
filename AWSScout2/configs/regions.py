@@ -226,7 +226,7 @@ class RegionConfig(GlobalConfig):
     Base class for ...
     """
 
-    def __init__(self, region_name, resource_types = []):
+    def __init__(self, region_name, resource_types = {}):
         self.region = region_name
         for resource_type in resource_types['region'] + resource_types['global']:
             setattr(self, resource_type, {})

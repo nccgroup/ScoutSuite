@@ -68,6 +68,7 @@ class ELBv2Config(RegionalServiceConfig):
     ELBv2 configuration for all AWS regions
     """
     region_config_class = ELBv2RegionConfig
+
     def __init__(self, service_metadata):
         super(ELBv2Config, self).__init__(service_metadata)
 

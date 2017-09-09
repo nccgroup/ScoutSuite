@@ -15,12 +15,7 @@ from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_c
 class EFSRegionConfig(RegionConfig):
     """
     EFS configuration for a single AWS region
-
-    :ivar file_systems:                 Dictionary of file systems
     """
-
-    def __init__(self):
-        self.file_systems = {}
 
     def parse_file_system(self, global_params, region, file_system):
         """
