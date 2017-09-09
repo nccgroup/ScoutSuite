@@ -37,6 +37,8 @@
         "cloudwatch": {
             "resources": {
                 "alarms": {
+                    "api_call": "describe_alarms",
+                    "response": "MetricAlarms",
                     "cols": 2,
                     "path": "services.cloudwatch.regions.id.alarms"
                 }

@@ -16,17 +16,7 @@ from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig
 class CloudWatchRegionConfig(RegionConfig):
     """
     CloudWatch configuration for a single AWS region
-
-    :ivar trails:                       Dictionary of trails [name]
-    :ivar trails_count:                 Number of trails in the region
     """
-
-    def __init__(self):
-        self.alarms = {}
-        self.alarms_count = 0
-        self.metrics = {}
-        self.metrics_count = 0
-
 
     def parse_alarm(self, global_params, region, alarm):
         """
@@ -53,11 +43,9 @@ class CloudWatchRegionConfig(RegionConfig):
 class CloudWatchConfig(RegionalServiceConfig):
     """
     CloudWatch configuration for all AWS regions
-
-    :cvar targets:                      Tuple with all CloudWatch resource names that may be fetched
-    :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
     """
-    targets = (
-        ('alarms', 'MetricAlarms', 'describe_alarms', {}, False),
-    )
+
     region_config_class = CloudWatchRegionConfig
+
+    def __init__(self, service_metadata):
+        super(CloudWatchConfig, self).__init__(service_metadata)
