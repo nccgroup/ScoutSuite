@@ -172,9 +172,13 @@ class RegionalServiceConfig(object):
             while True:
                 try:
                     method, region, target = q.get()
+
+                    if method.__name__ == 'store_target':
+                        target_type = target['scout2_target_type']
+                    else:
+                        target_type = method.__name__.replace('parse_', '') + 's'
                     method(params, region, target)
-                    target = method.__name__.replace('parse_', '') + 's'
-                    self.fetchstatuslogger.counts[target]['fetched'] += 1
+                    self.fetchstatuslogger.counts[target_type]['fetched'] += 1
                     self.fetchstatuslogger.show()
                 except Exception as e:
                     printException(e)
@@ -255,7 +259,17 @@ class RegionConfig(GlobalConfig):
         region = api_client._client_config.region_name
         # Queue resources
         for target in targets:
-            callback = getattr(self, 'parse_%s' % target_type[0:-1])
+            try:
+                callback = getattr(self, 'parse_%s' % target_type[0:-1])
+            except:
+                callback = self.store_target
+                target['scout2_target_type'] = target_type
             if q:
                 # Add to the queue
                 q.put((callback, region, target))
+
+    def store_target(self, global_params, region, target):
+        target_type = target.pop('scout2_target_type')
+        # print('Must store target in %s' % target_type)
+        # TODO : handle VPC vs non VPC...
+        #store = getattr(self, )

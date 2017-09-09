@@ -5,6 +5,7 @@ ELB-related classes and functions
 from opinel.utils.globals import manage_dictionary
 
 from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
+from AWSScout2.configs.vpc import VPCConfig
 from AWSScout2.utils import ec2_classic, get_keys
 
 
@@ -16,13 +17,7 @@ from AWSScout2.utils import ec2_classic, get_keys
 class ELBRegionConfig(RegionConfig):
     """
     ELB configuration for a single AWS region
-
-    :ivar vpcs:                         Dictionary of VPCs [id]
     """
-
-    def __init__(self):
-        self.vpcs = {}
-        self.elb_policies = {}
 
     def parse_elb(self, global_params, region, lb):
         """
@@ -35,7 +30,7 @@ class ELBRegionConfig(RegionConfig):
         elb = {}
         elb['name'] = lb.pop('LoadBalancerName')
         vpc_id = lb['VPCId'] if 'VPCId' in lb and lb['VPCId'] else ec2_classic
-        manage_dictionary(self.vpcs, vpc_id, ELBVPCConfig())
+        manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
         get_keys(lb, elb, ['DNSName', 'CreatedTime', 'AvailabilityZones', 'Subnets', 'Scheme'])
         elb['security_groups'] = []
         for sg in lb['SecurityGroups']:
@@ -72,29 +67,9 @@ class ELBRegionConfig(RegionConfig):
 class ELBConfig(RegionalServiceConfig):
     """
     ELB configuration for all AWS regions
-
-    :cvar targets:                      Tuple with all ELB resource names that may be fetched
-    :cvar config_class:                 Class to be used when initiating the service's configuration in a new region/VPC
     """
-    targets = (
-        ('elbs', 'LoadBalancerDescriptions', 'describe_load_balancers', {}, False),
-    )
+
     region_config_class = ELBRegionConfig
 
-
-
-########################################
-# ELBVPCConfig
-########################################
-
-class ELBVPCConfig(object):
-    """
-    ELB configuration for a single VPC
-
-    :ivar flow_logs:                    Dictionary of flow logs [id]
-    :ivar instances:                    Dictionary of instances [id]
-    """
-
-    def __init__(self, name = None):
-        self.name = name
-        self.elbs = {}
+    def __init__(self, service_metadata):
+        super(ELBConfig, self).__init__(service_metadata)

@@ -3,6 +3,8 @@
         "emr": {
             "resources": {
                 "clusters": {
+                    "api_call": "list_clusters",
+                    "response": "Clusters",
                     "cols": 2,
                     "path": "services.emr.regions.id.vpcs.id.clusters"
                 }
@@ -170,6 +172,8 @@
         "elb": {
             "resources": {
                 "elbs": {
+                    "api_call": "describe_load_balancers",
+                    "response": "LoadBalancerDescriptions",
                     "cols": 2,
                     "path": "services.elb.regions.id.vpcs.id.elbs"
                 }
@@ -259,16 +263,35 @@
         "rds": {
             "resources": {
                 "instances": {
+                    "api_call": "describe_db_instances",
+                    "response": "DBInstances",
                     "cols": 2,
                     "path": "services.rds.regions.id.vpcs.id.instances"
                 },
                 "security_groups": {
+                    "api_call": "describe_db_security_groups",
+                    "response": "DBSecurityGroups",
+                    "no_exceptions": true,
                     "cols": 2,
                     "path": "services.rds.regions.id.vpcs.id.security_groups"
                 },
                 "snapshots": {
+                    "api_call": "describe_db_snapshots",
+                    "response": "DBSnapshots",
                     "cols": 2,
                     "path": "services.rds.regions.id.vpcs.id.snapshots"
+                },
+                "parameter_groups": {
+                    "api_call": "describe_db_parameter_groups",
+                    "response": "DBParameterGroups",
+                    "cols": 2,
+                    "path": "services.rds.regions.id.parameter_groups"
+                },
+                "subnet_groups": {
+                    "api_call": "describe_db_subnet_groups",
+                    "response": "DBSubnetGroups",
+                    "cols": 2,
+                    "path": "services.rds.regions.id.vpcs.id.subnet_groups"
                 }
             }
         },

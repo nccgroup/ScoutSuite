@@ -3,7 +3,7 @@
 from opinel.utils.globals import manage_dictionary
 
 from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
-from AWSScout2.utils import ec2_classic
+from AWSScout2.configs.vpc import VPCConfig
 
 
 
@@ -14,15 +14,7 @@ from AWSScout2.utils import ec2_classic
 class EMRRegionConfig(RegionConfig):
     """
     EMR configuration for a single AWS region
-
-    :ivar vpcs:                         Dictionary of VPCs [id]
-    :ivar clusters_count:               Number of clusters in the region
     """
-
-    def __init__(self):
-        self.vpcs = {}
-        self.clusters_count = 0
-
 
     def parse_cluster(self, global_params, region, cluster):
         """
@@ -37,7 +29,7 @@ class EMRRegionConfig(RegionConfig):
         cluster['id'] = cluster.pop('Id')
         cluster['name'] = cluster.pop('Name')
         vpc_id = 'TODO' # The EMR API won't disclose the VPC ID, so wait until all configs have been fetch and look up the VPC based on the subnet ID
-        manage_dictionary(self.vpcs, vpc_id, EMRVPCConfig())
+        manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
         self.vpcs[vpc_id].clusters[cluster_id] = cluster
 
 
@@ -48,27 +40,9 @@ class EMRRegionConfig(RegionConfig):
 class EMRConfig(RegionalServiceConfig):
     """
     EMR configuration for all AWS regions
-
-    :cvar targets:                      Tuple with all EMR resource names that may be fetched
-    :cvar config_class:                 Class to be used when initiating the service's configuration in a new region/VPC
     """
-    targets = (
-        ('clusters', 'Clusters', 'list_clusters', {}, False),
-    )
+
     region_config_class = EMRRegionConfig
 
-
-
-########################################
-# EMRVPCConfig
-########################################
-
-class EMRVPCConfig(object):
-    """
-    EMR configuration for a single VPC
-
-    :ivar clusters:                     Dictionary of clusters [id]
-    """
-
-    def __init__(self):
-        self.clusters = {}
+    def __init__(self, service_metadata):
+        super(EMRConfig, self).__init__(service_metadata)
