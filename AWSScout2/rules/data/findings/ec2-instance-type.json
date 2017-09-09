@@ -1,0 +1,10 @@
+{
+    "description": "Use of _ARG_0_ instances",
+    "key": "ec2-instance-type-_STRIPDOTS_(_ARG_0_)",
+    "rationale": "Policies dictacte EC2 instances of type _ARG_0_ should not be used in this environment",
+    "path": "ec2.regions.id.vpcs.id.instances.id",
+    "dashboard_name": "Instances",
+    "conditions": [ "and",
+        [ "InstanceType", "equal", "_ARG_0_" ]
+    ]
+}
