@@ -11,17 +11,9 @@ from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig
 class DirectConnectRegionConfig(RegionConfig):
     """
     DirectConnect configuration for a single AWS region
-
-    :ivar connections:                       Dictionary of connections [name]
-    :ivar connections_count:                 Number of connections in the region
     """
 
-    def __init__(self):
-        self.connections = {}
-        self.connections_count = 0
-
-
-    def parse_connection(self, global_params, region, connection_url):
+    def parse_connection(self, global_params, region, connection):
         """
         Parse a single connection and fetch additional attributes
 
@@ -42,11 +34,9 @@ class DirectConnectRegionConfig(RegionConfig):
 class DirectConnectConfig(RegionalServiceConfig):
     """
     DirectConnect configuration for all AWS regions
-
-    :cvar targets:                      Tuple with all DirectConnect resource names that may be fetched
-    :cvar region_config_class:          Class to be used when initiating the service's configuration in a new region
     """
-    targets = (
-        ('connections', 'connections', 'describe_connections', {}, False),
-    )
+
     region_config_class = DirectConnectRegionConfig
+
+    def __init__(self, service_metadata):
+        super(DirectConnectConfig, self).__init__(service_metadata)

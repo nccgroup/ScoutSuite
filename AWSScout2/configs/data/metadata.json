@@ -117,6 +117,16 @@
                     "path": "services.route53.hosted_zones"
                 }
             }
+        },
+        "directconnect": {
+            "resources": {
+                "connections": {
+                    "api_call": "describe_connections",
+                    "response": "connections",
+                    "cols": 2,
+                    "path": "services.directconnect.connections"
+                }
+            }
         }
     },
     "compute": {
