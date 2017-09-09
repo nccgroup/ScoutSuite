@@ -117,18 +117,29 @@
         "ec2": {
             "resources": {
                 "instances": {
+                    "api_call": "describe_instances",
+                    "response": "Reservations",
                     "cols": 2,
                     "path": "services.ec2.regions.id.vpcs.id.instances"
                 },
                 "security_groups": {
+                    "api_call": "describe_security_groups",
+                    "response": "SecurityGroups",
                     "cols": 2,
                     "path": "services.ec2.regions.id.vpcs.id.security_groups"
                 },
-                "ebs_volumes": {
+                "volumes": {
+                    "api_call": "describe_volumes",
+                    "response": "Volumes",
                     "cols": 2,
                     "path": "services.ec2.regions.id.volumes"
                 },
                 "snapshots": {
+                    "api_call": "describe_snapshots",
+                    "params": {
+                        "OwnerIds": [ "_AWS_ACCOUNT_ID_" ]
+                    },
+                    "response": "Snapshots",
                     "cols": 2,
                     "path": "services.ec2.regions.id.snapshots"
                 }

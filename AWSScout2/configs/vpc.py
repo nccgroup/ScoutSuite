@@ -8,7 +8,7 @@ class VPCConfig(object):
     Configuration for a single VPC in a single service
     """
 
-    def __init__(self, name = None, resource_types = []):
+    def __init__(self, vpc_resource_types, name = None):
         self.name = name
-        for resource_type in resource_types:
+        for resource_type in vpc_resource_types:
             setattr(self, resource_type, {})

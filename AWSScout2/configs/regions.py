@@ -55,8 +55,6 @@ class RegionalServiceConfig(object):
             self.newtargets = {'first_region': (), 'other_regions': ()}
             for resource in service_metadata['resources']:
 
-                print(service_metadata['resources'][resource])
-
                 only_first_region = False
                 if re.match(r'.*?\.vpcs\.id\..*?', service_metadata['resources'][resource]['path']):
                     print('VPC resource')
@@ -71,17 +69,8 @@ class RegionalServiceConfig(object):
 
                 resource_metadata = service_metadata['resources'][resource]
                 if not only_first_region:
-                    self.newtargets['other_regions'] += (                    (resource, resource_metadata['response'], resource_metadata['api_call'], {}, False),)
-                self.newtargets['first_region'] += ((resource, resource_metadata['response'], resource_metadata['api_call'], {}, False),)
-
-            #print('Targets !!')
-            #print(str(self.newtargets))
-
-                #resource_metadata = service_metadata['resources'][resource]
-                #self.targets += ((resource, resource_metadata['response'], resource_metadata['api_call'], {}, False),)
-
-
-
+                    self.newtargets['other_regions'] += ((resource, resource_metadata['response'], resource_metadata['api_call'], resource_metadata['params'] if 'params' in resource_metadata else {}, False),)
+                self.newtargets['first_region'] += ((resource, resource_metadata['response'], resource_metadata['api_call'], resource_metadata['params'] if 'params' in resource_metadata else {}, False),)
 
 
     def init_region_config(self, region):
@@ -121,7 +110,6 @@ class RegionalServiceConfig(object):
             params = self.tweak_params(target[3], credentials)
             realtargets = realtargets + ((target[0], target[1], target[2], params, target[4]),)
         self.newtargets['other_regions'] = realtargets
-
 
         printInfo('Fetching %s config...' % format_service_name(self.service))
         self.fetchstatuslogger = FetchStatusLogger(self.newtargets['first_region'], True)
@@ -244,13 +232,11 @@ class RegionConfig(GlobalConfig):
                 targets = tuple(targets,)
             elif type(targets) != tuple:
                 targets = tuple(targets)
-#        else:
-#            targets = tuple(['%s' % method.replace('fetch_','').title() for method in methods])
         for target in targets:
-            self._fetch_targets(api_client, q, target, {})
+            self._fetch_targets(api_client, q, target)
 
 
-    def _fetch_targets(self, api_client, q, target, list_params):
+    def _fetch_targets(self, api_client, q, target):
         # Handle & format the target type
         target_type, response_attribute, list_method_name, list_params, ignore_list_error = target
         list_method = getattr(api_client, list_method_name)
