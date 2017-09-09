@@ -61,7 +61,7 @@ class ServicesConfig(object):
         self.ses = SESConfig(metadata['messaging']['ses'])
         self.sns = SNSConfig(metadata['messaging']['sns'])
         self.sqs = SQSConfig(metadata['messaging']['sqs'])
-        self.vpc = VPCConfig()
+        self.vpc = VPCConfig(metadata['network']['vpc'])
 
 
     def fetch(self, credentials, services = [], regions = [], partition_name = ''):

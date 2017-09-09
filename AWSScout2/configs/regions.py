@@ -50,31 +50,25 @@ class RegionalServiceConfig(object):
         self.regions = {}
         self.service = type(self).__name__.replace('Config', '').lower() # TODO: use regex with EOS instead of plain replace
         if service_metadata != {}:
-            self.targets = ()
             self.resource_types = {'global': [], 'region': [], 'vpc': []}
-            self.newtargets = {'first_region': (), 'other_regions': ()}
+            self.targets = {'first_region': (), 'other_regions': ()}
             for resource in service_metadata['resources']:
-
                 only_first_region = False
                 if re.match(r'.*?\.vpcs\.id\..*?', service_metadata['resources'][resource]['path']):
-                    print('VPC resource')
                     self.resource_types['vpc'].append(resource)
                 elif re.match(r'.*?\.regions\.id\..*?', service_metadata['resources'][resource]['path']):
                     self.resource_types['region'].append(resource)
-                    print('Regional resource')
                 else:
                     only_first_region = True
-                    print('Global resource')
                     self.resource_types['global'].append(resource)
-
                 resource_metadata = service_metadata['resources'][resource]
                 if 'api_call' not in resource_metadata:
                     continue
                 params = resource_metadata['params'] if 'params' in resource_metadata else {}
                 ignore_exceptions = True if 'no_exceptions' in resource_metadata and resource_metadata['no_exceptions'] == True else False
                 if not only_first_region:
-                    self.newtargets['other_regions'] += ((resource, resource_metadata['response'], resource_metadata['api_call'], params, ignore_exceptions),)
-                self.newtargets['first_region'] += ((resource, resource_metadata['response'], resource_metadata['api_call'], params, ignore_exceptions),)
+                    self.targets['other_regions'] += ((resource, resource_metadata['response'], resource_metadata['api_call'], params, ignore_exceptions),)
+                self.targets['first_region'] += ((resource, resource_metadata['response'], resource_metadata['api_call'], params, ignore_exceptions),)
 
 
     def init_region_config(self, region):
@@ -98,25 +92,22 @@ class RegionalServiceConfig(object):
 
         """
         # Initialize targets
-        if not targets:
-            try:
-                targets = type(self).targets # TODO: remove this case eventually
-            except:
-                targets = self.targets
         # Tweak params
         realtargets = ()
-        for i, target in enumerate(self.newtargets['first_region']):
+        if not targets:
+            targets = self.targets
+        for i, target in enumerate(targets['first_region']):
             params = self.tweak_params(target[3], credentials)
             realtargets = realtargets + ((target[0], target[1], target[2], params, target[4]),)
-        self.newtargets['first_region'] = realtargets
+        targets['first_region'] = realtargets
         realtargets = ()
-        for i, target in enumerate(self.newtargets['other_regions']):
+        for i, target in enumerate(targets['other_regions']):
             params = self.tweak_params(target[3], credentials)
             realtargets = realtargets + ((target[0], target[1], target[2], params, target[4]),)
-        self.newtargets['other_regions'] = realtargets
+        targets['other_regions'] = realtargets
 
         printInfo('Fetching %s config...' % format_service_name(self.service))
-        self.fetchstatuslogger = FetchStatusLogger(self.newtargets['first_region'], True)
+        self.fetchstatuslogger = FetchStatusLogger(targets['first_region'], True)
         api_service = 'ec2' if self.service.lower() == 'vpc' else self.service.lower()
         # Init regions
         regions = build_region_list(api_service, regions, partition_name) # TODO: move this code within this class
@@ -127,8 +118,7 @@ class RegionalServiceConfig(object):
         qr = self._init_threading(self._fetch_region, {'api_service': api_service, 'credentials': credentials, 'q': q, 'targets': ()}, 10)
         # Go
         for i, region in enumerate(regions):
-
-            qr.put((region, self.newtargets['first_region'] if i == 0 else self.newtargets['other_regions']))
+            qr.put((region, targets['first_region'] if i == 0 else targets['other_regions']))
         # Join
         qr.join()
         q.join()

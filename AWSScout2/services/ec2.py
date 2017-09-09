@@ -78,7 +78,7 @@ class EC2RegionConfig(RegionConfig):
         :param security)_group:         Security group
         """
         vpc_id = group['VpcId'] if 'VpcId' in group and group['VpcId'] else ec2_classic
-        manage_dictionary(self.vpcs, vpc_id, EC2VPCConfig())
+        manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
         security_group = {}
         security_group['name'] = group['GroupName']
         security_group['id'] = group['GroupId']

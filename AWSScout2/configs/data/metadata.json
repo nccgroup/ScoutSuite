@@ -95,28 +95,52 @@
         "vpc": {
             "resources": {
                 "network_acls": {
+                    "api_call": "describe_network_acls",
+                    "response": "NetworkAcls",
                     "cols": 2,
                     "path": "services.vpc.regions.id.vpcs.id.network_acls"
                 },
                 "vpcs": {
+                    "api_call": "describe_vpcs",
+                    "response": "Vpcs",
                     "cols": 2,
                     "path": "services.vpc.regions.id.vpcs"
                 },
                 "subnets": {
+                    "api_call": "describe_subnets",
+                    "response": "Subnets",
                     "cols": 2,
                     "path": "services.vpc.regions.id.vpcs.id.subnets"
                 },
                 "customer_gateways": {
+                    "api_call": "describe_customer_gateways",
+                    "response": "CustomerGateways",
                     "cols": 2,
                     "path": "services.vpc.regions.id.customer_gateways"
                 },
                 "vpn_gateways": {
+                    "api_call": "describe_vpn_gateways",
+                    "response": "VpnGateways",
                     "cols": 2,
                     "path": "services.vpc.regions.id.vpn_gateways"
                 },
                 "vpn_connections": {
+                    "api_call": "describe_vpn_connections",
+                    "response": "VpnConnections",
                     "cols": 2,
                     "path": "services.vpc.regions.id.vpn_connections"
+                },
+                "flow_logs": {
+                    "api_call": "describe_flow_logs",
+                    "response": "FlowLogs",
+                    "hidden": true,
+                    "path": "services.vpc.regions.id.vpc.id.flow_logs"
+                },
+                "route_tables": {
+                    "api_call": "describe_route_tables",
+                    "response": "RouteTables",
+                    "hidden": true,
+                    "path": "services.vpc.regions.id.vpcs.id.route_tables"
                 }
             }
         },
@@ -285,7 +309,7 @@
                     "response": "DBSecurityGroups",
                     "no_exceptions": true,
                     "cols": 2,
-                    "path": "services.rds.regions.id.security_groups"
+                    "path": "services.rds.regions.id.vpcs.id.security_groups"
                 },
                 "snapshots": {
                     "api_call": "describe_db_snapshots",
