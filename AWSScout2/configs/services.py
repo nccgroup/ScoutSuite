@@ -42,12 +42,12 @@ class ServicesConfig(object):
 
     def __init__(self, metadata):
 
-        self.cloudformation = CloudFormationConfig()
-        self.cloudtrail = CloudTrailConfig()
-        self.cloudwatch = CloudWatchConfig()
-        self.directconnect = DirectConnectConfig()
-        self.ec2 = EC2Config()
-        self.efs = EFSConfig(service_metadata = metadata['storage']['efs'])
+        self.cloudformation = CloudFormationConfig(metadata['management']['cloudformation'])
+        self.cloudtrail = CloudTrailConfig(metadata['management']['cloudtrail'])
+        self.cloudwatch = CloudWatchConfig(metadata['management']['cloudwatch'])
+        self.directconnect = DirectConnectConfig(metadata['network']['directconnect'])
+        self.ec2 = EC2Config(metadata['compute']['ec2'])
+        self.efs = EFSConfig(metadata['storage']['efs'])
         self.elasticache = ElastiCacheConfig()
         self.elb = ELBConfig()
         self.elbv2 = ELBv2Config(service_metadata = metadata['compute']['elbv2'])
