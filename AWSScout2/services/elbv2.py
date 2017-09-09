@@ -22,8 +22,8 @@ class ELBv2RegionConfig(RegionConfig):
     :ivar vpcs:                         Dictionary of VPCs [id]
     """
 
-    def __init__(self):
-        self.vpcs = {}
+#    def __init__(self, region_name, resource_types):
+#        super(ELBv2RegionConfig).__init__(self, region_name, resource_types)
 
 
     def parse_lb(self, global_params, region, lb):
@@ -37,7 +37,7 @@ class ELBv2RegionConfig(RegionConfig):
         lb['arn'] = lb.pop('LoadBalancerArn')
         lb['name'] = lb.pop('LoadBalancerName')
         vpc_id = lb.pop('VpcId') if 'VpcId' in lb and lb['VpcId'] else ec2_classic
-        manage_dictionary(self.vpcs, vpc_id, ELBv2VPCConfig())
+        manage_dictionary(self.vpcs, vpc_id, ELBv2VPCConfig(resource_types = self.vpc_resource_types))
         lb['security_groups'] = []
         for sg in lb['SecurityGroups']:
             lb['security_groups'].append({'GroupId': sg})
@@ -52,11 +52,11 @@ class ELBv2RegionConfig(RegionConfig):
             lb['listeners'][port] = listener
         # Get attributes
         lb['attributes'] = api_clients[region].describe_load_balancer_attributes(LoadBalancerArn = lb['arn'])['Attributes']
-        # TOD: describe_ssl_policies
-
-
         self.vpcs[vpc_id].lbs[self.get_non_aws_id(lb['name'])] = lb
 
+    def parse_ssl_policie(self, global_params, region, policy):
+        id = self.get_non_aws_id(policy['Name'])
+        self.ssl_policies[id] = policy
 
 
 ########################################
@@ -66,14 +66,10 @@ class ELBv2RegionConfig(RegionConfig):
 class ELBv2Config(RegionalServiceConfig):
     """
     ELBv2 configuration for all AWS regions
-
-    :cvar targets:                      Tuple with all ELBv2 resource names that may be fetched
-    :cvar config_class:                 Class to be used when initiating the service's configuration in a new region/VPC
     """
-    targets = (
-        ('lbs', 'LoadBalancers', 'describe_load_balancers', {}, False),
-    )
     region_config_class = ELBv2RegionConfig
+    def __init__(self, service_metadata):
+        super(ELBv2Config, self).__init__(service_metadata)
 
 
 
@@ -89,6 +85,7 @@ class ELBv2VPCConfig(object):
     :ivar instances:                    Dictionary of instances [id]
     """
 
-    def __init__(self, name = None):
+    def __init__(self, name = None, resource_types = []):
         self.name = name
-        self.lbs = {}
+        for resource_type in resource_types:
+            setattr(self, resource_type, {})

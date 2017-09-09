@@ -50,7 +50,7 @@ class ServicesConfig(object):
         self.efs = EFSConfig(service_metadata = metadata['storage']['efs'])
         self.elasticache = ElastiCacheConfig()
         self.elb = ELBConfig()
-        self.elbv2 = ELBv2Config()
+        self.elbv2 = ELBv2Config(service_metadata = metadata['compute']['elbv2'])
         self.emr = EMRConfig()
         self.iam = IAMConfig()
         self.redshift = RedshiftConfig()

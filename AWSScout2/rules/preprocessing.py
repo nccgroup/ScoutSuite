@@ -308,6 +308,8 @@ def __get_role_info(aws_config, attribute_name, attribute_value):
 
 
 def match_security_groups_and_resources(aws_config):
+    if aws_config['services']['ec2']['regions'] == {}:
+        return
     # EC2 instances
     callback_args = {'status_path': [ '..', '..', 'State', 'Name' ], 'resource_id_path': ['..'], 'sg_list_attribute_name': ['Groups'], 'sg_id_attribute_name': 'GroupId'}
     go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'instances', 'network_interfaces'], ['services', 'ec2'], match_security_groups_and_resources_callback, callback_args)

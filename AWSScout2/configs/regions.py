@@ -3,6 +3,7 @@
 Base classes and functions for region-specific services
 """
 
+import copy
 import re
 
 from threading import Event, Thread
@@ -50,9 +51,38 @@ class RegionalServiceConfig(object):
         self.service = type(self).__name__.replace('Config', '').lower() # TODO: use regex with EOS instead of plain replace
         if service_metadata != {}:
             self.targets = ()
+            self.resource_types = {'global': [], 'region': [], 'vpc': []}
+            self.newtargets = {'first_region': (), 'other_regions': ()}
             for resource in service_metadata['resources']:
+
+                print(service_metadata['resources'][resource])
+
+                only_first_region = False
+                if re.match(r'.*?\.vpcs\.id\..*?', service_metadata['resources'][resource]['path']):
+                    print('VPC resource')
+                    self.resource_types['vpc'].append(resource)
+                elif re.match(r'.*?\.regions\.id\..*?', service_metadata['resources'][resource]['path']):
+                    self.resource_types['region'].append(resource)
+                    print('Regional resource')
+                else:
+                    only_first_region = True
+                    print('Global resource')
+                    self.resource_types['global'].append(resource)
+
                 resource_metadata = service_metadata['resources'][resource]
-                self.targets += ((resource, resource_metadata['response'], resource_metadata['api_call'], {}, False),)
+                if not only_first_region:
+                    self.newtargets['other_regions'] += (                    (resource, resource_metadata['response'], resource_metadata['api_call'], {}, False),)
+                self.newtargets['first_region'] += ((resource, resource_metadata['response'], resource_metadata['api_call'], {}, False),)
+
+            #print('Targets !!')
+            #print(str(self.newtargets))
+
+                #resource_metadata = service_metadata['resources'][resource]
+                #self.targets += ((resource, resource_metadata['response'], resource_metadata['api_call'], {}, False),)
+
+
+
+
 
     def init_region_config(self, region):
         """
@@ -60,12 +90,12 @@ class RegionalServiceConfig(object):
 
         :param region:                  Name of the region
         """
-        self.regions[region] = self.region_config_class()
+        self.regions[region] = self.region_config_class(region_name = region, resource_types = self.resource_types)
 
 
     def fetch_all(self, credentials, regions = [], partition_name = 'aws', targets = None):
         """
-        Fetch all the SNS configuration supported by Scout2
+        Fetch all the configuration supported by Scout2 for a given service
 
         :param credentials:             F
         :param service:                 Name of the service
@@ -82,12 +112,19 @@ class RegionalServiceConfig(object):
                 targets = self.targets
         # Tweak params
         realtargets = ()
-        for i, target in enumerate(targets):
+        for i, target in enumerate(self.newtargets['first_region']):
             params = self.tweak_params(target[3], credentials)
             realtargets = realtargets + ((target[0], target[1], target[2], params, target[4]),)
-        targets = realtargets
+        self.newtargets['first_region'] = realtargets
+        realtargets = ()
+        for i, target in enumerate(self.newtargets['other_regions']):
+            params = self.tweak_params(target[3], credentials)
+            realtargets = realtargets + ((target[0], target[1], target[2], params, target[4]),)
+        self.newtargets['other_regions'] = realtargets
+
+
         printInfo('Fetching %s config...' % format_service_name(self.service))
-        self.fetchstatuslogger = FetchStatusLogger(targets, True)
+        self.fetchstatuslogger = FetchStatusLogger(self.newtargets['first_region'], True)
         api_service = 'ec2' if self.service.lower() == 'vpc' else self.service.lower()
         # Init regions
         regions = build_region_list(api_service, regions, partition_name) # TODO: move this code within this class
@@ -95,10 +132,11 @@ class RegionalServiceConfig(object):
         # Threading to fetch & parse resources (queue consumer)
         q = self._init_threading(self._fetch_target, {}, 20)
         # Threading to list resources (queue feeder)
-        qr = self._init_threading(self._fetch_region, {'api_service': api_service, 'credentials': credentials, 'q': q, 'targets': targets}, 10)
+        qr = self._init_threading(self._fetch_region, {'api_service': api_service, 'credentials': credentials, 'q': q, 'targets': ()}, 10)
         # Go
-        for region in regions:
-            qr.put(region)
+        for i, region in enumerate(regions):
+
+            qr.put((region, self.newtargets['first_region'] if i == 0 else self.newtargets['other_regions']))
         # Join
         qr.join()
         q.join()
@@ -121,11 +159,13 @@ class RegionalServiceConfig(object):
         try:
             while True:
                 try:
-                    region = q.get()
+                    region, targets = q.get()
+                    #print('Targets for region %s : %s' % (region, str(targets)))
                     self.init_region_config(region)
                     api_client = connect_service(params['api_service'], params['credentials'], region, silent = True)
                     api_clients[region] = api_client
-                    self.regions[region].fetch_all(api_client, self.fetchstatuslogger, params['q'], params['targets'])
+                    # TODO : something here for single_region stuff
+                    self.regions[region].fetch_all(api_client, self.fetchstatuslogger, params['q'], targets) #  params['targets'])
                     self.fetchstatuslogger.counts['regions']['fetched'] += 1
                 except Exception as e:
                     printException(e)
@@ -188,9 +228,12 @@ class RegionConfig(GlobalConfig):
 
     def __init__(self, region_name, resource_types = []):
         self.region = region_name
-        for resource_type in resource_types:
+        for resource_type in resource_types['region'] + resource_types['global']:
             setattr(self, resource_type, {})
             setattr(self, '%s_count' % resource_type, 0)
+        if len(resource_types['vpc']) > 0:
+            setattr(self, 'vpcs', {})
+            self.vpc_resource_types = resource_types['vpc']
 
 
     def fetch_all(self, api_client, fetchstatuslogger, q, targets):

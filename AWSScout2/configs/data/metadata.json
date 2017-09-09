@@ -151,8 +151,16 @@
         "elbv2": {
             "resources": {
                 "lbs": {
+                    "api_call": "describe_load_balancers",
+                    "response": "LoadBalancers",
                     "cols": 2,
                     "path": "services.elbv2.regions.id.vpcs.id.lbs"
+                },
+                "ssl_policies": {
+                    "api_call": "describe_ssl_policies",
+                    "response": "SslPolicies",
+                    "hidden": true,
+                    "path": "services.elbv2.ssl_policies"
                 }
             }
         }
@@ -249,7 +257,8 @@
             "resources": {
                 "file_systems": {
                     "api_call": "describe_file_systems",
-                    "response": "FileSystems"
+                    "response": "FileSystems",
+                    "path": "services.efs.regions.id.file_systems"
                 }
             }
         },
