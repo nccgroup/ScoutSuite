@@ -232,10 +232,21 @@
         "elasticache": {
             "resources": {
                 "clusters": {
+                    "api_call": "describe_cache_clusters",
+                    "response": "CacheClusters",
                     "cols": 2,
                     "path": "services.elasticache.regions.id.vpcs.id.clusters"
                 },
+                "parameter_groups": {
+                    "api_to_call": "describe_db_parameter_groups",
+                    "response": "DBParameterGroups",
+                    "cols": 2,
+                    "path": "services.elasticache.regions.id.parameter_groups"
+                },
                 "security_groups": {
+                    "api_call": "describe_cache_security_groups",
+                    "response": "CacheSecurityGroups",
+                    "no_exceptions": true,
                     "cols": 2,
                     "path": "services.elasticache.regions.id.security_groups"
                 },

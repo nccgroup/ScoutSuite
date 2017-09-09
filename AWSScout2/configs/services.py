@@ -48,7 +48,7 @@ class ServicesConfig(object):
         self.directconnect = DirectConnectConfig(metadata['network']['directconnect'])
         self.ec2 = EC2Config(metadata['compute']['ec2'])
         self.efs = EFSConfig(metadata['storage']['efs'])
-        self.elasticache = ElastiCacheConfig()
+        self.elasticache = ElastiCacheConfig(metadata['database']['elasticache'])
         self.elb = ELBConfig()
         self.elbv2 = ELBv2Config(service_metadata = metadata['compute']['elbv2'])
         self.emr = EMRConfig()
