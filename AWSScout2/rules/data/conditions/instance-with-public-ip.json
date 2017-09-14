@@ -1,0 +1,6 @@
+{
+    "conditions": [ "and",
+        [ "ec2.regions.id.vpcs.id.instances.id.network_interfaces.id.", "withKey", "Association" ],
+        [ "ec2.regions.id.vpcs.id.instances.id.network_interfaces.id.Association.PublicIp", "notNull", "" ]
+    ]
+}

@@ -1,0 +1,11 @@
+{
+    "description": "Instance with open NACLs",
+    "rationale": "",
+    "path": "ec2.regions.id.vpcs.id.instances.id.network_interfaces.id",
+    "dashboard_name": "ENIs",
+    "display_path": "ec2.regions.id.vpcs.id.instances.id",
+    "conditions": [ "and",
+        [ "_INCLUDE_(conditions/instance-with-public-ip.json)", "", "" ],
+        [ "_INCLUDE_(conditions/instance-with-open-nacls.json)", "", "" ]
+    ]
+}

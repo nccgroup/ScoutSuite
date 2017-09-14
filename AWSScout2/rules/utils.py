@@ -16,14 +16,24 @@ from AWSScout2.configs.browser import get_value_at
 
 
 re_get_value_at = re.compile(r'_GET_VALUE_AT_\((.*?)\)')
+re_nested_get_value_at = re.compile(r'_GET_VALUE_AT_\(.*')
 
 
 def fix_path_string(all_info, current_path, path_to_value):
-    dynamic_path = re_get_value_at.findall(path_to_value)
-    if dynamic_path:
+    # handle nested _GET_VALUE_AT_...
+    while True:
+        dynamic_path = re_get_value_at.findall(path_to_value)
+        if len(dynamic_path) == 0:
+            break
         for dp in dynamic_path:
-            dv = get_value_at(all_info, current_path, dp)
-            path_to_value = path_to_value.replace('_GET_VALUE_AT_(%s)' % dp, dv)
+            tmp = dp
+            while True:
+                nested = re_nested_get_value_at.findall(tmp)
+                if len(nested) == 0:
+                    break
+                tmp = nested[0].replace('_GET_VALUE_AT_(', '', 1)
+            dv = get_value_at(all_info, current_path, tmp)
+            path_to_value = path_to_value.replace('_GET_VALUE_AT_(%s)' % tmp, dv)
     return path_to_value
 
 
@@ -96,29 +106,29 @@ def pass_conditions(all_info, current_path, conditions, unknown_as_pass_conditio
         return True
     condition_operator = conditions.pop(0)
     for condition in conditions:
-      if condition[0] in condition_operators:
-        res = pass_conditions(all_info, current_path, condition, unknown_as_pass_condition)
-      else:
-        # Conditions are formed as "path to value", "type of test", "value(s) for test"
-        path_to_value, test_name, test_values = condition
-        path_to_value = fix_path_string(all_info, current_path, path_to_value)
-        target_obj = get_value_at(all_info, current_path, path_to_value)
-        if type(test_values) != list:
-            dynamic_value = re_get_value_at.match(test_values)
-            if dynamic_value:
-                test_values = get_value_at(all_info, current_path, dynamic_value.groups()[0], True)
-        try:
-            res = pass_condition(target_obj, test_name, test_values)
-        except Exception as e:
-            res = True if unknown_as_pass_condition else False
-            printError('Unable to process testcase \'%s\' on value \'%s\', interpreted as %s.' % (test_name, str(target_obj), res))
-            printException(e, True)
-      # Quick exit and + false
-      if condition_operator == 'and' and not res:
-          return False
-      # Quick exit or + true
-      if condition_operator == 'or' and res:
-          return True
+        if condition[0] in condition_operators:
+            res = pass_conditions(all_info, current_path, condition, unknown_as_pass_condition)
+        else:
+            # Conditions are formed as "path to value", "type of test", "value(s) for test"
+            path_to_value, test_name, test_values = condition
+            path_to_value = fix_path_string(all_info, current_path, path_to_value)
+            target_obj = get_value_at(all_info, current_path, path_to_value)
+            if type(test_values) != list:
+                dynamic_value = re_get_value_at.match(test_values)
+                if dynamic_value:
+                    test_values = get_value_at(all_info, current_path, dynamic_value.groups()[0], True)
+            try:
+                res = pass_condition(target_obj, test_name, test_values)
+            except Exception as e:
+                res = True if unknown_as_pass_condition else False
+                printError('Unable to process testcase \'%s\' on value \'%s\', interpreted as %s.' % (test_name, str(target_obj), res))
+                printException(e, True)
+        # Quick exit and + false
+        if condition_operator == 'and' and not res:
+            return False
+        # Quick exit or + true
+        if condition_operator == 'or' and res:
+            return True
     # Still here ?
     # or -> false
     # and -> true

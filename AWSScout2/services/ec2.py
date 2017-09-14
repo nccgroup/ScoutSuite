@@ -59,12 +59,12 @@ class EC2RegionConfig(RegionConfig):
             instance['reservation_id'] = reservation['ReservationId']
             instance['id'] = i['InstanceId']
             get_name(i, instance, 'InstanceId')
-            get_keys(i, instance, ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile'])
+            get_keys(i, instance, ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile', 'SubnetId'])
             # Network interfaces & security groups
             manage_dictionary(instance, 'network_interfaces', {})
             for eni in i['NetworkInterfaces']:
                 nic = {}
-                get_keys(eni, nic, ['Association', 'Groups', 'PrivateIpAddresses'])
+                get_keys(eni, nic, ['Association', 'Groups', 'PrivateIpAddresses', 'SubnetId'])
                 instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
             self.vpcs[vpc_id].instances[i['InstanceId']] = instance
 
