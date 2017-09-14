@@ -36,6 +36,11 @@
             {
                 "enabled": true
             }
+        ],
+        "ec2-instance-with-open-nacls.json": [
+            {
+                "enabled": true
+            }
         ]
     }, 
     "about": "Default set of filters for Scout2"
