@@ -9,7 +9,10 @@
     </div>
     {{#each items}}
       <div class="list-group" id="services.{{../service_name}}.regions.{{@key}}.vpcs.id.{{../resource_type}}.list">
-        <div class="list-group-item active"><a href="#services.{{../service_name}}.regions.{{@key}}.vpcs.id.{{../resource_type}}">{{@key}}</a></div>
+        <div class="list-group-item active">
+            <a href="#services.{{../service_name}}.regions.{{@key}}.vpcs.id.{{../resource_type}}">{{@key}}</a>
+            <span class="pull-right"><a href="javascript:hideRegion('services.{{../service_name}}.regions.{{@key}}.vpcs.id.{{../resource_type}}.list')"><i class="glyphicon glyphicon-remove-sign"></i></a></span>
+        </div>
         {{#each vpcs}}
           <div class="list-group-item list-sub-element" id="services.{{../../service_name}}.regions.{{@../key}}.vpcs.{{@key}}.{{../../resource_type}}.list">
             <a href="#services.{{../../service_name}}.regions.{{@../key}}.vpcs.{{@key}}.{{../../resource_type}}">{{get_value_at 'services.vpc.regions' @../key 'vpcs' @key 'name'}}</a>

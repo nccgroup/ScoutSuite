@@ -117,6 +117,12 @@ function hideRow(path) {
     $('div').filter(function(){ return this.id.match(path + '.details') }).hide();
 }
 
+function hideRegion(path) {
+    $("[id='" + path + "']").hide();
+    path = path.replace('.list', '');
+    hideItems(path);
+}
+
 
 //
 // Show links and views for a given path
