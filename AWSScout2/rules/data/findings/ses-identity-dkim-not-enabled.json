@@ -1,0 +1,9 @@
+{
+    "description": "DKIM not enabled",
+    "rationale": "",
+    "path": "ses.regions.id.identities.id",
+    "dashboard_name": "Identities",
+    "conditions": [ "and",
+        [ "DkimEnabled", "false", "" ]
+    ]
+}

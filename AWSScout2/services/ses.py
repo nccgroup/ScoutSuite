@@ -28,6 +28,9 @@ class SESRegionConfig(RegionConfig):
             policies = api_clients[region].get_identity_policies(Identity = identity_name, PolicyNames = policy_names)['Policies']
             for policy_name in policies:
                 identity['policies'][policy_name] = json.loads(policies[policy_name])
+        dkim = api_clients[region].get_identity_dkim_attributes(Identities = [ identity_name ])['DkimAttributes'][identity_name]
+        identity['DkimEnabled'] = dkim['DkimEnabled']
+        identity['DkimVerificationStatus'] = dkim['DkimVerificationStatus']
         self.identities[self.get_non_aws_id(identity_name)] = identity
 
 
