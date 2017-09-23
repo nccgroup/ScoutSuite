@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
-from __future__ import print_function
-from __future__ import unicode_literals
 
 import fnmatch
 import json
 import os
 import shutil
 
-from opinel.utils.console import printDebug, printError, printException, printInfo
+from opinel.utils.console import printDebug, printError, printException, printInfo, prompt_4_yes_no
 
 from AWSScout2.rules.rule_definition import RuleDefinition
 from AWSScout2.rules.rule import Rule
@@ -33,6 +31,7 @@ class Ruleset(object):
         self.filename = self.find_file(filename)
         if not self.filename:
             self.search_ruleset(environment_name)
+        printDebug('Loading ruleset %s' % self.filename)
         self.name = os.path.basename(self.filename).replace('.json','') if not name else name
 
         # Load ruleset
@@ -89,32 +88,6 @@ class Ruleset(object):
                     rule.set_definition(self.rule_definitions, attributes, ip_ranges, params)
 
 
-    def html_generator(self, output_dir, metadata, force_write, debug):
-        """
-
-        :param output_dir:
-        :param metadata:
-        :param force_write:
-        :param debug:
-        :return:
-        """
-        # Prepare the output directories
-        prepare_html_output_dir(output_dir)
-        # Create the JS include file
-        printInfo('Preparing the HTML ruleset generator...')
-        js_ruleset = {}
-        js_ruleset['name'] = self.name
-        js_ruleset['available_rules'] = self.available_rules
-        js_ruleset['services'] = list(sorted(set(self.services)))
-        js_ruleset['ruleset_generator_metadata'] = metadata
-        save_config_to_file(self.environment_name, js_ruleset, 'ruleset', output_dir, force_write, debug)
-        # Create the HTML generator
-        html_generator = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../rules/data/ruleset-generator.html')
-        dst_html_generator = os.path.join(output_dir, 'ruleset-generator.html')
-        shutil.copyfile(html_generator, dst_html_generator)
-        return dst_html_generator
-
-
     def load_rule_definitions(self, ruleset_generator = False, rule_dirs = []):
         """
         Load definition of rules declared in the ruleset
@@ -144,7 +117,7 @@ class Ruleset(object):
                     self.rule_definitions[os.path.basename(rule_filename)] = RuleDefinition(rule_filename)
 
 
-    def search_ruleset(self, environment_name):
+    def search_ruleset(self, environment_name, no_prompt = False):
         """
 
         :param environment_name:
@@ -152,14 +125,14 @@ class Ruleset(object):
         """
         ruleset_found = False
         if environment_name != 'default':
-            for f in os.listdir(os.getcwd()):
-                if fnmatch.fnmatch(f, '*.' + environment_name + '.json'):
+            ruleset_file_name = 'ruleset-%s.json' % environment_name
+            ruleset_file_path = os.path.join(os.getcwd(), ruleset_file_name)
+            if os.path.exists(ruleset_file_path):
+                if no_prompt or prompt_4_yes_no("A ruleset whose name matches your environment name was found in %s. Would you like to use it instead of the default one" % ruleset_file_name):
                     ruleset_found = True
-            if ruleset_found and prompt_4_yes_no("A ruleset whose name matches your environment name was found in %s. Would you like to use it instead of the default one" % f):
-                self.filename = f
+                    self.filename = ruleset_file_path
         if not ruleset_found:
             self.filename = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data/rulesets/default.json')
-
 
 
     def find_file(self, filename, filetype = 'rulesets'):
