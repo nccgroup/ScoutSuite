@@ -32,6 +32,9 @@ testcases = [
 
 class Rule(object):
 
+    def to_string(self):
+        return (str(vars(self)))
+    
     def __init__(self, filename, rule_type, enabled, level, arg_values):
         self.filename = filename
         self.rule_type = rule_type

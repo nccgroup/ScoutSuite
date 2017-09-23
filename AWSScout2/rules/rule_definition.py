@@ -39,6 +39,7 @@ class RuleDefinition(object):
         for rule_dir in self.rule_dirs:
             file_path = os.path.join(rule_dir, self.file_name) if rule_dir else self.file_name
             if os.path.isfile(file_path):
+                self.file_path = file_path
                 file_name_valid = True
                 break
         # Look for a built-in rule
