@@ -21,7 +21,7 @@ def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     map_all_subnets(aws_config)
     set_emr_vpc_ids(aws_config)
     sort_vpc_flow_logs(aws_config['services']['vpc'])
-    parse_elb_policies(aws_config)
+    #parse_elb_policies(aws_config)
     list_ec2_network_attack_surface(aws_config['services']['ec2'])
     add_security_group_name_to_ec2_grants(aws_config['services']['ec2'], aws_config['aws_account_id'])
     process_cloudtrail_trails(aws_config['services']['cloudtrail'])
