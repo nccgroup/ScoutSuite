@@ -1,0 +1,4 @@
+[
+    "ec2.regions.eu-west-1.vpcs.vpc-eu222222.security_groups.sg-eu222222.rules.ingress.protocols.TCP.ports.42.cidrs.0.CIDR",
+    "ec2.regions.eu-west-1.vpcs.vpc-eu222222.security_groups.sg-eu222222.rules.ingress.protocols.TCP.ports.43.cidrs.0.CIDR"
+]

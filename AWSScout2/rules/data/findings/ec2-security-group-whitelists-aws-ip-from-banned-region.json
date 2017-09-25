@@ -1,9 +1,9 @@
 {
     "description": "Security group whitelists AWS IPs outside the USA",
-    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id",
+    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
     "dashboard_name": "Rules",
     "conditions": [ "and",
-        [ "this", "inSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges/aws.json)" ],
-        [ "this", "notInSubnets", "_IP_RANGES_FROM_LOCAL_FILE_(AWSScout2/rules/data/ip-ranges/aws-in-us.json)" ]
+        [ "this", "inSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges/aws.json, [])" ],
+        [ "this", "notInSubnets", "_IP_RANGES_FROM_LOCAL_FILE_(AWSScout2/rules/data/ip-ranges/aws-in-us.json, [])" ]
     ]
 }

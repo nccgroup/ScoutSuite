@@ -1,0 +1,359 @@
+{
+    "aws_account_id": "123456789012",
+    "services": {
+        "ec2": {
+            "instances_count": 69,
+            "regions": {
+                "ap-northeast-2": {
+                    "instances_count": 0,
+                    "region": "ap-northeast-2",
+                    "security_groups_count": 1,
+                    "snapshots": {},
+                    "snapshots_count": 0,
+                    "volumes": {},
+                    "volumes_count": 0,
+                    "vpc_resource_types": [
+                        "instances",
+                        "security_groups"
+                    ],
+                    "vpcs": {
+                        "vpc-ap111111": {
+                            "instances": {},
+                            "name": null,
+                            "security_groups": {
+                                "sg-ap111111": {
+                                    "description": "default VPC security group",
+                                    "id": "sg-ap111111",
+                                    "name": "default",
+                                    "owner_id": "123456789012",
+                                    "rules": {
+                                        "egress": {
+                                            "count": 0,
+                                            "protocols": {}
+                                        },
+                                        "ingress": {
+                                            "count": 1,
+                                            "protocols": {
+                                                "ALL": {
+                                                    "ports": {
+                                                        "N/A": {
+                                                            "security_groups": [
+                                                                {
+                                                                    "GroupId": "sg-ap111111",
+                                                                    "GroupName": "default",
+                                                                    "UserId": "123456789012"
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "ap-south-1": {
+                    "instances_count": 0,
+                    "region": "ap-south-1",
+                    "security_groups_count": 1,
+                    "snapshots": {},
+                    "snapshots_count": 0,
+                    "volumes": {},
+                    "volumes_count": 0,
+                    "vpc_resource_types": [
+                        "instances",
+                        "security_groups"
+                    ],
+                    "vpcs": {
+                        "vpc-ap222222": {
+                            "instances": {},
+                            "name": null,
+                            "security_groups": {
+                                "sg-ap222222": {
+                                    "description": "default VPC security group",
+                                    "id": "sg-ap222222",
+                                    "name": "default",
+                                    "owner_id": "123456789012",
+                                    "rules": {
+                                        "egress": {
+                                            "count": 0,
+                                            "protocols": {}
+                                        },
+                                        "ingress": {
+                                            "count": 0,
+                                            "protocols": {}
+                                        }
+                                    },
+                                    "used_by": {
+                                        "ec2": {
+                                            "resource_type": {
+                                                "instances": {
+                                                    "running": [
+                                                        "i-ap222222222222222"
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "eu-central-1": {
+                    "instances_count": 0,
+                    "region": "eu-central-1",
+                    "security_groups_count": 1,
+                    "snapshots": {},
+                    "snapshots_count": 0,
+                    "volumes": {},
+                    "volumes_count": 0,
+                    "vpc_resource_types": [
+                        "instances",
+                        "security_groups"
+                    ],
+                    "vpcs": {
+                        "vp-eu111111": {
+                            "instances": {},
+                            "name": null,
+                            "security_groups": {
+                                "sg-eu111111": {
+                                    "description": "default VPC security group",
+                                    "id": "sg-eu111111",
+                                    "name": "default",
+                                    "owner_id": "123456789012",
+                                    "rules": {
+                                        "egress": {
+                                            "count": 0,
+                                            "protocols": {}
+                                        },
+                                        "ingress": {
+                                            "count": 0,
+                                            "protocols": {}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "eu-west-1": {
+                    "instances_count": 35,
+                    "region": "eu-west-1",
+                    "security_groups_count": 30,
+                    "vpcs": {
+                        "vpc-eu111111": {
+                            "instances": {},
+                            "name": null,
+                            "security_groups": {
+                                "sg-eu111111": {
+                                    "description": "default VPC security group",
+                                    "id": "sg-eu111111",
+                                    "name": "default",
+                                    "owner_id": "123456789012",
+                                    "rules": {
+                                        "egress": {
+                                            "count": 0,
+                                            "protocols": {}
+                                        },
+                                        "ingress": {
+                                            "count": 0,
+                                            "protocols": {}
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "vpc-eu222222": {
+                            "name": "Test VPC in eu-west-1",
+                            "security_groups": {
+                                "sg-eu222222": {
+                                    "description": "Allow access to Record Service ports from other region",
+                                    "id": "sg-eu222222",
+                                    "name": "test-sg-222222",
+                                    "owner_id": "123456789012",
+                                    "rules": {
+                                        "egress": {
+                                            "count": 1,
+                                            "protocols": {
+                                                "ALL": {
+                                                    "ports": {
+                                                        "N/A": {
+                                                            "cidrs": [
+                                                                {
+                                                                    "CIDR": "0.0.0.0/0",
+                                                                    "CIDRName": "All"
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "ingress": {
+                                            "count": 1,
+                                            "protocols": {
+                                                "TCP": {
+                                                    "ports": {
+                                                        "10-30": {
+                                                            "cidrs": [
+                                                                {
+                                                                    "CIDR": "10.0.0.0/8"
+                                                                }
+                                                            ]
+                                                        },
+                                                        "42": {
+                                                            "cidrs": [
+                                                                {
+                                                                    "CIDR": "54.151.0.0/17"
+                                                                }
+                                                            ]
+                                                        },
+                                                        "43": {
+                                                            "cidrs": [
+                                                                {
+                                                                    "CIDR": "13.124.0.0/16"
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "used_by": {
+                                        "ec2": {
+                                            "resource_type": {
+                                                "instances": {
+                                                    "running": [
+                                                        "i-eu111111111111111"
+                                                    ]
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "sa-east-1": {
+                    "instances_count": 0,
+                    "region": "sa-east-1",
+                    "security_groups_count": 1,
+                    "snapshots": {},
+                    "snapshots_count": 0,
+                    "volumes": {},
+                    "volumes_count": 0,
+                    "vpc_resource_types": [
+                        "instances",
+                        "security_groups"
+                    ],
+                    "vpcs": {
+                        "vpc-sa111111": {
+                            "instances": {},
+                            "name": null,
+                            "security_groups": {
+                                "sg-sa111111": {
+                                    "description": "default VPC security group",
+                                    "id": "sg-sa111111",
+                                    "name": "default",
+                                    "owner_id": "123456789012",
+                                    "rules": {
+                                        "egress": {
+                                            "count": 0,
+                                            "protocols": {}
+                                        },
+                                        "ingress": {
+                                            "count": 0,
+                                            "protocols": {}
+                                        }
+                                    }
+                                },
+                                "sg-sa222222": {
+                                    "description": "Test SG in SA",
+                                    "id": "sg-sa111111",
+                                    "name": "testsg",
+                                    "owner_id": "123456789012",
+                                    "rules": {
+                                        "egress": {
+                                            "count": 0,
+                                            "protocols": {}
+                                        },
+                                        "ingress": {
+                                            "count": 1,
+                                            "protocols": {
+                                                "ALL": {
+                                                    "ports": {
+                                                        "N/A": {
+                                                            "security_groups": [
+                                                                {
+                                                                    "GroupId": "sg-sa111111",
+                                                                    "GroupName": "testsg",
+                                                                    "UserId": "123456789012"
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "sg-sa33333333": {
+                                    "description": "Test SG in SA",
+                                    "id": "sg-sa33333333",
+                                    "name": "testsg",
+                                    "owner_id": "123456789012",
+                                    "rules": {
+                                        "egress": {
+                                            "count": 0,
+                                            "protocols": {}
+                                        },
+                                        "ingress": {
+                                            "count": 1,
+                                            "protocols": {
+                                                "ALL": {
+                                                    "ports": {
+                                                        "N/A": {
+                                                            "cidrs": [
+                                                                {
+                                                                    "CIDR": "0.0.0.0/0"
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                },
+                                                "TCP": {
+                                                    "ports": {
+                                                        "42": {
+                                                            "cidrs": [
+                                                                {
+                                                                    "CIDR": "0.0.0.0/0"
+                                                                }
+                                                            ]
+                                                        },
+                                                        "3306": {
+                                                            "cidrs": [
+                                                                {
+                                                                    "CIDR": "0.0.0.0/0"
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

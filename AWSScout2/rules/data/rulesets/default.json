@@ -111,12 +111,6 @@
                 "level": "danger"
             }
         ],
-        "iam-password-policy-no-expiration.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
         "rds-snapshot-public.json": [
             {
                 "enabled": true,
@@ -198,7 +192,7 @@
                 "level": "warning"
             }
         ],
-        "ec2-security-group-opens-non-http-port-to-all.json": [
+        "ec2-security-group-opens-port-to-all.json": [
             {
                 "enabled": true,
                 "args": [
@@ -559,15 +553,6 @@
                 "level": "danger"
             }
         ],
-        "iam-password-policy-minimum-length.json": [
-            {
-                "enabled": true,
-                "args": [
-                    "8"
-                ],
-                "level": "danger"
-            }
-        ],
         "iam-user-with-multiple-access-keys.json": [
             {
                 "enabled": true,
@@ -686,6 +671,60 @@
             {
                 "enabled": true,
                 "level": "warning"
+            }
+        ],
+        "iam-password-policy-expiration-threshold.json": [
+            {
+                "enabled": false,
+                "level": "danger",
+                "args": [
+                    "90"
+                ]
+            }
+        ],
+        "iam-password-policy-lowercase-required.json": [
+            {
+                "enabled": false,
+                "level": "danger"
+            }
+        ],
+        "iam-password-policy-minimum-length.json": [
+            {
+                "enabled": true,
+                "args": [
+                    "8"
+                ],
+                "level": "danger"
+            }
+        ],
+        "iam-password-policy-no-expiration.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-password-policy-no-lowercase-required.json": [
+            {
+                "enabled": false,
+                "level": "danger"
+            }
+        ],
+        "iam-password-policy-no-number-required.json": [
+            {
+                "enabled": false,
+                "level": "danger"
+            }
+        ],
+        "iam-password-policy-no-symbol-required.json": [
+            {
+                "enabled": false,
+                "level": "danger"
+            }
+        ],
+        "iam-password-policy-no-uppercase-required.json": [
+            {
+                "enabled": false,
+                "level": "danger"
             }
         ],
         "iam-password-policy-reuse-enabled.json": [
@@ -811,6 +850,15 @@
             {
                 "enabled": true,
                 "args": [
+                    "MySQL",
+                    "TCP",
+                    "3306"
+                ],
+                "level": "danger"
+            },
+            {
+                "enabled": true,
+                "args": [
                     "DNS",
                     "UDP",
                     "53"
@@ -832,15 +880,6 @@
                     "MsSQL",
                     "TCP",
                     "1433"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "MySQL",
-                    "TCP",
-                    "3306"
                 ],
                 "level": "danger"
             },

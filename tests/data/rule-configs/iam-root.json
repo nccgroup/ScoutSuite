@@ -1,0 +1,33 @@
+{
+    "aws_account_id": "123456789012",
+    "services": {
+        "iam": {
+            "credential_report": {
+                "<root_account>": {
+                    "access_key_1_active": "false",
+                    "access_key_1_last_rotated": "N/A",
+                    "access_key_1_last_used_date": "N/A",
+                    "access_key_1_last_used_region": "N/A",
+                    "access_key_1_last_used_service": "N/A",
+                    "access_key_2_active": "false",
+                    "access_key_2_last_rotated": "N/A",
+                    "access_key_2_last_used_date": "N/A",
+                    "access_key_2_last_used_region": "N/A",
+                    "access_key_2_last_used_service": "N/A",
+                    "arn": "arn:aws:iam::123456789012:root",
+                    "cert_1_active": "false",
+                    "cert_1_last_rotated": "N/A",
+                    "cert_2_active": "false",
+                    "cert_2_last_rotated": "N/A",
+                    "mfa_active": "false",
+                    "password_enabled": "not_supported",
+                    "password_last_changed": "not_supported",
+                    "password_last_used": "no_information",
+                    "password_next_rotation": "not_supported",
+                    "user": "<root_account>",
+                    "user_creation_time": "2017-09-06T13:19:23+00:00"
+                }
+            }
+        }
+    }
+}

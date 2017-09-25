@@ -1,0 +1,3 @@
+[
+    "ec2.regions.sa-east-1.vpcs.vpc-sa111111.security_groups.sg-sa33333333.rules.ingress.protocols.TCP.ports.3306.cidrs.0.CIDR"
+]

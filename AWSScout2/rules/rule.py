@@ -11,8 +11,8 @@ from AWSScout2.utils import format_service_name
 ip_ranges_from_args = 'ip-ranges-from-args'
 
 re_aws_account_id = re.compile(r'_AWS_ACCOUNT_ID_')
-re_ip_ranges_from_file = re.compile(r'_IP_RANGES_FROM_FILE_\((.*?)\)')
-re_ip_ranges_from_local_file = re.compile(r'_IP_RANGES_FROM_LOCAL_FILE`_\((.*?)\)')
+re_ip_ranges_from_file = re.compile(r'_IP_RANGES_FROM_FILE_\((.*?)(,.*?)\)')
+re_ip_ranges_from_local_file = re.compile(r'_IP_RANGES_FROM_LOCAL_FILE_\((.*?)(,.*?)\)')
 re_strip_dots = re.compile(r'(_STRIPDOTS_\((.*?)\))')
 
 testcases = [
@@ -85,24 +85,27 @@ class Rule(object):
             string_definition = string_definition.replace(value[0], value[1].replace('.', ''))
         definition = json.loads(string_definition)
         # Set special values (IP ranges, AWS account ID, ...)
-        if len(attributes):
-          for condition in definition['conditions']:
+        for condition in definition['conditions']:
             if type(condition) != list or len(condition) == 1 or type(condition[2]) == list:
                 continue
             for testcase in testcases:
                 result = testcase['regex'].match(condition[2])
                 if result and (testcase['name'] == 'ip_ranges_from_file' or testcase['name'] == 'ip_ranges_from_local_file'):
                     filename = result.groups()[0]
+                    conditions = result.groups()[1] if len(result.groups()) > 1 else []
+                    # TODO :: handle comma here...
                     if filename == ip_ranges_from_args:
                         prefixes = []
                         for filename in ip_ranges:
-                            prefixes += read_ip_ranges(filename, local_file = True, ip_only = True)
+                            prefixes += read_ip_ranges(filename, local_file = True, ip_only = True, conditions = conditions)
                         condition[2] = prefixes
+                        break
                     else:
                         local_file = True if testcase['name'] == 'ip_ranges_from_local_file' else False
-                        condition[2] = read_ip_ranges(filename, local_file = local_file, ip_only = True)
+                        condition[2] = read_ip_ranges(filename, local_file = local_file, ip_only = True, conditions = conditions)
+                        break
                     break
-                else:
+                elif result:
                     condition[2] = testcase['regex']
                     break
 

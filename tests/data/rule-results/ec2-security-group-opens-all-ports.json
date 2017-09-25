@@ -1,0 +1,5 @@
+[
+    "ec2.regions.ap-northeast-2.vpcs.vpc-ap111111.security_groups.sg-ap111111.rules.ingress.protocols.ALL.ports.N/A", 
+    "ec2.regions.sa-east-1.vpcs.vpc-sa111111.security_groups.sg-sa222222.rules.ingress.protocols.ALL.ports.N/A", 
+    "ec2.regions.sa-east-1.vpcs.vpc-sa111111.security_groups.sg-sa33333333.rules.ingress.protocols.ALL.ports.N/A"
+]
