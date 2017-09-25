@@ -38,7 +38,7 @@ class ELBv2RegionConfig(RegionConfig):
         lb['arn'] = lb.pop('LoadBalancerArn')
         lb['name'] = lb.pop('LoadBalancerName')
         vpc_id = lb.pop('VpcId') if 'VpcId' in lb and lb['VpcId'] else ec2_classic
-        manage_dictionary(self.vpcs, vpc_id, VPCConfig(resource_types = self.vpc_resource_types))
+        manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
         lb['security_groups'] = []
         for sg in lb['SecurityGroups']:
             lb['security_groups'].append({'GroupId': sg})
