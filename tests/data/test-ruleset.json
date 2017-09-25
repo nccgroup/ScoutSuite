@@ -1,0 +1,11 @@
+{
+    "rules": {
+        "iam-password-policy-no-expiration.json": [
+            {
+                "enabled": true, 
+                "level": "danger"
+            }
+        ]
+    }, 
+    "about": "regression test"
+}
