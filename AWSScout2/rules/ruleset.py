@@ -23,7 +23,7 @@ class Ruleset(object):
     :ivar ??
     """
 
-    def __init__(self, environment_name = 'default', filename = None, name = None, services = [], rule_type = 'findings', rules_dir = None, ip_ranges = [], ruleset_generator = False):
+    def __init__(self, environment_name = 'default', filename = None, name = None, services = [], rule_type = 'findings', rules_dir = None, ip_ranges = [], aws_account_id = None, ruleset_generator = False):
         self.rules_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
         self.environment_name = environment_name
         self.rule_type = rule_type
@@ -41,11 +41,12 @@ class Ruleset(object):
         self.load_rule_definitions(ruleset_generator)
 
         # Prepare the rules
+        params = {}
+        params['aws_account_id'] = aws_account_id
         if ruleset_generator:
-            self.prepare_rules(attributes =  ['description', 'key', 'rationale'])
+            self.prepare_rules(attributes =  ['description', 'key', 'rationale'], params = params)
         else:
-            # aws_account_id = '' ... # TODO
-            self.prepare_rules(ip_ranges = ip_ranges, params = {})
+            self.prepare_rules(ip_ranges = ip_ranges, params = params)
 
 
     def load(self, rule_type, quiet = False):
@@ -76,7 +77,7 @@ class Ruleset(object):
                 printError('Error: the file %s does not exist.' % self.filename)
 
 
-    def prepare_rules(self, attributes = [], ip_ranges = [], params = []):
+    def prepare_rules(self, attributes = [], ip_ranges = [], params = {}):
         """
         Update the ruleset's rules by duplicating fields as required by the HTML ruleset generator
 

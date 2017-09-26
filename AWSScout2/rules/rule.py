@@ -106,7 +106,7 @@ class Rule(object):
                         break
                     break
                 elif result:
-                    condition[2] = testcase['regex']
+                    condition[2] = params[testcase['name']]
                     break
 
         if len(attributes) == 0:

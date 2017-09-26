@@ -396,7 +396,7 @@
                 "level": "warning"
             }
         ],
-        "iam-assume-role-lacks-external-id.json": [
+        "iam-assume-role-lacks-external-id-and-mfa.json": [
             {
                 "enabled": true,
                 "level": "danger"
