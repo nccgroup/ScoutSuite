@@ -16,6 +16,8 @@ class ProcessingEngine(object):
         self.rules = {}
         for filename in self.ruleset.rules:
             for rule in self.ruleset.rules[filename]:
+                if not rule.enabled:
+                    continue
                 manage_dictionary(self.rules, rule.path, [])
                 self.rules[rule.path].append(rule)
 
