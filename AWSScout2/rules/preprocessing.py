@@ -27,6 +27,7 @@ def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     process_cloudtrail_trails(aws_config['services']['cloudtrail'])
     process_network_acls(aws_config['services']['vpc'])
     match_network_acls_and_subnets(aws_config['services']['vpc'])
+    match_instances_and_subnets(aws_config)
     match_instances_and_roles(aws_config)
     match_roles_and_cloudformation_stacks(aws_config)
     match_roles_and_vpc_flowlogs(aws_config)
@@ -246,6 +247,19 @@ def match_network_acls_and_subnets_callback(vpc_config, current_config, path, cu
         subnet_path = current_path[:-1] + ['subnets', association['SubnetId']]
         subnet = get_object_at(vpc_config, subnet_path)
         subnet['network_acl'] = acl_id
+
+
+def match_instances_and_subnets(aws_config):
+    go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'instances'], [], match_instances_and_subnets_callback, {})
+
+
+def match_instances_and_subnets_callback(aws_config, current_config, path, current_path, instance_id, callback_args):
+    subnet_id = current_config['SubnetId']
+    vpc = subnet_map[subnet_id]
+    subnet = aws_config['services']['vpc']['regions'][vpc['region']]['vpcs'][vpc['vpc_id']]['subnets'][subnet_id]
+    manage_dictionary(subnet, 'instances', [])
+    if instance_id not in subnet['instances']:
+        subnet['instances'].append(instance_id)
 
 
 def match_instances_and_roles(aws_config):
