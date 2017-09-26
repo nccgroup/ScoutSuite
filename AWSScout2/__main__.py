@@ -90,12 +90,12 @@ def main():
     preprocessing(aws_config, args.ip_ranges, args.ip_ranges_name_key)
 
     # Analyze config
-    finding_rules = Ruleset(profile_name, filename = args.ruleset, ip_ranges = args.ip_ranges)
+    finding_rules = Ruleset(profile_name, filename = args.ruleset, ip_ranges = args.ip_ranges, aws_account_id = aws_config['aws_account_id'])
     pe = ProcessingEngine(finding_rules)
     pe.run(aws_config)
 
     # Create display filters
-    filter_rules = Ruleset(filename = 'filters.json', rule_type = 'filters')
+    filter_rules = Ruleset(filename = 'filters.json', rule_type = 'filters', aws_account_id = aws_config['aws_account_id'])
     pe = ProcessingEngine(filter_rules)
     pe.run(aws_config)
 

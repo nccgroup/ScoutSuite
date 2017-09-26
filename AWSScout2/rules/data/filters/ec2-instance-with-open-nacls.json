@@ -1,5 +1,5 @@
 {
-    "description": "Instance with open NACLs",
+    "description": "Public instance with open NACLs",
     "rationale": "",
     "path": "ec2.regions.id.vpcs.id.instances.id.network_interfaces.id",
     "dashboard_name": "ENIs",
