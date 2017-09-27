@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 __author__  = 'l01cd3v'
-__version__ = '3.0.4'
+__version__ = '3.0.5'
 
 AWSCONFIG  = 42
 EXCEPTIONS = 4242
