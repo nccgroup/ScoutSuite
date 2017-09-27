@@ -56,6 +56,8 @@ class ELBRegionConfig(RegionConfig):
         manage_dictionary(elb, 'instances', [])
         for i in lb['Instances']:
             elb['instances'].append(i['InstanceId'])
+        # Get attributes
+        elb['attributes'] = api_clients[region].describe_load_balancer_attributes(LoadBalancerName=elb['name'])['LoadBalancerAttributes']
         self.vpcs[vpc_id].elbs[self.get_non_aws_id(elb['name'])] = elb
 
 

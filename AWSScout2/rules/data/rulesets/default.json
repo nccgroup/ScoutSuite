@@ -992,6 +992,12 @@
                 "level": "warning"
             }
         ],
+        "elb-no-access-logs.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "elbv2-no-access-logs.json": [
             {
                 "enabled": true,

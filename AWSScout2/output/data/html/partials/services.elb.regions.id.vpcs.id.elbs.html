@@ -2,20 +2,21 @@
     <!-- elb ELB partial -->
     <script id="services.elb.regions.id.vpcs.id.elbs.partial" type="text/x-handlebars-template">
         <div class="list-group-item active">
-          <h4 class="list-group-item-heading">{{name}}</h4>
+            <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
-          <h4>Network</h4>
-          <ul>
-            <li class="list-group-item-text">VPC: {{get_value_at 'services.elb.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</li>
-            <li class="list-group-item-text">DNS: {{DNSName}}</li>
-            <li class="list-group-item-text">Availability zones:</li>
+            <h4>Network</h4>
             <ul>
-              {{#each AvailabilityZones}}
-                <li class="list-group-item-text">{{this}}</li>
-              {{/each}}
+                <li class="list-group-item-text">VPC: {{get_value_at 'services.elb.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</li>
+                <li class="list-group-item-text">DNS: {{DNSName}}</li>
+                <li class="list-group-item-text">Scheme: {{Scheme}}</li>
+                <li class="list-group-item-text">Availability zones:</li>
+                <ul>
+                    {{#each AvailabilityZones}}
+                        <li class="list-group-item-text">{{this}}</li>
+                    {{/each}}
+                </ul>
             </ul>
-          </ul>
         </div>
         <div class="list-group-item">
             <h4>Listeners</h4>
@@ -30,6 +31,16 @@
                     </li>
                 {{/each}}
           </ul>
+        </div>
+        <div class="list-group-item">
+            <h4>Attributes</h4>
+            <ul>
+                {{#each attributes}}
+                    {{#each this}}
+                        <li class="list-group-item-text">{{@../key}}.{{@key}}: <span id="elb.regions.{{../../region}}.vpcs.{{../../vpc}}.elbs.{{@../../key}}.attributes.{{@../key}}.{{@key}}">{{this}}</span></li>
+                    {{/each}}
+                {{/each}}
+            </ul>
         </div>
         <div class="list-group-item" style="padding-bottom: 0 !important;">
           <div class="accordion">
