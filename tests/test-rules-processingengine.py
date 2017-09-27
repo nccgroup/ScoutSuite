@@ -56,7 +56,7 @@ class TestAWSScout2RulesProcessingEngine:
             pe.run(aws_config)
             service = file_name.split('-')[0]
             findings = aws_config['services'][service]['findings']
-            findings = findings[findings.keys()[0]]['items']
+            findings = findings[list(findings.keys())[0]]['items']
             test_result_file_name = os.path.join(test_dir, 'data/rule-results/%s' % file_name)
             if not os.path.isfile(test_result_file_name):
                 printError('Expected findings:: ')
