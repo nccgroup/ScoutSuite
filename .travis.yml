@@ -13,7 +13,6 @@ before_script:
 
 # command to run tests
 script:
-
 #  - 'nosetests tests/test-listall.py'
 #  - 'nosetests tests/test-rulesgenerator.py'
 #  - 'nosetests tests/test-utils.py'
@@ -24,3 +23,7 @@ script:
 
 # use container-base infrastructure
 sudo: false
+
+# Update test coverage
+after_success:
+    - coveralls
