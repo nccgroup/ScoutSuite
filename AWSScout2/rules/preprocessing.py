@@ -113,7 +113,7 @@ def process_network_acls_check_for_allow_all(network_acl, direction):
 
 
 def process_network_acls_check_for_aws_default(network_acl, direction):
-    if len(network_acl['rules'][direction]) == 2 and network_acl['allow_all_%s_traffic' % direction] > 0 and '100' in network_acl['rules'][direction]:
+    if len(network_acl['rules'][direction]) == 2 and int(network_acl['allow_all_%s_traffic' % direction]) > 0 and '100' in network_acl['rules'][direction]:
         # Assume it is AWS' default rules because there are 2 rules (100 and 65535) and the first rule allows all traffic
         network_acl['use_default_%s_rules' % direction] = True
     else:
