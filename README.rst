@@ -5,7 +5,7 @@ AWS Scout2
 .. image:: https://travis-ci.org/nccgroup/Scout2.svg?branch=master
         :target: https://travis-ci.org/nccgroup/Scout2
 
-.. image:: https://coveralls.io/repos/github/nccgroup/Scout2/badge.svg
+.. image:: https://coveralls.io/repos/github/nccgroup/Scout2/badge.svg?branch=master
         :target: https://coveralls.io/github/nccgroup/Scout2
 
 .. image:: https://badge.fury.io/py/AWSScout2.svg
