@@ -3,13 +3,15 @@
     <script id="ec2_grants.partial" type="text/x-handlebars-template">
       <ul>
         {{#each items}}
-          <span id="ec2.regions.{{../region}}.vpcs.{{../vpc}}.security_groups.{{../sg_id}}.rules.{{../direction}}.protocols.{{../protocol}}.ports.{{../ports}}.security_groups.{{@key}}">
-            {{#if GroupName}}
-              <li class="list-group-item-text">{{GroupName}} (<a href="javascript:findAndShowEC2Object('regions.vpcs.security_groups', '{{GroupId}}')">{{GroupId}}</a>)</li>
-            {{else}}
-              <li class="list-group-item-text">{{GroupId}} (AWS account ID {{UserId}})</li>
-            {{/if}}
-          </span>
+          <li class="list-group-item-text">
+            <span id="ec2.regions.{{../region}}.vpcs.{{../vpc}}.security_groups.{{../sg_id}}.rules.{{../direction}}.protocols.{{../protocol}}.ports.{{../ports}}.security_groups.{{@key}}">
+              {{#if GroupName}}
+                {{GroupName}} (<a href="javascript:findAndShowEC2Object('regions.vpcs.security_groups', '{{GroupId}}')">{{GroupId}}</a>)
+              {{else}}
+                {{GroupId}} (AWS account ID {{UserId}})
+              {{/if}}
+            </span>
+          </li>
         {{/each}}
       </ul>
     </script>

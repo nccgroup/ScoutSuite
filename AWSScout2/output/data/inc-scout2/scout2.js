@@ -174,6 +174,9 @@ function showFindings(path, resource_path) {
     items = get_value_at(path);
     level = get_value_at(path.replace('items', 'level'));
     resource_path_array = resource_path.split('.');
+    split_path = path.split('.');
+    finding_service = split_path[1];
+    finding_key = split_path[split_path.length - 2];
     for (item in items) {
         var id_array = items[item].split('.');
         var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
@@ -184,6 +187,21 @@ function showFindings(path, resource_path) {
             $('[id="' + items[item] + '"]').addClass('finding-' + level);
         }
         $('[id="' + items[item] + '"]').removeClass('finding-hidden');
+        $('[id="' + items[item] +'"]').attr('data-finding-service', finding_service);
+        $('[id="' + items[item] +'"]').attr('data-finding-key', finding_key);
+        $('[id="' + items[item] + '"]').click(function(e) {
+            finding_id = e.target.id;
+            if (!(finding_service in exceptions)) {
+                exceptions[finding_service] = new Object();
+            }
+            if (!(finding_key in exceptions[finding_service])) {
+                exceptions[finding_service][finding_key] = new Array();
+            }
+            is_exception = confirm('Mark this item as an exception ?');
+            if (is_exception && (exceptions[finding_service][finding_key].indexOf(finding_id) == -1)) {
+                exceptions[finding_service][finding_key].push(finding_id);
+            }
+        });
     }
 }
 
@@ -754,18 +772,24 @@ var generate_ruleset = function() {
         }     
         ruleset['rules'].push(rule);
     }
-    console.log(ruleset)
-    
-    var uriContent = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(ruleset, null, 4));
-    var dlAnchorElem = document.getElementById('downloadAnchorElem');
-    dlAnchorElem.setAttribute("href", uriContent);
-    dlAnchorElem.setAttribute("download", aws_info['name'] + '.json');
-    dlAnchorElem.click();
-
-    //var uriContent = "data:application/octet-stream;charset=utf-16le;base64,//5mAG8AbwAgAGIAYQByAAoA";
-    //newWindow = window.open(uriContent, 'custom-ruleset.json');
+    download_configuration(ruleset, aws_info['name'], '');
 }
 
+var download_configuration = function(configuration, name, prefix) {
+
+    var uriContent = "data:text/json;charset=utf-8," + encodeURIComponent(prefix + JSON.stringify(configuration, null, 4));
+    var dlAnchorElem = document.getElementById('downloadAnchorElem');
+    dlAnchorElem.setAttribute("href", uriContent);
+    dlAnchorElem.setAttribute("download", name + '.json');
+    dlAnchorElem.click();
+}
+
+var download_exceptions = function() {
+    var url = window.location.pathname;
+    var profile_name = url.substring(url.lastIndexOf('/')+1).replace('report-', '').replace('.html', '');
+    console.log(exceptions);
+    download_configuration(exceptions, 'exceptions-' + profile_name, 'exceptions = \n');
+}
 
 var show_element = function(element_id) {
 //    document.getElementById(element_id).style.display = 'block';
