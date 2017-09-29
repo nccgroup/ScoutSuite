@@ -21,7 +21,7 @@ from AWSScout2 import AWSCONFIG, __version__ as scout2_version
 from AWSScout2.cli_parser import Scout2ArgumentParser
 from AWSScout2.configs.scout2 import  Scout2Config
 from AWSScout2.output.html import Scout2Report
-from AWSScout2.rules.exceptions import process_exceptions
+from AWSScout2.rules.exceptions import RuleExceptions
 from AWSScout2.rules.ruleset import Ruleset
 from AWSScout2.rules.preprocessing import preprocessing
 from AWSScout2.rules.postprocessing import postprocessing
@@ -100,13 +100,14 @@ def main():
     pe.run(aws_config)
 
     # Handle exceptions
-    process_exceptions(aws_config, args.exceptions[0])
+    exceptions = RuleExceptions(profile_name, args.exceptions[0])
+    exceptions.process(aws_config)
 
     # Finalize
     postprocessing(aws_config, report.current_time, finding_rules)
 
     # Save config and create HTML report
-    html_report_path = report.save(aws_config, {}, args.force_write, args.debug)
+    html_report_path = report.save(aws_config, exceptions.exceptions, args.force_write, args.debug)
 
     # Open the report by default
     if not args.no_browser:

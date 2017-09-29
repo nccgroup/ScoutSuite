@@ -39,8 +39,9 @@ class JavaScriptReaderWriter(object):
             self.timestamp = self.current_time.strftime("%Y-%m-%d_%Hh%M%z") if not timestamp else timestamp
 
 
-    def load_from_file(self, config_type):
-        config_path, first_line = get_filename(config_type, self.profile, self.report_dir)
+    def load_from_file(self, config_type, config_path = None, first_line = None):
+        if not config_path:
+            config_path, first_line = get_filename(config_type, self.profile, self.report_dir)
         with open(config_path, 'rt') as f:
             json_payload = f.readlines()
             if first_line:
