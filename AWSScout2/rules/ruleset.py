@@ -4,6 +4,7 @@ import fnmatch
 import json
 import os
 import shutil
+import tempfile
 
 from opinel.utils.console import printDebug, printError, printException, printInfo, prompt_4_yes_no
 
@@ -12,6 +13,7 @@ from AWSScout2.rules.rule import Rule
 
 aws_ip_ranges_filename = 'ip-ranges.json'
 ip_ranges_from_args = 'ip-ranges-from-args'
+
 
 
 class Ruleset(object):
@@ -23,7 +25,7 @@ class Ruleset(object):
     :ivar ??
     """
 
-    def __init__(self, environment_name = 'default', filename = None, name = None, services = [], rule_type = 'findings', rules_dir = None, ip_ranges = [], aws_account_id = None, ruleset_generator = False):
+    def __init__(self, environment_name = 'default', filename = None, name = None, rule_type = 'findings', ip_ranges = [], aws_account_id = None, ruleset_generator = False):
         self.rules_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
         self.environment_name = environment_name
         self.rule_type = rule_type
@@ -33,12 +35,15 @@ class Ruleset(object):
             self.search_ruleset(environment_name)
         printDebug('Loading ruleset %s' % self.filename)
         self.name = os.path.basename(self.filename).replace('.json','') if not name else name
-
-        # Load ruleset
         self.load(self.rule_type)
+        self.shared_init(ruleset_generator, [], aws_account_id, ip_ranges)
+
+
+    def shared_init(self, ruleset_generator, rule_dirs, aws_account_id, ip_ranges):
 
         # Load rule definitions
-        self.load_rule_definitions(ruleset_generator)
+        if not hasattr(self, 'rule_definitions'):
+            self.load_rule_definitions(ruleset_generator, rule_dirs)
 
         # Prepare the rules
         params = {}
@@ -75,6 +80,19 @@ class Ruleset(object):
             self.rules = []
             if not quiet:
                 printError('Error: the file %s does not exist.' % self.filename)
+
+
+    def load_rules(self, file, rule_type, quiet = False):
+        file.seek(0)
+        ruleset = json.load(file)
+        self.about = ruleset['about']
+        self.rules = {}
+        for filename in ruleset['rules']:
+            self.rules[filename] = []
+            for rule in ruleset['rules'][filename]:
+                self.rules[filename].append(
+                    Rule(filename, rule_type, rule['enabled'], rule['level'] if 'level' in rule else '',
+                         rule['args'] if 'args' in rule else []))
 
 
     def prepare_rules(self, attributes = [], ip_ranges = [], params = {}):
@@ -153,4 +171,22 @@ class Ruleset(object):
             if not os.path.isfile(filename) and not filename.endswith('.json'):
                 filename = self.find_file('%s.json' % filename, filetype)
         return filename
+
+
+class TmpRuleset(Ruleset):
+
+    def __init__(self, rule_dirs = [], rule_filename = None, rule_args = [], rule_level = 'danger'):
+        self.rule_type = 'findings'
+        tmp_ruleset = {'rules': {}, 'about': 'Temporary, single-rule ruleset.'}
+        tmp_ruleset['rules'][rule_filename] = []
+        rule = {'enabled': True, 'level': rule_level}
+        if len(rule_args):
+            rule['args'] = rule_args
+        tmp_ruleset['rules'][rule_filename].append(rule)
+        tmp_ruleset_file = tempfile.TemporaryFile('w+t')
+        tmp_ruleset_file.write(json.dumps(tmp_ruleset))
+
+        self.load_rules(file = tmp_ruleset_file, rule_type = 'findings', quiet = False)
+
+        self.shared_init(False, rule_dirs, '', [])
 

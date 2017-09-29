@@ -22,7 +22,7 @@ class ProcessingEngine(object):
                 self.rules[rule.path].append(rule)
 
 
-    def run(self, aws_config):
+    def run(self, aws_config, skip_dashboard = False):
         for finding_path in self.rules:
             for rule in self.rules[finding_path]:
                 
@@ -43,6 +43,8 @@ class ProcessingEngine(object):
                 try:
                     setattr(rule, 'checked_items', 0)
                     aws_config['services'][service][self.ruleset.rule_type][rule.key]['items'] = recurse(aws_config['services'], aws_config['services'], path, [], rule, True)
+                    if skip_dashboard:
+                        continue
                     aws_config['services'][service][self.ruleset.rule_type][rule.key]['dashboard_name'] = rule.dashboard_name
                     aws_config['services'][service][self.ruleset.rule_type][rule.key]['checked_items'] = rule.checked_items
                     aws_config['services'][service][self.ruleset.rule_type][rule.key]['flagged_items'] = len(aws_config['services'][service][self.ruleset.rule_type][rule.key]['items'])

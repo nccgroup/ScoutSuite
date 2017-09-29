@@ -8,12 +8,18 @@ from opinel.utils.console import printDebug, printError, printException
 
 class RuleDefinition(object):
 
-    def __init__(self, file_name, rule_dirs = []):
+    def __init__(self, file_name = None, rule_dirs = [], string_definition = None):
         self.file_name = file_name
         self.rule_dirs = rule_dirs
         self.rule_types = ['findings', 'filters']
         self.rules_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
-        self.load()
+        if self.file_name:
+            self.load()
+        elif string_definition:
+            self.string_definition = string_definition
+            self.load_from_string_definition()
+        else:
+            printError('Error')
 
 
     def __str__(self):
@@ -65,9 +71,13 @@ class RuleDefinition(object):
             try:
                 with open(self.file_path, 'rt') as f:
                     self.string_definition = f.read()
-                    definition = json.loads(self.string_definition)
-                    for attr in definition:
-                        setattr(self, attr, definition[attr])
+                    self.load_from_string_definition()
             except Exception as e:
                 printException(e)
                 printError('Failed to load rule defined in %s' % file_path)
+
+
+    def load_from_string_definition(self):
+        definition = json.loads(self.string_definition)
+        for attr in definition:
+            setattr(self, attr, definition[attr])

@@ -13,7 +13,7 @@ from AWSScout2.configs.browser import get_value_at
 # Functions
 ########################################
 
-def format_listall_output(format_file, format_item_dir, format, config, option_prefix = None, template = None, skip_options = False):
+def format_listall_output(format_file, format_item_dir, format, rule, option_prefix = None, template = None, skip_options = False):
     """
     Prepare listall output template
 
@@ -62,7 +62,7 @@ def format_listall_output(format_file, format_item_dir, format, config, option_p
             if len(requested_files) == 0:
                 break
     elif format and format[0] == 'csv':
-        keys = config['keys']
+        keys = rule.keys
         line = ', '.join('_KEY_(%s)' % k for k in keys)
         lines = [ (line, line, keys) ]
         template = line
