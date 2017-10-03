@@ -23,6 +23,11 @@ class ProcessingEngine(object):
 
 
     def run(self, aws_config, skip_dashboard = False):
+        # Clean up existing findings
+        for service in aws_config['services']:
+            aws_config['services'][service][self.ruleset.rule_type] = {}
+
+        # Process each rule
         for finding_path in self.rules:
             for rule in self.rules[finding_path]:
                 

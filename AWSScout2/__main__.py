@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import copy
+import json
 import os
 import sys
 import webbrowser
@@ -110,6 +111,19 @@ def main():
 
     # Finalize
     postprocessing(aws_config, report.current_time, finding_rules)
+
+    # tmp h4ack
+    try:
+        organization_info_file = os.path.join(os.path.expanduser('~/.aws/recipes/%s/organization.json' % profile_name))
+        with open(organization_info_file, 'rt') as f:
+            org = {}
+            accounts = json.load(f)
+            for account in accounts:
+                account_id = account.pop('Id')
+                org[account_id] = account
+            aws_config['organization'] = org
+    except:
+        pass
 
     # Save config and create HTML report
     html_report_path = report.save(aws_config, exceptions, args.force_write, args.debug)
