@@ -121,6 +121,7 @@ def process_network_acls_check_for_aws_default(network_acl, direction):
 
 
 def list_ec2_network_attack_surface(ec2_config):
+    ec2_config['attack_surface'] = {}
     go_to_and_do(ec2_config, None, ['regions', 'vpcs', 'instances', 'network_interfaces', 'PrivateIpAddresses'], [], list_ec2_network_attack_surface_callback, {})
 
 
