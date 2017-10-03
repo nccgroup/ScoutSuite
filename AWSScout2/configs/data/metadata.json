@@ -141,6 +141,12 @@
                     "response": "RouteTables",
                     "hidden": true,
                     "path": "services.vpc.regions.id.vpcs.id.route_tables"
+                },
+                "peering_connections": {
+                    "api_call": "describe_vpc_peering_connections",
+                    "response": "VpcPeeringConnections",
+                    "hidden": true,
+                    "path": "services.vpc.regions.id.peering_connections"
                 }
             }
         },
