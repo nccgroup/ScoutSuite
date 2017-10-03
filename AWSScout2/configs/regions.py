@@ -16,6 +16,7 @@ except ImportError:
 from opinel.utils.aws import build_region_list, connect_service, get_aws_account_id, handle_truncated_response
 from opinel.utils.console import printException, printInfo
 
+from AWSScout2.configs.threads import thread_configs
 from AWSScout2.utils import format_service_name
 from AWSScout2.configs.base import GlobalConfig
 from AWSScout2.output.console import FetchStatusLogger
@@ -46,8 +47,9 @@ class RegionalServiceConfig(object):
     :ivar service:                      Name of the service
     """
 
-    def __init__(self, service_metadata = {}):
+    def __init__(self, service_metadata = {}, thread_config = 4):
         self.regions = {}
+        self.thread_config = thread_configs[thread_config]
         self.service = type(self).__name__.replace('Config', '').lower() # TODO: use regex with EOS instead of plain replace
         if service_metadata != {}:
             self.resource_types = {'global': [], 'region': [], 'vpc': []}
@@ -113,9 +115,9 @@ class RegionalServiceConfig(object):
         regions = build_region_list(api_service, regions, partition_name) # TODO: move this code within this class
         self.fetchstatuslogger.counts['regions']['discovered'] = len(regions)
         # Threading to fetch & parse resources (queue consumer)
-        q = self._init_threading(self._fetch_target, {}, 20)
+        q = self._init_threading(self._fetch_target, {}, self.thread_config['parse'])
         # Threading to list resources (queue feeder)
-        qr = self._init_threading(self._fetch_region, {'api_service': api_service, 'credentials': credentials, 'q': q, 'targets': ()}, 10)
+        qr = self._init_threading(self._fetch_region, {'api_service': api_service, 'credentials': credentials, 'q': q, 'targets': ()}, self.thread_config['list'])
         # Go
         for i, region in enumerate(regions):
             qr.put((region, targets['first_region'] if i == 0 else targets['other_regions']))

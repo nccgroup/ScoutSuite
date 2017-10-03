@@ -8,7 +8,7 @@ import webbrowser
 
 try:
     from opinel.utils.aws import get_aws_account_id
-    from opinel.utils.console import configPrintException, printInfo
+    from opinel.utils.console import configPrintException, printInfo, printDebug
     from opinel.utils.credentials import read_creds
     from opinel.utils.globals import check_requirements
 except Exception as e:
@@ -56,7 +56,7 @@ def main():
 
     # Create a new Scout2 config
     report = Scout2Report(profile_name, args.report_dir, args.timestamp)
-    aws_config = Scout2Config(profile_name, args.report_dir, args.timestamp, args.services, args.skipped_services)
+    aws_config = Scout2Config(profile_name, args.report_dir, args.timestamp, args.services, args.skipped_services, args.thread_config)
 
     if not args.fetch_local:
 
@@ -100,14 +100,19 @@ def main():
     pe.run(aws_config)
 
     # Handle exceptions
-    exceptions = RuleExceptions(profile_name, args.exceptions[0])
-    exceptions.process(aws_config)
+    try:
+        exceptions = RuleExceptions(profile_name, args.exceptions[0])
+        exceptions.process(aws_config)
+        exceptions = exceptions.exceptions
+    except Exception as e:
+        printDebug('Warning, failed to load exceptions. The file may not exist or may have an invalid format.')
+        exceptions = {}
 
     # Finalize
     postprocessing(aws_config, report.current_time, finding_rules)
 
     # Save config and create HTML report
-    html_report_path = report.save(aws_config, exceptions.exceptions, args.force_write, args.debug)
+    html_report_path = report.save(aws_config, exceptions, args.force_write, args.debug)
 
     # Open the report by default
     if not args.no_browser:

@@ -39,7 +39,7 @@ class IAMConfig(BaseConfig):
         # TODO: KMS ?
     )
 
-    def __init__(self):
+    def __init__(self, target_config):
         self.credential_report = {}
         self.groups = {}
         self.password_policy = {}
@@ -47,7 +47,7 @@ class IAMConfig(BaseConfig):
         self.policies = {}
         self.roles = {}
         self.users = {}
-        super(IAMConfig, self).__init__()
+        super(IAMConfig, self).__init__(target_config)
 
 
 

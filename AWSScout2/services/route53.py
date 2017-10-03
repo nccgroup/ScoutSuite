@@ -17,10 +17,10 @@ class Route53DomainsConfig(BaseConfig):
         ('domains', 'Domains', 'list_domains', {}, False),
     )
 
-    def __init__(self):
+    def __init__(self, target_config):
         self.domains = {}
         self.domains_count = 0
-        super(Route53DomainsConfig, self).__init__()
+        super(Route53DomainsConfig, self).__init__(target_config)
 
 
 
@@ -50,10 +50,10 @@ class Route53Config(BaseConfig):
         ('hosted_zones', 'HostedZones', 'list_hosted_zones', {}, False),
     )
 
-    def __init__(self):
+    def __init__(self, target_config):
         self.hosted_zones = {}
         self.hosted_zones_count = 0
-        super(Route53Config, self).__init__()
+        super(Route53Config, self).__init__(target_config)
 
 
 

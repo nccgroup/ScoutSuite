@@ -71,5 +71,5 @@ class SNSConfig(RegionalServiceConfig):
 
     region_config_class = SNSRegionConfig
 
-    def __init__(self, service_metadata):
-        super(SNSConfig, self).__init__(service_metadata)
+    def __init__(self, service_metadata, thread_config = 4):
+        super(SNSConfig, self).__init__(service_metadata, thread_config)

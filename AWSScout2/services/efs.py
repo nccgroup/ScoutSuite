@@ -52,5 +52,5 @@ class EFSConfig(RegionalServiceConfig):
 
     region_config_class = EFSRegionConfig
 
-    def __init__(self, service_metadata):
-        super(EFSConfig, self).__init__(service_metadata)
+    def __init__(self, service_metadata, thread_config = 4):
+        super(EFSConfig, self).__init__(service_metadata, thread_config)

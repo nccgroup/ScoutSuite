@@ -23,10 +23,6 @@ class ELBv2RegionConfig(RegionConfig):
     :ivar vpcs:                         Dictionary of VPCs [id]
     """
 
-#    def __init__(self, region_name, resource_types):
-#        super(ELBv2RegionConfig).__init__(self, region_name, resource_types)
-
-
     def parse_lb(self, global_params, region, lb):
         """
 
@@ -70,5 +66,5 @@ class ELBv2Config(RegionalServiceConfig):
     """
     region_config_class = ELBv2RegionConfig
 
-    def __init__(self, service_metadata):
-        super(ELBv2Config, self).__init__(service_metadata)
+    def __init__(self, service_metadata, thread_config = 4):
+        super(ELBv2Config, self).__init__(service_metadata, thread_config)

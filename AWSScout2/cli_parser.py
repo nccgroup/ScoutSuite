@@ -168,6 +168,11 @@ class Scout2ArgumentParser(SharedArgumentParser):
                                  default=False,
                                  action='store_true',
                                  help='Do not automatically open the report in the browser.')
+        self.parser.add_argument('--thread-config',
+                                 dest='thread_config',
+                                 type=int,
+                                 default=4,
+                                 help='Level of multi-threading wanted [1-5]; defaults to 4.')
 
     def parse_args(self):
         args = self.parser.parse_args()

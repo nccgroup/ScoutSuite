@@ -57,8 +57,8 @@ class CloudTrailConfig(RegionalServiceConfig):
 
     region_config_class = CloudTrailRegionConfig
 
-    def __init__(self, service_metadata):
-        super(CloudTrailConfig, self).__init__(service_metadata)
+    def __init__(self, service_metadata, thread_config = 4):
+        super(CloudTrailConfig, self).__init__(service_metadata, thread_config)
 
 
 

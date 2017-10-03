@@ -21,11 +21,11 @@ class Scout2Config(object):
     :services           AWS configuration sorted by service
     """
 
-    def __init__(self, profile, report_dir = None, timestamp = None, services= [], skipped_services = []):
+    def __init__(self, profile, report_dir = None, timestamp = None, services= [], skipped_services = [], thread_config = 4):
         self.aws_account_id = None
         self.last_run = None
         self.__load_metadata()
-        self.services = ServicesConfig(self.metadata)
+        self.services = ServicesConfig(self.metadata, thread_config)
         supported_services = vars(self.services).keys()
         self.service_list = self.__build_services_list(supported_services, services, skipped_services)
 

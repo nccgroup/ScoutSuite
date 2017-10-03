@@ -47,5 +47,5 @@ class CloudWatchConfig(RegionalServiceConfig):
 
     region_config_class = CloudWatchRegionConfig
 
-    def __init__(self, service_metadata):
-        super(CloudWatchConfig, self).__init__(service_metadata)
+    def __init__(self, service_metadata, thread_config = 4):
+        super(CloudWatchConfig, self).__init__(service_metadata, thread_config)

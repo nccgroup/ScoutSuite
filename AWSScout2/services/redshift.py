@@ -82,5 +82,5 @@ class RedshiftConfig(RegionalServiceConfig):
 
     region_config_class = RedshiftRegionConfig
 
-    def __init__(self, service_metadata):
-        super(RedshiftConfig, self).__init__(service_metadata)
+    def __init__(self, service_metadata, thread_config = 4):
+        super(RedshiftConfig, self).__init__(service_metadata, thread_config)

@@ -156,8 +156,8 @@ class VPCConfig(RegionalServiceConfig):
 
     region_config_class = VPCRegionConfig
 
-    def __init__(self, service_metadata):
-        super(VPCConfig, self).__init__(service_metadata)
+    def __init__(self, service_metadata, thread_config):
+        super(VPCConfig, self).__init__(service_metadata, thread_config)
 
 
 

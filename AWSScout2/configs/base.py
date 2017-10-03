@@ -11,6 +11,7 @@ except ImportError:
 from opinel.utils.aws import build_region_list, connect_service, handle_truncated_response
 from opinel.utils.console import printException, printInfo
 
+from AWSScout2.configs.threads import thread_configs
 from AWSScout2.output.console import FetchStatusLogger
 from AWSScout2.utils import format_service_name
 
@@ -42,8 +43,9 @@ class BaseConfig(GlobalConfig):
     FooBar
     """
     
-    def __init__(self):
+    def __init__(self, thread_config = 4):
         self.service = type(self).__name__.replace('Config', '').lower()  # TODO: use regex with EOS instead of plain replace
+        self.thread_config = thread_configs[thread_config]
 
 
     def fetch_all(self, credentials, regions = [], partition_name = 'aws', targets = None):
@@ -78,12 +80,12 @@ class BaseConfig(GlobalConfig):
         params = {'api_client': api_client}
         if self.service in ['s3']:
             params['api_clients'] = api_clients
-        q = self._init_threading(self.__fetch_target, params, 20)
+        q = self._init_threading(self.__fetch_target, params, self.thread_config['parse'])
         # Threading to list resources (queue feeder)
         params = {'api_client': api_client, 'q': q}
         if self.service in ['s3']:
             params['api_clients'] = api_clients
-        qt = self._init_threading(self.__fetch_service, params, 10)
+        qt = self._init_threading(self.__fetch_service, params, self.thread_config['list'])
         # Init display
         self.fetchstatuslogger = FetchStatusLogger(targets)
         # Go

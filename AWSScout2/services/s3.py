@@ -28,10 +28,10 @@ class S3Config(BaseConfig):
         ('buckets', 'Buckets', 'list_buckets', {}, False),
     )
 
-    def __init__(self):
+    def __init__(self, thread_config):
         self.buckets = {}
         self.buckets_count = 0
-        super(S3Config, self).__init__()
+        super(S3Config, self).__init__(thread_config)
 
     def parse_buckets(self, bucket, params):
         """

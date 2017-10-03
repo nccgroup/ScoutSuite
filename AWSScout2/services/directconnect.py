@@ -38,5 +38,5 @@ class DirectConnectConfig(RegionalServiceConfig):
 
     region_config_class = DirectConnectRegionConfig
 
-    def __init__(self, service_metadata):
-        super(DirectConnectConfig, self).__init__(service_metadata)
+    def __init__(self, service_metadata, thread_config = 4):
+        super(DirectConnectConfig, self).__init__(service_metadata, thread_config)

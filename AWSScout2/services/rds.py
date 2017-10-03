@@ -121,8 +121,8 @@ class RDSConfig(RegionalServiceConfig):
 
     region_config_class = RDSRegionConfig
 
-    def __init__(self, service_metadata):
-        super(RDSConfig, self).__init__(service_metadata)
+    def __init__(self, service_metadata, thread_config = 4):
+        super(RDSConfig, self).__init__(service_metadata, thread_config)
 
 
 def get_security_groups_info(rds_client, region_info):
