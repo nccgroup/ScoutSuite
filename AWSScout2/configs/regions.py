@@ -17,7 +17,7 @@ from opinel.utils.aws import build_region_list, connect_service, get_aws_account
 from opinel.utils.console import printException, printInfo
 
 from AWSScout2.configs.threads import thread_configs
-from AWSScout2.utils import format_service_name
+from AWSScout2.utils import format_service_name, is_throttled
 from AWSScout2.configs.base import GlobalConfig
 from AWSScout2.output.console import FetchStatusLogger
 
@@ -164,6 +164,7 @@ class RegionalServiceConfig(object):
             while True:
                 try:
                     method, region, target = q.get()
+                    backup = copy.deepcopy(target)
 
                     if method.__name__ == 'store_target':
                         target_type = target['scout2_target_type']
@@ -173,7 +174,10 @@ class RegionalServiceConfig(object):
                     self.fetchstatuslogger.counts[target_type]['fetched'] += 1
                     self.fetchstatuslogger.show()
                 except Exception as e:
-                    printException(e)
+                    if is_throttled(e):
+                        q.put((method, region, backup))
+                    else:
+                        printException(e)
                 finally:
                     q.task_done()
         except Exception as e:
