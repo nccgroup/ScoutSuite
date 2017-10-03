@@ -320,8 +320,11 @@ class IAMConfig(BaseConfig):
         try:
             policy_names = list_policy_method(**args)['PolicyNames']
         except Exception as e:
-            printException(e)
-            return fetched_policies
+            if is_throttled(e):
+                raise e
+            else:
+                printException(e)
+                return fetched_policies
         try:
             for policy_name in policy_names:
                 args['PolicyName'] = policy_name
@@ -332,7 +335,10 @@ class IAMConfig(BaseConfig):
                 fetched_policies[policy_id]['name'] = policy_name
                 self.__parse_permissions(policy_id, policy_document, 'inline_policies', iam_resource_type + 's', resource_id)
         except Exception as e:
-            printException(e)
+            if is_throttled(e):
+                raise e
+            else:
+                printException(e)
         return fetched_policies
 
 

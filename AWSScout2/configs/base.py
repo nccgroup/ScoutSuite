@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import copy
+
 from hashlib import sha1
 from threading import Event, Thread
 # Python2 vs Python3
@@ -155,12 +157,17 @@ class BaseConfig(GlobalConfig):
             while True:
                 try:
                     target_type, target = q.get()
+                    # Make a full copy of the target in case we need to re-queue it
+                    backup = copy.deepcopy(target)
                     method = getattr(self, 'parse_%s' % target_type)
                     method(target, params)
                     self.fetchstatuslogger.counts[target_type]['fetched'] += 1
                     self.fetchstatuslogger.show()
                 except Exception as e:
-                    printException(e)
+                    if hasattr(e, 'response') and 'Error' in e.response and e.response['Error']['Code'] in [ 'Throttling' ]:
+                        q.put((target_type, backup),)
+                    else:
+                        printException(e)
                 finally:
                     q.task_done()
         except Exception as e:
