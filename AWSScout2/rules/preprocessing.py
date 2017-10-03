@@ -33,6 +33,7 @@ def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     match_roles_and_vpc_flowlogs(aws_config)
     match_iam_policies_and_buckets(aws_config)
     match_security_groups_and_resources(aws_config)
+    match_peering_connections_with_vpc(aws_config)
     add_cidr_display_name(aws_config, ip_ranges, ip_ranges_name_key)
     merge_route53_and_route53domains(aws_config)
 
@@ -320,6 +321,20 @@ def __get_role_info(aws_config, attribute_name, attribute_value):
             iam_role_info['id'] = role_id
             break
     return iam_role_info
+
+
+def match_peering_connections_with_vpc(aws_config):
+    go_to_and_do(aws_config, aws_config['services']['vpc'], ['regions', 'peering_connections'], [], match_peering_connections_with_vpc_callback, {})
+
+
+def match_peering_connections_with_vpc_callback(aws_config, current_config, path, current_path, pc_id, callback_args):
+    info = 'AccepterVpcInfo' if current_config['AccepterVpcInfo']['OwnerId'] == aws_config['aws_account_id'] else 'RequesterVpcInfo'
+    region = current_path[1]
+    vpc_id = current_config[info]['VpcId']
+    target = aws_config['services']['vpc']['regions'][region]['vpcs'][vpc_id]
+    manage_dictionary(target, 'peering_connections', [])
+    if pc_id not in target['peering_connections']:
+        target['peering_connections'].append(pc_id)
 
 
 def match_security_groups_and_resources(aws_config):

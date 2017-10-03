@@ -13,7 +13,7 @@ try:
 except ImportError:
     from queue import Queue
 
-from opinel.utils.aws import build_region_list, connect_service, get_aws_account_id, handle_truncated_response
+from opinel.utils.aws import build_region_list, connect_service, get_aws_account_id, get_name, handle_truncated_response
 from opinel.utils.console import printException, printInfo
 
 from AWSScout2.configs.threads import thread_configs
@@ -266,6 +266,7 @@ class RegionConfig(GlobalConfig):
         #vpc_id = target['VpcId'] if 'VpcId' in target
         target_dict = getattr(self, target_type)
         target_id = target[id_map[target_type]]
+        get_name(target, target, target_id)
         target_dict[target_id] = target
 
 id_map = {

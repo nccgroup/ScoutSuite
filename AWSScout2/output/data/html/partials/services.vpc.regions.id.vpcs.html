@@ -48,6 +48,13 @@
             </div>
           </div>
         </div>
+        <div class="list-group-item" style="padding-bottom: 0 !important">
+            {{> accordion region = region items = peering_connections
+                title = 'Peering connections'
+                item_partial = 'services.vpc.regions.vpcs.peering_connections'
+                accordion_id = (concat 'services.vpc.regions' region 'vpcs' @key 'peering_connections')
+            }}
+        </div>
     </script>
     <script>
       Handlebars.registerPartial("services.vpc.regions.id.vpcs", $("#services\\.vpc\\.regions\\.id\\.vpcs\\.partial").html());
