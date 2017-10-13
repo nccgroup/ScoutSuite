@@ -12,6 +12,7 @@ try:
     from opinel.utils.console import configPrintException, printInfo, printDebug
     from opinel.utils.credentials import read_creds
     from opinel.utils.globals import check_requirements
+    from opinel.utils.profiles import AWSProfiles
 except Exception as e:
     print('Error: Scout2 depends on the opinel package. Install all the requirements with the following command:')
     print('  $ pip install -r requirements.txt')
@@ -112,18 +113,18 @@ def main():
     # Finalize
     postprocessing(aws_config, report.current_time, finding_rules)
 
-    # tmp h4ack
-    try:
-        organization_info_file = os.path.join(os.path.expanduser('~/.aws/recipes/%s/organization.json' % profile_name))
-        with open(organization_info_file, 'rt') as f:
-            org = {}
-            accounts = json.load(f)
-            for account in accounts:
-                account_id = account.pop('Id')
-                org[account_id] = account
-            aws_config['organization'] = org
-    except:
-        pass
+    # Get organization data if it exists
+    profile = AWSProfiles.get(profile_name)[0]
+    if 'source_profile' in profile.attributes:
+        organization_info_file = os.path.join(os.path.expanduser('~/.aws/recipes/%s/organization.json' %  profile.attributes['source_profile']))
+        if os.path.isfile(organization_info_file):
+            with open(organization_info_file, 'rt') as f:
+                org = {}
+                accounts = json.load(f)
+                for account in accounts:
+                    account_id = account.pop('Id')
+                    org[account_id] = account
+                aws_config['organization'] = org
 
     # Save config and create HTML report
     html_report_path = report.save(aws_config, exceptions, args.force_write, args.debug)
