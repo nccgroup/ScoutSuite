@@ -41,6 +41,11 @@
             {
                 "enabled": true
             }
+        ],
+        "ec2-security-group-with-public-cidr-grant.json": [
+            {
+                "enabled": true
+            }
         ]
     }, 
     "about": "Default set of filters for Scout2"

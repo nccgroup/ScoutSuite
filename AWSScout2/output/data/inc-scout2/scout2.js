@@ -7,7 +7,11 @@ var loaded_config_array = new Array();
 //
 var load_aws_account_id = function() {
     var element = document.getElementById('aws_account_id');
-    element.textContent = aws_info['aws_account_id'];
+    var value = aws_info['aws_account_id'];
+    if (('organization' in aws_info) && (value in aws_info['organization'])) {
+        value += ' (' + aws_info['organization'][value]['Name'] + ')'
+    }
+    element.textContent = value;
 }
 
 //

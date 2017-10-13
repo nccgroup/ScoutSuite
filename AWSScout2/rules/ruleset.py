@@ -39,6 +39,10 @@ class Ruleset(object):
         self.shared_init(ruleset_generator, [], aws_account_id, ip_ranges)
 
 
+    def to_string(self):
+        return (str(vars(self)))
+
+
     def shared_init(self, ruleset_generator, rule_dirs, aws_account_id, ip_ranges):
 
         # Load rule definitions

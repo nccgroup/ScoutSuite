@@ -5,6 +5,7 @@
         <h4 class="list-group-item-heading">{{name}}</h4>
       </div>
       <div class="list-group-item">
+        <div class="list-group-item-text">Arn: {{arn}}</div>
         {{> accordion_policy document = PolicyDocument policy_path = (concat 'iam.policies' @key 'PolicyDocument')}}
       </div>
       <div class="list-group-item">

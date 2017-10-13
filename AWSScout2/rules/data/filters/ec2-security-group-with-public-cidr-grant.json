@@ -1,0 +1,9 @@
+{
+    "description": "Security group whitelists public CIDRs",
+    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.ingress.protocols.id.ports.id.cidrs.id.CIDR",
+    "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "dashboard_name": "Rules",
+    "conditions": [ "and",
+        [ "this", "notInSubnets", [ "10.0.0.0/8", "172.16.0.0/16", "192.168.0.0/24" ] ]
+    ]
+}
