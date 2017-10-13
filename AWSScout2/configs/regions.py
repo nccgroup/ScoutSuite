@@ -266,14 +266,18 @@ class RegionConfig(GlobalConfig):
 
     def store_target(self, global_params, region, target):
         target_type = target.pop('scout2_target_type')
-        # TODO : handle VPC vs non VPC...
-        #vpc_id = target['VpcId'] if 'VpcId' in target
-        target_dict = getattr(self, target_type)
+        if 'VpcId' in target:
+            vpc_id = target.pop('VpcId')
+            tmp = getattr(self, 'vpcs')[vpc_id]
+            target_dict = getattr(tmp, target_type)
+        else:
+            target_dict = getattr(self, target_type)
         target_id = target[id_map[target_type]]
-        get_name(target, target, target_id)
+        get_name(target, target, id_map[target_type])
         target_dict[target_id] = target
 
 id_map = {
-    'peering_connections': 'VpcPeeringConnectionId'
+    'peering_connections': 'VpcPeeringConnectionId',
+    'subnet_groups': 'DBSubnetGroupName'
 }
 
