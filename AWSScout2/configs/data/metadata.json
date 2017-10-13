@@ -218,6 +218,10 @@
                     "response": "LoadBalancerDescriptions",
                     "cols": 2,
                     "path": "services.elb.regions.id.vpcs.id.elbs"
+                },
+                "elb_policies": {
+                    "cols": 2,
+                    "path": "services.elb.regions.id.elb_policies"
                 }
             }
         },
