@@ -25,7 +25,7 @@ class Ruleset(object):
     :ivar ??
     """
 
-    def __init__(self, environment_name = 'default', filename = None, name = None, rule_type = 'findings', ip_ranges = [], aws_account_id = None, ruleset_generator = False):
+    def __init__(self, environment_name = 'default', filename = None, name = None, rules_dir = [], rule_type = 'findings', ip_ranges = [], aws_account_id = None, ruleset_generator = False):
         self.rules_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
         self.environment_name = environment_name
         self.rule_type = rule_type
@@ -36,7 +36,7 @@ class Ruleset(object):
         printDebug('Loading ruleset %s' % self.filename)
         self.name = os.path.basename(self.filename).replace('.json','') if not name else name
         self.load(self.rule_type)
-        self.shared_init(ruleset_generator, [], aws_account_id, ip_ranges)
+        self.shared_init(ruleset_generator, rules_dir, aws_account_id, ip_ranges)
 
 
     def to_string(self):

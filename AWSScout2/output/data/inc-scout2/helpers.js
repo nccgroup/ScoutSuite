@@ -374,5 +374,10 @@ Handlebars.registerHelper('get_rule', function(rule_filename, attribute) {
 });
 
 Handlebars.registerHelper('get_arg_name', function(rule_filename, arg_index) {
-    return aws_info['rule_definitions'][rule_filename]['arg_names'][arg_index];
+    if ('arg_names' in aws_info['rule_definitions'][rule_filename]) {
+        return  aws_info['rule_definitions'][rule_filename]['arg_names'][arg_index];
+    } else {
+        console.log('Error, arg_names is not declared in ' + rule_filename);
+        return '';
+    }
 });

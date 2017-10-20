@@ -6,5 +6,8 @@
     "dashboard_name": "Instances",
     "conditions": [ "and",
         [ "InstanceType", "equal", "_ARG_0_" ]
+    ],
+    "arg_names": [
+        "Type of EC2 instance (e.g. t2.micro)"
     ]
 }

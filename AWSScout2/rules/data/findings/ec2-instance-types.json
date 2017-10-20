@@ -6,5 +6,8 @@
     "dashboard_name": "Instances",
     "conditions": [ "and",
         [ "InstanceType", "containAtLeastOneOf", "_ARG_1_" ]
+    ],
+    "arg_names": [
+        "Type of EC2 instances that may not be used."
     ]
 }
