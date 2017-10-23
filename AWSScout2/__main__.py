@@ -8,7 +8,7 @@ import sys
 import webbrowser
 
 try:
-    from opinel.utils.aws import get_aws_account_id
+    from opinel.utils.aws import get_aws_account_id, get_partition_name
     from opinel.utils.console import configPrintException, printInfo, printDebug
     from opinel.utils.credentials import read_creds
     from opinel.utils.globals import check_requirements
@@ -64,7 +64,7 @@ def main():
 
         # Fetch data from AWS APIs if not running a local analysis
         try:
-            aws_config.fetch(credentials, regions=args.regions, partition_name=args.partition_name)
+            aws_config.fetch(credentials, regions=args.regions, partition_name = get_partition_name(credentials))
         except KeyboardInterrupt:
             printInfo('\nCancelled by user')
             return 130

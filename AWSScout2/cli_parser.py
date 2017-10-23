@@ -131,7 +131,6 @@ class Scout2ArgumentParser(SharedArgumentParser):
         super(Scout2ArgumentParser, self).__init__()
         self.add_argument('profile', default_args)
         self.add_argument('regions', default_args)
-        self.add_argument('partition-name', default_args)
         self.add_argument('vpc', default_args)
         self.add_argument('ip-ranges', default_args)
         self.add_argument('ip-ranges-name-key', default_args)
