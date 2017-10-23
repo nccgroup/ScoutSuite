@@ -34,13 +34,13 @@ def update_last_run(aws_config, current_time, ruleset):
             # Not supported yet
             continue
         elif 'findings' in aws_config['services'][service]:
-            for finding in aws_config['services'][service]['findings']:
+            for finding in aws_config['services'][service]['findings'].values():
                 last_run['summary'][service]['rules_count'] += 1
-                last_run['summary'][service]['checked_items'] += aws_config['services'][service]['findings'][finding]['checked_items']
-                last_run['summary'][service]['flagged_items'] += aws_config['services'][service]['findings'][finding]['flagged_items']
-                if 'items' in aws_config['services'][service]['findings'][finding]:
-                    if last_run['summary'][service]['max_level'] != 'danger' and len(aws_config['services'][service]['findings'][finding]['items']) > 0:
-                        last_run['summary'][service]['max_level'] = aws_config['services'][service]['findings'][finding]['level']
+                last_run['summary'][service]['checked_items'] += finding['checked_items']
+                last_run['summary'][service]['flagged_items'] += finding['flagged_items']
+                items = finding.get('items', [])
+                if last_run['summary'][service]['max_level'] != 'danger' and len(items) > 0:
+                    last_run['summary'][service]['max_level'] = finding['level']
         # Total number of resources
         for key in aws_config['services'][service]:
             if key != 'regions_count' and key.endswith('_count'):
