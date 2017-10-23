@@ -114,17 +114,20 @@ def main():
     postprocessing(aws_config, report.current_time, finding_rules)
 
     # Get organization data if it exists
-    profile = AWSProfiles.get(profile_name)[0]
-    if 'source_profile' in profile.attributes:
-        organization_info_file = os.path.join(os.path.expanduser('~/.aws/recipes/%s/organization.json' %  profile.attributes['source_profile']))
-        if os.path.isfile(organization_info_file):
-            with open(organization_info_file, 'rt') as f:
-                org = {}
-                accounts = json.load(f)
-                for account in accounts:
-                    account_id = account.pop('Id')
-                    org[account_id] = account
-                aws_config['organization'] = org
+    try:
+        profile = AWSProfiles.get(profile_name)[0]
+        if 'source_profile' in profile.attributes:
+            organization_info_file = os.path.join(os.path.expanduser('~/.aws/recipes/%s/organization.json' %  profile.attributes['source_profile']))
+            if os.path.isfile(organization_info_file):
+                with open(organization_info_file, 'rt') as f:
+                    org = {}
+                    accounts = json.load(f)
+                    for account in accounts:
+                        account_id = account.pop('Id')
+                        org[account_id] = account
+                    aws_config['organization'] = org
+    except:
+        pass
 
     # Save config and create HTML report
     html_report_path = report.save(aws_config, exceptions, args.force_write, args.debug)
