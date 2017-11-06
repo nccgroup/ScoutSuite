@@ -240,6 +240,16 @@
                     "path": "services.elbv2.ssl_policies"
                 }
             }
+        },
+        "lambda": {
+            "resources": {
+                "functions": {
+                    "api_call": "list_functions",
+                    "response": "Functions",
+                    "hidden": true,
+                    "path": "services.lambda.regions.id.functions"
+                }
+            }
         }
     },
     "security": {

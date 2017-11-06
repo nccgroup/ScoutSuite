@@ -14,6 +14,7 @@ from AWSScout2.services.elb import ELBConfig
 from AWSScout2.services.elbv2 import ELBv2Config
 from AWSScout2.services.emr import EMRConfig
 from AWSScout2.services.iam import IAMConfig
+from AWSScout2.services.awslambda import LambdaConfig
 from AWSScout2.services.rds import RDSConfig
 from AWSScout2.services.redshift import RedshiftConfig
 from AWSScout2.services.route53 import Route53Config, Route53DomainsConfig
@@ -53,6 +54,7 @@ class ServicesConfig(object):
         self.elbv2 = ELBv2Config(metadata['compute']['elbv2'], thread_config)
         self.emr = EMRConfig(metadata['analytics']['emr'], thread_config)
         self.iam = IAMConfig(thread_config)
+        self.awslambda = LambdaConfig(metadata['compute']['lambda'], thread_config)
         self.redshift = RedshiftConfig(metadata['database']['redshift'], thread_config)
         self.rds = RDSConfig(metadata['database']['rds'], thread_config)
         self.route53 = Route53Config(thread_config)

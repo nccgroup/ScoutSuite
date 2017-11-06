@@ -277,6 +277,7 @@ class RegionConfig(GlobalConfig):
         target_dict[target_id] = target
 
 id_map = {
+    'functions': 'FunctionName',
     'peering_connections': 'VpcPeeringConnectionId',
     'subnet_groups': 'DBSubnetGroupName'
 }
