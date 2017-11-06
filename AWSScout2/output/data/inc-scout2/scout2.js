@@ -685,6 +685,8 @@ var make_title = function(title) {
         return 'CloudTrail';
     } else if (title == 'cloudwatch') {
         return 'CloudWatch';
+    } else if (title == 'awslambda') {
+        return 'Lambda';
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
     }

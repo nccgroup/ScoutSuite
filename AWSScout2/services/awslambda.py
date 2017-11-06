@@ -13,7 +13,9 @@ from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig
 
 class LambdaRegionConfig(RegionConfig):
 
-    pass
+    def parse_function(self, global_params, region, function):
+        function['name'] = function.pop('FunctionName')
+        self.functions[function['name']] = function
 
 
 

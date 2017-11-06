@@ -13,7 +13,7 @@
               <ul>
               {{#each resources}}
                 <li class="list-group-item-text"><a href="javascript:showObject('services.{{../service}}.regions.{{../region}}.vpcs.{{../vpc}}.{{../resource_type}}.{{this}}')">
-                  {{get_value_at 'services' ../service 'regions' ../region 'vpcs' ../vpc ../resource_type this 'name'}}
+                  {{get_value_at 'services' ../service 'regions' ../region 'vpcs' ../vpc ../resource_type this 'name'}} ({{this}})
                 </a></li>
               {{/each}}
               </ul>

@@ -377,6 +377,10 @@ def match_security_groups_and_resources(aws_config):
     go_to_and_do(aws_config, aws_config['services']['emr'], ['regions', 'vpcs', 'clusters'], ['services', 'emr'], match_security_groups_and_resources_callback, callback_args)
     callback_args = {'status_path': ['Status', 'State'], 'sg_list_attribute_name': ['Ec2InstanceAttributes', 'EmrManagedSlaveSecurityGroup'], 'sg_id_attribute_name': ''}
     go_to_and_do(aws_config, aws_config['services']['emr'], ['regions', 'vpcs', 'clusters'], ['services', 'emr'], match_security_groups_and_resources_callback, callback_args)
+    # Lambda functions
+    callback_args = {'status_path': ['Runtime'], 'sg_list_attribute_name': [ "VpcConfig", "SecurityGroupIds" ]}
+    go_to_and_do(aws_config, aws_config['services']['awslambda'], ['regions', 'functions'],  ['services', 'awslambda'], match_security_groups_and_resources_callback, callback_args)
+
 
 
 
@@ -395,7 +399,7 @@ def match_security_groups_and_resources_callback(aws_config, current_config, pat
         resource_type = resource_path[-2]
     if 'status_path' in callback_args:
         status_path = combine_paths(copy.deepcopy(original_resource_path), callback_args['status_path'])
-        resource_status = get_object_at(aws_config, status_path)
+        resource_status = get_object_at(aws_config, status_path).replace('.', '_')
     else:
         resource_status = None
     unknown_vpc_id = True if current_path[4] != 'vpcs' else False
