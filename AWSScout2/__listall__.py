@@ -51,7 +51,7 @@ def main():
         # Create a ruleset with only whatever rules were specified...
         if args.config:
             rule_filename = args.config
-            ruleset = TmpRuleset(rule_dirs = [os.getcwd()], rule_filename = args.config, rule_args = [])
+            ruleset = TmpRuleset(rule_dirs = [os.getcwd()], rule_filename = args.config, rule_args = args.config_args)
         else:
             # Create a local tmp rule
             rule_dict = {'description': 'artifact'}
