@@ -54,7 +54,7 @@ class ServicesConfig(object):
         self.elbv2 = ELBv2Config(metadata['compute']['elbv2'], thread_config)
         self.emr = EMRConfig(metadata['analytics']['emr'], thread_config)
         self.iam = IAMConfig(thread_config)
-        self.awslambda = LambdaConfig(metadata['compute']['lambda'], thread_config)
+        self.awslambda = LambdaConfig(metadata['compute']['awslambda'], thread_config)
         self.redshift = RedshiftConfig(metadata['database']['redshift'], thread_config)
         self.rds = RDSConfig(metadata['database']['rds'], thread_config)
         self.route53 = Route53Config(thread_config)

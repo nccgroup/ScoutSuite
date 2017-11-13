@@ -241,13 +241,12 @@
                 }
             }
         },
-        "lambda": {
+        "awslambda": {
             "resources": {
                 "functions": {
                     "api_call": "list_functions",
                     "response": "Functions",
-                    "hidden": true,
-                    "path": "services.lambda.regions.id.functions"
+                    "path": "services.awslambda.regions.id.functions"
                 }
             }
         }
