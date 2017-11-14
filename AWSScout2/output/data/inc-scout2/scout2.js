@@ -694,6 +694,9 @@ var make_title = function(title) {
 
 // Add one or
 var add_templates = function(group, service, section, resource_type, path, cols) {
+    if (cols == undefined) {
+        cols = 2;
+    }
     add_template(group, service, section, resource_type, path, 'details');
     if (cols > 1) {
         add_template(group, service, section, resource_type, path, 'list');
