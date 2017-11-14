@@ -38,7 +38,7 @@ class S3Config(BaseConfig):
         Parse a single S3 bucket TODO
         """
         bucket['name'] = bucket.pop('Name')
-        api_client = params['api_clients']['us-east-1']
+        api_client = params['api_clients'][get_s3_list_region(params['api_clients'].keys()[0])]
 
         bucket['CreationDate'] = str(bucket['CreationDate'])
         bucket['region'] = get_s3_bucket_location(api_client, bucket['name'])
