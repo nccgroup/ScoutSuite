@@ -1,0 +1,19 @@
+
+    <!-- Generic object partial -->
+    <script id="generic_object.partial" type="text/x-handlebars-template">
+        <ul>
+            {{#each this}}
+                <li class="list-group-item-text no-margin">{{@key}}:
+                {{#ifType this 'object'}}
+                    {{> generic_object this}}
+                {{else}}
+                    {{this}}
+                {{/ifType}}
+                </li>
+            {{/each}}
+        </ul>
+    </script>
+    <script>
+      Handlebars.registerPartial("generic_object", $("#generic_object\\.partial").html());
+    </script>
+

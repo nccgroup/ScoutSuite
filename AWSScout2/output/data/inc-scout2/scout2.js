@@ -56,6 +56,11 @@ function load_aws_config_from_json(script_id, cols) {
         return 1;
     }
 
+    // Default # of columns is 2
+    if ((cols === undefined) || (cols === null)) {
+        cols = 2;
+    }
+
     // Update the DOM
     hideAll();
     if (cols == 0) {

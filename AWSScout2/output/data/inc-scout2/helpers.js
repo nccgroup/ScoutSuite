@@ -211,6 +211,15 @@ Handlebars.registerHelper('ifShow', function(v1, v2, options) {
   }
 });
 
+Handlebars.registerHelper('ifType', function(v1, v2, options) {
+    console.log('Checking ' + v1 + ' (' + typeof(v1) + ')');
+    if(typeof v1 == v2) {
+        return options.fn(v1);
+    } else {
+        return options.inverse(v1);
+    }
+});
+
 Handlebars.registerHelper('fixBucketName', function(bucket_name) {
     if (bucket_name != undefined) {
         return bucket_name.replace(/\./g, '-');
