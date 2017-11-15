@@ -51,6 +51,11 @@ Install from source:
 Requirements
 ************
 
+Computing resources
+-------------------
+
+Scout2 is a multi-threaded tool that fetches and stores your AWS account's configuration settings in memory during runtime. It is expected that the tool will run with no issues on any modern laptop or equivalent VM. **Running Scout2 in a VM with limited computing resources such as a t2.micro instance is not intended and will likely result in the process being killed.**
+
 Python
 ------
 
