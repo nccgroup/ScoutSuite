@@ -7,7 +7,7 @@ import sys
 
 try:
     from opinel.utils.globals import check_requirements
-    from opinel.utils.console import configPrintException, printInfo
+    from opinel.utils.console import configPrintException, printError, printException, printInfo
 except Exception as e:
     print('Error: Scout2 depends on the opinel package. Install all the requirements with the following command:')
     print('  $ pip install -r requirements.txt')
@@ -44,15 +44,21 @@ def main():
     for profile_name in args.profile:
 
         # Load the config
-        report = Scout2Report(profile_name, args.report_dir, args.timestamp)
-        aws_config = report.jsrw.load_from_file(AWSCONFIG)
-        services = aws_config['service_list']
+        try:
+            report = Scout2Report(profile_name, args.report_dir, args.timestamp)
+            aws_config = report.jsrw.load_from_file(AWSCONFIG)
+            services = aws_config['service_list']
+        except Exception as e:
+            printException(e)
+            printError('Error, failed to load the configuration for profile %s' % profile_name)
+            continue
+
 
         # Create a ruleset with only whatever rules were specified...
         if args.config:
             rule_filename = args.config
             ruleset = TmpRuleset(rule_dirs = [os.getcwd()], rule_filename = args.config, rule_args = args.config_args)
-        else:
+        elif len(args.path) > 0:
             # Create a local tmp rule
             rule_dict = {'description': 'artifact'}
             rule_dict['path'] = args.path[0]
@@ -61,6 +67,10 @@ def main():
             with open(os.path.join(os.getcwd(), rule_filename), 'wt') as f:
                 f.write(json.dumps(rule_dict))
             ruleset = TmpRuleset(rule_dirs = [os.getcwd()], rule_filename = rule_filename, rule_args = [])
+        else:
+            printError('Error, you must provide either a rule configuration file or the path to the resources targeted.')
+            continue
+
 
         # Process the rule
         pe = ProcessingEngine(ruleset)
@@ -82,13 +92,16 @@ def main():
             rule.keys = []
             for filename in args.keys_file:
                 with open(filename, 'rt') as f:
-                    rule['keys'] += json.load(f)['keys']
+                    rule.keys += json.load(f)['keys']
         else:
             try:
                 # 3. Load default set of keys based on path
-                target_path = config['display_path'] if 'display_path' in config else config['path']
-                with open('listall-configs/%s.json' % target_path) as f:
-                    rule['keys'] = json.load(f)['keys']
+                target_path = rule.display_path if hasattr(rule, 'display_path') else rule.path
+                listall_configs_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'output/data/listall-configs')
+                target_file = os.path.join(listall_configs_dir, '%s.json' % target_path)
+                if os.path.isfile(target_file):
+                    with open(target_file, 'rt') as f:
+                        rule.keys = json.load(f)['keys']
             except:
                 # 4. Print the object name
                 rule.keys = ['name']
