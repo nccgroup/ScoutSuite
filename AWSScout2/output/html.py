@@ -2,7 +2,7 @@
 from __future__ import print_function
 
 import datetime
-import dateutil
+import dateutil.tz
 import os
 import shutil
 import zipfile
