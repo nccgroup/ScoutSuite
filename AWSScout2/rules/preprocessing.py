@@ -26,13 +26,10 @@ def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     add_security_group_name_to_ec2_grants(aws_config['services']['ec2'], aws_config['aws_account_id'])
     process_cloudtrail_trails(aws_config['services']['cloudtrail'])
     process_network_acls(aws_config['services']['vpc'])
-    match_network_acls_and_subnets(aws_config['services']['vpc'])
-    match_instances_and_subnets(aws_config)
     match_instances_and_roles(aws_config)
-    match_roles_and_cloudformation_stacks(aws_config)
-    match_roles_and_vpc_flowlogs(aws_config)
+
     match_iam_policies_and_buckets(aws_config)
-    process_vpc_peering_connections(aws_config)
+
     add_cidr_display_name(aws_config, ip_ranges, ip_ranges_name_key)
     merge_route53_and_route53domains(aws_config)
 
@@ -262,20 +259,11 @@ def __update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entit
         pass
 
 
-def match_network_acls_and_subnets(vpc_config):
-    printInfo('Matching VPC network ACLs and subnets...')
-    go_to_and_do(vpc_config, vpc_config, ['regions', 'vpcs', 'network_acls'], [], match_network_acls_and_subnets_callback, {})
-
-
 def match_network_acls_and_subnets_callback(vpc_config, current_config, path, current_path, acl_id, callback_args):
     for association in current_config['Associations']:
         subnet_path = current_path[:-1] + ['subnets', association['SubnetId']]
         subnet = get_object_at(vpc_config, subnet_path)
         subnet['network_acl'] = acl_id
-
-
-def match_instances_and_subnets(aws_config):
-    go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'instances'], [], match_instances_and_subnets_callback, {})
 
 
 def match_instances_and_subnets_callback(aws_config, current_config, path, current_path, instance_id, callback_args):
@@ -314,19 +302,11 @@ def match_instances_and_roles(aws_config):
                 iam_config['roles'][role_id]['instances_count'] += len(role_instances[instance_profile_id])
 
 
-def match_roles_and_cloudformation_stacks(aws_config):
-    go_to_and_do(aws_config, aws_config['services']['cloudformation'], ['regions', 'stacks'], [], match_roles_and_cloudformation_stacks_callback, {})
-
-
 def match_roles_and_cloudformation_stacks_callback(aws_config, current_config, path, current_path, stack_id, callback_args):
     if 'RoleARN' not in current_config:
         return
     role_arn = current_config.pop('RoleARN')
     current_config['iam_role'] = __get_role_info(aws_config, 'arn', role_arn)
-
-
-def match_roles_and_vpc_flowlogs(aws_config):
-    go_to_and_do(aws_config, aws_config['services']['vpc'], ['regions', 'flow_logs'], [], match_roles_and_vpc_flowlogs_callback, {})
 
 
 def match_roles_and_vpc_flowlogs_callback(aws_config, current_config, path, current_path, flowlog_id, callback_args):
@@ -344,10 +324,6 @@ def __get_role_info(aws_config, attribute_name, attribute_value):
             iam_role_info['id'] = role_id
             break
     return iam_role_info
-
-
-def process_vpc_peering_connections(aws_config):
-    go_to_and_do(aws_config, aws_config['services']['vpc'], ['regions', 'peering_connections'], [], process_vpc_peering_connections_callback, {})
 
 
 def process_vpc_peering_connections_callback(aws_config, current_config, path, current_path, pc_id, callback_args):
@@ -660,7 +636,6 @@ def new_go_to_and_do(aws_config, current_config, path, current_path, callbacks):
                             tmp.pop()
                             tmp.append(i)
                             go_to_and_do(aws_config, current_config[key][i], copy.deepcopy(path), tmp, callback, callback_args)
-            print('Done !')
         except Exception as e:
             printException(e)
             if i:

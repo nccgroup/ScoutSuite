@@ -22,7 +22,10 @@
                     "api_call": "describe_stacks",
                     "response": "Stacks",
                     "cols": 2,
-                    "path": "services.cloudformation.regions.id.stacks"
+                    "path": "services.cloudformation.regions.id.stacks",
+                    "callbacks": {
+                        "match_roles_and_cloudformation_stacks_callback": {}
+                    }
                 }
             }
         },
@@ -102,7 +105,10 @@
                     "api_call": "describe_network_acls",
                     "response": "NetworkAcls",
                     "cols": 2,
-                    "path": "services.vpc.regions.id.vpcs.id.network_acls"
+                    "path": "services.vpc.regions.id.vpcs.id.network_acls",
+                    "callbacks": {
+                        "match_network_acls_and_subnets_callback": {}
+                    }
                 },
                 "vpcs": {
                     "api_call": "describe_vpcs",
@@ -138,7 +144,10 @@
                     "api_call": "describe_flow_logs",
                     "response": "FlowLogs",
                     "hidden": true,
-                    "path": "services.vpc.regions.id.vpc.id.flow_logs"
+                    "path": "services.vpc.regions.id.vpc.id.flow_logs",
+                    "callbacks": {
+                        "match_roles_and_vpc_flowlogs_callback": {}
+                    }
                 },
                 "route_tables": {
                     "api_call": "describe_route_tables",
@@ -150,7 +159,10 @@
                     "api_call": "describe_vpc_peering_connections",
                     "response": "VpcPeeringConnections",
                     "hidden": true,
-                    "path": "services.vpc.regions.id.peering_connections"
+                    "path": "services.vpc.regions.id.peering_connections",
+                    "callbacks": {
+                        "process_vpc_peering_connections_callback": {}
+                    }
                 }
             }
         },
@@ -184,7 +196,10 @@
                     "api_call": "describe_instances",
                     "response": "Reservations",
                     "cols": 2,
-                    "path": "services.ec2.regions.id.vpcs.id.instances"
+                    "path": "services.ec2.regions.id.vpcs.id.instances",
+                    "callbacks": {
+                        "match_instances_and_subnets_callback": {}
+                    }
                 },
                 "security_groups": {
                     "api_call": "describe_security_groups",
