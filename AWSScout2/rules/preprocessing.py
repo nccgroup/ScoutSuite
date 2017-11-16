@@ -32,10 +32,33 @@ def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     match_roles_and_cloudformation_stacks(aws_config)
     match_roles_and_vpc_flowlogs(aws_config)
     match_iam_policies_and_buckets(aws_config)
-    match_security_groups_and_resources(aws_config)
     process_vpc_peering_connections(aws_config)
     add_cidr_display_name(aws_config, ip_ranges, ip_ranges_name_key)
     merge_route53_and_route53domains(aws_config)
+
+    # Preprocessing dictated by metadata
+    process_metadata_callbacks(aws_config)
+
+
+def process_metadata_callbacks(aws_config):
+    """
+    Iterates through each type of resource and, when callbacks have been
+    configured in the config metadata, recurse through each resource and calls
+    each callback.
+
+    :param aws_config:                  The entire AWS configuration object
+
+    :return:                            None
+    """
+    for service_group in aws_config['metadata']:
+        for service in aws_config['metadata'][service_group]:
+            for resource_type in aws_config['metadata'][service_group][service]['resources']:
+                if 'callbacks' in aws_config['metadata'][service_group][service]['resources'][resource_type]:
+                    current_path = [ 'services', service ]
+                    target_path = aws_config['metadata'][service_group][service]['resources'][resource_type]['path'].replace('.id', '').split('.')[2:]
+                    callbacks = aws_config['metadata'][service_group][service]['resources'][resource_type]['callbacks']
+                    new_go_to_and_do(aws_config, get_object_at(aws_config, current_path), target_path, current_path, callbacks)
+
 
 
 def add_cidr_display_name(aws_config, ip_ranges, ip_ranges_name_key):
@@ -348,46 +371,6 @@ def process_vpc_peering_connections_callback(aws_config, current_config, path, c
         current_config['peer_info']['name'] = current_config['peer_info']['OwnerId']
 
 
-
-def match_security_groups_and_resources(aws_config):
-    if aws_config['services']['ec2']['regions'] == {}:
-        return
-    # EC2 instances
-    callback_args = {'status_path': [ '..', '..', 'State', 'Name' ], 'resource_id_path': ['..'], 'sg_list_attribute_name': ['Groups'], 'sg_id_attribute_name': 'GroupId'}
-    go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'instances', 'network_interfaces'], ['services', 'ec2'], match_security_groups_and_resources_callback, callback_args)
-    # EC2 network interfaces
-    callback_args = {'sg_list_attribute_name': ['Groups'], 'sg_id_attribute_name': 'GroupId'}
-    go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'network_interfaces'], ['services', 'ec2'], match_security_groups_and_resources_callback, callback_args)
-    # EFS
-    callback_args = {'status_path': ['LifeCycleState'], 'sg_list_attribute_name': ['security_groups']}
-    go_to_and_do(aws_config, aws_config['services']['efs'], ['regions', 'file_systems', 'mount_targets'], ['services', 'efs'], match_security_groups_and_resources_callback, callback_args)
-    # ELBs
-    callback_args = {'status_path': ['Scheme'], 'sg_list_attribute_name': ['security_groups'], 'sg_id_attribute_name': 'GroupId'}
-    go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'elbs'], ['services', 'ec2'], match_security_groups_and_resources_callback, callback_args)
-    callback_args = {'status_path': ['State', 'Code'], 'sg_list_attribute_name': ['security_groups'], 'sg_id_attribute_name': 'GroupId'}
-    go_to_and_do(aws_config, aws_config['services']['elbv2'], ['regions', 'vpcs', 'lbs'], ['services', 'elbv2'], match_security_groups_and_resources_callback, callback_args)
-    # Redshift clusters
-    callback_args = {'status_path': ['ClusterStatus'], 'sg_list_attribute_name': ['VpcSecurityGroups'], 'sg_id_attribute_name': 'VpcSecurityGroupId'}
-    go_to_and_do(aws_config, aws_config['services']['redshift'], ['regions', 'vpcs', 'clusters'], ['services', 'redshift'], match_security_groups_and_resources_callback, callback_args)
-    # RDS instances
-    callback_args = {'status_path': ['DBInstanceStatus'], 'sg_list_attribute_name': ['VpcSecurityGroups'], 'sg_id_attribute_name': 'VpcSecurityGroupId'}
-    go_to_and_do(aws_config, aws_config['services']['rds'], ['regions', 'vpcs', 'instances'], ['services', 'rds'], match_security_groups_and_resources_callback, callback_args)
-    # ElastiCache clusters
-    callback_args = {'status_path': ['CacheClusterStatus'], 'sg_list_attribute_name': ['SecurityGroups'], 'sg_id_attribute_name': 'SecurityGroupId'}
-    go_to_and_do(aws_config, aws_config['services']['elasticache'], ['regions', 'vpcs', 'clusters'], ['services', 'elasticache'], match_security_groups_and_resources_callback, callback_args)
-    # EMR clusters
-    callback_args = {'status_path': ['Status', 'State'], 'sg_list_attribute_name': ['Ec2InstanceAttributes', 'EmrManagedMasterSecurityGroup'], 'sg_id_attribute_name': ''}
-    go_to_and_do(aws_config, aws_config['services']['emr'], ['regions', 'vpcs', 'clusters'], ['services', 'emr'], match_security_groups_and_resources_callback, callback_args)
-    callback_args = {'status_path': ['Status', 'State'], 'sg_list_attribute_name': ['Ec2InstanceAttributes', 'EmrManagedSlaveSecurityGroup'], 'sg_id_attribute_name': ''}
-    go_to_and_do(aws_config, aws_config['services']['emr'], ['regions', 'vpcs', 'clusters'], ['services', 'emr'], match_security_groups_and_resources_callback, callback_args)
-    # Lambda functions
-    callback_args = {'status_path': ['Runtime'], 'sg_list_attribute_name': [ "VpcConfig", "SecurityGroupIds" ]}
-    go_to_and_do(aws_config, aws_config['services']['awslambda'], ['regions', 'functions'],  ['services', 'awslambda'], match_security_groups_and_resources_callback, callback_args)
-
-
-
-
-
 def match_security_groups_and_resources_callback(aws_config, current_config, path, current_path, resource_id, callback_args):
     service = current_path[1]
     original_resource_path = combine_paths(copy.deepcopy(current_path), [ resource_id ])
@@ -629,3 +612,60 @@ def go_to_and_do(aws_config, current_config, path, current_path, callback, callb
         printInfo('Key = %s' % str(key))
         printInfo('Value = %s' % str(value))
         printInfo('Path = %s' % path)
+
+
+def new_go_to_and_do(aws_config, current_config, path, current_path, callbacks):
+    """
+    Recursively go to a target and execute a callback
+
+    :param aws_config:                  A
+    :param current_config:
+    :param path:
+    :param current_path:
+    :param callback:
+    :param callback_args:
+    :return:
+    """
+    for callback_name in callbacks:
+        try:
+            callback = globals()[callback_name]
+            callback_args = callbacks[callback_name]
+            key = path.pop(0)
+            if not current_config:
+                current_config = aws_config
+            if not current_path:
+                current_path = []
+            keys = key.split('.')
+            if len(keys) > 1:
+                while True:
+                    key = keys.pop(0)
+                    if not len(keys):
+                        break
+                    current_path.append(key)
+                    current_config = current_config[key]
+            if key in current_config:
+                current_path.append(key)
+                for (i, value) in enumerate(list(current_config[key])):
+                    if len(path) == 0:
+                        if type(current_config[key] == dict) and type(value) != dict and type(value) != list:
+                            callback(aws_config, current_config[key][value], path, current_path, value, callback_args)
+                        else:
+                            callback(aws_config, current_config, path, current_path, value, callback_args)
+                    else:
+                        tmp = copy.deepcopy(current_path)
+                        try:
+                            tmp.append(value)
+                            go_to_and_do(aws_config, current_config[key][value], copy.deepcopy(path), tmp, callback, callback_args)
+                        except:
+                            tmp.pop()
+                            tmp.append(i)
+                            go_to_and_do(aws_config, current_config[key][i], copy.deepcopy(path), tmp, callback, callback_args)
+            print('Done !')
+        except Exception as e:
+            printException(e)
+            if i:
+                printInfo('Index: %s' % str(i))
+            printInfo('Path: %s' % str(current_path))
+            printInfo('Key = %s' % str(key))
+            printInfo('Value = %s' % str(value))
+            printInfo('Path = %s' % path)

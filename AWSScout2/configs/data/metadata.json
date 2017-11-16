@@ -6,7 +6,11 @@
                     "api_call": "list_clusters",
                     "response": "Clusters",
                     "cols": 2,
-                    "path": "services.emr.regions.id.vpcs.id.clusters"
+                    "path": "services.emr.regions.id.vpcs.id.clusters",
+                    "callbacks": {
+
+                        "match_security_groups_and_resources_callback": {"status_path": ["Status", "State"], "sg_list_attribute_name": ["Ec2InstanceAttributes", "EmrManagedSlaveSecurityGroup"], "sg_id_attribute_name": ""}
+                    }
                 }
             }
         }
@@ -207,7 +211,10 @@
                     "api_call": "describe_network_interfaces",
                     "response": "NetworkInterfaces",
                     "path": "services.ec2.regions.id.vpcs.id.network_interfaces",
-                    "hidden": true
+                    "hidden": true,
+                    "callbacks": {
+                        "match_security_groups_and_resources_callback": {"sg_list_attribute_name": ["Groups"], "sg_id_attribute_name": "GroupId"}
+                    }
                 }
             },
             "summaries": {
@@ -223,7 +230,10 @@
                     "api_call": "describe_load_balancers",
                     "response": "LoadBalancerDescriptions",
                     "cols": 2,
-                    "path": "services.elb.regions.id.vpcs.id.elbs"
+                    "path": "services.elb.regions.id.vpcs.id.elbs",
+                    "callbacks": {
+                        "match_security_groups_and_resources_callback": {"status_path": ["Scheme"], "sg_list_attribute_name": ["security_groups"], "sg_id_attribute_name": "GroupId"}
+                    }
                 },
                 "elb_policies": {
                     "cols": 2,
@@ -237,7 +247,10 @@
                     "api_call": "describe_load_balancers",
                     "response": "LoadBalancers",
                     "cols": 2,
-                    "path": "services.elbv2.regions.id.vpcs.id.lbs"
+                    "path": "services.elbv2.regions.id.vpcs.id.lbs",
+                    "callbacks": {
+                        "match_security_groups_and_resources_callback": {"status_path": ["State", "Code"], "sg_list_attribute_name": ["security_groups"], "sg_id_attribute_name": "GroupId"}
+                    }
                 },
                 "ssl_policies": {
                     "api_call": "describe_ssl_policies",
@@ -252,7 +265,10 @@
                 "functions": {
                     "api_call": "list_functions",
                     "response": "Functions",
-                    "path": "services.awslambda.regions.id.functions"
+                    "path": "services.awslambda.regions.id.functions",
+                    "callbacks": {
+                        "match_security_groups_and_resources_callback": {"status_path": ["Runtime"], "sg_list_attribute_name": [ "VpcConfig", "SecurityGroupIds" ]}
+                    }
                 }
             }
         }
@@ -300,7 +316,10 @@
                     "api_call": "describe_cache_clusters",
                     "response": "CacheClusters",
                     "cols": 2,
-                    "path": "services.elasticache.regions.id.vpcs.id.clusters"
+                    "path": "services.elasticache.regions.id.vpcs.id.clusters",
+                    "callbacks": {
+                        "match_security_groups_and_resources_callback": {"status_path": ["CacheClusterStatus"], "sg_list_attribute_name": ["SecurityGroups"], "sg_id_attribute_name": "SecurityGroupId"}
+                    }
                 },
                 "parameter_groups": {
                     "api_to_call": "describe_db_parameter_groups",
@@ -327,7 +346,10 @@
                     "api_call": "describe_db_instances",
                     "response": "DBInstances",
                     "cols": 2,
-                    "path": "services.rds.regions.id.vpcs.id.instances"
+                    "path": "services.rds.regions.id.vpcs.id.instances",
+                    "callbacks": {
+                        "match_security_groups_and_resources_callback": {"status_path": ["DBInstanceStatus"], "sg_list_attribute_name": ["VpcSecurityGroups"], "sg_id_attribute_name": "VpcSecurityGroupId"}
+                    }
                 },
                 "security_groups": {
                     "api_call": "describe_db_security_groups",
@@ -362,7 +384,10 @@
                     "api_call": "describe_clusters",
                     "response": "Clusters",
                     "cols": 2,
-                    "path": "services.redshift.regions.id.vpcs.id.clusters"
+                    "path": "services.redshift.regions.id.vpcs.id.clusters",
+                    "callbacks": {
+                        "match_security_groups_and_resources_callback": {"status_path": ["ClusterStatus"], "sg_list_attribute_name": ["VpcSecurityGroups"], "sg_id_attribute_name": "VpcSecurityGroupId"}
+                    }
                 },
                 "parameter_groups": {
                     "api_call": "describe_cluster_parameter_groups",
@@ -387,7 +412,10 @@
                 "file_systems": {
                     "api_call": "describe_file_systems",
                     "response": "FileSystems",
-                    "path": "services.efs.regions.id.file_systems"
+                    "path": "services.efs.regions.id.file_systems",
+                    "callbacks": {
+                        "match_security_groups_and_resources_callback": {"status_path": ["LifeCycleState"], "sg_list_attribute_name": ["security_groups"]}
+                    }
                 }
             }
         },
