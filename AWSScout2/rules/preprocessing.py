@@ -17,21 +17,21 @@ def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     :param aws_config:
     :return:
     """
+
     map_all_sgs(aws_config)
     map_all_subnets(aws_config)
     set_emr_vpc_ids(aws_config)
-    sort_vpc_flow_logs(aws_config['services']['vpc'])
     #parse_elb_policies(aws_config)
     list_ec2_network_attack_surface(aws_config['services']['ec2'])
+
+
+    # Various data processing calls
     add_security_group_name_to_ec2_grants(aws_config['services']['ec2'], aws_config['aws_account_id'])
     process_cloudtrail_trails(aws_config['services']['cloudtrail'])
-    process_network_acls(aws_config['services']['vpc'])
-    match_instances_and_roles(aws_config)
-
-    match_iam_policies_and_buckets(aws_config)
-
     add_cidr_display_name(aws_config, ip_ranges, ip_ranges_name_key)
     merge_route53_and_route53domains(aws_config)
+    match_instances_and_roles(aws_config)
+    match_iam_policies_and_buckets(aws_config)
 
     # Preprocessing dictated by metadata
     process_metadata_callbacks(aws_config)
@@ -105,11 +105,6 @@ def process_cloudtrail_trails(cloudtrail_config):
                 global_events_logging.append((region, trail_id,))
     cloudtrail_config['IncludeGlobalServiceEvents'] = False if (len(global_events_logging) == 0) else True
     cloudtrail_config['DuplicatedGlobalServiceEvents'] = True if (len(global_events_logging) > 1) else False
-
-
-def process_network_acls(vpc_config):
-    printInfo('Analyzing VPC Network ACLs...')
-    go_to_and_do(vpc_config, None, ['regions', 'vpcs', 'network_acls'], [], process_network_acls_callback, {})
 
 
 def process_network_acls_callback(vpc_config, current_config, path, current_path, privateip_id, callback_args):
@@ -504,9 +499,6 @@ def parse_elb_policies_callback(aws_config, current_config, path, current_path, 
             # TODO: pop ?
 
 
-def sort_vpc_flow_logs(vpc_config):
-    go_to_and_do(vpc_config, None, ['regions', 'flow_logs'], [], sort_vpc_flow_logs_callback, {})
-
 
 def sort_vpc_flow_logs_callback(vpc_config, current_config, path, current_path, flow_log_id, callback_args):
     attached_resource = current_config['ResourceId']
@@ -602,10 +594,11 @@ def new_go_to_and_do(aws_config, current_config, path, current_path, callbacks):
     :param callback_args:
     :return:
     """
-    for callback_name in callbacks:
+    for callback_info in callbacks:
         try:
+            callback_name = callback_info[0]
             callback = globals()[callback_name]
-            callback_args = callbacks[callback_name]
+            callback_args = callback_info[1]
             key = path.pop(0)
             if not current_config:
                 current_config = aws_config
@@ -638,8 +631,6 @@ def new_go_to_and_do(aws_config, current_config, path, current_path, callbacks):
                             go_to_and_do(aws_config, current_config[key][i], copy.deepcopy(path), tmp, callback, callback_args)
         except Exception as e:
             printException(e)
-            if i:
-                printInfo('Index: %s' % str(i))
             printInfo('Path: %s' % str(current_path))
             printInfo('Key = %s' % str(key))
             printInfo('Value = %s' % str(value))
