@@ -107,7 +107,7 @@ class RDSRegionConfig(RegionConfig):
         security_group['name'] = security_group.pop('DBSecurityGroupName')
         # Save
         manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
-        self.vpcs[vpc_id].security_groups['name'] = security_group
+        self.vpcs[vpc_id].security_groups[security_group['name']] = security_group
 
 
 

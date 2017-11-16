@@ -6,20 +6,18 @@
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Information</h4>
-          <div class="list-group-item-text item-margin">Description: {{description}}</div>
+          <div class="list-group-item-text item-margin">Description: {{DBSecurityGroupDescription}}</div>
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Authorizations</h4>
           <ul>
-            {{#each ec2_groups}}
-              <li class="list-group-item-text">EC2 security group:
-                <a href="javascript:findAndShowEC2ObjectByAttr('regions.vpcs.security_groups', {'name': '{{EC2SecurityGroupName}}', 'owner_id': '{{EC2SecurityGroupOwnerId}}'})">
-                  {{EC2SecurityGroupName}} ({{@key}}) @ {{EC2SecurityGroupOwnerId}} ({{Status}})
-                </a>
+            {{#each EC2SecurityGroups}}
+              <li class="list-group-item-text">
+                {{EC2SecurityGroupName}} ({{EC2SecurityGroupId}}) @ {{EC2SecurityGroupOwnerId}} ({{Status}})
               </li>
             {{/each}}
-            {{#each ip_ranges}}
-              <li class="list-group-item-text">IP: {{@key}} ({{Status}})</li>
+            {{#each IPRanges}}
+              <li class="list-group-item-text">{{CIDRIP}} ({{Status}})</li>
             {{/each}}
           </ul>
         </div>
