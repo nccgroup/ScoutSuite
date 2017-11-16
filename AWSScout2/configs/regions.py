@@ -16,6 +16,7 @@ except ImportError:
 from opinel.utils.aws import build_region_list, connect_service, get_aws_account_id, get_name, handle_truncated_response
 from opinel.utils.console import printException, printInfo
 
+from AWSScout2.configs import resource_id_map
 from AWSScout2.configs.threads import thread_configs
 from AWSScout2.utils import format_service_name, is_throttled
 from AWSScout2.configs.base import GlobalConfig
@@ -272,12 +273,7 @@ class RegionConfig(GlobalConfig):
             target_dict = getattr(tmp, target_type)
         else:
             target_dict = getattr(self, target_type)
-        target_id = target[id_map[target_type]]
-        get_name(target, target, id_map[target_type])
+        target_id = target[resource_id_map[target_type]]
+        get_name(target, target, resource_id_map[target_type])
         target_dict[target_id] = target
-
-id_map = {
-    'peering_connections': 'VpcPeeringConnectionId',
-    'subnet_groups': 'DBSubnetGroupName'
-}
 
