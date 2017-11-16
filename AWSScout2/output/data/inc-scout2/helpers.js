@@ -212,7 +212,6 @@ Handlebars.registerHelper('ifShow', function(v1, v2, options) {
 });
 
 Handlebars.registerHelper('ifType', function(v1, v2, options) {
-    console.log('Checking ' + v1 + ' (' + typeof(v1) + ')');
     if(typeof v1 == v2) {
         return options.fn(v1);
     } else {
