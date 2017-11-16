@@ -1,0 +1,15 @@
+
+    <!-- RDS subnet group partial -->
+    <script id="services.rds.regions.id.vpcs.id.subnet_groups.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+            <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+            <h4 class="list-group-item-heading">Attributes</h4>
+            {{> generic_object resource}}
+        </div>
+    </script>
+    <script>
+        Handlebars.registerPartial("services.rds.regions.id.vpcs.id.subnet_groups", $("#services\\.rds\\.regions\\.id\\.vpcs\\.id\\.subnet_groups\\.partial").html());
+    </script>
+
