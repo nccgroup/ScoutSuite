@@ -202,6 +202,12 @@
                     "response": "Snapshots",
                     "cols": 2,
                     "path": "services.ec2.regions.id.snapshots"
+                },
+                "network_interfaces": {
+                    "api_call": "describe_network_interfaces",
+                    "response": "NetworkInterfaces",
+                    "path": "services.ec2.regions.id.vpcs.id.network_interfaces",
+                    "hidden": true
                 }
             },
             "summaries": {
