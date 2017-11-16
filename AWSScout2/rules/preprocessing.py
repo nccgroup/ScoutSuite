@@ -355,6 +355,9 @@ def match_security_groups_and_resources(aws_config):
     # EC2 instances
     callback_args = {'status_path': [ '..', '..', 'State', 'Name' ], 'resource_id_path': ['..'], 'sg_list_attribute_name': ['Groups'], 'sg_id_attribute_name': 'GroupId'}
     go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'instances', 'network_interfaces'], ['services', 'ec2'], match_security_groups_and_resources_callback, callback_args)
+    # EC2 network interfaces
+    callback_args = {'sg_list_attribute_name': ['Groups'], 'sg_id_attribute_name': 'GroupId'}
+    go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'network_interfaces'], ['services', 'ec2'], match_security_groups_and_resources_callback, callback_args)
     # EFS
     callback_args = {'status_path': ['LifeCycleState'], 'sg_list_attribute_name': ['security_groups']}
     go_to_and_do(aws_config, aws_config['services']['efs'], ['regions', 'file_systems', 'mount_targets'], ['services', 'efs'], match_security_groups_and_resources_callback, callback_args)
