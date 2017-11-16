@@ -36,9 +36,13 @@ class ELBv2RegionConfig(RegionConfig):
         vpc_id = lb.pop('VpcId') if 'VpcId' in lb and lb['VpcId'] else ec2_classic
         manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
         lb['security_groups'] = []
-        for sg in lb['SecurityGroups']:
-            lb['security_groups'].append({'GroupId': sg})
-        lb.pop('SecurityGroups')
+        try:
+            for sg in lb['SecurityGroups']:
+                lb['security_groups'].append({'GroupId': sg})
+            lb.pop('SecurityGroups')
+        except Exception as e:
+            # Network load balancers do not have security groups
+            pass
         lb['listeners'] = {}
         # Get listeners
         listeners = handle_truncated_response(api_clients[region].describe_listeners, {'LoadBalancerArn': lb['arn']}, ['Listeners'])['Listeners']
