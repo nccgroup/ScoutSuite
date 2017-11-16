@@ -49,6 +49,8 @@ def process_metadata_callbacks(aws_config):
     """
     for service_group in aws_config['metadata']:
         for service in aws_config['metadata'][service_group]:
+            if service == 'summaries':
+                continue
             for resource_type in aws_config['metadata'][service_group][service]['resources']:
                 if 'callbacks' in aws_config['metadata'][service_group][service]['resources'][resource_type]:
                     current_path = [ 'services', service ]

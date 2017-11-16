@@ -41,7 +41,18 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
+              {{#if summaries}}
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Summaries<b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  {{#each summaries}}
+                    <li><a href="#foobar">{{make_title @key}}</a></li>
+                  {{/each}}
+                </ul>
+              </li>
+              {{/if}}
               {{#each this}}
+              {{#unlessEqual @key 'summaries'}}
               {{#unless hidden}}
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{make_title @key}}<b class="caret"></b></a>
@@ -65,6 +76,7 @@
                     <li class="divider"></li>
                     <li class="dropdown-header">{{make_title @key}} config</li>
                     {{#each resources}}
+                      {{#unless hidden}}
                       {{#if risks}}
                         <li class="dropdown-submenu"><a href="#{{path}}">{{make_title @key}} ({{count}})</a>
                           <ul class="dropdown-menu">
@@ -77,10 +89,12 @@
                       {{else}}
                         <li><a href="#{{path}}">{{make_title @key}} ({{count}})</a></li>
                       {{/if}}
+                      {{/unless}}
                     {{/each}}
                   </ul>
                 </li>
               {{/unless}}
+              {{/unlessEqual}}
               {{/each}}
             </ul>
           </div>

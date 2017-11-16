@@ -192,6 +192,12 @@
         }
     },
     "compute": {
+        "summaries": {
+            "external attack surface": {
+                "cols": 1,
+                "path": "services.ec2.attack_surface"
+            }
+        },
         "ec2": {
             "resources": {
                 "instances": {

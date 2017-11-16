@@ -444,6 +444,9 @@ function load_metadata() {
     show_main_dashboard();
     for (group in aws_info['metadata']) {
       for (service in aws_info['metadata'][group]) {
+        if (service == 'summaries') {
+            continue;
+        }
         for (section in aws_info['metadata'][group][service]) {
             for (resource_type in aws_info['metadata'][group][service][section]) {
                 add_templates(group, service, section, resource_type, aws_info['metadata'][group][service][section][resource_type]['path'], aws_info['metadata'][group][service][section][resource_type]['cols']);
@@ -638,6 +641,9 @@ function lazy_loading(path) {
     var resource_type = resource_path_array[resource_path_array.length - 1];
     for (group in aws_info['metadata']) {
         if (service in aws_info['metadata'][group]) {
+            if (service == 'summaries') {
+                continue;
+            }
             if (resource_type in aws_info['metadata'][group][service]['resources']) {
                 var cols = aws_info['metadata'][group][service]['resources'][resource_type]['cols'];
             }
