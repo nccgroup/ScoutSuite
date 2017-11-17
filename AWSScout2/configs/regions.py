@@ -15,9 +15,11 @@ except ImportError:
 
 from opinel.utils.aws import build_region_list, connect_service, get_aws_account_id, get_name, handle_truncated_response
 from opinel.utils.console import printException, printInfo
+from opinel.utils.globals import manage_dictionary
 
 from AWSScout2.configs import resource_id_map
 from AWSScout2.configs.threads import thread_configs
+from AWSScout2.configs.vpc import VPCConfig
 from AWSScout2.utils import format_service_name, is_throttled
 from AWSScout2.configs.base import GlobalConfig
 from AWSScout2.output.console import FetchStatusLogger
@@ -269,6 +271,7 @@ class RegionConfig(GlobalConfig):
         target_type = target.pop('scout2_target_type')
         if 'VpcId' in target:
             vpc_id = target.pop('VpcId')
+            manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
             tmp = getattr(self, 'vpcs')[vpc_id]
             target_dict = getattr(tmp, target_type)
         else:
