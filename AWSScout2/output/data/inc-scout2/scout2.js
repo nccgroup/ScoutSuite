@@ -500,9 +500,10 @@ function showAllResources(script_id) {
 // Make title from resource path
 //
 function makeTitle(resource_path) {
+    resource_path = resource_path.replace('service_groups.', '');
     service = getService(resource_path);
     resource = resource_path.split('.').pop();
-    resource = resource.replace('_', ' ').replace('<', '').replace('>',
+    resource = resource.replace(/_/g, ' ').replace('<', '').replace('>',
     '').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}).replace("Acl","ACL").replace("Findings", "Dashboard");
     return service + ' ' + resource;
 }
