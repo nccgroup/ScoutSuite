@@ -353,6 +353,15 @@
         }
     },
     "database": {
+        "summaries": {
+            "external attack surface": {
+                "cols": 1,
+                "path": "service_groups.database.summaries.external_attack_surface",
+                "callbacks": [
+                    [ "merge", {"attribute": "external_attack_surface"} ]
+                ]
+            }
+        },
         "elasticache": {
             "resources": {
                 "clusters": {
@@ -361,7 +370,8 @@
                     "cols": 2,
                     "path": "services.elasticache.regions.id.vpcs.id.clusters",
                     "callbacks": [
-                        [ "match_security_groups_and_resources_callback", {"status_path": ["CacheClusterStatus"], "sg_list_attribute_name": ["SecurityGroups"], "sg_id_attribute_name": "SecurityGroupId"} ]
+                        [ "match_security_groups_and_resources_callback", {"status_path": ["CacheClusterStatus"], "sg_list_attribute_name": ["SecurityGroups"], "sg_id_attribute_name": "SecurityGroupId"} ],
+                        [ "get_db_attack_surface", {} ]
                     ]
                 },
                 "parameter_groups": {

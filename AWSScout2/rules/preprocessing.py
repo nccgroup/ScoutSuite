@@ -81,7 +81,6 @@ def process_metadata_callbacks(aws_config):
         if 'summaries' in aws_config['metadata'][service_group]:
             for summary in aws_config['metadata'][service_group]['summaries']:
                     current_path = [ 'services', service ]
-                    print('Summary :: %s' % summary)
                     for callback in aws_config['metadata'][service_group]['summaries'][summary]['callbacks']:
                         callback_name = callback[0]
                         callback_args = copy.deepcopy(callback[1])
@@ -673,6 +672,12 @@ def get_db_attack_surface(aws_config, current_config, path, current_path, db_id,
         listeners = [ current_config['Endpoint']['Port'] ]
         security_groups = current_config['VpcSecurityGroups']
         security_group_to_attack_surface(aws_config, service_config['external_attack_surface'], public_dns, current_path, [g['VpcSecurityGroupId'] for g in security_groups], listeners)
+    elif 'ConfigurationEndpoint' in current_config:
+        public_dns = current_config['ConfigurationEndpoint']['Address'].replace('.cfg', '') # TODO : get the proper addresss
+        listeners = [ current_config['ConfigurationEndpoint']['Port'] ]
+        security_groups = current_config['SecurityGroups']
+        security_group_to_attack_surface(aws_config, service_config['external_attack_surface'], public_dns, current_path, [g['SecurityGroupId'] for g in security_groups], listeners)
+        # TODO :: Get Redis endpoint information
 
 
 
@@ -691,11 +696,11 @@ def get_lb_attack_surface(aws_config, current_config, path, current_path, elb_id
     elif current_path[1] == 'elbv2' and current_config['Scheme'] == 'internet-facing':
         vpc_id = current_path[5]
         elb_config['external_attack_surface'][public_dns] = {'protocols': {}}
-        security_groups = current_config['security_groups']
+        security_groups = [g['GroupId'] for g in current_config['security_groups']]
         listeners = []
         for listener in current_config['listeners']:
             listeners.append(listener)
-        security_group_to_attack_surface(aws_config, elb_config['external_attack_surface'], public_dns, current_path, [g['GroupId'] for g in security_groups], 'GroupId', listeners)
+        security_group_to_attack_surface(aws_config, elb_config['external_attack_surface'], public_dns, current_path, security_groups, listeners)
     elif current_config['Scheme'] == 'internet-facing':
         # Classic ELbs do not have a security group, lookup listeners instead
         public_dns = current_config['DNSName']
