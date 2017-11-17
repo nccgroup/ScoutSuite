@@ -3,11 +3,9 @@
     <script id="ip_grants.partial" type="text/x-handlebars-template">
       <ul>
         {{#each items}}
-          <span class="ec2_attack_surface_item">
+          <span class="attack_surface_item">
             <li class="list-group-item-text">
-              <span id="ec2.regions.{{../region}}.vpcs.{{../vpc}}.security_groups.{{../sg_id}}.rules.{{../direction}}.protocols.{{../protocol}}.ports.{{../ports}}.cidrs.{{@key}}.CIDR">
-                {{CIDR}} {{#if CIDRName}}({{CIDRName}}){{/if}}
-              </span>
+              {{CIDR}} {{#if CIDRName}}({{CIDRName}}){{/if}}
             </li>
           </span>
         {{/each}}

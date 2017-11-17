@@ -22,7 +22,6 @@ def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     map_all_subnets(aws_config)
     set_emr_vpc_ids(aws_config)
     #parse_elb_policies(aws_config)
-    list_ec2_network_attack_surface(aws_config['services']['ec2'])
 
 
     # Various data processing calls
@@ -51,12 +50,30 @@ def process_metadata_callbacks(aws_config):
         for service in aws_config['metadata'][service_group]:
             if service == 'summaries':
                 continue
+            # Reset external attack surface
+            if 'summaries' in aws_config['metadata'][service_group][service]:
+                for summary in aws_config['metadata'][service_group][service]['summaries']:
+                    if summary == 'external attack surface' and service in aws_config['services'] and 'external_attack_surface' in aws_config['services'][service]:
+                        aws_config['services'][service].pop('external_attack_surface')
+            # Resources
             for resource_type in aws_config['metadata'][service_group][service]['resources']:
                 if 'callbacks' in aws_config['metadata'][service_group][service]['resources'][resource_type]:
                     current_path = [ 'services', service ]
                     target_path = aws_config['metadata'][service_group][service]['resources'][resource_type]['path'].replace('.id', '').split('.')[2:]
                     callbacks = aws_config['metadata'][service_group][service]['resources'][resource_type]['callbacks']
                     new_go_to_and_do(aws_config, get_object_at(aws_config, current_path), target_path, current_path, callbacks)
+            # Summaries
+            if 'summaries' in aws_config['metadata'][service_group][service]:
+              for summary in aws_config['metadata'][service_group][service]['summaries']:
+                if 'callbacks' in aws_config['metadata'][service_group][service]['summaries'][summary]:
+                    current_path = [ 'services', service ]
+                    for callback in aws_config['metadata'][service_group][service]['summaries'][summary]['callbacks']:
+                        callback_name = callback[0]
+                        callback_args = copy.deepcopy(callback[1])
+                        target_path = callback_args.pop('path').replace('.id', '').split('.')[2:]
+                        callbacks = [ [callback_name, callback_args] ]
+                        new_go_to_and_do(aws_config, get_object_at(aws_config, current_path), target_path, current_path, callbacks)
+
 
 
 
@@ -138,31 +155,13 @@ def process_network_acls_check_for_aws_default(network_acl, direction):
         network_acl['use_default_%s_rules' % direction] = False
 
 
-def list_ec2_network_attack_surface(ec2_config):
-    ec2_config['attack_surface'] = {}
-    go_to_and_do(ec2_config, None, ['regions', 'vpcs', 'instances', 'network_interfaces', 'PrivateIpAddresses'], [], list_ec2_network_attack_surface_callback, {})
 
-
-def list_ec2_network_attack_surface_callback(ec2_config, current_config, path, current_path, privateip_id, callback_args):
+def list_ec2_network_attack_surface_callback(aws_config, current_config, path, current_path, privateip_id, callback_args):
+    manage_dictionary(aws_config['services']['ec2'], 'external_attack_surface', {})
     if 'Association' in current_config and current_config['Association']:
         public_ip = current_config['Association']['PublicIp']
-        manage_dictionary(ec2_config, 'attack_surface', {})
-        manage_dictionary(ec2_config['attack_surface'], public_ip, {'protocols': {}})
-        for sg_info in current_config['Groups']:
-            sg_id = sg_info['GroupId']
-            sg_path = copy.deepcopy(current_path[0:4])
-            sg_path.append('security_groups')
-            sg_path.append(sg_id)
-            sg_path.append('rules')
-            sg_path.append('ingress')
-            ingress_rules = get_object_at(ec2_config, sg_path)
-            public_ip_grants = {}
-            for p in ingress_rules['protocols']:
-                for port in ingress_rules['protocols'][p]['ports']:
-                    if 'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
-                        manage_dictionary(ec2_config['attack_surface'][public_ip]['protocols'], p, {'ports': {}})
-                        manage_dictionary(ec2_config['attack_surface'][public_ip]['protocols'][p]['ports'], port, {'cidrs': []})
-                        ec2_config['attack_surface'][public_ip]['protocols'][p]['ports'][port]['cidrs'] += ingress_rules['protocols'][p]['ports'][port]['cidrs']
+        security_group_to_attack_surface(aws_config, aws_config['services']['ec2']['external_attack_surface'], public_ip, current_path, current_config['Groups'], [])
+
 
 
 sg_map = {}
@@ -636,3 +635,66 @@ def new_go_to_and_do(aws_config, current_config, path, current_path, callbacks):
             printInfo('Key = %s' % str(key))
             printInfo('Value = %s' % str(value))
             printInfo('Path = %s' % path)
+
+
+
+def get_lb_attack_surface(aws_config, current_config, path, current_path, elb_id, callback_args):
+    public_dns = current_config['DNSName']
+    elb_config = aws_config['services'][current_path[1]]
+    manage_dictionary(elb_config, 'external_attack_surface', {})
+    if current_path[1] == 'elbv2' and current_config['Type'] == 'network':
+        # Network LBs do not have a security group, lookup listeners instead
+        manage_dictionary(elb_config['external_attack_surface'], public_dns, {'protocols': {}})
+        for listener in current_config['listeners']:
+            protocol = current_config['listeners'][listener]['Protocol']
+            manage_dictionary(elb_config['external_attack_surface'][public_dns]['protocols'], protocol, {'ports': {}})
+            manage_dictionary(elb_config['external_attack_surface'][public_dns]['protocols'][protocol]['ports'], listener, {'cidrs': []})
+            elb_config['external_attack_surface'][public_dns]['protocols'][protocol]['ports'][listener]['cidrs'].append({'CIDR': '0.0.0.0/0'})
+    elif current_path[1] == 'elbv2' and current_config['Scheme'] == 'internet-facing':
+        vpc_id = current_path[5]
+        elb_config['external_attack_surface'][public_dns] = {'protocols': {}}
+        security_groups = current_config['security_groups']
+        listeners = []
+        for listener in current_config['listeners']:
+            listeners.append(listener)
+        security_group_to_attack_surface(aws_config, elb_config['external_attack_surface'], public_dns, current_path, security_groups, listeners)
+    elif current_config['Scheme'] == 'internet-facing':
+        # Classic ELbs do not have a security group, lookup listeners instead
+        public_dns = current_config['DNSName']
+        manage_dictionary(elb_config['external_attack_surface'], public_dns, {'protocols': {'TCP': {'ports': {}}}})
+        for listener in current_config['listeners']:
+            elb_config['external_attack_surface'][public_dns]['protocols']['TCP']['ports'][listener]['cidrs'].append({'CIDR': '0.0.0.0/0'})
+
+
+
+def security_group_to_attack_surface(aws_config, attack_surface_config, public_ip, current_path, security_groups, listeners = []):
+        manage_dictionary(attack_surface_config, public_ip, {'protocols': {}})
+        for sg_info in security_groups:
+            sg_id = sg_info['GroupId']
+            sg_path = copy.deepcopy(current_path[0:6])
+            sg_path[1] = 'ec2'
+            sg_path.append('security_groups')
+            sg_path.append(sg_id)
+            sg_path.append('rules')
+            sg_path.append('ingress')
+            ingress_rules = get_object_at(aws_config, sg_path) # aws_config['services']['ec2'], sg_path)
+            public_ip_grants = {}
+            for p in ingress_rules['protocols']:
+                for port in ingress_rules['protocols'][p]['ports']:
+                  if len(listeners) == 0 and 'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
+                      manage_dictionary(attack_surface_config[public_ip]['protocols'], p, {'ports': {}})
+                      manage_dictionary(attack_surface_config[public_ip]['protocols'][p]['ports'], port, {'cidrs': []})
+                      attack_surface_config[public_ip]['protocols'][p]['ports'][port]['cidrs'] += ingress_rules['protocols'][p]['ports'][port]['cidrs']
+                  else:
+                    ports = port.split('-')
+                    if len(ports) > 1:
+                        port_min = int(ports[0])
+                        port_max = int(ports[1])
+                    else:
+                        port_min = port_max = port
+                    for listener in listeners:
+                        listener = int(listener)
+                        if listener > port_min and listener < port_max and 'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
+                            manage_dictionary(attack_surface_config[public_ip]['protocols'], p, {'ports': {}})
+                            manage_dictionary(attack_surface_config[public_ip]['protocols'][p]['ports'], str(listener), {'cidrs': []})
+                            attack_surface_config[public_ip]['protocols'][p]['ports'][str(listener)]['cidrs'] += ingress_rules['protocols'][p]['ports'][port]['cidrs']
