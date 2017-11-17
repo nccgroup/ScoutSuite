@@ -55,6 +55,9 @@ def process_metadata_callbacks(aws_config):
                 for summary in aws_config['metadata'][service_group][service]['summaries']:
                     if summary == 'external attack surface' and service in aws_config['services'] and 'external_attack_surface' in aws_config['services'][service]:
                         aws_config['services'][service].pop('external_attack_surface')
+            # Reset all global summaries
+            if 'service_groups' in aws_config:
+                aws_config.pop('service_groups')
             # Resources
             for resource_type in aws_config['metadata'][service_group][service]['resources']:
                 if 'callbacks' in aws_config['metadata'][service_group][service]['resources'][resource_type]:
@@ -73,7 +76,30 @@ def process_metadata_callbacks(aws_config):
                         target_path = callback_args.pop('path').replace('.id', '').split('.')[2:]
                         callbacks = [ [callback_name, callback_args] ]
                         new_go_to_and_do(aws_config, get_object_at(aws_config, current_path), target_path, current_path, callbacks)
-
+    # Group-level summaries
+    for service_group in aws_config['metadata']:
+        if 'summaries' in aws_config['metadata'][service_group]:
+            for summary in aws_config['metadata'][service_group]['summaries']:
+                    current_path = [ 'services', service ]
+                    print('Summary :: %s' % summary)
+                    for callback in aws_config['metadata'][service_group]['summaries'][summary]['callbacks']:
+                        callback_name = callback[0]
+                        callback_args = copy.deepcopy(callback[1])
+                        target_path = aws_config['metadata'][service_group]['summaries'][summary]['path'].split('.')
+                        target_object = aws_config
+                        for p in target_path:
+                            manage_dictionary(target_object, p, {})
+                            target_object = target_object[p]
+                        if callback_name == 'merge':
+                            for service in aws_config['metadata'][service_group]:
+                                if service == 'summaries':
+                                    continue
+                                if 'summaries' in aws_config['metadata'][service_group][service] and summary in aws_config['metadata'][service_group][service]['summaries']:
+                                    try:
+                                        source = get_object_at(aws_config, aws_config['metadata'][service_group][service]['summaries'][summary]['path'].split('.'))
+                                    except:
+                                        source = {}
+                                    target_object.update(source)
 
 
 

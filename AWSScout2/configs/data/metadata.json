@@ -192,6 +192,15 @@
         }
     },
     "compute": {
+        "summaries": {
+            "external attack surface": {
+                "cols": 1,
+                "path": "service_groups.compute.summaries.external_attack_surface",
+                "callbacks": [
+                    [ "merge", {"attribute": "external_attack_surface"} ]
+                ]
+            }
+        },
         "ec2": {
             "resources": {
                 "instances": {
