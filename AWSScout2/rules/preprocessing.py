@@ -689,6 +689,7 @@ def get_lb_attack_surface(aws_config, current_config, path, current_path, elb_id
         public_dns = current_config['DNSName']
         manage_dictionary(elb_config['external_attack_surface'], public_dns, {'protocols': {'TCP': {'ports': {}}}})
         for listener in current_config['listeners']:
+            manage_dictionary(elb_config['external_attack_surface'][public_dns]['protocols']['TCP']['ports'], listener, {'cidrs': []})
             elb_config['external_attack_surface'][public_dns]['protocols']['TCP']['ports'][listener]['cidrs'].append({'CIDR': '0.0.0.0/0'})
 
 
