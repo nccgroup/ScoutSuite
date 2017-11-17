@@ -592,15 +592,10 @@ def new_go_to_and_do(aws_config, current_config, path, current_path, callbacks):
     :param current_config:
     :param path:
     :param current_path:
-    :param callback:
-    :param callback_args:
+    :param callbacks:
     :return:
     """
-    for callback_info in callbacks:
-        try:
-            callback_name = callback_info[0]
-            callback = globals()[callback_name]
-            callback_args = callback_info[1]
+    try:
             key = path.pop(0)
             if not current_config:
                 current_config = aws_config
@@ -618,20 +613,24 @@ def new_go_to_and_do(aws_config, current_config, path, current_path, callbacks):
                 current_path.append(key)
                 for (i, value) in enumerate(list(current_config[key])):
                     if len(path) == 0:
-                        if type(current_config[key] == dict) and type(value) != dict and type(value) != list:
-                            callback(aws_config, current_config[key][value], path, current_path, value, callback_args)
-                        else:
-                            callback(aws_config, current_config, path, current_path, value, callback_args)
+                        for callback_info in callbacks:
+                            callback_name = callback_info[0]
+                            callback = globals()[callback_name]
+                            callback_args = callback_info[1]
+                            if type(current_config[key] == dict) and type(value) != dict and type(value) != list:
+                                callback(aws_config, current_config[key][value], path, current_path, value, callback_args)
+                            else:
+                                callback(aws_config, current_config, path, current_path, value, callback_args)
                     else:
                         tmp = copy.deepcopy(current_path)
                         try:
                             tmp.append(value)
-                            go_to_and_do(aws_config, current_config[key][value], copy.deepcopy(path), tmp, callback, callback_args)
+                            new_go_to_and_do(aws_config, current_config[key][value], copy.deepcopy(path), tmp, callbacks)
                         except:
                             tmp.pop()
                             tmp.append(i)
-                            go_to_and_do(aws_config, current_config[key][i], copy.deepcopy(path), tmp, callback, callback_args)
-        except Exception as e:
+                            new_go_to_and_do(aws_config, current_config[key][i], copy.deepcopy(path), tmp, callbacks)
+    except Exception as e:
             printException(e)
             printInfo('Path: %s' % str(current_path))
             printInfo('Key = %s' % str(key))
