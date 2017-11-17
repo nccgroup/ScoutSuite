@@ -186,7 +186,7 @@ def list_ec2_network_attack_surface_callback(aws_config, current_config, path, c
     manage_dictionary(aws_config['services']['ec2'], 'external_attack_surface', {})
     if 'Association' in current_config and current_config['Association']:
         public_ip = current_config['Association']['PublicIp']
-        security_group_to_attack_surface(aws_config, aws_config['services']['ec2']['external_attack_surface'], public_ip, current_path, current_config['Groups'], [])
+        security_group_to_attack_surface(aws_config, aws_config['services']['ec2']['external_attack_surface'], public_ip, current_path, [g['GroupId'] for g in current_config['Groups']], [])
 
 
 
@@ -664,6 +664,18 @@ def new_go_to_and_do(aws_config, current_config, path, current_path, callbacks):
 
 
 
+def get_db_attack_surface(aws_config, current_config, path, current_path, db_id, callback_args):
+    service = current_path[1]
+    service_config = aws_config['services'][service]
+    manage_dictionary(service_config, 'external_attack_surface', {})
+    if (service == 'redshift' or service == 'rds') and 'PubliclyAccessible' in current_config and current_config['PubliclyAccessible']:
+        public_dns = current_config['Endpoint']['Address']
+        listeners = [ current_config['Endpoint']['Port'] ]
+        security_groups = current_config['VpcSecurityGroups']
+        security_group_to_attack_surface(aws_config, service_config['external_attack_surface'], public_dns, current_path, [g['VpcSecurityGroupId'] for g in security_groups], listeners)
+
+
+
 def get_lb_attack_surface(aws_config, current_config, path, current_path, elb_id, callback_args):
     public_dns = current_config['DNSName']
     elb_config = aws_config['services'][current_path[1]]
@@ -683,7 +695,7 @@ def get_lb_attack_surface(aws_config, current_config, path, current_path, elb_id
         listeners = []
         for listener in current_config['listeners']:
             listeners.append(listener)
-        security_group_to_attack_surface(aws_config, elb_config['external_attack_surface'], public_dns, current_path, security_groups, listeners)
+        security_group_to_attack_surface(aws_config, elb_config['external_attack_surface'], public_dns, current_path, [g['GroupId'] for g in security_groups], 'GroupId', listeners)
     elif current_config['Scheme'] == 'internet-facing':
         # Classic ELbs do not have a security group, lookup listeners instead
         public_dns = current_config['DNSName']
@@ -696,15 +708,14 @@ def get_lb_attack_surface(aws_config, current_config, path, current_path, elb_id
 
 def security_group_to_attack_surface(aws_config, attack_surface_config, public_ip, current_path, security_groups, listeners = []):
         manage_dictionary(attack_surface_config, public_ip, {'protocols': {}})
-        for sg_info in security_groups:
-            sg_id = sg_info['GroupId']
+        for sg_id in security_groups:
             sg_path = copy.deepcopy(current_path[0:6])
             sg_path[1] = 'ec2'
             sg_path.append('security_groups')
             sg_path.append(sg_id)
             sg_path.append('rules')
             sg_path.append('ingress')
-            ingress_rules = get_object_at(aws_config, sg_path) # aws_config['services']['ec2'], sg_path)
+            ingress_rules = get_object_at(aws_config, sg_path)
             public_ip_grants = {}
             for p in ingress_rules['protocols']:
                 for port in ingress_rules['protocols'][p]['ports']:

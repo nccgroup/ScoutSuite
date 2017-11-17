@@ -391,7 +391,8 @@
                     "cols": 2,
                     "path": "services.rds.regions.id.vpcs.id.instances",
                     "callbacks": [
-                        [ "match_security_groups_and_resources_callback", {"status_path": ["DBInstanceStatus"], "sg_list_attribute_name": ["VpcSecurityGroups"], "sg_id_attribute_name": "VpcSecurityGroupId"} ]
+                        [ "match_security_groups_and_resources_callback", {"status_path": ["DBInstanceStatus"], "sg_list_attribute_name": ["VpcSecurityGroups"], "sg_id_attribute_name": "VpcSecurityGroupId"} ],
+                        [ "get_db_attack_surface", {} ]
                     ]
                 },
                 "security_groups": {
@@ -419,6 +420,12 @@
                     "cols": 2,
                     "path": "services.rds.regions.id.vpcs.id.subnet_groups"
                 }
+            },
+            "summaries": {
+                "external attack surface": {
+                    "cols": 1,
+                    "path": "services.rds.external_attack_surface"
+                }
             }
         },
         "redshift": {
@@ -429,7 +436,8 @@
                     "cols": 2,
                     "path": "services.redshift.regions.id.vpcs.id.clusters",
                     "callbacks": [
-                        [ "match_security_groups_and_resources_callback", {"status_path": ["ClusterStatus"], "sg_list_attribute_name": ["VpcSecurityGroups"], "sg_id_attribute_name": "VpcSecurityGroupId"} ]
+                        [ "match_security_groups_and_resources_callback", {"status_path": ["ClusterStatus"], "sg_list_attribute_name": ["VpcSecurityGroups"], "sg_id_attribute_name": "VpcSecurityGroupId"} ],
+                        [ "get_db_attack_surface", {} ]
                     ]
                 },
                 "parameter_groups": {
@@ -444,6 +452,12 @@
                     "no_exceptions": true,
                     "cols": 2,
                     "path": "services.redshift.regions.id.security_groups"
+                }
+            },
+            "summaries": {
+                "external attack surface": {
+                    "cols": 1,
+                    "path": "services.redshift.external_attack_surface"
                 }
             }
         }
