@@ -29,7 +29,7 @@ class RedshiftRegionConfig(RegionConfig):
         :param cluster:                 Cluster
         """
         vpc_id = cluster.pop('VpcId') if 'VpcId' in cluster else ec2_classic
-        manage_dictionary(self.vpcs, vpc_id, VPCConfig())
+        manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
         name = cluster.pop('ClusterIdentifier')
         cluster['name'] = name
         self.vpcs[vpc_id].clusters[name] = cluster
