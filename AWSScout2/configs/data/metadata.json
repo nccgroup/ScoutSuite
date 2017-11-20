@@ -410,7 +410,7 @@
                     "response": "DBSecurityGroups",
                     "no_exceptions": true,
                     "cols": 2,
-                    "path": "services.rds.regions.id.vpcs.id.security_groups"
+                    "path": "services.rds.regions.id.security_groups"
                 },
                 "snapshots": {
                     "api_call": "describe_db_snapshots",

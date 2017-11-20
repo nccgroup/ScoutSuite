@@ -102,13 +102,14 @@ class RDSRegionConfig(RegionConfig):
         :param region:                  Name of the AWS region
         :param security)_group:         Security group
         """
-        vpc_id = security_group.pop('VpcId') if 'VpcId' in security_group else ec2_classic
-        manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
+        #vpc_id = security_group.pop('VpcId') if 'VpcId' in security_group else ec2_classic
+        #manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
         security_group['arn'] = security_group.pop('DBSecurityGroupArn')
         security_group['name'] = security_group.pop('DBSecurityGroupName')
         # Save
-        manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
-        self.vpcs[vpc_id].security_groups[security_group['name']] = security_group
+        #manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
+        #self.vpcs[vpc_id].security_groups[security_group['name']] = security_group
+        self.security_groups[security_group['name']] = security_group
 
 
 
