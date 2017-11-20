@@ -79,12 +79,13 @@ class RDSRegionConfig(RegionConfig):
         api_client = api_clients[region]
         try:
             parameters = handle_truncated_response(api_client.describe_db_parameters, {'DBParameterGroupName': parameter_group['name']}, ['Parameters'])['Parameters']
+            manage_dictionary(parameter_group, 'parameters', {})
             for parameter in parameters:
-                param = {}
-                param['value'] = parameter['ParameterValue'] if 'ParameterValue' in parameter else None
-                param['source'] = parameter['Source']
-                manage_dictionary(parameter_group, 'parameters', {})
-                parameter_group['parameters'][parameter['ParameterName']] = param
+                if not parameter['IsModifiable']:
+                    # Discard non-modifiable parameters
+                    continue
+                parameter_name = parameter.pop('ParameterName')
+                parameter_group['parameters'][parameter_name] = parameter
         except Exception as e:
             printException(e)
             printError('Failed fetching DB parameters for %s' % parameter_group['name'])
