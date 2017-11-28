@@ -108,8 +108,7 @@ class Ruleset(object):
         for filename in self.rule_definitions:
             if filename in self.rules:
                 for rule in self.rules[filename]:
-                    if rule.enabled == True:
-                        rule.set_definition(self.rule_definitions, attributes, ip_ranges, params)
+                    rule.set_definition(self.rule_definitions, attributes, ip_ranges, params)
 
 
     def load_rule_definitions(self, ruleset_generator = False, rule_dirs = []):

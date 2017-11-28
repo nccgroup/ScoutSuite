@@ -66,7 +66,7 @@ class RulesArgumentParser(SharedArgumentParser):
                                  dest='rules_dir',
                                  default=[],
                                  nargs='+',
-                                 help='Path to custom rule files.')
+                                 help='Path to directories where custom rules are defined.')
         self.parser.add_argument('--generator-dir',
                                  dest='generator_dir',
                                  default=DEFAULT_REPORT_DIR,
