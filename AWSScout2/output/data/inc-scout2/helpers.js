@@ -373,6 +373,11 @@ Handlebars.registerHelper('get_rule', function(rule_filename, attribute) {
         return rule_filename.split('-')[0];
     } else {
         rule = aws_info['rule_definitions'][rule_filename];
+        // Clean up some ruleset generator artifacts
+        attribute_cleanup = ['file_name', 'file_path', 'rule_dirs', 'rule_types', 'rules_data_path', 'string_definition'];
+        for (ac in attribute_cleanup) {
+            rule = rule_cleanup(rule, attribute_cleanup[ac]);
+        }
         if (attribute == '') {
             return rule;
         } else {
@@ -380,6 +385,13 @@ Handlebars.registerHelper('get_rule', function(rule_filename, attribute) {
         }
     }
 });
+
+var rule_cleanup = function(rule, attribute) {
+    if (attribute in rule) {
+        delete rule[attribute];
+    }
+    return rule;
+}
 
 Handlebars.registerHelper('get_arg_name', function(rule_filename, arg_index) {
     if ('arg_names' in aws_info['rule_definitions'][rule_filename]) {
