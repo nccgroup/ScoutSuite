@@ -8,6 +8,7 @@
         [ "InstanceType", "containAtLeastOneOf", "_ARG_1_" ]
     ],
     "arg_names": [
+        "Display name of types of instances",
         "Type of EC2 instances that may not be used."
     ]
 }
