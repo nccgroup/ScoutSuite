@@ -122,7 +122,7 @@ The following command will provide the list of available command line options:
 
     $ Scout2 --help
 
-For further details, checkout our GitHub pages at https://nccgroup.github.io/Scout2.
+For further details, checkout our Wiki pages at https://github.com/nccgroup/Scout2/wiki.
 
 *******
 License
