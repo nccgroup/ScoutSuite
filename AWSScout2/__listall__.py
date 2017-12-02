@@ -107,7 +107,7 @@ def main():
                 rule.keys = ['name']
 
         # Prepare the output format
-        (lines, template) = format_listall_output(args.format_file, 'foo', args.format, rule)
+        (lines, template) = format_listall_output(args.format_file[0], None, args.format, rule)
 
         # Print the output
         printInfo(generate_listall_output(lines, resources, aws_config, template, []))

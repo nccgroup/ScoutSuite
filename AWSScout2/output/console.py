@@ -46,7 +46,7 @@ def format_listall_output(format_file, format_item_dir, format, rule, option_pre
         re_file = re.compile(r'(_FILE_\((.*?)\)_ELIF_)')
         while True:
             requested_files = re_file.findall(template)
-            available_files = os.listdir(format_item_dir)
+            available_files = os.listdir(format_item_dir) if format_item_dir else []
             for requested_file in requested_files:
                 if requested_file[1].strip() in available_files:
                     with open(os.path.join(format_item_dir, requested_file[1].strip()), 'rt') as f:
@@ -54,7 +54,6 @@ def format_listall_output(format_file, format_item_dir, format, rule, option_pre
             # Find items and keys to be printed
             re_line = re.compile(r'(_ITEM_\((.*?)\)_METI_)')
             re_key = re.compile(r'_KEY_\(*(.*?)\)', re.DOTALL|re.MULTILINE) # Remove the multiline ?
-            format_item_mappings = os.listdir(format_item_dir)
             lines = re_line.findall(template)
             for (i, line) in enumerate(lines):
                 lines[i] = line + (re_key.findall(line[1]),)
