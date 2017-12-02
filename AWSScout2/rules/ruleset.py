@@ -69,7 +69,7 @@ class Ruleset(object):
             try:
                 with open(self.filename, 'rt') as f:
                     ruleset = json.load(f)
-                    self.about = ruleset['about']
+                    self.about = ruleset['about'] if 'about' in ruleset else ''
                     self.rules = {}
                     for filename in ruleset['rules']:
                         self.rules[filename] = []

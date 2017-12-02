@@ -770,13 +770,13 @@ var filter_rules = function(group, service) {
 
 var generate_ruleset = function() {
     var ruleset = new Object();
-    ruleset['rules'] = new Array();
+    ruleset['rules'] = new Object();
     // Find all the rules
     var rules = $("*[id^='rule-']");
     for (var i=0; i < rules.length; i++) {
+        var filename = $(rules[i]).find('#filename').val();
         var rule = new Object()
         rule['level'] = $(rules[i]).find('#level').val();
-        rule['filename'] = $(rules[i]).find('#filename').val();
         rule['enabled'] = $(rules[i]).find('#enabled').is(':checked');
         args = $(rules[i]).find("[id^='parameter_']")
         if (args.length > 0) {
@@ -790,8 +790,11 @@ var generate_ruleset = function() {
             for (k in tmp) {
                 rule['args'].push(tmp[k]);
             }
-        }     
-        ruleset['rules'].push(rule);
+        }
+        if (!(filename in ruleset['rules'])) {
+            ruleset['rules'][filename] = Array();
+        }
+        ruleset['rules'][filename].push(rule);
     }
     download_configuration(ruleset, aws_info['name'], '');
 }
