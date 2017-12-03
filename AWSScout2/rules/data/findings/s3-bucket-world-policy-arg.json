@@ -9,9 +9,15 @@
         [ "s3.buckets.id.", "withKey", "policy" ],
         [ "s3.buckets.id.policy.Statement.id.Effect", "equal", "Allow" ],
         [ "s3.buckets.id.policy.Statement.id.", "withoutKey", "Condition" ],
-        [ "s3.buckets.id.policy.Statement.id.Principal", "containAtLeastOneOf", [ "*" ] ],
         [ "s3.buckets.id.policy.Statement.id.", "containAction", "_ARG_1_" ],
-        [ "s3.buckets.id.policy.Statement.id.Action", "containNoneOf", [ "s3:*", "*" ] ]
+        [ "s3.buckets.id.policy.Statement.id.Action", "containNoneOf", [ "s3:*", "*" ] ],
+        [ "or",
+          [ "s3.buckets.id.policy.Statement.id.Principal", "containAtLeastOneOf", [ "*" ] ],
+          [ "and",
+            [ "s3.buckets.id.policy.Statement.id.Principal", "withKey", "AWS" ],
+            [ "s3.buckets.id.policy.Statement.id.Principal.AWS", "containAtLeastOneOf", [ "*" ] ]
+          ]
+        ]
     ],
     "keys": [
         "s3.buckets.id",
