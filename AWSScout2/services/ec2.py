@@ -64,7 +64,7 @@ class EC2RegionConfig(RegionConfig):
             manage_dictionary(instance, 'network_interfaces', {})
             for eni in i['NetworkInterfaces']:
                 nic = {}
-                get_keys(eni, nic, ['Association', 'Groups', 'PrivateIpAddresses', 'SubnetId'])
+                get_keys(eni, nic, ['Association', 'Groups', 'PrivateIpAddresses', 'SubnetId', 'Ipv6Addresses'])
                 instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
             self.vpcs[vpc_id].instances[i['InstanceId']] = instance
 
@@ -125,6 +125,12 @@ class EC2RegionConfig(RegionConfig):
                 manage_dictionary(protocols[ip_protocol]['ports'][port_value], 'cidrs', [])
                 protocols[ip_protocol]['ports'][port_value]['cidrs'].append({'CIDR': grant['CidrIp']})
                 rules_count = rules_count + 1
+            # IPv6
+            for grant in rule['Ipv6Ranges']:
+                manage_dictionary(protocols[ip_protocol]['ports'][port_value], 'cidrs', [])
+                protocols[ip_protocol]['ports'][port_value]['cidrs'].append({'CIDR': grant['CidrIpv6']})
+                rules_count = rules_count + 1
+
         return protocols, rules_count
 
 

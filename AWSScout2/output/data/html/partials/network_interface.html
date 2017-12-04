@@ -15,6 +15,14 @@
                             <li class="list-group-item-text no-margin">Public IP: {{Association.PublicIp}}</li>
                             {{#if Association.PublicDnsName}}<li class="list-group-item-text no-margin">Public DNS: {{Association.PublicDnsName}}</li>{{/if}}
                         {{/if}}
+                        {{#if Ipv6Addresses}}
+                            <li class="list-group-item-text no-margin">IPv6 addresses:</li>
+                            <ul>
+                            {{#each Ipv6Addresses}}
+                                <li class="list-group-item-text">{{Ipv6Address}}</li>
+                            {{/each}}
+                            </ul>
+                        {{/if}}
                         {{#each PrivateIpAddresses}}
                             <li class="list-group-item-text no-margin">{{#if Primary}}Primary {{/if}}Private IP: {{PrivateIpAddress}}</li>
                         {{/each}}

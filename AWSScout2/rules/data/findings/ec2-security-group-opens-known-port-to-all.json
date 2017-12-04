@@ -6,7 +6,10 @@
     "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
     "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
     "conditions": [ "and",
-        [ "this", "equal", "0.0.0.0/0" ],
+        [ "or",
+            [ "this", "equal", "0.0.0.0/0" ],
+            [ "this", "equal", "::/0" ]
+        ],
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id", "equal", "ingress" ],
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id", "equal", "_ARG_1_" ],
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id", "equal", "_ARG_2_" ]

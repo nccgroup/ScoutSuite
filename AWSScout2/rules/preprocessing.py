@@ -186,6 +186,11 @@ def list_ec2_network_attack_surface_callback(aws_config, current_config, path, c
     if 'Association' in current_config and current_config['Association']:
         public_ip = current_config['Association']['PublicIp']
         security_group_to_attack_surface(aws_config, aws_config['services']['ec2']['external_attack_surface'], public_ip, current_path, [g['GroupId'] for g in current_config['Groups']], [])
+    # IPv6
+    if 'Ipv6Addresses' in current_config and len(current_config['Ipv6Addresses']) > 0:
+        for ipv6 in current_config['Ipv6Addresses']:
+            ip = ipv6['Ipv6Address']
+            security_group_to_attack_surface(aws_config, aws_config['services']['ec2']['external_attack_surface'], ip, current_path, [g['GroupId'] for g in current_config['Groups']], [])
 
 
 
