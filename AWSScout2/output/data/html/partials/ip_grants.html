@@ -3,11 +3,15 @@
     <script id="ip_grants.partial" type="text/x-handlebars-template">
       <ul>
         {{#each items}}
-          <span class="attack_surface_item">
             <li class="list-group-item-text">
-              {{CIDR}} {{#if CIDRName}}({{CIDRName}}){{/if}}
+                {{#if ../span_id_prefix}}
+                    <span id="{{../../span_id_prefix}}.{{@key}}.CIDR">
+                {{/if}}
+                {{CIDR}} {{#if CIDRName}}({{CIDRName}}){{/if}}
+                {{#if ../span_id_prefix}}
+                    </span>
+                {{/if}}
             </li>
-          </span>
         {{/each}}
       </ul>
     </script>

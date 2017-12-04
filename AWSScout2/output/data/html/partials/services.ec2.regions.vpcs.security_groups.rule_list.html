@@ -21,7 +21,7 @@
               <ul>
               {{#if cidrs}}
                 <li class="list-group-item-text">IP addresses:</li>
-                {{> ip_grants items = cidrs protocol = @../key ports = @key sg_id = ../../../sg_id vpc = ../../../vpc region = ../../../region direction = ../../../direction}}
+                {{> ip_grants items = cidrs span_id_prefix = (concat 'ec2.regions' ../../../region 'vpcs' ../../../vpc 'security_groups' ../../../sg_id 'rules' ../../../direction 'protocols' @../key 'ports' @key 'cidrs')}}
               {{/if}}
               {{#if security_groups}}
                 <li class="list-group-item-text">EC2 security groups:</li>
