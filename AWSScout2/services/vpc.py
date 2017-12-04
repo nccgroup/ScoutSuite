@@ -78,8 +78,9 @@ class VPCRegionConfig(RegionConfig):
         for entry in entries:
             if entry['Egress'] == egress:
                 acl = {}
-                for key in ['CidrBlock', 'RuleAction', 'RuleNumber']:
+                for key in ['RuleAction', 'RuleNumber']:
                     acl[key] = entry[key]
+                acl['CidrBlock'] = entry['CidrBlock'] if 'CidrBlock' in entry else entry['Ipv6CidrBlock']
                 acl['protocol'] = protocols_dict[entry['Protocol']]
                 if 'PortRange' in entry:
                     from_port = entry['PortRange']['From'] if entry['PortRange']['From'] else 1
