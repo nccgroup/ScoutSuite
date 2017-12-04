@@ -1,0 +1,10 @@
+<!-- Filters -->
+<script id="regions.list.template" type="text/x-handlebars-template">
+    {{#each items}}
+        {{#if regions}}
+            {{#each regions}}
+                <li id="regionfilters.{{@../key}}.regions.{{@key}}"><a href="javascript:set_filter_url('{{@key}}');">{{@key}}</a></li>
+            {{/each}}
+        {{/if}}
+    {{/each}}
+</script>
