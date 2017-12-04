@@ -94,9 +94,7 @@ class Ruleset(object):
         for filename in ruleset['rules']:
             self.rules[filename] = []
             for rule in ruleset['rules'][filename]:
-                self.rules[filename].append(
-                    Rule(filename, rule_type, rule['enabled'], rule['level'] if 'level' in rule else '',
-                         rule['args'] if 'args' in rule else []))
+                self.rules[filename].append(Rule(filename, rule_type, rule['enabled'], rule['level'] if 'level' in rule else '', rule['args'] if 'args' in rule else []))
 
 
     def prepare_rules(self, attributes = [], ip_ranges = [], params = {}):
@@ -109,6 +107,11 @@ class Ruleset(object):
             if filename in self.rules:
                 for rule in self.rules[filename]:
                     rule.set_definition(self.rule_definitions, attributes, ip_ranges, params)
+            else:
+                self.rules[filename] = []
+                new_rule = Rule(filename, self.rule_type, False, 'danger', [])
+                new_rule.set_definition(self.rule_definitions, attributes, ip_ranges, params)
+                self.rules[filename].append(new_rule)
 
 
     def load_rule_definitions(self, ruleset_generator = False, rule_dirs = []):

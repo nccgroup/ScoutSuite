@@ -74,7 +74,9 @@ class Rule(object):
         parameters = re.findall(r'(_ARG_([a-zA-Z0-9]+)_)', string_definition)
         for param in parameters:
             index = int(param[1])
-            if type(self.args[index]) == list:
+            if len(self.args) <= index:
+                string_definition = string_definition.replace(param[0], '')
+            elif type(self.args[index]) == list:
                 value = '[ %s ]' % ', '.join('"%s"' % v for v in self.args[index])
                 string_definition = string_definition.replace('"%s"' % param[0], value)
             else:
