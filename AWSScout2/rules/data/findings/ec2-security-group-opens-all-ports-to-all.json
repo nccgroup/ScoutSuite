@@ -4,7 +4,7 @@
     "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
     "dashboard_name": "Rules",
     "conditions": [ "and",
-        [ "this", "equal", "0.0.0.0/0" ],
+        [ "_INCLUDE_(conditions/cidr-is-all.json)", "", ""],
         [ "_INCLUDE_(conditions/security-group-opens-all-ports.json)", "", ""]
     ]
 }
