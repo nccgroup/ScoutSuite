@@ -4,12 +4,13 @@
 
 var generate_ruleset = function() {
     var ruleset = new Object();
+    ruleset['about'] = aws_info['about'];
     ruleset['rules'] = new Object();
     // Find all the rules
     var rules = $("*[id^='rule-']");
     for (var i=0; i < rules.length; i++) {
-        var rule = new Object()
-        filename = $(rules[i]).find('#filename').val();
+        var filename = $(rules[i]).find('#filename').val();
+        var rule = new Object();
         rule['level'] = $(rules[i]).find('#level').val();
         rule['enabled'] = $(rules[i]).find('#enabled').is(':checked');
         args = $(rules[i]).find("[id^='parameter_']")
@@ -32,9 +33,5 @@ var generate_ruleset = function() {
         ruleset['rules'][filename].push(rule);
     }
 
-    var uriContent = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(ruleset, null, 4));
-    var dlAnchorElem = document.getElementById('downloadAnchorElem');
-    dlAnchorElem.setAttribute("href", uriContent);
-    dlAnchorElem.setAttribute("download", aws_info['name'] + '.json');
-    dlAnchorElem.click();
+    download_configuration(ruleset, aws_info['name'], '');
 }
