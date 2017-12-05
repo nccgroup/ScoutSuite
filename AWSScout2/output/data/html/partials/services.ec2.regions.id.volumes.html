@@ -1,0 +1,15 @@
+
+    <!-- EBS volume partial -->
+    <script id="services.ec2.regions.id.volumes.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+            <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+            <h4 class="list-group-item-heading">Attributes</h4>
+            {{> generic_object resource}}
+        </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.ec2.regions.id.volumes", $("#services\\.ec2\\.regions\\.id\\.volumes\\.partial").html());
+    </script>
+
