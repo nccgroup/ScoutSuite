@@ -1,428 +1,10 @@
 {
+    "about": "This ruleset consists of numerous rules that are considered standard by the project's maintainers in an effort to avoid false-positive warnings. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of AWS-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configured, and some of them being applicable to a limited number of users. Consider using the RulesetGenerator tool to make the most of Scout2.",
     "rules": {
-        "rds-instance-no-minor-upgrade.json": [
+        "cloudformation-stack-with-role.json": [
             {
                 "enabled": true,
                 "level": "danger"
-            }
-        ],
-        "iam-user-not-in-common-group.json": [
-            {
-                "enabled": false,
-                "args": [
-                    "_LIST_(AllUsers)"
-                ],
-                "level": "danger"
-            }
-        ],
-        "cloudtrail-no-global-services-logging.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "iam-user-with-password-and-key.json": [
-            {
-                "enabled": false,
-                "level": "warning"
-            }
-        ],
-        "iam-assume-role-policy-allows-all.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "ec2-default-security-group-with-rules.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "ec2-unused-security-group.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "redshift-parameter-group-logging-disabled.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "iam-user-without-mfa.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "route53-domain-no-autorenew.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "redshift-cluster-no-version-upgrade.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "s3-bucket-world-policy-arg.json": [
-            {
-                "enabled": true,
-                "args": [
-                    "Delete",
-                    "s3:Delete*"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "Get",
-                    "s3:GetObject*"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "List",
-                    "s3:ListBucket*"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "Put",
-                    "s3:PutObject*"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "Manage",
-                    "s3:Put*"
-                ],
-                "level": "danger"
-            }
-        ],
-        "rds-snapshot-public.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "sns-topic-world-policy.json": [
-            {
-                "enabled": true,
-                "args": [
-                    "Publish"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "Subscribe"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "Receive"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "AddPermission"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "RemovePermission"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "SetTopicAttributes"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "DeleteTopic"
-                ],
-                "level": "danger"
-            }
-        ],
-        "route53-domain-transferlock-not-authorized.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "ec2-security-group-whitelists-aws-ip-from-banned-region.json": [
-            {
-                "enabled": false,
-                "level": "danger"
-            }
-        ],
-        "iam-ec2-role-without-instances.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "ec2-default-security-group-in-use.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "ec2-security-group-opens-port-to-all.json": [
-            {
-                "enabled": true,
-                "args": [
-                    "TCP"
-                ],
-                "level": "warning"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "UDP"
-                ],
-                "level": "warning"
-            }
-        ],
-        "s3-bucket-no-logging.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "vpc-subnet-with-bad-acls.json": [
-            {
-                "enabled": true,
-                "args": [
-                    "ingress",
-                    "source"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "egress",
-                    "destination"
-                ],
-                "level": "danger"
-            }
-        ],
-        "rds-instance-single-az.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "iam-user-with-policies.json": [
-            {
-                "enabled": true,
-                "args": [
-                    "inline",
-                    "inline_policies"
-                ],
-                "level": "warning"
-            }
-        ],
-        "s3-bucket-website-enabled.json": [
-            {
-                "enabled": false,
-                "level": "warning"
-            }
-        ],
-        "s3-bucket-world-acl.json": [
-            {
-                "enabled": true,
-                "args": [
-                    "AllUsers",
-                    "read",
-                    "Bucket world-listable (anonymous)",
-                    "warning"
-                ],
-                "level": "warning"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "AllUsers",
-                    "read_acp",
-                    "Bucket's permissions world-readable (anonymous)",
-                    "warning"
-                ],
-                "level": "warning"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "AllUsers",
-                    "write",
-                    "Bucket world-writable (anonymous)",
-                    "danger"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "AllUsers",
-                    "write_acp",
-                    "Bucket's permissions world-writable (anonymous)",
-                    "danger"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "AuthenticatedUsers",
-                    "read",
-                    "Bucket world-listable",
-                    "danger"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "AuthenticatedUsers",
-                    "read_acp",
-                    "Bucket's permissions world-readable",
-                    "warning"
-                ],
-                "level": "warning"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "AuthenticatedUsers",
-                    "write",
-                    "Bucket world-writable",
-                    "danger"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "AuthenticatedUsers",
-                    "write_acp",
-                    "Bucket's permissions world-writable",
-                    "danger"
-                ],
-                "level": "danger"
-            }
-        ],
-        "rds-postgres-instance-with-invalid-certificate.json": [
-            {
-                "enabled": false,
-                "level": "warning"
-            }
-        ],
-        "s3-bucket-no-mfa-delete.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "vpc-default-network-acls-allow-all.json": [
-            {
-                "enabled": true,
-                "args": [
-                    "ingress",
-                    "source"
-                ],
-                "level": "warning"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "egress",
-                    "destination"
-                ],
-                "level": "warning"
-            }
-        ],
-        "ec2-instance-with-public-ip.json": [
-            {
-                "enabled": false,
-                "level": "warning"
-            }
-        ],
-        "s3-bucket-world-policy-star.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "rds-security-group-allows-all.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "ec2-security-group-whitelists-aws.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "s3-bucket-no-versioning.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "iam-assume-role-lacks-external-id-and-mfa.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "redshift-cluster-publicly-accessible.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "iam-human-user-with-policies.json": [
-            {
-                "enabled": false,
-                "args": [
-                    "_LIST_(AllHumanUsers)",
-                    "managed",
-                    "policies"
-                ],
-                "level": "danger"
-            }
-        ],
-        "rds-instance-short-backup-retention-period.json": [
-            {
-                "enabled": true,
-                "level": "warning"
             }
         ],
         "cloudtrail-duplicated-global-services-logging.json": [
@@ -431,13 +13,7 @@
                 "level": "warning"
             }
         ],
-        "redshift-cluster-database-not-encrypted.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "redshift-parameter-group-ssl-not-required.json": [
+        "cloudtrail-no-global-services-logging.json": [
             {
                 "enabled": true,
                 "level": "danger"
@@ -449,132 +25,7 @@
                 "level": "danger"
             }
         ],
-        "ec2-security-group-whitelists-non-elastic-ips.json": [
-            {
-                "enabled": false,
-                "level": "danger"
-            }
-        ],
-        "iam-inline-policy-for-role.json": [
-            {
-                "enabled": true,
-                "args": [
-                    "group",
-                    "iam",
-                    "PassRole"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "group",
-                    "sts",
-                    "AssumeRole"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "role",
-                    "iam",
-                    "PassRole"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "role",
-                    "sts",
-                    "AssumeRole"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "user",
-                    "iam",
-                    "PassRole"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "user",
-                    "sts",
-                    "AssumeRole"
-                ],
-                "level": "danger"
-            }
-        ],
-        "iam-user-not-in-category-group.json": [
-            {
-                "enabled": false,
-                "args": [
-                    "_LIST_(AllHumanUsers, AllHeadlessUsers)"
-                ],
-                "level": "danger"
-            }
-        ],
-        "iam-root-account-used-recently.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "iam-root-account-no-mfa.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "ec2-instance-in-security-group.json": [
-            {
-                "enabled": false,
-                "args": [
-                    "_LIST_(BannedSecurityGroup)"
-                ],
-                "level": "warning"
-            }
-        ],
         "cloudtrail-no-logging.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "ec2-security-group-opens-all-ports-to-all.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "iam-user-with-multiple-access-keys.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "ec2-security-group-opens-port-range.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "iam-service-user-with-password.json": [
-            {
-                "enabled": false,
-                "args": [
-                    "_LIST_(AllHeadlessUsers)"
-                ],
-                "level": "warning"
-            }
-        ],
-        "iam-root-account-with-active-keys.json": [
             {
                 "enabled": true,
                 "level": "danger"
@@ -586,21 +37,73 @@
                 "level": "danger"
             }
         ],
-        "iam-user-no-key-rotation.json": [
+        "cloudwatch-alarm-without-actions.json": [
             {
                 "enabled": true,
-                "args": [
-                    "Active",
-                    "90"
-                ],
+                "level": "warning"
+            }
+        ],
+        "ec2-default-security-group-in-use.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "ec2-default-security-group-with-rules.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "ec2-ebs-volume-not-encrypted.json": [
+            {
+                "enabled": true,
                 "level": "danger"
-            },
+            }
+        ],
+        "ec2-instance-in-security-group.json": [
+            {
+                "args": [
+                    "_LIST_(BannedSecurityGroup)"
+                ],
+                "enabled": false,
+                "level": "warning"
+            }
+        ],
+        "ec2-instance-type.json": [
+            {
+                "args": [
+                    "t2.micro"
+                ],
+                "enabled": false,
+                "level": "warning"
+            }
+        ],
+        "ec2-instance-types.json": [
+            {
+                "args": [
+                    "beefy",
+                    "g3.4xlarge,g3.8xlarge,g3.16xlarge"
+                ],
+                "enabled": false,
+                "level": "warning"
+            }
+        ],
+        "ec2-instance-with-public-ip.json": [
+            {
+                "enabled": false,
+                "level": "warning"
+            }
+        ],
+        "ec2-security-group-opens-all-ports-to-all.json": [
             {
                 "enabled": true,
-                "args": [
-                    "Inactive",
-                    "90"
-                ],
+                "level": "danger"
+            }
+        ],
+        "ec2-security-group-opens-all-ports-to-self.json": [
+            {
+                "enabled": true,
                 "level": "warning"
             }
         ],
@@ -610,76 +113,363 @@
                 "level": "warning"
             }
         ],
-        "sqs-queue-world-policy.json": [
+        "ec2-security-group-opens-known-port-to-all.json": [
             {
-                "enabled": true,
                 "args": [
-                    "SendMessage"
+                    "MySQL",
+                    "TCP",
+                    "3306"
                 ],
+                "enabled": true,
                 "level": "danger"
             },
             {
-                "enabled": true,
                 "args": [
-                    "ReceiveMessage"
+                    "DNS",
+                    "UDP",
+                    "53"
                 ],
+                "enabled": true,
                 "level": "danger"
             },
             {
-                "enabled": true,
                 "args": [
-                    "PurgeQueue"
+                    "MongoDB",
+                    "TCP",
+                    "27017"
                 ],
+                "enabled": true,
                 "level": "danger"
             },
             {
-                "enabled": true,
                 "args": [
-                    "DeleteMessage"
+                    "MsSQL",
+                    "TCP",
+                    "1433"
                 ],
+                "enabled": true,
                 "level": "danger"
             },
             {
-                "enabled": true,
                 "args": [
-                    "ChangeMessageVisibility"
+                    "Oracle DB",
+                    "TCP",
+                    "1521"
                 ],
+                "enabled": true,
                 "level": "danger"
             },
             {
-                "enabled": true,
                 "args": [
-                    "GetQueueAttributes"
+                    "PostgreSQL",
+                    "TCP",
+                    "5432"
                 ],
-                "level": "warning"
+                "enabled": true,
+                "level": "danger"
             },
             {
-                "enabled": true,
                 "args": [
-                    "GetQueueUrl"
+                    "RDP",
+                    "TCP",
+                    "3389"
                 ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "SSH",
+                    "TCP",
+                    "22"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "NFS",
+                    "TCP",
+                    "2049"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "SMTP",
+                    "TCP",
+                    "25"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "ec2-security-group-opens-plaintext-port.json": [
+            {
+                "args": [
+                    "FTP",
+                    "TCP",
+                    "21"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "Telnet",
+                    "TCP",
+                    "23"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "ec2-security-group-opens-port-range.json": [
+            {
+                "enabled": true,
                 "level": "warning"
             }
         ],
-        "rds-instance-storage-not-encrypted.json": [
+        "ec2-security-group-opens-port-to-all.json": [
+            {
+                "args": [
+                    "TCP"
+                ],
+                "enabled": true,
+                "level": "warning"
+            },
+            {
+                "args": [
+                    "UDP"
+                ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "ec2-security-group-whitelists-aws-ip-from-banned-region.json": [
+            {
+                "enabled": false,
+                "level": "danger"
+            }
+        ],
+        "ec2-security-group-whitelists-aws.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "ec2-security-group-whitelists-non-elastic-ips.json": [
+            {
+                "enabled": false,
+                "level": "danger"
+            }
+        ],
+        "ec2-security-group-whitelists-unknown-aws.json": [
+            {
+                "enabled": false,
+                "level": "danger"
+            }
+        ],
+        "ec2-security-group-whitelists-unknown-cidrs.json": [
+            {
+                "enabled": false,
+                "level": "danger"
+            }
+        ],
+        "ec2-unused-security-group.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "vpc-network-acl-not-used.json": [
+        "elb-no-access-logs.json": [
             {
                 "enabled": true,
                 "level": "warning"
+            }
+        ],
+        "elbv2-no-access-logs.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "elbv2-no-deletion-protection.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "elbv2-older-ssl-policy.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-assume-role-lacks-external-id-and-mfa.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-assume-role-no-mfa.json": [
+            {
+                "enabled": false,
+                "level": "danger"
+            }
+        ],
+        "iam-assume-role-policy-allows-all.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-ec2-role-without-instances.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-group-with-inline-policies.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-human-user-with-policies.json": [
+            {
+                "args": [
+                    "_LIST_(AllHumanUsers)",
+                    "managed",
+                    "policies"
+                ],
+                "enabled": false,
+                "level": "danger"
+            }
+        ],
+        "iam-inline-policy-allows-NotActions.json": [
+            {
+                "args": [
+                    "group"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "role"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "user"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-inline-policy-allows-non-sts-action.json": [
+            {
+                "enabled": false,
+                "level": "danger"
+            }
+        ],
+        "iam-inline-policy-for-role.json": [
+            {
+                "args": [
+                    "group",
+                    "iam",
+                    "PassRole"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "group",
+                    "sts",
+                    "AssumeRole"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "role",
+                    "iam",
+                    "PassRole"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "role",
+                    "sts",
+                    "AssumeRole"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "user",
+                    "iam",
+                    "PassRole"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "user",
+                    "sts",
+                    "AssumeRole"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-managed-policy-allows-NotActions.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-managed-policy-allows-non-sts-action.json": [
+            {
+                "enabled": false,
+                "level": "danger"
+            }
+        ],
+        "iam-managed-policy-for-role.json": [
+            {
+                "args": [
+                    "iam",
+                    "PassRole"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "sts",
+                    "AssumeRole"
+                ],
+                "enabled": true,
+                "level": "danger"
             }
         ],
         "iam-password-policy-expiration-threshold.json": [
             {
-                "enabled": false,
-                "level": "danger",
                 "args": [
                     "90"
-                ]
+                ],
+                "enabled": false,
+                "level": "danger"
             }
         ],
         "iam-password-policy-lowercase-required.json": [
@@ -690,10 +480,10 @@
         ],
         "iam-password-policy-minimum-length.json": [
             {
-                "enabled": true,
                 "args": [
                     "8"
                 ],
+                "enabled": true,
                 "level": "danger"
             }
         ],
@@ -733,218 +523,98 @@
                 "level": "danger"
             }
         ],
-        "iam-inline-policy-allows-NotActions.json": [
-            {
-                "enabled": true,
-                "args": [
-                    "group"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "role"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "user"
-                ],
-                "level": "danger"
-            }
-        ],
-        "ec2-security-group-whitelists-unknown-cidrs.json": [
-            {
-                "enabled": false,
-                "level": "danger"
-            }
-        ],
-        "route53-domain-no-transferlock.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "ses-identity-world-policy.json": [
-            {
-                "enabled": true,
-                "args": [
-                    "SendEmail"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "SendRawEmail"
-                ],
-                "level": "danger"
-            }
-        ],
         "iam-role-with-inline-policies.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "ec2-security-group-opens-plaintext-port.json": [
+        "iam-root-account-no-mfa.json": [
             {
                 "enabled": true,
-                "args": [
-                    "FTP",
-                    "TCP",
-                    "21"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "Telnet",
-                    "TCP",
-                    "23"
-                ],
                 "level": "danger"
             }
         ],
-        "vpc-subnet-without-flow-log.json": [
+        "iam-root-account-used-recently.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-root-account-with-active-keys.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-service-user-with-password.json": [
+            {
+                "args": [
+                    "_LIST_(AllHeadlessUsers)"
+                ],
+                "enabled": false,
+                "level": "warning"
+            }
+        ],
+        "iam-user-no-key-rotation.json": [
+            {
+                "args": [
+                    "Active",
+                    "90"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "Inactive",
+                    "90"
+                ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-user-not-in-category-group.json": [
+            {
+                "args": [
+                    "_LIST_(AllHumanUsers, AllHeadlessUsers)"
+                ],
+                "enabled": false,
+                "level": "danger"
+            }
+        ],
+        "iam-user-not-in-common-group.json": [
+            {
+                "args": [
+                    "_LIST_(AllUsers)"
+                ],
+                "enabled": false,
+                "level": "danger"
+            }
+        ],
+        "iam-user-with-multiple-access-keys.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "iam-managed-policy-for-role.json": [
+        "iam-user-with-password-and-key.json": [
             {
-                "enabled": true,
-                "args": [
-                    "iam",
-                    "PassRole"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "sts",
-                    "AssumeRole"
-                ],
-                "level": "danger"
+                "enabled": false,
+                "level": "warning"
             }
         ],
-        "cloudformation-stack-with-role.json": [
+        "iam-user-with-policies.json": [
             {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "iam-group-with-inline-policies.json": [
-            {
+                "args": [
+                    "inline",
+                    "inline_policies"
+                ],
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "ec2-security-group-opens-known-port-to-all.json": [
-            {
-                "enabled": true,
-                "args": [
-                    "MySQL",
-                    "TCP",
-                    "3306"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "DNS",
-                    "UDP",
-                    "53"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "MongoDB",
-                    "TCP",
-                    "27017"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "MsSQL",
-                    "TCP",
-                    "1433"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "Oracle DB",
-                    "TCP",
-                    "1521"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "PostgreSQL",
-                    "TCP",
-                    "5432"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "RDP",
-                    "TCP",
-                    "3389"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": true,
-                "args": [
-                    "SSH",
-                    "TCP",
-                    "22"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": "true",
-                "args": [
-                    "NFS",
-                    "TCP",
-                    "2049"
-                ],
-                "level": "danger"
-            },
-            {
-                "enabled": "true",
-                "args": [
-                    "SMTP",
-                    "TCP",
-                    "25"
-                ],
-                "level": "danger"
-            }
-        ],
-        "ec2-security-group-opens-all-ports-to-self.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "redshift-security-group-whitelists-all.json": [
+        "iam-user-without-mfa.json": [
             {
                 "enabled": true,
                 "level": "danger"
@@ -956,83 +626,254 @@
                 "level": "danger"
             }
         ],
-        "iam-managed-policy-allows-NotActions.json": [
+        "rds-instance-no-minor-upgrade.json": [
             {
                 "enabled": true,
                 "level": "danger"
             }
         ],
-        "vpc-custom-network-acls-allow-all.json": [
+        "rds-instance-short-backup-retention-period.json": [
             {
                 "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "rds-instance-single-az.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "rds-instance-storage-not-encrypted.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "rds-postgres-instance-with-invalid-certificate.json": [
+            {
+                "enabled": false,
+                "level": "warning"
+            }
+        ],
+        "rds-security-group-allows-all.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "rds-snapshot-public.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "redshift-cluster-database-not-encrypted.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "redshift-cluster-no-version-upgrade.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "redshift-cluster-publicly-accessible.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "redshift-parameter-group-logging-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "redshift-parameter-group-ssl-not-required.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "redshift-security-group-whitelists-all.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "route53-domain-no-autorenew.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "route53-domain-no-transferlock.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "route53-domain-transferlock-not-authorized.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "s3-bucket-no-logging.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "s3-bucket-no-mfa-delete.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "s3-bucket-no-versioning.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "s3-bucket-website-enabled.json": [
+            {
+                "enabled": false,
+                "level": "warning"
+            }
+        ],
+        "s3-bucket-world-acl.json": [
+            {
                 "args": [
-                    "ingress",
-                    "source"
+                    "AllUsers",
+                    "read",
+                    "Bucket world-listable (anonymous)",
+                    "warning"
                 ],
+                "enabled": true,
                 "level": "warning"
             },
             {
-                "enabled": true,
                 "args": [
-                    "egress",
-                    "destination"
+                    "AllUsers",
+                    "read_acp",
+                    "Bucket's permissions world-readable (anonymous)",
+                    "warning"
                 ],
+                "enabled": true,
                 "level": "warning"
-            }
-        ],
-        "ec2-security-group-whitelists-unknown-aws.json": [
+            },
             {
-                "enabled": false,
+                "args": [
+                    "AllUsers",
+                    "write",
+                    "Bucket world-writable (anonymous)",
+                    "danger"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "AllUsers",
+                    "write_acp",
+                    "Bucket's permissions world-writable (anonymous)",
+                    "danger"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "AuthenticatedUsers",
+                    "read",
+                    "Bucket world-listable",
+                    "danger"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "AuthenticatedUsers",
+                    "read_acp",
+                    "Bucket's permissions world-readable",
+                    "warning"
+                ],
+                "enabled": true,
+                "level": "warning"
+            },
+            {
+                "args": [
+                    "AuthenticatedUsers",
+                    "write",
+                    "Bucket world-writable",
+                    "danger"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "AuthenticatedUsers",
+                    "write_acp",
+                    "Bucket's permissions world-writable",
+                    "danger"
+                ],
+                "enabled": true,
                 "level": "danger"
             }
         ],
-        "cloudwatch-alarm-without-actions.json": [
+        "s3-bucket-world-policy-arg.json": [
             {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "elb-no-access-logs.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "elbv2-no-access-logs.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "elbv2-no-deletion-protection.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "elbv2-older-ssl-policy.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "ec2-instance-type.json": [
-            {
-                "enabled": false,
-                "level": "warning",
                 "args": [
-                    "t2.micro"
-                ]
+                    "Delete",
+                    "s3:Delete*"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "Get",
+                    "s3:GetObject*"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "List",
+                    "s3:ListBucket*"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "Put",
+                    "s3:PutObject*"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "Manage",
+                    "s3:Put*"
+                ],
+                "enabled": true,
+                "level": "danger"
             }
         ],
-        "ec2-instance-types.json": [
+        "s3-bucket-world-policy-star.json": [
             {
-                "enabled": false,
-                "level": "warning",
-                "args": [
-                    "beefy",
-                    [ "g3.4xlarge", "g3.8xlarge", "g3.16xlarge" ]
-                ]
+                "enabled": true,
+                "level": "danger"
             }
         ],
         "ses-identity-dkim-not-enabled.json": [
@@ -1046,7 +887,196 @@
                 "enabled": false,
                 "level": "warning"
             }
+        ],
+        "ses-identity-world-policy.json": [
+            {
+                "args": [
+                    "SendEmail"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "SendRawEmail"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "sns-topic-world-policy.json": [
+            {
+                "args": [
+                    "Publish"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "Subscribe"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "Receive"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "AddPermission"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "RemovePermission"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "SetTopicAttributes"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "DeleteTopic"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "sqs-queue-world-policy.json": [
+            {
+                "args": [
+                    "SendMessage"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "ReceiveMessage"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "PurgeQueue"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "DeleteMessage"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "ChangeMessageVisibility"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "GetQueueAttributes"
+                ],
+                "enabled": true,
+                "level": "warning"
+            },
+            {
+                "args": [
+                    "GetQueueUrl"
+                ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "vpc-custom-network-acls-allow-all.json": [
+            {
+                "args": [
+                    "ingress",
+                    "source"
+                ],
+                "enabled": true,
+                "level": "warning"
+            },
+            {
+                "args": [
+                    "egress",
+                    "destination"
+                ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "vpc-default-network-acls-allow-all.json": [
+            {
+                "args": [
+                    "ingress",
+                    "source"
+                ],
+                "enabled": true,
+                "level": "warning"
+            },
+            {
+                "args": [
+                    "egress",
+                    "destination"
+                ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "vpc-network-acl-not-used.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "vpc-subnet-with-bad-acls.json": [
+            {
+                "args": [
+                    "ingress",
+                    "source"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "egress",
+                    "destination"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "vpc-subnet-with-default-acls.json": [
+            {
+                "enabled": false,
+                "level": "danger"
+            }
+        ],
+        "vpc-subnet-without-flow-log.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
         ]
-    },
-    "about": "This ruleset consists of numerous rules that are considered standard by the project's maintainers in an effort to avoid false-positive warnings. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of AWS-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configured, and some of them being applicable to a limited number of users. Consider using the RulesetGenerator tool to make the most of Scout2."
+    }
 }
