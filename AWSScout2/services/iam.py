@@ -30,7 +30,7 @@ class IAMConfig(BaseConfig):
     targets = (
 
         ('groups', 'Groups', 'list_groups', {}, False),
-        ('policies', 'Policies', 'list_policies', {'OnlyAttached': True}, False),
+        ('policies', 'Policies', 'list_policies', [ {'Scope': 'Local'}, {'OnlyAttached': True} ], False),
         ('roles', 'Roles', 'list_roles', {}, False),
         ('users', 'Users', 'list_users', {}, False),
         ('credential_report', '', '', {}, False),
@@ -275,17 +275,20 @@ class IAMConfig(BaseConfig):
     ##### Finalize IAM config
     ########################################
     def finalize(self):
-        # Update permissions for manged policies
+        # Update permissions for managed policies
         for policy_id in self.policies:
-            for entity_type in self.policies[policy_id]['attached_to']:
-                for entity in self.policies[policy_id]['attached_to'][entity_type]:
-                    entity['id'] = self.get_id_for_resource(entity_type, entity['name'])
-                    entities = getattr(self, entity_type)
-                    manage_dictionary(entities[entity['id']], 'policies', [])
-                    manage_dictionary(entities[entity['id']], 'policies_counts', 0)
-                    entities[entity['id']]['policies'].append(policy_id)
-                    entities[entity['id']]['policies_counts'] += 1
-                    self.__parse_permissions(policy_id, self.policies[policy_id]['PolicyDocument'], 'policies', entity_type, entity['id'])
+            if 'attached_to' in self.policies[policy_id] and len(self.policies[policy_id]['attached_to']) > 0:
+                for entity_type in self.policies[policy_id]['attached_to']:
+                    for entity in self.policies[policy_id]['attached_to'][entity_type]:
+                        entity['id'] = self.get_id_for_resource(entity_type, entity['name'])
+                        entities = getattr(self, entity_type)
+                        manage_dictionary(entities[entity['id']], 'policies', [])
+                        manage_dictionary(entities[entity['id']], 'policies_counts', 0)
+                        entities[entity['id']]['policies'].append(policy_id)
+                        entities[entity['id']]['policies_counts'] += 1
+                        self.__parse_permissions(policy_id, self.policies[policy_id]['PolicyDocument'], 'policies', entity_type, entity['id'])
+            else:
+                self.__parse_permissions(policy_id, self.policies[policy_id]['PolicyDocument'], 'policies', None, None)
         super(IAMConfig, self).finalize()
 
 
@@ -364,6 +367,8 @@ class IAMConfig(BaseConfig):
             # Condition
             condition = statement['Condition'] if 'Condition' in statement else None
             manage_dictionary(self.permissions, action_string, {})
+            if iam_resource_type == None:
+                return
             self.__parse_actions(effect, action_string, statement[action_string], resource_string, statement[resource_string], iam_resource_type, resource_name, policy_name, policy_type, condition)
 
 

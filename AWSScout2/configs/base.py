@@ -133,8 +133,11 @@ class BaseConfig(GlobalConfig):
                         printException(e)
                         continue
                     try:
-                        targets = handle_truncated_response(method, list_params, [response_attribute])[
-                            response_attribute]
+                        if type(list_params) != list:
+                            list_params = [ list_params ]
+                        targets = []
+                        for lp in list_params:
+                            targets += handle_truncated_response(method, lp, [response_attribute])[response_attribute]
                     except Exception as e:
                         if not ignore_list_error:
                             printException(e)
