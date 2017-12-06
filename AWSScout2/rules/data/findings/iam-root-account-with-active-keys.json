@@ -1,5 +1,6 @@
 {
     "description": "Root account has active keys",
+    "rationale": "AWS root account access keys should be deleted as they provide unrestricted access to the AWS Account.",
     "path": "iam.credential_report.<root_account>",
     "dashboard_name": "Root account",
     "conditions": [ "or",

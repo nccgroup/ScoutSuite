@@ -541,6 +541,12 @@
                 "level": "danger"
             }
         ],
+        "iam-root-account-with-active-certs.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "iam-root-account-with-active-keys.json": [
             {
                 "enabled": true,
