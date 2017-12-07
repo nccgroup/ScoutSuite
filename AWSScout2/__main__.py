@@ -138,3 +138,4 @@ def main():
         url = 'file://%s' % os.path.abspath(html_report_path)
         webbrowser.open(url, new=2)
 
+    return 0
