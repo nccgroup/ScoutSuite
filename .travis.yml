@@ -20,7 +20,7 @@ script:
 #  - '[ "${TRAVIS_SECURE_ENV_VARS}" = "true" ] && nosetests tests/test-utils_sns.py || false'
     - nosetests --with-coverage tests/test-rules-ruleset.py
     - nosetests --with-coverage tests/test-rules-processingengine.py
-    - nosetests --with-coverage tests/test-scout2.py
+    - nosetests --with-coverage --nocapture tests/test-scout2.py
 
 # use container-base infrastructure
 sudo: false
