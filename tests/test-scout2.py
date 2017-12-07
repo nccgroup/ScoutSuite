@@ -1,5 +1,7 @@
 import subprocess
 
+from AWSScout2 import __main__
+
 from opinel.utils.console import configPrintException
 from opinel.utils.credentials import read_creds_from_environment_variables
 
