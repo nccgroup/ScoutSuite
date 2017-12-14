@@ -74,7 +74,7 @@ class Ruleset(object):
                     for filename in ruleset['rules']:
                         self.rules[filename] = []
                         for rule in ruleset['rules'][filename]:
-                            self.rules[filename].append(Rule(filename, rule_type, rule['enabled'], rule['level'] if 'level' in rule else '', rule['args'] if 'args' in rule else []))
+                            self.handle_rule_versions(filename, rule_type, rule)
             except Exception as e:
                 printException(e)
                 printError('Error: ruleset file %s contains malformed JSON.' % self.filename)
@@ -94,7 +94,22 @@ class Ruleset(object):
         for filename in ruleset['rules']:
             self.rules[filename] = []
             for rule in ruleset['rules'][filename]:
-                self.rules[filename].append(Rule(filename, rule_type, rule['enabled'], rule['level'] if 'level' in rule else '', rule['args'] if 'args' in rule else []))
+                self.handle_rule_versions(filename, rule_type, rule)
+
+
+    def handle_rule_versions(self, filename, rule_type, rule):
+        """
+        For each version of a rule found in the ruleset, append a new Rule object
+        """
+        if 'versions' in rule:
+            versions = rule.pop('versions')
+            for version_key_suffix in versions:
+                version = versions[version_key_suffix]
+                version['key_suffix'] = version_key_suffix
+                tmp_rule = dict(rule, **version)
+                self.rules[filename].append(Rule(filename, rule_type, tmp_rule))
+        else:
+            self.rules[filename].append(Rule(filename, rule_type, rule))
 
 
     def prepare_rules(self, attributes = [], ip_ranges = [], params = {}):
@@ -109,7 +124,7 @@ class Ruleset(object):
                     rule.set_definition(self.rule_definitions, attributes, ip_ranges, params)
             else:
                 self.rules[filename] = []
-                new_rule = Rule(filename, self.rule_type, False, 'danger', [])
+                new_rule = Rule(filename, self.rule_type, {'enabled': False, 'level': 'danger'})
                 new_rule.set_definition(self.rule_definitions, attributes, ip_ranges, params)
                 self.rules[filename].append(new_rule)
 
