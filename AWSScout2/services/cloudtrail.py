@@ -103,7 +103,3 @@ def cloudtrail_postprocessing(aws_config):
             cloudtrail_config['violations']['cloudtrail-no-logging']['checked_items'] += 1
             cloudtrail_config['violations']['cloudtrail-no-logging']['flagged_items'] += 1
             cloudtrail_config['violations']['cloudtrail-no-logging']['dashboard_name'] = 'Regions'
-    # Data logging
-    if not sum(cloudtrail_config['regions'][r]['data_logging_trails_count'] for r in cloudtrail_config['regions']):
-        for r in cloudtrail_config['regions']:
-            cloudtrail_config['violations']['cloudtrail-no-data-logging']['items'].append('cloudtrail.regions.%s' % r)
