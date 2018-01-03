@@ -736,7 +736,7 @@
         ],
         "cloudtrail-no-data-logging.json": [
             {
-                "enabled": true,
+                "enabled": false,
                 "level": "warning"
             }
         ],

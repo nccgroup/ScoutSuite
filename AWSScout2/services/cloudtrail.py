@@ -47,21 +47,25 @@ class CloudTrailRegionConfig(RegionConfig):
             for key in ['IsLogging', 'LatestDeliveryTime', 'LatestDeliveryError', 'StartLoggingTime', 'StopLoggingTime', 'LatestNotificationTime', 'LatestNotificationError', 'LatestCloudWatchLogsDeliveryError', 'LatestCloudWatchLogsDeliveryTime']:
                 trail_config[key] = trail_details[key] if key in trail_details else None
 
-            trail_config['wildcard_data_logging'] = self.data_logging_status(trail_config['name'], trail_details, api_client)
+        trail_config['wildcard_data_logging'] = self.data_logging_status(trail_config['name'], trail_details, api_client)
 
         self.trails[trail_id] = trail_config
 
     def data_logging_status(self, trail_name, trail_details, api_client):
         for es in api_client.get_event_selectors(TrailName=trail_name)['EventSelectors']:
             has_wildcard = {u'Values': [u'arn:aws:s3:::'], u'Type': u'AWS::S3::Object'} in es['DataResources']
-            is_fresh = 'LatestCloudWatchLogsDeliveryTime' in trail_details and ((int(time.time()) - int(
-                trail_details['LatestCloudWatchLogsDeliveryTime'].strftime("%s"))) / 1440) <= 24
             is_logging = trail_details['IsLogging']
 
-            if has_wildcard and is_fresh and is_logging:
-                return "Enabled"
+            if has_wildcard and is_logging and self.is_fresh(trail_details):
+                return True
 
-        return "Disabled"
+        return False
+
+    @staticmethod
+    def is_fresh(trail_details):
+        delivery_time = trail_details.get('LatestCloudWatchLogsDeliveryTime', "9999999").strftime("%s")
+        delivery_age = ((int(time.time()) - int(delivery_time)) / 1440)
+        return delivery_age <= 24
 
 
 ########################################

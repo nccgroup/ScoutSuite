@@ -139,8 +139,8 @@ def add_security_group_name_to_ec2_grants_callback(ec2_config, current_config, p
 def process_cloudtrail_trails(cloudtrail_config):
     printInfo('Processing CloudTrail config...')
     global_events_logging = []
+    data_logging_trails_count = 0
     for region in cloudtrail_config['regions']:
-        data_logging_trails_count = 0
         for trail_id in cloudtrail_config['regions'][region]['trails']:
             trail = cloudtrail_config['regions'][region]['trails'][trail_id]
             if 'HomeRegion' in trail and trail['HomeRegion'] != region:
@@ -149,10 +149,10 @@ def process_cloudtrail_trails(cloudtrail_config):
             if trail['IncludeGlobalServiceEvents'] == True and trail['IsLogging'] == True:
                 global_events_logging.append((region, trail_id,))
             # Any wildcard logging?
-            if trail.get('wildcard_data_logging', None) == 'Enabled':
+            if trail.get('wildcard_data_logging', False):
                 data_logging_trails_count += 1
 
-        cloudtrail_config['regions'][region]['data_logging_trails_count'] = data_logging_trails_count
+    cloudtrail_config['data_logging_trails_count'] = data_logging_trails_count
     cloudtrail_config['IncludeGlobalServiceEvents'] = False if (len(global_events_logging) == 0) else True
     cloudtrail_config['DuplicatedGlobalServiceEvents'] = True if (len(global_events_logging) > 1) else False
 
