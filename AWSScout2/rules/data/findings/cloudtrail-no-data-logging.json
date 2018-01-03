@@ -4,7 +4,7 @@
     "path": "cloudtrail.regions.id",
     "dashboard_name": "Regions",
     "conditions": [ "and",
-        [ "data_logging_trails_count", "equal", "0" ]
+        [ "cloudtrail.regions.id.data_logging_trails_count", "equal", "0" ]
     ],
     "id_suffix": "DataLoggingNotConfigured"
 }
