@@ -50,6 +50,14 @@ class TestScout2Class:
         assert (rc == 0)
 
 
+    #
+    # Make sure that Scout2's CIS ruleset run does not crash
+    #
+    def test_scout2_cis_ruleset_run(self):
+        rc = self.call_scout2(['--ruleset', 'cis-02-29-2016.json'])
+        assert (rc == 0)
+
+
 #    #
 #    # Make sure that Scout2's check-s3-acl option does not crash
 #    #
