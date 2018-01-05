@@ -19,6 +19,9 @@ class TestScout2Class:
         creds = read_creds_from_environment_variables()
         self.profile_name = 'travislike' if creds['AccessKeyId'] == None else None
 
+    @classmethod
+    def setUpClass(cls):
+        cls.has_run_scout2 = False
 
     def call_scout2(self, args):
         args = ['./Scout2.py' ] + args
@@ -28,6 +31,10 @@ class TestScout2Class:
         args.append('--force')
         args.append('--debug')
         args.append('--no-browser')
+        if TestScout2Class.has_run_scout2:
+            args.append('--local')
+        TestScout2Class.has_run_scout2 = True
+
         with mock.patch.object(sys, 'argv', args):
             return main()
 
