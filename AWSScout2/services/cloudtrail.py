@@ -2,6 +2,7 @@
 """
 CloudTrail-related classes and functions
 """
+import time
 
 from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 
@@ -27,6 +28,9 @@ class CloudTrailRegionConfig(RegionConfig):
         trail_config = {}
         trail_config['name'] = trail.pop('Name')
         trail_id = self.get_non_aws_id(trail_config['name'])
+
+        api_client = api_clients[region]
+
         # Do not duplicate entries for multiregion trails
         if 'IsMultiRegionTrail' in trail and trail['IsMultiRegionTrail'] and trail['HomeRegion'] != region:
             for key in ['HomeRegion', 'TrailARN']:
@@ -39,11 +43,29 @@ class CloudTrailRegionConfig(RegionConfig):
             for key in ['IsMultiRegionTrail', 'LogFileValidationEnabled']:
                 if key not in trail_config:
                     trail_config[key] = False
-            trail_details = api_clients[region].get_trail_status(Name=trail['TrailARN'])
+            trail_details = api_client.get_trail_status(Name=trail['TrailARN'])
             for key in ['IsLogging', 'LatestDeliveryTime', 'LatestDeliveryError', 'StartLoggingTime', 'StopLoggingTime', 'LatestNotificationTime', 'LatestNotificationError', 'LatestCloudWatchLogsDeliveryError', 'LatestCloudWatchLogsDeliveryTime']:
                 trail_config[key] = trail_details[key] if key in trail_details else None
+
+        trail_config['wildcard_data_logging'] = self.data_logging_status(trail_config['name'], trail_details, api_client)
+
         self.trails[trail_id] = trail_config
 
+    def data_logging_status(self, trail_name, trail_details, api_client):
+        for es in api_client.get_event_selectors(TrailName=trail_name)['EventSelectors']:
+            has_wildcard = {u'Values': [u'arn:aws:s3:::'], u'Type': u'AWS::S3::Object'} in es['DataResources']
+            is_logging = trail_details['IsLogging']
+
+            if has_wildcard and is_logging and self.is_fresh(trail_details):
+                return True
+
+        return False
+
+    @staticmethod
+    def is_fresh(trail_details):
+        delivery_time = trail_details.get('LatestCloudWatchLogsDeliveryTime', "9999999").strftime("%s")
+        delivery_age = ((int(time.time()) - int(delivery_time)) / 1440)
+        return delivery_age <= 24
 
 
 ########################################
