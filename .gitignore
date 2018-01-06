@@ -10,6 +10,8 @@ venv/
 # Packages
 *.egg
 *.egg-info
+.eggs
+.cache/
 dist
 build
 eggs
@@ -41,8 +43,18 @@ nosetests.xml
 
 # In case people do a `git add .` ...
 *.csv
+tests/data/ruleset-test.json
 
 # Data folder and files
 scout2-report*
 inc-awsconfig*
 report-*
+
+# PyCharm
+.idea/
+
+# Mac cruft
+.DS_Store
+
+# Emacs backups
+*~
