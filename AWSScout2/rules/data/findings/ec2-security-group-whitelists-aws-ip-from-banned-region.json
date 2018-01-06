@@ -4,6 +4,6 @@
     "dashboard_name": "Rules",
     "conditions": [ "and",
         [ "this", "inSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges/aws.json, [])" ],
-        [ "this", "notInSubnets", "_IP_RANGES_FROM_LOCAL_FILE_(AWSScout2/rules/data/ip-ranges/aws-in-us.json, [])" ]
+        [ "this", "notInSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges/aws-in-us.json, [])" ]
     ]
 }
