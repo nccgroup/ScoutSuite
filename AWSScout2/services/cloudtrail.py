@@ -28,6 +28,7 @@ class CloudTrailRegionConfig(RegionConfig):
         trail_config = {}
         trail_config['name'] = trail.pop('Name')
         trail_id = self.get_non_aws_id(trail_config['name'])
+        trail_details = None
 
         api_client = api_clients[region]
 
@@ -47,7 +48,8 @@ class CloudTrailRegionConfig(RegionConfig):
             for key in ['IsLogging', 'LatestDeliveryTime', 'LatestDeliveryError', 'StartLoggingTime', 'StopLoggingTime', 'LatestNotificationTime', 'LatestNotificationError', 'LatestCloudWatchLogsDeliveryError', 'LatestCloudWatchLogsDeliveryTime']:
                 trail_config[key] = trail_details[key] if key in trail_details else None
 
-        trail_config['wildcard_data_logging'] = self.data_logging_status(trail_config['name'], trail_details, api_client)
+        if trail_details:
+            trail_config['wildcard_data_logging'] = self.data_logging_status(trail_config['name'], trail_details, api_client)
 
         self.trails[trail_id] = trail_config
 
