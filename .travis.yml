@@ -25,6 +25,6 @@ script:
 # use container-base infrastructure
 sudo: false
 
-# Update test coverage
-after_success:
-    - coveralls
+# Update test coverage -- only when run locally
+#after_success:
+#    - coveralls
