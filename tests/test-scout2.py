@@ -11,23 +11,18 @@ from opinel.utils.credentials import read_creds_from_environment_variables
 #
 class TestScout2Class:
 
-    #
-    # Setup
-    #
-    def setup(self):
-        configPrintException(True)
-        creds = read_creds_from_environment_variables()
-        self.profile_name = 'travislike' if creds['AccessKeyId'] == None else None
-
     @classmethod
     def setUpClass(cls):
+        configPrintException(True)
+        creds = read_creds_from_environment_variables()
+        cls.profile_name = 'travislike' if creds['AccessKeyId'] == None else None
         cls.has_run_scout2 = False
 
     def call_scout2(self, args):
         args = ['./Scout2.py' ] + args
-        if self.profile_name:
+        if TestScout2Class.profile_name:
             args.append('--profile')
-            args.append(self.profile_name)
+            args.append(TestScout2Class.profile_name)
         args.append('--force')
         args.append('--debug')
         args.append('--no-browser')
