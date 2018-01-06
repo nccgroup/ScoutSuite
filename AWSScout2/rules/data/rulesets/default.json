@@ -734,6 +734,12 @@
                 "level": "warning"
             }
         ],
+        "cloudtrail-no-data-logging.json": [
+            {
+                "enabled": false,
+                "level": "warning"
+            }
+        ],
         "s3-bucket-no-mfa-delete.json": [
             {
                 "enabled": true,
