@@ -1,0 +1,8 @@
+{
+  "description": "User not used",
+  "path": "iam.users.id",
+  "dashboard_name": "Users",
+  "conditions": [ "and",
+    [ "iam.users.id.AccessKeys.id.AccessKeyLastUsed", "olderThan", ["10", "days"] ]
+  ]
+}

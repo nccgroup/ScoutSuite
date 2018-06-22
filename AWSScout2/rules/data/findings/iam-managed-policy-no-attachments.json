@@ -1,0 +1,9 @@
+{
+    "description": "Managed policy not attached to any entity",
+    "path": "iam.policies.id",
+    "display_path": "iam.policies.id",
+    "dashboard_name": "Policies",
+    "conditions": [ "and",
+        [ "iam.policies.id.attached_to", "empty", "" ]
+    ]
+}

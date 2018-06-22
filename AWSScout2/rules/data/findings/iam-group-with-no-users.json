@@ -1,0 +1,8 @@
+{
+    "description": "Group with no users",
+    "path": "iam.groups.id",
+    "dashboard_name": "groups",
+    "conditions": [ "and",
+        [ "iam.groups.id.users", "empty", "" ]
+    ]
+}
