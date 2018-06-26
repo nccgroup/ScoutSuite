@@ -54,7 +54,10 @@ Requirements
 Computing resources
 -------------------
 
-Scout2 is a multi-threaded tool that fetches and stores your AWS account's configuration settings in memory during runtime. It is expected that the tool will run with no issues on any modern laptop or equivalent VM. **Running Scout2 in a VM with limited computing resources such as a t2.micro instance is not intended and will likely result in the process being killed.**
+Scout2 is a multi-threaded tool that fetches and stores your AWS account's configuration settings in memory during
+runtime. It is expected that the tool will run with no issues on any modern laptop or equivalent VM. **Running Scout2
+in a VM with limited computing resources such as a t2.micro instance is not intended and will likely result in the
+process being killed.**
 
 Python
 ------
@@ -70,13 +73,13 @@ Scout2 is written in Python and supports the following versions:
 AWS Credentials
 ---------------
 
-To run Scout2, you will need valid AWS credentials (*e.g* Access Key ID and
-Secret Access Key). The role, or user account, associated with these credentials
-requires read-only access for all resources in a number of services, including
-but not limited to CloudTrail, EC2, IAM, RDS, Redshift, and S3.
+To run Scout2, you will need valid AWS credentials (*e.g* Access Key ID and Secret Access Key).
+The role, or user account, associated with these credentials requires read-only access for all resources in a number of
+services, including but not limited to CloudTrail, EC2, IAM, RDS, Redshift, and S3.
 
-If you are not sure what permissions to grant, the `Scout2-Default`_
-IAM policy lists the permissions necessary for a default run of Scout2.
+The following AWS Managed Policies can be attached to the principal to grant necessary permissions:
+* ReadOnlyAccess
+* SecurityAudit
 
 Compliance with AWS' Acceptable Use Policy
 ------------------------------------------
@@ -92,7 +95,8 @@ Usage
 
 After performing a number of AWS API calls, Scout2 will create a local HTML report and open it in the default browser.
 
-Using a computer already configured to use the AWS CLI, boto3, or another AWS SDK, you may use Scout2 using the following command:
+Using a computer already configured to use the AWS CLI, boto3, or another AWS SDK, you may use Scout2 using the
+following command:
 
 ::
 
@@ -100,7 +104,8 @@ Using a computer already configured to use the AWS CLI, boto3, or another AWS SD
 
 **Note:** EC2 instances with an IAM role fit in this category.
 
-If multiple profiles are configured in your .aws/credentials and .aws/config files, you may specify which credentials to use with the following command:
+If multiple profiles are configured in your .aws/credentials and .aws/config files, you may specify which credentials
+to use with the following command:
 
 ::
 
@@ -131,4 +136,3 @@ License
 GPLv2: See LICENSE.
 
 .. _pip: https://pip.pypa.io/en/stable/index.html
-.. _Scout2-Default: https://github.com/nccgroup/AWS-recipes/blob/master/IAM-Policies/Scout2-Default.json
