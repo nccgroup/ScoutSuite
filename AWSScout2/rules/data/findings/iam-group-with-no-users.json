@@ -1,0 +1,9 @@
+{
+    "description": "Group with no users",
+    "rationale": "Groups with no users should be reviewed and deleted if not necessary.",
+    "path": "iam.groups.id",
+    "dashboard_name": "groups",
+    "conditions": [ "and",
+        [ "iam.groups.id.users", "empty", "" ]
+    ]
+}

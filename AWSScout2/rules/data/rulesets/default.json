@@ -626,6 +626,18 @@
                 "level": "danger"
             }
         ],
+        "iam-group-with-no-users.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-managed-policy-no-attachments.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "rds-instance-backup-disabled.json": [
             {
                 "enabled": true,
