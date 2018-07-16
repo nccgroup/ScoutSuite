@@ -6,12 +6,9 @@ from opinel.utils.aws import get_name
 from opinel.utils.globals import manage_dictionary
 from opinel.utils.fs import load_data, read_ip_ranges
 
-
 from AWSScout2.utils import ec2_classic, get_keys
 from AWSScout2.configs.regions import RegionalServiceConfig, RegionConfig
 from AWSScout2.configs.vpc import VPCConfig as SingleVPCConfig
-
-
 
 ########################################
 # Globals
@@ -19,11 +16,10 @@ from AWSScout2.configs.vpc import VPCConfig as SingleVPCConfig
 
 protocols_dict = load_data('protocols.json', 'protocols')
 
-
-
 ########################################
 # VPCRegionConfig
 ########################################
+
 
 class VPCRegionConfig(RegionConfig):
     """
@@ -34,18 +30,17 @@ class VPCRegionConfig(RegionConfig):
         cgw['id'] = cgw.pop('CustomerGatewayId')
         self.customer_gateways[cgw['id']] = cgw
 
-    def parse_flow_log(self, global_params, region, fl):
+    def parse_flow_log(self, global_params, region, flow_log):
         """
 
         :param global_params:
         :param region:
-        :param fl:
+        :param flow_log:
         :return:
         """
-        get_name(fl, fl, 'FlowLogId')
-        fl_id = fl.pop('FlowLogId')
-        self.flow_logs[fl_id] = fl
-
+        get_name(flow_log, flow_log, 'FlowLogId')
+        flow_log_id = flow_log.pop('FlowLogId')
+        self.flow_logs[flow_log_id] = flow_log
 
     def parse_network_acl(self, global_params, region, network_acl):
         """
@@ -65,7 +60,6 @@ class VPCRegionConfig(RegionConfig):
         # Save
         manage_dictionary(self.vpcs, vpc_id, SingleVPCConfig(self.vpc_resource_types))
         self.vpcs[vpc_id].network_acls[network_acl['id']] = network_acl
-
 
     def __parse_network_acl_entries(self, entries, egress):
         """
@@ -92,19 +86,18 @@ class VPCRegionConfig(RegionConfig):
                 acl_dict[acl.pop('RuleNumber')] = acl
         return acl_dict
 
-
     def parse_route_table(self, global_params, region, rt):
         route_table = {}
         vpc_id = rt['VpcId']
-        get_name(rt, route_table, 'VpcId') # TODO: change get_name to have src then dst
+        get_name(rt, route_table, 'VpcId')  # TODO: change get_name to have src then dst
         get_keys(rt, route_table, ['Routes', 'Associations', 'PropagatingVgws'])
         # Save
         manage_dictionary(self.vpcs, vpc_id, SingleVPCConfig(self.vpc_resource_types))
         self.vpcs[vpc_id].route_tables[rt['RouteTableId']] = route_table
 
-
     def parse_subnet(self, global_params, region, subnet):
         """
+        Parse subnet object.
 
         :param global_params:
         :param region:
@@ -115,11 +108,11 @@ class VPCRegionConfig(RegionConfig):
         manage_dictionary(self.vpcs, vpc_id, SingleVPCConfig(self.vpc_resource_types))
         subnet_id = subnet['SubnetId']
         get_name(subnet, subnet, 'SubnetId')
-        subnet['flow_logs'] = []
+        # set flow logs that cover this subnet
+        subnet['flow_logs'] = get_subnet_flow_logs_list(self, subnet)
         # Save
         manage_dictionary(self.vpcs, vpc_id, SingleVPCConfig(self.vpc_resource_types))
         self.vpcs[vpc_id].subnets[subnet_id] = subnet
-
 
     def parse_vpc(self, global_params, region_name, vpc):
         """
@@ -134,21 +127,19 @@ class VPCRegionConfig(RegionConfig):
         manage_dictionary(self.vpcs, vpc_id, SingleVPCConfig(self.vpc_resource_types))
         self.vpcs[vpc_id].name = get_name(vpc, {}, 'VpcId')
 
-
     def parse_vpn_connection(self, global_params, region_name, vpnc):
         vpnc['id'] = vpnc.pop('VpnConnectionId')
         self.vpn_connections[vpnc['id']] = vpnc
-
 
     def parse_vpn_gateway(self, global_params, region_name, vpng):
         vpng['id'] = vpng.pop('VpnGatewayId')
         self.vpn_gateways[vpng['id']] = vpng
 
 
-
 ########################################
 # VPCConfig
 ########################################
+
 
 class VPCConfig(RegionalServiceConfig):
     """
@@ -161,19 +152,23 @@ class VPCConfig(RegionalServiceConfig):
         super(VPCConfig, self).__init__(service_metadata, thread_config)
 
 
-
-
 ########################################
 ##### VPC analysis functions
 ########################################
 
-
-
-#
-# Add a display name for all known CIDRs
-#
 known_cidrs = {'0.0.0.0/0': 'All'}
+
 def put_cidr_name(aws_config, current_config, path, current_path, resource_id, callback_args):
+    """
+    Add a display name for all known CIDRs
+    :param aws_config:
+    :param current_config:
+    :param path:
+    :param current_path:
+    :param resource_id:
+    :param callback_args:
+    :return:
+    """
     if 'cidrs' in current_config:
         cidr_list = []
         for cidr in current_config['cidrs']:
@@ -187,13 +182,19 @@ def put_cidr_name(aws_config, current_config, path, current_path, resource_id, c
             cidr_list.append({'CIDR': cidr, 'CIDRName': cidr_name})
         current_config['cidrs'] = cidr_list
 
-#
-# Read display name for CIDRs from ip-ranges files
-#
-aws_ip_ranges = {} # read_ip_ranges(aws_ip_ranges_filename, False)
+
+aws_ip_ranges = {}  # read_ip_ranges(aws_ip_ranges_filename, False)
+
 def get_cidr_name(cidr, ip_ranges_files, ip_ranges_name_key):
+    """
+    Read display name for CIDRs from ip-ranges files
+    :param cidr:
+    :param ip_ranges_files:
+    :param ip_ranges_name_key:
+    :return:
+    """
     for filename in ip_ranges_files:
-        ip_ranges = read_ip_ranges(filename, local_file = True)
+        ip_ranges = read_ip_ranges(filename, local_file=True)
         for ip_range in ip_ranges:
             ip_prefix = netaddr.IPNetwork(ip_range['ip_prefix'])
             cidr = netaddr.IPNetwork(cidr)
@@ -206,10 +207,17 @@ def get_cidr_name(cidr, ip_ranges_files, ip_ranges_name_key):
             return 'Unknown CIDR in %s %s' % (ip_range['service'], ip_range['region'])
     return 'Unknown CIDR'
 
-#
-# Propagate VPC names in VPC-related services (info only fetched during EC2 calls)
-#
 def propagate_vpc_names(aws_config, current_config, path, current_path, resource_id, callback_args):
+    """
+    Propagate VPC names in VPC-related services (info only fetched during EC2 calls)
+    :param aws_config:
+    :param current_config:
+    :param path:
+    :param current_path:
+    :param resource_id:
+    :param callback_args:
+    :return:
+    """
     if resource_id == ec2_classic:
         current_config['name'] = ec2_classic
     else:
@@ -219,3 +227,18 @@ def propagate_vpc_names(aws_config, current_config, path, current_path, resource
         target_path.append('Name')
         target_path = '.'.join(target_path)
         current_config['name'] = get_value_at(aws_config, target_path, target_path)
+
+def get_subnet_flow_logs_list(current_config, subnet):
+    """
+    Return the flow logs that cover a given subnet
+
+    :param current_config:
+    :param subnet: the subnet that the flow logs should cover
+    :return:
+    """
+    flow_logs_list = []
+    for flow_log in current_config.flow_logs:
+        if current_config.flow_logs[flow_log]['ResourceId'] == subnet['SubnetId'] or \
+                current_config.flow_logs[flow_log]['ResourceId'] == subnet['VpcId']:
+            flow_logs_list.append(flow_log)
+    return flow_logs_list
