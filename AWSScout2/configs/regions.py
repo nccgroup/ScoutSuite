@@ -282,6 +282,7 @@ class RegionConfig(GlobalConfig):
         region = api_client._client_config.region_name
         # Queue resources
         for target in targets:
+            # call callback methods
             try:
                 callback = getattr(self, 'parse_%s' % target_type[0:-1])
             except:
