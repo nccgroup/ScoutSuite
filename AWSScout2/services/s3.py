@@ -18,6 +18,7 @@ from AWSScout2.configs.base import BaseConfig
 # S3Config
 ########################################
 
+
 class S3Config(BaseConfig):
     """
     S3 configuration for all AWS regions
@@ -35,7 +36,17 @@ class S3Config(BaseConfig):
 
     def parse_buckets(self, bucket, params):
         """
-        Parse a single S3 bucket TODO
+        Parse a single S3 bucket
+
+        TODO:
+        - CORS
+        - Lifecycle
+        - Notification ?
+        - Get bucket's policy
+
+        :param bucket:
+        :param params:
+        :return:
         """
         bucket['name'] = bucket.pop('Name')
         api_client = params['api_clients'][get_s3_list_region(list(params['api_clients'].keys())[0])]
@@ -56,11 +67,6 @@ class S3Config(BaseConfig):
         get_s3_bucket_versioning(api_client, bucket['name'], bucket)
         get_s3_bucket_webhosting(api_client, bucket['name'], bucket)
         bucket['grantees'] = get_s3_acls(api_client, bucket['name'], bucket)
-        # TODO:
-        # CORS
-        # Lifecycle
-        # Notification ?
-        # Get bucket's policy
         get_s3_bucket_policy(api_client, bucket['name'], bucket)
         # If requested, get key properties
         #if params['check_encryption'] or params['check_acls']:
@@ -68,9 +74,6 @@ class S3Config(BaseConfig):
         #                       params['check_acls'])
         bucket['id'] = self.get_non_aws_id(bucket['name'])
         self.buckets[bucket['id']] = bucket
-
-
-
 
 def match_iam_policies_and_buckets(s3_info, iam_info):
     if 'Action' in iam_info['permissions']:
@@ -91,7 +94,6 @@ def match_iam_policies_and_buckets(s3_info, iam_info):
                                     if policy_type in iam_info['permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['NotResource'][full_path]:
                                         for policy in iam_info['permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['NotResource'][full_path][policy_type]:
                                             update_bucket_permissions(s3_info, iam_info, action, iam_entity, allowed_iam_entity, full_path, policy_type, policy)
-
 
 def update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entity, policy_info):
     if bucket_name != '*' and bucket_name in s3_info['buckets']:
@@ -196,26 +198,28 @@ def get_s3_acls(api_client, bucket_name, bucket, key_name = None):
         set_s3_permissions(grantees[grantee]['permissions'], permission)
     return grantees
   except Exception as e:
-    printException(e)
+    printError('Failed to get ACL configuration for %s: %s' % (bucket_name, e))
+    return {}
 
 def get_s3_bucket_policy(api_client, bucket_name, bucket_info):
     try:
         bucket_info['policy'] = json.loads(api_client.get_bucket_policy(Bucket = bucket_name)['Policy'])
+        return True
     except Exception as e:
-        if type(e) == ClientError and e.response['Error']['Code'] == 'NoSuchBucketPolicy':
-            pass
-        else:
-            printException(e)
-
+        if not (type(e) == ClientError and e.response['Error']['Code'] == 'NoSuchBucketPolicy'):
+            printError('Failed to get bucket policy for %s: %s' % (bucket_name, e))
+        return False
 
 def get_s3_bucket_versioning(api_client, bucket_name, bucket_info):
     try:
         versioning = api_client.get_bucket_versioning(Bucket = bucket_name)
         bucket_info['versioning_status'] = versioning['Status'] if 'Status' in versioning else 'Disabled'
         bucket_info['version_mfa_delete'] = versioning['MFADelete'] if 'MFADelete' in versioning else 'Disabled'
+        return True
     except Exception as e:
         bucket_info['versioning_status'] = 'Unknown'
         bucket_info['version_mfa_delete'] = 'Unknown'
+        return False
 
 def get_s3_bucket_logging(api_client, bucket_name, bucket_info):
     try:
@@ -225,23 +229,31 @@ def get_s3_bucket_logging(api_client, bucket_name, bucket_info):
             bucket_info['logging_stuff'] = logging
         else:
             bucket_info['logging'] = 'Disabled'
+        return True
     except Exception as e:
-        printError('Failed to get logging configuration for %s' % bucket_name)
-        printException(e)
+        printError('Failed to get logging configuration for %s: %s' % (bucket_name, e))
         bucket_info['logging'] = 'Unknown'
+        return False
 
 def get_s3_bucket_webhosting(api_client, bucket_name, bucket_info):
     try:
         result = api_client.get_bucket_website(Bucket = bucket_name)
         bucket_info['web_hosting'] = 'Enabled' if 'IndexDocument' in result else 'Disabled'
+        return True
     except Exception as e:
         # TODO: distinguish permission denied from  'NoSuchWebsiteConfiguration' errors
         bucket_info['web_hosting'] = 'Disabled'
-        pass
+        return False
 
-
-# List all available buckets
 def get_s3_buckets(api_client, s3_info, s3_params):
+    """
+    List all available buckets
+
+    :param api_client:
+    :param s3_info:
+    :param s3_params:
+    :return:
+    """
     manage_dictionary(s3_info, 'buckets', {})
     buckets = api_client[get_s3_list_region(s3_params['selected_regions'])].list_buckets()['Buckets']
     targets = []
@@ -258,11 +270,17 @@ def get_s3_buckets(api_client, s3_info, s3_params):
     s3_info['buckets_count'] = len(s3_info['buckets'])
     return s3_info
 
-
-
-
-# Get key-specific information (server-side encryption, acls, etc...)
 def get_s3_bucket_keys(api_client, bucket_name, bucket, check_encryption, check_acls):
+    """
+    Get key-specific information (server-side encryption, acls, etc...)
+
+    :param api_client:
+    :param bucket_name:
+    :param bucket:
+    :param check_encryption:
+    :param check_acls:
+    :return:
+    """
     bucket['keys'] = []
     keys = handle_truncated_response(api_client.list_objects, {'Bucket': bucket_name}, ['Contents'])
     bucket['keys_count'] = len(keys['Contents'])
@@ -290,11 +308,13 @@ def get_s3_bucket_keys(api_client, bucket_name, bucket, check_encryption, check_
         bucket['keys'].append(key)
         update_status(key_count, bucket['keys_count'], 'keys')
 
-
-#
-# Return region to be used for global calls such as list bucket and get bucket location
-#
 def get_s3_list_region(region):
+    """
+    Return region to be used for global calls such as list bucket and get bucket location
+
+    :param region:
+    :return:
+    """
     if region.startswith('us-gov-'):
         return 'us-gov-west-1'
     elif region.startswith('cn-'):

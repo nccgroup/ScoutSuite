@@ -626,6 +626,18 @@
                 "level": "danger"
             }
         ],
+        "iam-group-with-no-users.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-managed-policy-no-attachments.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "rds-instance-backup-disabled.json": [
             {
                 "enabled": true,
@@ -1067,7 +1079,7 @@
                     "source"
                 ],
                 "enabled": true,
-                "level": "danger"
+                "level": "warning"
             },
             {
                 "args": [
@@ -1075,17 +1087,29 @@
                     "destination"
                 ],
                 "enabled": true,
-                "level": "danger"
+                "level": "warning"
             }
         ],
         "vpc-subnet-with-default-acls.json": [
             {
                 "enabled": false,
-                "level": "danger"
+                "level": "warning"
             }
         ],
         "vpc-subnet-without-flow-log.json": [
             {
+                "args": [
+                    "ingress",
+                    "source"
+                ],
+                "enabled": true,
+                "level": "warning"
+            },
+            {
+                "args": [
+                    "egress",
+                    "destination"
+                ],
                 "enabled": true,
                 "level": "warning"
             }
