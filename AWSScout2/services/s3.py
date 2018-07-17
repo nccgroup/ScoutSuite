@@ -320,4 +320,4 @@ def get_s3_list_region(region):
     elif region.startswith('cn-'):
         return 'cn-north-1'
     else:
-        return 'us-east-1'
+        return region
