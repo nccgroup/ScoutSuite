@@ -55,9 +55,9 @@ Computing resources
 -------------------
 
 Scout2 is a multi-threaded tool that fetches and stores your AWS account's configuration settings in memory during
-runtime. It is expected that the tool will run with no issues on any modern laptop or equivalent VM. **Running Scout2
-in a VM with limited computing resources such as a t2.micro instance is not intended and will likely result in the
-process being killed.**
+runtime. It is expected that the tool will run with no issues on any modern laptop or equivalent VM.
+**Running Scout2 in a VM with limited computing resources such as a t2.micro instance is not intended and will likely
+result in the process being killed.**
 
 Python
 ------
@@ -77,7 +77,7 @@ To run Scout2, you will need valid AWS credentials (*e.g* Access Key ID and Secr
 The role, or user account, associated with these credentials requires read-only access for all resources in a number of
 services, including but not limited to CloudTrail, EC2, IAM, RDS, Redshift, and S3.
 
-The following AWS Managed Policies can be attached to the principal to grant necessary permissions:
+The following AWS Managed Policies can be attached to the principal in order to grant necessary permissions:
 * ReadOnlyAccess
 * SecurityAudit
 
