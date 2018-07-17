@@ -78,6 +78,7 @@ The role, or user account, associated with these credentials requires read-only 
 services, including but not limited to CloudTrail, EC2, IAM, RDS, Redshift, and S3.
 
 The following AWS Managed Policies can be attached to the principal in order to grant necessary permissions:
+
 * ReadOnlyAccess
 * SecurityAudit
 
