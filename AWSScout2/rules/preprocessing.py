@@ -23,7 +23,6 @@ def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
     set_emr_vpc_ids(aws_config)
     #parse_elb_policies(aws_config)
 
-
     # Various data processing calls
     add_security_group_name_to_ec2_grants(aws_config['services']['ec2'], aws_config['aws_account_id'])
     process_cloudtrail_trails(aws_config['services']['cloudtrail'])
@@ -34,7 +33,6 @@ def preprocessing(aws_config, ip_ranges = [], ip_ranges_name_key = None):
 
     # Preprocessing dictated by metadata
     process_metadata_callbacks(aws_config)
-
 
 def process_metadata_callbacks(aws_config):
     """
@@ -100,13 +98,10 @@ def process_metadata_callbacks(aws_config):
                                         source = {}
                                     target_object.update(source)
 
-
-
 def add_cidr_display_name(aws_config, ip_ranges, ip_ranges_name_key):
     if len(ip_ranges):
         callback_args = {'ip_ranges': ip_ranges, 'ip_ranges_name_key': ip_ranges_name_key}
         go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports'], ['services', 'ec2'], put_cidr_name, callback_args)
-
 
 def add_security_group_name_to_ec2_grants(ec2_config, aws_account_id):
     """
@@ -117,7 +112,6 @@ def add_security_group_name_to_ec2_grants(ec2_config, aws_account_id):
     :return:
     """
     go_to_and_do(ec2_config, None, ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports', 'security_groups'], [], add_security_group_name_to_ec2_grants_callback, {'AWSAccountId': aws_account_id})
-
 
 def add_security_group_name_to_ec2_grants_callback(ec2_config, current_config, path, current_path, ec2_grant, callback_args):
     sg_id = ec2_grant['GroupId']
@@ -134,7 +128,6 @@ def add_security_group_name_to_ec2_grants_callback(ec2_config, current_config, p
             target = current_path[:(current_path.index('security_groups') + 1)]
             target.append(sg_id)
         ec2_grant['GroupName'] = get_value_at(ec2_config, target, 'name')
-
 
 def process_cloudtrail_trails(cloudtrail_config):
     printInfo('Processing CloudTrail config...')
@@ -156,7 +149,6 @@ def process_cloudtrail_trails(cloudtrail_config):
     cloudtrail_config['IncludeGlobalServiceEvents'] = False if (len(global_events_logging) == 0) else True
     cloudtrail_config['DuplicatedGlobalServiceEvents'] = True if (len(global_events_logging) > 1) else False
 
-
 def process_network_acls_callback(vpc_config, current_config, path, current_path, privateip_id, callback_args):
     # Check if the network ACL allows all traffic from all IP addresses
     process_network_acls_check_for_allow_all(current_config, 'ingress')
@@ -164,7 +156,6 @@ def process_network_acls_callback(vpc_config, current_config, path, current_path
     # Check if the network ACL only has the default rules
     process_network_acls_check_for_aws_default(current_config, 'ingress')
     process_network_acls_check_for_aws_default(current_config, 'egress')
-
 
 def process_network_acls_check_for_allow_all(network_acl, direction):
     network_acl['allow_all_%s_traffic' % direction] = 0
@@ -177,15 +168,12 @@ def process_network_acls_check_for_allow_all(network_acl, direction):
                 network_acl['allow_all_%s_traffic' % direction] = rule_number
                 break
 
-
 def process_network_acls_check_for_aws_default(network_acl, direction):
     if len(network_acl['rules'][direction]) == 2 and int(network_acl['allow_all_%s_traffic' % direction]) > 0 and '100' in network_acl['rules'][direction]:
         # Assume it is AWS' default rules because there are 2 rules (100 and 65535) and the first rule allows all traffic
         network_acl['use_default_%s_rules' % direction] = True
     else:
         network_acl['use_default_%s_rules' % direction] = False
-
-
 
 def list_ec2_network_attack_surface_callback(aws_config, current_config, path, current_path, privateip_id, callback_args):
     manage_dictionary(aws_config['services']['ec2'], 'external_attack_surface', {})
@@ -198,17 +186,13 @@ def list_ec2_network_attack_surface_callback(aws_config, current_config, path, c
             ip = ipv6['Ipv6Address']
             security_group_to_attack_surface(aws_config, aws_config['services']['ec2']['external_attack_surface'], ip, current_path, [g['GroupId'] for g in current_config['Groups']], [])
 
-
-
 sg_map = {}
 def map_all_sgs(aws_config):
     go_to_and_do(aws_config, aws_config['services']['ec2'], ['regions', 'vpcs', 'security_groups'], ['services', 'ec2'], map_resource, {'map': sg_map})
 
-
 subnet_map = {}
 def map_all_subnets(aws_config):
     go_to_and_do(aws_config, aws_config['services']['vpc'], ['regions', 'vpcs', 'subnets'], ['services', 'vpc'], map_resource, {'map': subnet_map})
-
 
 def map_resource(ec2_config, current_config, path, current_path, resource_id, callback_args):
     map = callback_args['map']
@@ -216,7 +200,6 @@ def map_resource(ec2_config, current_config, path, current_path, resource_id, ca
         map[resource_id] = {'region': current_path[3]}
         if len(current_path) > 5:
             map[resource_id]['vpc_id'] = current_path[5]
-
 
 def match_iam_policies_and_buckets(aws_config):
     s3_info = aws_config['services']['s3']
@@ -290,13 +273,11 @@ def __update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entit
         # Could be an error or cross-account access, ignore...
         pass
 
-
 def match_network_acls_and_subnets_callback(vpc_config, current_config, path, current_path, acl_id, callback_args):
     for association in current_config['Associations']:
         subnet_path = current_path[:-1] + ['subnets', association['SubnetId']]
         subnet = get_object_at(vpc_config, subnet_path)
         subnet['network_acl'] = acl_id
-
 
 def match_instances_and_subnets_callback(aws_config, current_config, path, current_path, instance_id, callback_args):
     subnet_id = current_config['SubnetId']
@@ -305,7 +286,6 @@ def match_instances_and_subnets_callback(aws_config, current_config, path, curre
     manage_dictionary(subnet, 'instances', [])
     if instance_id not in subnet['instances']:
         subnet['instances'].append(instance_id)
-
 
 def match_instances_and_roles(aws_config):
     """
@@ -333,20 +313,17 @@ def match_instances_and_roles(aws_config):
                 iam_config['roles'][role_id]['instance_profiles'][instance_profile_id]['instances'] = role_instances[instance_profile_id]
                 iam_config['roles'][role_id]['instances_count'] += len(role_instances[instance_profile_id])
 
-
 def match_roles_and_cloudformation_stacks_callback(aws_config, current_config, path, current_path, stack_id, callback_args):
     if 'RoleARN' not in current_config:
         return
     role_arn = current_config.pop('RoleARN')
     current_config['iam_role'] = __get_role_info(aws_config, 'arn', role_arn)
 
-
 def match_roles_and_vpc_flowlogs_callback(aws_config, current_config, path, current_path, flowlog_id, callback_args):
     if 'DeliverLogsPermissionArn' not in current_config:
         return
     delivery_role_arn = current_config.pop('DeliverLogsPermissionArn')
     current_config['delivery_role'] = __get_role_info(aws_config, 'arn', delivery_role_arn)
-
 
 def __get_role_info(aws_config, attribute_name, attribute_value):
     iam_role_info = {'name': None, 'id': None}
@@ -356,7 +333,6 @@ def __get_role_info(aws_config, attribute_name, attribute_value):
             iam_role_info['id'] = role_id
             break
     return iam_role_info
-
 
 def process_vpc_peering_connections_callback(aws_config, current_config, path, current_path, pc_id, callback_args):
 
@@ -377,7 +353,6 @@ def process_vpc_peering_connections_callback(aws_config, current_config, path, c
         current_config['peer_info']['name'] = aws_config['organization'][current_config['peer_info']['OwnerId']]['Name']
     else:
         current_config['peer_info']['name'] = current_config['peer_info']['OwnerId']
-
 
 def match_security_groups_and_resources_callback(aws_config, current_config, path, current_path, resource_id, callback_args):
     service = current_path[1]
@@ -442,20 +417,17 @@ def match_security_groups_and_resources_callback(aws_config, current_config, pat
             printError('Failed to parse %s in %s in %s' % (resource_type, vpc_id, region))
             printException(e)
 
-
 def merge_route53_and_route53domains(aws_config):
     if 'route53domains' not in aws_config['services']:
         return
     aws_config['services']['route53'].update(aws_config['services']['route53domains'])
     aws_config['services'].pop('route53domains')
 
-
 def set_emr_vpc_ids(aws_config):
     clear_list = []
     go_to_and_do(aws_config, aws_config['services']['emr'], ['regions', 'vpcs'], ['services', 'emr'], set_emr_vpc_ids_callback, {'clear_list': clear_list})
     for region in clear_list:
         aws_config['services']['emr']['regions'][region]['vpcs'].pop('TODO')
-
 
 def set_emr_vpc_ids_callback(aws_config, current_config, path, current_path, vpc_id, callback_args):
     if vpc_id != 'TODO':
@@ -495,7 +467,6 @@ def set_emr_vpc_ids_callback(aws_config, current_config, path, current_path, vpc
     if len(current_config['clusters']) == 0:
         callback_args['clear_list'].append(region)
 
-
 def parse_elb_policies(aws_config):
     """
     TODO
@@ -508,7 +479,6 @@ def parse_elb_policies(aws_config):
 
     #if 'elbv2' in aws_config['services']:
         # Do something too here...
-
 
 def parse_elb_policies_callback(aws_config, current_config, path, current_path, region_id, callback_args):
     region_config = get_object_at(aws_config, [ 'services', 'elb', ] + current_path + [ region_id ])
@@ -534,8 +504,6 @@ def parse_elb_policies_callback(aws_config, current_config, path, current_path, 
             policy['options'] = options
             policy['ciphers'] = ciphers
             # TODO: pop ?
-
-
 
 def sort_vpc_flow_logs_callback(vpc_config, current_config, path, current_path, flow_log_id, callback_args):
     attached_resource = current_config['ResourceId']
@@ -563,7 +531,6 @@ def sort_vpc_flow_logs_callback(vpc_config, current_config, path, current_path, 
                 break
     else:
         printError('Resource %s attached to flow logs is not handled' % attached_resource)
-
 
 def go_to_and_do(aws_config, current_config, path, current_path, callback, callback_args = None):
     """
@@ -618,7 +585,6 @@ def go_to_and_do(aws_config, current_config, path, current_path, callback, callb
         printInfo('Value = %s' % str(value))
         printInfo('Path = %s' % path)
 
-
 def new_go_to_and_do(aws_config, current_config, path, current_path, callbacks):
     """
     Recursively go to a target and execute a callback
@@ -672,8 +638,6 @@ def new_go_to_and_do(aws_config, current_config, path, current_path, callbacks):
             printInfo('Value = %s' % str(value))
             printInfo('Path = %s' % path)
 
-
-
 def get_db_attack_surface(aws_config, current_config, path, current_path, db_id, callback_args):
     service = current_path[1]
     service_config = aws_config['services'][service]
@@ -689,8 +653,6 @@ def get_db_attack_surface(aws_config, current_config, path, current_path, db_id,
         security_groups = current_config['SecurityGroups']
         security_group_to_attack_surface(aws_config, service_config['external_attack_surface'], public_dns, current_path, [g['SecurityGroupId'] for g in security_groups], listeners)
         # TODO :: Get Redis endpoint information
-
-
 
 def get_lb_attack_surface(aws_config, current_config, path, current_path, elb_id, callback_args):
     public_dns = current_config['DNSName']
@@ -719,8 +681,6 @@ def get_lb_attack_surface(aws_config, current_config, path, current_path, elb_id
         for listener in current_config['listeners']:
             manage_dictionary(elb_config['external_attack_surface'][public_dns]['protocols']['TCP']['ports'], listener, {'cidrs': []})
             elb_config['external_attack_surface'][public_dns]['protocols']['TCP']['ports'][listener]['cidrs'].append({'CIDR': '0.0.0.0/0'})
-
-
 
 def security_group_to_attack_surface(aws_config, attack_surface_config, public_ip, current_path, security_groups, listeners = []):
         manage_dictionary(attack_surface_config, public_ip, {'protocols': {}})

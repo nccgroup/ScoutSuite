@@ -117,6 +117,16 @@
                     "cols": 2,
                     "path": "services.vpc.regions.id.vpcs"
                 },
+                "flow_logs": {
+                    "api_call": "describe_flow_logs",
+                    "response": "FlowLogs",
+                    "hidden": true,
+                    "path": "services.vpc.regions.id.vpc.id.flow_logs",
+                    "callbacks": [
+                        [ "sort_vpc_flow_logs_callback", {} ],
+                        [ "match_roles_and_vpc_flowlogs_callback", {} ]
+                    ]
+                },
                 "subnets": {
                     "api_call": "describe_subnets",
                     "response": "Subnets",
@@ -140,16 +150,6 @@
                     "response": "VpnConnections",
                     "cols": 2,
                     "path": "services.vpc.regions.id.vpn_connections"
-                },
-                "flow_logs": {
-                    "api_call": "describe_flow_logs",
-                    "response": "FlowLogs",
-                    "hidden": true,
-                    "path": "services.vpc.regions.id.vpc.id.flow_logs",
-                    "callbacks": [
-                        [ "sort_vpc_flow_logs_callback", {} ],
-                        [ "match_roles_and_vpc_flowlogs_callback", {} ]
-                    ]
                 },
                 "route_tables": {
                     "api_call": "describe_route_tables",
