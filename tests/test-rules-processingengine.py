@@ -5,8 +5,8 @@ import json
 
 from opinel.utils.console import configPrintException, printError
 
-from AWSScout2.rules.ruleset import Ruleset
-from AWSScout2.rules.processingengine import ProcessingEngine
+from ScoutSuite.rules.ruleset import Ruleset
+from ScoutSuite.rules.processingengine import ProcessingEngine
 
 class TestAWSScout2RulesProcessingEngine:
 
@@ -31,7 +31,7 @@ class TestAWSScout2RulesProcessingEngine:
     def test_all_finding_rules(self):
         test_dir = os.path.dirname(os.path.realpath(__file__))
         test_ruleset_file_name = os.path.join(test_dir, 'data/ruleset-test.json')
-        with open(os.path.join(test_dir, '../AWSScout2/rules/data/rulesets/default.json'), 'rt') as f:
+        with open(os.path.join(test_dir, '../ScoutSuite/rules/data/rulesets/default.json'), 'rt') as f:
             ruleset = json.load(f)
         rule_counters = {'found': 0, 'tested': 0, 'verified': 0}
         for file_name in ruleset['rules']:

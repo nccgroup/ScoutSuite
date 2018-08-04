@@ -1,9 +1,9 @@
 # Import AWS utils
-from AWSScout2.utils import *
+from ScoutSuite.utils import *
 
 
 #
-# Test methods for AWSScout2/utils.py
+# Test methods for ScoutSuite/utils.py
 #
 class TestAWSScout2UtilsClass:
 

@@ -1,4 +1,4 @@
-from AWSScout2.utils_cloudwatch import *
+from ScoutSuite.utils_cloudwatch import *
 
 #
 # Test for Scout2 CloudWatch functions

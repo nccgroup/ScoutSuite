@@ -2,7 +2,7 @@
 
 import os
 
-scout2_dir = 'AWSScout2'
+scout2_dir = 'ScoutSuite'
 tests_dir = 'testsbase'
 
 for root, dirnames, filenames in os.walk(scout2_dir):

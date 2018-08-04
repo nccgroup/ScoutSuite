@@ -1,4 +1,4 @@
-from AWSScout2.utils_sns import *
+from ScoutSuite.utils_sns import *
 
 #
 # Test for Scout2 SNS functions

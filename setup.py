@@ -5,13 +5,13 @@ import os
 from setuptools import setup, find_packages
 
 # Package info
-NAME = 'AWSScout2'
+NAME = 'ScoutSuite'
 ROOT = os.path.dirname(__file__)
 VERSION = __import__(NAME).__version__
 
 # Requirements
 requirements = []
-with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'AWSScout2', 'data', 'requirements.txt')) as f:
+with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'ScoutSuite', 'data', 'requirements.txt')) as f:
     for r in f.readlines():
         requirements.append(r.strip())
 
@@ -26,22 +26,22 @@ setup(
     url='https://github.com/nccgroup/Scout2',
     entry_points={
         'console_scripts': [
-            'Scout2 = AWSScout2.__main__:main',
-            'Scout2RulesGenerator = AWSScout2.__rules_generator__:main',
-            'Scout2Listall = AWSScout2.__listall__:main'
+            'Scout2 = ScoutSuite.__main__:main',
+            'Scout2RulesGenerator = ScoutSuite.__rules_generator__:main',
+            'Scout2Listall = ScoutSuite.__listall__:main'
         ]
     },
     packages=[
-        'AWSScout2', 'AWSScout2.configs', 'AWSScout2.output', 'AWSScout2.rules', 'AWSScout2.services'
+        'ScoutSuite', 'ScoutSuite.configs', 'ScoutSuite.output', 'ScoutSuite.rules', 'ScoutSuite.services'
     ],
     package_data={
-        'AWSScout2': [
+        'ScoutSuite': [
             'data/requirements.txt'
         ],
-        'AWSScout2.configs': [
+        'ScoutSuite.configs': [
             'data/*.json'
         ],
-        'AWSScout2.output': [
+        'ScoutSuite.output': [
             'data/html/*.html',
             'data/html/partials/*.html',
             'data/html/summaries/*.html',
@@ -49,7 +49,7 @@ setup(
             'data/inc-scout2/*.js',
             'data/inc-scout2/*.css'
         ],
-        'AWSScout2.rules': [
+        'ScoutSuite.rules': [
             'data/*.html',
             'data/filters/*.json',
             'data/findings/*.json',

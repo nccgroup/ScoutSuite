@@ -4,8 +4,8 @@ import os
 
 from opinel.utils.console import configPrintException, printDebug
 
-from AWSScout2.rules.rule import Rule
-from AWSScout2.rules.ruleset import Ruleset
+from ScoutSuite.rules.rule import Rule
+from ScoutSuite.rules.ruleset import Ruleset
 
 class TestAWSScout2RulesRuleset:
 
