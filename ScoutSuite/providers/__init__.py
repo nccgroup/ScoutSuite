@@ -2,7 +2,7 @@
 
 import sys
 
-from ScoutSuite.providers.aws.aws_provider import AWSProvider
+from ScoutSuite.providers.aws.provider import AWSProvider
 
 providers_dict = {'aws': 'AWSProvider'}
 
