@@ -3,26 +3,26 @@
 from opinel.utils.console import printError, printException, printInfo
 
 from ScoutSuite.utils import format_service_name
-from ScoutSuite.services.cloudformation import CloudFormationConfig
-from ScoutSuite.services.cloudtrail import CloudTrailConfig
-from ScoutSuite.services.cloudwatch import CloudWatchConfig
-from ScoutSuite.services.directconnect import DirectConnectConfig
-from ScoutSuite.services.ec2 import EC2Config
-from ScoutSuite.services.efs import EFSConfig
-from ScoutSuite.services.elasticache import ElastiCacheConfig
-from ScoutSuite.services.elb import ELBConfig
-from ScoutSuite.services.elbv2 import ELBv2Config
-from ScoutSuite.services.emr import EMRConfig
-from ScoutSuite.services.iam import IAMConfig
-from ScoutSuite.services.awslambda import LambdaConfig
-from ScoutSuite.services.rds import RDSConfig
-from ScoutSuite.services.redshift import RedshiftConfig
-from ScoutSuite.services.route53 import Route53Config, Route53DomainsConfig
-from ScoutSuite.services.s3 import S3Config
-from ScoutSuite.services.ses import SESConfig
-from ScoutSuite.services.sns import SNSConfig
-from ScoutSuite.services.sqs import SQSConfig
-from ScoutSuite.services.vpc import VPCConfig
+from ScoutSuite.providers.aws.services.cloudformation import CloudFormationConfig
+from ScoutSuite.providers.aws.services.cloudtrail import CloudTrailConfig
+from ScoutSuite.providers.aws.services.cloudwatch import CloudWatchConfig
+from ScoutSuite.providers.aws.services.directconnect import DirectConnectConfig
+from ScoutSuite.providers.aws.services.ec2 import EC2Config
+from ScoutSuite.providers.aws.services.efs import EFSConfig
+from ScoutSuite.providers.aws.services.elasticache import ElastiCacheConfig
+from ScoutSuite.providers.aws.services.elb import ELBConfig
+from ScoutSuite.providers.aws.services.elbv2 import ELBv2Config
+from ScoutSuite.providers.aws.services.emr import EMRConfig
+from ScoutSuite.providers.aws.services.iam import IAMConfig
+from ScoutSuite.providers.aws.services.awslambda import LambdaConfig
+from ScoutSuite.providers.aws.services.rds import RDSConfig
+from ScoutSuite.providers.aws.services.redshift import RedshiftConfig
+from ScoutSuite.providers.aws.services.route53 import Route53Config, Route53DomainsConfig
+from ScoutSuite.providers.aws.services.s3 import S3Config
+from ScoutSuite.providers.aws.services.ses import SESConfig
+from ScoutSuite.providers.aws.services.sns import SNSConfig
+from ScoutSuite.providers.aws.services.sqs import SQSConfig
+from ScoutSuite.providers.aws.services.vpc import VPCConfig
 
 
 class ServicesConfig(object):
@@ -98,9 +98,6 @@ class ServicesConfig(object):
 
     def multi_service_pass(self):
         pass
-
-
-
 
 
 def postprocessing(aws_config):

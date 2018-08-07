@@ -8,8 +8,8 @@ import tempfile
 
 from opinel.utils.console import printDebug, printError, printException, printInfo, prompt_4_yes_no
 
-from ScoutSuite.rules.rule_definition import RuleDefinition
-from ScoutSuite.rules.rule import Rule
+from ScoutSuite.core.rule_definition import RuleDefinition
+from ScoutSuite.core.rule import Rule
 
 aws_ip_ranges_filename = 'ip-ranges.json'
 ip_ranges_from_args = 'ip-ranges-from-args'

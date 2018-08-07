@@ -3,7 +3,7 @@
 from opinel.utils.console import printDebug, printError, printException
 from opinel.utils.globals import manage_dictionary
 
-from ScoutSuite.rules.utils import recurse
+from ScoutSuite.core.utils import recurse
 
 class ProcessingEngine(object):
     """

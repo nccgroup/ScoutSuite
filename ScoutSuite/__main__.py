@@ -19,23 +19,17 @@ except Exception as e:
     print(e)
     sys.exit(42)
 
-from ScoutSuite import AWSCONFIG, __version__ as scout2_version
+from ScoutSuite import AWSCONFIG
 from ScoutSuite.cli_parser import Scout2ArgumentParser
-from ScoutSuite.configs.scout2 import  Scout2Config
+from ScoutSuite.configs.scout2 import Scout2Config
 from ScoutSuite.output.html import Scout2Report
-from ScoutSuite.rules.exceptions import RuleExceptions
-from ScoutSuite.rules.ruleset import Ruleset
-from ScoutSuite.rules.preprocessing import preprocessing
-from ScoutSuite.rules.postprocessing import postprocessing
-from ScoutSuite.rules.processingengine import ProcessingEngine
+from ScoutSuite.core.exceptions import RuleExceptions
+from ScoutSuite.core.ruleset import Ruleset
+from ScoutSuite.core.processingengine import ProcessingEngine
+from ScoutSuite.providers import get_provider
 
-
-########################################
-##### Main
-########################################
 
 def main():
-
     # Parse arguments
     parser = Scout2ArgumentParser()
     args = parser.parse_args()
@@ -50,6 +44,11 @@ def main():
     # Set the profile name
     profile_name = args.profile[0]
 
+    # TODO this will be done according to CLI params
+    cloud_provider = get_provider('aws')
+
+    # TODO this will be moved to provider class
+    # authentication will be part of the provider's methods
     # Search for AWS credentials
     if not args.fetch_local:
         credentials = read_creds(args.profile[0], args.csv_credentials, args.mfa_serial, args.mfa_code)
@@ -58,13 +57,14 @@ def main():
 
     # Create a new Scout2 config
     report = Scout2Report(profile_name, args.report_dir, args.timestamp)
-    aws_config = Scout2Config(profile_name, args.report_dir, args.timestamp, args.services, args.skipped_services, args.thread_config)
+    aws_config = Scout2Config(profile_name, args.report_dir, args.timestamp, args.services, args.skipped_services,
+                              args.thread_config)
 
     if not args.fetch_local:
 
         # Fetch data from AWS APIs if not running a local analysis
         try:
-            aws_config.fetch(credentials, regions=args.regions, partition_name = get_partition_name(credentials))
+            aws_config.fetch(credentials, regions=args.regions, partition_name=get_partition_name(credentials))
         except KeyboardInterrupt:
             printInfo('\nCancelled by user')
             return 130
@@ -74,7 +74,7 @@ def main():
         aws_config['aws_account_id'] = get_aws_account_id(credentials)
 
         # Update means we reload the whole config and overwrite part of it
-        if args.update == True:
+        if args.update:
             new_aws_config = copy.deepcopy(aws_config)
             aws_config = report.jsrw.load_from_file(AWSCONFIG)
             for service in new_aws_config['service_list']:
@@ -89,15 +89,16 @@ def main():
         aws_config = report.jsrw.load_from_file(AWSCONFIG)
 
     # Pre processing
-    preprocessing(aws_config, args.ip_ranges, args.ip_ranges_name_key)
+    cloud_provider.preprocessing(aws_config, args.ip_ranges, args.ip_ranges_name_key)
 
     # Analyze config
-    finding_rules = Ruleset(profile_name, filename = args.ruleset, ip_ranges = args.ip_ranges, aws_account_id = aws_config['aws_account_id'])
+    finding_rules = Ruleset(profile_name, filename=args.ruleset, ip_ranges=args.ip_ranges,
+                            aws_account_id=aws_config['aws_account_id'])
     pe = ProcessingEngine(finding_rules)
     pe.run(aws_config)
 
     # Create display filters
-    filter_rules = Ruleset(filename = 'filters.json', rule_type = 'filters', aws_account_id = aws_config['aws_account_id'])
+    filter_rules = Ruleset(filename='filters.json', rule_type='filters', aws_account_id=aws_config['aws_account_id'])
     pe = ProcessingEngine(filter_rules)
     pe.run(aws_config)
 
@@ -111,13 +112,14 @@ def main():
         exceptions = {}
 
     # Finalize
-    postprocessing(aws_config, report.current_time, finding_rules)
+    cloud_provider.postprocessing(aws_config, report.current_time, finding_rules)
 
     # Get organization data if it exists
     try:
         profile = AWSProfiles.get(profile_name)[0]
         if 'source_profile' in profile.attributes:
-            organization_info_file = os.path.join(os.path.expanduser('~/.aws/recipes/%s/organization.json' %  profile.attributes['source_profile']))
+            organization_info_file = os.path.join(
+                os.path.expanduser('~/.aws/recipes/%s/organization.json' % profile.attributes['source_profile']))
             if os.path.isfile(organization_info_file):
                 with open(organization_info_file, 'rt') as f:
                     org = {}
@@ -126,7 +128,7 @@ def main():
                         account_id = account.pop('Id')
                         org[account_id] = account
                     aws_config['organization'] = org
-    except:
+    except Exception as e:
         pass
 
     # Save config and create HTML report
