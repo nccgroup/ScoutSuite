@@ -1,22 +1,64 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+from __future__ import unicode_literals
+
+import json
+import os
+
+from ScoutSuite.configs.services import ServicesConfig
 
 import sys
+import copy
 
 from opinel.utils.console import printException
+from opinel.utils.console import printDebug, printError, printException, printInfo
+from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite import __version__ as scout2_version
+from ScoutSuite.configs.browser import combine_paths, get_object_at, get_value_at
+from ScoutSuite.providers.aws.services.vpc import put_cidr_name
+from ScoutSuite.providers.base.provider import BaseProvider
+from ScoutSuite.utils import ec2_classic
 
 
 class BaseProvider:
     """
     Base class for the different providers.
+
+    Root object that holds all of the necessary provider-specific resources and Scout configuration items.
+
     For each supported cloud provider, a child class will be created which implements the necessary code.
     In addition, each method of children classes will call the base provider in order to execute code required for
     all cloud providers
     """
 
-    def __init__(self, config):
+    def __init__(self, config, report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4):
+        """
+
+        :aws_account_id     AWS account ID
+        :last_run           Information about the last run
+        :metadata           Metadata used to generate the HTML report
+        :ruleset            Ruleset used to perform the analysis
+        :services           AWS configuration sorted by service
+        """
+
         self.config = config
+        self.credentials = None
+
+        self.aws_account_id = None
+        self.last_run = None
+
+        self._load_metadata()
+        self.services = ServicesConfig(self.metadata, thread_config)
+        supported_services = vars(self.services).keys()
+        self.service_list = self._build_services_list(supported_services, services, skipped_services)
+
+    def authenticate(self):
+        """
+        Authenticate to the provider using provided credentials
+        :return:
+        """
+        pass
 
     def preprocessing(self, ip_ranges=[], ip_ranges_name_key=None):
         """
@@ -24,7 +66,9 @@ class BaseProvider:
 
         :return: None
         """
-        pass
+
+        # Preprocessing dictated by metadata
+        self._process_metadata_callbacks()
 
     def postprocessing(self, current_time, ruleset):
         """
@@ -35,13 +79,33 @@ class BaseProvider:
         :param ruleset:
         :return: None
         """
-        self.update_metadata(self.config)
-        self.update_last_run(self.config, current_time, ruleset)
+        self._update_metadata(self.config)
+        self._update_last_run(self.config, current_time, ruleset)
 
-    def _asdf(self):
-        pass
+    def fetch(self, regions=[], skipped_regions=[], partition_name='aws'):
+        """
+        Fetch resources for each service
 
-    def update_last_run(self, current_time, ruleset):
+        :param services:
+        :param skipped_services:
+        :param regions:
+        :param skipped_regions:
+        :param partition_name:
+        :return:
+        """
+        # TODO: determine partition name based on regions and warn if multiple partitions...
+        self.services.fetch(self.credentials, self.service_list, regions, partition_name)
+
+    def _load_metadata(self):
+        # Load metadata
+        scout2_configs_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
+        with open(os.path.join(scout2_configs_data_path, 'metadata.json'), 'rt') as f:
+            self.metadata = json.load(f)
+
+    def _build_services_list(self, supported_services, services, skipped_services):
+        return [s for s in supported_services if (services == [] or s in services) and s not in skipped_services]
+
+    def _update_last_run(self, current_time, ruleset):
         last_run = {}
         last_run['time'] = current_time.strftime("%Y-%m-%d %H:%M:%S%z")
         last_run['cmd'] = ' '.join(sys.argv)
@@ -69,7 +133,7 @@ class BaseProvider:
                     last_run['summary'][service]['resources_count'] += self.config['services'][service][key]
         self.config['last_run'] = last_run
 
-    def update_metadata(self, config):
+    def _update_metadata(self, config):
         service_map = {}
         for service_group in self.config['metadata']:
             for service in self.config['metadata'][service_group]:
@@ -107,5 +171,205 @@ class BaseProvider:
                                 self.config['metadata'][service_group][service]['resources'][resource]['count'] = \
                                     service_config[count]
                             except Exception as e:
-
                                 printException(e)
+
+    # TODO remove, this is most likely legacy code
+    # def update_metadata(self):
+    #     service_map = {}
+    #     for service_group in self.metadata:
+    #         for service in self.metadata[service_group]:
+    #             if service not in self.service_list:
+    #                 continue
+    #             if 'resources' not in self.metadata[service_group][service]:
+    #                 continue
+    #             service_map[service] = service_group
+    #             for resource in self.metadata[service_group][service]['resources']:
+    #                 # full_path = path if needed
+    #                 if not 'full_path' in self.metadata[service_group][service]['resources'][resource]:
+    #                     self.metadata[service_group][service]['resources'][resource]['full_path'] = self.metadata[service_group][service]['resources'][resource]['path']
+    #                 # Script is the full path minus "id" (TODO: change that)
+    #                 if not 'script' in self.metadata[service_group][service]['resources'][resource]:
+    #                     self.metadata[service_group][service]['resources'][resource]['script'] = '.'.join([x for x in self.metadata[service_group][service]['resources'][resource]['full_path'].split('.') if x != 'id'])
+    #                 # Update counts
+    #                 count = '%s_count' % resource
+    #                 service_config = getattr(self.services, service)
+    #                 if service_config and resource != 'regions':
+    #                   if hasattr(service_config, 'regions'):
+    #                     self.metadata[service_group][service]['resources'][resource]['count'] = 0
+    #                     for region in service_config.regions:
+    #                         if hasattr(service_config.regions[region], count):
+    #                             self.metadata[service_group][service]['resources'][resource]['count'] += getattr(service_config.regions[region], count)
+    #                   else:
+    #                       try:
+    #                           self.metadata[service_group][service]['resources'][resource]['count'] = getattr(service_config, count)
+    #                       except Exception as e:
+    #                           printException(e)
+    #                           print(vars(service_config))
+
+    def _process_metadata_callbacks(self, config):
+        """
+        Iterates through each type of resource and, when callbacks have been
+        configured in the config metadata, recurse through each resource and calls
+        each callback.
+
+        :param self.config:                  The entire AWS configuration object
+
+        :return:                            None
+        """
+        for service_group in self.config['metadata']:
+            for service in self.config['metadata'][service_group]:
+                if service == 'summaries':
+                    continue
+                # Reset external attack surface
+                if 'summaries' in self.config['metadata'][service_group][service]:
+                    for summary in self.config['metadata'][service_group][service]['summaries']:
+                        if summary == 'external attack surface' and \
+                                service in self.config['services'] and \
+                                'external_attack_surface' in self.config['services'][service]:
+                            self.config['services'][service].pop('external_attack_surface')
+                # Reset all global summaries
+                if 'service_groups' in self.config:
+                    self.config.pop('service_groups')
+                # Resources
+                for resource_type in self.config['metadata'][service_group][service]['resources']:
+                    if 'callbacks' in self.config['metadata'][service_group][service]['resources'][resource_type]:
+                        current_path = ['services', service]
+                        target_path = self.config['metadata'][service_group][service]['resources'][resource_type][
+                                          'path'].replace('.id', '').split('.')[2:]
+                        callbacks = self.config['metadata'][service_group][service]['resources'][resource_type][
+                            'callbacks']
+                        self._new_go_to_and_do(get_object_at(current_path), target_path, current_path,
+                                               callbacks)
+                # Summaries
+                if 'summaries' in self.config['metadata'][service_group][service]:
+                    for summary in self.config['metadata'][service_group][service]['summaries']:
+                        if 'callbacks' in self.config['metadata'][service_group][service]['summaries'][summary]:
+                            current_path = ['services', service]
+                            for callback in self.config['metadata'][service_group][service]['summaries'][summary][
+                                'callbacks']:
+                                callback_name = callback[0]
+                                callback_args = copy.deepcopy(callback[1])
+                                target_path = callback_args.pop('path').replace('.id', '').split('.')[2:]
+                                callbacks = [[callback_name, callback_args]]
+                                self._new_go_to_and_do(get_object_at(current_path), target_path,
+                                                       current_path, callbacks)
+        # Group-level summaries
+        for service_group in self.config['metadata']:
+            if 'summaries' in self.config['metadata'][service_group]:
+                for summary in self.config['metadata'][service_group]['summaries']:
+                    current_path = ['services', service]
+                    for callback in self.config['metadata'][service_group]['summaries'][summary]['callbacks']:
+                        callback_name = callback[0]
+                        callback_args = copy.deepcopy(callback[1])
+                        target_path = self.config['metadata'][service_group]['summaries'][summary]['path'].split('.')
+                        target_object = self.config
+                        for p in target_path:
+                            manage_dictionary(target_object, p, {})
+                            target_object = target_object[p]
+                        if callback_name == 'merge':
+                            for service in self.config['metadata'][service_group]:
+                                if service == 'summaries':
+                                    continue
+                                if 'summaries' in self.config['metadata'][service_group][service] and summary in \
+                                        self.config['metadata'][service_group][service]['summaries']:
+                                    try:
+                                        source = get_object_at(self.config['metadata'][service_group][service][
+                                                                   'summaries'][summary]['path'].split('.'))
+                                    except:
+                                        source = {}
+                                    target_object.update(source)
+
+    def _go_to_and_do(self, current_config, path, current_path, callback, callback_args=None):
+        """
+        Recursively go to a target and execute a callback
+        """
+        try:
+            key = path.pop(0)
+            if not current_config:
+                current_config = self.config
+            if not current_path:
+                current_path = []
+            keys = key.split('.')
+            if len(keys) > 1:
+                while True:
+                    key = keys.pop(0)
+                    if not len(keys):
+                        break
+                    current_path.append(key)
+                    current_config = current_config[key]
+            if key in current_config:
+                current_path.append(key)
+                for (i, value) in enumerate(list(current_config[key])):
+                    if len(path) == 0:
+                        if type(current_config[key] == dict) and type(value) != dict and type(value) != list:
+                            callback(current_config[key][value], path, current_path, value, callback_args)
+                        else:
+                            callback(current_config, path, current_path, value, callback_args)
+                    else:
+                        tmp = copy.deepcopy(current_path)
+                        try:
+                            tmp.append(value)
+                            self._go_to_and_do(current_config[key][value], copy.deepcopy(path), tmp, callback,
+                                               callback_args)
+                        except:
+                            tmp.pop()
+                            tmp.append(i)
+                            self._go_to_and_do(current_config[key][i], copy.deepcopy(path), tmp, callback,
+                                               callback_args)
+
+        except Exception as e:
+            printException(e)
+            if i:
+                printInfo('Index: %s' % str(i))
+            printInfo('Path: %s' % str(current_path))
+            printInfo('Key = %s' % str(key))
+            printInfo('Value = %s' % str(value))
+            printInfo('Path = %s' % path)
+
+    def _new_go_to_and_do(self, current_config, path, current_path, callbacks):
+        """
+        Recursively go to a target and execute a callback
+        """
+        try:
+            key = path.pop(0)
+            if not current_config:
+                current_config = self.config
+            if not current_path:
+                current_path = []
+            keys = key.split('.')
+            if len(keys) > 1:
+                while True:
+                    key = keys.pop(0)
+                    if not len(keys):
+                        break
+                    current_path.append(key)
+                    current_config = current_config[key]
+            if key in current_config:
+                current_path.append(key)
+                for (i, value) in enumerate(list(current_config[key])):
+                    if len(path) == 0:
+                        for callback_info in callbacks:
+                            callback_name = callback_info[0]
+                            callback = globals()[callback_name]
+                            callback_args = callback_info[1]
+                            if type(current_config[key] == dict) and type(value) != dict and type(value) != list:
+                                callback(current_config[key][value], path, current_path, value,
+                                         callback_args)
+                            else:
+                                callback(current_config, path, current_path, value, callback_args)
+                    else:
+                        tmp = copy.deepcopy(current_path)
+                        try:
+                            tmp.append(value)
+                            self._new_go_to_and_do(current_config[key][value], copy.deepcopy(path), tmp,
+                                                   callbacks)
+                        except:
+                            tmp.pop()
+                            tmp.append(i)
+                            self._new_go_to_and_do(current_config[key][i], copy.deepcopy(path), tmp, callbacks)
+        except Exception as e:
+            printException(e)
+            printInfo('Path: %s' % str(current_path))
+            printInfo('Key = %s' % str(key))
+            printInfo('Value = %s' % str(value))
+            printInfo('Path = %s' % path)
