@@ -7,7 +7,7 @@ from ScoutSuite.providers.aws.provider import AWSProvider
 providers_dict = {'aws': 'AWSProvider'}
 
 
-def get_provider(provider):
+def get_provider(provider, profile, report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4):
     """
     Returns an instance of the requested provider.
 
@@ -17,6 +17,6 @@ def get_provider(provider):
 
     provider_class = providers_dict.get(provider)
     provider_object = getattr(sys.modules[__name__], provider_class)
-    provider_instance = provider_object()
+    provider_instance = provider_object(profile, report_dir, timestamp, services, skipped_services, thread_config)
 
     return provider_instance

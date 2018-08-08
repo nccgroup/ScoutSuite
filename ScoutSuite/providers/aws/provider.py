@@ -2,6 +2,18 @@
 
 import copy
 
+try:
+    from opinel.utils.aws import get_aws_account_id, get_partition_name
+    from opinel.utils.console import configPrintException, printInfo, printDebug
+    from opinel.utils.credentials import read_creds
+    from opinel.utils.globals import check_requirements
+    from opinel.utils.profiles import AWSProfiles
+except Exception as e:
+    print('Error: Scout2 depends on the opinel package. Install all the requirements with the following command:')
+    print('  $ pip install -r requirements.txt')
+    print(e)
+    sys.exit(42)
+
 from opinel.utils.console import printDebug, printError, printException, printInfo
 from opinel.utils.globals import manage_dictionary
 
@@ -16,18 +28,27 @@ class AWSProvider(BaseProvider):
     Implements provider for AWS
     """
 
-    def __init__(self):
+    def __init__(self, profile, report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4):
+
+        # Check version of opinel
+        if not check_requirements(os.path.realpath(__file__)):
+            return 42
+
         self.sg_map = {}
         self.subnet_map = {}
 
-        super(BaseProvider, self).__init__()
+        self.profile = profile
+        self.aws_account_id = None
 
-    def authenticate(self):
+        super(BaseProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
+
+    def authenticate(self, profile, csv_credentials, mfa_serial, mfa_code):
         """
         Implement authentication for the AWS provider
         :return:
         """
-        pass
+        self.credentials = read_creds(profile, csv_credentials, mfa_serial, mfa_code)
+        self.aws_account_id = get_aws_account_id(self.credentials)
 
     def preprocessing(self, ip_ranges=[], ip_ranges_name_key=None):
         """

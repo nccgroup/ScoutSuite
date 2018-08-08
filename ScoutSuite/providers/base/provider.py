@@ -32,7 +32,7 @@ class BaseProvider:
     all cloud providers
     """
 
-    def __init__(self, config, report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4):
+    def __init__(self, report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4):
         """
 
         :aws_account_id     AWS account ID
@@ -42,10 +42,8 @@ class BaseProvider:
         :services           AWS configuration sorted by service
         """
 
-        self.config = config
         self.credentials = None
 
-        self.aws_account_id = None
         self.last_run = None
 
         self._load_metadata()

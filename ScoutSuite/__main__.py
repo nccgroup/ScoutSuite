@@ -43,102 +43,94 @@ def main():
     # Configure the debug level
     configPrintException(args.debug)
 
-    # TODO this will have to be moved at some point
-    # Check version of opinel
-    if not check_requirements(os.path.realpath(__file__)):
-        return 42
-
-    # Set the profile name
-    profile_name = args.profile[0]
-
     # TODO this will be done according to CLI params
-    cloud_provider = get_provider('aws')
-
-    # TODO this will be moved to provider class as authentication will be part of the provider's methods
-    # Search for AWS credentials
-    if not args.fetch_local:
-        credentials = read_creds(args.profile[0], args.csv_credentials, args.mfa_serial, args.mfa_code)
-        if credentials['AccessKeyId'] is None:
-            return 42
+    # Create a cloud provider object
+    cloud_provider = get_provider('aws', args.profile[0], args.csv_credentials, args.mfa_serial, args.mfa_code)
 
     # Create a new Scout2 config
-    report = Scout2Report(profile_name, args.report_dir, args.timestamp)
-    aws_config = Scout2Config(profile_name, args.report_dir, args.timestamp, args.services, args.skipped_services,
-                              args.thread_config)
+    report = Scout2Report(args.profile[0], args.report_dir, args.timestamp)
 
+    # Complete run, including pulling data from provider
     if not args.fetch_local:
+        # Authenticate to the cloud provider
+        # TODO this is currently specific to AWS
+        cloud_provider.authenticate(args.profile[0], args.csv_credentials, args.mfa_serial, args.mfa_code)
+        if cloud_provider.credentials['AccessKeyId'] is None:
+            return 42
 
-        # Fetch data from AWS APIs if not running a local analysis
+        # Fetch data from provider APIs
         try:
-            aws_config.fetch(credentials, regions=args.regions, partition_name=get_partition_name(credentials))
+            # TODO what's the get_partition_name for?
+            cloud_provider.fetch(regions=args.regions, partition_name=get_partition_name(cloud_provider.credentials))
         except KeyboardInterrupt:
             printInfo('\nCancelled by user')
             return 130
-        aws_config = report.jsrw.to_dict(aws_config)
 
-        # Set the account ID
-        aws_config['aws_account_id'] = get_aws_account_id(credentials)
+        # TODO this is currently broken
+        # # Update means we reload the whole config and overwrite part of it
+        # if args.update:
+        #     new_aws_config = copy.deepcopy(aws_config)
+        #     aws_config = report.jsrw.load_from_file(AWSCONFIG)
+        #     for service in new_aws_config['service_list']:
+        #         # Per service only for now, may add per region & per VPC later...
+        #         aws_config['services'][service] = new_aws_config['services'][service]
+        #     # Update the metadata too
+        #     aws_config['metadata'] = Scout2Config('default', None, None, [], []).metadata
+        pass
 
-        # Update means we reload the whole config and overwrite part of it
-        if args.update:
-            new_aws_config = copy.deepcopy(aws_config)
-            aws_config = report.jsrw.load_from_file(AWSCONFIG)
-            for service in new_aws_config['service_list']:
-                # Per service only for now, may add per region & per VPC later...
-                aws_config['services'][service] = new_aws_config['services'][service]
-            # Update the metadata too
-            aws_config['metadata'] = Scout2Config('default', None, None, [], []).metadata
-
+    # Partial run, using pre-pulled data
     else:
-
-        # Reload to flatten everything into a python dictionary
-        aws_config = report.jsrw.load_from_file(AWSCONFIG)
+        # TODO this is currently broken
+        # # Reload to flatten everything into a python dictionary
+        # aws_config = report.jsrw.load_from_file(AWSCONFIG)
+        pass
 
     # Pre processing
-    cloud_provider.preprocessing(aws_config, args.ip_ranges, args.ip_ranges_name_key)
+    cloud_provider.preprocessing(args.ip_ranges, args.ip_ranges_name_key)
 
     # Analyze config
-    finding_rules = Ruleset(profile_name, filename=args.ruleset, ip_ranges=args.ip_ranges,
-                            aws_account_id=aws_config['aws_account_id'])
-    pe = ProcessingEngine(finding_rules)
-    pe.run(aws_config)
+    finding_rules = Ruleset(args.profile[0], filename=args.ruleset, ip_ranges=args.ip_ranges,
+                            aws_account_id=cloud_provider.aws_account_id)
+    processing_engine = ProcessingEngine(finding_rules)
+    processing_engine.run(aws_config)  # TODO fix this
 
     # Create display filters
-    filter_rules = Ruleset(filename='filters.json', rule_type='filters', aws_account_id=aws_config['aws_account_id'])
-    pe = ProcessingEngine(filter_rules)
-    pe.run(aws_config)
+    filter_rules = Ruleset(filename='filters.json', rule_type='filters', aws_account_id=cloud_provider.aws_account_id)
+    processing_engine = ProcessingEngine(filter_rules)
+    processing_engine.run(aws_config)  # TODO fix this
 
     # Handle exceptions
     try:
-        exceptions = RuleExceptions(profile_name, args.exceptions[0])
-        exceptions.process(aws_config)
+        exceptions = RuleExceptions(args.profile[0], args.exceptions[0])
+        exceptions.process(aws_config)  # TODO fix this
         exceptions = exceptions.exceptions
     except Exception as e:
         printDebug('Warning, failed to load exceptions. The file may not exist or may have an invalid format.')
         exceptions = {}
 
     # Finalize
-    cloud_provider.postprocessing(aws_config, report.current_time, finding_rules)
+    cloud_provider.postprocessing(report.current_time, finding_rules)
 
-    # Get organization data if it exists
-    try:
-        profile = AWSProfiles.get(profile_name)[0]
-        if 'source_profile' in profile.attributes:
-            organization_info_file = os.path.join(
-                os.path.expanduser('~/.aws/recipes/%s/organization.json' % profile.attributes['source_profile']))
-            if os.path.isfile(organization_info_file):
-                with open(organization_info_file, 'rt') as f:
-                    org = {}
-                    accounts = json.load(f)
-                    for account in accounts:
-                        account_id = account.pop('Id')
-                        org[account_id] = account
-                    aws_config['organization'] = org
-    except Exception as e:
-        pass
+    # TODO this is AWS-specific
+    # # Get organization data if it exists
+    # try:
+    #     profile = AWSProfiles.get(args.profile[0])[0]
+    #     if 'source_profile' in profile.attributes:
+    #         organization_info_file = os.path.join(
+    #             os.path.expanduser('~/.aws/recipes/%s/organization.json' % profile.attributes['source_profile']))
+    #         if os.path.isfile(organization_info_file):
+    #             with open(organization_info_file, 'rt') as f:
+    #                 org = {}
+    #                 accounts = json.load(f)
+    #                 for account in accounts:
+    #                     account_id = account.pop('Id')
+    #                     org[account_id] = account
+    #                 aws_config['organization'] = org
+    # except Exception as e:
+    #     pass
 
     # Save config and create HTML report
-    html_report_path = report.save(aws_config, exceptions, args.force_write, args.debug)
+    html_report_path = report.save(aws_config, exceptions, args.force_write, args.debug)  # TODO fix this
 
     # Open the report by default
     if not args.no_browser:
