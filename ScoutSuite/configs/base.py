@@ -3,7 +3,8 @@
 import copy
 
 from hashlib import sha1
-from threading import Event, Thread
+from threading import Thread
+
 # Python2 vs Python3
 try:
     from Queue import Queue
@@ -44,22 +45,23 @@ class BaseConfig(GlobalConfig):
     """
     FooBar
     """
-    
-    def __init__(self, thread_config = 4):
-        self.service = type(self).__name__.replace('Config', '').lower()  # TODO: use regex with EOS instead of plain replace
+
+    def __init__(self, thread_config=4):
+        """
+
+        :param thread_config:
+        """
+        self.service = type(self).__name__.replace('Config','').lower()  # TODO: use regex with EOS instead of plain replace
         self.thread_config = thread_configs[thread_config]
 
-
-    def fetch_all(self, credentials, regions = [], partition_name = 'aws', targets = None):
+    def fetch_all(self, credentials, regions=[], partition_name='aws', targets=None):
         """
-        Generic fetching function that iterates through all of the service's targets
-
         :param credentials:             F
         :param service:                 Name of the service
         :param regions:                 Name of regions to fetch data from
         :param partition_name:          AWS partition to connect to
         :param targets:                 Type of resources to be fetched; defaults to all.
-
+        :return:
         """
         global status, formatted_string
         # Initialize targets
@@ -69,15 +71,16 @@ class BaseConfig(GlobalConfig):
         formatted_string = None
         api_service = self.service.lower()
         # Connect to the service
-        if self.service in [ 's3' ]: # S3 namespace is global but APIs aren't....
+        if self.service in ['s3']:  # S3 namespace is global but APIs aren't....
             api_clients = {}
             for region in build_region_list(self.service, regions, partition_name):
-                api_clients[region] = connect_service('s3', credentials, region, silent = True)
+                api_clients[region] = connect_service('s3', credentials, region, silent=True)
             api_client = api_clients[list(api_clients.keys())[0]]
         elif self.service == 'route53domains':
-            api_client = connect_service(self.service, credentials, 'us-east-1', silent = True) # TODO: use partition's default region
+            api_client = connect_service(self.service, credentials, 'us-east-1',
+                                         silent=True)  # TODO: use partition's default region
         else:
-            api_client = connect_service(self.service, credentials, silent = True)
+            api_client = connect_service(self.service, credentials, silent=True)
         # Threading to fetch & parse resources (queue consumer)
         params = {'api_client': api_client}
         if self.service in ['s3']:
@@ -100,24 +103,19 @@ class BaseConfig(GlobalConfig):
         if self.service != 'iam':
             self.fetchstatuslogger.show(True)
 
-
     def finalize(self):
         for t in self.fetchstatuslogger.counts:
             setattr(self, '%s_count' % t, self.fetchstatuslogger.counts[t]['fetched'])
         self.__delattr__('fetchstatuslogger')
 
-
     def _init_threading(self, function, params={}, num_threads=10):
-            # Init queue and threads
-            q = Queue(maxsize=0) # TODO: find something appropriate
-            if not num_threads:
-                num_threads = len(targets)
-            for i in range(num_threads):
-                worker = Thread(target=function, args=(q, params))
-                worker.setDaemon(True)
-                worker.start()
-            return q
-
+        # Init queue and threads
+        q = Queue(maxsize=0)  # TODO: find something appropriate
+        for i in range(num_threads):
+            worker = Thread(target=function, args=(q, params))
+            worker.setDaemon(True)
+            worker.start()
+        return q
 
     def __fetch_service(self, q, params):
         api_client = params['api_client']
@@ -134,7 +132,7 @@ class BaseConfig(GlobalConfig):
                         continue
                     try:
                         if type(list_params) != list:
-                            list_params = [ list_params ]
+                            list_params = [list_params]
                         targets = []
                         for lp in list_params:
                             targets += handle_truncated_response(method, lp, [response_attribute])[response_attribute]
@@ -144,7 +142,7 @@ class BaseConfig(GlobalConfig):
                         targets = []
                     self.fetchstatuslogger.counts[target_type]['discovered'] += len(targets)
                     for target in targets:
-                        params['q'].put((target_type, target),)
+                        params['q'].put((target_type, target), )
                 except Exception as e:
                     printException(e)
                 finally:
@@ -152,7 +150,6 @@ class BaseConfig(GlobalConfig):
         except Exception as e:
             printException(e)
             pass
-
 
     def __fetch_target(self, q, params):
         global status
@@ -167,8 +164,10 @@ class BaseConfig(GlobalConfig):
                     self.fetchstatuslogger.counts[target_type]['fetched'] += 1
                     self.fetchstatuslogger.show()
                 except Exception as e:
-                    if hasattr(e, 'response') and 'Error' in e.response and e.response['Error']['Code'] in [ 'Throttling' ]:
-                        q.put((target_type, backup),)
+                    if hasattr(e, 'response') and \
+                            'Error' in e.response and \
+                            e.response['Error']['Code'] in ['Throttling']:
+                        q.put((target_type, backup), )
                     else:
                         printException(e)
                 finally:
