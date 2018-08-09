@@ -47,7 +47,7 @@ def main():
     # Create a cloud provider object
     cloud_provider = get_provider('aws', args.profile[0], args.csv_credentials, args.mfa_serial, args.mfa_code)
 
-    # Create a new Scout2 config
+    # Create a new report
     report = Scout2Report(args.profile[0], args.report_dir, args.timestamp)
 
     # Complete run, including pulling data from provider
@@ -132,10 +132,11 @@ def main():
     # Save config and create HTML report
     html_report_path = report.save(aws_config, exceptions, args.force_write, args.debug)  # TODO fix this
 
-    # Open the report by default
-    if not args.no_browser:
-        printInfo('Opening the HTML report...')
-        url = 'file://%s' % os.path.abspath(html_report_path)
-        webbrowser.open(url, new=2)
+    # TODO this is currently broken
+    # # Open the report by default
+    # if not args.no_browser:
+    #     printInfo('Opening the HTML report...')
+    #     url = 'file://%s' % os.path.abspath(html_report_path)
+    #     webbrowser.open(url, new=2)
 
     return 0
