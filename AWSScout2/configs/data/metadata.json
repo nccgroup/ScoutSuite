@@ -121,7 +121,7 @@
                     "api_call": "describe_flow_logs",
                     "response": "FlowLogs",
                     "hidden": true,
-                    "path": "services.vpc.regions.id.vpc.id.flow_logs",
+                    "path": "services.vpc.regions.id.flow_logs",
                     "callbacks": [
                         [ "sort_vpc_flow_logs_callback", {} ],
                         [ "match_roles_and_vpc_flowlogs_callback", {} ]
