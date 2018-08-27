@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import copy
+import os
+import sys
 
 try:
     from opinel.utils.aws import get_aws_account_id, get_partition_name
@@ -30,8 +32,11 @@ class AWSProvider(BaseProvider):
 
     def __init__(self, profile, report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4):
 
+        self.metadata_path = '%s/metadata.json' % os.path.split(os.path.abspath(__file__))[0]
+
         # Check version of opinel
-        if not check_requirements(os.path.realpath(__file__)):
+        requirements_file_path = '%s/requirements.txt' % os.path.dirname(sys.modules['__main__'].__file__)
+        if not check_requirements(requirements_file_path):
             return 42
 
         self.sg_map = {}
@@ -40,7 +45,7 @@ class AWSProvider(BaseProvider):
         self.profile = profile
         self.aws_account_id = None
 
-        super(BaseProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
+        super(AWSProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
     def authenticate(self, profile, csv_credentials, mfa_serial, mfa_code):
         """
@@ -64,8 +69,8 @@ class AWSProvider(BaseProvider):
         # self.parse_elb_policies()
 
         # Various data processing calls
-        self._add_security_group_name_to_ec2_grants(self.config['services']['ec2'], self.config['aws_account_id'])
-        self._process_cloudtrail_trails(self.config['services']['cloudtrail'])
+        self._add_security_group_name_to_ec2_grants()
+        self._process_cloudtrail_trails(self.services.cloudtrail)
         self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
         self._merge_route53_and_route53domains()
         self._match_instances_and_roles()
@@ -85,18 +90,22 @@ class AWSProvider(BaseProvider):
     def _add_cidr_display_name(self, ip_ranges, ip_ranges_name_key):
         if len(ip_ranges):
             callback_args = {'ip_ranges': ip_ranges, 'ip_ranges_name_key': ip_ranges_name_key}
-            self._go_to_and_do(self.config['services']['ec2'],
+            self._go_to_and_do(self.services.ec2,
                                ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports'],
                                ['services', 'ec2'],
-                               put_cidr_name, callback_args)
+                               put_cidr_name,
+                               callback_args)
 
-    def _add_security_group_name_to_ec2_grants(self, ec2_config, aws_account_id):
+    def _add_security_group_name_to_ec2_grants(self):
         """
         Github issue #24: display the security group names in the list of grants (added here to have ligher JS code)
         """
-        self._go_to_and_do(ec2_config, None,
-                           ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports', 'security_groups'], [],
-                           self._add_security_group_name_to_ec2_grants_callback, {'AWSAccountId': aws_account_id})
+        self._go_to_and_do(self.services.ec2,
+                           None,
+                           ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports', 'security_groups'],
+                           [],
+                           self._add_security_group_name_to_ec2_grants_callback,
+                           {'AWSAccountId': self.aws_account_id})
 
     def _add_security_group_name_to_ec2_grants_callback(self, ec2_config, current_config, path, current_path, ec2_grant,
                                                         callback_args):
@@ -166,10 +175,10 @@ class AWSProvider(BaseProvider):
 
     def _list_ec2_network_attack_surface_callback(self, current_config, path, current_path, privateip_id,
                                                   callback_args):
-        manage_dictionary(self.config['services']['ec2'], 'external_attack_surface', {})
+        manage_dictionary(self.services.ec2, 'external_attack_surface', {})
         if 'Association' in current_config and current_config['Association']:
             public_ip = current_config['Association']['PublicIp']
-            self._security_group_to_attack_surface(self.config['services']['ec2']['external_attack_surface'],
+            self._security_group_to_attack_surface(self.services.ec2.external_attack_surface,
                                                    public_ip, current_path,
                                                    [g['GroupId'] for g in current_config['Groups']],
                                                    [])
@@ -177,17 +186,23 @@ class AWSProvider(BaseProvider):
         if 'Ipv6Addresses' in current_config and len(current_config['Ipv6Addresses']) > 0:
             for ipv6 in current_config['Ipv6Addresses']:
                 ip = ipv6['Ipv6Address']
-                self._security_group_to_attack_surface(self.config['services']['ec2']['external_attack_surface'],
+                self._security_group_to_attack_surface(self.services.ec2.external_attack_surface,
                                                        ip, current_path,
                                                        [g['GroupId'] for g in current_config['Groups']], [])
 
     def _map_all_sgs(self):
-        self._go_to_and_do(self.config['services']['ec2'], ['regions', 'vpcs', 'security_groups'],
-                           ['services', 'ec2'], self._map_resource, {'map': self.sg_map})
+        self._go_to_and_do(self.services.ec2,
+                           ['regions', 'vpcs', 'security_groups'],
+                           ['services', 'ec2'],
+                           self._map_resource,
+                           {'map': self.sg_map})
 
     def _map_all_subnets(self):
-        self._go_to_and_do(self.config['services']['vpc'], ['regions', 'vpcs', 'subnets'], ['services', 'vpc'],
-                           self._map_resource, {'map': self.subnet_map})
+        self._go_to_and_do(self.services.vpc,
+                           ['regions', 'vpcs', 'subnets'],
+                           ['services', 'vpc'],
+                           self._map_resource,
+                           {'map': self.subnet_map})
 
     def _map_resource(self, ec2_config, current_config, path, current_path, resource_id, callback_args):
         map = callback_args['map']
@@ -197,8 +212,8 @@ class AWSProvider(BaseProvider):
                 map[resource_id]['vpc_id'] = current_path[5]
 
     def _match_iam_policies_and_buckets(self):
-        s3_info = self.config['services']['s3']
-        iam_info = self.config['services']['iam']
+        s3_info = self.services.s3
+        iam_info = self.services.iam
         if 'Action' in iam_info['permissions']:
             for action in (x for x in iam_info['permissions']['Action'] if
                            ((x.startswith('s3:') and x != 's3:ListAllMyBuckets') or (x == '*'))):
@@ -301,15 +316,15 @@ class AWSProvider(BaseProvider):
                                               callback_args):
         subnet_id = current_config['SubnetId']
         vpc = self.subnet_map[subnet_id]
-        subnet = self.config['services']['vpc']['regions'][vpc['region']]['vpcs'][vpc['vpc_id']]['subnets'][subnet_id]
+        subnet = self.services.vpc.regions.vpc.region.vpcs.vpc.vpc_id.subnets.subnet_id
         manage_dictionary(subnet, 'instances', [])
         if instance_id not in subnet['instances']:
             subnet['instances'].append(instance_id)
 
     def _match_instances_and_roles(self):
         printInfo('Matching EC2 instances and IAM roles...')
-        ec2_config = self.config['services']['ec2']
-        iam_config = self.config['services']['iam']
+        ec2_config = self.services.ec2
+        iam_config = self.services.iam
         role_instances = {}
         for r in ec2_config['regions']:
             for v in ec2_config['regions'][r]['vpcs']:
@@ -344,9 +359,9 @@ class AWSProvider(BaseProvider):
 
     def _get_role_info(self, attribute_name, attribute_value):
         iam_role_info = {'name': None, 'id': None}
-        for role_id in self.config['services']['iam']['roles']:
-            if self.config['services']['iam']['roles'][role_id][attribute_name] == attribute_value:
-                iam_role_info['name'] = self.config['services']['iam']['roles'][role_id]['name']
+        for role_id in self.services.iam.roles:
+            if self.services.iam.roles.role_id.attribute_name == attribute_value:
+                iam_role_info['name'] = self.services.iam.roles.role_id.name
                 iam_role_info['id'] = role_id
                 break
         return iam_role_info
@@ -359,7 +374,7 @@ class AWSProvider(BaseProvider):
             'aws_account_id'] else 'RequesterVpcInfo'
         region = current_path[1]
         vpc_id = current_config[info]['VpcId']
-        target = self.config['services']['vpc']['regions'][region]['vpcs'][vpc_id]
+        target = self.services.vpc.regions.region.vpcs.vpc_id
         manage_dictionary(target, 'peering_connections', [])
         if pc_id not in target['peering_connections']:
             target['peering_connections'].append(pc_id)
@@ -442,15 +457,16 @@ class AWSProvider(BaseProvider):
     def _merge_route53_and_route53domains(self):
         if 'route53domains' not in self.config['services']:
             return
-        self.config['services']['route53'].update(self.config['services']['route53domains'])
+        # TODO fix this
+        self.config['services']['route53'].update(self.services.route53domains)
         self.config['services'].pop('route53domains')
 
     def _set_emr_vpc_ids(self):
         clear_list = []
-        self._go_to_and_do(self.config['services']['emr'], ['regions', 'vpcs'], ['services', 'emr'],
+        self._go_to_and_do(self.services.emr, ['regions', 'vpcs'], ['services', 'emr'],
                            self._set_emr_vpc_ids_callback, {'clear_list': clear_list})
         for region in clear_list:
-            self.config['services']['emr']['regions'][region]['vpcs'].pop('TODO')
+            self.services.emr.regions.region.vpcs.pop('TODO')
 
     def _set_emr_vpc_ids_callback(self, current_config, path, current_path, vpc_id, callback_args):
         if vpc_id != 'TODO':
@@ -492,7 +508,7 @@ class AWSProvider(BaseProvider):
 
     def _parse_elb_policies(self):
         if 'elb' in self.config['services']:
-            self._go_to_and_do(self.config['services']['elb'], ['regions'], [], self._parse_elb_policies_callback, {})
+            self._go_to_and_do(self.services.elb, ['regions'], [], self._parse_elb_policies_callback, {})
 
         # if 'elbv2' in self.config['services']:
         # Do something too here...

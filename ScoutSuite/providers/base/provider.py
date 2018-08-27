@@ -40,10 +40,11 @@ class BaseProvider:
         """
 
         self.credentials = None
-
         self.last_run = None
+        self.metadata = None
 
         self._load_metadata()
+
         self.services = ServicesConfig(self.metadata, thread_config)
         supported_services = vars(self.services).keys()
         self.service_list = self._build_services_list(supported_services, services, skipped_services)
@@ -92,9 +93,13 @@ class BaseProvider:
         self.services.fetch(self.credentials, self.service_list, regions, partition_name)
 
     def _load_metadata(self):
+        """
+        Load the metadata as defined in the child class metadata_path attribute
+
+        :return: None
+        """
         # Load metadata
-        scout2_configs_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
-        with open(os.path.join(scout2_configs_data_path, 'metadata.json'), 'rt') as f:
+        with open(self.metadata_path, 'rt') as f:
             self.metadata = json.load(f)
 
     def _build_services_list(self, supported_services, services, skipped_services):
@@ -279,6 +284,7 @@ class BaseProvider:
         Recursively go to a target and execute a callback
         """
         try:
+
             key = path.pop(0)
             if not current_config:
                 current_config = self.config
@@ -292,33 +298,32 @@ class BaseProvider:
                         break
                     current_path.append(key)
                     current_config = current_config[key]
-            if key in current_config:
+            if hasattr(current_config, key):
                 current_path.append(key)
-                for (i, value) in enumerate(list(current_config[key])):
+                current_config_key = getattr(current_config, key)
+                for (i, value) in enumerate(list(current_config_key)):
                     if len(path) == 0:
-                        if type(current_config[key] == dict) and type(value) != dict and type(value) != list:
-                            callback(current_config[key][value], path, current_path, value, callback_args)
+                        if type(current_config_key == dict) and type(value) != dict and type(value) != list:
+                            callback(current_config_key[value], path, current_path, value, callback_args)
                         else:
                             callback(current_config, path, current_path, value, callback_args)
                     else:
                         tmp = copy.deepcopy(current_path)
                         try:
                             tmp.append(value)
-                            self._go_to_and_do(current_config[key][value], copy.deepcopy(path), tmp, callback,
+                            self._go_to_and_do(current_config_key[value], copy.deepcopy(path), tmp, callback,
                                                callback_args)
                         except:
                             tmp.pop()
                             tmp.append(i)
-                            self._go_to_and_do(current_config[key][i], copy.deepcopy(path), tmp, callback,
+                            self._go_to_and_do(current_config_key[i], copy.deepcopy(path), tmp, callback,
                                                callback_args)
 
         except Exception as e:
             printException(e)
-            if i:
-                printInfo('Index: %s' % str(i))
             printInfo('Path: %s' % str(current_path))
-            printInfo('Key = %s' % str(key))
-            printInfo('Value = %s' % str(value))
+            printInfo('Key = %s' % str(key) if 'key' in locals() else 'not defined')
+            printInfo('Value = %s' % str(value) if 'value' in locals() else 'not defined')
             printInfo('Path = %s' % path)
 
     def _new_go_to_and_do(self, current_config, path, current_path, callbacks):
@@ -326,6 +331,7 @@ class BaseProvider:
         Recursively go to a target and execute a callback
         """
         try:
+
             key = path.pop(0)
             if not current_config:
                 current_config = self.config
@@ -365,6 +371,6 @@ class BaseProvider:
         except Exception as e:
             printException(e)
             printInfo('Path: %s' % str(current_path))
-            printInfo('Key = %s' % str(key))
-            printInfo('Value = %s' % str(value))
+            printInfo('Key = %s' % str(key) if 'key' in locals() else 'not defined')
+            printInfo('Value = %s' % str(value) if 'value' in locals() else 'not defined')
             printInfo('Path = %s' % path)
