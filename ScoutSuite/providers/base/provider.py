@@ -16,9 +16,6 @@ from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite import __version__ as scout2_version
 from ScoutSuite.configs.browser import combine_paths, get_object_at, get_value_at
-from ScoutSuite.providers.aws.services.vpc import put_cidr_name
-from ScoutSuite.providers.base.provider import BaseProvider
-from ScoutSuite.utils import ec2_classic
 
 
 class BaseProvider:
