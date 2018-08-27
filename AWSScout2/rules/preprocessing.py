@@ -505,12 +505,12 @@ def parse_elb_policies_callback(aws_config, current_config, path, current_path, 
             policy['ciphers'] = ciphers
             # TODO: pop ?
 
-def sort_vpc_flow_logs_callback(vpc_config, current_config, path, current_path, flow_log_id, callback_args):
+def sort_vpc_flow_logs_callback(aws_config, current_config, path, current_path, flow_log_id, callback_args):
     attached_resource = current_config['ResourceId']
     if attached_resource.startswith('vpc-'):
-        vpc_path = combine_paths(current_path[0:2], ['vpcs', attached_resource])
+        vpc_path = combine_paths(current_path[0:4], ['vpcs', attached_resource])
         try:
-            attached_vpc = get_object_at(vpc_config, vpc_path)
+            attached_vpc = get_object_at(aws_config, vpc_path)
         except Exception as e:
             printDebug('It appears that the flow log %s is attached to a resource that was previously deleted (%s).' % (flow_log_id, attached_resource))
             return
@@ -522,13 +522,11 @@ def sort_vpc_flow_logs_callback(vpc_config, current_config, path, current_path, 
             if flow_log_id not in attached_vpc['subnets'][subnet_id]['flow_logs']:
                 attached_vpc['subnets'][subnet_id]['flow_logs'].append(flow_log_id)
     elif attached_resource.startswith('subnet-'):
-        all_vpcs = get_object_at(vpc_config, combine_paths(current_path[0:2], ['vpcs']))
-        for vpc in all_vpcs:
-            if attached_resource in all_vpcs[vpc]['subnets']:
-                manage_dictionary(all_vpcs[vpc]['subnets'][attached_resource], 'flow_logs', [])
-                if flow_log_id not in all_vpcs[vpc]['subnets'][attached_resource]['flow_logs']:
-                    all_vpcs[vpc]['subnets'][attached_resource]['flow_logs'].append(flow_log_id)
-                break
+        subnet_path = combine_paths(current_path[0:4], ['vpcs', subnet_map[attached_resource]['vpc_id'], 'subnets', attached_resource])
+        subnet = get_object_at(aws_config, subnet_path)
+        manage_dictionary(subnet, 'flow_logs', [])
+        if flow_log_id not in subnet['flow_logs']:
+            subnet['flow_logs'].append(flow_log_id)
     else:
         printError('Resource %s attached to flow logs is not handled' % attached_resource)
 
