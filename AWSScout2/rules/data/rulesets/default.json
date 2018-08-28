@@ -764,6 +764,12 @@
                 "level": "warning"
             }
         ],
+        "s3-bucket-no-default-encryption.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "s3-bucket-website-enabled.json": [
             {
                 "enabled": false,

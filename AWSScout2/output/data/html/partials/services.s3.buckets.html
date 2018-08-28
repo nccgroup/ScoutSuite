@@ -9,6 +9,7 @@
           <div class="list-group-item-text item-margin">Region: {{region}}</div>
           <div class="list-group-item-text item-margin">Creation date: {{CreationDate}}</div>
           <div class="list-group-item-text item-margin">Logging: <span id="s3.buckets.{{@key}}.logging">{{has_logging? logging}}</span></div>
+          <div class="list-group-item-text item-margin">Default encryption: <span id="s3.buckets.{{@key}}.default_encryption">{{default_encryption}}</span></div>
           <div class="list-group-item-text item-margin">Versioning: <span id="s3.buckets.{{@key}}.versioning">{{versioning_status}}</span></div>
           <div class="list-group-item-text item-margin">MFA Delete: <span id="s3.buckets.{{@key}}.mfa_delete">{{version_mfa_delete}}</span></div>
           <div class="list-group-item-text item-margin">Static website hosting: <span id="s3.buckets.{{@key}}.web_hosting">{{web_hosting}}</span></div>
