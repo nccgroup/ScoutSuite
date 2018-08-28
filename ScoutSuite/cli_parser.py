@@ -124,11 +124,10 @@ class ListallArgumentParser(SharedArgumentParser):
                                 help='Keys to be printed for the given object (read values from file.')
 
 
-
-class Scout2ArgumentParser(SharedArgumentParser):
+class ScoutSuiteArgumentParser(SharedArgumentParser):
 
     def __init__(self, default_args = None):
-        super(Scout2ArgumentParser, self).__init__()
+        super(ScoutSuiteArgumentParser, self).__init__()
         self.add_argument('profile', default_args)
         self.add_argument('regions', default_args)
         self.add_argument('vpc', default_args)
@@ -142,6 +141,11 @@ class Scout2ArgumentParser(SharedArgumentParser):
         self.add_argument('exceptions', default_args)
         self.add_argument('services', default_args)
         self.add_argument('skip', default_args)
+        # TODO this probably shouldn't be here as it's a default arg
+        self.parser.add_argument('--provider',
+                          action='store',
+                          choices = ['aws', 'gcp'],
+                          help='The cloud provider to scan (currently supports AWS (\'aws\') and GCP (\'gcp\')')
         self.parser.add_argument('-l', '--local',
                                 dest='fetch_local',
                                 default=False,

@@ -20,7 +20,7 @@ except Exception as e:
     sys.exit(42)
 
 from ScoutSuite import AWSCONFIG
-from ScoutSuite.cli_parser import Scout2ArgumentParser
+from ScoutSuite.cli_parser import ScoutSuiteArgumentParser
 # from ScoutSuite.configs.scout2 import Scout2Config
 from ScoutSuite.output.html import Scout2Report
 from ScoutSuite.core.exceptions import RuleExceptions
@@ -37,7 +37,7 @@ def main():
     """
 
     # Parse arguments
-    parser = Scout2ArgumentParser()
+    parser = ScoutSuiteArgumentParser()
     args = parser.parse_args()
 
     # Configure the debug level
@@ -45,7 +45,7 @@ def main():
 
     # Create a cloud provider object
     # TODO this will be done according to CLI params
-    cloud_provider = get_provider('aws', args.profile[0], args.report_dir, args.timestamp,
+    cloud_provider = get_provider(args.provider, args.profile[0], args.report_dir, args.timestamp,
                                   args.services, args.skipped_services, args.thread_config)
 
     # Create a new report

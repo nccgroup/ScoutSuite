@@ -3,9 +3,10 @@
 import sys
 
 from ScoutSuite.providers.aws.provider import AWSProvider
+from ScoutSuite.providers.gcp.provider import GCPProvider
 
-providers_dict = {'aws': 'AWSProvider'}
-
+providers_dict = {'aws': 'AWSProvider',
+                  'gcp': 'GCPProvider'}
 
 def get_provider(provider, profile, report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4):
     """
