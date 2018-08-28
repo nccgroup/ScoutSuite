@@ -335,10 +335,19 @@ def __get_role_info(aws_config, attribute_name, attribute_value):
     return iam_role_info
 
 def process_vpc_peering_connections_callback(aws_config, current_config, path, current_path, pc_id, callback_args):
+    """
+    Create a list of peering connection IDs in each VPC
 
-    # Create a list of peering connection IDs in each VPC
+    :param aws_config:
+    :param current_config:
+    :param path:
+    :param current_path:
+    :param pc_id:
+    :param callback_args:
+    :return:
+    """
     info = 'AccepterVpcInfo' if current_config['AccepterVpcInfo']['OwnerId'] == aws_config['aws_account_id'] else 'RequesterVpcInfo'
-    region = current_path[1]
+    region = current_path[current_path.index('regions')+1]
     vpc_id = current_config[info]['VpcId']
     target = aws_config['services']['vpc']['regions'][region]['vpcs'][vpc_id]
     manage_dictionary(target, 'peering_connections', [])
@@ -409,13 +418,16 @@ def match_security_groups_and_resources_callback(aws_config, current_config, pat
             else:
                 sg['used_by'][service]['resource_type'][resource_type].append(resource_id)
     except Exception as e:
-        region = current_path[3]
-        vpc_id = current_path[5]
-        if vpc_id == ec2_classic and resource_type == 'elbs':
+        if resource_type in ['elbs', 'functions']:
             pass
         else:
-            printError('Failed to parse %s in %s in %s' % (resource_type, vpc_id, region))
-            printException(e)
+            region = current_path[3]
+            vpc_id = current_path[5]
+            if vpc_id == ec2_classic:
+                pass
+            else:
+                printError('Failed to parse %s in %s in %s' % (resource_type, vpc_id, region))
+                printException(e)
 
 def merge_route53_and_route53domains(aws_config):
     if 'route53domains' not in aws_config['services']:
@@ -534,7 +546,7 @@ def go_to_and_do(aws_config, current_config, path, current_path, callback, callb
     """
     Recursively go to a target and execute a callback
 
-    :param aws_config:                  A
+    :param aws_config:
     :param current_config:
     :param path:
     :param current_path:
@@ -587,7 +599,7 @@ def new_go_to_and_do(aws_config, current_config, path, current_path, callbacks):
     """
     Recursively go to a target and execute a callback
 
-    :param aws_config:                  A
+    :param aws_config:
     :param current_config:
     :param path:
     :param current_path:
@@ -690,23 +702,34 @@ def security_group_to_attack_surface(aws_config, attack_surface_config, public_i
             sg_path.append('rules')
             sg_path.append('ingress')
             ingress_rules = get_object_at(aws_config, sg_path)
-            public_ip_grants = {}
-            for p in ingress_rules['protocols']:
-                for port in ingress_rules['protocols'][p]['ports']:
-                  if len(listeners) == 0 and 'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
-                      manage_dictionary(attack_surface_config[public_ip]['protocols'], p, {'ports': {}})
-                      manage_dictionary(attack_surface_config[public_ip]['protocols'][p]['ports'], port, {'cidrs': []})
-                      attack_surface_config[public_ip]['protocols'][p]['ports'][port]['cidrs'] += ingress_rules['protocols'][p]['ports'][port]['cidrs']
-                  else:
-                    ports = port.split('-')
-                    if len(ports) > 1:
-                        port_min = int(ports[0])
-                        port_max = int(ports[1])
-                    else:
-                        port_min = port_max = port
-                    for listener in listeners:
-                        listener = int(listener)
-                        if listener > port_min and listener < port_max and 'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
-                            manage_dictionary(attack_surface_config[public_ip]['protocols'], p, {'ports': {}})
-                            manage_dictionary(attack_surface_config[public_ip]['protocols'][p]['ports'], str(listener), {'cidrs': []})
-                            attack_surface_config[public_ip]['protocols'][p]['ports'][str(listener)]['cidrs'] += ingress_rules['protocols'][p]['ports'][port]['cidrs']
+            if 'protocols' in ingress_rules:
+                for p in ingress_rules['protocols']:
+                    for port in ingress_rules['protocols'][p]['ports']:
+                      if len(listeners) == 0 and 'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
+                          manage_dictionary(attack_surface_config[public_ip]['protocols'],
+                                            p,
+                                            {'ports': {}})
+                          manage_dictionary(attack_surface_config[public_ip]['protocols'][p]['ports'],
+                                            port,
+                                            {'cidrs': []})
+                          attack_surface_config[public_ip]['protocols'][p]['ports'][port]['cidrs'] += \
+                              ingress_rules['protocols'][p]['ports'][port]['cidrs']
+                      else:
+                        ports = port.split('-')
+                        if len(ports) > 1:
+                            port_min = int(ports[0])
+                            port_max = int(ports[1])
+                        else:
+                            port_min = port_max = port
+                        for listener in listeners:
+                            listener = int(listener)
+                            if listener > port_min and listener < port_max and \
+                                    'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
+                                manage_dictionary(attack_surface_config[public_ip]['protocols'],
+                                                  p,
+                                                  {'ports': {}})
+                                manage_dictionary(attack_surface_config[public_ip]['protocols'][p]['ports'],
+                                                  str(listener),
+                                                  {'cidrs': []})
+                                attack_surface_config[public_ip]['protocols'][p]['ports'][str(listener)]['cidrs'] += \
+                                    ingress_rules['protocols'][p]['ports'][port]['cidrs']

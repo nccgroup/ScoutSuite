@@ -2,11 +2,8 @@
 
 import copy
 
-from opinel.utils.console import printError, printException
+from opinel.utils.console import printError, printException, printInfo
 
-########################################
-# Functions
-########################################
 
 def combine_paths(path1, path2):
     path = path1
@@ -17,7 +14,8 @@ def combine_paths(path1, path2):
             path.append(p)
     return path
 
-def get_attribute_at(config, target_path, key, default_value = None):
+
+def get_attribute_at(config, target_path, key, default_value=None):
     """
     Return attribute value at a given path
 
@@ -32,7 +30,7 @@ def get_attribute_at(config, target_path, key, default_value = None):
     return config[key] if key in config else default_value
 
 
-def get_object_at(dictionary, path, attribute_name = None):
+def get_object_at(dictionary, path, attribute_name=None):
     """
     Get arbitrary object given a dictionary and path (list of keys)
 
@@ -42,15 +40,19 @@ def get_object_at(dictionary, path, attribute_name = None):
     :return:
     """
     o = dictionary
-    for p in path:
-        o = o[p]
-    if attribute_name:
-        return o[attribute_name]
-    else:
-        return o
+    try:
+        for p in path:
+            o = o[p]
+        if attribute_name:
+            return o[attribute_name]
+        else:
+            return o
+    # failed to find attribute/key in dictionary
+    except Exception:
+        return {}
 
 
-def get_value_at(all_info, current_path, key, to_string = False):
+def get_value_at(all_info, current_path, key, to_string=False):
     """
     Get value located at a given path
 
@@ -91,13 +93,19 @@ def get_value_at(all_info, current_path, key, to_string = False):
               try:
                 target_obj = target_obj[p]
               except Exception as e:
-                printError('Current path: %s' % str(current_path))
-                #print(target_obj)
+                printInfo('Info: %s\n'
+                          'Path: %s\n'
+                          'Key: %s' % (str(all_info),
+                                       str(current_path),
+                                       str(key)))
                 printException(e)
                 raise Exception
           except Exception as e:
-            printError('Current path: %s' % str(current_path))
-            #print(target_obj)
+            printInfo('Info: %s\n'
+                      'Path: %s\n'
+                      'Key: %s' % (str(all_info),
+                                   str(current_path),
+                                   str(key)))
             printException(e)
             raise Exception
     if to_string:
