@@ -1,0 +1,10 @@
+{
+  "dashboard_name": "Buckets",
+  "description": "Bucket allowing clear text (HTTP) communication",
+  "rationale": "If HTTPS is not enforced on the bucket policy, communication between clients and S3 buckets can use unencrypted HTTP. As a result, sensitive information could be transmitted in clear text over the network|Internet.",
+  "path": "s3.buckets.id",
+  "conditions": [ "and",
+    [ "s3.buckets.id.secure_transport", "equal", "Disabled" ]
+  ],
+  "id_suffix": "secure_transport"
+}

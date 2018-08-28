@@ -770,6 +770,12 @@
                 "level": "warning"
             }
         ],
+        "s3-bucket-allowing-cleartext.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "s3-bucket-website-enabled.json": [
             {
                 "enabled": false,

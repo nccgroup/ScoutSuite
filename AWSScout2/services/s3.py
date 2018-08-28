@@ -70,6 +70,7 @@ class S3Config(BaseConfig):
         get_s3_bucket_default_encryption(api_client, bucket['name'], bucket)
         bucket['grantees'] = get_s3_acls(api_client, bucket['name'], bucket)
         get_s3_bucket_policy(api_client, bucket['name'], bucket)
+        get_s3_bucket_secure_transport(api_client, bucket['name'], bucket)
         # If requested, get key properties
         #if params['check_encryption'] or params['check_acls']:
         #    get_s3_bucket_keys(api_client, bucket['name'], bucket, params['check_encryption'],
@@ -210,6 +211,28 @@ def get_s3_bucket_policy(api_client, bucket_name, bucket_info):
     except Exception as e:
         if not (type(e) == ClientError and e.response['Error']['Code'] == 'NoSuchBucketPolicy'):
             printError('Failed to get bucket policy for %s: %s' % (bucket_name, e))
+        return False
+
+def get_s3_bucket_secure_transport(api_client, bucket_name, bucket_info):
+    try:
+        if 'policy' in bucket_info:
+            bucket_info['secure_transport'] = 'Disabled'
+            for statement in bucket_info['policy']['Statement']:
+                # evaluate statement to see if it contains a condition disallowing HTTP transport
+                # TODO this might not cover all cases
+                if 'Condition' in statement and \
+                        'Bool' in statement['Condition'] and \
+                        'aws:SecureTransport' in statement['Condition']['Bool'] and \
+                        statement['Condition']['Bool']['aws:SecureTransport'] == 'false' and \
+                        statement['Effect'] == 'Deny':
+                    bucket_info['secure_transport'] = 'Enabled'
+            return True
+        else:
+            bucket_info['secure_transport'] = 'Disabled'
+            return True
+    except Exception as e:
+        printError('Failed to get evaluate bucket policy for %s: %s' % (bucket_name, e))
+        bucket_info['secure_transport'] = 'Unknown'
         return False
 
 def get_s3_bucket_versioning(api_client, bucket_name, bucket_info):
