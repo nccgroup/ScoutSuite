@@ -45,10 +45,12 @@ def main():
 
     # Create a cloud provider object
     # TODO this will be done according to CLI params
-    cloud_provider = get_provider('aws', args.profile[0])
+    cloud_provider = get_provider('aws', args.profile[0], args.report_dir, args.timestamp,
+                                  args.services, args.skipped_services, args.thread_config)
 
     # Create a new report
-    report = Scout2Report(args.profile[0], args.report_dir, args.timestamp)
+    # TODO not sure how this fits in
+    # report = Scout2Report(args.profile[0], args.report_dir, args.timestamp)
 
     # Complete run, including pulling data from provider
     if not args.fetch_local:

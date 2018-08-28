@@ -101,7 +101,6 @@ class AWSProvider(BaseProvider):
         Github issue #24: display the security group names in the list of grants (added here to have ligher JS code)
         """
         self._go_to_and_do(self.services.ec2,
-                           None,
                            ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports', 'security_groups'],
                            [],
                            self._add_security_group_name_to_ec2_grants_callback,
@@ -128,9 +127,9 @@ class AWSProvider(BaseProvider):
         printInfo('Processing CloudTrail config...')
         global_events_logging = []
         data_logging_trails_count = 0
-        for region in cloudtrail_config['regions']:
-            for trail_id in cloudtrail_config['regions'][region]['trails']:
-                trail = cloudtrail_config['regions'][region]['trails'][trail_id]
+        for region in cloudtrail_config.regions:
+            for trail_id in cloudtrail_config.regions.region.trails:
+                trail = cloudtrail_config.regions.region.trails.trail_id
                 if 'HomeRegion' in trail and trail['HomeRegion'] != region:
                     # Part of a multi-region trail, skip until we find the whole object
                     continue
