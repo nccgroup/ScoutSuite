@@ -16,6 +16,7 @@ from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite import __version__ as scout2_version
 from ScoutSuite.configs.browser import combine_paths, get_object_at, get_value_at
+from output.html import Scout2Report
 
 
 class BaseProvider:
@@ -92,6 +93,17 @@ class BaseProvider:
         # TODO: determine partition name based on regions and warn if multiple partitions...
         self.services.fetch(self.credentials, self.service_list, regions, partition_name)
 
+        # TODO implement this properly
+        """
+        This is quite ugly but the legacy Scout2 expects the configurations to be dictionaries.
+        Eventually this should be moved to objects/attributes, but that will require significan re-write.
+        """
+        report = Scout2Report(self.profile)
+        self.services = report.jsrw.to_dict(self.services)
+        # services_dict = report.jsrw.to_dict(self.services)
+        # for service in vars(self.services):
+        #     setattr(self.services, service, services_dict[service])
+
     def _load_metadata(self):
         """
         Load the metadata as defined in the child class metadata_path attribute
@@ -135,40 +147,40 @@ class BaseProvider:
 
     def _update_metadata(self, config):
         service_map = {}
-        for service_group in self.config['metadata']:
-            for service in self.config['metadata'][service_group]:
+        for service_group in self.metadata:
+            for service in self.metadata[service_group]:
                 if service not in self.config['service_list']:
                     continue
-                if 'hidden' in self.config['metadata'][service_group][service] and \
-                        self.config['metadata'][service_group][service]['hidden'] == True:
+                if 'hidden' in self.metadata[service_group][service] and \
+                        self.metadata[service_group][service]['hidden'] == True:
                     continue
-                if 'resources' not in self.config['metadata'][service_group][service]:
+                if 'resources' not in self.metadata[service_group][service]:
                     continue
                 service_map[service] = service_group
-                for resource in self.config['metadata'][service_group][service]['resources']:
+                for resource in self.metadata[service_group][service]['resources']:
                     # full_path = path if needed
-                    if not 'full_path' in self.config['metadata'][service_group][service]['resources'][resource]:
-                        self.config['metadata'][service_group][service]['resources'][resource]['full_path'] = \
-                            self.config['metadata'][service_group][service]['resources'][resource]['path']
+                    if not 'full_path' in self.metadata[service_group][service]['resources'][resource]:
+                        self.metadata[service_group][service]['resources'][resource]['full_path'] = \
+                            self.metadata[service_group][service]['resources'][resource]['path']
                     # Script is the full path minus "id" (TODO: change that)
-                    if not 'script' in self.config['metadata'][service_group][service]['resources'][resource]:
-                        self.config['metadata'][service_group][service]['resources'][resource]['script'] = '.'.join(
+                    if not 'script' in self.metadata[service_group][service]['resources'][resource]:
+                        self.metadata[service_group][service]['resources'][resource]['script'] = '.'.join(
                             [x for x in
-                             self.config['metadata'][service_group][service]['resources'][resource]['full_path'].split(
+                             self.metadata[service_group][service]['resources'][resource]['full_path'].split(
                                  '.') if x != 'id'])
                     # Update counts
                     count = '%s_count' % resource
                     service_config = self.config['services'][service]
                     if service_config and resource != 'regions':
                         if 'regions' in service_config.keys():  # hasattr(service_config, 'regions'):
-                            self.config['metadata'][service_group][service]['resources'][resource]['count'] = 0
+                            self.metadata[service_group][service]['resources'][resource]['count'] = 0
                             for region in service_config['regions']:
                                 if count in service_config['regions'][region].keys():
-                                    self.config['metadata'][service_group][service]['resources'][resource]['count'] += \
+                                    self.metadata[service_group][service]['resources'][resource]['count'] += \
                                         service_config['regions'][region][count]
                         else:
                             try:
-                                self.config['metadata'][service_group][service]['resources'][resource]['count'] = \
+                                self.metadata[service_group][service]['resources'][resource]['count'] = \
                                     service_config[count]
                             except Exception as e:
                                 printException(e)
@@ -206,7 +218,7 @@ class BaseProvider:
     #                           printException(e)
     #                           print(vars(service_config))
 
-    def _process_metadata_callbacks(self, config):
+    def _process_metadata_callbacks(self):
         """
         Iterates through each type of resource and, when callbacks have been
         configured in the config metadata, recurse through each resource and calls
@@ -216,64 +228,68 @@ class BaseProvider:
 
         :return:                            None
         """
-        for service_group in self.config['metadata']:
-            for service in self.config['metadata'][service_group]:
+        for service_group in self.metadata:
+            for service in self.metadata[service_group]:
                 if service == 'summaries':
                     continue
                 # Reset external attack surface
-                if 'summaries' in self.config['metadata'][service_group][service]:
-                    for summary in self.config['metadata'][service_group][service]['summaries']:
+                if 'summaries' in self.metadata[service_group][service]:
+                    for summary in self.metadata[service_group][service]['summaries']:
                         if summary == 'external attack surface' and \
-                                service in self.config['services'] and \
-                                'external_attack_surface' in self.config['services'][service]:
-                            self.config['services'][service].pop('external_attack_surface')
+                                service in self.services and \
+                                'external_attack_surface' in self.services[service]:
+                            self.services[service].pop('external_attack_surface')
                 # Reset all global summaries
-                if 'service_groups' in self.config:
+                if 'service_groups' in vars(self):
                     self.config.pop('service_groups')
                 # Resources
-                for resource_type in self.config['metadata'][service_group][service]['resources']:
-                    if 'callbacks' in self.config['metadata'][service_group][service]['resources'][resource_type]:
+                for resource_type in self.metadata[service_group][service]['resources']:
+                    if 'callbacks' in self.metadata[service_group][service]['resources'][resource_type]:
                         current_path = ['services', service]
-                        target_path = self.config['metadata'][service_group][service]['resources'][resource_type][
+                        target_path = self.metadata[service_group][service]['resources'][resource_type][
                                           'path'].replace('.id', '').split('.')[2:]
-                        callbacks = self.config['metadata'][service_group][service]['resources'][resource_type][
+                        callbacks = self.metadata[service_group][service]['resources'][resource_type][
                             'callbacks']
-                        self._new_go_to_and_do(get_object_at(current_path), target_path, current_path,
+                        self._new_go_to_and_do(self.services[service],
+                                               target_path,
+                                               current_path,
                                                callbacks)
                 # Summaries
-                if 'summaries' in self.config['metadata'][service_group][service]:
-                    for summary in self.config['metadata'][service_group][service]['summaries']:
-                        if 'callbacks' in self.config['metadata'][service_group][service]['summaries'][summary]:
+                if 'summaries' in self.metadata[service_group][service]:
+                    for summary in self.metadata[service_group][service]['summaries']:
+                        if 'callbacks' in self.metadata[service_group][service]['summaries'][summary]:
                             current_path = ['services', service]
-                            for callback in self.config['metadata'][service_group][service]['summaries'][summary][
+                            for callback in self.metadata[service_group][service]['summaries'][summary][
                                 'callbacks']:
                                 callback_name = callback[0]
                                 callback_args = copy.deepcopy(callback[1])
                                 target_path = callback_args.pop('path').replace('.id', '').split('.')[2:]
                                 callbacks = [[callback_name, callback_args]]
-                                self._new_go_to_and_do(get_object_at(current_path), target_path,
-                                                       current_path, callbacks)
+                                self._new_go_to_and_do(self.services[service],
+                                                       target_path,
+                                                       current_path,
+                                                       callbacks)
         # Group-level summaries
-        for service_group in self.config['metadata']:
-            if 'summaries' in self.config['metadata'][service_group]:
-                for summary in self.config['metadata'][service_group]['summaries']:
+        for service_group in self.metadata:
+            if 'summaries' in self.metadata[service_group]:
+                for summary in self.metadata[service_group]['summaries']:
                     current_path = ['services', service]
-                    for callback in self.config['metadata'][service_group]['summaries'][summary]['callbacks']:
+                    for callback in self.metadata[service_group]['summaries'][summary]['callbacks']:
                         callback_name = callback[0]
                         callback_args = copy.deepcopy(callback[1])
-                        target_path = self.config['metadata'][service_group]['summaries'][summary]['path'].split('.')
-                        target_object = self.config
+                        target_path = self.metadata[service_group]['summaries'][summary]['path'].split('.')
+                        target_object = {'services': self.services}  # ugly fix for Scout2 legacy config dict
                         for p in target_path:
                             manage_dictionary(target_object, p, {})
                             target_object = target_object[p]
                         if callback_name == 'merge':
-                            for service in self.config['metadata'][service_group]:
+                            for service in self.metadata[service_group]:
                                 if service == 'summaries':
                                     continue
-                                if 'summaries' in self.config['metadata'][service_group][service] and summary in \
-                                        self.config['metadata'][service_group][service]['summaries']:
+                                if 'summaries' in self.metadata[service_group][service] and summary in \
+                                        self.metadata[service_group][service]['summaries']:
                                     try:
-                                        source = get_object_at(self.config['metadata'][service_group][service][
+                                        source = get_object_at(self.metadata[service_group][service][
                                                                    'summaries'][summary]['path'].split('.'))
                                     except:
                                         source = {}
