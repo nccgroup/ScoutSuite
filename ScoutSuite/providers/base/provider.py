@@ -76,8 +76,8 @@ class BaseProvider:
         :param ruleset:
         :return: None
         """
-        self._update_metadata(self.config)
-        self._update_last_run(self.config, current_time, ruleset)
+        self._update_metadata()
+        self._update_last_run(current_time, ruleset)
 
     def fetch(self, regions=[], skipped_regions=[], partition_name='aws'):
         """
@@ -125,14 +125,14 @@ class BaseProvider:
         last_run['ruleset_name'] = ruleset.name
         last_run['ruleset_about'] = ruleset.about
         last_run['summary'] = {}
-        for service in self.config['services']:
+        for service in self.services:
             last_run['summary'][service] = {'checked_items': 0, 'flagged_items': 0, 'max_level': 'warning',
                                             'rules_count': 0, 'resources_count': 0}
-            if self.config['services'][service] == None:
+            if self.services[service] == None:
                 # Not supported yet
                 continue
-            elif 'findings' in self.config['services'][service]:
-                for finding in self.config['services'][service]['findings'].values():
+            elif 'findings' in self.services[service]:
+                for finding in self.services[service]['findings'].values():
                     last_run['summary'][service]['rules_count'] += 1
                     last_run['summary'][service]['checked_items'] += finding['checked_items']
                     last_run['summary'][service]['flagged_items'] += finding['flagged_items']
@@ -140,16 +140,16 @@ class BaseProvider:
                     if last_run['summary'][service]['max_level'] != 'danger' and len(items) > 0:
                         last_run['summary'][service]['max_level'] = finding['level']
             # Total number of resources
-            for key in self.config['services'][service]:
+            for key in self.services[service]:
                 if key != 'regions_count' and key.endswith('_count'):
-                    last_run['summary'][service]['resources_count'] += self.config['services'][service][key]
-        self.config['last_run'] = last_run
+                    last_run['summary'][service]['resources_count'] += self.services[service][key]
+        self.last_run = last_run
 
-    def _update_metadata(self, config):
+    def _update_metadata(self):
         service_map = {}
         for service_group in self.metadata:
             for service in self.metadata[service_group]:
-                if service not in self.config['service_list']:
+                if service not in self.service_list:
                     continue
                 if 'hidden' in self.metadata[service_group][service] and \
                         self.metadata[service_group][service]['hidden'] == True:
@@ -170,7 +170,7 @@ class BaseProvider:
                                  '.') if x != 'id'])
                     # Update counts
                     count = '%s_count' % resource
-                    service_config = self.config['services'][service]
+                    service_config = self.services[service]
                     if service_config and resource != 'regions':
                         if 'regions' in service_config.keys():  # hasattr(service_config, 'regions'):
                             self.metadata[service_group][service]['resources'][resource]['count'] = 0

@@ -22,10 +22,10 @@ class ProcessingEngine(object):
                 self.rules[rule.path].append(rule)
 
 
-    def run(self, aws_config, skip_dashboard = False):
+    def run(self, cloud_provider, skip_dashboard = False):
         # Clean up existing findings
-        for service in aws_config['services']:
-            aws_config['services'][service][self.ruleset.rule_type] = {}
+        for service in cloud_provider.services:
+            cloud_provider.services[service][self.ruleset.rule_type] = {}
 
         # Process each rule
         for finding_path in self.rules:
@@ -38,27 +38,27 @@ class ProcessingEngine(object):
                 finding_path = rule.path
                 path = finding_path.split('.')
                 service = path[0]
-                manage_dictionary(aws_config['services'][service], self.ruleset.rule_type, {})
-                aws_config['services'][service][self.ruleset.rule_type][rule.key] = {}
-                aws_config['services'][service][self.ruleset.rule_type][rule.key]['description'] = rule.description
-                aws_config['services'][service][self.ruleset.rule_type][rule.key]['path'] = rule.path
+                manage_dictionary(cloud_provider.services[service], self.ruleset.rule_type, {})
+                cloud_provider.services[service][self.ruleset.rule_type][rule.key] = {}
+                cloud_provider.services[service][self.ruleset.rule_type][rule.key]['description'] = rule.description
+                cloud_provider.services[service][self.ruleset.rule_type][rule.key]['path'] = rule.path
                 for attr in ['level', 'id_suffix', 'display_path']:
                     if hasattr(rule, attr):
-                        aws_config['services'][service][self.ruleset.rule_type][rule.key][attr] = getattr(rule, attr)
+                        cloud_provider.services[service][self.ruleset.rule_type][rule.key][attr] = getattr(rule, attr)
                 try:
                     setattr(rule, 'checked_items', 0)
-                    aws_config['services'][service][self.ruleset.rule_type][rule.key]['items'] = recurse(aws_config['services'], aws_config['services'], path, [], rule, True)
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['items'] = recurse(cloud_provider.services, cloud_provider.services, path, [], rule, True)
                     if skip_dashboard:
                         continue
-                    aws_config['services'][service][self.ruleset.rule_type][rule.key]['dashboard_name'] = rule.dashboard_name
-                    aws_config['services'][service][self.ruleset.rule_type][rule.key]['checked_items'] = rule.checked_items
-                    aws_config['services'][service][self.ruleset.rule_type][rule.key]['flagged_items'] = len(aws_config['services'][service][self.ruleset.rule_type][rule.key]['items'])
-                    aws_config['services'][service][self.ruleset.rule_type][rule.key]['service'] = rule.service
-                    aws_config['services'][service][self.ruleset.rule_type][rule.key]['rationale'] = rule.rationale if hasattr(rule, 'rationale') else 'N/A'
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['dashboard_name'] = rule.dashboard_name
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['checked_items'] = rule.checked_items
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['flagged_items'] = len(cloud_provider.services[service][self.ruleset.rule_type][rule.key]['items'])
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['service'] = rule.service
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['rationale'] = rule.rationale if hasattr(rule, 'rationale') else 'N/A'
                 except Exception as e:
                     printException(e)
                     printError('Failed to process rule defined in %s' % rule.filename)
                     # Fallback if process rule failed to ensure report creation and data dump still happen
-                    aws_config['services'][service][self.ruleset.rule_type][rule.key]['checked_items'] = 0
-                    aws_config['services'][service][self.ruleset.rule_type][rule.key]['flagged_items'] = 0
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['checked_items'] = 0
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['flagged_items'] = 0
 

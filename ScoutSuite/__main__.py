@@ -49,8 +49,7 @@ def main():
                                   args.services, args.skipped_services, args.thread_config)
 
     # Create a new report
-    # TODO not sure how this fits in
-    # report = Scout2Report(args.profile[0], args.report_dir, args.timestamp)
+    report = Scout2Report(args.profile[0], args.report_dir, args.timestamp)
 
     # Complete run, including pulling data from provider
     if not args.fetch_local:
@@ -90,31 +89,28 @@ def main():
     # Pre processing
     cloud_provider.preprocessing(args.ip_ranges, args.ip_ranges_name_key)
 
-    # TODO uncomment when above is functional
     # # Analyze config
-    # finding_rules = Ruleset(args.profile[0], filename=args.ruleset, ip_ranges=args.ip_ranges,
-    #                         aws_account_id=cloud_provider.aws_account_id)
-    # processing_engine = ProcessingEngine(finding_rules)
-    # processing_engine.run(aws_config)  # TODO fix this
-    #
-    # # Create display filters
-    # filter_rules = Ruleset(filename='filters.json', rule_type='filters', aws_account_id=cloud_provider.aws_account_id)
-    # processing_engine = ProcessingEngine(filter_rules)
-    # processing_engine.run(aws_config)  # TODO fix this
+    finding_rules = Ruleset(args.profile[0], filename=args.ruleset, ip_ranges=args.ip_ranges,
+                            aws_account_id=cloud_provider.aws_account_id)
+    processing_engine = ProcessingEngine(finding_rules)
+    processing_engine.run(cloud_provider)
 
-    # TODO uncomment when above is functional
-    # # Handle exceptions
-    # try:
-    #     exceptions = RuleExceptions(args.profile[0], args.exceptions[0])
-    #     exceptions.process(aws_config)  # TODO fix this
-    #     exceptions = exceptions.exceptions
-    # except Exception as e:
-    #     printDebug('Warning, failed to load exceptions. The file may not exist or may have an invalid format.')
-    #     exceptions = {}
+    # Create display filters
+    filter_rules = Ruleset(filename='filters.json', rule_type='filters', aws_account_id=cloud_provider.aws_account_id)
+    processing_engine = ProcessingEngine(filter_rules)
+    processing_engine.run(cloud_provider)
 
-    # TODO uncomment when above is functional
+    # Handle exceptions
+    try:
+        exceptions = RuleExceptions(args.profile[0], args.exceptions[0])
+        exceptions.process(cloud_provider)
+        exceptions = exceptions.exceptions
+    except Exception as e:
+        printDebug('Warning, failed to load exceptions. The file may not exist or may have an invalid format.')
+        exceptions = {}
+
     # Finalize
-    # cloud_provider.postprocessing(report.current_time, finding_rules)
+    cloud_provider.postprocessing(report.current_time, finding_rules)
 
     # TODO this is AWS-specific
     # # Get organization data if it exists
@@ -134,15 +130,13 @@ def main():
     # except Exception as e:
     #     pass
 
-    # TODO uncomment when above is functional
     # Save config and create HTML report
-    # html_report_path = report.save(aws_config, exceptions, args.force_write, args.debug)  # TODO fix this
+    html_report_path = report.save(cloud_provider, exceptions, args.force_write, args.debug)
 
-    # TODO this is currently broken
-    # # Open the report by default
-    # if not args.no_browser:
-    #     printInfo('Opening the HTML report...')
-    #     url = 'file://%s' % os.path.abspath(html_report_path)
-    #     webbrowser.open(url, new=2)
+    # Open the report by default
+    if not args.no_browser:
+        printInfo('Opening the HTML report...')
+        url = 'file://%s' % os.path.abspath(html_report_path)
+        webbrowser.open(url, new=2)
 
     return 0

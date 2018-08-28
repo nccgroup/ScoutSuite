@@ -67,7 +67,11 @@ class Rule(object):
             if condition[0].startswith('_INCLUDE_('):
                 include = re.findall(r'_INCLUDE_\((.*?)\)', condition[0])[0]
                 #new_conditions = load_data(include, key_name = 'conditions')
-                with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data/%s' % include), 'rt') as f:
+
+                # TODO fix this, it's just hardcoded for aws
+                rules_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'/providers/aws/rules'+'/%s' % include
+
+                with open(rules_path, 'rt') as f:
                     new_conditions = f.read()
                     for (i, value) in enumerate(condition[1]):
                         new_conditions = re.sub(condition[1][i], condition[2][i], new_conditions)
