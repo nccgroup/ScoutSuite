@@ -1,0 +1,12 @@
+{
+      "storage": {
+        "cloudstorage": {
+            "resources": {
+                "buckets": {
+                    "cols": 2,
+                    "path": "services.cloudstorage.buckets"
+                }
+            }
+        }
+    }
+}
