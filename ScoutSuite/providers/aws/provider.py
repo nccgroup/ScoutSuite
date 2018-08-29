@@ -4,6 +4,8 @@ import copy
 import os
 import sys
 
+from providers.aws.configs.services import AWSServicesConfig
+
 try:
     from opinel.utils.aws import get_aws_account_id, get_partition_name
     from opinel.utils.console import configPrintException, printInfo, printDebug
@@ -46,6 +48,8 @@ class AWSProvider(BaseProvider):
         self.profile = profile
         self.aws_account_id = None
 
+        self.services = AWSServicesConfig(self.metadata, thread_config)
+
         super(AWSProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
     def authenticate(self, profile, csv_credentials, mfa_serial, mfa_code):
@@ -55,6 +59,12 @@ class AWSProvider(BaseProvider):
         """
         self.credentials = read_creds(profile, csv_credentials, mfa_serial, mfa_code)
         self.aws_account_id = get_aws_account_id(self.credentials)
+
+        if self.credentials['AccessKeyId'] is None:
+            return False
+        else:
+            return True
+
 
     def preprocessing(self, ip_ranges=[], ip_ranges_name_key=None):
         """

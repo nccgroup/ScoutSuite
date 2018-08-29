@@ -54,20 +54,19 @@ def main():
     # Complete run, including pulling data from provider
     if not args.fetch_local:
         # Authenticate to the cloud provider
-        # TODO this is currently specific to AWS
-        cloud_provider.authenticate(args.profile[0], args.csv_credentials, args.mfa_serial, args.mfa_code)
-        if cloud_provider.credentials['AccessKeyId'] is None:
+        authenticated = cloud_provider.authenticate(args.profile[0], args.csv_credentials, args.mfa_serial, args.mfa_code)
+        if not authenticated:
             return 42
 
+        # Fetch data from provider APIs
+        try:
+            # TODO what's the get_partition_name for?
+            cloud_provider.fetch(regions=args.regions, partition_name=get_partition_name(cloud_provider.credentials))
+        except KeyboardInterrupt:
+            printInfo('\nCancelled by user')
+            return 130
+
     # TODO uncomment when functional
-    #     # Fetch data from provider APIs
-    #     try:
-    #         # TODO what's the get_partition_name for?
-    #         cloud_provider.fetch(regions=args.regions, partition_name=get_partition_name(cloud_provider.credentials))
-    #     except KeyboardInterrupt:
-    #         printInfo('\nCancelled by user')
-    #         return 130
-    #
     #     # TODO this is currently broken
     #     # # Update means we reload the whole config and overwrite part of it
     #     # if args.update:
