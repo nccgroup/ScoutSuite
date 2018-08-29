@@ -7,7 +7,7 @@ import json
 
 from opinel.utils.globals import manage_dictionary
 
-from ScoutSuite.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
+from providers.base.configs import RegionalServiceConfig, RegionConfig, api_clients
 
 
 ########################################

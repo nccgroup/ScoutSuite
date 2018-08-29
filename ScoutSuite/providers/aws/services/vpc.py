@@ -7,8 +7,8 @@ from opinel.utils.globals import manage_dictionary
 from opinel.utils.fs import load_data, read_ip_ranges
 
 from ScoutSuite.utils import ec2_classic, get_keys
-from ScoutSuite.configs.regions import RegionalServiceConfig, RegionConfig
-from ScoutSuite.configs.vpc import VPCConfig as SingleVPCConfig
+from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig
+from ScoutSuite.providers.aws.configs.vpc import VPCConfig as SingleVPCConfig
 
 ########################################
 # Globals

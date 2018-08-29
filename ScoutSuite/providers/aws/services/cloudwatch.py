@@ -3,9 +3,7 @@
 CloudWatch-related classes and functions
 """
 
-from opinel.utils.globals import manage_dictionary
-
-from ScoutSuite.configs.regions import RegionalServiceConfig, RegionConfig
+from providers.base.configs import RegionalServiceConfig, RegionConfig
 
 
 

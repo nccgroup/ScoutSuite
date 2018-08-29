@@ -6,12 +6,12 @@ S3-related classes and functions
 import json
 from botocore.exceptions import ClientError
 
-from opinel.utils.aws import connect_service, handle_truncated_response
+from opinel.utils.aws import handle_truncated_response
 from opinel.utils.console import printError, printException, printInfo
 from opinel.utils.globals import manage_dictionary
 from opinel.services.s3 import get_s3_bucket_location
 
-from ScoutSuite.configs.base import BaseConfig
+from providers.aws.configs.base import BaseConfig
 
 
 ########################################

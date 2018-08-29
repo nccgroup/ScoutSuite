@@ -3,7 +3,7 @@
 Lambda-related classes and functions
 """
 
-from ScoutSuite.configs.regions import RegionalServiceConfig, RegionConfig
+from providers.base.configs import RegionalServiceConfig, RegionConfig
 
 
 

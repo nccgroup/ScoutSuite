@@ -15,7 +15,7 @@ except Exception as e:
     sys.exit(42)
 
 from ScoutSuite.cli_parser import RulesArgumentParser
-from ScoutSuite.configs.scout2 import Scout2Config
+from providers.base.configs import Scout2Config
 from ScoutSuite.rules.ruleset import Ruleset
 from ScoutSuite.output.html import RulesetGenerator
 

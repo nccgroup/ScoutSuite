@@ -2,8 +2,8 @@
 
 from opinel.utils.globals import manage_dictionary
 
-from ScoutSuite.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
-from ScoutSuite.configs.vpc import VPCConfig
+from providers.base.configs import RegionalServiceConfig, RegionConfig, api_clients
+from providers.base.configs import VPCConfig
 from ScoutSuite.utils import ec2_classic
 
 

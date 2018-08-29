@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from ScoutSuite.configs.regions import RegionalServiceConfig, RegionConfig
+from providers.base.configs import RegionalServiceConfig, RegionConfig
 
 
 

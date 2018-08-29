@@ -3,19 +3,17 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import json
-import os
 
-from ScoutSuite.configs.services import ServicesConfig
+from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 
 import sys
 import copy
 
-from opinel.utils.console import printException
-from opinel.utils.console import printDebug, printError, printException, printInfo
+from opinel.utils.console import printException, printInfo
 from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite import __version__ as scout2_version
-from ScoutSuite.configs.browser import combine_paths, get_object_at, get_value_at
+from providers.base.configs.browser import get_object_at
 from output.html import Scout2Report
 
 
@@ -46,7 +44,7 @@ class BaseProvider:
 
         self._load_metadata()
 
-        self.services = ServicesConfig(self.metadata, thread_config)
+        self.services = BaseServicesConfig(self.metadata, thread_config)
         supported_services = vars(self.services).keys()
         self.service_list = self._build_services_list(supported_services, services, skipped_services)
 
@@ -100,9 +98,6 @@ class BaseProvider:
         """
         report = Scout2Report(self.profile)
         self.services = report.jsrw.to_dict(self.services)
-        # services_dict = report.jsrw.to_dict(self.services)
-        # for service in vars(self.services):
-        #     setattr(self.services, service, services_dict[service])
 
     def _load_metadata(self):
         """

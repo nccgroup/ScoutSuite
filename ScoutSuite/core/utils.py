@@ -8,10 +8,9 @@ import re
 
 from opinel.utils.conditions import pass_condition
 from opinel.utils.console import printError, printException
-from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite.core import condition_operators
-from ScoutSuite.configs.browser import get_value_at
+from providers.base.configs.browser import get_value_at
 
 
 
