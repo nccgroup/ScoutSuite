@@ -15,7 +15,6 @@ aws_ip_ranges_filename = 'ip-ranges.json'
 ip_ranges_from_args = 'ip-ranges-from-args'
 
 
-
 class Ruleset(object):
     """
     TODO
@@ -25,11 +24,19 @@ class Ruleset(object):
     :ivar ??
     """
 
-    def __init__(self, environment_name = 'default', filename = None, name = None, rules_dir = [], rule_type = 'findings', ip_ranges = [], aws_account_id = None, ruleset_generator = False):
+    def __init__(self,
+                 environment_name = 'default',
+                 cloud_provider = 'aws',
+                 filename = None,
+                 name = None,
+                 rules_dir = [],
+                 rule_type = 'findings',
+                 ip_ranges = [],
+                 aws_account_id = None,
+                 ruleset_generator = False):
 
-        self.rules_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
-        # TODO fix this, it's just hardcoded for aws
-        self.rules_data_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'/providers/aws/rules'
+        # self.rules_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
+        self.rules_data_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'/providers/%s/rules' % cloud_provider
 
         self.environment_name = environment_name
         self.rule_type = rule_type
@@ -111,9 +118,9 @@ class Ruleset(object):
                 version = versions[version_key_suffix]
                 version['key_suffix'] = version_key_suffix
                 tmp_rule = dict(rule, **version)
-                self.rules[filename].append(Rule(filename, rule_type, tmp_rule))
+                self.rules[filename].append(Rule(self.rules_data_path, filename, rule_type, tmp_rule))
         else:
-            self.rules[filename].append(Rule(filename, rule_type, rule))
+            self.rules[filename].append(Rule(self.rules_data_path, filename, rule_type, rule))
 
 
     def prepare_rules(self, attributes = [], ip_ranges = [], params = {}):
@@ -128,7 +135,7 @@ class Ruleset(object):
                     rule.set_definition(self.rule_definitions, attributes, ip_ranges, params)
             else:
                 self.rules[filename] = []
-                new_rule = Rule(filename, self.rule_type, {'enabled': False, 'level': 'danger'})
+                new_rule = Rule(self.rules_data_path, filename, self.rule_type, {'enabled': False, 'level': 'danger'})
                 new_rule.set_definition(self.rule_definitions, attributes, ip_ranges, params)
                 self.rules[filename].append(new_rule)
 
@@ -150,7 +157,7 @@ class Ruleset(object):
             for rule in self.rules[rule_filename]:
                 if not rule.enabled and not ruleset_generator:
                     continue
-            self.rule_definitions[os.path.basename(rule_filename)] = RuleDefinition(rule_filename, rule_dirs = rule_dirs)
+            self.rule_definitions[os.path.basename(rule_filename)] = RuleDefinition(self.rules_data_path, rule_filename, rule_dirs = rule_dirs)
         # In case of the ruleset generator, list all available built-in rules
         if ruleset_generator:
             rule_dirs.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data/findings'))
@@ -159,7 +166,7 @@ class Ruleset(object):
                 rule_filenames += [f for f in os.listdir(rule_dir) if os.path.isfile(os.path.join(rule_dir, f))]
             for rule_filename in rule_filenames:
                 if rule_filename not in self.rule_definitions:
-                    self.rule_definitions[os.path.basename(rule_filename)] = RuleDefinition(rule_filename)
+                    self.rule_definitions[os.path.basename(rule_filename)] = RuleDefinition(self.rules_data_path, rule_filename)
 
 
     def search_ruleset(self, environment_name, no_prompt = False):

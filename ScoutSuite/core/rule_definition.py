@@ -8,14 +8,15 @@ from opinel.utils.console import printDebug, printError, printException
 
 class RuleDefinition(object):
 
-    def __init__(self, file_name = None, rule_dirs = [], string_definition = None):
+    def __init__(self, data_path, file_name = None, rule_dirs = [], string_definition = None):
+        self.rules_data_path = data_path
         self.file_name = file_name
         self.rule_dirs = rule_dirs
         self.rule_types = ['findings', 'filters']
 
-        self.rules_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
-        # TODO fix this, it's just hardcoded for aws
-        self.rules_data_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'/providers/aws/rules'
+        # self.rules_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
+        # # TODO fix this, it's just hardcoded for aws
+        # self.rules_data_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'/providers/aws/rules'
 
         if self.file_name:
             self.load()

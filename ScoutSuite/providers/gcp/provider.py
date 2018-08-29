@@ -39,7 +39,7 @@ class GCPProvider(BaseProvider):
         path = os.path.expanduser('~')+'/client_secrets.json'
         os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = path
         self.credentials = GoogleCredentials.get_application_default()
-        self.gcp_project_id = self.credentials._service_account_email.split('@')[1].split('.')[0]
+        self.aws_account_id = self.credentials._service_account_email.split('@')[1].split('.')[0]  # TODO this is for AWS
 
         if self.credentials:
             return True

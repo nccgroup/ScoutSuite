@@ -35,7 +35,8 @@ class Rule(object):
     def to_string(self):
         return (str(vars(self)))
     
-    def __init__(self, filename, rule_type, rule):
+    def __init__(self, data_path, filename, rule_type, rule):
+        self.data_path = data_path
         self.filename = filename
         self.rule_type = rule_type
         self.enabled = bool(self.get_attribute('enabled', rule, False))
@@ -67,10 +68,7 @@ class Rule(object):
             if condition[0].startswith('_INCLUDE_('):
                 include = re.findall(r'_INCLUDE_\((.*?)\)', condition[0])[0]
                 #new_conditions = load_data(include, key_name = 'conditions')
-
-                # TODO fix this, it's just hardcoded for aws
-                rules_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))+'/providers/aws/rules'+'/%s' % include
-
+                rules_path = '%s/%s' % (self.data_path, include)
                 with open(rules_path, 'rt') as f:
                     new_conditions = f.read()
                     for (i, value) in enumerate(condition[1]):

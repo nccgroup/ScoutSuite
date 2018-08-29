@@ -20,7 +20,10 @@ formatted_service_name = {
     'lambda': 'Lambda',
     'redshift': 'RedShift',
     'route53': 'Route53',
-    'route53domains': 'Route53Domains'
+    'route53domains': 'Route53Domains',
+
+    'cloudstorage': 'Cloud Storage'
+
 }
 
 

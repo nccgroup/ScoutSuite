@@ -18,11 +18,16 @@ class Scout2Encoder(json.JSONEncoder):
     JSON encoder class
     """
     def default(self, o):
-        if type(o) == datetime.datetime:
+        try:
+            if type(o) == datetime.datetime:
+                return str(o)
+            else:
+                # remove credentials from metadata
+                if hasattr(o, 'credentials'):
+                    o.credentials = None
+                return vars(o)
+        except Exception as e:
             return str(o)
-        else:
-            return vars(o)
-
 
 
 class JavaScriptReaderWriter(object):
