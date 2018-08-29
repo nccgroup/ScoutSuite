@@ -10,9 +10,9 @@ from opinel.utils.console import printException, printInfo
 from opinel.utils.fs import load_data
 from opinel.utils.globals import manage_dictionary
 
-from providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
-from providers.base.configs import VPCConfig
+from ScoutSuite.providers.aws.configs.vpc import VPCConfig
 from ScoutSuite.utils import get_keys, ec2_classic
+from providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 
 
 ########################################
@@ -21,7 +21,6 @@ from ScoutSuite.utils import get_keys, ec2_classic
 
 icmp_message_types_dict = load_data('icmp_message_types.json', 'icmp_message_types')
 protocols_dict = load_data('protocols.json', 'protocols')
-
 
 
 ########################################
@@ -42,7 +41,6 @@ class EC2RegionConfig(RegionConfig):
         :return:
         """
         self.elastic_ips[eip['PublicIp']] = eip
-
 
     def parse_instance(self, global_params, region, reservation):
         """
@@ -68,7 +66,6 @@ class EC2RegionConfig(RegionConfig):
                 instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
             self.vpcs[vpc_id].instances[i['InstanceId']] = instance
 
-
     def parse_security_group(self, global_params, region, group):
         """
         Parse a single Redsfhit security group
@@ -85,10 +82,11 @@ class EC2RegionConfig(RegionConfig):
         security_group['description'] = group['Description']
         security_group['owner_id'] = group['OwnerId']
         security_group['rules'] = {'ingress': {}, 'egress': {}}
-        security_group['rules']['ingress']['protocols'], security_group['rules']['ingress']['count'] = self.__parse_security_group_rules(group['IpPermissions'])
-        security_group['rules']['egress']['protocols'], security_group['rules']['egress']['count'] = self.__parse_security_group_rules(group['IpPermissionsEgress'])
+        security_group['rules']['ingress']['protocols'], security_group['rules']['ingress'][
+            'count'] = self.__parse_security_group_rules(group['IpPermissions'])
+        security_group['rules']['egress']['protocols'], security_group['rules']['egress'][
+            'count'] = self.__parse_security_group_rules(group['IpPermissionsEgress'])
         self.vpcs[vpc_id].security_groups[group['GroupId']] = security_group
-
 
     def __parse_security_group_rules(self, rules):
         """
@@ -133,7 +131,6 @@ class EC2RegionConfig(RegionConfig):
 
         return protocols, rules_count
 
-
     def parse_snapshot(self, global_params, region, snapshot):
         """
 
@@ -146,8 +143,9 @@ class EC2RegionConfig(RegionConfig):
         snapshot['name'] = get_name(snapshot, snapshot, 'id')
         self.snapshots[snapshot['id']] = snapshot
         # Get snapshot attribute
-        snapshot['createVolumPermission'] = api_clients[region].describe_snapshot_attribute(Attribute = 'createVolumePermission', SnapshotId = snapshot['id'])['CreateVolumePermissions']
-
+        snapshot['createVolumPermission'] = \
+        api_clients[region].describe_snapshot_attribute(Attribute='createVolumePermission', SnapshotId=snapshot['id'])[
+            'CreateVolumePermissions']
 
     def parse_volume(self, global_params, region, volume):
         """
@@ -162,7 +160,6 @@ class EC2RegionConfig(RegionConfig):
         self.volumes[volume['id']] = volume
 
 
-
 ########################################
 # EC2Config
 ########################################
@@ -174,9 +171,8 @@ class EC2Config(RegionalServiceConfig):
 
     region_config_class = EC2RegionConfig
 
-    def __init__(self, service_metadata, thread_config = 4):
+    def __init__(self, service_metadata, thread_config=4):
         super(EC2Config, self).__init__(service_metadata, thread_config)
-
 
 
 ########################################
@@ -185,12 +181,12 @@ class EC2Config(RegionalServiceConfig):
 
 def analyze_ec2_config(ec2_info, aws_account_id, force_write):
     try:
-        printInfo('Analyzing EC2 config... ', newLine = False)
+        printInfo('Analyzing EC2 config... ', newLine=False)
         # Tweaks
         link_elastic_ips(ec2_info)
         add_security_group_name_to_ec2_grants(ec2_info, aws_account_id)
         # Custom EC2 analysis
-#        check_for_elastic_ip(ec2_info)
+        #        check_for_elastic_ip(ec2_info)
         list_network_attack_surface(ec2_info, 'attack_surface', 'PublicIpAddress')
         # TODO: make this optional, commented out for now
         # list_network_attack_surface(ec2_info, 'private_attack_surface', 'PrivateIpAddress')
@@ -199,34 +195,56 @@ def analyze_ec2_config(ec2_info, aws_account_id, force_write):
         printInfo('Error')
         printException(e)
 
-#
-# Github issue #24: display the security group names in the list of grants (added here to have ligher JS code)
-#
+
 def add_security_group_name_to_ec2_grants(ec2_config, aws_account_id):
-    go_to_and_do(ec2_config, None, ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports', 'security_groups'], [], add_security_group_name_to_ec2_grants_callback, {'AWSAccountId': aws_account_id})
-#
-# Callback
-#
-def add_security_group_name_to_ec2_grants_callback(ec2_config, current_config, path, current_path, ec2_grant, callback_args):
+    """
+    Github issue #24: display the security group names in the list of grants (added here to have ligher JS code)
+
+    :param ec2_config:
+    :param aws_account_id:
+    :return:
+    """
+    go_to_and_do(ec2_config, None,
+                 ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports', 'security_groups'], [],
+                 add_security_group_name_to_ec2_grants_callback, {'AWSAccountId': aws_account_id})
+
+
+def add_security_group_name_to_ec2_grants_callback(ec2_config, current_config, path, current_path, ec2_grant,
+                                                   callback_args):
+    """
+    Callback
+
+    :param ec2_config:
+    :param current_config:
+    :param path:
+    :param current_path:
+    :param ec2_grant:
+    :param callback_args:
+    :return:
+    """
     sg_id = ec2_grant['GroupId']
     if sg_id in current_path:
-        target = current_path[:(current_path.index(sg_id)+1)]
+        target = current_path[:(current_path.index(sg_id) + 1)]
         ec2_grant['GroupName'] = get_attribute_at(ec2_config, target, 'name')
     elif ec2_grant['UserId'] == callback_args['AWSAccountId']:
         if 'VpcId' in ec2_grant:
-            target = current_path[:(current_path.index('vpcs')+1)]
+            target = current_path[:(current_path.index('vpcs') + 1)]
             target.append(ec2_grant['VpcId'])
             target.append('security_groups')
             target.append(sg_id)
         else:
-            target = current_path[:(current_path.index('security_groups')+1)]
+            target = current_path[:(current_path.index('security_groups') + 1)]
             target.append(sg_id)
         ec2_grant['GroupName'] = get_attribute_at(ec2_config, target, 'name')
 
-#
-# Check that the whitelisted EC2 IP addresses are not static IPs
-#
+
 def check_for_elastic_ip(ec2_info):
+    """
+    Check that the whitelisted EC2 IP addresses are not static IPs
+
+    :param ec2_info:
+    :return:
+    """
     # Build a list of all elatic IP in the account
     elastic_ips = []
     for region in ec2_info['regions']:
@@ -250,39 +268,44 @@ def check_for_elastic_ip(ec2_info):
     ec2_info['violations']['non-elastic-ec2-public-ip-whitelisted'].macro_items = new_macro_items
 
 
-#
-# Link EIP with instances (looks like this might be no longer needed with boto3)
-#
 def link_elastic_ips(ec2_config):
+    """
+    Link EIP with instances (looks like this might be no longer needed with boto3)
+
+    :param ec2_config:
+    :return:
+    """
     return
     go_to_and_do(ec2_config, None, ['regions', 'elastic_ips'], None, link_elastic_ips_callback1, {})
+
 
 def link_elastic_ips_callback1(ec2_config, current_config, path, current_path, elastic_ip, callback_args):
     if not 'id' in current_config:
         return
     instance_id = current_config['id']
     return
-    go_to_and_do(ec2_config, None, ['regions', 'vpcs', 'instances'], None, link_elastic_ips_callback2, {'instance_id': instance_id, 'elastic_ip': elastic_ip})
+    go_to_and_do(ec2_config, None, ['regions', 'vpcs', 'instances'], None, link_elastic_ips_callback2,
+                 {'instance_id': instance_id, 'elastic_ip': elastic_ip})
+
 
 def link_elastic_ips_callback2(ec2_config, current_config, path, current_path, instance_id, callback_args):
     if instance_id == callback_args['instance_id']:
         if not 'PublicIpAddress' in current_config:
             current_config['PublicIpAddress'] = callback_args['elastic_ip']
         elif current_config['PublicIpAddress'] != callback_args['elastic_ip']:
-            printInfo('Warning: public IP address exists (%s) for an instance associated with an elastic IP (%s)' % (current_config['PublicIpAddress'], callback_args['elastic_ip']))
+            printInfo('Warning: public IP address exists (%s) for an instance associated with an elastic IP (%s)' % (
+            current_config['PublicIpAddress'], callback_args['elastic_ip']))
             # This can happen... fix it
 
 
-
-
-
-
-
-#
-# Once all the data has been fetched, iterate through instances and list them
-# Could this be done when all the "used_by" values are set ??? TODO
-#
 def list_instances_in_security_groups(region_info):
+    """
+    Once all the data has been fetched, iterate through instances and list them
+    Could this be done when all the "used_by" values are set ??? TODO
+
+    :param region_info:
+    :return:
+    """
     for vpc in region_info['vpcs']:
         if not 'instances' in region_info['vpcs'][vpc]:
             return
@@ -295,17 +318,15 @@ def list_instances_in_security_groups(region_info):
                 region_info['vpcs'][vpc]['security_groups'][sg_id]['instances'][state].append(instance)
 
 
-
-
-#
-# Ensure name and ID are set
-#
 def manage_vpc(vpc_info, vpc_id):
+    """
+    Ensure name and ID are set
+
+    :param vpc_info:
+    :param vpc_id:
+    :return:
+    """
     manage_dictionary(vpc_info, vpc_id, {})
     vpc_info[vpc_id]['id'] = vpc_id
     if not 'name' in vpc_info[vpc_id]:
         vpc_info[vpc_id]['name'] = vpc_id
-
-
-
-

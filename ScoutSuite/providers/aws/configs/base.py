@@ -64,12 +64,13 @@ class BaseConfig(GlobalConfig):
         :return:
         """
         global status, formatted_string
+
         # Initialize targets
         if not targets:
             targets = type(self).targets
         printInfo('Fetching %s config...' % format_service_name(self.service))
         formatted_string = None
-        api_service = self.service.lower()
+
         # Connect to the service
         if self.service in ['s3']:  # S3 namespace is global but APIs aren't....
             api_clients = {}
@@ -81,24 +82,33 @@ class BaseConfig(GlobalConfig):
                                          silent=True)  # TODO: use partition's default region
         else:
             api_client = connect_service(self.service, credentials, silent=True)
+
         # Threading to fetch & parse resources (queue consumer)
         params = {'api_client': api_client}
         if self.service in ['s3']:
             params['api_clients'] = api_clients
-        q = self._init_threading(self.__fetch_target, params, self.thread_config['parse'])
+
+        # Threading to parse resources (queue feeder)
+        target_queue = self._init_threading(self.__fetch_target, params, self.thread_config['parse'])
+
         # Threading to list resources (queue feeder)
-        params = {'api_client': api_client, 'q': q}
+        params = {'api_client': api_client, 'q': target_queue}
         if self.service in ['s3']:
             params['api_clients'] = api_clients
-        qt = self._init_threading(self.__fetch_service, params, self.thread_config['list'])
+
+        service_queue = self._init_threading(self.__fetch_service, params, self.thread_config['list'])
+
         # Init display
         self.fetchstatuslogger = FetchStatusLogger(targets)
+
         # Go
         for target in targets:
-            qt.put(target)
+            service_queue.put(target)
+
         # Join
-        qt.join()
-        q.join()
+        service_queue.join()
+        target_queue.join()
+
         # Show completion and force newline
         if self.service != 'iam':
             self.fetchstatuslogger.show(True)

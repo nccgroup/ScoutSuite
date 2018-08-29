@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.console import printError, printException, printInfo
+from opinel.utils.console import printError, printException, printInfo, printDebug
 
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 
@@ -79,9 +79,11 @@ class AWSServicesConfig(BaseServicesConfig):
         """
         for service in vars(self):
             try:
+                # skip services
                 if services != [] and service not in services:
                     continue
                 service_config = getattr(self, service)
+                # call fetch method for the service
                 if 'fetch_all' in dir(service_config):
                     method_args = {}
                     method_args['credentials'] = credentials
@@ -91,6 +93,8 @@ class AWSServicesConfig(BaseServicesConfig):
                     service_config.fetch_all(**method_args)
                     if hasattr(service_config, 'finalize'):
                         service_config.finalize()
+                else:
+                    printDebug('No method to fetch service %s.' % service)
             except Exception as e:
                 printError('Error: could not fetch %s configuration.' % service)
                 printException(e)

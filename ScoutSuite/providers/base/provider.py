@@ -44,8 +44,7 @@ class BaseProvider:
 
         self._load_metadata()
 
-        # TODO this could be done better
-        # self.services = BaseServicesConfig(self.metadata, thread_config)
+        self.services = self.services_config(self.metadata, thread_config)
         supported_services = vars(self.services).keys()
         self.service_list = self._build_services_list(supported_services, services, skipped_services)
 

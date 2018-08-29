@@ -25,8 +25,7 @@ class GCPProvider(BaseProvider):
 
         self.profile = profile
         self.gcp_project_id = None
-
-        self.services = GCPServicesConfig(self.metadata, thread_config)
+        self.services_config = GCPServicesConfig
 
         super(GCPProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 

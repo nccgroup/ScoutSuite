@@ -3,7 +3,7 @@
 CloudWatch-related classes and functions
 """
 
-from providers.base.configs import RegionalServiceConfig, RegionConfig
+from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 
 
 
