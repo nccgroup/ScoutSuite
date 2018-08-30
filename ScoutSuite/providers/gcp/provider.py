@@ -2,16 +2,10 @@
 
 import os
 
-import googleapiclient
-
-from oauth2client import tools
-from oauth2client.client import GoogleCredentials
-from oauth2client.client import OAuth2WebServerFlow
-from oauth2client.file import Storage
-from googleapiclient import discovery
+import google.auth
 
 from ScoutSuite.providers.base.provider import BaseProvider
-from providers.gcp.configs.services import GCPServicesConfig
+from ScoutSuite.providers.gcp.configs.services import GCPServicesConfig
 
 
 class GCPProvider(BaseProvider):
@@ -38,8 +32,10 @@ class GCPProvider(BaseProvider):
         # TODO this is hardcoded
         path = os.path.expanduser('~')+'/client_secrets.json'
         os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = path
-        self.credentials = GoogleCredentials.get_application_default()
-        self.aws_account_id = self.credentials._service_account_email.split('@')[1].split('.')[0]  # TODO this is for AWS
+
+        self.credentials, self.gcp_project_id = google.auth.default()
+
+        self.aws_account_id = self.gcp_project_id  # TODO this is for AWS
 
         if self.credentials:
             return True

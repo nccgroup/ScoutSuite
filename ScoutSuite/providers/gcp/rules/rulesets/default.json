@@ -1,5 +1,17 @@
 {
     "about": "test ruleset",
     "rules": {
+        "cloudstorage-bucket-no-versioning.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudstorage-bucket-no-logging.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ]
     }
 }

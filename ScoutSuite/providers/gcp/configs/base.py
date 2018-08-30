@@ -11,6 +11,8 @@ try:
 except ImportError:
     from queue import Queue
 
+from google.cloud import storage
+
 from opinel.utils.aws import build_region_list, handle_truncated_response
 from opinel.utils.console import printException, printInfo
 
@@ -18,13 +20,7 @@ from ScoutSuite.providers.base.configs.threads import thread_configs
 from ScoutSuite.output.console import FetchStatusLogger
 from ScoutSuite.utils import format_service_name
 
-import googleapiclient
 
-from oauth2client import tools
-from oauth2client.client import GoogleCredentials
-from oauth2client.client import OAuth2WebServerFlow
-from oauth2client.file import Storage
-from googleapiclient import discovery
 
 
 ########################################
@@ -65,7 +61,7 @@ class BaseConfig(GlobalConfig):
         formatted_string = None
 
         # Connect to the service
-        api_client = discovery.build('storage', 'v1', credentials=credentials)  # TODO this is hardcoded
+        api_client = storage.Client(credentials=credentials)  # TODO this is hardcoded
 
         # Threading to fetch & parse resources (queue consumer)
         params = {'api_client': api_client}
@@ -113,16 +109,18 @@ class BaseConfig(GlobalConfig):
                     if not list_method_name:
                         continue
                     try:
-                        method_init = getattr(api_client, target_type)
-                        resource = method_init()
-                        method = getattr(resource, list_method_name)
+                        method = getattr(api_client, list_method_name)
                     except Exception as e:
                         printException(e)
                         continue
                     try:
 
-                        response = method(**list_params).execute()
-                        targets = response['items']
+                        response = method(**list_params)
+                        targets = list(response)
+
+                        # Remove client as it's unpickleable and adding the Bucket object to the Queue will pickle
+                        for bucket in targets:
+                            bucket._client = None
 
                         # if type(list_params) != list:
                         #     list_params = [list_params]
