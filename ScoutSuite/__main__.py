@@ -53,7 +53,11 @@ def main():
     # Complete run, including pulling data from provider
     if not args.fetch_local:
         # Authenticate to the cloud provider
-        authenticated = cloud_provider.authenticate(args.profile[0], args.csv_credentials, args.mfa_serial, args.mfa_code)
+        authenticated = cloud_provider.authenticate(client_secrets=args.client_secrets,
+                                                    profile=args.profile[0],
+                                                    csv_credentials=args.csv_credentials,
+                                                    mfa_serial=args.mfa_serial,
+                                                    mfa_code=args.mfa_code)
         if not authenticated:
             return 42
 
@@ -90,7 +94,7 @@ def main():
     cloud_provider.preprocessing(args.ip_ranges, args.ip_ranges_name_key)
 
     # # Analyze config
-    finding_rules = Ruleset(args.profile[0],
+    finding_rules = Ruleset(environment_name=args.profile[0],
                             cloud_provider=args.provider,
                             filename=args.ruleset,
                             ip_ranges=args.ip_ranges,

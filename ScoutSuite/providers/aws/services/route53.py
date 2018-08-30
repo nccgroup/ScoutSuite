@@ -2,7 +2,7 @@
 
 from opinel.utils.aws import handle_truncated_response
 
-from providers.aws.configs.base import AWSBaseConfig
+from ScoutSuite.providers.aws.configs.base import AWSBaseConfig
 
 
 

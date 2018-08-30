@@ -12,7 +12,7 @@ from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
 from ScoutSuite.utils import get_keys, ec2_classic
-from providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
+from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 
 
 ########################################

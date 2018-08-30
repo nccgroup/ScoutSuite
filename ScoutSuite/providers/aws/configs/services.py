@@ -2,9 +2,7 @@
 
 from opinel.utils.console import printError, printException, printInfo, printDebug
 
-from ScoutSuite.providers.base.configs.services import BaseServicesConfig
-
-from ScoutSuite.utils import format_service_name
+from ScoutSuite.providers.aws.services.awslambda import LambdaConfig
 from ScoutSuite.providers.aws.services.cloudformation import CloudFormationConfig
 from ScoutSuite.providers.aws.services.cloudtrail import CloudTrailConfig
 from ScoutSuite.providers.aws.services.cloudwatch import CloudWatchConfig
@@ -16,7 +14,6 @@ from ScoutSuite.providers.aws.services.elb import ELBConfig
 from ScoutSuite.providers.aws.services.elbv2 import ELBv2Config
 from ScoutSuite.providers.aws.services.emr import EMRConfig
 from ScoutSuite.providers.aws.services.iam import IAMConfig
-from ScoutSuite.providers.aws.services.awslambda import LambdaConfig
 from ScoutSuite.providers.aws.services.rds import RDSConfig
 from ScoutSuite.providers.aws.services.redshift import RedshiftConfig
 from ScoutSuite.providers.aws.services.route53 import Route53Config, Route53DomainsConfig
@@ -25,6 +22,8 @@ from ScoutSuite.providers.aws.services.ses import SESConfig
 from ScoutSuite.providers.aws.services.sns import SNSConfig
 from ScoutSuite.providers.aws.services.sqs import SQSConfig
 from ScoutSuite.providers.aws.services.vpc import VPCConfig
+from ScoutSuite.providers.base.configs.services import BaseServicesConfig
+from ScoutSuite.utils import format_service_name
 
 
 class AWSServicesConfig(BaseServicesConfig):
@@ -43,7 +42,7 @@ class AWSServicesConfig(BaseServicesConfig):
     :ivar sqs:                          SQS configuration
     """
 
-    def __init__(self, metadata, thread_config = 4):
+    def __init__(self, metadata, thread_config=4):
 
         self.cloudformation = CloudFormationConfig(metadata['management']['cloudformation'], thread_config)
         self.cloudtrail = CloudTrailConfig(metadata['management']['cloudtrail'], thread_config)
@@ -67,8 +66,7 @@ class AWSServicesConfig(BaseServicesConfig):
         self.sqs = SQSConfig(metadata['messaging']['sqs'], thread_config)
         self.vpc = VPCConfig(metadata['network']['vpc'], thread_config)
 
-
-    def fetch(self, credentials, services = [], regions = [], partition_name = ''):
+    def fetch(self, credentials, services=[], regions=[], partition_name='', **kwargs):
         """
 
         :param credentials:
@@ -116,6 +114,3 @@ class AWSServicesConfig(BaseServicesConfig):
                 except Exception as e:
                     printException(e)
                     pass
-
-
-

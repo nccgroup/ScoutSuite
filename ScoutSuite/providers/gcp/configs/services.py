@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.console import printError, printException, printInfo, printDebug
+from opinel.utils.console import printError, printException, printDebug
 
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 from ScoutSuite.providers.gcp.services.cloudstorage import CloudStorageConfig
 
+
 class GCPServicesConfig(BaseServicesConfig):
 
-    def __init__(self, metadata, thread_config = 4):
+    def __init__(self, metadata, thread_config=4):
 
         self.cloudstorage = CloudStorageConfig(thread_config)
 
-    def fetch(self, credentials, services = [], regions = [], partition_name = ''):
+    def fetch(self, credentials, services=[], regions=[], **kwargs):
         for service in vars(self):
             try:
                 # skip services
@@ -34,5 +35,3 @@ class GCPServicesConfig(BaseServicesConfig):
 
     def postprocessing(self):
         pass
-
-

@@ -11,7 +11,7 @@ from opinel.utils.console import printError, printException, printInfo
 from opinel.utils.globals import manage_dictionary
 from opinel.services.s3 import get_s3_bucket_location
 
-from providers.aws.configs.base import AWSBaseConfig
+from ScoutSuite.providers.aws.configs.base import AWSBaseConfig
 
 
 ########################################

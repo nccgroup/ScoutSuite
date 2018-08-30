@@ -4,8 +4,6 @@ import copy
 import os
 import sys
 
-from providers.aws.configs.services import AWSServicesConfig
-
 try:
     from opinel.utils.aws import get_aws_account_id, get_partition_name
     from opinel.utils.console import configPrintException, printInfo, printDebug
@@ -21,7 +19,8 @@ except Exception as e:
 from opinel.utils.console import printDebug, printError, printException, printInfo
 from opinel.utils.globals import manage_dictionary
 
-from providers.base.configs.browser import combine_paths, get_object_at, get_value_at
+from ScoutSuite.providers.aws.configs.services import AWSServicesConfig
+from ScoutSuite.providers.base.configs.browser import combine_paths, get_object_at, get_value_at
 from ScoutSuite.providers.aws.services.vpc import put_cidr_name
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.utils import ec2_classic
@@ -37,10 +36,10 @@ class AWSProvider(BaseProvider):
         self.metadata_path = '%s/metadata.json' % os.path.split(os.path.abspath(__file__))[0]
 
         # TODO this should probably not be here
-        # Check version of opinel
-        requirements_file_path = '%s/requirements.txt' % os.path.dirname(sys.modules['__main__'].__file__)
-        if not check_requirements(requirements_file_path):
-            return 42
+        # # Check version of opinel
+        # requirements_file_path = '%s/requirements.txt' % os.path.dirname(sys.modules['__main__'].__file__)
+        # if not check_requirements(requirements_file_path):
+        #     return 42
 
         self.sg_map = {}
         self.subnet_map = {}
@@ -49,10 +48,9 @@ class AWSProvider(BaseProvider):
         self.aws_account_id = None
         self.services_config = AWSServicesConfig
 
-
         super(AWSProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
-    def authenticate(self, profile, csv_credentials, mfa_serial, mfa_code):
+    def authenticate(self, profile, csv_credentials, mfa_serial, mfa_code, **kwargs):
         """
         Implement authentication for the AWS provider
         :return:
@@ -64,7 +62,6 @@ class AWSProvider(BaseProvider):
             return False
         else:
             return True
-
 
     def preprocessing(self, ip_ranges=[], ip_ranges_name_key=None):
         """
@@ -232,7 +229,8 @@ class AWSProvider(BaseProvider):
                     if 'Allow' in iam_info['permissions']['Action'][action][iam_entity]:
                         for allowed_iam_entity in iam_info['permissions']['Action'][action][iam_entity]['Allow']:
                             # For resource statements, we can easily rely on the existing permissions structure
-                            if 'Resource' in iam_info['permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]:
+                            if 'Resource' in iam_info['permissions']['Action'][action][iam_entity]['Allow'][
+                                allowed_iam_entity]:
                                 for full_path in (x for x in
                                                   iam_info['permissions']['Action'][action][iam_entity]['Allow'][
                                                       allowed_iam_entity]['Resource'] if

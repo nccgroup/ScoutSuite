@@ -6,7 +6,7 @@ import sys
 
 from opinel.utils.globals import manage_dictionary
 
-from providers.base.configs.browser import get_value_at
+from ScoutSuite.providers.base.configs.browser import get_value_at
 
 
 ########################################

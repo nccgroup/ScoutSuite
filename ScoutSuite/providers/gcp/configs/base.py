@@ -20,8 +20,7 @@ from ScoutSuite.providers.gcp.utils import connect_service
 from ScoutSuite.providers.base.configs.threads import thread_configs
 from ScoutSuite.output.console import FetchStatusLogger
 from ScoutSuite.utils import format_service_name
-
-from providers.base.configs.base import GlobalConfig
+from ScoutSuite.providers.base.configs.base import GlobalConfig
 
 status = None
 formatted_string = None

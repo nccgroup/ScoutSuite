@@ -13,8 +13,8 @@ from opinel.utils.console import printException, printInfo
 from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite import __version__ as scout2_version
-from providers.base.configs.browser import get_object_at
-from output.html import Scout2Report
+from ScoutSuite.providers.base.configs.browser import get_object_at
+from ScoutSuite.output.html import Scout2Report
 
 
 class BaseProvider:
@@ -89,7 +89,7 @@ class BaseProvider:
         :return:
         """
         # TODO: determine partition name based on regions and warn if multiple partitions...
-        self.services.fetch(self.credentials, self.service_list, regions, partition_name)
+        self.services.fetch(self.credentials, self.service_list, regions, partition_name=None)
 
         # TODO implement this properly
         """

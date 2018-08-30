@@ -141,11 +141,6 @@ class ScoutSuiteArgumentParser(SharedArgumentParser):
         self.add_argument('exceptions', default_args)
         self.add_argument('services', default_args)
         self.add_argument('skip', default_args)
-        # TODO this probably shouldn't be here as it's a default arg
-        self.parser.add_argument('--provider',
-                          action='store',
-                          choices = ['aws', 'gcp'],
-                          help='The cloud provider to scan (currently supports AWS (\'aws\') and GCP (\'gcp\')')
         self.parser.add_argument('-l', '--local',
                                 dest='fetch_local',
                                 default=False,
@@ -163,7 +158,7 @@ class ScoutSuiteArgumentParser(SharedArgumentParser):
                                 help='Reload all the existing data and only overwrite data in scope for this run')
         self.parser.add_argument('--ruleset',
                                 dest='ruleset',
-                                default=None,
+                                default='default.json',
                                 nargs='?',
                                 help='Set of rules to be used during the analysis.')
         self.parser.add_argument('--no-browser',
@@ -176,6 +171,16 @@ class ScoutSuiteArgumentParser(SharedArgumentParser):
                                  type=int,
                                  default=4,
                                  help='Level of multi-threading wanted [1-5]; defaults to 4.')
+
+        # TODO this probably shouldn't be here
+        self.parser.add_argument('--provider',
+                                 required=True,
+                                 action='store',
+                                 choices = ['aws', 'gcp'],
+                                 help='The cloud provider to scan (currently supports AWS (\'aws\') and GCP (\'gcp\')')
+        self.parser.add_argument('--client-secrets',
+                                 action='store',
+                                 help='Path of the Google Application Credentials file')
 
     def parse_args(self):
         args = self.parser.parse_args()

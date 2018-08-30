@@ -10,9 +10,7 @@ from opinel.utils.conditions import pass_condition
 from opinel.utils.console import printError, printException
 
 from ScoutSuite.core import condition_operators
-from providers.base.configs.browser import get_value_at
-
-
+from ScoutSuite.providers.base.configs.browser import get_value_at
 
 re_get_value_at = re.compile(r'_GET_VALUE_AT_\((.*?)\)')
 re_nested_get_value_at = re.compile(r'_GET_VALUE_AT_\(.*')
@@ -36,7 +34,7 @@ def fix_path_string(all_info, current_path, path_to_value):
     return path_to_value
 
 
-def recurse(all_info, current_info, target_path, current_path, config, add_suffix = False):
+def recurse(all_info, current_info, target_path, current_path, config, add_suffix=False):
     """
 
     :param all_info:
@@ -74,13 +72,15 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
                 split_current_path = copy.deepcopy(current_path)
                 split_current_path.append(key)
                 split_current_info = current_info[key]
-                results = results + recurse(all_info, split_current_info, split_target_path, split_current_path, config, add_suffix)
+                results = results + recurse(all_info, split_current_info, split_target_path, split_current_path, config,
+                                            add_suffix)
     # To handle lists properly, I would have to make sure the list is properly ordered and I can use the index to consistently access an object... Investigate (or do not use lists)
     elif type(current_info) == list:
         for index, split_current_info in enumerate(current_info):
             split_current_path = copy.deepcopy(current_path)
             split_current_path.append(str(index))
-            results = results + recurse(all_info, split_current_info, copy.deepcopy(target_path), split_current_path, config, add_suffix)
+            results = results + recurse(all_info, split_current_info, copy.deepcopy(target_path), split_current_path,
+                                        config, add_suffix)
     else:
         printError('Error: unhandled case, typeof(current_info) = %s' % type(current_info))
         printError('Path: %s' % current_path)
@@ -90,7 +90,7 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
     return results
 
 
-def pass_conditions(all_info, current_path, conditions, unknown_as_pass_condition = False):
+def pass_conditions(all_info, current_path, conditions, unknown_as_pass_condition=False):
     """
     Pass all conditions?
 
@@ -120,7 +120,8 @@ def pass_conditions(all_info, current_path, conditions, unknown_as_pass_conditio
                 res = pass_condition(target_obj, test_name, test_values)
             except Exception as e:
                 res = True if unknown_as_pass_condition else False
-                printError('Unable to process testcase \'%s\' on value \'%s\', interpreted as %s.' % (test_name, str(target_obj), res))
+                printError('Unable to process testcase \'%s\' on value \'%s\', interpreted as %s.' % (
+                test_name, str(target_obj), res))
                 printException(e, True)
         # Quick exit and + false
         if condition_operator == 'and' and not res:

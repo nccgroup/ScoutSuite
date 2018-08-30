@@ -2,7 +2,6 @@
 
 import copy
 
-from hashlib import sha1
 from threading import Thread
 
 # Python2 vs Python3
@@ -11,18 +10,16 @@ try:
 except ImportError:
     from queue import Queue
 
-from providers.base.configs.base import GlobalConfig
-
 from opinel.utils.aws import build_region_list, connect_service, handle_truncated_response
 from opinel.utils.console import printException, printInfo
 
-from ScoutSuite.providers.base.configs.threads import thread_configs
+from ScoutSuite.providers.base.configs.base import GlobalConfig
 from ScoutSuite.output.console import FetchStatusLogger
 from ScoutSuite.utils import format_service_name
 
-
 status = None
 formatted_string = None
+
 
 class AWSBaseConfig(GlobalConfig):
     """
