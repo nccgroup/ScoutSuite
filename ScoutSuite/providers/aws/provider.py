@@ -237,7 +237,7 @@ class AWSProvider(BaseProvider):
                                                   x.startswith('arn:aws:s3:') or x == '*'):
                                     parts = full_path.split('/')
                                     bucket_name = parts[0].split(':')[-1]
-                                    self.update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entity,
+                                    self._update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entity,
                                                                 iam_info['permissions']['Action'][action][iam_entity][
                                                                     'Allow'][allowed_iam_entity]['Resource'][full_path])
                             # For notresource statements, we must fetch the policy document to determine which buckets are not protected

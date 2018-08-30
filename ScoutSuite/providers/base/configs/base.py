@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from hashlib import sha1
+
 from ScoutSuite.providers.base.configs.threads import thread_configs
 
 class GlobalConfig(object):
