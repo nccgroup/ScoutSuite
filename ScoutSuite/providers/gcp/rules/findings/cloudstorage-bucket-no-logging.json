@@ -1,0 +1,9 @@
+{
+    "dashboard_name": "Buckets",
+    "description": "Bucket without logging",
+    "path": "cloudstorage.buckets.id",
+    "conditions": [ "and",
+        [ "cloudstorage.buckets.id.logging_status", "equal", "Disabled" ]
+    ],
+    "id_suffix": "logging"
+}
