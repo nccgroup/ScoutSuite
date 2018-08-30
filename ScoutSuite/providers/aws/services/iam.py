@@ -4,13 +4,13 @@ from opinel.utils.aws import connect_service, handle_truncated_response
 from opinel.utils.console import printError, printException
 from opinel.utils.globals import manage_dictionary
 
-from providers.aws.configs.base import BaseConfig
+from providers.aws.configs.base import AWSBaseConfig
 from ScoutSuite.utils import *
 
 from botocore.exceptions import ClientError
 
 
-class IAMConfig(BaseConfig):
+class IAMConfig(AWSBaseConfig):
     """
     Object that holds the IAM configuration
 
@@ -332,7 +332,7 @@ class IAMConfig(BaseConfig):
             for policy_name in policy_names:
                 args['PolicyName'] = policy_name
                 policy_document = get_policy_method(**args)['PolicyDocument']
-                policy_id = self.get_non_aws_id(policy_name)
+                policy_id = self.get_non_provider_id(policy_name)
                 manage_dictionary(fetched_policies, policy_id, {})
                 fetched_policies[policy_id]['PolicyDocument'] = policy_document
                 fetched_policies[policy_id]['name'] = policy_name

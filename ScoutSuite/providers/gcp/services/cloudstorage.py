@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from ScoutSuite.providers.gcp.configs.base import BaseConfig
+from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
 from opinel.utils.console import printError, printException, printInfo
 
 
-class CloudStorageConfig(BaseConfig):
+class CloudStorageConfig(GCPBaseConfig):
     targets = (
         ('buckets', 'Buckets', 'list_buckets', {}, False),
     )

@@ -11,6 +11,8 @@ try:
 except ImportError:
     from queue import Queue
 
+from providers.base.configs.base import GlobalConfig
+
 from opinel.utils.aws import build_region_list, connect_service, handle_truncated_response
 from opinel.utils.console import printException, printInfo
 
@@ -18,41 +20,14 @@ from ScoutSuite.providers.base.configs.threads import thread_configs
 from ScoutSuite.output.console import FetchStatusLogger
 from ScoutSuite.utils import format_service_name
 
-########################################
-# Globals
-########################################
 
 status = None
 formatted_string = None
 
-
-class GlobalConfig(object):
-
-    def get_non_aws_id(self, name):
-        """
-        Not all AWS resources have an ID and some services allow the use of "." in names, which break's Scout2's
-        recursion scheme if name is used as an ID. Use SHA1(name) instead.
-
-        :param name:                    Name of the resource to
-        :return:                        SHA1(name)
-        """
-        m = sha1()
-        m.update(name.encode('utf-8'))
-        return m.hexdigest()
-
-
-class BaseConfig(GlobalConfig):
+class AWSBaseConfig(GlobalConfig):
     """
     FooBar
     """
-
-    def __init__(self, thread_config=4):
-        """
-
-        :param thread_config:
-        """
-        self.service = type(self).__name__.replace('Config','').lower()  # TODO: use regex with EOS instead of plain replace
-        self.thread_config = thread_configs[thread_config]
 
     def fetch_all(self, credentials, regions=[], partition_name='aws', targets=None):
         """

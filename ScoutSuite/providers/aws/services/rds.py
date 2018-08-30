@@ -90,7 +90,7 @@ class RDSRegionConfig(RegionConfig):
             printException(e)
             printError('Failed fetching DB parameters for %s' % parameter_group['name'])
         # Save
-        parameter_group_id = self.get_non_aws_id(parameter_group['name'])
+        parameter_group_id = self.get_non_provider_id(parameter_group['name'])
         (self).parameter_groups[parameter_group_id] = parameter_group
 
 

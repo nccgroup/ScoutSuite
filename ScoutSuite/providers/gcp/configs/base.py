@@ -16,34 +16,19 @@ from google.cloud import storage
 from opinel.utils.aws import build_region_list, handle_truncated_response
 from opinel.utils.console import printException, printInfo
 
+from ScoutSuite.providers.gcp.utils import connect_service
 from ScoutSuite.providers.base.configs.threads import thread_configs
 from ScoutSuite.output.console import FetchStatusLogger
 from ScoutSuite.utils import format_service_name
 
-
-
-
-########################################
-# Globals
-########################################
+from providers.base.configs.base import GlobalConfig
 
 status = None
 formatted_string = None
 
+class GCPBaseConfig(GlobalConfig):
 
-class GlobalConfig(object):
-
-    def __ini__(self):
-        pass
-
-class BaseConfig(GlobalConfig):
-
-    def __init__(self, thread_config=4):
-        # self.service = type(self).__name__.replace('Config','').lower()
-        self.service = type(self).__name__.replace('Config','').lower()  # TODO: use regex with EOS instead of plain replace
-        self.thread_config = thread_configs[thread_config]
-
-    def fetch_all(self, credentials, regions=[], partition_name='aws', targets=None):
+    def fetch_all(self, credentials, regions=[], partition_name='gcp', targets=None):
         """
         :param credentials:             F
         :param service:                 Name of the service
@@ -61,7 +46,7 @@ class BaseConfig(GlobalConfig):
         formatted_string = None
 
         # Connect to the service
-        api_client = storage.Client(credentials=credentials)  # TODO this is hardcoded
+        api_client = connect_service(service=self.service, credentials=credentials)
 
         # Threading to fetch & parse resources (queue consumer)
         params = {'api_client': api_client}
@@ -114,25 +99,16 @@ class BaseConfig(GlobalConfig):
                         printException(e)
                         continue
                     try:
-
                         response = method(**list_params)
                         targets = list(response)
-
                         # Remove client as it's unpickleable and adding the Bucket object to the Queue will pickle
+                        # The client is re-inserted in each config
                         for bucket in targets:
                             bucket._client = None
-
-                        # if type(list_params) != list:
-                        #     list_params = [list_params]
-                        # targets = []
-                        # for lp in list_params:
-                        #     targets += handle_truncated_response(method, lp, [response_attribute])[response_attribute]
-
                     except Exception as e:
                         if not ignore_list_error:
                             printException(e)
                         targets = []
-
                     self.fetchstatuslogger.counts[target_type]['discovered'] += len(targets)
                     for target in targets:
                         params['q'].put((target_type, target), )
@@ -145,6 +121,7 @@ class BaseConfig(GlobalConfig):
             pass
 
     def __fetch_target(self, q, params):
+        # TODO this is copied from AWS's AWSBaseConfig
         global status
         try:
             while True:

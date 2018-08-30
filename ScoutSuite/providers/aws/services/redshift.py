@@ -44,7 +44,7 @@ class RedshiftRegionConfig(RegionConfig):
         :param parameter_group:         Parameter group
         """
         pg_name = parameter_group.pop('ParameterGroupName')
-        pg_id = self.get_non_aws_id(pg_name) # Name could be used as only letters digits or hyphens
+        pg_id = self.get_non_provider_id(pg_name) # Name could be used as only letters digits or hyphens
         parameter_group['name'] = pg_name
         parameter_group['parameters'] = {}
         api_client = api_clients[region]

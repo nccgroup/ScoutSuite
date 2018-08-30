@@ -52,10 +52,10 @@ class ELBv2RegionConfig(RegionConfig):
             lb['listeners'][port] = listener
         # Get attributes
         lb['attributes'] = api_clients[region].describe_load_balancer_attributes(LoadBalancerArn = lb['arn'])['Attributes']
-        self.vpcs[vpc_id].lbs[self.get_non_aws_id(lb['name'])] = lb
+        self.vpcs[vpc_id].lbs[self.get_non_provider_id(lb['name'])] = lb
 
     def parse_ssl_policie(self, global_params, region, policy):
-        id = self.get_non_aws_id(policy['Name'])
+        id = self.get_non_provider_id(policy['Name'])
         self.ssl_policies[id] = policy
 
 

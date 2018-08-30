@@ -2,11 +2,11 @@
 
 from opinel.utils.aws import handle_truncated_response
 
-from providers.aws.configs.base import BaseConfig
+from providers.aws.configs.base import AWSBaseConfig
 
 
 
-class Route53DomainsConfig(BaseConfig):
+class Route53DomainsConfig(AWSBaseConfig):
     """
     Object that holds the Route53Domains configuration
     """
@@ -29,7 +29,7 @@ class Route53DomainsConfig(BaseConfig):
         """
         Parse a single Route53Domains domain
         """
-        domain_id = self.get_non_aws_id(domain['DomainName'])
+        domain_id = self.get_non_provider_id(domain['DomainName'])
         domain['name'] = domain.pop('DomainName')
         #TODO: Get Dnssec info when available
         #api_client = params['api_client']
@@ -39,7 +39,7 @@ class Route53DomainsConfig(BaseConfig):
 
 
 
-class Route53Config(BaseConfig):
+class Route53Config(AWSBaseConfig):
     """
     Object that holds the Route53 configuration
     """

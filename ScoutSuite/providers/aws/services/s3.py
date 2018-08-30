@@ -11,7 +11,7 @@ from opinel.utils.console import printError, printException, printInfo
 from opinel.utils.globals import manage_dictionary
 from opinel.services.s3 import get_s3_bucket_location
 
-from providers.aws.configs.base import BaseConfig
+from providers.aws.configs.base import AWSBaseConfig
 
 
 ########################################
@@ -19,7 +19,7 @@ from providers.aws.configs.base import BaseConfig
 ########################################
 
 
-class S3Config(BaseConfig):
+class S3Config(AWSBaseConfig):
     """
     S3 configuration for all AWS regions
 
@@ -72,7 +72,7 @@ class S3Config(BaseConfig):
         #if params['check_encryption'] or params['check_acls']:
         #    get_s3_bucket_keys(api_client, bucket['name'], bucket, params['check_encryption'],
         #                       params['check_acls'])
-        bucket['id'] = self.get_non_aws_id(bucket['name'])
+        bucket['id'] = self.get_non_provider_id(bucket['name'])
         self.buckets[bucket['id']] = bucket
 
 def match_iam_policies_and_buckets(s3_info, iam_info):

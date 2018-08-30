@@ -27,7 +27,7 @@ class CloudTrailRegionConfig(RegionConfig):
         """
         trail_config = {}
         trail_config['name'] = trail.pop('Name')
-        trail_id = self.get_non_aws_id(trail_config['name'])
+        trail_id = self.get_non_provider_id(trail_config['name'])
         trail_details = None
 
         api_client = api_clients[region]
@@ -40,7 +40,7 @@ class CloudTrailRegionConfig(RegionConfig):
         else:
             for key in trail:
                 trail_config[key] = trail[key]
-            trail_config['bucket_id'] = self.get_non_aws_id(trail_config.pop('S3BucketName'))
+            trail_config['bucket_id'] = self.get_non_provider_id(trail_config.pop('S3BucketName'))
             for key in ['IsMultiRegionTrail', 'LogFileValidationEnabled']:
                 if key not in trail_config:
                     trail_config[key] = False

@@ -31,7 +31,7 @@ class SESRegionConfig(RegionConfig):
         dkim = api_clients[region].get_identity_dkim_attributes(Identities = [ identity_name ])['DkimAttributes'][identity_name]
         identity['DkimEnabled'] = dkim['DkimEnabled']
         identity['DkimVerificationStatus'] = dkim['DkimVerificationStatus']
-        self.identities[self.get_non_aws_id(identity_name)] = identity
+        self.identities[self.get_non_provider_id(identity_name)] = identity
 
 
 

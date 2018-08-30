@@ -41,7 +41,7 @@ class ELBRegionConfig(RegionConfig):
             listener = l['Listener']
             manage_dictionary(listener, 'policies', [])
             for policy_name in l['PolicyNames']:
-                policy_id = self.get_non_aws_id(policy_name)
+                policy_id = self.get_non_provider_id(policy_name)
                 listener['policies'].append(policy_id)
                 if policy_id not in self.elb_policies:
                     policy_names.append(policy_name)
@@ -51,14 +51,14 @@ class ELBRegionConfig(RegionConfig):
             policies = api_clients[region].describe_load_balancer_policies(LoadBalancerName = elb['name'], PolicyNames = policy_names)['PolicyDescriptions']
             for policy in policies:
                 policy['name'] = policy.pop('PolicyName')
-                policy_id = self.get_non_aws_id(policy['name'])
+                policy_id = self.get_non_provider_id(policy['name'])
                 self.elb_policies[policy_id] = policy
         manage_dictionary(elb, 'instances', [])
         for i in lb['Instances']:
             elb['instances'].append(i['InstanceId'])
         # Get attributes
         elb['attributes'] = api_clients[region].describe_load_balancer_attributes(LoadBalancerName=elb['name'])['LoadBalancerAttributes']
-        self.vpcs[vpc_id].elbs[self.get_non_aws_id(elb['name'])] = elb
+        self.vpcs[vpc_id].elbs[self.get_non_provider_id(elb['name'])] = elb
 
 
 
