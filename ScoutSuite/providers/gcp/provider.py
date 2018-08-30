@@ -34,7 +34,6 @@ class GCPProvider(BaseProvider):
         os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = path
 
         self.credentials, self.gcp_project_id = google.auth.default()
-
         self.aws_account_id = self.gcp_project_id  # TODO this is for AWS
 
         if self.credentials:

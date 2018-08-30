@@ -115,37 +115,34 @@ def main():
         printDebug('Warning, failed to load exceptions. The file may not exist or may have an invalid format.')
         exceptions = {}
 
-
     # Finalize
     cloud_provider.postprocessing(report.current_time, finding_rules)
 
-    # # TODO this is AWS-specific
-    # # # Get organization data if it exists
-    # # try:
-    # #     profile = AWSProfiles.get(args.profile[0])[0]
-    # #     if 'source_profile' in profile.attributes:
-    # #         organization_info_file = os.path.join(
-    # #             os.path.expanduser('~/.aws/recipes/%s/organization.json' % profile.attributes['source_profile']))
-    # #         if os.path.isfile(organization_info_file):
-    # #             with open(organization_info_file, 'rt') as f:
-    # #                 org = {}
-    # #                 accounts = json.load(f)
-    # #                 for account in accounts:
-    # #                     account_id = account.pop('Id')
-    # #                     org[account_id] = account
-    # #                 aws_config['organization'] = org
-    # # except Exception as e:
-    # #     pass
+    # TODO this is AWS-specific
+    # # Get organization data if it exists
+    # try:
+    #     profile = AWSProfiles.get(args.profile[0])[0]
+    #     if 'source_profile' in profile.attributes:
+    #         organization_info_file = os.path.join(
+    #             os.path.expanduser('~/.aws/recipes/%s/organization.json' % profile.attributes['source_profile']))
+    #         if os.path.isfile(organization_info_file):
+    #             with open(organization_info_file, 'rt') as f:
+    #                 org = {}
+    #                 accounts = json.load(f)
+    #                 for account in accounts:
+    #                     account_id = account.pop('Id')
+    #                     org[account_id] = account
+    #                 aws_config['organization'] = org
+    # except Exception as e:
+    #     pass
 
-
-    # TODO uncomment when functional
     # Save config and create HTML report
     html_report_path = report.save(cloud_provider, exceptions, args.force_write, args.debug)
 
-    # # Open the report by default
-    # if not args.no_browser:
-    #     printInfo('Opening the HTML report...')
-    #     url = 'file://%s' % os.path.abspath(html_report_path)
-    #     webbrowser.open(url, new=2)
+    # Open the report by default
+    if not args.no_browser:
+        printInfo('Opening the HTML report...')
+        url = 'file://%s' % os.path.abspath(html_report_path)
+        webbrowser.open(url, new=2)
 
     return 0
