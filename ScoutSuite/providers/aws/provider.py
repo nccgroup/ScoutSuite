@@ -364,8 +364,8 @@ class AWSProvider(BaseProvider):
     def _get_role_info(self, attribute_name, attribute_value):
         iam_role_info = {'name': None, 'id': None}
         for role_id in self.services['iam']['roles']:
-            if self.services['iam']['roles']['role_id']['attribute_name'] == attribute_value:
-                iam_role_info['name'] = self.services['iam']['roles']['role_id.name']
+            if self.services['iam']['roles'][role_id][attribute_name] == attribute_value:
+                iam_role_info['name'] = self.services['iam']['roles'][role_id]['name']
                 iam_role_info['id'] = role_id
                 break
         return iam_role_info
@@ -407,7 +407,7 @@ class AWSProvider(BaseProvider):
             resource_type = resource_path[-2]
         if 'status_path' in callback_args:
             status_path = combine_paths(copy.deepcopy(original_resource_path), callback_args['status_path'])
-            resource_status = get_object_at(status_path).replace('.', '_')
+            resource_status = get_object_at(self, status_path).replace('.', '_')
         else:
             resource_status = None
         unknown_vpc_id = True if current_path[4] != 'vpcs' else False
