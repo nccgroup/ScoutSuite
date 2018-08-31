@@ -202,20 +202,23 @@ class AWSProvider(BaseProvider):
                            {'map': self.sg_map})
 
     def _map_all_subnets(self):
-        a = dict()
+        subnet_map = dict()
         self._go_to_and_do(self.services['vpc'],
                            ['regions', 'vpcs', 'subnets'],
                            ['services', 'vpc'],
                            self._map_resource,
-                           {'map': self.subnet_map})
-        b = a
+                           {'map': subnet_map})
+        self.subnet_map = subnet_map
 
     def _map_resource(self, current_config, path, current_path, resource_id, callback_args):
-        map = callback_args['map']
-        if resource_id not in map:
-            map[resource_id] = {'region': current_path[3]}
+        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
+        # map = callback_args['map']
+        if resource_id not in callback_args['map']:
+            callback_args['map'][resource_id] = {'region': current_path[3]}
             if len(current_path) > 5:
-                map[resource_id]['vpc_id'] = current_path[5]
+                callback_args['map'][resource_id]['vpc_id'] = current_path[5]
+        a = callback_args['map']
+        b = a
 
     def _match_iam_policies_and_buckets(self):
         s3_info = self.services['s3']
