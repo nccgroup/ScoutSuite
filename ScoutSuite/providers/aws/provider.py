@@ -195,30 +195,28 @@ class AWSProvider(BaseProvider):
                                                        [g['GroupId'] for g in current_config['Groups']], [])
 
     def _map_all_sgs(self):
+        sg_map = dict()
         self._go_to_and_do(self.services['ec2'],
                            ['regions', 'vpcs', 'security_groups'],
                            ['services', 'ec2'],
-                           self._map_resource,
-                           {'map': self.sg_map})
+                           self.map_resource,
+                           {'map': sg_map})
+        self.sg_map = sg_map
 
     def _map_all_subnets(self):
         subnet_map = dict()
         self._go_to_and_do(self.services['vpc'],
                            ['regions', 'vpcs', 'subnets'],
                            ['services', 'vpc'],
-                           self._map_resource,
+                           self.map_resource,
                            {'map': subnet_map})
         self.subnet_map = subnet_map
 
-    def _map_resource(self, current_config, path, current_path, resource_id, callback_args):
-        print('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!')
-        # map = callback_args['map']
+    def map_resource(self, current_config, path, current_path, resource_id, callback_args):
         if resource_id not in callback_args['map']:
             callback_args['map'][resource_id] = {'region': current_path[3]}
             if len(current_path) > 5:
                 callback_args['map'][resource_id]['vpc_id'] = current_path[5]
-        a = callback_args['map']
-        b = a
 
     def _match_iam_policies_and_buckets(self):
         s3_info = self.services['s3']
@@ -467,8 +465,11 @@ class AWSProvider(BaseProvider):
 
     def _set_emr_vpc_ids(self):
         clear_list = []
-        self._go_to_and_do(self.services['emr'], ['regions', 'vpcs'], ['services', 'emr'],
-                           self.set_emr_vpc_ids_callback, {'clear_list': clear_list})
+        self._go_to_and_do(self.services['emr'],
+                           ['regions', 'vpcs'],
+                           ['services', 'emr'],
+                           self.set_emr_vpc_ids_callback,
+                           {'clear_list': clear_list})
         for region in clear_list:
             self.services['emr']['regions']['region']['vpcs'].pop('TODO')
 
@@ -512,7 +513,11 @@ class AWSProvider(BaseProvider):
 
     def _parse_elb_policies(self):
         if 'elb' in self.config['services']:
-            self._go_to_and_do(self.services['elb'], ['regions'], [], self.parse_elb_policies_callback, {})
+            self._go_to_and_do(self.services['elb'],
+                               ['regions'],
+                               [],
+                               self.parse_elb_policies_callback,
+                               {})
 
         # if 'elbv2' in self.config['services']:
         # Do something too here...

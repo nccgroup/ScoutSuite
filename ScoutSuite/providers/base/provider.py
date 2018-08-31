@@ -310,9 +310,11 @@ class BaseProvider:
                         break
                     current_path.append(key)
                     current_config = current_config[key]
-            if hasattr(current_config, key):
+            # if hasattr(current_config, key):
+            if key in current_config:
                 current_path.append(key)
-                current_config_key = getattr(current_config, key)
+                # current_config_key = getattr(current_config, key)
+                current_config_key = current_config[key]
                 for (i, value) in enumerate(list(current_config_key)):
                     if len(path) == 0:
                         if type(current_config_key == dict) and type(value) != dict and type(value) != list:
