@@ -77,7 +77,7 @@ class BaseProvider:
         self._update_metadata()
         self._update_last_run(current_time, ruleset)
 
-    def fetch(self, regions=[], skipped_regions=[], partition_name='aws'):
+    def fetch(self, regions=[], skipped_regions=[], partition_name=None):
         """
         Fetch resources for each service
 
@@ -89,7 +89,7 @@ class BaseProvider:
         :return:
         """
         # TODO: determine partition name based on regions and warn if multiple partitions...
-        self.services.fetch(self.credentials, self.service_list, regions, partition_name=None)
+        self.services.fetch(self.credentials, self.service_list, regions, partition_name=partition_name)
 
         # TODO implement this properly
         """
@@ -284,8 +284,9 @@ class BaseProvider:
                                 if 'summaries' in self.metadata[service_group][service] and summary in \
                                         self.metadata[service_group][service]['summaries']:
                                     try:
-                                        source = get_object_at(self.metadata[service_group][service][
-                                                                   'summaries'][summary]['path'].split('.'))
+                                        source = get_object_at(
+                                            self.metadata[service_group][service]['summaries'][summary]['path'].
+                                                split('.'))
                                     except:
                                         source = {}
                                     target_object.update(source)
@@ -362,10 +363,16 @@ class BaseProvider:
                     if len(path) == 0:
                         for callback_info in callbacks:
                             callback_name = callback_info[0]
-                            callback = globals()[callback_name]
+
+                            # callback = globals()[callback_name]
+                            callback = getattr(self, callback_name)
+
                             callback_args = callback_info[1]
                             if type(current_config[key] == dict) and type(value) != dict and type(value) != list:
-                                callback(current_config[key][value], path, current_path, value,
+                                callback(current_config[key][value],
+                                         path,
+                                         current_path,
+                                         value,
                                          callback_args)
                             else:
                                 callback(current_config, path, current_path, value, callback_args)

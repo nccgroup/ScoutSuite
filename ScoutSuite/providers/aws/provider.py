@@ -78,8 +78,7 @@ class AWSProvider(BaseProvider):
 
         # Various data processing calls
         self._add_security_group_name_to_ec2_grants()
-        # TODO fix this
-        # self._process_cloudtrail_trails(self.services['cloudtrail'])
+        self._process_cloudtrail_trails(self.services['cloudtrail'])
         self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
         self._merge_route53_and_route53domains()
         self._match_instances_and_roles()
@@ -112,15 +111,14 @@ class AWSProvider(BaseProvider):
         self._go_to_and_do(self.services['ec2'],
                            ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports', 'security_groups'],
                            [],
-                           self._add_security_group_name_to_ec2_grants_callback,
+                           self.add_security_group_name_to_ec2_grants_callback,
                            {'AWSAccountId': self.aws_account_id})
 
-    def _add_security_group_name_to_ec2_grants_callback(self, ec2_config, current_config, path, current_path, ec2_grant,
-                                                        callback_args):
+    def add_security_group_name_to_ec2_grants_callback(self, current_config, path, current_path, ec2_grant, callback_args):
         sg_id = ec2_grant['GroupId']
         if sg_id in current_path:
             target = current_path[:(current_path.index(sg_id) + 1)]
-            ec2_grant['GroupName'] = get_value_at(ec2_config, target, 'name')
+            ec2_grant['GroupName'] = get_value_at(self.services['ec2'], target, 'name')
         elif ec2_grant['UserId'] == callback_args['AWSAccountId']:
             if 'VpcId' in ec2_grant:
                 target = current_path[:(current_path.index('vpcs') + 1)]
@@ -130,15 +128,15 @@ class AWSProvider(BaseProvider):
             else:
                 target = current_path[:(current_path.index('security_groups') + 1)]
                 target.append(sg_id)
-            ec2_grant['GroupName'] = get_value_at(ec2_config, target, 'name')
+            ec2_grant['GroupName'] = get_value_at(self.services['ec2'], target, 'name')
 
     def _process_cloudtrail_trails(self, cloudtrail_config):
         printInfo('Processing CloudTrail config...')
         global_events_logging = []
         data_logging_trails_count = 0
-        for region in cloudtrail_config.regions:
-            for trail_id in cloudtrail_config.regions.region.trails:
-                trail = cloudtrail_config.regions.region.trails.trail_id
+        for region in cloudtrail_config['regions']:
+            for trail_id in cloudtrail_config['regions'][region]['trails']:
+                trail = cloudtrail_config['regions'][region]['trails']['trail_id']
                 if 'HomeRegion' in trail and trail['HomeRegion'] != region:
                     # Part of a multi-region trail, skip until we find the whole object
                     continue
@@ -152,8 +150,7 @@ class AWSProvider(BaseProvider):
         cloudtrail_config['IncludeGlobalServiceEvents'] = False if (len(global_events_logging) == 0) else True
         cloudtrail_config['DuplicatedGlobalServiceEvents'] = True if (len(global_events_logging) > 1) else False
 
-    def _process_network_acls_callback(self, vpc_config, current_config, path, current_path, privateip_id,
-                                       callback_args):
+    def process_network_acls_callback(self, current_config, path, current_path, privateip_id, callback_args):
         # Check if the network ACL allows all traffic from all IP addresses
         self._process_network_acls_check_for_allow_all(current_config, 'ingress')
         self._process_network_acls_check_for_allow_all(current_config, 'egress')
@@ -181,8 +178,7 @@ class AWSProvider(BaseProvider):
         else:
             network_acl['use_default_%s_rules' % direction] = False
 
-    def _list_ec2_network_attack_surface_callback(self, current_config, path, current_path, privateip_id,
-                                                  callback_args):
+    def list_ec2_network_attack_surface_callback(self, current_config, path, current_path, privateip_id, callback_args):
         manage_dictionary(self.services['ec2'], 'external_attack_surface', {})
         if 'Association' in current_config and current_config['Association']:
             public_ip = current_config['Association']['PublicIp']
@@ -206,13 +202,15 @@ class AWSProvider(BaseProvider):
                            {'map': self.sg_map})
 
     def _map_all_subnets(self):
+        a = dict()
         self._go_to_and_do(self.services['vpc'],
                            ['regions', 'vpcs', 'subnets'],
                            ['services', 'vpc'],
                            self._map_resource,
                            {'map': self.subnet_map})
+        b = a
 
-    def _map_resource(self, ec2_config, current_config, path, current_path, resource_id, callback_args):
+    def _map_resource(self, current_config, path, current_path, resource_id, callback_args):
         map = callback_args['map']
         if resource_id not in map:
             map[resource_id] = {'region': current_path[3]}
@@ -314,18 +312,16 @@ class AWSProvider(BaseProvider):
             # Could be an error or cross-account access, ignore...
             pass
 
-    def _match_network_acls_and_subnets_callback(self, vpc_config, current_config, path, current_path, acl_id,
-                                                 callback_args):
+    def match_network_acls_and_subnets_callback(self, current_config, path, current_path, acl_id, callback_args):
         for association in current_config['Associations']:
             subnet_path = current_path[:-1] + ['subnets', association['SubnetId']]
-            subnet = get_object_at(vpc_config, subnet_path)
+            subnet = get_object_at(self, subnet_path)
             subnet['network_acl'] = acl_id
 
-    def _match_instances_and_subnets_callback(self, current_config, path, current_path, instance_id,
-                                              callback_args):
+    def match_instances_and_subnets_callback(self, current_config, path, current_path, instance_id, callback_args):
         subnet_id = current_config['SubnetId']
         vpc = self.subnet_map[subnet_id]
-        subnet = self.services['vpc']['regions']['vpc']['region']['vpcs']['vpc']['vpc_id']['subnets']['subnet_id']
+        subnet = self.services['vpc']['regions'][vpc['region']]['vpcs'][vpc['vpc_id']]['subnets'][subnet_id]
         manage_dictionary(subnet, 'instances', [])
         if instance_id not in subnet['instances']:
             subnet['instances'].append(instance_id)
@@ -352,15 +348,13 @@ class AWSProvider(BaseProvider):
                         role_instances[instance_profile_id]
                     iam_config['roles'][role_id]['instances_count'] += len(role_instances[instance_profile_id])
 
-    def _match_roles_and_cloudformation_stacks_callback(self, current_config, path, current_path, stack_id,
-                                                        callback_args):
+    def match_roles_and_cloudformation_stacks_callback(self, current_config, path, current_path, stack_id, callback_args):
         if 'RoleARN' not in current_config:
             return
         role_arn = current_config.pop('RoleARN')
         current_config['iam_role'] = self._get_role_info('arn', role_arn)
 
-    def _match_roles_and_vpc_flowlogs_callback(self, current_config, path, current_path, flowlog_id,
-                                               callback_args):
+    def match_roles_and_vpc_flowlogs_callback(self, current_config, path, current_path, flowlog_id, callback_args):
         if 'DeliverLogsPermissionArn' not in current_config:
             return
         delivery_role_arn = current_config.pop('DeliverLogsPermissionArn')
@@ -375,8 +369,7 @@ class AWSProvider(BaseProvider):
                 break
         return iam_role_info
 
-    def _process_vpc_peering_connections_callback(self, current_config, path, current_path, pc_id,
-                                                  callback_args):
+    def process_vpc_peering_connections_callback(self, current_config, path, current_path, pc_id, callback_args):
 
         # Create a list of peering connection IDs in each VPC
         info = 'AccepterVpcInfo' if current_config['AccepterVpcInfo']['OwnerId'] == self.config[
@@ -399,11 +392,10 @@ class AWSProvider(BaseProvider):
         else:
             current_config['peer_info']['name'] = current_config['peer_info']['OwnerId']
 
-    def _match_security_groups_and_resources_callback(self, current_config, path, current_path, resource_id,
-                                                      callback_args):
+    def match_security_groups_and_resources_callback(self, current_config, path, current_path, resource_id, callback_args):
         service = current_path[1]
         original_resource_path = combine_paths(copy.deepcopy(current_path), [resource_id])
-        resource = get_object_at(original_resource_path)
+        resource = get_object_at(self, original_resource_path)
         if not 'resource_id_path' in callback_args:
             resource_type = current_path[-1]
             resource_path = copy.deepcopy(current_path)
@@ -442,7 +434,7 @@ class AWSProvider(BaseProvider):
                     sg_base_path.append('security_groups')
                 sg_path = copy.deepcopy(sg_base_path)
                 sg_path.append(sg_id)
-                sg = get_object_at(sg_path)
+                sg = get_object_at(self, sg_path)
                 # Add usage information
                 manage_dictionary(sg, 'used_by', {})
                 manage_dictionary(sg['used_by'], service, {})
@@ -473,11 +465,11 @@ class AWSProvider(BaseProvider):
     def _set_emr_vpc_ids(self):
         clear_list = []
         self._go_to_and_do(self.services['emr'], ['regions', 'vpcs'], ['services', 'emr'],
-                           self._set_emr_vpc_ids_callback, {'clear_list': clear_list})
+                           self.set_emr_vpc_ids_callback, {'clear_list': clear_list})
         for region in clear_list:
             self.services['emr']['regions']['region']['vpcs'].pop('TODO')
 
-    def _set_emr_vpc_ids_callback(self, current_config, path, current_path, vpc_id, callback_args):
+    def set_emr_vpc_ids_callback(self, current_config, path, current_path, vpc_id, callback_args):
         if vpc_id != 'TODO':
             return
         region = current_path[3]
@@ -517,12 +509,12 @@ class AWSProvider(BaseProvider):
 
     def _parse_elb_policies(self):
         if 'elb' in self.config['services']:
-            self._go_to_and_do(self.services['elb'], ['regions'], [], self._parse_elb_policies_callback, {})
+            self._go_to_and_do(self.services['elb'], ['regions'], [], self.parse_elb_policies_callback, {})
 
         # if 'elbv2' in self.config['services']:
         # Do something too here...
 
-    def _parse_elb_policies_callback(self, current_config, path, current_path, region_id, callback_args):
+    def parse_elb_policies_callback(self, current_config, path, current_path, region_id, callback_args):
         region_config = get_object_at(['services', 'elb', ] + current_path + [region_id])
         region_config['elb_policies'] = current_config['elb_policies']
         for policy_id in region_config['elb_policies']:
@@ -548,12 +540,12 @@ class AWSProvider(BaseProvider):
                 policy['ciphers'] = ciphers
                 # TODO: pop ?
 
-    def _sort_vpc_flow_logs_callback(self, vpc_config, current_config, path, current_path, flow_log_id, callback_args):
+    def sort_vpc_flow_logs_callback(self, current_config, path, current_path, flow_log_id, callback_args):
         attached_resource = current_config['ResourceId']
         if attached_resource.startswith('vpc-'):
-            vpc_path = combine_paths(current_path[0:2], ['vpcs', attached_resource])
+            vpc_path = combine_paths(current_path[0:4], ['vpcs', attached_resource])
             try:
-                attached_vpc = get_object_at(vpc_config, vpc_path)
+                attached_vpc = get_object_at(self, vpc_path)
             except Exception as e:
                 printDebug(
                     'It appears that the flow log %s is attached to a resource that was previously deleted (%s).' % (
@@ -567,13 +559,20 @@ class AWSProvider(BaseProvider):
                 if flow_log_id not in attached_vpc['subnets'][subnet_id]['flow_logs']:
                     attached_vpc['subnets'][subnet_id]['flow_logs'].append(flow_log_id)
         elif attached_resource.startswith('subnet-'):
-            all_vpcs = get_object_at(vpc_config, combine_paths(current_path[0:2], ['vpcs']))
-            for vpc in all_vpcs:
-                if attached_resource in all_vpcs[vpc]['subnets']:
-                    manage_dictionary(all_vpcs[vpc]['subnets'][attached_resource], 'flow_logs', [])
-                    if flow_log_id not in all_vpcs[vpc]['subnets'][attached_resource]['flow_logs']:
-                        all_vpcs[vpc]['subnets'][attached_resource]['flow_logs'].append(flow_log_id)
-                    break
+            subnet_path = combine_paths(current_path[0:4],
+                                        ['vpcs', self.subnet_map[attached_resource]['vpc_id'], 'subnets', attached_resource])
+            subnet = get_object_at(self, subnet_path)
+            manage_dictionary(subnet, 'flow_logs', [])
+            if flow_log_id not in subnet['flow_logs']:
+                subnet['flow_logs'].append(flow_log_id)
+            # TODO this is pre-merge (from Loic) code
+            # all_vpcs = get_object_at(self, combine_paths(current_path[0:2], ['vpcs']))
+            # for vpc in self.services['vpc']:
+            #     if attached_resource in all_vpcs[vpc]['subnets']:
+            #         manage_dictionary(all_vpcs[vpc]['subnets'][attached_resource], 'flow_logs', [])
+            #         if flow_log_id not in all_vpcs[vpc]['subnets'][attached_resource]['flow_logs']:
+            #             all_vpcs[vpc]['subnets'][attached_resource]['flow_logs'].append(flow_log_id)
+            #         break
         else:
             printError('Resource %s attached to flow logs is not handled' % attached_resource)
 
@@ -643,7 +642,7 @@ class AWSProvider(BaseProvider):
             sg_path.append(sg_id)
             sg_path.append('rules')
             sg_path.append('ingress')
-            ingress_rules = get_object_at(sg_path)
+            ingress_rules = get_object_at(self, sg_path)
             public_ip_grants = {}
             for p in ingress_rules['protocols']:
                 for port in ingress_rules['protocols'][p]['ports']:

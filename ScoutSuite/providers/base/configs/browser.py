@@ -32,7 +32,7 @@ def get_attribute_at(config, target_path, key, default_value = None):
     return config[key] if key in config else default_value
 
 
-def get_object_at(dictionary, path, attribute_name = None):
+def get_object_at(object, path, attribute_name=None):
     """
     Get arbitrary object given a dictionary and path (list of keys)
 
@@ -41,13 +41,33 @@ def get_object_at(dictionary, path, attribute_name = None):
     :param attribute_name:
     :return:
     """
-    o = dictionary
-    for p in path:
-        o = o[p]
-    if attribute_name:
-        return o[attribute_name]
-    else:
-        return o
+    o = object
+    try:
+        for p in path:
+            if type(o) is dict:
+                o = o[p]
+            else:
+                o = getattr(o, p)
+
+        if attribute_name:
+            if type(o) is dict:
+                return o[attribute_name]
+            else:
+                return getattr(o, attribute_name)
+        else:
+            return o
+    except Exception as e:
+        printException(e)
+        raise Exception
+
+    # this is the legacy version of this function
+    # o = dictionary
+    # for p in path:
+    #     o = o[p]
+    # if attribute_name:
+    #     return o[attribute_name]
+    # else:
+    #     return o
 
 
 def get_value_at(all_info, current_path, key, to_string = False):

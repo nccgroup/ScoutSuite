@@ -64,7 +64,7 @@ def main():
         # Fetch data from provider APIs
         try:
             # TODO this is specific to AWS
-            if args.provider is 'aws':
+            if args.provider == 'aws':
                 cloud_provider.fetch(regions=args.regions, partition_name=get_partition_name(cloud_provider.credentials))
             else:
                 cloud_provider.fetch(regions=args.regions)
