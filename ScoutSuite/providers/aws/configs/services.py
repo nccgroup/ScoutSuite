@@ -66,51 +66,29 @@ class AWSServicesConfig(BaseServicesConfig):
         self.sqs = SQSConfig(metadata['messaging']['sqs'], thread_config)
         self.vpc = VPCConfig(metadata['network']['vpc'], thread_config)
 
-    def fetch(self, credentials, services=[], regions=[], partition_name='', **kwargs):
-        """
+    def _is_provider(self, provider_name):
+        if provider_name == 'aws':
+            return True
+        else:
+            return False
 
-        :param credentials:
-        :param services:
-        :param regions:
-        :param partition_name:
-        :return:
-        """
-        for service in vars(self):
-            try:
-                # skip services
-                if services != [] and service not in services:
-                    continue
-                service_config = getattr(self, service)
-                # call fetch method for the service
-                if 'fetch_all' in dir(service_config):
-                    method_args = {}
-                    method_args['credentials'] = credentials
-                    if service != 'iam':
-                        method_args['regions'] = regions
-                        method_args['partition_name'] = partition_name
-                    service_config.fetch_all(**method_args)
-                    if hasattr(service_config, 'finalize'):
-                        service_config.finalize()
-                else:
-                    printDebug('No method to fetch service %s.' % service)
-            except Exception as e:
-                printError('Error: could not fetch %s configuration.' % service)
-                printException(e)
+    # TODO is this ever called?
+    # def single_service_pass(self):
+    #     pass
 
-    def single_service_pass(self):
-        pass
+    # TODO is this ever called?
+    # def multi_service_pass(self):
+    #     pass
 
-    def multi_service_pass(self):
-        pass
-
-    def postprocessing(self):
-        for service in self.services:
-            method_name = '%s_postprocessing' % service
-            if method_name in globals():
-                try:
-                    printInfo('Post-processing %s config...' % format_service_name(service))
-                    method = globals()[method_name]
-                    method(aws_config)
-                except Exception as e:
-                    printException(e)
-                    pass
+    # TODO is this ever called?
+    # def postprocessing(self):
+    #     for service in self.services:
+    #         method_name = '%s_postprocessing' % service
+    #         if method_name in globals():
+    #             try:
+    #                 printInfo('Post-processing %s config...' % format_service_name(service))
+    #                 method = globals()[method_name]
+    #                 method(aws_config)
+    #             except Exception as e:
+    #                 printException(e)
+    #                 pass

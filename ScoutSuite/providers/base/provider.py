@@ -180,38 +180,6 @@ class BaseProvider:
                             except Exception as e:
                                 printException(e)
 
-    # TODO remove, this is most likely legacy code
-    # def update_metadata(self):
-    #     service_map = {}
-    #     for service_group in self.metadata:
-    #         for service in self.metadata[service_group]:
-    #             if service not in self.service_list:
-    #                 continue
-    #             if 'resources' not in self.metadata[service_group][service]:
-    #                 continue
-    #             service_map[service] = service_group
-    #             for resource in self.metadata[service_group][service]['resources']:
-    #                 # full_path = path if needed
-    #                 if not 'full_path' in self.metadata[service_group][service]['resources'][resource]:
-    #                     self.metadata[service_group][service]['resources'][resource]['full_path'] = self.metadata[service_group][service]['resources'][resource]['path']
-    #                 # Script is the full path minus "id" (TODO: change that)
-    #                 if not 'script' in self.metadata[service_group][service]['resources'][resource]:
-    #                     self.metadata[service_group][service]['resources'][resource]['script'] = '.'.join([x for x in self.metadata[service_group][service]['resources'][resource]['full_path'].split('.') if x != 'id'])
-    #                 # Update counts
-    #                 count = '%s_count' % resource
-    #                 service_config = getattr(self.services, service)
-    #                 if service_config and resource != 'regions':
-    #                   if hasattr(service_config, 'regions'):
-    #                     self.metadata[service_group][service]['resources'][resource]['count'] = 0
-    #                     for region in service_config.regions:
-    #                         if hasattr(service_config.regions[region], count):
-    #                             self.metadata[service_group][service]['resources'][resource]['count'] += getattr(service_config.regions[region], count)
-    #                   else:
-    #                       try:
-    #                           self.metadata[service_group][service]['resources'][resource]['count'] = getattr(service_config, count)
-    #                       except Exception as e:
-    #                           printException(e)
-    #                           print(vars(service_config))
 
     def _process_metadata_callbacks(self):
         """
