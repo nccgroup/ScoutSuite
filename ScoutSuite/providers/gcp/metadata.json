@@ -7,6 +7,14 @@
                     "path": "services.cloudstorage.buckets"
                 }
             }
+        },
+        "cloudstorage": {
+          "resources": {
+            "buckets": {
+              "cols": 2,
+              "path": "services.cloudsql.databases"
+            }
+          }
         }
     }
 }

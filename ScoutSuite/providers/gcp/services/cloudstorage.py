@@ -11,6 +11,9 @@ class CloudStorageConfig(GCPBaseConfig):
     )
 
     def __init__(self, thread_config):
+
+        self.library_type = 'cloud_client_library'
+
         self.buckets = {}
         self.buckets_count = 0
         super(CloudStorageConfig, self).__init__(thread_config)

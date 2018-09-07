@@ -14,7 +14,10 @@ from hashlib import sha1
 
 from ScoutSuite.providers.base.configs.threads import thread_configs
 
+# TODO do this better without name conflict
 from opinel.utils.aws import connect_service
+from ScoutSuite.providers.gcp.utils import gcp_connect_service
+
 from opinel.utils.aws import build_region_list, handle_truncated_response
 from opinel.utils.console import printException, printInfo
 
@@ -83,7 +86,7 @@ class BaseConfig():
                 api_client = connect_service(self.service, credentials, silent=True)
 
         elif self._is_provider('gcp'):
-            api_client = connect_service(service=self.service, credentials=credentials)
+            api_client = gcp_connect_service(service=self.service, credentials=credentials)
 
         # Threading to fetch & parse resources (queue consumer)
         params = {'api_client': api_client}
