@@ -89,7 +89,7 @@ class BaseProvider:
         :return:
         """
         # TODO: determine partition name based on regions and warn if multiple partitions...
-        self.services.fetch(self.credentials, self.service_list, regions, partition_name=partition_name)
+        self.services.fetch(self.credentials, self.service_list, regions)
 
         # TODO implement this properly
         """

@@ -63,17 +63,13 @@ def main():
 
         # Fetch data from provider APIs
         try:
-            # TODO this is specific to AWS
-            if args.provider == 'aws':
-                cloud_provider.fetch(regions=args.regions, partition_name=get_partition_name(cloud_provider.credentials))
-            else:
-                cloud_provider.fetch(regions=args.regions)
+            cloud_provider.fetch(regions=args.regions)
         except KeyboardInterrupt:
             printInfo('\nCancelled by user')
             return 130
 
-        # TODO this is currently broken
-        # # Update means we reload the whole config and overwrite part of it
+        # Update means we reload the whole config and overwrite part of it
+        # TODO this is currently broken - unsure if will be supporterd in the future
         # if args.update:
         #     new_aws_config = copy.deepcopy(aws_config)
         #     aws_config = report.jsrw.load_from_file(AWSCONFIG)
@@ -85,8 +81,8 @@ def main():
 
     # Partial run, using pre-pulled data
     else:
-        # TODO this is currently broken
-        # # Reload to flatten everything into a python dictionary
+        # Reload to flatten everything into a python dictionary
+        # TODO this is currently broken - unsure if will be supporterd in the future
         # aws_config = report.jsrw.load_from_file(AWSCONFIG)
         pass
 
@@ -122,8 +118,8 @@ def main():
     # Finalize
     cloud_provider.postprocessing(report.current_time, finding_rules)
 
+    # Get organization data if it exists
     # TODO this is AWS-specific
-    # # Get organization data if it exists
     # try:
     #     profile = AWSProfiles.get(args.profile[0])[0]
     #     if 'source_profile' in profile.attributes:

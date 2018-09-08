@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.console import printError, printException, printInfo, printDebug
+from opinel.utils.console import printError, printException, printDebug
+from opinel.utils.aws import get_aws_account_id, get_partition_name
 
 class BaseServicesConfig:
 
-    def __init__(self, metadata, thread_config = 4):
+    def __init__(self, metadata, thread_config=4):
         pass
-
 
     def _is_provider(self, provider_name):
         return False
 
-
-    def fetch(self, credentials, services=[], regions=[], partition_name='', **kwargs):
+    def fetch(self, credentials, services=[], regions=[]):
         for service in vars(self):
             try:
                 # skip services
@@ -27,7 +26,7 @@ class BaseServicesConfig:
 
                     if self._is_provider('aws'):
                         if service != 'iam':
-                            method_args['partition_name'] = partition_name
+                            method_args['partition_name'] = get_partition_name(credentials)
 
                     service_config.fetch_all(**method_args)
                     if hasattr(service_config, 'finalize'):
