@@ -136,7 +136,7 @@ class AWSProvider(BaseProvider):
         data_logging_trails_count = 0
         for region in cloudtrail_config['regions']:
             for trail_id in cloudtrail_config['regions'][region]['trails']:
-                trail = cloudtrail_config['regions'][region]['trails']['trail_id']
+                trail = cloudtrail_config['regions'][region]['trails'][trail_id]
                 if 'HomeRegion' in trail and trail['HomeRegion'] != region:
                     # Part of a multi-region trail, skip until we find the whole object
                     continue
