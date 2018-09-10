@@ -665,10 +665,9 @@ class AWSProvider(BaseProvider):
                             port_min = int(ports[0])
                             port_max = int(ports[1])
                         else:
-                            port_min = port_max = port
+                            port_min = port_max = int(port)
                         for listener in listeners:
-                            listener = int(listener)
-                            if listener > port_min and listener < port_max and 'cidrs' in \
+                            if int(listener) > port_min and int(listener) < port_max and 'cidrs' in \
                                     ingress_rules['protocols'][p]['ports'][port]:
                                 manage_dictionary(attack_surface_config[public_ip]['protocols'], p, {'ports': {}})
                                 manage_dictionary(attack_surface_config[public_ip]['protocols'][p]['ports'],
