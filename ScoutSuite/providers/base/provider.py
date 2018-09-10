@@ -203,8 +203,8 @@ class BaseProvider:
                                 'external_attack_surface' in self.services[service]:
                             self.services[service].pop('external_attack_surface')
                 # Reset all global summaries
-                if 'service_groups' in vars(self):
-                    self.config.pop('service_groups')
+                if hasattr(self, 'service_groups'):
+                    del self.service_groups
                 # Resources
                 for resource_type in self.metadata[service_group][service]['resources']:
                     if 'callbacks' in self.metadata[service_group][service]['resources'][resource_type]:
