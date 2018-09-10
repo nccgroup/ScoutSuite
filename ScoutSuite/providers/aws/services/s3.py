@@ -4,7 +4,8 @@ S3-related classes and functions
 """
 
 import json
-from botocore.exceptions import ClientError
+
+from botocore.exceptions import ClientError, ParamValidationError
 
 from opinel.utils.aws import handle_truncated_response
 from opinel.utils.console import printError, printException, printInfo
@@ -66,8 +67,10 @@ class S3Config(AWSBaseConfig):
         get_s3_bucket_logging(api_client, bucket['name'], bucket)
         get_s3_bucket_versioning(api_client, bucket['name'], bucket)
         get_s3_bucket_webhosting(api_client, bucket['name'], bucket)
+        get_s3_bucket_default_encryption(api_client, bucket['name'], bucket)
         bucket['grantees'] = get_s3_acls(api_client, bucket['name'], bucket)
         get_s3_bucket_policy(api_client, bucket['name'], bucket)
+        get_s3_bucket_secure_transport(api_client, bucket['name'], bucket)
         # If requested, get key properties
         #if params['check_encryption'] or params['check_acls']:
         #    get_s3_bucket_keys(api_client, bucket['name'], bucket, params['check_encryption'],
@@ -210,6 +213,28 @@ def get_s3_bucket_policy(api_client, bucket_name, bucket_info):
             printError('Failed to get bucket policy for %s: %s' % (bucket_name, e))
         return False
 
+def get_s3_bucket_secure_transport(api_client, bucket_name, bucket_info):
+    try:
+        if 'policy' in bucket_info:
+            bucket_info['secure_transport'] = 'Disabled'
+            for statement in bucket_info['policy']['Statement']:
+                # evaluate statement to see if it contains a condition disallowing HTTP transport
+                # TODO this might not cover all cases
+                if 'Condition' in statement and \
+                        'Bool' in statement['Condition'] and \
+                        'aws:SecureTransport' in statement['Condition']['Bool'] and \
+                        statement['Condition']['Bool']['aws:SecureTransport'] == 'false' and \
+                        statement['Effect'] == 'Deny':
+                    bucket_info['secure_transport'] = 'Enabled'
+            return True
+        else:
+            bucket_info['secure_transport'] = 'Disabled'
+            return True
+    except Exception as e:
+        printError('Failed to get evaluate bucket policy for %s: %s' % (bucket_name, e))
+        bucket_info['secure_transport'] = 'Unknown'
+        return False
+
 def get_s3_bucket_versioning(api_client, bucket_name, bucket_info):
     try:
         versioning = api_client.get_bucket_versioning(Bucket = bucket_name)
@@ -243,6 +268,24 @@ def get_s3_bucket_webhosting(api_client, bucket_name, bucket_info):
     except Exception as e:
         # TODO: distinguish permission denied from  'NoSuchWebsiteConfiguration' errors
         bucket_info['web_hosting'] = 'Disabled'
+        return False
+
+def get_s3_bucket_default_encryption(api_client, bucket_name, bucket_info):
+    try:
+        default_encryption = api_client.get_bucket_encryption(Bucket = bucket_name)
+        bucket_info['default_encryption'] = 'Enabled'
+        return True
+    except ClientError as e:
+        if 'ServerSideEncryptionConfigurationNotFoundError' in e.response['Error']['Code']:
+            bucket_info['default_encryption'] = 'Disabled'
+            return True
+        else:
+            printError('Failed to get encryption configuration for %s: %s' % (bucket_name, e))
+            bucket_info['default_encryption'] = 'Unknown'
+            return False
+    except Exception as e:
+        printError('Failed to get encryption configuration for %s: %s' % (bucket_name, e))
+        bucket_info['default_encryption'] = 'Unknown'
         return False
 
 def get_s3_buckets(api_client, s3_info, s3_params):
