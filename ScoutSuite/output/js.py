@@ -24,7 +24,7 @@ class Scout2Encoder(json.JSONEncoder):
             else:
                 # remove credentials from metadata
                 if hasattr(o, 'credentials'):
-                    o.credentials = None
+                    del o.credentials
                 return vars(o)
         except Exception as e:
             return str(o)
