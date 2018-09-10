@@ -22,7 +22,7 @@ class Scout2Encoder(json.JSONEncoder):
             if type(o) == datetime.datetime:
                 return str(o)
             else:
-                # remove unwanted attributes from the provider object
+                # remove unwanted attributes from the provider object during conversion to json
                 if hasattr(o, 'profile'):
                     del o.profile
                 if hasattr(o, 'credentials'):
