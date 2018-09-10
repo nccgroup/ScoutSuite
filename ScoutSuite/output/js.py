@@ -22,9 +22,15 @@ class Scout2Encoder(json.JSONEncoder):
             if type(o) == datetime.datetime:
                 return str(o)
             else:
-                # remove credentials from metadata
+                # remove unwanted attributes from the provider object
+                if hasattr(o, 'profile'):
+                    del o.profile
                 if hasattr(o, 'credentials'):
                     del o.credentials
+                if hasattr(o, 'metadata_path'):
+                    del o.metadata_path
+                if hasattr(o, 'services_config'):
+                    del o.services_config
                 return vars(o)
         except Exception as e:
             return str(o)
