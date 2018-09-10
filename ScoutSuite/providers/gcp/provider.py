@@ -33,13 +33,12 @@ class GCPProvider(BaseProvider):
         """
 
         if client_secrets:
-            client_secrets_path = os.path.abspath(client_secrets)
+            client_secrets_path = os.path.abspath(client_secrets)  # TODO this is probably wrong
             os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = client_secrets_path
         # Currently not supported
         else:
             printError('Failed to authenticate to GCP - currently only supports service accounts')
             return False
-
 
         try:
             self.credentials, self.gcp_project_id = google.auth.default()
