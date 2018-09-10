@@ -373,8 +373,7 @@ class AWSProvider(BaseProvider):
     def process_vpc_peering_connections_callback(self, current_config, path, current_path, pc_id, callback_args):
 
         # Create a list of peering connection IDs in each VPC
-        info = 'AccepterVpcInfo' if current_config['AccepterVpcInfo']['OwnerId'] == self.config[
-            'aws_account_id'] else 'RequesterVpcInfo'
+        info = 'AccepterVpcInfo' if current_config['AccepterVpcInfo']['OwnerId'] == self.aws_account_id else 'RequesterVpcInfo'
         region = current_path[1]
         vpc_id = current_config[info]['VpcId']
         target = self.services['vpc']['regions']['region']['vpcs'][vpc_id]
@@ -387,8 +386,8 @@ class AWSProvider(BaseProvider):
             current_config['AccepterVpcInfo' if info == 'RequesterVpcInfo' else 'RequesterVpcInfo'])
         if 'PeeringOptions' in current_config['peer_info']:
             current_config['peer_info'].pop('PeeringOptions')
-        if 'organization' in self.config and current_config['peer_info']['OwnerId'] in self.config['organization']:
-            current_config['peer_info']['name'] = self.config['organization'][current_config['peer_info']['OwnerId']][
+        if hasattr('organization', self) and current_config['peer_info']['OwnerId'] in self.organization:
+            current_config['peer_info']['name'] = self.organization[current_config['peer_info']['OwnerId']][
                 'Name']
         else:
             current_config['peer_info']['name'] = current_config['peer_info']['OwnerId']
@@ -512,7 +511,7 @@ class AWSProvider(BaseProvider):
             callback_args['clear_list'].append(region)
 
     def _parse_elb_policies(self):
-        if 'elb' in self.config['services']:
+        if 'elb' in self.services:
             self._go_to_and_do(self.services['elb'],
                                ['regions'],
                                [],
@@ -584,9 +583,9 @@ class AWSProvider(BaseProvider):
         else:
             printError('Resource %s attached to flow logs is not handled' % attached_resource)
 
-    def _get_db_attack_surface(self, current_config, path, current_path, db_id, callback_args):
+    def get_db_attack_surface(self, current_config, path, current_path, db_id, callback_args):
         service = current_path[1]
-        service_config = self.config['services'][service]
+        service_config = self.services[service]
         manage_dictionary(service_config, 'external_attack_surface', {})
         if (service == 'redshift' or service == 'rds') and 'PubliclyAccessible' in current_config and current_config[
             'PubliclyAccessible']:
@@ -606,9 +605,9 @@ class AWSProvider(BaseProvider):
                                                    listeners)
             # TODO :: Get Redis endpoint information
 
-    def _get_lb_attack_surface(self, current_config, path, current_path, elb_id, callback_args):
+    def get_lb_attack_surface(self, current_config, path, current_path, elb_id, callback_args):
         public_dns = current_config['DNSName']
-        elb_config = self.config['services'][current_path[1]]
+        elb_config = self.services[current_path[1]]
         manage_dictionary(elb_config, 'external_attack_surface', {})
         if current_path[1] == 'elbv2' and current_config['Type'] == 'network':
             # Network LBs do not have a security group, lookup listeners instead
