@@ -13,7 +13,7 @@ class GCPServicesConfig(BaseServicesConfig):
     def __init__(self, metadata, thread_config=4):
 
         self.cloudstorage = CloudStorageConfig(thread_config)
-        # self.cloudsql = CloudSQLConfig(thread_config)
+        self.cloudsql = CloudSQLConfig(thread_config)
 
     def _is_provider(self, provider_name):
         if provider_name == 'gcp':

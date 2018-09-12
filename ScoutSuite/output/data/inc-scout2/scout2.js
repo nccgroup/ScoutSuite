@@ -726,14 +726,24 @@ var make_title = function(title) {
         return title.toString();
     }
     title = title.toLowerCase();
-    if (['ec2', 'efs', 'iam', 'rds', 'sns', 'ses', 'sqs', 'vpc'].indexOf(title) != -1) {
+    if (['ec2', 'efs', 'iam', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) != -1) {
         return title.toUpperCase();
     } else if (title == 'cloudtrail') {
         return 'CloudTrail';
     } else if (title == 'cloudwatch') {
         return 'CloudWatch';
+    } else if (title == 'cloudformation') {
+        return 'CloudFormation';
     } else if (title == 'awslambda') {
         return 'Lambda';
+    } else if (title == 'elasticache') {
+        return 'ElastiCache';
+    } else if (title == 'redshift') {
+        return 'RedShift';
+    } else if (title == 'cloudstorage') {
+        return 'Cloud Storage';
+    } else if (title == 'cloudsql') {
+        return 'Cloud SQL';
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
     }

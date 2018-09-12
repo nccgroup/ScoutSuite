@@ -8,6 +8,16 @@ from opinel.utils.console import printError, printException
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.gcp.configs.services import GCPServicesConfig
 
+import googleapiclient
+from oauth2client.client import GoogleCredentials
+from googleapiclient import discovery
+
+
+class GCPCredentials():
+
+    def __init__(self, api_client_credentials, cloud_client_credentials):
+        self.api_client_credentials = api_client_credentials
+        self.cloud_client_credentials = cloud_client_credentials
 
 class GCPProvider(BaseProvider):
     """
@@ -41,7 +51,16 @@ class GCPProvider(BaseProvider):
             return False
 
         try:
+
+            # TODO there is probably a better way to do this
+            # api_client_credentials = GoogleCredentials.get_application_default()
+            # cloud_client_credentials, self.gcp_project_id = google.auth.default()
+            #
+            # self.credentials = GCPCredentials(api_client_credentials, cloud_client_credentials)
+
+            # TODO not sure why this works - there are no credentials for API client libraries
             self.credentials, self.gcp_project_id = google.auth.default()
+
             self.aws_account_id = self.gcp_project_id  # TODO this is for AWS
 
             if self.credentials:

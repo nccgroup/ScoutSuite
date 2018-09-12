@@ -13,11 +13,9 @@ class GCPBaseConfig(BaseConfig):
 
     def __init__(self, thread_config):
 
-        self.library_type = None
+        self.library_type = None if not self.library_type else self.library_type
 
         super(GCPBaseConfig, self).__init__(thread_config)
-
-
 
     def _is_provider(self, provider_name):
         if provider_name == 'gcp':

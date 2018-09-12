@@ -8,11 +8,11 @@
                 }
             }
         },
-        "cloudstorage": {
+        "cloudsql": {
           "resources": {
-            "buckets": {
+            "instances": {
               "cols": 2,
-              "path": "services.cloudsql.databases"
+              "path": "services.cloudsql.instances"
             }
           }
         }

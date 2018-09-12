@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import sys
+
 from opinel.utils.cli_parser import OpinelArgumentParser
 
 from ScoutSuite import DEFAULT_REPORT_DIR
@@ -178,9 +180,30 @@ class ScoutSuiteArgumentParser(SharedArgumentParser):
                                  action='store',
                                  choices = ['aws', 'gcp'],
                                  help='The cloud provider to scan (currently supports AWS (\'aws\') and GCP (\'gcp\')')
-        self.parser.add_argument('--client-secrets',
+
+        a = sys.argv
+        self.parser.add_argument('--user-account',
+                                 action='store_true',
+                                 required='gcp' in sys.argv and '--service-account' not in sys.argv,
+                                 help='Run Scout Suite with a Google Account')
+
+        self.parser.add_argument('--service-account',
+                                 action='store_true',
+                                 required='gcp' in sys.argv and '--user-account' not in sys.argv,
+                                 help='Run Scout Suite with a Google Service Account')
+
+        self.parser.add_argument('--keys',
                                  action='store',
-                                 help='Path of the Google Application Credentials file')
+                                 required='--service-account' in sys.argv,
+                                 help='Path of the Google Service Account Application Credentials file')
+
+        self.parser.add_argument('--project-id',
+                                 action='store',
+                                 help='ID of the GCP Project to analyze')
+
+        self.parser.add_argument('--organization-id',
+                                 action='store',
+                                 help='ID of the GCP Organization to analyze')
 
     def parse_args(self):
         args = self.parser.parse_args()

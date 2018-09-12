@@ -157,7 +157,14 @@ class BaseConfig():
                     if not list_method_name:
                         continue
                     try:
-                        method = getattr(api_client, list_method_name)
+
+                        # This is a specific case for GCP services that don't have a native cloud library
+                        if self.library_type == 'api_client_library':
+                            target = getattr(api_client, target_type)
+                            method = getattr(target(), list_method_name)
+                        else:
+                            method = getattr(api_client, list_method_name)
+
                     except Exception as e:
                         printException(e)
                         continue
@@ -172,12 +179,18 @@ class BaseConfig():
                                     response_attribute]
 
                         elif self._is_provider('gcp'):
-                            response = method(**list_params)
-                            targets = list(response)
-                            # Remove client as it's unpickleable and adding the object to the Queue will pickle
-                            # The client is later re-inserted in each Config
-                            for t in targets:
-                                t._client = None
+
+                            if self.library_type == 'cloud_client_library':
+                                response = method(**list_params)
+                                targets = list(response)
+                                # Remove client as it's unpickleable and adding the object to the Queue will pickle
+                                # The client is later re-inserted in each Config
+                                for t in targets:
+                                    t._client = None
+                            if self.library_type == 'api_client_library':
+                                # TODO accessing the project id from here isn't great
+                                response = method(project=api_client._http.credentials.project_id).execute()
+                                targets = response['items']
 
                     except Exception as e:
                         if not ignore_list_error:

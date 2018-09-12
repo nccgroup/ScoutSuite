@@ -12,6 +12,24 @@
                 "enabled": true,
                 "level": "warning"
             }
+        ],
+        "cloudsql-instance-backups-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-instance-no-logging.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-instance-ssl-not-required.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
         ]
     }
 }

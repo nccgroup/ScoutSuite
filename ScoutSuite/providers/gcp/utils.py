@@ -11,11 +11,16 @@ def gcp_connect_service(service, credentials, region_name=None):
     try:
         if service == 'cloudstorage':
 
-            # service = discovery.build('storage', 'v1', credentials)
-
+            # return storage.Client(credentials=credentials.cloud_client_credentials)
             return storage.Client(credentials=credentials)
 
-        # elif service == 'cloudsql':
+        elif service == 'cloudsql':
+
+            # client = discovery.build('sqladmin', 'v1beta4', credentials.api_client_credentials)
+            # return client
+
+            # TODO not sure why this works - there are no credentials for API client libraries
+            return discovery.build('sqladmin', 'v1beta4')
 
         else:
             printException('Service %s not supported' % service)
@@ -24,26 +29,3 @@ def gcp_connect_service(service, credentials, region_name=None):
     except Exception as e:
         printException(e)
         return None
-
-"""
-insert_entity(projectId, "storage", ["buckets"], "Bucket")
-insert_entity(projectId, "sqladmin", ["instances"], "SQL Instance", "v1beta4")
-"""
-def insert_entity(projectId, product, categories, table_name, version="v1", prefix="", items="items"):
-
-    service = discovery.build(product, version, credentials=storage.get())
-    while categories:
-        api_entity = getattr(service, categories.pop(0))()
-        service = api_entity
-    request = api_entity.list(project=prefix + projectId)
-    try:
-        while request is not None:
-            response = request.execute()
-            for item in response[items]:
-                db.table(table_name).insert(item)
-            try:
-                request = api_entity.list_next(previous_request=request, previous_response=response)
-            except AttributeError:
-                request = None
-    except KeyError:
-        pass

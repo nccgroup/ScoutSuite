@@ -1,0 +1,9 @@
+{
+  "description": "Logging disabled",
+  "path": "cloudsql.instances.id",
+  "dashboard_name": "Instances",
+  "conditions": [ "and",
+    [ "cloudsql.instances.id.log_status", "equal", "Disabled" ]
+  ],
+  "id_suffix": "LogStatus"
+}
