@@ -1,6 +1,6 @@
-##########
-AWS Scout2
-##########
+#####################
+NCC Group Scout Suite
+#####################
 
 .. image:: https://travis-ci.org/nccgroup/Scout2.svg?branch=master
         :target: https://travis-ci.org/nccgroup/Scout2
@@ -16,17 +16,16 @@ AWS Scout2
 Description
 ***********
 
-Scout2 is a security tool that lets AWS administrators assess their
-environment's security posture. Using the AWS API, Scout2 gathers configuration
-data for manual inspection and highlights high-risk areas automatically. Rather
-than pouring through dozens of pages on the web, Scout2 supplies a clear view of
-the attack surface automatically.
+Scout Suite is a multi-cloud configuratiobn review tool, which enables assessing the security posture of cloud
+environments. Using the APIs provided by cloud providers, Scout gathers configuration data for manual inspection and
+highlights risk areas automatically. Rather than pouring through dozens of pages on the web, Scout supplies a clear
+view of the attack surface automatically.
 
-**Note:** Scout2 is stable and actively maintained, but a number of features and
-internals may change. As such, please bear with us as we find time to work on,
-and improve, the tool. Feel free to report a bug with details (*e.g.* console
-output using the "--debug" argument), request a new feature, or send a pull
-request.
+**Note:** Scout is stable and actively maintained, but a number of features and internals may change. As such, please
+bear with us as we find time to work on, and improve, the tool. Feel free to report a bug with details (please provide
+console output using the "--debug" argument), request a new feature, or send a pull request.
+
+**add something about Scout2 and where to find latest**
 
 ************
 Installation
@@ -36,14 +35,14 @@ Install via `pip`_:
 
 ::
 
-    $ pip install awsscout2
+    $ pip install scoutsuite
 
 Install from source:
 
 ::
 
-    $ git clone https://github.com/nccgroup/Scout2
-    $ cd Scout2
+    $ git clone https://github.com/nccgroup/ScoutSuite
+    $ cd ScoutSuite
     $ pip install -r requirements.txt
     $ python setup.py install
 
