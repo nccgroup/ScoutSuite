@@ -1,4 +1,6 @@
-# ScoutSuite
+##########
+AWS Scout2
+##########
 
 .. image:: https://travis-ci.org/nccgroup/Scout2.svg?branch=master
         :target: https://travis-ci.org/nccgroup/Scout2
@@ -10,7 +12,9 @@
         :target: https://badge.fury.io/py/AWSScout2
         :align: right
 
-## Description
+***********
+Description
+***********
 
 Scout2 is a security tool that lets AWS administrators assess their
 environment's security posture. Using the AWS API, Scout2 gathers configuration
@@ -24,34 +28,39 @@ and improve, the tool. Feel free to report a bug with details (*e.g.* console
 output using the "--debug" argument), request a new feature, or send a pull
 request.
 
-## Installation
+************
+Installation
+************
 
-Install via `pip`:
+Install via `pip`_:
 
-```
+::
+
     $ pip install awsscout2
-```
-
 
 Install from source:
 
-```
+::
+
     $ git clone https://github.com/nccgroup/Scout2
     $ cd Scout2
     $ pip install -r requirements.txt
     $ python setup.py install
-```
 
-## Requirements
+************
+Requirements
+************
 
-### Computing resources
+Computing resources
+-------------------
 
 Scout2 is a multi-threaded tool that fetches and stores your AWS account's configuration settings in memory during
 runtime. It is expected that the tool will run with no issues on any modern laptop or equivalent VM.
 **Running Scout2 in a VM with limited computing resources such as a t2.micro instance is not intended and will likely
 result in the process being killed.**
 
-### Python
+Python
+------
 
 Scout2 is written in Python and supports the following versions:
 
@@ -61,7 +70,8 @@ Scout2 is written in Python and supports the following versions:
 * 3.5
 * 3.6
 
-### AWS Credentials
+AWS Credentials
+---------------
 
 To run Scout2, you will need valid AWS credentials (*e.g* Access Key ID and Secret Access Key).
 The role, or user account, associated with these credentials requires read-only access for all resources in a number of
@@ -72,7 +82,8 @@ The following AWS Managed Policies can be attached to the principal in order to 
 * ReadOnlyAccess
 * SecurityAudit
 
-### Compliance with AWS' Acceptable Use Policy
+Compliance with AWS' Acceptable Use Policy
+------------------------------------------
 
 Use of Scout2 does not require AWS users to complete and submit the AWS
 Vulnerability / Penetration Testing Request Form. Scout2 only performs AWS API
@@ -80,7 +91,8 @@ calls to fetch configuration data and identify security gaps, which is not
 considered security scanning as it does not impact AWS' network and
 applications.
 
-### Usage
+Usage
+-----
 
 After performing a number of AWS API calls, Scout2 will create a local HTML report and open it in the default browser.
 
@@ -106,7 +118,9 @@ If you have a CSV file containing the API access key ID and secret, you may run 
 
     $ Scout2 --csv-credentials <CREDENTIALS.CSV>
 
-## Advanced documentation
+**********************
+Advanced documentation
+**********************
 
 The following command will provide the list of available command line options:
 
@@ -116,7 +130,9 @@ The following command will provide the list of available command line options:
 
 For further details, checkout our Wiki pages at https://github.com/nccgroup/Scout2/wiki.
 
-## License
+*******
+License
+*******
 
 GPLv2: See LICENSE.
 
