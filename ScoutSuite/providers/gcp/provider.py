@@ -107,12 +107,13 @@ class GCPProvider(BaseProvider):
         projects = []
 
         resource_manager_client = resource_manager.Client(credentials=self.credentials)
+        b = dir(resource_manager_client)
 
         project_list = resource_manager_client.list_projects()
 
         for p in project_list:
-            project = resource_manager_client.fetch_project(p.project_id)
+            # project = resource_manager_client.fetch_project(p.project_id)
             if p.parent['id'] == self.organization_id and p.status == 'ACTIVE':
-                projects.append(project.project_id)
+                projects.append(p.project_id)
 
         return projects

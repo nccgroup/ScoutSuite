@@ -1,0 +1,13 @@
+{
+  "arg_names": [ "Member", "Role", "Description"],
+  "key": "cloudstorage-bucket-_ARG_0_-_ARG_1_",
+  "description": "_ARG_2_",
+  "dashboard_name": "Buckets",
+  "display_path": "cloudstorage.buckets.id",
+  "path": "cloudstorage.buckets.id",
+  "conditions": [ "and",
+    [ "cloudstorage.buckets.id.acl_configuration", "withKey", "_ARG_0_"],
+    [ "cloudstorage.buckets.id.acl_configuration._ARG_0_", "containAtLeastOneOf", "_ARG_1_"]
+  ],
+  "id_suffix": "_ARG_1_"
+}

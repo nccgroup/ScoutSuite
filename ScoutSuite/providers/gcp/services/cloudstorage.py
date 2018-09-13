@@ -34,17 +34,19 @@ class CloudStorageConfig(GCPBaseConfig):
         bucket_dict = {}
         bucket_dict['id'] = bucket.id
         bucket_dict['name'] = bucket.name
+        bucket_dict['project_id'] = bucket.project_number
         bucket_dict['creation_date'] = bucket.time_created
         bucket_dict['location'] = bucket.location.lower()
         bucket_dict['storage_class'] = bucket.storage_class.lower()
 
         bucket_dict['versioning_status'] = 'Enabled' if bucket.versioning_enabled else 'Disabled'
 
-        get_cloudstorage_bucket_logging(api_client, bucket, bucket_dict)
+        get_cloudstorage_bucket_logging(bucket, bucket_dict)
+        get_cloudstorage_bucket_acl(bucket, bucket_dict)
 
         self.buckets[bucket_dict['id']] = bucket_dict
 
-def get_cloudstorage_bucket_logging(api_client, bucket, bucket_dict):
+def get_cloudstorage_bucket_logging(bucket, bucket_dict):
 
     try:
         logging = bucket.get_logging()
@@ -54,6 +56,36 @@ def get_cloudstorage_bucket_logging(api_client, bucket, bucket_dict):
             bucket_dict['logging_status'] = 'Disabled'
         return True
     except Exception as e:
-        printError('Failed to get logging configuration for %s: %s' % (bucket.name, e))
+        printError('Failed to get bucket logging configuration for %s: %s' % (bucket.name, e))
         bucket_dict['logging_status'] = 'Unknown'
         return False
+
+
+def get_cloudstorage_bucket_acl(bucket, bucket_dict):
+
+    try:
+
+        bucket_acls = bucket.get_iam_policy()
+
+        import see
+        b = see.see(bucket)
+        c = bucket.default_object_acl
+
+        bucket_dict['acl_configuration'] = {}
+
+        for role in bucket_acls._bindings:
+            for member in bucket_acls[role]:
+                if member.split(':')[0] not in ['projectEditor' , 'projectViewer', 'projectOwner']:
+                    if 'member' not in bucket_dict['acl_configuration']:
+                        bucket_dict['acl_configuration'][member] = [role]
+                    else:
+                        bucket_dict['acl_configuration'][member].append(role)
+
+        return True
+    except Exception as e:
+        printError('Failed to get bucket ACL configuration for %s: %s' % (bucket.name, e))
+        bucket_dict['acls'] = 'Unknown'
+        return False
+
+
+

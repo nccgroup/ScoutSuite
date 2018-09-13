@@ -13,6 +13,24 @@
                 "level": "warning"
             }
         ],
+        "cloudstorage-bucket-member.json": [
+            {
+                "args": [
+                    "allUsers",
+                    "Bucket with 'allUsers' permissions"
+                ],
+                "enabled": true,
+                "level": "warning"
+            },
+            {
+                "args": [
+                    "allAuthenticatedUsers",
+                    "Bucket with 'allAuthenticatedUsers' permissions"
+                ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "cloudsql-instance-backups-disabled.json": [
             {
                 "enabled": true,
