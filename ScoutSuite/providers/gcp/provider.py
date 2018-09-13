@@ -11,6 +11,7 @@ from ScoutSuite.providers.gcp.configs.services import GCPServicesConfig
 import googleapiclient
 from oauth2client.client import GoogleCredentials
 from googleapiclient import discovery
+from google.cloud import resource_manager
 
 
 class GCPCredentials():
@@ -24,17 +25,22 @@ class GCPProvider(BaseProvider):
     Implements provider for AWS
     """
 
-    def __init__(self, profile, report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4):
+    def __init__(self, project_id=None, organization_id=None,
+                 report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4, **kwargs):
+
+        self.profile = 'gcp-profile'  # TODO this is aws-specific
 
         self.metadata_path = '%s/metadata.json' % os.path.split(os.path.abspath(__file__))[0]
 
-        self.profile = profile
-        self.gcp_project_id = None
+        self.project_id=project_id
+        self.projects=[project_id]
+        self.organization_id=organization_id
+
         self.services_config = GCPServicesConfig
 
         super(GCPProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
-    def authenticate(self, client_secrets=None, **kargs):
+    def authenticate(self, key_file=None, user_account=None, service_account=None, **kargs):
         """
         Implement authentication for the GCP provider
         Refer to https://google-auth.readthedocs.io/en/stable/reference/google.auth.html.
@@ -42,12 +48,16 @@ class GCPProvider(BaseProvider):
         :return:
         """
 
-        if client_secrets:
-            client_secrets_path = os.path.abspath(client_secrets)  # TODO this is probably wrong
+        if user_account:
+            # disable GCP warning about using User Accounts
+            import warnings
+            warnings.filterwarnings("ignore", "Your application has authenticated using end user credentials")
+            pass  # Nothing more to do
+        elif service_account:
+            client_secrets_path = os.path.abspath(key_file)  # TODO this is probably wrong
             os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = client_secrets_path
-        # Currently not supported
         else:
-            printError('Failed to authenticate to GCP - currently only supports service accounts')
+            printError('Failed to authenticate to GCP - no supported account type')
             return False
 
         try:
@@ -55,15 +65,22 @@ class GCPProvider(BaseProvider):
             # TODO there is probably a better way to do this
             # api_client_credentials = GoogleCredentials.get_application_default()
             # cloud_client_credentials, self.gcp_project_id = google.auth.default()
-            #
             # self.credentials = GCPCredentials(api_client_credentials, cloud_client_credentials)
 
             # TODO not sure why this works - there are no credentials for API client libraries
-            self.credentials, self.gcp_project_id = google.auth.default()
-
-            self.aws_account_id = self.gcp_project_id  # TODO this is for AWS
+            self.credentials, project_id = google.auth.default()
 
             if self.credentials:
+                if self.organization_id:
+                    self.projects = self._get_all_projects_in_organization()
+                elif not self.project_id:
+                    self.projects = [project_id]
+
+                self.aws_account_id = self.projects[0] # TODO this is for AWS
+
+                # TODO this shouldn't be done here? but it has to in order to init with projects...
+                self.services.set_projects(projects=self.projects)
+
                 return True
             else:
                 return False
@@ -84,3 +101,18 @@ class GCPProvider(BaseProvider):
         """
 
         super(GCPProvider, self).preprocessing()
+
+    def _get_all_projects_in_organization(self):
+
+        projects = []
+
+        resource_manager_client = resource_manager.Client(credentials=self.credentials)
+
+        project_list = resource_manager_client.list_projects()
+
+        for p in project_list:
+            project = resource_manager_client.fetch_project(p.project_id)
+            if p.parent['id'] == self.organization_id and p.status == 'ACTIVE':
+                projects.append(project.project_id)
+
+        return projects

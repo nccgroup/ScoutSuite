@@ -5,7 +5,7 @@ from opinel.utils.aws import get_aws_account_id, get_partition_name
 
 class BaseServicesConfig:
 
-    def __init__(self, metadata, thread_config=4):
+    def __init__(self, metadata=None, thread_config=4):
         pass
 
     def _is_provider(self, provider_name):

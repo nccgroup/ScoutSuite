@@ -42,7 +42,7 @@ class AWSServicesConfig(BaseServicesConfig):
     :ivar sqs:                          SQS configuration
     """
 
-    def __init__(self, metadata, thread_config=4):
+    def __init__(self, metadata=None, thread_config=4, **kwargs):
 
         self.cloudformation = CloudFormationConfig(metadata['management']['cloudformation'], thread_config)
         self.cloudtrail = CloudTrailConfig(metadata['management']['cloudtrail'], thread_config)

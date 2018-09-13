@@ -28,7 +28,7 @@ class BaseProvider:
     all cloud providers
     """
 
-    def __init__(self, report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4):
+    def __init__(self, report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4, **kwargs):
         """
 
         :aws_account_id     AWS account ID

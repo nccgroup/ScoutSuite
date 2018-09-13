@@ -31,7 +31,7 @@ class AWSProvider(BaseProvider):
     Implements provider for AWS
     """
 
-    def __init__(self, profile, report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4):
+    def __init__(self, profile='default', report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4, **kwargs):
 
         self.metadata_path = '%s/metadata.json' % os.path.split(os.path.abspath(__file__))[0]
 

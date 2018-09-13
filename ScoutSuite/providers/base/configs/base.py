@@ -31,13 +31,12 @@ formatted_string = None
 
 class BaseConfig():
 
-    def __init__(self, thread_config=4):
+    def __init__(self, thread_config=4, **kwargs):
         """
 
         :param thread_config:
         """
-        self.service = type(self).__name__.replace('Config',
-                                                   '').lower()  # TODO: use regex with EOS instead of plain replace
+        self.service = type(self).__name__.replace('Config','').lower()  # TODO: use regex with EOS instead of plain replace
         self.thread_config = thread_configs[thread_config]
 
     def _is_provider(self, provider_name):
@@ -179,18 +178,27 @@ class BaseConfig():
                                     response_attribute]
 
                         elif self._is_provider('gcp'):
+                            targets = []
 
-                            if self.library_type == 'cloud_client_library':
-                                response = method(**list_params)
-                                targets = list(response)
-                                # Remove client as it's unpickleable and adding the object to the Queue will pickle
-                                # The client is later re-inserted in each Config
-                                for t in targets:
-                                    t._client = None
-                            if self.library_type == 'api_client_library':
-                                # TODO accessing the project id from here isn't great
-                                response = method(project=api_client._http.credentials.project_id).execute()
-                                targets = response['items']
+                            for project in self.projects:
+                                list_params['project'] = project
+
+                                try:
+                                    if self.library_type == 'cloud_client_library':
+                                        response = method(**list_params)
+                                        targets += list(response)
+                                        # Remove client as it's unpickleable and adding the object to the Queue will pickle
+                                        # The client is later re-inserted in each Config
+                                        for t in targets:
+                                            t._client = None
+
+                                    if self.library_type == 'api_client_library':
+                                            response = method(**list_params).execute()
+                                            if 'items' in response:
+                                                targets += response['items']
+                                except Exception as e:
+                                    if not ignore_list_error:
+                                        printException(e)
 
                     except Exception as e:
                         if not ignore_list_error:

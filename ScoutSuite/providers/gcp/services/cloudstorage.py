@@ -16,6 +16,7 @@ class CloudStorageConfig(GCPBaseConfig):
 
         self.buckets = {}
         self.buckets_count = 0
+
         super(CloudStorageConfig, self).__init__(thread_config)
 
     def parse_buckets(self, bucket, params):

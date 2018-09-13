@@ -8,7 +8,10 @@ from ScoutSuite.providers.gcp.provider import GCPProvider
 providers_dict = {'aws': 'AWSProvider',
                   'gcp': 'GCPProvider'}
 
-def get_provider(provider, profile, report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4):
+def get_provider(provider,
+                 profile=None,
+                 project_id=None, organization_id=None,
+                 report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4):
     """
     Returns an instance of the requested provider.
 
@@ -18,6 +21,13 @@ def get_provider(provider, profile, report_dir=None, timestamp=None, services=[]
 
     provider_class = providers_dict.get(provider)
     provider_object = getattr(sys.modules[__name__], provider_class)
-    provider_instance = provider_object(profile, report_dir, timestamp, services, skipped_services, thread_config)
+    provider_instance = provider_object(profile=profile,
+                                        project_id=project_id,
+                                        organization_id=organization_id,
+                                        report_dir=report_dir,
+                                        timestamp=timestamp,
+                                        services=services,
+                                        skipped_services=skipped_services,
+                                        thread_config=thread_config)
 
     return provider_instance

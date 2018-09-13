@@ -44,8 +44,15 @@ def main():
     configPrintException(args.debug)
 
     # Create a cloud provider object
-    cloud_provider = get_provider(args.provider, args.profile[0], args.report_dir, args.timestamp,
-                                  args.services, args.skipped_services, args.thread_config)
+    cloud_provider = get_provider(provider=args.provider,
+                                  profile=args.profile[0],
+                                  project_id=args.project_id,
+                                  organization_id=args.organization_id,
+                                  report_dir=args.report_dir,
+                                  timestamp=args.timestamp,
+                                  services=args.services,
+                                  skipped_services=args.skipped_services,
+                                  thread_config=args.thread_config)
 
     # Create a new report
     report = Scout2Report(args.profile[0], args.report_dir, args.timestamp)
@@ -53,11 +60,13 @@ def main():
     # Complete run, including pulling data from provider
     if not args.fetch_local:
         # Authenticate to the cloud provider
-        authenticated = cloud_provider.authenticate(client_secrets=args.client_secrets,
-                                                    profile=args.profile[0],
+        authenticated = cloud_provider.authenticate(profile=args.profile[0],
                                                     csv_credentials=args.csv_credentials,
                                                     mfa_serial=args.mfa_serial,
-                                                    mfa_code=args.mfa_code)
+                                                    mfa_code=args.mfa_code,
+                                                    key_file=args.key_file,
+                                                    user_account=args.user_account,
+                                                    service_account=args.service_account)
         if not authenticated:
             return 42
 

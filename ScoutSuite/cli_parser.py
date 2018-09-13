@@ -192,7 +192,7 @@ class ScoutSuiteArgumentParser(SharedArgumentParser):
                                  required='gcp' in sys.argv and '--user-account' not in sys.argv,
                                  help='Run Scout Suite with a Google Service Account')
 
-        self.parser.add_argument('--keys',
+        self.parser.add_argument('--key-file',
                                  action='store',
                                  required='--service-account' in sys.argv,
                                  help='Path of the Google Service Account Application Credentials file')

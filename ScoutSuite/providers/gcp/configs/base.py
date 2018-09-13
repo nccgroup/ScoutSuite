@@ -11,9 +11,11 @@ from ScoutSuite.providers.base.configs.base import BaseConfig
 
 class GCPBaseConfig(BaseConfig):
 
-    def __init__(self, thread_config):
+    def __init__(self, thread_config=4, projects=[], **kwargs):
 
         self.library_type = None if not self.library_type else self.library_type
+
+        self.projects = projects
 
         super(GCPBaseConfig, self).__init__(thread_config)
 
