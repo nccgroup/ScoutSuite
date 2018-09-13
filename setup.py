@@ -11,7 +11,7 @@ VERSION = __import__(NAME).__version__
 
 # Requirements
 requirements = []
-with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'ScoutSuite', 'data', 'requirements.txt')) as f:
+with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'requirements.txt')) as f:
     for r in f.readlines():
         requirements.append(r.strip())
 
@@ -19,14 +19,13 @@ with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'ScoutSuite'
 setup(
     name=NAME,
     version=VERSION,
-    description='Scout2, TODO',
+    description='Scout Suite, a multi-cloud configuration review tool',
     long_description=open('README.rst').read(),
-    author='l01cd3v',
-    author_email='l01cd3v@gmail.com',
-    url='https://github.com/nccgroup/Scout2',
+    author='NCC Group',
+    url='https://github.com/nccgroup/ScoutSuite',
     entry_points={
         'console_scripts': [
-            'Scout2 = ScoutSuite.__main__:main',
+            'Scout = ScoutSuite.__main__:main',
             'Scout2RulesGenerator = ScoutSuite.__rules_generator__:main',
             'Scout2Listall = ScoutSuite.__listall__:main'
         ]
@@ -36,7 +35,7 @@ setup(
     ],
     package_data={
         'ScoutSuite': [
-            'data/requirements.txt'
+            'requirements.txt'
         ],
         'ScoutSuite.configs': [
             'data/*.json'
