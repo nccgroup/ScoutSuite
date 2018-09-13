@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
+from opinel.utils.console import printError
 
-from opinel.utils.console import printError, printException, printInfo
+from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
 
 class CloudStorageConfig(GCPBaseConfig):
@@ -11,7 +11,6 @@ class CloudStorageConfig(GCPBaseConfig):
     )
 
     def __init__(self, thread_config):
-
         self.library_type = 'cloud_client_library'
 
         self.buckets = {}
@@ -34,9 +33,10 @@ class CloudStorageConfig(GCPBaseConfig):
         bucket_dict = {}
         bucket_dict['id'] = bucket.id
         bucket_dict['name'] = bucket.name
-        bucket_dict['project_id'] = bucket.project_number
+        bucket_dict['project_id'] = bucket.client.project  # TODO test this works
+        bucket_dict['project_number'] = bucket.project_number
         bucket_dict['creation_date'] = bucket.time_created
-        bucket_dict['location'] = bucket.location.lower()
+        bucket_dict['location'] = bucket.location
         bucket_dict['storage_class'] = bucket.storage_class.lower()
 
         bucket_dict['versioning_status'] = 'Enabled' if bucket.versioning_enabled else 'Disabled'
@@ -46,8 +46,8 @@ class CloudStorageConfig(GCPBaseConfig):
 
         self.buckets[bucket_dict['id']] = bucket_dict
 
-def get_cloudstorage_bucket_logging(bucket, bucket_dict):
 
+def get_cloudstorage_bucket_logging(bucket, bucket_dict):
     try:
         logging = bucket.get_logging()
         if logging:
@@ -62,20 +62,14 @@ def get_cloudstorage_bucket_logging(bucket, bucket_dict):
 
 
 def get_cloudstorage_bucket_acl(bucket, bucket_dict):
-
     try:
 
         bucket_acls = bucket.get_iam_policy()
 
-        import see
-        b = see.see(bucket)
-        c = bucket.default_object_acl
-
         bucket_dict['acl_configuration'] = {}
-
         for role in bucket_acls._bindings:
             for member in bucket_acls[role]:
-                if member.split(':')[0] not in ['projectEditor' , 'projectViewer', 'projectOwner']:
+                if member.split(':')[0] not in ['projectEditor', 'projectViewer', 'projectOwner']:
                     if 'member' not in bucket_dict['acl_configuration']:
                         bucket_dict['acl_configuration'][member] = [role]
                     else:
@@ -86,6 +80,3 @@ def get_cloudstorage_bucket_acl(bucket, bucket_dict):
         printError('Failed to get bucket ACL configuration for %s: %s' % (bucket.name, e))
         bucket_dict['acls'] = 'Unknown'
         return False
-
-
-
