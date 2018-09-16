@@ -181,7 +181,10 @@ class BaseConfig():
                             targets = []
 
                             for project in self.projects:
-                                list_params['project'] = project
+
+                                for k in list_params:
+                                    if list_params[k] == 'project_placeholder':
+                                        list_params[k] = project
 
                                 try:
                                     if self.library_type == 'cloud_client_library':

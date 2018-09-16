@@ -7,7 +7,7 @@ from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
 class CloudStorageConfig(GCPBaseConfig):
     targets = (
-        ('buckets', 'Buckets', 'list_buckets', {}, False),
+        ('buckets', 'Buckets', 'list_buckets', {'project': 'project_placeholder'}, False),
     )
 
     def __init__(self, thread_config):
@@ -31,7 +31,7 @@ class CloudStorageConfig(GCPBaseConfig):
         bucket._client = api_client
 
         bucket_dict = {}
-        bucket_dict['id'] = bucket.id
+        bucket_dict['id'] = self.get_non_provider_id(bucket.id)
         bucket_dict['name'] = bucket.name
         bucket_dict['project_id'] = bucket.client.project  # TODO test this works
         bucket_dict['project_number'] = bucket.project_number

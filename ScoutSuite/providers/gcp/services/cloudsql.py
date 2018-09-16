@@ -7,7 +7,7 @@ from opinel.utils.console import printError, printException, printInfo
 
 class CloudSQLConfig(GCPBaseConfig):
     targets = (
-        ('instances', 'Instances', 'list', {}, False),
+        ('instances', 'Instances', 'list', {'project': 'project_placeholder'}, False),
     )
 
     def __init__(self, thread_config):

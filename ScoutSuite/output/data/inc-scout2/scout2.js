@@ -744,6 +744,10 @@ var make_title = function(title) {
         return 'Cloud Storage';
     } else if (title == 'cloudsql') {
         return 'Cloud SQL';
+    } else if (title == 'stackdriverlogging') {
+        return 'Stackdriver Logging';
+    } else if (title == 'stackdrivermonitoring') {
+        return 'Stackdriver Monitoring';
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
     }

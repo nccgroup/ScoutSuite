@@ -23,7 +23,9 @@ formatted_service_name = {
     'route53domains': 'Route53Domains',
 
     'cloudstorage': 'Cloud Storage',
-    'cloudsql': 'Cloud SQL'
+    'cloudsql': 'Cloud SQL',
+    'stackdriverlogging': 'Stackdriver Logging',
+    'stackdrivermonitoring': 'Stackdriver Monitoring',
 }
 
 

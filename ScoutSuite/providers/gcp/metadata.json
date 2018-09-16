@@ -1,20 +1,40 @@
 {
-      "storage": {
-        "cloudstorage": {
-            "resources": {
-                "buckets": {
-                    "cols": 2,
-                    "path": "services.cloudstorage.buckets"
-                }
-            }
-        },
-        "cloudsql": {
-          "resources": {
-            "instances": {
-              "cols": 2,
-              "path": "services.cloudsql.instances"
-            }
-          }
+  "security": {
+    "iam": {
+      "resources": {
+        "roles": {
+          "cols": 2,
+          "path": "services.iam.roles"
         }
+      }
     }
+  },
+  "storage": {
+    "cloudstorage": {
+      "resources": {
+        "buckets": {
+          "cols": 2,
+          "path": "services.cloudstorage.buckets"
+        }
+      }
+    },
+    "cloudsql": {
+      "resources": {
+        "instances": {
+          "cols": 2,
+          "path": "services.cloudsql.instances"
+        }
+      }
+    }
+  },
+  "management": {
+    "stackdriverlogging": {
+      "resources": {
+        "sinks": {
+          "cols": 2,
+          "path": "services.stackdriverlogging.sinks"
+        }
+      }
+    }
+  }
 }

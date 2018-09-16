@@ -1,53 +1,59 @@
 {
-    "about": "test ruleset",
-    "rules": {
-        "cloudstorage-bucket-no-versioning.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
+  "about": "Default ruleset for GCP.",
+  "rules": {
+    "cloudstorage-bucket-no-versioning.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "cloudstorage-bucket-no-logging.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "cloudstorage-bucket-member.json": [
+      {
+        "args": [
+          "allUsers",
+          "Bucket with 'allUsers' permissions"
         ],
-        "cloudstorage-bucket-no-logging.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
+        "enabled": true,
+        "level": "warning"
+      },
+      {
+        "args": [
+          "allAuthenticatedUsers",
+          "Bucket with 'allAuthenticatedUsers' permissions"
         ],
-        "cloudstorage-bucket-member.json": [
-            {
-                "args": [
-                    "allUsers",
-                    "Bucket with 'allUsers' permissions"
-                ],
-                "enabled": true,
-                "level": "warning"
-            },
-            {
-                "args": [
-                    "allAuthenticatedUsers",
-                    "Bucket with 'allAuthenticatedUsers' permissions"
-                ],
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "cloudsql-instance-backups-disabled.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "cloudsql-instance-no-logging.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "cloudsql-instance-ssl-not-required.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ]
-    }
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "cloudsql-instance-backups-disabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "cloudsql-instance-no-logging.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "cloudsql-instance-ssl-not-required.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "stackdriverlogging-no-export-sinks.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ]
+  }
 }

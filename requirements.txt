@@ -6,6 +6,8 @@ opinel>=3.3.4,<4.0.0
 google-cloud-resource-manager
 google-cloud-storage>=1.11.0
 google-cloud-container
+google-cloud-logging
+google-cloud-monitoring
 
 google_api_python_client
 oauth2client>=4.1.3

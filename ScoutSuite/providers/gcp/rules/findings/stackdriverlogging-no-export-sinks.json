@@ -1,0 +1,9 @@
+{
+    "dashboard_name": "Logging",
+    "description": "No Export Sinks",
+    "path": "stackdriverlogging.sinks.id",
+    "conditions": [ "and",
+        [ "stackdriverlogging.sinks", "empty", "" ]
+    ],
+    "id_suffix": "logging"
+}
