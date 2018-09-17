@@ -100,6 +100,8 @@ class GCPProvider(BaseProvider):
         :return: None
         """
 
+        self._match_instances_and_snapshots()
+
         super(GCPProvider, self).preprocessing()
 
     def _get_all_projects_in_organization(self):
@@ -117,3 +119,18 @@ class GCPProvider(BaseProvider):
                 projects.append(p.project_id)
 
         return projects
+
+    def _match_instances_and_snapshots(self):
+        """
+        Compare Compute Engine instances and snapshots to identify instance disks that do not have a snapshot.
+
+        :return:
+        """
+
+        if 'computeengine' in self.services:
+            for instance in self.services['computeengine']['instances'].values():
+                for instance_disk in instance['disks'].values():
+                    instance_disk['snapshots'] = []
+                    for disk in self.services['computeengine']['snapshots'].values():
+                        if disk['status'] == 'READY' and disk['source_disk_url'] == instance_disk['source_url']:
+                            instance_disk['snapshots'].append(disk)

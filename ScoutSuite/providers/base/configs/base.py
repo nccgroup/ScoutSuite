@@ -167,6 +167,7 @@ class BaseConfig():
                     except Exception as e:
                         printException(e)
                         continue
+
                     try:
 
                         # TODO put this code in each provider
@@ -185,10 +186,13 @@ class BaseConfig():
                         elif self._is_provider('gcp'):
                             targets = []
                             for project in self.projects:
+
                                 for k in list_params:
                                     if list_params[k] == 'project_placeholder':
                                         list_params[k] = project
+
                                 try:
+
                                     if self.library_type == 'cloud_client_library':
                                         response = method(**list_params)
                                         targets += list(response)
@@ -196,10 +200,24 @@ class BaseConfig():
                                         # The client is later re-inserted in each Config
                                         for t in targets:
                                             t._client = None
+
                                     if self.library_type == 'api_client_library':
-                                            response = method(**list_params).execute()
-                                            if 'items' in response:
-                                                targets += response['items']
+
+                                        response = method(**list_params).execute()
+                                        if 'items' in response:
+                                            targets += response['items']
+
+                                        # request = method(**list_params)
+                                        # while request is not None:
+                                        #     response = request.execute()
+                                        #     if 'items' in response:
+                                        #         targets += response['items']
+                                        #     try:
+                                        #         request = api_entity.list_next(previous_request=request,
+                                        #                                        previous_response=response)
+                                        #     except AttributeError:
+                                        #         request = None
+
                                 except Exception as e:
                                     if not ignore_list_error:
                                         printException(e)

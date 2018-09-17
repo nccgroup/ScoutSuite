@@ -54,6 +54,24 @@
         "enabled": true,
         "level": "warning"
       }
+    ],
+    "computeengine-instance-with-deletion-protection-disabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "computeengine-old-disk-snapshot.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "computeengine-instance-disk-with-no-snapshot.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }

@@ -9,6 +9,22 @@
       }
     }
   },
+  "compute": {
+    "computeengine": {
+      "resources": {
+        "instances": {
+          "cols": 2,
+          "path": "services.computeengine.instances"
+        }
+      },
+      "resources": {
+        "snapshots": {
+          "cols": 2,
+          "path": "services.computeengine.snapshots"
+        }
+      }
+    }
+  },
   "storage": {
     "cloudstorage": {
       "resources": {

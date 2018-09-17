@@ -1,0 +1,9 @@
+{
+    "dashboard_name": "Instances",
+    "description": "Instance without deletion protection",
+    "path": "computeengine.instances.id",
+    "conditions": [ "and",
+        [ "computeengine.instances.id.deletion_protection", "equal", "Disabled" ]
+    ],
+    "id_suffix": "deletion_protection"
+}
