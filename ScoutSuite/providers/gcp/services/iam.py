@@ -19,5 +19,6 @@ class IAMConfig(GCPBaseConfig):
 
         super(IAMConfig, self).__init__(thread_config)
 
-    def parse_roles(self, instance, params):
-        a = instance
+    def parse_roles(self, role, params):
+
+        a = role

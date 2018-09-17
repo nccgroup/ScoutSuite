@@ -1,10 +1,8 @@
 
       <!-- Dasboard partial -->
       <script id="services.id.findings.partial" type="text/x-handlebars-template">
-
         <div class="row" id="services.{{service_name}}.findings.row">
           <div class="col-sm-12" id="services.{{service_name}}.findings.list">
-
               <div class="form-group container row">
                 <div class="col-sm-4">
                     <input class="form-control dashboard-filter" type="text" id="dashboardFilter" placeholder="Filter findings">
@@ -22,7 +20,6 @@
                     <button class="form-control btn finding-title-danger" id="finding-title-danger">Danger</button>
                 </div>
               </div>
-
               {{#if findings}}
                 {{#grouped_each 3 findings}}
                   <div class="findings_row row">
@@ -58,7 +55,6 @@
               // Filter by text search
               $(".dashboard-filter").on("keyup", function() {
                   var value = $(this).val().toLowerCase();
-                  console.log(value)
                   $(".findings_row > .col-sm-4").filter(function() {
                       $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                   });
@@ -70,7 +66,12 @@
                       $(this).toggle($(this).find(">:first-child").attr("class").indexOf(value) > -1)
                   });
                   $("#dashboardFilter").val("")
-
               })
+              // Remove filter on dashboard change
+              $(window).on('hashchange', function(e){
+                  $(".findings_row > .col-sm-4").filter(function() {
+                      $(this).show()
+                  });
+              });
           });
       </script>
