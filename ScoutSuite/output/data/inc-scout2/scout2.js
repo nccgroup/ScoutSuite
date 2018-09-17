@@ -748,6 +748,8 @@ var make_title = function(title) {
         return 'Stackdriver Logging';
     } else if (title == 'stackdrivermonitoring') {
         return 'Stackdriver Monitoring';
+    } else if (title == 'computeengine') {
+        return 'Compute Engine';
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
     }

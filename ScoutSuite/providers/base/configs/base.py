@@ -169,6 +169,10 @@ class BaseConfig():
                         continue
                     try:
 
+                        # TODO put this code in each provider
+                        # should return the list of targets
+
+                        # AWS provider
                         if self._is_provider('aws'):
                             if type(list_params) != list:
                                 list_params = [list_params]
@@ -177,15 +181,13 @@ class BaseConfig():
                                 targets += handle_truncated_response(method, lp, [response_attribute])[
                                     response_attribute]
 
+                        # GCP provider
                         elif self._is_provider('gcp'):
                             targets = []
-
                             for project in self.projects:
-
                                 for k in list_params:
                                     if list_params[k] == 'project_placeholder':
                                         list_params[k] = project
-
                                 try:
                                     if self.library_type == 'cloud_client_library':
                                         response = method(**list_params)
@@ -194,7 +196,6 @@ class BaseConfig():
                                         # The client is later re-inserted in each Config
                                         for t in targets:
                                             t._client = None
-
                                     if self.library_type == 'api_client_library':
                                             response = method(**list_params).execute()
                                             if 'items' in response:

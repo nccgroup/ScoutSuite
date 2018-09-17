@@ -26,6 +26,7 @@ formatted_service_name = {
     'cloudsql': 'Cloud SQL',
     'stackdriverlogging': 'Stackdriver Logging',
     'stackdrivermonitoring': 'Stackdriver Monitoring',
+    'computeengine': 'Compute Engine',
 }
 
 

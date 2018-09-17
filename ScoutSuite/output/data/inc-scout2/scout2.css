@@ -160,3 +160,9 @@ ul.no-bullet {
     width: 20%;
     display: none;
 }
+
+/*override Bootstrap CSS*/
+/*.list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {*/
+    /*background-image: linear-gradient(to bottom,#3c3c3c 0,#222 100%);*/
+/*}*/
+

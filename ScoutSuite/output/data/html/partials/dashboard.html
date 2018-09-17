@@ -1,11 +1,31 @@
 
       <!-- Dasboard partial -->
       <script id="services.id.findings.partial" type="text/x-handlebars-template">
+
         <div class="row" id="services.{{service_name}}.findings.row">
           <div class="col-sm-12" id="services.{{service_name}}.findings.list">
+
+              <div class="form-group container row">
+                <div class="col-sm-4">
+                    <input class="form-control dashboard-filter" type="text" id="dashboardFilter" placeholder="Filter findings">
+                </div>
+                <div class="col-sm-2">
+                    <button class="form-control btn finding-title-unknown" id="finding-title">Show All</button>
+                </div>
+                <div class="col-sm-2">
+                    <button class="form-control btn finding-title-good" id="finding-title-good">Good</button>
+                </div>
+                <div class="col-sm-2">
+                    <button class="form-control btn finding-title-warning" id="finding-title-warning">Warning</button>
+                </div>
+                <div class="col-sm-2">
+                    <button class="form-control btn finding-title-danger" id="finding-title-danger">Danger</button>
+                </div>
+              </div>
+
               {{#if findings}}
                 {{#grouped_each 3 findings}}
-                  <div class="row">
+                  <div class="findings_row row">
                     {{#each this}}
                       <div class="col-sm-4">
                         <div class="list-group-item finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
@@ -32,4 +52,25 @@
       <script>
         Handlebars.registerPartial("dashboard", $("#services\\.id\\.findings\\.partial").html());
       </script>
+      <script>
+          // Dashboard filtering
+          $(document).ready(function(){
+              // Filter by text search
+              $(".dashboard-filter").on("keyup", function() {
+                  var value = $(this).val().toLowerCase();
+                  console.log(value)
+                  $(".findings_row > .col-sm-4").filter(function() {
+                      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                  });
+              });
+              // Filter by button
+              $('.btn').click(function() {
+                  var value = $(this).attr('id');
+                  $(".findings_row > .col-sm-4").filter(function() {
+                      $(this).toggle($(this).find(">:first-child").attr("class").indexOf(value) > -1)
+                  });
+                  $("#dashboardFilter").val("")
 
+              })
+          });
+      </script>

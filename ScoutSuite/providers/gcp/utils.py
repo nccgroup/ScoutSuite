@@ -29,6 +29,9 @@ def gcp_connect_service(service, credentials, region_name=None):
         if service == 'stackdrivermonitoring':
             return monitoring_v3.MetricServiceClient()
 
+        elif service == 'computeengine':
+            return discovery.build('compute', 'v1')
+
         else:
             printException('Service %s not supported' % service)
             return None
