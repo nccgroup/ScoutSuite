@@ -180,12 +180,16 @@ function showFilters(resource_path) {
     $('[id="' + resource_path + '.id.filters"]').show();
     // show region filters
     $('[id*="regionfilters.' + service + '.regions"]').show();
-
 }
 
 function hideFilters() {
     $('[id*=".id.filters"]').hide();
     $('[id*="regionfilters"]').hide();
+    // Reset dashboard filters
+    $(".dashboard-filter").val("");
+    $(".findings_row > .col-sm-4").filter(function() {
+        $(this).show()
+    });
 }
 
 //
@@ -495,10 +499,8 @@ function show_main_dashboard() {
     showRowWithItems('last_run');
     $('#section_title-h2').text('');
     // Remove URL hash
-    // removeHash()
     history.pushState("", document.title, window.location.pathname + window.location.search);
 }
-
 
 //
 // Remove everything from "#" in URL
@@ -599,6 +601,7 @@ function get_value_at(path) {
 var current_service_group = ''
 var current_resource_path = ''
 function updateDOM(anchor) {
+
 
     // Strip the # sign
     var path = decodeURIComponent(anchor.replace('#', ''));
