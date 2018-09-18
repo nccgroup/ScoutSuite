@@ -32,6 +32,8 @@ class GCPProvider(BaseProvider):
 
         self.metadata_path = '%s/metadata.json' % os.path.split(os.path.abspath(__file__))[0]
 
+        self.provider_name = 'Google Cloud Platform'
+
         self.project_id=project_id
         self.projects=[project_id]
         self.organization_id=organization_id

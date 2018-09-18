@@ -48,6 +48,8 @@ class AWSProvider(BaseProvider):
         self.aws_account_id = None
         self.services_config = AWSServicesConfig
 
+        self.provider_name = 'Amazon Web Services'
+
         super(AWSProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
     def authenticate(self, profile, csv_credentials, mfa_serial, mfa_code, **kwargs):
