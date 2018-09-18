@@ -1,5 +1,5 @@
-NCC Group Scout Suite
-#####################
+|ncc_logo| Scout Suite
+#######################
 
 .. image:: https://travis-ci.org/nccgroup/Scout2.svg?branch=master
         :target: https://travis-ci.org/nccgroup/Scout2
@@ -165,3 +165,4 @@ License
 GPLv2: See LICENSE.
 
 .. _pip: https://pip.pypa.io/en/stable/index.html
+.. |ncc_logo| image:: https://avatars1.githubusercontent.com/u/4067082?s=200&v=4
