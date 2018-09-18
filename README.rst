@@ -1,4 +1,4 @@
-NCC Group Scout Suite
+Scout Suite
 #######################
 
 .. image:: https://travis-ci.org/nccgroup/Scout2.svg?branch=master
