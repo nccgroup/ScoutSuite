@@ -124,6 +124,8 @@ class BaseConfig():
             # Show completion and force newline
             if self.service != 'iam':
                 self.fetchstatuslogger.show(True)
+        else:
+            self.fetchstatuslogger.show(True)
 
     def __fetch_target(self, q, params):
         global status

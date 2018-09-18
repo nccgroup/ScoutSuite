@@ -16,10 +16,10 @@ class GCPServicesConfig(BaseServicesConfig):
 
         self.cloudstorage = CloudStorageConfig(thread_config=thread_config)
         self.cloudsql = CloudSQLConfig(thread_config=thread_config)
+        self.computeengine = ComputeEngineConfig(thread_config=thread_config)
         self.iam = IAMConfig(thread_config=thread_config)
         self.stackdriverlogging = StackdriverLoggingConfig(thread_config=thread_config)
         self.stackdrivermonitoring = StackdriverMonitoringConfig(thread_config=thread_config)
-        self.computeengine = ComputeEngineConfig(thread_config=thread_config)
 
     def _is_provider(self, provider_name):
         if provider_name == 'gcp':
