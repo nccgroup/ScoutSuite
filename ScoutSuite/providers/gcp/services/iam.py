@@ -7,7 +7,7 @@ from opinel.utils.console import printError, printException, printInfo
 
 class IAMConfig(GCPBaseConfig):
     targets = (
-        ('roles', 'Roles', 'list', {}, False),
+        ('roles', 'Roles', 'list', {'parent': 'project/ncccon2018prjct'}, False),
     )
 
     def __init__(self, thread_config):
