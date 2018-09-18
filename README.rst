@@ -166,4 +166,7 @@ GPLv2: See LICENSE.
 
 .. _pip: https://pip.pypa.io/en/stable/index.html
 .. |ncc_logo| image:: https://avatars1.githubusercontent.com/u/4067082
-              :scale: 10 %
+               :height: 100px
+               :width: 100 px
+               :scale: 40 %
+               :alt: [NCC Group icon]
