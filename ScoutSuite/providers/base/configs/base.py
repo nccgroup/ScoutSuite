@@ -36,6 +36,9 @@ class BaseConfig():
 
         :param thread_config:
         """
+
+        self.library_type = None if not hasattr(self, 'library_type') else self.library_type
+
         self.service = type(self).__name__.replace('Config','').lower()  # TODO: use regex with EOS instead of plain replace
         self.thread_config = thread_configs[thread_config]
 
