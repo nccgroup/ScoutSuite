@@ -192,21 +192,41 @@ class BaseConfig():
                         elif self._is_provider('gcp'):
                             targets = []
 
-                            for project in self.projects:
+                            # TODO this is temporary, will have to be moved to Config children objects
+                            # What this does is create a list with all combinations of possibilities for method parameters
+                            list_params_list = []
+                            # only projects
+                            if 'project' in list_params.keys() and not 'zone' in list_params.keys():
+                                for project in self.projects:
+                                    temp_list_params = dict(list_params)
+                                    temp_list_params['project'] = project
+                                    list_params_list.append(temp_list_params)
+                            # only zones
+                            elif not 'project' in list_params.keys() and 'zone' in list_params.keys():
+                                zones = self.get_zones(client=api_client, project=self.projects[0])
+                                for zone in zones:
+                                    temp_list_params = dict(list_params)
+                                    temp_list_params['zone'] = zone
+                                    list_params_list.append(temp_list_params)
+                            # projects and zones
+                            elif 'project' in list_params.keys() and 'zone' in list_params.keys():
+                                zones = self.get_zones(client=api_client, project=self.projects[0])
+                                import itertools
+                                for elem in list(itertools.product(*[self.projects, zones])):
+                                    temp_list_params = dict(list_params)
+                                    temp_list_params['project'] = elem[0]
+                                    temp_list_params['zone'] = elem[1]
+                                    list_params_list.append(temp_list_params)
+                            # neither projects nor zones
+                            else:
+                                list_params_list.append(list_params)
 
-                                # TODO this is temporary (and broken), will have to be moved to Config children objects
-                                zones = self.get_zones(client=api_client,
-                                                       project=project)
-                                if zones and 'zone' in list_params.keys():
-                                    list_params['zone'] = zones[0]
-
-                                if 'project' in list_params.keys():
-                                    list_params['project'] = project
+                            for list_params_combination in list_params_list:
 
                                 try:
 
                                     if self.library_type == 'cloud_client_library':
-                                        response = method(**list_params)
+                                        response = method(**list_params_combination)
                                         targets += list(response)
                                         # Remove client as it's unpickleable and adding the object to the Queue will pickle
                                         # The client is later re-inserted in each Config
@@ -215,7 +235,7 @@ class BaseConfig():
 
                                     if self.library_type == 'api_client_library':
 
-                                        response = method(**list_params).execute()
+                                        response = method(**list_params_combination).execute()
                                         if 'items' in response:
                                             targets += response['items']
 
