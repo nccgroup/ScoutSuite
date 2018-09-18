@@ -104,6 +104,8 @@ function hideAll() {
     if ((element != undefined) && (element.checked == true)) {
         showRow('aws_account_id');
     }
+    current_resource_path = ''
+    current_service_group = ''
 }
 
 
@@ -493,7 +495,9 @@ function show_main_dashboard() {
     showRowWithItems('aws_account_id');
     showRowWithItems('last_run');
     $('#section_title-h2').text('');
-    removeHash()
+    // Remove URL hash
+    // removeHash()
+    history.pushState("", document.title, window.location.pathname + window.location.search);
 }
 
 
@@ -508,9 +512,8 @@ function removeHash () {
         // Prevent scrolling by storing the page's current scroll offset
         scrollV = document.body.scrollTop;
         scrollH = document.body.scrollLeft;
-
+        // Remove hash value
         loc.hash = "";
-
         // Restore the scroll offset, should be flicker free
         document.body.scrollTop = scrollV;
         document.body.scrollLeft = scrollH;
@@ -566,7 +569,11 @@ function updateTitle(title) {
 // Update the DOM
 //
 function locationHashChanged() {
-    updateDOM(location.hash);
+    if(location.hash) {
+        updateDOM(location.hash);
+    } else {
+        updateDOM('');
+    }
 }
 window.onhashchange = locationHashChanged;
 
@@ -627,7 +634,9 @@ function updateDOM(anchor) {
     $('span').removeClass('finding-warning');
 
     // DOM Update
-    if (path.endsWith('.items')) {
+    if (path == '') {
+        show_main_dashboard()
+    } else if (path.endsWith('.items')) {
         // Switch view for findings
         lazy_loading(resource_path);
         hideAll();
