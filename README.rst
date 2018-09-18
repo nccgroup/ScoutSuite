@@ -1,4 +1,4 @@
-|ncc_logo| Scout Suite
+NCC Group Scout Suite
 #######################
 
 .. image:: https://travis-ci.org/nccgroup/Scout2.svg?branch=master
@@ -19,11 +19,17 @@ environments. Using the APIs provided by cloud providers, Scout gathers configur
 highlights risk areas automatically. Rather than pouring through dozens of pages on the web, Scout supplies a clear
 view of the attack surface automatically.
 
-**Note:** Scout is stable and actively maintained, but a number of features and internals may change. As such, please
+**Note:**
+
+Scout Suite is stable and actively maintained, but a number of features and internals may change. As such, please
 bear with us as we find time to work on, and improve, the tool. Feel free to report a bug with details (please provide
 console output using the "--debug" argument), request a new feature, or send a pull request.
 
-**add something about Scout2 and where to find latest**
+.. IMPORTANT::
+   The latest (and final) version of Scout2 can be found in https://github.com/nccgroup/Scout2/releases and
+   https://pypi.org/project/AWSScout2/.
+
+   Further work is not planned for this branch. Fixes for the issues currently opened will be implemented in Scout Suite.
 
 Support
 -------
@@ -31,11 +37,17 @@ Support
 The following cloud providers are currently supported:
 
 - Amazon Web Services
-- Google Cloud Platform (beta)
-- Azure (alpha)
+- Google Cloud Platform (alpha)
+
+Support is in the roadmap for the following cloud provider(s):
+
+- Azure
 
 Installation
 ************
+
+.. NOTE::
+   TODO
 
 Install via `pip`_:
 
@@ -92,12 +104,8 @@ The following AWS Managed Policies can be attached to the principal in order to 
 Google Cloud Platform
 ^^^^^^^^^^^^^^^^^^^^^
 
-**todo**
-
-Azure
-^^^^^
-
-**todo**
+.. NOTE::
+   TODO
 
 Compliance
 ----------
@@ -114,15 +122,14 @@ applications.
 Google Cloud Platform
 ^^^^^^^^^^^^^^^^^^^^^
 
-**todo**
-
-Azure
-^^^^^
-
-**todo**
+.. NOTE::
+   TODO
 
 Usage
 -----
+
+.. NOTE::
+   TODO - provide examples for each provider
 
 After performing a number of AWS API calls, Scout will create a local HTML report and open it in the default browser.
 
@@ -165,8 +172,3 @@ License
 GPLv2: See LICENSE.
 
 .. _pip: https://pip.pypa.io/en/stable/index.html
-.. |ncc_logo| image:: https://avatars1.githubusercontent.com/u/4067082
-               :height: 100px
-               :width: 100 px
-               :scale: 40 %
-               :alt: [NCC Group icon]
