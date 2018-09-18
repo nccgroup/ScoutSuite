@@ -105,7 +105,6 @@ function hideAll() {
         showRow('aws_account_id');
     }
     current_resource_path = ''
-    current_service_group = ''
 }
 
 
