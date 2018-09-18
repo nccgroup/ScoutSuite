@@ -5,7 +5,7 @@ from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
 class ComputeEngineConfig(GCPBaseConfig):
     targets = (
-        ('instances', 'Instances', 'list', {'project': 'project_placeholder', 'zone': 'europe-west1-b'}, False),
+        ('instances', 'Instances', 'list', {'project': 'project_placeholder', 'zone': 'zone_placeholder'}, False),
         ('snapshots', 'Snapshots', 'list', {'project': 'project_placeholder'}, False),
         ('networks', 'Networks', 'list', {'project': 'project_placeholder'}, False),
         ('firewalls', 'Firewalls', 'list', {'project': 'project_placeholder'}, False),
@@ -25,6 +25,13 @@ class ComputeEngineConfig(GCPBaseConfig):
 
         # TODO figure out why GCP returns errors when running with more then 1 thread (multithreading)
         super(ComputeEngineConfig, self).__init__(thread_config=1)
+
+    def get_zones(self, client, project):
+        zones_list = []
+        zones = client.zones().list(project=project).execute()['items']
+        for zone in zones:
+            zones_list.append(zone['name'])
+        return zones_list
 
     def parse_instances(self, instance, params):
         instance_dict = {}

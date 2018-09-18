@@ -161,6 +161,7 @@ class BaseConfig():
                         if self.library_type == 'api_client_library':
                             target = getattr(api_client, target_type)
                             method = getattr(target(), list_method_name)
+                        # This works for AWS and GCP cloud libraries
                         else:
                             method = getattr(api_client, list_method_name)
 
@@ -185,11 +186,17 @@ class BaseConfig():
                         # GCP provider
                         elif self._is_provider('gcp'):
                             targets = []
+
                             for project in self.projects:
 
-                                for k in list_params:
-                                    if list_params[k] == 'project_placeholder':
-                                        list_params[k] = project
+                                # TODO this is temporary (and broken), will have to be moved to Config children objects
+                                zones = self.get_zones(client=api_client,
+                                                       project=project)
+                                if zones and 'zone' in list_params.keys():
+                                    list_params['zone'] = zones[0]
+
+                                if 'project' in list_params.keys():
+                                    list_params['project'] = project
 
                                 try:
 
@@ -207,6 +214,7 @@ class BaseConfig():
                                         if 'items' in response:
                                             targets += response['items']
 
+                                        # TODO need to handle too long responses
                                         # request = method(**list_params)
                                         # while request is not None:
                                         #     response = request.execute()

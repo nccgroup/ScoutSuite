@@ -24,3 +24,12 @@ class GCPBaseConfig(BaseConfig):
             return True
         else:
             return False
+
+    def get_zones(self, **kwargs):
+        """
+        Certain services require to be poled per-zone. In these cases, this method will return a list of zones to poll
+        or None.
+
+        :return:
+        """
+        return None
