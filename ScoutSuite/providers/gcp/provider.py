@@ -103,6 +103,7 @@ class GCPProvider(BaseProvider):
         """
 
         self._match_instances_and_snapshots()
+        self._match_networks_and_instances()
 
         super(GCPProvider, self).preprocessing()
 
@@ -136,3 +137,18 @@ class GCPProvider(BaseProvider):
                     for disk in self.services['computeengine']['snapshots'].values():
                         if disk['status'] == 'READY' and disk['source_disk_url'] == instance_disk['source_url']:
                             instance_disk['snapshots'].append(disk)
+
+    def _match_networks_and_instances(self):
+        """
+        For each network, math instances in that network
+
+        :return:
+        """
+
+        if 'computeengine' in self.services:
+            for network in self.services['computeengine']['networks'].values():
+                network['instances'] = []
+                for instance in self.services['computeengine']['instances'].values():
+                    for network_interface in instance['network_interfaces']:
+                        if network_interface['network'] == network['network_url']:
+                            network['instances'].append(instance['id'])

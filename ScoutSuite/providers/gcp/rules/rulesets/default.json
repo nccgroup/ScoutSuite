@@ -78,6 +78,12 @@
         "enabled": true,
         "level": "warning"
       }
+    ],
+    "computeengine-network-with-no-instances.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }
