@@ -49,6 +49,12 @@
         "level": "warning"
       }
     ],
+    "cloudsql-instance-with-no-backups.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "stackdriverlogging-no-export-sinks.json": [
       {
         "enabled": true,

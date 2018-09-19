@@ -38,4 +38,24 @@ class CloudSQLConfig(GCPBaseConfig):
                                                      instance['settings']['ipConfiguration'] and \
                                                      instance['settings']['ipConfiguration']['requireSsl']) else 'Disabled'
 
+        instance_dict['backups'] = self._get_instance_backups(instance, params)
+
         self.instances[instance_dict['id']] = instance_dict
+
+
+    def _get_instance_backups(self, instance, params):
+        backups = params['api_client'].backupRuns().list(project=instance['project'],
+                                                         instance=instance['name']).execute()
+        try:
+            backups_dict = {}
+            for backup in backups['items']:
+                backups_dict[backup['id']] = {
+                    'backup_url': backup['selfLink'],
+                    'creation_timestamp': backup['endTime'],
+                    'status': backup['status'],
+                    'type': backup['type']
+                }
+            return backups_dict
+        except Exception as e:
+            printError('Failed to get backups for SQL instance %s: %s' % (instance['name'], e))
+            return None

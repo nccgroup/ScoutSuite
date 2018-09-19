@@ -42,9 +42,13 @@ class RuleDefinition(object):
         """
         file_name_valid = False
         rule_type_valid = False
+        file_path = None
         # Look for a locally-defined rule
         for rule_dir in self.rule_dirs:
-            file_path = os.path.join(rule_dir, self.file_name) if rule_dir else self.file_name
+            try:
+                file_path = os.path.join(rule_dir, self.file_name) if rule_dir else self.file_name
+            except Exception as e:
+                printError('Failed to load file %s: %e' % (self.file_name, e))
             if os.path.isfile(file_path):
                 self.file_path = file_path
                 file_name_valid = True
@@ -74,11 +78,14 @@ class RuleDefinition(object):
                     self.string_definition = f.read()
                     self.load_from_string_definition()
             except Exception as e:
-                printException(e)
-                printError('Failed to load rule defined in %s' % file_path)
+                # printException(e)
+                printError('Failed to load rule defined in %s: %s' % (self.file_name, e))
 
 
     def load_from_string_definition(self):
-        definition = json.loads(self.string_definition)
-        for attr in definition:
-            setattr(self, attr, definition[attr])
+        try:
+            definition = json.loads(self.string_definition)
+            for attr in definition:
+                setattr(self, attr, definition[attr])
+        except Exception as e:
+            printError('Failed to load string definition %s: %e' % (self.string_definition, e))

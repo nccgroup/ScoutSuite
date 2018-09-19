@@ -18,8 +18,11 @@ class ProcessingEngine(object):
             for rule in self.ruleset.rules[filename]:
                 if not rule.enabled:
                     continue
-                manage_dictionary(self.rules, rule.path, [])
-                self.rules[rule.path].append(rule)
+                try:
+                    manage_dictionary(self.rules, rule.path, [])
+                    self.rules[rule.path].append(rule)
+                except Exception as e:
+                    printError('Failed to create rule %s: %s' % (rule.path, e))
 
 
     def run(self, cloud_provider, skip_dashboard = False):

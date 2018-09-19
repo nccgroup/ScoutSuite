@@ -5,8 +5,10 @@ import os
 import re
 
 from opinel.utils.fs import read_ip_ranges
+from opinel.utils.console import printDebug, printError, printException
 
 from ScoutSuite.utils import format_service_name
+
 
 ip_ranges_from_args = 'ip-ranges-from-args'
 
@@ -59,76 +61,80 @@ class Rule(object):
         :param convert:
         :return:
         """
-        string_definition = rule_definitions[self.filename].string_definition
-        # Load condition dependencies
-        definition = json.loads(string_definition)
-        definition['conditions'] += self.conditions
-        loaded_conditions = []
-        for condition in definition['conditions']:
-            if condition[0].startswith('_INCLUDE_('):
-                include = re.findall(r'_INCLUDE_\((.*?)\)', condition[0])[0]
-                #new_conditions = load_data(include, key_name = 'conditions')
-                rules_path = '%s/%s' % (self.data_path, include)
-                with open(rules_path, 'rt') as f:
-                    new_conditions = f.read()
-                    for (i, value) in enumerate(condition[1]):
-                        new_conditions = re.sub(condition[1][i], condition[2][i], new_conditions)
-                    new_conditions = json.loads(new_conditions)['conditions']
-                loaded_conditions.append(new_conditions)
-            else:
-                loaded_conditions.append(condition)
-        definition['conditions'] = loaded_conditions
-        string_definition = json.dumps(definition)
-        # Set parameters
-        parameters = re.findall(r'(_ARG_([a-zA-Z0-9]+)_)', string_definition)
-        for param in parameters:
-            index = int(param[1])
-            if len(self.args) <= index:
-                string_definition = string_definition.replace(param[0], '')
-            elif type(self.args[index]) == list:
-                value = '[ %s ]' % ', '.join('"%s"' % v for v in self.args[index])
-                string_definition = string_definition.replace('"%s"' % param[0], value)
-            else:
-                string_definition = string_definition.replace(param[0], self.args[index])
-        # Strip dots if necessary
-        stripdots = re_strip_dots.findall(string_definition)
-        for value in stripdots:
-            string_definition = string_definition.replace(value[0], value[1].replace('.', ''))
-        definition = json.loads(string_definition)
-        # Set special values (IP ranges, AWS account ID, ...)
-        for condition in definition['conditions']:
-            if type(condition) != list or len(condition) == 1 or type(condition[2]) == list:
-                continue
-            for testcase in testcases:
-                result = testcase['regex'].match(condition[2])
-                if result and (testcase['name'] == 'ip_ranges_from_file' or testcase['name'] == 'ip_ranges_from_local_file'):
-                    filename = result.groups()[0]
-                    conditions = result.groups()[1] if len(result.groups()) > 1 else []
-                    # TODO :: handle comma here...
-                    if filename == ip_ranges_from_args:
-                        prefixes = []
-                        for filename in ip_ranges:
-                            prefixes += read_ip_ranges(filename, local_file = True, ip_only = True, conditions = conditions)
-                        condition[2] = prefixes
+        try:
+            string_definition = rule_definitions[self.filename].string_definition
+            # Load condition dependencies
+            definition = json.loads(string_definition)
+            definition['conditions'] += self.conditions
+            loaded_conditions = []
+            for condition in definition['conditions']:
+                if condition[0].startswith('_INCLUDE_('):
+                    include = re.findall(r'_INCLUDE_\((.*?)\)', condition[0])[0]
+                    #new_conditions = load_data(include, key_name = 'conditions')
+                    rules_path = '%s/%s' % (self.data_path, include)
+                    with open(rules_path, 'rt') as f:
+                        new_conditions = f.read()
+                        for (i, value) in enumerate(condition[1]):
+                            new_conditions = re.sub(condition[1][i], condition[2][i], new_conditions)
+                        new_conditions = json.loads(new_conditions)['conditions']
+                    loaded_conditions.append(new_conditions)
+                else:
+                    loaded_conditions.append(condition)
+            definition['conditions'] = loaded_conditions
+            string_definition = json.dumps(definition)
+            # Set parameters
+            parameters = re.findall(r'(_ARG_([a-zA-Z0-9]+)_)', string_definition)
+            for param in parameters:
+                index = int(param[1])
+                if len(self.args) <= index:
+                    string_definition = string_definition.replace(param[0], '')
+                elif type(self.args[index]) == list:
+                    value = '[ %s ]' % ', '.join('"%s"' % v for v in self.args[index])
+                    string_definition = string_definition.replace('"%s"' % param[0], value)
+                else:
+                    string_definition = string_definition.replace(param[0], self.args[index])
+            # Strip dots if necessary
+            stripdots = re_strip_dots.findall(string_definition)
+            for value in stripdots:
+                string_definition = string_definition.replace(value[0], value[1].replace('.', ''))
+            definition = json.loads(string_definition)
+            # Set special values (IP ranges, AWS account ID, ...)
+            for condition in definition['conditions']:
+                if type(condition) != list or len(condition) == 1 or type(condition[2]) == list:
+                    continue
+                for testcase in testcases:
+                    result = testcase['regex'].match(condition[2])
+                    if result and (testcase['name'] == 'ip_ranges_from_file' or testcase['name'] == 'ip_ranges_from_local_file'):
+                        filename = result.groups()[0]
+                        conditions = result.groups()[1] if len(result.groups()) > 1 else []
+                        # TODO :: handle comma here...
+                        if filename == ip_ranges_from_args:
+                            prefixes = []
+                            for filename in ip_ranges:
+                                prefixes += read_ip_ranges(filename, local_file = True, ip_only = True, conditions = conditions)
+                            condition[2] = prefixes
+                            break
+                        else:
+                            local_file = True if testcase['name'] == 'ip_ranges_from_local_file' else False
+                            condition[2] = read_ip_ranges(filename, local_file = local_file, ip_only = True, conditions = conditions)
+                            break
                         break
-                    else:
-                        local_file = True if testcase['name'] == 'ip_ranges_from_local_file' else False
-                        condition[2] = read_ip_ranges(filename, local_file = local_file, ip_only = True, conditions = conditions)
+                    elif result:
+                        condition[2] = params[testcase['name']]
                         break
-                    break
-                elif result:
-                    condition[2] = params[testcase['name']]
-                    break
 
-        if len(attributes) == 0:
-            attributes = [attr for attr in definition]
-        for attr in attributes:
-            if attr in definition:
-                setattr(self, attr, definition[attr])
-        if hasattr(self, 'path'):
-            self.service = format_service_name(self.path.split('.')[0])
-        if not hasattr(self, 'key'):
-            setattr(self, 'key', self.filename)
-        setattr(self, 'key', self.key.replace('.json', ''))
-        if self.key_suffix:
-            setattr(self, 'key', '%s-%s' % (self.key, self.key_suffix))
+            if len(attributes) == 0:
+                attributes = [attr for attr in definition]
+            for attr in attributes:
+                if attr in definition:
+                    setattr(self, attr, definition[attr])
+            if hasattr(self, 'path'):
+                self.service = format_service_name(self.path.split('.')[0])
+            if not hasattr(self, 'key'):
+                setattr(self, 'key', self.filename)
+            setattr(self, 'key', self.key.replace('.json', ''))
+            if self.key_suffix:
+                setattr(self, 'key', '%s-%s' % (self.key, self.key_suffix))
+        except Exception as e:
+            # printException(e)
+            printError('Failed to set definition %s: %s' % (self.filename, e))
