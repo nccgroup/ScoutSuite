@@ -90,7 +90,29 @@ class ComputeEngineConfig(GCPBaseConfig):
         firewall_dict['network_url'] = firewall['network']
         firewall_dict['priority'] = firewall['priority']
         firewall_dict['source_ranges'] = firewall['sourceRanges']
-        firewall_dict['allowed'] = firewall['allowed']
+        firewall_dict['target_tags'] = firewall['targetTags'] if 'targetTags' in firewall else []
+
+        # Parse FW rules
+        for direction in ['allowed', 'denied']:
+            direction_string = '%s_traffic' % direction
+            firewall_dict[direction_string] = {
+                'tcp': [],
+                'udp': [],
+                'icmp': []
+            }
+            if direction in firewall:
+                for rule in firewall[direction]:
+                    if rule['IPProtocol'] == 'all':
+                        for protocol in firewall_dict[direction_string]:
+                            firewall_dict[direction_string][protocol] = ['*']
+                        break
+                    else:
+                        if firewall_dict[direction_string][rule['IPProtocol']] != ['*']:
+                            if 'ports' in rule:
+                                firewall_dict[direction_string][rule['IPProtocol']] += rule['ports']
+                            else:
+                                firewall_dict[direction_string][rule['IPProtocol']] = ['*']
+
         firewall_dict['direction'] = firewall['direction']
         firewall_dict['disabled'] = firewall['disabled']
         self.firewalls[firewall_dict['id']] = firewall_dict
