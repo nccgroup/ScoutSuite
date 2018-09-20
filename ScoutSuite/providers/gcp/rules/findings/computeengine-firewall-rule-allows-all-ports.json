@@ -2,6 +2,7 @@
   "dashboard_name": "Firewall Rules",
   "description": "Firewall rule opens all ports (0-65535)",
   "path": "computeengine.firewalls.id.allowed_traffic.id.ports.id",
+  "display_path": "computeengine.firewalls.id",
   "conditions": [ "and",
     [ "computeengine.firewalls.id.disabled", "notTrue", "" ],
     [ "computeengine.firewalls.id.direction", "equal", "INGRESS" ],
@@ -10,6 +11,5 @@
       [ "computeengine.firewalls.id.allowed_traffic.id.", "equal", "*" ],
       [ "computeengine.firewalls.id.allowed_traffic.id.", "equal", "0-65535" ]
     ]
-  ],
-  "id_suffix": "FirewallRule"
+  ]
 }

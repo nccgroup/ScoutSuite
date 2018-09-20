@@ -4,6 +4,5 @@
   "path": "cloudsql.instances.id",
   "conditions": [ "and",
     [ "cloudsql.instances.id.ssl_required", "equal", "Disabled" ]
-  ],
-  "id_suffix": "SSLRequired"
+  ]
 }

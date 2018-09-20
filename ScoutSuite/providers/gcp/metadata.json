@@ -15,12 +15,14 @@
         "instances": {
           "cols": 2,
           "path": "services.computeengine.instances"
-        }
-      },
-      "resources": {
+        },
         "snapshots": {
           "cols": 2,
           "path": "services.computeengine.snapshots"
+        },
+        "firewalls": {
+          "cols": 2,
+          "path": "services.computeengine.firewalls"
         }
       }
     }

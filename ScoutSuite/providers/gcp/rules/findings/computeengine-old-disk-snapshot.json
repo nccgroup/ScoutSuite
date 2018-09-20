@@ -5,6 +5,5 @@
   "conditions": [ "and",
     [ "computeengine.snapshots.id.status", "equal", "READY" ],
     [ "computeengine.snapshots.id.creation_timestamp", "olderThan", ["90", "days"] ]
-  ],
-  "id_suffix": "old_snapshots"
+  ]
 }

@@ -4,6 +4,5 @@
     "path": "stackdriverlogging.sinks.id",
     "conditions": [ "and",
         [ "stackdriverlogging.sinks", "empty", "" ]
-    ],
-    "id_suffix": "logging"
+    ]
 }

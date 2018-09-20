@@ -4,6 +4,5 @@
   "dashboard_name": "Instances",
   "conditions": [ "and",
     [ "cloudsql.instances.id.backups", "empty", "" ]
-  ],
-  "id_suffix": "LackOfBackups"
+  ]
 }

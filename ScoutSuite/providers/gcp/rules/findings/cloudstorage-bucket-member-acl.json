@@ -8,6 +8,5 @@
   "conditions": [ "and",
     [ "cloudstorage.buckets.id.acl_configuration", "withKey", "_ARG_0_"],
     [ "cloudstorage.buckets.id.acl_configuration._ARG_0_", "containAtLeastOneOf", "_ARG_1_"]
-  ],
-  "id_suffix": "_ARG_1_"
+  ]
 }
