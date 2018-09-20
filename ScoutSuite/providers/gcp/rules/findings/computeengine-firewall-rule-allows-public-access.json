@@ -1,6 +1,6 @@
 {
   "dashboard_name": "Firewall Rules",
-  "description": "Firewall rule allows public access",
+  "description": "Firewall rule allows public access (0.0.0.0/0)",
   "path": "computeengine.firewalls.id",
   "conditions": [ "and",
     [ "computeengine.firewalls.id.disabled", "notTrue", "" ],

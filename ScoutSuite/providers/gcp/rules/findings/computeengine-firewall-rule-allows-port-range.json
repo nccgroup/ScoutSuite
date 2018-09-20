@@ -1,6 +1,6 @@
 {
   "dashboard_name": "Firewall Rules Traffic",
-  "description": "Firewall rule uses port range(s)",
+  "description": "Firewall rule allows port range(s)",
   "path": "computeengine.firewalls.id.allowed_traffic.id.ports.id",
   "display_path": "computeengine.firewalls.id",
   "conditions": [ "and",
