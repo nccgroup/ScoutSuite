@@ -4,7 +4,7 @@ import json
 import os
 import tempfile
 
-from opinel.utils.console import printDebug, printError, printException, prompt_4_yes_no
+from opinel.utils.console import printDebug, printError, prompt_4_yes_no
 
 from ScoutSuite.core.rule import Rule
 from ScoutSuite.core.rule_definition import RuleDefinition
@@ -83,7 +83,7 @@ class Ruleset(object):
                         for rule in ruleset['rules'][filename]:
                             self.handle_rule_versions(filename, rule_type, rule)
             except Exception as e:
-                printException(e)
+                # printException(e)
                 printError('Error: ruleset file %s contains malformed JSON.' % self.filename)
                 self.rules = []
                 self.about = ''
