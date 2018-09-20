@@ -23,6 +23,10 @@
         "firewalls": {
           "cols": 2,
           "path": "services.computeengine.firewalls"
+        },
+        "networks": {
+          "cols": 2,
+          "path": "services.computeengine.networks"
         }
       }
     }

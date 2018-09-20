@@ -1,7 +1,7 @@
 {
   "description": "Instance with no backups",
-  "path": "cloudsql.instances.id",
   "dashboard_name": "Instances",
+  "path": "cloudsql.instances.id",
   "conditions": [ "and",
     [ "cloudsql.instances.id.backups", "empty", "" ]
   ]
