@@ -36,13 +36,24 @@ def fix_path_string(all_info, current_path, path_to_value):
 
 def recurse(all_info, current_info, target_path, current_path, config, add_suffix=False):
     """
+    Recursively test conditions for a path.
+    In order to do this, needs to evaluate all the `id` possibilities.
 
-    :param all_info:
-    :param current_info:
-    :param target_path:
+    When the value in the path is `id`, this represents either a key for a dict or an index for a list.
+
+    When the is `id`:
+    - For a dict return value at key
+    - For a list, return the list
+    When the value ends in `id.`:
+    - For a dict, return a list of keys
+    - For a list, return value at the index indicated by id
+    `
+    :param all_info:        All of the services' data
+    :param current_info:    ?
+    :param target_path:     The path that is being tested
     :param current_path:
-    :param config:
-    :param add_suffix:
+    :param config:          The Rule object that is being tested
+    :param add_suffix:      ?
     :return:
     """
     results = []
@@ -72,15 +83,20 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
                 split_current_path = copy.deepcopy(current_path)
                 split_current_path.append(key)
                 split_current_info = current_info[key]
-                results = results + recurse(all_info, split_current_info, split_target_path, split_current_path, config,
-                                            add_suffix)
-    # To handle lists properly, I would have to make sure the list is properly ordered and I can use the index to consistently access an object... Investigate (or do not use lists)
+                results = results + recurse(all_info, split_current_info, split_target_path, split_current_path,
+                                            config, add_suffix)
+    # To handle lists properly, I would have to make sure the list is properly ordered and I can use the index to
+    # consistently access an object... Investigate (or do not use lists)
     elif type(current_info) == list:
         for index, split_current_info in enumerate(current_info):
             split_current_path = copy.deepcopy(current_path)
             split_current_path.append(str(index))
             results = results + recurse(all_info, split_current_info, copy.deepcopy(target_path), split_current_path,
                                         config, add_suffix)
+    elif type(current_info) == str:
+        split_current_path = copy.deepcopy(current_path)
+        results = results + recurse(all_info, current_info, [], split_current_path,
+                                    config, add_suffix)
     else:
         printError('Error: unhandled case, typeof(current_info) = %s' % type(current_info))
         printError('Path: %s' % current_path)
@@ -92,11 +108,11 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
 
 def pass_conditions(all_info, current_path, conditions, unknown_as_pass_condition=False):
     """
-    Pass all conditions?
+    Check that all conditions are passed for the current path.
 
-    :param all_info:
-    :param current_path:
-    :param conditions:
+    :param all_info:        All of the services' data
+    :param current_path:    The value of the `path` variable defined in the finding file
+    :param conditions:      The conditions to check as defined in the finding file
     :param unknown_as_pass_condition:   Consider an undetermined condition as passed
     :return:
     """
@@ -121,7 +137,7 @@ def pass_conditions(all_info, current_path, conditions, unknown_as_pass_conditio
             except Exception as e:
                 res = True if unknown_as_pass_condition else False
                 printError('Unable to process testcase \'%s\' on value \'%s\', interpreted as %s.' % (
-                test_name, str(target_obj), res))
+                    test_name, str(target_obj), res))
                 printException(e, True)
         # Quick exit and + false
         if condition_operator == 'and' and not res:

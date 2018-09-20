@@ -84,6 +84,24 @@
         "enabled": true,
         "level": "warning"
       }
+    ],
+    "computeengine-firewall-rule-allows-port-range.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "computeengine-firewall-rule-allows-all-ports.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "computeengine-firewall-rule-allows-public-access.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }
