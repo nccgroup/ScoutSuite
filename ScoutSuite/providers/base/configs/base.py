@@ -17,6 +17,7 @@ from ScoutSuite.providers.base.configs.threads import thread_configs
 # TODO do this better without name conflict
 from opinel.utils.aws import connect_service
 from ScoutSuite.providers.gcp.utils import gcp_connect_service
+from ScoutSuite.providers.azure.utils import azure_connect_service
 
 from opinel.utils.aws import build_region_list, handle_truncated_response
 from opinel.utils.console import printException, printInfo
@@ -89,6 +90,8 @@ class BaseConfig():
 
         elif self._is_provider('gcp'):
             api_client = gcp_connect_service(service=self.service, credentials=credentials)
+        elif self._is_provider('azure'):
+            api_client = azure_connect_service(service=self.service, credentials=credentials)
 
         # Threading to fetch & parse resources (queue consumer)
         params = {'api_client': api_client}
@@ -166,6 +169,10 @@ class BaseConfig():
                         if self.library_type == 'api_client_library':
                             target = getattr(api_client, target_type)
                             method = getattr(target(), list_method_name)
+                        # This is how Azure works
+                        elif self._is_provider('azure'):
+                            target = getattr(api_client, target_type)
+                            method = getattr(target, list_method_name)
                         # This works for AWS and GCP cloud libraries
                         else:
                             method = getattr(api_client, list_method_name)
@@ -254,6 +261,13 @@ class BaseConfig():
                                 except Exception as e:
                                     if not ignore_list_error:
                                         printException(e)
+
+                        # Azure provider
+                        if self._is_provider('azure'):
+                            targets = []
+                            response = method(**list_params)
+                            for i in response:
+                                targets.append(i)
 
                     except Exception as e:
                         if not ignore_list_error:

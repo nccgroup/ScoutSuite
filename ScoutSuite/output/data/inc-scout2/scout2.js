@@ -762,6 +762,8 @@ var make_title = function(title) {
         return 'Stackdriver Monitoring';
     } else if (title == 'computeengine') {
         return 'Compute Engine';
+    } else if (title == 'storageaccounts') {
+        return 'Storage Accounts';
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
     }

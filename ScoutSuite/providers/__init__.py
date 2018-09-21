@@ -4,9 +4,11 @@ import sys
 
 from ScoutSuite.providers.aws.provider import AWSProvider
 from ScoutSuite.providers.gcp.provider import GCPProvider
+from ScoutSuite.providers.azure.provider import AzureProvider
 
 providers_dict = {'aws': 'AWSProvider',
-                  'gcp': 'GCPProvider'}
+                  'gcp': 'GCPProvider',
+                  'azure': 'AzureProvider'}
 
 def get_provider(provider,
                  profile=None,

@@ -27,6 +27,8 @@ formatted_service_name = {
     'stackdriverlogging': 'Stackdriver Logging',
     'stackdrivermonitoring': 'Stackdriver Monitoring',
     'computeengine': 'Compute Engine',
+
+    'storageaccounts': 'Storage Accounts',
 }
 
 

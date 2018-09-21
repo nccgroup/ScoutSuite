@@ -1,0 +1,12 @@
+{
+  "storage": {
+    "storageaccounts": {
+      "resources": {
+        "storage_accounts": {
+          "cols": 2,
+          "path": "services.storageaccounts.storage_accounts"
+        }
+      }
+    }
+  }
+}

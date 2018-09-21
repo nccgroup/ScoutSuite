@@ -178,7 +178,7 @@ class ScoutSuiteArgumentParser(SharedArgumentParser):
         self.parser.add_argument('--provider',
                                  required=True,
                                  action='store',
-                                 choices = ['aws', 'gcp'],
+                                 choices = ['aws', 'gcp', 'azure'],
                                  help='The cloud provider to scan (currently supports AWS (\'aws\') and GCP (\'gcp\')')
 
         a = sys.argv
