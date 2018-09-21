@@ -85,7 +85,7 @@ def get_value_at(all_info, current_path, key, to_string=False):
                 if key == 'id':
                     target_path.append(current_path[i])
                 # If empty key and value is an index, keep the index
-                elif key == '' and current_path[i].isdigit():
+                elif key == '' and i < len(current_path) and current_path[i].isdigit():
                     target_path.append(int(current_path[i]))
                 # Otherwise, use key
                 else:
