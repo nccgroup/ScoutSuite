@@ -1,0 +1,11 @@
+{
+  "about": "Default ruleset for Azure.",
+  "rules": {
+    "storageaccount-account-allowing-clear-text.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ]
+  }
+}
