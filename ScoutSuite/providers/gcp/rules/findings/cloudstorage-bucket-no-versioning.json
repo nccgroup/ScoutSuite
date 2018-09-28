@@ -4,5 +4,6 @@
     "path": "cloudstorage.buckets.id",
     "conditions": [ "and",
         [ "cloudstorage.buckets.id.versioning_status", "equal", "Disabled" ]
-    ]
+    ],
+    "id_suffix": "versioning"
 }

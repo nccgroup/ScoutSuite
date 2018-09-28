@@ -4,5 +4,6 @@
   "dashboard_name": "Instances",
   "conditions": [ "and",
     [ "cloudsql.instances.id.log_status", "equal", "Disabled" ]
-  ]
+  ],
+  "id_suffix": "log_status"
 }
