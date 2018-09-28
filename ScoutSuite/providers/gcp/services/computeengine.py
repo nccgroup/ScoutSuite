@@ -37,7 +37,7 @@ class ComputeEngineConfig(GCPBaseConfig):
         instance_dict = {}
         instance_dict['id'] = self.get_non_provider_id(instance['name'])
         instance_dict['name'] = instance['name']
-        instance_dict['description'] = instance['description']
+        instance_dict['description'] = instance['description'] if instance['description'] else 'N/A'
         instance_dict['creation_timestamp'] = instance['creationTimestamp']
         instance_dict['tags'] = instance['tags']
         instance_dict['status'] = instance['status']
@@ -62,7 +62,7 @@ class ComputeEngineConfig(GCPBaseConfig):
         snapshot_dict = {}
         snapshot_dict['id'] = snapshot['id']
         snapshot_dict['name'] = snapshot['name']
-        snapshot_dict['description'] = snapshot['description']
+        snapshot_dict['description'] = snapshot['description'] if snapshot['description'] else 'N/A'
         snapshot_dict['creation_timestamp'] = snapshot['creationTimestamp']
         snapshot_dict['status'] = snapshot['status']
         snapshot_dict['source_disk_id'] = snapshot['sourceDiskId']
@@ -73,7 +73,7 @@ class ComputeEngineConfig(GCPBaseConfig):
         network_dict = {}
         network_dict['id'] = network['id']
         network_dict['name'] = network['name']
-        network_dict['description'] = network['description'] if 'description' in network else None
+        network_dict['description'] = network['description'] if 'description' in network and network['description'] else 'N/A'
         network_dict['creation_timestamp'] = network['creationTimestamp']
         network_dict['network_url'] = network['selfLink']
         network_dict['subnetwork_urls'] = network['subnetworks']

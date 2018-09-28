@@ -1,0 +1,28 @@
+
+<!-- Compute Engine snapshots partial -->
+<script id="services.computeengine.snapshots.partial" type="text/x-handlebars-template">
+    <div class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">ID: <span id="computeengine.snapshots.{{@key}}.id">{{d}}</span></div>
+        <div class="list-group-item-text item-margin">Name: <span id="computeengine.snapshots.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Decription: <span id="computeengine.snapshots.{{@key}}.description">{{description}}</span></div>
+        <div class="list-group-item-text item-margin">Creation Date: <span id="computeengine.snapshots.{{@key}}.creation_timestamp">{{creation_timestamp}}</span></div>
+        <div class="list-group-item-text item-margin">Status: <span id="computeengine.snapshots.{{@key}}.status">{{status}}</span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.computeengine.snapshots", $("#services\\.computeengine\\.snapshots\\.partial").html());
+</script>
+
+<!-- Single computeengine snapshot template -->
+<script id="single_computeengine_snapshot-template" type="text/x-handlebars-template">
+    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+    {{> services.computeengine.snapshots}}
+</script>
+<script>
+    var single_computeengine_snapshot_template = Handlebars.compile($("#single_computeengine_snapshot-template").html());
+</script>
