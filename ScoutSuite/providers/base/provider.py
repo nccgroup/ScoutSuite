@@ -7,6 +7,7 @@ import sys
 import copy
 
 from opinel.utils.console import printException, printInfo
+from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite import __version__ as scout2_version
 from ScoutSuite.providers.base.configs.browser import get_object_at
@@ -248,10 +249,19 @@ class BaseProvider:
                         callback_name = callback[0]
                         callback_args = copy.deepcopy(callback[1])
                         target_path = self.metadata[service_group]['summaries'][summary]['path'].split('.')
-                        target_object = self
+
+                        setattr(self, 'service_groups', {})
+                        target_object = self.service_groups
+
                         for p in target_path:
-                            self.manage_object(target_object, p, {})
-                            target_object = getattr(target_object, p)
+                            manage_dictionary(target_object, p, {})
+                            target_object = target_object[p]
+
+                        # target_object = self
+                        # for p in target_path:
+                        #     self.manage_object(target_object, p, {})
+                        #     target_object = getattr(target_object, p)
+
                         if callback_name == 'merge':
                             for service in self.metadata[service_group]:
                                 if service == 'summaries':
