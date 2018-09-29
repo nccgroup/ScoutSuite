@@ -69,8 +69,9 @@ class Scout2Report(HTMLReport):
     Scout2 HTML report
     """
 
-    def __init__(self, profile, report_dir = None, timestamp = False, exceptions = {}):
+    def __init__(self, provider, profile=None, report_dir = None, timestamp = False, exceptions = {}):
         self.html_root = HTMLREPORT_FILE
+        self.provider = provider
         super(Scout2Report, self).__init__(profile, report_dir, timestamp, exceptions)
 
     def save(self, config, exceptions, force_write = False, debug = False):
@@ -83,8 +84,10 @@ class Scout2Report(HTMLReport):
         contents = ''
         # Use all scripts under html/partials/
         contents += self.get_content_from('partials')
+        contents += self.get_content_from('partials/%s' % self.provider)
         # Use all scripts under html/summaries/
         contents += self.get_content_from('summaries')
+        contents += self.get_content_from('summaries/%s' % self.provider)
         new_file, first_line = get_filename(HTMLREPORT, self.profile, self.report_dir)
         printInfo('Creating %s ...' % new_file)
         if prompt_4_overwrite(new_file, force_write):

@@ -28,6 +28,7 @@ class AzureProvider(BaseProvider):
 
         self.metadata_path = '%s/metadata.json' % os.path.split(os.path.abspath(__file__))[0]
 
+        self.provider_code = 'azure'
         self.provider_name = 'Microsoft Azure'
 
         self.services_config = AzureServicesConfig

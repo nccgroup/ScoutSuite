@@ -45,7 +45,7 @@ def main():
 
         # Load the config
         try:
-            report = Scout2Report(profile_name, args.report_dir, args.timestamp)
+            report = Scout2Report(args.provider, profile_name, args.report_dir, args.timestamp)
             aws_config = report.jsrw.load_from_file(AWSCONFIG)
             services = aws_config['service_list']
         except Exception as e:

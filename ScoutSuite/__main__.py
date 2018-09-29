@@ -55,7 +55,7 @@ def main():
                                   thread_config=args.thread_config)
 
     # Create a new report
-    report = Scout2Report(args.profile[0], args.report_dir, args.timestamp)
+    report = Scout2Report(args.provider, args.profile[0], args.report_dir, args.timestamp)
 
     # Complete run, including pulling data from provider
     if not args.fetch_local:
