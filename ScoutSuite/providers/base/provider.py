@@ -3,14 +3,10 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import json
-
-from ScoutSuite.providers.base.configs.services import BaseServicesConfig
-
 import sys
 import copy
 
 from opinel.utils.console import printException, printInfo
-from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite import __version__ as scout2_version
 from ScoutSuite.providers.base.configs.browser import get_object_at
@@ -180,6 +176,17 @@ class BaseProvider:
                             except Exception as e:
                                 printException(e)
 
+    def manage_object(self, object, attr, init, callback=None):
+        """
+        This is a quick-fix copy of Opine's manage_dictionary in order to support the new ScoutSuite object which isn't
+        a dict
+        """
+        if not hasattr(object, attr):
+            setattr(object, attr, init)
+            self.manage_object(object, attr, init)
+            if callback:
+                callback(getattr(object, attr))
+        return object
 
     def _process_metadata_callbacks(self):
         """
@@ -241,10 +248,10 @@ class BaseProvider:
                         callback_name = callback[0]
                         callback_args = copy.deepcopy(callback[1])
                         target_path = self.metadata[service_group]['summaries'][summary]['path'].split('.')
-                        target_object = {'services': self.services}  # ugly fix for Scout2 legacy config dict
+                        target_object = self
                         for p in target_path:
-                            manage_dictionary(target_object, p, {})
-                            target_object = target_object[p]
+                            self.manage_object(target_object, p, {})
+                            target_object = getattr(object, p)
                         if callback_name == 'merge':
                             for service in self.metadata[service_group]:
                                 if service == 'summaries':
