@@ -182,11 +182,16 @@ class BaseProvider:
         This is a quick-fix copy of Opine's manage_dictionary in order to support the new ScoutSuite object which isn't
         a dict
         """
-        if not hasattr(object, attr):
-            setattr(object, attr, init)
-            self.manage_object(object, attr, init)
-            if callback:
-                callback(getattr(object, attr))
+        if type(object) == dict:
+            if not str(attr) in object:
+                object[str(attr)] = init
+                self.manage_object(object, attr, init)
+        else:
+            if not hasattr(object, attr):
+                setattr(object, attr, init)
+                self.manage_object(object, attr, init)
+        if callback:
+            callback(getattr(object, attr))
         return object
 
     def _process_metadata_callbacks(self):
@@ -249,19 +254,14 @@ class BaseProvider:
                         callback_name = callback[0]
                         callback_args = copy.deepcopy(callback[1])
                         target_path = self.metadata[service_group]['summaries'][summary]['path'].split('.')
-
-                        setattr(self, 'service_groups', {})
-                        target_object = self.service_groups
-
+                        # quick fix as legacy Scout2 expects "self" to be a dict
+                        target_object = self
                         for p in target_path:
-                            manage_dictionary(target_object, p, {})
-                            target_object = target_object[p]
-
-                        # target_object = self
-                        # for p in target_path:
-                        #     self.manage_object(target_object, p, {})
-                        #     target_object = getattr(target_object, p)
-
+                            self.manage_object(target_object, p, {})
+                            if type(target_object) == dict:
+                                target_object = target_object[p]
+                            else:
+                                target_object = getattr(target_object, p)
                         if callback_name == 'merge':
                             for service in self.metadata[service_group]:
                                 if service == 'summaries':
