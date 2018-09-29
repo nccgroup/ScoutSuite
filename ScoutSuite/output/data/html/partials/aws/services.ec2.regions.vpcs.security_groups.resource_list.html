@@ -1,0 +1,32 @@
+
+    <!-- EC2 security group associated resources list partial -->
+    <script id="services.ec2.regions.vpcs.security_groups.resource_list.partial" type="text/x-handlebars-template">
+      {{#if resources}}
+        <div class="accordion">
+          <li><h5 class="list-group-item-heading accordion-heading">{{make_title status}}
+            <a class="accordion-toggle" data-toggle="collapse" href="#ec2_security_group-{{group}}-{{service}}_{{resource_type}}_list-{{status}}">
+              <span class="badge pull-right btn-info">{{resources.length}}</span>
+            </a>
+          </h5></li>
+          <div id="ec2_security_group-{{group}}-{{service}}_{{resource_type}}_list-{{status}}" class="accordion-body collapse">
+            <div class="accordion-inner">
+              <ul>
+              {{#each resources}}
+                <li class="list-group-item-text"><a href="javascript:showObject('services.{{../service}}.regions.{{../region}}.vpcs.{{../vpc}}.{{../resource_type}}.{{this}}')">
+                  {{get_value_at 'services' ../service 'regions' ../region 'vpcs' ../vpc ../resource_type this 'name'}} ({{this}})
+                </a></li>
+              {{/each}}
+              </ul>
+            </div>
+          </div>
+        </div>
+      {{else}}
+        <h5 class="list-group-item-heading item-margin accordion-heading">{{status}}
+          <span class="badge pull-right">{{resources.length}}</span>
+        </h5>
+      {{/if}}
+    </script>
+    <script>
+      Handlebars.registerPartial("services.ec2.regions.vpcs.security_groups.resource_list", $("#services\\.ec2\\.regions\\.vpcs\\.security_groups\\.resource_list\\.partial").html());
+    </script>
+

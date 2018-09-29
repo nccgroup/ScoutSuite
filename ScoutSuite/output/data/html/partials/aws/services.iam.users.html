@@ -1,0 +1,71 @@
+
+  <!-- IAM user partial -->
+  <script id="services.iam.users.partial" type="text/x-handlebars-template">
+    <div class="list-group-item active">
+      <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+      <h4 class="list-group-item-heading">Information</h4>
+      <div class="list-group-item-text item-margin">Creation date: {{CreateDate}}</div>
+    </div>
+    <div class="list-group-item">
+      <h4 class="list-group-item-heading">Authentication methods</h4>
+      <p class="list-group-item-text item-margin">Password enabled: {{has_profiles? LoginProfile}}</p>
+      <ul></ul>
+      <p class="list-group-item-text item-margin">Multi-Factor enabled: <span id="iam.users.{{id}}.mfa_enabled">{{has_mfa? MFADevices}}</span></p>
+      <ul class="item-margin">
+      {{#each MFADevices}}
+        <li class="list-group-item-text"> Serial number: {{SerialNumber}}</li>
+      {{/each}}
+      </ul>
+      <p class="list-group-item-text item-margin">Access Keys: <span id="iam.users.{{id}}.multiple_api_keys">{{has_access_keys? AccessKeys}}</p><span>
+      <ul class="item-margin">
+      {{#each AccessKeys}}
+        <li class="list-group-item-text"><span id="iam.users.{{@../key}}.AccessKeys.{{@key}}">{{AccessKeyId}}, {{Status}}, created on {{CreateDate}}</span></li>
+      {{/each}}
+      </ul>
+      <p class="list-group-item-text item-margin">
+        <span id="iam.users.{{id}}.multiple_active_api_keys" class="finding-hidden">
+          <i class="glyphicon glyphicon-warning-sign"></i> Review the need for multiple active access keys
+        </span>
+      </p>
+      <p class="list-group-item-text item-margin">
+        <span id="iam.users.{{id}}.password_and_keys" class="finding-hidden">
+          <i class="glyphicon glyphicon-warning-sign"></i> Review the need for password-based and key-based authentication
+        </span>
+      </p>
+      <p class="list-group-item-text item-margin">
+        <span id="iam.users.{{id}}.member_of_common_group" class="finding-hidden">
+          <i class="glyphicon glyphicon-warning-sign"></i> User does not belong to the global/mandatory group
+        </span>
+      </p>
+      <p class="list-group-item-text item-margin">
+        <span id="iam.users.{{id}}.member_of_category_group" class="finding-hidden">
+          <i class="glyphicon glyphicon-warning-sign"></i> User does not belong to a category group
+        </span>
+      </p>
+
+    </div>
+    <div class="list-group-item">
+      <h4 class="list-group-item-heading">Groups<span class="badge pull-right {{#if groups.length}}btn-info{{/if}}">{{groups.length}}</span></h4>
+      <ul class="no-bullet">
+      {{#each groups}}
+        <li class="list-group-item-text"><a href="javascript:showObject('services.iam.groups', 'name', '{{this}}')">{{this}}</a></li>
+      {{/each}}
+      </ul>
+    </div>
+    {{> services.iam.inline_policies resource_type = 'users' resource_id = id}}
+    {{> services.iam.policies_list resource_type = 'users' resource_id = id}}
+  </script>
+  <script>
+    Handlebars.registerPartial("services.iam.users", $("#services\\.iam\\.users\\.partial").html());
+  </script>
+
+    <!-- Single IAM user template -->
+    <script id="services.iam.users.template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.iam.users}}
+    </script>
+    <script>
+        var single_iam_user_template = Handlebars.compile($("#services\\.iam\\.users\\.template").html());
+    </script>

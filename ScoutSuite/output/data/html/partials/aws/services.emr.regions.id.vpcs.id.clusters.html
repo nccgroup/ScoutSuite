@@ -1,0 +1,61 @@
+
+    <!-- EMR cluster partial -->
+    <script id="services.emr.regions.id.vpcs.id.clusters.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+            <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+            <h4>Information</h4>
+            <ul>
+                <li class="list-group-item-text">Region: {{region}}</li>
+                <li class="list-group-item-text">VPC: {{get_value_at 'services.ec2.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</li>
+                <li class="list-group-item-text">Id: {{id}}</li>
+                <li class="list-group-item-text">Availability zone: {{Ec2InstanceAttributes.Ec2AvailabilityZone}}</li>
+                <li class="list-group-item-text">Status: {{Status.State}}</li>
+                <li class="list-group-item-text">Instance profile: {{Ec2InstanceAttributes.IamInstanceProfile}}</li>
+                <li class="list-group-item-text">Visible to all users: {{VisibleToAllUsers}}</li>
+            </ul>
+        </div>
+        <div class="list-group-item">
+            <h4>Master</h4>
+            <ul>
+                <li class="list-group-item-text">Public DNS: {{#if MasterPublicDnsName}}{{MasterPublicDnsName}}{{else}}N/A{{/if}}</li>
+                <li class="list-group-item-text">Security group:
+                    {{#if Ec2InstanceAttributes.EmrManagedMasterSecurityGroup}}
+                        <a href="javascript:showObject('services.ec2.regions.{{region}}.vpcs.{{vpc}}.security_groups.{{Ec2InstanceAttributes.EmrManagedMasterSecurityGroup}}')">
+                            {{get_value_at 'services.ec2.regions' region 'vpcs' vpc 'security_groups' Ec2InstanceAttributes.EmrManagedMasterSecurityGroup 'name'}}
+                        </a>
+                    {{else}}
+                        N/A
+                    {{/if}}
+                </li>
+            </ul>
+        </div>
+        <div class="list-group-item">
+            <h4>Slave</h4>
+            <ul>
+                <li class="list-group-item-text">Security group:
+                    {{#if Ec2InstanceAttributes.EmrManagedSlaveSecurityGroup}}
+                        <a href="javascript:showObject('services.ec2.regions.{{region}}.vpcs.{{vpc}}.security_groups.{{Ec2InstanceAttributes.EmrManagedSlaveSecurityGroup}}')">
+                            {{get_value_at 'services.ec2.regions' region 'vpcs' vpc 'security_groups' Ec2InstanceAttributes.EmrManagedSlaveSecurityGroup 'name'}}
+                        </a>
+                    {{else}}
+                        N/A
+                    {{/if}}
+                </li>
+            </ul>
+        </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.emr.regions.id.vpcs.id.clusters", $("#services\\.emr\\.regions\\.id\\.vpcs\\.id\\.clusters\\.partial").html());
+    </script>
+
+    <!-- Single EMR cluster template -->
+    <script id="single_emr_cluster-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.emr.regions.id.vpcs.id.clusters}}
+    </script>
+    <script>
+        var single_emr_cluster_template = Handlebars.compile($("#single_emr_cluster-template").html());
+    </script>
+

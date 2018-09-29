@@ -1,0 +1,56 @@
+
+    <!-- VPC Network ACL partial -->
+    <script id="services.vpc.regions.id.vpcs.id.network_acls.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+            <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        {{#each rules}}
+            <div class="list-group-item">
+                <h4 class="list-group-item-heading">{{make_title @key}} rules</h4>
+                <table class="table-striped" width="100%">
+                    <tr>
+                        <td width="20%" class="text-center">Rule number</td>
+                        <td width="20%" class="text-center">Port</td>
+                        <td width="20%" class="text-center">Protocol</td>
+                        <td width="20%" class="text-center">IP address</td>
+                        <td width="20%" class="text-center">Action</td>
+                    </tr>
+                    {{#each this}}
+                        <tr id="vpc.regions.{{../../region}}.vpcs.{{../../vpc}}.network_acls.{{@../../key}}.{{@../key}}.{{@key}}">
+                            <td width="20%" class="text-center">{{@key}}</td>
+                            <td width="20%" class="text-center">{{port_range}}</td>
+                            <td width="20%" class="text-center">{{protocol}}</td>
+                            <td width="20%" class="text-center">{{CidrBlock}}</td>
+                            <td width="20%" class="text-center">{{RuleAction}}</td>
+                        </tr>
+                    {{/each}}
+                </table>
+            </div>
+        {{/each}}
+        <div class="list-group-item">
+            <h4 class="list-group-item-heading">Associated Subnets</h4>
+            <ul>
+            {{#each Associations}}
+                <li class="list-group-item-text">
+                    {{> resource_link resource_path = (concat 'services.vpc.regions' ../region 'vpcs' ../vpc 'subnets' SubnetId)}}
+                </li>
+            {{/each}}
+            </ul>
+            <span id="vpc.regions.{{region}}.vpcs.{{vpc}}.network_acls.{{@key}}.unused" class="finding-hidden item-margin">
+                <i class="glyphicon glyphicon-warning-sign"></i> This network ACL is not the VPC's default NACL and is not associated with any existing VPC.
+            </span>
+        </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.vpc.regions.id.vpcs.id.network_acls", $("#services\\.vpc\\.regions\\.id\\.vpcs\\.id\\.network_acls\\.partial").html());
+    </script>
+
+    <!-- Single VPC Network ACL template -->
+    <script id="single_vpc_network_acl-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.vpc.regions.id.vpcs.id.network_acls}}
+    </script>
+    <script>
+        var single_vpc_network_acl_template = Handlebars.compile($("#single_vpc_network_acl-template").html());
+    </script>
+

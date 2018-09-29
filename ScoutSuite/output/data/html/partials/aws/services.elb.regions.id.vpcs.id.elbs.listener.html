@@ -1,0 +1,8 @@
+
+    <!-- elb ELB partial -->
+    <script id="services.elb.regions.vpcs.elbs.listener.partial" type="text/x-handlebars-template">
+        {{LoadBalancerPort}} ({{Protocol}}) <i class="glyphicon glyphicon-arrow-right"></i> {{InstancePort}} ({{InstanceProtocol}})
+    </script>
+    <script>
+        Handlebars.registerPartial("services.elb.regions.vpcs.elbs.listener", $("#services\\.elb\\.regions\\.vpcs\\.elbs\\.listener\\.partial").html());
+    </script>

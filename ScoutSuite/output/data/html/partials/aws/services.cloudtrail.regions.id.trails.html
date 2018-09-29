@@ -1,0 +1,44 @@
+
+<!-- Trail partial -->
+<script id="services.cloudtrail.regions.id.trails.partial" type="text/x-handlebars-template">
+  {{#unless scout2_link}}
+    <div class="list-group-item active">
+      <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+    <h4>Information</h4>
+      <ul>
+        <li class="list-group-item-text">Name: {{name}}</li>
+        <li class="list-group-item-text">Region: {{region}}</li>
+        <li class="list-group-item-text">Enabled: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.IsLogging">{{IsLogging}}</span></li>
+        <li class="list-group-item-text">Multi region: {{IsMultiRegionTrail}}</li>
+        {{#ifEqual IsMultiRegionTrail "true"}}
+          <li></li>
+        {{/ifEqual}}
+        <li class="list-group-item-text">Start Logging Time: {{StartLoggingTime}}</li>
+        <li class="list-group-item-text">Stop Logging Time: {{StopLoggingTime}}</li>
+        <li class="list-group-item-text">Include global services:
+          <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.GlobalServicesDuplicated">
+            <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.IncludeGlobalServiceEvents">
+              {{#if IncludeGlobalServiceEvents}} True {{#unless IsLogging}}(Trail disabled){{/unless}} {{else}} False {{/if}}
+            </span>
+          </span>
+        </li>
+        <li class="list-group-item-text">Log File Validation Enabled: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.LogFileValidationDisabled">{{LogFileValidationEnabled}}</span></li>
+        <li class="list-group-item-text">Destination S3 bucket name: <a href="javascript:showObject('services.s3.buckets.{{bucket_id}}')">{{get_value_at 'services.s3.buckets' bucket_id 'name'}}</a>/{{S3KeyPrefix}}</li>
+      </ul>
+    </div>
+  {{/unless}}
+</script>
+<script>
+  Handlebars.registerPartial("services.cloudtrail.regions.id.trails", $("#services\\.cloudtrail\\.regions\\.id\\.trails\\.partial").html());
+</script>
+
+<!-- Single EC2 instance template -->
+<script id="single_cloudtrail_trail-template" type="text/x-handlebars-template">
+    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+    {{> services.cloudtrail.regions.id.trails}}
+</script>
+<script>
+    var single_cloudtrail_trail_template = Handlebars.compile($("#single_cloudtrail_trail-template").html());
+</script>

@@ -1,0 +1,50 @@
+
+    <!-- EC2 security group rules partial -->
+    <script id="services.ec2.regions.vpcs.security_groups.rule_list.partial" type="text/x-handlebars-template">
+      <div class="list-group-item">
+        <h4 class="list-group-item-heading">
+          {{make_title direction}} Rules
+          {{#ifEqual count 0}}
+            <span class="badge pull-right">{{count}}</span>
+          {{else}}
+            <span class="badge pull-right btn-info">{{count}}</span>
+          {{/ifEqual}}
+        </h4>
+        <ul>
+        {{#each protocols}}
+          <li class="list-group-item-text">{{@key}}</li>
+          <ul>
+            <li class="list-group-item-text">{{#ifEqual @key "ICMP"}}Message types{{else}}Ports{{/ifEqual}}:
+            <ul>
+            {{#each ports}}
+              <li><span id="ec2.regions.{{../../region}}.vpcs.{{../../vpc}}.security_groups.{{../../sg_id}}.rules.{{../../direction}}.protocols.{{@../key}}.ports.{{@key}}">{{@key}}<span></li>
+              <ul>
+              {{#if cidrs}}
+                <li class="list-group-item-text">IP addresses:</li>
+                {{> ip_grants items = cidrs span_id_prefix = (concat 'ec2.regions' ../../../region 'vpcs' ../../../vpc 'security_groups' ../../../sg_id 'rules' ../../../direction 'protocols' @../key 'ports' @key 'cidrs')}}
+              {{/if}}
+              {{#if Ipv6Ranges}}
+                <li class="list-group-item-text">IPv6 addresses:</li>
+                {{> ip_grants items = Ipv6Ranges span_id_prefix = (concat 'ec2.regions' ../../../region 'vpcs' ../../../vpc 'security_groups' ../../../sg_id 'rules' ../../../direction 'protocols' @../key 'ports' @key 'Ipv6Ranges')}}
+              {{/if}}
+              {{#if security_groups}}
+                <li class="list-group-item-text">EC2 security groups:</li>
+                {{> ec2_grants region = ../../../region vpc = ../../../vpc sg_id = ../../../sg_id direction = ../../../direction protocol = @../key ports = @key items = security_groups}}
+              {{/if}}
+              </ul>
+            {{/each}}
+            </ul>
+          </ul>
+        {{/each}}
+        </ul>
+        {{#ifEqual sg_name 'default'}}
+          <span id="ec2.regions.{{region}}.vpcs.{{vpc}}.security_groups.{{sg_id}}.rules.{{direction}}.default_with_rules" class="finding-hidden item-margin">
+            <i class="glyphicon glyphicon-warning-sign"></i> Default security groups should have no rules.
+          </span>
+        {{/ifEqual}}
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.ec2.regions.vpcs.security_groups.rule_list", $("#services\\.ec2\\.regions\\.vpcs\\.security_groups\\.rule_list\\.partial").html());
+    </script>
+

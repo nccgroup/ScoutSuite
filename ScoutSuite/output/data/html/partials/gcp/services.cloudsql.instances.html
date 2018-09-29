@@ -1,0 +1,27 @@
+
+<!-- Cloud Storage instances partial -->
+<script id="services.cloudsql.instances.partial" type="text/x-handlebars-template">
+    <div class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="cloudsql.instances.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Automatic Backups: <span id="cloudsql.instances.{{@key}}.automatic_backup_status">{{automatic_backup_status}}</span></div>
+        <div class="list-group-item-text item-margin">Logs: <span id="cloudsql.instances.{{@key}}.log_status">{{log_status}}</span></div>
+        <div class="list-group-item-text item-margin">SSL Required: <span id="cloudsql.instances.{{@key}}.ssl_required">{{ssl_required}}</span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.cloudsql.instances", $("#services\\.cloudsql\\.instances\\.partial").html());
+</script>
+
+<!-- Single cloudsql instance template -->
+<script id="single_cloudsql_instance-template" type="text/x-handlebars-template">
+    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+    {{> services.cloudsql.instances}}
+</script>
+<script>
+    var single_cloudsql_instance_template = Handlebars.compile($("#single_cloudsql_instance-template").html());
+</script>

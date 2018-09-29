@@ -1,0 +1,33 @@
+
+    <!-- RDS parameter group partial -->
+    <script id="services.rds.regions.id.parameter_groups.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+            <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+            <h4 class="list-group-item-heading">Information</h4>
+            <div class="list-group-item-text">Group family: {{DBParameterGroupFamily}}</div>
+            <div class="list-group-item-text">Description: {{Description}}</div>
+            <div class="list-group-item-text">ARN: {{arn}}</div>
+        </div>
+        <div class="list-group-item">
+            <h4 class="list-group-item-heading">Parameters</h4>
+            <div class="row">
+                <div class="col-sm-4">Name</div>
+                <div class="col-sm-4">Value</div>
+                <div class="col-sm-4">Description</div>
+            </div>
+            {{#each parameters}}
+                <div class="row">
+                    <hr style="margin: 5px !important">
+                    <div class="col-sm-4">{{@key}}</div>
+                    <div class="col-sm-4">{{ParameterValue}}</div>
+                    <div class="col-sm-4">{{Description}}</div>
+                </div>
+            {{/each}}
+        </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.rds.regions.id.parameter_groups", $("#services\\.rds\\.regions\\.id\\.parameter_groups\\.partial").html());
+    </script>
+

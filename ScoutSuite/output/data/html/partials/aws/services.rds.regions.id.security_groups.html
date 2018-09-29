@@ -1,0 +1,28 @@
+
+    <!-- RDS security group partials -->
+    <script id="services.rds.regions.id.security_groups.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text item-margin">Description: {{DBSecurityGroupDescription}}</div>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Authorizations</h4>
+          <ul>
+            {{#each EC2SecurityGroups}}
+              <li class="list-group-item-text">
+                {{EC2SecurityGroupName}} ({{EC2SecurityGroupId}}) @ {{EC2SecurityGroupOwnerId}} ({{Status}})
+              </li>
+            {{/each}}
+            {{#each IPRanges}}
+              <li class="list-group-item-text">{{CIDRIP}} ({{Status}})</li>
+            {{/each}}
+          </ul>
+        </div>
+    </script>
+    <script>
+        Handlebars.registerPartial("services.rds.regions.id.security_groups", $("#services\\.rds\\.regions\\.id\\.security_groups\\.partial").html());
+    </script>
+

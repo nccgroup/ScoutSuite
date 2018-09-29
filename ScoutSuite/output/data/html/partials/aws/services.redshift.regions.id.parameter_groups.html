@@ -1,0 +1,26 @@
+    <!-- Redshift parameter group partial -->
+
+    <script id="services.redshift.regions.id.parameter_groups.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{resource_key}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text item-margin">Description: {{Description}}</div>
+          <div class="list-group-item-text item-margin">Group Family: {{ParameterGroupFamily}}</div>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Parameters</h4>
+          <ul>
+            {{#each parameters}}
+              <li class="list-group-item-text">{{@key}}:
+                <span id="redshift.regions.{{../region}}.parameter_groups.{{@../key}}.{{@key}}">{{value}}</span>
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+    </script>
+    <script>
+        Handlebars.registerPartial("services.redshift.regions.id.parameter_groups", $("#services\\.redshift\\.regions\\.id\\.parameter_groups\\.partial").html());
+    </script>
+

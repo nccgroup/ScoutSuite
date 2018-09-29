@@ -1,0 +1,32 @@
+
+    <!-- SES queue partial -->
+    <script id="services.ses.regions.id.identities.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+            <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+            <h4 class="list-group-item-heading">DKIM Configuration</h4>
+            <div class="list-group-item-text item-margin">Enabled: {{DkimEnabled}}</div>
+            <div class="list-group-item-text item-margin">Verification Status: {{DkimVerificationStatus}}</div>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Policies</h4>
+          {{#each policies}}
+            <div class="list-group-item">
+              {{> accordion_policy name = @key policy_path = (concat 'ses.regions' region 'identities' @../key 'policies' @index) document = this}}
+            </div>
+          {{/each}}
+        </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.ses.regions.id.identities", $("#services\\.ses\\.regions\\.id\\.identities\\.partial").html());
+    </script>
+
+    <!-- Single SES queue template -->
+    <script id="single_ses_queue-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.ses.regions.id.identities}}
+    </script>
+    <script>
+        var single_ses_queue_template = Handlebars.compile($("#single_ses_queue-template").html());
+    </script>

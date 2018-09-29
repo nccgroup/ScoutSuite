@@ -1,0 +1,72 @@
+
+    <!-- elb ELB partial -->
+    <script id="services.elb.regions.id.vpcs.id.elbs.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+            <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+            <h4>Network</h4>
+            <ul>
+                <li class="list-group-item-text">VPC: {{get_value_at 'services.elb.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</li>
+                <li class="list-group-item-text">DNS: {{DNSName}}</li>
+                <li class="list-group-item-text">Scheme: {{Scheme}}</li>
+                <li class="list-group-item-text">Availability zones:</li>
+                <ul>
+                    {{#each AvailabilityZones}}
+                        <li class="list-group-item-text">{{this}}</li>
+                    {{/each}}
+                </ul>
+            </ul>
+        </div>
+        <div class="list-group-item">
+            <h4>Listeners</h4>
+            <ul>
+                {{#each listeners}}
+                    <li class="list-group-item-text">
+                        {{> accordion region = ../region items = policies
+                            title_partial = 'services.elb.regions.vpcs.elbs.listener'
+                            item_partial = 'services.elb.regions.vpcs.elbs.linked_policy'
+                            accordion_id = (concat 'services.elb.regions' ../region 'vpcs' ../vpc 'elbs' @../key)
+                        }}
+                    </li>
+                {{/each}}
+          </ul>
+        </div>
+        <div class="list-group-item">
+            <h4>Attributes</h4>
+            <ul>
+                {{#each attributes}}
+                    {{#each this}}
+                        <li class="list-group-item-text">{{@../key}}.{{@key}}: <span id="elb.regions.{{../../region}}.vpcs.{{../../vpc}}.elbs.{{@../../key}}.attributes.{{@../key}}.{{@key}}">{{this}}</span></li>
+                    {{/each}}
+                {{/each}}
+            </ul>
+        </div>
+        <div class="list-group-item" style="padding-bottom: 0 !important;">
+          <div class="accordion">
+            <h4 class="list-group-item-heading accordion-heading">Security groups
+              <a class="accordion-toggle" data-toggle="collapse" href="#services\.elb\.regions\.{{region}}\.vpcs\.{{vpc}}\.elbs\.{{@key}}\.security_groups"><span class="badge pull-right btn-info">{{security_groups.length}}</span></a>
+            </h4>
+            <div id="services.elb.regions.{{region}}.vpcs.{{vpc}}.elbs.{{@key}}.security_groups" class="accordion-body collapse">
+              <div class="accordion-inner">
+                <ul class="no-bullet">
+                  {{#each security_groups}}
+                    <li><a href="javascript:showObject('services.elb.regions.{{../region}}.vpcs.{{../vpc}}.security_groups.{{GroupId}}')">{{GroupId}}</a></li>
+                  {{/each}}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="list-group-item">
+          <h4>Destination</h4>
+          <ul>
+            {{> services.elb.regions.vpcs.elbs.linked_resources region = region vpc = vpc resources = instances resource_type = 'instances'}}
+            {{> services.elb.regions.vpcs.elbs.linked_resources region = region vpc = vpc resources = Subnets resource_type = 'subnets'}}
+          </ul>
+        </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.elb.regions.id.vpcs.id.elbs", $("#services\\.elb\\.regions\\.id\\.vpcs\\.id\\.elbs\\.partial").html());
+    </script>
+

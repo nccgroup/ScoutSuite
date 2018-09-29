@@ -1,0 +1,15 @@
+
+    <!-- IAM managed policies partial -->
+    <script id="services.iam.policies_list.partial" type="text/x-handlebars-template">
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Managed Policies <span id="iam.{{resource_type}}.{{resource_id}}.policies" class="badge pull-right btn-info">{{policies_count}}</span></h4>
+          <ul class="no-bullet">
+          {{#each policies}}
+            <li class="list-group-item-text"><a href="javascript:showObject('services.iam.policies.{{this}}')">{{get_value_at 'services.iam.policies' this 'name'}}</a></li>
+          {{/each}}
+          </ul>
+        </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.iam.policies_list", $("#services\\.iam\\.policies_list\\.partial").html());
+    </script>

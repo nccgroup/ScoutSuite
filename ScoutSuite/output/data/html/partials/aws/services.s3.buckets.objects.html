@@ -1,0 +1,32 @@
+
+    <!-- S3 object partial -->
+    <script id="services.s3.buckets.objects.partial" type="text/x-handlebars-template">
+      <div class="list-group" id="services.s3.buckets.objects.{{name}}.details">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{get_value_at 'services.s3.buckets' bucket_id 'name'}}/{{get_value_at 'services.s3.buckets' bucket_id 'keys' key_id 'name'}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text">
+            <ul class="no-bullet">
+              <li>Server-side encryption: {{{good_bad_icon 's3-object-unencrypted' bucket_id key_id 'ServerSideEncryption'}}}</li>                          
+              <li>Permissions match bucket's: {{{good_bad_icon 's3-object-acls-mismatch-bucket' bucket_id key_id 'grantees'}}}</li>
+            </ul>
+          </div>
+        </div>
+        {{> services.s3.acls resource_type = 'object' resource_path = (concat 's3.buckets' bucket_id 'keys' key_id)}}
+      </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.s3.buckets.objects", $("#services\\.s3\\.buckets\\.objects\\.partial").html());
+    </script>
+
+    <!-- Single S3 object template -->
+    <script id="single_s3_object-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.s3.buckets.objects}}
+    </script>
+    <script>
+      var single_s3_object_template = Handlebars.compile($("#single_s3_object-template").html());
+    </script>
+

@@ -1,0 +1,48 @@
+
+<!-- Alarm partial -->
+<script id="services.cloudwatch.regions.id.alarms.partial" type="text/x-handlebars-template">
+    <div class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4>Information</h4>
+        <ul>
+            <li class="list-group-item-text">Name: {{name}}</li>
+            <li class="list-group-item-text">Region: {{region}}</li>
+            <li class="list-group-item-text">Actions enabled: <span id="cloudwatch.regions.{{region}}.alarms.{{@key}}.ActionsEnabled">{{ActionsEnabled}}</span></li>
+            <li class="list-group-item-text">State: {{StateValue}}</li>
+            <li class="list-group-item-text">Metric: {{Namespace}}::{{MetricName}}</li>
+        </ul>
+    </div>
+    <div class="list-group-item">
+        <h4>Alarm Actions<span id="cloudwatch.regions.{{region}}.alarms.{{@key}}.AlarmActions" class="badge pull-right {{#ifPositive AlarmActions.length}}btn-info{{/ifPositive}}">{{AlarmActions.length}}</span></h4>
+        <ul>
+        {{#each AlarmActions}}
+            <li class="'list-group-item-text">{{this}}</li>
+        {{/each}}
+        {{#unless AlarmActions}}
+            <span id="cloudwatch.regions.{{region}}.alarms.{{@key}}.NoActions"><i class="glyphicon glyphicon-warning-sign"></i> No actions have been configured for this alarm.</span>
+        {{/unless}}
+        </ul>
+    </div>
+    <div class="list-group-item">
+        <h4>Insufficient Data Actions<span class="badge pull-right {{#ifPositive InsufficientDataActions.length}}btn-info{{/ifPositive}}">{{InsufficientDataActions.length}}</span></h4>
+        <ul>
+        {{#each InsufficientDataActions}}
+            <li class="list-group-item-text">{{this}}</li>
+        {{/each}}
+        </ul>
+    </div>
+</script>
+<script>
+    Handlebars.registerPartial("services.cloudwatch.regions.id.alarms", $("#services\\.cloudwatch\\.regions\\.id\\.alarms\\.partial").html());
+</script>
+
+<!-- Single CloudWatch alarm template -->
+<script id="single_cloudwatch_alarm-template" type="text/x-handlebars-template">
+    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+    {{> services.cloudwatch.regions.id.alarms}}
+</script>
+<script>
+    var single_cloudwatch_alarm_template = Handlebars.compile($("#single_cloudwatch_alarm-template").html());
+</script>

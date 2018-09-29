@@ -1,0 +1,35 @@
+
+    <!-- Redshift security group partials -->
+    <script id="services.redshift.regions.id.vpcs.id.security_groups.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{resource_key}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text item-margin">Description: {{Description}}</div>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Rules</h4>
+          <ul>
+            {{#if IPRanges}}
+              <li class="list-group-item-text">IP addresses:</li>
+              <ul>
+                {{#each IPRanges}}
+                  <li class="list-group-item-text">{{CIDRIP}}: <span id="services.redshift.regions.vpcs.security_groupss-all-ips-authorized-{{../resource_key}}">{{Status}}</span></li>
+                {{/each}}
+              </ul>
+            {{/if}}
+            {{#if EC2SecurityGroups}}
+              <li class="list-group-item-text">EC2 security groups:</li>
+              <ul>
+                {{#each EC2SecurityGroups}}
+                  <li class="list-group-item-text">{{EC2SecurityGroupName}} (AWS account ID {{UserId}}): {{Status}}</li>
+                {{/each}}
+              </ul>
+            {{/if}}
+          </ul>
+        </div>
+    </script>
+    <script>
+        Handlebars.registerPartial("services.redshift.regions.id.vpcs.id.security_groups", $("#services\\.redshift\\.regions\\.id\\.vpcs\\.id\\.security_groups\\.partial").html());
+    </script>

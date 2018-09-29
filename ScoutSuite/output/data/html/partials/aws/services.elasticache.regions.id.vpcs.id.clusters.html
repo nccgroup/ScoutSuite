@@ -1,0 +1,15 @@
+
+    <!-- ElastiCache cluster partial -->
+    <script id="services.elasticache.regions.id.vpcs.id.clusters.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+            <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+            <h4 class="list-group-item-heading">Attributes</h4>
+            {{> generic_object resource}}
+        </div>
+    </script>
+    <script>
+      Handlebars.registerPartial("services.elasticache.regions.id.vpcs.id.clusters", $("#services\\.elasticache\\.regions\\.id\\.vpcs\\.id\\.clusters\\.partial").html());
+    </script>
+

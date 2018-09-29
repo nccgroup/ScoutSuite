@@ -1,0 +1,50 @@
+
+    <!-- CloudFormation stack partial -->
+    <script id="services.cloudformation.regions.id.stacks.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+            <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+            <h4 class="list-group-item-heading">Description</h4>
+            <div class="list-group-item-text item-margin">{{Description}}</div>
+        </div>
+        <div class="list-group-item">
+            <h4 class="list-group-item-heading">Information</h4>
+            <div class="list-group-item-text item-margin">Region: {{region}}</div>
+            <div class="list-group-item-text item-margin">Created on: {{CreationTime}}</div>
+            <div class="list-group-item-text item-margin" id="">Role:
+                {{#if iam_role}}
+                    <a href="javascript:showObject('services.iam.roles.{{iam_role.id}}')">{{iam_role.name}}</a>
+                    <span id="cloudformation.regions.{{region}}.stacks.{{name}}"><i class="glyphicon glyphicon-warning-sign"></i></span>
+                {{else}}
+                    None
+                {{/if}}
+            </div>
+        </div>
+        <div class="list-group-item">
+            <h4 class="list-group-item-heading">Capabilities <span class="badge pull-right">{{#if Capabilities}}{{Capabilities.length}}{{else}}0{{/if}}</span></h4>
+            <ul>
+            {{#each Capabilities}}
+                <li class="list-group-item-text">{{this}}</li>
+            {{/each}}
+            </ul>
+        </div>
+        {{#if policy}}
+        <div class="list-group-item">
+          {{> accordion_policy name = 'Stack Policy' policy_path = (concat 'cloudformation.regions' region 'stacks' @key 'policy') document = policy}}
+        </div>
+        {{/if}}
+    </script>
+    <script>
+      Handlebars.registerPartial("services.cloudformation.regions.id.stacks", $("#services\\.cloudformation\\.regions\\.id\\.stacks\\.partial").html());
+    </script>
+
+    <!-- Single CloudFormation stack template -->
+    <script id="single_cloudformation_stack-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.cloudformation.regions.id.stacks}}
+    </script>
+    <script>
+        var single_cloudformation_stack_template = Handlebars.compile($("#single_cloudformation_stack-template").html());
+    </script>
+

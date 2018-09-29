@@ -1,0 +1,30 @@
+
+    <!-- SNS queue partial -->
+    <script id="services.sqs.regions.id.queues.partial" type="text/x-handlebars-template">
+        <div class="list-group-item active">
+          <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+          <h4 class="list-group-item-heading">Information</h4>
+          <div class="list-group-item-text item-margin">Region: {{region}}</div>
+          <div class="list-group-item-text item-margin">ARN: {{arn}}</div>
+          <div class="list-group-item-text item-margin">Created on: {{CreatedTimestamp}}</div>
+        </div>
+        {{#if Policy.Statement.length}}
+          <div class="list-group-item">
+            {{> accordion_policy name = 'Access control policy' policy_path = (concat 'sqs.regions' region 'queues' @key 'Policy') document = Policy}}
+          </div>
+        {{/if}}
+    </script>
+    <script>
+      Handlebars.registerPartial("services.sqs.regions.id.queues", $("#services\\.sqs\\.regions\\.id\\.queues\\.partial").html());
+    </script>
+
+    <!-- Single SNS queue template -->
+    <script id="single_sqs_queue-template" type="text/x-handlebars-template">
+        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+        {{> services.sqs.regions.id.queues}}
+    </script>
+    <script>
+        var single_sqs_queue_template = Handlebars.compile($("#single_sqs_queue-template").html());
+    </script>
