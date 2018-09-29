@@ -85,12 +85,16 @@ class ComputeEngineConfig(GCPBaseConfig):
         firewall_dict = {}
         firewall_dict['id'] = firewall['id']
         firewall_dict['name'] = firewall['name']
-        firewall_dict['descriptiong'] = firewall['description'] if 'description' in firewall else None
+        firewall_dict['description'] = firewall['description'] if 'description' in firewall else None
         firewall_dict['creation_timestamp'] = firewall['creationTimestamp']
+        firewall_dict['network'] = firewall['network'].split('/')[-1]
         firewall_dict['network_url'] = firewall['network']
         firewall_dict['priority'] = firewall['priority']
-        firewall_dict['source_ranges'] = firewall['sourceRanges']
+        firewall_dict['source_ranges'] = firewall['sourceRanges'] if 'sourceRanges' in firewall else []
+        firewall_dict['source_tags'] = firewall['sourceTags'] if 'sourceTags' in firewall else []
         firewall_dict['target_tags'] = firewall['targetTags'] if 'targetTags' in firewall else []
+        firewall_dict['direction'] = firewall['direction']
+        firewall_dict['disabled'] = firewall['disabled']
 
         # Parse FW rules
         for direction in ['allowed', 'denied']:
@@ -101,6 +105,7 @@ class ComputeEngineConfig(GCPBaseConfig):
                 'icmp': []
             }
             if direction in firewall:
+                firewall_dict['action'] = direction
                 for rule in firewall[direction]:
                     if rule['IPProtocol'] == 'all':
                         for protocol in firewall_dict[direction_string]:
@@ -113,6 +118,4 @@ class ComputeEngineConfig(GCPBaseConfig):
                             else:
                                 firewall_dict[direction_string][rule['IPProtocol']] = ['*']
 
-        firewall_dict['direction'] = firewall['direction']
-        firewall_dict['disabled'] = firewall['disabled']
         self.firewalls[firewall_dict['id']] = firewall_dict
