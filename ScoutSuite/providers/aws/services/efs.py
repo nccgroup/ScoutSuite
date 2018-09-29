@@ -26,7 +26,10 @@ class EFSRegionConfig(RegionConfig):
         :return:
         """
         fs_id = file_system.pop('FileSystemId')
-        file_system['name'] = file_system.pop('Name')
+        if 'Name' in file_system:
+            file_system['name'] = file_system.pop('Name')
+        else:
+            file_system['name'] = None
         # Get tags
         file_system['tags'] = handle_truncated_response(api_clients[region].describe_tags, {'FileSystemId': fs_id}, ['Tags'])['Tags']
         # Get mount targets
