@@ -251,7 +251,7 @@ class BaseProvider:
                         target_object = self
                         for p in target_path:
                             self.manage_object(target_object, p, {})
-                            target_object = getattr(object, p)
+                            target_object = getattr(target_object, p)
                         if callback_name == 'merge':
                             for service in self.metadata[service_group]:
                                 if service == 'summaries':
