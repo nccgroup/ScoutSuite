@@ -1,8 +1,8 @@
 include LICENSE
 include README.md
 include requirements.txt
-recursive-include AWSScout2/data *
-recursive-include AWSScout2/configs/data *
-recursive-include AWSScout2/output/data *
-recursive-include AWSScout2/rules/data *
+recursive-include ScoutSuite/data *
+recursive-include ScoutSuite/configs/data *
+recursive-include ScoutSuite/output/data *
+recursive-include ScoutSuite/rules/data *
 
