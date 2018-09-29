@@ -7,7 +7,7 @@ import os
 import shutil
 import zipfile
 
-from opinel.utils.console import printInfo
+from opinel.utils.console import printInfo, printException
 
 from ScoutSuite import AWSCONFIG, EXCEPTIONS, HTMLREPORT, AWSRULESET, AWSCONFIG_FILE, EXCEPTIONS_FILE, HTMLREPORT_FILE, GENERATOR_FILE, REPORT_TITLE
 from ScoutSuite.output.utils import get_filename, prompt_4_overwrite
@@ -37,8 +37,11 @@ class HTMLReport(object):
         template_dir  = os.path.join(self.html_data_path, templates_type)
         template_files = [os.path.join(template_dir, f) for f in os.listdir(template_dir) if os.path.isfile(os.path.join(template_dir, f))]
         for filename in template_files:
-            with open('%s' % filename, 'rt') as f:
-                contents = contents + f.read()
+            try:
+                with open('%s' % filename, 'rt') as f:
+                    contents = contents + f.read()
+            except Exception as e:
+                printException('Error reading filename %s: %s' % (filename, e))
         return contents
 
     def prepare_html_report_dir(self):
