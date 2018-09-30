@@ -1,5 +1,4 @@
-
-<!-- Generic left-menu link partial for region-then-resource -->
+<!-- Generic left-menu link partial for resources -->
 <script id="left_menu.partial" type="text/x-handlebars-template">
   <div id="services.{{service_name}}.{{resource_type}}.list">
     <div class="list-group" >
@@ -8,14 +7,14 @@
       </div>
     </div>
     <div class="list-group">
-    {{#each items}}
+      {{#each items}}
       <div class="list-group-item" id="services.{{../service_name}}.{{../resource_type}}.{{id}}.link">
         <a href="#services.{{../service_name}}.{{../resource_type}}.{{id}}.view">{{name}}</a>
       </div>
-    {{/each}}
-  </div>
+      {{/each}}
+    </div>
 </script>
 <script>
-  Handlebars.registerPartial("left_menu", $("#left_menu\\.partial").html());
+    Handlebars.registerPartial("left_menu", $("#left_menu\\.partial").html());
 </script>
 
