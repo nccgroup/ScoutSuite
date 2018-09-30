@@ -109,13 +109,13 @@ class ComputeEngineConfig(GCPBaseConfig):
                 for rule in firewall[direction]:
                     if rule['IPProtocol'] == 'all':
                         for protocol in firewall_dict[direction_string]:
-                            firewall_dict[direction_string][protocol] = ['*']
+                            firewall_dict[direction_string][protocol] = ['']
                         break
                     else:
-                        if firewall_dict[direction_string][rule['IPProtocol']] != ['*']:
+                        if firewall_dict[direction_string][rule['IPProtocol']] != ['0-65535']:
                             if 'ports' in rule:
                                 firewall_dict[direction_string][rule['IPProtocol']] += rule['ports']
                             else:
-                                firewall_dict[direction_string][rule['IPProtocol']] = ['*']
+                                firewall_dict[direction_string][rule['IPProtocol']] = ['0-65535']
 
         self.firewalls[firewall_dict['id']] = firewall_dict

@@ -1,0 +1,13 @@
+{
+  "dashboard_name": "Firewall Rule Elements",
+  "description": "Firewall rule allows internal traffic",
+  "rationale": "Firewall rule allows ingress connections for all protocols and ports among instances in the network.",
+  "path": "computeengine.firewalls.id.allowed_traffic.id.ports.id",
+  "display_path": "computeengine.firewalls.id",
+  "conditions": [ "and",
+    [ "computeengine.firewalls.id.disabled", "notTrue", "" ],
+    [ "computeengine.firewalls.id.direction", "equal", "INGRESS" ],
+    [ "computeengine.firewalls.id.allowed_traffic.id.", "equal", "0-65535" ],
+    [ "computeengine.firewalls.id.source_ranges", "containAtLeastOneOf", "10.128.0.0/9" ]
+  ]
+}

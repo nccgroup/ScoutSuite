@@ -1,0 +1,12 @@
+{
+  "dashboard_name": "Firewall Rule Elements",
+  "description": "Firewall rule allows public access (0.0.0.0/0) to a sensitive port",
+  "path": "computeengine.firewalls.id.allowed_traffic.id.ports.id",
+  "display_path": "computeengine.firewalls.id",
+  "conditions": [ "and",
+    [ "computeengine.firewalls.id.disabled", "notTrue", "" ],
+    [ "computeengine.firewalls.id.direction", "equal", "INGRESS" ],
+    [ "computeengine.firewalls.id.source_ranges", "containAtLeastOneOf", "0.0.0.0/0" ],
+    [ "computeengine.firewalls.id.allowed_traffic.id.", "containAtLeastOneOf", ["21", "22", "23", "53", "1433", "1521", "3306", "3389", "27017", "54322"] ]
+  ]
+}
