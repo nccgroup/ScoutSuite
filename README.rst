@@ -15,21 +15,20 @@ Description
 ***********
 
 Scout Suite is a multi-cloud configuratiobn review tool, which enables assessing the security posture of cloud
-environments. Using the APIs provided by cloud providers, Scout gathers configuration data for manual inspection and
-highlights risk areas automatically. Rather than pouring through dozens of pages on the web, Scout supplies a clear
+environments. Using the APIs exposed by cloud providers, Scout gathers configuration data for manual inspection and
+highlights risk areas . Rather than pouring through dozens of pages on the web, Scout supplies a clear
 view of the attack surface automatically.
-
-**Note:**
 
 Scout Suite is stable and actively maintained, but a number of features and internals may change. As such, please
 bear with us as we find time to work on, and improve, the tool. Feel free to report a bug with details (please provide
 console output using the "--debug" argument), request a new feature, or send a pull request.
 
-.. IMPORTANT::
-   The latest (and final) version of Scout2 can be found in https://github.com/nccgroup/Scout2/releases and
-   https://pypi.org/project/AWSScout2/.
+**Note:**
 
-   Further work is not planned for this branch. Fixes for the issues currently opened will be implemented in Scout Suite.
+The latest (and final) version of Scout2 can be found in https://github.com/nccgroup/Scout2/releases and
+https://pypi.org/project/AWSScout2/.
+
+Further work is not planned for this branch. Fixes for the issues currently opened will be implemented in Scout Suite.
 
 Support
 -------
@@ -37,19 +36,14 @@ Support
 The following cloud providers are currently supported:
 
 - Amazon Web Services
-- Google Cloud Platform (alpha)
+- Google Cloud Platform (beta)
+- Azure (early alpha)
 
-Support is in the roadmap for the following cloud provider(s):
-
-- Azure
 
 Installation
 ************
 
-.. NOTE::
-   TODO
-
-Install via `pip`_:
+Install via `pip`:
 
 ::
 
@@ -72,6 +66,7 @@ Computing resources
 
 Scout Suite is a multi-threaded tool that fetches and stores your AWS account's configuration settings in memory during
 runtime. It is expected that the tool will run with no issues on any modern laptop or equivalent VM.
+
 **Running Scout Suite in a VM with limited computing resources such as a t2.micro instance is not intended and will likely
 result in the process being killed.**
 
@@ -86,8 +81,8 @@ Scout Suite is written in Python and supports the following versions:
 * 3.5
 * 3.6
 
-AWS Credentials
----------------
+Credentials
+-----------
 
 Amazon Web Services
 ^^^^^^^^^^^^^^^^^^^
@@ -104,8 +99,12 @@ The following AWS Managed Policies can be attached to the principal in order to 
 Google Cloud Platform
 ^^^^^^^^^^^^^^^^^^^^^
 
-.. NOTE::
-   TODO
+TODO
+
+Azure
+^^^^^
+
+TODO
 
 Compliance
 ----------
@@ -122,14 +121,17 @@ applications.
 Google Cloud Platform
 ^^^^^^^^^^^^^^^^^^^^^
 
-.. NOTE::
-   TODO
+TODO
+
+Azure
+^^^^^
+
+TODO
 
 Usage
 -----
 
-.. NOTE::
-   TODO - provide examples for each provider
+TODO - provide examples for each provider
 
 After performing a number of AWS API calls, Scout will create a local HTML report and open it in the default browser.
 
