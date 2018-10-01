@@ -1,0 +1,32 @@
+
+<!-- Cloud Resources Manager bindings' partial -->
+<script id="services.cloudresourcemanager.bindings.partial" type="text/x-handlebars-template">
+    <div class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="cloudresourcemanager.bindings.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Members:</div>
+        <div class="accordion-inner">
+            <ul>
+                {{#each members}}
+                <li>{{this}}</li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.cloudresourcemanager.bindings", $("#services\\.cloudresourcemanager\\.bindings\\.partial").html());
+</script>
+
+<!-- Single cloudresourcemanager binding template -->
+<script id="single_cloudresourcemanager_binding-template" type="text/x-handlebars-template">
+    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+    {{> services.cloudresourcemanager.bindings}}
+</script>
+<script>
+    var single_cloudresourcemanager_binding_template = Handlebars.compile($("#single_cloudresourcemanager_binding-template").html());
+</script>

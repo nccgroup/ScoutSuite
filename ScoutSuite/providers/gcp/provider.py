@@ -96,7 +96,7 @@ class GCPProvider(BaseProvider):
     def preprocessing(self, ip_ranges=[], ip_ranges_name_key=None):
         """
         TODO description
-        Tweak the AWS config to match cross-service resources and clean any fetching artifacts
+        Tweak the AWS config to match cross- resources and clean any fetching artifacts
 
         :param ip_ranges:
         :param ip_ranges_name_key:
@@ -109,16 +109,19 @@ class GCPProvider(BaseProvider):
         super(GCPProvider, self).preprocessing()
 
     def _get_all_projects_in_organization(self):
+        """
+        Can probably be helped by:
+            client = discovery.build('cloudresourcemanager', 'v1', credentials=credentials_api)
+            ancestors = client.projects().getAncestry(projectId='[id]').execute()
+        """
 
         projects = []
 
         resource_manager_client = resource_manager.Client(credentials=self.credentials)
-        b = dir(resource_manager_client)
 
         project_list = resource_manager_client.list_projects()
 
         for p in project_list:
-            # project = resource_manager_client.fetch_project(p.project_id)
             if p.parent['id'] == self.organization_id and p.status == 'ACTIVE':
                 projects.append(p.project_id)
 

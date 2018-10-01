@@ -7,6 +7,14 @@
           "path": "services.iam.roles"
         }
       }
+    },
+    "cloudresourcemanager": {
+      "resources": {
+        "bindings": {
+          "cols": 2,
+          "path": "services.cloudresourcemanager.bindings"
+        }
+      }
     }
   },
   "compute": {

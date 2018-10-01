@@ -203,27 +203,30 @@ class BaseConfig():
                             # What this does is create a list with all combinations of possibilities for method parameters
                             list_params_list = []
                             # only projects
-                            if 'project' in list_params.keys() and not 'zone' in list_params.keys():
+                            if 'project_placeholder' in list_params.values() and not 'zone_placeholder' in list_params.values():
                                 for project in self.projects:
-                                    temp_list_params = dict(list_params)
-                                    temp_list_params['project'] = project
-                                    list_params_list.append(temp_list_params)
+                                    list_params_list.append({key:
+                                                                 project if list_params[key] == 'project_placeholder'
+                                                                 else list_params[key]
+                                                             for key in list_params})
                             # only zones
-                            elif not 'project' in list_params.keys() and 'zone' in list_params.keys():
+                            elif not 'project_placeholder' in list_params.values() and 'zone_placeholder' in list_params.values():
                                 zones = self.get_zones(client=api_client, project=self.projects[0])
                                 for zone in zones:
-                                    temp_list_params = dict(list_params)
-                                    temp_list_params['zone'] = zone
-                                    list_params_list.append(temp_list_params)
+                                    list_params_list.append({key:
+                                                                 zone if list_params[key] == 'zone_placeholder'
+                                                                 else list_params[key]
+                                                             for key in list_params})
                             # projects and zones
-                            elif 'project' in list_params.keys() and 'zone' in list_params.keys():
+                            elif 'project_placeholder' in list_params.values() and 'zone_placeholder' in list_params.values():
                                 zones = self.get_zones(client=api_client, project=self.projects[0])
                                 import itertools
                                 for elem in list(itertools.product(*[self.projects, zones])):
-                                    temp_list_params = dict(list_params)
-                                    temp_list_params['project'] = elem[0]
-                                    temp_list_params['zone'] = elem[1]
-                                    list_params_list.append(temp_list_params)
+                                    list_params_list.append({key:
+                                                                 elem[0] if list_params[key] == 'project_placeholder'
+                                                                 else (elem[1] if list_params[key] == 'zone_placeholder'
+                                                                     else list_params[key])
+                                                             for key in list_params})
                             # neither projects nor zones
                             else:
                                 list_params_list.append(list_params)
@@ -245,8 +248,11 @@ class BaseConfig():
                                         response = method(**list_params_combination).execute()
                                         if 'items' in response:
                                             targets += response['items']
+                                        # this seems to be only for cloudresourcemanager
+                                        if 'bindings' in response:
+                                            targets += response['bindings']
 
-                                        # TODO need to handle too long responses
+                                        # TODO need to handle long responses
                                         # request = method(**list_params)
                                         # while request is not None:
                                         #     response = request.execute()

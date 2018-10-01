@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.console import printException, printInfo
+from opinel.utils.console import printException
 
 from google.cloud import storage
 from google.cloud import logging
@@ -8,10 +8,15 @@ from google.cloud import monitoring_v3
 
 from googleapiclient import discovery
 
+
 def gcp_connect_service(service, credentials, region_name=None):
 
     try:
-        if service == 'cloudstorage':
+
+        if service == 'cloudresourcemanager':
+            return discovery.build('cloudresourcemanager', 'v1')
+
+        elif service == 'cloudstorage':
             return storage.Client()
 
         elif service == 'cloudsql':

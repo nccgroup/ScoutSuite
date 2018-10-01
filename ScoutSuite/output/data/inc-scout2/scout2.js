@@ -753,6 +753,7 @@ var make_title = function(title) {
     } else if (title == 'redshift') {
         return 'RedShift';
     } else if (title == 'cloudstorage') {
+
         return 'Cloud Storage';
     } else if (title == 'cloudsql') {
         return 'Cloud SQL';
@@ -762,8 +763,12 @@ var make_title = function(title) {
         return 'Stackdriver Monitoring';
     } else if (title == 'computeengine') {
         return 'Compute Engine';
+    } else if (title == 'cloudresourcemanager') {
+        return 'Cloud Resource Manager';
+
     } else if (title == 'storageaccounts') {
         return 'Storage Accounts';
+
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
     }

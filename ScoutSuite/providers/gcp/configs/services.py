@@ -9,11 +9,13 @@ from ScoutSuite.providers.gcp.services.iam import IAMConfig
 from ScoutSuite.providers.gcp.services.stackdriverlogging import StackdriverLoggingConfig
 from ScoutSuite.providers.gcp.services.stackdrivermonitoring import StackdriverMonitoringConfig
 from ScoutSuite.providers.gcp.services.computeengine import ComputeEngineConfig
+from ScoutSuite.providers.gcp.services.cloudresourcemanager import CloudResourceManager
 
 class GCPServicesConfig(BaseServicesConfig):
 
     def __init__(self, metadata=None, thread_config=4, projects=[], **kwargs):
 
+        self.cloudresourcemanager = CloudResourceManager(thread_config=thread_config)
         self.cloudstorage = CloudStorageConfig(thread_config=thread_config)
         self.cloudsql = CloudSQLConfig(thread_config=thread_config)
         self.computeengine = ComputeEngineConfig(thread_config=thread_config)

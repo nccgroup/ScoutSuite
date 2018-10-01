@@ -109,13 +109,19 @@
         "level": "warning"
       }
     ],
-    "ec2-security-group-opens-sensitive-port-to-all.json": [
+    "computeengine-firewall-rule-opens-sensitive-port-to-all.json": [
       {
         "enabled": true,
         "level": "warning"
       }
     ],
     "computeengine-firewall-rule-allows-internal-traffic.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "cloudresourcemanager-primitive-role-in-use.json": [
       {
         "enabled": true,
         "level": "warning"
