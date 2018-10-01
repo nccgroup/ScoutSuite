@@ -10,7 +10,7 @@
         <div class="list-group-item-text item-margin">Description: <span id="computeengine.instances.{{@key}}.description">{{description}}</span></div>
         <div class="list-group-item-text item-margin">Status: <span id="computeengine.instances.{{@key}}.status">{{status}}</span></div>
         <div class="list-group-item-text item-margin">Creation Date: <span id="computeengine.instances.{{@key}}.creation_timestamp">{{creation_timestamp}}</span></div>
-        <div class="list-group-item-text item-margin">Tags: <span id="computeengine.instances.{{@key}}.tags">{{tags}}</span></div>
+        <div class="list-group-item-text item-margin">Tags: <span id="computeengine.instances.{{@key}}.tags">{{json_stringify tags}}</span></div>
         <div class="list-group-item-text item-margin">Deletion Protection: <span id="computeengine.instances.{{@key}}.deletion_protection">{{deletion_protection}}</span></div>
     </div>
 </script>
