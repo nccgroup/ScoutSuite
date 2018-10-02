@@ -126,6 +126,12 @@
         "enabled": true,
         "level": "warning"
       }
+    ],
+    "cloudresourcemanager-role-assigned-to-user.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }
