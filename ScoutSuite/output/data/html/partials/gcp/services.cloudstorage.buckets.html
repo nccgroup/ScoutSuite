@@ -12,6 +12,21 @@
         <div class="list-group-item-text item-margin">Storage Class: <span id="cloudstorage.buckets.{{@key}}.storage_class">{{storage_class}}</span></div>
         <div class="list-group-item-text item-margin">Logging: <span id="cloudstorage.buckets.{{@key}}.logging">{{logging_status}}</span></div>
         <div class="list-group-item-text item-margin">Versioning: <span id="cloudstorage.buckets.{{@key}}.versioning">{{versioning_status}}</span></div>
+        <div class="accordion-inner">
+            <h5 class="list-group-item-heading"><span id="cloudstorage.buckets.{{@key}}.permissions">Permissions:</span></h5>
+            <ul>
+                {{#each acl_configuration}}
+                <li>{{@key}}</li>
+                <ul>
+                    {{#each this}}
+                    <li>{{this}}</li>
+                    {{/each}}
+                </ul>
+                {{else}}
+                    <li>None</li>
+                {{/each}}
+            </ul>
+        </div>
     </div>
 </script>
 

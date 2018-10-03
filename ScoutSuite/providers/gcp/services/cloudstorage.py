@@ -70,7 +70,7 @@ def get_cloudstorage_bucket_acl(bucket, bucket_dict):
         for role in bucket_acls._bindings:
             for member in bucket_acls[role]:
                 if member.split(':')[0] not in ['projectEditor', 'projectViewer', 'projectOwner']:
-                    if 'member' not in bucket_dict['acl_configuration']:
+                    if member not in bucket_dict['acl_configuration']:
                         bucket_dict['acl_configuration'][member] = [role]
                     else:
                         bucket_dict['acl_configuration'][member].append(role)

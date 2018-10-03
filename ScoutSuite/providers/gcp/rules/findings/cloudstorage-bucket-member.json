@@ -7,5 +7,6 @@
   "path": "cloudstorage.buckets.id",
   "conditions": [ "and",
     [ "cloudstorage.buckets.id.acl_configuration", "withKey", "_ARG_0_"]
-  ]
+  ],
+  "id_suffix": "permissions"
 }
