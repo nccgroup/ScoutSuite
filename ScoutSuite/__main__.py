@@ -78,15 +78,12 @@ def main():
             return 130
 
         # Update means we reload the whole config and overwrite part of it
-        # TODO this is currently broken - unsure if will be supporterd in the future
-        # if args.update:
-        #     new_aws_config = copy.deepcopy(aws_config)
-        #     aws_config = report.jsrw.load_from_file(AWSCONFIG)
-        #     for service in new_aws_config['service_list']:
-        #         # Per service only for now, may add per region & per VPC later...
-        #         aws_config['services'][service] = new_aws_config['services'][service]
-        #     # Update the metadata too
-        #     aws_config['metadata'] = Scout2Config('default', None, None, [], []).metadata
+        if args.update:
+            current_run_services = copy.deepcopy(cloud_provider.services)
+            last_run_dict = report.jsrw.load_from_file(AWSCONFIG)
+            cloud_provider.services = last_run_dict['services']
+            for service in cloud_provider.service_list:
+                cloud_provider.services[service] = current_run_services[service]
 
     # Partial run, using pre-pulled data
     else:
