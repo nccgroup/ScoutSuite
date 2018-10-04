@@ -34,24 +34,30 @@ setup(
         'ScoutSuite', 'ScoutSuite.core', 'ScoutSuite.output', 'ScoutSuite.providers'
     ],
     package_data={
-        'ScoutSuite': [
-        ],
-        'ScoutSuite.configs': [
-            'data/*.json'
-        ],
         'ScoutSuite.output': [
             'data/html/*.html',
             'data/html/partials/*.html',
+            'data/html/partials/aws/*.html',
+            'data/html/partials/azure/*.html',
+            'data/html/partials/gcp/*.html',
             'data/html/summaries/*.html',
             'data/includes.zip',
             'data/inc-scout2/*.js',
             'data/inc-scout2/*.css'
         ],
-        'ScoutSuite.rules': [
-            'data/*.html',
-            'data/filters/*.json',
-            'data/findings/*.json',
-            'data/rulesets/*.json'
+        'ScoutSuite.providers': [
+            'aws/rules/conditions/*.json',
+            'aws/rules/filters/*.json',
+            'aws/rules/findings/*.json',
+            'aws/rules/rulesets/*.json'
+            'azure/rules/conditions/*.json',
+            'azure/rules/filters/*.json',
+            'azure/rules/findings/*.json',
+            'azure/rules/rulesets/*.json'
+            'gcp/rules/conditions/*.json',
+            'gcp/rules/filters/*.json',
+            'gcp/rules/findings/*.json',
+            'gcp/rules/rulesets/*.json'
         ]
     },
     include_package_data=True,

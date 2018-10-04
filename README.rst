@@ -8,7 +8,7 @@ Scout Suite
         :target: https://coveralls.io/github/nccgroup/Scout2
 
 .. image:: https://badge.fury.io/py/AWSScout2.svg
-        :target: https://badge.fury.io/py/AWSScout2
+        :target: https://badge.fury.io/py/ScoutSuite
         :align: right
 
 Description
