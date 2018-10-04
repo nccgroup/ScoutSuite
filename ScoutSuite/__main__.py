@@ -88,9 +88,9 @@ def main():
     # Partial run, using pre-pulled data
     else:
         # Reload to flatten everything into a python dictionary
-        # TODO this is currently broken - unsure if will be supporterd in the future
-        # aws_config = report.jsrw.load_from_file(AWSCONFIG)
-        pass
+        last_run_dict = report.jsrw.load_from_file(AWSCONFIG)
+        for key in last_run_dict:
+            setattr(cloud_provider, key, last_run_dict[key])
 
     # Pre processing
     cloud_provider.preprocessing(args.ip_ranges, args.ip_ranges_name_key)
