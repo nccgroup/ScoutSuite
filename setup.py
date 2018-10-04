@@ -31,11 +31,10 @@ setup(
         ]
     },
     packages=[
-        'ScoutSuite', 'ScoutSuite.configs', 'ScoutSuite.output', 'ScoutSuite.rules', 'ScoutSuite.services'
+        'ScoutSuite', 'ScoutSuite.core', 'ScoutSuite.output', 'ScoutSuite.providers'
     ],
     package_data={
         'ScoutSuite': [
-            'requirements.txt'
         ],
         'ScoutSuite.configs': [
             'data/*.json'
