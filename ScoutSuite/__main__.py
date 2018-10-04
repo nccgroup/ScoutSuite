@@ -124,23 +124,23 @@ def main():
     # Finalize
     cloud_provider.postprocessing(report.current_time, finding_rules)
 
+    # TODO this is AWS-specific - move to postprocessing?
     # Get organization data if it exists
-    # TODO this is AWS-specific
-    # try:
-    #     profile = AWSProfiles.get(args.profile[0])[0]
-    #     if 'source_profile' in profile.attributes:
-    #         organization_info_file = os.path.join(
-    #             os.path.expanduser('~/.aws/recipes/%s/organization.json' % profile.attributes['source_profile']))
-    #         if os.path.isfile(organization_info_file):
-    #             with open(organization_info_file, 'rt') as f:
-    #                 org = {}
-    #                 accounts = json.load(f)
-    #                 for account in accounts:
-    #                     account_id = account.pop('Id')
-    #                     org[account_id] = account
-    #                 aws_config['organization'] = org
-    # except Exception as e:
-    #     pass
+    try:
+        profile = AWSProfiles.get(args.profile[0])[0]
+        if 'source_profile' in profile.attributes:
+            organization_info_file = os.path.join(os.path.expanduser('~/.aws/recipes/%s/organization.json' %
+                                                                     profile.attributes['source_profile']))
+            if os.path.isfile(organization_info_file):
+                with open(organization_info_file, 'rt') as f:
+                    org = {}
+                    accounts = json.load(f)
+                    for account in accounts:
+                        account_id = account.pop('Id')
+                        org[account_id] = account
+                    setattr(cloud_provider, 'organization', org)
+    except Exception as e:
+        pass
 
     # Save config and create HTML report
     html_report_path = report.save(cloud_provider, exceptions, args.force_write, args.debug)
