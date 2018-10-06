@@ -47,17 +47,17 @@ class HTMLReport(object):
     def prepare_html_report_dir(self):
         if not os.path.isdir(self.report_dir):
             os.makedirs(self.report_dir)
-        aws_config_dir = os.path.join(self.report_dir, 'inc-awsconfig')
-        if not os.path.isdir(aws_config_dir):
-            os.makedirs(aws_config_dir)
+        run_results_dir = os.path.join(self.report_dir, 'inc-scoutsuite-run')
+        if not os.path.isdir(run_results_dir):
+            os.makedirs(run_results_dir)
         # Copy static 3rd-party files
         archive = os.path.join(self.scout2_report_data_path, 'includes.zip')
         zip_ref = zipfile.ZipFile(archive)
         zip_ref.extractall(self.report_dir)
         zip_ref.close()
         # Copy static files
-        inc_scout2_dir = os.path.join(self.report_dir, 'inc-scout2')
-        src_inc_scout2_dir = os.path.join(self.scout2_report_data_path, 'inc-scout2')
+        inc_scout2_dir = os.path.join(self.report_dir, 'inc-scoutsuite')
+        src_inc_scout2_dir = os.path.join(self.scout2_report_data_path, 'inc-scoutsuite')
         if os.path.isdir(inc_scout2_dir):
             shutil.rmtree(inc_scout2_dir)
         shutil.copytree(src_inc_scout2_dir, inc_scout2_dir)

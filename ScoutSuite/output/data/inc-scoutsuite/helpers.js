@@ -226,23 +226,24 @@ Handlebars.registerHelper('fixBucketName', function(bucket_name) {
 });
 
 // http://funkjedi.com/technology/412-every-nth-item-in-handlebars, slightly tweaked to work with a dictionary
-Handlebars.registerHelper('grouped_each', function(every, context, options) {
-    var out = "", subcontext = [], i;
-    var keys = Object.keys(context);
-    var count = keys.length;
-    var subcontext = {};
-    if (context && count > 0) {
-        for (i = 0; i < count; i++) {
-            if (i > 0 && i % every === 0) {
-                out += options.fn(subcontext);
-                subcontext = {};
-            }
-            subcontext[keys[i]] = context[keys[i]];
-        }
-        out += options.fn(subcontext);
-    }
-    return out;
-});
+// TODO this is duplicated code
+// Handlebars.registerHelper('grouped_each', function(every, context, options) {
+//     var out = "", subcontext = [], i;
+//     var keys = Object.keys(context);
+//     var count = keys.length;
+//     var subcontext = {};
+//     if (context && count > 0) {
+//         for (i = 0; i < count; i++) {
+//             if (i > 0 && i % every === 0) {
+//                 out += options.fn(subcontext);
+//                 subcontext = {};
+//             }
+//             subcontext[keys[i]] = context[keys[i]];
+//         }
+//         out += options.fn(subcontext);
+//     }
+//     return out;
+// });
 
 Handlebars.registerHelper('dashboard_color', function(level, checked, flagged) {
     if (checked == 0) {
@@ -348,6 +349,47 @@ Handlebars.registerHelper('grouped_each', function(every, context, options) {
         out += options.fn(subcontext);
     }
     return out;
+});
+
+// Sort findings according to description and risk rating
+Handlebars.registerHelper('each_with_sort', function(context, options) {
+    var ret = "";
+
+    var sorted_findings = {};
+
+    var sorted_findings_keys = Object.keys(context).sort(function(a,b) {
+        if(context[a].flagged_items == 0 && context[b].flagged_items == 0){
+            if(context[a].description.toLowerCase() < context[b].description.toLowerCase()) return -1;
+            if(context[a].description.toLowerCase() > context[b].description.toLowerCase()) return 1;
+        };
+        if((context[a].flagged_items == 0 && context[b].flagged_items > 0)
+            || (context[a].flagged_items > 0 && context[b].flagged_items == 0)){
+            if(context[a].flagged_items > context[b].flagged_items) return -1;
+            return 1
+        };
+        if(context[a].flagged_items > 0 && context[b].flagged_items > 0){
+            if(context[a].level == context[b].level){
+                if(context[a].description.toLowerCase() < context[b].description.toLowerCase()) return -1;
+                if(context[a].description.toLowerCase() > context[b].description.toLowerCase()) return 1;
+            }
+            else {
+                if(context[a].level.toLowerCase() === 'danger') return -1;
+                if(context[b].level.toLowerCase() === 'danger') return 1;
+                if(context[a].level.toLowerCase() === 'warning') return -1;
+                if(context[b].level.toLowerCase() === 'warning') return 1;
+            };
+        };
+        return 0;
+    });
+
+    sorted_findings_keys.forEach(function(key) {
+        sorted_findings[key] = context[key];
+    });
+
+    ret += options.fn(sorted_findings);
+
+    return ret
+
 });
 
 Handlebars.registerHelper('sorted_each', function(array, key, opts) {

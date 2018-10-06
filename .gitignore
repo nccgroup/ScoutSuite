@@ -46,8 +46,8 @@ nosetests.xml
 tests/data/ruleset-test.json
 
 # Data folder and files
-scout2-report*
-inc-awsconfig*
+scoutsuite-report*
+inc-scoutsuite-run*
 report-*
 
 # PyCharm
