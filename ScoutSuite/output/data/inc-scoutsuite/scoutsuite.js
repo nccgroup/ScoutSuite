@@ -188,7 +188,7 @@ function hideFilters() {
     $('[id*="regionfilters"]').hide();
     // Reset dashboard filters
     $(".dashboard-filter").val("");
-    $(".findings_row > .col-sm-4").filter(function() {
+    $(".finding_items").filter(function() {
         $(this).show()
     });
 }
