@@ -57,7 +57,7 @@ class ProcessingEngine(object):
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['checked_items'] = rule.checked_items
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['flagged_items'] = len(cloud_provider.services[service][self.ruleset.rule_type][rule.key]['items'])
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['service'] = rule.service
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['rationale'] = rule.rationale if hasattr(rule, 'rationale') else 'N/A'
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['rationale'] = rule.rationale if hasattr(rule, 'rationale') else 'No description available.'
                 except Exception as e:
                     printException(e)
                     printError('Failed to process rule defined in %s' % rule.filename)
