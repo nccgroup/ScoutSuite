@@ -20,16 +20,16 @@
                     <button class="form-control btn finding-title-danger" id="finding-title-danger">Danger</button>
                 </div>
               </div>
-              <ul class="list-group ">
+              <ul class="list-group">
+
               {{#each_dict_as_sorted_list findings}}
-              <div id="list-{{key}}" class="finding_items">
-                  <div class="list-group-item finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
+                  <div id="list-{{key}}" class="list-group-item finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
                       <div class="row">
                           <div class="col-sm-11">
                               <a href="#services.{{../service_name}}.findings.{{key}}.items">{{description}}</a>
                           </div>
                           <div class="col-sm-1">
-                              <button class="btn glyphicon glyphicon-plus" style="background-color:transparent" data-toggle="collapse" data-target="#item-{{key}}" aria-expanded="true" aria-controls="item-{{key}}"></button>
+                              <button class="btn glyphicon glyphicon-plus" style="background-color:transparent" data-toggle="collapse" data-target="#item-{{key}}" aria-expanded="false" aria-controls="item-{{key}}"></button>
                           </div>
                       </div>
                   </div>
@@ -46,9 +46,8 @@
                           </div>
                       </div>
                   </div>
-              </div>
               {{/each_dict_as_sorted_list}}
-                  </ul>
+              </ul>
 
           </div>
         </div>
