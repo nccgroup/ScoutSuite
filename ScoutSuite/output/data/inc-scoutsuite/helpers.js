@@ -351,11 +351,10 @@ Handlebars.registerHelper('grouped_each', function(every, context, options) {
     return out;
 });
 
-// Sort findings according to description and risk rating
-Handlebars.registerHelper('each_with_sort', function(context, options) {
+// Takes a dict and returns a sorted list
+// The key for each element of the dict is added as an attribute of each list object
+Handlebars.registerHelper('each_dict_as_sorted_list', function(context, options) {
     var ret = "";
-
-    var sorted_findings = {};
 
     var sorted_findings_keys = Object.keys(context).sort(function(a,b) {
         if(context[a].flagged_items == 0 && context[b].flagged_items == 0){
@@ -383,13 +382,13 @@ Handlebars.registerHelper('each_with_sort', function(context, options) {
     });
 
     sorted_findings_keys.forEach(function(key) {
-        sorted_findings[key] = context[key];
+        var obj = context[key];
+        obj['key'] = key;
+        // sorted_findings.push(obj);
+        ret += options.fn(obj);
     });
 
-    ret += options.fn(sorted_findings);
-
     return ret
-
 });
 
 Handlebars.registerHelper('sorted_each', function(array, key, opts) {

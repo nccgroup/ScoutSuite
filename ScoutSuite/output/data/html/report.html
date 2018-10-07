@@ -15,7 +15,7 @@
     <!-- Bootstrap core CSS -->
     <link href="inc-bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap theme -->
-    <link href="inc-bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+    <!--<link href="inc-bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">-->
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -91,7 +91,7 @@
             <div class="row" id="about.details">
                 <div class="list-group">
                     <div class="row list-group-item active">
-                        About
+                        About Scout Suite
                     </div>
                     <div class="row list-group-item">
                         <p>Scout Suite is an open-source tool released by <a href="https://www.nccgroup.trust" rel="author" target="_blank">NCC Group</a>.</p>
@@ -134,7 +134,7 @@
                                 <div class="list-group-item">Service
                                     <div class="col-sm-2 pull-right" style="text-align: center"># of Checks</div>
                                     <div class="col-sm-2 pull-right" style="text-align: center"># of Findings</div>
-                                    <div class="col-sm-2 pull-right" style="text-align: center"># of Rules</div>
+                                    <div class="col-sm-2 pull-right="pleae="text-align: center"># of Rules</div>
                                     <div class="col-sm-2 pull-right" style="text-align: center"># of Resources</div>
                                 </div>
                                 {{#each items.summary}}
@@ -149,19 +149,17 @@
                                 {{/each}}
                             </div>
                             <div class="list-group-item-text item-margin">&nbsp;</div>
-                            <div class="list-group-item-text item-margin">&nbsp;</div>
                             <div class="list-group-item-text item-margin">Last run:
                                 <div class="list-group-item-text item-margin">&nbsp;</div>
                                 <div class="list-group-item-text item-margin">Time: {{items.time}}</div>
                                 <div class="list-group-item-text item-margin">Command: <code>{{items.cmd}}</code></div>
                             </div>
                             <div class="list-group-item-text item-margin">&nbsp;</div>
-                            <div class="list-group-item-text item-margin">Report generated with Scout Suite version {{items.version}}</div>
+                            <div class="list-group-item-text item-margin">Report generated with Scout Suite version <samp>{{items.version}}</samp></div>
                             <div class="list-group-item-text item-margin">&nbsp;</div>
-                            <div class="list-group-item-text item-margin">Ruleset used: {{items.ruleset_name}}</div>
-                            <div class="list-group-item-text item-margin">&nbsp;</div>
-                            <div class="list-group-item-text item-margin">{{items.ruleset_about}}</div>
-                            <div class="list-group-item-text item-margin">&nbsp;</div>
+                            <div class="list-group-item-text item-margin">Using ruleset <samp>{{items.ruleset_name}}</samp>:
+                                <div class="list-group-item-text item-margin"><p><em>{{items.ruleset_about}}</em></p></div>
+                            </div>
                         </div>
                     </div>
                 </h4>

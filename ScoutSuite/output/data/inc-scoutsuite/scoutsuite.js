@@ -480,14 +480,13 @@ function load_metadata() {
 
 
 //
-// Show About Scout2 div
+// Show About Scout Suite div
 //
 function about() {
     hideAll();
     showRow('about');
     $('#section_title-h2').text('');
 }
-
 
 //
 // Show main dashboard
