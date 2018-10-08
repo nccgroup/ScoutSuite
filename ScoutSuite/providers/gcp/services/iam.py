@@ -42,9 +42,13 @@ class IAMConfig(GCPBaseConfig):
                     'key_algorithm': key['keyAlgorithm']
                 }
 
-        service_account_dict['bindingss'] = self._get_service_account_iam_policy(params['api_client'],
-                                                                                 service_account_dict['project_id'],
-                                                                                 service_account_dict['email'])
+        bindings = self._get_service_account_iam_policy(params['api_client'],
+                                                        service_account_dict['project_id'],
+                                                        service_account_dict['email'])
+        service_account_dict['bindings'] = []
+        if bindings:
+            service_account_dict['bindings'] = bindings
+
 
         self.service_accounts[service_account_dict['id']] = service_account_dict
 
@@ -78,7 +82,7 @@ class IAMConfig(GCPBaseConfig):
             # response = api_client.projects().serviceAccounts().getIamPolicy(
             response = client.projects().serviceAccounts().getIamPolicy(
                 resource='projects/%s/serviceAccounts/%s' % (project_id, service_account_email)).execute()
-            if 'binginss' in response:
+            if 'bindings' in response:
                 return response['bindings']
             else:
                 return None

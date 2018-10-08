@@ -138,6 +138,24 @@
         "enabled": true,
         "level": "warning"
       }
+    ],
+    "iam-service-account-user-member.json": [
+      {
+        "args": [
+          "allUsers",
+          "Service Account with 'allUsers' Service Account User"
+        ],
+        "enabled": true,
+        "level": "warning"
+      },
+      {
+        "args": [
+          "allAuthenticatedUsers",
+          "Service Account with 'allAuthenticatedUsers' Service Account User"
+        ],
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }
