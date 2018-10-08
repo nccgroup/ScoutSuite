@@ -9,7 +9,7 @@ from googleapiclient import discovery
 
 class IAMConfig(GCPBaseConfig):
     targets = (
-        ('projects.serviceAccounts', 'ServiceAccounts', 'list', {'name': 'projects/ncccon2018prjct'}, False),
+        ('projects.serviceAccounts', 'Service Accounts', 'list', {'name': 'projects/ncccon2018prjct'}, False),
     )
 
     def __init__(self, thread_config):
@@ -30,14 +30,13 @@ class IAMConfig(GCPBaseConfig):
         service_account_dict['email'] = service_account['email']
         service_account_dict['project_id'] = service_account['projectId']
 
-        service_account_dict['keys'] = {}
         keys = self._get_service_account_keys(params['api_client'],
                                               service_account_dict['project_id'],
                                               service_account_dict['email'])
+        service_account_dict['keys'] = {}
         if keys:
             for key in keys:
-                service_account_dict['keys'][self.get_non_provider_id(key['name'])] = {
-                    'name': key['name'],
+                service_account_dict['keys'][key['name'].split('/')[-1]] = {
                     'valid_after': key['validAfterTime'],
                     'valid_before': key['validBeforeTime'],
                     'key_algorithm': key['keyAlgorithm']

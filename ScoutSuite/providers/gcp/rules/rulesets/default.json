@@ -132,6 +132,12 @@
         "enabled": true,
         "level": "warning"
       }
+    ],
+    "iam-old-service-account-keys.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }
