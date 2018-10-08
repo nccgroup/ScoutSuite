@@ -138,7 +138,8 @@ class BaseConfig():
                     target_type, target = q.get()
                     # Make a full copy of the target in case we need to re-queue it
                     backup = copy.deepcopy(target)
-                    method = getattr(self, 'parse_%s' % target_type)
+                    method = getattr(self, 'parse_%s' %
+                                     target_type.replace('.', '_'))  # hack for GCP API Client libs
                     method(target, params)
                     self.fetchstatuslogger.counts[target_type]['fetched'] += 1
                     self.fetchstatuslogger.show()
@@ -167,7 +168,11 @@ class BaseConfig():
 
                         # This is a specific case for GCP services that don't have a native cloud library
                         if self.library_type == 'api_client_library':
-                            target = getattr(api_client, target_type)
+                            # Required for nested targers, e.g. projects().resource().list()
+                            target = getattr(api_client, target_type.split('.')[0])
+                            for type in target_type.split('.')[1:]:
+                                target = getattr(target(), type)
+                                # target_type = type  # hack to display the last element
                             method = getattr(target(), list_method_name)
                         # This is how Azure works
                         elif self._is_provider('azure'):
@@ -199,7 +204,7 @@ class BaseConfig():
                         elif self._is_provider('gcp'):
                             targets = []
 
-                            # TODO this is temporary, will have to be moved to Config children objects
+                            # FIXME this is temporary, will have to be moved to Config children objects
                             # What this does is create a list with all combinations of possibilities for method parameters
                             list_params_list = []
                             # only projects
@@ -248,9 +253,13 @@ class BaseConfig():
                                         response = method(**list_params_combination).execute()
                                         if 'items' in response:
                                             targets += response['items']
-                                        # this seems to be only for cloudresourcemanager
+                                        # TODO this should be more modular
+                                        # this is only for cloudresourcemanager
                                         if 'bindings' in response:
                                             targets += response['bindings']
+                                        # this is only for IAM
+                                        if 'accounts' in response:
+                                            targets += response['accounts']
 
                                         # TODO need to handle long responses
                                         # request = method(**list_params)
