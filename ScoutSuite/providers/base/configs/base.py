@@ -170,8 +170,8 @@ class BaseConfig():
                         if self.library_type == 'api_client_library':
                             # Required for nested targers, e.g. projects().resource().list()
                             target = getattr(api_client, target_type.split('.')[0])
-                            for type in target_type.split('.')[1:]:
-                                target = getattr(target(), type)
+                            for t in target_type.split('.')[1:]:
+                                target = getattr(target(), t)
                                 # target_type = type  # hack to display the last element
                             method = getattr(target(), list_method_name)
                         # This is how Azure works
