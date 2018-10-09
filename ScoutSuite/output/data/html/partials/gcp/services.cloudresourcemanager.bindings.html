@@ -6,38 +6,40 @@
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Information</h4>
-        <div class="list-group-item-text item-margin">Name: <span id="cloudresourcemanager.bindings.{{@key}}.name">{{name}}</span></div>
-        <br>
-        {{#if members.users}}
+        <div class="list-group-item-text item-margin">Role Name: <span id="cloudresourcemanager.bindings.{{@key}}.name">{{name}}</span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Bindings</h4>
         <h5 class="list-group-item-heading">Attached Users:</h5>
         <div class="accordion-inner">
             <ul>
                 {{#each members.users}}
-                <li>{{this}}</li>
+                <li><samp>{{this}}</samp></li>
+                {{else}}
+                <li><samp>None</samp></li>
                 {{/each}}
             </ul>
         </div>
-        {{/if}}
-        {{#if members.groups}}
         <h5 class="list-group-item-heading">Attached Groups:</h5>
         <div class="accordion-inner">
             <ul>
                 {{#each members.groups}}
-                <li>{{this}}</li>
+                <li><samp>{{this}}</samp></li>
+                {{else}}
+                <li><samp>None</samp></li>
                 {{/each}}
             </ul>
         </div>
-        {{/if}}
-        {{#if members.roles}}
-        <h5 class="list-group-item-heading">Attached Roles:</h5>
+        <h5 class="list-group-item-heading">Attached Service Accounts:</h5>
         <div class="accordion-inner">
             <ul>
-                {{#each members.roles}}
-                <li>{{this}}</li>
+                {{#each members.service_accounts}}
+                <li><samp>{{this}}</samp></li>
+                {{else}}
+                <li><samp>None</samp></li>
                 {{/each}}
             </ul>
         </div>
-        {{/if}}
     </div>
 </script>
 

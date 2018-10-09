@@ -6,12 +6,28 @@
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Information</h4>
-        <div class="list-group-item-text item-margin">Name: <span id="computeengine.instances.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Instance Name: <span id="computeengine.instances.{{@key}}.name">{{name}}</span></div>
         <div class="list-group-item-text item-margin">Description: <span id="computeengine.instances.{{@key}}.description">{{description}}</span></div>
-        <div class="list-group-item-text item-margin">Status: <span id="computeengine.instances.{{@key}}.status">{{status}}</span></div>
         <div class="list-group-item-text item-margin">Creation Date: <span id="computeengine.instances.{{@key}}.creation_timestamp">{{creation_timestamp}}</span></div>
-        <div class="list-group-item-text item-margin">Tags: <span id="computeengine.instances.{{@key}}.tags">{{json_stringify tags}}</span></div>
+        <div class="list-group-item-text item-margin">Status: <span id="computeengine.instances.{{@key}}.status">{{status}}</span></div>
         <div class="list-group-item-text item-margin">Deletion Protection: <span id="computeengine.instances.{{@key}}.deletion_protection">{{deletion_protection}}</span></div>
+        {{#if tags}}
+        <div class="list-group-item-text item-margin">Tags:</div>
+        <ul>
+            {{#each tags}}
+            <li><samp>{{@key}}</samp></li>
+            <ul>
+                {{#each this}}
+                <li><samp>{{this}}</samp></li>
+                {{else}}
+                <li><samp>None</samp></li>
+                {{/each}}
+            </ul>
+            {{else}}
+            <li><samp>None</samp></li>
+            {{/each}}
+        </ul>
+        {{/if}}
     </div>
 </script>
 

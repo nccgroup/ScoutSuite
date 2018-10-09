@@ -86,7 +86,7 @@ class ComputeEngineConfig(GCPBaseConfig):
         firewall_dict = {}
         firewall_dict['id'] = firewall['id']
         firewall_dict['name'] = firewall['name']
-        firewall_dict['description'] = firewall['description'] if 'description' in firewall else None
+        firewall_dict['description'] = firewall['description'] if 'description' in firewall else 'N/A'
         firewall_dict['creation_timestamp'] = firewall['creationTimestamp']
         firewall_dict['network'] = firewall['network'].split('/')[-1]
         firewall_dict['network_url'] = firewall['network']
@@ -110,7 +110,7 @@ class ComputeEngineConfig(GCPBaseConfig):
                 for rule in firewall[direction]:
                     if rule['IPProtocol'] == 'all':
                         for protocol in firewall_dict[direction_string]:
-                            firewall_dict[direction_string][protocol] = ['']
+                            firewall_dict[direction_string][protocol] = ['0-65535']
                         break
                     else:
                         if firewall_dict[direction_string][rule['IPProtocol']] != ['0-65535']:
