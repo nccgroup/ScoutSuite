@@ -202,9 +202,9 @@ class BaseProvider:
         each callback.
 
         :param self.config:                  The entire AWS configuration object
-
         :return:                            None
         """
+        # Service-level summaries
         for service_group in self.metadata:
             for service in self.metadata[service_group]:
                 if service == 'summaries':
