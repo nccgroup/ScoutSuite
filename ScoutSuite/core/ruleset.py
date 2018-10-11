@@ -154,7 +154,7 @@ class Ruleset(object):
                                                                                     rule_dirs=rule_dirs)
         # In case of the ruleset generator, list all available built-in rules
         if ruleset_generator:
-            rule_dirs.append(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data/findings'))
+            rule_dirs.append(self.rules_data_path + '/findings')
             rule_filenames = []
             for rule_dir in rule_dirs:
                 rule_filenames += [f for f in os.listdir(rule_dir) if os.path.isfile(os.path.join(rule_dir, f))]
