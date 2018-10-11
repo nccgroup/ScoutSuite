@@ -277,6 +277,8 @@ class BaseProvider:
                                         source = {}
                                     target_object.update(source)
 
+        return None
+
     def _go_to_and_do(self, current_config, path, current_path, callback, callback_args=None):
         """
         Recursively go to a target and execute a callback
