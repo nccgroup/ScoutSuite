@@ -1,9 +1,10 @@
 import subprocess
 
+
 #
 # Tests for ListAll.py
 #
-class TestListAllClass:  
+class TestListAllClass:
 
     #
     # Make sure that ListAll does not crash with --help

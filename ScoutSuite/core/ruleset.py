@@ -149,7 +149,8 @@ class Ruleset(object):
             for rule in self.rules[rule_filename]:
                 if not rule.enabled and not ruleset_generator:
                     continue
-            self.rule_definitions[os.path.basename(rule_filename)] = RuleDefinition(self.rules_data_path, rule_filename,
+            self.rule_definitions[os.path.basename(rule_filename)] = RuleDefinition(self.rules_data_path,
+                                                                                    rule_filename,
                                                                                     rule_dirs=rule_dirs)
         # In case of the ruleset generator, list all available built-in rules
         if ruleset_generator:

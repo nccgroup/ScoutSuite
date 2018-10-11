@@ -1,9 +1,10 @@
 import subprocess
 
+
 #
 # Tests for RulesGenerator.py
 #
-class TestRulesGeneratorClass:  
+class TestRulesGeneratorClass:
 
     #
     # Make sure that RulesGenerator does not crash with --help
