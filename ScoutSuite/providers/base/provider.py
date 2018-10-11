@@ -267,13 +267,12 @@ class BaseProvider:
                             for service in self.metadata[service_group]:
                                 if service == 'summaries':
                                     continue
-                                if 'summaries' in self.metadata[service_group][service] and summary in \
-                                        self.metadata[service_group][service]['summaries']:
+                                if 'summaries' in self.metadata[service_group][service] and \
+                                        summary in self.metadata[service_group][service]['summaries']:
                                     try:
-                                        source = get_object_at(
-                                            self.metadata[service_group][service]['summaries'][summary]['path'].
-                                                split('.'))
-                                    except:
+                                        source = get_object_at(self,
+                                                               self.metadata[service_group][service]['summaries'][summary]['path'].split('.'))
+                                    except Exception as e:
                                         source = {}
                                     target_object.update(source)
 
