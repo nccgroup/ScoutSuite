@@ -5,6 +5,7 @@ netaddr>=0.7.11
 opinel>=3.3.4,<4.0.0
 
 # GCP Provider
+grpc
 ## Cloud Libraries
 google-cloud-resource-manager
 google-cloud-storage>=1.11.0
