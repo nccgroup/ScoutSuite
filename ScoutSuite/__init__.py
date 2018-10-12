@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 __author__  = 'NCC Group'
-__version__ = '4.0.0-beta'
+__version__ = '4.0.1-beta'
 
 AWSCONFIG  = 42
 EXCEPTIONS = 4242
