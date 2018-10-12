@@ -205,8 +205,8 @@ class ScoutSuiteArgumentParser(SharedArgumentParser):
                                  action='store',
                                  help='ID of the GCP Organization to analyze')
 
-    def parse_args(self):
-        args = self.parser.parse_args()
+    def parse_args(self, args=None):
+        args = self.parser.parse_args(args)
         # If local analysis, overwrite results
         if args.fetch_local:
             args.force_write = True

@@ -29,7 +29,7 @@ from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.providers import get_provider
 
 
-def main():
+def main(passed_args=None):
     """
     Main method that runs a scan
 
@@ -38,7 +38,11 @@ def main():
 
     # Parse arguments
     parser = ScoutSuiteArgumentParser()
-    args = parser.parse_args()
+
+    if passed_args:
+        args = parser.parse_args(passed_args)
+    else:
+        args = parser.parse_args()
 
     # Configure the debug level
     configPrintException(args.debug)
