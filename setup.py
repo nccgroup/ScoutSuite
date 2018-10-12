@@ -30,9 +30,7 @@ setup(
             'Scout2Listall = ScoutSuite.__listall__:main'
         ]
     },
-    packages=[
-        'ScoutSuite', 'ScoutSuite.core', 'ScoutSuite.output', 'ScoutSuite.providers'
-    ],
+    packages=find_packages(),
     package_data={
         'ScoutSuite.output': [
             'data/html/*.html',
