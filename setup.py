@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# distutils/setuptools install script for Scout2
+# distutils/setuptools install script for Scout Suite
 import os
 from setuptools import setup, find_packages
 
