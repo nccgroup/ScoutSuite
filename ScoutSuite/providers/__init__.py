@@ -2,6 +2,7 @@
 
 import sys
 
+import ScoutSuite.providers.aws.provider.base
 from ScoutSuite.providers.aws.provider import AWSProvider
 from ScoutSuite.providers.gcp.provider import GCPProvider
 from ScoutSuite.providers.azure.provider import AzureProvider
