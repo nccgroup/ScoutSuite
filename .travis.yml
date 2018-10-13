@@ -8,6 +8,7 @@ python:
   - "3.6"
 
 before_script:
+  - pip install -U setuptools
   - pip install -r requirements.txt
   - pip install coveralls
 
