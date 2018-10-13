@@ -19,7 +19,7 @@ from opinel.utils.aws import connect_service
 from ScoutSuite.providers.gcp.utils import gcp_connect_service
 from ScoutSuite.providers.azure.utils import azure_connect_service
 
-from opinel.utils.aws import build_region_list, handle_truncated_response
+from opinel.utils.aws import build_region_list
 from opinel.utils.console import printException, printInfo
 
 from ScoutSuite.output.console import FetchStatusLogger
@@ -40,7 +40,8 @@ class BaseConfig():
 
         self.library_type = None if not hasattr(self, 'library_type') else self.library_type
 
-        self.service = type(self).__name__.replace('Config','').lower()  # TODO: use regex with EOS instead of plain replace
+        self.service = type(self).__name__.replace('Config',
+                                                   '').lower()  # TODO: use regex with EOS instead of plain replace
         self.thread_config = thread_configs[thread_config]
 
     def _is_provider(self, provider_name):
@@ -162,133 +163,25 @@ class BaseConfig():
             while True:
                 try:
                     target_type, response_attribute, list_method_name, list_params, ignore_list_error = q.get()
+
                     if not list_method_name:
                         continue
+
                     try:
-
-                        # This is a specific case for GCP services that don't have a native cloud library
-                        if self.library_type == 'api_client_library':
-                            # Required for nested targers, e.g. projects().resource().list()
-                            target = getattr(api_client, target_type.split('.')[0])
-                            for t in target_type.split('.')[1:]:
-                                target = getattr(target(), t)
-                                # target_type = type  # hack to display the last element
-                            method = getattr(target(), list_method_name)
-                        # This is how Azure works
-                        elif self._is_provider('azure'):
-                            target = getattr(api_client, target_type)
-                            method = getattr(target, list_method_name)
-                        # This works for AWS and GCP cloud libraries
-                        else:
-                            method = getattr(api_client, list_method_name)
-
+                        method = self._get_method(api_client, target_type, list_method_name)
                     except Exception as e:
                         printException(e)
                         continue
 
                     try:
-
-                        # TODO put this code in each provider
-                        # should return the list of targets
-
-                        # AWS provider
-                        if self._is_provider('aws'):
-                            if type(list_params) != list:
-                                list_params = [list_params]
-                            targets = []
-                            for lp in list_params:
-                                targets += handle_truncated_response(method, lp, [response_attribute])[
-                                    response_attribute]
-
-                        # GCP provider
-                        elif self._is_provider('gcp'):
-                            targets = []
-
-                            # FIXME this is temporary, will have to be moved to Config children objects
-                            # What this does is create a list with all combinations of possibilities for method parameters
-                            list_params_list = []
-                            # only projects
-                            if 'project_placeholder' in list_params.values() and not 'zone_placeholder' in list_params.values():
-                                for project in self.projects:
-                                    list_params_list.append({key:
-                                                                 project if list_params[key] == 'project_placeholder'
-                                                                 else list_params[key]
-                                                             for key in list_params})
-                            # only zones
-                            elif not 'project_placeholder' in list_params.values() and 'zone_placeholder' in list_params.values():
-                                zones = self.get_zones(client=api_client, project=self.projects[0])
-                                for zone in zones:
-                                    list_params_list.append({key:
-                                                                 zone if list_params[key] == 'zone_placeholder'
-                                                                 else list_params[key]
-                                                             for key in list_params})
-                            # projects and zones
-                            elif 'project_placeholder' in list_params.values() and 'zone_placeholder' in list_params.values():
-                                zones = self.get_zones(client=api_client, project=self.projects[0])
-                                import itertools
-                                for elem in list(itertools.product(*[self.projects, zones])):
-                                    list_params_list.append({key:
-                                                                 elem[0] if list_params[key] == 'project_placeholder'
-                                                                 else (elem[1] if list_params[key] == 'zone_placeholder'
-                                                                     else list_params[key])
-                                                             for key in list_params})
-                            # neither projects nor zones
-                            else:
-                                list_params_list.append(list_params)
-
-                            for list_params_combination in list_params_list:
-
-                                try:
-
-                                    if self.library_type == 'cloud_client_library':
-                                        response = method(**list_params_combination)
-                                        targets += list(response)
-                                        # Remove client as it's unpickleable and adding the object to the Queue will pickle
-                                        # The client is later re-inserted in each Config
-                                        for t in targets:
-                                            t._client = None
-
-                                    if self.library_type == 'api_client_library':
-
-                                        response = method(**list_params_combination).execute()
-                                        if 'items' in response:
-                                            targets += response['items']
-                                        # TODO this should be more modular
-                                        # this is only for cloudresourcemanager
-                                        if 'bindings' in response:
-                                            targets += response['bindings']
-                                        # this is only for IAM
-                                        if 'accounts' in response:
-                                            targets += response['accounts']
-
-                                        # TODO need to handle long responses
-                                        # request = method(**list_params)
-                                        # while request is not None:
-                                        #     response = request.execute()
-                                        #     if 'items' in response:
-                                        #         targets += response['items']
-                                        #     try:
-                                        #         request = api_entity.list_next(previous_request=request,
-                                        #                                        previous_response=response)
-                                        #     except AttributeError:
-                                        #         request = None
-
-                                except Exception as e:
-                                    if not ignore_list_error:
-                                        printException(e)
-
-                        # Azure provider
-                        if self._is_provider('azure'):
-                            targets = []
-                            response = method(**list_params)
-                            for i in response:
-                                targets.append(i)
-
+                        targets = self._get_targets(response_attribute, api_client, method, list_params, ignore_list_error)
                     except Exception as e:
                         if not ignore_list_error:
                             printException(e)
                         targets = []
+
                     self.fetchstatuslogger.counts[target_type]['discovered'] += len(targets)
+
                     for target in targets:
                         params['q'].put((target_type, target), )
                 except Exception as e:
@@ -298,6 +191,22 @@ class BaseConfig():
         except Exception as e:
             printException(e)
             pass
+
+    def _get_method(self, api_client, target_type, list_method_name):
+        """
+        Gets the appropriate method, required as each provider may have particularities
+
+        :return:
+        """
+        return None
+
+    def _get_targets(self, response_attribute, api_client, method, list_params, ignore_list_error):
+        """
+        Gets the targets, required as each provider may have particularities
+
+        :return:
+        """
+        return None
 
     def finalize(self):
         for t in self.fetchstatuslogger.counts:
