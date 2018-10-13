@@ -9,6 +9,7 @@ opinel>=3.3.4,<4.0.0
 # GCP Provider
 grpcio
 ## Cloud Libraries
+google-cloud
 google-cloud-resource-manager
 google-cloud-storage>=1.11.0
 google-cloud-container
