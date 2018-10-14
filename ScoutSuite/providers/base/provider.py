@@ -15,7 +15,7 @@ from ScoutSuite.providers.base.configs.browser import get_object_at
 from ScoutSuite.output.html import Scout2Report
 
 
-class BaseProvider:
+class BaseProvider(object):
     """
     Base class for the different providers.
 
