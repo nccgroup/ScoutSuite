@@ -30,7 +30,7 @@ status = None
 formatted_string = None
 
 
-class BaseConfig():
+class BaseConfig(object):
 
     def __init__(self, thread_config=4, **kwargs):
         """

@@ -3,7 +3,7 @@
 from opinel.utils.console import printError, printException, printDebug
 from opinel.utils.aws import get_aws_account_id, get_partition_name
 
-class BaseServicesConfig:
+class BaseServicesConfig(object):
 
     def __init__(self, metadata=None, thread_config=4):
         pass
