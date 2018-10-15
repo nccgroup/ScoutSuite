@@ -72,7 +72,8 @@ class GCPBaseConfig(BaseConfig):
             for project in self.projects:
                 list_params_list.append({key:
                                              project if list_params[key] == 'project_placeholder'
-                                             else list_params[key]
+                                             else ('projects/%s' % project if list_params[key] == 'projects/project_placeholder'
+                                                   else list_params[key])
                                          for key in list_params})
         # only zones
         elif not 'project_placeholder' in list_params.values() and 'zone_placeholder' in list_params.values():
@@ -89,8 +90,9 @@ class GCPBaseConfig(BaseConfig):
             for elem in list(itertools.product(*[self.projects, zones])):
                 list_params_list.append({key:
                                              elem[0] if list_params[key] == 'project_placeholder'
-                                             else (elem[1] if list_params[key] == 'zone_placeholder'
-                                                   else list_params[key])
+                                             else ('projects/%s' % elem[0] if list_params[key] == 'projects/project_placeholder'
+                                                   else (elem[1] if list_params[key] == 'zone_placeholder'
+                                                         else list_params[key]))
                                          for key in list_params})
         # neither projects nor zones
         else:
