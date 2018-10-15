@@ -9,7 +9,7 @@ from googleapiclient import discovery
 
 class IAMConfig(GCPBaseConfig):
     targets = (
-        ('projects.serviceAccounts', 'Service Accounts', 'list', {'name': 'projects/ncccon2018prjct'}, False),
+        ('projects.serviceAccounts', 'Service Accounts', 'list', {'name': 'projects/project_placeholder'}, False),
     )
 
     def __init__(self, thread_config):
