@@ -104,15 +104,11 @@ Google Cloud Platform
 There are two ways to run Scout against a GCP project.
 
 1. User Account
-	1. Configure the cloud shell to use the appropriate User Account credentials (:code:`gcloud init` command)
+    1. Configure the cloud shell to use the appropriate User Account credentials (:code:`gcloud init` command)
     2. Obtain access credentials to run Scout with: :code:`gcloud auth application-default login`
     3. Run Scout with the :code:`--user-account` flag
 2. Service Account
-	1. Go to the console service accounts page at https://console.cloud.google.com/iam-admin/serviceaccounts/project?project=[project] and create a service account.
-	2. Go to IAM management console at https://console.cloud.google.com/iam-admin/iam/project?project=[project] and add Security Reviewer and Viewer permissions to the service account created in step 1.
-	3. Generate a Service Account key from https://console.cloud.google.com/apis/credentials?project=[project].
-	4. Place the JSON file (named keyfile.json) generated in step 3 into the application directory.
-	5. Set the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to the path of the JSON file downloaded. Or use the SDK to run `gcloud auth application-default login`.
+    1. TODO
 
 The following roles can be attached to the member in order to grant necessary permissions:
 * Viewer
