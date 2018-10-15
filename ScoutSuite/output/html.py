@@ -2,17 +2,17 @@
 from __future__ import print_function
 
 import datetime
-import dateutil.tz
 import os
 import shutil
 import zipfile
 
+import dateutil.tz
 from opinel.utils.console import printInfo, printException
 
-from ScoutSuite import AWSCONFIG, EXCEPTIONS, HTMLREPORT, AWSRULESET, AWSCONFIG_FILE, EXCEPTIONS_FILE, HTMLREPORT_FILE, GENERATOR_FILE, REPORT_TITLE
-from ScoutSuite.output.utils import get_filename, prompt_4_overwrite
+from ScoutSuite import AWSCONFIG, EXCEPTIONS, HTMLREPORT, AWSRULESET, AWSCONFIG_FILE, EXCEPTIONS_FILE, HTMLREPORT_FILE, \
+    GENERATOR_FILE, REPORT_TITLE
 from ScoutSuite.output.js import JavaScriptReaderWriter
-
+from ScoutSuite.output.utils import get_filename, prompt_4_overwrite
 
 
 class HTMLReport(object):
@@ -20,9 +20,9 @@ class HTMLReport(object):
     Base HTML report
     """
 
-    def __init__(self, profile, report_dir, timestamp = False, exceptions = {}):
+    def __init__(self, profile, report_dir, timestamp=False, exceptions={}):
         self.report_dir = report_dir
-        self.profile = profile.replace('/', '_').replace('\\', '_') # Issue 111
+        self.profile = profile.replace('/', '_').replace('\\', '_')  # Issue 111
         self.current_time = datetime.datetime.now(dateutil.tz.tzlocal())
         if timestamp != False:
             self.timestamp = self.current_time.strftime("%Y-%m-%d_%Hh%M%z") if not timestamp else timestamp
@@ -34,8 +34,9 @@ class HTMLReport(object):
 
     def get_content_from(self, templates_type):
         contents = ''
-        template_dir  = os.path.join(self.html_data_path, templates_type)
-        template_files = [os.path.join(template_dir, f) for f in os.listdir(template_dir) if os.path.isfile(os.path.join(template_dir, f))]
+        template_dir = os.path.join(self.html_data_path, templates_type)
+        template_files = [os.path.join(template_dir, f) for f in os.listdir(template_dir) if
+                          os.path.isfile(os.path.join(template_dir, f))]
         for filename in template_files:
             try:
                 with open('%s' % filename, 'rt') as f:
@@ -63,18 +64,17 @@ class HTMLReport(object):
         shutil.copytree(src_inc_scout2_dir, inc_scout2_dir)
 
 
-
 class Scout2Report(HTMLReport):
     """
     Scout2 HTML report
     """
 
-    def __init__(self, provider, profile=None, report_dir = None, timestamp = False, exceptions = {}):
+    def __init__(self, provider, profile=None, report_dir=None, timestamp=False, exceptions={}):
         self.html_root = HTMLREPORT_FILE
         self.provider = provider
         super(Scout2Report, self).__init__(profile, report_dir, timestamp, exceptions)
 
-    def save(self, config, exceptions, force_write = False, debug = False):
+    def save(self, config, exceptions, force_write=False, debug=False):
         self.prepare_html_report_dir()
         self.jsrw.save_to_file(config, AWSCONFIG, force_write, debug)
         self.jsrw.save_to_file(exceptions, EXCEPTIONS, force_write, debug)
@@ -107,13 +107,12 @@ class Scout2Report(HTMLReport):
         return new_file
 
 
-
 class RulesetGenerator(HTMLReport):
     """
     HTML ruleset generator for Scout2
     """
 
-    def __init__(self, ruleset_name, report_dir = None, timestamp = False, exceptions = {}):
+    def __init__(self, ruleset_name, report_dir=None, timestamp=False, exceptions={}):
         self.html_root = GENERATOR_FILE
         self.ruleset_name = ruleset_name
         super(RulesetGenerator, self).__init__(ruleset_name, report_dir, timestamp, exceptions)
@@ -124,7 +123,7 @@ class RulesetGenerator(HTMLReport):
         shutil.copyfile(src_rule_generator, rule_generator)
         return rule_generator
 
-    def save(self, config, force_write = False, debug = False):
+    def save(self, config, force_write=False, debug=False):
         self.prepare_html_report_dir()
         self.jsrw.save_to_file(config, AWSRULESET, force_write, debug)
         return self.create_html_report(force_write)
