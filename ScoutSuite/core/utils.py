@@ -3,6 +3,7 @@
 Single-service rule processing functions
 """
 
+from six import string_types
 import copy
 import re
 
@@ -93,7 +94,7 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
             split_current_path.append(str(index))
             results = results + recurse(all_info, split_current_info, copy.deepcopy(target_path), split_current_path,
                                         config, add_suffix)
-    elif type(current_info) == str:
+    elif isinstance(current_info, string_types):
         split_current_path = copy.deepcopy(current_path)
         results = results + recurse(all_info, current_info, [], split_current_path,
                                     config, add_suffix)
