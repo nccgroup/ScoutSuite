@@ -37,7 +37,7 @@ class ComputeEngineConfig(GCPBaseConfig):
         instance_dict = {}
         instance_dict['id'] = self.get_non_provider_id(instance['name'])
         instance_dict['name'] = instance['name']
-        instance_dict['description'] = instance['description'] if instance['description'] else 'N/A'
+        instance_dict['description'] = instance['description'] if 'description' in instance else 'N/A'
         instance_dict['creation_timestamp'] = instance['creationTimestamp']
         instance_dict['zone'] = instance['zone'].split('/')[-1]
         instance_dict['tags'] = instance['tags']
