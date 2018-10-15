@@ -108,15 +108,18 @@ class ComputeEngineConfig(GCPBaseConfig):
             if direction in firewall:
                 firewall_dict['action'] = direction
                 for rule in firewall[direction]:
-                    if rule['IPProtocol'] == 'all':
-                        for protocol in firewall_dict[direction_string]:
-                            firewall_dict[direction_string][protocol] = ['0-65535']
-                        break
+                    if rule['IPProtocol'] not in firewall_dict[direction_string]:
+                        firewall_dict[direction_string][rule['IPProtocol']] = ['*']
                     else:
-                        if firewall_dict[direction_string][rule['IPProtocol']] != ['0-65535']:
-                            if 'ports' in rule:
-                                firewall_dict[direction_string][rule['IPProtocol']] += rule['ports']
-                            else:
-                                firewall_dict[direction_string][rule['IPProtocol']] = ['0-65535']
+                        if rule['IPProtocol'] == 'all':
+                            for protocol in firewall_dict[direction_string]:
+                                firewall_dict[direction_string][protocol] = ['0-65535']
+                            break
+                        else:
+                            if firewall_dict[direction_string][rule['IPProtocol']] != ['0-65535']:
+                                if 'ports' in rule:
+                                    firewall_dict[direction_string][rule['IPProtocol']] += rule['ports']
+                                else:
+                                    firewall_dict[direction_string][rule['IPProtocol']] = ['0-65535']
 
         self.firewalls[firewall_dict['id']] = firewall_dict
