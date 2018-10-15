@@ -26,7 +26,7 @@ console output using the "--debug" argument), request a new feature, or send a p
 **Note:**
 
 The latest (and final) version of Scout2 can be found in https://github.com/nccgroup/Scout2/releases and
-https://pypi.org/project/AWSScout2/.
+https://pypi.org/project/ScoutSuite/.
 
 Further work is not planned for this branch. Fixes for the issues currently opened will be implemented in Scout Suite.
 
@@ -55,6 +55,8 @@ Install from source:
 
     $ git clone https://github.com/nccgroup/ScoutSuite
     $ cd ScoutSuite
+    $ virtualenv -p python venv
+    $ source venv/bin/activate
     $ pip install -r requirements.txt
     $ python setup.py install
 
@@ -64,11 +66,11 @@ Requirements
 Computing resources
 -------------------
 
-Scout Suite is a multi-threaded tool that fetches and stores your AWS account's configuration settings in memory during
-runtime. It is expected that the tool will run with no issues on any modern laptop or equivalent VM.
+Scout Suite is a multi-threaded tool that fetches and stores your cloud account's configuration settings in memory
+during runtime. It is expected that the tool will run with no issues on any modern laptop or equivalent VM.
 
-**Running Scout Suite in a VM with limited computing resources such as a t2.micro instance is not intended and will likely
-result in the process being killed.**
+**Note** that running Scout Suite in a VM with limited computing resources such as an AWS t2.micro instance is not intended and
+will likely result in the process being killed.
 
 Python
 ------
@@ -76,10 +78,10 @@ Python
 Scout Suite is written in Python and supports the following versions:
 
 * 2.7
-* 3.3
 * 3.4
 * 3.5
 * 3.6
+* 3.7
 
 Credentials
 -----------
@@ -87,7 +89,7 @@ Credentials
 Amazon Web Services
 ^^^^^^^^^^^^^^^^^^^
 
-To run Scout, you will need valid AWS credentials (*e.g* Access Key ID and Secret Access Key).
+To run Scout against an AWS account, you will need valid AWS credentials (*e.g* Access Key ID and Secret Access Key).
 The role, or user account, associated with these credentials requires read-only access for all resources in a number of
 services, including but not limited to CloudTrail, EC2, IAM, RDS, Redshift, and S3.
 
@@ -99,7 +101,23 @@ The following AWS Managed Policies can be attached to the principal in order to 
 Google Cloud Platform
 ^^^^^^^^^^^^^^^^^^^^^
 
-TODO
+There are two ways to run Scout against a GCP project.
+
+1. User Account
+	1. Configure the cloud shell to use the appropriate User Account credentials (:code:`gcloud init` command)
+    2. Obtain access credentials to run Scout with: :code:`gcloud auth application-default login`
+    3. Run Scout with the :code:`--user-account` flag
+2. Service Account
+	1. Go to the console service accounts page at https://console.cloud.google.com/iam-admin/serviceaccounts/project?project=[project] and create a service account.
+	2. Go to IAM management console at https://console.cloud.google.com/iam-admin/iam/project?project=[project] and add Security Reviewer and Viewer permissions to the service account created in step 1.
+	3. Generate a Service Account key from https://console.cloud.google.com/apis/credentials?project=[project].
+	4. Place the JSON file (named keyfile.json) generated in step 3 into the application directory.
+	5. Set the environment variable `GOOGLE_APPLICATION_CREDENTIALS` to the path of the JSON file downloaded. Or use the SDK to run `gcloud auth application-default login`.
+
+The following roles can be attached to the member in order to grant necessary permissions:
+* Viewer
+* Security Reviewer
+* Stackdriver Account Viewer
 
 Azure
 ^^^^^
