@@ -68,7 +68,8 @@ class GCPBaseConfig(BaseConfig):
         # What this does is create a list with all combinations of possibilities for method parameters
         list_params_list = []
         # only projects
-        if 'project_placeholder' in list_params.values() and not 'zone_placeholder' in list_params.values():
+        if ('project_placeholder' in list_params.values() or 'projects/project_placeholder' in list_params.values())\
+                and not 'zone_placeholder' in list_params.values():
             for project in self.projects:
                 list_params_list.append({key:
                                              project if list_params[key] == 'project_placeholder'
@@ -76,7 +77,8 @@ class GCPBaseConfig(BaseConfig):
                                                    else list_params[key])
                                          for key in list_params})
         # only zones
-        elif not 'project_placeholder' in list_params.values() and 'zone_placeholder' in list_params.values():
+        elif not ('project_placeholder' in list_params.values() or 'projects/project_placeholder' in list_params.values())\
+                and 'zone_placeholder' in list_params.values():
             zones = self.get_zones(client=api_client, project=self.projects[0])
             for zone in zones:
                 list_params_list.append({key:
@@ -84,7 +86,8 @@ class GCPBaseConfig(BaseConfig):
                                              else list_params[key]
                                          for key in list_params})
         # projects and zones
-        elif 'project_placeholder' in list_params.values() and 'zone_placeholder' in list_params.values():
+        elif ('project_placeholder' in list_params.values() or 'projects/project_placeholder' in list_params.values())\
+                and 'zone_placeholder' in list_params.values():
             zones = self.get_zones(client=api_client, project=self.projects[0])
             import itertools
             for elem in list(itertools.product(*[self.projects, zones])):
