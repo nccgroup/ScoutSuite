@@ -77,7 +77,7 @@ class GCPProvider(BaseProvider):
             if self.credentials:
 
                 if self.project_id:
-                    self.projects = [project_id]
+                    self.projects = [self.project_id]
                     self.aws_account_id = self.project_id # FIXME this is for AWS
 
                 elif self.organization_id:
@@ -91,7 +91,7 @@ class GCPProvider(BaseProvider):
                     self.aws_account_id = self.folder_id # FIXME this is for AWS
 
                 else:
-                    return False
+                    self.projects = [project_id]
 
                 # TODO this shouldn't be done here? but it has to in order to init with projects...
                 self.services.set_projects(projects=self.projects)
