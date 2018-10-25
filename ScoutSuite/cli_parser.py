@@ -200,7 +200,9 @@ class ScoutSuiteArgumentParser(SharedArgumentParser):
         self.parser.add_argument('--project-id',
                                  action='store',
                                  help='ID of the GCP Project to analyze')
-
+        self.parser.add_argument('--folder-id',
+                                 action='store',
+                                 help='ID of the GCP Folder to analyze')
         self.parser.add_argument('--organization-id',
                                  action='store',
                                  help='ID of the GCP Organization to analyze')

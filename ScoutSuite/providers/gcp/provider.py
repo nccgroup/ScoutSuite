@@ -25,7 +25,7 @@ class GCPProvider(BaseProvider):
     Implements provider for AWS
     """
 
-    def __init__(self, project_id=None, organization_id=None,
+    def __init__(self, project_id=None, folder_id=None, organization_id=None,
                  report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4, **kwargs):
 
         self.profile = 'gcp-profile'  # TODO this is aws-specific
@@ -35,8 +35,9 @@ class GCPProvider(BaseProvider):
         self.provider_code = 'gcp'
         self.provider_name = 'Google Cloud Platform'
 
+        self.projects=[]
         self.project_id=project_id
-        self.projects=[project_id]
+        self.folder_id=folder_id
         self.organization_id=organization_id
 
         self.services_config = GCPServicesConfig
@@ -73,13 +74,23 @@ class GCPProvider(BaseProvider):
             # TODO not sure why this works - there are no credentials for API client libraries
             self.credentials, project_id = google.auth.default()
 
+
             if self.credentials:
-                if self.organization_id:
-                    self.projects = self._get_all_projects_in_organization()
-                elif not self.project_id:
+
+                if self.project_id:
                     self.projects = [project_id]
 
-                self.aws_account_id = self.projects[0] # TODO this is for AWS
+                elif self.organization_id:
+                    self.projects = self._get_projects_in_org_or_folder(parent_type='organization',
+                                                                        parent_id=self.organization_id)
+
+                elif self.folder_id:
+                    self.projects = self._get_projects_in_org_or_folder(parent_type='folder',
+                                                                        parent_id=self.folder_id)
+                else:
+                    return False
+
+                self.aws_account_id = self.projects[0] # FIXME this is for AWS
 
                 # TODO this shouldn't be done here? but it has to in order to init with projects...
                 self.services.set_projects(projects=self.projects)
@@ -108,15 +119,18 @@ class GCPProvider(BaseProvider):
 
         super(GCPProvider, self).preprocessing()
 
-    def _get_all_projects_in_organization(self):
+    def _get_projects_in_org_or_folder(self, parent_type, parent_id):
         """
-        Can probably be helped by:
-            client = discovery.build('cloudresourcemanager', 'v1', credentials=credentials_api)
-            ancestors = client.projects().getAncestry(projectId='[id]').execute()
+        Returns all the projects in a given organization or folder
         """
 
+        if parent_type not in ['organization', 'folder']:
+            return None
         projects = []
 
+        #FIXME can't currently be done with API client library as it consumes v1 which doesn't support folders
+        """
+        
         resource_manager_client = resource_manager.Client(credentials=self.credentials)
 
         project_list = resource_manager_client.list_projects()
@@ -124,6 +138,29 @@ class GCPProvider(BaseProvider):
         for p in project_list:
             if p.parent['id'] == self.organization_id and p.status == 'ACTIVE':
                 projects.append(p.project_id)
+        """
+
+        resource_manager_client_v1 = discovery.build('cloudresourcemanager', 'v1', credentials=self.credentials)
+        resource_manager_client_v2 = discovery.build('cloudresourcemanager', 'v2', credentials=self.credentials)
+
+        # get parent children projectss
+        request = resource_manager_client_v1.projects().list(filter='parent.id:%s' % parent_id)
+        while request is not None:
+            response = request.execute()
+
+            if 'projects' in response.keys():
+                for project in response['projects']:
+                    if project['lifecycleState'] == "ACTIVE":
+                        projects.append(project['projectId'])
+
+            request = resource_manager_client_v1.projects().list_next(previous_request=request,
+                                                                      previous_response=response)
+
+        # get parent children projects in children folders recursively
+        folder_response = resource_manager_client_v2.folders().list(parent='%ss/%s' % (parent_type, parent_id)).execute()
+        if 'folders' in folder_response.keys():
+            for folder in folder_response['folders']:
+                projects.extend(self._get_projects_in_org_or_folder("folder", folder['name'].strip(u'folders/')))
 
         return projects
 

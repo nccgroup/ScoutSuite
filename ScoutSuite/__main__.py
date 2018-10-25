@@ -51,6 +51,7 @@ def main(passed_args=None):
     cloud_provider = get_provider(provider=args.provider,
                                   profile=args.profile[0],
                                   project_id=args.project_id,
+                                  folder_id=args.folder_id,
                                   organization_id=args.organization_id,
                                   report_dir=args.report_dir,
                                   timestamp=args.timestamp,
