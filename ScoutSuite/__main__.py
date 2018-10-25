@@ -65,10 +65,12 @@ def main(passed_args=None):
     if cloud_provider.provider_code == 'gcp':
         if args.project_id:
             report_file_name = 'gcp-%s' % args.project_id
-        if args.organization_id:
+        elif args.organization_id:
             report_file_name = 'gcp-%s' % args.organization_id
-        if args.folder_id:
+        elif args.folder_id:
             report_file_name = 'gcp-%s' % args.folder_id
+        else:
+            report_file_name = 'gcp'
     if cloud_provider.provider_code == 'azure':
         report_file_name = 'azure'
 
