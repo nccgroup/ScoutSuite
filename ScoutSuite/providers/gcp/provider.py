@@ -74,23 +74,24 @@ class GCPProvider(BaseProvider):
             # TODO not sure why this works - there are no credentials for API client libraries
             self.credentials, project_id = google.auth.default()
 
-
             if self.credentials:
 
                 if self.project_id:
                     self.projects = [project_id]
+                    self.aws_account_id = self.project_id # FIXME this is for AWS
 
                 elif self.organization_id:
                     self.projects = self._get_projects_in_org_or_folder(parent_type='organization',
                                                                         parent_id=self.organization_id)
+                    self.aws_account_id = self.organization_id # FIXME this is for AWS
 
                 elif self.folder_id:
                     self.projects = self._get_projects_in_org_or_folder(parent_type='folder',
                                                                         parent_id=self.folder_id)
+                    self.aws_account_id = self.folder_id # FIXME this is for AWS
+
                 else:
                     return False
-
-                self.aws_account_id = self.projects[0] # FIXME this is for AWS
 
                 # TODO this shouldn't be done here? but it has to in order to init with projects...
                 self.services.set_projects(projects=self.projects)

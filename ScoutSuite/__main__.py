@@ -59,8 +59,21 @@ def main(passed_args=None):
                                   skipped_services=args.skipped_services,
                                   thread_config=args.thread_config)
 
+    #FIXME this shouldn't be done here
+    if cloud_provider.provider_code == 'aws':
+        report_file_name = 'aws-%s' % args.profile[0]
+    if cloud_provider.provider_code == 'gcp':
+        if args.project_id:
+            report_file_name = 'gcp-%s' % args.project_id
+        if args.organization_id:
+            report_file_name = 'gcp-%s' % args.organization_id
+        if args.folder_id:
+            report_file_name = 'gcp-%s' % args.folder_id
+    if cloud_provider.provider_code == 'azure':
+        report_file_name = 'azure'
+
     # Create a new report
-    report = Scout2Report(args.provider, args.profile[0], args.report_dir, args.timestamp)
+    report = Scout2Report(args.provider, report_file_name, args.report_dir, args.timestamp)
 
     # Complete run, including pulling data from provider
     if not args.fetch_local:
