@@ -7,7 +7,9 @@ except ImportError:
     from queue import Queue
 
 import json
+
 from googleapiclient.errors import HttpError
+from google.api_core.exceptions import PermissionDenied
 
 from opinel.utils.console import printException, printError
 
@@ -155,6 +157,9 @@ class GCPBaseConfig(BaseConfig):
                     if error_json['error']['message'] not in error_list:
                         error_list.append(error_json['error']['message'])
                         printError(error_json['error']['message'])
+
+                except PermissionDenied as e:
+                    printError("%s: %s - %s for project %s" % (e.message, self.service, self.targets, project['projectId']))
 
                 except Exception as e:
                     printException(e)
