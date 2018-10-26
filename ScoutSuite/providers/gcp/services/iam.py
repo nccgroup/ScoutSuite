@@ -26,7 +26,8 @@ class IAMConfig(GCPBaseConfig):
         service_account_dict = {}
 
         service_account_dict['id'] = service_account['uniqueId']
-        service_account_dict['name'] = service_account['displayName']
+        service_account_dict['display_name'] = service_account['displayName'] if 'displayName' in service_account else 'N/A'
+        service_account_dict['name'] = service_account['email']
         service_account_dict['email'] = service_account['email']
         service_account_dict['project_id'] = service_account['projectId']
 
