@@ -1,3 +1,49 @@
+// Event handlers
+$(document).ready(function(){
+
+    // when button is clicked, return CSV with finding
+    $('#findings_download_button').click(function(event){
+        var anchor = window.location.hash.substr(1);
+        // Strip the # sign
+        var path = decodeURIComponent(anchor.replace('#', ''));
+        // Get resource path based on browsed-to path
+        var resource_path = get_resource_path(path);
+
+        var csv_array = [];
+
+        var items = get_value_at(path);
+        var level = get_value_at(path.replace('items', 'level'));
+        var resource_path_array = resource_path.split('.');
+        var split_path = path.split('.');
+        var finding_service = split_path[1];
+        var finding_key = split_path[split_path.length - 2];
+
+        for (item in items) {
+            // get item value
+            var id_array = items[item].split('.');
+            var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
+            var i = get_value_at(id)
+            // for first item, put keys at beginning of csv
+            if (item == 0){
+                var key_values_array = []
+                Object.keys(i).forEach(function(key) {
+                    key_values_array.push(key);
+                });
+                csv_array.push(key_values_array);
+            }
+            // put each value in array
+            var values_array = []
+            Object.keys(i).forEach(function(key) {
+                values_array.push(JSON.stringify(i[key]));
+            });
+            // append to csv array
+            csv_array.push(values_array);
+        }
+
+        download_as_csv(finding_key + '.csv', csv_array)
+    });
+
+});
 
 // Globals
 var loaded_config_array = new Array();
@@ -495,6 +541,7 @@ function show_main_dashboard() {
     hideAll();
     // Hide filters
     hideFilters();
+    $('#findings_download_button').hide();
     showRowWithItems('aws_account_id');
     showRowWithItems('last_run');
     $('#section_title-h2').text('');
@@ -623,9 +670,11 @@ function updateDOM(anchor) {
     }
 
     // Update title
+    $('#findings_download_button').hide();
     if (path.endsWith('.items')) {
         title = get_value_at(path.replace('items', 'description'));
         updateTitle(title);
+        $('#findings_download_button').show();
     } else {
         title = makeTitle(resource_path);
         updateTitle(title);
@@ -874,4 +923,53 @@ var set_filter_url = function(region) {
     tmp = location.hash.split('.');
     tmp[3] = region;
     location.hash = tmp.join('.');
+}
+
+// returns a csv file to download
+// example input:
+//     exportToCsv('export.csv', [
+//         ['name','description'],
+//         ['david','123'],
+//         ['jona','""'],
+//         ['a','b'],
+//     ])
+function download_as_csv(filename, rows) {
+    var processRow = function (row) {
+        var finalVal = '';
+        for (var j = 0; j < row.length; j++) {
+            var innerValue = row[j] === null ? '' : row[j].toString();
+            if (row[j] instanceof Date) {
+                innerValue = row[j].toLocaleString();
+            };
+            var result = innerValue.replace(/"/g, '""');
+            if (result.search(/("|,|\n)/g) >= 0)
+                result = '"' + result + '"';
+            if (j > 0)
+                finalVal += ',';
+            finalVal += result;
+        }
+        return finalVal + '\n';
+    };
+
+    var csvFile = '';
+    for (var i = 0; i < rows.length; i++) {
+        csvFile += processRow(rows[i]);
+    }
+
+    var blob = new Blob([csvFile], { type: 'text/csv;charset=utf-8;' });
+    if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, filename);
+    } else {
+        var link = document.createElement("a");
+        if (link.download !== undefined) { // feature detection
+            // Browsers that support HTML5 download attribute
+            var url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
 }
