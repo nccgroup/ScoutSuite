@@ -30,6 +30,7 @@ class CloudSQLConfig(GCPBaseConfig):
         instance_dict = {}
         instance_dict['id'] = self.get_non_provider_id(instance['name'])
         instance_dict['name'] = instance['name']
+        instance_dict['project_id'] = instance['project']
 
         instance_dict['automatic_backup_status'] = 'Enabled' if instance['settings']['backupConfiguration']['enabled'] else 'Disabled'
         instance_dict['log_status'] = 'Enabled' if instance['settings']['backupConfiguration']['binaryLogEnabled'] else 'Disabled'
