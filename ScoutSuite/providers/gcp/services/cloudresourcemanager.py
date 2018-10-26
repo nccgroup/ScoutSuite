@@ -33,17 +33,18 @@ class CloudResourceManager(GCPBaseConfig):
         binding_dict['members'] = {'users': [],
                                    'groups': [],
                                    'service_accounts': []}
-        for member in binding['members']:
-            type = member.split(':')[0]
-            entity = member.split(':')[1]
-            if type == 'user':
-                binding_dict['members']['users'].append(entity)
-            elif type == 'group':
-                binding_dict['members']['groups'].append(entity)
-            elif type == 'serviceAccount':
-                binding_dict['members']['service_accounts'].append(entity)
-            else:
-                printException('Type %s not handled' % type)
+        if 'members' in binding:
+            for member in binding['members']:
+                type = member.split(':')[0]
+                entity = member.split(':')[1]
+                if type == 'user':
+                    binding_dict['members']['users'].append(entity)
+                elif type == 'group':
+                    binding_dict['members']['groups'].append(entity)
+                elif type == 'serviceAccount':
+                    binding_dict['members']['service_accounts'].append(entity)
+                else:
+                    printException('Type %s not handled' % type)
 
         self.bindings[binding_dict['id']] = binding_dict
 
