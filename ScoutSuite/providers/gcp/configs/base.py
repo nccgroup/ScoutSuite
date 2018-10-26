@@ -115,28 +115,25 @@ class GCPBaseConfig(BaseConfig):
 
                 if self.library_type == 'api_client_library':
 
-                    response = method(**list_params_combination).execute()
-                    if 'items' in response:
-                        targets += response['items']
-                    # TODO this should be more modular
-                    # this is only for cloudresourcemanager
-                    if 'bindings' in response:
-                        targets += response['bindings']
-                    # this is only for IAM
-                    if 'accounts' in response:
-                        targets += response['accounts']
-
                     # TODO need to handle long responses
-                    # request = method(**list_params)
-                    # while request is not None:
-                    #     response = request.execute()
-                    #     if 'items' in response:
-                    #         targets += response['items']
-                    #     try:
-                    #         request = api_entity.list_next(previous_request=request,
-                    #                                        previous_response=response)
-                    #     except AttributeError:
-                    #         request = None
+                    request = method(**list_params_combination)
+                    while request is not None:
+                        response = request.execute()
+
+                        if 'items' in response:
+                            targets += response['items']
+                        # TODO this should be more modular
+                        # this is only for cloudresourcemanager
+                        if 'bindings' in response:
+                            targets += response['bindings']
+                        # this is only for IAM
+                        if 'accounts' in response:
+                            targets += response['accounts']
+
+                        # TODO need to define the _next
+                        # request = method_next(previous_request=request,
+                        #                       previous_response=response)
+                        request = None
 
             except Exception as e:
                 if not ignore_list_error:
