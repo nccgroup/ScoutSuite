@@ -47,11 +47,20 @@ class CloudSQLConfig(GCPBaseConfig):
 
 
     def _get_instance_backups(self, instance, params):
+
+        backups_dict = {}
+
         try:
             backups = params['api_client'].backupRuns().list(project=instance['project'],
                                                              instance=instance['name']).execute()
+        # this is triggered when there are no backups
+        except AttributeError as e:
+            return backups_dict
+        except Exception as e:
+            printError('Failed to fetch backups for SQL instance %s: %s' % (instance['name'], e))
+            return None
 
-            backups_dict = {}
+        try:
             if 'items' in backups:
                 for backup in backups['items']:
                     backups_dict[backup['id']] = {
@@ -60,7 +69,9 @@ class CloudSQLConfig(GCPBaseConfig):
                         'status': backup['status'],
                         'type': backup['type']
                     }
+
             return backups_dict
+
         except Exception as e:
-            printError('Failed to get backups for SQL instance %s: %s' % (instance['name'], e))
+            printError('Failed to parse backups for SQL instance %s: %s' % (instance['name'], e))
             return None
