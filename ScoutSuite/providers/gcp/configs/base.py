@@ -72,8 +72,8 @@ class GCPBaseConfig(BaseConfig):
                 and not 'zone_placeholder' in list_params.values():
             for project in self.projects:
                 list_params_list.append({key:
-                                             project if list_params[key] == 'project_placeholder'
-                                             else ('projects/%s' % project if list_params[key] == 'projects/project_placeholder'
+                                             project['projectId'] if list_params[key] == 'project_placeholder'
+                                             else ('projects/%s' % project['projectId'] if list_params[key] == 'projects/project_placeholder'
                                                    else list_params[key])
                                          for key in list_params})
         # only zones
@@ -93,7 +93,7 @@ class GCPBaseConfig(BaseConfig):
             for elem in list(itertools.product(*[self.projects, zones])):
                 list_params_list.append({key:
                                              elem[0] if list_params[key] == 'project_placeholder'
-                                             else ('projects/%s' % elem[0] if list_params[key] == 'projects/project_placeholder'
+                                             else ('projects/%s' % elem[0]['projectId'] if list_params[key] == 'projects/project_placeholder'
                                                    else (elem[1] if list_params[key] == 'zone_placeholder'
                                                          else list_params[key]))
                                          for key in list_params})

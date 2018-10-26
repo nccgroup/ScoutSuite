@@ -33,7 +33,12 @@ class CloudStorageConfig(GCPBaseConfig):
         bucket_dict = {}
         bucket_dict['id'] = self.get_non_provider_id(bucket.id)
         bucket_dict['name'] = bucket.name
-        bucket_dict['project_id'] = bucket.client.project  # TODO test this works
+
+        for project in self.projects:
+            if str(project['projectNumber']) == str(bucket.project_number):
+                bucket_dict['project_id'] = project['projectId']
+                break
+
         bucket_dict['project_number'] = bucket.project_number
         bucket_dict['creation_date'] = bucket.time_created
         bucket_dict['location'] = bucket.location

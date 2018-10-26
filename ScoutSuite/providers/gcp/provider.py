@@ -77,16 +77,17 @@ class GCPProvider(BaseProvider):
             if self.credentials:
 
                 if self.project_id:
-                    self.projects = [self.project_id]
+                    self.projects = self._get_projects(parent_type='project',
+                                                       parent_id=self.project_id)
                     self.aws_account_id = self.project_id # FIXME this is for AWS
 
                 elif self.organization_id:
-                    self.projects = self._get_projects_in_org_or_folder(parent_type='organization',
+                    self.projects = self._get_projects(parent_type='organization',
                                                                         parent_id=self.organization_id)
                     self.aws_account_id = self.organization_id # FIXME this is for AWS
 
                 elif self.folder_id:
-                    self.projects = self._get_projects_in_org_or_folder(parent_type='folder',
+                    self.projects = self._get_projects(parent_type='folder',
                                                                         parent_id=self.folder_id)
                     self.aws_account_id = self.folder_id # FIXME this is for AWS
 
@@ -120,13 +121,15 @@ class GCPProvider(BaseProvider):
 
         super(GCPProvider, self).preprocessing()
 
-    def _get_projects_in_org_or_folder(self, parent_type, parent_id):
+    def _get_projects(self, parent_type, parent_id):
         """
-        Returns all the projects in a given organization or folder
+        Returns all the projects in a given organization or folder. For a project_id it only returns the project
+        details.
         """
 
-        if parent_type not in ['organization', 'folder']:
+        if parent_type not in ['project', 'organization', 'folder']:
             return None
+
         projects = []
 
         #FIXME can't currently be done with API client library as it consumes v1 which doesn't support folders
@@ -144,24 +147,34 @@ class GCPProvider(BaseProvider):
         resource_manager_client_v1 = discovery.build('cloudresourcemanager', 'v1', credentials=self.credentials)
         resource_manager_client_v2 = discovery.build('cloudresourcemanager', 'v2', credentials=self.credentials)
 
-        # get parent children projectss
-        request = resource_manager_client_v1.projects().list(filter='parent.id:%s' % parent_id)
-        while request is not None:
-            response = request.execute()
+        if parent_type == 'project':
 
-            if 'projects' in response.keys():
-                for project in response['projects']:
+            project_response = resource_manager_client_v1.projects().list(filter='id:%s' % parent_id).execute()
+            if 'projects' in project_response.keys():
+                for project in project_response['projects']:
                     if project['lifecycleState'] == "ACTIVE":
-                        projects.append(project['projectId'])
+                        projects.append(project)
 
-            request = resource_manager_client_v1.projects().list_next(previous_request=request,
-                                                                      previous_response=response)
+        else:
 
-        # get parent children projects in children folders recursively
-        folder_response = resource_manager_client_v2.folders().list(parent='%ss/%s' % (parent_type, parent_id)).execute()
-        if 'folders' in folder_response.keys():
-            for folder in folder_response['folders']:
-                projects.extend(self._get_projects_in_org_or_folder("folder", folder['name'].strip(u'folders/')))
+            # get parent children projectss
+            request = resource_manager_client_v1.projects().list(filter='parent.id:%s' % parent_id)
+            while request is not None:
+                response = request.execute()
+
+                if 'projects' in response.keys():
+                    for project in response['projects']:
+                        if project['lifecycleState'] == "ACTIVE":
+                            projects.append(project)
+
+                request = resource_manager_client_v1.projects().list_next(previous_request=request,
+                                                                          previous_response=response)
+
+            # get parent children projects in children folders recursively
+            folder_response = resource_manager_client_v2.folders().list(parent='%ss/%s' % (parent_type, parent_id)).execute()
+            if 'folders' in folder_response.keys():
+                for folder in folder_response['folders']:
+                    projects.extend(self._get_projects_in_org_or_folder("folder", folder['name'].strip(u'folders/')))
 
         return projects
 
