@@ -2,6 +2,9 @@
 
 from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
+from googleapiclient.errors import HttpError
+import json
+from opinel.utils.console import printException, printError
 
 class ComputeEngineConfig(GCPBaseConfig):
     targets = (
@@ -13,6 +16,7 @@ class ComputeEngineConfig(GCPBaseConfig):
 
     def __init__(self, thread_config):
         self.library_type = 'api_client_library'
+        self.zones = None
 
         self.instances = {}
         self.instances_count = 0
@@ -27,11 +31,23 @@ class ComputeEngineConfig(GCPBaseConfig):
         super(ComputeEngineConfig, self).__init__(thread_config=1)
 
     def get_zones(self, client, project):
-        zones_list = []
-        zones = client.zones().list(project=project).execute()['items']
-        for zone in zones:
-            zones_list.append(zone['name'])
-        return zones_list
+        try:
+            if self.zones:
+                return self.zones
+            else:
+                zones_list = []
+                zones = client.zones().list(project=project).execute()['items']
+                for zone in zones:
+                    zones_list.append(zone['name'])
+                self.zones = zones_list
+                return zones_list
+
+        except HttpError as e:
+            raise e
+
+        except Exception as e:
+            printException(e)
+            return None
 
     def parse_instances(self, instance, params):
         instance_dict = {}
