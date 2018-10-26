@@ -34,7 +34,7 @@ $(document).ready(function(){
             // put each value in array
             var values_array = []
             Object.keys(i).forEach(function(key) {
-                values_array.push(JSON.stringify(i[key]));
+                values_array.push(JSON.stringify(i[key]).replace(/^"(.*)"$/, '$1'));
             });
             // append to csv array
             csv_array.push(values_array);
