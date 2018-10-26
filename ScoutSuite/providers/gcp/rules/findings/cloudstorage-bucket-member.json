@@ -4,7 +4,7 @@
   "description": "_ARG_1_",
   "dashboard_name": "Buckets",
   "display_path": "cloudstorage.buckets.id",
-  "path": "cloudstorage.buckets.id",
+  "path": "cloudstorage.buckets.id.acl_configuration",
   "conditions": [ "and",
     [ "cloudstorage.buckets.id.acl_configuration", "withKey", "_ARG_0_"]
   ],
