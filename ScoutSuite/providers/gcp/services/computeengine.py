@@ -48,14 +48,15 @@ class ComputeEngineConfig(GCPBaseConfig):
         instance_dict['deletion_protection'] = 'Enabled' if instance['deletionProtection'] else 'Disabled'
 
         instance_dict['disks'] = {}
-        for disk in instance['disks']:
-            instance_dict['disks'][self.get_non_provider_id(disk['deviceName'])] = {
-                'type': disk['type'],
-                'mode': disk['mode'],
-                'source_url': disk['source'],
-                'source_device_name': disk['deviceName'],
-                'bootable': disk['boot']
-                }
+        if 'disks' in instance:
+            for disk in instance['disks']:
+                instance_dict['disks'][self.get_non_provider_id(disk['deviceName'])] = {
+                    'type': disk['type'],
+                    'mode': disk['mode'],
+                    'source_url': disk['source'],
+                    'source_device_name': disk['deviceName'],
+                    'bootable': disk['boot']
+                    }
 
         self.instances[instance_dict['id']] = instance_dict
 
