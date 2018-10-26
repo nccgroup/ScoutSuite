@@ -36,7 +36,7 @@ The following cloud providers are currently supported:
 -   Google Cloud Platform (beta)
 -   Azure (early alpha)
 
-# Installation
+## Installation
 
 Install via \`pip\`:
 
@@ -51,7 +51,7 @@ Install from source:
     $ pip install -r requirements.txt
     $ python setup.py install
 
-# Requirements
+## Requirements
 
 ### Computing resources
 
@@ -138,8 +138,8 @@ abide by the Cloud Platform Acceptable Use Policy and the Terms of Service and e
 projects you onw (and not other customers’ applications).
 
 References:
-https://cloud.google.com/terms/aup
-https://cloud.google.com/terms/
+- https://cloud.google.com/terms/aup
+- https://cloud.google.com/terms/
 
 #### Azure
 
