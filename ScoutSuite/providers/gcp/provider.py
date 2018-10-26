@@ -174,7 +174,7 @@ class GCPProvider(BaseProvider):
             folder_response = resource_manager_client_v2.folders().list(parent='%ss/%s' % (parent_type, parent_id)).execute()
             if 'folders' in folder_response.keys():
                 for folder in folder_response['folders']:
-                    projects.extend(self._get_projects_in_org_or_folder("folder", folder['name'].strip(u'folders/')))
+                    projects.extend(self._get_projects("folder", folder['name'].strip(u'folders/')))
 
         return projects
 
