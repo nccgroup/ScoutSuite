@@ -2,6 +2,7 @@
 
 from opinel.utils.console import printError
 
+import operator
 from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
 
@@ -43,6 +44,11 @@ class CloudSQLConfig(GCPBaseConfig):
 
         instance_dict['backups'] = self._get_instance_backups(instance, params)
 
+        instance_dict['last_backup_timestamp'] = \
+            instance_dict['backups'][max(instance_dict['backups'].keys(),
+                                         key=(lambda k: instance_dict['backups'][k]['creation_timestamp']))]['creation_timestamp'] if \
+                instance_dict['backups'].keys() else 'N/A'
+
         self.instances[instance_dict['id']] = instance_dict
 
 
@@ -63,12 +69,13 @@ class CloudSQLConfig(GCPBaseConfig):
         try:
             if 'items' in backups:
                 for backup in backups['items']:
-                    backups_dict[backup['id']] = {
-                        'backup_url': backup['selfLink'],
-                        'creation_timestamp': backup['endTime'],
-                        'status': backup['status'],
-                        'type': backup['type']
-                    }
+                    if backup['status'] == 'SUCCESSFUL':
+                        backups_dict[backup['id']] = {
+                            'backup_url': backup['selfLink'],
+                            'creation_timestamp': backup['endTime'],
+                            'status': backup['status'],
+                            'type': backup['type']
+                        }
 
             return backups_dict
 
