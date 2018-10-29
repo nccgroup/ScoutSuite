@@ -324,11 +324,12 @@ class AWSProvider(BaseProvider):
 
     def match_instances_and_subnets_callback(self, current_config, path, current_path, instance_id, callback_args):
         subnet_id = current_config['SubnetId']
-        vpc = self.subnet_map[subnet_id]
-        subnet = self.services['vpc']['regions'][vpc['region']]['vpcs'][vpc['vpc_id']]['subnets'][subnet_id]
-        manage_dictionary(subnet, 'instances', [])
-        if instance_id not in subnet['instances']:
-            subnet['instances'].append(instance_id)
+        if subnet_id:
+            vpc = self.subnet_map[subnet_id]
+            subnet = self.services['vpc']['regions'][vpc['region']]['vpcs'][vpc['vpc_id']]['subnets'][subnet_id]
+            manage_dictionary(subnet, 'instances', [])
+            if instance_id not in subnet['instances']:
+                subnet['instances'].append(instance_id)
 
     def _match_instances_and_roles(self):
         printInfo('Matching EC2 instances and IAM roles...')
@@ -377,9 +378,13 @@ class AWSProvider(BaseProvider):
 
         # Create a list of peering connection IDs in each VPC
         info = 'AccepterVpcInfo' if current_config['AccepterVpcInfo']['OwnerId'] == self.aws_account_id else 'RequesterVpcInfo'
-        region = current_path[1]
+        region = current_path[current_path.index('regions') + 1]
         vpc_id = current_config[info]['VpcId']
-        target = self.services['vpc']['regions']['region']['vpcs'][vpc_id]
+        if vpc_id not in self.services['vpc']['regions'][region]['vpcs']:
+            region = current_config['AccepterVpcInfo']['Region']
+            target = self.services['vpc']['regions'][region]['vpcs'][vpc_id]
+        else:
+            target = self.services['vpc']['regions'][region]['vpcs'][vpc_id]
         manage_dictionary(target, 'peering_connections', [])
         if pc_id not in target['peering_connections']:
             target['peering_connections'].append(pc_id)
@@ -389,7 +394,7 @@ class AWSProvider(BaseProvider):
             current_config['AccepterVpcInfo' if info == 'RequesterVpcInfo' else 'RequesterVpcInfo'])
         if 'PeeringOptions' in current_config['peer_info']:
             current_config['peer_info'].pop('PeeringOptions')
-        if hasattr('organization', self) and current_config['peer_info']['OwnerId'] in self.organization:
+        if hasattr(self, 'organization') and current_config['peer_info']['OwnerId'] in self.organization:
             current_config['peer_info']['name'] = self.organization[current_config['peer_info']['OwnerId']][
                 'Name']
         else:
@@ -667,11 +672,17 @@ class AWSProvider(BaseProvider):
                         if len(ports) > 1:
                             port_min = int(ports[0])
                             port_max = int(ports[1])
+                        elif port == 'N/A':
+                            port_min = port_max = None
+                        elif port == 'ALL':
+                            port_min = 0
+                            port_max = 65535
                         else:
                             port_min = port_max = int(port)
                         for listener in listeners:
-                            if int(listener) > port_min and int(listener) < port_max and 'cidrs' in \
-                                    ingress_rules['protocols'][p]['ports'][port]:
+                            if (port_min and port_max) and \
+                                    int(listener) > port_min and int(listener) < port_max and \
+                                    'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
                                 manage_dictionary(attack_surface_config[public_ip]['protocols'], p, {'ports': {}})
                                 manage_dictionary(attack_surface_config[public_ip]['protocols'][p]['ports'],
                                                   str(listener), {'cidrs': []})
