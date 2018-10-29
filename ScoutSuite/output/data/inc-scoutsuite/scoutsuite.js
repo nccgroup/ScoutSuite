@@ -3,6 +3,9 @@ $(document).ready(function(){
 
     // when button is clicked, return CSV with finding
     $('#findings_download_button').click(function(event){
+
+        var button_clicked = event.target.id;
+
         var anchor = window.location.hash.substr(1);
         // Strip the # sign
         var path = decodeURIComponent(anchor.replace('#', ''));
@@ -10,6 +13,7 @@ $(document).ready(function(){
         var resource_path = get_resource_path(path);
 
         var csv_array = [];
+        var json_dict = {};
 
         var items = get_value_at(path);
         var level = get_value_at(path.replace('items', 'level'));
@@ -18,29 +22,54 @@ $(document).ready(function(){
         var finding_service = split_path[1];
         var finding_key = split_path[split_path.length - 2];
 
-        for (item in items) {
-            // get item value
-            var id_array = items[item].split('.');
-            var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
-            var i = get_value_at(id)
-            // for first item, put keys at beginning of csv
-            if (item == 0){
-                var key_values_array = []
+        if (button_clicked == 'findings_download_csv_button'){
+            for (item in items) {
+                // get item value
+                var id_array = items[item].split('.');
+                var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
+                var i = get_value_at(id)
+                // for first item, put keys at beginning of csv
+                if (item == 0){
+                    var key_values_array = []
+                    Object.keys(i).forEach(function(key) {
+                        key_values_array.push(key);
+                    });
+                    csv_array.push(key_values_array);
+                }
+                // put each value in array
+                var values_array = []
                 Object.keys(i).forEach(function(key) {
-                    key_values_array.push(key);
+                    values_array.push(JSON.stringify(i[key]).replace(/^"(.*)"$/, '$1'));
                 });
-                csv_array.push(key_values_array);
+                // append to csv array
+                csv_array.push(values_array);
             }
-            // put each value in array
-            var values_array = []
-            Object.keys(i).forEach(function(key) {
-                values_array.push(JSON.stringify(i[key]).replace(/^"(.*)"$/, '$1'));
-            });
-            // append to csv array
-            csv_array.push(values_array);
-        }
 
-        download_as_csv(finding_key + '.csv', csv_array)
+            download_as_csv(finding_key + '.csv', csv_array)
+        };
+
+        if (button_clicked == 'findings_download_json_button'){
+            json_dict['items'] = [];
+            for (item in items) {
+                // get item value
+                var id_array = items[item].split('.');
+                var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
+                var i = get_value_at(id)
+                // add item to json
+                json_dict['items'].push(i);
+            }
+            // doesn't work as ID is not always last or second to last value in id_array
+            // for (item in items) {
+            //     // get item value
+            //     var id_array = items[item].split('.');
+            //     var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
+            //     var i = get_value_at(id);
+            //     // add item to json
+            //     json_dict[id_array[id_array.length - 2]] = i;
+            // }
+            download_as_json(finding_key + '.json', json_dict);
+        };
+
     });
 
 });
@@ -957,6 +986,28 @@ function download_as_csv(filename, rows) {
     }
 
     var blob = new Blob([csvFile], { type: 'text/csv;charset=utf-8;' });
+    if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, filename);
+    } else {
+        var link = document.createElement("a");
+        if (link.download !== undefined) { // feature detection
+            // Browsers that support HTML5 download attribute
+            var url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
+}
+
+function download_as_json(filename, dict) {
+
+    var json_str = JSON.stringify(dict);
+
+    var blob = new Blob([json_str], { type: 'application/json;' });
     if (navigator.msSaveBlob) { // IE 10+
         navigator.msSaveBlob(blob, filename);
     } else {
