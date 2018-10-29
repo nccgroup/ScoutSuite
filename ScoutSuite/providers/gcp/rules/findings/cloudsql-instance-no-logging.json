@@ -1,5 +1,5 @@
 {
-  "description": "Logging disabled",
+  "description": "Binary logging disabled",
   "path": "cloudsql.instances.id",
   "dashboard_name": "Instances",
   "conditions": [ "and",
