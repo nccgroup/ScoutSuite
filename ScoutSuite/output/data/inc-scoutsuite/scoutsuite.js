@@ -695,7 +695,6 @@ var current_service_group = ''
 var current_resource_path = ''
 function updateDOM(anchor) {
 
-
     // Strip the # sign
     var path = decodeURIComponent(anchor.replace('#', ''));
 
@@ -715,9 +714,18 @@ function updateDOM(anchor) {
         return;
     }
 
-    if (!path.endsWith('.findings')) {
+    // FIXME this is not a very good implementation
+    if (!path.endsWith('.findings') &&
+        !path.endsWith('.statistics') &&
+        !path.endsWith('.password_policy') &&
+        !path.endsWith('.permissions') &&
+        !path.endsWith('.<root_account>') &&
+        !path.endsWith('.external_attack_surface')) {
         $('#findings_download_button').show();
-    }
+    } else {
+        $('#findings_download_button').hide();
+    };
+
     // Update title
     if (path.endsWith('.items')) {
         title = get_value_at(path.replace('items', 'description'));
