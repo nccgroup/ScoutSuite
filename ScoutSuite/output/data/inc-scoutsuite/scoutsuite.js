@@ -23,13 +23,21 @@ $(document).ready(function(){
         var finding_key = split_path[split_path.length - 2];
 
         if (button_clicked == 'findings_download_csv_button'){
+            var first_entry = 1;
             for (item in items) {
                 // get item value
-                var id_array = items[item].split('.');
-                var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
-                var i = get_value_at(id)
+                // when path ends in '.items' (findings)
+                if (typeof items[item] === 'string') {
+                    var id_array = items[item].split('.');
+                    var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
+                    var i = get_value_at(id)
+                }
+                // all other cases
+                else {
+                    var i = items[item];
+                };
                 // for first item, put keys at beginning of csv
-                if (item == 0){
+                if (first_entry == 1){
                     var key_values_array = []
                     Object.keys(i).forEach(function(key) {
                         key_values_array.push(key);
@@ -43,6 +51,7 @@ $(document).ready(function(){
                 });
                 // append to csv array
                 csv_array.push(values_array);
+                first_entry = 0;
             }
 
             download_as_csv(finding_key + '.csv', csv_array)
@@ -52,9 +61,16 @@ $(document).ready(function(){
             json_dict['items'] = [];
             for (item in items) {
                 // get item value
-                var id_array = items[item].split('.');
-                var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
-                var i = get_value_at(id)
+                // when path ends in '.items' (findings)
+                if (typeof items[item] === 'string') {
+                    var id_array = items[item].split('.');
+                    var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
+                    var i = get_value_at(id)
+                }
+                // all other cases
+                else {
+                    var i = items[item];
+                };
                 // add item to json
                 json_dict['items'].push(i);
             }
@@ -560,6 +576,7 @@ function load_metadata() {
 function about() {
     hideAll();
     showRow('about');
+    $('#findings_download_button').hide();
     $('#section_title-h2').text('');
 }
 
@@ -698,12 +715,13 @@ function updateDOM(anchor) {
         return;
     }
 
+    if (!path.endsWith('.findings')) {
+        $('#findings_download_button').show();
+    }
     // Update title
-    $('#findings_download_button').hide();
     if (path.endsWith('.items')) {
         title = get_value_at(path.replace('items', 'description'));
         updateTitle(title);
-        $('#findings_download_button').show();
     } else {
         title = makeTitle(resource_path);
         updateTitle(title);
