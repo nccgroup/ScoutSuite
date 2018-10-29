@@ -13,6 +13,7 @@ from oauth2client.client import GoogleCredentials
 from googleapiclient import discovery
 from google.cloud import resource_manager
 
+import logging
 
 class GCPCredentials():
 
@@ -27,6 +28,9 @@ class GCPProvider(BaseProvider):
 
     def __init__(self, project_id=None, folder_id=None, organization_id=None,
                  report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4, **kwargs):
+
+        # set debugging level to ERROR as the library can raise warnings which we don't want to see
+        logging.getLogger('googleapicliet.discovery_cache').setLevel(logging.ERROR)
 
         self.profile = 'gcp-profile'  # TODO this is aws-specific
 
