@@ -64,7 +64,7 @@ class CloudSQLConfig(GCPBaseConfig):
             return backups_dict
         except Exception as e:
             printError('Failed to fetch backups for SQL instance %s: %s' % (instance['name'], e))
-            return None
+            return backups_dict
 
         try:
             if 'items' in backups:
