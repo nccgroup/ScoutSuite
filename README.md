@@ -89,12 +89,10 @@ There are two ways to run Scout against a GCP project.
     2.  Obtain access credentials to run Scout with: gcloud auth application-default login
     3.  Run Scout with the `--user-account` flag
 2.  Service Account
-    1.  Generate service account keys 
-    2.  Download the keys in JSON format (refer to <https://cloud.google.com/iam/docs/creating-managing-service-account-keys>)
-    3.  Run Scout with the --service-account flag and providing the key file path with `--key-file <path/to/key_file.json`
+    1.  Generate and download service account keys in JSON format (refer to <https://cloud.google.com/iam/docs/creating-managing-service-account-keys>)
+    2.  Run Scout with the `--service-account` flag while providing the key file path with `--key-file path/to/key_file.json`
 
-The following roles can be attached to the member in order to grant
-necessary permissions:
+The following roles can be attached to the member in order to grant necessary permissions:
 
 - Viewer
 - Security Reviewer
