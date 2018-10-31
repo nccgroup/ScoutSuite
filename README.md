@@ -1,8 +1,8 @@
 # Scout Suite
 
-![image](https://travis-ci.org/nccgroup/Scout2.svg?branch=master)
-![image](https://coveralls.io/repos/github/nccgroup/Scout2/badge.svg?branch=master)
-![image](https://badge.fury.io/py/AWSScout2.svg)
+<!--- ![image](https://travis-ci.org/nccgroup/Scout2.svg?branch=master) -->
+<!--- ![image](https://coveralls.io/repos/github/nccgroup/Scout2/badge.svg?branch=master) -->
+[![PyPI version](https://badge.fury.io/py/ScoutSuite.svg)](https://badge.fury.io/py/ScoutSuite)
 
 ## Description
 
@@ -18,7 +18,7 @@ console output using the "--debug" argument), request a new feature, or send a p
 **Note:**
 
 The latest (and final) version of Scout2 can be found in <https://github.com/nccgroup/Scout2/releases> and
-<https://pypi.org/project/ScoutSuite/>.
+<https://pypi.org/project/AWSScout2>.
 
 Further work is not planned for Scout2. Fixes for the issues currently opened will be implemented in Scout Suite.
 
