@@ -3,7 +3,7 @@
 from opinel.utils.console import printException
 
 from google.cloud import storage
-from google.cloud import logging
+from google.cloud import logging as stackdriver_logging
 from google.cloud import monitoring_v3
 
 from googleapiclient import discovery
@@ -32,7 +32,7 @@ def gcp_connect_service(service, credentials=None, region_name=None):
             return discovery.build('iam', 'v1', cache_discovery=False, cache=MemoryCache())
 
         if service == 'stackdriverlogging':
-            return logging.Client()
+            return stackdriver_logging.Client()
 
         if service == 'stackdrivermonitoring':
             return monitoring_v3.MetricServiceClient()
