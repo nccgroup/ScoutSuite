@@ -11,11 +11,9 @@ environments. Using the APIs exposed by cloud providers, Scout gathers configura
 highlights risk areas . Rather than pouring through dozens of pages on the web, Scout supplies a clear view of the 
 attack surface automatically.
 
-Scout Suite is stable and actively maintained, but a number of features
-and internals may change. As such, please bear with us as we find time
-to work on, and improve, the tool. Feel free to report a bug with
-details (please provide console output using the "--debug" argument),
-request a new feature, or send a pull request.
+Scout Suite is stable and actively maintained, but a number of features and internals may change. As such, please bear 
+with us as we find time to work on, and improve, the tool. Feel free to report a bug with details (please provide 
+console output using the "--debug" argument), request a new feature, or send a pull request.
 
 **Note:**
 
@@ -34,7 +32,7 @@ The following cloud providers are currently supported:
 
 ## Installation
 
-Install via \`pip\`:
+Install via `pip`:
 
     $ pip install scoutsuite
 
@@ -51,14 +49,11 @@ Install from source:
 
 ### Computing resources
 
-Scout Suite is a multi-threaded tool that fetches and stores your cloud
-account's configuration settings in memory during runtime. It is
-expected that the tool will run with no issues on any modern laptop or
-equivalent VM.
+Scout Suite is a multi-threaded tool that fetches and stores your cloud account's configuration settings in memory 
+during runtime. It is expected that the tool will run with no issues on any modern laptop or equivalent VM.
 
-**Note** that running Scout Suite in a VM with limited computing
-resources such as an AWS t2.micro instance is not intended and will
-likely result in the process being killed.
+**Note** that running Scout Suite in a VM with limited computing resources such as an AWS t2.micro instance is not 
+intended and will likely result in the process being killed.
 
 ### Python
 
@@ -76,14 +71,11 @@ The required libraries can be found in the requirements.txt file.
 
 #### Amazon Web Services
 
-To run Scout against an AWS account, you will need valid AWS credentials
-(*e.g* Access Key ID and Secret Access Key). The role, or user account,
-associated with these credentials requires read-only access for all
-resources in a number of services, including but not limited to
-CloudTrail, EC2, IAM, RDS, Redshift, and S3.
+To run Scout against an AWS account, you will need valid AWS credentials (*e.g* Access Key ID and Secret Access Key).
+The role, or user account,associated with these credentials requires read-only access for all resources in a number of 
+services, including but not limited to CloudTrail, EC2, IAM, RDS, Redshift, and S3.
 
-The following AWS Managed Policies can be attached to the principal in
-order to grant necessary permissions:
+The following AWS Managed Policies can be attached to the principal in order to grant necessary permissions:
 
 -   ReadOnlyAccess
 -   SecurityAudit
@@ -130,8 +122,8 @@ considered security scanning as it does not impact AWS' network and applications
 #### Google Cloud Platform
 
 Use of Scout Suite does not require GCP users to contact Google to begin testing.The only requirement is that users 
-abide by the Cloud Platform Acceptable Use Policy and the Terms of Service and ensure that tests only affect 
-projects you onw (and not other customers’ applications).
+abide by the Cloud Platform Acceptable Use Policy and the Terms of Service and ensure that tests only affect projects 
+you onw (and not other customers’ applications).
 
 References:
 - https://cloud.google.com/terms/aup
@@ -160,14 +152,12 @@ following command:
 
 **Note:** EC2 instances with an IAM role fit in this category.
 
-If multiple profiles are configured in your .aws/credentials and
-.aws/config files, you may specify which credentials to use with the
-following command:
+If multiple profiles are configured in your .aws/credentials and .aws/config files, you may specify which credentials 
+to use with the following command:
 
     $ Scout --profile <PROFILE_NAME>
 
-If you have a CSV file containing the API access key ID and secret, you
-may run Scout with the following command:
+If you have a CSV file containing the API access key ID and secret, you may run Scout with the following command:
 
     $ Scout --csv-credentials <CREDENTIALS.CSV>
 
