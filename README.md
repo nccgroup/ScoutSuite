@@ -143,18 +143,11 @@ TODO
 
 ### Usage
 
-Using a computer already configured to use the AWS CLI, boto3, or another AWS SDK, you may use Scout using the 
-following command:
-
-    $ Scout
-
-The following command will provide the list of available command line
-options:
+The following command will provide the list of available command line options:
 
     $ Scout --help
 
-For further details, checkout our Wiki pages at
-<https://github.com/nccgroup/ScoutSuite/wiki>.
+For further details, checkout our Wiki pages at <https://github.com/nccgroup/ScoutSuite/wiki>.
 
 After performing a number of AWS API calls, Scout will create a local HTML report and open it in the default browser.
 
