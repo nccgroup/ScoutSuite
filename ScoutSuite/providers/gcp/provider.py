@@ -7,6 +7,7 @@ from opinel.utils.console import printError, printException
 
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.gcp.configs.services import GCPServicesConfig
+from ScoutSuite.providers.gcp.utils import gcp_connect_service
 
 import googleapiclient
 from oauth2client.client import GoogleCredentials
@@ -144,8 +145,10 @@ class GCPProvider(BaseProvider):
                 projects.append(p.project_id)
         """
 
-        resource_manager_client_v1 = discovery.build('cloudresourcemanager', 'v1', credentials=self.credentials, cache_discovery=False )
-        resource_manager_client_v2 = discovery.build('cloudresourcemanager', 'v2', credentials=self.credentials, cache_discovery=False )
+        # resource_manager_client_v1 = discovery.build('cloudresourcemanager', 'v1', credentials=self.credentials, cache_discovery=False )
+        # resource_manager_client_v2 = discovery.build('cloudresourcemanager', 'v2', credentials=self.credentials, cache_discovery=False )
+        resource_manager_client_v1 = gcp_connect_service(service='cloudresourcemanager', credentials=self.credentials)
+        resource_manager_client_v2 = gcp_connect_service(service='cloudresourcemanager-v2', credentials=self.credentials)
 
         if parent_type == 'project':
 

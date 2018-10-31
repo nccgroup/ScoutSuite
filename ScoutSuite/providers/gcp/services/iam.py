@@ -5,6 +5,7 @@ from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 from opinel.utils.console import printError, printException, printInfo
 
 from googleapiclient import discovery
+from ScoutSuite.providers.gcp.utils import gcp_connect_service
 
 
 class IAMConfig(GCPBaseConfig):
@@ -62,6 +63,7 @@ class IAMConfig(GCPBaseConfig):
         try:
             #FIXME for some reason using the api_client fails, creating a new client doesn't generate an error...
             client = discovery.build('iam', 'v1', cache_discovery=False)
+            # client = gcp_connect_service(service='iam')
 
             # response = api_client.projects().serviceAccounts().keys().list(
             response = client.projects().serviceAccounts().keys().list(

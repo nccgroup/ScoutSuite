@@ -8,25 +8,28 @@ from google.cloud import monitoring_v3
 
 from googleapiclient import discovery
 
+import logging
 
-def gcp_connect_service(service, credentials, region_name=None):
+def gcp_connect_service(service, credentials=None, region_name=None):
+
+    logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.ERROR)
 
     try:
 
         if service == 'cloudresourcemanager':
-            return discovery.build('cloudresourcemanager', 'v1', cache_discovery=False )
+            return discovery.build('cloudresourcemanager', 'v1', cache_discovery=False, cache=MemoryCache())
+
+        elif service == 'cloudresourcemanager-v2':
+            return discovery.build('cloudresourcemanager', 'v2', cache_discovery=False, cache=MemoryCache())
 
         elif service == 'cloudstorage':
             return storage.Client()
 
         elif service == 'cloudsql':
-            # client = discovery.build('sqladmin', 'v1beta4', credentials.api_client_credentials)
-            # return client
-            # TODO not sure why this works - there are no credentials for API client libraries
-            return discovery.build('sqladmin', 'v1beta4', cache_discovery=False )
+            return discovery.build('sqladmin', 'v1beta4', cache_discovery=False, cache=MemoryCache())
 
         elif service == 'iam':
-            return discovery.build('iam', 'v1', cache_discovery=False )
+            return discovery.build('iam', 'v1', cache_discovery=False, cache=MemoryCache())
 
         if service == 'stackdriverlogging':
             return logging.Client()
@@ -35,7 +38,7 @@ def gcp_connect_service(service, credentials, region_name=None):
             return monitoring_v3.MetricServiceClient()
 
         elif service == 'computeengine':
-            return discovery.build('compute', 'v1', cache_discovery=False )
+            return discovery.build('compute', 'v1', cache_discovery=False, cache=MemoryCache())
 
         else:
             printException('Service %s not supported' % service)
@@ -44,3 +47,16 @@ def gcp_connect_service(service, credentials, region_name=None):
     except Exception as e:
         printException(e)
         return None
+
+
+class MemoryCache:
+    """
+    Workaround https://github.com/googleapis/google-api-python-client/issues/325#issuecomment-274349841
+    """
+    _CACHE = {}
+
+    def get(self, url):
+        return MemoryCache._CACHE.get(url)
+
+    def set(self, url, content):
+        MemoryCache._CACHE[url] = content
