@@ -61,7 +61,7 @@ class IAMConfig(GCPBaseConfig):
 
         try:
             #FIXME for some reason using the api_client fails, creating a new client doesn't generate an error...
-            client = discovery.build('iam', 'v1')
+            client = discovery.build('iam', 'v1', cache_discovery=False)
 
             # response = api_client.projects().serviceAccounts().keys().list(
             response = client.projects().serviceAccounts().keys().list(

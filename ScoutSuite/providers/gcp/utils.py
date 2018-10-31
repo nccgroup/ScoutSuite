@@ -14,7 +14,7 @@ def gcp_connect_service(service, credentials, region_name=None):
     try:
 
         if service == 'cloudresourcemanager':
-            return discovery.build('cloudresourcemanager', 'v1')
+            return discovery.build('cloudresourcemanager', 'v1', cache_discovery=False )
 
         elif service == 'cloudstorage':
             return storage.Client()
@@ -23,10 +23,10 @@ def gcp_connect_service(service, credentials, region_name=None):
             # client = discovery.build('sqladmin', 'v1beta4', credentials.api_client_credentials)
             # return client
             # TODO not sure why this works - there are no credentials for API client libraries
-            return discovery.build('sqladmin', 'v1beta4')
+            return discovery.build('sqladmin', 'v1beta4', cache_discovery=False )
 
         elif service == 'iam':
-            return discovery.build('iam', 'v1')
+            return discovery.build('iam', 'v1', cache_discovery=False )
 
         if service == 'stackdriverlogging':
             return logging.Client()
@@ -35,7 +35,7 @@ def gcp_connect_service(service, credentials, region_name=None):
             return monitoring_v3.MetricServiceClient()
 
         elif service == 'computeengine':
-            return discovery.build('compute', 'v1')
+            return discovery.build('compute', 'v1', cache_discovery=False )
 
         else:
             printException('Service %s not supported' % service)
