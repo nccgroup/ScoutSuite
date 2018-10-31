@@ -85,27 +85,20 @@ The following AWS Managed Policies can be attached to the principal in order to 
 There are two ways to run Scout against a GCP project.
 
 1.  User Account
-    :   1.  Configure the cloud shell to use the appropriate User
-            Account credentials (`gcloud init` command to use a new
-            accound and `gcloud config set account <account>` to use an
-            existing account)
-        2.  Obtain access credentials to run Scout with:
-            gcloud auth application-default login
-        3.  Run Scout with the `--user-account` flag
-
+    1.  Configure the cloud shell to use the appropriate User Account credentials (`gcloud init` command to use a new accound and `gcloud config set account <account>` to use an existing account)
+    2.  Obtain access credentials to run Scout with: gcloud auth application-default login
+    3.  Run Scout with the `--user-account` flag
 2.  Service Account
-    :   1.  Generate service account keys
-        2.  Download the keys in JSON format (refer to
-            <https://cloud.google.com/iam/docs/creating-managing-service-account-keys>)
-        3.  Run Scout with the --service-account flag and providing the
-            key file path with `--key-file <path/to/key_file.json`
+    1.  Generate service account keys 
+    2.  Download the keys in JSON format (refer to <https://cloud.google.com/iam/docs/creating-managing-service-account-keys>)
+    3.  Run Scout with the --service-account flag and providing the key file path with `--key-file <path/to/key_file.json`
 
 The following roles can be attached to the member in order to grant
 necessary permissions:
 
--   Viewer
--   Security Reviewer
--   Stackdriver Account Viewer
+- Viewer
+- Security Reviewer
+- Stackdriver Account Viewer
 
 #### Azure
 
