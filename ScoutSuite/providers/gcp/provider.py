@@ -3,16 +3,14 @@
 import os
 
 import google.auth
+import googleapiclient
 from opinel.utils.console import printError, printException
 
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.gcp.configs.services import GCPServicesConfig
 from ScoutSuite.providers.gcp.utils import gcp_connect_service
 
-import googleapiclient
-from oauth2client.client import GoogleCredentials
-from googleapiclient import discovery
-from google.cloud import resource_manager
+
 
 
 class GCPCredentials():
@@ -67,12 +65,6 @@ class GCPProvider(BaseProvider):
 
         try:
 
-            # TODO there is probably a better way to do this
-            # api_client_credentials = GoogleCredentials.get_application_default()
-            # cloud_client_credentials, self.gcp_project_id = google.auth.default()
-            # self.credentials = GCPCredentials(api_client_credentials, cloud_client_credentials)
-
-            # TODO not sure why this works - there are no credentials for API client libraries
             self.credentials, project_id = google.auth.default()
 
             if self.credentials:
@@ -106,6 +98,12 @@ class GCPProvider(BaseProvider):
             printError('Failed to authenticate to GCP')
             printException(e)
             return False
+
+        except googleapiclient.errors.HttpError as e:
+            printError('Failed to authenticate to GCP')
+            printException(e)
+            return False
+
 
     def preprocessing(self, ip_ranges=[], ip_ranges_name_key=None):
         """
@@ -145,8 +143,6 @@ class GCPProvider(BaseProvider):
                 projects.append(p.project_id)
         """
 
-        # resource_manager_client_v1 = discovery.build('cloudresourcemanager', 'v1', credentials=self.credentials, cache_discovery=False )
-        # resource_manager_client_v2 = discovery.build('cloudresourcemanager', 'v2', credentials=self.credentials, cache_discovery=False )
         resource_manager_client_v1 = gcp_connect_service(service='cloudresourcemanager', credentials=self.credentials)
         resource_manager_client_v2 = gcp_connect_service(service='cloudresourcemanager-v2', credentials=self.credentials)
 
