@@ -1,0 +1,9 @@
+{
+  "dashboard_name": "Firewall Rule",
+  "description": "Default firewall rule in use",
+  "path": "computeengine.firewalls.id",
+  "display_path": "computeengine.firewalls.id",
+  "conditions": [ "and",
+    [ "computeengine.firewalls.id.name", "containAtLeastOneOf", ["default-allow-internal", "default-allow-icmp", "default-allow-rdp", "default-allow-ssh"] ]
+  ]
+}

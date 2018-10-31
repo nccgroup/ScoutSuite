@@ -11,6 +11,7 @@ class ComputeEngineConfig(GCPBaseConfig):
         ('instances', 'Instances', 'list', {'project': 'project_placeholder', 'zone': 'zone_placeholder'}, False),
         ('snapshots', 'Snapshots', 'list', {'project': 'project_placeholder'}, False),
         ('networks', 'Networks', 'list', {'project': 'project_placeholder'}, False),
+        # ('subnetworks', 'Subnetworks', 'list', {'project': 'project_placeholder', 'region': 'region_placeholder'}, False),
         ('firewalls', 'Firewalls', 'list', {'project': 'project_placeholder'}, False),
     )
 
@@ -99,6 +100,11 @@ class ComputeEngineConfig(GCPBaseConfig):
         network_dict['auto_subnet'] = network['autoCreateSubnetworks']
         network_dict['routing_config'] = network['routingConfig']
         self.networks[network_dict['id']] = network_dict
+
+    def parse_subnetworks(self, subnetwork, params):
+        subnetwork_dict = {}
+        subnetwork_dict['id'] = subnetwork['id']
+        self.networks[subnetwork_dict['id']] = subnetwork_dict
 
     def parse_firewalls(self, firewall, params):
         firewall_dict = {}

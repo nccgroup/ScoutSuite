@@ -91,6 +91,12 @@
         "level": "warning"
       }
     ],
+    "computeengine-firewall-default-rule-in-use.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "computeengine-firewall-rule-allows-all-ports.json": [
       {
         "enabled": true,
