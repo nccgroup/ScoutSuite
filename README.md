@@ -6,12 +6,10 @@
 
 ## Description
 
-Scout Suite is a multi-cloud configuratiobn review tool, which enables
-assessing the security posture of cloud environments. Using the APIs
-exposed by cloud providers, Scout gathers configuration data for manual
-inspection and highlights risk areas . Rather than pouring through
-dozens of pages on the web, Scout supplies a clear view of the attack
-surface automatically.
+Scout Suite is a multi-cloud configuration review tool, which enables assessing the security posture of cloud
+environments. Using the APIs exposed by cloud providers, Scout gathers configuration data for manual inspection and 
+highlights risk areas . Rather than pouring through dozens of pages on the web, Scout supplies a clear view of the 
+attack surface automatically.
 
 Scout Suite is stable and actively maintained, but a number of features
 and internals may change. As such, please bear with us as we find time
@@ -21,12 +19,10 @@ request a new feature, or send a pull request.
 
 **Note:**
 
-The latest (and final) version of Scout2 can be found in
-<https://github.com/nccgroup/Scout2/releases> and
+The latest (and final) version of Scout2 can be found in <https://github.com/nccgroup/Scout2/releases> and
 <https://pypi.org/project/ScoutSuite/>.
 
-Further work is not planned for this branch. Fixes for the issues
-currently opened will be implemented in Scout Suite.
+Further work is not planned for Scout2. Fixes for the issues currently opened will be implemented in Scout Suite.
 
 ### Support
 
