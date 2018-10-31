@@ -52,6 +52,7 @@ class ComputeEngineConfig(GCPBaseConfig):
     def parse_instances(self, instance, params):
         instance_dict = {}
         instance_dict['id'] = self.get_non_provider_id(instance['name'])
+        instance_dict['project_id'] = instance['selfLink'].split('/')[-5]
         instance_dict['name'] = instance['name']
         instance_dict['description'] = instance['description'] if 'description' in instance else 'N/A'
         instance_dict['creation_timestamp'] = instance['creationTimestamp']

@@ -192,6 +192,11 @@ class GCPProvider(BaseProvider):
                         if disk['status'] == 'READY' and disk['source_disk_url'] == instance_disk['source_url']:
                             instance_disk['snapshots'].append(disk)
 
+                    instance_disk['latest_snapshot'] = max(instance_disk['snapshots'],
+                                                           key=lambda x: x['creation_timestamp']) \
+                        if instance_disk['snapshots'] else None
+
+
     def _match_networks_and_instances(self):
         """
         For each network, math instances in that network

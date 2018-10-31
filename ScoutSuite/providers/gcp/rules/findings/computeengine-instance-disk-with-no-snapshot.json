@@ -5,6 +5,7 @@
   "display_path": "computeengine.instances.id",
   "conditions": [ "and",
     [ "computeengine.instances.id.disks.id.snapshots", "empty", "" ]
-  ]
+  ],
+  "id_suffix": "latest_snapshot"
 }
 
