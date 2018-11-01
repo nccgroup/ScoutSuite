@@ -20,6 +20,7 @@ setup(
     name=NAME,
     version=VERSION,
     description='Scout Suite, a multi-cloud configuration review tool',
+    long_description_content_type='text/markdown',
     long_description=open('README.md').read(),
     author='NCC Group',
     url='https://github.com/nccgroup/ScoutSuite',
