@@ -43,7 +43,7 @@ Install from source:
     $ virtualenv -p python venv
     $ source venv/bin/activate
     $ pip install -r requirements.txt
-    $ python setup.py install
+    $ python Scout.py --help
 
 ## Requirements
 
@@ -128,7 +128,7 @@ TODO
 
 The following command will provide the list of available command line options:
 
-    $ Scout --help
+    $ python Scout.py --help
 
 For further details, checkout our Wiki pages at <https://github.com/nccgroup/ScoutSuite/wiki>.
 
@@ -136,25 +136,30 @@ After performing a number of AWS API calls, Scout will create a local HTML repor
 
 #### Amazon Web Services
 
-Using a computer already configured to use the AWS CLI, boto3, or another AWS SDK, you may use Scout using the 
-following command:
+Using a computer already configured to use the AWS CLI, you may use Scout using the following command:
 
-    $ Scout
+    $ python Scout.py --provider aws
 
 **Note:** EC2 instances with an IAM role fit in this category.
 
 If multiple profiles are configured in your .aws/credentials and .aws/config files, you may specify which credentials 
 to use with the following command:
 
-    $ Scout --profile <PROFILE_NAME>
+    $ python Scout.py --profile <PROFILE_NAME>
 
 If you have a CSV file containing the API access key ID and secret, you may run Scout with the following command:
 
-    $ Scout --csv-credentials <CREDENTIALS.CSV>
+    $ python Scout.py --csv-credentials <CREDENTIALS.CSV>
 
 #### Google Cloud Platform
 
-TODO
+Using a computer already configured to use gcloud command-line tool, you may use Scout using the following command:
+
+    $ python Scout.py --provider gcp --user-account
+    
+To run Scout using Service Account keys, using the following command:
+
+    $ python Scout. --provider gcp --service-account --key-file </PATH/TO/KEY_FILE.JSON>
 
 #### Azure
 
