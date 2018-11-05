@@ -109,8 +109,10 @@ class ComputeEngineConfig(GCPBaseConfig):
     def parse_firewalls(self, firewall, params):
         firewall_dict = {}
         firewall_dict['id'] = firewall['id']
+        firewall_dict['project_id'] = firewall['selfLink'].split('/')[-4]
         firewall_dict['name'] = firewall['name']
-        firewall_dict['description'] = firewall['description'] if 'description' in firewall else 'N/A'
+        firewall_dict['description'] = firewall['description'] if \
+            'description' in firewall and firewall['description'] else 'N/A'
         firewall_dict['creation_timestamp'] = firewall['creationTimestamp']
         firewall_dict['network'] = firewall['network'].split('/')[-1]
         firewall_dict['network_url'] = firewall['network']
