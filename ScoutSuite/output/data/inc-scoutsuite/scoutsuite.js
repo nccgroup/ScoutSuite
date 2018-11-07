@@ -1,8 +1,14 @@
-// Event handlers
-$(document).ready(function(){
+// Globals
+var loaded_config_array = new Array();
+var run_results;
+
+/**
+ * Event handlers
+ */
+$(document).ready(function () {
 
     // when button is clicked, return CSV with finding
-    $('#findings_download_button').click(function(event){
+    $('#findings_download_button').click(function (event) {
 
         var button_clicked = event.target.id;
 
@@ -22,7 +28,7 @@ $(document).ready(function(){
         var finding_service = split_path[1];
         var finding_key = split_path[split_path.length - 2];
 
-        if (button_clicked == 'findings_download_csv_button'){
+        if (button_clicked == 'findings_download_csv_button') {
             var first_entry = 1;
             for (item in items) {
                 // get item value
@@ -36,28 +42,30 @@ $(document).ready(function(){
                 else {
                     var i = items[item];
                 };
+                ;
                 // for first item, put keys at beginning of csv
-                if (first_entry == 1){
+                if (first_entry == 1) {
                     var key_values_array = []
-                    Object.keys(i).forEach(function(key) {
+                    Object.keys(i).forEach(function (key) {
                         key_values_array.push(key);
                     });
                     csv_array.push(key_values_array);
-                }
+                };
                 // put each value in array
                 var values_array = []
-                Object.keys(i).forEach(function(key) {
+                Object.keys(i).forEach(function (key) {
                     values_array.push(JSON.stringify(i[key]).replace(/^"(.*)"$/, '$1'));
                 });
                 // append to csv array
                 csv_array.push(values_array);
                 first_entry = 0;
-            }
+            };
 
             download_as_csv(finding_key + '.csv', csv_array)
         };
+        ;
 
-        if (button_clicked == 'findings_download_json_button'){
+        if (button_clicked == 'findings_download_json_button') {
             json_dict['items'] = [];
             for (item in items) {
                 // get item value
@@ -71,9 +79,10 @@ $(document).ready(function(){
                 else {
                     var i = items[item];
                 };
+                ;
                 // add item to json
                 json_dict['items'].push(i);
-            }
+            };
             // doesn't work as ID is not always last or second to last value in id_array
             // for (item in items) {
             //     // get item value
@@ -82,7 +91,7 @@ $(document).ready(function(){
             //     var i = get_value_at(id);
             //     // add item to json
             //     json_dict[id_array[id_array.length - 2]] = i;
-            // }
+            // };
             download_as_json(finding_key + '.json', json_dict);
         };
 
@@ -90,68 +99,68 @@ $(document).ready(function(){
 
 });
 
-// Globals
-var loaded_config_array = new Array();
-
-//
-// Display the account ID -- use of the generic function + templates result in the div not being at the top of the page
-//
-var load_aws_account_id = function() {
+/**
+ * Display the account ID -- use of the generic function + templates result in the div not being at the top of the page
+ */
+var load_aws_account_id = function () {
     var element = document.getElementById('aws_account_id');
-    var value = '<span class="glyphicon glyphicon-cloud"></span> ' + aws_info['provider_name'] +
-        ' <span class="glyphicon glyphicon-chevron-right"></span> ' + aws_info['aws_account_id'];
-    if (('organization' in aws_info) && (value in aws_info['organization'])) {
-        value += ' (' + aws_info['organization'][value]['Name'] + ')'
-    }
+    var value = '<span class="glyphicon glyphicon-cloud"></span> ' + run_results['provider_name'] +
+        ' <span class="glyphicon glyphicon-chevron-right"></span> ' + run_results['aws_account_id'];
+    if (('organization' in run_results) && (value in run_results['organization'])) {
+        value += ' (' + run_results['organization'][value]['Name'] + ')'
+    };
     element.innerHTML = value;
-}
+};
 
-//
-// Generic load JSON function
-//
+/**
+ * Generic load JSON function
+ * @param script_id
+ * @param cols
+ * @returns {number};
+ */
 function load_aws_config_from_json(script_id, cols) {
 
     // Abort if data was previously loaded
     if (loaded_config_array.indexOf(script_id) > 0) {
         // When the path does not contain .id.
         return 0
-    }
+    };
     path_array = script_id.split('.');
-    for (i=3; i<path_array.length; i=i+2) {
+    for (i = 3; i < path_array.length; i = i + 2) {
         path_array[i] = 'id';
-    }
+    };
     fixed_path = path_array.join('.');
     if (loaded_config_array.indexOf(fixed_path) > 0) {
         // When the loaded path contains id but browsed-to path contains a specific value
         return 0
-    }
+    };
     path_array[1] = 'id';
     fixed_path = path_array.join('.');
     if (loaded_config_array.indexOf(fixed_path) > 0) {
         // Special case for services.id.findings
         return 0
-    }
+    };
 
     // Build the list based on the path, stopping at the first .id. value
-    list = aws_info;
+    list = run_results;
     path_array = script_id.split('.id.')[0].split('.');
     for (i in path_array) {
         // Allows for creation of regions-filter etc...
         if (i.endsWith('-filters')) {
             i = i.replace('-filters', '');
-        }
+        };
         list = list[path_array[i]];
-    }
+    };
 
     // Filters
-    if (path_array[i] == 'items' && i > 3 && path_array[i-2] == 'filters') {
+    if (path_array[i] == 'items' && i > 3 && path_array[i - 2] == 'filters') {
         return 1;
-    }
+    };
 
     // Default # of columns is 2
     if ((cols === undefined) || (cols === null)) {
         cols = 2;
-    }
+    };
 
     // Update the DOM
     hideAll();
@@ -166,102 +175,125 @@ function load_aws_config_from_json(script_id, cols) {
         // Double-column display
         process_template(script_id + '.list.template', 'double-column-left', list);
         process_template(script_id + '.details.template', 'double-column-right', list);
-    }
+    };
 
     // Update the list of loaded data
     loaded_config_array.push(script_id);
     return 1;
-}
+};
 
 
-//
-// Compile Handlebars templates and update the DOM
-//
+/**
+ * Compile Handlebars templates and update the DOM
+ * @param id1
+ * @param container_id
+ * @param list
+ */
 function process_template(id1, container_id, list) {
     id1 = id1.replace(/<|>/g, '');
     var template_to_compile = document.getElementById(id1).innerHTML;
     var compiled_template = Handlebars.compile(template_to_compile);
     var inner_html = compiled_template({items: list});
     document.getElementById(container_id).innerHTML += inner_html;
-}
+};
 
-
-//
-// Hide all lists and details 
-//
+/**
+ * Hide all lists and details
+ */
 function hideAll() {
     $("[id*='.list']").not("[id*='metadata.list']").not("[id='regions.list']").not("[id*='filters.list']").hide();
     $("[id*='.details']").hide();
     var element = document.getElementById('scout2_display_account_id_on_all_pages');
     if ((element != undefined) && (element.checked == true)) {
         showRow('aws_account_id');
-    }
+    };
     current_resource_path = ''
-}
+};
 
 
-//
-// Show list and details' container for a given path
-//
+/**
+ * Show list and details' container for a given path
+ * @param path
+ */
 function showRow(path) {
     path = path.replace(/.id./g, '\.[^.]+\.');
-    $('div').filter(function(){ return this.id.match(path + '.list') }).show();
-    $('div').filter(function(){ return this.id.match(path + '.details') }).show();
-}
+    $('div').filter(function () {
+        return this.id.match(path + '.list')
+    }).show();
+    $('div').filter(function () {
+        return this.id.match(path + '.details')
+    }).show();
+};
 
 
-//
-// Hide list and details' containers for a given path
-//
+/**
+ * Hide list and details' containers for a given path
+ * @param path
+ */
 function hideRow(path) {
     path = path.replace(/.id./g, '\.[^.]+\.');
-    $('div').filter(function(){ return this.id.match(path + '.list') }).hide();
-    $('div').filter(function(){ return this.id.match(path + '.details') }).hide();
-}
+    $('div').filter(function () {
+        return this.id.match(path + '.list')
+    }).hide();
+    $('div').filter(function () {
+        return this.id.match(path + '.details')
+    }).hide();
+};
 
 function hideRegion(path) {
     $("[id='" + path + "']").hide();
     path = path.replace('.list', '');
     hideItems(path);
-}
+};
 
-
-//
-// Show links and views for a given path
-//
+/**
+ * Show links and views for a given path
+ * @param path
+ */
 function showItems(path) {
     path = path.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.';
-    $('div').filter(function(){ return this.id.match(path + 'link') }).show();
-    $('div').filter(function(){ return this.id.match(path + 'view') }).show();
-}
+    $('div').filter(function () {
+        return this.id.match(path + 'link')
+    }).show();
+    $('div').filter(function () {
+        return this.id.match(path + 'view')
+    }).show();
+};
 
 
-//
-// Hide resource views for a given path
-//
+/**
+ * Hide resource views for a given path
+ * @param resource_path
+ */
 function hideItems(resource_path) {
     path = resource_path.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.view';
-    $('div').filter(function(){ return this.id.match(path) }).hide();
-}
+    $('div').filter(function () {
+        return this.id.match(path)
+    }).hide();
+};
 
 
-//
-// Hide resource links for a given path
-//
+/**
+ * Hide resource links for a given path
+ * @param resource_path
+ */
 function hideLinks(resource_path) {
     // TODO: Handle Region and VPC hiding...
     path = resource_path.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.link';
-    $('div').filter(function(){ return this.id.match(path) }).hide();
-}
+    $('div').filter(function () {
+        return this.id.match(path)
+    }).hide();
+};
 
 
-//
-// Show list, details' container, links, and view for a given path
-//
+/**
+ * Show list, details' container, links, and view for a given path
+ * @param path
+ */
 function showRowWithItems(path) {
     showRow(path);
     showItems(path);
-}
+};
 
 
 function showFilters(resource_path) {
@@ -272,21 +304,23 @@ function showFilters(resource_path) {
     $('[id="' + resource_path + '.id.filters"]').show();
     // show region filters
     $('[id*="regionfilters.' + service + '.regions"]').show();
-}
+};
 
 function hideFilters() {
     $('[id*=".id.filters"]').hide();
     $('[id*="regionfilters"]').hide();
     // Reset dashboard filters
     $(".dashboard-filter").val("");
-    $(".finding_items").filter(function() {
+    $(".finding_items").filter(function () {
         $(this).show()
     });
-}
+};
 
-//
-// Show findings
-//
+/**
+ * Show findings
+ * @param path
+ * @param resource_path
+ */
 function showFindings(path, resource_path) {
     items = get_value_at(path);
     level = get_value_at(path.replace('items', 'level'));
@@ -302,64 +336,53 @@ function showFindings(path, resource_path) {
             $('[id="' + items[item] + '"]').addClass('finding-title-' + level);
         } else {
             $('[id="' + items[item] + '"]').addClass('finding-' + level);
-        }
+        };
         $('[id="' + items[item] + '"]').removeClass('finding-hidden');
-        $('[id="' + items[item] +'"]').attr('data-finding-service', finding_service);
-        $('[id="' + items[item] +'"]').attr('data-finding-key', finding_key);
-        $('[id="' + items[item] + '"]').click(function(e) {
+        $('[id="' + items[item] + '"]').attr('data-finding-service', finding_service);
+        $('[id="' + items[item] + '"]').attr('data-finding-key', finding_key);
+        $('[id="' + items[item] + '"]').click(function (e) {
             finding_id = e.target.id;
             if (!(finding_service in exceptions)) {
                 exceptions[finding_service] = new Object();
-            }
+            };
             if (!(finding_key in exceptions[finding_service])) {
                 exceptions[finding_service][finding_key] = new Array();
-            }
+            };
             is_exception = confirm('Mark this item as an exception ?');
             if (is_exception && (exceptions[finding_service][finding_key].indexOf(finding_id) == -1)) {
                 exceptions[finding_service][finding_key].push(finding_id);
-            }
+            };
         });
-    }
-}
+    };
+};
 
-
-//
-// Show a single item
-//
+/**
+ * Show a single item
+ * @param id
+ */
 function showSingleItem(id) {
     if (!id.endsWith('.view')) {
         id = id + '.view';
-    }
+    };
     $("[id='" + id + "']").show();
     id = id.replace('.view', '.link');
     $("[id='" + id + "']").show();
-}
-
-
-/*
-    prefix = keyword.split('_')[0];
-    $("[id*='" + keyword + "-list']").show();
-    $("[id*='" + keyword + "-details']").show();
-    $("[id*='" + keyword + "-filter']").show();
-    $("[id*='" + keyword + "-filtericon']").removeClass('glyphicon-check');
-    $("[id*='" + keyword + "-filtericon']").addClass('glyphicon-unchecked');
-    $("[id*='" + prefix + "_region-']").show();
-    $("[id*='" + prefix + "_region-filtericon']").removeClass('glyphicon-unchecked');
-    $("[id*='" + prefix + "_region-filtericon']").addClass('glyphicon-check');
-*/
-
+};
 
 function toggleDetails(keyword, item) {
     var id = '#' + keyword + '-' + item;
     $(id).toggle();
-}
+};
 
-// Update the navigation bar
+/**
+ * Update the navigation bar
+ * @param service
+ */
 function updateNavbar(service) {
     $('[id*="dropdown"]').removeClass('active-dropdown');
     $('#' + service + '_dropdown').addClass('active-dropdown');
     $('[id*="dropdown"]').show();
-}
+};
 
 function toggleVisibility(id) {
     id1 = '#' + id;
@@ -369,8 +392,9 @@ function toggleVisibility(id) {
         $(id2).html('<i class="glyphicon glyphicon-collapse-down"></i>');
     } else {
         $(id2).html('<i class="glyphicon glyphicon-expand"></i>');
-    }
-}
+    };
+};
+
 function iterateEC2ObjectsAndCall(data, entities, callback, callback_args) {
     if (entities.length > 0) {
         var entity = entities.shift();
@@ -380,10 +404,11 @@ function iterateEC2ObjectsAndCall(data, entities, callback, callback_args) {
                 iterateEC2ObjectsAndCall(data[entity][i], eval(JSON.stringify(entities)), callback, callback_args);
             } else {
                 callback(data[entity][i], callback_args);
-            }
-        }
-    }
-}
+            };
+        };
+    };
+};
+
 function findEC2Object(ec2_data, entities, id) {
     if (entities.length > 0) {
         var entity = entities.shift();
@@ -393,14 +418,15 @@ function findEC2Object(ec2_data, entities, id) {
                 var object = findEC2Object(ec2_data[entity][i], eval(JSON.stringify(entities)), id);
                 if (object) {
                     return object;
-                }
-            } else if(i == id) {
+                };
+            } else if (i == id) {
                 return ec2_data[entity][i];
-            }
-        }
-    }
+            };
+        };
+    };
     return '';
-}
+};
+
 function findEC2ObjectByAttr(ec2_data, entities, attributes) {
     if (entities.length > 0) {
         var entity = entities.shift();
@@ -410,139 +436,156 @@ function findEC2ObjectByAttr(ec2_data, entities, attributes) {
                 var object = findEC2ObjectByAttr(ec2_data[entity][i], eval(JSON.stringify(entities)), attributes);
                 if (object) {
                     return object;
-                }
+                };
             } else {
                 var found = true;
                 for (attr in attributes) {
                     // h4ck :: EC2 security groups in RDS are lowercased...
                     if (ec2_data[entity][i][attr].toLowerCase() != attributes[attr].toLowerCase()) {
                         found = false;
-                    }
-                }
+                    };
+                };
                 if (found) {
                     return ec2_data[entity][i];
-                }
-            }
-        }
-    }
+                };
+            };
+        };
+    };
     return '';
-}
+};
+
 function findEC2ObjectAttribute(ec2_info, path, id, attribute) {
     var entities = path.split('.');
     var object = findEC2Object(ec2_info, entities, id);
     if (object[attribute]) {
         return object[attribute];
-    }
+    };
     return '';
-}
+};
+
 function findAndShowEC2Object(path, id) {
     entities = path.split('.');
-    var object = findEC2Object(aws_info['services']['ec2'], entities, id);
+    var object = findEC2Object(run_results['services']['ec2'], entities, id);
     var etype = entities.pop();
     if (etype == 'instances') {
         $('#overlay-details').html(single_ec2_instance_template(object));
-    } else if(etype == 'security_groups') {
+    } else if (etype == 'security_groups') {
         $('#overlay-details').html(single_ec2_security_group_template(object));
     } else if (etype == 'vpcs') {
         $('#overlay-details').html(single_vpc_template(object));
     } else if (etype == 'network_acls') {
-        object['name']=id;
+        object['name'] = id;
         $('#overlay-details').html(single_vpc_network_acl_template(object));
-    }
+    };
     showPopup();
-}
+};
+
 function findAndShowEC2ObjectByAttr(path, attributes) {
     entities = path.split('.');
-    var object = findEC2ObjectByAttr(aws_info['services']['ec2'], entities, attributes);
+    var object = findEC2ObjectByAttr(run_results['services']['ec2'], entities, attributes);
     var etype = entities.pop();
     if (etype == 'security_groups') {
         $('#overlay-details').html(single_ec2_security_group_template(object));
-    }
+    };
     showPopup();
-}
+};
+
 function showEC2Instance2(data) {
     $('#overlay-details').html(single_ec2_instance_template(data));
     showPopup();
-}
+};
+
 function showEC2Instance(region, vpc, id) {
-    var data = aws_info['services']['ec2']['regions'][region]['vpcs'][vpc]['instances'][id];
+    var data = run_results['services']['ec2']['regions'][region]['vpcs'][vpc]['instances'][id];
     $('#overlay-details').html(single_ec2_instance_template(data));
     showPopup();
-}
+};
+
 function showEC2SecurityGroup(region, vpc, id) {
-    var data = aws_info['services']['ec2']['regions'][region]['vpcs'][vpc]['security_groups'][id];
+    var data = run_results['services']['ec2']['regions'][region]['vpcs'][vpc]['security_groups'][id];
     $('#overlay-details').html(single_ec2_security_group_template(data));
     showPopup();
-}
+};
+
 function showObject() {
     var path = arguments[0];
     var path_array = path.split('.');
     var path_length = path_array.length;
-    var data = aws_info;
+    var data = run_results;
     for (var i = 0; i < path_length; i++) {
         data = data[path_array[i]];
-    }
+    };
     // Filter if ...
     if (arguments.length > 1) {
         var attr_name = arguments[1];
         var attr_value = arguments[2];
-        for(resource in data) {
+        for (resource in data) {
             if (data[resource][attr_name] == attr_value) {
                 data = data[resource];
                 break;
-            }
-        }
-        var resource_type = path_array[1] + '_' + path_array[path_length-1];
+            };
+        };
+        var resource_type = path_array[1] + '_' + path_array[path_length - 1];
     } else {
-        var resource_type = path_array[1] + '_' + path_array[path_length-2];
-    }
-    resource = resource_type.substring(0,resource_type.length - 1).replace(/\.?ie$/, "y");
+        var resource_type = path_array[1] + '_' + path_array[path_length - 2];
+    };
+    resource = resource_type.substring(0, resource_type.length - 1).replace(/\.?ie$/, "y");
     template = 'single_' + resource + '_template';
     $('#overlay-details').html(window[template](data));
     showPopup();
-}
+};
+
 function showIAMManagedPolicy(policy_id) {
-    var data = aws_info['services']['iam']['policies'][policy_id];
+    var data = run_results['services']['iam']['policies'][policy_id];
     data['policy_id'] = policy_id;
     showIAMPolicy(data);
-}
+};
+
 function showIAMInlinePolicy(iam_entity_type, iam_entity_name, policy_id) {
-    var data = aws_info['services']['iam'][iam_entity_type][iam_entity_name]['inline_policies'][policy_id];
+    var data = run_results['services']['iam'][iam_entity_type][iam_entity_name]['inline_policies'][policy_id];
     data['policy_id'] = policy_id;
     showIAMPolicy(data);
-}
+};
+
 function showIAMPolicy(data) {
     $('#overlay-details').html(single_iam_policy_template(data));
     showPopup();
     var id = '#iam_policy_details-' + data['report_id'];
     $(id).toggle();
-}
+};
+
 function showS3Bucket(bucket_name) {
-    var data = aws_info['services']['s3']['buckets'][bucket_name];
+    var data = run_results['services']['s3']['buckets'][bucket_name];
     $('#overlay-details').html(single_s3_bucket_template(data));
     showPopup();
-}
+};
+
 function showS3Object(bucket_id, key_id) {
-    var data = aws_info['services']['s3']['buckets'][bucket_id]['keys'][key_id];
+    var data = run_results['services']['s3']['buckets'][bucket_id]['keys'][key_id];
     data['key_id'] = key_id;
     data['bucket_id'] = bucket_id;
     $('#overlay-details').html(single_s3_object_template(data));
     showPopup();
-}
+};
+
 function showPopup() {
     $("#overlay-background").show();
     $("#overlay-details").show();
-}
+};
+
 function hidePopup() {
     $("#overlay-background").hide();
     $("#overlay-details").hide();
-}
+};
 
 
-//
-// Set up dashboards and dropdown menus
-//
+/**
+ * Set up dashboards and dropdown menus
+ */
 function load_metadata() {
+
+    run_results = get_scoutsuite_results();
+
     load_aws_account_id();
     load_aws_config_from_json('last_run', 1);
     load_aws_config_from_json('metadata', 0);
@@ -550,19 +593,22 @@ function load_metadata() {
     load_aws_config_from_json('services.id.filters', 0); // service-specific filters
     load_aws_config_from_json('services.id.regions', 0); // region filters
     show_main_dashboard();
-    for (group in aws_info['metadata']) {
-      for (service in aws_info['metadata'][group]) {
-        if (service == 'summaries') {
-            continue;
-        }
-        for (section in aws_info['metadata'][group][service]) {
-            for (resource_type in aws_info['metadata'][group][service][section]) {
-                add_templates(group, service, section, resource_type, aws_info['metadata'][group][service][section][resource_type]['path'], aws_info['metadata'][group][service][section][resource_type]['cols']);
-            }
-        }
-      }
-    }
-}
+
+    for (group in run_results['metadata']) {
+        for (service in run_results['metadata'][group]) {
+            if (service == 'summaries') {
+                continue;
+            };
+            for (section in run_results['metadata'][group][service]) {
+                for (resource_type in run_results['metadata'][group][service][section]) {
+                    add_templates(group, service, section, resource_type,
+                        run_results['metadata'][group][service][section][resource_type]['path'],
+                        run_results['metadata'][group][service][section][resource_type]['cols']);
+                };
+            };
+        };
+    };
+};
 
 
 ////////////////////////
@@ -570,19 +616,19 @@ function load_metadata() {
 ////////////////////////
 
 
-//
-// Show About Scout Suite div
-//
+/**
+ * Show About Scout Suite div
+ */
 function about() {
     hideAll();
     showRow('about');
     $('#findings_download_button').hide();
     $('#section_title-h2').text('');
-}
+};
 
-//
-// Show main dashboard
-//
+/**
+ * Show main dashboard
+ */
 function show_main_dashboard() {
     hideAll();
     // Hide filters
@@ -593,12 +639,12 @@ function show_main_dashboard() {
     $('#section_title-h2').text('');
     // Remove URL hash
     history.pushState("", document.title, window.location.pathname + window.location.search);
-}
+};
 
-//
-// Remove everything from "#" in URL
-///
-function removeHash () {
+/**
+ * Remove everything from "#" in URL
+ */
+function removeHash() {
     var scrollV, scrollH, loc = window.location;
     if ("pushState" in history)
         history.pushState("", document.title, loc.pathname + loc.search);
@@ -611,88 +657,99 @@ function removeHash () {
         // Restore the scroll offset, should be flicker free
         document.body.scrollTop = scrollV;
         document.body.scrollLeft = scrollH;
-    }
-}
+    };
+};
 
 
-//
-// Show All Resources
-// 
+/**
+ * Show All Resources
+ * @param script_id
+ */
 function showAllResources(script_id) {
     var path_array = script_id.split('.');
     var selector = "[id^='" + path_array.shift() + "." + path_array.shift() + ".']"
     for (p in path_array) {
         $(selector).show();
         selector = selector + "[id*='." + path_array[p] + "']";
-    }
-}
+    };
+};
 
 
-//
-// Make title from resource path
-//
+/**
+ * Make title from resource path
+ * @param resource_path
+ * @returns {string};
+ */
 function makeTitle(resource_path) {
     resource_path = resource_path.replace('service_groups.', '');
     service = getService(resource_path);
     resource = resource_path.split('.').pop();
     resource = resource.replace(/_/g, ' ').replace('<', '').replace('>',
-    '').replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}).replace("Acl","ACL").replace("Findings", "Dashboard");
+        '').replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    }).replace("Acl", "ACL").replace("Findings", "Dashboard");
     return service + ' ' + resource;
-}
-   
+};
+
 function getService(resource_path) {
     if (resource_path.startsWith('services')) {
         service = resource_path.split('.')[1];
     } else {
         service = resource_path.split('.')[0];
-    }
+    };
     service = make_title(service);
 //    service = service.toUpperCase().replace('CLOUDTRAIL', 'CloudTrail').replace('REDSHIFT', 'RedShift').replace('ROUTE53', 'Route53');
     return service;
-}
+};
 
-//
-// Update title div's contents
-//
+/**
+ * Update title div's contents
+ * @param title
+ */
 function updateTitle(title) {
     $("#section_title-h2").text(title);
-}
+};
 
 
-//
-// Update the DOM
-//
+/**
+ * Update the DOM
+ */
 function locationHashChanged() {
-    if(location.hash) {
+    if (location.hash) {
         updateDOM(location.hash);
     } else {
         updateDOM('');
-    }
-}
+    };
+};
+
 window.onhashchange = locationHashChanged;
 
 
-//
-// Get value at given path
-//
+/**
+ * Get value at given path
+ * @param path
+ * @returns {*};
+ */
 function get_value_at(path) {
     path_array = path.split('.');
-    value = aws_info;
+    value = run_results;
     for (p in path_array) {
         try {
             value = value[path_array[p]];
-        } catch(err) {
+        } catch (err) {
             console.log(err);
-        }
-    }
+        };
+    };
     return value;
-}
+};
 
-//
-// Browsing
-//
+/**
+ * Browsing
+ * @type {string};
+ */
 var current_service_group = ''
 var current_resource_path = ''
+
 function updateDOM(anchor) {
 
     // Strip the # sign
@@ -712,7 +769,7 @@ function updateDOM(anchor) {
         id = '#groups\\.' + current_service_group + '\\.list';
         $(id).show();
         return;
-    }
+    };
 
     // FIXME this is not a very good implementation
     if (!path.endsWith('.findings') &&
@@ -725,6 +782,7 @@ function updateDOM(anchor) {
     } else {
         $('#findings_download_button').hide();
     };
+    ;
 
     // Update title
     if (path.endsWith('.items')) {
@@ -733,7 +791,7 @@ function updateDOM(anchor) {
     } else {
         title = makeTitle(resource_path);
         updateTitle(title);
-    }
+    };
 
     // Clear findings highlighting
     $('span').removeClass('finding-danger');
@@ -768,78 +826,85 @@ function updateDOM(anchor) {
             showRowWithItems(resource_path);
             showFilters(resource_path);
             current_resource_path = resource_path;
-        }
+        };
         // TODO: Highlight all findings...
-        
+
     } else {
         // The DOM was updated by the lazy loading function, save the current resource path
         showFilters(resource_path);
         current_resource_path = resource_path;
-    }
+    };
 
     // Scroll to the top
-    window.scrollTo(0,0);
-}
+    window.scrollTo(0, 0);
+};
 
 
-//
+/**
+ *
+ * @param path
+ * @returns {number};
+ */
 // TODO: merge into load_aws_config_from_json...
-//
 function lazy_loading(path) {
     var cols = 1;
     var resource_path_array = path.split('.')
     var service = resource_path_array[1];
     var resource_type = resource_path_array[resource_path_array.length - 1];
-    for (group in aws_info['metadata']) {
-        if (service in aws_info['metadata'][group]) {
+    for (group in run_results['metadata']) {
+        if (service in run_results['metadata'][group]) {
             if (service == 'summaries') {
                 continue;
-            }
-            if (resource_type in aws_info['metadata'][group][service]['resources']) {
-                var cols = aws_info['metadata'][group][service]['resources'][resource_type]['cols'];
-            }
+            };
+            if (resource_type in run_results['metadata'][group][service]['resources']) {
+                var cols = run_results['metadata'][group][service]['resources'][resource_type]['cols'];
+            };
             break
-        }
-    }
+        };
+    };
     return load_aws_config_from_json(path, cols);
-}
+};
 
 
-//
-// Get the resource path based on a given path
-//
+/**
+ * Get the resource path based on a given path
+ * @param path
+ * @returns {*|string};
+ */
 function get_resource_path(path) {
     var path_array = path.split('.');
     if (path.endsWith('.items')) {
         var resource_path = get_value_at(path.replace('items', 'display_path'));
         if (resource_path == undefined) {
             resource_path = get_value_at(path.replace('items', 'path'));
-        }
+        };
         resource_path_array = resource_path.split('.');
         last_value = resource_path_array.pop();
         resource_path = 'services.' + resource_path_array.join('.');
         // Fix for issue #79
         if (last_value == '<root_account>') {
             resource_path += '.' + last_value;
-        }
+        };
     } else if (path.endsWith('.view')) {
         // Resource path is not changed (this may break when using `back' button in browser)
         var resource_path = current_resource_path;
     } else {
         var resource_path = path; // path_array[path_array.length-1];
-    }
+    };
     return resource_path;
-}
+};
 
 
-//
-// Format title
-//
-var make_title = function(title) {
+/**
+ * Format title
+ * @param title
+ * @returns {string};
+ */
+var make_title = function (title) {
     if (typeof(title) != "string") {
         console.log("Error: received title " + title + " (string expected).");
         return title.toString();
-    }
+    };
     title = title.toLowerCase();
     if (['ec2', 'efs', 'iam', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) != -1) {
         return title.toUpperCase();
@@ -874,25 +939,39 @@ var make_title = function(title) {
 
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
-    }
-}
+    };
+};
 
-// Add one or
-var add_templates = function(group, service, section, resource_type, path, cols) {
+/**
+ * Add one or
+ * @param group
+ * @param service
+ * @param section
+ * @param resource_type
+ * @param path
+ * @param cols
+ */
+var add_templates = function (group, service, section, resource_type, path, cols) {
     if (cols == undefined) {
         cols = 2;
-    }
+    };
     add_template(group, service, section, resource_type, path, 'details');
     if (cols > 1) {
         add_template(group, service, section, resource_type, path, 'list');
-    }
-}
+    };
+};
 
 
-//
-// Add resource templates
-//
-var add_template = function(group, service, section, resource_type, path, suffix) {
+/**
+ * Add resource templates
+ * @param group
+ * @param service
+ * @param section
+ * @param resource_type
+ * @param path
+ * @param suffix
+ */
+var add_template = function (group, service, section, resource_type, path, suffix) {
     var template = document.createElement("script");
     template.type = "text/x-handlebars-template";
     template.id = path + "." + suffix + ".template";
@@ -904,7 +983,7 @@ var add_template = function(group, service, section, resource_type, path, suffix
                 partial_name = 'left_menu_for_region';
             } else {
                 partial_name = 'left_menu';
-            }
+            };
         } else if (suffix == 'details') {
             if (path.indexOf('.vpcs.id.') > 0) {
                 partial_name = 'details_for_vpc';
@@ -912,82 +991,85 @@ var add_template = function(group, service, section, resource_type, path, suffix
                 partial_name = 'details_for_region';
             } else {
                 partial_name = 'details';
-            }
+            };
         } else {
             console.log('Invalid suffix (' + suffix + ') for resources template.');
-        }
-        template.innerHTML = "{{> " + partial_name + " service_group = '" + group  + "' service_name = '" + service + "' resource_type = '" + resource_type + "' partial_name = '" + path + "'}}";
+        };
+        template.innerHTML = "{{> " + partial_name + " service_group = '" + group + "' service_name = '" + service + "' resource_type = '" + resource_type + "' partial_name = '" + path + "'}}";
         $('body').append(template);
-    }
-}
+    };
+};
 
-var add_summary_template = function(path) {
+var add_summary_template = function (path) {
     var template = document.createElement("script");
     template.type = "text/x-handlebars-template";
     template.id = path + ".details.template";
     template.innerHTML = "{{> " + partial_name + " service_name = '" + service + "' resource_type = '" + resource_type + "' partial_name = '" + path + "'}}";
     $('body').append(template);
-}
+};
 
-// Rules generator
-var filter_rules = function(group, service) {
+/**
+ * Rules generator
+ * @param group
+ * @param service
+ */
+var filter_rules = function (group, service) {
     if (service == undefined) {
         $("[id*='rule-']").show();
     } else {
         $("[id*='rule-']").not("[id*='rule-" + service + "']").hide();
         $("[id*='rule-" + service + "']").show();
-    }
+    };
     var id = "groups." + group + ".list";
     $("[id='" + id + "']").hide();
-}
+};
 
-var download_configuration = function(configuration, name, prefix) {
+var download_configuration = function (configuration, name, prefix) {
 
     var uriContent = "data:text/json;charset=utf-8," + encodeURIComponent(prefix + JSON.stringify(configuration, null, 4));
     var dlAnchorElem = document.getElementById('downloadAnchorElem');
     dlAnchorElem.setAttribute("href", uriContent);
     dlAnchorElem.setAttribute("download", name + '.json');
     dlAnchorElem.click();
-}
+};
 
-var download_exceptions = function() {
+var download_exceptions = function () {
     var url = window.location.pathname;
-    var profile_name = url.substring(url.lastIndexOf('/')+1).replace('report-', '').replace('.html', '');
+    var profile_name = url.substring(url.lastIndexOf('/') + 1).replace('report-', '').replace('.html', '');
     console.log(exceptions);
     download_configuration(exceptions, 'exceptions-' + profile_name, 'exceptions = \n');
-}
+};
 
-var show_element = function(element_id) {
-//    document.getElementById(element_id).style.display = 'block';
+var show_element = function (element_id) {
     $('#' + element_id).show();
-}
+};
 
-var hide_element = function(element_id) {
-//    var id = '#' + element_id;
+var hide_element = function (element_id) {
     $('#' + element_id).hide();
-//    document.getElementById(element_id).style.display = 'none';
-}
+};
 
-var toggle_element = function(element_id) {
-//    var id = '#' + element_id;
-//    $(id).toggle();
+var toggle_element = function (element_id) {
     $('#' + element_id).toggle();
-}
+};
 
-var set_filter_url = function(region) {
+var set_filter_url = function (region) {
     tmp = location.hash.split('.');
     tmp[3] = region;
     location.hash = tmp.join('.');
-}
+};
 
-// returns a csv file to download
-// example input:
-//     exportToCsv('export.csv', [
-//         ['name','description'],
-//         ['david','123'],
-//         ['jona','""'],
-//         ['a','b'],
-//     ])
+/**
+ * Returns a csv file to download
+ *   example input:
+ *   exportToCsv('export.csv', [
+ *   ['name','description'],
+ *   ['david','123'],
+ *   ['jona','""'],
+ *   ['a','b'],
+ *   ])
+ * @param filename
+ * @param rows
+ */
 function download_as_csv(filename, rows) {
     var processRow = function (row) {
         var finalVal = '';
@@ -996,22 +1078,23 @@ function download_as_csv(filename, rows) {
             if (row[j] instanceof Date) {
                 innerValue = row[j].toLocaleString();
             };
+            ;
             var result = innerValue.replace(/"/g, '""');
             if (result.search(/("|,|\n)/g) >= 0)
                 result = '"' + result + '"';
             if (j > 0)
                 finalVal += ',';
             finalVal += result;
-        }
+        };
         return finalVal + '\n';
     };
 
     var csvFile = '';
     for (var i = 0; i < rows.length; i++) {
         csvFile += processRow(rows[i]);
-    }
+    };
 
-    var blob = new Blob([csvFile], { type: 'text/csv;charset=utf-8;' });
+    var blob = new Blob([csvFile], {type: 'text/csv;charset=utf-8;'});
     if (navigator.msSaveBlob) { // IE 10+
         navigator.msSaveBlob(blob, filename);
     } else {
@@ -1025,15 +1108,15 @@ function download_as_csv(filename, rows) {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-        }
-    }
-}
+        };
+    };
+};
 
 function download_as_json(filename, dict) {
 
     var json_str = JSON.stringify(dict);
 
-    var blob = new Blob([json_str], { type: 'application/json;' });
+    var blob = new Blob([json_str], {type: 'application/json;'});
     if (navigator.msSaveBlob) { // IE 10+
         navigator.msSaveBlob(blob, filename);
     } else {
@@ -1047,6 +1130,6 @@ function download_as_json(filename, dict) {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-        }
-    }
+        };
+    };
 }

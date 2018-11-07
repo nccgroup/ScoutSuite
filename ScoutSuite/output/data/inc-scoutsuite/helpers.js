@@ -82,12 +82,12 @@ Handlebars.registerHelper('s3_grant_2_icon', function(value) {
 
 Handlebars.registerHelper('good_bad_icon', function(finding, bucket_id, key_id, suffix) {
     var key_path = 's3.buckets.' + bucket_id + '.keys.' + key_id + '.' + suffix;
-    var index = aws_info['services']['s3']['findings'][finding]['items'].indexOf(key_path);
-    var level = aws_info['services']['s3']['findings'][finding]['level'];
+    var index = run_results['services']['s3']['findings'][finding]['items'].indexOf(key_path);
+    var level = run_results['services']['s3']['findings'][finding]['level'];
     if (index > -1) {
         return '<i class="glyphicon glyphicon-remove finding-' + level +'"></i>';
     } else {
-        var key_details = aws_info['services']['s3']['buckets'][bucket_id]['keys'][key_id];
+        var key_details = run_results['services']['s3']['buckets'][bucket_id]['keys'][key_id];
         if ((finding == 's3-object-acls-mismatch-bucket') && ('grantees' in key_details)) {
             return '<i class="glyphicon glyphicon-ok finding-good"></i>';
         } else if ((finding == 's3-object-unencrypted') && ('ServerSideEncryption' in key_details)) {
@@ -109,9 +109,9 @@ Handlebars.registerHelper('finding_entity', function(prefix, entity) {
 Handlebars.registerHelper('count_in', function(service, path) {
     var entities = path.split('.');
     if (service == 'ec2') {
-        var input = aws_info['services']['ec2'];
+        var input = run_results['services']['ec2'];
     } else if(service == 'cloudtrail') {
-        var input = aws_info['services']['cloudtrail'];
+        var input = run_results['services']['cloudtrail'];
     } else {
         return 0;
     }
@@ -123,23 +123,23 @@ Handlebars.registerHelper('count_in_new', function(path) {
     console.log('Counting ' + path);
     /*
     if (service == 'ec2') {
-        var input = aws_info['services']['ec2'];
+        var input = run_results['services']['ec2'];
     } else if(service == 'cloudtrail') {
-        var input = aws_info['services']['cloudtrail'];
+        var input = run_results['services']['cloudtrail'];
     } else {
         return 0;
     }
     */
-    return recursive_count(aws_info, entities);
+    return recursive_count(run_results, entities);
 });
 
 Handlebars.registerHelper('count_ec2_in_region', function(region, path) {
-    if (typeof aws_info['services']['ec2'] != 'undefined') {
+    if (typeof run_results['services']['ec2'] != 'undefined') {
         var count = 0;
         var entities = path.split('.');
-        for (r in aws_info['services']['ec2']['regions']) {
+        for (r in run_results['services']['ec2']['regions']) {
             if (r == region) {
-                return recursive_count(aws_info['services']['ec2']['regions'][r], entities);
+                return recursive_count(run_results['services']['ec2']['regions'][r], entities);
             }
         }
     } else {
@@ -190,7 +190,7 @@ var recursive_count = function(input, entities) {
 }
 
 Handlebars.registerHelper('find_ec2_object_attribute', function(path, id, attribute ) {
-    return findEC2ObjectAttribute(aws_info['services']['ec2'], path, id, attribute);
+    return findEC2ObjectAttribute(run_results['services']['ec2'], path, id, attribute);
 });
 
 Handlebars.registerHelper('format_date', function(timestamp) {
@@ -417,7 +417,7 @@ Handlebars.registerHelper('get_rule', function(rule_filename, attribute) {
     if (attribute == 'service') {
         return rule_filename.split('-')[0];
     } else {
-        rule = aws_info['rule_definitions'][rule_filename];
+        rule = run_results['rule_definitions'][rule_filename];
         // Clean up some ruleset generator artifacts
         attribute_cleanup = ['file_name', 'file_path', 'rule_dirs', 'rule_types', 'rules_data_path', 'string_definition'];
         for (ac in attribute_cleanup) {
@@ -439,8 +439,8 @@ var rule_cleanup = function(rule, attribute) {
 }
 
 Handlebars.registerHelper('get_arg_name', function(rule_filename, arg_index) {
-    if ('arg_names' in aws_info['rule_definitions'][rule_filename]) {
-        return  aws_info['rule_definitions'][rule_filename]['arg_names'][arg_index];
+    if ('arg_names' in run_results['rule_definitions'][rule_filename]) {
+        return  run_results['rule_definitions'][rule_filename]['arg_names'][arg_index];
     } else {
         console.log('Error, arg_names is not declared in ' + rule_filename);
         return '';
