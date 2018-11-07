@@ -122,6 +122,7 @@ class ComputeEngineConfig(GCPBaseConfig):
     def parse_networks(self, network, params):
         network_dict = {}
         network_dict['id'] = network['id']
+        network_dict['project_id'] = network['selfLink'].split('/')[-4]
         network_dict['name'] = network['name']
         network_dict['description'] = network['description'] if 'description' in network and network['description'] else 'N/A'
         network_dict['creation_timestamp'] = network['creationTimestamp']
@@ -134,6 +135,8 @@ class ComputeEngineConfig(GCPBaseConfig):
     def parse_subnetworks(self, subnetwork, params):
         subnetwork_dict = {}
         subnetwork_dict['id'] = subnetwork['id']
+        subnetwork_dict['project_id'] = subnetwork['selfLink'].split('/')[-5]
+        subnetwork_dict['region'] = subnetwork['region'].split('/')[-1]
         subnetwork_dict['region'] = subnetwork['region'].split('/')[-1]
         subnetwork_dict['name'] = "%s-%s" % (subnetwork['name'], subnetwork_dict['region'])
         subnetwork_dict['subnetwork'] = subnetwork['network'].split('/')[-1]
