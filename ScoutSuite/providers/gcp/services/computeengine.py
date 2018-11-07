@@ -95,6 +95,7 @@ class ComputeEngineConfig(GCPBaseConfig):
         instance_dict['service_accounts'] = instance['serviceAccounts']
         instance_dict['deletion_protection'] = 'Enabled' if instance['deletionProtection'] else 'Disabled'
 
+        # TODO this should be done in it's own getter method and merged with instances during postprocessing
         instance_dict['disks'] = {}
         if 'disks' in instance:
             for disk in instance['disks']:
