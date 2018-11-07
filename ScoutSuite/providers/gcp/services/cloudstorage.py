@@ -7,7 +7,7 @@ from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
 class CloudStorageConfig(GCPBaseConfig):
     targets = (
-        ('buckets', 'Buckets', 'list_buckets', {'project': 'project_placeholder'}, False),
+        ('buckets', 'Buckets', 'list_buckets', {'project': '{{project_placeholder}}'}, False),
     )
 
     def __init__(self, thread_config):

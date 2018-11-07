@@ -10,7 +10,7 @@ from ScoutSuite.providers.gcp.utils import gcp_connect_service
 
 class IAMConfig(GCPBaseConfig):
     targets = (
-        ('projects.serviceAccounts', 'Service Accounts', 'list', {'name': 'projects/project_placeholder'}, False),
+        ('projects.serviceAccounts', 'Service Accounts', 'list', {'name': 'projects/{{project_placeholder}}'}, False),
     )
 
     def __init__(self, thread_config):

@@ -7,6 +7,7 @@ except ImportError:
     from queue import Queue
 
 import json
+import re, itertools
 
 from googleapiclient.errors import HttpError
 from google.api_core.exceptions import PermissionDenied
@@ -71,52 +72,73 @@ class GCPBaseConfig(BaseConfig):
         error_list = [] # list of errors, so that we don't print the same error multiple times
 
         try:
-
             # FIXME this is temporary, will have to be moved to Config children objects
-            # get zones from a project that has CE API enabled
+            # get zones and regions from a project that has CE API enabled
             zones = None
+            regions = None
             for project in self.projects:
                 try:
+                    regions = self.get_regions(client=api_client, project=project['projectId'])
                     zones = self.get_zones(client=api_client, project=project['projectId'])
                 except HttpError as e:
                     pass
                 except Exception as e:
                     printException(e)
-                if zones:
+                if zones and regions:
                     break
-            # What this does is create a list with all combinations of possibilities for method parameters
+
+            # Create a list with all combinations for method parameters
             list_params_list = []
-            # only projects
-            if ('project_placeholder' in list_params.values() or 'projects/project_placeholder' in list_params.values())\
-                    and not 'zone_placeholder' in list_params.values():
-                for project in self.projects:
-                    list_params_list.append({key:
-                                                 project['projectId'] if list_params[key] == 'project_placeholder'
-                                                 else ('projects/%s' % project['projectId'] if list_params[key] == 'projects/project_placeholder'
-                                                       else list_params[key])
-                                             for key in list_params})
-            # only zones
-            elif not ('project_placeholder' in list_params.values() or 'projects/project_placeholder' in list_params.values())\
-                    and 'zone_placeholder' in list_params.values():
-                for zone in zones:
-                    list_params_list.append({key:
-                                                 zone if list_params[key] == 'zone_placeholder'
-                                                 else list_params[key]
-                                             for key in list_params})
-            # projects and zones
-            elif ('project_placeholder' in list_params.values() or 'projects/project_placeholder' in list_params.values())\
-                    and 'zone_placeholder' in list_params.values():
-                import itertools
-                for elem in list(itertools.product(*[self.projects, zones])):
-                    list_params_list.append({key:
-                                                 elem[0]['projectId'] if list_params[key] == 'project_placeholder'
-                                                 else ('projects/%s' % elem[0]['projectId'] if list_params[key] == 'projects/project_placeholder'
-                                                       else (elem[1] if list_params[key] == 'zone_placeholder'
-                                                             else list_params[key]))
-                                             for key in list_params})
-            # neither projects nor zones
-            else:
-                list_params_list.append(list_params)
+
+            # TODO remove this outdated code
+            # # only projects
+            # if ('project_placeholder' in list_params.values() or 'projects/project_placeholder' in list_params.values())\
+            #         and not 'zone_placeholder' in list_params.values():
+            #     for project in self.projects:
+            #         list_params_list.append({key:
+            #                                      project['projectId'] if list_params[key] == 'project_placeholder'
+            #                                      else ('projects/%s' % project['projectId'] if list_params[key] == 'projects/project_placeholder'
+            #                                            else list_params[key])
+            #                                  for key in list_params})
+            # # only zones
+            # elif not ('project_placeholder' in list_params.values() or 'projects/project_placeholder' in list_params.values())\
+            #         and 'zone_placeholder' in list_params.values():
+            #     for zone in zones:
+            #         list_params_list.append({key:
+            #                                      zone if list_params[key] == 'zone_placeholder'
+            #                                      else list_params[key]
+            #                                  for key in list_params})
+            # # projects and zones
+            # elif ('project_placeholder' in list_params.values() or 'projects/project_placeholder' in list_params.values())\
+            #         and 'zone_placeholder' in list_params.values():
+            #     for elem in list(itertools.product(*[self.projects, zones])):
+            #         list_params_list.append({key:
+            #                                      elem[0]['projectId'] if list_params[key] == 'project_placeholder'
+            #                                      else ('projects/%s' % elem[0]['projectId'] if list_params[key] == 'projects/project_placeholder'
+            #                                            else (elem[1] if list_params[key] == 'zone_placeholder'
+            #                                                  else list_params[key]))
+            #                                  for key in list_params})
+            # # neither projects nor zones
+            # else:
+            #     list_params_list.append(list_params)
+
+            # Dict for all the elements to combine
+            combination_elements = {'project_placeholder': [project['projectId'] for project in self.projects],
+                                    'zone_placeholder': zones,
+                                    'region_placeholder': regions}
+            # Get a list of {{}} terms
+            sources = re.findall("{{(.*?)}}", str(list_params.values()))
+            # Remove keys from combinations if they aren't in the sources
+            confirmed_combination_elements = {}
+            for source in sources:
+                confirmed_combination_elements[source] = combination_elements[source]
+            # Build a list of the possible combinations
+            combinations = self._dict_product(confirmed_combination_elements)
+            for combination in combinations:
+                l = list_params.copy()
+                for k, v in l.items():
+                    l[k] = combination[v.replace('{{', '').replace('}}', '')]
+                list_params_list.append(l)
 
             for list_params_combination in list_params_list:
 
@@ -175,3 +197,8 @@ class GCPBaseConfig(BaseConfig):
 
         finally:
             return targets
+
+    def _dict_product(self, d):
+        keys = d.keys()
+        for element in itertools.product(*d.values()):
+            yield dict(zip(keys, element))

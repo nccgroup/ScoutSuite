@@ -8,16 +8,17 @@ from opinel.utils.console import printException, printError
 
 class ComputeEngineConfig(GCPBaseConfig):
     targets = (
-        ('instances', 'Instances', 'list', {'project': 'project_placeholder', 'zone': 'zone_placeholder'}, False),
-        ('snapshots', 'Snapshots', 'list', {'project': 'project_placeholder'}, False),
-        ('networks', 'Networks', 'list', {'project': 'project_placeholder'}, False),
-        # ('subnetworks', 'Subnetworks', 'list', {'project': 'project_placeholder', 'region': 'region_placeholder'}, False),
-        ('firewalls', 'Firewalls', 'list', {'project': 'project_placeholder'}, False),
+        ('instances', 'Instances', 'list', {'project': '{{project_placeholder}}', 'zone': '{{zone_placeholder}}'}, False),
+        ('snapshots', 'Snapshots', 'list', {'project': '{{project_placeholder}}'}, False),
+        ('networks', 'Networks', 'list', {'project': '{{project_placeholder}}'}, False),
+        ('subnetworks', 'Subnetworks', 'list', {'project': '{{project_placeholder}}', 'region': '{{region_placeholder}}'}, False),
+        ('firewalls', 'Firewalls', 'list', {'project': '{{project_placeholder}}'}, False),
     )
 
     def __init__(self, thread_config):
         self.library_type = 'api_client_library'
         self.zones = None
+        self.regions = None
 
         self.instances = {}
         self.instances_count = 0
@@ -25,13 +26,44 @@ class ComputeEngineConfig(GCPBaseConfig):
         self.snapshots_count = 0
         self.networks = {}
         self.networks_count = 0
+        self.subnetworks = {}
+        self.subnetworks_count = 0
         self.firewalls = {}
         self.firewalls_count = 0
 
         # TODO figure out why GCP returns errors when running with more then 1 thread (multithreading)
         super(ComputeEngineConfig, self).__init__(thread_config=1)
 
+    def get_regions(self, client, project):
+        """
+        Returns a list of all the regions. Uses an attribute to store the list in order to only run once.
+        :param client:
+        :param project:
+        :return:
+        """
+        try:
+            if self.regions:
+                return self.regions
+            else:
+                regions_list = []
+                regions = client.regions().list(project=project).execute()['items']
+                for region in regions:
+                    regions_list.append(region['name'])
+                self.regions = regions_list
+                return regions_list
+        except HttpError as e:
+            raise e
+        except Exception as e:
+            printException(e)
+            return None
+
     def get_zones(self, client, project):
+        """
+        Returns a list of all the zones. Uses an attribute to store the list in order to only run once.
+        :param client:
+        :param project:
+        :return:
+        """
         try:
             if self.zones:
                 return self.zones
@@ -42,10 +74,8 @@ class ComputeEngineConfig(GCPBaseConfig):
                     zones_list.append(zone['name'])
                 self.zones = zones_list
                 return zones_list
-
         except HttpError as e:
             raise e
-
         except Exception as e:
             printException(e)
             return None
@@ -104,7 +134,14 @@ class ComputeEngineConfig(GCPBaseConfig):
     def parse_subnetworks(self, subnetwork, params):
         subnetwork_dict = {}
         subnetwork_dict['id'] = subnetwork['id']
-        self.networks[subnetwork_dict['id']] = subnetwork_dict
+        subnetwork_dict['region'] = subnetwork['region'].split('/')[-1]
+        subnetwork_dict['name'] = "%s-%s" % (subnetwork['name'], subnetwork_dict['region'])
+        subnetwork_dict['subnetwork'] = subnetwork['network'].split('/')[-1]
+        subnetwork_dict['gateway_address'] = subnetwork['gatewayAddress']
+        subnetwork_dict['ip_range'] = subnetwork['ipCidrRange']
+        subnetwork_dict['creation_timestamp'] = subnetwork['creationTimestamp']
+        subnetwork_dict['private_ip_google_access'] = subnetwork['privateIpGoogleAccess']
+        self.subnetworks[subnetwork_dict['id']] = subnetwork_dict
 
     def parse_firewalls(self, firewall, params):
         firewall_dict = {}

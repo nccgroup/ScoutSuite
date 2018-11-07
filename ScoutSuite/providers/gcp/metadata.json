@@ -35,6 +35,10 @@
         "networks": {
           "cols": 2,
           "path": "services.computeengine.networks"
+        },
+        "subnetworks": {
+          "cols": 2,
+          "path": "services.computeengine.subnetworks"
         }
       }
     }

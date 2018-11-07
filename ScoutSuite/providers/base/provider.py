@@ -166,7 +166,7 @@ class BaseProvider(object):
                     count = '%s_count' % resource
                     service_config = self.services[service]
                     if service_config and resource != 'regions':
-                        if 'regions' in service_config.keys():  # hasattr(service_config, 'regions'):
+                        if 'regions' in service_config.keys() and isinstance(service_config['regions'], dict):
                             self.metadata[service_group][service]['resources'][resource]['count'] = 0
                             for region in service_config['regions']:
                                 if count in service_config['regions'][region].keys():

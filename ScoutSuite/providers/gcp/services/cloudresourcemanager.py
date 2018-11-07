@@ -7,7 +7,7 @@ from opinel.utils.console import printError, printException, printInfo
 
 class CloudResourceManager(GCPBaseConfig):
     targets = (
-        ('projects', 'Bindings', 'getIamPolicy', {'resource': 'project_placeholder'}, False),
+        ('projects', 'Bindings', 'getIamPolicy', {'resource': '{{project_placeholder}}'}, False),
     )
 
     def __init__(self, thread_config):

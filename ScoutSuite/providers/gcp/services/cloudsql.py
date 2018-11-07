@@ -8,7 +8,7 @@ from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
 class CloudSQLConfig(GCPBaseConfig):
     targets = (
-        ('instances', 'Instances', 'list', {'project': 'project_placeholder'}, False),
+        ('instances', 'Instances', 'list', {'project': '{{project_placeholder}}'}, False),
     )
 
     def __init__(self, thread_config):
