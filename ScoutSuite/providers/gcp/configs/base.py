@@ -6,12 +6,12 @@ try:
 except ImportError:
     from queue import Queue
 
+import itertools
 import json
-import re, itertools
+import re
 
-from googleapiclient.errors import HttpError
 from google.api_core.exceptions import PermissionDenied
-
+from googleapiclient.errors import HttpError
 from opinel.utils.console import printException, printError
 
 from ScoutSuite.providers.base.configs.base import BaseConfig
@@ -31,10 +31,19 @@ class GCPBaseConfig(BaseConfig):
         else:
             return False
 
+    def get_regions(self, **kwargs):
+        """
+        Certain services require to be poled per-region.
+        In these cases, this method will return a list of regions to poll or None.
+
+        :return:
+        """
+        return None
+
     def get_zones(self, **kwargs):
         """
-        Certain services require to be poled per-zone. In these cases, this method will return a list of zones to poll
-        or None.
+        Certain services require to be poled per-zone.
+        In these cases, this method will return a list of zones to poll or None.
 
         :return:
         """
@@ -69,7 +78,7 @@ class GCPBaseConfig(BaseConfig):
         """
 
         targets = []
-        error_list = [] # list of errors, so that we don't print the same error multiple times
+        error_list = []  # list of errors, so that we don't print the same error multiple times
 
         try:
             # FIXME this is temporary, will have to be moved to Config children objects
@@ -137,7 +146,9 @@ class GCPBaseConfig(BaseConfig):
             for combination in combinations:
                 l = list_params.copy()
                 for k, v in l.items():
-                    l[k] = combination[v.replace('{{', '').replace('}}', '')]
+                    # l[k] = combination[v.replace('{{', '').replace('}}', '')]
+                    k2 = re.findall("{{(.*?)}}", v)[0]
+                    l[k] = l[k].replace('{{%s}}' % k2, combination[k2])
                 list_params_list.append(l)
 
             for list_params_combination in list_params_list:
@@ -181,7 +192,8 @@ class GCPBaseConfig(BaseConfig):
                         printError(error_json['error']['message'])
 
                 except PermissionDenied as e:
-                    printError("%s: %s - %s for project %s" % (e.message, self.service, self.targets, project['projectId']))
+                    printError(
+                        "%s: %s - %s for project %s" % (e.message, self.service, self.targets, project['projectId']))
 
                 except Exception as e:
                     printException(e)

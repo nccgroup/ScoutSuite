@@ -19,9 +19,9 @@ class CloudResourceManager(GCPBaseConfig):
 
         super(CloudResourceManager, self).__init__(thread_config)
 
-    # this is a misnammer, as the method returns IAM policies.
+    # this is a misnamer, as the method returns IAM policies.
     # In addition, the 'project' method already exists for the BaseConfig object which creates a conflict.
-    # TODO solve this is fhe Cloud Resource Manager needs to be used to get multiple things
+    # TODO solve this if the Cloud Resource Manager needs to be used to get multiple things
     def parse_projects(self, binding, params):
         """
         """
