@@ -161,7 +161,7 @@ Using a computer already configured to use gcloud command-line tool, you may use
     
 To run Scout using Service Account keys, using the following command:
 
-    $ python Scout. --provider gcp --service-account --key-file </PATH/TO/KEY_FILE.JSON>
+    $ python Scout.py --provider gcp --service-account --key-file </PATH/TO/KEY_FILE.JSON>
     
 To scan a GCP:
 - Organization, use the `organization-id <ORGANIZATION ID>` argument
