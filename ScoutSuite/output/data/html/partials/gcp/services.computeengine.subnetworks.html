@@ -1,0 +1,30 @@
+
+<!-- Compute Engine subnetworks partial -->
+<script id="services.computeengine.subnetworks.partial" type="text/x-handlebars-template">
+    <div class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">ID: <span id="computeengine.subnetworks.{{@key}}.id">{{id}}</span></div>
+        <div class="list-group-item-text item-margin">Name: <span id="computeengine.subnetworks.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Subnetwork: <span id="computeengine.subnetworks.{{@key}}.subnetwork">{{subnetwork}}</span></div>
+        <div class="list-group-item-text item-margin">Region: <span id="computeengine.subnetworks.{{@key}}.region">{{region}}</span></div>
+        <div class="list-group-item-text item-margin">Gateway Address: <span id="computeengine.subnetworks.{{@key}}.gateway_address">{{gateway_address}}</span></div>
+        <div class="list-group-item-text item-margin">IP Range: <span id="computeengine.subnetworks.{{@key}}.ip_range">{{ip_range}}</span></div>
+        <div class="list-group-item-text item-margin">Creation Date: <span id="computeengine.subnetworks.{{@key}}.creation_timestamp">{{creation_timestamp}}</span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.computeengine.subnetworks", $("#services\\.computeengine\\.subnetworks\\.partial").html());
+</script>
+
+<!-- Single computeengine subnetwork template -->
+<script id="single_computeengine_subnetwork-template" type="text/x-handlebars-template">
+    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+    {{> services.computeengine.subnetworks}}
+</script>
+<script>
+    var single_computeengine_subnetwork_template = Handlebars.compile($("#single_computeengine_subnetwork-template").html());
+</script>
