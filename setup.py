@@ -19,7 +19,7 @@ with open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'requirement
 setup(
     name=NAME,
     version=VERSION,
-    description='Scout Suite, a multi-cloud configuration review tool',
+    description='Scout Suite, a multi-cloud security auditing tool',
     long_description_content_type='text/markdown',
     long_description=open('README.md').read(),
     author='NCC Group',
