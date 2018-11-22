@@ -18,9 +18,7 @@ console output using the `--debug` argument), request a new feature, or send a p
 **Note:**
 
 The latest (and final) version of Scout2 can be found in <https://github.com/nccgroup/Scout2/releases> and
-<https://pypi.org/project/AWSScout2>.
-
-Further work is not planned for Scout2. Fixes for the issues currently opened will be implemented in Scout Suite.
+<https://pypi.org/project/AWSScout2>. Further work is not planned for Scout2. Fixes will be implemented in Scout Suite.
 
 ### Support
 
