@@ -6,7 +6,7 @@
 
 ## Description
 
-Scout Suite is a multi-cloud security auditing tool, which enables assessing the security posture of cloud
+Scout Suite is a multi-cloud security auditing tool/, which enables assessing the security posture of cloud
 environments. Using the APIs exposed by cloud providers, Scout gathers configuration data for manual inspection and 
 highlights risk areas. Rather than pouring through dozens of pages on the web consoles, Scout provides a clear view of 
 the attack surface automatically.
@@ -51,7 +51,7 @@ Install from source:
 
 Scout Suite is a multi-threaded tool that fetches and stores your cloud account's configuration settings in memory 
 during runtime. It is expected that the tool will run with no issues on any modern laptop or equivalent VM. **Note** 
-that running Scout Suite in a VM with limited computing resources such as an AWS t2.micro instance is not intended 
+that running Scout Suite in a VM with limited computing resources such as an AWS t2.micro instance is not intended and 
 may result in the process being killed.
 
 ### Python
