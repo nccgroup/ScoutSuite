@@ -4,6 +4,7 @@ EC2-related classes and functions
 """
 
 # TODO: move a lot of this to VPCconfig, and use some sort of filter to only list SGs in EC2 classic
+import netaddr
 
 from opinel.utils.aws import get_name
 from opinel.utils.console import printException, printInfo

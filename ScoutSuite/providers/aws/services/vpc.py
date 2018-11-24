@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import netaddr
+import copy
 
 from opinel.utils.aws import get_name
 from opinel.utils.globals import manage_dictionary
