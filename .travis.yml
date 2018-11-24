@@ -1,5 +1,8 @@
 language: python
 
+# use container-base infrastructure
+sudo: false
+
 python:
   - "2.7"
   - "3.4"
@@ -7,12 +10,22 @@ python:
   - "3.6"
   - "3.7"
 
-dist: xenial
+matrix:
+  include:
+    - python: "3.7"
+      dist: xenial    # required for Python 3.7 (travis-ci/travis-ci#9069)
+      sudo: required  # required for Python 3.7 (travis-ci/travis-ci#9069)
 
-before_script:
+install:
   - pip install -U setuptools
   - pip install -r requirements.txt
-  - pip install coveralls
+  - pip install coveralls flake8
+
+before_script:
+  # stop the build if there are Python syntax errors or undefined names
+  - flake8 . --count --select=E901,E999,F821,F822,F823 --show-source --statistics
+  # exit-zero treats all errors as warnings.  The GitHub editor is 127 chars wide
+  - flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
 # command to run tests
 script:
@@ -25,8 +38,6 @@ script:
     - nosetests --with-coverage tests/test-rules-processingengine.py
     - nosetests --with-coverage --nocapture tests/test-scoutsuite.py
 
-# use container-base infrastructure
-sudo: required
 
 # Update test coverage -- only when run locally
 #after_success:
