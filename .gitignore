@@ -2,6 +2,7 @@
 env/
 venv/
 
+# Compiled files
 *.py[cod]
 
 # C extensions
