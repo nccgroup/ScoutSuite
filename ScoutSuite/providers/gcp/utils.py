@@ -5,6 +5,7 @@ from opinel.utils.console import printException
 from google.cloud import storage
 from google.cloud import logging as stackdriver_logging
 from google.cloud import monitoring_v3
+from google.cloud import container_v1
 
 from googleapiclient import discovery
 
@@ -39,6 +40,9 @@ def gcp_connect_service(service, credentials=None, region_name=None):
 
         elif service == 'computeengine':
             return discovery.build('compute', 'v1', cache_discovery=False, cache=MemoryCache())
+
+        elif service == 'kubernetesengine':
+            return container_v1.ClusterManagerClient()
 
         else:
             printException('Service %s not supported' % service)
