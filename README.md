@@ -6,7 +6,7 @@
 
 ## Description
 
-Scout Suite is a multi-cloud security auditing tool/, which enables assessing the security posture of cloud
+Scout Suite is a multi-cloud security auditing tool, which enables assessing the security posture of cloud
 environments. Using the APIs exposed by cloud providers, Scout gathers configuration data for manual inspection and 
 highlights risk areas. Rather than pouring through dozens of pages on the web consoles, Scout provides a clear view of 
 the attack surface automatically.
