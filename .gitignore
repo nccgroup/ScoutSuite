@@ -59,3 +59,9 @@ report-*
 
 # Emacs backups
 *~
+
+# Private files
+*.private.*
+# Private folders
+/private*/
+/**/private*/
