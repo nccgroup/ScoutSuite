@@ -21,10 +21,10 @@ class GCPBaseConfig(BaseConfig):
 
     def __init__(self, thread_config=4, projects=[], **kwargs):
 
+        self.projects = projects
+
         self.zones = None
         self.regions = None
-
-        self.projects = projects
 
         super(GCPBaseConfig, self).__init__(thread_config)
 
@@ -37,56 +37,58 @@ class GCPBaseConfig(BaseConfig):
     def get_regions(self, **kwargs):
         """
         Certain services require to be poled per-region.
-        In these cases, this method will return a list of regions to poll or None.
+        In these cases, this method will return a list of regions to poll.
 
         :return:
         """
 
-        compute_engine_client = gcp_connect_service(service='computeengine')
+        computeengine_client = gcp_connect_service(service='computeengine')
 
-        try:
+        if not self.regions:
             # get regions from a project that has CE API enabled
-            self.regions = None
             for project in self.projects:
                 try:
-                    self.regions = compute_engine_client.get_regions(client=kwargs['api_client'], project=project['projectId'])
+                    regions_list = []
+                    regions = computeengine_client.regions().list(project=project['projectId']).execute()['items']
+                    for region in regions:
+                        regions_list.append(region['name'])
+                    self.regions = regions_list
                 except HttpError as e:
                     pass
                 except Exception as e:
                     printException(e)
                 if self.regions:
                     break
-        except Exception as e:
-            printException(e)
 
-        return None
+        return self.regions
 
     def get_zones(self, **kwargs):
         """
         Certain services require to be poled per-zone.
-        In these cases, this method will return a list of zones to poll or None.
+        In these cases, this method will return a list of zones to poll.
 
         :return:
         """
 
-        compute_engine_client = gcp_connect_service(service='computeengine')
+        computeengine_client = gcp_connect_service(service='computeengine')
 
-        try:
+        if not self.zones:
             # get zones from a project that has CE API enabled
-            self.zones = None
             for project in self.projects:
                 try:
-                    self.zones = compute_engine_client.get_zones(client=kwargs['api_client'], project=project['projectId'])
+                    zones_list = []
+                    zones = computeengine_client.zones().list(project=project['projectId']).execute()['items']
+                    for zone in zones:
+                        zones_list.append(zone['name'])
+                    self.zones = zones_list
                 except HttpError as e:
                     pass
                 except Exception as e:
                     printException(e)
                 if self.zones:
                     break
-        except Exception as e:
-            printException(e)
 
-        return None
+        return self.zones
 
     def _get_method(self, api_client, target_type, list_method_name):
         """
@@ -121,13 +123,17 @@ class GCPBaseConfig(BaseConfig):
 
         try:
 
+            regions = self.get_regions()
+            zones = self.get_zones()
+
             # Create a list with all combinations for method parameters
             list_params_list = []
 
             # Dict for all the elements to combine
             combination_elements = {'project_placeholder': [project['projectId'] for project in self.projects],
-                                    'zone_placeholder': self.zones,
-                                    'region_placeholder': self.regions}
+                                    'region_placeholder': regions,
+                                    'zone_placeholder': zones}
+
             # Get a list of {{}} terms
             sources = re.findall("{{(.*?)}}", str(list_params.values()))
             # Remove keys from combinations if they aren't in the sources
@@ -185,8 +191,7 @@ class GCPBaseConfig(BaseConfig):
                         printError(error_json['error']['message'])
 
                 except PermissionDenied as e:
-                    printError(
-                        "%s: %s - %s for project %s" % (e.message, self.service, self.targets, project['projectId']))
+                    printError("%s: %s - %s" % (e.message, self.service, self.targets))
 
                 except Exception as e:
                     printException(e)
@@ -204,6 +209,9 @@ class GCPBaseConfig(BaseConfig):
             return targets
 
     def _dict_product(self, d):
-        keys = d.keys()
-        for element in itertools.product(*d.values()):
-            yield dict(zip(keys, element))
+        try:
+            keys = d.keys()
+            for element in itertools.product(*d.values()):
+                yield dict(zip(keys, element))
+        except Exception as e:
+            a = 1
