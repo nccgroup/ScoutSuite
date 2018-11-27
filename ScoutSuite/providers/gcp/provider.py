@@ -11,8 +11,6 @@ from ScoutSuite.providers.gcp.configs.services import GCPServicesConfig
 from ScoutSuite.providers.gcp.utils import gcp_connect_service
 
 
-
-
 class GCPCredentials():
 
     def __init__(self, api_client_credentials, cloud_client_credentials):
@@ -108,7 +106,7 @@ class GCPProvider(BaseProvider):
     def preprocessing(self, ip_ranges=[], ip_ranges_name_key=None):
         """
         TODO description
-        Tweak the AWS config to match cross- resources and clean any fetching artifacts
+        Tweak the AWS config to match cross-resources and clean any fetching artifacts
 
         :param ip_ranges:
         :param ip_ranges_name_key:
