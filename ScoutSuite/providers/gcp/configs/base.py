@@ -15,11 +15,14 @@ from googleapiclient.errors import HttpError
 from opinel.utils.console import printException, printError
 
 from ScoutSuite.providers.base.configs.base import BaseConfig
-
+from ScoutSuite.providers.gcp.utils import gcp_connect_service
 
 class GCPBaseConfig(BaseConfig):
 
     def __init__(self, thread_config=4, projects=[], **kwargs):
+
+        self.zones = None
+        self.regions = None
 
         self.projects = projects
 
@@ -38,6 +41,24 @@ class GCPBaseConfig(BaseConfig):
 
         :return:
         """
+
+        compute_engine_client = gcp_connect_service(service='computeengine')
+
+        try:
+            # get regions from a project that has CE API enabled
+            self.regions = None
+            for project in self.projects:
+                try:
+                    self.regions = compute_engine_client.get_regions(client=kwargs['api_client'], project=project['projectId'])
+                except HttpError as e:
+                    pass
+                except Exception as e:
+                    printException(e)
+                if self.regions:
+                    break
+        except Exception as e:
+            printException(e)
+
         return None
 
     def get_zones(self, **kwargs):
@@ -47,6 +68,24 @@ class GCPBaseConfig(BaseConfig):
 
         :return:
         """
+
+        compute_engine_client = gcp_connect_service(service='computeengine')
+
+        try:
+            # get zones from a project that has CE API enabled
+            self.zones = None
+            for project in self.projects:
+                try:
+                    self.zones = compute_engine_client.get_zones(client=kwargs['api_client'], project=project['projectId'])
+                except HttpError as e:
+                    pass
+                except Exception as e:
+                    printException(e)
+                if self.zones:
+                    break
+        except Exception as e:
+            printException(e)
+
         return None
 
     def _get_method(self, api_client, target_type, list_method_name):
@@ -81,60 +120,14 @@ class GCPBaseConfig(BaseConfig):
         error_list = []  # list of errors, so that we don't print the same error multiple times
 
         try:
-            # FIXME this is temporary, will have to be moved to Config children objects
-            # get zones and regions from a project that has CE API enabled
-            zones = None
-            regions = None
-            for project in self.projects:
-                try:
-                    regions = self.get_regions(client=api_client, project=project['projectId'])
-                    zones = self.get_zones(client=api_client, project=project['projectId'])
-                except HttpError as e:
-                    pass
-                except Exception as e:
-                    printException(e)
-                if zones and regions:
-                    break
 
             # Create a list with all combinations for method parameters
             list_params_list = []
 
-            # TODO remove this outdated code
-            # # only projects
-            # if ('project_placeholder' in list_params.values() or 'projects/project_placeholder' in list_params.values())\
-            #         and not 'zone_placeholder' in list_params.values():
-            #     for project in self.projects:
-            #         list_params_list.append({key:
-            #                                      project['projectId'] if list_params[key] == 'project_placeholder'
-            #                                      else ('projects/%s' % project['projectId'] if list_params[key] == 'projects/project_placeholder'
-            #                                            else list_params[key])
-            #                                  for key in list_params})
-            # # only zones
-            # elif not ('project_placeholder' in list_params.values() or 'projects/project_placeholder' in list_params.values())\
-            #         and 'zone_placeholder' in list_params.values():
-            #     for zone in zones:
-            #         list_params_list.append({key:
-            #                                      zone if list_params[key] == 'zone_placeholder'
-            #                                      else list_params[key]
-            #                                  for key in list_params})
-            # # projects and zones
-            # elif ('project_placeholder' in list_params.values() or 'projects/project_placeholder' in list_params.values())\
-            #         and 'zone_placeholder' in list_params.values():
-            #     for elem in list(itertools.product(*[self.projects, zones])):
-            #         list_params_list.append({key:
-            #                                      elem[0]['projectId'] if list_params[key] == 'project_placeholder'
-            #                                      else ('projects/%s' % elem[0]['projectId'] if list_params[key] == 'projects/project_placeholder'
-            #                                            else (elem[1] if list_params[key] == 'zone_placeholder'
-            #                                                  else list_params[key]))
-            #                                  for key in list_params})
-            # # neither projects nor zones
-            # else:
-            #     list_params_list.append(list_params)
-
             # Dict for all the elements to combine
             combination_elements = {'project_placeholder': [project['projectId'] for project in self.projects],
-                                    'zone_placeholder': zones,
-                                    'region_placeholder': regions}
+                                    'zone_placeholder': self.zones,
+                                    'region_placeholder': self.regions}
             # Get a list of {{}} terms
             sources = re.findall("{{(.*?)}}", str(list_params.values()))
             # Remove keys from combinations if they aren't in the sources
