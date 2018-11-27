@@ -61,7 +61,7 @@ report-*
 *~
 
 # Private files
-*.private.*
+*private.*
 # Private folders
 /private*/
 /**/private*/
