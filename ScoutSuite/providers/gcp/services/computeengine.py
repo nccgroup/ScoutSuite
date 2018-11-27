@@ -17,8 +17,6 @@ class ComputeEngineConfig(GCPBaseConfig):
 
     def __init__(self, thread_config):
         self.library_type = 'api_client_library'
-        self.zones = None
-        self.regions = None
 
         self.instances = {}
         self.instances_count = 0
