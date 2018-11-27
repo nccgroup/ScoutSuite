@@ -32,51 +32,51 @@ class ComputeEngineConfig(GCPBaseConfig):
         # TODO figure out why GCP returns errors when running with more then 1 thread (multithreading)
         super(ComputeEngineConfig, self).__init__(thread_config=1)
 
-    def get_regions(self, client, project):
-        """
-        Returns a list of all the regions. Uses an attribute to store the list in order to only run once.
-        :param client:
-        :param project:
-        :return:
-        """
-        try:
-            if self.regions:
-                return self.regions
-            else:
-                regions_list = []
-                regions = client.regions().list(project=project).execute()['items']
-                for region in regions:
-                    regions_list.append(region['name'])
-                self.regions = regions_list
-                return regions_list
-        except HttpError as e:
-            raise e
-        except Exception as e:
-            printException(e)
-            return None
-
-    def get_zones(self, client, project):
-        """
-        Returns a list of all the zones. Uses an attribute to store the list in order to only run once.
-        :param client:
-        :param project:
-        :return:
-        """
-        try:
-            if self.zones:
-                return self.zones
-            else:
-                zones_list = []
-                zones = client.zones().list(project=project).execute()['items']
-                for zone in zones:
-                    zones_list.append(zone['name'])
-                self.zones = zones_list
-                return zones_list
-        except HttpError as e:
-            raise e
-        except Exception as e:
-            printException(e)
-            return None
+    # def get_regions(self, client, project):
+    #     """
+    #     Returns a list of all the regions. Uses an attribute to store the list in order to only run once.
+    #     :param client:
+    #     :param project:
+    #     :return:
+    #     """
+    #     try:
+    #         if self.regions:
+    #             return self.regions
+    #         else:
+    #             regions_list = []
+    #             regions = client.regions().list(project=project).execute()['items']
+    #             for region in regions:
+    #                 regions_list.append(region['name'])
+    #             self.regions = regions_list
+    #             return regions_list
+    #     except HttpError as e:
+    #         raise e
+    #     except Exception as e:
+    #         printException(e)
+    #         return None
+    #
+    # def get_zones(self, client, project):
+    #     """
+    #     Returns a list of all the zones. Uses an attribute to store the list in order to only run once.
+    #     :param client:
+    #     :param project:
+    #     :return:
+    #     """
+    #     try:
+    #         if self.zones:
+    #             return self.zones
+    #         else:
+    #             zones_list = []
+    #             zones = client.zones().list(project=project).execute()['items']
+    #             for zone in zones:
+    #                 zones_list.append(zone['name'])
+    #             self.zones = zones_list
+    #             return zones_list
+    #     except HttpError as e:
+    #         raise e
+    #     except Exception as e:
+    #         printException(e)
+    #         return None
 
     def parse_instances(self, instance, params):
         instance_dict = {}
