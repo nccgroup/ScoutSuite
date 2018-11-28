@@ -11,6 +11,12 @@ from ScoutSuite.providers.gcp.services.stackdrivermonitoring import StackdriverM
 from ScoutSuite.providers.gcp.services.computeengine import ComputeEngineConfig
 from ScoutSuite.providers.gcp.services.cloudresourcemanager import CloudResourceManager
 
+try:
+    from ScoutSuite.providers.gcp.services.kubernetesengine_private import KubernetesEngineConfig
+except ImportError:
+    pass
+
+
 class GCPServicesConfig(BaseServicesConfig):
 
     def __init__(self, metadata=None, thread_config=4, projects=[], **kwargs):
@@ -22,6 +28,12 @@ class GCPServicesConfig(BaseServicesConfig):
         self.iam = IAMConfig(thread_config=thread_config)
         self.stackdriverlogging = StackdriverLoggingConfig(thread_config=thread_config)
         # self.stackdrivermonitoring = StackdriverMonitoringConfig(thread_config=thread_config)
+
+        # try:
+        #     self.kubernetesengine = KubernetesEngineConfig(thread_config=thread_config)
+        # except Exception as e:
+        #     # TODO handle specific error
+        #     print(e)
 
     def _is_provider(self, provider_name):
         if provider_name == 'gcp':
