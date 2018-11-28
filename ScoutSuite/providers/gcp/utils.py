@@ -13,6 +13,8 @@ import logging
 def gcp_connect_service(service, credentials=None, region_name=None):
 
     logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.ERROR)
+    # Set logging level to error for GCP services as otherwise generates a lot of warnings
+    logging.getLogger().setLevel(logging.ERROR)
 
     try:
 
