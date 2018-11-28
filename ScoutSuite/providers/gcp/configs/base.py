@@ -23,6 +23,8 @@ class GCPBaseConfig(BaseConfig):
 
         self.projects = projects
 
+        self.error_list = []  # list of errors, so that we don't print the same error multiple times
+
         self.zones = None
         self.regions = None
 
@@ -119,7 +121,6 @@ class GCPBaseConfig(BaseConfig):
         """
 
         targets = []
-        error_list = []  # list of errors, so that we don't print the same error multiple times
 
         try:
 
@@ -186,8 +187,8 @@ class GCPBaseConfig(BaseConfig):
 
                 except HttpError as e:
                     error_json = json.loads(e.content)
-                    if error_json['error']['message'] not in error_list:
-                        error_list.append(error_json['error']['message'])
+                    if error_json['error']['message'] not in self.error_list:
+                        self.error_list.append(error_json['error']['message'])
                         printError(error_json['error']['message'])
 
                 except PermissionDenied as e:
@@ -198,8 +199,8 @@ class GCPBaseConfig(BaseConfig):
 
         except HttpError as e:
             error_json = json.loads(e.content)
-            if error_json['error']['message'] not in error_list:
-                error_list.append(error_json['error']['message'])
+            if error_json['error']['message'] not in self.error_list:
+                self.error_list.append(error_json['error']['message'])
                 printError(error_json['error']['message'])
 
         except Exception as e:
@@ -209,9 +210,6 @@ class GCPBaseConfig(BaseConfig):
             return targets
 
     def _dict_product(self, d):
-        try:
-            keys = d.keys()
-            for element in itertools.product(*d.values()):
-                yield dict(zip(keys, element))
-        except Exception as e:
-            a = 1
+        keys = d.keys()
+        for element in itertools.product(*d.values()):
+            yield dict(zip(keys, element))
