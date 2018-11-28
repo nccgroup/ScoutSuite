@@ -85,7 +85,7 @@ class ComputeEngineConfig(GCPBaseConfig):
         instance_dict['id'] = self.get_non_provider_id(instance['name'])
         instance_dict['project_id'] = instance['selfLink'].split('/')[-5]
         instance_dict['name'] = instance['name']
-        instance_dict['description'] = instance['description'] if 'description' in instance else 'N/A'
+        instance_dict['description'] = instance['description'] if 'description' in instance and instance['description'] else 'N/A'
         instance_dict['creation_timestamp'] = instance['creationTimestamp']
         instance_dict['zone'] = instance['zone'].split('/')[-1]
         instance_dict['tags'] = instance['tags']
@@ -113,7 +113,7 @@ class ComputeEngineConfig(GCPBaseConfig):
         snapshot_dict = {}
         snapshot_dict['id'] = snapshot['id']
         snapshot_dict['name'] = snapshot['name']
-        snapshot_dict['description'] = snapshot['description'] if snapshot['description'] else 'N/A'
+        snapshot_dict['description'] = snapshot['description'] if 'description' in snapshot and snapshot['description'] else 'N/A'
         snapshot_dict['creation_timestamp'] = snapshot['creationTimestamp']
         snapshot_dict['status'] = snapshot['status']
         snapshot_dict['source_disk_id'] = snapshot['sourceDiskId']
