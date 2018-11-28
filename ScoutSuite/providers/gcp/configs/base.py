@@ -23,6 +23,8 @@ class GCPBaseConfig(BaseConfig):
 
         self.projects = projects
 
+        self.error_list = []  # list of errors, so that we don't print the same error multiple times
+
         super(GCPBaseConfig, self).__init__(thread_config)
 
     def _is_provider(self, provider_name):
@@ -78,7 +80,6 @@ class GCPBaseConfig(BaseConfig):
         """
 
         targets = []
-        error_list = []  # list of errors, so that we don't print the same error multiple times
 
         try:
             # FIXME this is temporary, will have to be moved to Config children objects
@@ -187,8 +188,8 @@ class GCPBaseConfig(BaseConfig):
 
                 except HttpError as e:
                     error_json = json.loads(e.content)
-                    if error_json['error']['message'] not in error_list:
-                        error_list.append(error_json['error']['message'])
+                    if error_json['error']['message'] not in self.error_list:
+                        self.error_list.append(error_json['error']['message'])
                         printError(error_json['error']['message'])
 
                 except PermissionDenied as e:
@@ -200,8 +201,8 @@ class GCPBaseConfig(BaseConfig):
 
         except HttpError as e:
             error_json = json.loads(e.content)
-            if error_json['error']['message'] not in error_list:
-                error_list.append(error_json['error']['message'])
+            if error_json['error']['message'] not in self.error_list:
+                self.error_list.append(error_json['error']['message'])
                 printError(error_json['error']['message'])
 
         except Exception as e:
