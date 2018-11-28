@@ -2,6 +2,7 @@
 
 import os
 
+import warnings
 import google.auth
 import googleapiclient
 from opinel.utils.console import printError, printException
@@ -53,7 +54,6 @@ class GCPProvider(BaseProvider):
 
         if user_account:
             # disable GCP warning about using User Accounts
-            import warnings
             warnings.filterwarnings("ignore", "Your application has authenticated using end user credentials")
             pass  # Nothing more to do
         elif service_account:
