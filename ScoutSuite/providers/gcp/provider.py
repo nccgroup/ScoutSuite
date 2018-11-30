@@ -2,6 +2,7 @@
 
 import os
 
+import warnings
 import google.auth
 import googleapiclient
 from opinel.utils.console import printError, printException
@@ -9,8 +10,6 @@ from opinel.utils.console import printError, printException
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.gcp.configs.services import GCPServicesConfig
 from ScoutSuite.providers.gcp.utils import gcp_connect_service
-
-
 
 
 class GCPCredentials():
@@ -53,7 +52,6 @@ class GCPProvider(BaseProvider):
 
         if user_account:
             # disable GCP warning about using User Accounts
-            import warnings
             warnings.filterwarnings("ignore", "Your application has authenticated using end user credentials")
             pass  # Nothing more to do
         elif service_account:
@@ -108,7 +106,7 @@ class GCPProvider(BaseProvider):
     def preprocessing(self, ip_ranges=[], ip_ranges_name_key=None):
         """
         TODO description
-        Tweak the AWS config to match cross- resources and clean any fetching artifacts
+        Tweak the AWS config to match cross-resources and clean any fetching artifacts
 
         :param ip_ranges:
         :param ip_ranges_name_key:

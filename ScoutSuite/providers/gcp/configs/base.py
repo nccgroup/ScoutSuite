@@ -15,13 +15,18 @@ from googleapiclient.errors import HttpError
 from opinel.utils.console import printException, printError
 
 from ScoutSuite.providers.base.configs.base import BaseConfig
-
+from ScoutSuite.providers.gcp.utils import gcp_connect_service
 
 class GCPBaseConfig(BaseConfig):
 
     def __init__(self, thread_config=4, projects=[], **kwargs):
 
         self.projects = projects
+
+        self.error_list = []  # list of errors, so that we don't print the same error multiple times
+
+        self.zones = None
+        self.regions = None
 
         super(GCPBaseConfig, self).__init__(thread_config)
 
@@ -34,20 +39,58 @@ class GCPBaseConfig(BaseConfig):
     def get_regions(self, **kwargs):
         """
         Certain services require to be poled per-region.
-        In these cases, this method will return a list of regions to poll or None.
+        In these cases, this method will return a list of regions to poll.
 
         :return:
         """
-        return None
+
+        computeengine_client = gcp_connect_service(service='computeengine')
+
+        if not self.regions:
+            # get regions from a project that has CE API enabled
+            for project in self.projects:
+                try:
+                    regions_list = []
+                    regions = computeengine_client.regions().list(project=project['projectId']).execute()['items']
+                    for region in regions:
+                        regions_list.append(region['name'])
+                    self.regions = regions_list
+                except HttpError as e:
+                    pass
+                except Exception as e:
+                    printException(e)
+                if self.regions:
+                    break
+
+        return self.regions
 
     def get_zones(self, **kwargs):
         """
         Certain services require to be poled per-zone.
-        In these cases, this method will return a list of zones to poll or None.
+        In these cases, this method will return a list of zones to poll.
 
         :return:
         """
-        return None
+
+        computeengine_client = gcp_connect_service(service='computeengine')
+
+        if not self.zones:
+            # get zones from a project that has CE API enabled
+            for project in self.projects:
+                try:
+                    zones_list = []
+                    zones = computeengine_client.zones().list(project=project['projectId']).execute()['items']
+                    for zone in zones:
+                        zones_list.append(zone['name'])
+                    self.zones = zones_list
+                except HttpError as e:
+                    pass
+                except Exception as e:
+                    printException(e)
+                if self.zones:
+                    break
+
+        return self.zones
 
     def _get_method(self, api_client, target_type, list_method_name):
         """
@@ -78,63 +121,20 @@ class GCPBaseConfig(BaseConfig):
         """
 
         targets = []
-        error_list = []  # list of errors, so that we don't print the same error multiple times
 
         try:
-            # FIXME this is temporary, will have to be moved to Config children objects
-            # get zones and regions from a project that has CE API enabled
-            zones = None
-            regions = None
-            for project in self.projects:
-                try:
-                    regions = self.get_regions(client=api_client, project=project['projectId'])
-                    zones = self.get_zones(client=api_client, project=project['projectId'])
-                except HttpError as e:
-                    pass
-                except Exception as e:
-                    printException(e)
-                if zones and regions:
-                    break
+
+            regions = self.get_regions()
+            zones = self.get_zones()
 
             # Create a list with all combinations for method parameters
             list_params_list = []
 
-            # TODO remove this outdated code
-            # # only projects
-            # if ('project_placeholder' in list_params.values() or 'projects/project_placeholder' in list_params.values())\
-            #         and not 'zone_placeholder' in list_params.values():
-            #     for project in self.projects:
-            #         list_params_list.append({key:
-            #                                      project['projectId'] if list_params[key] == 'project_placeholder'
-            #                                      else ('projects/%s' % project['projectId'] if list_params[key] == 'projects/project_placeholder'
-            #                                            else list_params[key])
-            #                                  for key in list_params})
-            # # only zones
-            # elif not ('project_placeholder' in list_params.values() or 'projects/project_placeholder' in list_params.values())\
-            #         and 'zone_placeholder' in list_params.values():
-            #     for zone in zones:
-            #         list_params_list.append({key:
-            #                                      zone if list_params[key] == 'zone_placeholder'
-            #                                      else list_params[key]
-            #                                  for key in list_params})
-            # # projects and zones
-            # elif ('project_placeholder' in list_params.values() or 'projects/project_placeholder' in list_params.values())\
-            #         and 'zone_placeholder' in list_params.values():
-            #     for elem in list(itertools.product(*[self.projects, zones])):
-            #         list_params_list.append({key:
-            #                                      elem[0]['projectId'] if list_params[key] == 'project_placeholder'
-            #                                      else ('projects/%s' % elem[0]['projectId'] if list_params[key] == 'projects/project_placeholder'
-            #                                            else (elem[1] if list_params[key] == 'zone_placeholder'
-            #                                                  else list_params[key]))
-            #                                  for key in list_params})
-            # # neither projects nor zones
-            # else:
-            #     list_params_list.append(list_params)
-
             # Dict for all the elements to combine
             combination_elements = {'project_placeholder': [project['projectId'] for project in self.projects],
-                                    'zone_placeholder': zones,
-                                    'region_placeholder': regions}
+                                    'region_placeholder': regions,
+                                    'zone_placeholder': zones}
+
             # Get a list of {{}} terms
             sources = re.findall("{{(.*?)}}", str(list_params.values()))
             # Remove keys from combinations if they aren't in the sources
@@ -187,21 +187,20 @@ class GCPBaseConfig(BaseConfig):
 
                 except HttpError as e:
                     error_json = json.loads(e.content)
-                    if error_json['error']['message'] not in error_list:
-                        error_list.append(error_json['error']['message'])
+                    if error_json['error']['message'] not in self.error_list:
+                        self.error_list.append(error_json['error']['message'])
                         printError(error_json['error']['message'])
 
                 except PermissionDenied as e:
-                    printError(
-                        "%s: %s - %s for project %s" % (e.message, self.service, self.targets, project['projectId']))
+                    printError("%s: %s - %s" % (e.message, self.service, self.targets))
 
                 except Exception as e:
                     printException(e)
 
         except HttpError as e:
             error_json = json.loads(e.content)
-            if error_json['error']['message'] not in error_list:
-                error_list.append(error_json['error']['message'])
+            if error_json['error']['message'] not in self.error_list:
+                self.error_list.append(error_json['error']['message'])
                 printError(error_json['error']['message'])
 
         except Exception as e:
