@@ -931,9 +931,10 @@ var make_title = function (title) {
         return 'Stackdriver Monitoring';
     } else if (title == 'computeengine') {
         return 'Compute Engine';
+    } else if (title == 'kubernetesengine') {
+        return 'Kubernetes Engine';
     } else if (title == 'cloudresourcemanager') {
         return 'Cloud Resource Manager';
-
     } else if (title == 'storageaccounts') {
         return 'Storage Accounts';
 

@@ -41,6 +41,14 @@
           "path": "services.computeengine.subnetworks"
         }
       }
+    },
+    "kubernetesengine": {
+      "resources": {
+        "clusters": {
+          "cols": 2,
+          "path": "services.kubernetesengine.clusters"
+        }
+      }
     }
   },
   "storage": {

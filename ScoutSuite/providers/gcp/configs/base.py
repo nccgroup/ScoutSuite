@@ -11,7 +11,9 @@ import json
 import re
 
 from google.api_core.exceptions import PermissionDenied
+from google.cloud import container_v1
 from googleapiclient.errors import HttpError
+
 from opinel.utils.console import printException, printError
 
 from ScoutSuite.providers.base.configs.base import BaseConfig
@@ -146,9 +148,9 @@ class GCPBaseConfig(BaseConfig):
             for combination in combinations:
                 l = list_params.copy()
                 for k, v in l.items():
-                    # l[k] = combination[v.replace('{{', '').replace('}}', '')]
-                    k2 = re.findall("{{(.*?)}}", v)[0]
-                    l[k] = l[k].replace('{{%s}}' % k2, combination[k2])
+                    k1 = re.findall("{{(.*?)}}", v)
+                    if k1:
+                        l[k] = l[k].replace('{{%s}}' % k1[0], combination[k1[0]])
                 list_params_list.append(l)
 
             for list_params_combination in list_params_list:
@@ -157,11 +159,19 @@ class GCPBaseConfig(BaseConfig):
 
                     if self.library_type == 'cloud_client_library':
                         response = method(**list_params_combination)
-                        targets += list(response)
+
+                        # TODO this should be more modular
+                        # this is only for kubernetesengine
+                        if isinstance(response, container_v1.types.ListClustersResponse):
+                            targets += response.clusters
+                        else:
+                            targets += list(response)
+
                         # Remove client as it's unpickleable and adding the object to the Queue will pickle
                         # The client is later re-inserted in each Config
                         for t in targets:
-                            t._client = None
+                            if hasattr(t, '_client'):
+                                t._client = None
 
                     if self.library_type == 'api_client_library':
 
@@ -176,6 +186,7 @@ class GCPBaseConfig(BaseConfig):
                             # this is only for cloudresourcemanager
                             if 'bindings' in response:
                                 targets += response['bindings']
+                            # TODO this should be more modular
                             # this is only for IAM
                             if 'accounts' in response:
                                 targets += response['accounts']
