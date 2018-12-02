@@ -18,9 +18,7 @@ console output using the `--debug` argument), request a new feature, or send a p
 **Note:**
 
 The latest (and final) version of Scout2 can be found in <https://github.com/nccgroup/Scout2/releases> and
-<https://pypi.org/project/AWSScout2>.
-
-Further work is not planned for Scout2. Fixes for the issues currently opened will be implemented in Scout Suite.
+<https://pypi.org/project/AWSScout2>. Further work is not planned for Scout2. Fixes will be implemented in Scout Suite.
 
 ### Support
 
@@ -51,7 +49,7 @@ Install from source:
 
 Scout Suite is a multi-threaded tool that fetches and stores your cloud account's configuration settings in memory 
 during runtime. It is expected that the tool will run with no issues on any modern laptop or equivalent VM. **Note** 
-that running Scout Suite in a VM with limited computing resources such as an AWS t2.micro instance is not intended 
+that running Scout Suite in a VM with limited computing resources such as an AWS t2.micro instance is not intended and 
 may result in the process being killed.
 
 ### Python
