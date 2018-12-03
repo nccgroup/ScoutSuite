@@ -48,7 +48,7 @@ class HTMLReport(object):
     def prepare_html_report_dir(self):
         if not os.path.isdir(self.report_dir):
             os.makedirs(self.report_dir)
-        run_results_dir = os.path.join(self.report_dir, 'inc-scoutsuite-run')
+        run_results_dir = os.path.join(self.report_dir, 'scoutsuite-results')
         if not os.path.isdir(run_results_dir):
             os.makedirs(run_results_dir)
         # Copy static 3rd-party files
