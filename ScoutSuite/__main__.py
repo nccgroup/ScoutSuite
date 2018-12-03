@@ -88,12 +88,6 @@ def main(passed_args=None):
                                                     user_account=args.user_account,
                                                     service_account=args.service_account)
 
-        # FIXME this shouldn't be done here
-        # This is for the case where a GCP service account isd used and we can't know the
-        # project id before authenticating
-        if cloud_provider.provider_code == 'gcp':
-            report.profile = 'gcp-%s' % cloud_provider.profile
-
         if not authenticated:
             return 42
 
