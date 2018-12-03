@@ -33,10 +33,10 @@ class GCPProvider(BaseProvider):
         self.provider_code = 'gcp'
         self.provider_name = 'Google Cloud Platform'
 
-        self.projects=[]
-        self.project_id=project_id
-        self.folder_id=folder_id
-        self.organization_id=organization_id
+        self.projects = []
+        self.project_id = project_id
+        self.folder_id = folder_id
+        self.organization_id = organization_id
 
         self.services_config = GCPServicesConfig
 
@@ -71,19 +71,26 @@ class GCPProvider(BaseProvider):
                     self.projects = self._get_projects(parent_type='project',
                                                        parent_id=self.project_id)
                     self.aws_account_id = self.project_id # FIXME this is for AWS
+                    self.profile = self.project_id # FIXME this is for AWS
 
                 elif self.organization_id:
                     self.projects = self._get_projects(parent_type='organization',
-                                                                        parent_id=self.organization_id)
+                                                       parent_id=self.organization_id)
                     self.aws_account_id = self.organization_id # FIXME this is for AWS
+                    self.profile = self.organization_id # FIXME this is for AWS
 
                 elif self.folder_id:
                     self.projects = self._get_projects(parent_type='folder',
-                                                                        parent_id=self.folder_id)
+                                                       parent_id=self.folder_id)
                     self.aws_account_id = self.folder_id # FIXME this is for AWS
+                    self.profile = self.folder_id # FIXME this is for AWS
 
                 else:
-                    self.projects = [project_id]
+                    self.project_id = project_id
+                    self.projects = self._get_projects(parent_type='project',
+                                                       parent_id=self.project_id)
+                    self.aws_account_id = self.project_id # FIXME this is for AWS
+                    self.profile = self.project_id # FIXME this is for AWS
 
                 # TODO this shouldn't be done here? but it has to in order to init with projects...
                 self.services.set_projects(projects=self.projects)
