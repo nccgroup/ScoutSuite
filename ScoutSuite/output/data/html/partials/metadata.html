@@ -87,7 +87,11 @@
                           </ul>
                         </li>
                       {{else}}
-                        <li><a href="#{{path}}">{{make_title @key}} ({{count}})</a></li>
+                        {{#if count}}
+                            <li><a href="#{{path}}">{{make_title @key}} ({{count}})</a></li>
+                        {{else}}
+                            <li class="disabled"><a href="">{{make_title @key}}</a></li>
+                        {{/if}}
                       {{/if}}
                       {{/unless}}
                     {{/each}}
