@@ -28,6 +28,6 @@ script:
 # use container-base infrastructure
 sudo: required
 
-# Update test coverage -- only when run locally
+# Update test coverage
 after_success:
     - coveralls
