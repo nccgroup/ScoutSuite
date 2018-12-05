@@ -161,7 +161,7 @@ To run Scout using Service Account keys, using the following command:
 
     $ python Scout.py --provider gcp --service-account --key-file </PATH/TO/KEY_FILE.JSON>
     
-To scan a GCP:
+To scan a GCP ... 
 - Organization, use the `organization-id <ORGANIZATION ID>` argument
 - Folder, use the `folder-id <FOLDER ID>` argument.
 - Project, use the `project-id <PROJECT ID>` argument 
