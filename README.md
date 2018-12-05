@@ -1,7 +1,7 @@
 # Scout Suite
 
-<!--- ![image](https://travis-ci.org/nccgroup/Scout2.svg?branch=master) -->
-<!--- ![image](https://coveralls.io/repos/github/nccgroup/Scout2/badge.svg?branch=master) -->
+![image](https://travis-ci.org/nccgroup/ScoutSuite.svg?branch=master)
+![image](https://coveralls.io/repos/github/nccgroup/ScoutSuite/badge.svg?branch=master) 
 [![PyPI version](https://badge.fury.io/py/ScoutSuite.svg)](https://badge.fury.io/py/ScoutSuite)
 
 ## Description
