@@ -29,5 +29,5 @@ script:
 sudo: required
 
 # Update test coverage -- only when run locally
-#after_success:
-#    - coveralls
+after_success:
+    - coveralls
