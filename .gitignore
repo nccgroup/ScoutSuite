@@ -2,6 +2,7 @@
 env/
 venv/
 
+# Compiled files
 *.py[cod]
 
 # C extensions
@@ -58,3 +59,9 @@ report-*
 
 # Emacs backups
 *~
+
+# Private files
+*private.*
+# Private folders
+/private*/
+/**/private*/

@@ -87,6 +87,7 @@ def main(passed_args=None):
                                                     key_file=args.key_file,
                                                     user_account=args.user_account,
                                                     service_account=args.service_account)
+
         if not authenticated:
             return 42
 

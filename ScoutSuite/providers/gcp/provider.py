@@ -2,6 +2,7 @@
 
 import os
 
+import warnings
 import google.auth
 import googleapiclient
 from opinel.utils.console import printError, printException
@@ -9,8 +10,6 @@ from opinel.utils.console import printError, printException
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.gcp.configs.services import GCPServicesConfig
 from ScoutSuite.providers.gcp.utils import gcp_connect_service
-
-
 
 
 class GCPCredentials():
@@ -34,10 +33,10 @@ class GCPProvider(BaseProvider):
         self.provider_code = 'gcp'
         self.provider_name = 'Google Cloud Platform'
 
-        self.projects=[]
-        self.project_id=project_id
-        self.folder_id=folder_id
-        self.organization_id=organization_id
+        self.projects = []
+        self.project_id = project_id
+        self.folder_id = folder_id
+        self.organization_id = organization_id
 
         self.services_config = GCPServicesConfig
 
@@ -53,7 +52,6 @@ class GCPProvider(BaseProvider):
 
         if user_account:
             # disable GCP warning about using User Accounts
-            import warnings
             warnings.filterwarnings("ignore", "Your application has authenticated using end user credentials")
             pass  # Nothing more to do
         elif service_account:
@@ -73,19 +71,26 @@ class GCPProvider(BaseProvider):
                     self.projects = self._get_projects(parent_type='project',
                                                        parent_id=self.project_id)
                     self.aws_account_id = self.project_id # FIXME this is for AWS
+                    self.profile = self.project_id # FIXME this is for AWS
 
                 elif self.organization_id:
                     self.projects = self._get_projects(parent_type='organization',
-                                                                        parent_id=self.organization_id)
+                                                       parent_id=self.organization_id)
                     self.aws_account_id = self.organization_id # FIXME this is for AWS
+                    self.profile = self.organization_id # FIXME this is for AWS
 
                 elif self.folder_id:
                     self.projects = self._get_projects(parent_type='folder',
-                                                                        parent_id=self.folder_id)
+                                                       parent_id=self.folder_id)
                     self.aws_account_id = self.folder_id # FIXME this is for AWS
+                    self.profile = self.folder_id # FIXME this is for AWS
 
                 else:
-                    self.projects = [project_id]
+                    self.project_id = project_id
+                    self.projects = self._get_projects(parent_type='project',
+                                                       parent_id=self.project_id)
+                    self.aws_account_id = self.project_id # FIXME this is for AWS
+                    self.profile = self.project_id # FIXME this is for AWS
 
                 # TODO this shouldn't be done here? but it has to in order to init with projects...
                 self.services.set_projects(projects=self.projects)
@@ -108,7 +113,7 @@ class GCPProvider(BaseProvider):
     def preprocessing(self, ip_ranges=[], ip_ranges_name_key=None):
         """
         TODO description
-        Tweak the AWS config to match cross- resources and clean any fetching artifacts
+        Tweak the AWS config to match cross-resources and clean any fetching artifacts
 
         :param ip_ranges:
         :param ip_ranges_name_key:

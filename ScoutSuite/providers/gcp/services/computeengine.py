@@ -17,8 +17,6 @@ class ComputeEngineConfig(GCPBaseConfig):
 
     def __init__(self, thread_config):
         self.library_type = 'api_client_library'
-        self.zones = None
-        self.regions = None
 
         self.instances = {}
         self.instances_count = 0
@@ -34,58 +32,58 @@ class ComputeEngineConfig(GCPBaseConfig):
         # TODO figure out why GCP returns errors when running with more then 1 thread (multithreading)
         super(ComputeEngineConfig, self).__init__(thread_config=1)
 
-    def get_regions(self, client, project):
-        """
-        Returns a list of all the regions. Uses an attribute to store the list in order to only run once.
-        :param client:
-        :param project:
-        :return:
-        """
-        try:
-            if self.regions:
-                return self.regions
-            else:
-                regions_list = []
-                regions = client.regions().list(project=project).execute()['items']
-                for region in regions:
-                    regions_list.append(region['name'])
-                self.regions = regions_list
-                return regions_list
-        except HttpError as e:
-            raise e
-        except Exception as e:
-            printException(e)
-            return None
-
-    def get_zones(self, client, project):
-        """
-        Returns a list of all the zones. Uses an attribute to store the list in order to only run once.
-        :param client:
-        :param project:
-        :return:
-        """
-        try:
-            if self.zones:
-                return self.zones
-            else:
-                zones_list = []
-                zones = client.zones().list(project=project).execute()['items']
-                for zone in zones:
-                    zones_list.append(zone['name'])
-                self.zones = zones_list
-                return zones_list
-        except HttpError as e:
-            raise e
-        except Exception as e:
-            printException(e)
-            return None
+    # def get_regions(self, client, project):
+    #     """
+    #     Returns a list of all the regions. Uses an attribute to store the list in order to only run once.
+    #     :param client:
+    #     :param project:
+    #     :return:
+    #     """
+    #     try:
+    #         if self.regions:
+    #             return self.regions
+    #         else:
+    #             regions_list = []
+    #             regions = client.regions().list(project=project).execute()['items']
+    #             for region in regions:
+    #                 regions_list.append(region['name'])
+    #             self.regions = regions_list
+    #             return regions_list
+    #     except HttpError as e:
+    #         raise e
+    #     except Exception as e:
+    #         printException(e)
+    #         return None
+    #
+    # def get_zones(self, client, project):
+    #     """
+    #     Returns a list of all the zones. Uses an attribute to store the list in order to only run once.
+    #     :param client:
+    #     :param project:
+    #     :return:
+    #     """
+    #     try:
+    #         if self.zones:
+    #             return self.zones
+    #         else:
+    #             zones_list = []
+    #             zones = client.zones().list(project=project).execute()['items']
+    #             for zone in zones:
+    #                 zones_list.append(zone['name'])
+    #             self.zones = zones_list
+    #             return zones_list
+    #     except HttpError as e:
+    #         raise e
+    #     except Exception as e:
+    #         printException(e)
+    #         return None
 
     def parse_instances(self, instance, params):
         instance_dict = {}
         instance_dict['id'] = self.get_non_provider_id(instance['name'])
         instance_dict['project_id'] = instance['selfLink'].split('/')[-5]
         instance_dict['name'] = instance['name']
-        instance_dict['description'] = instance['description'] if 'description' in instance else 'N/A'
+        instance_dict['description'] = instance['description'] if 'description' in instance and instance['description'] else 'N/A'
         instance_dict['creation_timestamp'] = instance['creationTimestamp']
         instance_dict['zone'] = instance['zone'].split('/')[-1]
         instance_dict['tags'] = instance['tags']
@@ -113,7 +111,7 @@ class ComputeEngineConfig(GCPBaseConfig):
         snapshot_dict = {}
         snapshot_dict['id'] = snapshot['id']
         snapshot_dict['name'] = snapshot['name']
-        snapshot_dict['description'] = snapshot['description'] if snapshot['description'] else 'N/A'
+        snapshot_dict['description'] = snapshot['description'] if 'description' in snapshot and snapshot['description'] else 'N/A'
         snapshot_dict['creation_timestamp'] = snapshot['creationTimestamp']
         snapshot_dict['status'] = snapshot['status']
         snapshot_dict['source_disk_id'] = snapshot['sourceDiskId']

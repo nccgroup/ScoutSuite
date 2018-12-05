@@ -1,12 +1,12 @@
 # Scout Suite
 
-<!--- ![image](https://travis-ci.org/nccgroup/Scout2.svg?branch=master) -->
-<!--- ![image](https://coveralls.io/repos/github/nccgroup/Scout2/badge.svg?branch=master) -->
+![image](https://travis-ci.org/nccgroup/ScoutSuite.svg?branch=master)
+![image](https://coveralls.io/repos/github/nccgroup/ScoutSuite/badge.svg?branch=master) 
 [![PyPI version](https://badge.fury.io/py/ScoutSuite.svg)](https://badge.fury.io/py/ScoutSuite)
 
 ## Description
 
-Scout Suite is a multi-cloud security auditing tool/, which enables assessing the security posture of cloud
+Scout Suite is a multi-cloud security auditing tool, which enables assessing the security posture of cloud
 environments. Using the APIs exposed by cloud providers, Scout gathers configuration data for manual inspection and 
 highlights risk areas. Rather than pouring through dozens of pages on the web consoles, Scout provides a clear view of 
 the attack surface automatically.
@@ -161,7 +161,7 @@ To run Scout using Service Account keys, using the following command:
 
     $ python Scout.py --provider gcp --service-account --key-file </PATH/TO/KEY_FILE.JSON>
     
-To scan a GCP:
+To scan a GCP ... 
 - Organization, use the `organization-id <ORGANIZATION ID>` argument
 - Folder, use the `folder-id <FOLDER ID>` argument.
 - Project, use the `project-id <PROJECT ID>` argument 
