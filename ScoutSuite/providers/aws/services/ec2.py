@@ -12,6 +12,7 @@ from opinel.utils.fs import load_data
 from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
+from ScoutSuite.providers.base.configs.browser import get_attribute_at
 from ScoutSuite.utils import get_keys, ec2_classic
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 
