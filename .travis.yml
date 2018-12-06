@@ -1,6 +1,6 @@
 language: python
 
-# use container-base infrastructure
+# Use container-base infrastructure
 sudo: false
 
 python:
@@ -19,7 +19,9 @@ matrix:
 install:
   - pip install -U setuptools
   - pip install -r requirements.txt
-  - pip install coveralls flake8
+  - pip install flake8
+  - pip install coveralls
+  - pip install codecov
 
 before_script:
   # stop the build if there are Python syntax errors or undefined names
@@ -27,18 +29,19 @@ before_script:
   # exit-zero treats all errors as warnings.  The GitHub editor is 127 chars wide
   - flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-# command to run tests
+# Command to run tests
 script:
-    - nosetests --with-coverage tests/test-utils.py
-#  - 'nosetests tests/test-listall.py'
-#  - 'nosetests tests/test-rulesgenerator.py'
-#  - 'nosetests tests/test-utils.py'
-#  - '[ "${TRAVIS_SECURE_ENV_VARS}" = "true" ] && nosetests tests/test-utils_sns.py || false'
-    - nosetests --with-coverage tests/test-rules-ruleset.py
-    - nosetests --with-coverage tests/test-rules-processingengine.py
-    - nosetests --with-coverage --nocapture tests/test-scoutsuite.py -a "!credential"
+  - nosetests --with-coverage tests/test-utils.py
+  #  - 'nosetests tests/test-listall.py'
+  #  - 'nosetests tests/test-rulesgenerator.py'
+  #  - 'nosetests tests/test-utils.py'
+  #  - '[ "${TRAVIS_SECURE_ENV_VARS}" = "true" ] && nosetests tests/test-utils_sns.py || false'
+  - nosetests --with-coverage tests/test-rules-ruleset.py
+  - nosetests --with-coverage tests/test-rules-processingengine.py
+  - nosetests --with-coverage --nocapture tests/test-scoutsuite.py -a "!credential"
 
+# Update test coverage
+after_success:
+  - coveralls
+  - codecov
 
-# Update test coverage -- only when run locally
-#after_success:
-#    - coveralls
