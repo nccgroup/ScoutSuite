@@ -185,8 +185,6 @@ class EC2Config(RegionalServiceConfig):
 def analyze_ec2_config(ec2_info, aws_account_id, force_write):
     try:
         printInfo('Analyzing EC2 config... ', newLine=False)
-        # Tweaks
-        link_elastic_ips(ec2_info)
         # Custom EC2 analysis
         #        check_for_elastic_ip(ec2_info)
         # FIXME - commented for now as this method doesn't seem to be defined anywhere'
@@ -255,26 +253,6 @@ def check_for_elastic_ip(ec2_info):
             new_macro_items.append(ec2_info['violations']['non-elastic-ec2-public-ip-whitelisted'].macro_items[i])
     ec2_info['violations']['non-elastic-ec2-public-ip-whitelisted'].items = new_items
     ec2_info['violations']['non-elastic-ec2-public-ip-whitelisted'].macro_items = new_macro_items
-
-
-def link_elastic_ips(ec2_config):
-    """
-    Link EIP with instances (looks like this might be no longer needed with boto3)
-
-    :param ec2_config:
-    :return:
-    """
-    return
-    go_to_and_do(ec2_config, None, ['regions', 'elastic_ips'], None, link_elastic_ips_callback1, {})
-
-
-def link_elastic_ips_callback1(ec2_config, current_config, path, current_path, elastic_ip, callback_args):
-    if not 'id' in current_config:
-        return
-    instance_id = current_config['id']
-    return
-    go_to_and_do(ec2_config, None, ['regions', 'vpcs', 'instances'], None, link_elastic_ips_callback2,
-                 {'instance_id': instance_id, 'elastic_ip': elastic_ip})
 
 
 def link_elastic_ips_callback2(ec2_config, current_config, path, current_path, instance_id, callback_args):
