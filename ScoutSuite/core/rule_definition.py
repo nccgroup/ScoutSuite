@@ -26,7 +26,7 @@ class RuleDefinition(object):
     def __str__(self):
         desription = getattr(self, 'description')
         dlen = len(desription)
-        padding = (80 - dlen) / 2 if dlen < 80 else 0
+        padding = (80 - dlen) // 2 if dlen < 80 else 0
         value = '-' * 80 + '\n' + ' ' * padding + ' %s' % getattr(self, 'description') + '\n' + '-' * 80 + '\n'
         quiet_list = ['descriptions', 'rule_dirs', 'rule_types', 'rules_data_path', 'string_definition']
         value += '\n'.join(('%s: %s') % (attr, str(getattr(self, attr))) for attr in vars(self) if attr not in quiet_list)
