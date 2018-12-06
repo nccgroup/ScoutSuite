@@ -395,6 +395,13 @@ function toggleVisibility(id) {
     };
 };
 
+/**
+ *
+ * @param data
+ * @param entities
+ * @param callback
+ * @param callback_args
+ */
 function iterateEC2ObjectsAndCall(data, entities, callback, callback_args) {
     if (entities.length > 0) {
         var entity = entities.shift();
@@ -409,6 +416,13 @@ function iterateEC2ObjectsAndCall(data, entities, callback, callback_args) {
     };
 };
 
+/**
+ *
+ * @param ec2_data
+ * @param entities
+ * @param id
+ * @returns {*}
+ */
 function findEC2Object(ec2_data, entities, id) {
     if (entities.length > 0) {
         var entity = entities.shift();
@@ -427,6 +441,13 @@ function findEC2Object(ec2_data, entities, id) {
     return '';
 };
 
+/**
+ *
+ * @param ec2_data
+ * @param entities
+ * @param attributes
+ * @returns {*}
+ */
 function findEC2ObjectByAttr(ec2_data, entities, attributes) {
     if (entities.length > 0) {
         var entity = entities.shift();
@@ -454,6 +475,14 @@ function findEC2ObjectByAttr(ec2_data, entities, attributes) {
     return '';
 };
 
+/**
+ *
+ * @param ec2_info
+ * @param path
+ * @param id
+ * @param attribute
+ * @returns {*}
+ */
 function findEC2ObjectAttribute(ec2_info, path, id, attribute) {
     var entities = path.split('.');
     var object = findEC2Object(ec2_info, entities, id);
@@ -463,6 +492,11 @@ function findEC2ObjectAttribute(ec2_info, path, id, attribute) {
     return '';
 };
 
+/**
+ *
+ * @param path
+ * @param id
+ */
 function findAndShowEC2Object(path, id) {
     entities = path.split('.');
     var object = findEC2Object(run_results['services']['ec2'], entities, id);
@@ -480,6 +514,11 @@ function findAndShowEC2Object(path, id) {
     showPopup();
 };
 
+/**
+ *
+ * @param path
+ * @param attributes
+ */
 function findAndShowEC2ObjectByAttr(path, attributes) {
     entities = path.split('.');
     var object = findEC2ObjectByAttr(run_results['services']['ec2'], entities, attributes);
@@ -490,23 +529,42 @@ function findAndShowEC2ObjectByAttr(path, attributes) {
     showPopup();
 };
 
+/**
+ *
+ * @param data
+ */
 function showEC2Instance2(data) {
     $('#overlay-details').html(single_ec2_instance_template(data));
     showPopup();
 };
 
+/**
+ *
+ * @param region
+ * @param vpc
+ * @param id
+ */
 function showEC2Instance(region, vpc, id) {
     var data = run_results['services']['ec2']['regions'][region]['vpcs'][vpc]['instances'][id];
     $('#overlay-details').html(single_ec2_instance_template(data));
     showPopup();
 };
 
+/**
+ *
+ * @param region
+ * @param vpc
+ * @param id
+ */
 function showEC2SecurityGroup(region, vpc, id) {
     var data = run_results['services']['ec2']['regions'][region]['vpcs'][vpc]['security_groups'][id];
     $('#overlay-details').html(single_ec2_security_group_template(data));
     showPopup();
 };
 
+/**
+ *
+ */
 function showObject() {
     var path = arguments[0];
     var path_array = path.split('.');
@@ -535,18 +593,32 @@ function showObject() {
     showPopup();
 };
 
+/**
+ *
+ * @param policy_id
+ */
 function showIAMManagedPolicy(policy_id) {
     var data = run_results['services']['iam']['policies'][policy_id];
     data['policy_id'] = policy_id;
     showIAMPolicy(data);
 };
 
+/**
+ *
+ * @param iam_entity_type
+ * @param iam_entity_name
+ * @param policy_id
+ */
 function showIAMInlinePolicy(iam_entity_type, iam_entity_name, policy_id) {
     var data = run_results['services']['iam'][iam_entity_type][iam_entity_name]['inline_policies'][policy_id];
     data['policy_id'] = policy_id;
     showIAMPolicy(data);
 };
 
+/**
+ *
+ * @param data
+ */
 function showIAMPolicy(data) {
     $('#overlay-details').html(single_iam_policy_template(data));
     showPopup();
@@ -554,12 +626,21 @@ function showIAMPolicy(data) {
     $(id).toggle();
 };
 
+/**
+ *
+ * @param bucket_name
+ */
 function showS3Bucket(bucket_name) {
     var data = run_results['services']['s3']['buckets'][bucket_name];
     $('#overlay-details').html(single_s3_bucket_template(data));
     showPopup();
 };
 
+/**
+ *
+ * @param bucket_id
+ * @param key_id
+ */
 function showS3Object(bucket_id, key_id) {
     var data = run_results['services']['s3']['buckets'][bucket_id]['keys'][key_id];
     data['key_id'] = key_id;
@@ -568,11 +649,17 @@ function showS3Object(bucket_id, key_id) {
     showPopup();
 };
 
+/**
+ *
+ */
 function showPopup() {
     $("#overlay-background").show();
     $("#overlay-details").show();
 };
 
+/**
+ *
+ */
 function hidePopup() {
     $("#overlay-background").hide();
     $("#overlay-details").hide();
@@ -660,7 +747,6 @@ function removeHash() {
     };
 };
 
-
 /**
  * Show All Resources
  * @param script_id
@@ -673,7 +759,6 @@ function showAllResources(script_id) {
         selector = selector + "[id*='." + path_array[p] + "']";
     };
 };
-
 
 /**
  * Make title from resource path
@@ -691,6 +776,11 @@ function makeTitle(resource_path) {
     return service + ' ' + resource;
 };
 
+/**
+ *
+ * @param resource_path
+ * @returns {string}
+ */
 function getService(resource_path) {
     if (resource_path.startsWith('services')) {
         service = resource_path.split('.')[1];
@@ -724,7 +814,6 @@ function locationHashChanged() {
 
 window.onhashchange = locationHashChanged;
 
-
 /**
  * Get value at given path
  * @param path
@@ -743,13 +832,13 @@ function get_value_at(path) {
     return value;
 };
 
-/**
- * Browsing
- * @type {string};
- */
 var current_service_group = ''
 var current_resource_path = ''
 
+/**
+ *
+ * @param anchor
+ */
 function updateDOM(anchor) {
 
     // Strip the # sign
