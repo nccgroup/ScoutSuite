@@ -28,10 +28,15 @@ class TestAWSScout2RulesRuleset:
         test002 = Ruleset(filename=self.test_ruleset_002)
         for rule in test002.rules:
             printDebug(test002.rules[rule][0].to_string())
+        test005 = Ruleset(filename=self.test_ruleset_001, ruleset_generator=True)
+
+    def test_ruleset_file_not_exist(self):
         test003 = Ruleset(filename='tests/data/no-such-file.json')
         assert (test003.rules == [])
+
+    def test_ruleset_invalid(self):
         test004 = Ruleset(filename='tests/data/invalid-file.json')
-        test005 = Ruleset(filename=self.test_ruleset_001, ruleset_generator=True)
+        assert (test004.rules == [])
 
     def test_find_file(self):
         test101 = Ruleset().find_file(self.test_ruleset_001)
