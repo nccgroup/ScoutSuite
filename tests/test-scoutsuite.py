@@ -1,6 +1,8 @@
 import subprocess
 
 import mock
+from nose.plugins.attrib import attr
+
 from opinel.utils.console import configPrintException
 from opinel.utils.credentials import read_creds_from_environment_variables
 
@@ -51,6 +53,7 @@ class TestScoutSuiteClass:
     #
     # Make sure that ScoutSuite's default run does not crash
     #
+    @attr("credential")
     def test_scout_suite_default_run(self):
         rc = self.call_scout_suite([])
         assert (rc == 0)
@@ -58,6 +61,7 @@ class TestScoutSuiteClass:
     #
     # Make sure that ScoutSuite's CIS ruleset run does not crash
     #
+    @attr("credential")
     def test_scout_suite_cis_ruleset_run(self):
         rc = self.call_scout_suite(['--ruleset', 'cis-02-29-2016.json'])
         assert (rc == 0)

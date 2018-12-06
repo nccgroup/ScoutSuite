@@ -21,7 +21,6 @@ except Exception as e:
 
 from ScoutSuite import AWSCONFIG
 from ScoutSuite.cli_parser import ScoutSuiteArgumentParser
-# from ScoutSuite.configs.scout2 import Scout2Config
 from ScoutSuite.output.html import Scout2Report
 from ScoutSuite.core.exceptions import RuleExceptions
 from ScoutSuite.core.ruleset import Ruleset
@@ -87,6 +86,7 @@ def main(passed_args=None):
                                                     key_file=args.key_file,
                                                     user_account=args.user_account,
                                                     service_account=args.service_account)
+
         if not authenticated:
             return 42
 

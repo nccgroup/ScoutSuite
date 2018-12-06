@@ -15,7 +15,6 @@ except Exception as e:
     sys.exit(42)
 
 from ScoutSuite.cli_parser import RulesArgumentParser
-# from ScoutSuite.providers.base.configs import Scout2Config
 from ScoutSuite.providers import get_provider
 from ScoutSuite.core.ruleset import Ruleset
 from ScoutSuite.output.html import RulesetGenerator
@@ -49,7 +48,7 @@ def main():
     cloud_provider = get_provider(provider='aws',
                                   profile='default')
 
-    ruleset.ruleset_generator_metadata = Scout2Config('default', None, None, [], []).metadata
+    ruleset.ruleset_generator_metadata = cloud_provider.metadata
 
     ruleset_generator_path = ruleset_generator.save(ruleset, args.force_write, args.debug)
 
