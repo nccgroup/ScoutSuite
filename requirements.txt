@@ -3,7 +3,7 @@ python-dateutil>=2.2
 netaddr>=0.7.11
 
 # AWS Provider
-boto3>=1.4.4
+boto3>=1.9.60
 opinel>=3.3.4,<4.0.0
 
 # GCP Provider
