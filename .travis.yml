@@ -14,7 +14,7 @@ before_script:
   - pip install -r requirements.txt
   - pip install coveralls
 
-# command to run tests
+# Command to run tests
 script:
     - nosetests --with-coverage tests/test-utils.py
 #  - 'nosetests tests/test-listall.py'
@@ -25,7 +25,7 @@ script:
     - nosetests --with-coverage tests/test-rules-processingengine.py
     - nosetests --with-coverage --nocapture tests/test-scoutsuite.py -a "!credential"
 
-# use container-base infrastructure
+# Use container-base infrastructure
 sudo: required
 
 # Update test coverage
