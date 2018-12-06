@@ -13,21 +13,23 @@ before_script:
   - pip install -U setuptools
   - pip install -r requirements.txt
   - pip install coveralls
+  - pip install --user codecov
 
 # Command to run tests
 script:
-    - nosetests --with-coverage tests/test-utils.py
-#  - 'nosetests tests/test-listall.py'
-#  - 'nosetests tests/test-rulesgenerator.py'
-#  - 'nosetests tests/test-utils.py'
-#  - '[ "${TRAVIS_SECURE_ENV_VARS}" = "true" ] && nosetests tests/test-utils_sns.py || false'
-    - nosetests --with-coverage tests/test-rules-ruleset.py
-    - nosetests --with-coverage tests/test-rules-processingengine.py
-    - nosetests --with-coverage --nocapture tests/test-scoutsuite.py -a "!credential"
+  - nosetests --with-coverage tests/test-utils.py
+  #  - 'nosetests tests/test-listall.py'
+  #  - 'nosetests tests/test-rulesgenerator.py'
+  #  - 'nosetests tests/test-utils.py'
+  #  - '[ "${TRAVIS_SECURE_ENV_VARS}" = "true" ] && nosetests tests/test-utils_sns.py || false'
+  - nosetests --with-coverage tests/test-rules-ruleset.py
+  - nosetests --with-coverage tests/test-rules-processingengine.py
+  - nosetests --with-coverage --nocapture tests/test-scoutsuite.py -a "!credential"
 
 # Use container-base infrastructure
 sudo: required
 
 # Update test coverage
 after_success:
-    - coveralls
+  - coveralls
+  - codecov
