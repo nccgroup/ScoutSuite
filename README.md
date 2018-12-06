@@ -1,7 +1,8 @@
 # Scout Suite
 
-![image](https://travis-ci.org/nccgroup/ScoutSuite.svg?branch=master)
-![image](https://coveralls.io/repos/github/nccgroup/ScoutSuite/badge.svg?branch=master) 
+[![Travis](https://travis-ci.org/nccgroup/ScoutSuite.svg?branch=master)](https://travis-ci.org/nccgroup/ScoutSuite.svg?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/nccgroup/ScoutSuite/badge.svg?branch=master)](https://coveralls.io/github/nccgroup/ScoutSuite?branch=master)
+[![CodeCov](https://codecov.io/gh/nccgroup/ScoutSuite/branch/master/graph/badge.svg)](https://codecov.io/gh/nccgroup/ScoutSuite)
 [![PyPI version](https://badge.fury.io/py/ScoutSuite.svg)](https://badge.fury.io/py/ScoutSuite)
 
 ## Description
