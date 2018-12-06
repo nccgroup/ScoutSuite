@@ -19,10 +19,17 @@ class TestAWSScout2RulesRuleset:
 
     def test_ruleset_class(self):
         test001 = Ruleset(filename=self.test_ruleset_001)
-        assert ('iam-password-policy-no-expiration.json' in test001.rules)
-        assert (type(test001.rules['iam-password-policy-no-expiration.json']) == list)
-        assert (type(test001.rules['iam-password-policy-no-expiration.json'][0] == Rule))
-        assert (hasattr(test001.rules['iam-password-policy-no-expiration.json'][0], 'path'))
+
+        assert (os.path.isdir(test001.rules_data_path))
+        assert (os.path.isfile(test001.filename))
+        assert (test001.name == "test-ruleset")
+        assert (test001.about == "regression test")
+
+        test_file_key = 'iam-password-policy-no-expiration.json'
+        assert (test_file_key in test001.rules)
+        assert (type(test001.rules[test_file_key]) == list)
+        assert (type(test001.rules[test_file_key][0] == Rule))
+        assert (hasattr(test001.rules[test_file_key][0], 'path'))
         for rule in test001.rules:
             printDebug(test001.rules[rule][0].to_string())
         test002 = Ruleset(filename=self.test_ruleset_002)
