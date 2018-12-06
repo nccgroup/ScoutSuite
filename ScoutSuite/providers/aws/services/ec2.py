@@ -13,6 +13,7 @@ from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
 from ScoutSuite.providers.base.configs.browser import get_attribute_at
+from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.utils import get_keys, ec2_classic
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 
@@ -186,30 +187,16 @@ def analyze_ec2_config(ec2_info, aws_account_id, force_write):
         printInfo('Analyzing EC2 config... ', newLine=False)
         # Tweaks
         link_elastic_ips(ec2_info)
-        add_security_group_name_to_ec2_grants(ec2_info, aws_account_id)
         # Custom EC2 analysis
         #        check_for_elastic_ip(ec2_info)
-        list_network_attack_surface(ec2_info, 'attack_surface', 'PublicIpAddress')
+        # FIXME - commented for now as this method doesn't seem to be defined anywhere'
+        # list_network_attack_surface(ec2_info, 'attack_surface', 'PublicIpAddress')
         # TODO: make this optional, commented out for now
         # list_network_attack_surface(ec2_info, 'private_attack_surface', 'PrivateIpAddress')
         printInfo('Success')
     except Exception as e:
         printInfo('Error')
         printException(e)
-
-
-def add_security_group_name_to_ec2_grants(ec2_config, aws_account_id):
-    """
-    Github issue #24: display the security group names in the list of grants (added here to have ligher JS code)
-
-    :param ec2_config:
-    :param aws_account_id:
-    :return:
-    """
-    go_to_and_do(ec2_config, None,
-                 ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports', 'security_groups'], [],
-                 add_security_group_name_to_ec2_grants_callback, {'AWSAccountId': aws_account_id})
-
 
 def add_security_group_name_to_ec2_grants_callback(ec2_config, current_config, path, current_path, ec2_grant,
                                                    callback_args):

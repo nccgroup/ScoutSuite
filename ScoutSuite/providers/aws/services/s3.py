@@ -309,8 +309,9 @@ def get_s3_buckets(api_client, s3_info, s3_params):
     s3_info['buckets_count'] = len(targets)
     s3_params['api_clients'] = api_client
     s3_params['s3_info'] = s3_info
-    thread_work(targets, get_s3_bucket, params = s3_params, num_threads = 30)
-    show_status(s3_info)
+    # FIXME - commented for now as this method doesn't seem to be defined anywhere'
+    # thread_work(targets, get_s3_bucket, params = s3_params, num_threads = 30)
+    # show_status(s3_info)
     s3_info['buckets_count'] = len(s3_info['buckets'])
     return s3_info
 
@@ -329,7 +330,8 @@ def get_s3_bucket_keys(api_client, bucket_name, bucket, check_encryption, check_
     keys = handle_truncated_response(api_client.list_objects, {'Bucket': bucket_name}, ['Contents'])
     bucket['keys_count'] = len(keys['Contents'])
     key_count = 0
-    update_status(key_count, bucket['keys_count'], 'keys')
+    # FIXME - commented for now as this method doesn't seem to be defined anywhere'
+    # update_status(key_count, bucket['keys_count'], 'keys')
     for key in keys['Contents']:
         key_count += 1
         key['name'] = key.pop('Key')
@@ -350,7 +352,8 @@ def get_s3_bucket_keys(api_client, bucket_name, bucket, check_encryption, check_
                 continue
         # Save it
         bucket['keys'].append(key)
-        update_status(key_count, bucket['keys_count'], 'keys')
+        # FIXME - commented for now as this method doesn't seem to be defined anywhere'
+        # update_status(key_count, bucket['keys_count'], 'keys')
 
 def get_s3_list_region(region):
     """
