@@ -33,9 +33,10 @@ def main():
     # Configure the debug level
     configPrintException(args.debug)
 
-    # Check version of opinel
-    if not check_requirements(os.path.realpath(__file__)):
-        return 42
+    # FIXME check that all requirements are installed
+    # # Check version of opinel
+    # if not check_requirements(os.path.realpath(__file__)):
+    #     return 42
 
     # Load ruleset
     ruleset = Ruleset(filename = args.base_ruleset, name = args.ruleset_name, rules_dir = args.rules_dir, ruleset_generator = True)
@@ -43,9 +44,8 @@ def main():
     # Generate the HTML generator
     ruleset_generator = RulesetGenerator(args.ruleset_name, args.generator_dir)
 
-    #FIXME this is broken in Scout Suite
-    # Create a cloud provider object
-    cloud_provider = get_provider(provider='aws',
+    # FIXME is broken in Scout Suite, only handles AWS
+    cloud_provider = get_provider(provider='gcp',
                                   profile='default')
 
     ruleset.ruleset_generator_metadata = cloud_provider.metadata
