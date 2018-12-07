@@ -35,12 +35,6 @@ class AWSProvider(BaseProvider):
 
         self.metadata_path = '%s/metadata.json' % os.path.split(os.path.abspath(__file__))[0]
 
-        # TODO this should probably not be here
-        # # Check version of opinel
-        # requirements_file_path = '%s/requirements.txt' % os.path.dirname(sys.modules['__main__'].__file__)
-        # if not check_requirements(requirements_file_path):
-        #     return 42
-
         self.sg_map = {}
         self.subnet_map = {}
 
