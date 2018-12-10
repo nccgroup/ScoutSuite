@@ -19,7 +19,6 @@ class TestAWSScout2RulesRuleset:
 
     def test_ruleset_class(self):
         test001 = Ruleset(filename=self.test_ruleset_001)
-
         assert (os.path.isdir(test001.rules_data_path))
         assert (os.path.isfile(test001.filename))
         assert (test001.name == "test-ruleset")
@@ -50,6 +49,19 @@ class TestAWSScout2RulesRuleset:
     def test_ruleset_invalid(self):
         test004 = Ruleset(filename='tests/data/invalid-file.json')
         assert (test004.rules == [])
+
+    def test_cloud_provider_path(self):
+        test001 = Ruleset(filename=self.test_ruleset_001)
+        assert (os.path.samefile(test001.rules_data_path, './ScoutSuite/providers/aws/rules'))
+
+        test001 = Ruleset(filename=self.test_ruleset_001, cloud_provider="aws")
+        assert (os.path.samefile(test001.rules_data_path, './ScoutSuite/providers/aws/rules'))
+
+        test001 = Ruleset(filename=self.test_ruleset_001, cloud_provider="azure")
+        assert (os.path.samefile(test001.rules_data_path, './ScoutSuite/providers/azure/rules'))
+
+        test001 = Ruleset(filename=self.test_ruleset_001, cloud_provider="gcp")
+        assert (os.path.samefile(test001.rules_data_path, './ScoutSuite/providers/gcp/rules'))
 
     def test_find_file(self):
         test101 = Ruleset().find_file(self.test_ruleset_001)
