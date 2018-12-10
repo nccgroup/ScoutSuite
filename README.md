@@ -115,7 +115,7 @@ considered security scanning as it does not impact AWS' network and applications
 
 Use of Scout Suite does not require GCP users to contact Google to begin testing. The only requirement is that users 
 abide by the Cloud Platform Acceptable Use Policy and the Terms of Service and ensure that tests only affect projects 
-you onw (and not other customers’ applications).
+you own (and not other customers' applications).
 
 References:
 - https://cloud.google.com/terms/aup
