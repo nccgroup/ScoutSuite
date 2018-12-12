@@ -224,8 +224,10 @@ def get_s3_bucket_secure_transport(api_client, bucket_name, bucket_info):
                 if 'Condition' in statement and \
                         'Bool' in statement['Condition'] and \
                         'aws:SecureTransport' in statement['Condition']['Bool'] and \
-                        statement['Condition']['Bool']['aws:SecureTransport'] == 'false' and \
-                        statement['Effect'] == 'Deny':
+                        ((statement['Condition']['Bool']['aws:SecureTransport'] == 'false' and \
+                          statement['Effect'] == 'Deny') or
+                         (statement['Condition']['Bool']['aws:SecureTransport'] == 'true' and \
+                           statement['Effect'] == 'Allow')):
                     bucket_info['secure_transport'] = 'Enabled'
             return True
         else:
