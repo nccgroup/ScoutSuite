@@ -35,17 +35,17 @@ $(document).ready(function(){
                 // all other cases
                 else {
                     var i = items[item];
-                };
+                }
                 // for first item, put keys at beginning of csv
                 if (first_entry == 1){
-                    var key_values_array = []
+                    var key_values_array = [];
                     Object.keys(i).forEach(function(key) {
                         key_values_array.push(key);
                     });
                     csv_array.push(key_values_array);
                 }
                 // put each value in array
-                var values_array = []
+                var values_array = [];
                 Object.keys(i).forEach(function(key) {
                     values_array.push(JSON.stringify(i[key]).replace(/^"(.*)"$/, '$1'));
                 });
@@ -55,8 +55,7 @@ $(document).ready(function(){
             }
 
             download_as_csv(finding_key + '.csv', csv_array)
-        };
-
+        }
         if (button_clicked == 'findings_download_json_button'){
             json_dict['items'] = [];
             for (item in items) {
@@ -70,7 +69,7 @@ $(document).ready(function(){
                 // all other cases
                 else {
                     var i = items[item];
-                };
+                }
                 // add item to json
                 json_dict['items'].push(i);
             }
@@ -84,14 +83,13 @@ $(document).ready(function(){
             //     json_dict[id_array[id_array.length - 2]] = i;
             // }
             download_as_json(finding_key + '.json', json_dict);
-        };
-
+        }
     });
 
 });
 
 // Globals
-var loaded_config_array = new Array();
+var loaded_config_array = [];
 
 //
 // Display the account ID -- use of the generic function + templates result in the div not being at the top of the page
@@ -104,7 +102,7 @@ var load_aws_account_id = function() {
         value += ' (' + aws_info['organization'][value]['Name'] + ')'
     }
     element.innerHTML = value;
-}
+};
 
 //
 // Generic load JSON function
@@ -309,10 +307,10 @@ function showFindings(path, resource_path) {
         $('[id="' + items[item] + '"]').click(function(e) {
             finding_id = e.target.id;
             if (!(finding_service in exceptions)) {
-                exceptions[finding_service] = new Object();
+                exceptions[finding_service] = {};
             }
             if (!(finding_key in exceptions[finding_service])) {
-                exceptions[finding_service][finding_key] = new Array();
+                exceptions[finding_service][finding_key] = [];
             }
             is_exception = confirm('Mark this item as an exception ?');
             if (is_exception && (exceptions[finding_service][finding_key].indexOf(finding_id) == -1)) {
@@ -363,7 +361,7 @@ function updateNavbar(service) {
 
 function toggleVisibility(id) {
     id1 = '#' + id;
-    $(id1).toggle()
+    $(id1).toggle();
     id2 = '#bullet-' + id;
     if ($(id1).is(":visible")) {
         $(id2).html('<i class="glyphicon glyphicon-collapse-down"></i>');
@@ -620,7 +618,7 @@ function removeHash () {
 // 
 function showAllResources(script_id) {
     var path_array = script_id.split('.');
-    var selector = "[id^='" + path_array.shift() + "." + path_array.shift() + ".']"
+    var selector = "[id^='" + path_array.shift() + "." + path_array.shift() + ".']";
     for (p in path_array) {
         $(selector).show();
         selector = selector + "[id*='." + path_array[p] + "']";
@@ -691,8 +689,8 @@ function get_value_at(path) {
 //
 // Browsing
 //
-var current_service_group = ''
-var current_resource_path = ''
+var current_service_group = '';
+var current_resource_path = '';
 function updateDOM(anchor) {
 
     // Strip the # sign
@@ -724,8 +722,7 @@ function updateDOM(anchor) {
         $('#findings_download_button').show();
     } else {
         $('#findings_download_button').hide();
-    };
-
+    }
     // Update title
     if (path.endsWith('.items')) {
         title = get_value_at(path.replace('items', 'description'));
@@ -787,7 +784,7 @@ function updateDOM(anchor) {
 //
 function lazy_loading(path) {
     var cols = 1;
-    var resource_path_array = path.split('.')
+    var resource_path_array = path.split('.');
     var service = resource_path_array[1];
     var resource_type = resource_path_array[resource_path_array.length - 1];
     for (group in aws_info['metadata']) {
@@ -875,7 +872,7 @@ var make_title = function(title) {
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
     }
-}
+};
 
 // Add one or
 var add_templates = function(group, service, section, resource_type, path, cols) {
@@ -886,7 +883,7 @@ var add_templates = function(group, service, section, resource_type, path, cols)
     if (cols > 1) {
         add_template(group, service, section, resource_type, path, 'list');
     }
-}
+};
 
 
 //
@@ -919,7 +916,7 @@ var add_template = function(group, service, section, resource_type, path, suffix
         template.innerHTML = "{{> " + partial_name + " service_group = '" + group  + "' service_name = '" + service + "' resource_type = '" + resource_type + "' partial_name = '" + path + "'}}";
         $('body').append(template);
     }
-}
+};
 
 var add_summary_template = function(path) {
     var template = document.createElement("script");
@@ -927,7 +924,7 @@ var add_summary_template = function(path) {
     template.id = path + ".details.template";
     template.innerHTML = "{{> " + partial_name + " service_name = '" + service + "' resource_type = '" + resource_type + "' partial_name = '" + path + "'}}";
     $('body').append(template);
-}
+};
 
 // Rules generator
 var filter_rules = function(group, service) {
@@ -939,7 +936,7 @@ var filter_rules = function(group, service) {
     }
     var id = "groups." + group + ".list";
     $("[id='" + id + "']").hide();
-}
+};
 
 var download_configuration = function(configuration, name, prefix) {
 
@@ -948,37 +945,37 @@ var download_configuration = function(configuration, name, prefix) {
     dlAnchorElem.setAttribute("href", uriContent);
     dlAnchorElem.setAttribute("download", name + '.json');
     dlAnchorElem.click();
-}
+};
 
 var download_exceptions = function() {
     var url = window.location.pathname;
     var profile_name = url.substring(url.lastIndexOf('/')+1).replace('report-', '').replace('.html', '');
     console.log(exceptions);
     download_configuration(exceptions, 'exceptions-' + profile_name, 'exceptions = \n');
-}
+};
 
 var show_element = function(element_id) {
 //    document.getElementById(element_id).style.display = 'block';
     $('#' + element_id).show();
-}
+};
 
 var hide_element = function(element_id) {
 //    var id = '#' + element_id;
     $('#' + element_id).hide();
 //    document.getElementById(element_id).style.display = 'none';
-}
+};
 
 var toggle_element = function(element_id) {
 //    var id = '#' + element_id;
 //    $(id).toggle();
     $('#' + element_id).toggle();
-}
+};
 
 var set_filter_url = function(region) {
     tmp = location.hash.split('.');
     tmp[3] = region;
     location.hash = tmp.join('.');
-}
+};
 
 // returns a csv file to download
 // example input:
@@ -995,7 +992,7 @@ function download_as_csv(filename, rows) {
             var innerValue = row[j] === null ? '' : row[j].toString();
             if (row[j] instanceof Date) {
                 innerValue = row[j].toLocaleString();
-            };
+            }
             var result = innerValue.replace(/"/g, '""');
             if (result.search(/("|,|\n)/g) >= 0)
                 result = '"' + result + '"';
