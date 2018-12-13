@@ -52,8 +52,8 @@ class TestAWSScout2RulesRuleset:
         assert (test004.rules == [])
 
     def test_find_file(self):
-        test101 = Ruleset().find_file(self.test_ruleset_001)
-        test102 = Ruleset().find_file('default')
+        test101 = Ruleset(cloud_provider='aws').find_file(self.test_ruleset_001)
+        test102 = Ruleset(cloud_provider='aws').find_file('default')
 
     def test_search_ruleset(self):
-        test201 = Ruleset().search_ruleset('test', no_prompt=True)
+        test201 = Ruleset(cloud_provider='aws').search_ruleset('test', no_prompt=True)
