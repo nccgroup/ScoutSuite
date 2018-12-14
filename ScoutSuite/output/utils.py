@@ -6,6 +6,8 @@ import sys
 
 from opinel.utils.console import printError
 
+from six.moves import input
+
 from ScoutSuite import AWSCONFIG, EXCEPTIONS, HTMLREPORT, AWSRULESET, AWSCONFIG_FILE, EXCEPTIONS_FILE, HTMLREPORT_FILE, AWSRULESET_FILE
 
 
@@ -16,12 +18,10 @@ def prompt_4_yes_no(question):
     :param question:                    Question to ask; answer is yes/no
     :return:                            :boolean
     """
+
     while True:
         sys.stdout.write(question + ' (y/n)? ')
-        try:
-            choice = raw_input().lower()
-        except:
-            choice = input().lower()
+        choice = input().lower()
         if choice == 'yes' or choice == 'y':
             return True
         elif choice == 'no' or choice == 'n':

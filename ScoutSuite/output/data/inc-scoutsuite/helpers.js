@@ -18,7 +18,7 @@ Handlebars.registerHelper('displayPolicy', function(blob) {
         policy += ',\n';
         
     }
-    policy += '}'
+    policy += '}';
     return policy;
 });
 
@@ -187,7 +187,7 @@ var recursive_count = function(input, entities) {
         count = count + 1;
     }
     return count;
-}
+};
 
 Handlebars.registerHelper('find_ec2_object_attribute', function(path, id, attribute ) {
     return findEC2ObjectAttribute(run_results['services']['ec2'], path, id, attribute);
@@ -362,12 +362,12 @@ Handlebars.registerHelper('each_dict_as_sorted_list', function(context, options)
             if(context[a].checked_items != 0 && context[b].checked_items == 0) return -1;
             if(context[a].description.toLowerCase() < context[b].description.toLowerCase()) return -1;
             if(context[a].description.toLowerCase() > context[b].description.toLowerCase()) return 1;
-        };
+        }
         if((context[a].flagged_items == 0 && context[b].flagged_items > 0)
             || (context[a].flagged_items > 0 && context[b].flagged_items == 0)){
             if(context[a].flagged_items > context[b].flagged_items) return -1;
             return 1
-        };
+        }
         if(context[a].flagged_items > 0 && context[b].flagged_items > 0){
             if(context[a].level == context[b].level){
                 if(context[a].description.toLowerCase() < context[b].description.toLowerCase()) return -1;
@@ -380,8 +380,8 @@ Handlebars.registerHelper('each_dict_as_sorted_list', function(context, options)
                 if(context[b].level.toLowerCase() === 'warning') return 1;
                 if(context[a].level.toLowerCase() === 'warning') return -1;
                 if(context[b].level.toLowerCase() === 'warning') return 1;
-            };
-        };
+            }
+        }
         return 0;
     });
 
@@ -397,7 +397,7 @@ Handlebars.registerHelper('each_dict_as_sorted_list', function(context, options)
 
 Handlebars.registerHelper('sorted_each', function(array, key, opts) {
     newarray = array.sort(function(a, b) {
-        if (a[key] < b[key]) return -1
+        if (a[key] < b[key]) return -1;
         if (a[key] > b[key]) return 1;
         return 0;
     });
@@ -436,7 +436,7 @@ var rule_cleanup = function(rule, attribute) {
         delete rule[attribute];
     }
     return rule;
-}
+};
 
 Handlebars.registerHelper('get_arg_name', function(rule_filename, arg_index) {
     if ('arg_names' in run_results['rule_definitions'][rule_filename]) {

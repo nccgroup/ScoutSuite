@@ -40,7 +40,7 @@ class Ruleset(object):
         self.environment_name = environment_name
         self.rule_type = rule_type
         # Ruleset filename
-        self.filename = self.find_file(filename)
+        self.filename = self.find_file(filename, provider=cloud_provider)
         if not self.filename:
             self.search_ruleset(environment_name)
         printDebug('Loading ruleset %s' % self.filename)
@@ -172,16 +172,16 @@ class Ruleset(object):
         ruleset_found = False
         if environment_name != 'default':
             ruleset_file_name = 'ruleset-%s.json' % environment_name
-            ruleset_file_path = os.path.join(os.getcwd(), ruleset_file_name)
+            ruleset_file_path = os.path.join(self.rules_data_path, 'rulesets/%s' % ruleset_file_name)
             if os.path.exists(ruleset_file_path):
                 if no_prompt or prompt_4_yes_no(
                         "A ruleset whose name matches your environment name was found in %s. Would you like to use it instead of the default one" % ruleset_file_name):
                     ruleset_found = True
                     self.filename = ruleset_file_path
         if not ruleset_found:
-            self.filename = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data/rulesets/default.json')
+            self.filename = os.path.join(self.rules_data_path, 'rulesets/default.json')
 
-    def find_file(self, filename, filetype='rulesets'):
+    def find_file(self, filename, filetype='rulesets', provider=None):
         """
 
         :param filename:

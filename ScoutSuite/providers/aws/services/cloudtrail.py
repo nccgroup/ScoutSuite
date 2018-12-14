@@ -49,7 +49,10 @@ class CloudTrailRegionConfig(RegionConfig):
                 trail_config[key] = trail_details[key] if key in trail_details else None
 
         if trail_details:
-            trail_config['wildcard_data_logging'] = self.data_logging_status(trail_config['name'], trail_details, api_client)
+            # using trail ARN instead of name as with Organizations the trail would be located in another account
+            trail_config['wildcard_data_logging'] = self.data_logging_status(trail_config['TrailARN'],
+                                                                             trail_details,
+                                                                             api_client)
 
         self.trails[trail_id] = trail_config
 

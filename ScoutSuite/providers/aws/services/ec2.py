@@ -4,6 +4,7 @@ EC2-related classes and functions
 """
 
 # TODO: move a lot of this to VPCconfig, and use some sort of filter to only list SGs in EC2 classic
+import netaddr
 
 from opinel.utils.aws import get_name
 from opinel.utils.console import printException, printInfo
@@ -11,6 +12,8 @@ from opinel.utils.fs import load_data
 from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
+from ScoutSuite.providers.base.configs.browser import get_attribute_at
+from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.utils import get_keys, ec2_classic
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 
@@ -182,32 +185,16 @@ class EC2Config(RegionalServiceConfig):
 def analyze_ec2_config(ec2_info, aws_account_id, force_write):
     try:
         printInfo('Analyzing EC2 config... ', newLine=False)
-        # Tweaks
-        link_elastic_ips(ec2_info)
-        add_security_group_name_to_ec2_grants(ec2_info, aws_account_id)
         # Custom EC2 analysis
         #        check_for_elastic_ip(ec2_info)
-        list_network_attack_surface(ec2_info, 'attack_surface', 'PublicIpAddress')
+        # FIXME - commented for now as this method doesn't seem to be defined anywhere'
+        # list_network_attack_surface(ec2_info, 'attack_surface', 'PublicIpAddress')
         # TODO: make this optional, commented out for now
         # list_network_attack_surface(ec2_info, 'private_attack_surface', 'PrivateIpAddress')
         printInfo('Success')
     except Exception as e:
         printInfo('Error')
         printException(e)
-
-
-def add_security_group_name_to_ec2_grants(ec2_config, aws_account_id):
-    """
-    Github issue #24: display the security group names in the list of grants (added here to have ligher JS code)
-
-    :param ec2_config:
-    :param aws_account_id:
-    :return:
-    """
-    go_to_and_do(ec2_config, None,
-                 ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports', 'security_groups'], [],
-                 add_security_group_name_to_ec2_grants_callback, {'AWSAccountId': aws_account_id})
-
 
 def add_security_group_name_to_ec2_grants_callback(ec2_config, current_config, path, current_path, ec2_grant,
                                                    callback_args):
@@ -266,26 +253,6 @@ def check_for_elastic_ip(ec2_info):
             new_macro_items.append(ec2_info['violations']['non-elastic-ec2-public-ip-whitelisted'].macro_items[i])
     ec2_info['violations']['non-elastic-ec2-public-ip-whitelisted'].items = new_items
     ec2_info['violations']['non-elastic-ec2-public-ip-whitelisted'].macro_items = new_macro_items
-
-
-def link_elastic_ips(ec2_config):
-    """
-    Link EIP with instances (looks like this might be no longer needed with boto3)
-
-    :param ec2_config:
-    :return:
-    """
-    return
-    go_to_and_do(ec2_config, None, ['regions', 'elastic_ips'], None, link_elastic_ips_callback1, {})
-
-
-def link_elastic_ips_callback1(ec2_config, current_config, path, current_path, elastic_ip, callback_args):
-    if not 'id' in current_config:
-        return
-    instance_id = current_config['id']
-    return
-    go_to_and_do(ec2_config, None, ['regions', 'vpcs', 'instances'], None, link_elastic_ips_callback2,
-                 {'instance_id': instance_id, 'elastic_ip': elastic_ip})
 
 
 def link_elastic_ips_callback2(ec2_config, current_config, path, current_path, instance_id, callback_args):

@@ -1,7 +1,12 @@
-# Scout Suite
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/4206926/49877604-10457580-fe26-11e8-92d7-cd876c4f6454.png" width=350/>
+</p>
 
-<!--- ![image](https://travis-ci.org/nccgroup/Scout2.svg?branch=master) -->
-<!--- ![image](https://coveralls.io/repos/github/nccgroup/Scout2/badge.svg?branch=master) -->
+# 
+
+[![Travis](https://travis-ci.org/nccgroup/ScoutSuite.svg?branch=master)](https://travis-ci.org/nccgroup/ScoutSuite)
+[![Coverage Status](https://coveralls.io/repos/github/nccgroup/ScoutSuite/badge.svg?branch=master)](https://coveralls.io/github/nccgroup/ScoutSuite?branch=master)
+[![CodeCov](https://codecov.io/gh/nccgroup/ScoutSuite/branch/master/graph/badge.svg)](https://codecov.io/gh/nccgroup/ScoutSuite)
 [![PyPI version](https://badge.fury.io/py/ScoutSuite.svg)](https://badge.fury.io/py/ScoutSuite)
 
 ## Description
@@ -114,7 +119,7 @@ considered security scanning as it does not impact AWS' network and applications
 
 Use of Scout Suite does not require GCP users to contact Google to begin testing. The only requirement is that users 
 abide by the Cloud Platform Acceptable Use Policy and the Terms of Service and ensure that tests only affect projects 
-you onw (and not other customers’ applications).
+you own (and not other customers' applications).
 
 References:
 - https://cloud.google.com/terms/aup
@@ -161,7 +166,7 @@ To run Scout using Service Account keys, using the following command:
 
     $ python Scout.py --provider gcp --service-account --key-file </PATH/TO/KEY_FILE.JSON>
     
-To scan a GCP:
+To scan a GCP ... 
 - Organization, use the `organization-id <ORGANIZATION ID>` argument
 - Folder, use the `folder-id <FOLDER ID>` argument.
 - Project, use the `project-id <PROJECT ID>` argument 

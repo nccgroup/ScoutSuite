@@ -15,7 +15,6 @@ except Exception as e:
     sys.exit(42)
 
 from ScoutSuite.cli_parser import RulesArgumentParser
-# from ScoutSuite.providers.base.configs import Scout2Config
 from ScoutSuite.providers import get_provider
 from ScoutSuite.core.ruleset import Ruleset
 from ScoutSuite.output.html import RulesetGenerator
@@ -34,9 +33,10 @@ def main():
     # Configure the debug level
     configPrintException(args.debug)
 
-    # Check version of opinel
-    if not check_requirements(os.path.realpath(__file__)):
-        return 42
+    # FIXME check that all requirements are installed
+    # # Check version of opinel
+    # if not check_requirements(os.path.realpath(__file__)):
+    #     return 42
 
     # Load ruleset
     ruleset = Ruleset(filename = args.base_ruleset, name = args.ruleset_name, rules_dir = args.rules_dir, ruleset_generator = True)
@@ -44,12 +44,11 @@ def main():
     # Generate the HTML generator
     ruleset_generator = RulesetGenerator(args.ruleset_name, args.generator_dir)
 
-    #FIXME this is broken in Scout Suite
-    # Create a cloud provider object
-    cloud_provider = get_provider(provider='aws',
+    # FIXME is broken in Scout Suite, only handles AWS
+    cloud_provider = get_provider(provider='gcp',
                                   profile='default')
 
-    ruleset.ruleset_generator_metadata = Scout2Config('default', None, None, [], []).metadata
+    ruleset.ruleset_generator_metadata = cloud_provider.metadata
 
     ruleset_generator_path = ruleset_generator.save(ruleset, args.force_write, args.debug)
 

@@ -3,22 +3,21 @@
 Exceptions handling
 """
 
-import json
-
 from opinel.utils.console import printDebug
 
 from ScoutSuite import EXCEPTIONS
 from ScoutSuite.output.js import JavaScriptReaderWriter
 
+
 class RuleExceptions(object):
 
-    def __init__(self, profile, file_path = None, foobar = None): 
+    def __init__(self, profile, file_path=None, foobar=None):
         self.profile = profile
         self.file_path = file_path
         self.jsrw = JavaScriptReaderWriter(self.profile)
-        self.exceptions = self.jsrw.load_from_file(config_type = EXCEPTIONS,
-                                                   config_path = self.file_path,
-                                                   first_line = True)
+        self.exceptions = self.jsrw.load_from_file(config_type=EXCEPTIONS,
+                                                   config_path=self.file_path,
+                                                   first_line=True)
 
     def process(self, cloud_provider):
         for service in self.exceptions:
@@ -32,4 +31,4 @@ class RuleExceptions(object):
                         filtered_items.append(item)
                 cloud_provider.services[service]['findings'][rule]['items'] = filtered_items
                 cloud_provider.services[service]['findings'][rule]['flagged_items'] = \
-                    len(cloud_provider.services['services'][service]['findings'][rule]['items'])
+                    len(cloud_provider.services[service]['findings'][rule]['items'])

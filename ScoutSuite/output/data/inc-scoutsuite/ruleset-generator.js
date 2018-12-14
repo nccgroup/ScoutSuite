@@ -10,25 +10,25 @@ var generate_ruleset = function() {
     var rules = $("*[id^='rule-']");
     for (var i=0; i < rules.length; i++) {
         var filename = $(rules[i]).find('#filename').val();
-        var rule = new Object();
+        var rule = {};
         rule['level'] = $(rules[i]).find('#level').val();
         rule['enabled'] = $(rules[i]).find('#enabled').is(':checked');
-        args = $(rules[i]).find("[id^='parameter_']")
+        args = $(rules[i]).find("[id^='parameter_']");
         if (args.length > 0) {
-            tmp = new Object();
+            tmp = {};
             for (var j=0; j < args.length; j++) {
                 id = $(args[j]).attr('id').replace('parameter_', '');
                 val = $(args[j]).val();
                 tmp[id] = val;
             }
-            rule['args'] = new Array();
+            rule['args'] = [];
             for (k in tmp) {
                 rule['args'].push(tmp[k]);
             }
         }
 
         if (!(filename in ruleset['rules'])) {
-            ruleset['rules'][filename] = new Array();
+            ruleset['rules'][filename] = [];
         }
         ruleset['rules'][filename].push(rule);
     }

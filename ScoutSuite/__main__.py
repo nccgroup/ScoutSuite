@@ -21,7 +21,6 @@ except Exception as e:
 
 from ScoutSuite import AWSCONFIG
 from ScoutSuite.cli_parser import ScoutSuiteArgumentParser
-# from ScoutSuite.configs.scout2 import Scout2Config
 from ScoutSuite.output.html import Scout2Report
 from ScoutSuite.core.exceptions import RuleExceptions
 from ScoutSuite.core.ruleset import Ruleset
@@ -35,6 +34,12 @@ def main(passed_args=None):
 
     :return:
     """
+
+    # FIXME check that all requirements are installed
+    # # Check version of opinel
+    # requirements_file_path = '%s/requirements.txt' % os.path.dirname(sys.modules['__main__'].__file__)
+    # if not check_requirements(requirements_file_path):
+    #     return 42
 
     # Parse arguments
     parser = ScoutSuiteArgumentParser()
