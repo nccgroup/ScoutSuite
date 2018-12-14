@@ -18,7 +18,8 @@ class TestAWSScout2RulesRuleset:
         self.test_ruleset_001 = os.path.join(self.test_dir, 'data/test-ruleset.json')
         self.test_ruleset_002 = os.path.join(self.test_dir, 'data/test-ruleset-absolute-path.json')
 
-    def test_ruleset_class(self):
+    @patch("ScoutSuite.core.ruleset.printError")
+    def test_ruleset_class(self, printError):
         test001 = Ruleset(filename=self.test_ruleset_001)
         assert (os.path.isdir(test001.rules_data_path))
         assert (os.path.isfile(test001.filename))
@@ -37,19 +38,29 @@ class TestAWSScout2RulesRuleset:
         assert (test001.rule_definitions[test_file_key].description == "Password expiration disabled")
         for rule_def in test001.rule_definitions:
             printDebug(str(test001.rule_definitions[rule_def]))
+        assert (printError.call_count == 0)
 
         test002 = Ruleset(filename=self.test_ruleset_002)
         for rule in test002.rules:
             printDebug(test002.rules[rule][0].to_string())
+        assert (printError.call_count == 1) # is this expected ??
+        assert ("test-ruleset-absolute-path.json does not exist." in printError.call_args_list[0][0][0])
+
         test005 = Ruleset(filename=self.test_ruleset_001, ruleset_generator=True)
 
-    def test_ruleset_file_not_exist(self):
+    @patch("ScoutSuite.core.ruleset.printError")
+    def test_ruleset_file_not_exist(self, printError):
         test003 = Ruleset(cloud_provider='aws', filename='tests/data/no-such-file.json')
         assert (test003.rules == [])
+        assert (printError.call_count == 1)
+        assert ("no-such-file.json does not exist" in printError.call_args_list[0][0][0])
 
-    def test_ruleset_invalid(self):
+    @patch("ScoutSuite.core.ruleset.printError")
+    def test_ruleset_invalid(self, printError):
         test004 = Ruleset(cloud_provider='aws', filename='tests/data/invalid-file.json')
         assert (test004.rules == [])
+        assert (printError.call_count == 1)
+        assert ("invalid-file.json contains malformed JSON" in printError.call_args_list[0][0][0])
 
     def test_path_for_cloud_providers(self):
         target = Ruleset(filename=self.test_ruleset_001)
