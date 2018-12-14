@@ -1,0 +1,12 @@
+{
+    "about": "Placeholder",
+    "rules": {
+        "rule-name.json": [
+            {
+                "level": "danger",
+                "filename": "rule-name.json",
+                "enabled": true
+            }
+        ]
+    }
+}

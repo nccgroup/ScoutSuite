@@ -77,37 +77,29 @@ class TestAWSScout2RulesRuleset:
         target = Ruleset(filename='filters')
         assert (os.path.samefile(target.filename, rpath + 'rulesets/filters.json'))
 
-    def test_path_search_default(self):
+    @patch("ScoutSuite.core.ruleset.prompt_4_yes_no")
+    def test_file_search(self, prompt_yes_no):
+        prompt_yes_no.return_value = False
+
         target = Ruleset(filename=None)
-        norms = os.path.normpath(os.path.join(self.test_dir, '../ScoutSuite/core/data/rulesets/default.json'))
-        # assert (os.path.normpath(target.filename) == norms)
+        assert (prompt_yes_no.call_count == 0)
+        assert (os.path.samefile(target.filename, os.path.join(target.rules_data_path, './rulesets/default.json')))
 
-        assert (os.path.exists("ruleset-notexist.json") == False)
         target = Ruleset(filename=None, environment_name="notexist")
-        norms = os.path.normpath(os.path.join(self.test_dir, '../ScoutSuite/core/data/rulesets/default.json'))
-        # assert (os.path.normpath(target.filename) == norms)
+        assert (prompt_yes_no.call_count == 0)
+        assert (os.path.samefile(target.filename, os.path.join(target.rules_data_path, './rulesets/default.json')))
 
-    @patch("ScoutSuite.core.ruleset.prompt_4_yes_no", return_value=True)
-    def test_path_search_withenv_prompt_yes(self, patched):
-        with open("ruleset-special.json", "w") as f:
-            f.write(".")
+        target = Ruleset(filename=None, environment_name="sample")
+        assert (prompt_yes_no.call_count == 1)
+        assert (os.path.samefile(target.filename, os.path.join(target.rules_data_path, './rulesets/default.json')))
 
-        target = Ruleset(filename=None, environment_name="special")
-        norms = os.path.abspath('./ruleset-special.json')
-        # assert (os.path.normpath(target.filename) == norms)
+        prompt_yes_no.reset_mock()
+        prompt_yes_no.return_value = True
 
-        os.unlink("ruleset-special.json")
-
-    @patch("ScoutSuite.core.ruleset.prompt_4_yes_no", return_value=False)
-    def test_path_search_withenv_prompt_no(self, patched):
-        with open("ruleset-special.json", "w") as f:
-            f.write(".")
-
-        target = Ruleset(filename=None, environment_name="special")
-        norms = os.path.normpath(os.path.join(self.test_dir, '../ScoutSuite/core/data/rulesets/default.json'))
-        # assert (os.path.normpath(target.filename) == norms)
-
-        os.unlink("ruleset-special.json")
+        target = Ruleset(filename=None, environment_name="sample")
+        assert (prompt_yes_no.call_count == 1)
+        assert (os.path.samefile(target.filename,
+                                 os.path.join(target.rules_data_path, './rulesets/ruleset-sample.json')))
 
     def test_find_file(self):
         test101 = Ruleset(cloud_provider='aws').find_file(self.test_ruleset_001)
