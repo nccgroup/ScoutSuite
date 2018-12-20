@@ -181,7 +181,6 @@ class ScoutSuiteArgumentParser(SharedArgumentParser):
                                  choices = ['aws', 'gcp', 'azure'],
                                  help='The cloud provider to scan (currently supports AWS (\'aws\') and GCP (\'gcp\')')
 
-        a = sys.argv
         self.parser.add_argument('--user-account',
                                  action='store_true',
                                  required='gcp' in sys.argv and '--service-account' not in sys.argv,
