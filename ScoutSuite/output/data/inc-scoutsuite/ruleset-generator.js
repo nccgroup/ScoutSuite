@@ -3,9 +3,9 @@
 /**********************************************************/
 
 var generate_ruleset = function() {
-    var ruleset = {};
-    ruleset['about'] = aws_info['about'];
-    ruleset['rules'] = {};
+    var ruleset = new Object();
+    ruleset['about'] =run_results['about'];
+    ruleset['rules'] = new Object();
     // Find all the rules
     var rules = $("*[id^='rule-']");
     for (var i=0; i < rules.length; i++) {
@@ -33,5 +33,5 @@ var generate_ruleset = function() {
         ruleset['rules'][filename].push(rule);
     }
 
-    download_configuration(ruleset, aws_info['name'], '');
-};
+    download_configuration(ruleset, run_results['name'], '');
+}

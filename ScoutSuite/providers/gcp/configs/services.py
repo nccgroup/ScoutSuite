@@ -26,14 +26,14 @@ class GCPServicesConfig(BaseServicesConfig):
         self.cloudsql = CloudSQLConfig(thread_config=thread_config)
         self.computeengine = ComputeEngineConfig(thread_config=thread_config)
         self.iam = IAMConfig(thread_config=thread_config)
+
+        try:
+            self.kubernetesengine = KubernetesEngineConfig(thread_config=thread_config)
+        except NameError as e:
+            pass
+
         self.stackdriverlogging = StackdriverLoggingConfig(thread_config=thread_config)
         # self.stackdrivermonitoring = StackdriverMonitoringConfig(thread_config=thread_config)
-
-        # try:
-        #     self.kubernetesengine = KubernetesEngineConfig(thread_config=thread_config)
-        # except Exception as e:
-        #     # TODO handle specific error
-        #     print(e)
 
     def _is_provider(self, provider_name):
         if provider_name == 'gcp':

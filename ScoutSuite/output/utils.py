@@ -47,7 +47,7 @@ def prompt_4_overwrite(filename, force_write):
 def get_filename(config_type, profile, report_dir):
         if config_type == AWSCONFIG:
             filename = AWSCONFIG_FILE
-            first_line = 'aws_info ='
+            first_line = 'scoutsuite_results ='
         elif config_type == EXCEPTIONS:
             filename = EXCEPTIONS_FILE
             first_line = 'exceptions ='
@@ -56,7 +56,7 @@ def get_filename(config_type, profile, report_dir):
             first_line = None
         elif config_type == AWSRULESET:
             filename = AWSRULESET_FILE
-            first_line = 'aws_info ='
+            first_line = 'scoutsuite_results ='
         else:
             printError('invalid config type provided (%s)' % config_type)
             raise Exception

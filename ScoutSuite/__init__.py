@@ -9,9 +9,9 @@ HTMLREPORT = 424242
 AWSRULESET = 42424242
 
 DEFAULT_REPORT_DIR = 'scoutsuite-report'
-AWSCONFIG_FILE  = 'inc-scoutsuite-run/scoutsuite_config.js'
-AWSRULESET_FILE = 'inc-scoutsuite-run/scoutsuite_ruleset.js'
-EXCEPTIONS_FILE = 'inc-scoutsuite-run/scoutsuite_exceptions.js'
+AWSCONFIG_FILE  = 'scoutsuite-results/scoutsuite_results.js'
+AWSRULESET_FILE = 'scoutsuite-results/scoutsuite_ruleset.js'
+EXCEPTIONS_FILE = 'scoutsuite-results/scoutsuite_exceptions.js'
 HTMLREPORT_FILE = 'report.html'
 GENERATOR_FILE  = 'ruleset-generator.html'
 
