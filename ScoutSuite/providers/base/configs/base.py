@@ -76,6 +76,8 @@ class BaseConfig(object):
         printInfo('Fetching %s config...' % format_service_name(self.service))
         formatted_string = None
 
+        # FIXME the below should be in moved to each provider's code
+
         # Connect to the service
         if self._is_provider('aws'):
             if self.service in ['s3']:  # S3 namespace is global but APIs aren't....
@@ -91,6 +93,7 @@ class BaseConfig(object):
 
         elif self._is_provider('gcp'):
             api_client = gcp_connect_service(service=self.service, credentials=credentials)
+
         elif self._is_provider('azure'):
             api_client = azure_connect_service(service=self.service, credentials=credentials)
 
