@@ -13,7 +13,8 @@ from ScoutSuite.providers.base.configs.browser import get_value_at
 # Functions
 ########################################
 
-def format_listall_output(format_file, format_item_dir, format, rule, option_prefix = None, template = None, skip_options = False):
+def format_listall_output(format_file, format_item_dir, format, rule, option_prefix=None, template=None,
+                          skip_options=False):
     """
     Prepare listall output template
 
@@ -53,7 +54,7 @@ def format_listall_output(format_file, format_item_dir, format, rule, option_pre
                         template = template.replace(requested_file[0].strip(), f.read())
             # Find items and keys to be printed
             re_line = re.compile(r'(_ITEM_\((.*?)\)_METI_)')
-            re_key = re.compile(r'_KEY_\(*(.*?)\)', re.DOTALL|re.MULTILINE) # Remove the multiline ?
+            re_key = re.compile(r'_KEY_\(*(.*?)\)', re.DOTALL | re.MULTILINE)  # Remove the multiline ?
             lines = re_line.findall(template)
             for (i, line) in enumerate(lines):
                 lines[i] = line + (re_key.findall(line[1]),)
@@ -63,12 +64,12 @@ def format_listall_output(format_file, format_item_dir, format, rule, option_pre
     elif format and format[0] == 'csv':
         keys = rule.keys
         line = ', '.join('_KEY_(%s)' % k for k in keys)
-        lines = [ (line, line, keys) ]
+        lines = [(line, line, keys)]
         template = line
     return (lines, template)
 
 
-def generate_listall_output(lines, resources, aws_config, template, arguments, nodup = False):
+def generate_listall_output(lines, resources, aws_config, template, arguments, nodup=False):
     """
     Format and print the output of ListAll
 
@@ -86,7 +87,8 @@ def generate_listall_output(lines, resources, aws_config, template, arguments, n
             current_path = resource.split('.')
             outline = line[1]
             for key in line[2]:
-                outline = outline.replace('_KEY_('+key+')', get_value_at(aws_config['services'], current_path, key, True))
+                outline = outline.replace('_KEY_(' + key + ')',
+                                          get_value_at(aws_config['services'], current_path, key, True))
             output.append(outline)
         output = '\n'.join(line for line in sorted(set(output)))
         template = template.replace(line[0], output)
@@ -95,14 +97,13 @@ def generate_listall_output(lines, resources, aws_config, template, arguments, n
     return template
 
 
-
 ########################################
 # Status updates
 ########################################
 
 class FetchStatusLogger():
 
-    def __init__(self, targets, add_regions = False):
+    def __init__(self, targets, add_regions=False):
         self.targets = []
         self.formatted_string = '\r '
         self.counts = {}
@@ -120,14 +121,12 @@ class FetchStatusLogger():
             self.formatted_string += ' %18s'
         self.__out(target_names, True)
 
-
-    def show(self, new_line = False):
+    def show(self, new_line=False):
         values = ()
         for target in self.targets:
             v = '%s/%s' % (self.counts[target]['fetched'], self.counts[target]['discovered'])
             values += (v,)
         self.__out(values, new_line)
-
 
     def __out(self, values, new_line):
         try:
