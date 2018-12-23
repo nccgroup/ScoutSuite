@@ -13,7 +13,7 @@ aws_ip_ranges_filename = 'ip-ranges.json'
 ip_ranges_from_args = 'ip-ranges-from-args'
 
 
-class Ruleset(object):
+class Ruleset:
     """
     TODO
 
@@ -33,7 +33,6 @@ class Ruleset(object):
                  aws_account_id=None,
                  ruleset_generator=False):
 
-        # self.rules_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
         self.rules_data_path = os.path.dirname(
             os.path.dirname(os.path.abspath(__file__))) + '/providers/%s/rules' % cloud_provider
 
@@ -201,7 +200,7 @@ class Ruleset(object):
 
 class TmpRuleset(Ruleset):
 
-    def __init__(self, rule_dirs=[], rule_filename=None, rule_args=[], rule_level='danger'):
+    def __init__(self, cloud_provider='aws', rule_dirs=[], rule_filename=None, rule_args=[], rule_level='danger'):
         self.rule_type = 'findings'
         tmp_ruleset = {'rules': {}, 'about': 'Temporary, single-rule ruleset.'}
         tmp_ruleset['rules'][rule_filename] = []
@@ -212,6 +211,11 @@ class TmpRuleset(Ruleset):
         tmp_ruleset_file = tempfile.TemporaryFile('w+t')
         tmp_ruleset_file.write(json.dumps(tmp_ruleset))
 
+        self.rules_data_path = os.path.dirname(
+            os.path.dirname(os.path.abspath(__file__))) + '/providers/%s/rules' % cloud_provider
+
         self.load_rules(file=tmp_ruleset_file, rule_type='findings', quiet=False)
 
         self.shared_init(False, rule_dirs, '', [])
+
+

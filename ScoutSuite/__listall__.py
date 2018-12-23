@@ -5,6 +5,7 @@ import json
 import os
 import sys
 
+
 try:
     from opinel.utils.globals import check_requirements
     from opinel.utils.console import configPrintException, printError, printException, printInfo
@@ -15,12 +16,12 @@ except Exception as e:
     sys.exit(42)
 
 from ScoutSuite import AWSCONFIG
+from ScoutSuite.providers import get_provider
 from ScoutSuite.cli_parser import ListallArgumentParser
+from ScoutSuite.core.ruleset import TmpRuleset
+from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.output.console import format_listall_output, generate_listall_output
 from ScoutSuite.output.html import Scout2Report
-from ScoutSuite.rules.rule_definition import RuleDefinition
-from ScoutSuite.rules.ruleset import TmpRuleset
-from ScoutSuite.rules.processingengine import ProcessingEngine
 
 
 ########################################
@@ -28,7 +29,6 @@ from ScoutSuite.rules.processingengine import ProcessingEngine
 ########################################
 
 def main():
-
     # Parse arguments
     parser = ListallArgumentParser()
     args = parser.parse_args()
@@ -36,16 +36,19 @@ def main():
     # Configure the debug level
     configPrintException(args.debug)
 
-    # Check version of opinel
-    if not check_requirements(os.path.realpath(__file__)):
-        return 42
+    # FIXME check that all requirements are installed
+    # # Check version of opinel
+    # if not check_requirements(os.path.realpath(__file__)):
+    #     return 42
 
     # Support multiple environments
     for profile_name in args.profile:
 
         # Load the config
         try:
-            report = Scout2Report(args.provider, profile_name, args.report_dir, args.timestamp)
+            #FIXME this is specific to AWS
+            report_file_name = 'aws-%s' % profile_name
+            report = Scout2Report('aws', report_file_name, args.report_dir, args.timestamp)
             aws_config = report.jsrw.load_from_file(AWSCONFIG)
             services = aws_config['service_list']
         except Exception as e:
@@ -53,11 +56,14 @@ def main():
             printError('Error, failed to load the configuration for profile %s' % profile_name)
             continue
 
-
         # Create a ruleset with only whatever rules were specified...
         if args.config:
             rule_filename = args.config
-            ruleset = TmpRuleset(rule_dirs = [os.getcwd()], rule_filename = args.config, rule_args = args.config_args)
+            ruleset = TmpRuleset(environment_name=args.profile[0],
+                                 cloud_provider='aws',
+                                 rule_dirs=[os.getcwd()],
+                                 rule_filename=args.config,
+                                 rule_args=args.config_args)
         elif len(args.path) > 0:
             # Create a local tmp rule
             rule_dict = {'description': 'artifact'}
@@ -66,15 +72,19 @@ def main():
             rule_filename = 'listall-artifact.json'
             with open(os.path.join(os.getcwd(), rule_filename), 'wt') as f:
                 f.write(json.dumps(rule_dict))
-            ruleset = TmpRuleset(rule_dirs = [os.getcwd()], rule_filename = rule_filename, rule_args = [])
+            ruleset = TmpRuleset(rule_dirs=[os.getcwd()], rule_filename=rule_filename, rule_args=[])
         else:
-            printError('Error, you must provide either a rule configuration file or the path to the resources targeted.')
+            printError(
+                'Error, you must provide either a rule configuration file or the path to the resources targeted.')
             continue
 
+        # FIXME is broken in Scout Suite, only handles AWS
+        cloud_provider = get_provider(provider='aws',
+                                      profile=args.profile[0])
 
         # Process the rule
         pe = ProcessingEngine(ruleset)
-        pe.run(aws_config, skip_dashboard = True)
+        pe.run(cloud_provider, skip_dashboard=True)
 
         # Retrieve items
         rule = ruleset.rules[rule_filename][0]
@@ -97,7 +107,8 @@ def main():
             try:
                 # 3. Load default set of keys based on path
                 target_path = rule.display_path if hasattr(rule, 'display_path') else rule.path
-                listall_configs_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'output/data/listall-configs')
+                listall_configs_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)),
+                                                   'output/data/listall-configs')
                 target_file = os.path.join(listall_configs_dir, '%s.json' % target_path)
                 if os.path.isfile(target_file):
                     with open(target_file, 'rt') as f:

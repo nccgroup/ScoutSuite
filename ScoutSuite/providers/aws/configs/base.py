@@ -10,6 +10,7 @@ from ScoutSuite.providers.base.configs.base import BaseConfig
 
 from opinel.utils.aws import handle_truncated_response
 
+
 class AWSBaseConfig(BaseConfig):
 
     def _is_provider(self, provider_name):

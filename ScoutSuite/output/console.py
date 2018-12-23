@@ -101,7 +101,7 @@ def generate_listall_output(lines, resources, aws_config, template, arguments, n
 # Status updates
 ########################################
 
-class FetchStatusLogger():
+class FetchStatusLogger:
 
     def __init__(self, targets, add_regions=False):
         self.targets = []

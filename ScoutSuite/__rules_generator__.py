@@ -45,7 +45,7 @@ def main():
     ruleset_generator = RulesetGenerator(args.ruleset_name, args.generator_dir)
 
     # FIXME is broken in Scout Suite, only handles AWS
-    cloud_provider = get_provider(provider='gcp',
+    cloud_provider = get_provider(provider='aws',
                                   profile='default')
 
     ruleset.ruleset_generator_metadata = cloud_provider.metadata

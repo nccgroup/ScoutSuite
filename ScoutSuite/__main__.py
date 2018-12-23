@@ -121,7 +121,7 @@ def main(passed_args=None):
     # Pre processing
     cloud_provider.preprocessing(args.ip_ranges, args.ip_ranges_name_key)
 
-    # # Analyze config
+    # Analyze config
     finding_rules = Ruleset(environment_name=args.profile[0],
                             cloud_provider=args.provider,
                             filename=args.ruleset,
