@@ -673,6 +673,13 @@ function load_metadata() {
 
     run_results = get_scoutsuite_results();
 
+    // Set title dynamically
+    $(function(){
+        3
+        $(document).attr("title", 'Scout Suite Report [' + run_results['aws_account_id'] + ']');
+        4
+    });
+
     load_aws_account_id();
     load_aws_config_from_json('last_run', 1);
     load_aws_config_from_json('metadata', 0);
