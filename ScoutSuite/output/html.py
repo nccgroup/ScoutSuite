@@ -96,8 +96,7 @@ class Scout2Report(HTMLReport):
             with open(os.path.join(self.html_data_path, self.html_root)) as f:
                 with open(new_file, 'wt') as nf:
                     for line in f:
-                        newline = line.replace(REPORT_TITLE,
-                                               REPORT_TITLE + ' [' + self.profile + ']')
+                        newline = line
                         if self.profile != 'default':
                             newline = newline.replace(AWSCONFIG_FILE,
                                                       AWSCONFIG_FILE.replace('.js', '-%s.js' % self.profile))
