@@ -86,6 +86,7 @@ class GCPProvider(BaseProvider):
                     self.profile = self.folder_id # FIXME this is for AWS
 
                 else:
+                    # FIXME this will fail if no default project is set in gcloud config
                     self.project_id = project_id
                     self.projects = self._get_projects(parent_type='project',
                                                        parent_id=self.project_id)
