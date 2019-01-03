@@ -66,7 +66,10 @@ def main(passed_args=None):
 
     #FIXME this shouldn't be done here
     if cloud_provider.provider_code == 'aws':
-        report_file_name = 'aws-%s' % args.profile[0]
+        if args.profile:
+            report_file_name = 'aws-%s' % args.profile[0]
+        else:
+            report_file_name = 'aws'
     if cloud_provider.provider_code == 'gcp':
         if args.project_id:
             report_file_name = 'gcp-%s' % args.project_id
