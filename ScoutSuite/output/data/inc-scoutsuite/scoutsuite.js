@@ -566,43 +566,50 @@ function showEC2SecurityGroup(region, vpc, id) {
  *
  */
 function showObject() {
-    var path = arguments[0];
     var path_array = path.split('.');
     var path_length = path_array.length;
-    var data = run_results;
-    for (var i = 0; i < path_length; i++) {
-        data = data[path_array[i]];
-    };
+    var data = getResource(arguments[0]);
 
     // Adds the resource path values to the data context
     for (var i = 0; i < path_length - 1; i += 2) {
-        if(i + 1 >= path_length) break;
+        if (i + 1 >= path_length) break;
 
         const resource_type = makeResourceTypeSingular(path_array[i]);
         data[resource_type] = path_array[i + 1];
     }
 
     // Filter if ...
-    if (arguments.length > 1) {
+    if (arguments[1] && arguments[2]) {
         var attr_name = arguments[1];
         var attr_value = arguments[2];
         for (resource in data) {
-            if (data[resource][attr_name] == attr_value) {
-                data = data[resource];
-                break;
-            };
+            if (data[resource][attr_name] !== attr_value) continue;
+            data = data[resource];
+            break;
         };
         var resource_type = path_array[1] + '_' + path_array[path_length - 1];
     } else {
         var resource_type = path_array[1] + '_' + path_array[path_length - 2];
     };
 
-
     resource = makeResourceTypeSingular(resource_type);
     template = 'single_' + resource + '_template';
     $('#overlay-details').html(window[template](data));
     showPopup();
 };
+
+/**
+ * Gets a resource from the run results.
+ * @param {string} path 
+ */
+function getResource(path) {
+    var path_array = path.split('.');
+    var path_length = path_array.length;
+    var data = run_results;
+    for (var i = 0; i < path_length; i++) {
+        data = data[path_array[i]];
+    };
+}
 
 /**
  * Makes the resource type singular.
