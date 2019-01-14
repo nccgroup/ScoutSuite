@@ -565,8 +565,7 @@ function showEC2SecurityGroup(region, vpc, id) {
 /**
  *
  */
-function showObject() {
-    const path = arguments[0];
+function showObject(path, attr_name, attr_value) {
     const path_array = path.split('.');
     const path_length = path_array.length;
     let data = getResource(path);
@@ -581,9 +580,7 @@ function showObject() {
 
     // Filter if ...
     let resource_type;
-    if (arguments[1] && arguments[2]) {
-        const attr_name = arguments[1];
-        const attr_value = arguments[2];
+    if (attr_name && attr_value) {
         for (const resource in data) {
             if (data[resource][attr_name] !== attr_value) continue;
             data = data[resource];
