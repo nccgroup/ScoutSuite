@@ -573,6 +573,15 @@ function showObject() {
     for (var i = 0; i < path_length; i++) {
         data = data[path_array[i]];
     };
+
+    // Adds the resource path values to the data context
+    for (var i = 0; i < path_length - 1; i += 2) {
+        if(i + 1 >= path_length) break;
+
+        const resource_type = makeResourceTypeSingular(path_array[i]);
+        data[resource_type] = path_array[i + 1];
+    }
+
     // Filter if ...
     if (arguments.length > 1) {
         var attr_name = arguments[1];
@@ -587,11 +596,21 @@ function showObject() {
     } else {
         var resource_type = path_array[1] + '_' + path_array[path_length - 2];
     };
-    resource = resource_type.substring(0, resource_type.length - 1).replace(/\.?ie$/, "y");
+
+
+    resource = makeResourceTypeSingular(resource_type);
     template = 'single_' + resource + '_template';
     $('#overlay-details').html(window[template](data));
     showPopup();
 };
+
+/**
+ * Makes the resource type singular.
+ * @param {string} resource_type 
+ */
+function makeResourceTypeSingular(resource_type) {
+    return resource_type.substring(0, resource_type.length - 1).replace(/\.?ie$/, "y");
+}
 
 /**
  *
