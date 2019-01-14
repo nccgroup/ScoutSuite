@@ -566,30 +566,33 @@ function showEC2SecurityGroup(region, vpc, id) {
  *
  */
 function showObject() {
-    var path_array = path.split('.');
-    var path_length = path_array.length;
-    var data = getResource(arguments[0]);
+    const path = arguments[0];
+    const path_array = path.split('.');
+    const path_length = path_array.length;
+    let data = getResource(path);
 
     // Adds the resource path values to the data context
-    for (var i = 0; i < path_length - 1; i += 2) {
+    for (let i = 0; i < path_length - 1; i += 2) {
         if (i + 1 >= path_length) break;
 
-        const resource_type = makeResourceTypeSingular(path_array[i]);
-        data[resource_type] = path_array[i + 1];
+        const attribute = makeResourceTypeSingular(path_array[i]);
+        data[attribute] = path_array[i + 1];
     }
 
     // Filter if ...
+    let resource_type;
     if (arguments[1] && arguments[2]) {
-        var attr_name = arguments[1];
-        var attr_value = arguments[2];
-        for (resource in data) {
+        const attr_name = arguments[1];
+        const attr_value = arguments[2];
+        for (const resource in data) {
             if (data[resource][attr_name] !== attr_value) continue;
             data = data[resource];
             break;
         };
-        var resource_type = path_array[1] + '_' + path_array[path_length - 1];
+
+        resource_type = path_array[1] + '_' + path_array[path_length - 1];
     } else {
-        var resource_type = path_array[1] + '_' + path_array[path_length - 2];
+        resource_type = path_array[1] + '_' + path_array[path_length - 2];
     };
 
     resource = makeResourceTypeSingular(resource_type);
@@ -603,12 +606,12 @@ function showObject() {
  * @param {string} path 
  */
 function getResource(path) {
-    var path_array = path.split('.');
-    var path_length = path_array.length;
-    var data = run_results;
-    for (var i = 0; i < path_length; i++) {
-        data = data[path_array[i]];
+    let data = run_results;
+    for (const attribute of path.split('.')) {
+        data = data[attribute];
     };
+
+    return data;
 }
 
 /**
