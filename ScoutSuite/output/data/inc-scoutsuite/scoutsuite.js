@@ -565,33 +565,59 @@ function showEC2SecurityGroup(region, vpc, id) {
 /**
  *
  */
-function showObject() {
-    var path = arguments[0];
-    var path_array = path.split('.');
-    var path_length = path_array.length;
-    var data = run_results;
-    for (var i = 0; i < path_length; i++) {
-        data = data[path_array[i]];
-    };
+function showObject(path, attr_name, attr_value) {
+    const path_array = path.split('.');
+    const path_length = path_array.length;
+    let data = getResource(path);
+
+    // Adds the resource path values to the data context
+    for (let i = 0; i < path_length - 1; i += 2) {
+        if (i + 1 >= path_length) break;
+
+        const attribute = makeResourceTypeSingular(path_array[i]);
+        data[attribute] = path_array[i + 1];
+    }
+
     // Filter if ...
-    if (arguments.length > 1) {
-        var attr_name = arguments[1];
-        var attr_value = arguments[2];
-        for (resource in data) {
-            if (data[resource][attr_name] == attr_value) {
-                data = data[resource];
-                break;
-            };
+    let resource_type;
+    if (attr_name && attr_value) {
+        for (const resource in data) {
+            if (data[resource][attr_name] !== attr_value) continue;
+            data = data[resource];
+            break;
         };
-        var resource_type = path_array[1] + '_' + path_array[path_length - 1];
+
+        resource_type = path_array[1] + '_' + path_array[path_length - 1];
     } else {
-        var resource_type = path_array[1] + '_' + path_array[path_length - 2];
+        resource_type = path_array[1] + '_' + path_array[path_length - 2];
     };
-    resource = resource_type.substring(0, resource_type.length - 1).replace(/\.?ie$/, "y");
+
+    resource = makeResourceTypeSingular(resource_type);
     template = 'single_' + resource + '_template';
     $('#overlay-details').html(window[template](data));
     showPopup();
 };
+
+/**
+ * Gets a resource from the run results.
+ * @param {string} path 
+ */
+function getResource(path) {
+    let data = run_results;
+    for (const attribute of path.split('.')) {
+        data = data[attribute];
+    };
+
+    return data;
+}
+
+/**
+ * Makes the resource type singular.
+ * @param {string} resource_type 
+ */
+function makeResourceTypeSingular(resource_type) {
+    return resource_type.substring(0, resource_type.length - 1).replace(/\.?ie$/, "y");
+}
 
 /**
  *
