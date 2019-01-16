@@ -375,6 +375,22 @@ function toggleDetails(keyword, item) {
 };
 
 /**
+ * Toggles between light and dark themes
+ * @param title
+ */
+function toggle_theme(index, file) {
+
+    var oldlink = document.getElementsByTagName("link").item(index);
+
+    var newlink = document.createElement("link");
+    newlink.setAttribute("rel", "stylesheet");
+    newlink.setAttribute("type", "text/css");
+    newlink.setAttribute("href", file);
+
+    document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
+};
+
+/**
  * Update the navigation bar
  * @param service
  */
