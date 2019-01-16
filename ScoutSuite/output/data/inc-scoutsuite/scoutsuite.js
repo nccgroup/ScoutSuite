@@ -376,18 +376,16 @@ function toggleDetails(keyword, item) {
 
 /**
  * Toggles between light and dark themes
- * @param title
+ * @param index
  */
-function toggle_theme(index, file) {
-
+function toggle_theme(index) {
     var oldlink = document.getElementsByTagName("link").item(index);
-
-    var newlink = document.createElement("link");
-    newlink.setAttribute("rel", "stylesheet");
-    newlink.setAttribute("type", "text/css");
-    newlink.setAttribute("href", file);
-
-    document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
+    if (document.getElementById("dark_theme").checked) {
+        oldlink.href = "inc-bootstrap/css/bootstrap-dark.min.css";
+    }
+    else {
+        oldlink.href = "inc-bootstrap/css/bootstrap-light.min.css";
+    }
 };
 
 /**

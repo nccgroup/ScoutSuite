@@ -29,7 +29,11 @@
                 <ul class="dropdown-menu">
                   <li><a href="javascript:about()">About Scout Suite</a></li>
                   <li><a href="javascript:download_exceptions()">Export exceptions</a><a id="downloadAnchorElem" style="display:none"></a></li>
-                  <li><a href="javascript:toggle_theme('inc-bootstrap/css/bootstrap-night.min.css', 2')">Toggle theme</a></li>
+                  <li><a>Dark theme
+                    <label class="switch">
+                      <input type="checkbox" id="dark_theme" onclick="toggle_theme(2)">
+                      <span class="slider round"></span>
+                    </label></a></li>
                 </ul>
               </li>
             </ul>
