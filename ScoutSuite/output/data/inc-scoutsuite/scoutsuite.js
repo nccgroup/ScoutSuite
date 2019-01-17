@@ -3,15 +3,14 @@ var loaded_config_array = new Array();
 var run_results;
 const DARK_THEME = "inc-bootstrap/css/bootstrap-dark.min.css";
 const LIGHT_THEME = "inc-bootstrap/css/bootstrap-light.min.css";
-const THEME_INDEX = 2;
 
 /**
  * Event handlers
  */
 $(document).ready(function () {
     // Loading last theme before window.onload to prevent flickering of styles    
-    if (localStorage.getItem("dark_theme") == "true") {
-        document.getElementById("dark_theme").checked = true;
+    if (localStorage.getItem("theme_checkbox") == "true") {
+        document.getElementById("theme_checkbox").checked = true;
         set_theme(DARK_THEME);
     }
 
@@ -386,7 +385,7 @@ function toggleDetails(keyword, item) {
  * Toggles between light and dark themes
  */
 function toggle_theme() {
-    if (document.getElementById("dark_theme").checked) {
+    if (document.getElementById("theme_checkbox").checked) {
         this.set_theme(DARK_THEME)
     }
     else {
@@ -400,7 +399,7 @@ function toggle_theme() {
  */
 function set_theme(file)
 {
-    var oldlink = document.getElementsByTagName("link").item(THEME_INDEX);
+    var oldlink = document.getElementById("theme");
     oldlink.href = file;
 }
 
@@ -408,7 +407,7 @@ function set_theme(file)
  * Save the current theme on web storage
  */
 window.onunload = function() {
-    localStorage.setItem("dark_theme", document.getElementById("dark_theme").checked);
+    localStorage.setItem("theme_checkbox", document.getElementById("theme_checkbox").checked);
 }
 
 /**
