@@ -38,6 +38,21 @@
             </div>
         </div>
     </script>
-    <script>
-        Handlebars.registerPartial("network_interface", $("#network_interface\\.partial").html());
-    </script>
+<script>
+  Handlebars.registerPartial("network_interface", $("#network_interface\\.partial").html());
+</script>
+
+<!-- Single CloudFormation stack template -->
+<script id="single_network_interface-template" type="text/x-handlebars-template">
+  <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+  <div class="list-group-item active">
+    <h4 class="list-group-item-heading">{{network_interface}}</h4>
+  </div>
+  <div class="list-group-item">
+    {{> network_interface}}
+  </div>
+</script>
+
+<script>
+  var single_ec2_network_interface_template = Handlebars.compile($("#single_network_interface-template").html());
+</script>
