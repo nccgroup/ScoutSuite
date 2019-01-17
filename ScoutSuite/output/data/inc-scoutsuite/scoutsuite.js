@@ -1,11 +1,18 @@
 // Globals
 var loaded_config_array = new Array();
 var run_results;
+const DARK_THEME = "inc-bootstrap/css/bootstrap-dark.min.css";
+const LIGHT_THEME = "inc-bootstrap/css/bootstrap-light.min.css";
 
 /**
  * Event handlers
  */
 $(document).ready(function () {
+    // Loading last theme before window.onload to prevent flickering of styles    
+    if (localStorage.getItem("theme_checkbox") == "true") {
+        document.getElementById("theme_checkbox").checked = true;
+        set_theme(DARK_THEME);
+    }
 
     // when button is clicked, return CSV with finding
     $('#findings_download_button').click(function (event) {
@@ -373,6 +380,35 @@ function toggleDetails(keyword, item) {
     var id = '#' + keyword + '-' + item;
     $(id).toggle();
 };
+
+/**
+ * Toggles between light and dark themes
+ */
+function toggle_theme() {
+    if (document.getElementById("theme_checkbox").checked) {
+        this.set_theme(DARK_THEME)
+    }
+    else {
+        this.set_theme(LIGHT_THEME)
+    }
+};
+
+/**
+ * Sets the css file location received as the theme
+ * @param file
+ */
+function set_theme(file)
+{
+    var oldlink = document.getElementById("theme");
+    oldlink.href = file;
+}
+
+/**
+ * Save the current theme on web storage
+ */
+window.onunload = function() {
+    localStorage.setItem("theme_checkbox", document.getElementById("theme_checkbox").checked);
+}
 
 /**
  * Update the navigation bar
