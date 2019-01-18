@@ -24,7 +24,7 @@
             <ul>
                 {{#each network_interfaces}}
                     <li class="list-group-item-text">
-                        {{> network_interface region = ../region vpc_id = ../vpc instance_id = @../key}}
+                        {{> network_interface region = ../region vpc = ../vpc network_interface = @../key}}
                     </li>
                 {{/each}}
             </ul>
