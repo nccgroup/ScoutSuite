@@ -54,6 +54,9 @@ report-*
 # PyCharm
 .idea/
 
+# Vs Code
+.vscode/
+
 # Mac cruft
 .DS_Store
 
