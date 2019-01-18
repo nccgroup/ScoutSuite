@@ -35,6 +35,7 @@ script:
   #  - 'nosetests tests/test-rulesgenerator.py'
   #  - 'nosetests tests/test-utils.py'
   #  - '[ "${TRAVIS_SECURE_ENV_VARS}" = "true" ] && nosetests tests/test-utils_sns.py || false'
+  - nosetests --with-coverage tests/test-main.py
   - nosetests --with-coverage tests/test-rules-ruleset.py
   - nosetests --with-coverage tests/test-rules-processingengine.py
   - nosetests --with-coverage --nocapture tests/test-scoutsuite.py -a "!credential"
