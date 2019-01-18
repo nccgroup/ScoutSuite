@@ -21,7 +21,8 @@ from ScoutSuite.providers.gcp.utils import gcp_connect_service
 
 class GCPBaseConfig(BaseConfig):
 
-    def __init__(self, thread_config=4, projects=[], **kwargs):
+    def __init__(self, thread_config=4, projects=None, **kwargs):
+        projects = [] if projects is None else projects
 
         self.projects = projects
 

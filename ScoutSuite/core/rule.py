@@ -52,7 +52,7 @@ class Rule(object):
         return rule[name] if name in list(rule.keys()) else default_value
 
 
-    def set_definition(self, rule_definitions, attributes = [], ip_ranges = [], params = {}):
+    def set_definition(self, rule_definitions, attributes = None, ip_ranges = None, params = None):
         """
         Update every attribute of the rule by setting the argument values as necessary
 
@@ -61,6 +61,9 @@ class Rule(object):
         :param convert:
         :return:
         """
+        attributes = [] if attributes is None else attributes
+        ip_ranges = [] if ip_ranges is None else ip_ranges
+        params = {} if params is None else params
         try:
             string_definition = rule_definitions[self.filename].string_definition
             # Load condition dependencies
