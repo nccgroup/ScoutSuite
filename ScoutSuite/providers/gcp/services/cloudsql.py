@@ -33,8 +33,8 @@ class CloudSQLConfig(GCPBaseConfig):
         instance_dict['name'] = instance['name']
         instance_dict['project_id'] = instance['project']
         instance_dict['automatic_backup_enabled'] = instance['settings']['backupConfiguration']['enabled']
-        instance_dict['log_enabled'] = _is_log_enabled(instance)
-        instance_dict['ssl_required'] = _is_ssl_required(instance)
+        instance_dict['log_enabled'] = self._is_log_enabled(instance)
+        instance_dict['ssl_required'] = self._is_ssl_required(instance)
 
         instance_dict['backups'] = self._get_instance_backups(instance, params)
 
