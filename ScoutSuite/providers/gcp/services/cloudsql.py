@@ -77,10 +77,10 @@ class CloudSQLConfig(GCPBaseConfig):
             printError('Failed to parse backups for SQL instance %s: %s' % (instance['name'], e))
             return None
 
-    def _is_log_enabled(instance) :
+    def _is_log_enabled(self, instance) :
         return 'binaryLogEnagled' in instance['settings']['backupConfiguration'] \
                 and instance['settings']['backupConfiguration']['binaryLogEnabled']
 
-    def _is_ssl_required(instance):
+    def _is_ssl_required(self, instance):
         return 'requireSsl' in instance['settings']['ipConfiguration'] \
                 and instance['settings']['ipConfiguration']['requireSsl']
