@@ -409,7 +409,7 @@ Handlebars.registerHelper('escape_dots', function() {
 });
 
 /**
- * Converts a boolean value to 'Enabled' or 'Disabled'. If the value is undefined, then it returns 'Unknown'.
+ * Converts a boolean value to 'Enabled' or 'Disabled'. If the value is undefined or null, then it returns 'Unknown'.
  */
 Handlebars.registerHelper('convert_bool_to_enabled', function (value) {
     if (value === undefined || value === null) return 'Unknown';
