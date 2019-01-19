@@ -311,8 +311,7 @@ def get_s3_bucket_default_encryption(api_client, bucket_name, bucket_info):
             bucket_info['default_encryption_enabled'] = False
             return True
         else:
-            printError(
-                'Failed to get encryption configuration for %s: %s' % (bucket_name, e))
+            printError('Failed to get encryption configuration for %s: %s' % (bucket_name, e))
             bucket_info['default_encryption_enabled'] = None
             return False
     except Exception as e:
