@@ -10,8 +10,8 @@
         <div class="list-group-item-text item-margin">Creation Date: <span id="cloudstorage.buckets.{{@key}}.creation_date">{{creation_date}}</span></div>
         <div class="list-group-item-text item-margin">Location: <span id="cloudstorage.buckets.{{@key}}.location">{{location}}</span></div>
         <div class="list-group-item-text item-margin">Storage Class: <span id="cloudstorage.buckets.{{@key}}.storage_class">{{storage_class}}</span></div>
-        <div class="list-group-item-text item-margin">Logging: <span id="cloudstorage.buckets.{{@key}}.logging">{{logging_status}}</span></div>
-        <div class="list-group-item-text item-margin">Versioning: <span id="cloudstorage.buckets.{{@key}}.versioning">{{bool_to_enabled_string versioning_status}}</span></div>
+        <div class="list-group-item-text item-margin">Logging: <span id="cloudstorage.buckets.{{@key}}.logging_enabled">{{convert_bool_to_enabled logging_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Versioning: <span id="cloudstorage.buckets.{{@key}}.versioning">{{convert_bool_to_enabled versioning_status}}</span></div>
     </div>
     <div class="list-group-item">
         <h4 id="cloudstorage.buckets.{{@key}}.permissions" class="list-group-item-heading">Permissions</h4>

@@ -91,7 +91,7 @@ class ComputeEngineConfig(GCPBaseConfig):
         instance_dict['zone_url_'] = instance['zone']
         instance_dict['network_interfaces'] = instance['networkInterfaces']
         instance_dict['service_accounts'] = instance['serviceAccounts']
-        instance_dict['deletion_protection'] = 'Enabled' if instance['deletionProtection'] else 'Disabled'
+        instance_dict['deletion_protection_enabled'] = instance['deletionProtection']
 
         # TODO this should be done in it's own getter method and merged with instances during postprocessing
         instance_dict['disks'] = {}

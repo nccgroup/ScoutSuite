@@ -3,7 +3,7 @@
     "description": "Instance without deletion protection",
     "path": "computeengine.instances.id",
     "conditions": [ "and",
-        [ "computeengine.instances.id.deletion_protection", "equal", "Disabled" ]
+        [ "computeengine.instances.id.deletion_protection_enabled", "false", "" ]
     ],
-    "id_suffix": "deletion_protection"
+    "id_suffix": "deletion_protection_enabled"
 }

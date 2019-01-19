@@ -3,6 +3,6 @@
     "path": "storageaccounts.storage_accounts.id",
     "dashboard_name": "Accounts",
     "conditions": [ "and",
-        [ "storageaccounts.storage_accounts.id.https_traffic_enabled", "equal", "Disabled" ]
+        [ "storageaccounts.storage_accounts.id.https_traffic_enabled", "false", "" ]
     ]
 }

@@ -11,7 +11,7 @@
         <div class="list-group-item-text item-margin">Project ID: <span id="computeengine.instances.{{@key}}.project_id">{{project_id}}</span></div>
         <div class="list-group-item-text item-margin">Creation Date: <span id="computeengine.instances.{{@key}}.creation_timestamp">{{creation_timestamp}}</span></div>
         <div class="list-group-item-text item-margin">Status: <span id="computeengine.instances.{{@key}}.status">{{status}}</span></div>
-        <div class="list-group-item-text item-margin">Deletion Protection: <span id="computeengine.instances.{{@key}}.deletion_protection">{{deletion_protection}}</span></div>
+        <div class="list-group-item-text item-margin">Deletion Protection: <span id="computeengine.instances.{{@key}}.deletion_protection_enabled">{{convert_bool_to_enabled deletion_protection_enabled}}</span></div>
         {{#if tags}}
         <div class="list-group-item-text item-margin">Tags:</div>
         <ul>

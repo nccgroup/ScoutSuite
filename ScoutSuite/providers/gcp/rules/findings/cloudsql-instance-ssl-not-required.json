@@ -3,7 +3,7 @@
   "description": "SSL not required",
   "path": "cloudsql.instances.id",
   "conditions": [ "and",
-    [ "cloudsql.instances.id.ssl_required", "equal", "Disabled" ]
+    [ "cloudsql.instances.id.ssl_required", "false", "" ]
   ],
   "id_suffix": "ssl_required"
 }

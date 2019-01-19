@@ -53,15 +53,11 @@ class CloudStorageConfig(GCPBaseConfig):
 
 def get_cloudstorage_bucket_logging(bucket, bucket_dict):
     try:
-        logging = bucket.get_logging()
-        if logging:
-            bucket_dict['logging_status'] = 'Enabled'
-        else:
-            bucket_dict['logging_status'] = 'Disabled'
+        bucket_dict['logging_enabled'] = bucket.get_logging() != None
         return True
     except Exception as e:
         printError('Failed to get bucket logging configuration for %s: %s' % (bucket.name, e))
-        bucket_dict['logging_status'] = 'Unknown'
+        bucket_dict['logging_enabled'] = None
         return False
 
 
