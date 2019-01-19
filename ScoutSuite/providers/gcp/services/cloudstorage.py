@@ -43,8 +43,7 @@ class CloudStorageConfig(GCPBaseConfig):
         bucket_dict['creation_date'] = bucket.time_created
         bucket_dict['location'] = bucket.location
         bucket_dict['storage_class'] = bucket.storage_class.lower()
-
-        bucket_dict['versioning_status'] = 'Enabled' if bucket.versioning_enabled else 'Disabled'
+        bucket_dict['versioning_status_enabled'] = bucket.versioning_enabled
 
         get_cloudstorage_bucket_logging(bucket, bucket_dict)
         get_cloudstorage_bucket_acl(bucket, bucket_dict)

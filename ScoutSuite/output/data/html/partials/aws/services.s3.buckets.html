@@ -9,11 +9,11 @@
           <div class="list-group-item-text item-margin">Region: {{region}}</div>
           <div class="list-group-item-text item-margin">Creation date: {{CreationDate}}</div>
           <div class="list-group-item-text item-margin">Logging: <span id="s3.buckets.{{@key}}.logging">{{has_logging? logging}}</span></div>
-          <div class="list-group-item-text item-margin">Default encryption: <span id="s3.buckets.{{@key}}.default_encryption">{{default_encryption}}</span></div>
-          <div class="list-group-item-text item-margin">Versioning: <span id="s3.buckets.{{@key}}.versioning">{{versioning_status}}</span></div>
-          <div class="list-group-item-text item-margin">MFA Delete: <span id="s3.buckets.{{@key}}.mfa_delete">{{version_mfa_delete}}</span></div>
-          <div class="list-group-item-text item-margin">Secure transport: <span id="s3.buckets.{{@key}}.secure_transport">{{secure_transport}}</span></div>
-          <div class="list-group-item-text item-margin">Static website hosting: <span id="s3.buckets.{{@key}}.web_hosting">{{web_hosting}}</span></div>
+          <div class="list-group-item-text item-margin">Default encryption: <span id="s3.buckets.{{@key}}.default_encryption_enabled">{{ bool_to_enabled_string default_encryption_enabled}}</span></div>
+          <div class="list-group-item-text item-margin">Versioning: <span id="s3.buckets.{{@key}}.versioning">{{bool_to_enabled_string versioning_status_enabled}}</span></div>
+          <div class="list-group-item-text item-margin">MFA Delete: <span id="s3.buckets.{{@key}}.mfa_delete">{{bool_to_enabled_string version_mfa_delete_enabled}}</span></div>
+          <div class="list-group-item-text item-margin">Secure transport: <span id="s3.buckets.{{@key}}.secure_transport_enabled">{{bool_to_enabled_string secure_transport_enabled}}</span></div>
+          <div class="list-group-item-text item-margin">Static website hosting: <span id="s3.buckets.{{@key}}.web_hosting_enabled">{{bool_to_enabled_string web_hosting_enabled}}</span></div>
         </div>
         {{> services.s3.acls resource_type = 'bucket' resource_path = (concat 's3.buckets' @key)}}
         {{#if policy}}
