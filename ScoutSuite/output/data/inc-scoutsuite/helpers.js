@@ -408,6 +408,13 @@ Handlebars.registerHelper('escape_dots', function() {
     return arguments[0].replace(/\./g, '\\.');
 });
 
+/**
+ * Converts a boolean value to 'Enabled' or 'Disabled'.
+ */
+Handlebars.registerHelper('bool_to_enabled_string', function (value) {
+    return value ? 'Enabled' : 'Disabled'
+});
+
 
 /*********************/
 /* Ruleset generator */
