@@ -98,10 +98,6 @@ Handlebars.registerHelper('good_bad_icon', function (finding, bucket_id, key_id,
     }
 });
 
-Handlebars.registerHelper('has_logging?', function (logging) {
-    return logging;
-});
-
 Handlebars.registerHelper('finding_entity', function (prefix, entity) {
     return finding_entity(prefix, entity);
 });
@@ -411,7 +407,7 @@ Handlebars.registerHelper('escape_dots', function () {
 /**
  * Converts a boolean value to 'Enabled' or 'Disabled'. If the value is undefined, then it returns 'Unknown'.
  */
-Handlebars.registerHelper('bool_to_enabled_string', function (value) {
+Handlebars.registerHelper('convert_bool_to_enabled', function (value) {
     if (value === undefined || value === null) return 'Unknown';
     return value ? 'Enabled' : 'Disabled';
 });
