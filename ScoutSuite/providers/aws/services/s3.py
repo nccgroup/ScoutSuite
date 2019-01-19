@@ -293,7 +293,7 @@ def get_s3_bucket_logging(api_client, bucket_name, bucket_info):
 def get_s3_bucket_webhosting(api_client, bucket_name, bucket_info):
     try:
         result = api_client.get_bucket_website(Bucket=bucket_name)
-        bucket_info['web_hosting_enabled'] = IndexDocument' in result
+        bucket_info['web_hosting_enabled'] = 'IndexDocument' in result
         return True
     except Exception as e:
         # TODO: distinguish permission denied from  'NoSuchWebsiteConfiguration' errors
