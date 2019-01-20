@@ -38,7 +38,7 @@ class AzureProvider(BaseProvider):
 
     def authenticate(self, key_file=None, user_account=None, service_account=None, **kargs):
         """
-        Implement authentication for the Azure provider using azure-cli.
+        Implements authentication for the Azure provider using azure-cli.
         Refer to https://docs.microsoft.com/en-us/python/azure/python-sdk-azure-authenticate?view=azure-python.
 
         :return:
