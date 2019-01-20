@@ -42,7 +42,7 @@
     <!-- Fixed navbar -->
     <!------------------>
 
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="metadata.list"></div>
+    <div class="navbar navbar-inverse fixed-top" role="navigation" id="metadata.list"></div>
 
     <!--------------->
     <!-- Container -->
@@ -75,8 +75,8 @@
         <div id="section_title-div" style="display:flex;position:relative;">
             <h2 id="section_title-h2"></h2>
             <div id="findings_download_button" style="display:none;position:absolute;right:0;transform:translateY(+50%);">
-                <button id="findings_download_csv_button" type="button" class="btn btn-default"><span class="glyphicon glyphicon-download-alt"></span>CSV</button>
-                <button id="findings_download_json_button" type="button" class="btn btn-default"><span class="glyphicon glyphicon-download-alt"></span>JSON</button>
+                <button id="findings_download_csv_button" type="button" class="btn btn-secondary"><span class="glyphicon glyphicon-download-alt"></span>CSV</button>
+                <button id="findings_download_json_button" type="button" class="btn btn-secondary"><span class="glyphicon glyphicon-download-alt"></span>JSON</button>
             </div>
         </div>
 
@@ -135,18 +135,18 @@
                             <div class="list-group-item-text item-margin">
                                 <div class="list-group-item-text" style="text-align: center">&nbsp;</div>
                                 <div class="list-group-item">Service
-                                    <div class="col-sm-2 pull-right" style="text-align: center">Checks</div>
-                                    <div class="col-sm-2 pull-right" style="text-align: center">Findings</div>
-                                    <div class="col-sm-2 pull-right" style="text-align: center">Rules</div>
-                                    <div class="col-sm-2 pull-right" style="text-align: center">Resources</div>
+                                    <div class="col-sm-2 float-right" style="text-align: center">Checks</div>
+                                    <div class="col-sm-2 float-right" style="text-align: center">Findings</div>
+                                    <div class="col-sm-2 float-right" style="text-align: center">Rules</div>
+                                    <div class="col-sm-2 float-right" style="text-align: center">Resources</div>
                                 </div>
                                 {{#each items.summary}}
                                 <a href="#services.{{@key}}.findings" style="color: black !important;">
                                     <div class="list-group-item finding-title-{{dashboard_color max_level checked_items flagged_items}}">{{make_title @key}}
-                                        <div class="col-sm-2 pull-right" style="text-align: center">{{checked_items}}</div>
-                                        <div class="col-sm-2 pull-right" style="text-align: center">{{flagged_items}}</div>
-                                        <div class="col-sm-2 pull-right" style="text-align: center">{{rules_count}}</div>
-                                        <div class="col-sm-2 pull-right" style="text-align: center">{{resources_count}}</div>
+                                        <div class="col-sm-2 float-right" style="text-align: center">{{checked_items}}</div>
+                                        <div class="col-sm-2 float-right" style="text-align: center">{{flagged_items}}</div>
+                                        <div class="col-sm-2 float-right" style="text-align: center">{{rules_count}}</div>
+                                        <div class="col-sm-2 float-right" style="text-align: center">{{resources_count}}</div>
                                     </div>
                                 </a>
                                 {{/each}}

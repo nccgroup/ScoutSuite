@@ -13,7 +13,7 @@
                 </li>
               {{/each}}
             </ul>
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav ml-auto">
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Regions<b class="caret"></b></a>
                 <ul class="dropdown-menu" id="regions.list">
@@ -79,7 +79,7 @@
                         <li><a href="#{{path}}">{{make_title @key}}</a></li>
                       {{/if}}
                     {{/each}}
-                    <li class="divider"></li>
+                    <li class="dropdown-divider"></li>
                     <li class="dropdown-header">{{make_title @key}} config</li>
                     {{#each resources}}
                       {{#unless hidden}}

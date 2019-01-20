@@ -5,7 +5,7 @@
           <li>
             <h5 class="list-group-item-heading accordion-heading">{{ make_title service }} {{ make_title resource_type }}
               <a class="accordion-toggle" data-toggle="collapse" href="#ec2_security_group-{{group}}-{{service}}_{{resource_type}}_list-{{status}}">
-                <span class="badge pull-right btn-info">{{resources.length}}</span>
+                <span class="badge float-right btn-info">{{resources.length}}</span>
               </a>
             </h5>
           </li>
@@ -25,7 +25,7 @@
         </div>
       {{else}}
         <h5 class="list-group-item-heading item-margin accordion-heading">{{status}}
-          <span class="badge pull-right">{{resources.length}}</span>
+          <span class="badge float-right">{{resources.length}}</span>
         </h5>
       {{/if}}
     </script>

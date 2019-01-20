@@ -47,7 +47,7 @@
 
     </div>
     <div class="list-group-item">
-      <h4 class="list-group-item-heading">Groups<span class="badge pull-right {{#if groups.length}}btn-info{{/if}}">{{groups.length}}</span></h4>
+      <h4 class="list-group-item-heading">Groups<span class="badge float-right {{#if groups.length}}btn-info{{/if}}">{{groups.length}}</span></h4>
       <ul class="no-bullet">
       {{#each groups}}
         <li class="list-group-item-text"><a href="javascript:showObject('services.iam.groups', 'name', '{{this}}')">{{this}}</a></li>

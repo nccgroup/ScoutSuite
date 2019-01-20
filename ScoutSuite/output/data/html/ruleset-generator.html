@@ -44,7 +44,7 @@
         <!-- Fixed navbar -->
         <!------------------>
 
-        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="ruleset_generator_metadata.list">
+        <div class="navbar navbar-inverse fixed-top" role="navigation" id="ruleset_generator_metadata.list">
         </div>
 
         <script id="ruleset_generator_metadata.list.template" type="text/x-handlebars-template">
@@ -60,7 +60,7 @@
                             </li>
                         {{/each}}
                     </ul>
-                    <ul class="nav navbar-nav navbar-right">
+                    <ul class="nav navbar-nav ml-auto">
                         <li><a href="javascript:generate_ruleset()"><span id="iam_filter">Generate Ruleset</span></a><a id="downloadAnchorElem" style="display:none"></a></li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span><b class="caret"></b></a>
@@ -150,7 +150,7 @@
                             <div class="accordion">
                                 <h4 class="accordion-heading">Raw JSON
                                     <a class="accordion-toggle" data-toggle="collapse" href="#rawjson-{{key}}">
-                                        <span class="badge pull-right btn-info">Details</span>
+                                        <span class="badge float-right btn-info">Details</span>
                                     </a>
                                 </h4>
                                 <div id="rawjson-{{key}}" class="item-margin accordion-body collapse">
