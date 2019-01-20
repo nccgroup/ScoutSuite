@@ -78,9 +78,7 @@ class CloudSQLConfig(GCPBaseConfig):
             return None
 
     def _is_log_enabled(self, instance) :
-        return 'binaryLogEnagled' in instance['settings']['backupConfiguration'] \
-                and instance['settings']['backupConfiguration']['binaryLogEnabled']
+        return instance['settings']['backupConfiguration'].get('binaryLogEnabled')
 
     def _is_ssl_required(self, instance):
-        return 'requireSsl' in instance['settings']['ipConfiguration'] \
-                and instance['settings']['ipConfiguration']['requireSsl']
+        return instance['settings']['ipConfiguration'].get('requireSsl')
