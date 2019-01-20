@@ -265,15 +265,15 @@ def get_s3_bucket_secure_transport(api_client, bucket_name, bucket_info):
 def get_s3_bucket_versioning(api_client, bucket_name, bucket_info):
     try:
         versioning = api_client.get_bucket_versioning(Bucket=bucket_name)
-        bucket_info['versioning_status_enabled'] =  _enabled_to_bool(versioning.get('Status'))
-        bucket_info['version_mfa_delete_enabled'] = _enabled_to_bool(versioning.get('MFADelete'))
+        bucket_info['versioning_status_enabled'] = _status_to_bool(versioning.get('Status'))
+        bucket_info['version_mfa_delete_enabled'] = _status_to_bool(versioning.get('MFADelete'))
         return True
     except Exception as e:
         bucket_info['versioning_status_enabled'] = None
         bucket_info['version_mfa_delete_enabled'] = None
         return False
 
-def _enabled_to_bool(value):
+def _status_to_bool(value):
     """ Converts a string to True if it is equal to 'Enabled' or to False otherwise. """
     return value == 'Enabled'
 
