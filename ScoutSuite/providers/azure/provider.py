@@ -2,29 +2,30 @@
 
 import os
 
-import google.auth
 from opinel.utils.console import printError, printException
 
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.azure.configs.services import AzureServicesConfig
 
-from azure.common.credentials import ServicePrincipalCredentials
+from azure.common.client_factory import get_azure_cli_credentials
 
-class AzureCredentials():
+
+class AzureCredentials:
 
     def __init__(self, credentials, subscription_id):
         self.credentials = credentials
         self.subscription_id = subscription_id
 
+
 class AzureProvider(BaseProvider):
     """
-    Implements provider for AWS
+    Implements provider for Azure
     """
 
     def __init__(self, project_id=None, organization_id=None,
                  report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4, **kwargs):
 
-        self.profile = 'aws-profile'  # TODO this is aws-specific
+        self.profile = 'azure-profile'  # TODO this is aws-specific
 
         self.metadata_path = '%s/metadata.json' % os.path.split(os.path.abspath(__file__))[0]
 
@@ -37,37 +38,16 @@ class AzureProvider(BaseProvider):
 
     def authenticate(self, key_file=None, user_account=None, service_account=None, **kargs):
         """
-        Implement authentication for the GCP provider
-        Refer to https://google-auth.readthedocs.io/en/stable/reference/google.auth.html.
+        Implement authentication for the Azure provider using azure-cli.
+        Refer to https://docs.microsoft.com/en-us/python/azure/python-sdk-azure-authenticate?view=azure-python.
 
         :return:
         """
 
         try:
-
-            # TODO this is temporary
-            import os
-            # Azure subscription
-            SUBSCRIPTION_ID = os.environ['SUBSCRIPTION_ID']
-            # Tenant ID for your Azure Subscription
-            TENANT_ID = os.environ['TENANT_ID']
-            # Your Service Principal App ID
-            CLIENT = os.environ['CLIENT']
-            # Your Service Principal Password
-            KEY = os.environ['KEY']
-
-            self.aws_account_id = TENANT_ID # TODO this is for AWS
-
-            credentials = ServicePrincipalCredentials(
-                client_id=CLIENT,
-                secret=KEY,
-                tenant=TENANT_ID
-            )
-
-            self.credentials = AzureCredentials(credentials, SUBSCRIPTION_ID)
-
+            cli_credentials, self.aws_account_id = get_azure_cli_credentials()          #TODO: Remove aws_account_id
+            self.credentials = AzureCredentials(cli_credentials, self.aws_account_id)
             return True
-
         except Exception as e:
             printError('Failed to authenticate to Azure')
             printException(e)

@@ -173,4 +173,6 @@ To scan a GCP ...
 
 #### Azure
 
-TODO
+Using a computer already configured to use azure-cli, you may use scout using the following command:
+
+    $ python Scout.py --provider azure

@@ -20,3 +20,4 @@ oauth2client>=4.1.3
 
 # Azure Provider
 azure-mgmt-storage>=3.0.0
+azure-cli-core
