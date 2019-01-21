@@ -8,7 +8,7 @@
         <div class="navbar-collapse collapse">
             <ul class="navbar-nav mr-auto">
               {{#each items}}
-                <li class="nav-item active">
+                <li class="nav-link dropdown-toggle">
                   <a href="#groups.{{@key}}.list"><span class="nav-link dropdown-toggle" id="metadata.{{@key}}">{{make_title @key}}</b></a>
                 </li>
               {{/each}}
