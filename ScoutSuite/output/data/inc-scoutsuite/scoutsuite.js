@@ -748,7 +748,7 @@ function load_metadata() {
     load_aws_config_from_json('services.id.findings', 1);
     load_aws_config_from_json('services.id.filters', 0); // service-specific filters
     load_aws_config_from_json('services.id.regions', 0); // region filters
-    show_main_dashboard();
+    showPageFromHash();
 
     for (group in run_results['metadata']) {
         for (service in run_results['metadata'][group]) {
@@ -872,7 +872,7 @@ function updateTitle(title) {
 /**
  * Update the DOM
  */
-function locationHashChanged() {
+function showPageFromHash() {
     if (location.hash) {
         updateDOM(location.hash);
     } else {
@@ -880,7 +880,7 @@ function locationHashChanged() {
     };
 };
 
-window.onhashchange = locationHashChanged;
+window.onhashchange = showPageFromHash;
 
 /**
  * Get value at given path
