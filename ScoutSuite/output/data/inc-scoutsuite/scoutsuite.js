@@ -14,6 +14,8 @@ $(document).ready(function () {
         set_theme(DARK_THEME);
     }
 
+    showPageFromHash();
+
     // when button is clicked, return CSV with finding
     $('#findings_download_button').click(function (event) {
 
@@ -748,7 +750,6 @@ function load_metadata() {
     load_aws_config_from_json('services.id.findings', 1);
     load_aws_config_from_json('services.id.filters', 0); // service-specific filters
     load_aws_config_from_json('services.id.regions', 0); // region filters
-    showPageFromHash();
 
     for (group in run_results['metadata']) {
         for (service in run_results['metadata'][group]) {
