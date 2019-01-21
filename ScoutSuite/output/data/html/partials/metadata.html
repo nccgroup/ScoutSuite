@@ -6,20 +6,20 @@
           <span class="navbar-brand"><a href="javascript:show_main_dashboard()">Scout Suite</a></span>
         </div>
         <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
+            <ul class="navbar-nav mr-auto">
               {{#each items}}
-                <li class="dropdown">
+                <li class="nav-item active">
                   <a href="#groups.{{@key}}.list"><span id="metadata.{{@key}}">{{make_title @key}}</span><b class="caret"></b></a>
                 </li>
               {{/each}}
             </ul>
-            <ul class="nav navbar-nav ml-auto">
-              <li class="dropdown">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item active">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Regions<b class="caret"></b></a>
                 <ul class="dropdown-menu" id="regions.list">
                 </ul>
               </li>
-              <li class="dropdown">
+              <li class="nav-item active">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filters<b class="caret"></b></a>
                 <ul class="dropdown-menu" id="filters.list">
                 </ul>
