@@ -56,14 +56,14 @@
                     <ul class="nav navbar-nav">
                         {{#each items}}
                             <li class="dropdown">
-                                <a href="#groups.{{@key}}.list"><span id="ruleset_generator_metadata.{{@key}}">{{make_title @key}}</span><b class="caret"></b></a>
+                                <a href="#groups.{{@key}}.list"><span id="ruleset_generator_metadata.{{@key}}">{{make_title @key}}</span></a>
                             </li>
                         {{/each}}
                     </ul>
                     <ul class="nav navbar-nav ml-auto">
                         <li><a href="javascript:generate_ruleset()"><span id="iam_filter">Generate Ruleset</span></a><a id="downloadAnchorElem" style="display:none"></a></li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span><b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a href="javascript:about()">About</a></li>
                             </ul>

@@ -9,27 +9,27 @@
             <ul class="navbar-nav mr-auto">
               {{#each items}}
                 <li class="nav-item active">
-                  <a href="#groups.{{@key}}.list"><span id="metadata.{{@key}}">{{make_title @key}}</span><b class="caret"></b></a>
+                  <a href="#groups.{{@key}}.list"><span class="nav-link dropdown-toggle" id="metadata.{{@key}}">{{make_title @key}}</b></a>
                 </li>
               {{/each}}
             </ul>
             <ul class="navbar-nav mr-auto">
               <li class="nav-item active">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Regions<b class="caret"></b></a>
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Regions</a>
                 <ul class="dropdown-menu" id="regions.list">
                 </ul>
               </li>
               <li class="nav-item active">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filters<b class="caret"></b></a>
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Filters</a>
                 <ul class="dropdown-menu" id="filters.list">
                 </ul>
               </li>
               <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span><b class="caret"></b></a>
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span></a>
                 <ul class="dropdown-menu">
-                  <li><a href="javascript:about()">About Scout Suite</a></li>
-                  <li><a href="javascript:download_exceptions()">Export exceptions</a><a id="downloadAnchorElem" style="display:none"></a></li>
-                  <li><a>Dark theme
+                  <li><a class="dropdown-item" href="javascript:about()">About Scout Suite</a></li>
+                  <li><a class="dropdown-item" href="javascript:download_exceptions()">Export exceptions</a><a id="downloadAnchorElem" style="display:none"></a></li>
+                  <li><a class="dropdown-item">Dark theme
                     <label class="switch">
                       <input type="checkbox" id="theme_checkbox" onclick="toggle_theme()">
                       <span class="slider round"></span>
@@ -49,7 +49,7 @@
             <ul class="nav navbar-nav">
               {{#if summaries}}
               <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Summaries<b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Summaries</a>
                 <ul class="dropdown-menu">
                   {{#each summaries}}
                     <li><a href="#{{path}}">{{make_title @key}}</a></li>
@@ -61,7 +61,7 @@
               {{#unlessEqual @key 'summaries'}}
               {{#unless hidden}}
                 <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{make_title @key}}<b class="caret"></b></a>
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{make_title @key}}</a>
                   <ul class="dropdown-menu">
                     <li class="dropdown-header">Summaries</li>
                     <li><a href="#services.{{@key}}.findings">Dashboard</a></li>
