@@ -857,7 +857,6 @@ function getService(resource_path) {
         service = resource_path.split('.')[0];
     };
     service = make_title(service);
-//    service = service.toUpperCase().replace('CLOUDTRAIL', 'CloudTrail').replace('REDSHIFT', 'RedShift').replace('ROUTE53', 'Route53');
     return service;
 };
 
