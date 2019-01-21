@@ -408,6 +408,14 @@ Handlebars.registerHelper('escape_dots', function() {
     return arguments[0].replace(/\./g, '\\.');
 });
 
+/**
+ * Converts a boolean value to 'Enabled' or 'Disabled'. If the value is undefined or null, then it returns 'Unknown'.
+ */
+Handlebars.registerHelper('convert_bool_to_enabled', function (value) {
+    if (value === undefined || value === null) return 'Unknown';
+    return value ? 'Enabled' : 'Disabled';
+});
+
 
 /*********************/
 /* Ruleset generator */
@@ -446,3 +454,4 @@ Handlebars.registerHelper('get_arg_name', function(rule_filename, arg_index) {
         return '';
     }
 });
+

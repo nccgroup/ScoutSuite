@@ -32,15 +32,9 @@ class CloudSQLConfig(GCPBaseConfig):
         instance_dict['id'] = self.get_non_provider_id(instance['name'])
         instance_dict['name'] = instance['name']
         instance_dict['project_id'] = instance['project']
-        instance_dict['automatic_backup_status'] = 'Enabled' if instance['settings']['backupConfiguration'][
-            'enabled'] else 'Disabled'
-        instance_dict['log_status'] = 'Enabled' \
-            if 'binaryLogEnagled' in instance['settings']['backupConfiguration'] \
-               and instance['settings']['backupConfiguration']['binaryLogEnabled'] \
-            else 'Disabled'
-        instance_dict['ssl_required'] = 'Enabled' if ('requireSsl' in \
-                                                      instance['settings']['ipConfiguration'] and \
-                                                      instance['settings']['ipConfiguration']['requireSsl']) else 'Disabled'
+        instance_dict['automatic_backup_enabled'] = instance['settings']['backupConfiguration']['enabled']
+        instance_dict['log_enabled'] = self._is_log_enabled(instance)
+        instance_dict['ssl_required'] = self._is_ssl_required(instance)
 
         instance_dict['backups'] = self._get_instance_backups(instance, params)
 
@@ -82,3 +76,9 @@ class CloudSQLConfig(GCPBaseConfig):
         except Exception as e:
             printError('Failed to parse backups for SQL instance %s: %s' % (instance['name'], e))
             return None
+
+    def _is_log_enabled(self, instance) :
+        return instance['settings']['backupConfiguration'].get('binaryLogEnabled')
+
+    def _is_ssl_required(self, instance):
+        return instance['settings']['ipConfiguration'].get('requireSsl')

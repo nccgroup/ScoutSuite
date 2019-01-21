@@ -23,7 +23,7 @@ class StorageAccountsConfig(AzureBaseConfig):
 
         storage_account_dict['id'] = self.get_non_provider_id(storage_account.id)
         storage_account_dict['name'] = storage_account.name
-        storage_account_dict['https_traffic_enabled'] = 'Enabled' if storage_account.enable_https_traffic_only else 'Disabled'
+        storage_account_dict['https_traffic_enabled'] = storage_account.enable_https_traffic_only
 
         self.storage_accounts[storage_account_dict['id']] = storage_account_dict
 
