@@ -218,5 +218,19 @@ input:checked + .slider:before {
 }
 
 .spacer {
-    height: 6rem;
+    height: 10rem;
+}
+
+.sub-navbar {
+    position: inherit;
+    float: bottom;
+    margin-top: 2rem;
+    width: 100%;
+    left: 0rem;
+    right: 0rem;
+    top: 0rem;
+    padding-top: 2rem;
+    padding-left: 8rem;
+    align-content: stretch;
+    z-index: -1;
 }

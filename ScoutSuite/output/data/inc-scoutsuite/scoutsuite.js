@@ -111,8 +111,8 @@ $(document).ready(function () {
  */
 var load_aws_account_id = function () {
     var element = document.getElementById('aws_account_id');
-    var value = '<span class="glyphicon glyphicon-cloud"></span> ' + run_results['provider_name'] +
-        ' <span class="glyphicon glyphicon-chevron-right"></span> ' + run_results['aws_account_id'];
+    var value = '<i class="fa fa-cloud"></i> ' + run_results['provider_name'] +
+        ' <i class="fa fa-chevron-right"></i> ' + run_results['aws_account_id'];
     if (('organization' in run_results) && (value in run_results['organization'])) {
         value += ' (' + run_results['organization'][value]['Name'] + ')'
     };
@@ -425,9 +425,9 @@ function toggleVisibility(id) {
     $(id1).toggle()
     id2 = '#bullet-' + id;
     if ($(id1).is(":visible")) {
-        $(id2).html('<i class="glyphicon glyphicon-collapse-down"></i>');
+        $(id2).html('<i class="fa fa-caret-square-o-down"></i>');
     } else {
-        $(id2).html('<i class="glyphicon glyphicon-expand"></i>');
+        $(id2).html('<i class="fa fa-caret-square-o-right"></i>');
     };
 };
 
