@@ -42,7 +42,7 @@
     <!-- Fixed navbar -->
     <!------------------>
 
-    <div class="navbar fixed-top navbar-expand-lg navbar-primary bg-primary" role="navigation" id="metadata.list"></div>
+    <div class="navbar fixed-top navbar-expand-lg bg-primary" role="navigation" id="metadata.list"></div>
 
     <!--------------->
     <!-- Container -->
@@ -51,17 +51,16 @@
     <div class="container theme-showcase" id="container-user">
 
         <!-- Empty header -->
-        <div class="page-header">
-        </div>
+        <div class="spacer"></div>
 
         <!-- Overlay divs used to show entity details in a pop up fashion -->
         <div id="overlay-background" class="overlay-bg"></div>
         <div id="overlay-details" class="overlay col-sm-6"></div>
 
         <!-- AWS account ID -->
-        <div class="row" id="aws_account_id.details" style="margin-bottom: -10px">
+        <div class="row justify-content-center" id="aws_account_id.details">
             <h4>
-                <div class="list-group-item-text center" style="text-align: center" onclick="toggle_element('scout2_display_account_id_on_all_pages_form')" >
+                <div class="list-group-item-text" onclick="toggle_element('scout2_display_account_id_on_all_pages_form')" >
                     <span id="aws_account_id"></span>
                 </div>
                 <div id="scout2_display_account_id_on_all_pages_form" class="list-group-item-text center" style="text-align: center; display: none">
