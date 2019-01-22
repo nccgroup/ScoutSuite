@@ -14,6 +14,8 @@ $(document).ready(function () {
         set_theme(DARK_THEME);
     }
 
+    showPageFromHash();
+
     // when button is clicked, return CSV with finding
     $('#findings_download_button').click(function (event) {
 
@@ -748,7 +750,6 @@ function load_metadata() {
     load_aws_config_from_json('services.id.findings', 1);
     load_aws_config_from_json('services.id.filters', 0); // service-specific filters
     load_aws_config_from_json('services.id.regions', 0); // region filters
-    show_main_dashboard();
 
     for (group in run_results['metadata']) {
         for (service in run_results['metadata'][group]) {
@@ -857,7 +858,6 @@ function getService(resource_path) {
         service = resource_path.split('.')[0];
     };
     service = make_title(service);
-//    service = service.toUpperCase().replace('CLOUDTRAIL', 'CloudTrail').replace('REDSHIFT', 'RedShift').replace('ROUTE53', 'Route53');
     return service;
 };
 
@@ -873,7 +873,7 @@ function updateTitle(title) {
 /**
  * Update the DOM
  */
-function locationHashChanged() {
+function showPageFromHash() {
     if (location.hash) {
         updateDOM(location.hash);
     } else {
@@ -881,7 +881,7 @@ function locationHashChanged() {
     };
 };
 
-window.onhashchange = locationHashChanged;
+window.onhashchange = showPageFromHash;
 
 /**
  * Get value at given path
