@@ -200,6 +200,9 @@ Handlebars.registerHelper('format_date', function(time) {
     else if(typeof time === 'string') {
         return new Date(time);
     }
+    else if(!time || time === null) {
+        return 'No date provided'
+    }
     else {
         return 'Invalid date format';
     }
