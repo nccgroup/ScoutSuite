@@ -334,6 +334,10 @@
                 "users": {
                     "cols": 2,
                     "path": "services.iam.users"
+                },
+                "credential_report": {
+                    "cols": 2,
+                    "path": "services.iam.credential_report"
                 }
             },
             "summaries": {
