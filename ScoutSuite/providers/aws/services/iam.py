@@ -89,7 +89,7 @@ class IAMConfig(AWSBaseConfig):
                 for key, value in zip(keys, values):
                     iam_report[values[0]][key] = value
             self.credential_report = iam_report
-            self.fetchstatuslogger.counts['credential_report']['fetched'] = 1
+            self.fetchstatuslogger.counts['credential_report']['fetched'] = len(iam_report)
         except Exception as e:
             if ignore_exception:
                 return
