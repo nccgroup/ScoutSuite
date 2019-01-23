@@ -72,7 +72,7 @@ class IAMConfig(AWSBaseConfig):
         :param: ignore_exception : initiate credential report creation as not  always ready
         :type: Boolean
         """
-        iam_report = {}
+        credential_reports = {}
         try:
             api_client = connect_service('iam', credentials, silent=True)
             response = api_client.generate_credential_report()
@@ -80,29 +80,50 @@ class IAMConfig(AWSBaseConfig):
                 if not ignore_exception:
                     printError('Failed to generate a credential report.')
                 return
+                
             report = api_client.get_credential_report()['Content']
             lines = report.splitlines()
             keys = lines[0].decode('utf-8').split(',')
             self.fetchstatuslogger.counts['credential_reports']['discovered'] = len(lines) - 1
 
             for line in lines[1:]:
+                credential_report = {}
                 values = line.decode('utf-8').split(',')
-                manage_dictionary(iam_report, values[0], {})
+                user_id = values[0]
                 for key, value in zip(keys, values):
-                    iam_report[values[0]][key] = value
-                self.fetchstatuslogger.counts['credential_reports']['fetched'] = len(iam_report)
+                    credential_report[key] = value
 
-            for user_id in iam_report:
-                iam_report[user_id]['id'] = user_id
-                iam_report[user_id]['name'] = user_id
+                credential_report['password_last_used'] = self._sanitize_date(credential_report['password_last_used'])
+                credential_report['access_key_1_last_used_date'] = self._sanitize_date(credential_report['access_key_1_last_used_date'])
+                credential_report['access_key_2_last_used_date'] = self._sanitize_date(credential_report['access_key_2_last_used_date'])
+                credential_report['last_used'] = self._compute_last_used(credential_report)
+                credential_report['name'] = user_id
+                credential_report['id'] = user_id
+                manage_dictionary(credential_reports, user_id, credential_report)
+                self.fetchstatuslogger.counts['credential_reports']['fetched'] = len(credential_reports)
 
-            self.credential_reports = iam_report
+            self.credential_reports = credential_reports
 
         except Exception as e:
             if ignore_exception:
                 return
             printError('Failed to download a credential report.')
             printException(e)
+
+
+    def _compute_last_used(self, credential_report):
+        dates = [credential_report['password_last_used'], 
+                 credential_report['access_key_1_last_used_date'], 
+                 credential_report['access_key_2_last_used_date']]
+
+        dates = [date for date in dates if date is not None]
+        return max(dates) if len(dates) > 0 else None
+
+    def _sanitize_date(self, date):
+        """
+        Returns the date if it is not equal to 'N/A' or 'no_information', else returns None
+        """
+        return date  if date != 'no_information' and date != 'N/A' else None
 
     ########################################
     ##### Groups
