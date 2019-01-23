@@ -88,6 +88,12 @@ class IAMConfig(AWSBaseConfig):
                 manage_dictionary(iam_report, values[0], {})
                 for key, value in zip(keys, values):
                     iam_report[values[0]][key] = value
+
+            for user_id in iam_report:
+                iam_report[user_id]['id'] = user_id
+                iam_report[user_id]['name'] = user_id
+
+
             self.credential_report = iam_report
             self.fetchstatuslogger.counts['credential_report']['fetched'] = len(iam_report)
         except Exception as e:
