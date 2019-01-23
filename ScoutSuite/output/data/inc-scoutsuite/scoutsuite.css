@@ -224,7 +224,7 @@ input:checked + .slider:before {
 .sub-navbar {
     position: inherit;
     float: bottom;
-    margin-top: 2rem;
+    margin-top: 3rem;
     width: 100%;
     left: 0rem;
     right: 0rem;

@@ -14,7 +14,7 @@
     <div class="list-group-item-text item-margin" id="">Role:
       {{#if iam_role}}
         <a href="javascript:showObject('services.iam.roles.{{iam_role.id}}')">{{iam_role.name}}</a>
-        <span id="cloudformation.regions.{{region}}.stacks.{{name}}"><i class="glyphicon glyphicon-warning-sign"></i></span>
+        <span id="cloudformation.regions.{{region}}.stacks.{{name}}"><i class="fa fa-exclamation-triangle"></i></span>
       {{else}}
         None
       {{/if}}

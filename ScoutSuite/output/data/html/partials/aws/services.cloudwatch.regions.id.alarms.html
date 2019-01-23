@@ -21,7 +21,7 @@
             <li class="'list-group-item-text">{{this}}</li>
         {{/each}}
         {{#unless AlarmActions}}
-            <span id="cloudwatch.regions.{{region}}.alarms.{{@key}}.NoActions"><i class="glyphicon glyphicon-warning-sign"></i> No actions have been configured for this alarm.</span>
+            <span id="cloudwatch.regions.{{region}}.alarms.{{@key}}.NoActions"><i class="fa fa-exclamation-triangle"></i> No actions have been configured for this alarm.</span>
         {{/unless}}
         </ul>
     </div>
