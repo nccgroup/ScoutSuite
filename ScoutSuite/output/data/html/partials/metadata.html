@@ -3,29 +3,29 @@
   <script id="metadata.list.template" type="text/x-handlebars-template">
       <div class="container">
         <div class="navbar-header">
-          <span class="navbar-brand text-white"><a href="javascript:show_main_dashboard()">Scout Suite</a></span>
+          <span class="navbar-brand"><a class="text-white" href="javascript:show_main_dashboard()">Scout Suite</a></span>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
               {{#each items}}
                 <li class="nav-item dropdown">
-                  <a href="#groups.{{@key}}.list"><span class="nav-link dropdown-toggle text-white" id="metadata.{{@key}}">{{make_title @key}}</b></a>
+                  <a href="#groups.{{@key}}.list"><span class="nav-link dropdown-toggle" id="metadata.{{@key}}">{{make_title @key}}</b></a>
                 </li>
               {{/each}}
             </ul>
             <ul class="nav navbar-nav ml-auto">
               <li class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle text-white" data-toggle="dropdown">Regions</a>
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Regions</a>
                 <ul class="dropdown-menu" id="regions.list">
                 </ul>
               </li>
               <li class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle text-white" data-toggle="dropdown">Filters</a>
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Filters</a>
                 <ul class="dropdown-menu" id="filters.list">
                 </ul>
               </li>
               <li class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle text-white" data-toggle="dropdown"><i class="fa fa-cog"></i></a>
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i></a>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="javascript:about()">About Scout Suite</a></li>
                   <li><a class="dropdown-item" href="javascript:download_exceptions()">Export exceptions</a><a id="downloadAnchorElem" style="display:none"></a></li>
