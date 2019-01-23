@@ -940,7 +940,6 @@ function updateDOM(anchor) {
     } else {
         $('#findings_download_button').hide();
     };
-    ;
 
     // Update title
     if (path.endsWith('.items')) {
