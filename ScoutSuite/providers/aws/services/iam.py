@@ -13,7 +13,7 @@ class IAMConfig(AWSBaseConfig):
     """
     Object that holds the IAM configuration
 
-    :ivar credential_report:    Credential report as downloaded from the AWS API
+    :ivar credential_reports:    Credential report as downloaded from the AWS API
     :ivar groups:               Dictionary of IAM groups in the AWS account
     :ivar groups_count:         len(groups)
     :ivar password_policy:      Account password policy
@@ -32,14 +32,14 @@ class IAMConfig(AWSBaseConfig):
         ('policies', 'Policies', 'list_policies', [{'Scope': 'Local'}, {'OnlyAttached': True}], False),
         ('roles', 'Roles', 'list_roles', {}, False),
         ('users', 'Users', 'list_users', {}, False),
-        ('credential_report', '', '', {}, False),
+        ('credential_reports', '', '', {}, False),
         ('password_policy', '', '', {}, False)
         # TODO: Federations
         # TODO: KMS ?
     )
 
     def __init__(self, target_config):
-        self.credential_report = {}
+        self.credential_reports = {}
         self.groups = {}
         self.password_policy = {}
         self.permissions = {}
@@ -53,17 +53,17 @@ class IAMConfig(AWSBaseConfig):
     ########################################
 
     def fetch_all(self, credentials, regions=[], partition_name='aws', targets=None):
-        self.fetch_credential_report(credentials, True)
+        self.fetch_credential_reports(credentials, True)
         super(IAMConfig, self).fetch_all(credentials, regions, partition_name, targets)
         self.fetch_password_policy(credentials)
-        self.fetch_credential_report(credentials)
+        self.fetch_credential_reports(credentials)
         self.fetchstatuslogger.show(True)
 
     ########################################
     ##### Credential report
     ########################################
 
-    def fetch_credential_report(self, credentials, ignore_exception=False):
+    def fetch_credential_reports(self, credentials, ignore_exception=False):
         """
         Fetch the credential report
 
@@ -83,20 +83,21 @@ class IAMConfig(AWSBaseConfig):
             report = api_client.get_credential_report()['Content']
             lines = report.splitlines()
             keys = lines[0].decode('utf-8').split(',')
+            self.fetchstatuslogger.counts['credential_reports']['discovered'] = len(lines) - 1
+
             for line in lines[1:]:
                 values = line.decode('utf-8').split(',')
                 manage_dictionary(iam_report, values[0], {})
                 for key, value in zip(keys, values):
                     iam_report[values[0]][key] = value
+                self.fetchstatuslogger.counts['credential_reports']['fetched'] = len(iam_report)
 
             for user_id in iam_report:
                 iam_report[user_id]['id'] = user_id
                 iam_report[user_id]['name'] = user_id
 
-            self.credential_report = iam_report
-            self.fetchstatuslogger.counts['credential_report']['fetched'] = len(iam_report)
-            self.fetchstatuslogger.counts['credential_report']['discovered'] = len(iam_report)
-            
+            self.credential_reports = iam_report
+
         except Exception as e:
             if ignore_exception:
                 return
