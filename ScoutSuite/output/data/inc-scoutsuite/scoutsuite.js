@@ -1039,10 +1039,6 @@ function get_resource_path(path) {
         resource_path_array = resource_path.split('.');
         last_value = resource_path_array.pop();
         resource_path = 'services.' + resource_path_array.join('.');
-        // Fix for issue #79
-        if (last_value == '<root_account>') {
-            resource_path += '.' + last_value;
-        };
     } else if (path.endsWith('.view')) {
         // Resource path is not changed (this may break when using `back' button in browser)
         var resource_path = current_resource_path;
