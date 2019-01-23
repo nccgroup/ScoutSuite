@@ -93,9 +93,10 @@ class IAMConfig(AWSBaseConfig):
                 iam_report[user_id]['id'] = user_id
                 iam_report[user_id]['name'] = user_id
 
-
             self.credential_report = iam_report
             self.fetchstatuslogger.counts['credential_report']['fetched'] = len(iam_report)
+            self.fetchstatuslogger.counts['credential_report']['discovered'] = len(iam_report)
+            
         except Exception as e:
             if ignore_exception:
                 return
