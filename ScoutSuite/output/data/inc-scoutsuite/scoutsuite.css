@@ -234,3 +234,15 @@ input:checked + .slider:before {
     align-content: stretch;
     z-index: -1;
 }
+
+.pr-0 {
+    padding-right: 0rem;
+}
+
+.text-overflow {
+    word-wrap: break-word;
+}
+
+.std-size {
+    font-size: 1rem;
+}
