@@ -2,8 +2,9 @@
   "dashboard_name": "Instances",
   "description": "SSL not required",
   "path": "cloudsql.instances.id",
-  "conditions": [ "and",
-    [ "cloudsql.instances.id.ssl_required", "equal", "Disabled" ]
+  "conditions": [ "or",
+    [ "cloudsql.instances.id.ssl_required", "false", ""],
+    [ "cloudsql.instances.id.ssl_required", "null", ""]
   ],
   "id_suffix": "ssl_required"
 }
