@@ -52,7 +52,6 @@ class IAMConfig(AWSBaseConfig):
     ##### Overload to fetch credentials report before and after
     ########################################
 
-    
     def fetch_all(self, credentials, regions=None, partition_name='aws', targets=None):
         regions = [] if regions is None else regions
         self.fetch_credential_reports(credentials, True)
@@ -325,7 +324,6 @@ class IAMConfig(AWSBaseConfig):
 
     def get_id_for_resource(self, iam_resource_type, resource_name):
         for resource_id in getattr(self, iam_resource_type):
-          
             if getattr(self, iam_resource_type)[resource_id]['name'] == resource_name:
                 return resource_id
 
