@@ -11,7 +11,9 @@ class BaseServicesConfig(object):
     def _is_provider(self, provider_name):
         return False
 
-    def fetch(self, credentials, services=[], regions=[]):
+    def fetch(self, credentials, services=None, regions=None):
+        services = [] if services is None else services
+        regions = [] if regions is None else regions
         for service in vars(self):
             try:
                 # skip services

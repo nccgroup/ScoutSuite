@@ -26,7 +26,7 @@ class BaseProvider(object):
     all cloud providers
     """
 
-    def __init__(self, report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4, **kwargs):
+    def __init__(self, report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
         """
 
         :aws_account_id     AWS account ID
@@ -35,6 +35,8 @@ class BaseProvider(object):
         :ruleset            Ruleset used to perform the analysis
         :services           AWS configuration sorted by service
         """
+        services = [] if services is None else services
+        skipped_services = [] if skipped_services is None else skipped_services
 
         self.credentials = None
         self.last_run = None
@@ -53,12 +55,13 @@ class BaseProvider(object):
         """
         pass
 
-    def preprocessing(self, ip_ranges=[], ip_ranges_name_key=None):
+    def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
         TODO
 
         :return: None
         """
+        ip_ranges = [] if ip_ranges is None else ip_ranges
 
         # Preprocessing dictated by metadata
         self._process_metadata_callbacks()
@@ -75,7 +78,7 @@ class BaseProvider(object):
         self._update_metadata()
         self._update_last_run(current_time, ruleset)
 
-    def fetch(self, regions=[], skipped_regions=[], partition_name=None):
+    def fetch(self, regions=None, skipped_regions=None, partition_name=None):
         """
         Fetch resources for each service
 
@@ -86,6 +89,8 @@ class BaseProvider(object):
         :param partition_name:
         :return:
         """
+        regions = [] if regions is None else regions
+        skipped_regions = [] if skipped_regions is None else skipped_regions
         # TODO: determine partition name based on regions and warn if multiple partitions...
         self.services.fetch(self.credentials, self.service_list, regions)
 

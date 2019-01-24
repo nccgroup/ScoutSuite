@@ -13,13 +13,15 @@ providers_dict = {'aws': 'AWSProvider',
 def get_provider(provider,
                  profile=None,
                  project_id=None, folder_id=None, organization_id=None,
-                 report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4):
+                 report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4):
     """
     Returns an instance of the requested provider.
 
     :param provider: a string indicating the provider
     :return: a child instance of the BaseProvider class or None if no object implemented
     """
+    services = [] if services is None else services
+    skipped_services = [] if skipped_services is None else skipped_services
 
     provider_class = providers_dict.get(provider)
     provider_object = getattr(sys.modules[__name__], provider_class)

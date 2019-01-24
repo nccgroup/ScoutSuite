@@ -52,7 +52,8 @@ class IAMConfig(AWSBaseConfig):
     ##### Overload to fetch credentials report before and after
     ########################################
 
-    def fetch_all(self, credentials, regions=[], partition_name='aws', targets=None):
+    def fetch_all(self, credentials, regions=None, partition_name='aws', targets=None):
+        regions = [] if regions is None else regions
         self.fetch_credential_reports(credentials, True)
         super(IAMConfig, self).fetch_all(credentials, regions, partition_name, targets)
         self.fetch_password_policy(credentials)
