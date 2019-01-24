@@ -5,7 +5,6 @@
  * [How to report a bug](#How-to-report-a-bug)
  * [How to suggest a new feature](#How-to-suggest-a-new-feature)
  * [Code review process](#Code-review-process)
- * [Code of conduct](#code-of-conduct)
 
 ## Introduction
 
