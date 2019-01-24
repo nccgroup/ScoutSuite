@@ -14,7 +14,7 @@ Following these guidelines helps to communicate that you respect the time of the
 
 ## Getting started
 
-So you wanna contribute some code, that's great! This project follows the [GitHub Workflow](https://guides.github.com/introduction/flow/). 
+So you want to contribute some code, that's great! This project follows the [GitHub Workflow](https://guides.github.com/introduction/flow/). 
 
 1. If it's a complex issue, please describe how you plan on going about addressing it on the issue thread.
 2. Assign yourself to the issue
@@ -27,6 +27,8 @@ So you wanna contribute some code, that's great! This project follows the [GitHu
 6. [Create a pull request](https://help.github.com/articles/creating-a-pull-request/) against `develop`
 7. Wait for people to review it
 8. Address the comments people left on your pull request
+9. Go back to 7. and repeat until your PR is 💯 
+10. Wait for someone from the team to merge your PR
 
 ## How to report a bug
 
@@ -39,6 +41,7 @@ So you wanna contribute some code, that's great! This project follows the [GitHu
  5. What did you see instead?
 
 ## How to suggest a new feature
+
 If you find yourself wishing for a feature that doesn't exist in Scout Suite, you are probably not alone. There are bound to be others out there with similar needs. Many of the features that Scout Suite has today have been added because our users saw the need. Open an issue on our issues list on GitHub which describes the feature you would like to see, why you need it, and how it should work.
 
 ## Code review process
