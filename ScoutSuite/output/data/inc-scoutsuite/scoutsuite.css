@@ -244,5 +244,5 @@ input:checked + .slider:before {
 }
 
 .std-size {
-    font-size: 1rem;
+    font-size: 18px;
 }
