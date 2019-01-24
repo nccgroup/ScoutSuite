@@ -14,7 +14,7 @@ try:
     from opinel.utils.globals import check_requirements
     from opinel.utils.profiles import AWSProfiles
 except Exception as e:
-    print('Error: Scout2 depends on the opinel package. Install all the requirements with the following command:')
+    print('Error: Scout depends on the opinel package. Install all the requirements with the following command:')
     print('  $ pip install -r requirements.txt')
     print(e)
     sys.exit(42)

@@ -334,6 +334,10 @@
                 "users": {
                     "cols": 2,
                     "path": "services.iam.users"
+                },
+                "credential_reports": {
+                    "cols": 2,
+                    "path": "services.iam.credential_reports"
                 }
             },
             "summaries": {
@@ -344,10 +348,6 @@
                 "password_policy": {
                     "cols": 1,
                     "path": "services.iam.password_policy"
-                },
-                "root_account": {
-                    "cols": 1,
-                    "path": "services.iam.credential_report.<root_account>"
                 }
             }
         }

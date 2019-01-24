@@ -193,8 +193,19 @@ Handlebars.registerHelper('find_ec2_object_attribute', function(path, id, attrib
     return findEC2ObjectAttribute(run_results['services']['ec2'], path, id, attribute);
 });
 
-Handlebars.registerHelper('format_date', function(timestamp) {
-    return new Date(timestamp * 1000).toString();
+Handlebars.registerHelper('format_date', function(time) {
+    if(typeof time === 'number') {
+        return new Date(time * 1000).toString();
+    }
+    else if(typeof time === 'string') {
+        return new Date(time);
+    }
+    else if(!time || time === null) {
+        return 'No date available'
+    }
+    else {
+        return 'Invalid date format';
+    }
 });
 
 Handlebars.registerHelper('make_title', function(title) {
