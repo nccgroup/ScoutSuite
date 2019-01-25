@@ -9,7 +9,7 @@
           <ul>
             <li class="list-group-item-text">RDS Instance: <a href="javascript:showObject('services.rds.regions.{{region}}.vpcs.{{vpc_id}}.instances.{{DBInstanceIdentifier}}')">{{DBInstanceIdentifier}}</a></li>
             <li class="list-group-item-text">Created on: {{SnapshotCreateTime}}</li>
-            <li class="list-group-item-text">Encrypted: {{Encrypted}}</li>
+            <li class="list-group-item-text">Encrypted: <span id="rds.regions.{{region}}.vpcs.{{vpc_id}}.snapshots.{{@key}}.snapshot-not-encrypted">{{Encrypted}}</span></li>
             <li class="list-group-item-text">Option group: {{OptionGroupName}}</li>
           </ul>
         </div>
