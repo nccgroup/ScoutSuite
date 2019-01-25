@@ -167,10 +167,14 @@ class BaseProvider(object):
                             [x for x in
                              self.metadata[service_group][service]['resources'][resource]['full_path'].split(
                                  '.') if x != 'id'])
+                    
                     # Update counts
-                    count = '%s_count' % resource
                     service_config = self.services[service]
-                    if service_config and resource != 'regions':
+                    if not service_config :
+                        continue
+                    
+                    count = '%s_count' % resource
+                    if resource != 'regions':
                         if 'regions' in service_config.keys() and isinstance(service_config['regions'], dict):
                             self.metadata[service_group][service]['resources'][resource]['count'] = 0
                             for region in service_config['regions']:
@@ -183,6 +187,9 @@ class BaseProvider(object):
                                     service_config[count]
                             except Exception as e:
                                 printException(e)
+                    else:
+                        self.metadata[service_group][service]['resources'][resource]['count'] = len(service_config['regions'])
+
 
     def manage_object(self, object, attr, init, callback=None):
         """
