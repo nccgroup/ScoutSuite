@@ -14,12 +14,12 @@
             {{#each ResourceRecordSets}}
             <div class="row item-margin">
                 <hr style="margin: 5px !important">
-                <div class="col-sm-7 pull-right" style="text-align: center">
+                <div class="col-sm-7 float-right" style="text-align: center">
                     {{#each ResourceRecords}}
                         <div class="list-group-item-text">{{Value}}</div>
                     {{/each}}
                 </div>
-                <div class="col-sm-1 pull-right" style="text-align: center">{{Type}}</div>
+                <div class="col-sm-1 float-right" style="text-align: center">{{Type}}</div>
                 <div class="list-group-item-text">{{Name}}</div>
                 </div>
                 {{#if @last}}<hr style="margin: 5px !important">{{/if}}

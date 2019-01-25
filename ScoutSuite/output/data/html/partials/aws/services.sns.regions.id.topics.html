@@ -29,7 +29,7 @@
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Subscriptions
               {{#unlessEqual subscriptions_count 0}}<a class="accordion-toggle" data-toggle="collapse" href="#sns\.regions\.{{region}}\.topics\.{{@key}}\.subscriptions">{{/unlessEqual}}
-              <span id="sns.regions.{{region}}.topics.{{@key}}.subscriptions_count" class="badge pull-right {{#unlessEqual subscriptions_count 0}}btn-info{{/unlessEqual}}">{{subscriptions_count}}</span>
+              <span id="sns.regions.{{region}}.topics.{{@key}}.subscriptions_count" class="badge float-right {{#unlessEqual subscriptions_count 0}}btn-info{{/unlessEqual}}">{{subscriptions_count}}</span>
               {{#unlessEqual subscriptions_count 0}}</a>{{/unlessEqual}}
             </h4>
             <div id="sns.regions.{{region}}.topics.{{@key}}.subscriptions" class="accordion-body collapse">

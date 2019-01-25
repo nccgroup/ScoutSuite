@@ -3,33 +3,33 @@
   <script id="metadata.list.template" type="text/x-handlebars-template">
       <div class="container">
         <div class="navbar-header">
-          <span class="navbar-brand"><a href="javascript:show_main_dashboard()">Scout Suite</a></span>
+          <span class="navbar-brand"><a class="text-white" href="javascript:show_main_dashboard()">Scout Suite</a></span>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
               {{#each items}}
-                <li class="dropdown">
-                  <a href="#groups.{{@key}}.list"><span id="metadata.{{@key}}">{{make_title @key}}</span><b class="caret"></b></a>
+                <li class="nav-item dropdown">
+                  <a href="#groups.{{@key}}.list"><span class="nav-link dropdown-toggle" id="metadata.{{@key}}">{{make_title @key}}</b></a>
                 </li>
               {{/each}}
             </ul>
-            <ul class="nav navbar-nav navbar-right">
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Regions<b class="caret"></b></a>
+            <ul class="nav navbar-nav ml-auto">
+              <li class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Regions</a>
                 <ul class="dropdown-menu" id="regions.list">
                 </ul>
               </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filters<b class="caret"></b></a>
+              <li class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Filters</a>
                 <ul class="dropdown-menu" id="filters.list">
                 </ul>
               </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span><b class="caret"></b></a>
+              <li class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-cog"></i></a>
                 <ul class="dropdown-menu">
-                  <li><a href="javascript:about()">About Scout Suite</a></li>
-                  <li><a href="javascript:download_exceptions()">Export exceptions</a><a id="downloadAnchorElem" style="display:none"></a></li>
-                  <li><a>Dark theme
+                  <li><a class="dropdown-item" href="javascript:about()">About Scout Suite</a></li>
+                  <li><a class="dropdown-item" href="javascript:download_exceptions()">Export exceptions</a><a id="downloadAnchorElem" style="display:none"></a></li>
+                  <li><a class="dropdown-item">Dark theme
                     <label class="switch">
                       <input type="checkbox" id="theme_checkbox" onclick="toggle_theme()">
                       <span class="slider round"></span>
@@ -41,18 +41,15 @@
           </div>
       </div>
       {{#each items}}
-      <div class="container" id="groups.{{@key}}.list">
-        <div class="navbar-header">
-          <span class="navbar-brand"></span>
-        </div>
+      <div class="container navbar-expand-md bg-primary nav sub-navbar" id="groups.{{@key}}.list">
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
               {{#if summaries}}
               <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Summaries<b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle nav-link text-white" data-toggle="dropdown">Summaries</a>
                 <ul class="dropdown-menu">
                   {{#each summaries}}
-                    <li><a href="#{{path}}">{{make_title @key}}</a></li>
+                    <li><a class="dropdown-item" href="#{{path}}">{{make_title @key}}</a></li>
                   {{/each}}
                 </ul>
               </li>
@@ -61,25 +58,25 @@
               {{#unlessEqual @key 'summaries'}}
               {{#unless hidden}}
                 <li class="dropdown">
-                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{make_title @key}}<b class="caret"></b></a>
+                  <a href="#" class="dropdown-toggle nav-link text-white" data-toggle="dropdown">{{make_title @key}}</a>
                   <ul class="dropdown-menu">
                     <li class="dropdown-header">Summaries</li>
-                    <li><a href="#services.{{@key}}.findings">Dashboard</a></li>
+                    <li><a class="dropdown-item" href="#services.{{@key}}.findings">Dashboard</a></li>
                     {{#each summaries}}
                       {{#if risks}}
                         <li class="dropdown-submenu"><a href="#{{path}}">{{make_title @key}}</a>
                           <ul class="dropdown-menu">
                             <li class="dropdown-header">Security risks</li>
                             {{#each risks}}
-                              <li><a href="#services.{{@../../key}}.findings.{{this}}.items">{{get_value_at 'services' @../../key 'findings' this 'description'}}</a></li>
+                              <li><a class="dropdown-item" href="#services.{{@../../key}}.findings.{{this}}.items">{{get_value_at 'services' @../../key 'findings' this 'description'}}</a></li>
                             {{/each}}
                           </ul>
                         </li>
                       {{else}}
-                        <li><a href="#{{path}}">{{make_title @key}}</a></li>
+                        <li><a class="dropdown-item" href="#{{path}}">{{make_title @key}}</a></li>
                       {{/if}}
                     {{/each}}
-                    <li class="divider"></li>
+                    <li class="dropdown-divider"></li>
                     <li class="dropdown-header">{{make_title @key}} config</li>
                     {{#each resources}}
                       {{#unless hidden}}
@@ -88,15 +85,15 @@
                           <ul class="dropdown-menu">
                             <li class="dropdown-header">Security risks</li>
                             {{#each risks}}
-                              <li><a href="#services.{{@../../key}}.findings.{{this}}.items">{{get_value_at 'services' @../../key 'findings' this 'description'}}</a></li>
+                              <li><a class="dropdown-item" href="#services.{{@../../key}}.findings.{{this}}.items">{{get_value_at 'services' @../../key 'findings' this 'description'}}</a></li>
                             {{/each}}
                           </ul>
                         </li>
                       {{else}}
                         {{#if count}}
-                            <li><a href="#{{path}}">{{make_title @key}} ({{count}})</a></li>
+                            <li><a class="dropdown-item" href="#{{path}}">{{make_title @key}} ({{count}})</a></li>
                         {{else}}
-                            <li class="disabled"><a href="">{{make_title @key}}</a></li>
+                            <li class="disabled"><a class="dropdown-item disabled" href="">{{make_title @key}}</a></li>
                         {{/if}}
                       {{/if}}
                       {{/unless}}
