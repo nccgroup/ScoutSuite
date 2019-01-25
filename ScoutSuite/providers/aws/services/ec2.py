@@ -51,7 +51,7 @@ class EC2RegionConfig(RegionConfig):
 
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
-        :param instance:                 Cluster
+        :param instance:                Cluster
         """
         for i in reservation['Instances']:
             instance = {}
@@ -146,7 +146,7 @@ class EC2RegionConfig(RegionConfig):
         snapshot['name'] = get_name(snapshot, snapshot, 'id')
         self.snapshots[snapshot['id']] = snapshot
         # Get snapshot attribute
-        snapshot['createVolumPermission'] = \
+        snapshot['createVolumePermission'] = \
         api_clients[region].describe_snapshot_attribute(Attribute='createVolumePermission', SnapshotId=snapshot['id'])[
             'CreateVolumePermissions']
 
