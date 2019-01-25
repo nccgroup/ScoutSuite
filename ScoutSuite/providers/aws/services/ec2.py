@@ -69,6 +69,22 @@ class EC2RegionConfig(RegionConfig):
                 instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
             self.vpcs[vpc_id].instances[i['InstanceId']] = instance
 
+    def parse_image(self, global_params, region, image):
+        """
+        Parses a single AMI (Amazon Machine Image)
+
+        :param global_params:           Parameters shared for all regions
+        :param region:                  Name of the AWS region
+        :param snapshot:                Single image
+        """
+        id = image['ImageId']
+        name = image['Name']
+
+        image['id'] = id
+        image['name'] = name
+
+        self.images[id] = image 
+
     def parse_security_group(self, global_params, region, group):
         """
         Parse a single Redsfhit security group

@@ -241,6 +241,15 @@
                     "callbacks": [
                         [ "match_security_groups_and_resources_callback", {"sg_list_attribute_name": ["Groups"], "sg_id_attribute_name": "GroupId"} ]
                     ]
+                },
+                "images": {
+                    "api_call": "describe_images",
+                    "params": {
+                        "Owners": [ "_AWS_ACCOUNT_ID_" ]
+                    },
+                    "response": "Images",
+                    "cols": 2,
+                    "path": "services.ec2.regions.id.images"
                 }
             },
             "summaries": {
