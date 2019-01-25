@@ -149,6 +149,10 @@ class EC2RegionConfig(RegionConfig):
         snapshot['createVolumePermission'] = \
         api_clients[region].describe_snapshot_attribute(Attribute='createVolumePermission', SnapshotId=snapshot['id'])[
             'CreateVolumePermissions']
+        snapshot['public'] = self._is_public(snapshot)
+
+    def _is_public(self, snapshot):
+        return any([permission.get('Group') == 'all' for permission in snapshot['createVolumePermission']])
 
     def parse_volume(self, global_params, region, volume):
         """
