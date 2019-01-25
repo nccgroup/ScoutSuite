@@ -235,6 +235,8 @@ class RegionConfig(BaseConfig):
     def __init__(self, region_name, resource_types=None):
         resource_types = {} if resource_types is None else resource_types
         self.region = region_name
+        self.name = region_name
+        self.id = region_name
         for resource_type in resource_types['region'] + resource_types['global']:
             setattr(self, resource_type, {})
             setattr(self, '%s_count' % resource_type, 0)
