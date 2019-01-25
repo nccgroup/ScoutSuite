@@ -5,9 +5,9 @@
         <h4 class="list-group-item-heading">
           {{make_title direction}} Rules
           {{#ifEqual count 0}}
-            <span class="badge pull-right">{{count}}</span>
+            <span class="badge float-right">{{count}}</span>
           {{else}}
-            <span class="badge pull-right btn-info">{{count}}</span>
+            <span class="badge float-right btn-info">{{count}}</span>
           {{/ifEqual}}
         </h4>
         <ul>
@@ -39,7 +39,7 @@
         </ul>
         {{#ifEqual sg_name 'default'}}
           <span id="ec2.regions.{{region}}.vpcs.{{vpc}}.security_groups.{{sg_id}}.rules.{{direction}}.default_with_rules" class="finding-hidden item-margin">
-            <i class="glyphicon glyphicon-warning-sign"></i> Default security groups should have no rules.
+            <i class="fa fa-exclamation-triangle"></i> Default security groups should have no rules.
           </span>
         {{/ifEqual}}
       </div>

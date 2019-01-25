@@ -26,10 +26,10 @@
         {{/each}}
       </ul>
       <span id="services.ec2.regions.vpcs.security_groups-unused-{{id}}" class="finding-hidden item-margin">
-        <i class="glyphicon glyphicon-warning-sign"></i> This group is not used by either EC2, RDS, or Redshift.
+        <i class="fa fa-exclamation-triangle"></i> This group is not used by either EC2, RDS, or Redshift.
       </span>
       <span id="ec2.regions.{{region}}.vpcs.{{vpc}}.security_groups.{{id}}.default_in_use" class="finding-hidden item-margin">
-        <i class="glyphicon glyphicon-warning-sign"></i> Default security groups should not be used.
+        <i class="fa fa-exclamation-triangle"></i> Default security groups should not be used.
       </span>
     </div>
 </script>

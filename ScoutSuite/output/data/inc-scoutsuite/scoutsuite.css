@@ -216,3 +216,33 @@ input:checked + .slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+
+.spacer {
+    height: 10rem;
+}
+
+.sub-navbar {
+    position: inherit;
+    float: bottom;
+    margin-top: 3rem;
+    width: 100%;
+    left: 0rem;
+    right: 0rem;
+    top: 0rem;
+    padding-top: 2rem;
+    padding-left: 8rem;
+    align-content: stretch;
+    z-index: -1;
+}
+
+.pr-0 {
+    padding-right: 0rem;
+}
+
+.text-overflow {
+    word-wrap: break-word;
+}
+
+.std-size {
+    font-size: 18px;
+}
