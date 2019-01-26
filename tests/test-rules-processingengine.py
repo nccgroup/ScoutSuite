@@ -36,7 +36,6 @@ class TestAWSScout2RulesProcessingEngine:
     def test_all_finding_rules(self):
         test_dir = os.path.dirname(os.path.realpath(__file__))
         test_ruleset_file_name = os.path.join(test_dir, 'data/ruleset-test.json')
-
         #FIXME this is only for AWS
         with open(os.path.join(test_dir, '../ScoutSuite/providers/aws/rules/rulesets/default.json'), 'rt') as f:
             ruleset = json.load(f)
@@ -64,8 +63,9 @@ class TestAWSScout2RulesProcessingEngine:
                 test_config_dict = json.load(f)
                 for key in test_config_dict:
                     setattr(dummy_provider, key, test_config_dict[key])
-            pe.run(dummy_provider)
             service = file_name.split('-')[0]
+            dummy_provider.service_list = [service]
+            pe.run(dummy_provider)
             findings = dummy_provider.services[service]['findings']
             findings = findings[list(findings.keys())[0]]['items']
             test_result_file_name = os.path.join(test_dir, 'data/rule-results/%s' % file_name)
@@ -82,6 +82,6 @@ class TestAWSScout2RulesProcessingEngine:
                 printError('Expected items:\n %s' % json.dumps(sorted(items)))
                 printError('Reported items:\n %s' % json.dumps(sorted(findings)))
                 assert (False)
-        printError('Existing  rules: %d' % rule_counters['found'])
-        printError('Processed rules: %d' % rule_counters['tested'])
-        printError('Verified  rules: %d' % rule_counters['verified'])
+        print('Existing  rules: %d' % rule_counters['found'])
+        print('Processed rules: %d' % rule_counters['tested'])
+        print('Verified  rules: %d' % rule_counters['verified'])
