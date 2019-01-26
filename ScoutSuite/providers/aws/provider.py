@@ -147,7 +147,7 @@ class AWSProvider(BaseProvider):
                     data_logging_trails_count += 1
 
         cloudtrail_config['data_logging_trails_count'] = data_logging_trails_count
-        cloudtrail_config['IncludeGlobalServiceEvents'] = global_events_logging > 0
+        cloudtrail_config['IncludeGlobalServiceEvents'] = len(global_events_logging) > 0
         cloudtrail_config['DuplicatedGlobalServiceEvents'] = len(global_events_logging) > 1
 
     def process_network_acls_callback(self, current_config, path, current_path, privateip_id, callback_args):
