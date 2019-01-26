@@ -2,12 +2,15 @@
 
 import os
 
+from getpass import getpass
+
 from opinel.utils.console import printError, printException
 
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.azure.configs.services import AzureServicesConfig
 
-from azure.common.client_factory import get_azure_cli_credentials
+from msrestazure.azure_active_directory import MSIAuthentication
+from azure.common.credentials import ServicePrincipalCredentials, UserPassCredentials, get_azure_cli_credentials
 
 
 class AzureCredentials:
@@ -36,7 +39,8 @@ class AzureProvider(BaseProvider):
 
         super(AzureProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
-    def authenticate(self, key_file=None, user_account=None, service_account=None, **kargs):
+    def authenticate(self, key_file=None, user_account=None, service_account=None, azure_cli=None, azure_msi=None,
+                     azure_service_principal=None, azure_file_auth=None, azure_user_credentials=None, **kargs):
         """
         Implements authentication for the Azure provider using azure-cli.
         Refer to https://docs.microsoft.com/en-us/python/azure/python-sdk-azure-authenticate?view=azure-python.
@@ -45,9 +49,45 @@ class AzureProvider(BaseProvider):
         """
 
         try:
-            cli_credentials, self.aws_account_id = get_azure_cli_credentials()          #TODO: Remove aws_account_id
-            self.credentials = AzureCredentials(cli_credentials, self.aws_account_id)
-            return True
+            if azure_cli:
+                cli_credentials, self.aws_account_id = get_azure_cli_credentials()  # TODO: Remove aws_account_id
+                self.credentials = AzureCredentials(cli_credentials, self.aws_account_id)
+                print(cli_credentials)
+                return True
+            elif azure_msi:
+                # TODO test
+                credentials = MSIAuthentication()
+                self.aws_account_id = "aaa"
+                self.credentials = AzureCredentials(credentials, self.aws_account_id)
+                return True
+            elif azure_file_auth:
+                # TODO
+                return True
+            elif azure_service_principal:
+                subscription_id = input("Subscription ID: ")
+                tenant_id = input("Tenant ID: ")
+                client_id = input("Client ID: ")
+                client_secret = getpass("Client secret: ")
+
+                self.aws_account_id = tenant_id  # TODO this is for AWS
+
+                credentials = ServicePrincipalCredentials(
+                    client_id=client_id,
+                    secret=client_secret,
+                    tenant=tenant_id
+                )
+
+                self.credentials = AzureCredentials(credentials, subscription_id)
+
+                return True
+            elif azure_user_credentials:
+                username = input("Username: ")
+                password = getpass("Password: ")
+
+                credentials = UserPassCredentials(username, password)
+                self.aws_account_id = ""  # TODO this is for AWS
+                self.credentials = AzureCredentials(credentials, self.aws_account_id)
+                return True
         except Exception as e:
             printError('Failed to authenticate to Azure')
             printException(e)

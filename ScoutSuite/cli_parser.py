@@ -204,6 +204,24 @@ class ScoutSuiteArgumentParser(SharedArgumentParser):
                                  action='store',
                                  help='ID of the GCP Organization to analyze')
 
+        azure_auth_modes = self.parser.add_mutually_exclusive_group(required="azure" in sys.argv)
+
+        azure_auth_modes.add_argument('--azure-cli',
+                                      action='store_true',
+                                      help='Run Scout Suite using configured azure-cli credentials.')
+        azure_auth_modes.add_argument('--azure-msi',
+                                      action='store_true',
+                                      help='Run Scout Suite with Managed Service Identity.')
+        azure_auth_modes.add_argument('--azure-service-principal',
+                                      action='store_true',
+                                      help='Run Scout Suite with an Azure Service Principal')
+        azure_auth_modes.add_argument('--azure-file-auth',
+                                      action='store_true',
+                                      help='Run Scout Suite with a credential file')
+        azure_auth_modes.add_argument('--azure-user-credentials',
+                                      action='store_true',
+                                      help='Run Scout Suite with user credentials')
+
     def parse_args(self, args=None):
         args = self.parser.parse_args(args)
         # If local analysis, overwrite results
