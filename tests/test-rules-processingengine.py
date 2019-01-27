@@ -84,8 +84,9 @@ class TestAWSScout2RulesProcessingEngine:
         test_ruleset = {'rules': {}, 'about': 'regression test'}
         test_ruleset['rules'][rule_file_name] = [rule]
 
-        with tempfile.NamedTemporaryFile('wt', delete=True) as f:
+        with tempfile.NamedTemporaryFile('wt', delete=False) as f:
             f.write(json.dumps(test_ruleset, indent=4))
-            return Ruleset(filename=f.name)
+
+        return Ruleset(filename=f.name)
 
         return None
