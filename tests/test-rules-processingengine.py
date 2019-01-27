@@ -21,18 +21,6 @@ class TestAWSScout2RulesProcessingEngine:
         self.rule_counters = {'found': 0, 'tested': 0, 'verified': 0}
         self.test_dir = os.path.dirname(os.path.realpath(__file__))
 
-        # Build a fake ruleset
-
-    #    filename = 'foobar.json'
-    #    ruleset = {'rules': {}}
-    #    ruleset['rules'][filename] = []
-    #    ruleset['rules'][filename].append({'enabled': True, 'level': 'danger'})
-    #    pass
-
-    # finding_rules = Ruleset(profile_name, filename=args.ruleset, ip_ranges=args.ip_ranges)
-    # pe = ProcessingEngine(finding_rules)
-    # pe.run(aws_config)
-
     # TODO
     # Check that one testcase per finding rule exists (should be within default
     # reulset)
