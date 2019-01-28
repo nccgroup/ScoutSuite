@@ -211,13 +211,14 @@ class ScoutSuiteArgumentParser(SharedArgumentParser):
                                       help='Run Scout Suite using configured azure-cli credentials.')
         azure_auth_modes.add_argument('--azure-msi',
                                       action='store_true',
-                                      help='Run Scout Suite with Managed Service Identity.')
+                                      help='Run Scout Suite with Managed Service Identity. '
+                                           'Note that this is still untested.')
         azure_auth_modes.add_argument('--azure-service-principal',
                                       action='store_true',
                                       help='Run Scout Suite with an Azure Service Principal')
         azure_auth_modes.add_argument('--azure-file-auth',
-                                      action='store_true',
-                                      help='Run Scout Suite with a credential file')
+                                      action='store',
+                                      help='Run Scout Suite with the specified credential file')
         azure_auth_modes.add_argument('--azure-user-credentials',
                                       action='store_true',
                                       help='Run Scout Suite with user credentials')

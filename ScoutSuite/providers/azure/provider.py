@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import json
 
 from getpass import getpass
 
@@ -10,6 +11,7 @@ from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.azure.configs.services import AzureServicesConfig
 
 from msrestazure.azure_active_directory import MSIAuthentication
+from azure.mgmt.resource import SubscriptionClient
 from azure.common.credentials import ServicePrincipalCredentials, UserPassCredentials, get_azure_cli_credentials
 
 
@@ -52,17 +54,37 @@ class AzureProvider(BaseProvider):
             if azure_cli:
                 cli_credentials, self.aws_account_id = get_azure_cli_credentials()  # TODO: Remove aws_account_id
                 self.credentials = AzureCredentials(cli_credentials, self.aws_account_id)
-                print(cli_credentials)
                 return True
             elif azure_msi:
-                # TODO test
+                # TODO Untested
                 credentials = MSIAuthentication()
-                self.aws_account_id = "aaa"
+
+                # Get the subscription ID
+                subscription_client = SubscriptionClient(credentials)
+                subscription = next(subscription_client.subscriptions.list())
+                self.aws_account_id = subscription.subscription_id
+
                 self.credentials = AzureCredentials(credentials, self.aws_account_id)
                 return True
             elif azure_file_auth:
-                # TODO
-                return True
+                with open(azure_file_auth) as f:
+                    data = json.loads(f.read())
+                    subscription_id = data.get('subscriptionId')
+                    tenant_id = data.get('tenantId')
+                    client_id = data.get('clientId')
+                    client_secret = data.get('clientSecret')
+
+                    self.aws_account_id = tenant_id  # TODO this is for AWS
+
+                    credentials = ServicePrincipalCredentials(
+                        client_id=client_id,
+                        secret=client_secret,
+                        tenant=tenant_id
+                    )
+
+                    self.credentials = AzureCredentials(credentials, subscription_id)
+
+                    return True
             elif azure_service_principal:
                 subscription_id = input("Subscription ID: ")
                 tenant_id = input("Tenant ID: ")
