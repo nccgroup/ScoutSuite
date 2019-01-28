@@ -1,15 +1,25 @@
 
-    <!-- EBS volume partial -->
-    <script id="services.ec2.regions.id.volumes.partial" type="text/x-handlebars-template">
-        <div class="list-group-item active">
-            <h4 class="list-group-item-heading">{{name}}</h4>
-        </div>
-        <div class="list-group-item">
-            <h4 class="list-group-item-heading">Attributes</h4>
-            {{> generic_object resource}}
-        </div>
-    </script>
-    <script>
-      Handlebars.registerPartial("services.ec2.regions.id.volumes", $("#services\\.ec2\\.regions\\.id\\.volumes\\.partial").html());
-    </script>
+<!-- EBS volume partial -->
+<script id="services.ec2.regions.id.volumes.partial" type="text/x-handlebars-template">
+    <div class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Attributes</h4>
+        {{> generic_object this}}
+    </div>
+</script>
 
+<script>
+    Handlebars.registerPartial("services.ec2.regions.id.volumes", $("#services\\.ec2\\.regions\\.id\\.volumes\\.partial").html());
+</script>
+
+<!-- Single EBS volume template -->
+<script id="single_ebs_volume-template" type="text/x-handlebars-template">
+    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+    {{> services.ec2.regions.id.volumes}}
+</script>
+
+<script>
+    var single_ec2_volume_template = Handlebars.compile($("#single_ebs_volume-template").html());
+</script>
