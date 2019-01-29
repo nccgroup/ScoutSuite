@@ -56,12 +56,11 @@ class CloudTrailRegionConfig(RegionConfig):
                                                                              api_client)
             
             for es in api_client.get_event_selectors(TrailName=trail_config['TrailARN'])['EventSelectors']:
-                trail_config['DataEventsEnabled'] = True if 'All' in es['ReadWriteType'] else False
+                trail_config['DataEventsEnabled'] = True if len(es['DataResources']) > 0 else False
                 trail_config['ManagementEventsEnabled'] = es['IncludeManagementEvents']
-
-        trail_config['TEMP'] = api_client.get_event_selectors(TrailName=trail_config['TrailARN'])['EventSelectors']
         
         self.trails[trail_id] = trail_config
+
 
     def data_logging_status(self, trail_name, trail_details, api_client):
         for es in api_client.get_event_selectors(TrailName=trail_name)['EventSelectors']:
