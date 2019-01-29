@@ -73,7 +73,6 @@ class GCPProvider(BaseProvider):
         try:
 
             self.credentials, project_id = google.auth.default()
-
             if self.credentials:
 
                 if self.project_id:
@@ -99,8 +98,8 @@ class GCPProvider(BaseProvider):
                     self.projects = self._get_projects(parent_type='service-account',
                                                        parent_id=self.project_id,
                                                        service_account=self.service_account)
-                    self.aws_account_id = "gcp-audit-service-account" # FIXME this is for AWS
-                    self.profile = "gcp-audit-service-account" # FIXME this is for AWS
+                    self.aws_account_id = self.credentials.service_account_email # FIXME this is for AWS
+                    self.profile = self.credentials.service_account_email # FIXME this is for AWS
 
                 else:
                     # FIXME this will fail if no default project is set in gcloud config
