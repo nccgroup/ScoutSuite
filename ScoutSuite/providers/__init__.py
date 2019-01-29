@@ -12,7 +12,7 @@ providers_dict = {'aws': 'AWSProvider',
 
 def get_provider(provider,
                  profile=None,
-                 project_id=None, folder_id=None, organization_id=None,
+                 project_id=None, folder_id=None, organization_id=None, service_account=False,
                  report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4):
     """
     Returns an instance of the requested provider.
@@ -23,14 +23,26 @@ def get_provider(provider,
 
     provider_class = providers_dict.get(provider)
     provider_object = getattr(sys.modules[__name__], provider_class)
-    provider_instance = provider_object(profile=profile,
-                                        project_id=project_id,
-                                        folder_id=folder_id,
-                                        organization_id=organization_id,
-                                        report_dir=report_dir,
-                                        timestamp=timestamp,
-                                        services=services,
-                                        skipped_services=skipped_services,
-                                        thread_config=thread_config)
+    if provider == 'gcp':
+        provider_instance = provider_object(profile=profile,
+                                            project_id=project_id,
+                                            folder_id=folder_id,
+                                            organization_id=organization_id,
+                                            service_account=service_account,
+                                            report_dir=report_dir,
+                                            timestamp=timestamp,
+                                            services=services,
+                                            skipped_services=skipped_services,
+                                            thread_config=thread_config)
+    else: # it's aws or azure
+        provider_instance = provider_object(profile=profile,
+                                            project_id=project_id,
+                                            folder_id=folder_id,
+                                            organization_id=organization_id,
+                                            report_dir=report_dir,
+                                            timestamp=timestamp,
+                                            services=services,
+                                            skipped_services=skipped_services,
+                                            thread_config=thread_config)
 
     return provider_instance

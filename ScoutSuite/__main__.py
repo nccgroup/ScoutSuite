@@ -57,6 +57,7 @@ def main(passed_args=None):
                                   profile=args.profile[0],
                                   project_id=args.project_id,
                                   folder_id=args.folder_id,
+                                  service_account=args.service_account,
                                   organization_id=args.organization_id,
                                   report_dir=args.report_dir,
                                   timestamp=args.timestamp,

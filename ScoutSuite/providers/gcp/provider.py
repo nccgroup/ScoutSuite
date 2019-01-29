@@ -5,6 +5,7 @@ import os
 import warnings
 import google.auth
 import googleapiclient
+import google.oauth2.service_account
 from googleapiclient.discovery import build
 from opinel.utils.console import printError, printException
 
@@ -21,10 +22,10 @@ class GCPCredentials():
 
 class GCPProvider(BaseProvider):
     """
-    Implements provider for AWS
+    Implements provider for GCP
     """
 
-    def __init__(self, project_id=None, folder_id=None, organization_id=None,
+    def __init__(self, project_id=None, folder_id=None, organization_id=None, service_account=False,
                  report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4, **kwargs):
 
         self.profile = 'gcp-profile'  # TODO this is aws-specific
@@ -38,6 +39,8 @@ class GCPProvider(BaseProvider):
         self.project_id = project_id
         self.folder_id = folder_id
         self.organization_id = organization_id
+
+        self.service_account = service_account
 
         self.services_config = GCPServicesConfig
 
@@ -55,9 +58,15 @@ class GCPProvider(BaseProvider):
             # disable GCP warning about using User Accounts
             warnings.filterwarnings("ignore", "Your application has authenticated using end user credentials")
             pass  # Nothing more to do
-        elif service_account:
+        elif service_account: # This is fine for now except we've added a boolean property to the GCPProvider for service_accounts
             client_secrets_path = os.path.abspath(key_file)  # TODO this is probably wrong
+            # maybe we should add a flag if using a service_account type
             os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = client_secrets_path
+            # There should be some other differentiating factor but maybe for know its enough to look for a service account credential
+            # and a flag to search all projects
+            # no project_id which should be fine
+
+            self.service_account = True
         else:
             printError('Failed to authenticate to GCP - no supported account type')
             return False
@@ -65,17 +74,11 @@ class GCPProvider(BaseProvider):
         try:
 
             self.credentials, project_id = google.auth.default()
-            print("credentials")
-            print(self.credentials)
-            print("project id")
-            print(self.project_id)
 
             if self.credentials:
-                self._get_projects_for_service_account(parent_type='project',
-                                                   parent_id=self.project_id, credentials=self.credentials)
-                return
 
                 if self.project_id:
+                    # service_account credentials with project_id will follow this path
                     self.projects = self._get_projects(parent_type='project',
                                                        parent_id=self.project_id)
                     self.aws_account_id = self.project_id # FIXME this is for AWS
@@ -93,8 +96,16 @@ class GCPProvider(BaseProvider):
                     self.aws_account_id = self.folder_id # FIXME this is for AWS
                     self.profile = self.folder_id # FIXME this is for AWS
 
+                elif self.service_account: # We know that project_id hasn't been provided and that we have a service account
+                    self.projects = self._get_projects(parent_type='service-account',
+                                                       parent_id=self.project_id,
+                                                       service_account=self.service_account)
+                    self.aws_account_id = "gcp-audit-service-account" # FIXME this is for AWS
+                    self.profile = "gcp-audit-service-account" # FIXME this is for AWS
+
                 else:
                     # FIXME this will fail if no default project is set in gcloud config
+                    # This is caused because html.py is looking for a profile to build the report
                     self.project_id = project_id
                     self.projects = self._get_projects(parent_type='project',
                                                        parent_id=self.project_id)
@@ -134,13 +145,13 @@ class GCPProvider(BaseProvider):
 
         super(GCPProvider, self).preprocessing()
 
-    def _get_projects(self, parent_type, parent_id):
+    def _get_projects(self, parent_type, parent_id, service_account=False):
         """
         Returns all the projects in a given organization or folder. For a project_id it only returns the project
         details.
         """
 
-        if parent_type not in ['project', 'organization', 'folder']:
+        if parent_type not in ['project', 'organization', 'folder', 'service-account']:
             return None
 
         projects = []
@@ -161,77 +172,18 @@ class GCPProvider(BaseProvider):
         resource_manager_client_v2 = gcp_connect_service(service='cloudresourcemanager-v2', credentials=self.credentials)
 
         if parent_type == 'project':
-
             project_response = resource_manager_client_v1.projects().list(filter='id:%s' % parent_id).execute()
             if 'projects' in project_response.keys():
                 for project in project_response['projects']:
                     if project['lifecycleState'] == "ACTIVE":
                         projects.append(project)
 
-        else:
-
-            # get parent children projectss
-            request = resource_manager_client_v1.projects().list(filter='parent.id:%s' % parent_id)
-            while request is not None:
-                response = request.execute()
-
-                if 'projects' in response.keys():
-                    for project in response['projects']:
-                        if project['lifecycleState'] == "ACTIVE":
-                            projects.append(project)
-
-                request = resource_manager_client_v1.projects().list_next(previous_request=request,
-                                                                          previous_response=response)
-
-            # get parent children projects in children folders recursively
-            folder_response = resource_manager_client_v2.folders().list(parent='%ss/%s' % (parent_type, parent_id)).execute()
-            if 'folders' in folder_response.keys():
-                for folder in folder_response['folders']:
-                    projects.extend(self._get_projects("folder", folder['name'].strip(u'folders/')))
-
-        return projects
-
-    def _get_projects_for_service_account(self, parent_type, parent_id, credentials):
-        """
-        Returns all the projects that a service account has access to. For a project_id it only returns the project
-        details.
-        """
-
-        # Get creds and call the equivalent of gcloud projects list
-        service = build('cloudresourcemanager', 'v1', credentials=self.credentials)
-        request = service.projects().list()
-        response = request.execute()
-        print(response)
-
-
-        if parent_type not in ['project', 'organization', 'folder']:
-            return None
-
-        projects = []
-
-        #FIXME can't currently be done with API client library as it consumes v1 which doesn't support folders
-        """
-
-        resource_manager_client = resource_manager.Client(credentials=self.credentials)
-
-        project_list = resource_manager_client.list_projects()
-
-        for p in project_list:
-            if p.parent['id'] == self.organization_id and p.status == 'ACTIVE':
-                projects.append(p.project_id)
-        """
-
-        resource_manager_client_v1 = gcp_connect_service(service='cloudresourcemanager', credentials=self.credentials)
-        resource_manager_client_v2 = gcp_connect_service(service='cloudresourcemanager-v2', credentials=self.credentials)
-
-        if parent_type == 'project':
-
-            project_response = resource_manager_client_v1.projects().list(filter='id:%s' % parent_id).execute()
+        elif parent_type == 'service-account':
+            project_response = resource_manager_client_v1.projects().list().execute()
             if 'projects' in project_response.keys():
                 for project in project_response['projects']:
                     if project['lifecycleState'] == "ACTIVE":
                         projects.append(project)
-
         else:
 
             # get parent children projectss
