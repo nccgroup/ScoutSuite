@@ -47,13 +47,20 @@ class CloudTrailRegionConfig(RegionConfig):
             trail_details = api_client.get_trail_status(Name=trail['TrailARN'])
             for key in ['IsLogging', 'LatestDeliveryTime', 'LatestDeliveryError', 'StartLoggingTime', 'StopLoggingTime', 'LatestNotificationTime', 'LatestNotificationError', 'LatestCloudWatchLogsDeliveryError', 'LatestCloudWatchLogsDeliveryTime']:
                 trail_config[key] = trail_details[key] if key in trail_details else None
+                
 
         if trail_details:
             # using trail ARN instead of name as with Organizations the trail would be located in another account
             trail_config['wildcard_data_logging'] = self.data_logging_status(trail_config['TrailARN'],
                                                                              trail_details,
                                                                              api_client)
+            
+            for es in api_client.get_event_selectors(TrailName=trail_config['TrailARN'])['EventSelectors']:
+                trail_config['DataEventsEnabled'] = True if 'All' in es['ReadWriteType'] else False
+                trail_config['ManagementEventsEnabled'] = es['IncludeManagementEvents']
 
+        trail_config['TEMP'] = api_client.get_event_selectors(TrailName=trail_config['TrailARN'])['EventSelectors']
+        
         self.trails[trail_id] = trail_config
 
     def data_logging_status(self, trail_name, trail_details, api_client):
