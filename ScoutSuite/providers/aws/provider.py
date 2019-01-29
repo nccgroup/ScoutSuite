@@ -140,15 +140,15 @@ class AWSProvider(BaseProvider):
                 if 'HomeRegion' in trail and trail['HomeRegion'] != region:
                     # Part of a multi-region trail, skip until we find the whole object
                     continue
-                if trail['IncludeGlobalServiceEvents'] == True and trail['IsLogging'] == True:
+                if trail['IncludeGlobalServiceEvents'] and trail['IsLogging']:
                     global_events_logging.append((region, trail_id,))
                 # Any wildcard logging?
                 if trail.get('wildcard_data_logging', False):
                     data_logging_trails_count += 1
 
         cloudtrail_config['data_logging_trails_count'] = data_logging_trails_count
-        cloudtrail_config['IncludeGlobalServiceEvents'] = False if (len(global_events_logging) == 0) else True
-        cloudtrail_config['DuplicatedGlobalServiceEvents'] = True if (len(global_events_logging) > 1) else False
+        cloudtrail_config['IncludeGlobalServiceEvents'] = len(global_events_logging) > 0
+        cloudtrail_config['DuplicatedGlobalServiceEvents'] = len(global_events_logging) > 1
 
     def process_network_acls_callback(self, current_config, path, current_path, privateip_id, callback_args):
         # Check if the network ACL allows all traffic from all IP addresses

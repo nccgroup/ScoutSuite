@@ -37,10 +37,7 @@ class GCPServicesConfig(BaseServicesConfig):
         # self.stackdrivermonitoring = StackdriverMonitoringConfig(thread_config=thread_config)
 
     def _is_provider(self, provider_name):
-        if provider_name == 'gcp':
-            return True
-        else:
-            return False
+        return provider_name == 'gcp'
 
     def set_projects(self, projects):
         """

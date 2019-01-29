@@ -34,10 +34,7 @@ class GCPBaseConfig(BaseConfig):
         super(GCPBaseConfig, self).__init__(thread_config)
 
     def _is_provider(self, provider_name):
-        if provider_name == 'gcp':
-            return True
-        else:
-            return False
+        return provider_name == 'gcp'
 
     def get_regions(self, **kwargs):
         """

@@ -67,10 +67,7 @@ class AWSServicesConfig(BaseServicesConfig):
         self.vpc = VPCConfig(metadata['network']['vpc'], thread_config)
 
     def _is_provider(self, provider_name):
-        if provider_name == 'aws':
-            return True
-        else:
-            return False
+        return provider_name == 'aws'
 
     # TODO is this ever called?
     # def single_service_pass(self):
