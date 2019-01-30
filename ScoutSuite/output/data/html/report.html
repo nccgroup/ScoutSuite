@@ -133,7 +133,7 @@
                         <div class="list-group-item active">
                             <div class="list-group-item-heading">Dashboard</div>
                         </div>
-                        <div class="list-group-item">
+                        <div class="list-group-item" id="last_run">
                             <div class="list-group-item-text">
                                 <div class="list-group-item">Service
                                     <div class="col-sm-2 float-right" style="text-align: center">Checks</div>
@@ -151,17 +151,6 @@
                                     </div>
                                 </a>
                                 {{/each}}
-                            </div>
-                            <div class="list-group-item-text item-margin">&nbsp;</div>
-                            <div class="list-group-item-text item-margin">Last run:
-                                <div class="list-group-item-text item-margin">Time: {{items.time}}</div>
-                                <div class="list-group-item-text item-margin">Command: <code>{{items.cmd}}</code></div>
-                            </div>
-                            <div class="list-group-item-text item-margin">&nbsp;</div>
-                            <div class="list-group-item-text item-margin">Report generated with Scout Suite version <samp>{{items.version}}</samp></div>
-                            <div class="list-group-item-text item-margin">&nbsp;</div>
-                            <div class="list-group-item-text item-margin">Using ruleset <samp>{{items.ruleset_name}}</samp>:
-                                <div class="list-group-item-text item-margin"><p><em>{{items.ruleset_about}}</em></p></div>
                             </div>
                         </div>
                     </div>
