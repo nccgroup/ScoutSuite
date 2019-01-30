@@ -759,11 +759,9 @@ function load_metadata() {
 /**
  * Show About Scout Suite div
  */
-function about() {
-    hideAll();
-    showRow('about');
-    $('#findings_download_button').hide();
-    $('#section_title-h2').text('');
+function showAbout() {
+    $('#modal-container').html(about_scoutsuite_template());
+    $('#modal-container').modal();
 };
 
 

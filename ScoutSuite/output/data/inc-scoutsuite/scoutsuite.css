@@ -53,7 +53,7 @@
     color: #23af44 !important;
 }
 .finding-title {
-    background: #f5f5f5 !important;
+    background: #f5f5f5;
 }
 
 .finding-badge {
@@ -114,34 +114,24 @@ ul.no-bullet {
 .plain-link a:link,
 .plain-link a:visited,
 .plain-link a:active {
-    color: #019479 !important;
-    text-decoration: none !important;
+    color: black;
+    text-decoration: none;
 }
 
 .plain-link a:hover {
-    color: #007f67 !important;
-    text-decoration: underline !important;
+    text-decoration: underline;
 }
 
-.disabled-link a:link{
+.disabled-link a:link,
+.disabled-link a:active,
+.disabled-link a:visited,
+.disabled-link a:hover {
+    color: rgb(110, 110, 110);
     pointer-events: none;
     cursor: default;
 }
-.disabled-link a:visited{
-    pointer-events: none;
-    cursor: default;
-}
-.disabled-link a:hover{
-    pointer-events: none;
-    cursor: default;
-}
-.disabled-link a:active{
-    pointer-events: none;
-    cursor: default;
-}
-
 .active a{
-    text-decoration: none !important;
+    text-decoration: none;
     color: black;
 }
 
@@ -336,6 +326,7 @@ input:checked + .slider:before {
 }
 
 .finding_items {
+    font-size: 18px;
     margin: 4px 0;
     border-radius: 3px;
 }
