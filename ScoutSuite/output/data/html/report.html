@@ -112,17 +112,17 @@
                         <div class="list-group-item active">
                             <div class="list-group-item-heading">Dashboard</div>
                         </div>
-                        <div class="list-group-item" id="last_run">
-                            <div class="list-group-item-text">
-                                <div class="list-group-item">Service
+                        <div class="accordion" id="last_run">
+                            <div class="card">
+                                <div class="card-header">Service
                                     <div class="col-sm-2 float-right" style="text-align: center">Checks</div>
                                     <div class="col-sm-2 float-right" style="text-align: center">Findings</div>
                                     <div class="col-sm-2 float-right" style="text-align: center">Rules</div>
                                     <div class="col-sm-2 float-right" style="text-align: center">Resources</div>
                                 </div>
                                 {{#each items.summary}}
-                                <a href="#services.{{@key}}.findings" style="color: black !important;">
-                                    <div class="list-group-item finding-title">
+                                <a href="#services.{{@key}}.findings" class="card-header" style="color: black !important">
+                                    <div class="finding-title">
                                         <span class="finding-badge finding-badge-{{dashboard_color max_level checked_items flagged_items}}"></span>
                                         {{make_title @key}}
                                         <div class="col-sm-2 float-right" style="text-align: center">{{checked_items}}</div>

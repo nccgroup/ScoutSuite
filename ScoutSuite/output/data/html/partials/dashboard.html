@@ -21,32 +21,32 @@
                 </div>
               </div>
 
-              <ul class="list-group">
+              <ul class="list-group accordion">
                   {{#each_dict_as_sorted_list findings}}
-                  <div id="list-{{key}}" class="finding_items">
-                      <div class="list-group-item finding-title finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
-                          <div class="row">
-                              <div class="col-sm-11">
-                                  <span class="finding-badge finding-badge-{{dashboard_color level checked_items flagged_items}}"></span>
-                                  <a href="#services.{{../service_name}}.findings.{{key}}.items">{{description}}</a>
-                              </div>
-                              <div class="col-sm-1">
-                                  <button class="finding btn fa collapsed" style="background-color:transparent" data-toggle="collapse" data-target="#item-{{key}}" aria-expanded="false" aria-controls="item-{{key}}"></button>
-                              </div>
-                          </div>
-                      </div>
-                      <div class="list-group-item collapse" id="item-{{key}}" aria-labelledby="item-{{key}}" data-parent="#list-{{key}}">
-                          <div class="col-sm-9">
-                              <p>{{rationale}}</p>
-                          </div>
-                          <div class="col-sm-3">
-                              <ul>
-                                  <li>{{dashboard_name}} checked: {{checked_items}}</li>
-                                  <li>{{dashboard_name}} flagged: {{flagged_items}}</li>
-                              </ul>
-                          </div>
-                      </div>
-                  </div>
+                      <div id="list-{{key}}" class="card finding_items">
+                        <div class="card-header row finding-title finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
+                            <div class="col-sm-11">
+                                <span class="finding-badge finding-badge-{{dashboard_color level checked_items flagged_items}}"></span>
+                                <a href="#services.{{../service_name}}.findings.{{key}}.items">{{description}}</a>
+                            </div>
+                            <div class="col-sm-1">
+                                <button class="finding btn fa collapsed" style="background-color:transparent" data-toggle="collapse" data-target="#item-{{key}}" aria-expanded="false" aria-controls="item-{{key}}"></button>
+                            </div>
+                        </div>
+                        <div class="collapse" id="item-{{key}}" aria-labelledby="item-{{key}}" data-parent="#list-{{key}}">
+                            <div class="card-body">
+                                <div class="col-sm-9">
+                                    <p>{{rationale}}</p>
+                                </div>
+                                <div class="col-sm-3">
+                                    <ul>
+                                        <li>{{dashboard_name}} checked: {{checked_items}}</li>
+                                        <li>{{dashboard_name}} flagged: {{flagged_items}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                   {{/each_dict_as_sorted_list}}
               </ul>
 
