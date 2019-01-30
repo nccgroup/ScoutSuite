@@ -10,7 +10,9 @@
       <ul>
         <li class="list-group-item-text">Name: {{name}}</li>
         <li class="list-group-item-text">Region: {{region}}</li>
-        <li class="list-group-item-text">Enabled: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.IsLogging">{{IsLogging}}</span></li>
+        <li class="list-group-item-text">Logging: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.IsLogging">{{IsLogging}}</span></li>
+        <li class="list-group-item-text">Data events: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.DataEventsEnabled">{{DataEventsEnabled}}</span></li>
+        <li class="list-group-item-text">Management events: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.ManagementEventsEnabled">{{ManagementEventsEnabled}}</span></li>
         <li class="list-group-item-text">Multi region: {{IsMultiRegionTrail}}</li>
         {{#ifEqual IsMultiRegionTrail "true"}}
           <li></li>
@@ -26,6 +28,7 @@
         </li>
         <li class="list-group-item-text">Log File Validation Enabled: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.LogFileValidationDisabled">{{LogFileValidationEnabled}}</span></li>
         <li class="list-group-item-text">Destination S3 bucket name: <a href="javascript:showObject('services.s3.buckets.{{bucket_id}}')">{{get_value_at 'services.s3.buckets' bucket_id 'name'}}</a>/{{S3KeyPrefix}}</li>
+        <li class="list-group-item-text">KMS key: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.KmsKeyId">{{#if KmsKeyId}} true {{else}} false {{/if}}</span></li>
       </ul>
     </div>
   {{/unless}}
