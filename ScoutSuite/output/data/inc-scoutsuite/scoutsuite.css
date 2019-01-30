@@ -120,7 +120,7 @@ ul.no-bullet {
 
 .plain-link a:hover {
     color: #007f67 !important;
-    text-decoration: none !important;
+    text-decoration: underline !important;
 }
 
 .disabled-link a:link{
