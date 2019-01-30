@@ -632,8 +632,7 @@ function showObject(path, attr_name, attr_value) {
 
     resource = makeResourceTypeSingular(resource_type);
     template = 'single_' + resource + '_template';
-    $('#overlay-details').html(window[template](data));
-    showPopup();
+    showPopup(window[template](data));
 };
 
 /**
@@ -716,19 +715,10 @@ function showS3Object(bucket_id, key_id) {
 /**
  *
  */
-function showPopup() {
-    $("#overlay-background").show();
-    $("#overlay-details").show();
+function showPopup(content) {
+    $('#modal-container').html(content);
+    $('#modal-container').modal();
 };
-
-/**
- *
- */
-function hidePopup() {
-    $("#overlay-background").hide();
-    $("#overlay-details").hide();
-};
-
 
 /**
  * Set up dashboards and dropdown menus
@@ -782,6 +772,15 @@ function about() {
     $('#findings_download_button').hide();
     $('#section_title-h2').text('');
 };
+
+
+/**
+ * 
+ */
+function showLastRunDetails() {
+    $('#modal-container').html(last_run_details_template(run_results.last_run));
+    $('#modal-container').modal();
+}
 
 /**
  * Show main dashboard

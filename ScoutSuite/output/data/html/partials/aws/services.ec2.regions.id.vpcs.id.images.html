@@ -1,6 +1,6 @@
 <!-- AIMs partial -->
 <script id="services.ec2.regions.id.images.partial" type="text/x-handlebars-template">
-    <div class="list-group-item active">
+    <div id="resource-name" class="list-group-item active">
         <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
     <div class="list-group-item">
@@ -19,9 +19,8 @@
 
 <!-- Single AIM template -->
 <script id="single_ec2_image-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.ec2.regions.id.images}}
-    </script>
+    {{> modal-template template='services.ec2.regions.id.images' }}
+</script>
 <script>
     var single_ec2__template = Handlebars.compile($("#single_ec2_image-template").html());
 </script>

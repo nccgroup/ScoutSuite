@@ -1,7 +1,7 @@
 
   <!-- IAM user partial -->
   <script id="services.iam.users.partial" type="text/x-handlebars-template">
-    <div class="list-group-item active">
+    <div id="resource-name" class="list-group-item active">
       <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
     <div class="list-group-item">
@@ -63,8 +63,7 @@
 
     <!-- Single IAM user template -->
     <script id="services.iam.users.template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.iam.users}}
+        {{> modal-template template='services.iam.users'}}
     </script>
     <script>
         var single_iam_user_template = Handlebars.compile($("#services\\.iam\\.users\\.template").html());

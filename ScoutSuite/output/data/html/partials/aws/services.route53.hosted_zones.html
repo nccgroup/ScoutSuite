@@ -1,7 +1,7 @@
 
     <!-- Route53 hosted_zone partial -->
     <script id="services.route53.hosted_zones.partial" type="text/x-handlebars-template">
-        <div class="list-group-item active">
+        <div id="resource-name" class="list-group-item active">
             <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
@@ -32,8 +32,7 @@
 
     <!-- Single Route53 hosted_zone template -->
     <script id="services.route53.hosted_zones.template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.route53.hosted_zones}}
+        {{> modal-template template='services.route53.hosted_zones'}}
     </script>
     <script>
         var single_route53_hosted_zone_template = Handlebars.compile($("#services\\.route53\\.hosted_zones\\.template").html());

@@ -1,7 +1,7 @@
 
 <!-- Compute Engine firewalls partial -->
 <script id="services.computeengine.firewalls.partial" type="text/x-handlebars-template">
-    <div class="list-group-item active">
+    <div id="resource-name" class="list-group-item active">
         <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
     <div class="list-group-item">
@@ -91,8 +91,7 @@
 
 <!-- Single computeengine firewall template -->
 <script id="single_computeengine_firewall-template" type="text/x-handlebars-template">
-    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-    {{> services.computeengine.firewalls}}
+    {{> modal-template template='services.computeengine.firewalls'}}
 </script>
 <script>
     var single_computeengine_firewall_template = Handlebars.compile($("#single_computeengine_firewall-template").html());

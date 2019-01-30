@@ -1,0 +1,27 @@
+<script id="last_run_details-template" type="text/x-handlebars-template">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Last run details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="list-group-item-text item-margin">Last run:
+                    <div class="list-group-item-text item-margin">Time: {{time}}</div>
+                    <div class="list-group-item-text item-margin">Command: <code>{{cmd}}</code></div>
+                </div>
+                <div class="list-group-item-text item-margin">&nbsp;</div>
+                <div class="list-group-item-text item-margin">Report generated with Scout Suite version <samp>{{version}}</samp></div>
+                <div class="list-group-item-text item-margin">&nbsp;</div>
+                <div class="list-group-item-text item-margin">Using ruleset <samp>{{ruleset_name}}</samp>:
+                <div class="list-group-item-text item-margin"><p><em>{{ruleset_about}}</em></p></div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script>
+    var last_run_details_template = Handlebars.compile($("#last_run_details-template").html());
+</script>

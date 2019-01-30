@@ -1,7 +1,7 @@
 
     <!-- VPC partial -->
     <script id="services.vpc.regions.id.vpcs.partial" type="text/x-handlebars-template">
-        <div class="list-group-item active">
+        <div id="resource-name" class="list-group-item active">
           <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
@@ -62,8 +62,7 @@
 
     <!-- Single VPC template -->
     <script id="single_vpc-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.vpc.regions.id.vpcs}}
+        {{> modal-template template='services.vpc.regions.id.vpcs'}}
     </script>
     <script>
         var single_vpc_template = Handlebars.compile($("#single_vpc-template").html());
