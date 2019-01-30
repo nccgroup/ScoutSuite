@@ -1,18 +1,72 @@
-
-  <!-- Per Service Type navigation bar -->
-  <script id="metadata.list.template" type="text/x-handlebars-template">
+<!-- Per Service Type navigation bar -->
+<script id="metadata.list.template" type="text/x-handlebars-template">
       <div class="container">
         <div class="navbar-header">
           <span class="navbar-brand"><a class="text-white" href="javascript:show_main_dashboard()">Scout Suite</a></span>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-              {{#each items}}
+                {{#each items}}
                 <li class="nav-item dropdown">
-                  <a href="#groups.{{@key}}.list"><span class="nav-link dropdown-toggle" id="metadata.{{@key}}">{{make_title @key}}</b></a>
+                    <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown">{{make_title @key}}</a>
+                    <ul class="dropdown-menu" role="button">
+                        {{#if summaries}}
+                            <li class="dropdown-submenu">
+                                <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">Summaries</a>
+                                <ul class="dropdown-menu">
+                                    {{#each summaries}}
+                                    <li><a class="dropdown-item nav-link" href="#{{path}}">{{make_title @key}}</a></li>
+                                    {{/each}}
+                                </ul>
+                                <div class="dropdown-divider"></div>
+                            </li>
+                        {{/if}} 
+
+                        {{#each this}} {{#unlessEqual @key 'summaries'}} {{#unless hidden}}
+                            <li class="dropdown-submenu">
+                                <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">{{ make_title @key }}</a>
+                                <ul class="dropdown-menu">
+                                    <li class="dropdown-header">Summaries</li>
+                                    <li><a class="dropdown-item" href="#services.{{@key}}.findings">Dashboard</a></li>
+                                    {{#each summaries}} {{#if risks}}
+                                        <li class="dropdown-submenu"><a href="#{{path}}">{{make_title @key}}</a>
+                                            <ul class="dropdown-menu">
+                                                <li class="dropdown-header">Security risks</li>
+                                                {{#each risks}}
+                                                <li><a class="dropdown-item" href="#services.{{@../../key}}.findings.{{this}}.items">{{get_value_at
+                                                    'services' @../../key 'findings' this 'description'}}</a></li>
+                                                {{/each}}
+                                            </ul>
+                                        </li>
+                                    {{else}}
+                                        <li><a class="dropdown-item" href="#{{path}}">{{make_title @key}}</a></li>
+                                    {{/if}} {{/each}}
+
+                                    <li class="dropdown-divider"></li>
+                                    <li class="dropdown-header">{{make_title @key}} config</li>
+                                    {{#each resources}} {{#unless hidden}} {{#if risks}}
+                                        <li class="dropdown-submenu"><a href="#{{path}}">{{make_title @key}} ({{count}})</a>
+                                            <ul class="dropdown-menu">
+                                                <li class="dropdown-header">Security risks</li>
+                                                {{#each risks}}
+                                                <li><a class="dropdown-item" href="#services.{{@../../key}}.findings.{{this}}.items">{{get_value_at
+                                                        'services' @../../key 'findings' this 'description'}}</a></li>
+                                                {{/each}}
+                                            </ul>
+                                        </li>
+                                    {{else}} {{#if count}}
+                                        <li><a class="dropdown-item" href="#{{path}}">{{make_title @key}} ({{count}})</a></li>
+                                    {{else}}
+                                        <li class="disabled"><a class="dropdown-item disabled" href="">{{make_title @key}}</a></li>
+                                    {{/if}} {{/if}} {{/unless}} {{/each}}
+                                </ul>
+                            </li>
+                        {{/unless}} {{/unlessEqual}} {{/each}}
+                    </ul>
                 </li>
-              {{/each}}
+                {{/each}}
             </ul>
+
             <ul class="nav navbar-nav ml-auto">
               <li class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Regions</a>
@@ -40,72 +94,4 @@
             </ul>
           </div>
       </div>
-      {{#each items}}
-      <div class="container navbar-expand-md bg-primary nav sub-navbar" id="groups.{{@key}}.list">
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-              {{#if summaries}}
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle nav-link text-white" data-toggle="dropdown">Summaries</a>
-                <ul class="dropdown-menu">
-                  {{#each summaries}}
-                    <li><a class="dropdown-item" href="#{{path}}">{{make_title @key}}</a></li>
-                  {{/each}}
-                </ul>
-              </li>
-              {{/if}}
-              {{#each this}}
-              {{#unlessEqual @key 'summaries'}}
-              {{#unless hidden}}
-                <li class="dropdown">
-                  <a href="#" class="dropdown-toggle nav-link text-white" data-toggle="dropdown">{{make_title @key}}</a>
-                  <ul class="dropdown-menu">
-                    <li class="dropdown-header">Summaries</li>
-                    <li><a class="dropdown-item" href="#services.{{@key}}.findings">Dashboard</a></li>
-                    {{#each summaries}}
-                      {{#if risks}}
-                        <li class="dropdown-submenu"><a href="#{{path}}">{{make_title @key}}</a>
-                          <ul class="dropdown-menu">
-                            <li class="dropdown-header">Security risks</li>
-                            {{#each risks}}
-                              <li><a class="dropdown-item" href="#services.{{@../../key}}.findings.{{this}}.items">{{get_value_at 'services' @../../key 'findings' this 'description'}}</a></li>
-                            {{/each}}
-                          </ul>
-                        </li>
-                      {{else}}
-                        <li><a class="dropdown-item" href="#{{path}}">{{make_title @key}}</a></li>
-                      {{/if}}
-                    {{/each}}
-                    <li class="dropdown-divider"></li>
-                    <li class="dropdown-header">{{make_title @key}} config</li>
-                    {{#each resources}}
-                      {{#unless hidden}}
-                      {{#if risks}}
-                        <li class="dropdown-submenu"><a href="#{{path}}">{{make_title @key}} ({{count}})</a>
-                          <ul class="dropdown-menu">
-                            <li class="dropdown-header">Security risks</li>
-                            {{#each risks}}
-                              <li><a class="dropdown-item" href="#services.{{@../../key}}.findings.{{this}}.items">{{get_value_at 'services' @../../key 'findings' this 'description'}}</a></li>
-                            {{/each}}
-                          </ul>
-                        </li>
-                      {{else}}
-                        {{#if count}}
-                            <li><a class="dropdown-item" href="#{{path}}">{{make_title @key}} ({{count}})</a></li>
-                        {{else}}
-                            <li class="disabled"><a class="dropdown-item disabled" href="">{{make_title @key}}</a></li>
-                        {{/if}}
-                      {{/if}}
-                      {{/unless}}
-                    {{/each}}
-                  </ul>
-                </li>
-              {{/unless}}
-              {{/unlessEqual}}
-              {{/each}}
-            </ul>
-          </div>
-      </div>
-      {{/each}}
   </script>
-

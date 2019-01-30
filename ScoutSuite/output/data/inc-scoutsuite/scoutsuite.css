@@ -134,7 +134,6 @@ ul.no-bullet {
     border-width: 5px 0 5px 5px;
     border-left-color: #ccc;
     margin-top: 5px;
-    margin-right: -10px;
 }
 
 .dropdown-submenu:hover>a:after {
@@ -151,6 +150,14 @@ ul.no-bullet {
     -webkit-border-radius: 6px 0 6px 6px;
     -moz-border-radius: 6px 0 6px 6px;
     border-radius: 6px 0 6px 6px;
+}
+
+.dropdown-item.disabled, .dropdown-item:disabled {
+    color: #bbcdce;
+}
+
+.dropdown-item {
+    color: #647273;
 }
 
 .rationale-overlay {
