@@ -540,16 +540,16 @@ function findAndShowEC2Object(path, id) {
     var object = findEC2Object(run_results['services']['ec2'], entities, id);
     var etype = entities.pop();
     if (etype == 'instances') {
-        $('#overlay-details').html(single_ec2_instance_template(object));
+        showPopup(single_ec2_instance_template(object));
     } else if (etype == 'security_groups') {
-        $('#overlay-details').html(single_ec2_security_group_template(object));
+        showPopup(single_ec2_security_group_template(object));
     } else if (etype == 'vpcs') {
-        $('#overlay-details').html(single_vpc_template(object));
+        showPopup(single_vpc_template(object));
     } else if (etype == 'network_acls') {
         object['name'] = id;
-        $('#overlay-details').html(single_vpc_network_acl_template(object));
+        showPopup(single_vpc_network_acl_template(object));
     };
-    showPopup();
+    
 };
 
 /**
@@ -562,9 +562,8 @@ function findAndShowEC2ObjectByAttr(path, attributes) {
     var object = findEC2ObjectByAttr(run_results['services']['ec2'], entities, attributes);
     var etype = entities.pop();
     if (etype == 'security_groups') {
-        $('#overlay-details').html(single_ec2_security_group_template(object));
+        showPopup(single_ec2_security_group_template(object));
     };
-    showPopup();
 };
 
 /**
@@ -572,8 +571,7 @@ function findAndShowEC2ObjectByAttr(path, attributes) {
  * @param data
  */
 function showEC2Instance2(data) {
-    $('#overlay-details').html(single_ec2_instance_template(data));
-    showPopup();
+    showPopup(single_ec2_instance_template(data));
 };
 
 /**
@@ -584,8 +582,7 @@ function showEC2Instance2(data) {
  */
 function showEC2Instance(region, vpc, id) {
     var data = run_results['services']['ec2']['regions'][region]['vpcs'][vpc]['instances'][id];
-    $('#overlay-details').html(single_ec2_instance_template(data));
-    showPopup();
+    showPopup(single_ec2_instance_template(data));
 };
 
 /**
@@ -596,8 +593,7 @@ function showEC2Instance(region, vpc, id) {
  */
 function showEC2SecurityGroup(region, vpc, id) {
     var data = run_results['services']['ec2']['regions'][region]['vpcs'][vpc]['security_groups'][id];
-    $('#overlay-details').html(single_ec2_security_group_template(data));
-    showPopup();
+    showPopup(single_ec2_security_group_template(data));
 };
 
 /**
@@ -683,8 +679,7 @@ function showIAMInlinePolicy(iam_entity_type, iam_entity_name, policy_id) {
  * @param data
  */
 function showIAMPolicy(data) {
-    $('#overlay-details').html(single_iam_policy_template(data));
-    showPopup();
+    showPopup(single_iam_policy_template(data));
     var id = '#iam_policy_details-' + data['report_id'];
     $(id).toggle();
 };
@@ -695,8 +690,7 @@ function showIAMPolicy(data) {
  */
 function showS3Bucket(bucket_name) {
     var data = run_results['services']['s3']['buckets'][bucket_name];
-    $('#overlay-details').html(single_s3_bucket_template(data));
-    showPopup();
+    showPopup(single_s3_bucket_template(data));
 };
 
 /**
@@ -708,8 +702,7 @@ function showS3Object(bucket_id, key_id) {
     var data = run_results['services']['s3']['buckets'][bucket_id]['keys'][key_id];
     data['key_id'] = key_id;
     data['bucket_id'] = bucket_id;
-    $('#overlay-details').html(single_s3_object_template(data));
-    showPopup();
+    showPopup(single_s3_object_template(data));
 };
 
 /**
