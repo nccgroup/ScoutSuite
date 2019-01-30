@@ -1,0 +1,25 @@
+<!-- Storage Accounts partial -->
+<script id="services.storageaccounts.storage_accounts.partial" type="text/x-handlebars-template">
+    <div class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Storage Account Name: <span id="storageaccounts.storage_accounts.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Public traffic allowed: <span id="storageaccounts.storage_accounts.{{@key}}.public_traffic_allowed">{{ public_traffic_allowed }}</span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.storageaccounts.storage_accounts", $("#services\\.storageaccounts\\.storage_accounts\\.partial").html());
+</script>
+
+<!-- Single Storage Accounts template -->
+<script id="single_storageaccounts_storage_accounts-template" type="text/x-handlebars-template">
+    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+    {{> services.storageaccounts.storage_accounts}}
+</script>
+<script>
+    var single_storageaccounts_storage_accounts_template = Handlebars.compile($("#single_storageaccounts_storage_accounts-template").html());
+</script>
