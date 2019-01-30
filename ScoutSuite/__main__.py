@@ -49,70 +49,71 @@ def main(passed_args=None):
     else:
         args = parser.parse_args()
 
+    args = args.__dict__
+
     # Configure the debug level
-    configPrintException(args.debug)
+    configPrintException(args.get('debug'))
 
     # Create a cloud provider object
-    cloud_provider = get_provider(provider=args.provider,
-                                  profile=args.profile[0],
-                                  project_id=args.project_id,
-                                  folder_id=args.folder_id,
-                                  organization_id=args.organization_id,
-                                  report_dir=args.report_dir,
-                                  timestamp=args.timestamp,
-                                  services=args.services,
-                                  skipped_services=args.skipped_services,
-                                  thread_config=args.thread_config)
+    cloud_provider = get_provider(provider=args.get('provider'),
+                                  profile=args.get('profile'),
+                                  project_id=args.get('project_id'),
+                                  folder_id=args.get('folder_id'),
+                                  organization_id=args.get('organization_id'),
+                                  report_dir=args.get('report_dir'),
+                                  timestamp=args.get('timestamp'),
+                                  services=args.get('services'),
+                                  skipped_services=args.get('skipped_services'),
+                                  thread_config=args.get('thread_config'))
 
     # FIXME this shouldn't be done here
     if cloud_provider.provider_code == 'aws':
-        if args.profile:
-            report_file_name = 'aws-%s' % args.profile[0]
+        if args.get('profile'):
+            report_file_name = 'aws-%s' % args.get('profile')[0]
         else:
             report_file_name = 'aws'
     if cloud_provider.provider_code == 'gcp':
-        if args.project_id:
-            report_file_name = 'gcp-%s' % args.project_id
-        elif args.organization_id:
-            report_file_name = 'gcp-%s' % args.organization_id
-        elif args.folder_id:
-            report_file_name = 'gcp-%s' % args.folder_id
+        if args.get('project_id'):
+            report_file_name = 'gcp-%s' % args.get('project_id')
+        elif args.get('organization_id'):
+            report_file_name = 'gcp-%s' % args.get('organization_id')
+        elif args.get('folder_id'):
+            report_file_name = 'gcp-%s' % args.get('folder_id')
         else:
             report_file_name = 'gcp'
     if cloud_provider.provider_code == 'azure':
         report_file_name = 'azure'
 
     # Create a new report
-    report = Scout2Report(args.provider, report_file_name, args.report_dir, args.timestamp)
+    report = Scout2Report(args.get('provider'), report_file_name, args.get('report_dir'), args.get('timestamp'))
 
     # Complete run, including pulling data from provider
-    if not args.fetch_local:
+    if not args.get('fetch_local'):
         # Authenticate to the cloud provider
-        authenticated = cloud_provider.authenticate(profile=args.profile[0],
-                                                    csv_credentials=args.csv_credentials,
-                                                    mfa_serial=args.mfa_serial,
-                                                    mfa_code=args.mfa_code,
-                                                    key_file=args.key_file,
-                                                    user_account=args.user_account,
-                                                    service_account=args.service_account,
-                                                    azure_cli=args.azure_cli,
-                                                    azure_msi=args.azure_msi,
-                                                    azure_service_principal=args.azure_service_principal,
-                                                    azure_file_auth=args.azure_file_auth,
-                                                    azure_user_credentials=args.azure_user_credentials)
+        authenticated = cloud_provider.authenticate(profile=args.get('profile'),
+                                                    csv_credentials=args.get('csv_credentials'),
+                                                    mfa_serial=args.get('mfa_serial'),
+                                                    mfa_code=args.get('mfa_code'),
+                                                    user_account=args.get('user_account'),
+                                                    service_account=args.get('service_account'),
+                                                    cli=args.get('cli'),
+                                                    msi=args.get('azure_msi'),
+                                                    service_principal=args.get('azure_service_principal'),
+                                                    file_auth=args.get('azure_file_auth'),
+                                                    user_credentials=args.get('azure_user_credentials'))
 
         if not authenticated:
             return 42
 
         # Fetch data from provider APIs
         try:
-            cloud_provider.fetch(regions=args.regions)
+            cloud_provider.fetch(regions=args.get('regions'))
         except KeyboardInterrupt:
             printInfo('\nCancelled by user')
             return 130
 
         # Update means we reload the whole config and overwrite part of it
-        if args.update:
+        if args.get('update'):
             current_run_services = copy.deepcopy(cloud_provider.services)
             last_run_dict = report.jsrw.load_from_file(AWSCONFIG)
             cloud_provider.services = last_run_dict['services']
@@ -127,19 +128,19 @@ def main(passed_args=None):
             setattr(cloud_provider, key, last_run_dict[key])
 
     # Pre processing
-    cloud_provider.preprocessing(args.ip_ranges, args.ip_ranges_name_key)
+    cloud_provider.preprocessing(args.get('ip_ranges'), args.get('ip_ranges_name_key'))
 
     # Analyze config
-    finding_rules = Ruleset(environment_name=args.profile[0],
-                            cloud_provider=args.provider,
-                            filename=args.ruleset,
-                            ip_ranges=args.ip_ranges,
+    finding_rules = Ruleset(environment_name=args.get('profile'),
+                            cloud_provider=args.get('provider'),
+                            filename=args.get('ruleset'),
+                            ip_ranges=args.get('ip_ranges'),
                             aws_account_id=cloud_provider.aws_account_id)
     processing_engine = ProcessingEngine(finding_rules)
     processing_engine.run(cloud_provider)
 
     # Create display filters
-    filter_rules = Ruleset(cloud_provider=args.provider,
+    filter_rules = Ruleset(cloud_provider=args.get('provider'),
                            filename='filters.json',
                            rule_type='filters',
                            aws_account_id=cloud_provider.aws_account_id)
@@ -148,7 +149,7 @@ def main(passed_args=None):
 
     # Handle exceptions
     try:
-        exceptions = RuleExceptions(args.profile[0], args.exceptions[0])
+        exceptions = RuleExceptions(args.get('profile'), args.get('exceptions')[0])
         exceptions.process(cloud_provider)
         exceptions = exceptions.exceptions
     except Exception as e:
@@ -161,7 +162,7 @@ def main(passed_args=None):
     # TODO this is AWS-specific - move to postprocessing?
     # Get organization data if it exists
     try:
-        profile = AWSProfiles.get(args.profile[0])[0]
+        profile = AWSProfiles.get(args.get('profile'))[0]
         if 'source_profile' in profile.attributes:
             organization_info_file = os.path.join(os.path.expanduser('~/.aws/recipes/%s/organization.json' %
                                                                      profile.attributes['source_profile']))
@@ -177,10 +178,10 @@ def main(passed_args=None):
         pass
 
     # Save config and create HTML report
-    html_report_path = report.save(cloud_provider, exceptions, args.force_write, args.debug)
+    html_report_path = report.save(cloud_provider, exceptions, args.get('force_write'), args.get('debug'))
 
     # Open the report by default
-    if not args.no_browser:
+    if not args.get('no_browser'):
         printInfo('Opening the HTML report...')
         url = 'file://%s' % os.path.abspath(html_report_path)
         webbrowser.open(url, new=2)

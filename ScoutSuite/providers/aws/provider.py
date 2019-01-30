@@ -31,7 +31,7 @@ class AWSProvider(BaseProvider):
     Implements provider for AWS
     """
 
-    def __init__(self, profile='default', report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
+    def __init__(self, profile=None, report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
@@ -40,7 +40,7 @@ class AWSProvider(BaseProvider):
         self.sg_map = {}
         self.subnet_map = {}
 
-        self.profile = profile
+        self.profile = profile[0] if profile else 'default'
         self.aws_account_id = None
         self.services_config = AWSServicesConfig
 
@@ -54,7 +54,7 @@ class AWSProvider(BaseProvider):
         Implement authentication for the AWS provider
         :return:
         """
-        self.credentials = read_creds(profile, csv_credentials, mfa_serial, mfa_code)
+        self.credentials = read_creds(profile[0], csv_credentials, mfa_serial, mfa_code)
         self.aws_account_id = get_aws_account_id(self.credentials)
 
         if self.credentials['AccessKeyId'] is None:

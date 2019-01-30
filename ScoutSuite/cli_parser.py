@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import sys
+import argparse
+import os
 
 from opinel.utils.cli_parser import OpinelArgumentParser
 
@@ -123,23 +124,18 @@ class ListallArgumentParser(SharedArgumentParser):
                                  help='Keys to be printed for the given object (read values from file.')
 
 
-class ScoutSuiteArgumentParser(SharedArgumentParser):
+class ScoutSuiteArgumentParser:
+    def __init__(self):
+        self.parser = argparse.ArgumentParser()
+        subparsers = self.parser.add_subparsers(title="The provider you want to run Scout against",
+                                                dest="provider")
 
-    def __init__(self, default_args=None):
-        super(ScoutSuiteArgumentParser, self).__init__()
-        self.add_argument('profile', default_args)
-        self.add_argument('regions', default_args)
-        self.add_argument('vpc', default_args)
-        self.add_argument('ip-ranges', default_args)
-        self.add_argument('ip-ranges-name-key', default_args)
-        self.add_argument('mfa-serial')
-        self.add_argument('mfa-code')
-        self.add_argument('csv-credentials')
-        self.add_argument('report-dir', default_args)
-        self.add_argument('timestamp', default_args)
-        self.add_argument('exceptions', default_args)
-        self.add_argument('services', default_args)
-        self.add_argument('skip', default_args)
+        # Global settings
+        self.parser.add_argument('--debug',
+                                 dest='debug',
+                                 default=False,
+                                 action='store_true',
+                                 help='Print the stack trace when exception occurs')
         self.parser.add_argument('-l', '--local',
                                  dest='fetch_local',
                                  default=False,
@@ -170,55 +166,133 @@ class ScoutSuiteArgumentParser(SharedArgumentParser):
                                  type=int,
                                  default=4,
                                  help='Level of multi-threading wanted [1-5]; defaults to 4.')
-
-        # TODO this probably shouldn't be here
-        self.parser.add_argument('--provider',
-                                 required=True,
-                                 action='store',
-                                 choices=['aws', 'gcp', 'azure'],
-                                 help='The cloud provider to scan (currently supports AWS (\'aws\'), \
-                                        GCP (\'gcp\') and Azure (\'azure\'))')
-
-        self.parser.add_argument('--user-account',
+        self.parser.add_argument('--report-dir',
+                                 dest='report_dir',
+                                 default=DEFAULT_REPORT_DIR,
+                                 help='Path of the Scout2 report.')
+        self.parser.add_argument('--timestamp',
+                                 dest='timestamp',
+                                 default=False,
+                                 nargs='?',
+                                 help='Timestamp added to the name of the report (default is current time in UTC).')
+        self.parser.add_argument('--exceptions',
+                                 dest='exceptions',
+                                 default=[None],
+                                 nargs='+',
+                                 help='Exception file to use during analysis.')
+        self.parser.add_argument('--force',
+                                 dest='force_write',
+                                 default=False,
                                  action='store_true',
-                                 required='gcp' in sys.argv and '--service-account' not in sys.argv,
-                                 help='Run Scout Suite with a Google Account')
+                                 help='Overwrite existing files')
 
-        self.parser.add_argument('--service-account',
-                                 action='store_true',
-                                 required='gcp' in sys.argv and '--user-account' not in sys.argv,
-                                 help='Run Scout Suite with a Google Service Account')
+        # Amazon Web Services
+        aws_parser = subparsers.add_parser("aws",
+                                           help="Run Scout against an Amazon web Services account")
 
-        self.parser.add_argument('--key-file',
-                                 action='store',
-                                 required='--service-account' in sys.argv,
-                                 help='Path of the Google Service Account Application Credentials file')
+        default = os.environ.get('AWS_PROFILE', 'default')
+        default_origin = " (from AWS_PROFILE)." if 'AWS_PROFILE' in os.environ else "."
+        aws_parser.add_argument('--profile',
+                                dest='profile',
+                                default=[default],
+                                nargs='+',
+                                help='Name of the profile. Defaults to %(default)s' + default_origin)
+        aws_parser.add_argument('--regions',
+                                dest='regions',
+                                default=[],
+                                nargs='+',
+                                help='Name of regions to run the tool in, defaults to all')
+        aws_parser.add_argument('--vpc',
+                                dest='vpc',
+                                default=[],
+                                nargs='+',
+                                help='Name of VPC to run the tool in, defaults to all')
+        aws_parser.add_argument('--ip-ranges',
+                                dest='ip_ranges',
+                                default=[],
+                                nargs='+',
+                                help='Config file(s) that contain your known IP ranges')
+        aws_parser.add_argument('--ip-ranges-name-key',
+                                dest='ip_ranges_name_key',
+                                default='name',
+                                help='Name of the key containing the display name of a known CIDR')
+        aws_parser.add_argument('--mfa-serial',
+                                dest='mfa_serial',
+                                default=None,
+                                help='ARN of the user\'s MFA device')
+        aws_parser.add_argument('--mfa-code',
+                                dest='mfa_code',
+                                default=None,
+                                help='Six-digit code displayed on the MFA device.')
+        aws_parser.add_argument('--csv-credentials',
+                                dest='csv_credentials',
+                                default=None,
+                                help='Path to a CSV file containing the access key ID and secret key')
+        aws_parser.add_argument('--services',
+                                dest='services',
+                                default=[],
+                                nargs='+',
+                                help='Name of in-scope services.')
+        aws_parser.add_argument('--skip',
+                                dest='skipped_services',
+                                default=[],
+                                nargs='+',
+                                help='Name of out-of-scope services.')
 
-        self.parser.add_argument('--project-id',
-                                 action='store',
-                                 help='ID of the GCP Project to analyze')
-        self.parser.add_argument('--folder-id',
-                                 action='store',
-                                 help='ID of the GCP Folder to analyze')
-        self.parser.add_argument('--organization-id',
-                                 action='store',
-                                 help='ID of the GCP Organization to analyze')
+        # Google Cloud Platform
+        gcp_parser = subparsers.add_parser("gcp",
+                                           help="Run Scout against a Google Cloud Platform account")
 
-        azure_auth_modes = self.parser.add_mutually_exclusive_group(required="azure" in sys.argv)
+        gcp_auth_modes = gcp_parser.add_mutually_exclusive_group(required=True)
 
-        azure_auth_modes.add_argument('--azure-cli',
+        gcp_auth_modes.add_argument('--user-account',
+                                    action='store_true',
+                                    dest="auth_file",
+                                    help='Run Scout Suite with a Google Account')
+
+        gcp_auth_modes.add_argument('--service-account',
+                                    action='store',
+                                    help='Run Scout Suite with a Google Service Account with the specified '
+                                         'Google Service Account Application Credentials file')
+
+        gcp_scope = gcp_parser.add_mutually_exclusive_group(required=False)
+
+        gcp_scope.add_argument('--project-id',
+                               action='store',
+                               help='ID of the GCP Project to analyze')
+
+        gcp_scope.add_argument('--folder-id',
+                               action='store',
+                               help='ID of the GCP Folder to analyze')
+
+        gcp_scope.add_argument('--organization-id',
+                               action='store',
+                               help='ID of the GCP Organization to analyze')
+
+        # Microsoft Azure
+        azure_parser = subparsers.add_parser("azure",
+                                             help="Run Scout against a Microsoft Azure account")
+
+        azure_auth_modes = azure_parser.add_mutually_exclusive_group(required=True)
+
+        azure_auth_modes.add_argument('--cli',
                                       action='store_true',
                                       help='Run Scout Suite using configured azure-cli credentials')
-        azure_auth_modes.add_argument('--azure-msi',
+
+        azure_auth_modes.add_argument('--msi',
                                       action='store_true',
                                       help='Run Scout Suite with Managed Service Identity')
-        azure_auth_modes.add_argument('--azure-service-principal',
+
+        azure_auth_modes.add_argument('--service-principal',
                                       action='store_true',
                                       help='Run Scout Suite with an Azure Service Principal')
-        azure_auth_modes.add_argument('--azure-file-auth',
+
+        azure_auth_modes.add_argument('--file-auth',
                                       action='store',
+                                      dest='auth_file',
                                       help='Run Scout Suite with the specified credential file')
-        azure_auth_modes.add_argument('--azure-user-credentials',
+
+        azure_auth_modes.add_argument('--user-credentials',
                                       action='store_true',
                                       help='Run Scout Suite with user credentials')
 

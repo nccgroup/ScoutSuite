@@ -44,7 +44,7 @@ class GCPProvider(BaseProvider):
 
         super(GCPProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
-    def authenticate(self, key_file=None, user_account=None, service_account=None, **kargs):
+    def authenticate(self, user_account=None, service_account=None, **kargs):
         """
         Implement authentication for the GCP provider
         Refer to https://google-auth.readthedocs.io/en/stable/reference/google.auth.html.
@@ -57,7 +57,7 @@ class GCPProvider(BaseProvider):
             warnings.filterwarnings("ignore", "Your application has authenticated using end user credentials")
             pass  # Nothing more to do
         elif service_account:
-            client_secrets_path = os.path.abspath(key_file)  # TODO this is probably wrong
+            client_secrets_path = os.path.abspath(service_account)  # TODO this is probably wrong
             os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = client_secrets_path
         else:
             printError('Failed to authenticate to GCP - no supported account type')

@@ -43,8 +43,8 @@ class AzureProvider(BaseProvider):
 
         super(AzureProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
-    def authenticate(self, key_file=None, user_account=None, service_account=None, azure_cli=None, azure_msi=None,
-                     azure_service_principal=None, azure_file_auth=None, azure_user_credentials=None, **kargs):
+    def authenticate(self, key_file=None, user_account=None, service_account=None, cli=None, msi=None,
+                     service_principal=None, file_auth=None, user_credentials=None, **kargs):
         """
         Implements authentication for the Azure provider using azure-cli.
         Refer to https://docs.microsoft.com/en-us/python/azure/python-sdk-azure-authenticate?view=azure-python.
@@ -53,11 +53,11 @@ class AzureProvider(BaseProvider):
         """
 
         try:
-            if azure_cli:
+            if cli:
                 cli_credentials, self.aws_account_id = get_azure_cli_credentials()  # TODO: Remove aws_account_id
                 self.credentials = AzureCredentials(cli_credentials, self.aws_account_id)
                 return True
-            elif azure_msi:
+            elif msi:
                 credentials = MSIAuthentication()
 
                 # Get the subscription ID
@@ -72,8 +72,8 @@ class AzureProvider(BaseProvider):
 
                 self.credentials = AzureCredentials(credentials, self.aws_account_id)
                 return True
-            elif azure_file_auth:
-                with open(azure_file_auth) as f:
+            elif file_auth:
+                with open(file_auth) as f:
                     data = json.loads(f.read())
                     subscription_id = data.get('subscriptionId')
                     tenant_id = data.get('tenantId')
@@ -91,7 +91,7 @@ class AzureProvider(BaseProvider):
                     self.credentials = AzureCredentials(credentials, subscription_id)
 
                     return True
-            elif azure_service_principal:
+            elif service_principal:
                 subscription_id = input("Subscription ID: ")
                 tenant_id = input("Tenant ID: ")
                 client_id = input("Client ID: ")
@@ -108,7 +108,7 @@ class AzureProvider(BaseProvider):
                 self.credentials = AzureCredentials(credentials, subscription_id)
 
                 return True
-            elif azure_user_credentials:
+            elif user_credentials:
                 username = input("Username: ")
                 password = getpass("Password: ")
 
