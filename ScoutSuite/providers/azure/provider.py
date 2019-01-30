@@ -56,13 +56,17 @@ class AzureProvider(BaseProvider):
                 self.credentials = AzureCredentials(cli_credentials, self.aws_account_id)
                 return True
             elif azure_msi:
-                # TODO Untested
                 credentials = MSIAuthentication()
 
                 # Get the subscription ID
                 subscription_client = SubscriptionClient(credentials)
-                subscription = next(subscription_client.subscriptions.list())
-                self.aws_account_id = subscription.subscription_id
+                try:
+                    # Tries to read the subscription list
+                    subscription = next(subscription_client.subscriptions.list())
+                    self.aws_account_id = subscription.subscription_id
+                except StopIteration:
+                    # If the VM cannot read subscription list, ask Subscription ID:
+                    self.aws_account_id = input('Subscription ID: ')
 
                 self.credentials = AzureCredentials(credentials, self.aws_account_id)
                 return True
