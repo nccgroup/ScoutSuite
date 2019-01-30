@@ -207,7 +207,7 @@ Using a computer already configured to use azure-cli, you may use Scout using th
 
     $ python Scout.py --provider azure --azure-cli
     
-When using Scout in an Azure virtual machine with the Reader role on it's identity, you may use 
+When using Scout in an Azure virtual machine with the Reader role, you may use 
 Scout using the following command:
 
     $ python Scout.py --provider azure --azure-msi
