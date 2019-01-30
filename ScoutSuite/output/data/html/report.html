@@ -139,7 +139,9 @@
                                 </div>
                                 {{#each items.summary}}
                                 <a href="#services.{{@key}}.findings" style="color: black !important;">
-                                    <div class="list-group-item finding-title-{{dashboard_color max_level checked_items flagged_items}}">{{make_title @key}}
+                                    <div class="list-group-item finding-title">
+                                        <span class="finding-badge finding-badge-{{dashboard_color max_level checked_items flagged_items}}"></span>
+                                        {{make_title @key}}
                                         <div class="col-sm-2 float-right" style="text-align: center">{{checked_items}}</div>
                                         <div class="col-sm-2 float-right" style="text-align: center">{{flagged_items}}</div>
                                         <div class="col-sm-2 float-right" style="text-align: center">{{rules_count}}</div>
@@ -185,6 +187,9 @@
             </div>
         </footer>
 
+        <!-- Used by showPopup -->
+        <div id="modal-container" class="modal fade" tabindex="-1" role="dialog"></div>
+
         <!--Always put footer at end of page-->
         <script>
             $(document).ready(function() {
@@ -196,8 +201,6 @@
             });
         </script>
     </div>
-
-    <div id="modal-container" class="modal fade" tabindex="-1" role="dialog"></div>
 </body>
 
 </html>

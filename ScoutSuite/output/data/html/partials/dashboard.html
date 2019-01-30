@@ -8,25 +8,26 @@
                     <input class="form-control dashboard-filter" type="text" id="dashboardFilter" placeholder="Filter findings">
                 </div>
                 <div class="col-sm-2">
-                    <button class="form-control btn finding-title-unknown text-info" id="finding-title">Show All</button>
+                    <button class="form-control btn btn-light" id="finding-title">Show All</button>
                 </div>
                 <div class="col-sm-2">
-                    <button class="form-control btn finding-title-good" id="finding-title-good">Good</button>
+                    <button class="form-control btn btn-success" id="finding-title-good">Good</button>
                 </div>
                 <div class="col-sm-2">
-                    <button class="form-control btn finding-title-warning" id="finding-title-warning">Warning</button>
+                    <button class="form-control btn btn-warning" id="finding-title-warning">Warning</button>
                 </div>
                 <div class="col-sm-2">
-                    <button class="form-control btn finding-title-danger" id="finding-title-danger">Danger</button>
+                    <button class="form-control btn btn-danger" id="finding-title-danger">Danger</button>
                 </div>
               </div>
 
               <ul class="list-group">
                   {{#each_dict_as_sorted_list findings}}
-                  <div id="list-{{key}}" class="finding_items">
-                      <div class="list-group-item finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
+                  <div id="list-{{key}}" class="finding_items ">
+                      <div class="list-group-item finding-title finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
                           <div class="row">
                               <div class="col-sm-11">
+                                  <span class="finding-badge finding-badge-{{dashboard_color level checked_items flagged_items}}"></span>
                                   <a href="#services.{{../service_name}}.findings.{{key}}.items">{{description}}</a>
                               </div>
                               <div class="col-sm-1">
@@ -34,17 +35,15 @@
                               </div>
                           </div>
                       </div>
-                      <div class="list-group-item">
-                          <div id="item-{{key}}" class="row collapse" aria-labelledby="item-{{key}}" data-parent="#list-{{key}}">
-                              <div class="col-sm-9">
-                                  <p>{{rationale}}</p>
-                              </div>
-                              <div class="col-sm-3">
-                                  <ul>
-                                      <li>{{dashboard_name}} checked: {{checked_items}}</li>
-                                      <li>{{dashboard_name}} flagged: {{flagged_items}}</li>
-                                  </ul>
-                              </div>
+                      <div class="list-group-item collapse" id="item-{{key}}" aria-labelledby="item-{{key}}" data-parent="#list-{{key}}">
+                          <div class="col-sm-9">
+                              <p>{{rationale}}</p>
+                          </div>
+                          <div class="col-sm-3">
+                              <ul>
+                                  <li>{{dashboard_name}} checked: {{checked_items}}</li>
+                                  <li>{{dashboard_name}} flagged: {{flagged_items}}</li>
+                              </ul>
                           </div>
                       </div>
                   </div>
@@ -67,6 +66,7 @@
                       $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                   });
               });
+
               // Filter by button
               $('.btn').click(function() {
                   var value = $(this).attr('id');

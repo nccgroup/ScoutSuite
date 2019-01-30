@@ -1,5 +1,38 @@
 @import url("./modal.css");
 
+/* Bootstrap overrides */
+
+.btn-success,
+.btn-success:focus
+ {
+    color: #fff;
+    background-color: #23af44;
+    border-color: #23af44;
+}
+
+.btn-success:hover,
+.btn-success:active
+ {
+    color: #fff;
+    background-color: #1f9b3c;
+    border-color: #1f9b3c;
+}
+
+.btn-warning:focus {
+    color: #fff;
+    background-color: #F39C12;
+    border-color: #F39C12;
+}
+
+.btn-danger:focus {
+    color: #fff;
+    background-color: #E74C3C;
+    border-color: #E74C3C;
+}
+
+/* Scout Suite */
+
+
 .item-margin {
     margin-left: 25px;
 }
@@ -11,25 +44,34 @@
     display: none;
 }
 .finding-danger {
-    color:  red !important;
-}
-.finding-title-danger {
-    background: red!important;
+    color:  #ee293d !important;
 }
 .finding-warning {
-    color: orange !important;
-}
-.finding-title-warning {
-    background: orange !important;
+    color: #fdbe00 !important;
 }
 .finding-good {
-    color: green !important;
+    color: #23af44 !important;
 }
-.finding-title-good {
-    background: green !important;
+.finding-title {
+    background: #f5f5f5 !important;
 }
-.finding-title-unknown {
-    background: #eee !important;
+
+.finding-badge {
+    margin-bottom: 1px;
+    margin-right: 8px;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.4), inset 0px -1px 2px rgba(255, 255, 255, 0.5);
+}
+
+.finding-badge-good { background-color: #23af44; }
+.finding-badge-warning { background-color: #fdbe00; }
+.finding-badge-danger { background-color: #ee293d; }
+.finding-badge-unknown { 
+    background-color: rgba(225, 225, 225); 
+    box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.2), inset 0px -1px 2px rgba(255, 255, 255, 0.5);
 }
 
 ul.no-bullet {
@@ -69,22 +111,18 @@ ul.no-bullet {
     border-radius: 5px;
 }
 
-.plain-link a:link {
-    color: black !important;
-    text-decoration: none !important;
-}
-.plain-link a:visited {
-    color: black !important;
-    text-decoration: none !important;
-}
-.plain-link a:hover {
-    color: black !important;
-    text-decoration: none !important;
-}
+.plain-link a:link,
+.plain-link a:visited,
 .plain-link a:active {
-    color: black !important;
+    color: #019479 !important;
     text-decoration: none !important;
 }
+
+.plain-link a:hover {
+    color: #007f67 !important;
+    text-decoration: none !important;
+}
+
 .disabled-link a:link{
     pointer-events: none;
     cursor: default;
@@ -104,7 +142,7 @@ ul.no-bullet {
 
 .active a{
     text-decoration: none !important;
-    color: black !important;
+    color: black;
 }
 
 .dropdown-submenu {
@@ -278,4 +316,26 @@ input:checked + .slider:before {
 
 #last_run {
     width: 100%;
+}
+
+#double-column-left .list-group {
+    margin: 3px 0;
+}
+
+#double-column-left .active a,
+#double-column-left .active .fa {
+    color: rgba(24, 188, 155);
+}
+
+#double-column-left .active .fa:hover {
+    color: rgba(24, 188, 155);
+}
+
+.finding-learn-more i {
+    font-size: 0.8em;
+}
+
+.finding_items {
+    margin: 4px 0;
+    border-radius: 3px;
 }
