@@ -260,7 +260,7 @@ input:checked + .slider:before {
 
 .finding:before {
     content: "\f068";
-    left:-5px;
+    left:5px;
     position:absolute;
     top:0;
 }
@@ -268,7 +268,7 @@ input:checked + .slider:before {
 
 .collapsed.finding:before {
     content: "\f067";
-    left:-5px;
+    left:5px;
     position:absolute;
     top:0;
 }
