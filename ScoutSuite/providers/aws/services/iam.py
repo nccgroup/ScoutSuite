@@ -24,6 +24,8 @@ class IAMConfig(AWSBaseConfig):
     :ivar roles_count:          len(roles)
     :ivar users:                Dictionary of IAM users in the AWS account
     :ivar users_count:          len(users)
+    :ivar cmks:                  Dictionnary of CMKs in the AWS account
+    :ivar cmks_count:            len(cmks)
     """
 
     targets = (
@@ -33,7 +35,8 @@ class IAMConfig(AWSBaseConfig):
         ('roles', 'Roles', 'list_roles', {}, False),
         ('users', 'Users', 'list_users', {}, False),
         ('credential_reports', '', '', {}, False),
-        ('password_policy', '', '', {}, False)
+        ('password_policy', '', '', {}, False),
+        ('cmks', '', '', {}, False)
         # TODO: Federations
         # TODO: KMS ?
     )
@@ -46,6 +49,7 @@ class IAMConfig(AWSBaseConfig):
         self.policies = {}
         self.roles = {}
         self.users = {}
+        self.cmks = {}
         super(IAMConfig, self).__init__(target_config)
 
     ########################################
@@ -59,6 +63,7 @@ class IAMConfig(AWSBaseConfig):
         self.fetch_password_policy(credentials)
         self.fetch_credential_reports(credentials)
         self.fetchstatuslogger.show(True)
+        self.fetch_cmks(credentials)
 
     ########################################
     ##### Credential report
@@ -427,3 +432,19 @@ class IAMConfig(AWSBaseConfig):
                 resource][policy_type], policy_name, {})
         self.permissions[action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][
             resource][policy_type][policy_name]['condition'] = condition
+
+
+    ########################################
+    ##### CMKs (Customer Master Keys) 
+    ########################################
+    def fetch_cmks(self, credentials):
+        """
+        Fetch the Customer Master Keys
+        """
+        try:
+            api_client = connect_service('kms', credentials, region_name = 'us-east-2', silent=True)
+            self.cmks = api_client.list_keys()
+
+        except Exception as e:
+            printError('Failed to download CMKs.')
+            printException(e)
