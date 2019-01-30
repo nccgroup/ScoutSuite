@@ -56,7 +56,7 @@ class CloudTrailRegionConfig(RegionConfig):
                                                                              api_client)
             
             for es in api_client.get_event_selectors(TrailName=trail_config['TrailARN'])['EventSelectors']:
-                trail_config['DataEventsEnabled'] = True if len(es['DataResources']) > 0 else False
+                trail_config['DataEventsEnabled'] = len(es['DataResources']) > 0
                 trail_config['ManagementEventsEnabled'] = es['IncludeManagementEvents']
         
         self.trails[trail_id] = trail_config
