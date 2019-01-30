@@ -11,7 +11,8 @@
         <li class="list-group-item-text">Name: {{name}}</li>
         <li class="list-group-item-text">Region: {{region}}</li>
         <li class="list-group-item-text">Logging: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.IsLogging">{{IsLogging}}</span></li>
-        <li class="list-group-item-text">Data events: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.DataEventsEnabled">{{DataEventsEnabled}}</span></li>
+        <li class="list-group-item-text">Data events: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.cloudtrail-data-events-disabled">{{DataEventsEnabled}}</span></li>
+
         <li class="list-group-item-text">Management events: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.ManagementEventsEnabled">{{ManagementEventsEnabled}}</span></li>
         <li class="list-group-item-text">Multi region: {{IsMultiRegionTrail}}</li>
         {{#ifEqual IsMultiRegionTrail "true"}}
