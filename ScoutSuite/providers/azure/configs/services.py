@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.console import printError, printException, printDebug
-
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 from ScoutSuite.providers.azure.services.storageaccounts import StorageAccountsConfig
+
 
 class AzureServicesConfig(BaseServicesConfig):
 
