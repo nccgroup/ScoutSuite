@@ -62,7 +62,7 @@
 }
 
 .finding-badge-danger:before { 
-    content: '\f714';
+    content: '\f06a';
     color:#ee293d; 
 }
 .finding-badge-unknown:before {  
