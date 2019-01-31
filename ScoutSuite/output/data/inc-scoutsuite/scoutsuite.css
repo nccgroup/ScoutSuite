@@ -2,10 +2,6 @@
 
 /* Bootstrap overrides */
 
-.card-header:first-child {
-    border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0;
-}
-
 .btn-success,
 .btn-success:focus
  {
@@ -277,6 +273,7 @@ input:checked + .slider:before {
 }
 
 .finding:before {
+    color: black;
     content: "\f068"; /* Fontawesome '+' */
     left:5px;
     position:absolute;
@@ -286,6 +283,7 @@ input:checked + .slider:before {
 
 
 .collapsed.finding:before {
+    color: black;
     content: "\f067"; /* Fontawesome '-' */
     left:5px;
     position:absolute;
