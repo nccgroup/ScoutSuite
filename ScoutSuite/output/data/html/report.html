@@ -124,7 +124,7 @@
                             {{#each items.summary}}
                             <a href="#services.{{@key}}.findings" class="card" style="color: black !important">
                                 <div class="finding-title card-header">
-                                    <span class="finding-badge finding-badge-{{dashboard_color max_level checked_items flagged_items}}"></span>
+                                    <i class="fa finding-badge finding-badge-{{dashboard_color max_level checked_items flagged_items}}"></i>
                                     {{make_title @key}}
                                     <div class="col-sm-2 float-right" style="text-align: center">{{checked_items}}</div>
                                     <div class="col-sm-2 float-right" style="text-align: center">{{flagged_items}}</div>

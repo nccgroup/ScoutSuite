@@ -48,15 +48,27 @@
     margin-bottom: 1px;
     margin-right: 8px;
     display: inline-block;
-    width: 12px;
-    height: 12px;
     border-radius: 100%;
 }
 
-.finding-badge-good { background-image: linear-gradient(#23af44 10%, #21983d 90%); }
-.finding-badge-warning { background-image: linear-gradient(#fdbe00 10%, #daa300 90%); }
-.finding-badge-danger { background-image: linear-gradient(#ee293d 10%, #cc2233 90%); }
-.finding-badge-unknown {  background-image: linear-gradient(rgb(225, 225, 225) 10%, rgb(201, 201, 201) 90%); background-color:  }
+.finding-badge-good:before { 
+    content: '\f06a';
+    color: #23af44; 
+}
+
+.finding-badge-warning:before { 
+    content: '\f06a';
+    color: #fdbe00; 
+}
+
+.finding-badge-danger:before { 
+    content: '\f714';
+    color:#ee293d; 
+}
+.finding-badge-unknown:before {  
+    content: '\f111';
+    color: rgb(225, 225, 225);
+}
 
 ul.no-bullet {
     list-style-type: none;
@@ -278,7 +290,6 @@ input:checked + .slider:before {
     left:5px;
     position:absolute;
     top:0;
-    
 }
 
 
