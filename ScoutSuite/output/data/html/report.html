@@ -113,25 +113,26 @@
                             <div class="list-group-item-heading">Dashboard</div>
                         </div>
                         <div class="accordion" id="last_run">
-                            <div class="card">
+                            <a class="card">
                                 <div class="card-header">Service
                                     <div class="col-sm-2 float-right" style="text-align: center">Checks</div>
                                     <div class="col-sm-2 float-right" style="text-align: center">Findings</div>
                                     <div class="col-sm-2 float-right" style="text-align: center">Rules</div>
                                     <div class="col-sm-2 float-right" style="text-align: center">Resources</div>
                                 </div>
-                                {{#each items.summary}}
-                                <a href="#services.{{@key}}.findings" class="card-header" style="color: black !important">
-                                    <div class="finding-title">
-                                        <span class="finding-badge finding-badge-{{dashboard_color max_level checked_items flagged_items}}"></span>
-                                        {{make_title @key}}
-                                        <div class="col-sm-2 float-right" style="text-align: center">{{checked_items}}</div>
-                                        <div class="col-sm-2 float-right" style="text-align: center">{{flagged_items}}</div>
-                                        <div class="col-sm-2 float-right" style="text-align: center">{{rules_count}}</div>
-                                        <div class="col-sm-2 float-right" style="text-align: center">{{resources_count}}</div>
-                                    </div>
-                                </a>
-                                {{/each}}
+                            </a>
+                            {{#each items.summary}}
+                            <a href="#services.{{@key}}.findings" class="card" style="color: black !important">
+                                <div class="finding-title card-header">
+                                    <span class="finding-badge finding-badge-{{dashboard_color max_level checked_items flagged_items}}"></span>
+                                    {{make_title @key}}
+                                    <div class="col-sm-2 float-right" style="text-align: center">{{checked_items}}</div>
+                                    <div class="col-sm-2 float-right" style="text-align: center">{{flagged_items}}</div>
+                                    <div class="col-sm-2 float-right" style="text-align: center">{{rules_count}}</div>
+                                    <div class="col-sm-2 float-right" style="text-align: center">{{resources_count}}</div>
+                                </div>
+                            </a>
+                            {{/each}}
                             </div>
                         </div>
                     </div>

@@ -769,7 +769,7 @@ function showAbout() {
  * 
  */
 function showLastRunDetails() {
-    $('#modal-container').html(last_run_details_template(run_results.last_run));
+    $('#modal-container').html(last_run_details_template(run_results));
     $('#modal-container').modal();
 }
 
