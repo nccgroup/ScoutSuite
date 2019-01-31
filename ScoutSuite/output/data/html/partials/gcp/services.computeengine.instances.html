@@ -1,7 +1,7 @@
 
 <!-- Compute Engine instances partial -->
 <script id="services.computeengine.instances.partial" type="text/x-handlebars-template">
-    <div class="list-group-item active">
+    <div id="resource-name" class="list-group-item active">
         <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
     <div class="list-group-item">
@@ -60,8 +60,7 @@
 
 <!-- Single computeengine instance template -->
 <script id="single_computeengine_instance-template" type="text/x-handlebars-template">
-    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-    {{> services.computeengine.instances}}
+    {{> modal-template template='services.computeengine.instances'}}
 </script>
 <script>
     var single_computeengine_instance_template = Handlebars.compile($("#single_computeengine_instance-template").html());

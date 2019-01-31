@@ -1,7 +1,7 @@
 
     <!-- SNS topic partial -->
     <script id="services.sns.regions.id.topics.partial" type="text/x-handlebars-template">
-        <div class="list-group-item active">
+        <div id="resource-name" class="list-group-item active">
           <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
@@ -55,8 +55,7 @@
 
     <!-- Single SNS topic template -->
     <script id="single_sns_topic-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.sns.regions.id.topics}}
+        {{> modal-template template='services.sns.regions.id.topics'}}
     </script>
     <script>
         var single_sns_topic_template = Handlebars.compile($("#single_sns_topic-template").html());

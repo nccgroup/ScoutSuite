@@ -1,7 +1,7 @@
 
     <!-- ELB Policy partial -->
     <script id="services.elb.regions.id.elb_policies.partial" type="text/x-handlebars-template">
-        <div class="list-group-item active">
+        <div id="resource-name" class="list-group-item active">
           <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         {{#ifEqual PolicyTypeName 'SSLNegotiationPolicyType'}}
@@ -47,8 +47,7 @@
 
     <!-- Single elb security group template -->
     <script id="single_elb_elb_policy-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.elb.regions.id.elb_policies}}
+        {{> modal-template template='services.elb.regions.id.elb_policies'}}
     </script>
     <script>
         var single_elb_elb_policy_template = Handlebars.compile($("#single_elb_elb_policy-template").html());

@@ -44,13 +44,7 @@
 
 <!-- Single CloudFormation stack template -->
 <script id="single_network_interface-template" type="text/x-handlebars-template">
-  <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-  <div class="list-group-item active">
-    <h4 class="list-group-item-heading">{{network_interface}}</h4>
-  </div>
-  <div class="list-group-item">
-    {{> network_interface}}
-  </div>
+    {{> modal-template template='network_interface' name=network_interface}}
 </script>
 
 <script>

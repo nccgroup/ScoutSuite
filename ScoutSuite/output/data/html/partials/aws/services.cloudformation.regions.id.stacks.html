@@ -1,6 +1,6 @@
 <!-- CloudFormation stack partial -->
 <script id="services.cloudformation.regions.id.stacks.partial" type="text/x-handlebars-template">
-  <div class="list-group-item active">
+  <div id="resource-name" class="list-group-item active">
     <h4 class="list-group-item-heading">{{name}}</h4>
   </div>
   <div class="list-group-item">
@@ -43,8 +43,7 @@
 
 <!-- Single CloudFormation stack template -->
 <script id="single_cloudformation_stack-template" type="text/x-handlebars-template">
-  <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-  {{> services.cloudformation.regions.id.stacks}}
+  {{> modal-template template='services.cloudformation.regions.id.stacks' }}
 </script>
 
 <script>

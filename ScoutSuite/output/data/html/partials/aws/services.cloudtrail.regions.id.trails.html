@@ -2,7 +2,7 @@
 <!-- Trail partial -->
 <script id="services.cloudtrail.regions.id.trails.partial" type="text/x-handlebars-template">
   {{#unless scout2_link}}
-    <div class="list-group-item active">
+    <div id="resource-name" class="list-group-item active">
       <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
     <div class="list-group-item">
@@ -40,8 +40,7 @@
 
 <!-- Single EC2 instance template -->
 <script id="single_cloudtrail_trail-template" type="text/x-handlebars-template">
-    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-    {{> services.cloudtrail.regions.id.trails}}
+    {{> modal-template template='services.cloudtrail.regions.id.trails' }}
 </script>
 <script>
     var single_cloudtrail_trail_template = Handlebars.compile($("#single_cloudtrail_trail-template").html());

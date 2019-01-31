@@ -2,7 +2,7 @@
     <!-- S3 object partial -->
     <script id="services.s3.buckets.objects.partial" type="text/x-handlebars-template">
       <div class="list-group" id="services.s3.buckets.objects.{{name}}.details">
-        <div class="list-group-item active">
+        <div id="resource-name" class="list-group-item active">
           <h4 class="list-group-item-heading">{{get_value_at 'services.s3.buckets' bucket_id 'name'}}/{{get_value_at 'services.s3.buckets' bucket_id 'keys' key_id 'name'}}</h4>
         </div>
         <div class="list-group-item">
@@ -23,8 +23,7 @@
 
     <!-- Single S3 object template -->
     <script id="single_s3_object-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.s3.buckets.objects}}
+        {{> modal-template template='services.s3.buckets.objects'}}
     </script>
     <script>
       var single_s3_object_template = Handlebars.compile($("#single_s3_object-template").html());

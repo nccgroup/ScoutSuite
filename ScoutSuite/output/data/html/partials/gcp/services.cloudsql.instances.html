@@ -1,7 +1,7 @@
 
 <!-- Cloud Storage instances partial -->
 <script id="services.cloudsql.instances.partial" type="text/x-handlebars-template">
-    <div class="list-group-item active">
+    <div id="resource-name" class="list-group-item active">
         <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
     <div class="list-group-item">
@@ -21,8 +21,7 @@
 
 <!-- Single cloudsql instance template -->
 <script id="single_cloudsql_instance-template" type="text/x-handlebars-template">
-    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-    {{> services.cloudsql.instances}}
+    {{> modal-template template='services.cloudsql.instances'}}
 </script>
 <script>
     var single_cloudsql_instance_template = Handlebars.compile($("#single_cloudsql_instance-template").html());
