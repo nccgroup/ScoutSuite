@@ -15,13 +15,14 @@
             <li class="list-group-item-text">Instance Class: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.DBInstanceClass"> {{DBInstanceClass}}<span></li>
             <li class="list-group-item-text">Created on: {{InstanceCreateTime}}</li>
             <li class="list-group-item-text">Backup retention period in days: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.BackupRetentionPeriod">{{BackupRetentionPeriod}}</span>
+            <li class="list-group-item-text">Publicly accessible: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.instance_publicly_accessible">{{PubliclyAccessible}}</span>
             <li class="list-group-item-text">Enhanced Monitoring:
               <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.EnhancedMonitoringResourceArn">{{#if EnhancedMonitoringResourceArn}} Enabled {{else}} Disabled {{/if}}</span>
             </li>
             <li class="list-group-item-text">Encrypted Storage: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.StorageEncrypted">{{StorageEncrypted}}</span></li>
           </ul>
           <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.pgsslcert" class="finding-hidden item-margin">
-           <i class="glyphicon glyphicon-warning-sign"></i> SSL/TLS certificates on PostgreSQL instances created before August 8, 2014, cannot be verified.
+           <i class="fa fa-exclamation-triangle"></i> SSL/TLS certificates on PostgreSQL instances created before August 8, 2014, cannot be verified.
           </span>
         </div>
         <div class="list-group-item">

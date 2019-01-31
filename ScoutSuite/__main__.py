@@ -14,7 +14,7 @@ try:
     from opinel.utils.globals import check_requirements
     from opinel.utils.profiles import AWSProfiles
 except Exception as e:
-    print('Error: Scout2 depends on the opinel package. Install all the requirements with the following command:')
+    print('Error: Scout depends on the opinel package. Install all the requirements with the following command:')
     print('  $ pip install -r requirements.txt')
     print(e)
     sys.exit(42)
@@ -65,7 +65,7 @@ def main(passed_args=None):
                                   skipped_services=args.skipped_services,
                                   thread_config=args.thread_config)
 
-    #FIXME this shouldn't be done here
+    # FIXME this shouldn't be done here
     if cloud_provider.provider_code == 'aws':
         if args.profile:
             report_file_name = 'aws-%s' % args.profile[0]
@@ -95,7 +95,12 @@ def main(passed_args=None):
                                                     mfa_code=args.mfa_code,
                                                     key_file=args.key_file,
                                                     user_account=args.user_account,
-                                                    service_account=args.service_account)
+                                                    service_account=args.service_account,
+                                                    azure_cli=args.azure_cli,
+                                                    azure_msi=args.azure_msi,
+                                                    azure_service_principal=args.azure_service_principal,
+                                                    azure_file_auth=args.azure_file_auth,
+                                                    azure_user_credentials=args.azure_user_credentials)
 
         if not authenticated:
             return 42

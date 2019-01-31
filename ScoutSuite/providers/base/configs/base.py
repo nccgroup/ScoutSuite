@@ -59,7 +59,7 @@ class BaseConfig(object):
         m.update(name.encode('utf-8'))
         return m.hexdigest()
 
-    def fetch_all(self, credentials, regions=[], partition_name='aws', targets=None):
+    def fetch_all(self, credentials, regions=None, partition_name='aws', targets=None):
         """
         :param credentials:             F
         :param service:                 Name of the service
@@ -68,6 +68,7 @@ class BaseConfig(object):
         :param targets:                 Type of resources to be fetched; defaults to all.
         :return:
         """
+        regions = [] if regions is None else regions
         global status, formatted_string
 
         # Initialize targets
@@ -216,7 +217,8 @@ class BaseConfig(object):
             setattr(self, '%s_count' % t, self.fetchstatuslogger.counts[t]['fetched'])
         self.__delattr__('fetchstatuslogger')
 
-    def _init_threading(self, function, params={}, num_threads=10):
+    def _init_threading(self, function, params=None, num_threads=10):
+        params = {} if params is None else params
         # Init queue and threads
         q = Queue(maxsize=0)  # TODO: find something appropriate
         for i in range(num_threads):

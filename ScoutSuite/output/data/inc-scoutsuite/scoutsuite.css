@@ -161,3 +161,88 @@ ul.no-bullet {
     display: none;
 }
 
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 26px;
+    height: 14px;
+  }
+
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 11px;
+    width: 11px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+}
+
+input:checked + .slider {
+    background-color: #428bca;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px 1px #428bca;
+}
+
+input:checked + .slider:before {
+    -ms-transform: translateX(11px);
+    transform: translateX(11px);
+}
+
+.slider.round {
+    border-radius: 14px;
+    top: 2px;
+    bottom: -2px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.spacer {
+    height: 10rem;
+}
+
+.sub-navbar {
+    position: inherit;
+    float: bottom;
+    margin-top: 3rem;
+    width: 100%;
+    left: 0rem;
+    right: 0rem;
+    top: 0rem;
+    padding-top: 2rem;
+    padding-left: 8rem;
+    align-content: stretch;
+    z-index: -1;
+}
+
+.pr-0 {
+    padding-right: 0rem;
+}
+
+.text-overflow {
+    word-wrap: break-word;
+}
+
+.std-size {
+    font-size: 18px;
+}

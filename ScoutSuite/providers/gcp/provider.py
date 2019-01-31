@@ -25,7 +25,9 @@ class GCPProvider(BaseProvider):
     """
 
     def __init__(self, project_id=None, folder_id=None, organization_id=None, service_account=False,
-                 report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4, **kwargs):
+                 report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
+        services = [] if services is None else services
+        skipped_services = [] if skipped_services is None else skipped_services
 
         self.profile = 'gcp-profile'  # TODO this is aws-specific
 
@@ -128,7 +130,7 @@ class GCPProvider(BaseProvider):
             return False
 
 
-    def preprocessing(self, ip_ranges=[], ip_ranges_name_key=None):
+    def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
         TODO description
         Tweak the AWS config to match cross-resources and clean any fetching artifacts
@@ -137,6 +139,7 @@ class GCPProvider(BaseProvider):
         :param ip_ranges_name_key:
         :return: None
         """
+        ip_ranges = [] if ip_ranges is None else ip_ranges
 
         self._match_instances_and_snapshots()
         self._match_networks_and_instances()

@@ -27,11 +27,13 @@ class Ruleset:
                  cloud_provider='aws',
                  filename=None,
                  name=None,
-                 rules_dir=[],
+                 rules_dir=None,
                  rule_type='findings',
-                 ip_ranges=[],
+                 ip_ranges=None,
                  aws_account_id=None,
                  ruleset_generator=False):
+        rules_dir = [] if rules_dir is None else rules_dir
+        ip_ranges = [] if ip_ranges is None else ip_ranges
 
         self.rules_data_path = os.path.dirname(
             os.path.dirname(os.path.abspath(__file__))) + '/providers/%s/rules' % cloud_provider
@@ -115,12 +117,15 @@ class Ruleset:
         else:
             self.rules[filename].append(Rule(self.rules_data_path, filename, rule_type, rule))
 
-    def prepare_rules(self, attributes=[], ip_ranges=[], params={}):
+    def prepare_rules(self, attributes=None, ip_ranges=None, params=None):
         """
         Update the ruleset's rules by duplicating fields as required by the HTML ruleset generator
 
         :return:
         """
+        attributes = [] if attributes is None else attributes
+        ip_ranges = [] if ip_ranges is None else ip_ranges
+        params = {} if params is None else params
         for filename in self.rule_definitions:
             if filename in self.rules:
                 for rule in self.rules[filename]:
@@ -131,7 +136,7 @@ class Ruleset:
                 new_rule.set_definition(self.rule_definitions, attributes, ip_ranges, params)
                 self.rules[filename].append(new_rule)
 
-    def load_rule_definitions(self, ruleset_generator=False, rule_dirs=[]):
+    def load_rule_definitions(self, ruleset_generator=False, rule_dirs=None):
         """
         Load definition of rules declared in the ruleset
 
@@ -141,6 +146,7 @@ class Ruleset:
         :param generator:
         :return:
         """
+        rule_dirs = [] if rule_dirs is None else rule_dirs
 
         # Load rules from JSON files
         self.rule_definitions = {}
@@ -200,7 +206,9 @@ class Ruleset:
 
 class TmpRuleset(Ruleset):
 
-    def __init__(self, cloud_provider='aws', rule_dirs=[], rule_filename=None, rule_args=[], rule_level='danger'):
+    def __init__(self, cloud_provider='aws', rule_dirs=None, rule_filename=None, rule_args=None, rule_level='danger'):
+        rule_dirs = [] if rule_dirs is None else rule_dirs
+        rule_args = [] if rule_args is None else rule_args
         self.rule_type = 'findings'
         tmp_ruleset = {'rules': {}, 'about': 'Temporary, single-rule ruleset.'}
         tmp_ruleset['rules'][rule_filename] = []

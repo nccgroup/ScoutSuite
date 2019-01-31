@@ -19,7 +19,8 @@ except ImportError:
 
 class GCPServicesConfig(BaseServicesConfig):
 
-    def __init__(self, metadata=None, thread_config=4, projects=[], **kwargs):
+    def __init__(self, metadata=None, thread_config=4, projects=None, **kwargs):
+        projects = [] if projects is None else projects
 
         self.cloudresourcemanager = CloudResourceManager(thread_config=thread_config)
         self.cloudstorage = CloudStorageConfig(thread_config=thread_config)
@@ -36,10 +37,7 @@ class GCPServicesConfig(BaseServicesConfig):
         # self.stackdrivermonitoring = StackdriverMonitoringConfig(thread_config=thread_config)
 
     def _is_provider(self, provider_name):
-        if provider_name == 'gcp':
-            return True
-        else:
-            return False
+        return provider_name == 'gcp'
 
     def set_projects(self, projects):
         """

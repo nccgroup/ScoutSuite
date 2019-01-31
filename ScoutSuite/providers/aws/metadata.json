@@ -241,6 +241,15 @@
                     "callbacks": [
                         [ "match_security_groups_and_resources_callback", {"sg_list_attribute_name": ["Groups"], "sg_id_attribute_name": "GroupId"} ]
                     ]
+                },
+                "images": {
+                    "api_call": "describe_images",
+                    "params": {
+                        "Owners": [ "_AWS_ACCOUNT_ID_" ]
+                    },
+                    "response": "Images",
+                    "cols": 2,
+                    "path": "services.ec2.regions.id.images"
                 }
             },
             "summaries": {
@@ -334,6 +343,10 @@
                 "users": {
                     "cols": 2,
                     "path": "services.iam.users"
+                },
+                "credential_reports": {
+                    "cols": 2,
+                    "path": "services.iam.credential_reports"
                 }
             },
             "summaries": {
@@ -344,10 +357,6 @@
                 "password_policy": {
                     "cols": 1,
                     "path": "services.iam.password_policy"
-                },
-                "root_account": {
-                    "cols": 1,
-                    "path": "services.iam.credential_report.<root_account>"
                 }
             }
         }

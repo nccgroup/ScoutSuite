@@ -21,7 +21,8 @@ from ScoutSuite.providers.gcp.utils import gcp_connect_service
 
 class GCPBaseConfig(BaseConfig):
 
-    def __init__(self, thread_config=4, projects=[], **kwargs):
+    def __init__(self, thread_config=4, projects=None, **kwargs):
+        projects = [] if projects is None else projects
 
         self.projects = projects
 
@@ -33,10 +34,7 @@ class GCPBaseConfig(BaseConfig):
         super(GCPBaseConfig, self).__init__(thread_config)
 
     def _is_provider(self, provider_name):
-        if provider_name == 'gcp':
-            return True
-        else:
-            return False
+        return provider_name == 'gcp'
 
     def get_regions(self, **kwargs):
         """

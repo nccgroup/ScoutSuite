@@ -8,7 +8,8 @@ from opinel.utils.console import printDebug, printError, printException
 
 class RuleDefinition(object):
 
-    def __init__(self, data_path, file_name = None, rule_dirs = [], string_definition = None):
+    def __init__(self, data_path, file_name = None, rule_dirs = None, string_definition = None):
+        rule_dirs = [] if rule_dirs is None else rule_dirs
         self.rules_data_path = data_path
         self.file_name = file_name
         self.rule_dirs = rule_dirs

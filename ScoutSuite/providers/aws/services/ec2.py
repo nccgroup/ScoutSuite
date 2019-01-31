@@ -51,7 +51,7 @@ class EC2RegionConfig(RegionConfig):
 
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
-        :param instance:                 Cluster
+        :param instance:                Cluster
         """
         for i in reservation['Instances']:
             instance = {}
@@ -68,6 +68,22 @@ class EC2RegionConfig(RegionConfig):
                 get_keys(eni, nic, ['Association', 'Groups', 'PrivateIpAddresses', 'SubnetId', 'Ipv6Addresses'])
                 instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
             self.vpcs[vpc_id].instances[i['InstanceId']] = instance
+
+    def parse_image(self, global_params, region, image):
+        """
+        Parses a single AMI (Amazon Machine Image)
+
+        :param global_params:           Parameters shared for all regions
+        :param region:                  Name of the AWS region
+        :param snapshot:                Single image
+        """
+        id = image['ImageId']
+        name = image['Name']
+
+        image['id'] = id
+        image['name'] = name
+
+        self.images[id] = image 
 
     def parse_security_group(self, global_params, region, group):
         """
@@ -146,9 +162,13 @@ class EC2RegionConfig(RegionConfig):
         snapshot['name'] = get_name(snapshot, snapshot, 'id')
         self.snapshots[snapshot['id']] = snapshot
         # Get snapshot attribute
-        snapshot['createVolumPermission'] = \
+        snapshot['createVolumePermission'] = \
         api_clients[region].describe_snapshot_attribute(Attribute='createVolumePermission', SnapshotId=snapshot['id'])[
             'CreateVolumePermissions']
+        snapshot['public'] = self._is_public(snapshot)
+
+    def _is_public(self, snapshot):
+        return any([permission.get('Group') == 'all' for permission in snapshot['createVolumePermission']])
 
     def parse_volume(self, global_params, region, volume):
         """
