@@ -27,7 +27,7 @@ class BaseServicesConfig(object):
                     method_args['regions'] = regions
 
                     if self._is_provider('aws'):
-                        if service != 'iam':
+                        if service != 'iam' and service != 'kms':
                             method_args['partition_name'] = get_partition_name(credentials)
 
                     service_config.fetch_all(**method_args)

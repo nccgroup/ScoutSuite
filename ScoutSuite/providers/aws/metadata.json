@@ -359,6 +359,14 @@
                     "path": "services.iam.password_policy"
                 }
             }
+        },
+        "kms": {
+            "resources": {
+                "customer_master_keys": {
+                    "cols": 2,
+                    "path": "services.kms.customer_master_keys"
+                }
+            }
         }
     },
     "database": {

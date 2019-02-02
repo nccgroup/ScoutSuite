@@ -1030,7 +1030,7 @@ var make_title = function (title) {
         return title.toString();
     };
     title = title.toLowerCase();
-    if (['ec2', 'efs', 'iam', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) != -1) {
+    if (['ec2', 'efs', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) != -1) {
         return title.toUpperCase();
     } else if (title == 'cloudtrail') {
         return 'CloudTrail';
