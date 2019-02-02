@@ -24,6 +24,8 @@ class IAMConfig(AWSBaseConfig):
     :ivar roles_count:          len(roles)
     :ivar users:                Dictionary of IAM users in the AWS account
     :ivar users_count:          len(users)
+    :ivar cmks:                  Dictionnary of CMKs in the AWS account
+    :ivar cmks_count:            len(cmks)
     """
 
     targets = (
@@ -33,7 +35,8 @@ class IAMConfig(AWSBaseConfig):
         ('roles', 'Roles', 'list_roles', {}, False),
         ('users', 'Users', 'list_users', {}, False),
         ('credential_reports', '', '', {}, False),
-        ('password_policy', '', '', {}, False)
+        ('password_policy', '', '', {}, False),
+        ('cmks', '', '', {}, False)
         # TODO: Federations
         # TODO: KMS ?
     )
@@ -46,6 +49,7 @@ class IAMConfig(AWSBaseConfig):
         self.policies = {}
         self.roles = {}
         self.users = {}
+        self.cmks = {}
         super(IAMConfig, self).__init__(target_config)
 
     ########################################
@@ -59,6 +63,7 @@ class IAMConfig(AWSBaseConfig):
         self.fetch_password_policy(credentials)
         self.fetch_credential_reports(credentials)
         self.fetchstatuslogger.show(True)
+        self.fetch_cmks(credentials)
 
     ########################################
     ##### Credential report
@@ -81,7 +86,7 @@ class IAMConfig(AWSBaseConfig):
                 if not ignore_exception:
                     printError('Failed to generate a credential report.')
                 return
-
+                
             report = api_client.get_credential_report()['Content']
             lines = report.splitlines()
             keys = lines[0].decode('utf-8').split(',')
@@ -95,10 +100,8 @@ class IAMConfig(AWSBaseConfig):
                     credential_report[key] = value
 
                 credential_report['password_last_used'] = self._sanitize_date(credential_report['password_last_used'])
-                credential_report['access_key_1_last_used_date'] = self._sanitize_date(
-                    credential_report['access_key_1_last_used_date'])
-                credential_report['access_key_2_last_used_date'] = self._sanitize_date(
-                    credential_report['access_key_2_last_used_date'])
+                credential_report['access_key_1_last_used_date'] = self._sanitize_date(credential_report['access_key_1_last_used_date'])
+                credential_report['access_key_2_last_used_date'] = self._sanitize_date(credential_report['access_key_2_last_used_date'])
                 credential_report['last_used'] = self._compute_last_used(credential_report)
                 credential_report['name'] = user_id
                 credential_report['id'] = user_id
@@ -113,9 +116,10 @@ class IAMConfig(AWSBaseConfig):
             printError('Failed to download a credential report.')
             printException(e)
 
+
     def _compute_last_used(self, credential_report):
-        dates = [credential_report['password_last_used'],
-                 credential_report['access_key_1_last_used_date'],
+        dates = [credential_report['password_last_used'], 
+                 credential_report['access_key_1_last_used_date'], 
                  credential_report['access_key_2_last_used_date']]
 
         dates = [date for date in dates if date is not None]
@@ -125,7 +129,7 @@ class IAMConfig(AWSBaseConfig):
         """
         Returns the date if it is not equal to 'N/A' or 'no_information', else returns None
         """
-        return date if date != 'no_information' and date != 'N/A' else None
+        return date  if date != 'no_information' and date != 'N/A' else None
 
     ########################################
     ##### Groups
@@ -428,3 +432,23 @@ class IAMConfig(AWSBaseConfig):
                 resource][policy_type], policy_name, {})
         self.permissions[action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][
             resource][policy_type][policy_name]['condition'] = condition
+
+
+    ########################################
+    ##### CMKs (Customer Managed Keys)
+    ########################################
+    def fetch_cmks(self, credentials):
+        """
+        Fetch the Customer Managed Keys
+        """
+        try:
+            api_client = connect_service('kms', credentials, region_name='us-east-2', silent=True)
+            cmks = api_client.list_keys()
+            for index, key in enumerate(cmks['Keys']):
+                cmks['Keys'][index]['rotation_status'] = \
+                    api_client.get_key_rotation_status(KeyId=cmks['Keys'][index]['KeyId'])
+            self.cmks = cmks
+
+        except Exception as e:
+            printError('Failed to download CMKs.')
+            printException(e)
