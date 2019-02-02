@@ -435,15 +435,19 @@ class IAMConfig(AWSBaseConfig):
 
 
     ########################################
-    ##### CMKs (Customer Master Keys) 
+    ##### CMKs (Customer Managed Keys)
     ########################################
     def fetch_cmks(self, credentials):
         """
-        Fetch the Customer Master Keys
+        Fetch the Customer Managed Keys
         """
         try:
-            api_client = connect_service('kms', credentials, region_name = 'us-east-2', silent=True)
-            self.cmks = api_client.list_keys()
+            api_client = connect_service('kms', credentials, region_name='us-east-2', silent=True)
+            cmks = api_client.list_keys()
+            for index, key in enumerate(cmks['Keys']):
+                cmks['Keys'][index]['rotation_status'] = \
+                    api_client.get_key_rotation_status(KeyId=cmks['Keys'][index]['KeyId'])
+            self.cmks = cmks
 
         except Exception as e:
             printError('Failed to download CMKs.')
