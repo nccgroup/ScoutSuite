@@ -329,7 +329,7 @@
                 "keys": {
                     "api_call": "list_keys",
                     "response": "Keys",
-                    "path": "services.kms.regions.id.functions"
+                    "path": "services.kms.regions.id.keys"
                 }
             }
         }

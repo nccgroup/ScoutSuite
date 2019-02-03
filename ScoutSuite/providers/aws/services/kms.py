@@ -20,22 +20,15 @@ class KMSRegionConfig(RegionConfig):
         :param region:                  Name of the AWS region
         :param key:                     Key
         """
-        
-        key_config = {}
-        
-        try:
-            api_client = connect_service('kms', self.credentials, region_name=region, silent=True)
-            customer_master_keys = api_client.list_keys()
-            for index, key in enumerate(customer_master_keys['Keys']):
-                customer_master_keys['Keys'][index]['rotation_status'] = \
-                    api_client.get_key_rotation_status(KeyId=customer_master_keys['Keys'][index]['KeyId'])
-                customer_master_keys['customer_master_keys_count'] = len(customer_master_keys)
-            self.customer_master_keys = customer_master_keys
+        customer_master_keys = {}        
+        customer_master_keys['id'] = key.pop('KeyId')
+        customer_master_keys['arn'] = key.pop('KeyArn')
 
-        except Exception as e:
-            printError('Failed to download customer master keys.')
-            printException(e)
+        api_client = api_clients[region]
+        rotation_status = api_client.get_key_rotation_status(KeyId=customer_master_keys['id'])
+        customer_master_keys['rotation_enabled'] = rotation_status['KeyRotationEnabled']
 
+        self.keys = customer_master_keys
         
 ########################################
 # KMSConfig
