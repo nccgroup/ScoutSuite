@@ -8,6 +8,7 @@
         <h4 class="list-group-item-heading">Information</h4>
         <div class="list-group-item-text item-margin">Storage Account Name: <span id="storageaccounts.storage_accounts.{{@key}}.name">{{name}}</span></div>
         <div class="list-group-item-text item-margin">Public traffic: <span id="storageaccounts.storage_accounts.{{@key}}.public_traffic_allowed">{{ convert_bool_to_enabled public_traffic_allowed }}</span></div>
+        <div class="list-group-item-text item-margin">Access Key Rotated: <span id="monitor.activity_logs.storage_accounts.{{@key}}.access_keys_rotated">{{ get_value_at 'services' 'monitor' 'activity_logs' 'storage_accounts' @key 'access_keys_rotated' }}</span></div>
     </div>
 
     <div class="list-group-item">
