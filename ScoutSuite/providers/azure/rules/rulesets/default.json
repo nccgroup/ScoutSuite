@@ -6,6 +6,18 @@
         "enabled": true,
         "level": "warning"
       }
+    ],
+    "storageaccount-public-blob-container.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "storageaccount-access-keys-not-rotated.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }
