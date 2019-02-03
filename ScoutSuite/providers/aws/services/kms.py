@@ -3,60 +3,50 @@ from opinel.utils.aws import connect_service, handle_truncated_response
 from opinel.utils.console import printError, printException
 from opinel.utils.globals import manage_dictionary
 
-from ScoutSuite.providers.aws.configs.base import AWSBaseConfig
+from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 from ScoutSuite.utils import *
 
 
-class KMSConfig(AWSBaseConfig):
+class KMSRegionConfig(RegionConfig):
     """
-    Object that holds the KMS configuration
-
-    :ivar customer_master_keys:                  Dictionnary of CMKs in the AWS account
-    :ivar customer_master_keys_count:            len(customer_master_keys)
+    KMS Configuration for a single AWS region
     """
 
-    targets = (
-        ('customer_master_keys', '', '', {}, False)
-    )
-
-    def __init__(self, target_config):
-        self.customer_master_keys = {}
-        super(KMSConfig, self).__init__(target_config)
-
-    ########################################
-    ##### Fetch information
-    ########################################
-
-    def fetch_all(self, credentials, regions=None, partition_name='aws', targets=None):
-        regions = [] if regions is None else regions
-        super(KMSConfig, self).fetch_all(credentials, regions, partition_name, targets)
-        self.fetch_cmks(credentials)
-        self.fetchstatuslogger.show(True)
-
-    ########################################
-    ##### CMKs (Customer Managed Keys)
-    ########################################
-
-    def fetch_cmks(self, credentials):
+    def parse_key(self, global_params, region, key):
         """
-        Fetch the Customer Managed Keys
+        Parse a single Key Management Service
+
+        :param global_params:           Parameters shared for all regions
+        :param region:                  Name of the AWS region
+        :param key:                     Key
         """
+        
+        key_config = {}
+        
         try:
-            api_client = connect_service('kms', credentials, region_name='us-east-2', silent=True)
+            api_client = connect_service('kms', self.credentials, region_name=region, silent=True)
             customer_master_keys = api_client.list_keys()
-            #for index, key in enumerate(customer_master_keys['Keys']):
-             #   customer_master_keys['Keys'][index]['rotation_status'] = \
-              #      api_client.get_key_rotation_status(KeyId=customer_master_keys['Keys'][index]['KeyId'])
-               # customer_master_keys['customer_master_keys_count'] = len(customer_master_keys)
+            for index, key in enumerate(customer_master_keys['Keys']):
+                customer_master_keys['Keys'][index]['rotation_status'] = \
+                    api_client.get_key_rotation_status(KeyId=customer_master_keys['Keys'][index]['KeyId'])
+                customer_master_keys['customer_master_keys_count'] = len(customer_master_keys)
             self.customer_master_keys = customer_master_keys
 
         except Exception as e:
             printError('Failed to download customer master keys.')
             printException(e)
 
-    ########################################
-    ##### Finalize KMS config
-    ########################################
+        
+########################################
+# KMSConfig
+########################################
 
-    def finalize(self):
-        super(KMSConfig, self).finalize()
+class KMSConfig(RegionalServiceConfig):
+    """
+    KMS configuration for all AWS regions
+    """
+
+    region_config_class = KMSRegionConfig
+
+    def __init__(self, service_metadata, thread_config=4):
+        super(KMSConfig, self).__init__(service_metadata, thread_config)

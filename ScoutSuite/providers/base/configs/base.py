@@ -130,7 +130,7 @@ class BaseConfig(object):
 
         if self._is_provider('aws'):
             # Show completion and force newline
-            if self.service != 'iam' and self.service != 'kms':
+            if self.service != 'iam':
                 self.fetchstatuslogger.show(True)
         else:
             self.fetchstatuslogger.show(True)

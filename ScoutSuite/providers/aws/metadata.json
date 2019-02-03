@@ -323,6 +323,15 @@
                     ]
                 }
             }
+        },
+        "kms": {
+            "resources": {
+                "keys": {
+                    "api_call": "list_keys",
+                    "response": "Keys",
+                    "path": "services.kms.regions.id.functions"
+                }
+            }
         }
     },
     "security": {
@@ -357,14 +366,6 @@
                 "password_policy": {
                     "cols": 1,
                     "path": "services.iam.password_policy"
-                }
-            }
-        },
-        "kms": {
-            "resources": {
-                "customer_master_keys": {
-                    "cols": 2,
-                    "path": "services.kms.customer_master_keys"
                 }
             }
         }
