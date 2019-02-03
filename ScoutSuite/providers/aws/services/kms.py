@@ -1,10 +1,4 @@
-from botocore.exceptions import ClientError
-from opinel.utils.aws import connect_service, handle_truncated_response
-from opinel.utils.console import printError, printException
-from opinel.utils.globals import manage_dictionary
-
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
-from ScoutSuite.utils import *
 
 
 class KMSRegionConfig(RegionConfig):
@@ -20,16 +14,16 @@ class KMSRegionConfig(RegionConfig):
         :param region:                  Name of the AWS region
         :param key:                     Key
         """
-        customer_master_keys = {}        
-        customer_master_keys['id'] = key.pop('KeyId')
-        customer_master_keys['arn'] = key.pop('KeyArn')
+
+        customer_master_key = {'id': key.pop('KeyId'), 'arn': key.pop('KeyArn')}
 
         api_client = api_clients[region]
-        rotation_status = api_client.get_key_rotation_status(KeyId=customer_master_keys['id'])
-        customer_master_keys['rotation_enabled'] = rotation_status['KeyRotationEnabled']
+        rotation_status = api_client.get_key_rotation_status(KeyId=customer_master_key['id'])
+        customer_master_key['rotation_enabled'] = rotation_status['KeyRotationEnabled']
 
-        self.keys = customer_master_keys
-        
+        self.keys[len(self.keys)] = customer_master_key
+
+
 ########################################
 # KMSConfig
 ########################################
