@@ -21,7 +21,7 @@ class StorageAccountsConfig(AzureBaseConfig):
 
         storage_account_dict = {}
 
-        storage_account_dict['id'] = self.get_non_provider_id(storage_account.id)
+        storage_account_dict['id'] = self.get_non_provider_id(storage_account.id.lower())
         storage_account_dict['name'] = storage_account.name
         storage_account_dict['https_traffic_enabled'] = storage_account.enable_https_traffic_only
         storage_account_dict['public_traffic_allowed'] = self._is_public_traffic_allowed(storage_account)
