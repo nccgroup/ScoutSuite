@@ -57,7 +57,7 @@ class AWSServicesConfig(BaseServicesConfig):
         self.elbv2 = ELBv2Config(metadata['compute']['elbv2'], thread_config)
         self.emr = EMRConfig(metadata['analytics']['emr'], thread_config)
         self.iam = IAMConfig(thread_config)
-        self.kms = KMSConfig(metadata['compute']['kms'], thread_config)
+        self.kms = KMSConfig(metadata['security']['kms'], thread_config)
         self.awslambda = LambdaConfig(metadata['compute']['awslambda'], thread_config)
         self.redshift = RedshiftConfig(metadata['database']['redshift'], thread_config)
         self.rds = RDSConfig(metadata['database']['rds'], thread_config)

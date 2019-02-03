@@ -323,15 +323,6 @@
                     ]
                 }
             }
-        },
-        "kms": {
-            "resources": {
-                "keys": {
-                    "api_call": "list_keys",
-                    "response": "Keys",
-                    "path": "services.kms.regions.id.keys"
-                }
-            }
         }
     },
     "security": {
@@ -366,6 +357,15 @@
                 "password_policy": {
                     "cols": 1,
                     "path": "services.iam.password_policy"
+                }
+            }
+        },        
+        "kms": {
+            "resources": {
+                "keys": {
+                    "api_call": "list_keys",
+                    "response": "Keys",
+                    "path": "services.kms.regions.id.keys"
                 }
             }
         }
