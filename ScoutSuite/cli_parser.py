@@ -220,9 +220,10 @@ class ScoutSuiteArgumentParser:
                                             help="Run Scout against a Microsoft Azure account")
 
         self.init_common_args(parser.add_argument_group('ScoutSuite parameters'))
-        parser = parser.add_argument_group('Azure parameters')
+        azure_parser = parser.add_argument_group('Authentication modes')
+        azure_auth_params = parser.add_argument_group('Authentication parameters')
 
-        azure_auth_modes = parser.add_mutually_exclusive_group(required=True)
+        azure_auth_modes = azure_parser.add_mutually_exclusive_group(required=True)
 
         azure_auth_modes.add_argument('--cli',
                                       action='store_true',
@@ -235,15 +236,43 @@ class ScoutSuiteArgumentParser:
         azure_auth_modes.add_argument('--service-principal',
                                       action='store_true',
                                       help='Run Scout Suite with an Azure Service Principal')
+        azure_auth_params.add_argument('--tenant',
+                                       action='store',
+                                       dest='tenant_id',
+                                       help='Tenant ID of the service principal')
+        azure_auth_params.add_argument('--subscription',
+                                       action='store',
+                                       dest='subscription_id',
+                                       help='Subscription ID of the service principal')
+        azure_auth_params.add_argument('--client-id',
+                                       action='store',
+                                       dest='client_id',
+                                       help='Client ID of the service principal')
+        azure_auth_params.add_argument('--client-secret',
+                                       action='store',
+                                       dest='client_secret',
+                                       help='Client of the service principal')
 
         azure_auth_modes.add_argument('--file-auth',
                                       action='store',
-                                      dest='auth_file',
+                                      type=argparse.FileType('r'),
+                                      dest='file_auth',
+                                      metavar="FILE",
                                       help='Run Scout Suite with the specified credential file')
 
         azure_auth_modes.add_argument('--user-credentials',
                                       action='store_true',
                                       help='Run Scout Suite with user credentials')
+        azure_auth_params.add_argument('--username',
+                                       action='store',
+                                       default=None,
+                                       dest='username',
+                                       help='Username of the Scout Suite account')
+        azure_auth_params.add_argument('--password',
+                                       action='store',
+                                       default=None,
+                                       dest='password',
+                                       help='Password of the Scout Suite account')
 
     @staticmethod
     def init_common_args(parser):

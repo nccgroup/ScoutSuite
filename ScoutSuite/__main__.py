@@ -48,6 +48,7 @@ def main(args):
     configPrintException(args.get('debug'))
 
     # Create a cloud provider object
+    # TODO fix this mess
     cloud_provider = get_provider(provider=args.get('module'),
                                   profile=args.get('profile'),
                                   project_id=args.get('project_id'),
@@ -90,10 +91,17 @@ def main(args):
                                                     user_account=args.get('user_account'),
                                                     service_account=args.get('service_account'),
                                                     cli=args.get('cli'),
-                                                    msi=args.get('azure_msi'),
-                                                    service_principal=args.get('azure_service_principal'),
-                                                    file_auth=args.get('azure_file_auth'),
-                                                    user_credentials=args.get('azure_user_credentials'))
+                                                    msi=args.get('msi'),
+                                                    service_principal=args.get('service_principal'),
+                                                    file_auth=args.get('file_auth'),
+                                                    user_credentials=args.get('user_credentials'),
+                                                    tenant_id=args.get('tenant_id'),
+                                                    subscription_id=args.get('subscription_id'),
+                                                    client_id=args.get('client_id'),
+                                                    client_secret=args.get('client_secret'),
+                                                    username=args.get('username'),
+                                                    password=args.get('password')
+                                                    )
 
         if not authenticated:
             return 42
