@@ -20,7 +20,7 @@ class GCPCredentials():
 
 class GCPProvider(BaseProvider):
     """
-    Implements provider for AWS
+    Implements provider for GCP
     """
 
     def __init__(self, project_id=None, folder_id=None, organization_id=None,
