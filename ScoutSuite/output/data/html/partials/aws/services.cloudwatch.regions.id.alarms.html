@@ -1,7 +1,7 @@
 
 <!-- Alarm partial -->
 <script id="services.cloudwatch.regions.id.alarms.partial" type="text/x-handlebars-template">
-    <div class="list-group-item active">
+    <div id="resource-name" class="list-group-item active">
         <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
     <div class="list-group-item">
@@ -40,8 +40,7 @@
 
 <!-- Single CloudWatch alarm template -->
 <script id="single_cloudwatch_alarm-template" type="text/x-handlebars-template">
-    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-    {{> services.cloudwatch.regions.id.alarms}}
+  {{> modal-template template='services.cloudwatch.regions.id.alarms' }}
 </script>
 <script>
     var single_cloudwatch_alarm_template = Handlebars.compile($("#single_cloudwatch_alarm-template").html());

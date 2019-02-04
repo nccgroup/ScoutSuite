@@ -1,7 +1,7 @@
 
     <!-- SNS queue partial -->
     <script id="services.sqs.regions.id.queues.partial" type="text/x-handlebars-template">
-        <div class="list-group-item active">
+        <div id="resource-name" class="list-group-item active">
           <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
@@ -22,8 +22,7 @@
 
     <!-- Single SNS queue template -->
     <script id="single_sqs_queue-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.sqs.regions.id.queues}}
+        {{> modal-template template='services.sqs.regions.id.queues'}}
     </script>
     <script>
         var single_sqs_queue_template = Handlebars.compile($("#single_sqs_queue-template").html());

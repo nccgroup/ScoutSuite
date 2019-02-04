@@ -1,3 +1,38 @@
+@import url("./modal.css");
+
+/* Bootstrap overrides */
+
+.btn-success,
+.btn-success:focus
+ {
+    color: #fff;
+    background-color: #23af44;
+    border-color: #23af44;
+}
+
+.btn-success:hover,
+.btn-success:active
+ {
+    color: #fff;
+    background-color: #1f9b3c;
+    border-color: #1f9b3c;
+}
+
+.btn-warning:focus {
+    color: #fff;
+    background-color: #F39C12;
+    border-color: #F39C12;
+}
+
+.btn-danger:focus {
+    color: #fff;
+    background-color: #E74C3C;
+    border-color: #E74C3C;
+}
+
+/* Scout Suite */
+
+
 .item-margin {
     margin-left: 25px;
 }
@@ -5,29 +40,34 @@
     margin-left: -25px !important;
 }
 
-.finding-hidden {
-    display: none;
+.finding-title {
+    background: #f5f5f5;
 }
-.finding-danger {
-    color:  red !important;
+
+.finding-badge {
+    margin-bottom: 1px;
+    margin-right: 8px;
+    display: inline-block;
+    border-radius: 100%;
 }
-.finding-title-danger {
-    background: red!important;
+
+.finding-badge-good:before { 
+    content: '\f058';
+    color: #23af44; 
 }
-.finding-warning {
-    color: orange !important;
+
+.finding-badge-warning:before { 
+    content: '\f06a';
+    color: #fdbe00; 
 }
-.finding-title-warning {
-    background: orange !important;
+
+.finding-badge-danger:before { 
+    content: '\f06a';
+    color:#ee293d; 
 }
-.finding-good {
-    color: green !important;
-}
-.finding-title-good {
-    background: green !important;
-}
-.finding-title-unknown {
-    background: #eee !important;
+.finding-badge-unknown:before {  
+    content: '\f111';
+    color: rgb(225, 225, 225);
 }
 
 ul.no-bullet {
@@ -67,42 +107,28 @@ ul.no-bullet {
     border-radius: 5px;
 }
 
-.plain-link a:link {
-    color: black !important;
-    text-decoration: none !important;
-}
-.plain-link a:visited {
-    color: black !important;
-    text-decoration: none !important;
-}
-.plain-link a:hover {
-    color: black !important;
-    text-decoration: none !important;
-}
+.plain-link a:link,
+.plain-link a:visited,
 .plain-link a:active {
-    color: black !important;
-    text-decoration: none !important;
-}
-.disabled-link a:link{
-    pointer-events: none;
-    cursor: default;
-}
-.disabled-link a:visited{
-    pointer-events: none;
-    cursor: default;
-}
-.disabled-link a:hover{
-    pointer-events: none;
-    cursor: default;
-}
-.disabled-link a:active{
-    pointer-events: none;
-    cursor: default;
+    color: black;
+    text-decoration: none;
 }
 
+.plain-link a:hover {
+    text-decoration: underline;
+}
+
+.disabled-link a:link,
+.disabled-link a:active,
+.disabled-link a:visited,
+.disabled-link a:hover {
+    color: rgb(110, 110, 110);
+    pointer-events: none;
+    cursor: default;
+}
 .active a{
-    text-decoration: none !important;
-    color: black !important;
+    text-decoration: none;
+    color: black;
 }
 
 .dropdown-submenu {
@@ -134,7 +160,6 @@ ul.no-bullet {
     border-width: 5px 0 5px 5px;
     border-left-color: #ccc;
     margin-top: 5px;
-    margin-right: -10px;
 }
 
 .dropdown-submenu:hover>a:after {
@@ -151,6 +176,14 @@ ul.no-bullet {
     -webkit-border-radius: 6px 0 6px 6px;
     -moz-border-radius: 6px 0 6px 6px;
     border-radius: 6px 0 6px 6px;
+}
+
+.dropdown-item.disabled, .dropdown-item:disabled {
+    color: #bbcdce;
+}
+
+.dropdown-item {
+    color: #647273;
 }
 
 .rationale-overlay {
@@ -244,5 +277,51 @@ input:checked + .slider:before {
 }
 
 .std-size {
+    font-size: 18px;
+}
+
+.finding {
+    position: relative;
+}
+
+.finding:before {
+    color: black;
+    content: "\f068"; /* Fontawesome '+' */
+    left:5px;
+    position:absolute;
+    top:0;
+}
+
+
+.collapsed.finding:before {
+    color: black;
+    content: "\f067"; /* Fontawesome '-' */
+    left:5px;
+    position:absolute;
+    top:0;
+}
+
+#last_run {
+    width: 100%;
+}
+
+#double-column-left .list-group {
+    margin: 3px 0;
+}
+
+#double-column-left .active a,
+#double-column-left .active .fa {
+    color: rgba(24, 188, 155);
+}
+
+#double-column-left .active .fa:hover {
+    color: rgba(24, 188, 155);
+}
+
+.finding-learn-more i {
+    font-size: 0.8em;
+}
+
+.finding_items {
     font-size: 18px;
 }

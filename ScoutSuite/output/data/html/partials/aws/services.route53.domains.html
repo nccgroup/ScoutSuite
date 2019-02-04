@@ -1,7 +1,7 @@
 
     <!-- Route53 domain partial -->
     <script id="services.route53.domains.partial" type="text/x-handlebars-template">
-        <div class="list-group-item active">
+        <div id="resource-name" class="list-group-item active">
             <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
@@ -23,8 +23,7 @@
 
     <!-- Single Route53 domain template -->
     <script id="services.route53.domains.template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.route53.domains}}
+        {{> modal-template template='services.route53.domains'}}
     </script>
     <script>
         var single_route53_domain_template = Handlebars.compile($("#services\\.route53\\.domains\\.template").html());

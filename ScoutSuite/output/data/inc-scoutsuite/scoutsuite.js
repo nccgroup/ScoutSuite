@@ -540,16 +540,16 @@ function findAndShowEC2Object(path, id) {
     var object = findEC2Object(run_results['services']['ec2'], entities, id);
     var etype = entities.pop();
     if (etype == 'instances') {
-        $('#overlay-details').html(single_ec2_instance_template(object));
+        showPopup(single_ec2_instance_template(object));
     } else if (etype == 'security_groups') {
-        $('#overlay-details').html(single_ec2_security_group_template(object));
+        showPopup(single_ec2_security_group_template(object));
     } else if (etype == 'vpcs') {
-        $('#overlay-details').html(single_vpc_template(object));
+        showPopup(single_vpc_template(object));
     } else if (etype == 'network_acls') {
         object['name'] = id;
-        $('#overlay-details').html(single_vpc_network_acl_template(object));
+        showPopup(single_vpc_network_acl_template(object));
     };
-    showPopup();
+    
 };
 
 /**
@@ -562,9 +562,8 @@ function findAndShowEC2ObjectByAttr(path, attributes) {
     var object = findEC2ObjectByAttr(run_results['services']['ec2'], entities, attributes);
     var etype = entities.pop();
     if (etype == 'security_groups') {
-        $('#overlay-details').html(single_ec2_security_group_template(object));
+        showPopup(single_ec2_security_group_template(object));
     };
-    showPopup();
 };
 
 /**
@@ -572,8 +571,7 @@ function findAndShowEC2ObjectByAttr(path, attributes) {
  * @param data
  */
 function showEC2Instance2(data) {
-    $('#overlay-details').html(single_ec2_instance_template(data));
-    showPopup();
+    showPopup(single_ec2_instance_template(data));
 };
 
 /**
@@ -584,8 +582,7 @@ function showEC2Instance2(data) {
  */
 function showEC2Instance(region, vpc, id) {
     var data = run_results['services']['ec2']['regions'][region]['vpcs'][vpc]['instances'][id];
-    $('#overlay-details').html(single_ec2_instance_template(data));
-    showPopup();
+    showPopup(single_ec2_instance_template(data));
 };
 
 /**
@@ -596,8 +593,7 @@ function showEC2Instance(region, vpc, id) {
  */
 function showEC2SecurityGroup(region, vpc, id) {
     var data = run_results['services']['ec2']['regions'][region]['vpcs'][vpc]['security_groups'][id];
-    $('#overlay-details').html(single_ec2_security_group_template(data));
-    showPopup();
+    showPopup(single_ec2_security_group_template(data));
 };
 
 /**
@@ -632,8 +628,7 @@ function showObject(path, attr_name, attr_value) {
 
     resource = makeResourceTypeSingular(resource_type);
     template = 'single_' + resource + '_template';
-    $('#overlay-details').html(window[template](data));
-    showPopup();
+    showPopup(window[template](data));
 };
 
 /**
@@ -684,8 +679,7 @@ function showIAMInlinePolicy(iam_entity_type, iam_entity_name, policy_id) {
  * @param data
  */
 function showIAMPolicy(data) {
-    $('#overlay-details').html(single_iam_policy_template(data));
-    showPopup();
+    showPopup(single_iam_policy_template(data));
     var id = '#iam_policy_details-' + data['report_id'];
     $(id).toggle();
 };
@@ -696,8 +690,7 @@ function showIAMPolicy(data) {
  */
 function showS3Bucket(bucket_name) {
     var data = run_results['services']['s3']['buckets'][bucket_name];
-    $('#overlay-details').html(single_s3_bucket_template(data));
-    showPopup();
+    showPopup(single_s3_bucket_template(data));
 };
 
 /**
@@ -709,26 +702,16 @@ function showS3Object(bucket_id, key_id) {
     var data = run_results['services']['s3']['buckets'][bucket_id]['keys'][key_id];
     data['key_id'] = key_id;
     data['bucket_id'] = bucket_id;
-    $('#overlay-details').html(single_s3_object_template(data));
-    showPopup();
+    showPopup(single_s3_object_template(data));
 };
 
 /**
  *
  */
-function showPopup() {
-    $("#overlay-background").show();
-    $("#overlay-details").show();
+function showPopup(content) {
+    $('#modal-container').html(content);
+    $('#modal-container').modal();
 };
-
-/**
- *
- */
-function hidePopup() {
-    $("#overlay-background").hide();
-    $("#overlay-details").hide();
-};
-
 
 /**
  * Set up dashboards and dropdown menus
@@ -776,12 +759,19 @@ function load_metadata() {
 /**
  * Show About Scout Suite div
  */
-function about() {
-    hideAll();
-    showRow('about');
-    $('#findings_download_button').hide();
-    $('#section_title-h2').text('');
+function showAbout() {
+    $('#modal-container').html(about_scoutsuite_template());
+    $('#modal-container').modal();
 };
+
+
+/**
+ * 
+ */
+function showLastRunDetails() {
+    $('#modal-container').html(last_run_details_template(run_results));
+    $('#modal-container').modal();
+}
 
 /**
  * Show main dashboard
@@ -796,25 +786,6 @@ function show_main_dashboard() {
     $('#section_title-h2').text('');
     // Remove URL hash
     history.pushState("", document.title, window.location.pathname + window.location.search);
-};
-
-/**
- * Remove everything from "#" in URL
- */
-function removeHash() {
-    var scrollV, scrollH, loc = window.location;
-    if ("pushState" in history)
-        history.pushState("", document.title, loc.pathname + loc.search);
-    else {
-        // Prevent scrolling by storing the page's current scroll offset
-        scrollV = document.body.scrollTop;
-        scrollH = document.body.scrollLeft;
-        // Remove hash value
-        loc.hash = "";
-        // Restore the scroll offset, should be flicker free
-        document.body.scrollTop = scrollV;
-        document.body.scrollLeft = scrollH;
-    };
 };
 
 /**

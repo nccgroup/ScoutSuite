@@ -1,0 +1,26 @@
+<script id="about_scoutsuite-template" type="text/x-handlebars-template">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">About Scout Suite</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row list-group-item">
+                    <p>Scout Suite is an open-source tool released by <a href="https://www.nccgroup.trust" rel="author" target="_blank">NCC Group</a>.</p>
+                    <p>Use the top navigation bar to review the configuration of the supported cloud provider services.</p>
+                    <p>
+                        For more information about Scout Suite, please check out the project's page on
+                        <a href="https://github.com/nccgroup/ScoutSuite" target="_blank">GitHub</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script>
+    var about_scoutsuite_template = Handlebars.compile($("#about_scoutsuite-template").html());
+</script>

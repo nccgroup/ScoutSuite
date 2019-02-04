@@ -1,7 +1,7 @@
 
     <!-- S3 bucket partial -->
     <script id="services.s3.buckets.partial" type="text/x-handlebars-template">
-        <div class="list-group-item active">
+        <div id="resource-name" class="list-group-item active">
           <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
@@ -68,8 +68,7 @@
 
     <!-- Single S3 bucket template -->
     <script id="single_s3_bucket-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.s3.buckets}}
+        {{> modal-template template='services.s3.buckets' }}
     </script>
     <script>
         var single_s3_bucket_template = Handlebars.compile($("#single_s3_bucket-template").html());

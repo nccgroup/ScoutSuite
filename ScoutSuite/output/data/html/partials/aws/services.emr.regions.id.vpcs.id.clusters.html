@@ -1,7 +1,7 @@
 
     <!-- EMR cluster partial -->
     <script id="services.emr.regions.id.vpcs.id.clusters.partial" type="text/x-handlebars-template">
-        <div class="list-group-item active">
+        <div id="resource-name" class="list-group-item active">
             <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
@@ -52,8 +52,7 @@
 
     <!-- Single EMR cluster template -->
     <script id="single_emr_cluster-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.emr.regions.id.vpcs.id.clusters}}
+        {{> modal-template template='services.emr.regions.id.vpcs.id.clusters'}}
     </script>
     <script>
         var single_emr_cluster_template = Handlebars.compile($("#single_emr_cluster-template").html());
