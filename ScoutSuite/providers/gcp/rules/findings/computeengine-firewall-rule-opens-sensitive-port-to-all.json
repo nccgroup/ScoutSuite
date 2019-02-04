@@ -4,6 +4,7 @@
   "path": "computeengine.firewalls.id.allowed_traffic.id.ports.id",
   "display_path": "computeengine.firewalls.id",
   "conditions": [ "and",
+    [ "computeengine.firewalls.id.action", "equal", "allowed"],
     [ "computeengine.firewalls.id.disabled", "notTrue", "" ],
     [ "computeengine.firewalls.id.direction", "equal", "INGRESS" ],
     [ "computeengine.firewalls.id.source_ranges", "containAtLeastOneOf", "0.0.0.0/0" ],
