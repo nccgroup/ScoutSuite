@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import argparse
 
 from opinel.utils.cli_parser import OpinelArgumentParser
 
@@ -204,7 +205,10 @@ class ScoutSuiteArgumentParser(SharedArgumentParser):
                                  action='store',
                                  help='ID of the GCP Organization to analyze')
 
-        azure_auth_modes = self.parser.add_mutually_exclusive_group(required="azure" in sys.argv)
+        azure_parser = self.parser.add_argument_group('Azure authentication modes')
+        azure_auth_params = self.parser.add_argument_group('Azure authentication parameters')
+
+        azure_auth_modes = azure_parser.add_mutually_exclusive_group(required="azure" in sys.argv)
 
         azure_auth_modes.add_argument('--azure-cli',
                                       action='store_true',
@@ -217,10 +221,40 @@ class ScoutSuiteArgumentParser(SharedArgumentParser):
                                       help='Run Scout Suite with an Azure Service Principal')
         azure_auth_modes.add_argument('--azure-file-auth',
                                       action='store',
+                                      type=argparse.FileType('r'),
+                                      metavar="FILE",
                                       help='Run Scout Suite with the specified credential file')
         azure_auth_modes.add_argument('--azure-user-credentials',
                                       action='store_true',
                                       help='Run Scout Suite with user credentials')
+
+        azure_auth_params.add_argument('--tenant',
+                                       action='store',
+                                       dest='tenant_id',
+                                       help='Tenant ID of the Azure service principal')
+        azure_auth_params.add_argument('--subscription',
+                                       action='store',
+                                       dest='subscription_id',
+                                       help='Subscription ID of the Azure service principal')
+        azure_auth_params.add_argument('--client-id',
+                                       action='store',
+                                       dest='client_id',
+                                       help='Client ID of the Azure service principal')
+        azure_auth_params.add_argument('--client-secret',
+                                       action='store',
+                                       dest='client_secret',
+                                       help='Client secret of the Azure service principal')
+
+        azure_auth_params.add_argument('--azure-username',
+                                       action='store',
+                                       default=None,
+                                       dest='azure_username',
+                                       help='Username of the Azure account')
+        azure_auth_params.add_argument('--azure-password',
+                                       action='store',
+                                       default=None,
+                                       dest='azure_password',
+                                       help='Password of the Azure account')
 
     def parse_args(self, args=None):
         args = self.parser.parse_args(args)

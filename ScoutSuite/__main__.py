@@ -99,7 +99,14 @@ def main(passed_args=None):
                                                     azure_msi=args.azure_msi,
                                                     azure_service_principal=args.azure_service_principal,
                                                     azure_file_auth=args.azure_file_auth,
-                                                    azure_user_credentials=args.azure_user_credentials)
+                                                    azure_user_credentials=args.azure_user_credentials,
+                                                    azure_tenant_id=args.tenant_id,
+                                                    azure_subscription_id=args.subscription_id,
+                                                    azure_client_id=args.client_id,
+                                                    azure_client_secret=args.client_secret,
+                                                    azure_username=args.azure_username,
+                                                    azure_password=args.azure_password
+                                                    )
 
         if not authenticated:
             return 42
