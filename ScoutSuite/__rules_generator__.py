@@ -14,7 +14,6 @@ except Exception as e:
     print(e)
     sys.exit(42)
 
-from ScoutSuite.cli_parser import RulesArgumentParser
 from ScoutSuite.providers import get_provider
 from ScoutSuite.core.ruleset import Ruleset
 from ScoutSuite.output.html import RulesetGenerator
@@ -24,12 +23,7 @@ from ScoutSuite.output.html import RulesetGenerator
 ##### Main
 ########################################
 
-def main():
-
-    # Parse arguments
-    parser = RulesArgumentParser()
-    args = parser.parse_args()
-
+def main(args):
     # Configure the debug level
     configPrintException(args.debug)
 
@@ -39,7 +33,8 @@ def main():
     #     return 42
 
     # Load ruleset
-    ruleset = Ruleset(filename = args.base_ruleset, name = args.ruleset_name, rules_dir = args.rules_dir, ruleset_generator = True)
+    ruleset = Ruleset(filename=args.base_ruleset, name=args.ruleset_name, rules_dir=args.rules_dir,
+                      ruleset_generator=True)
 
     # Generate the HTML generator
     ruleset_generator = RulesetGenerator(args.ruleset_name, args.generator_dir)

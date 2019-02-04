@@ -28,7 +28,7 @@ from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.providers import get_provider
 
 
-def main(passed_args=None):
+def main(args):
     """
     Main method that runs a scan
 
@@ -41,21 +41,14 @@ def main(passed_args=None):
     # if not check_requirements(requirements_file_path):
     #     return 42
 
-    # Parse arguments
-    parser = ScoutSuiteArgumentParser()
-
-    if passed_args:
-        args = parser.parse_args(passed_args)
-    else:
-        args = parser.parse_args()
-
+    # Get the dictionnary to get None instead of a crash
     args = args.__dict__
 
     # Configure the debug level
     configPrintException(args.get('debug'))
 
     # Create a cloud provider object
-    cloud_provider = get_provider(provider=args.get('provider'),
+    cloud_provider = get_provider(provider=args.get('module'),
                                   profile=args.get('profile'),
                                   project_id=args.get('project_id'),
                                   folder_id=args.get('folder_id'),
@@ -85,7 +78,7 @@ def main(passed_args=None):
         report_file_name = 'azure'
 
     # Create a new report
-    report = Scout2Report(args.get('provider'), report_file_name, args.get('report_dir'), args.get('timestamp'))
+    report = Scout2Report(args.get('module'), report_file_name, args.get('report_dir'), args.get('timestamp'))
 
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
@@ -132,7 +125,7 @@ def main(passed_args=None):
 
     # Analyze config
     finding_rules = Ruleset(environment_name=args.get('profile'),
-                            cloud_provider=args.get('provider'),
+                            cloud_provider=args.get('module'),
                             filename=args.get('ruleset'),
                             ip_ranges=args.get('ip_ranges'),
                             aws_account_id=cloud_provider.aws_account_id)
@@ -140,7 +133,7 @@ def main(passed_args=None):
     processing_engine.run(cloud_provider)
 
     # Create display filters
-    filter_rules = Ruleset(cloud_provider=args.get('provider'),
+    filter_rules = Ruleset(cloud_provider=args.get('module'),
                            filename='filters.json',
                            rule_type='filters',
                            aws_account_id=cloud_provider.aws_account_id)
