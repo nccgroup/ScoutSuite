@@ -5,7 +5,7 @@ import os
 import warnings
 import google.auth
 import googleapiclient
-import google.oauth2.service_account
+#import google.oauth2.service_account
 from opinel.utils.console import printError, printException
 
 from ScoutSuite.providers.base.provider import BaseProvider
@@ -24,8 +24,7 @@ class GCPProvider(BaseProvider):
     Implements provider for GCP
     """
 
-    def __init__(self, project_id=None, folder_id=None, organization_id=None, service_account=False,
-                 report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4, **kwargs):
+    def __init__(self, project_id=None, folder_id=None, organization_id=None, report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4, **kwargs):
 
         self.profile = 'gcp-profile'  # TODO this is aws-specific
 
@@ -38,8 +37,6 @@ class GCPProvider(BaseProvider):
         self.project_id = project_id
         self.folder_id = folder_id
         self.organization_id = organization_id
-
-        self.service_account = service_account
 
         self.services_config = GCPServicesConfig
 
@@ -57,15 +54,9 @@ class GCPProvider(BaseProvider):
             # disable GCP warning about using User Accounts
             warnings.filterwarnings("ignore", "Your application has authenticated using end user credentials")
             pass  # Nothing more to do
-        elif service_account: # This is fine for now except we've added a boolean property to the GCPProvider for service_accounts
+        elif service_account:
             client_secrets_path = os.path.abspath(key_file)  # TODO this is probably wrong
-            # maybe we should add a flag if using a service_account type
             os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = client_secrets_path
-            # There should be some other differentiating factor but maybe for know its enough to look for a service account credential
-            # and a flag to search all projects
-            # no project_id which should be fine
-
-            self.service_account = True
         else:
             printError('Failed to authenticate to GCP - no supported account type')
             return False
@@ -96,14 +87,12 @@ class GCPProvider(BaseProvider):
 
                 elif self.service_account: # We know that project_id hasn't been provided and that we have a service account
                     self.projects = self._get_projects(parent_type='service-account',
-                                                       parent_id=self.project_id,
-                                                       service_account=self.service_account)
+                                                       parent_id=self.project_id)
                     self.aws_account_id = self.credentials.service_account_email # FIXME this is for AWS
                     self.profile = self.credentials.service_account_email # FIXME this is for AWS
 
                 else:
-                    # FIXME this will fail if no default project is set in gcloud config
-                    # This is caused because html.py is looking for a profile to build the report
+                    # FIXME this will fail if no default project is set in gcloud config. This is caused because html.py is looking for a profile to build the report
                     self.project_id = project_id
                     self.projects = self._get_projects(parent_type='project',
                                                        parent_id=self.project_id)
@@ -143,7 +132,7 @@ class GCPProvider(BaseProvider):
 
         super(GCPProvider, self).preprocessing()
 
-    def _get_projects(self, parent_type, parent_id, service_account=False):
+    def _get_projects(self, parent_type, parent_id):
         """
         Returns all the projects in a given organization or folder. For a project_id it only returns the project
         details.
