@@ -77,7 +77,7 @@ Handlebars.registerHelper('list_permissions', function(permissions) {
 });
 
 Handlebars.registerHelper('s3_grant_2_icon', function(value) {
-    return '<i class="' + ((value == true) ? 'glyphicon glyphicon-ok' : '') +'"></i>';
+    return '<i class="' + ((value == true) ? 'fa fa-check' : '') +'"></i>';
 });
 
 Handlebars.registerHelper('good_bad_icon', function(finding, bucket_id, key_id, suffix) {
@@ -85,15 +85,15 @@ Handlebars.registerHelper('good_bad_icon', function(finding, bucket_id, key_id, 
     var index = run_results['services']['s3']['findings'][finding]['items'].indexOf(key_path);
     var level = run_results['services']['s3']['findings'][finding]['level'];
     if (index > -1) {
-        return '<i class="glyphicon glyphicon-remove finding-' + level +'"></i>';
+        return '<i class="fa fa-times finding-' + level +'"></i>';
     } else {
         var key_details = run_results['services']['s3']['buckets'][bucket_id]['keys'][key_id];
         if ((finding == 's3-object-acls-mismatch-bucket') && ('grantees' in key_details)) {
-            return '<i class="glyphicon glyphicon-ok finding-good"></i>';
+            return '<i class="fa fa-check finding-good"></i>';
         } else if ((finding == 's3-object-unencrypted') && ('ServerSideEncryption' in key_details)) {
-            return '<i class="glyphicon glyphicon-ok finding-good"></i>';
+            return '<i class="fa fa-check finding-good"></i>';
         } else {
-            return '<i class="glyphicon glyphicon-question-sign"></i>';
+            return '<i class="fa fa-question-circle"></i></i>';
         }
     } 
 });
@@ -193,8 +193,19 @@ Handlebars.registerHelper('find_ec2_object_attribute', function(path, id, attrib
     return findEC2ObjectAttribute(run_results['services']['ec2'], path, id, attribute);
 });
 
-Handlebars.registerHelper('format_date', function(timestamp) {
-    return new Date(timestamp * 1000).toString();
+Handlebars.registerHelper('format_date', function(time) {
+    if(typeof time === 'number') {
+        return new Date(time * 1000).toString();
+    }
+    else if(typeof time === 'string') {
+        return new Date(time);
+    }
+    else if(!time || time === null) {
+        return 'No date available'
+    }
+    else {
+        return 'Invalid date format';
+    }
 });
 
 Handlebars.registerHelper('make_title', function(title) {
@@ -408,6 +419,14 @@ Handlebars.registerHelper('escape_dots', function() {
     return arguments[0].replace(/\./g, '\\.');
 });
 
+/**
+ * Converts a boolean value to 'Enabled' or 'Disabled'. If the value is undefined or null, then it returns 'Unknown'.
+ */
+Handlebars.registerHelper('convert_bool_to_enabled', function (value) {
+    if (value === undefined || value === null) return 'Unknown';
+    return value ? 'Enabled' : 'Disabled';
+});
+
 
 /*********************/
 /* Ruleset generator */
@@ -446,3 +465,4 @@ Handlebars.registerHelper('get_arg_name', function(rule_filename, arg_index) {
         return '';
     }
 });
+

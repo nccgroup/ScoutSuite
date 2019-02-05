@@ -1,7 +1,7 @@
 
   <!-- IAM user partial -->
   <script id="services.iam.users.partial" type="text/x-handlebars-template">
-    <div class="list-group-item active">
+    <div id="resource-name" class="list-group-item active">
       <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
     <div class="list-group-item">
@@ -26,28 +26,28 @@
       </ul>
       <p class="list-group-item-text item-margin">
         <span id="iam.users.{{id}}.multiple_active_api_keys" class="finding-hidden">
-          <i class="glyphicon glyphicon-warning-sign"></i> Review the need for multiple active access keys
+          <i class="fa fa-exclamation-triangle"></i> Review the need for multiple active access keys
         </span>
       </p>
       <p class="list-group-item-text item-margin">
         <span id="iam.users.{{id}}.password_and_keys" class="finding-hidden">
-          <i class="glyphicon glyphicon-warning-sign"></i> Review the need for password-based and key-based authentication
+          <i class="fa fa-exclamation-triangle"></i> Review the need for password-based and key-based authentication
         </span>
       </p>
       <p class="list-group-item-text item-margin">
         <span id="iam.users.{{id}}.member_of_common_group" class="finding-hidden">
-          <i class="glyphicon glyphicon-warning-sign"></i> User does not belong to the global/mandatory group
+          <i class="fa fa-exclamation-triangle"></i> User does not belong to the global/mandatory group
         </span>
       </p>
       <p class="list-group-item-text item-margin">
         <span id="iam.users.{{id}}.member_of_category_group" class="finding-hidden">
-          <i class="glyphicon glyphicon-warning-sign"></i> User does not belong to a category group
+          <i class="fa fa-exclamation-triangle"></i> User does not belong to a category group
         </span>
       </p>
 
     </div>
     <div class="list-group-item">
-      <h4 class="list-group-item-heading">Groups<span class="badge pull-right {{#if groups.length}}btn-info{{/if}}">{{groups.length}}</span></h4>
+      <h4 class="list-group-item-heading">Groups<span class="badge float-right {{#if groups.length}}btn-info{{/if}}">{{groups.length}}</span></h4>
       <ul class="no-bullet">
       {{#each groups}}
         <li class="list-group-item-text"><a href="javascript:showObject('services.iam.groups', 'name', '{{this}}')">{{this}}</a></li>
@@ -63,8 +63,7 @@
 
     <!-- Single IAM user template -->
     <script id="services.iam.users.template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.iam.users}}
+        {{> modal-template template='services.iam.users'}}
     </script>
     <script>
         var single_iam_user_template = Handlebars.compile($("#services\\.iam\\.users\\.template").html());

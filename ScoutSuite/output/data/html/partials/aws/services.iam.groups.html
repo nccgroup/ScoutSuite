@@ -1,7 +1,7 @@
 
     <!-- IAM group partial -->
     <script id="services.iam.groups.partial" type="text/x-handlebars-template">
-        <div class="list-group-item active">
+        <div id="resource-name" class="list-group-item active">
           <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
@@ -12,9 +12,9 @@
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Members
               {{#if users}}
-                <a class="accordion-toggle" data-toggle="collapse" href="#iam\.groups\.{{id}}\.users"><span class="badge pull-right btn-info">{{users.length}}</span></a>
+                <a class="accordion-toggle" data-toggle="collapse" href="#iam\.groups\.{{id}}\.users"><span class="badge float-right btn-info">{{users.length}}</span></a>
               {{else}}
-                <span class="badge pull-right">{{users.length}}</span>
+                <span class="badge float-right">{{users.length}}</span>
               {{/if}}
             </h4>
             <div id="iam.groups.{{id}}.users" class="accordion-body collapse">
@@ -37,8 +37,7 @@
 
     <!-- Single IAM group template -->
     <script id="services.iam.groups.template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.iam.groups}}
+        {{> modal-template template='services.iam.groups'}}
     </script>
     <script>
         var single_iam_group_template = Handlebars.compile($("#services\\.iam\\.groups\\.template").html());

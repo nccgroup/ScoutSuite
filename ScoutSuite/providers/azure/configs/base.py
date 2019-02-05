@@ -16,10 +16,7 @@ class AzureBaseConfig(BaseConfig):
         super(AzureBaseConfig, self).__init__(thread_config)
 
     def _is_provider(self, provider_name):
-        if provider_name == 'azure':
-            return True
-        else:
-            return False
+        return provider_name == 'azure'
 
     def _get_method(self, api_client, target_type, list_method_name):
         """

@@ -1,0 +1,39 @@
+<!-- Storage Accounts partial -->
+<script id="services.storageaccounts.storage_accounts.partial" type="text/x-handlebars-template">
+    <div class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Storage Account Name: <span id="storageaccounts.storage_accounts.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Public traffic: <span id="storageaccounts.storage_accounts.{{@key}}.public_traffic_allowed">{{ convert_bool_to_enabled public_traffic_allowed }}</span></div>
+        <div class="list-group-item-text item-margin">Access Key Rotated: <span id="monitor.activity_logs.storage_accounts.{{@key}}.access_keys_rotated">{{ get_value_at 'services' 'monitor' 'activity_logs' 'storage_accounts' @key 'access_keys_rotated' }}</span></div>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Blob Containers</h4>
+        <div class="list-group-item-text item-margin">
+        {{#each blob_containers}}
+            {{@key}}
+            <div class="list-group-item-text item-margin">
+            Public access: <span id="storageaccounts.storage_accounts.{{@../key}}.blob_containers.{{@key}}.public_access_allowed">{{ convert_bool_to_enabled public_access_allowed }}</span>
+            </div>
+        {{/each}}
+        </div>
+    </div>
+
+</script>
+
+<script>
+    Handlebars.registerPartial("services.storageaccounts.storage_accounts", $("#services\\.storageaccounts\\.storage_accounts\\.partial").html());
+</script>
+
+<!-- Single Storage Accounts template -->
+<script id="single_storageaccounts_storage_accounts-template" type="text/x-handlebars-template">
+    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+    {{> services.storageaccounts.storage_accounts}}
+</script>
+<script>
+    var single_storageaccounts_storage_accounts_template = Handlebars.compile($("#single_storageaccounts_storage_accounts-template").html());
+</script>

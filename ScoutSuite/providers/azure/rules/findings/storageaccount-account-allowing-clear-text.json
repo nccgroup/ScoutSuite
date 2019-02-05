@@ -1,8 +1,9 @@
 {
     "description": "HTTPS Not Enforced",
     "path": "storageaccounts.storage_accounts.id",
+    "rationale": "You should ensure that secure transfer is required to access your storage accounts. See CIS 3.1.",
     "dashboard_name": "Accounts",
     "conditions": [ "and",
-        [ "storageaccounts.storage_accounts.id.https_traffic_enabled", "equal", "Disabled" ]
+        [ "storageaccounts.storage_accounts.id.https_traffic_enabled", "false", "" ]
     ]
 }

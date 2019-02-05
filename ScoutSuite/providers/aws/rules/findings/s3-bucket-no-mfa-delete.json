@@ -3,8 +3,8 @@
     "description": "Versioned bucket without MFA delete",
     "path": "s3.buckets.id",
     "conditions": [ "and",
-        [ "s3.buckets.id.versioning_status", "equal", "Enabled" ],
-        [ "s3.buckets.id.version_mfa_delete", "equal", "Disabled" ]
+        [ "s3.buckets.id.versioning_status_enabled", "true", "" ],
+        [ "s3.buckets.id.version_mfa_delete_enabled", "false", "" ]
     ],
     "id_suffix": "mfa_delete"
 }

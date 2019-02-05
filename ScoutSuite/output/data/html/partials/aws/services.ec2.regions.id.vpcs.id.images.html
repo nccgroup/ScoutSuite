@@ -1,0 +1,26 @@
+<!-- AIMs partial -->
+<script id="services.ec2.regions.id.images.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4>Information</h4>
+        <ul>
+            <li class="list-group-item-text">Id: {{id}}</li>
+            <li class="list-group-item-text">Architecture: {{get_value_at 'services.ec2.regions' region 'images' id 'Architecture'}}</li>
+            <li class="list-group-item-text">Is public: <span id="ec2.regions.{{region}}.images.{{id}}.image_is_public">{{get_value_at 'services.ec2.regions' region 'images' id 'Public'}}</span></li>
+        </ul>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.ec2.regions.id.images", $("#services\\.ec2\\.regions\\.id\\.images\\.partial").html());
+</script>
+
+<!-- Single AIM template -->
+<script id="single_ec2_image-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.ec2.regions.id.images' }}
+</script>
+<script>
+    var single_ec2__template = Handlebars.compile($("#single_ec2_image-template").html());
+</script>

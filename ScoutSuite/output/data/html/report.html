@@ -15,7 +15,10 @@
     <!-- Bootstrap core CSS -->
     <link href="inc-bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap theme -->
-    <link href="inc-bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link id="theme" href="inc-bootstrap/css/bootstrap-light.min.css" rel="stylesheet">
+    
+    <!-- Fontawesome CSS -->
+    <link id="theme" href="inc-fontawesome/css/all.min.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -24,7 +27,7 @@
     <![endif]-->
 
     <!-- jQuery -->
-    <script src="inc-jquery/jquery-1.11.2.min.js"></script>
+    <script src="inc-jquery/jquery-3.3.1.min.js"></script>
 
     <!-- Handlebars -->
     <script src="inc-handlebars/handlebars-v3.0.0.js"></script>
@@ -42,7 +45,7 @@
     <!-- Fixed navbar -->
     <!------------------>
 
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation" id="metadata.list"></div>
+    <div class="navbar fixed-top navbar-expand-lg bg-primary" role="navigation" id="metadata.list"></div>
 
     <!--------------->
     <!-- Container -->
@@ -51,20 +54,15 @@
     <div class="container theme-showcase" id="container-user">
 
         <!-- Empty header -->
-        <div class="page-header">
-        </div>
-
-        <!-- Overlay divs used to show entity details in a pop up fashion -->
-        <div id="overlay-background" class="overlay-bg"></div>
-        <div id="overlay-details" class="overlay col-sm-6"></div>
+        <div class="spacer"></div>
 
         <!-- AWS account ID -->
-        <div class="row" id="aws_account_id.details" style="margin-bottom: -10px">
+        <div class="row justify-content-center" id="aws_account_id.details">
             <h4>
-                <div class="list-group-item-text center" style="text-align: center" onclick="toggle_element('scout2_display_account_id_on_all_pages_form')" >
+                <div class="list-group-item-text std-size" onclick="toggle_element('scout2_display_account_id_on_all_pages_form')" >
                     <span id="aws_account_id"></span>
                 </div>
-                <div id="scout2_display_account_id_on_all_pages_form" class="list-group-item-text center" style="text-align: center; display: none">
+                <div id="scout2_display_account_id_on_all_pages_form" class="list-group-item-text center std-size" style="text-align: center; display: none">
                     <label><input id="scout2_display_account_id_on_all_pages" type="checkbox" value="">Display account ID on all pages</label>
                 </div>
             </h4>
@@ -75,40 +73,23 @@
         <div id="section_title-div" style="display:flex;position:relative;">
             <h2 id="section_title-h2"></h2>
             <div id="findings_download_button" style="display:none;position:absolute;right:0;transform:translateY(+50%);">
-                <button id="findings_download_csv_button" type="button" class="btn btn-default"><span class="glyphicon glyphicon-download-alt"></span>CSV</button>
-                <button id="findings_download_json_button" type="button" class="btn btn-default"><span class="glyphicon glyphicon-download-alt"></span>JSON</button>
+                <button id="findings_download_csv_button" type="button" class="btn btn-secondary"><i class="fa fa-download"></i>CSV</button>
+                <button id="findings_download_json_button" type="button" class="btn btn-secondary"><i class="fa fa-download"></i>JSON</button>
             </div>
         </div>
 
         <!-- One column container -->
         <div class="row">
-            <div class="col-sm-12" id="single-column">
+            <div class="col-sm-12 w-100" id="single-column">
             </div>
 
             <!-- Two columns container -->
-            <div class="row">
-                <div class="col-sm-4" id="double-column-left"></div>
-                <div class="col-sm-8" id="double-column-right"></div>
+            <div class="row w-100">
+                <div class="col-sm-4 w-100 text-overflow" id="double-column-left"></div>
+                <div class="col-sm-8 w-100 pr-0" id="double-column-right"></div>
             </div>
 
             <!-- PLACEHOLDER -->
-
-            <!-- About Scout -->
-            <div class="row" id="about.details">
-                <div class="list-group">
-                    <div class="row list-group-item active">
-                        About Scout Suite
-                    </div>
-                    <div class="row list-group-item">
-                        <p>Scout Suite is an open-source tool released by <a href="https://www.nccgroup.trust" rel="author" target="_blank">NCC Group</a>.</p>
-                        <p>Use the top navigation bar to review the configuration of the supported cloud provider services.</p>
-                        <p>
-                            For more information about Scout Suite, please check out the project's page on
-                            <a href="https://github.com/nccgroup/ScoutSuite" target="_blank">GitHub</a>.
-                        </p>
-                    </div>
-                </div>
-            </div>
 
             <!-- Please wait -->
             <div class="row" id="please_wait.details">
@@ -127,40 +108,31 @@
             <!-- About-run dashboard -->
             <script id="last_run.details.template" type="text/x-handlebars-template">
                 <h4>
-                    <div class="row" id="last_run.details">
+                    <div class="row std-size" id="last_run.details">
                         <div class="list-group-item active">
                             <div class="list-group-item-heading">Dashboard</div>
                         </div>
-                        <div class="list-group-item">
-                            <div class="list-group-item-text item-margin">
-                                <div class="list-group-item-text" style="text-align: center">&nbsp;</div>
-                                <div class="list-group-item">Service
-                                    <div class="col-sm-2 pull-right" style="text-align: center">Checks</div>
-                                    <div class="col-sm-2 pull-right" style="text-align: center">Findings</div>
-                                    <div class="col-sm-2 pull-right" style="text-align: center">Rules</div>
-                                    <div class="col-sm-2 pull-right" style="text-align: center">Resources</div>
+                        <div class="accordion" id="last_run">
+                            <a class="card">
+                                <div class="card-header">Service
+                                    <div class="col-sm-2 float-right" style="text-align: center">Checks</div>
+                                    <div class="col-sm-2 float-right" style="text-align: center">Findings</div>
+                                    <div class="col-sm-2 float-right" style="text-align: center">Rules</div>
+                                    <div class="col-sm-2 float-right" style="text-align: center">Resources</div>
                                 </div>
-                                {{#each items.summary}}
-                                <a href="#services.{{@key}}.findings" style="color: black !important;">
-                                    <div class="list-group-item finding-title-{{dashboard_color max_level checked_items flagged_items}}">{{make_title @key}}
-                                        <div class="col-sm-2 pull-right" style="text-align: center">{{checked_items}}</div>
-                                        <div class="col-sm-2 pull-right" style="text-align: center">{{flagged_items}}</div>
-                                        <div class="col-sm-2 pull-right" style="text-align: center">{{rules_count}}</div>
-                                        <div class="col-sm-2 pull-right" style="text-align: center">{{resources_count}}</div>
-                                    </div>
-                                </a>
-                                {{/each}}
-                            </div>
-                            <div class="list-group-item-text item-margin">&nbsp;</div>
-                            <div class="list-group-item-text item-margin">Last run:
-                                <div class="list-group-item-text item-margin">Time: {{items.time}}</div>
-                                <div class="list-group-item-text item-margin">Command: <code>{{items.cmd}}</code></div>
-                            </div>
-                            <div class="list-group-item-text item-margin">&nbsp;</div>
-                            <div class="list-group-item-text item-margin">Report generated with Scout Suite version <samp>{{items.version}}</samp></div>
-                            <div class="list-group-item-text item-margin">&nbsp;</div>
-                            <div class="list-group-item-text item-margin">Using ruleset <samp>{{items.ruleset_name}}</samp>:
-                                <div class="list-group-item-text item-margin"><p><em>{{items.ruleset_about}}</em></p></div>
+                            </a>
+                            {{#each items.summary}}
+                            <a href="#services.{{@key}}.findings" class="card" style="color: black !important">
+                                <div class="finding-title card-header">
+                                    <i class="fa finding-badge finding-badge-{{dashboard_color max_level checked_items flagged_items}}"></i>
+                                    {{make_title @key}}
+                                    <div class="col-sm-2 float-right" style="text-align: center">{{checked_items}}</div>
+                                    <div class="col-sm-2 float-right" style="text-align: center">{{flagged_items}}</div>
+                                    <div class="col-sm-2 float-right" style="text-align: center">{{rules_count}}</div>
+                                    <div class="col-sm-2 float-right" style="text-align: center">{{resources_count}}</div>
+                                </div>
+                            </a>
+                            {{/each}}
                             </div>
                         </div>
                     </div>
@@ -199,6 +171,9 @@
             </div>
         </footer>
 
+        <!-- Used by showPopup -->
+        <div id="modal-container" class="modal fade" tabindex="-1" role="dialog"></div>
+
         <!--Always put footer at end of page-->
         <script>
             $(document).ready(function() {
@@ -209,9 +184,7 @@
                     $('#footer').css('margin-top', 0 + (docHeight - footerTop) + 'px');
             });
         </script>
-
     </div>
-
 </body>
 
 </html>

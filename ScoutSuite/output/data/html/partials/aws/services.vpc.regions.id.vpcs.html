@@ -1,7 +1,7 @@
 
     <!-- VPC partial -->
     <script id="services.vpc.regions.id.vpcs.partial" type="text/x-handlebars-template">
-        <div class="list-group-item active">
+        <div id="resource-name" class="list-group-item active">
           <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
@@ -16,7 +16,7 @@
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Network ACLs
               <a class="accordion-toggle" data-toggle="collapse" href="#services\.vpc\.regions\.{{region}}\.vpcs\.{{@key}}\.network_acls">
-                <span class="badge pull-right btn-info">{{count_vpc_network_acls network_acls}}</span>
+                <span class="badge float-right btn-info">{{count_vpc_network_acls network_acls}}</span>
               </a>
             </h4>
             <div id="services.vpc.regions.{{region}}.vpcs.{{@key}}.network_acls" class="accordion-body collapse">
@@ -34,7 +34,7 @@
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Instances
               <a class="accordion-toggle" data-toggle="collapse" href="#services\.vpc\.regions\.{{region}}\.vpcs\.{{@key}}\.instances">
-                <span class="badge pull-right btn-info">{{count_vpc_instances instances}}</span>
+                <span class="badge float-right btn-info">{{count_vpc_instances instances}}</span>
               </a>
             </h4>
             <div id="services.vpc.regions.{{region}}.vpcs.{{@key}}.instances" class="accordion-body collapse">
@@ -62,8 +62,7 @@
 
     <!-- Single VPC template -->
     <script id="single_vpc-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.vpc.regions.id.vpcs}}
+        {{> modal-template template='services.vpc.regions.id.vpcs'}}
     </script>
     <script>
         var single_vpc_template = Handlebars.compile($("#single_vpc-template").html());

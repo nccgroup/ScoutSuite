@@ -240,7 +240,7 @@ def get_s3_bucket_policy(api_client, bucket_name, bucket_info):
 def get_s3_bucket_secure_transport(api_client, bucket_name, bucket_info):
     try:
         if 'policy' in bucket_info:
-            bucket_info['secure_transport'] = 'Disabled'
+            bucket_info['secure_transport_enabled'] = False
             for statement in bucket_info['policy']['Statement']:
                 # evaluate statement to see if it contains a condition disallowing HTTP transport
                 # TODO this might not cover all cases
@@ -251,27 +251,31 @@ def get_s3_bucket_secure_transport(api_client, bucket_name, bucket_info):
                           statement['Effect'] == 'Deny') or
                          (statement['Condition']['Bool']['aws:SecureTransport'] == 'true' and \
                           statement['Effect'] == 'Allow')):
-                    bucket_info['secure_transport'] = 'Enabled'
+                    bucket_info['secure_transport_enabled'] = True
             return True
         else:
-            bucket_info['secure_transport'] = 'Disabled'
+            bucket_info['secure_transport_enabled'] = False
             return True
     except Exception as e:
         printError('Failed to get evaluate bucket policy for %s: %s' % (bucket_name, e))
-        bucket_info['secure_transport'] = 'Unknown'
+        bucket_info['secure_transport'] = None
         return False
 
 
 def get_s3_bucket_versioning(api_client, bucket_name, bucket_info):
     try:
         versioning = api_client.get_bucket_versioning(Bucket=bucket_name)
-        bucket_info['versioning_status'] = versioning['Status'] if 'Status' in versioning else 'Disabled'
-        bucket_info['version_mfa_delete'] = versioning['MFADelete'] if 'MFADelete' in versioning else 'Disabled'
+        bucket_info['versioning_status_enabled'] = _status_to_bool(versioning.get('Status'))
+        bucket_info['version_mfa_delete_enabled'] = _status_to_bool(versioning.get('MFADelete'))
         return True
     except Exception as e:
-        bucket_info['versioning_status'] = 'Unknown'
-        bucket_info['version_mfa_delete'] = 'Unknown'
+        bucket_info['versioning_status_enabled'] = None
+        bucket_info['version_mfa_delete_enabled'] = None
         return False
+
+def _status_to_bool(value):
+    """ Converts a string to True if it is equal to 'Enabled' or to False otherwise. """
+    return value == 'Enabled'
 
 
 def get_s3_bucket_logging(api_client, bucket_name, bucket_info):
@@ -293,26 +297,26 @@ def get_s3_bucket_logging(api_client, bucket_name, bucket_info):
 def get_s3_bucket_webhosting(api_client, bucket_name, bucket_info):
     try:
         result = api_client.get_bucket_website(Bucket=bucket_name)
-        bucket_info['web_hosting'] = 'Enabled' if 'IndexDocument' in result else 'Disabled'
+        bucket_info['web_hosting_enabled'] = 'IndexDocument' in result
         return True
     except Exception as e:
         # TODO: distinguish permission denied from  'NoSuchWebsiteConfiguration' errors
-        bucket_info['web_hosting'] = 'Disabled'
+        bucket_info['web_hosting_enabled'] = False
         return False
 
 
 def get_s3_bucket_default_encryption(api_client, bucket_name, bucket_info):
     try:
         default_encryption = api_client.get_bucket_encryption(Bucket=bucket_name)
-        bucket_info['default_encryption'] = 'Enabled'
+        bucket_info['default_encryption_enabled'] = True
         return True
     except ClientError as e:
         if 'ServerSideEncryptionConfigurationNotFoundError' in e.response['Error']['Code']:
-            bucket_info['default_encryption'] = 'Disabled'
+            bucket_info['default_encryption_enabled'] = False
             return True
         else:
             printError('Failed to get encryption configuration for %s: %s' % (bucket_name, e))
-            bucket_info['default_encryption'] = 'Unknown'
+            bucket_info['default_encryption_enabled'] = None
             return False
     except Exception as e:
         printError('Failed to get encryption configuration for %s: %s' % (bucket_name, e))

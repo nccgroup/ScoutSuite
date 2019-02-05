@@ -1,7 +1,7 @@
 
     <!-- SNS topic partial -->
     <script id="services.sns.regions.id.topics.partial" type="text/x-handlebars-template">
-        <div class="list-group-item active">
+        <div id="resource-name" class="list-group-item active">
           <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
@@ -29,7 +29,7 @@
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Subscriptions
               {{#unlessEqual subscriptions_count 0}}<a class="accordion-toggle" data-toggle="collapse" href="#sns\.regions\.{{region}}\.topics\.{{@key}}\.subscriptions">{{/unlessEqual}}
-              <span id="sns.regions.{{region}}.topics.{{@key}}.subscriptions_count" class="badge pull-right {{#unlessEqual subscriptions_count 0}}btn-info{{/unlessEqual}}">{{subscriptions_count}}</span>
+              <span id="sns.regions.{{region}}.topics.{{@key}}.subscriptions_count" class="badge float-right {{#unlessEqual subscriptions_count 0}}btn-info{{/unlessEqual}}">{{subscriptions_count}}</span>
               {{#unlessEqual subscriptions_count 0}}</a>{{/unlessEqual}}
             </h4>
             <div id="sns.regions.{{region}}.topics.{{@key}}.subscriptions" class="accordion-body collapse">
@@ -55,8 +55,7 @@
 
     <!-- Single SNS topic template -->
     <script id="single_sns_topic-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.sns.regions.id.topics}}
+        {{> modal-template template='services.sns.regions.id.topics'}}
     </script>
     <script>
         var single_sns_topic_template = Handlebars.compile($("#single_sns_topic-template").html());

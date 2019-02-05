@@ -14,10 +14,7 @@ from opinel.utils.aws import handle_truncated_response
 class AWSBaseConfig(BaseConfig):
 
     def _is_provider(self, provider_name):
-        if provider_name == 'aws':
-            return True
-        else:
-            return False
+        return provider_name == 'aws'
 
     def _get_method(self, api_client, target_type, list_method_name):
         """

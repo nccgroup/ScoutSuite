@@ -20,7 +20,8 @@ class HTMLReport(object):
     Base HTML report
     """
 
-    def __init__(self, profile, report_dir, timestamp=False, exceptions={}):
+    def __init__(self, profile, report_dir, timestamp=False, exceptions=None):
+        exceptions = {} if exceptions is None else exceptions
         self.report_dir = report_dir
         self.profile = profile.replace('/', '_').replace('\\', '_')  # Issue 111
         self.current_time = datetime.datetime.now(dateutil.tz.tzlocal())
@@ -69,7 +70,8 @@ class Scout2Report(HTMLReport):
     Scout2 HTML report
     """
 
-    def __init__(self, provider, profile=None, report_dir=None, timestamp=False, exceptions={}):
+    def __init__(self, provider, profile=None, report_dir=None, timestamp=False, exceptions=None):
+        exceptions = {} if exceptions is None else exceptions
         self.html_root = HTMLREPORT_FILE
         self.provider = provider
         super(Scout2Report, self).__init__(profile, report_dir, timestamp, exceptions)
@@ -112,7 +114,8 @@ class RulesetGenerator(HTMLReport):
     HTML ruleset generator for Scout2
     """
 
-    def __init__(self, ruleset_name, report_dir=None, timestamp=False, exceptions={}):
+    def __init__(self, ruleset_name, report_dir=None, timestamp=False, exceptions=None):
+        exceptions = {} if exceptions is None else exceptions
         self.html_root = GENERATOR_FILE
         self.ruleset_name = ruleset_name
         super(RulesetGenerator, self).__init__(ruleset_name, report_dir, timestamp, exceptions)

@@ -13,7 +13,7 @@ class IAMConfig(AWSBaseConfig):
     """
     Object that holds the IAM configuration
 
-    :ivar credential_report:    Credential report as downloaded from the AWS API
+    :ivar credential_reports:    Credential report as downloaded from the AWS API
     :ivar groups:               Dictionary of IAM groups in the AWS account
     :ivar groups_count:         len(groups)
     :ivar password_policy:      Account password policy
@@ -32,14 +32,14 @@ class IAMConfig(AWSBaseConfig):
         ('policies', 'Policies', 'list_policies', [{'Scope': 'Local'}, {'OnlyAttached': True}], False),
         ('roles', 'Roles', 'list_roles', {}, False),
         ('users', 'Users', 'list_users', {}, False),
-        ('credential_report', '', '', {}, False),
+        ('credential_reports', '', '', {}, False),
         ('password_policy', '', '', {}, False)
         # TODO: Federations
         # TODO: KMS ?
     )
 
     def __init__(self, target_config):
-        self.credential_report = {}
+        self.credential_reports = {}
         self.groups = {}
         self.password_policy = {}
         self.permissions = {}
@@ -52,18 +52,19 @@ class IAMConfig(AWSBaseConfig):
     ##### Overload to fetch credentials report before and after
     ########################################
 
-    def fetch_all(self, credentials, regions=[], partition_name='aws', targets=None):
-        self.fetch_credential_report(credentials, True)
+    def fetch_all(self, credentials, regions=None, partition_name='aws', targets=None):
+        regions = [] if regions is None else regions
+        self.fetch_credential_reports(credentials, True)
         super(IAMConfig, self).fetch_all(credentials, regions, partition_name, targets)
         self.fetch_password_policy(credentials)
-        self.fetch_credential_report(credentials)
+        self.fetch_credential_reports(credentials)
         self.fetchstatuslogger.show(True)
 
     ########################################
     ##### Credential report
     ########################################
 
-    def fetch_credential_report(self, credentials, ignore_exception=False):
+    def fetch_credential_reports(self, credentials, ignore_exception=False):
         """
         Fetch the credential report
 
@@ -72,7 +73,7 @@ class IAMConfig(AWSBaseConfig):
         :param: ignore_exception : initiate credential report creation as not  always ready
         :type: Boolean
         """
-        iam_report = {}
+        credential_reports = {}
         try:
             api_client = connect_service('iam', credentials, silent=True)
             response = api_client.generate_credential_report()
@@ -80,21 +81,50 @@ class IAMConfig(AWSBaseConfig):
                 if not ignore_exception:
                     printError('Failed to generate a credential report.')
                 return
+                
             report = api_client.get_credential_report()['Content']
             lines = report.splitlines()
             keys = lines[0].decode('utf-8').split(',')
+            self.fetchstatuslogger.counts['credential_reports']['discovered'] = len(lines) - 1
+
             for line in lines[1:]:
+                credential_report = {}
                 values = line.decode('utf-8').split(',')
-                manage_dictionary(iam_report, values[0], {})
+                user_id = values[0]
                 for key, value in zip(keys, values):
-                    iam_report[values[0]][key] = value
-            self.credential_report = iam_report
-            self.fetchstatuslogger.counts['credential_report']['fetched'] = 1
+                    credential_report[key] = value
+
+                credential_report['password_last_used'] = self._sanitize_date(credential_report['password_last_used'])
+                credential_report['access_key_1_last_used_date'] = self._sanitize_date(credential_report['access_key_1_last_used_date'])
+                credential_report['access_key_2_last_used_date'] = self._sanitize_date(credential_report['access_key_2_last_used_date'])
+                credential_report['last_used'] = self._compute_last_used(credential_report)
+                credential_report['name'] = user_id
+                credential_report['id'] = user_id
+                manage_dictionary(credential_reports, user_id, credential_report)
+                self.fetchstatuslogger.counts['credential_reports']['fetched'] = len(credential_reports)
+
+            self.credential_reports = credential_reports
+
         except Exception as e:
             if ignore_exception:
                 return
             printError('Failed to download a credential report.')
             printException(e)
+
+
+    def _compute_last_used(self, credential_report):
+        dates = [credential_report['password_last_used'], 
+                 credential_report['access_key_1_last_used_date'], 
+                 credential_report['access_key_2_last_used_date']]
+
+        dates = [date for date in dates if date is not None]
+        return max(dates) if len(dates) > 0 else None
+
+    def _sanitize_date(self, date):
+        """
+        Returns the date if it is not equal to 'N/A' or 'no_information', else returns None
+        """
+        return date  if date != 'no_information' and date != 'N/A' else None
 
     ########################################
     ##### Groups

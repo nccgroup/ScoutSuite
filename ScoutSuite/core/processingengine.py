@@ -31,7 +31,7 @@ class ProcessingEngine(object):
             cloud_provider.services[service][self.ruleset.rule_type] = {}
 
         # Process each rule
-        for finding_path in self.rules:
+        for finding_path in self._filter_rules(self.rules, cloud_provider.service_list):
             for rule in self.rules[finding_path]:
                 
                 if not rule.enabled:  # or rule.service not in []: # TODO: handle this...
@@ -65,3 +65,5 @@ class ProcessingEngine(object):
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['checked_items'] = 0
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['flagged_items'] = 0
 
+    def _filter_rules(self, rules, services):
+        return { rule_name: rule for rule_name, rule in rules.items() if rule_name.split('.')[0] in services }

@@ -45,7 +45,8 @@ class RegionalServiceConfig(object):
     :ivar service:                      Name of the service
     """
 
-    def __init__(self, service_metadata={}, thread_config=4):
+    def __init__(self, service_metadata=None, thread_config=4):
+        service_metadata = {} if service_metadata is None else service_metadata
         self.regions = {}
         self.thread_config = thread_configs[thread_config]
         self.service = \
@@ -88,7 +89,7 @@ class RegionalServiceConfig(object):
         """
         self.regions[region] = self.region_config_class(region_name = region, resource_types = self.resource_types)
 
-    def fetch_all(self, credentials, regions = [], partition_name = 'aws', targets = None):
+    def fetch_all(self, credentials, regions = None, partition_name = 'aws', targets = None):
         """
         Fetch all the configuration supported by Scout2 for a given service
 
@@ -101,6 +102,7 @@ class RegionalServiceConfig(object):
         """
         # Initialize targets
         # Tweak params
+        regions = [] if regions is None else regions
         realtargets = ()
         if not targets:
             targets = self.targets
@@ -135,7 +137,7 @@ class RegionalServiceConfig(object):
         # Show completion and force newline
         self.fetchstatuslogger.show(True)
 
-    def _init_threading(self, function, params={}, num_threads=10):
+    def _init_threading(self, function, params=None, num_threads=10):
         """
         Initialize queue and threads
 
@@ -144,6 +146,7 @@ class RegionalServiceConfig(object):
         :param num_threads:
         :return:
         """
+        params = {} if params is None else params
         q = Queue(maxsize=0) # TODO: find something appropriate
         for i in range(num_threads):
             worker = Thread(target=function, args=(q, params))
@@ -229,8 +232,11 @@ class RegionConfig(BaseConfig):
     Base class for ...
     """
 
-    def __init__(self, region_name, resource_types={}):
+    def __init__(self, region_name, resource_types=None):
+        resource_types = {} if resource_types is None else resource_types
         self.region = region_name
+        self.name = region_name
+        self.id = region_name
         for resource_type in resource_types['region'] + resource_types['global']:
             setattr(self, resource_type, {})
             setattr(self, '%s_count' % resource_type, 0)

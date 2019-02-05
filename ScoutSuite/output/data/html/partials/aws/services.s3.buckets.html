@@ -1,7 +1,7 @@
 
     <!-- S3 bucket partial -->
     <script id="services.s3.buckets.partial" type="text/x-handlebars-template">
-        <div class="list-group-item active">
+        <div id="resource-name" class="list-group-item active">
           <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
@@ -9,11 +9,11 @@
           <div class="list-group-item-text item-margin">Region: {{region}}</div>
           <div class="list-group-item-text item-margin">Creation date: {{CreationDate}}</div>
           <div class="list-group-item-text item-margin">Logging: <span id="s3.buckets.{{@key}}.logging">{{has_logging? logging}}</span></div>
-          <div class="list-group-item-text item-margin">Default encryption: <span id="s3.buckets.{{@key}}.default_encryption">{{default_encryption}}</span></div>
-          <div class="list-group-item-text item-margin">Versioning: <span id="s3.buckets.{{@key}}.versioning">{{versioning_status}}</span></div>
-          <div class="list-group-item-text item-margin">MFA Delete: <span id="s3.buckets.{{@key}}.mfa_delete">{{version_mfa_delete}}</span></div>
-          <div class="list-group-item-text item-margin">Secure transport: <span id="s3.buckets.{{@key}}.secure_transport">{{secure_transport}}</span></div>
-          <div class="list-group-item-text item-margin">Static website hosting: <span id="s3.buckets.{{@key}}.web_hosting">{{web_hosting}}</span></div>
+          <div class="list-group-item-text item-margin">Default encryption: <span id="s3.buckets.{{@key}}.default_encryption_enabled">{{ convert_bool_to_enabled default_encryption_enabled}}</span></div>
+          <div class="list-group-item-text item-margin">Versioning: <span id="s3.buckets.{{@key}}.versioning">{{convert_bool_to_enabled versioning_status_enabled}}</span></div>
+          <div class="list-group-item-text item-margin">MFA Delete: <span id="s3.buckets.{{@key}}.mfa_delete">{{convert_bool_to_enabled version_mfa_delete_enabled}}</span></div>
+          <div class="list-group-item-text item-margin">Secure transport: <span id="s3.buckets.{{@key}}.secure_transport_enabled">{{convert_bool_to_enabled secure_transport_enabled}}</span></div>
+          <div class="list-group-item-text item-margin">Static website hosting: <span id="s3.buckets.{{@key}}.web_hosting_enabled">{{convert_bool_to_enabled web_hosting_enabled}}</span></div>
         </div>
         {{> services.s3.acls resource_type = 'bucket' resource_path = (concat 's3.buckets' @key)}}
         {{#if policy}}
@@ -29,7 +29,7 @@
             <div class="accordion">
               <h4 class="list-group-item-heading accordion-heading">Keys
                 <a class="accordion-toggle" data-toggle="collapse" href="#services\.s3\.buckets\.{{@key}}\.keys">
-                  <span class="badge pull-right btn-info">{{keys_count}}<span>
+                  <span class="badge float-right btn-info">{{keys_count}}<span>
                 </a>
               </h4>
               <div id="services.s3.buckets.{{@key}}.keys" class="accordion-body item-margin collapse">
@@ -68,8 +68,7 @@
 
     <!-- Single S3 bucket template -->
     <script id="single_s3_bucket-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.s3.buckets}}
+        {{> modal-template template='services.s3.buckets' }}
     </script>
     <script>
         var single_s3_bucket_template = Handlebars.compile($("#single_s3_bucket-template").html());

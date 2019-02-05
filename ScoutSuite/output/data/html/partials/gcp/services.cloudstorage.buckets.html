@@ -1,7 +1,7 @@
 
 <!-- Cloud Storage bucket partial -->
 <script id="services.cloudstorage.buckets.partial" type="text/x-handlebars-template">
-    <div class="list-group-item active">
+    <div id="resource-name" class="list-group-item active">
         <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
     <div class="list-group-item">
@@ -10,8 +10,8 @@
         <div class="list-group-item-text item-margin">Creation Date: <span id="cloudstorage.buckets.{{@key}}.creation_date">{{creation_date}}</span></div>
         <div class="list-group-item-text item-margin">Location: <span id="cloudstorage.buckets.{{@key}}.location">{{location}}</span></div>
         <div class="list-group-item-text item-margin">Storage Class: <span id="cloudstorage.buckets.{{@key}}.storage_class">{{storage_class}}</span></div>
-        <div class="list-group-item-text item-margin">Logging: <span id="cloudstorage.buckets.{{@key}}.logging">{{logging_status}}</span></div>
-        <div class="list-group-item-text item-margin">Versioning: <span id="cloudstorage.buckets.{{@key}}.versioning">{{versioning_status}}</span></div>
+        <div class="list-group-item-text item-margin">Logging: <span id="cloudstorage.buckets.{{@key}}.logging_enabled">{{convert_bool_to_enabled logging_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Versioning: <span id="cloudstorage.buckets.{{@key}}.versioning">{{convert_bool_to_enabled versioning_status}}</span></div>
     </div>
     <div class="list-group-item">
         <h4 id="cloudstorage.buckets.{{@key}}.permissions" class="list-group-item-heading">Permissions</h4>
@@ -38,8 +38,7 @@
 
 <!-- Single cloudstorage bucket template -->
 <script id="single_cloudstorage_bucket-template" type="text/x-handlebars-template">
-    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-    {{> services.cloudstorage.buckets}}
+    {{> modal-template template='services.cloudstorage.buckets'}}
 </script>
 <script>
     var single_cloudstorage_bucket_template = Handlebars.compile($("#single_cloudstorage_bucket-template").html());
