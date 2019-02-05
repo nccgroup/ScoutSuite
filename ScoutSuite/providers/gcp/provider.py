@@ -69,11 +69,16 @@ class GCPProvider(BaseProvider):
             if self.credentials:
 
                 if self.project_id:
-                    # service_account credentials with project_id will follow this path
                     self.projects = self._get_projects(parent_type='project',
                                                        parent_id=self.project_id)
                     self.aws_account_id = self.project_id # FIXME this is for AWS
                     self.profile = self.project_id # FIXME this is for AWS
+
+                elif project_id:
+                    self.projects = self._get_projects(parent_type='project',
+                                                       parent_id=project_id)
+                    self.aws_account_id = project_id # FIXME this is for AWS
+                    self.profile = project_id # FIXME this is for AWS
 
                 elif self.organization_id:
                     self.projects = self._get_projects(parent_type='organization',
@@ -87,19 +92,18 @@ class GCPProvider(BaseProvider):
                     self.aws_account_id = self.folder_id # FIXME this is for AWS
                     self.profile = self.folder_id # FIXME this is for AWS
 
-                elif self.service_account: # We know that project_id hasn't been provided and that we have a service account
-                    self.projects = self._get_projects(parent_type='service-account',
-                                                       parent_id=self.project_id)
+                elif service_account:
+                    self.projects = self._get_projects(parent_type='all',
+                                                       parent_id=None)
                     self.aws_account_id = self.credentials.service_account_email # FIXME this is for AWS
                     self.profile = self.credentials.service_account_email # FIXME this is for AWS
 
                 else:
-                    # FIXME this will fail if no default project is set in gcloud config. This is caused because html.py is looking for a profile to build the report
                     self.project_id = project_id
-                    self.projects = self._get_projects(parent_type='project',
-                                                       parent_id=self.project_id)
-                    self.aws_account_id = self.project_id # FIXME this is for AWS
-                    self.profile = self.project_id # FIXME this is for AWS
+                    self.projects = self._get_projects(parent_type='all',
+                                                       parent_id=None)
+                    self.aws_account_id = 'gcp' # FIXME this is for AWS
+                    self.profile = 'gcp' # FIXME this is for AWS
 
                 # TODO this shouldn't be done here? but it has to in order to init with projects...
                 self.services.set_projects(projects=self.projects)
@@ -141,7 +145,7 @@ class GCPProvider(BaseProvider):
         details.
         """
 
-        if parent_type not in ['project', 'organization', 'folder', 'service-account']:
+        if parent_type not in ['project', 'organization', 'folder', 'all']:
             return None
 
         projects = []
@@ -168,7 +172,7 @@ class GCPProvider(BaseProvider):
                     if project['lifecycleState'] == "ACTIVE":
                         projects.append(project)
 
-        elif parent_type == 'service-account':
+        elif parent_type == 'all':
             project_response = resource_manager_client_v1.projects().list().execute()
             if 'projects' in project_response.keys():
                 for project in project_response['projects']:
@@ -176,7 +180,7 @@ class GCPProvider(BaseProvider):
                         projects.append(project)
         else:
 
-            # get parent children projectss
+            # get parent children projects
             request = resource_manager_client_v1.projects().list(filter='parent.id:%s' % parent_id)
             while request is not None:
                 response = request.execute()
