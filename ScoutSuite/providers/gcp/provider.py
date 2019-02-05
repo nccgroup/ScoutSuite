@@ -20,7 +20,7 @@ class GCPCredentials():
 
 class GCPProvider(BaseProvider):
     """
-    Implements provider for AWS
+    Implements provider for GCP
     """
 
     def __init__(self, project_id=None, folder_id=None, organization_id=None,
@@ -66,10 +66,10 @@ class GCPProvider(BaseProvider):
         try:
 
             self.credentials, project_id = google.auth.default()
-
             if self.credentials:
 
                 if self.project_id:
+                    # service_account credentials with project_id will follow this path
                     self.projects = self._get_projects(parent_type='project',
                                                        parent_id=self.project_id)
                     self.aws_account_id = self.project_id # FIXME this is for AWS
@@ -87,8 +87,14 @@ class GCPProvider(BaseProvider):
                     self.aws_account_id = self.folder_id # FIXME this is for AWS
                     self.profile = self.folder_id # FIXME this is for AWS
 
+                elif self.service_account: # We know that project_id hasn't been provided and that we have a service account
+                    self.projects = self._get_projects(parent_type='service-account',
+                                                       parent_id=self.project_id)
+                    self.aws_account_id = self.credentials.service_account_email # FIXME this is for AWS
+                    self.profile = self.credentials.service_account_email # FIXME this is for AWS
+
                 else:
-                    # FIXME this will fail if no default project is set in gcloud config
+                    # FIXME this will fail if no default project is set in gcloud config. This is caused because html.py is looking for a profile to build the report
                     self.project_id = project_id
                     self.projects = self._get_projects(parent_type='project',
                                                        parent_id=self.project_id)
@@ -135,14 +141,14 @@ class GCPProvider(BaseProvider):
         details.
         """
 
-        if parent_type not in ['project', 'organization', 'folder']:
+        if parent_type not in ['project', 'organization', 'folder', 'service-account']:
             return None
 
         projects = []
 
         #FIXME can't currently be done with API client library as it consumes v1 which doesn't support folders
         """
-        
+
         resource_manager_client = resource_manager.Client(credentials=self.credentials)
 
         project_list = resource_manager_client.list_projects()
@@ -156,13 +162,18 @@ class GCPProvider(BaseProvider):
         resource_manager_client_v2 = gcp_connect_service(service='cloudresourcemanager-v2', credentials=self.credentials)
 
         if parent_type == 'project':
-
             project_response = resource_manager_client_v1.projects().list(filter='id:%s' % parent_id).execute()
             if 'projects' in project_response.keys():
                 for project in project_response['projects']:
                     if project['lifecycleState'] == "ACTIVE":
                         projects.append(project)
 
+        elif parent_type == 'service-account':
+            project_response = resource_manager_client_v1.projects().list().execute()
+            if 'projects' in project_response.keys():
+                for project in project_response['projects']:
+                    if project['lifecycleState'] == "ACTIVE":
+                        projects.append(project)
         else:
 
             # get parent children projectss
