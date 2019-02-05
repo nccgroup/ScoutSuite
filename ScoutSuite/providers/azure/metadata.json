@@ -8,5 +8,15 @@
         }
       }
     }
+  },
+  "sql": {
+    "sql": {
+      "resources": {
+        "servers": {
+          "cols": 2,
+          "path": "services.sql.servers"
+        }
+      }
+    }
   }
 }
