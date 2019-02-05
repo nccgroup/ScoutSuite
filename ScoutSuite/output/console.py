@@ -114,9 +114,6 @@ class FetchStatusLogger:
             target_type = target[0] if type(target) == tuple else target
             self.targets.append(target_type)
             manage_dictionary(self.counts, target_type, {'discovered': 0, 'fetched': 0})
-            # h4ck for credential report....
-            if target_type == 'credential_report':
-                self.counts[target_type]['discovered'] = 1
             target_names += (target_type,)
             self.formatted_string += ' %18s'
         self.__out(target_names, True)

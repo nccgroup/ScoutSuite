@@ -16,9 +16,9 @@
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Instances
               {{#ifPositive instances_count}}
-                <a class="accordion-toggle" data-toggle="collapse" href="#iam\.roles\.{{id}}\.instances"><span class="badge pull-right btn-info">{{instances_count}}</span></a>
+                <a class="accordion-toggle" data-toggle="collapse" href="#iam\.roles\.{{id}}\.instances"><span class="badge float-right btn-info">{{instances_count}}</span></a>
               {{else}}
-                <span class="badge pull-right">{{instances_count}}</span>
+                <span class="badge float-right">{{instances_count}}</span>
               {{/ifPositive}}
             </h4>
             <div id="iam.roles.{{id}}.instances" class="accordion-body collapse">

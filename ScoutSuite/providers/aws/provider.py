@@ -31,7 +31,9 @@ class AWSProvider(BaseProvider):
     Implements provider for AWS
     """
 
-    def __init__(self, profile='default', report_dir=None, timestamp=None, services=[], skipped_services=[], thread_config=4, **kwargs):
+    def __init__(self, profile='default', report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
+        services = [] if services is None else services
+        skipped_services = [] if skipped_services is None else skipped_services
 
         self.metadata_path = '%s/metadata.json' % os.path.split(os.path.abspath(__file__))[0]
 
@@ -60,7 +62,7 @@ class AWSProvider(BaseProvider):
         else:
             return True
 
-    def preprocessing(self, ip_ranges=[], ip_ranges_name_key=None):
+    def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
         Tweak the AWS config to match cross-service resources and clean any fetching artifacts
 
@@ -68,6 +70,7 @@ class AWSProvider(BaseProvider):
         :param ip_ranges_name_key:
         :return: None
         """
+        ip_ranges = [] if ip_ranges is None else ip_ranges
         self._map_all_sgs()
         self._map_all_subnets()
         self._set_emr_vpc_ids()
@@ -137,15 +140,15 @@ class AWSProvider(BaseProvider):
                 if 'HomeRegion' in trail and trail['HomeRegion'] != region:
                     # Part of a multi-region trail, skip until we find the whole object
                     continue
-                if trail['IncludeGlobalServiceEvents'] == True and trail['IsLogging'] == True:
+                if trail['IncludeGlobalServiceEvents'] and trail['IsLogging']:
                     global_events_logging.append((region, trail_id,))
                 # Any wildcard logging?
                 if trail.get('wildcard_data_logging', False):
                     data_logging_trails_count += 1
 
         cloudtrail_config['data_logging_trails_count'] = data_logging_trails_count
-        cloudtrail_config['IncludeGlobalServiceEvents'] = False if (len(global_events_logging) == 0) else True
-        cloudtrail_config['DuplicatedGlobalServiceEvents'] = True if (len(global_events_logging) > 1) else False
+        cloudtrail_config['IncludeGlobalServiceEvents'] = len(global_events_logging) > 0
+        cloudtrail_config['DuplicatedGlobalServiceEvents'] = len(global_events_logging) > 1
 
     def process_network_acls_callback(self, current_config, path, current_path, privateip_id, callback_args):
         # Check if the network ACL allows all traffic from all IP addresses
@@ -642,7 +645,8 @@ class AWSProvider(BaseProvider):
                     'cidrs'].append({'CIDR': '0.0.0.0/0'})
 
     def _security_group_to_attack_surface(self, attack_surface_config, public_ip, current_path,
-                                          security_groups, listeners=[]):
+                                          security_groups, listeners=None):
+        listeners = [] if listeners is None else listeners
         manage_dictionary(attack_surface_config, public_ip, {'protocols': {}})
         for sg_id in security_groups:
             sg_path = copy.deepcopy(current_path[0:6])

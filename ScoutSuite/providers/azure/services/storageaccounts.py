@@ -2,8 +2,6 @@
 
 from ScoutSuite.providers.azure.configs.base import AzureBaseConfig
 
-from opinel.utils.console import printError, printException, printInfo
-
 
 class StorageAccountsConfig(AzureBaseConfig):
     targets = (
@@ -23,7 +21,10 @@ class StorageAccountsConfig(AzureBaseConfig):
 
         storage_account_dict['id'] = self.get_non_provider_id(storage_account.id)
         storage_account_dict['name'] = storage_account.name
-        storage_account_dict['https_traffic_enabled'] = 'Enabled' if storage_account.enable_https_traffic_only else 'Disabled'
+        storage_account_dict['https_traffic_enabled'] = storage_account.enable_https_traffic_only
+        storage_account_dict['public_traffic_allowed'] = self._is_public_traffic_allowed(storage_account)
 
         self.storage_accounts[storage_account_dict['id']] = storage_account_dict
 
+    def _is_public_traffic_allowed(self, storage_account):
+        return storage_account.network_rule_set.default_action == "Allow"

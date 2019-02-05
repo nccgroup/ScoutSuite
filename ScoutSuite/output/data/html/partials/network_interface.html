@@ -1,43 +1,58 @@
-    <!-- Network interface partial -->
-    <script id="network_interface.partial" type="text/x-handlebars-template">
-        <div class="accordion">
-            <div class="list-group-item-heading accordion-heading">
-                {{@key}}
-                <a class="accordion-toggle" data-toggle="collapse" href="#{{escape_dots (concat 'ec2.regions' region 'vpcs' vpc_id 'instances' instance_id 'network_interfaces' @key)}}">
-                    <span class="badge pull-right btn-info">Details</span>
-                </a>
-            </div>
-            <div id="{{concat 'ec2.regions' region 'vpcs' vpc_id 'instances' instance_id 'network_interfaces' @key}}" class="accordion-body item-margin">
-                <div class="accordion-inner">
-                    <ul>
-                        {{#if Description}}<li class="list-group-item-text no-margin">Description: {{Description}}</li>{{/if}}
-                        {{#if Association}}
-                            <li class="list-group-item-text no-margin">Public IP: {{Association.PublicIp}}</li>
-                            {{#if Association.PublicDnsName}}<li class="list-group-item-text no-margin">Public DNS: {{Association.PublicDnsName}}</li>{{/if}}
-                        {{/if}}
-                        {{#if Ipv6Addresses}}
-                            <li class="list-group-item-text no-margin">IPv6 addresses:</li>
-                            <ul>
-                            {{#each Ipv6Addresses}}
-                                <li class="list-group-item-text">{{Ipv6Address}}</li>
-                            {{/each}}
-                            </ul>
-                        {{/if}}
-                        {{#each PrivateIpAddresses}}
-                            <li class="list-group-item-text no-margin">{{#if Primary}}Primary {{/if}}Private IP: {{PrivateIpAddress}}</li>
-                        {{/each}}
-                        <li class="list-group-item-text no-margin">Security groups:
-                            <ul>
-                                {{#each Groups}}
-                                    <li><a href="javascript:showObject('services.ec2.regions.{{../region}}.vpcs.{{../vpc_id}}.security_groups.{{GroupId}}')">{{GroupName}}</a></li>
-                                {{/each}}
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </script>
-    <script>
-        Handlebars.registerPartial("network_interface", $("#network_interface\\.partial").html());
-    </script>
+<!-- Network interface partial -->
+<script id="network_interface.partial" type="text/x-handlebars-template">
+  <div class="accordion">
+    <div class="list-group-item-heading accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" href="#{{escape_dots (concat 'ec2.regions' region 'vpcs' vpc 'instances' instance_id 'network_interfaces' network_interface)}}">
+          <span class="badge float-right btn-info">Details</span>
+      </a>
+    </div>
+    <div id="{{concat 'ec2.regions' region 'vpcs' vpc 'instances' instance_id 'network_interfaces' network_interface}}" class="accordion-body item-margin">
+      <div class="accordion-inner">
+        <ul>
+          {{#if Description}}<li class="list-group-item-text no-margin">Description: {{Description}}</li>{{/if}}
+          {{#if Association}}
+              <li class="list-group-item-text no-margin">Public IP: {{Association.PublicIp}}</li>
+              {{#if Association.PublicDnsName}}<li class="list-group-item-text no-margin">Public DNS: {{Association.PublicDnsName}}</li>{{/if}}
+          {{/if}}
+          {{#if Ipv6Addresses}}
+              <li class="list-group-item-text no-margin">IPv6 addresses:</li>
+              <ul>
+              {{#each Ipv6Addresses}}
+                  <li class="list-group-item-text">{{Ipv6Address}}</li>
+              {{/each}}
+              </ul>
+          {{/if}}
+          {{#each PrivateIpAddresses}}
+              <li class="list-group-item-text no-margin">{{#if Primary}}Primary {{/if}}Private IP: {{PrivateIpAddress}}</li>
+          {{/each}}
+          <li class="list-group-item-text no-margin">Security groups:
+            <ul>
+              {{#each Groups}}
+                <li><a href="javascript:showObject('services.ec2.regions.{{../region}}.vpcs.{{../vpc}}.security_groups.{{GroupId}}')">{{GroupName}}</a></li>
+              {{/each}}
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script>
+  Handlebars.registerPartial("network_interface", $("#network_interface\\.partial").html());
+</script>
+
+<!-- Single CloudFormation stack template -->
+<script id="single_network_interface-template" type="text/x-handlebars-template">
+  <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
+  <div class="list-group-item active">
+    <h4 class="list-group-item-heading">{{network_interface}}</h4>
+  </div>
+  <div class="list-group-item">
+    {{> network_interface}}
+  </div>
+</script>
+
+<script>
+  var single_ec2_network_interface_template = Handlebars.compile($("#single_network_interface-template").html());
+</script>

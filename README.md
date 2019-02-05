@@ -105,7 +105,32 @@ The following roles can be attached to the member used to run Scout in order to 
 
 #### Azure
 
-TODO
+There are five ways to run scout against an Azure organization.
+
+1.  azure-cli
+    1. On most system, you can install azure-cli using `pip install azure-cli`.
+    2. Log into an account. The easiest way to do it it with `az login`(for more authentication method, 
+    you can refer to https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest).
+    3. Run Scout with the `--azure-cli` flag.
+2.  Managed Service Identity
+    1. Configure your identity on the Azure portal(you can refer to 
+    https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/)
+    2. Run Scout with the `--azure-msi` flag.
+3.  Service Principal
+    1. Set up a service principal on the Azure portal(you can refer to 
+    https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal)
+    2. Run Scout with the `--azure-service-principal` flag. Scout will prompt you for the 
+    required information.
+4.  File-based Authentication
+    1. Create a Service Principal for azure SDK. You can do this with azure-cli using 
+    `az ad sp create-for-rbac --sdk-auth > mycredentials.json`.
+    2. Run Scout while providing it with the credentials file using 
+    `--azure-file-auth path/to/credentials/file`.
+5.  User Credentials
+    1. Run Scout using `--azure-user-credentials`. The application will prompt you for your credentials.
+
+Scout will require the Reader role over all the resources you want to check. The easiest way is to give 
+it Reader over the Subscription, as it will be inherited on all the resources.
 
 ### Compliance
 
@@ -127,7 +152,12 @@ References:
 
 #### Azure
 
-TODO
+Use of Scout Suite does not require Azure users to contact Microsoft to begin testing. The only requirement is that 
+users abide by the Microsoft Cloud Unified Penetration Testing Rules of Engagement.
+
+References:
+- https://docs.microsoft.com/en-us/azure/security/azure-security-pen-testing
+- https://www.microsoft.com/en-us/msrc/pentest-rules-of-engagement
 
 ### Usage
 
@@ -174,4 +204,23 @@ To scan a GCP ...
 
 #### Azure
 
-TODO
+Using a computer already configured to use azure-cli, you may use Scout using the following command:
+
+    $ python Scout.py --provider azure --azure-cli
+    
+When using Scout in an Azure virtual machine with the Reader role, you may use 
+Scout using the following command:
+
+    $ python Scout.py --provider azure --azure-msi
+    
+When using Scout with a Service Principal, you may run Scout using the following command:
+
+    $ python Scout.py --provider azure --azure-service-principal
+    
+When using Scout with an authentication file, you may run Scout using the following command:
+
+    $ python Scout.py --provider azure --azure-file-auth path/to/auth/file
+  
+When using Scout against your user account, you may run Scout using the following command:
+
+    $ python Scout.py --provider azure --azure-user-credentials

@@ -12,9 +12,9 @@
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Members
               {{#if users}}
-                <a class="accordion-toggle" data-toggle="collapse" href="#iam\.groups\.{{id}}\.users"><span class="badge pull-right btn-info">{{users.length}}</span></a>
+                <a class="accordion-toggle" data-toggle="collapse" href="#iam\.groups\.{{id}}\.users"><span class="badge float-right btn-info">{{users.length}}</span></a>
               {{else}}
-                <span class="badge pull-right">{{users.length}}</span>
+                <span class="badge float-right">{{users.length}}</span>
               {{/if}}
             </h4>
             <div id="iam.groups.{{id}}.users" class="accordion-body collapse">

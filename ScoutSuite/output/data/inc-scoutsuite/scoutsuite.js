@@ -1,11 +1,20 @@
 // Globals
 var loaded_config_array = new Array();
 var run_results;
+const DARK_THEME = "inc-bootstrap/css/bootstrap-dark.min.css";
+const LIGHT_THEME = "inc-bootstrap/css/bootstrap-light.min.css";
 
 /**
  * Event handlers
  */
 $(document).ready(function () {
+    // Loading last theme before window.onload to prevent flickering of styles    
+    if (localStorage.getItem("theme_checkbox") == "true") {
+        document.getElementById("theme_checkbox").checked = true;
+        set_theme(DARK_THEME);
+    }
+
+    showPageFromHash();
 
     // when button is clicked, return CSV with finding
     $('#findings_download_button').click(function (event) {
@@ -104,8 +113,8 @@ $(document).ready(function () {
  */
 var load_aws_account_id = function () {
     var element = document.getElementById('aws_account_id');
-    var value = '<span class="glyphicon glyphicon-cloud"></span> ' + run_results['provider_name'] +
-        ' <span class="glyphicon glyphicon-chevron-right"></span> ' + run_results['aws_account_id'];
+    var value = '<i class="fa fa-cloud"></i> ' + run_results['provider_name'] +
+        ' <i class="fa fa-chevron-right"></i> ' + run_results['aws_account_id'];
     if (('organization' in run_results) && (value in run_results['organization'])) {
         value += ' (' + run_results['organization'][value]['Name'] + ')'
     };
@@ -375,6 +384,35 @@ function toggleDetails(keyword, item) {
 };
 
 /**
+ * Toggles between light and dark themes
+ */
+function toggle_theme() {
+    if (document.getElementById("theme_checkbox").checked) {
+        this.set_theme(DARK_THEME)
+    }
+    else {
+        this.set_theme(LIGHT_THEME)
+    }
+};
+
+/**
+ * Sets the css file location received as the theme
+ * @param file
+ */
+function set_theme(file)
+{
+    var oldlink = document.getElementById("theme");
+    oldlink.href = file;
+}
+
+/**
+ * Save the current theme on web storage
+ */
+window.onunload = function() {
+    localStorage.setItem("theme_checkbox", document.getElementById("theme_checkbox").checked);
+}
+
+/**
  * Update the navigation bar
  * @param service
  */
@@ -389,9 +427,9 @@ function toggleVisibility(id) {
     $(id1).toggle()
     id2 = '#bullet-' + id;
     if ($(id1).is(":visible")) {
-        $(id2).html('<i class="glyphicon glyphicon-collapse-down"></i>');
+        $(id2).html('<i class="fa fa-caret-square-o-down"></i>');
     } else {
-        $(id2).html('<i class="glyphicon glyphicon-expand"></i>');
+        $(id2).html('<i class="fa fa-caret-square-o-right"></i>');
     };
 };
 
@@ -565,33 +603,59 @@ function showEC2SecurityGroup(region, vpc, id) {
 /**
  *
  */
-function showObject() {
-    var path = arguments[0];
-    var path_array = path.split('.');
-    var path_length = path_array.length;
-    var data = run_results;
-    for (var i = 0; i < path_length; i++) {
-        data = data[path_array[i]];
-    };
+function showObject(path, attr_name, attr_value) {
+    const path_array = path.split('.');
+    const path_length = path_array.length;
+    let data = getResource(path);
+
+    // Adds the resource path values to the data context
+    for (let i = 0; i < path_length - 1; i += 2) {
+        if (i + 1 >= path_length) break;
+
+        const attribute = makeResourceTypeSingular(path_array[i]);
+        data[attribute] = path_array[i + 1];
+    }
+
     // Filter if ...
-    if (arguments.length > 1) {
-        var attr_name = arguments[1];
-        var attr_value = arguments[2];
-        for (resource in data) {
-            if (data[resource][attr_name] == attr_value) {
-                data = data[resource];
-                break;
-            };
+    let resource_type;
+    if (attr_name && attr_value) {
+        for (const resource in data) {
+            if (data[resource][attr_name] !== attr_value) continue;
+            data = data[resource];
+            break;
         };
-        var resource_type = path_array[1] + '_' + path_array[path_length - 1];
+
+        resource_type = path_array[1] + '_' + path_array[path_length - 1];
     } else {
-        var resource_type = path_array[1] + '_' + path_array[path_length - 2];
+        resource_type = path_array[1] + '_' + path_array[path_length - 2];
     };
-    resource = resource_type.substring(0, resource_type.length - 1).replace(/\.?ie$/, "y");
+
+    resource = makeResourceTypeSingular(resource_type);
     template = 'single_' + resource + '_template';
     $('#overlay-details').html(window[template](data));
     showPopup();
 };
+
+/**
+ * Gets a resource from the run results.
+ * @param {string} path 
+ */
+function getResource(path) {
+    let data = run_results;
+    for (const attribute of path.split('.')) {
+        data = data[attribute];
+    };
+
+    return data;
+}
+
+/**
+ * Makes the resource type singular.
+ * @param {string} resource_type 
+ */
+function makeResourceTypeSingular(resource_type) {
+    return resource_type.substring(0, resource_type.length - 1).replace(/\.?ie$/, "y");
+}
 
 /**
  *
@@ -686,7 +750,6 @@ function load_metadata() {
     load_aws_config_from_json('services.id.findings', 1);
     load_aws_config_from_json('services.id.filters', 0); // service-specific filters
     load_aws_config_from_json('services.id.regions', 0); // region filters
-    show_main_dashboard();
 
     for (group in run_results['metadata']) {
         for (service in run_results['metadata'][group]) {
@@ -795,7 +858,6 @@ function getService(resource_path) {
         service = resource_path.split('.')[0];
     };
     service = make_title(service);
-//    service = service.toUpperCase().replace('CLOUDTRAIL', 'CloudTrail').replace('REDSHIFT', 'RedShift').replace('ROUTE53', 'Route53');
     return service;
 };
 
@@ -811,7 +873,7 @@ function updateTitle(title) {
 /**
  * Update the DOM
  */
-function locationHashChanged() {
+function showPageFromHash() {
     if (location.hash) {
         updateDOM(location.hash);
     } else {
@@ -819,7 +881,7 @@ function locationHashChanged() {
     };
 };
 
-window.onhashchange = locationHashChanged;
+window.onhashchange = showPageFromHash;
 
 /**
  * Get value at given path
@@ -878,7 +940,6 @@ function updateDOM(anchor) {
     } else {
         $('#findings_download_button').hide();
     };
-    ;
 
     // Update title
     if (path.endsWith('.items')) {
@@ -977,10 +1038,6 @@ function get_resource_path(path) {
         resource_path_array = resource_path.split('.');
         last_value = resource_path_array.pop();
         resource_path = 'services.' + resource_path_array.join('.');
-        // Fix for issue #79
-        if (last_value == '<root_account>') {
-            resource_path += '.' + last_value;
-        };
     } else if (path.endsWith('.view')) {
         // Resource path is not changed (this may break when using `back' button in browser)
         var resource_path = current_resource_path;
