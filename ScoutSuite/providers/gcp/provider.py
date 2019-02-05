@@ -5,7 +5,6 @@ import os
 import warnings
 import google.auth
 import googleapiclient
-#import google.oauth2.service_account
 from opinel.utils.console import printError, printException
 
 from ScoutSuite.providers.base.provider import BaseProvider
