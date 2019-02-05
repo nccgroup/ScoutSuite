@@ -18,6 +18,18 @@
         "enabled": true,
         "level": "warning"
       }
+    ],
+    "sql-databases-no-auditing.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "sql-databases-no-threat-detection.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }
