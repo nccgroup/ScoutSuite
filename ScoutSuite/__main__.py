@@ -93,7 +93,7 @@ def main(args):
                                                     msi=args.get('msi'),
                                                     service_principal=args.get('service_principal'),
                                                     file_auth=args.get('file_auth'),
-                                                    user_credentials=args.get('user_credentials'),
+                                                    user_credentials=args.get('user_account'),
                                                     tenant_id=args.get('tenant_id'),
                                                     subscription_id=args.get('subscription_id'),
                                                     client_id=args.get('client_id'),

@@ -264,7 +264,7 @@ class ScoutSuiteArgumentParser:
                                       metavar="FILE",
                                       help='Run Scout Suite with the specified credential file')
 
-        azure_auth_modes.add_argument('--user-credentials',
+        azure_auth_modes.add_argument('--user-account',
                                       action='store_true',
                                       help='Run Scout Suite with user credentials')
         azure_auth_params.add_argument('--username',

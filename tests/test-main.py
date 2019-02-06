@@ -43,7 +43,7 @@ class TestMainClass(TestCase):
         assert (code is None)
 
     def test_aws_provider(self):
-        args = ["--provider", "aws"]
+        args = ["aws"]
         self.mocked_provider.provider_code = "aws"
 
         code = main(passed_args=args)
@@ -57,7 +57,7 @@ class TestMainClass(TestCase):
         assert (report_init_args[2] == "scoutsuite-report")  # report_dir
 
     def test_gcp_provider(self):
-        args = ["--provider", "gcp"]
+        args = ["gcp"]
         self.mocked_provider.provider_code = "gcp"
 
         code = main(passed_args=args)
@@ -71,7 +71,7 @@ class TestMainClass(TestCase):
         assert (report_init_args[2] == "scoutsuite-report")  # report_dir
 
     def test_azure_provider(self):
-        args = ["--provider", "azure"]
+        args = ["azure"]
         self.mocked_provider.provider_code = "azure"
 
         code = main(passed_args=args)
@@ -85,7 +85,7 @@ class TestMainClass(TestCase):
         assert (report_init_args[2] == "scoutsuite-report")  # report_dir
 
     def test_unauthenticated(self):
-        args = ["--provider", "aws"]
+        args = ["aws"]
         self.mocked_provider.provider_code = "aws"
         self.mocked_provider.authenticate = MagicMock(return_value=False)
 
@@ -95,7 +95,7 @@ class TestMainClass(TestCase):
         assert (code == unauthenticated_code)
 
     def test_keyboardinterrupted(self):
-        args = ["--provider", "aws"]
+        args = ["aws"]
         self.mocked_provider.provider_code = "aws"
 
         def _raise(e):
