@@ -606,7 +606,7 @@
         ],
         "iam-user-with-password-and-key.json": [
             {
-                "enabled": false,
+                "enabled": true,
                 "level": "warning"
             }
         ],
