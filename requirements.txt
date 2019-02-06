@@ -7,15 +7,17 @@ boto3>=1.9.60
 opinel>=3.3.4,<4.0.0
 
 # GCP Provider
-grpcio
+grpcio>=1.18.0
 ## Cloud Libraries
-google-cloud-resource-manager
-google-cloud-storage
-google-cloud-container
-google-cloud-logging
-google-cloud-monitoring
+google-cloud-container>=0.2.1
+google-cloud-core>=0.29.1
+google-cloud-iam>=0.1.0
+google-cloud-logging>=1.10.0
+google-cloud-monitoring>=0.31.1
+google-cloud-resource-manager>=0.28.3
+google-cloud-storage>=1.13.2
 ## API Client Libraries
-google_api_python_client
+google-api-python-client>=1.7.8
 oauth2client>=4.1.3
 
 # Azure Provider
