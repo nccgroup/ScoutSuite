@@ -156,6 +156,12 @@ class GCPBaseConfig(BaseConfig):
                 try:
 
                     if self.library_type == 'cloud_client_library':
+
+                        # TODO this should be more modular
+                        # this is only for stackdriverlogging
+                        if self.service == 'stackdriverlogging':
+                            api_client.project = list_params_combination.pop('project')
+
                         response = method(**list_params_combination)
 
                         # TODO this should be more modular
