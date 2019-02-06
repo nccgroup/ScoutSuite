@@ -9,13 +9,13 @@ from ScoutSuite.__main__ import main as scout
 
 from ScoutSuite.cli_parser import ScoutSuiteArgumentParser
 
+modules = {
+    "listall": listall,
+    "rules": rules_generator,
+}
+
 if __name__ == "__main__":
     parser = ScoutSuiteArgumentParser()
     args = parser.parse_args()
-    if args.module == "listall":
-        main = listall
-    elif args.module == "rules":
-        main = rules_generator
-    else:
-        main = scout
-    sys.exit(main(args))
+
+    sys.exit(modules.get(args.module, scout)(args))
