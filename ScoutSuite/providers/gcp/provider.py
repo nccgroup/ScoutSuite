@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-[d['value'] for d in l]
 
 import os
-
 import warnings
+
 import google.auth
 import googleapiclient
 from opinel.utils.console import printError, printException
@@ -17,6 +17,7 @@ class GCPCredentials():
     def __init__(self, api_client_credentials, cloud_client_credentials):
         self.api_client_credentials = api_client_credentials
         self.cloud_client_credentials = cloud_client_credentials
+
 
 class GCPProvider(BaseProvider):
     """
@@ -68,30 +69,41 @@ class GCPProvider(BaseProvider):
             self.credentials, project_id = google.auth.default()
             if self.credentials:
 
-                if self.project_id or project_id:
+                # Project passed through the CLI
+                if self.project_id:
                     self.projects = self._get_projects(parent_type='project',
-                                                       parent_id=self.project_id if self.project_id else project_id)
-                    self.aws_account_id = self.project_id if self.project_id else project_id# FIXME this is for AWS
-                    self.profile = self.project_id if self.project_id else project_id# FIXME this is for AWS
+                                                       parent_id=self.project_id)
+                    self.aws_account_id = self.project_id  # FIXME this is for AWS
+                    self.profile = self.project_id  # FIXME this is for AWS
 
-                elif self.organization_id:
-                    self.projects = self._get_projects(parent_type='organization',
-                                                       parent_id=self.organization_id)
-                    self.aws_account_id = self.organization_id # FIXME this is for AWS
-                    self.profile = self.organization_id # FIXME this is for AWS
-
+                # Folder passed through the CLI
                 elif self.folder_id:
                     self.projects = self._get_projects(parent_type='folder',
                                                        parent_id=self.folder_id)
-                    self.aws_account_id = self.folder_id # FIXME this is for AWS
-                    self.profile = self.folder_id # FIXME this is for AWS
+                    self.aws_account_id = self.folder_id  # FIXME this is for AWS
+                    self.profile = self.folder_id  # FIXME this is for AWS
 
+                # Organization passed through the CLI
+                elif self.organization_id:
+                    self.projects = self._get_projects(parent_type='organization',
+                                                       parent_id=self.organization_id)
+                    self.aws_account_id = self.organization_id  # FIXME this is for AWS
+                    self.profile = self.organization_id  # FIXME this is for AWS
+
+                # Project inferred from default configuration
+                if project_id:
+                    self.projects = self._get_projects(parent_type='project',
+                                                       parent_id=project_id)
+                    self.aws_account_id = project_id  # FIXME this is for AWS
+                    self.profile = project_id  # FIXME this is for AWS
+
+                # All projects to which the user / Service Account has access to
                 else:
                     # self.project_id = project_id
                     self.projects = self._get_projects(parent_type='all',
                                                        parent_id=None)
-                    self.aws_account_id = 'gcp' # FIXME this is for AWS
-                    self.profile = 'gcp' # FIXME this is for AWS
+                    self.aws_account_id = 'gcp'  # FIXME this is for AWS
+                    self.profile = 'gcp'  # FIXME this is for AWS
 
                 # TODO this shouldn't be done here? but it has to in order to init with projects...
                 self.services.set_projects(projects=self.projects)
@@ -109,7 +121,6 @@ class GCPProvider(BaseProvider):
             printError('Failed to authenticate to GCP')
             printException(e)
             return False
-
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
@@ -138,7 +149,7 @@ class GCPProvider(BaseProvider):
 
         projects = []
 
-        #FIXME can't currently be done with API client library as it consumes v1 which doesn't support folders
+        # FIXME can't currently be done with API client library as it consumes v1 which doesn't support folders
         """
 
         resource_manager_client = resource_manager.Client(credentials=self.credentials)
@@ -151,7 +162,8 @@ class GCPProvider(BaseProvider):
         """
 
         resource_manager_client_v1 = gcp_connect_service(service='cloudresourcemanager', credentials=self.credentials)
-        resource_manager_client_v2 = gcp_connect_service(service='cloudresourcemanager-v2', credentials=self.credentials)
+        resource_manager_client_v2 = gcp_connect_service(service='cloudresourcemanager-v2',
+                                                         credentials=self.credentials)
 
         if parent_type == 'project':
             project_response = resource_manager_client_v1.projects().list(filter='id:%s' % parent_id).execute()
@@ -182,7 +194,8 @@ class GCPProvider(BaseProvider):
                                                                           previous_response=response)
 
             # get parent children projects in children folders recursively
-            folder_response = resource_manager_client_v2.folders().list(parent='%ss/%s' % (parent_type, parent_id)).execute()
+            folder_response = resource_manager_client_v2.folders().list(
+                parent='%ss/%s' % (parent_type, parent_id)).execute()
             if 'folders' in folder_response.keys():
                 for folder in folder_response['folders']:
                     projects.extend(self._get_projects("folder", folder['name'].strip(u'folders/')))
@@ -207,7 +220,6 @@ class GCPProvider(BaseProvider):
                     instance_disk['latest_snapshot'] = max(instance_disk['snapshots'],
                                                            key=lambda x: x['creation_timestamp']) \
                         if instance_disk['snapshots'] else None
-
 
     def _match_networks_and_instances(self):
         """
