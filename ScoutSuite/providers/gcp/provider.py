@@ -102,8 +102,12 @@ class GCPProvider(BaseProvider):
                     # self.project_id = project_id
                     self.projects = self._get_projects(parent_type='all',
                                                        parent_id=None)
-                    self.aws_account_id = 'gcp'  # FIXME this is for AWS
-                    self.profile = 'gcp'  # FIXME this is for AWS
+                    if service_account and hasattr(self.credentials, 'service_account_email'):
+                        self.aws_account_id = self.credentials.service_account_email  # FIXME this is for AWS
+                    else:
+                        self.aws_account_id = 'GCP'  # FIXME this is for AWS
+
+                    self.profile = 'GCP'  # FIXME this is for AWS
 
                 # TODO this shouldn't be done here? but it has to in order to init with projects...
                 self.services.set_projects(projects=self.projects)
