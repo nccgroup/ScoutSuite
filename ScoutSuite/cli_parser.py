@@ -26,7 +26,6 @@ class ScoutSuiteArgumentParser:
         self.common_providers_args_parser = argparse.ArgumentParser(add_help=False, parents=[self.base_args_parser])
 
         self.subparsers = self.parser.add_subparsers(title="The module you want to run",
-                                                     required=True,
                                                      dest="module")
 
         self._init_common_args_parser()
@@ -330,6 +329,10 @@ class ScoutSuiteArgumentParser:
 
     def parse_args(self, args=None):
         args = self.parser.parse_args(args)
+
+        # Cannot simply use required for backward compatibility
+        if not args.module:
+            self.parser.error('You need to input a module')
         # If local analysis, overwrite results
         if args.__dict__.get('fetch_local'):
             args.force_write = True
