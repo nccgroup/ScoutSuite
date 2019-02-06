@@ -29,16 +29,16 @@ class ScoutSuiteArgumentParser:
                                                      required=True,
                                                      dest="module")
 
-        self.init_common_args_parser()
+        self._init_common_args_parser()
 
-        self.init_rules_generator_parser()
-        self.init_listall_parser()
+        self._init_rules_generator_parser()
+        self._init_listall_parser()
 
-        self.init_aws_parser()
-        self.init_gcp_parser()
-        self.init_azure_parser()
+        self._init_aws_parser()
+        self._init_gcp_parser()
+        self._init_azure_parser()
 
-    def init_rules_generator_parser(self):
+    def _init_rules_generator_parser(self):
         parser = self.subparsers.add_parser("rules",
                                             help="Run the ScoutSuite rules generator")
         parser.add_argument('--ruleset-name',
@@ -65,7 +65,7 @@ class ScoutSuiteArgumentParser:
                             action='store_true',
                             help='Do not automatically open the report in the browser.')
 
-    def init_listall_parser(self):
+    def _init_listall_parser(self):
         parser = self.subparsers.add_parser("listall",
                                             help="Run the ScoutSuite CSV exporter")
 
@@ -130,7 +130,7 @@ class ScoutSuiteArgumentParser:
                             nargs='+',
                             help='Keys to be printed for the given object (read values from file.')
 
-    def init_aws_parser(self):
+    def _init_aws_parser(self):
         parser = self.subparsers.add_parser("aws",
                                             parents=[self.common_providers_args_parser],
                                             help="Run Scout against an Amazon web Services account")
@@ -186,7 +186,7 @@ class ScoutSuiteArgumentParser:
                             nargs='+',
                             help='Name of out-of-scope services.')
 
-    def init_gcp_parser(self):
+    def _init_gcp_parser(self):
         parser = self.subparsers.add_parser("gcp",
                                             parents=[self.common_providers_args_parser],
                                             help="Run Scout against a Google Cloud Platform account")
@@ -219,7 +219,7 @@ class ScoutSuiteArgumentParser:
                                action='store',
                                help='ID of the GCP Organization to analyze')
 
-    def init_azure_parser(self):
+    def _init_azure_parser(self):
         parser = self.subparsers.add_parser("azure",
                                             parents=[self.common_providers_args_parser],
                                             help="Run Scout against a Microsoft Azure account")
@@ -278,7 +278,7 @@ class ScoutSuiteArgumentParser:
                                        dest='password',
                                        help='Password of the Scout Suite account')
 
-    def init_common_args_parser(self):
+    def _init_common_args_parser(self):
         parser = self.common_providers_args_parser.add_argument_group('ScoutSuite Arguments')
 
         parser.add_argument('-l', '--local',
