@@ -11,7 +11,7 @@ from ScoutSuite.cli_parser import ScoutSuiteArgumentParser
 
 modules = {
     "listall": listall,
-    "rules": rules_generator,
+    "ruleset": rules_generator,
 }
 
 if __name__ == "__main__":

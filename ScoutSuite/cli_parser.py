@@ -39,7 +39,7 @@ class ScoutSuiteArgumentParser:
         self._init_azure_parser()
 
     def _init_rules_generator_parser(self):
-        parser = self.subparsers.add_parser("rules",
+        parser = self.subparsers.add_parser("ruleset",
                                             parents=[self.base_args_parser],
                                             help="Run the ScoutSuite rules generator")
         parser.add_argument('--ruleset-name',
