@@ -1,7 +1,7 @@
 
     <!-- SES queue partial -->
     <script id="services.ses.regions.id.identities.partial" type="text/x-handlebars-template">
-        <div class="list-group-item active">
+        <div id="resource-name" class="list-group-item active">
             <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
@@ -24,8 +24,7 @@
 
     <!-- Single SES queue template -->
     <script id="single_ses_queue-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.ses.regions.id.identities}}
+        {{> modal-template template='services.ses.regions.id.identities'}}
     </script>
     <script>
         var single_ses_queue_template = Handlebars.compile($("#single_ses_queue-template").html());

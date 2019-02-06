@@ -1,7 +1,7 @@
 
 <!-- Stackdriver Logging sinks partial -->
 <script id="services.stackdriverlogging.sinks.partial" type="text/x-handlebars-template">
-    <div class="list-group-item active">
+    <div id="resource-name" class="list-group-item active">
         <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
     <div class="list-group-item">
@@ -18,8 +18,7 @@
 
 <!-- Single stackdriverlogging sink template -->
 <script id="single_stackdriverlogging_sink-template" type="text/x-handlebars-template">
-    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-    {{> services.stackdriverlogging.sinks}}
+    {{> modal-template template='services.stackdriverlogging.sinks'}}
 </script>
 <script>
     var single_stackdriverlogging_sink_template = Handlebars.compile($("#single_stackdriverlogging_sink-template").html());

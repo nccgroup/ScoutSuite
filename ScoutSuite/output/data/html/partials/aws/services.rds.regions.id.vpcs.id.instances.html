@@ -1,7 +1,7 @@
 
     <!-- RDS instance partial -->
     <script id="services.rds.regions.id.vpcs.id.instances.partial" type="text/x-handlebars-template">
-        <div class="list-group-item active">
+        <div id="resource-name" class="list-group-item active">
           <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
@@ -39,8 +39,7 @@
 
     <!-- Single RDS instance template -->
     <script id="single_rds_instance-template" type="text/x-handlebars-template">
-        <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-        {{> services.rds.regions.id.vpcs.id.instances}}
+        {{> modal-template template='services.rds.regions.id.vpcs.id.instances'}}
     </script>
     <script>
         var single_rds_instance_template = Handlebars.compile($("#single_rds_instance-template").html());

@@ -1,7 +1,6 @@
-
 <!-- EBS volume partial -->
 <script id="services.ec2.regions.id.volumes.partial" type="text/x-handlebars-template">
-    <div class="list-group-item active">
+    <div id="resource-name" class="list-group-item active">
         <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
     <div class="list-group-item">
@@ -16,8 +15,7 @@
 
 <!-- Single EBS volume template -->
 <script id="single_ebs_volume-template" type="text/x-handlebars-template">
-    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-    {{> services.ec2.regions.id.volumes}}
+    {{> modal-template template='services.ec2.regions.id.volumes' }}
 </script>
 
 <script>

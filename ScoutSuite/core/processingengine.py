@@ -66,6 +66,4 @@ class ProcessingEngine(object):
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['flagged_items'] = 0
 
     def _filter_rules(self, rules, services):
-        return { rule: rules[rule] for rule in rules if rule.split('.')[0] in services }
-
-
+        return { rule_name: rule for rule_name, rule in rules.items() if rule_name.split('.')[0] in services }

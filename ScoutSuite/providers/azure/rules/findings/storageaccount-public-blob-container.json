@@ -1,0 +1,11 @@
+{
+    "dashboard_name": "Storage Accounts",
+    "description": "Public Blob Container",
+    "rationale": "Your blob containers should be private. See CIS 3.7.",
+    "path": "storageaccounts.storage_accounts.id.blob_containers.id",
+    "display_path": "storageaccounts.storage_accounts.id",
+    "conditions": [ "and",
+        [ "storageaccounts.storage_accounts.id.blob_containers.id.public_access_allowed", "true", "" ]
+    ],
+    "id_suffix": "public_access_allowed"
+}
