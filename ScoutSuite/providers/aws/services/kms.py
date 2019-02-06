@@ -18,8 +18,18 @@ class KMSRegionConfig(RegionConfig):
         customer_master_key = {'id': key.pop('KeyId'), 'arn': key.pop('KeyArn')}
 
         api_client = api_clients[region]
+
         rotation_status = api_client.get_key_rotation_status(KeyId=customer_master_key['id'])
         customer_master_key['rotation_enabled'] = rotation_status['KeyRotationEnabled']
+
+        key_information = api_client.describe_key(KeyId=customer_master_key['id'])
+        customer_master_key['description'] = key_information['KeyMetadata']['Description']
+
+        alias = api_client.list_aliases(KeyId=customer_master_key['id'])
+        if len(alias['Aliases']):
+            customer_master_key['name'] = alias['Aliases'][0]['AliasName'][6:len(alias['Aliases'][0]['AliasName'])]
+        else:
+            customer_master_key['name'] = 'unnamed key'
 
         self.keys[len(self.keys)] = customer_master_key
 
