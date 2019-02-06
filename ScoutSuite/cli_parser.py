@@ -12,20 +12,24 @@ class ScoutSuiteArgumentParser:
     def __init__(self):
         self.parser = argparse.ArgumentParser()
 
-        self.parser.add_argument('--debug',
-                                 dest='debug',
-                                 default=False,
-                                 action='store_true',
-                                 help='Print the stack trace when exception occurs')
-        self.parser.add_argument('--force',
-                                 dest='force_write',
-                                 default=False,
-                                 action='store_true',
-                                 help='Overwrite existing files')
+        self.base_args_parser = argparse.ArgumentParser(add_help=False)
+        self.base_args_parser.add_argument('--debug',
+                                           dest='debug',
+                                           default=False,
+                                           action='store_true',
+                                           help='Print the stack trace when exception occurs')
+        self.base_args_parser.add_argument('--force',
+                                           dest='force_write',
+                                           default=False,
+                                           action='store_true',
+                                           help='Overwrite existing files')
+        self.common_providers_args_parser = argparse.ArgumentParser(add_help=False, parents=[self.base_args_parser])
 
         self.subparsers = self.parser.add_subparsers(title="The module you want to run",
                                                      required=True,
                                                      dest="module")
+
+        self.init_common_args_parser()
 
         self.init_rules_generator_parser()
         self.init_listall_parser()
@@ -128,9 +132,9 @@ class ScoutSuiteArgumentParser:
 
     def init_aws_parser(self):
         parser = self.subparsers.add_parser("aws",
+                                            parents=[self.common_providers_args_parser],
                                             help="Run Scout against an Amazon web Services account")
 
-        self.init_common_args(parser.add_argument_group('ScoutSuite parameters'))
         parser = parser.add_argument_group('AWS parameters')
 
         default = os.environ.get('AWS_PROFILE', 'default')
@@ -184,9 +188,9 @@ class ScoutSuiteArgumentParser:
 
     def init_gcp_parser(self):
         parser = self.subparsers.add_parser("gcp",
+                                            parents=[self.common_providers_args_parser],
                                             help="Run Scout against a Google Cloud Platform account")
 
-        self.init_common_args(parser.add_argument_group('ScoutSuite parameters'))
         parser = parser.add_argument_group('GCP parameters')
 
         gcp_auth_modes = parser.add_mutually_exclusive_group(required=True)
@@ -217,9 +221,9 @@ class ScoutSuiteArgumentParser:
 
     def init_azure_parser(self):
         parser = self.subparsers.add_parser("azure",
+                                            parents=[self.common_providers_args_parser],
                                             help="Run Scout against a Microsoft Azure account")
 
-        self.init_common_args(parser.add_argument_group('ScoutSuite parameters'))
         azure_parser = parser.add_argument_group('Authentication modes')
         azure_auth_params = parser.add_argument_group('Authentication parameters')
 
@@ -274,8 +278,9 @@ class ScoutSuiteArgumentParser:
                                        dest='password',
                                        help='Password of the Scout Suite account')
 
-    @staticmethod
-    def init_common_args(parser):
+    def init_common_args_parser(self):
+        parser = self.common_providers_args_parser.add_argument_group('ScoutSuite Arguments')
+
         parser.add_argument('-l', '--local',
                             dest='fetch_local',
                             default=False,

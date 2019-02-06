@@ -20,7 +20,6 @@ except Exception as e:
     sys.exit(42)
 
 from ScoutSuite import AWSCONFIG
-from ScoutSuite.cli_parser import ScoutSuiteArgumentParser
 from ScoutSuite.output.html import Scout2Report
 from ScoutSuite.core.exceptions import RuleExceptions
 from ScoutSuite.core.ruleset import Ruleset
