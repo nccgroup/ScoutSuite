@@ -53,7 +53,7 @@ def main(args):
                                   thread_config=args.get('thread_config'))
 
     report_file_name = generate_report_name(cloud_provider.provider_code, args)
-    
+
     # Create a new report
     report = Scout2Report(args.get('module'), report_file_name, args.get('report_dir'), args.get('timestamp'))
 

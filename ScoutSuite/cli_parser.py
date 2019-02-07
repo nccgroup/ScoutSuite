@@ -58,7 +58,7 @@ class ScoutSuiteArgumentParser:
         parser.add_argument('--generator-dir',
                             dest='generator_dir',
                             default=DEFAULT_REPORT_DIR,
-                            help='Path of the Scout2 rules generator.')
+                            help='Path of the Scout rules generator.')
         parser.add_argument('--no-browser',
                             dest='no_browser',
                             default=False,
