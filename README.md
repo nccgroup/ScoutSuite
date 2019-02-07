@@ -226,7 +226,7 @@ When using Scout with a Service Principal, you may run Scout using the following
 
     $ python Scout.py azure --service-principal
 
-You can also pass the credentials you want directly with command line arguments. The remaining one will be asked
+You can also pass the credentials you want directly with command line arguments. The remaining ones will be asked
 interactively:
 
     $ python Scout.py azure --service-principal --tenant <TENANT_ID> --subscription <SUBSCRIPTION_ID> --client-id <CLIENT_ID>
