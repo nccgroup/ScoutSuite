@@ -34,12 +34,6 @@ def main(args):
     :return:
     """
 
-    # FIXME check that all requirements are installed
-    # # Check version of opinel
-    # requirements_file_path = '%s/requirements.txt' % os.path.dirname(sys.modules['__main__'].__file__)
-    # if not check_requirements(requirements_file_path):
-    #     return 42
-
     # Get the dictionnary to get None instead of a crash
     args = args.__dict__
 
