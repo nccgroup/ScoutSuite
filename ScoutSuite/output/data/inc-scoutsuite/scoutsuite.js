@@ -92,15 +92,6 @@ $(document).ready(function () {
                 // add item to json
                 json_dict['items'].push(i);
             };
-            // doesn't work as ID is not always last or second to last value in id_array
-            // for (item in items) {
-            //     // get item value
-            //     var id_array = items[item].split('.');
-            //     var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
-            //     var i = get_value_at(id);
-            //     // add item to json
-            //     json_dict[id_array[id_array.length - 2]] = i;
-            // };
             download_as_json(finding_key + '.json', json_dict);
         };
 
@@ -302,7 +293,6 @@ function showRowWithItems(path) {
 function showFilters(resource_path) {
     hideFilters();
     service = resource_path.split('.')[1];
-    console.log('Service: ' + service);
     // Show service filters
     $('[id="' + resource_path + '.id.filters"]').show();
     // show region filters
