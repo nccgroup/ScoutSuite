@@ -118,7 +118,10 @@
     "computeengine-firewall-rule-opens-sensitive-port-to-all.json": [
       {
         "enabled": true,
-        "level": "warning"
+        "level": "warning",
+        "args": [
+            "INGRESS"
+        ]
       }
     ],
     "computeengine-firewall-rule-allows-internal-traffic.json": [

@@ -3,6 +3,7 @@
   "description": "Firewall rule allows public access (0.0.0.0/0)",
   "path": "computeengine.firewalls.id",
   "conditions": [ "and",
+    [ "computeengine.firewalls.id.action", "equal", "allowed"],
     [ "computeengine.firewalls.id.disabled", "notTrue", "" ],
     [ "computeengine.firewalls.id.direction", "equal", "INGRESS" ],
     [ "computeengine.firewalls.id.source_ranges", "containAtLeastOneOf", "0.0.0.0/0" ]

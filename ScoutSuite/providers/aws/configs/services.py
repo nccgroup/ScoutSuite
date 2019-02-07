@@ -14,6 +14,7 @@ from ScoutSuite.providers.aws.services.elb import ELBConfig
 from ScoutSuite.providers.aws.services.elbv2 import ELBv2Config
 from ScoutSuite.providers.aws.services.emr import EMRConfig
 from ScoutSuite.providers.aws.services.iam import IAMConfig
+from ScoutSuite.providers.aws.services.kms import KMSConfig
 from ScoutSuite.providers.aws.services.rds import RDSConfig
 from ScoutSuite.providers.aws.services.redshift import RedshiftConfig
 from ScoutSuite.providers.aws.services.route53 import Route53Config, Route53DomainsConfig
@@ -34,6 +35,7 @@ class AWSServicesConfig(BaseServicesConfig):
     :ivar cloudwatch:                   CloudWatch configuration: TODO
     :ivar ec2:                          EC2 configuration
     :ivar iam:                          IAM configuration
+    :ivar kms:                          KMS configuration
     :ivar rds:                          RDS configuration
     :ivar redshift:                     Redshift configuration
     :ivar s3:                           S3 configuration
@@ -55,6 +57,7 @@ class AWSServicesConfig(BaseServicesConfig):
         self.elbv2 = ELBv2Config(metadata['compute']['elbv2'], thread_config)
         self.emr = EMRConfig(metadata['analytics']['emr'], thread_config)
         self.iam = IAMConfig(thread_config)
+        self.kms = KMSConfig(metadata['security']['kms'], thread_config)
         self.awslambda = LambdaConfig(metadata['compute']['awslambda'], thread_config)
         self.redshift = RedshiftConfig(metadata['database']['redshift'], thread_config)
         self.rds = RDSConfig(metadata['database']['rds'], thread_config)
