@@ -3,7 +3,7 @@
 from ScoutSuite.providers.azure.configs.base import AzureBaseConfig
 from ScoutSuite.providers.azure.utils import get_resource_group_name
 
-class SQLConfig(AzureBaseConfig):
+class SQLDatabaseConfig(AzureBaseConfig):
     targets = (
         ('servers', 'Servers', 'list', {}, False),
     )
@@ -13,7 +13,7 @@ class SQLConfig(AzureBaseConfig):
         self.servers = {}
         self.servers_count = 0
 
-        super(SQLConfig, self).__init__(thread_config)
+        super(SQLDatabaseConfig, self).__init__(thread_config)
 
     def parse_servers(self, server, params):
         server_dict = {}
@@ -48,8 +48,8 @@ class SQLConfig(AzureBaseConfig):
         if response_attribute == "Servers":
             return self._get_servers(api_client, method, list_params)
         else:
-            return super(SQLConfig, self)._get_targets(response_attribute, api_client, method,
-                                                                   list_params, ignore_list_error)
+            return super(SQLDatabaseConfig, self)._get_targets(response_attribute, api_client, method,
+                                                               list_params, ignore_list_error)
 
     def _get_servers(self, api_client, method, list_params):
         servers = []

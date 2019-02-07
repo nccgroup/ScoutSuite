@@ -10,11 +10,11 @@
     }
   },
   "sql": {
-    "sql": {
+    "sqldatabase": {
       "resources": {
         "servers": {
           "cols": 2,
-          "path": "services.sql.servers"
+          "path": "services.sqldatabase.servers"
         }
       }
     }

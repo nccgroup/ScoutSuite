@@ -16,7 +16,7 @@ def azure_connect_service(service, credentials, region_name=None):
             return StorageManagementClient(credentials.credentials, credentials.subscription_id)
         elif service == 'monitor':
             return MonitorManagementClient(credentials.credentials, credentials.subscription_id)
-        elif service == 'sql':
+        elif service == 'sqldatabase':
             return SqlManagementClient(credentials.credentials, credentials.subscription_id)
         else:
             printException('Service %s not supported' % service)
