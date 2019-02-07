@@ -31,7 +31,7 @@ The following cloud providers are currently supported/planned:
 
 -   Amazon Web Services
 -   Google Cloud Platform (beta)
--   Azure (early alpha)
+-   Azure (alpha)
 
 ## Installation
 
