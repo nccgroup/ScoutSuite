@@ -165,7 +165,7 @@ The following command will provide the list of available command line options:
 
     $ python Scout.py --help
 
-You can also use this for help on a specific provider:
+You can also use this to get help on a specific provider:
 
     $ python Scout.py aws --help
 
