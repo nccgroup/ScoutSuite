@@ -35,8 +35,8 @@ class CloudSQLConfig(GCPBaseConfig):
         instance_dict['automatic_backup_enabled'] = instance['settings']['backupConfiguration']['enabled']
         instance_dict['log_enabled'] = self._is_log_enabled(instance)
         instance_dict['ssl_required'] = self._is_ssl_required(instance)
-
         instance_dict['backups'] = self._get_instance_backups(instance, params)
+        instance_dict['authorized_networks'] = instance['settings']['ipConfiguration']['authorizedNetworks']
 
         instance_dict['last_backup_timestamp'] = \
             instance_dict['backups'][max(instance_dict['backups'].keys(),
