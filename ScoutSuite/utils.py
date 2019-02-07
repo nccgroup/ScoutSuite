@@ -30,7 +30,9 @@ formatted_service_name = {
     'kubernetesengine': 'Kubernetes Engine',
     'cloudresourcemanager': 'Cloud Resource Manager',
 
+    'monitor': 'Monitor',
     'storageaccounts': 'Storage Accounts',
+    'sqldatabase': 'SQL Database',
 }
 
 

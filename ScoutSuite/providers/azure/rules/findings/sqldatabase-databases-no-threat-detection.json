@@ -1,0 +1,11 @@
+{
+    "dashboard_name": "SQL Databases",
+    "description": "Threat detection disabled",
+    "rationale": "You should enable threat detection for all of your SQL databases. See CIS 4.2.2.",
+    "path": "sqldatabase.servers.id.databases.id",
+    "display_path": "sqldatabase.servers.id",
+    "conditions": [ "and",
+        [ "sqldatabase.servers.id.databases.id.threat_detection_enabled", "false", "" ]
+    ],
+    "id_suffix": "threat_detection_enabled"
+}

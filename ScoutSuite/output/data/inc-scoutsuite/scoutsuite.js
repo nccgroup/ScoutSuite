@@ -984,7 +984,7 @@ function make_title (title) {
         return title.toString();
     };
     title = title.toLowerCase();
-    if (['ec2', 'efs', 'iam', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) != -1) {
+    if (['ec2', 'efs', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) != -1) {
         return title.toUpperCase();
     } else if (title == 'cloudtrail') {
         return 'CloudTrail';
@@ -1015,6 +1015,10 @@ function make_title (title) {
         return 'Cloud Resource Manager';
     } else if (title == 'storageaccounts') {
         return 'Storage Accounts';
+    } else if (title == 'monitor') {
+        return 'Monitor';
+    } else if (title == 'sqldatabase') {
+        return 'SQL Database';
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
     };
