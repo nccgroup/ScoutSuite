@@ -1061,7 +1061,10 @@ var make_title = function (title) {
         return 'Cloud Resource Manager';
     } else if (title == 'storageaccounts') {
         return 'Storage Accounts';
-
+    } else if (title == 'monitor') {
+        return 'Monitor';
+    } else if (title == 'sqldatabase') {
+        return 'SQL Database';
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
     };
