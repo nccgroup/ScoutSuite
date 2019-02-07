@@ -90,8 +90,8 @@ class GCPProvider(BaseProvider):
                     self.aws_account_id = self.organization_id  # FIXME this is for AWS
                     self.profile = self.organization_id  # FIXME this is for AWS
 
-                # Project inferred from default configuration
-                if project_id:
+                # Project inferred from default configuration and not a service account
+                if project_id and not service_account:
                     self.projects = self._get_projects(parent_type='project',
                                                        parent_id=project_id)
                     self.aws_account_id = project_id  # FIXME this is for AWS
