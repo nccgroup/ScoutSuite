@@ -30,6 +30,18 @@
         "enabled": true,
         "level": "warning"
       }
+    ],
+    "sqldatabase-databases-no-transparent-data-encryption.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "sqldatabase-servers-no-ad-admin-configured.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }
