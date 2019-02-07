@@ -82,6 +82,8 @@ def main(passed_args=None):
     if cloud_provider.provider_code == 'azure':
         report_file_name = 'azure'
 
+    # TODO move this to after authentication, so that the report can be more specific to what's being scanned.
+    # For example if scanning with a GCP service account, the SA email can only be known after authenticating...
     # Create a new report
     report = Scout2Report(args.provider, report_file_name, args.report_dir, args.timestamp)
 
