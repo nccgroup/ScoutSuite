@@ -176,16 +176,6 @@ class ScoutSuiteArgumentParser:
                             dest='csv_credentials',
                             default=None,
                             help='Path to a CSV file containing the access key ID and secret key')
-        parser.add_argument('--services',
-                            dest='services',
-                            default=[],
-                            nargs='+',
-                            help='Name of in-scope services.')
-        parser.add_argument('--skip',
-                            dest='skipped_services',
-                            default=[],
-                            nargs='+',
-                            help='Name of out-of-scope services.')
 
     def _init_gcp_parser(self):
         parser = self.subparsers.add_parser("gcp",
@@ -321,6 +311,16 @@ class ScoutSuiteArgumentParser:
                             default=False,
                             nargs='?',
                             help='Timestamp added to the name of the report (default is current time in UTC).')
+        parser.add_argument('--services',
+                            dest='services',
+                            default=[],
+                            nargs='+',
+                            help='Name of in-scope services.')
+        parser.add_argument('--skip',
+                            dest='skipped_services',
+                            default=[],
+                            nargs='+',
+                            help='Name of out-of-scope services.')
         parser.add_argument('--exceptions',
                             dest='exceptions',
                             default=[None],
