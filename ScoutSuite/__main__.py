@@ -52,24 +52,8 @@ def main(args):
                                   skipped_services=args.get('skipped_services'),
                                   thread_config=args.get('thread_config'))
 
-    # FIXME this shouldn't be done here
-    if cloud_provider.provider_code == 'aws':
-        if args.get('profile'):
-            report_file_name = 'aws-%s' % args.get('profile')[0]
-        else:
-            report_file_name = 'aws'
-    if cloud_provider.provider_code == 'gcp':
-        if args.get('project_id'):
-            report_file_name = 'gcp-%s' % args.get('project_id')
-        elif args.get('organization_id'):
-            report_file_name = 'gcp-%s' % args.get('organization_id')
-        elif args.get('folder_id'):
-            report_file_name = 'gcp-%s' % args.get('folder_id')
-        else:
-            report_file_name = 'gcp'
-    if cloud_provider.provider_code == 'azure':
-        report_file_name = 'azure'
-
+    report_file_name = generate_report_name(cloud_provider.provider_code, args)
+    
     # Create a new report
     report = Scout2Report(args.get('module'), report_file_name, args.get('report_dir'), args.get('timestamp'))
 
@@ -179,3 +163,23 @@ def main(args):
         webbrowser.open(url, new=2)
 
     return 0
+
+
+def generate_report_name(provider_code, args):
+    if provider_code == 'aws':
+        if args.get('profile'):
+            report_file_name = 'aws-%s' % args.get('profile')[0]
+        else:
+            report_file_name = 'aws'
+    if provider_code == 'gcp':
+        if args.get('project_id'):
+            report_file_name = 'gcp-%s' % args.get('project_id')
+        elif args.get('organization_id'):
+            report_file_name = 'gcp-%s' % args.get('organization_id')
+        elif args.get('folder_id'):
+            report_file_name = 'gcp-%s' % args.get('folder_id')
+        else:
+            report_file_name = 'gcp'
+    if provider_code == 'azure':
+        report_file_name = 'azure'
+    return report_file_name
