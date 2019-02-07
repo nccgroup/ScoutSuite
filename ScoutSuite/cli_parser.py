@@ -80,7 +80,7 @@ class ScoutSuiteArgumentParser:
         parser.add_argument('--report-dir',
                             dest='report_dir',
                             default=DEFAULT_REPORT_DIR,
-                            help='Path of the ScoutSuite report.')
+                            help='Path of the Scout report.')
         parser.add_argument('--ip-ranges',
                             dest='ip_ranges',
                             default=[],
@@ -262,12 +262,12 @@ class ScoutSuiteArgumentParser:
                                        action='store',
                                        default=None,
                                        dest='username',
-                                       help='Username of the Scout Suite account')
+                                       help='Username of the Azure account')
         azure_auth_params.add_argument('--password',
                                        action='store',
                                        default=None,
                                        dest='password',
-                                       help='Password of the Scout Suite account')
+                                       help='Password of the Azure account')
 
     def _init_common_args_parser(self):
         parser = self.common_providers_args_parser.add_argument_group('ScoutSuite Arguments')
