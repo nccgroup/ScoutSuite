@@ -70,8 +70,8 @@
     color: rgb(225, 225, 225);
 }
 
-.finding-warning { color: #fdbe00;  }
-.finding-danger {  color:#ee293d;  }
+.finding-warning { color: #fdbe00; }
+.finding-danger { color:#ee293d; }
 
 ul.no-bullet {
     list-style-type: none;
