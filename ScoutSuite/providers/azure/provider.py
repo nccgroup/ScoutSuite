@@ -43,10 +43,9 @@ class AzureProvider(BaseProvider):
 
         super(AzureProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
-    def authenticate(self, key_file=None, user_account=None, service_account=None, cli=None, msi=None,
-                     service_principal=None, file_auth=None, user_credentials=None, tenant_id=None,
-                     subscription_id=None, client_id=None, client_secret=None, username=None, password=None,
-                     **kargs):
+    def authenticate(self, cli=None, msi=None, service_principal=None, file_auth=None, user_account=None,
+                     tenant_id=None, subscription_id=None, client_id=None, client_secret=None, username=None,
+                     password=None, **kargs):
         """
         Implements authentication for the Azure provider using azure-cli.
         Refer to https://docs.microsoft.com/en-us/python/azure/python-sdk-azure-authenticate?view=azure-python.
@@ -109,7 +108,7 @@ class AzureProvider(BaseProvider):
                 self.credentials = AzureCredentials(credentials, subscription_id)
 
                 return True
-            elif user_credentials:
+            elif user_account:
                 username = username if username else input("Username: ")
                 password = password if password else getpass("Password: ")
 
