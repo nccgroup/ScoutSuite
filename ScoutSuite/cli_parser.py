@@ -40,7 +40,7 @@ class ScoutSuiteArgumentParser:
     def _init_rules_generator_parser(self):
         parser = self.subparsers.add_parser("ruleset",
                                             parents=[self.base_args_parser],
-                                            help="Run the ScoutSuite rules generator")
+                                            help="Run the Scout rules generator")
         parser.add_argument('--ruleset-name',
                             dest='ruleset_name',
                             default=None,
@@ -68,7 +68,7 @@ class ScoutSuiteArgumentParser:
     def _init_listall_parser(self):
         parser = self.subparsers.add_parser("listall",
                                             parents=[self.base_args_parser],
-                                            help="Run the ScoutSuite CSV exporter")
+                                            help="Run the Scout CSV exporter")
 
         default = os.environ.get('AWS_PROFILE', 'default')
         default_origin = " (from AWS_PROFILE)." if 'AWS_PROFILE' in os.environ else "."
