@@ -41,7 +41,6 @@ def main(args):
     configPrintException(args.get('debug'))
 
     # Create a cloud provider object
-    # TODO fix this mess
     cloud_provider = get_provider(provider=args.get('module'),
                                   profile=args.get('profile'),
                                   project_id=args.get('project_id'),
