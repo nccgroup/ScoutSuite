@@ -126,8 +126,8 @@ class ComputeEngineConfig(GCPBaseConfig):
         network_dict['description'] = network['description'] if 'description' in network and network['description'] else 'N/A'
         network_dict['creation_timestamp'] = network['creationTimestamp']
         network_dict['network_url'] = network['selfLink']
-        network_dict['subnetwork_urls'] = network['subnetworks']
-        network_dict['auto_subnet'] = network['autoCreateSubnetworks']
+        network_dict['subnetwork_urls'] = network.get('subnetworks', None)
+        network_dict['auto_subnet'] = network.get('autoCreateSubnetworks',  None)
         network_dict['routing_config'] = network['routingConfig']
         self.networks[network_dict['id']] = network_dict
 
