@@ -189,11 +189,11 @@ class ScoutSuiteArgumentParser:
         gcp_auth_modes.add_argument('--user-account',
                                     action='store_true',
                                     dest="auth_file",
-                                    help='Run Scout Suite with a Google Account')
+                                    help='Run Scout with a Google Account')
 
         gcp_auth_modes.add_argument('--service-account',
                                     action='store',
-                                    help='Run Scout Suite with a Google Service Account with the specified '
+                                    help='Run Scout with a Google Service Account with the specified '
                                          'Google Service Account Application Credentials file')
 
         gcp_scope = parser.add_mutually_exclusive_group(required=False)
@@ -222,15 +222,15 @@ class ScoutSuiteArgumentParser:
 
         azure_auth_modes.add_argument('--cli',
                                       action='store_true',
-                                      help='Run Scout Suite using configured azure-cli credentials')
+                                      help='Run Scout using configured azure-cli credentials')
 
         azure_auth_modes.add_argument('--msi',
                                       action='store_true',
-                                      help='Run Scout Suite with Managed Service Identity')
+                                      help='Run Scout with Managed Service Identity')
 
         azure_auth_modes.add_argument('--service-principal',
                                       action='store_true',
-                                      help='Run Scout Suite with an Azure Service Principal')
+                                      help='Run Scout with an Azure Service Principal')
         azure_auth_params.add_argument('--tenant',
                                        action='store',
                                        dest='tenant_id',
@@ -253,11 +253,11 @@ class ScoutSuiteArgumentParser:
                                       type=argparse.FileType('r'),
                                       dest='file_auth',
                                       metavar="FILE",
-                                      help='Run Scout Suite with the specified credential file')
+                                      help='Run Scout with the specified credential file')
 
         azure_auth_modes.add_argument('--user-account',
                                       action='store_true',
-                                      help='Run Scout Suite with user credentials')
+                                      help='Run Scout with user credentials')
         azure_auth_params.add_argument('--username',
                                        action='store',
                                        default=None,
@@ -270,7 +270,7 @@ class ScoutSuiteArgumentParser:
                                        help='Password of the Azure account')
 
     def _init_common_args_parser(self):
-        parser = self.common_providers_args_parser.add_argument_group('ScoutSuite Arguments')
+        parser = self.common_providers_args_parser.add_argument_group('Scout Arguments')
 
         parser.add_argument('-l', '--local',
                             dest='fetch_local',
@@ -305,7 +305,7 @@ class ScoutSuiteArgumentParser:
         parser.add_argument('--report-dir',
                             dest='report_dir',
                             default=DEFAULT_REPORT_DIR,
-                            help='Path of the ScoutSuite report.')
+                            help='Path of the Scout report.')
         parser.add_argument('--timestamp',
                             dest='timestamp',
                             default=False,
