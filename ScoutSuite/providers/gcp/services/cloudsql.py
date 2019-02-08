@@ -18,7 +18,8 @@ class CloudSQLConfig(GCPBaseConfig):
         self.instances = {}
         self.instances_count = 0
 
-        super(CloudSQLConfig, self).__init__(thread_config)
+        # TODO figure out why GCP returns errors when running with more then 1 thread (multithreading)
+        super(CloudSQLConfig, self).__init__(thread_config=1)
 
     def parse_instances(self, instance, params):
         """
