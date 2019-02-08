@@ -111,15 +111,19 @@ There are five ways to run scout against an Azure organization.
     1. On most system, you can install azure-cli using `pip install azure-cli`.
     2. Log into an account. The easiest way to do it it with `az login`(for more authentication method,
     you can refer to https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest).
-    3. Run Scout with the `--azure-cli` flag.
+    3. Run Scout with the `--cli` flag.
 2.  Managed Service Identity
     1. Configure your identity on the Azure portal(you can refer to
     https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/)
-    2. Run Scout with the `--azure-msi` flag.
+    2. Run Scout with the `--msi` flag.
 3.  Service Principal
     1. Set up a service principal on the Azure portal(you can refer to
     https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal)
+<<<<<<< HEAD
     2. Run Scout with the `--azure-service-principal` flag. Scout will prompt you for the
+=======
+    2. Run Scout with the `--service-principal` flag. Scout will prompt you for the 
+>>>>>>> upstream/refactor/127-cli-refactoring
     required information.
 4.  File-based Authentication
     1. Create a Service Principal for azure SDK. You can do this with azure-cli using
@@ -127,7 +131,7 @@ There are five ways to run scout against an Azure organization.
     2. Run Scout while providing it with the credentials file using
     `--azure-file-auth path/to/credentials/file`.
 5.  User Credentials
-    1. Run Scout using `--azure-user-credentials`. The application will prompt you for your credentials.
+    1. Run Scout using `--user-account`. The application will prompt you for your credentials.
 
 Scout will require the Reader role over all the resources you want to check. The easiest way is to give
 it Reader over the Subscription, as it will be inherited on all the resources.
@@ -165,37 +169,51 @@ The following command will provide the list of available command line options:
 
     $ python Scout.py --help
 
+You can also use this to get help on a specific provider:
+
+    $ python Scout.py aws --help
+
 For further details, checkout our Wiki pages at <https://github.com/nccgroup/ScoutSuite/wiki>.
 
 After performing a number of API calls, Scout will create a local HTML report and open it in the default browser.
+
+Also note that the command line will try to infer the argument name if possible when receiving partial switch. For
+example, this will work and use the selected profile:
+
+    $python Scout.py aws --pro PROFILE
 
 #### Amazon Web Services
 
 Using a computer already configured to use the AWS CLI, you may use Scout using the following command:
 
-    $ python Scout.py --provider aws
+    $ python Scout.py aws
 
 **Note:** EC2 instances with an IAM role fit in this category.
 
 If multiple profiles are configured in your .aws/credentials and .aws/config files, you may specify which credentials
 to use with the following command:
 
-    $ python Scout.py --profile <PROFILE_NAME>
+    $ python Scout.py aws --profile <PROFILE_NAME>
 
 If you have a CSV file containing the API access key ID and secret, you may run Scout with the following command:
 
-    $ python Scout.py --csv-credentials <CREDENTIALS.CSV>
+    $ python Scout.py aws --csv-credentials <CREDENTIALS.CSV>
 
 #### Google Cloud Platform
 
 Using a computer already configured to use gcloud command-line tool, you may use Scout using the following command:
 
-    $ python Scout.py --provider gcp --user-account
+    $ python Scout.py gcp --user-account
 
 To run Scout using Service Account keys, using the following command:
 
+<<<<<<< HEAD
     $ python Scout.py --provider gcp --service-account --key-file </PATH/TO/KEY_FILE.JSON>
 By default, using the `--service-account` argument will audit only the inferred project that is part of its credentials key file. To scan all projects that a service account has access to, use the `--all` flag to override. If you only want to scan a single project, include the `--project-id` argument.
+=======
+    $ python Scout.py gcp --service-account </PATH/TO/KEY_FILE.JSON>
+By default, using the `--service-account` argument will audit all the projects that the provided service account has access to. If you only want to scan a single project, include the `--project-id` argument.
+>>>>>>> upstream/refactor/127-cli-refactoring
 
 To scan a GCP ...
 - Organization, use the `organization-id <ORGANIZATION ID>` argument
@@ -207,6 +225,7 @@ To scan a GCP ...
 
 Using a computer already configured to use azure-cli, you may use Scout using the following command:
 
+<<<<<<< HEAD
     $ python Scout.py --provider azure --azure-cli
 
 When using Scout in an Azure virtual machine with the Reader role, you may use
@@ -222,6 +241,34 @@ When using Scout with an authentication file, you may run Scout using the follow
 
     $ python Scout.py --provider azure --azure-file-auth path/to/auth/file
 
+=======
+    $ python Scout.py azure --cli
+    
+When using Scout in an Azure virtual machine with the Reader role, you may use 
+Scout using the following command:
+
+    $ python Scout.py azure --msi
+    
+When using Scout with a Service Principal, you may run Scout using the following command:
+
+    $ python Scout.py azure --service-principal
+
+You can also pass the credentials you want directly with command line arguments. The remaining ones will be asked
+interactively:
+
+    $ python Scout.py azure --service-principal --tenant <TENANT_ID> --subscription <SUBSCRIPTION_ID> --client-id <CLIENT_ID>
+    --client-secret <CLIENT_SECRET>
+    
+When using Scout with an authentication file, you may run Scout using the following command:
+
+    $ python Scout.py azure --file-auth </PATH/TO/KEY_FILE.JSON>
+  
+>>>>>>> upstream/refactor/127-cli-refactoring
 When using Scout against your user account, you may run Scout using the following command:
 
-    $ python Scout.py --provider azure --azure-user-credentials
+    $ python Scout.py azure --user-account
+
+You can also pass the credentials you want directly with command line arguments. The remaining ones will be asked
+interactively:
+
+    $ python Scout.py azure --username <USERNAME> --password <PASSWORD>
