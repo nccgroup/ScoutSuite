@@ -1,0 +1,29 @@
+
+<!-- Key partial -->
+<script id="services.kms.regions.id.keys.partial" type="text/x-handlebars-template">
+  {{#unless scout2_link}}
+    <div id="resource-name" class="list-group-item active">
+      <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+    <h4>Information</h4>
+      <ul>
+        <li class="list-group-item-text">Id: <span id="kms.regions.{{region}}.keys.{{@key}}.id">{{id}}</span></li>
+        <li class="list-group-item-text">Arn: <span id="kms.regions.{{region}}.keys.{{@key}}.arn">{{arn}}</span></li>
+        <li class="list-group-item-text">Rotation enabled: <span id="kms.regions.{{region}}.keys.{{@key}}.rotation_enabled">{{rotation_enabled}}</span></li>
+        <li class="list-group-item-text">Description: <span id="kms.regions.{{region}}.keys.{{@key}}.description">{{description}}</span></li>
+      </ul>
+    </div>
+  {{/unless}}
+</script>
+<script>
+  Handlebars.registerPartial("services.kms.regions.id.keys", $("#services\\.kms\\.regions\\.id\\.keys\\.partial").html());
+</script>
+
+<!-- Single KMS instance template -->
+<script id="single_kms_key-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.kms.regions.id.keys' }}
+</script>
+<script>
+    var single_kms_key_template = Handlebars.compile($("#single_kms_key-template").html());
+</script>

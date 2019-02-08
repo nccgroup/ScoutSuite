@@ -7,7 +7,7 @@ from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
 class StackdriverLoggingConfig(GCPBaseConfig):
     targets = (
-        ('sinks', 'Sinks', 'list_sinks', {}, False),
+        ('sinks', 'Sinks', 'list_sinks', {'project': '{{project_placeholder}}'}, False),
     )
 
     def __init__(self, thread_config):

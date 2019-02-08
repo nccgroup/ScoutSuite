@@ -34,7 +34,7 @@
     "sqldatabase-databases-no-transparent-data-encryption.json": [
       {
         "enabled": true,
-        "level": "danger"
+        "level": "warning"
       }
     ],
     "sqldatabase-servers-no-ad-admin-configured.json": [
