@@ -5,7 +5,7 @@ import warnings
 
 import google.auth
 import googleapiclient
-from opinel.utils.console import printError, printException
+from opinel.utils.console import printError, printException, printInfo
 
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.gcp.configs.services import GCPServicesConfig
@@ -52,8 +52,7 @@ class GCPProvider(BaseProvider):
 
         :return:
         """
-        print("value of all")
-        print(all)
+
         if user_account:
             # disable GCP warning about using User Accounts
             warnings.filterwarnings("ignore", "Your application has authenticated using end user credentials")
@@ -207,6 +206,9 @@ class GCPProvider(BaseProvider):
                 for folder in folder_response['folders']:
                     projects.extend(self._get_projects("folder", folder['name'].strip(u'folders/')))
 
+
+
+        printInfo("We found {} projects to scan.".format(len(projects)))
         return projects
 
     def _match_instances_and_snapshots(self):
