@@ -119,12 +119,7 @@ There are five ways to run scout against an Azure organization.
 3.  Service Principal
     1. Set up a service principal on the Azure portal(you can refer to
     https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal)
-<<<<<<< HEAD
-    2. Run Scout with the `--azure-service-principal` flag. Scout will prompt you for the
-=======
-    2. Run Scout with the `--service-principal` flag. Scout will prompt you for the 
->>>>>>> upstream/refactor/127-cli-refactoring
-    required information.
+    2. Run Scout with the `--service-principal` flag. Scout will prompt you for the required information.
 4.  File-based Authentication
     1. Create a Service Principal for azure SDK. You can do this with azure-cli using
     `az ad sp create-for-rbac --sdk-auth > mycredentials.json`.
@@ -207,48 +202,26 @@ Using a computer already configured to use gcloud command-line tool, you may use
 
 To run Scout using Service Account keys, using the following command:
 
-<<<<<<< HEAD
     $ python Scout.py --provider gcp --service-account --key-file </PATH/TO/KEY_FILE.JSON>
-By default, using the `--service-account` argument will audit only the inferred project that is part of its credentials key file. To scan all projects that a service account has access to, use the `--all` flag to override. If you only want to scan a single project, include the `--project-id` argument.
-=======
-    $ python Scout.py gcp --service-account </PATH/TO/KEY_FILE.JSON>
-By default, using the `--service-account` argument will audit all the projects that the provided service account has access to. If you only want to scan a single project, include the `--project-id` argument.
->>>>>>> upstream/refactor/127-cli-refactoring
+By default, using the `--service-account` argument will audit only the inferred project that is part of its credentials key file. To scan all projects that a service account has access to, use the `--gcp-scan-all` flag to override. If you only want to scan a single project, include the `--project-id` argument.
 
 To scan a GCP ...
 - Organization, use the `organization-id <ORGANIZATION ID>` argument
 - Folder, use the `folder-id <FOLDER ID>` argument.
 - Project, use the `project-id <PROJECT ID>` argument
-- All projects that a user/service account has access to, use the `--all` flags.
+- All projects that a user/service account has access to, use the `--gcp-scan-all` flags.
 
 #### Azure
 
 Using a computer already configured to use azure-cli, you may use Scout using the following command:
 
-<<<<<<< HEAD
-    $ python Scout.py --provider azure --azure-cli
+    $ python Scout.py azure --cli
 
 When using Scout in an Azure virtual machine with the Reader role, you may use
 Scout using the following command:
 
-    $ python Scout.py --provider azure --azure-msi
-
-When using Scout with a Service Principal, you may run Scout using the following command:
-
-    $ python Scout.py --provider azure --azure-service-principal
-
-When using Scout with an authentication file, you may run Scout using the following command:
-
-    $ python Scout.py --provider azure --azure-file-auth path/to/auth/file
-
-=======
-    $ python Scout.py azure --cli
-    
-When using Scout in an Azure virtual machine with the Reader role, you may use 
-Scout using the following command:
-
     $ python Scout.py azure --msi
-    
+
 When using Scout with a Service Principal, you may run Scout using the following command:
 
     $ python Scout.py azure --service-principal
@@ -258,12 +231,11 @@ interactively:
 
     $ python Scout.py azure --service-principal --tenant <TENANT_ID> --subscription <SUBSCRIPTION_ID> --client-id <CLIENT_ID>
     --client-secret <CLIENT_SECRET>
-    
+
 When using Scout with an authentication file, you may run Scout using the following command:
 
     $ python Scout.py azure --file-auth </PATH/TO/KEY_FILE.JSON>
-  
->>>>>>> upstream/refactor/127-cli-refactoring
+
 When using Scout against your user account, you may run Scout using the following command:
 
     $ python Scout.py azure --user-account
