@@ -38,6 +38,7 @@ class CloudSQLConfig(GCPBaseConfig):
         instance_dict['log_enabled'] = self._is_log_enabled(instance)
         instance_dict['ssl_required'] = self._is_ssl_required(instance)
         instance_dict['backups'] = self._get_instance_backups(instance, params)
+        instance_dict['users'] = self._get_users(instance, params)
         instance_dict['authorized_networks'] = instance['settings']['ipConfiguration']['authorizedNetworks']
 
         instance_dict['last_backup_timestamp'] = \
@@ -47,6 +48,24 @@ class CloudSQLConfig(GCPBaseConfig):
 
         self.instances[instance_dict['id']] = instance_dict
 
+    def _get_users(self, instance, params):
+        users_dict = {}
+
+        try:
+            users = params['api_client'].users().list(project=instance['project'], instance=instance['name']).execute()
+            for user in users['items']:
+                users_dict[user['name']] = self._parse_user(user)
+
+        except Exception as e:
+            printError('Failed to fetch users for SQL instance %s: %s' % (instance['name'], e))
+            
+        return users_dict
+
+    def _parse_user(self, user):
+        user_dict = {}
+        user_dict['name'] = user['name']
+        user_dict['host'] = user.get('host')
+        return user_dict
 
     def _get_instance_backups(self, instance, params):
 

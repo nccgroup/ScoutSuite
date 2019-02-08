@@ -18,6 +18,12 @@
                 <li><span id="cloudsql.instances.{{@../key}}.authorized_networks.{{@key}}.open_to_the_world">{{ value }}</span></li>
             {{/each}}
         </ul>
+        <div class="list-group-item-text item-margin">Users:</div>
+        <ul>
+            {{#each users }}
+                <li><span id="cloudsql.instances.{{@../key}}.root_access_from_any_host"><strong>{{ name }}</strong>: {{ host }}</span></li>
+            {{/each}}
+        </ul>
     </div>
 </script>
 
