@@ -97,6 +97,7 @@ def main(passed_args=None):
                                                     key_file=args.key_file,
                                                     user_account=args.user_account,
                                                     service_account=args.service_account,
+                                                    all=args.all,
                                                     azure_cli=args.azure_cli,
                                                     azure_msi=args.azure_msi,
                                                     azure_service_principal=args.azure_service_principal,

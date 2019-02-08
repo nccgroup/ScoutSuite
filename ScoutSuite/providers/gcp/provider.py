@@ -45,14 +45,15 @@ class GCPProvider(BaseProvider):
 
         super(GCPProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
-    def authenticate(self, key_file=None, user_account=None, service_account=None, **kargs):
+    def authenticate(self, key_file=None, user_account=None, service_account=None, all=False, **kargs):
         """
         Implement authentication for the GCP provider
         Refer to https://google-auth.readthedocs.io/en/stable/reference/google.auth.html.
 
         :return:
         """
-
+        print("value of all")
+        print(all)
         if user_account:
             # disable GCP warning about using User Accounts
             warnings.filterwarnings("ignore", "Your application has authenticated using end user credentials")
@@ -69,8 +70,17 @@ class GCPProvider(BaseProvider):
             self.credentials, project_id = google.auth.default()
             if self.credentials:
 
+                # all flag passed through the CLI. All projects to which the user / Service Account has access to
+                if all:
+                    self.projects = self._get_projects(parent_type='all',
+                                                       parent_id=None)
+                    if service_account and hasattr(self.credentials, 'service_account_email'):
+                        self.aws_account_id = self.credentials.service_account_email  # FIXME this is for AWS
+                    else:
+                        self.aws_account_id = 'GCP'  # FIXME this is for AWS
+                    self.profile = 'GCP'  # FIXME this is for AWS
                 # Project passed through the CLI
-                if self.project_id:
+                elif self.project_id:
                     self.projects = self._get_projects(parent_type='project',
                                                        parent_id=self.project_id)
                     self.aws_account_id = self.project_id  # FIXME this is for AWS
@@ -91,23 +101,16 @@ class GCPProvider(BaseProvider):
                     self.profile = self.organization_id  # FIXME this is for AWS
 
                 # Project inferred from default configuration
-                if project_id:
+                elif project_id:
                     self.projects = self._get_projects(parent_type='project',
                                                        parent_id=project_id)
                     self.aws_account_id = project_id  # FIXME this is for AWS
                     self.profile = project_id  # FIXME this is for AWS
-
-                # All projects to which the user / Service Account has access to
                 else:
-                    # self.project_id = project_id
-                    self.projects = self._get_projects(parent_type='all',
-                                                       parent_id=None)
-                    if service_account and hasattr(self.credentials, 'service_account_email'):
-                        self.aws_account_id = self.credentials.service_account_email  # FIXME this is for AWS
-                    else:
-                        self.aws_account_id = 'GCP'  # FIXME this is for AWS
 
-                    self.profile = 'GCP'  # FIXME this is for AWS
+                    raise Exception("""The level to which you wished to scan the projects could not be determined and
+                                    no default project id was found. If you're trying to scan all the projects please add the `--all`
+                                    flag to the CLI. Otherwise, you can pass the project id, folder id, or organization.""")
 
                 # TODO this shouldn't be done here? but it has to in order to init with projects...
                 self.services.set_projects(projects=self.projects)

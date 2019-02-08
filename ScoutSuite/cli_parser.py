@@ -197,13 +197,19 @@ class ScoutSuiteArgumentParser(SharedArgumentParser):
 
         self.parser.add_argument('--project-id',
                                  action='store',
+                                 required='--all' not in sys.argv,
                                  help='ID of the GCP Project to analyze')
         self.parser.add_argument('--folder-id',
                                  action='store',
+                                 required='--all' not in sys.argv,
                                  help='ID of the GCP Folder to analyze')
         self.parser.add_argument('--organization-id',
                                  action='store',
+                                 required='--all' not in sys.argv,
                                  help='ID of the GCP Organization to analyze')
+        self.parser.add_argument('--all',
+                                 action='store_true',
+                                 help='flag to determine if ScoutSuite should scan all projects a user/service account has access to')
 
         azure_parser = self.parser.add_argument_group('Azure authentication modes')
         azure_auth_params = self.parser.add_argument_group('Azure authentication parameters')
