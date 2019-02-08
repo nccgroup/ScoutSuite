@@ -211,7 +211,7 @@ class GCPProvider(BaseProvider):
 
 
 
-        printInfo("We found {} projects to scan.".format(len(projects)))
+        printInfo("We found {} project(s) to scan.".format(len(projects)))
         return projects
 
     def _match_instances_and_snapshots(self):
