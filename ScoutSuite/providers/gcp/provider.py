@@ -41,15 +41,14 @@ class GCPProvider(BaseProvider):
         self.folder_id = folder_id
         self.organization_id = organization_id
 
+        # GCP Project Scope
+        self.gcp_scan_all = kwargs.get('gcp_scan_all', False)
+
         self.services_config = GCPServicesConfig
 
         super(GCPProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
-<<<<<<< HEAD
-    def authenticate(self, key_file=None, user_account=None, service_account=None, all=False, **kargs):
-=======
     def authenticate(self, user_account=None, service_account=None, **kargs):
->>>>>>> upstream/refactor/127-cli-refactoring
         """
         Implement authentication for the GCP provider
         Refer to https://google-auth.readthedocs.io/en/stable/reference/google.auth.html.
@@ -74,7 +73,7 @@ class GCPProvider(BaseProvider):
             if self.credentials:
 
                 # all flag passed through the CLI. All projects to which the user / Service Account has access to
-                if all:
+                if self.gcp_scan_all:
                     self.projects = self._get_projects(parent_type='all',
                                                        parent_id=None)
                     if service_account and hasattr(self.credentials, 'service_account_email'):

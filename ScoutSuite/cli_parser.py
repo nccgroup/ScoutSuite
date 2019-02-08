@@ -209,6 +209,10 @@ class ScoutSuiteArgumentParser:
                                action='store',
                                help='ID of the GCP Organization to analyze')
 
+        gcp_scope.add_argument('--gcp-scan-all',
+                               action='store_true',
+                               help='ID of the GCP Organization to analyze')
+
     def _init_azure_parser(self):
         parser = self.subparsers.add_parser("azure",
                                             parents=[self.common_providers_args_parser],

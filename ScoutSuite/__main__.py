@@ -50,7 +50,8 @@ def main(args):
                                   timestamp=args.get('timestamp'),
                                   services=args.get('services'),
                                   skipped_services=args.get('skipped_services'),
-                                  thread_config=args.get('thread_config'))
+                                  thread_config=args.get('thread_config'),
+                                  gcp_scan_all=args.get('gcp_scan_all'))
 
     report_file_name = generate_report_name(cloud_provider.provider_code, args)
 
