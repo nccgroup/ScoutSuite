@@ -1,0 +1,7 @@
+.dropdown-item {
+    color: #fff;
+}
+
+.dropdown-item.disabled, .dropdown-item:disabled {
+    color: #647273;
+}
