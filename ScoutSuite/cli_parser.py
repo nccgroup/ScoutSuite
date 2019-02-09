@@ -35,11 +35,17 @@ class ScoutSuiteArgumentParser:
 
         default_profile = os.environ.get('AWS_PROFILE', 'default')
         default_profile_origin = " (from AWS_PROFILE)." if 'AWS_PROFILE' in os.environ else "."
-        parser.add_argument('--profile',
+        parser.add_argument('-p',
+                            '--profile',
                             dest='profile',
                             default=[default_profile],
                             nargs='+',
                             help='Name of the profile. Defaults to %(default)s' + default_profile_origin)
+        parser.add_argument('-c',
+                            '--csv-credentials',
+                            dest='csv_credentials',
+                            default=None,
+                            help='Path to a CSV file containing the access key ID and secret key')
         parser.add_argument('--mfa-serial',
                             dest='mfa_serial',
                             default=None,
@@ -48,14 +54,11 @@ class ScoutSuiteArgumentParser:
                             dest='mfa_code',
                             default=None,
                             help='Six-digit code displayed on the MFA device.')
-        parser.add_argument('--csv-credentials',
-                            dest='csv_credentials',
-                            default=None,
-                            help='Path to a CSV file containing the access key ID and secret key')
 
         parser = aws_parser.add_argument_group('Additional arguments')
 
-        parser.add_argument('--regions',
+        parser.add_argument('-r',
+                            '--regions',
                             dest='regions',
                             default=[],
                             nargs='+',
@@ -83,11 +86,13 @@ class ScoutSuiteArgumentParser:
         parser = gcp_parser.add_argument_group('Authentication modes')
         gcp_auth_modes = parser.add_mutually_exclusive_group(required=True)
 
-        gcp_auth_modes.add_argument('--user-account',
+        gcp_auth_modes.add_argument('-u',
+                                    '--user-account',
                                     action='store_true',
                                     help='Run Scout with a Google Account')
 
-        gcp_auth_modes.add_argument('--service-account',
+        gcp_auth_modes.add_argument('-s',
+                                    '--service-account',
                                     action='store',
                                     dest="auth_file",
                                     metavar="KEY_FILE",
@@ -119,15 +124,18 @@ class ScoutSuiteArgumentParser:
 
         azure_auth_modes = azure_parser.add_mutually_exclusive_group(required=True)
 
-        azure_auth_modes.add_argument('--cli',
+        azure_auth_modes.add_argument('-c',
+                                      '--cli',
                                       action='store_true',
                                       help='Run Scout using configured azure-cli credentials')
 
-        azure_auth_modes.add_argument('--msi',
+        azure_auth_modes.add_argument('-m',
+                                      '--msi',
                                       action='store_true',
                                       help='Run Scout with Managed Service Identity')
 
-        azure_auth_modes.add_argument('--service-principal',
+        azure_auth_modes.add_argument('-s',
+                                      '--service-principal',
                                       action='store_true',
                                       help='Run Scout with an Azure Service Principal')
         azure_auth_params.add_argument('--tenant',
@@ -157,12 +165,14 @@ class ScoutSuiteArgumentParser:
         azure_auth_modes.add_argument('--user-account',
                                       action='store_true',
                                       help='Run Scout with user credentials')
-        azure_auth_params.add_argument('--username',
+        azure_auth_params.add_argument('-u',
+                                       '--username',
                                        action='store',
                                        default=None,
                                        dest='username',
                                        help='Username of the Azure account')
-        azure_auth_params.add_argument('--password',
+        azure_auth_params.add_argument('-p',
+                                       '--password',
                                        action='store',
                                        default=None,
                                        dest='password',
@@ -171,22 +181,22 @@ class ScoutSuiteArgumentParser:
     def _init_common_args_parser(self):
         parser = self.common_providers_args_parser.add_argument_group('Scout Arguments')
 
-        parser.add_argument('--debug',
-                            dest='debug',
-                            default=False,
-                            action='store_true',
-                            help='Print the stack trace when exception occurs')
-        parser.add_argument('--force',
+        parser.add_argument('-f',
+                            '--force',
                             dest='force_write',
                             default=False,
                             action='store_true',
                             help='Overwrite existing files')
-
         parser.add_argument('-l', '--local',
                             dest='fetch_local',
                             default=False,
                             action='store_true',
                             help='Use local data previously fetched and re-run the analysis.')
+        parser.add_argument('--debug',
+                            dest='debug',
+                            default=False,
+                            action='store_true',
+                            help='Print the stack trace when exception occurs')
         parser.add_argument('--resume',
                             dest='resume',
                             default=False,
