@@ -250,10 +250,6 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 
-.spacer {
-    height: 10rem;
-}
-
 .sub-navbar {
     position: inherit;
     float: bottom;
