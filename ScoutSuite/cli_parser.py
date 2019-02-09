@@ -99,8 +99,7 @@ class ScoutSuiteArgumentParser:
                                     help='Run Scout with a Google Service Account with the specified '
                                          'Google Service Account Application Credentials file')
 
-        parser = gcp_parser.add_argument_group('Additional arguments')
-        gcp_scope = parser.add_mutually_exclusive_group(required=True)
+        gcp_scope = gcp_parser.add_argument_group('Additional arguments')
 
         gcp_scope.add_argument('--project-id',
                                action='store',
