@@ -188,11 +188,12 @@ class ScoutSuiteArgumentParser:
 
         gcp_auth_modes.add_argument('--user-account',
                                     action='store_true',
-                                    dest="auth_file",
                                     help='Run Scout with a Google Account')
 
         gcp_auth_modes.add_argument('--service-account',
                                     action='store',
+                                    dest="auth_file",
+                                    metavar="KEY_FILE",
                                     help='Run Scout with a Google Service Account with the specified '
                                          'Google Service Account Application Credentials file')
 
