@@ -41,7 +41,7 @@ def main(args):
     configPrintException(args.get('debug'))
 
     # Create a cloud provider object
-    cloud_provider = get_provider(provider=args.get('module'),
+    cloud_provider = get_provider(provider=args.get('provider'),
                                   profile=args.get('profile'),
                                   project_id=args.get('project_id'),
                                   folder_id=args.get('folder_id'),
@@ -57,7 +57,7 @@ def main(args):
     # TODO move this to after authentication, so that the report can be more specific to what's being scanned.
     # For example if scanning with a GCP service account, the SA email can only be known after authenticating...
     # Create a new report
-    report = Scout2Report(args.get('module'), report_file_name, args.get('report_dir'), args.get('timestamp'))
+    report = Scout2Report(args.get('provider'), report_file_name, args.get('report_dir'), args.get('timestamp'))
 
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
@@ -110,7 +110,7 @@ def main(args):
 
     # Analyze config
     finding_rules = Ruleset(environment_name=args.get('profile'),
-                            cloud_provider=args.get('module'),
+                            cloud_provider=args.get('provider'),
                             filename=args.get('ruleset'),
                             ip_ranges=args.get('ip_ranges'),
                             aws_account_id=cloud_provider.aws_account_id)
@@ -118,7 +118,7 @@ def main(args):
     processing_engine.run(cloud_provider)
 
     # Create display filters
-    filter_rules = Ruleset(cloud_provider=args.get('module'),
+    filter_rules = Ruleset(cloud_provider=args.get('provider'),
                            filename='filters.json',
                            rule_type='filters',
                            aws_account_id=cloud_provider.aws_account_id)

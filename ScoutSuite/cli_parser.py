@@ -12,124 +12,19 @@ class ScoutSuiteArgumentParser:
     def __init__(self):
         self.parser = argparse.ArgumentParser()
 
-        self.base_args_parser = argparse.ArgumentParser(add_help=False)
-        self.base_args_parser.add_argument('--debug',
-                                           dest='debug',
-                                           default=False,
-                                           action='store_true',
-                                           help='Print the stack trace when exception occurs')
-        self.base_args_parser.add_argument('--force',
-                                           dest='force_write',
-                                           default=False,
-                                           action='store_true',
-                                           help='Overwrite existing files')
-        self.common_providers_args_parser = argparse.ArgumentParser(add_help=False, parents=[self.base_args_parser])
+        # People will still be able to use the old --provider syntax
+        self.parser.add_argument("--provider", action='store_true', dest='sinkhole', help=argparse.SUPPRESS)
 
-        self.subparsers = self.parser.add_subparsers(title="The module you want to run",
-                                                     dest="module")
+        self.common_providers_args_parser = argparse.ArgumentParser(add_help=False)
+
+        self.subparsers = self.parser.add_subparsers(title="The provider you want to run scout against",
+                                                     dest="provider")
 
         self._init_common_args_parser()
-
-        self._init_rules_generator_parser()
-        self._init_listall_parser()
 
         self._init_aws_parser()
         self._init_gcp_parser()
         self._init_azure_parser()
-
-    def _init_rules_generator_parser(self):
-        parser = self.subparsers.add_parser("ruleset",
-                                            parents=[self.base_args_parser],
-                                            help="Run the Scout rules generator")
-        parser.add_argument('--ruleset-name',
-                            dest='ruleset_name',
-                            default=None,
-                            required=True,
-                            help='Name of the ruleset to be generated.')
-        parser.add_argument('--base-ruleset',
-                            dest='base_ruleset',
-                            default='default',
-                            help='Ruleset to be used as the baseline.')
-        parser.add_argument('--rules-dir',
-                            dest='rules_dir',
-                            default=[],
-                            nargs='+',
-                            help='Path to directories where custom rules are defined.')
-        parser.add_argument('--generator-dir',
-                            dest='generator_dir',
-                            default=DEFAULT_REPORT_DIR,
-                            help='Path of the Scout rules generator.')
-        parser.add_argument('--no-browser',
-                            dest='no_browser',
-                            default=False,
-                            action='store_true',
-                            help='Do not automatically open the report in the browser.')
-
-    def _init_listall_parser(self):
-        parser = self.subparsers.add_parser("listall",
-                                            parents=[self.base_args_parser],
-                                            help="Run the Scout CSV exporter")
-
-        default = os.environ.get('AWS_PROFILE', 'default')
-        default_origin = " (from AWS_PROFILE)." if 'AWS_PROFILE' in os.environ else "."
-        parser.add_argument('--profile',
-                            dest='profile',
-                            default=[default],
-                            nargs='+',
-                            help='Name of the profile. Defaults to %(default)s' + default_origin)
-        parser.add_argument('--report-dir',
-                            dest='report_dir',
-                            default=DEFAULT_REPORT_DIR,
-                            help='Path of the Scout report.')
-        parser.add_argument('--ip-ranges',
-                            dest='ip_ranges',
-                            default=[],
-                            nargs='+',
-                            help='Config file(s) that contain your known IP ranges')
-        parser.add_argument('--timestamp',
-                            dest='timestamp',
-                            default=False,
-                            nargs='?',
-                            help='Timestamp added to the name of the report (default is current time in UTC).')
-        parser.add_argument('--exceptions',
-                            dest='exceptions',
-                            default=[None],
-                            nargs='+',
-                            help='Exception file to use during analysis.')
-        parser.add_argument('--format',
-                            dest='format',
-                            default=['csv'],
-                            nargs='+',
-                            help='Listall output format.')
-        parser.add_argument('--format-file',
-                            dest='format_file',
-                            default=None,
-                            nargs='+',
-                            help='Listall output format file')
-        parser.add_argument('--config',
-                            dest='config',
-                            default=None,
-                            help='Config file that sets the path and keys to be listed.')
-        parser.add_argument('--config-args',
-                            dest='config_args',
-                            default=[],
-                            nargs='+',
-                            help='Arguments to be passed to the config file.')
-        parser.add_argument('--path',
-                            dest='path',
-                            default=[],
-                            nargs='+',
-                            help='Path of the resources to list (e.g. iam.users.id or ec2.regions.id.vpcs.id)')
-        parser.add_argument('--keys',
-                            dest='keys',
-                            default=[],
-                            nargs='+',
-                            help='Keys to be printed for the given object.')
-        parser.add_argument('--keys-from-file',
-                            dest='keys_file',
-                            default=[],
-                            nargs='+',
-                            help='Keys to be printed for the given object (read values from file.')
 
     def _init_aws_parser(self):
         parser = self.subparsers.add_parser("aws",
@@ -273,6 +168,17 @@ class ScoutSuiteArgumentParser:
     def _init_common_args_parser(self):
         parser = self.common_providers_args_parser.add_argument_group('Scout Arguments')
 
+        parser.add_argument('--debug',
+                            dest='debug',
+                            default=False,
+                            action='store_true',
+                            help='Print the stack trace when exception occurs')
+        parser.add_argument('--force',
+                            dest='force_write',
+                            default=False,
+                            action='store_true',
+                            help='Overwrite existing files')
+
         parser.add_argument('-l', '--local',
                             dest='fetch_local',
                             default=False,
@@ -332,8 +238,8 @@ class ScoutSuiteArgumentParser:
         args = self.parser.parse_args(args)
 
         # Cannot simply use required for backward compatibility
-        if not args.module:
-            self.parser.error('You need to input a module')
+        if not args.provider:
+            self.parser.error('You need to input a provider')
         # If local analysis, overwrite results
         if args.__dict__.get('fetch_local'):
             args.force_write = True
