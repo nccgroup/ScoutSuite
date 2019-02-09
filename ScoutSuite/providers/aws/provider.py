@@ -78,6 +78,7 @@ class AWSProvider(BaseProvider):
 
         # Various data processing calls
         self._add_security_group_name_to_ec2_grants()
+        self._add_last_snapshot_date_to_ec2_volumes()
         self._process_cloudtrail_trails(self.services['cloudtrail'])
         self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
         self._merge_route53_and_route53domains()
@@ -113,6 +114,13 @@ class AWSProvider(BaseProvider):
                            [],
                            self.add_security_group_name_to_ec2_grants_callback,
                            {'AWSAccountId': self.aws_account_id})
+
+    def _add_last_snapshot_date_to_ec2_volumes(self):
+        for region in self.services['ec2']['regions'].values():
+            for volumeId, volume in region.get('volumes').items():
+                completed_snapshots = [s for s in region['snapshots'].values() if s['VolumeId'] == volumeId and s['State'] == 'completed']
+                mostRecent = sorted(completed_snapshots, key=lambda s: s['StartTime'], reverse=True)[0]
+                volume['LastSnapshotDate'] = mostRecent['StartTime']
 
     def add_security_group_name_to_ec2_grants_callback(self, current_config, path, current_path, ec2_grant, callback_args):
         sg_id = ec2_grant['GroupId']
