@@ -321,3 +321,9 @@ input:checked + .slider:before {
 .finding_items {
     font-size: 18px;
 }
+
+@media only screen and (max-width: 1200px) {
+    #container-user {
+      margin-top: 5rem !important;
+    }
+  }
