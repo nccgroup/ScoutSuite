@@ -92,15 +92,6 @@ $(document).ready(function () {
                 // add item to json
                 json_dict['items'].push(i);
             };
-            // doesn't work as ID is not always last or second to last value in id_array
-            // for (item in items) {
-            //     // get item value
-            //     var id_array = items[item].split('.');
-            //     var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
-            //     var i = get_value_at(id);
-            //     // add item to json
-            //     json_dict[id_array[id_array.length - 2]] = i;
-            // };
             download_as_json(finding_key + '.json', json_dict);
         };
 
@@ -308,7 +299,6 @@ function showRowWithItems(path) {
 function showFilters(resource_path) {
     hideFilters();
     service = resource_path.split('.')[1];
-    console.log('Service: ' + service);
     // Show service filters
     $('[id="' + resource_path + '.id.filters"]').show();
     // show region filters
@@ -1030,7 +1020,7 @@ var make_title = function (title) {
         return title.toString();
     };
     title = title.toLowerCase();
-    if (['ec2', 'efs', 'iam', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) != -1) {
+    if (['ec2', 'efs', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) != -1) {
         return title.toUpperCase();
     } else if (title == 'cloudtrail') {
         return 'CloudTrail';
@@ -1061,7 +1051,10 @@ var make_title = function (title) {
         return 'Cloud Resource Manager';
     } else if (title == 'storageaccounts') {
         return 'Storage Accounts';
-
+    } else if (title == 'monitor') {
+        return 'Monitor';
+    } else if (title == 'sqldatabase') {
+        return 'SQL Database';
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
     };

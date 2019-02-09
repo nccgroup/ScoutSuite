@@ -18,6 +18,30 @@
         "enabled": true,
         "level": "warning"
       }
+    ],
+    "sqldatabase-databases-no-auditing.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "sqldatabase-databases-no-threat-detection.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "sqldatabase-databases-no-transparent-data-encryption.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "sqldatabase-servers-no-ad-admin-configured.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }
