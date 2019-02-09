@@ -27,11 +27,11 @@ class ScoutSuiteArgumentParser:
         self._init_azure_parser()
 
     def _init_aws_parser(self):
-        parser = self.subparsers.add_parser("aws",
-                                            parents=[self.common_providers_args_parser],
-                                            help="Run Scout against an Amazon web Services account")
+        aws_parser = self.subparsers.add_parser("aws",
+                                                parents=[self.common_providers_args_parser],
+                                                help="Run Scout against an Amazon web Services account")
 
-        parser = parser.add_argument_group('AWS parameters')
+        parser = aws_parser.add_argument_group('Authentication parameters')
 
         default_profile = os.environ.get('AWS_PROFILE', 'default')
         default_profile_origin = " (from AWS_PROFILE)." if 'AWS_PROFILE' in os.environ else "."
@@ -40,6 +40,21 @@ class ScoutSuiteArgumentParser:
                             default=[default_profile],
                             nargs='+',
                             help='Name of the profile. Defaults to %(default)s' + default_profile_origin)
+        parser.add_argument('--mfa-serial',
+                            dest='mfa_serial',
+                            default=None,
+                            help='ARN of the user\'s MFA device')
+        parser.add_argument('--mfa-code',
+                            dest='mfa_code',
+                            default=None,
+                            help='Six-digit code displayed on the MFA device.')
+        parser.add_argument('--csv-credentials',
+                            dest='csv_credentials',
+                            default=None,
+                            help='Path to a CSV file containing the access key ID and secret key')
+
+        parser = aws_parser.add_argument_group('Additional arguments')
+
         parser.add_argument('--regions',
                             dest='regions',
                             default=[],
@@ -59,26 +74,13 @@ class ScoutSuiteArgumentParser:
                             dest='ip_ranges_name_key',
                             default='name',
                             help='Name of the key containing the display name of a known CIDR')
-        parser.add_argument('--mfa-serial',
-                            dest='mfa_serial',
-                            default=None,
-                            help='ARN of the user\'s MFA device')
-        parser.add_argument('--mfa-code',
-                            dest='mfa_code',
-                            default=None,
-                            help='Six-digit code displayed on the MFA device.')
-        parser.add_argument('--csv-credentials',
-                            dest='csv_credentials',
-                            default=None,
-                            help='Path to a CSV file containing the access key ID and secret key')
 
     def _init_gcp_parser(self):
-        parser = self.subparsers.add_parser("gcp",
-                                            parents=[self.common_providers_args_parser],
-                                            help="Run Scout against a Google Cloud Platform account")
+        gcp_parser = self.subparsers.add_parser("gcp",
+                                                parents=[self.common_providers_args_parser],
+                                                help="Run Scout against a Google Cloud Platform account")
 
-        parser = parser.add_argument_group('GCP parameters')
-
+        parser = gcp_parser.add_argument_group('Authentication modes')
         gcp_auth_modes = parser.add_mutually_exclusive_group(required=True)
 
         gcp_auth_modes.add_argument('--user-account',
@@ -92,7 +94,8 @@ class ScoutSuiteArgumentParser:
                                     help='Run Scout with a Google Service Account with the specified '
                                          'Google Service Account Application Credentials file')
 
-        gcp_scope = parser.add_mutually_exclusive_group(required=False)
+        parser = gcp_parser.add_argument_group('Additional arguments')
+        gcp_scope = parser.add_mutually_exclusive_group(required=True)
 
         gcp_scope.add_argument('--project-id',
                                action='store',
