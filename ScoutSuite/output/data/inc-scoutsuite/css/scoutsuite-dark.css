@@ -5,3 +5,7 @@
 .dropdown-item.disabled, .dropdown-item:disabled {
     color: #647273;
 }
+
+code {
+    color: #1f1;
+}
