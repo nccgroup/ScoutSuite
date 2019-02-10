@@ -31,7 +31,7 @@ class AWSProvider(BaseProvider):
     Implements provider for AWS
     """
 
-    def __init__(self, profile='default', report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
+    def __init__(self, profile=None, report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
@@ -40,7 +40,7 @@ class AWSProvider(BaseProvider):
         self.sg_map = {}
         self.subnet_map = {}
 
-        self.profile = profile
+        self.profile = profile[0] if profile else 'default'
         self.aws_account_id = None
         self.services_config = AWSServicesConfig
 
@@ -54,7 +54,7 @@ class AWSProvider(BaseProvider):
         Implement authentication for the AWS provider
         :return:
         """
-        self.credentials = read_creds(profile, csv_credentials, mfa_serial, mfa_code)
+        self.credentials = read_creds(profile[0], csv_credentials, mfa_serial, mfa_code)
         self.aws_account_id = get_aws_account_id(self.credentials)
 
         if self.credentials['AccessKeyId'] is None:
@@ -78,6 +78,7 @@ class AWSProvider(BaseProvider):
 
         # Various data processing calls
         self._add_security_group_name_to_ec2_grants()
+        self._add_last_snapshot_date_to_ec2_volumes()
         self._process_cloudtrail_trails(self.services['cloudtrail'])
         self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
         self._merge_route53_and_route53domains()
@@ -113,6 +114,13 @@ class AWSProvider(BaseProvider):
                            [],
                            self.add_security_group_name_to_ec2_grants_callback,
                            {'AWSAccountId': self.aws_account_id})
+
+    def _add_last_snapshot_date_to_ec2_volumes(self):
+        for region in self.services['ec2']['regions'].values():
+            for volumeId, volume in region.get('volumes').items():
+                completed_snapshots = [s for s in region['snapshots'].values() if s['VolumeId'] == volumeId and s['State'] == 'completed']
+                mostRecent = sorted(completed_snapshots, key=lambda s: s['StartTime'], reverse=True)[0]
+                volume['LastSnapshotDate'] = mostRecent['StartTime']
 
     def add_security_group_name_to_ec2_grants_callback(self, current_config, path, current_path, ec2_grant, callback_args):
         sg_id = ec2_grant['GroupId']

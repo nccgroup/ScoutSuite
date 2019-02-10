@@ -210,34 +210,28 @@ function hideAll() {
  */
 function showRow(path) {
     path = path.replace(/.id./g, '\.[^.]+\.');
+    showList(path);
+    showDetails(path);
+};
+
+function showList(path) {
     $('div').filter(function () {
         return this.id.match(path + '.list')
     }).show();
+}
+
+function showDetails(path) {
     $('div').filter(function () {
         return this.id.match(path + '.details')
     }).show();
-};
+}
 
-
-/**
- * Hide list and details' containers for a given path
- * @param path
- */
-function hideRow(path) {
-    path = path.replace(/.id./g, '\.[^.]+\.');
-    $('div').filter(function () {
-        return this.id.match(path + '.list')
-    }).hide();
-    $('div').filter(function () {
-        return this.id.match(path + '.details')
-    }).hide();
-};
-
-function hideRegion(path) {
+function hideList(path) {
     $("[id='" + path + "']").hide();
     path = path.replace('.list', '');
     hideItems(path);
 };
+
 
 /**
  * Show links and views for a given path
@@ -750,19 +744,6 @@ function show_main_dashboard() {
 };
 
 /**
- * Show All Resources
- * @param script_id
- */
-function showAllResources(script_id) {
-    var path_array = script_id.split('.');
-    var selector = "[id^='" + path_array.shift() + "." + path_array.shift() + ".']"
-    for (p in path_array) {
-        $(selector).show();
-        selector = selector + "[id*='." + path_array[p] + "']";
-    };
-};
-
-/**
  * Make title from resource path
  * @param resource_path
  * @returns {string};
@@ -961,7 +942,6 @@ function lazy_loading(path) {
  * @returns {*|string};
  */
 function get_resource_path(path) {
-    var path_array = path.split('.');
     if (path.endsWith('.items')) {
         var resource_path = get_value_at(path.replace('items', 'display_path'));
         if (resource_path == undefined) {
@@ -974,7 +954,7 @@ function get_resource_path(path) {
         // Resource path is not changed (this may break when using `back' button in browser)
         var resource_path = current_resource_path;
     } else {
-        var resource_path = path; // path_array[path_array.length-1];
+        var resource_path = path; 
     };
     return resource_path;
 };
@@ -985,7 +965,7 @@ function get_resource_path(path) {
  * @param title
  * @returns {string};
  */
-var make_title = function (title) {
+function make_title (title) {
     if (typeof(title) != "string") {
         console.log("Error: received title " + title + " (string expected).");
         return title.toString();
@@ -1040,7 +1020,7 @@ var make_title = function (title) {
  * @param path
  * @param cols
  */
-var add_templates = function (group, service, section, resource_type, path, cols) {
+function add_templates (group, service, section, resource_type, path, cols) {
     if (cols == undefined) {
         cols = 2;
     };
@@ -1049,7 +1029,6 @@ var add_templates = function (group, service, section, resource_type, path, cols
         add_template(group, service, section, resource_type, path, 'list');
     };
 };
-
 
 /**
  * Add resource templates
@@ -1060,7 +1039,7 @@ var add_templates = function (group, service, section, resource_type, path, cols
  * @param path
  * @param suffix
  */
-var add_template = function (group, service, section, resource_type, path, suffix) {
+function add_template(group, service, section, resource_type, path, suffix) {
     var template = document.createElement("script");
     template.type = "text/x-handlebars-template";
     template.id = path + "." + suffix + ".template";
@@ -1089,20 +1068,12 @@ var add_template = function (group, service, section, resource_type, path, suffi
     };
 };
 
-var add_summary_template = function (path) {
-    var template = document.createElement("script");
-    template.type = "text/x-handlebars-template";
-    template.id = path + ".details.template";
-    template.innerHTML = "{{> " + partial_name + " service_name = '" + service + "' resource_type = '" + resource_type + "' partial_name = '" + path + "'}}";
-    $('body').append(template);
-};
-
 /**
  * Rules generator
  * @param group
  * @param service
  */
-var filter_rules = function (group, service) {
+function filter_rules(group, service) {
     if (service == undefined) {
         $("[id*='rule-']").show();
     } else {
@@ -1113,7 +1084,7 @@ var filter_rules = function (group, service) {
     $("[id='" + id + "']").hide();
 };
 
-var download_configuration = function (configuration, name, prefix) {
+function download_configuration(configuration, name, prefix) {
 
     var uriContent = "data:text/json;charset=utf-8," + encodeURIComponent(prefix + JSON.stringify(configuration, null, 4));
     var dlAnchorElem = document.getElementById('downloadAnchorElem');
@@ -1122,26 +1093,14 @@ var download_configuration = function (configuration, name, prefix) {
     dlAnchorElem.click();
 };
 
-var download_exceptions = function () {
+function download_exceptions() {
     var url = window.location.pathname;
     var profile_name = url.substring(url.lastIndexOf('/') + 1).replace('report-', '').replace('.html', '');
     console.log(exceptions);
     download_configuration(exceptions, 'exceptions-' + profile_name, 'exceptions = \n');
 };
 
-var show_element = function (element_id) {
-    $('#' + element_id).show();
-};
-
-var hide_element = function (element_id) {
-    $('#' + element_id).hide();
-};
-
-var toggle_element = function (element_id) {
-    $('#' + element_id).toggle();
-};
-
-var set_filter_url = function (region) {
+function set_filter_url(region) {
     tmp = location.hash.split('.');
     tmp[3] = region;
     location.hash = tmp.join('.');

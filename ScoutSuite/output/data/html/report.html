@@ -46,16 +46,13 @@
     <!-- Fixed navbar -->
     <!------------------>
 
-    <div class="navbar fixed-top navbar-expand-lg bg-primary" role="navigation" id="metadata.list"></div>
+    <div class="navbar fixed-top navbar-expand-md bg-primary" role="navigation" id="metadata.list"></div>
 
     <!--------------->
     <!-- Container -->
     <!--------------->
 
-    <div class="container theme-showcase" id="container-user">
-
-        <!-- Empty header -->
-        <div class="spacer"></div>
+    <div class="container theme-showcase mt-5 pt-5" id="container-user">
 
         <!-- AWS account ID -->
         <div class="row justify-content-center" id="aws_account_id.details">
@@ -71,9 +68,9 @@
 
         <!-- Title section -->
         <!--<div id="section_title-div">-->
-        <div id="section_title-div" style="display:flex;position:relative;">
+        <div id="section_title-div" style="display:flex;flex-direction:column;position:relative;">
             <h2 id="section_title-h2"></h2>
-            <div id="findings_download_button" style="display:none;position:absolute;right:0;transform:translateY(+50%);">
+            <div id="findings_download_button" style="display:none;position:relative;margin-left:auto">
                 <button id="findings_download_csv_button" type="button" class="btn btn-secondary"><i class="fa fa-download"></i>CSV</button>
                 <button id="findings_download_json_button" type="button" class="btn btn-secondary"><i class="fa fa-download"></i>JSON</button>
             </div>

@@ -76,6 +76,9 @@
     color: rgb(225, 225, 225);
 }
 
+.finding-warning { color: #fdbe00; }
+.finding-danger { color:#ee293d; }
+
 ul.no-bullet {
     list-style-type: none;
 }
@@ -253,10 +256,6 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 
-.spacer {
-    height: 10rem;
-}
-
 .sub-navbar {
     position: inherit;
     float: bottom;
@@ -328,3 +327,9 @@ input:checked + .slider:before {
 .finding_items {
     font-size: 18px;
 }
+
+@media only screen and (max-width: 1200px) {
+    #container-user {
+      margin-top: 5rem !important;
+    }
+  }
