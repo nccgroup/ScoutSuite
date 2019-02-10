@@ -1,11 +1,11 @@
 {
     "dashboard_name": "Security Center",
-    "description": "Sending email to security contact on alert is off",
+    "description": "Sending email to administrators on alert is off",
     "rationale": "You should set the 'Send Me Email About Alerts' to On. See CIS 2.18.",
     "path": "securitycenter.security_contacts.id",
     "display_path": "securitycenter.security_contacts",
     "conditions": [ "and",
         ["securitycenter.security_contacts.id.alert_notifications", "equal", "Off"]
     ],
-    "id_suffix": "security_contacts_phone_not_set"
+    "id_suffix": "security_contacts_alert_notifications"
 }

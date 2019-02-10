@@ -73,6 +73,12 @@
         "level": "warning"
       }
     ],
+    "securitycenter-security-contacts-no-admin-email-notifications.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "securitycenter-auto-provisioning-off.json": [
       {
         "enabled": true,
