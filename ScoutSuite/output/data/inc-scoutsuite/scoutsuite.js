@@ -1,8 +1,12 @@
 // Globals
 var loaded_config_array = new Array();
 var run_results;
-const DARK_THEME = "inc-bootstrap/css/bootstrap-dark.min.css";
-const LIGHT_THEME = "inc-bootstrap/css/bootstrap-light.min.css";
+
+const DARK_BOOTSTRAP_THEME = "inc-bootstrap/css/bootstrap-dark.min.css";
+const LIGHT_BOOTSTRAP_THEME = "inc-bootstrap/css/bootstrap-light.min.css";
+
+const DARK_SCOUT_THEME = "inc-scoutsuite/css/scoutsuite-dark.css";
+const LIGHT_SCOUT_THEME = "inc-scoutsuite/css/scoutsuite-light.css";
 
 /**
  * Event handlers
@@ -11,7 +15,8 @@ $(document).ready(function () {
     // Loading last theme before window.onload to prevent flickering of styles    
     if (localStorage.getItem("theme_checkbox") == "true") {
         document.getElementById("theme_checkbox").checked = true;
-        set_theme(DARK_THEME);
+        setBootstrapTheme(DARK_BOOTSTRAP_THEME);
+        setScoutTheme(DARK_SCOUT_THEME);
     }
 
     showPageFromHash();
@@ -376,24 +381,35 @@ function toggleDetails(keyword, item) {
 /**
  * Toggles between light and dark themes
  */
-function toggle_theme() {
+function toggleTheme() {
     if (document.getElementById("theme_checkbox").checked) {
-        this.set_theme(DARK_THEME)
+        this.setBootstrapTheme(DARK_BOOTSTRAP_THEME)
+        this.setScoutTheme(DARK_SCOUT_THEME)
     }
     else {
-        this.set_theme(LIGHT_THEME)
+        this.setBootstrapTheme(LIGHT_BOOTSTRAP_THEME)
+        this.setScoutTheme(LIGHT_SCOUT_THEME)
     }
 };
 
 /**
- * Sets the css file location received as the theme
+ * Sets the css file location received as the bootstrap theme
  * @param file
  */
-function set_theme(file)
-{
-    var oldlink = document.getElementById("theme");
+function setBootstrapTheme(file) {
+    var oldlink = document.getElementById("bootstrap-theme");
     oldlink.href = file;
 }
+
+/**
+ * Sets the css file location received as the scout theme
+ * @param file
+ */
+function setScoutTheme(file) {
+    var oldlink = document.getElementById("scout-theme");
+    oldlink.href = file;
+}
+
 
 /**
  * Save the current theme on web storage

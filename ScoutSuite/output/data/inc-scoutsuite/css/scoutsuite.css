@@ -253,10 +253,6 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 
-.spacer {
-    height: 10rem;
-}
-
 .sub-navbar {
     position: inherit;
     float: bottom;
@@ -328,3 +324,9 @@ input:checked + .slider:before {
 .finding_items {
     font-size: 18px;
 }
+
+@media only screen and (max-width: 1200px) {
+    #container-user {
+      margin-top: 5rem !important;
+    }
+  }
