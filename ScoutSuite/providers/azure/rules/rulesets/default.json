@@ -42,6 +42,12 @@
         "enabled": true,
         "level": "warning"
       }
+    ],
+    "securitycenter-standard-tier-not-enabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }

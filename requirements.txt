@@ -24,5 +24,6 @@ oauth2client>=4.1.3
 azure-mgmt-storage>=3.0.0
 azure-mgmt-monitor
 azure-mgmt-sql
+azure-mgmt-security
 azure-cli-core
 pyyaml>=4.2b1
