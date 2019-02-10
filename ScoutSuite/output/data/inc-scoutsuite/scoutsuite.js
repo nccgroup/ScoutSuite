@@ -102,6 +102,7 @@ $(document).ready(function () {
 
     });
 
+    hidePleaseWait();
 });
 
 /**
@@ -723,7 +724,6 @@ function showPopup(content) {
  * Set up dashboards and dropdown menus
  */
 function load_metadata() {
-
     run_results = get_scoutsuite_results();
 
     // Set title dynamically
@@ -763,16 +763,23 @@ function load_metadata() {
 
 
 /**
- * Show About Scout Suite div
+ * Show About Scout Suite modal
  */
 function showAbout() {
     $('#modal-container').html(about_scoutsuite_template());
     $('#modal-container').modal();
 };
 
+/**
+ * Hides About Scout Suite modal
+ */
+function hidePleaseWait() {
+    $('#please-wait-modal').fadeOut(500, () => { });
+    $('#please-wait-backdrop').fadeOut(500, () => { });
+};
 
 /**
- * 
+ * Shows last run details modal
  */
 function showLastRunDetails() {
     $('#modal-container').html(last_run_details_template(run_results));
