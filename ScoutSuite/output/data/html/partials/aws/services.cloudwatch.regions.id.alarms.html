@@ -15,11 +15,7 @@
         </ul>
     </div>
     <div class="list-group-item">
-        <h4>Alarm Actions
-            <span id="cloudwatch.regions.{{region}}.alarms.{{@key}}.AlarmActions" class="badge float-right {{#ifPositive AlarmActions.length}}btn-info{{/ifPositive}}">
-                {{AlarmActions.length}}
-            </span>
-        </h4>
+        <h4>Alarm Actions {{> count_badge count=resources.AlarmActions.length}} </h4>
         <ul>
         {{#each AlarmActions}}
             <li class="'list-group-item-text">{{this}}</li>
@@ -30,7 +26,7 @@
         </ul>
     </div>
     <div class="list-group-item">
-        <h4>Insufficient Data Actions<span class="badge float-right {{#ifPositive InsufficientDataActions.length}}btn-info{{/ifPositive}}">{{InsufficientDataActions.length}}</span></h4>
+        <h4>Insufficient Data Actions {{> count_badge count=InsufficientDataActions.length}}</h4>
         <ul>
         {{#each InsufficientDataActions}}
             <li class="list-group-item-text">{{this}}</li>

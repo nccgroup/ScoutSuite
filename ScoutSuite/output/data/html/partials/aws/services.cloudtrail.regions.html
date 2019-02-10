@@ -17,7 +17,7 @@
     <div class="list-group-item">
       <div class="accordion">
         <h4 class="list-group-item-heading accordion-heading">Trails
-            {{> count_badge link=(concat '#cloudtrail.regions' name 'trails') count=trails_count}}
+            {{> count_badge target=(concat '#cloudtrail.regions' name 'trails') count=trails_count}}
         </h4>
         <div id="cloudtrail.regions.{{name}}.trails" class="accordion-body collapse">
           <div class="accordion-inner">
