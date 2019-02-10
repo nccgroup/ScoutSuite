@@ -1,7 +1,7 @@
 {
     "dashboard_name": "Security Center",
     "description": "No security contact set",
-    "rationale": "You should set at least one security contact. See CIS 2.16.",
+    "rationale": "You should set at least one security contact.",
     "path": "securitycenter.security_contacts",
     "display_path": "securitycenter.security_contacts",
     "conditions": [ "and",
