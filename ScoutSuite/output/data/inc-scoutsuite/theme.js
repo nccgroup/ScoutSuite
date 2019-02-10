@@ -5,13 +5,13 @@ const DARK_SCOUT_THEME = "inc-scoutsuite/css/scoutsuite-dark.css";
 const LIGHT_SCOUT_THEME = "inc-scoutsuite/css/scoutsuite-light.css";
 
 $(document).ready(() => {
-    if (localStorage.getItem("theme_checkbox") == "true") {
+    if (isDarkThemeEnabled()) {
         document.getElementById("theme_checkbox").checked = true;
     }
 });
 
 function loadLastTheme() {
-    if (localStorage.getItem("theme_checkbox") == "true") {
+    if (isDarkThemeEnabled()) {
         setBootstrapTheme(DARK_BOOTSTRAP_THEME);
         setScoutTheme(DARK_SCOUT_THEME);
     }
@@ -21,6 +21,7 @@ function loadLastTheme() {
  * Toggles between light and dark themes
  */
 function toggleTheme() {
+    localStorage.setItem("dark_theme_enabled", document.getElementById("theme_checkbox").checked);
     if (document.getElementById("theme_checkbox").checked) {
         this.setBootstrapTheme(DARK_BOOTSTRAP_THEME)
         this.setScoutTheme(DARK_SCOUT_THEME)
@@ -29,14 +30,16 @@ function toggleTheme() {
         this.setBootstrapTheme(LIGHT_BOOTSTRAP_THEME)
         this.setScoutTheme(LIGHT_SCOUT_THEME)
     }
-    localStorage.setItem("theme_checkbox", document.getElementById("theme_checkbox").checked);
 };
 
 /**
  * Toggles between light and dark themes
  */
 function toggleTheme() {
-    if (document.getElementById("theme_checkbox").checked) {
+    const darkThemeEnabled = document.getElementById("theme_checkbox").checked
+    saveIsDarkThemeEnabled(darkThemeEnabled);
+
+    if (darkThemeEnabled) {
         this.setBootstrapTheme(DARK_BOOTSTRAP_THEME)
         this.setScoutTheme(DARK_SCOUT_THEME)
     }
@@ -44,7 +47,6 @@ function toggleTheme() {
         this.setBootstrapTheme(LIGHT_BOOTSTRAP_THEME)
         this.setScoutTheme(LIGHT_SCOUT_THEME)
     }
-    localStorage.setItem("theme_checkbox", document.getElementById("theme_checkbox").checked);
 };
 
 /**
@@ -63,3 +65,10 @@ function setScoutTheme(file) {
     document.getElementById("scout-theme").href = file;
 }
 
+function isDarkThemeEnabled() {
+    return localStorage.getItem("dark_theme_enabled") == "true";
+}
+
+function saveIsDarkThemeEnabled(isDarkThemeEnabled) {
+    localStorage.setItem("dark_theme_enabled", isDarkThemeEnabled);
+}
