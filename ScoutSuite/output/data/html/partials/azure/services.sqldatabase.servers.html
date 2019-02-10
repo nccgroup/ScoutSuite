@@ -19,6 +19,7 @@
                 <div class="list-group-item-text item-margin">Auditing: <span id="sqldatabase.servers.{{@../key}}.databases.{{@key}}.auditing_enabled">{{ convert_bool_to_enabled auditing_enabled }}</span></div>
                 <div class="list-group-item-text item-margin">Threat detection: <span id="sqldatabase.servers.{{@../key}}.databases.{{@key}}.threat_detection_enabled">{{ convert_bool_to_enabled threat_detection_enabled }}</span></div>
                 <div class="list-group-item-text item-margin">Transparent data encryption: <span id="sqldatabase.servers.{{@../key}}.databases.{{@key}}.transparent_data_encryption_enabled">{{ convert_bool_to_enabled transparent_data_encryption_enabled }}</span></div>
+                <div class="list-group-item-text item-margin">Geo-replication configured: <span id="sqldatabase.servers.{{@../key}}.databases.{{@key}}.replication_configured">{{ replication_configured }}</span></div>
             </div>
         {{/each}}
         </div>

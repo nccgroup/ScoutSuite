@@ -40,6 +40,7 @@ class SQLDatabaseConfig(AzureBaseConfig):
             db_dict['auditing_enabled'] = self._is_auditing_enabled(db)
             db_dict['threat_detection_enabled'] = self._is_threat_detection_enabled(db)
             db_dict['transparent_data_encryption_enabled'] = self._is_transparent_data_encryption_enabled(db)
+            db_dict['replication_configured'] = self._is_replication_configured(db)
             databases[db.name] = db_dict
 
         return databases
@@ -52,6 +53,9 @@ class SQLDatabaseConfig(AzureBaseConfig):
 
     def _is_transparent_data_encryption_enabled(self, db):
         return db.transparent_data_encryption_settings.status == "Enabled"
+
+    def _is_replication_configured(self, db):
+        return len(db.replication_links) > 0
 
     def _get_targets(self, response_attribute, api_client, method, list_params, ignore_list_error):
         if response_attribute == "Servers":
@@ -83,6 +87,8 @@ class SQLDatabaseConfig(AzureBaseConfig):
                     self._get_threat_detection_settings(api_client, resource_group_name, server_name, db.name))
             setattr(db, "transparent_data_encryption_settings",
                     self._get_transparent_data_encryption_settings(api_client, resource_group_name, server_name, db.name))
+            setattr(db, "replication_links",
+                    list(self._get_replication_links(api_client, resource_group_name, server_name, db.name)))
             databases.append(db)
 
         return databases
@@ -101,3 +107,6 @@ class SQLDatabaseConfig(AzureBaseConfig):
             return api_client.server_azure_ad_administrators.get(resource_group_name, server_name)
         except CloudError:  # no ad admin configured returns a 404 error
             return None
+
+    def _get_replication_links(self, api_client, resource_group_name, server_name, database_name):
+        return api_client.replication_links.list_by_database(resource_group_name, server_name, database_name)
