@@ -48,6 +48,18 @@
         "enabled": true,
         "level": "warning"
       }
+    ],
+    "securitycenter-security-contacts-email-not-set.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "securitycenter-security-contacts-not-set.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }
