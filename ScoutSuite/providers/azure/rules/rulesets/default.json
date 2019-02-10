@@ -60,6 +60,12 @@
         "enabled": true,
         "level": "warning"
       }
+    ],
+    "securitycenter-auto-provisioning-off.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }
