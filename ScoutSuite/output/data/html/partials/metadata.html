@@ -96,3 +96,11 @@
           </div>
       </div>
   </script>
+
+<script src="inc-scoutsuite/theme.js"></script>
+<script>
+    loadLastTheme();
+    if (localStorage.getItem("theme_checkbox") == "true") {
+        document.getElementById("theme_checkbox").checked = true;
+    }
+</script>
