@@ -30,6 +30,12 @@
     border-color: #E74C3C;
 }
 
+.btn-info.disabled, .btn-info:disabled {
+    color: rgb(255, 255, 255);
+    background-color: rgb(180, 180, 180);
+    border-color: rgb(180, 180, 180);
+}
+
 /* Scout Suite */
 
 

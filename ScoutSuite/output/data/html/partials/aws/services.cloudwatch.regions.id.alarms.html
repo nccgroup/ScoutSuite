@@ -15,7 +15,11 @@
         </ul>
     </div>
     <div class="list-group-item">
-        <h4>Alarm Actions<span id="cloudwatch.regions.{{region}}.alarms.{{@key}}.AlarmActions" class="badge float-right {{#ifPositive AlarmActions.length}}btn-info{{/ifPositive}}">{{AlarmActions.length}}</span></h4>
+        <h4>Alarm Actions
+            <span id="cloudwatch.regions.{{region}}.alarms.{{@key}}.AlarmActions" class="badge float-right {{#ifPositive AlarmActions.length}}btn-info{{/ifPositive}}">
+                {{AlarmActions.length}}
+            </span>
+        </h4>
         <ul>
         {{#each AlarmActions}}
             <li class="'list-group-item-text">{{this}}</li>

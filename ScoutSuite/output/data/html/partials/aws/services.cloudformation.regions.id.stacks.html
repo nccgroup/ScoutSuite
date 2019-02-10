@@ -21,7 +21,7 @@
     </div>
   </div>
   <div class="list-group-item">
-    <h4 class="list-group-item-heading">Capabilities <span class="badge float-right">{{#if Capabilities}}{{Capabilities.length}}{{else}}0{{/if}}</span></h4>
+    <h4 class="list-group-item-heading">Capabilities {{> count_badge count=Capabilities.length}}</h4>
     <ul>
       {{#each Capabilities}}
         <li class="list-group-item-text">
