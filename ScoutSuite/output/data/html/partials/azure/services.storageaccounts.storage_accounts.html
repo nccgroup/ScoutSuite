@@ -31,8 +31,7 @@
 
 <!-- Single Storage Accounts template -->
 <script id="single_storageaccounts_storage_accounts-template" type="text/x-handlebars-template">
-    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-    {{> services.storageaccounts.storage_accounts}}
+    {{> modal-template template='services.storageaccounts.storage_accounts' }}
 </script>
 <script>
     var single_storageaccounts_storage_accounts_template = Handlebars.compile($("#single_storageaccounts_storage_accounts-template").html());

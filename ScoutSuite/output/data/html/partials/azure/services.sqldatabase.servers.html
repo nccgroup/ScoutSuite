@@ -33,8 +33,7 @@
 
 <!-- Single SQL Database template -->
 <script id="single_sqldatabase_servers-template" type="text/x-handlebars-template">
-    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-    {{> services.sqldatabase.servers}}
+    {{> modal-template template='services.sqldatabase.servers' }}
 </script>
 <script>
     var single_sqldatabase_servers_template = Handlebars.compile($("#single_sqldatabase_servers-template").html());
