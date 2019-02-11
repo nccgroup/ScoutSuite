@@ -18,5 +18,15 @@
         }
       }
     }
+  },
+  "security": {
+    "keyvault": {
+      "resources": {
+        "vaults": {
+          "cols": 2,
+          "path": "services.keyvault.vaults"
+        }
+      }
+    }
   }
 }
