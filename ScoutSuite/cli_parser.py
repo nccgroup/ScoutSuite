@@ -101,19 +101,19 @@ class ScoutSuiteArgumentParser:
 
         gcp_scope.add_argument('--project-id',
                                action='store',
-                               help='ID of the GCP Project to analyze')
+                               help='ID of the GCP Project to scan')
 
         gcp_scope.add_argument('--folder-id',
                                action='store',
-                               help='ID of the GCP Folder to analyze')
+                               help='ID of the GCP Folder to scan')
 
         gcp_scope.add_argument('--organization-id',
                                action='store',
-                               help='ID of the GCP Organization to analyze')
+                               help='ID of the GCP Organization to scan')
 
         gcp_scope.add_argument('--all-projects',
                                action='store_true',
-                               help='Analyze all of the accessible projects')
+                               help='Scan all of the accessible projects')
 
     def _init_azure_parser(self):
         parser = self.subparsers.add_parser("azure",
