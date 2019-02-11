@@ -13,7 +13,7 @@ providers_dict = {'aws': 'AWSProvider',
 def get_provider(provider,
                  profile=None,
                  project_id=None, folder_id=None, organization_id=None,
-                 report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4):
+                 report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
     """
     Returns an instance of the requested provider.
 
@@ -33,6 +33,7 @@ def get_provider(provider,
                                         timestamp=timestamp,
                                         services=services,
                                         skipped_services=skipped_services,
-                                        thread_config=thread_config)
+                                        thread_config=thread_config,
+                                        **kwargs)
 
     return provider_instance
