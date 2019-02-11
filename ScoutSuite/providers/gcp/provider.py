@@ -5,7 +5,7 @@ import warnings
 
 import google.auth
 import googleapiclient
-from opinel.utils.console import printError, printException
+from opinel.utils.console import printError, printException, printInfo
 
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.gcp.configs.services import GCPServicesConfig
@@ -24,7 +24,7 @@ class GCPProvider(BaseProvider):
     Implements provider for GCP
     """
 
-    def __init__(self, project_id=None, folder_id=None, organization_id=None,
+    def __init__(self, project_id=None, folder_id=None, organization_id=None, all_projects=None,
                  report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
@@ -37,6 +37,7 @@ class GCPProvider(BaseProvider):
         self.provider_name = 'Google Cloud Platform'
 
         self.projects = []
+        self.all_projects = all_projects
         self.project_id = project_id
         self.folder_id = folder_id
         self.organization_id = organization_id
@@ -58,7 +59,7 @@ class GCPProvider(BaseProvider):
             warnings.filterwarnings("ignore", "Your application has authenticated using end user credentials")
             pass  # Nothing more to do
         elif service_account:
-            client_secrets_path = os.path.abspath(service_account)  # TODO this is probably wrong
+            client_secrets_path = os.path.abspath(service_account)
             os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = client_secrets_path
         else:
             printError('Failed to authenticate to GCP - no supported account type')
@@ -69,8 +70,17 @@ class GCPProvider(BaseProvider):
             self.credentials, project_id = google.auth.default()
             if self.credentials:
 
+                # All projects to which the user / Service Account has access to
+                if self.all_projects:
+                    self.projects = self._get_projects(parent_type='all',
+                                                       parent_id=None)
+                    if service_account and hasattr(self.credentials, 'service_account_email'):
+                        self.aws_account_id = self.credentials.service_account_email  # FIXME this is for AWS
+                    else:
+                        self.aws_account_id = 'GCP'  # FIXME this is for AWS
+                    self.profile = 'GCP'  # FIXME this is for AWS
                 # Project passed through the CLI
-                if self.project_id:
+                elif self.project_id:
                     self.projects = self._get_projects(parent_type='project',
                                                        parent_id=self.project_id)
                     self.aws_account_id = self.project_id  # FIXME this is for AWS
@@ -91,23 +101,16 @@ class GCPProvider(BaseProvider):
                     self.profile = self.organization_id  # FIXME this is for AWS
 
                 # Project inferred from default configuration
-                if project_id:
+                elif project_id:
                     self.projects = self._get_projects(parent_type='project',
                                                        parent_id=project_id)
                     self.aws_account_id = project_id  # FIXME this is for AWS
                     self.profile = project_id  # FIXME this is for AWS
 
-                # All projects to which the user / Service Account has access to
+                # Raise exception if none of the above
                 else:
-                    # self.project_id = project_id
-                    self.projects = self._get_projects(parent_type='all',
-                                                       parent_id=None)
-                    if service_account and hasattr(self.credentials, 'service_account_email'):
-                        self.aws_account_id = self.credentials.service_account_email  # FIXME this is for AWS
-                    else:
-                        self.aws_account_id = 'GCP'  # FIXME this is for AWS
-
-                    self.profile = 'GCP'  # FIXME this is for AWS
+                    printInfo("Could not infer the Projects to scan and no default Project ID was found.")
+                    return False
 
                 # TODO this shouldn't be done here? but it has to in order to init with projects...
                 self.services.set_projects(projects=self.projects)
@@ -169,42 +172,51 @@ class GCPProvider(BaseProvider):
         resource_manager_client_v2 = gcp_connect_service(service='cloudresourcemanager-v2',
                                                          credentials=self.credentials)
 
-        if parent_type == 'project':
-            project_response = resource_manager_client_v1.projects().list(filter='id:%s' % parent_id).execute()
-            if 'projects' in project_response.keys():
-                for project in project_response['projects']:
-                    if project['lifecycleState'] == "ACTIVE":
-                        projects.append(project)
-
-        elif parent_type == 'all':
-            project_response = resource_manager_client_v1.projects().list().execute()
-            if 'projects' in project_response.keys():
-                for project in project_response['projects']:
-                    if project['lifecycleState'] == "ACTIVE":
-                        projects.append(project)
-        else:
-
-            # get parent children projects
-            request = resource_manager_client_v1.projects().list(filter='parent.id:%s' % parent_id)
-            while request is not None:
-                response = request.execute()
-
-                if 'projects' in response.keys():
-                    for project in response['projects']:
+        try:
+            if parent_type == 'project':
+                project_response = resource_manager_client_v1.projects().list(filter='id:%s' % parent_id).execute()
+                if 'projects' in project_response.keys():
+                    for project in project_response['projects']:
                         if project['lifecycleState'] == "ACTIVE":
                             projects.append(project)
 
-                request = resource_manager_client_v1.projects().list_next(previous_request=request,
-                                                                          previous_response=response)
+            elif parent_type == 'all':
+                project_response = resource_manager_client_v1.projects().list().execute()
+                if 'projects' in project_response.keys():
+                    for project in project_response['projects']:
+                        if project['lifecycleState'] == "ACTIVE":
+                            projects.append(project)
+            else:
 
-            # get parent children projects in children folders recursively
-            folder_response = resource_manager_client_v2.folders().list(
-                parent='%ss/%s' % (parent_type, parent_id)).execute()
-            if 'folders' in folder_response.keys():
-                for folder in folder_response['folders']:
-                    projects.extend(self._get_projects("folder", folder['name'].strip(u'folders/')))
+                # get parent children projects
+                request = resource_manager_client_v1.projects().list(filter='parent.id:%s' % parent_id)
+                while request is not None:
+                    response = request.execute()
 
-        return projects
+                    if 'projects' in response.keys():
+                        for project in response['projects']:
+                            if project['lifecycleState'] == "ACTIVE":
+                                projects.append(project)
+
+                    request = resource_manager_client_v1.projects().list_next(previous_request=request,
+                                                                              previous_response=response)
+
+                # get parent children projects in children folders recursively
+                folder_response = resource_manager_client_v2.folders().list(
+                    parent='%ss/%s' % (parent_type, parent_id)).execute()
+                if 'folders' in folder_response.keys():
+                    for folder in folder_response['folders']:
+                        projects.extend(self._get_projects("folder", folder['name'].strip(u'folders/')))
+
+            printInfo("Found {} project(s) to scan.".format(len(projects)))
+
+        except Exception as e:
+            printError('Unable to list accessible Projects')
+            printException(e)
+
+        finally:
+            return projects
+
 
     def _match_instances_and_snapshots(self):
         """
