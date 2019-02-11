@@ -1,5 +1,5 @@
 {
-    "dashboard_name": "Security Center",
+    "dashboard_name": "Pricings",
     "description": "Standard tier not enabled",
     "rationale": "You should enable Standard Tier pricing for your Security Center (CIS 2.1).",
     "path": "securitycenter.pricings.id",
