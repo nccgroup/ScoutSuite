@@ -6,7 +6,6 @@ import os
 
 from ScoutSuite import DEFAULT_REPORT_DIR
 
-
 class ScoutSuiteArgumentParser:
 
     def __init__(self):
@@ -111,6 +110,10 @@ class ScoutSuiteArgumentParser:
         gcp_scope.add_argument('--organization-id',
                                action='store',
                                help='ID of the GCP Organization to analyze')
+
+        gcp_scope.add_argument('--all-projects',
+                               action='store_true',
+                               help='Analyze all of the accessible projects')
 
     def _init_azure_parser(self):
         parser = self.subparsers.add_parser("azure",
