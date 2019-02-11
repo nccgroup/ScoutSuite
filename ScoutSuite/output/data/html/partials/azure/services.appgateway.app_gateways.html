@@ -1,6 +1,6 @@
 <!-- Application Gateway partial -->
 <script id="services.appgateway.app_gateways.partial" type="text/x-handlebars-template">
-    <div class="list-group-item active">
+    <div id="resource-name" class="list-group-item active">
         <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
 
@@ -17,8 +17,7 @@
 
 <!-- Single Application Gateway template -->
 <script id="single_appgateway_app_gateways-template" type="text/x-handlebars-template">
-    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-    {{> services.appgateway.app_gateways}}
+    {{> modal-template template='services.appgateway.app_gateways' }}
 </script>
 <script>
     var single_appgateway_app_gateways_template = Handlebars.compile($("#single_appgateway_app_gateways-template").html());
