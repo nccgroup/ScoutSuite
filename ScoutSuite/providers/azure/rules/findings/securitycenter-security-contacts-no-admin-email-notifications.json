@@ -6,6 +6,5 @@
     "display_path": "securitycenter.security_contacts",
     "conditions": [ "and",
         ["securitycenter.security_contacts.id.alerts_to_admins", "equal", "Off"]
-    ],
-    "id_suffix": "security_contacts_alerts_to_admins"
+    ]
 }
