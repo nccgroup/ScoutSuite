@@ -16,17 +16,9 @@ services = {
     'securitycenter': lambda credentials, subscription_id: SecurityCenter(credentials, subscription_id, ''),
 }
 
+
 def azure_connect_service(service, credentials, region_name=None):
     try:
-        #if service == 'storageaccounts':
-        #    return StorageManagementClient(credentials.credentials, credentials.subscription_id)
-        #elif service == 'monitor':
-        #    return MonitorManagementClient(credentials.credentials, credentials.subscription_id)
-        #elif service == 'sqldatabase':
-        #    return SqlManagementClient(credentials.credentials, credentials.subscription_id)
-        #elif service == 'securitycenter':
-        #    return SecurityCenter(credentials.credentials, credentials.subscription_id, '')
-
         client = services.get(service)
         if client:
             return client(credentials.credentials, credentials.subscription_id)
