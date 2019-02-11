@@ -18,7 +18,8 @@ class CloudSQLConfig(GCPBaseConfig):
         self.instances = {}
         self.instances_count = 0
 
-        super(CloudSQLConfig, self).__init__(thread_config)
+        # TODO figure out why GCP returns errors when running with more then 1 thread (multithreading)
+        super(CloudSQLConfig, self).__init__(thread_config=1)
 
     def parse_instances(self, instance, params):
         """
@@ -33,10 +34,12 @@ class CloudSQLConfig(GCPBaseConfig):
         instance_dict['name'] = instance['name']
         instance_dict['project_id'] = instance['project']
         instance_dict['automatic_backup_enabled'] = instance['settings']['backupConfiguration']['enabled']
+        instance_dict['database_version'] = instance['databaseVersion']
         instance_dict['log_enabled'] = self._is_log_enabled(instance)
         instance_dict['ssl_required'] = self._is_ssl_required(instance)
-
         instance_dict['backups'] = self._get_instance_backups(instance, params)
+        instance_dict['users'] = self._get_users(instance, params)
+        instance_dict['authorized_networks'] = instance['settings']['ipConfiguration']['authorizedNetworks']
 
         instance_dict['last_backup_timestamp'] = \
             instance_dict['backups'][max(instance_dict['backups'].keys(),
@@ -45,6 +48,24 @@ class CloudSQLConfig(GCPBaseConfig):
 
         self.instances[instance_dict['id']] = instance_dict
 
+    def _get_users(self, instance, params):
+        users_dict = {}
+
+        try:
+            users = params['api_client'].users().list(project=instance['project'], instance=instance['name']).execute()
+            for user in users['items']:
+                users_dict[user['name']] = self._parse_user(user)
+
+        except Exception as e:
+            printError('Failed to fetch users for SQL instance %s: %s' % (instance['name'], e))
+            
+        return users_dict
+
+    def _parse_user(self, user):
+        user_dict = {}
+        user_dict['name'] = user['name']
+        user_dict['host'] = user.get('host')
+        return user_dict
 
     def _get_instance_backups(self, instance, params):
 
