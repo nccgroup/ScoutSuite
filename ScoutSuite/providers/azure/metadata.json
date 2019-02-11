@@ -18,5 +18,23 @@
         }
       }
     }
+  },
+  "securitycenter": {
+    "securitycenter": {
+      "resources": {
+        "pricings": {
+          "cols": 2,
+          "path": "services.securitycenter.pricings"
+        },
+        "security_contacts": {
+          "cols": 2,
+          "path": "services.securitycenter.security_contacts"
+        },
+        "auto_provisioning_settings": {
+          "cols": 2,
+          "path": "services.securitycenter.auto_provisioning_settings"
+        }
+      }
+    }
   }
 }
