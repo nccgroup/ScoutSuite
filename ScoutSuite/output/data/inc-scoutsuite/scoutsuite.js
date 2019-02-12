@@ -1025,6 +1025,10 @@ function make_title (title) {
         return 'Monitor';
     } else if (title == 'sqldatabase') {
         return 'SQL Database';
+    } else if (title == 'keyvault') {
+        return 'Key Vault';
+    } else if (title == 'appgateway') {
+        return 'Application Gateway';
     } else if (title == 'rediscache') {
         return 'Redis Cache';
     } else {
