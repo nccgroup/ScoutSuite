@@ -4,6 +4,7 @@ from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 from ScoutSuite.providers.azure.services.storageaccounts import StorageAccountsConfig
 from ScoutSuite.providers.azure.services.monitor import MonitorConfig
 from ScoutSuite.providers.azure.services.sqldatabase import SQLDatabaseConfig
+from ScoutSuite.providers.azure.services.keyvault import KeyVaultConfig
 try:
     from ScoutSuite.providers.azure.services.appgateway_private import AppGatewayConfig
 except ImportError:
@@ -17,6 +18,7 @@ class AzureServicesConfig(BaseServicesConfig):
         self.storageaccounts = StorageAccountsConfig(thread_config=thread_config)
         self.monitor = MonitorConfig(thread_config=thread_config)
         self.sqldatabase = SQLDatabaseConfig(thread_config=thread_config)
+        self.keyvault = KeyVaultConfig(thread_config=thread_config)
 
         try:
             self.appgateway = AppGatewayConfig(thread_config=thread_config)
