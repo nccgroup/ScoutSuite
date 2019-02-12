@@ -9,7 +9,7 @@
       }
     }
   },
-  "sql": {
+  "database": {
     "sqldatabase": {
       "resources": {
         "servers": {
