@@ -9,6 +9,10 @@ try:
     from ScoutSuite.providers.azure.services.appgateway_private import AppGatewayConfig
 except ImportError:
     pass
+try:
+    from ScoutSuite.providers.azure.services.rediscache_private import RedisCacheConfig
+except ImportError:
+    pass
 
 
 class AzureServicesConfig(BaseServicesConfig):
@@ -22,6 +26,10 @@ class AzureServicesConfig(BaseServicesConfig):
 
         try:
             self.appgateway = AppGatewayConfig(thread_config=thread_config)
+        except NameError:
+            pass
+        try:
+            self.rediscache = RedisCacheConfig(thread_config=thread_config)
         except NameError:
             pass
 

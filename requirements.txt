@@ -26,5 +26,6 @@ azure-mgmt-monitor
 azure-mgmt-sql
 azure-mgmt-keyvault>=1.1.0
 azure-mgmt-network>=2.5.1
+azure-mgmt-redis>=6.0.0
 azure-cli-core
 pyyaml>=4.2b1

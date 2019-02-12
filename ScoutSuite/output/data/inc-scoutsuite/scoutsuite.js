@@ -1029,6 +1029,8 @@ function make_title (title) {
         return 'Key Vault';
     } else if (title == 'appgateway') {
         return 'Application Gateway';
+    } else if (title == 'rediscache') {
+        return 'Redis Cache';
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
     };

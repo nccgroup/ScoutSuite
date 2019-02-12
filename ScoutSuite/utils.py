@@ -34,7 +34,8 @@ formatted_service_name = {
     'storageaccounts': 'Storage Accounts',
     'sqldatabase': 'SQL Database',
     'keyvault': 'Key Vault',
-    'appgateway': 'Application Gateway'
+    'appgateway': 'Application Gateway',
+    'rediscache': 'Redis Cache'
 }
 
 
