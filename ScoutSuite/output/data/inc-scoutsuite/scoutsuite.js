@@ -1125,6 +1125,18 @@ function download_exceptions() {
     download_configuration(exceptions, 'exceptions-' + profile_name, 'exceptions = \n');
 };
 
+var show_element = function (element_id) {
+    $('#' + element_id).show();
+};
+
+var hide_element = function (element_id) {
+    $('#' + element_id).hide();
+};
+
+var toggle_element = function (element_id) {
+    $('#' + element_id).toggle();
+};
+
 function set_filter_url(region) {
     tmp = location.hash.split('.');
     tmp[3] = region;

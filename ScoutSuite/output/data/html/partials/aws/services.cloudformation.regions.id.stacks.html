@@ -33,7 +33,7 @@
   </div>
   {{#if policy}}
     <div class="list-group-item">
-      {{> accordion_policy name = 'Stack Policy' policy_path = (concat 'cloudformation.regions' region 'stacks' @key 'policy') document = policy}}
+      <code>{{> accordion_policy name = 'Stack Policy' policy_path = (concat 'cloudformation.regions' region 'stacks' @key 'policy') document = policy}}</code>
     </div>
   {{/if}}
 </script>
