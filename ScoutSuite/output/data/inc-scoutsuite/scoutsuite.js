@@ -1025,6 +1025,8 @@ function make_title (title) {
         return 'Monitor';
     } else if (title == 'sqldatabase') {
         return 'SQL Database';
+    } else if (title == 'rediscache') {
+        return 'Redis Cache';
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
     };
