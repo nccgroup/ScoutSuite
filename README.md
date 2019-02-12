@@ -99,9 +99,9 @@ There are two ways to run Scout against a GCP Organization or Project.
 
 The following roles can be attached to the member used to run Scout in order to grant necessary permissions:
 
-- Viewer
-- Security Reviewer
-- Stackdriver Account Viewer
+- `Viewer`
+- `Security Reviewer`
+- `Stackdriver Account Viewer`
 
 #### Azure
 
@@ -201,9 +201,9 @@ Using a computer already configured to use gcloud command-line tool, you may use
 
 To run Scout using Service Account keys, using the following command:
 
-    $ python Scout.py gcp --service-account --key-file </PATH/TO/KEY_FILE.JSON>
+    $ python Scout.py gcp --service-account </PATH/TO/KEY_FILE.JSON>
     
-By default, using the `--service-account` argument will audit only the inferred project that is part of its credentials key file. To scan all projects that a service account has access to, use the `--gcp-scan-all` flag to override. If you only want to scan a single project, include the `--project-id` argument.
+By default, only the inferred default Project will be scanned.
 
 To scan a GCP ...
 - Organization, use the `organization-id <ORGANIZATION ID>` argument
