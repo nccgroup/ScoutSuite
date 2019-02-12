@@ -5,6 +5,10 @@ from ScoutSuite.providers.azure.services.storageaccounts import StorageAccountsC
 from ScoutSuite.providers.azure.services.monitor import MonitorConfig
 from ScoutSuite.providers.azure.services.sqldatabase import SQLDatabaseConfig
 from ScoutSuite.providers.azure.services.keyvault import KeyVaultConfig
+try:
+    from ScoutSuite.providers.azure.services.appgateway_private import AppGatewayConfig
+except ImportError:
+    pass
 
 
 class AzureServicesConfig(BaseServicesConfig):
@@ -15,6 +19,11 @@ class AzureServicesConfig(BaseServicesConfig):
         self.monitor = MonitorConfig(thread_config=thread_config)
         self.sqldatabase = SQLDatabaseConfig(thread_config=thread_config)
         self.keyvault = KeyVaultConfig(thread_config=thread_config)
+
+        try:
+            self.appgateway = AppGatewayConfig(thread_config=thread_config)
+        except NameError:
+            pass
 
     def _is_provider(self, provider_name):
         return provider_name == 'azure'

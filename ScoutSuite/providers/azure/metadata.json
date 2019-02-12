@@ -28,5 +28,15 @@
         }
       }
     }
+  },
+  "network": {
+    "appgateway": {
+      "resources": {
+        "app_gateways": {
+          "cols": 2,
+          "path": "services.appgateway.app_gateways"
+        }
+      }
+    }
   }
 }

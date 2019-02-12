@@ -1027,6 +1027,8 @@ function make_title (title) {
         return 'SQL Database';
     } else if (title == 'keyvault') {
         return 'Key Vault';
+    } else if (title == 'appgateway') {
+        return 'Application Gateway';
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
     };

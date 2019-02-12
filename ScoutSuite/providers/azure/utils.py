@@ -8,6 +8,7 @@ from azure.mgmt.storage import StorageManagementClient
 from azure.mgmt.monitor import MonitorManagementClient
 from azure.mgmt.sql import SqlManagementClient
 from azure.mgmt.keyvault import KeyVaultManagementClient
+from azure.mgmt.network import NetworkManagementClient
 
 
 def azure_connect_service(service, credentials, region_name=None):
@@ -21,6 +22,8 @@ def azure_connect_service(service, credentials, region_name=None):
             return SqlManagementClient(credentials.credentials, credentials.subscription_id)
         elif service == 'keyvault':
             return KeyVaultManagementClient(credentials.credentials, credentials.subscription_id)
+        elif service == 'appgateway':
+            return NetworkManagementClient(credentials.credentials, credentials.subscription_id)
         else:
             printException('Service %s not supported' % service)
             return None
