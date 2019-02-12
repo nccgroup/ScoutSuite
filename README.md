@@ -173,7 +173,7 @@ After performing a number of API calls, Scout will create a local HTML report an
 
 Using a computer already configured to use the AWS CLI, you may use Scout using the following command:
 
-    $ python Scout.py aws
+    $ python Scout.py --provider aws
 
 **Note:** EC2 instances with an IAM role fit in this category.
 
@@ -190,11 +190,11 @@ If you have a CSV file containing the API access key ID and secret, you may run 
 
 Using a computer already configured to use gcloud command-line tool, you may use Scout using the following command:
 
-    $ python Scout.py gcp --user-account
+    $ python Scout.py --provider gcp --user-account
     
 To run Scout using Service Account keys, using the following command:
 
-    $ python Scout.py gcp --service-account --key-file </PATH/TO/KEY_FILE.JSON>
+    $ python Scout.py --provider gcp --service-account --key-file </PATH/TO/KEY_FILE.JSON>
     
 To scan a GCP ... 
 - Organization, use the `organization-id <ORGANIZATION ID>` argument
@@ -205,21 +205,21 @@ To scan a GCP ...
 
 Using a computer already configured to use azure-cli, you may use Scout using the following command:
 
-    $ python Scout.py azure --azure-cli
+    $ python Scout.py --provider azure --azure-cli
     
 When using Scout in an Azure virtual machine with the Reader role, you may use 
 Scout using the following command:
 
-    $ python Scout.py azure --azure-msi
+    $ python Scout.py --provider azure --azure-msi
     
 When using Scout with a Service Principal, you may run Scout using the following command:
 
-    $ python Scout.py azure --azure-service-principal
+    $ python Scout.py --provider azure --azure-service-principal
     
 When using Scout with an authentication file, you may run Scout using the following command:
 
-    $ python Scout.py azure --azure-file-auth path/to/auth/file
+    $ python Scout.py --provider azure --azure-file-auth path/to/auth/file
   
 When using Scout against your user account, you may run Scout using the following command:
 
-    $ python Scout.py azure --azure-user-credentials
+    $ python Scout.py --provider azure --azure-user-credentials
