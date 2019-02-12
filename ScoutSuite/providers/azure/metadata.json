@@ -18,5 +18,15 @@
         }
       }
     }
+  },
+  "redis": {
+    "rediscache": {
+      "resources": {
+        "caches": {
+          "cols": 2,
+          "path": "services.rediscache.caches"
+        }
+      }
+    }
   }
 }
