@@ -46,11 +46,13 @@ def main(args):
                                   project_id=args.get('project_id'),
                                   folder_id=args.get('folder_id'),
                                   organization_id=args.get('organization_id'),
+                                  all_projects=args.get('all_projects'),
                                   report_dir=args.get('report_dir'),
                                   timestamp=args.get('timestamp'),
                                   services=args.get('services'),
                                   skipped_services=args.get('skipped_services'),
-                                  thread_config=args.get('thread_config'))
+                                  thread_config=args.get('thread_config'),
+                                  )
 
     report_file_name = generate_report_name(cloud_provider.provider_code, args)
 

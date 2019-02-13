@@ -1,6 +1,6 @@
 <!-- SQL Database partial -->
 <script id="services.sqldatabase.servers.partial" type="text/x-handlebars-template">
-    <div class="list-group-item active">
+    <div id="resource-name" class="list-group-item active">
         <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
 
@@ -19,6 +19,7 @@
                 <div class="list-group-item-text item-margin">Auditing: <span id="sqldatabase.servers.{{@../key}}.databases.{{@key}}.auditing_enabled">{{ convert_bool_to_enabled auditing_enabled }}</span></div>
                 <div class="list-group-item-text item-margin">Threat detection: <span id="sqldatabase.servers.{{@../key}}.databases.{{@key}}.threat_detection_enabled">{{ convert_bool_to_enabled threat_detection_enabled }}</span></div>
                 <div class="list-group-item-text item-margin">Transparent data encryption: <span id="sqldatabase.servers.{{@../key}}.databases.{{@key}}.transparent_data_encryption_enabled">{{ convert_bool_to_enabled transparent_data_encryption_enabled }}</span></div>
+                <div class="list-group-item-text item-margin">Geo-replication configured: <span id="sqldatabase.servers.{{@../key}}.databases.{{@key}}.replication_configured">{{ replication_configured }}</span></div>
             </div>
         {{/each}}
         </div>
@@ -32,8 +33,7 @@
 
 <!-- Single SQL Database template -->
 <script id="single_sqldatabase_servers-template" type="text/x-handlebars-template">
-    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-    {{> services.sqldatabase.servers}}
+    {{> modal-template template='services.sqldatabase.servers' }}
 </script>
 <script>
     var single_sqldatabase_servers_template = Handlebars.compile($("#single_sqldatabase_servers-template").html());
