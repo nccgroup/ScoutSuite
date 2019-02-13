@@ -6,5 +6,6 @@
     "display_path": "securitycenter.security_contacts",
     "conditions": [ "and",
         ["securitycenter.security_contacts.id.alert_notifications", "equal", "Off"]
-    ]
+    ],
+    "id_suffix": "no_email_notification_on_alert"
 }

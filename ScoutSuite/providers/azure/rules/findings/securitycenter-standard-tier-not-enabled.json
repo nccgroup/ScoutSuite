@@ -6,5 +6,6 @@
     "display_path": "securitycenter.pricings.id",
     "conditions": [ "and",
         ["securitycenter.pricings.id.pricing_tier", "notEqual", "Standard" ]
-    ]
+    ],
+    "id_suffix": "standard_tier_enabled"
 }

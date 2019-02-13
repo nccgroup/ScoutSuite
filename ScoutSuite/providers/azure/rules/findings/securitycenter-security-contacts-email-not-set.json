@@ -6,5 +6,6 @@
     "display_path": "securitycenter.security_contacts",
     "conditions": [ "and",
         ["securitycenter.security_contacts.id.email", "equal", ""]
-    ]
+    ],
+    "id_suffix": "email_not_set"
 }
