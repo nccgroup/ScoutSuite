@@ -5,7 +5,7 @@
     "path": "securitycenter.security_contacts.id",
     "display_path": "securitycenter.security_contacts",
     "conditions": [ "and",
-        ["securitycenter.security_contacts.id.alert_notifications", "equal", "Off"]
+        ["securitycenter.security_contacts.id.alert_notifications", "false", ""]
     ],
     "id_suffix": "no_email_notification_on_alert"
 }

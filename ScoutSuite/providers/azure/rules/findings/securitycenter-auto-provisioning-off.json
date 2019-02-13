@@ -5,7 +5,7 @@
     "path": "securitycenter.auto_provisioning_settings.id",
     "display_path": "securitycenter.auto_provisioning_settings",
     "conditions": [ "and",
-        ["securitycenter.auto_provisioning_settings.id.auto_provision", "equal", "Off"]
+        ["securitycenter.auto_provisioning_settings.id.auto_provision", "false", ""]
     ],
     "id_suffix": "provisionning_off"
 }
