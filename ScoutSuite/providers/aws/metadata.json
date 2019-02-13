@@ -384,7 +384,7 @@
             "resources": {
                 "tables": {
                     "api_call": "list_tables",
-                    "response": "Tables",
+                    "response": "TableNames",
                     "path": "services.dynamodb.regions.id.tables"
                 }
             }

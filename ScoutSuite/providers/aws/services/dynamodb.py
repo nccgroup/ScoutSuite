@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-
-import json
-
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 
 
@@ -23,8 +19,8 @@ class DynamoDBRegionConfig(RegionConfig):
         :param table:                   Table
 
         """
-    
-    print("Dynamo Time")
+        api_client = api_clients[region]
+        self.tables[len(self.tables)] = api_client.describe_table(TableName=table)['Table']
 
 
 ########################################
