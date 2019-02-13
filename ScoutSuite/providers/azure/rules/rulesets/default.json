@@ -19,6 +19,18 @@
         "level": "warning"
       }
     ],
+    "network-watcher-not-enabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "network-watcher-not-provisioned.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "storageaccount-account-allowing-clear-text.json": [
       {
         "enabled": true,

@@ -5,14 +5,28 @@ from ScoutSuite.providers.azure.configs.base import AzureBaseConfig
 
 class NetworkConfig(AzureBaseConfig):
     targets = (
+        ('network_watchers', 'Network Watchers', 'list_all', {}, False),
         ('network_security_groups', 'Network Security Group', 'list_all', {}, False),
     )
 
     def __init__(self, thread_config):
+        self.network_watchers = {}
+        self.network_watchers_count = 0
+
         self.network_security_groups = {}
         self.network_security_groups_count = 0
 
         super(NetworkConfig, self).__init__(thread_config)
+
+    def parse_network_watchers(self, network_watcher, params):
+        network_watcher_dict = {}
+        network_watcher_dict['id'] = network_watcher.id
+        network_watcher_dict['name'] = network_watcher.name
+        network_watcher_dict['provisioning_state'] = network_watcher.provisioning_state == "Succeeded"
+        network_watcher_dict['location'] = network_watcher.location
+        network_watcher_dict['etag'] = network_watcher.etag
+
+        self.network_watchers[network_watcher_dict['id']] = network_watcher_dict
 
     def parse_network_security_groups(self, network_security_group, params):
         network_security_group_dict = {}
