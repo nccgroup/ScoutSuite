@@ -59,7 +59,9 @@
           "path": "services.cloudstorage.buckets"
         }
       }
-    },
+    }
+  },
+  "database": {
     "cloudsql": {
       "resources": {
         "instances": {
