@@ -34,7 +34,7 @@ class AWSServicesConfig(BaseServicesConfig):
                                         
     :ivar cloudtrail:                   CloudTrail configuration
     :ivar cloudwatch:                   CloudWatch configuration: TODO
-    :ivar dynamodb:                   DynomaDB configuration
+    :ivar dynamodb:                     DynomaDB configuration
     :ivar ec2:                          EC2 configuration
     :ivar iam:                          IAM configuration
     :ivar kms:                          KMS configuration

@@ -385,8 +385,7 @@
                 "tables": {
                     "api_call": "list_tables",
                     "response": "Tables",
-                    "cols": 2,
-                    "path": "services.dynamodb.regions.id.vpcs.id.tables"
+                    "path": "services.dynamodb.regions.id.tables"
                 }
             }
         },

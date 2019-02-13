@@ -1000,12 +1000,13 @@ function make_title (title) {
         return 'CloudFormation';
     } else if (title == 'awslambda') {
         return 'Lambda';
+    } else if (title == 'dynamodb') {
+        return 'DynamoDB';
     } else if (title == 'elasticache') {
         return 'ElastiCache';
     } else if (title == 'redshift') {
         return 'RedShift';
     } else if (title == 'cloudstorage') {
-
         return 'Cloud Storage';
     } else if (title == 'cloudsql') {
         return 'Cloud SQL';
