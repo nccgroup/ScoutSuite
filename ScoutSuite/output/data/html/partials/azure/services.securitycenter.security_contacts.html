@@ -1,0 +1,27 @@
+<!-- Storage Accounts partial -->
+<script id="services.securitycenter.security_contacts.partial" type="text/x-handlebars-template">
+    <div id="ressource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Contact name: <span id="securitycenter.security_contacts.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Email: <span id="securitycenter.security_contacts.{{@key}}.email">{{ email }}</span></div>
+        <div class="list-group-item-text item-margin">Phone: <span id="securitycenter.security_contacts.{{@key}}.phone">{{ phone }}</span></div>
+        <div class="list-group-item-text item-margin">Notify on alert: <span id="securitycenter.security_contacts.{{@key}}.alert_notifications">{{ alert_notifications }}</span></div>
+        <div class="list-group-item-text item-margin">Notify administrators on alert: <span id="securitycenter.security_contacts.{{@key}}.alerts_to_admins">{{ alerts_to_admins }}</span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.securitycenter.security_contacts", $("#services\\.securitycenter\\.security_contacts\\.partial").html());
+</script>
+
+<!-- Single Pricings template -->
+<script id="single_securitycenter_security_contacts-template" type="text/x-handlebars-template">
+    {{> modal_template template='services.securitycenter.security_contacts'}}
+</script>
+<script>
+    var single_securitycenter_security_contacts_template = Handlebars.compile($("#single_securitycenter_security_contacts-template").html());
+</script>

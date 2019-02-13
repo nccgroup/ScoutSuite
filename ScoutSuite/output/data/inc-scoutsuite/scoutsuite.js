@@ -1006,6 +1006,14 @@ function make_title (title) {
         return 'Monitor';
     } else if (title == 'sqldatabase') {
         return 'SQL Database';
+    } else if (title == 'securitycenter') {
+        return 'Security Center';
+    } else if (title == 'keyvault') {
+        return 'Key Vault';
+    } else if (title == 'appgateway') {
+        return 'Application Gateway';
+    } else if (title == 'rediscache') {
+        return 'Redis Cache';
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
     };
@@ -1098,6 +1106,18 @@ function download_exceptions() {
     var profile_name = url.substring(url.lastIndexOf('/') + 1).replace('report-', '').replace('.html', '');
     console.log(exceptions);
     download_configuration(exceptions, 'exceptions-' + profile_name, 'exceptions = \n');
+};
+
+var show_element = function (element_id) {
+    $('#' + element_id).show();
+};
+
+var hide_element = function (element_id) {
+    $('#' + element_id).hide();
+};
+
+var toggle_element = function (element_id) {
+    $('#' + element_id).toggle();
 };
 
 function set_filter_url(region) {

@@ -33,6 +33,10 @@ formatted_service_name = {
     'monitor': 'Monitor',
     'storageaccounts': 'Storage Accounts',
     'sqldatabase': 'SQL Database',
+    'securitycenter': 'Security Center',
+    'keyvault': 'Key Vault',
+    'appgateway': 'Application Gateway',
+    'rediscache': 'Redis Cache'
 }
 
 

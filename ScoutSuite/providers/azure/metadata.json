@@ -9,12 +9,60 @@
       }
     }
   },
-  "sql": {
+  "database": {
     "sqldatabase": {
       "resources": {
         "servers": {
           "cols": 2,
           "path": "services.sqldatabase.servers"
+        }
+      }
+    }
+  },
+  "securitycenter": {
+    "securitycenter": {
+      "resources": {
+        "pricings": {
+          "cols": 2,
+          "path": "services.securitycenter.pricings"
+        },
+        "security_contacts": {
+          "cols": 2,
+          "path": "services.securitycenter.security_contacts"
+        },
+        "auto_provisioning_settings": {
+          "cols": 2,
+          "path": "services.securitycenter.auto_provisioning_settings"
+        }
+      }
+    }
+  },
+  "security": {
+    "keyvault": {
+      "resources": {
+        "vaults": {
+          "cols": 2,
+          "path": "services.keyvault.vaults"
+        }
+      }
+    }
+  },
+  "network": {
+    "appgateway": {
+      "resources": {
+        "app_gateways": {
+          "cols": 2,
+          "path": "services.appgateway.app_gateways"
+        }
+      }
+    }
+  },
+  "redis": {
+    "rediscache": {
+      "resources": {
+        "caches": {
+          "cols": 2,
+          "path": "services.rediscache.caches"
         }
       }
     }

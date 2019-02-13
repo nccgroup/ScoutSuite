@@ -16,7 +16,7 @@ environments. Using the APIs exposed by cloud providers, Scout gathers configura
 highlights risk areas. Rather than pouring through dozens of pages on the web consoles, Scout provides a clear view of
 the attack surface automatically.
 
-Scout Suite is stable and actively maintained, but a number of features and internals may change. As such, please bear
+Scout Suite is stable and actively maintained, but a number of features and internals may change. As such, please bare
 with us as we find time to work on, and improve, the tool. Feel free to report a bug with details (please provide
 console output using the `--debug` argument), request a new feature, or send a pull request.
 
@@ -31,7 +31,7 @@ The following cloud providers are currently supported/planned:
 
 -   Amazon Web Services
 -   Google Cloud Platform (beta)
--   Azure (early alpha)
+-   Azure (alpha)
 
 ## Installation
 
@@ -79,8 +79,8 @@ To run Scout against an AWS account, you will need valid AWS credentials (i.e. A
 The following AWS Managed Policies can be attached to the principal used to run Scout in order to grant the necessary
 permissions:
 
--   ReadOnlyAccess
--   SecurityAudit
+-   `ReadOnlyAccess`
+-   `SecurityAudit`
 
 #### Google Cloud Platform
 
@@ -94,14 +94,13 @@ There are two ways to run Scout against a GCP Organization or Project.
 2.  Service Account
     1.  Generate and download service account keys in JSON format
     (refer to <https://cloud.google.com/iam/docs/creating-managing-service-account-keys>)
-    2.  Run Scout with the `--service-account` flag while providing the key file path with
-    `--key-file path/to/key_file.json`
+    2.  Run Scout with the `--service-account` flag while providing the key file path
 
 The following roles can be attached to the member used to run Scout in order to grant necessary permissions:
 
-- Viewer
-- Security Reviewer
-- Stackdriver Account Viewer
+- `Viewer`
+- `Security Reviewer`
+- `Stackdriver Account Viewer`
 
 #### Azure
 
@@ -128,8 +127,7 @@ There are five ways to run scout against an Azure organization.
 5.  User Credentials
     1. Run Scout using `--user-account`. The application will prompt you for your credentials.
 
-Scout will require the Reader role over all the resources you want to check. The easiest way is to give
-it Reader over the Subscription, as it will be inherited on all the resources.
+Scout will require the `Reader` role over all the resources to assess. The easiest way is to authenticate with a principal that has this role over the target Subscription, as it will be inherited on all the resources.
 
 ### Compliance
 
@@ -202,9 +200,9 @@ Using a computer already configured to use gcloud command-line tool, you may use
 
 To run Scout using Service Account keys, using the following command:
 
-    $ python Scout.py --provider gcp --service-account --key-file </PATH/TO/KEY_FILE.JSON>
+    $ python Scout.py gcp --service-account </PATH/TO/KEY_FILE.JSON>
     
-By default, using the `--service-account` argument will audit only the inferred project that is part of its credentials key file. To scan all projects that a service account has access to, use the `--gcp-scan-all` flag to override. If you only want to scan a single project, include the `--project-id` argument.
+By default, only the inferred default Project will be scanned.
 
 To scan a GCP ...
 - Organization, use the `organization-id <ORGANIZATION ID>` argument
