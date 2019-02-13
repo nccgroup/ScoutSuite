@@ -1,0 +1,11 @@
+{
+    "dashboard_name": "Security Center",
+    "description": "No security contact set",
+    "rationale": "You should set at least one security contact (CID2.16-2.17).",
+    "path": "securitycenter.security_contacts",
+    "display_path": "securitycenter.security_contacts",
+    "conditions": [ "and",
+        ["securitycenter.security_contacts", "empty", ""]
+    ],
+    "id_suffix": "security_contact_not_set"
+}

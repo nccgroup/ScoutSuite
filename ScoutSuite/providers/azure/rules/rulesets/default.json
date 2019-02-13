@@ -42,6 +42,48 @@
         "enabled": true,
         "level": "warning"
       }
+    ],
+    "securitycenter-standard-tier-not-enabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "securitycenter-security-contacts-not-set.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "securitycenter-security-contacts-email-not-set.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "securitycenter-security-contacts-phone-not-set.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "securitycenter-security-contacts-no-email-notifications.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "securitycenter-security-contacts-no-admin-email-notifications.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "securitycenter-auto-provisioning-off.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }
