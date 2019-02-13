@@ -2,23 +2,10 @@
 var loaded_config_array = new Array();
 var run_results;
 
-const DARK_BOOTSTRAP_THEME = "inc-bootstrap/css/bootstrap-dark.min.css";
-const LIGHT_BOOTSTRAP_THEME = "inc-bootstrap/css/bootstrap-light.min.css";
-
-const DARK_SCOUT_THEME = "inc-scoutsuite/css/scoutsuite-dark.css";
-const LIGHT_SCOUT_THEME = "inc-scoutsuite/css/scoutsuite-light.css";
-
 /**
  * Event handlers
  */
 $(document).ready(function () {
-    // Loading last theme before window.onload to prevent flickering of styles    
-    if (localStorage.getItem("theme_checkbox") == "true") {
-        document.getElementById("theme_checkbox").checked = true;
-        setBootstrapTheme(DARK_BOOTSTRAP_THEME);
-        setScoutTheme(DARK_SCOUT_THEME);
-    }
-
     showPageFromHash();
 
     // when button is clicked, return CSV with finding
@@ -102,6 +89,7 @@ $(document).ready(function () {
 
     });
 
+    hidePleaseWait();
 });
 
 /**
@@ -367,45 +355,32 @@ function showSingleItem(id) {
     $("[id='" + id + "']").show();
 };
 
-/**
- * Toggles between light and dark themes
- */
-function toggleTheme() {
-    if (document.getElementById("theme_checkbox").checked) {
-        this.setBootstrapTheme(DARK_BOOTSTRAP_THEME)
-        this.setScoutTheme(DARK_SCOUT_THEME)
-    }
-    else {
-        this.setBootstrapTheme(LIGHT_BOOTSTRAP_THEME)
-        this.setScoutTheme(LIGHT_SCOUT_THEME)
-    }
+function toggleDetails(keyword, item) {
+    var id = '#' + keyword + '-' + item;
+    $(id).toggle();
 };
 
-/**
- * Sets the css file location received as the bootstrap theme
- * @param file
- */
-function setBootstrapTheme(file) {
-    var oldlink = document.getElementById("bootstrap-theme");
-    oldlink.href = file;
-}
 
 /**
- * Sets the css file location received as the scout theme
- * @param file
+ * Update the navigation bar
+ * @param service
  */
-function setScoutTheme(file) {
-    var oldlink = document.getElementById("scout-theme");
-    oldlink.href = file;
-}
+function updateNavbar(service) {
+    $('[id*="dropdown"]').removeClass('active-dropdown');
+    $('#' + service + '_dropdown').addClass('active-dropdown');
+    $('[id*="dropdown"]').show();
+};
 
-
-/**
- * Save the current theme on web storage
- */
-window.onunload = function() {
-    localStorage.setItem("theme_checkbox", document.getElementById("theme_checkbox").checked);
-}
+function toggleVisibility(id) {
+    id1 = '#' + id;
+    $(id1).toggle()
+    id2 = '#bullet-' + id;
+    if ($(id1).is(":visible")) {
+        $(id2).html('<i class="fa fa-caret-square-o-down"></i>');
+    } else {
+        $(id2).html('<i class="fa fa-caret-square-o-right"></i>');
+    };
+};
 
 /**
  *
@@ -691,7 +666,6 @@ function showPopup(content) {
  * Set up dashboards and dropdown menus
  */
 function load_metadata() {
-
     run_results = get_scoutsuite_results();
 
     // Set title dynamically
@@ -731,16 +705,23 @@ function load_metadata() {
 
 
 /**
- * Show About Scout Suite div
+ * Show About Scout Suite modal
  */
 function showAbout() {
     $('#modal-container').html(about_scoutsuite_template());
     $('#modal-container').modal();
 };
 
+/**
+ * Hides About Scout Suite modal
+ */
+function hidePleaseWait() {
+    $('#please-wait-modal').fadeOut(500, () => { });
+    $('#please-wait-backdrop').fadeOut(500, () => { });
+};
 
 /**
- * 
+ * Shows last run details modal
  */
 function showLastRunDetails() {
     $('#modal-container').html(last_run_details_template(run_results));

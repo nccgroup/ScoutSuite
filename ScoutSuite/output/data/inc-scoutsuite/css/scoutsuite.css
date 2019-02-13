@@ -30,6 +30,12 @@
     border-color: #E74C3C;
 }
 
+.btn-info.disabled, .btn-info:disabled {
+    color: rgb(255, 255, 255);
+    background-color: rgb(180, 180, 180);
+    border-color: rgb(180, 180, 180);
+}
+
 /* Scout Suite */
 
 
@@ -185,10 +191,6 @@ ul.no-bullet {
     color: #bbcdce;
 }
 
-.dropdown-item {
-    color: #647273;
-}
-
 .rationale-overlay {
     z-index: 2147483647;
     display: block;
@@ -202,6 +204,7 @@ ul.no-bullet {
     display: inline-block;
     width: 26px;
     height: 14px;
+    line-height: 1em;
   }
 
 .switch input { 

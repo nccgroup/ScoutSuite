@@ -4,11 +4,7 @@
       <div class="list-group-item">
         <h4 class="list-group-item-heading">
           {{make_title direction}} Rules
-          {{#ifEqual count 0}}
-            <span class="badge float-right">{{count}}</span>
-          {{else}}
-            <span class="badge float-right btn-info">{{count}}</span>
-          {{/ifEqual}}
+          {{> count_badge count=count}}
         </h4>
         <ul>
         {{#each protocols}}
