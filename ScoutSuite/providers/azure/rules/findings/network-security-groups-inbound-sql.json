@@ -1,0 +1,13 @@
+{
+    "dashboard_name": "Network",
+    "description": "SQL inbound access permitted by security group",
+    "rationale": "You should not permit SQL inbound access to a network security group (CIS 6.3).",
+    "path": "network.network_security_groups.id.security_rules.id",
+    "display_path": "network.network_security_groups.id.security_rules",
+    "conditions": [ "and",
+        ["network.network_security_groups.id.security_rules.id.direction", "equal", "Inbound"],
+        ["network.network_security_groups.id.security_rules.id.destination_ports", "containAtLeastOneOf", "22"],
+        ["network.network_security_groups.id.security_rules.id.allow", "true", ""]
+    ],
+    "id_suffix": "security_groups_inbound_sql"
+}
