@@ -1,6 +1,6 @@
 <!-- Storage Accounts partial -->
 <script id="services.securitycenter.auto_provisioning_settings.partial" type="text/x-handlebars-template">
-    <div class="list-group-item active">
+    <div id="ressource-name" class="list-group-item active">
         <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
 
@@ -17,8 +17,7 @@
 
 <!-- Single Pricings template -->
 <script id="single_securitycenter_auto_provisioning_settings-template" type="text/x-handlebars-template">
-    <div style="text-align: right; padding-right: 10px; text-weight: bold;"><a href="javascript:hidePopup()">X</a></div>
-    {{> services.securitycenter.auto_provisioning_settings}}
+    {{> modal.template template='services.securitycenter.auto_provisioning_settings'}}
 </script>
 <script>
     var single_securitycenter_auto_provisioning_settings_template = Handlebars.compile($("#single_securitycenter_auto_provisioning_settings-template").html());
