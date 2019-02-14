@@ -6,6 +6,13 @@ var run_results;
  * Event handlers
  */
 $(document).ready(function () {
+    onPageLoad();
+});
+
+/**
+ * Implements page load functionality
+ */
+function onPageLoad() {
     showPageFromHash();
 
     // when button is clicked, return CSV with finding
@@ -90,7 +97,7 @@ $(document).ready(function () {
     });
 
     hidePleaseWait();
-});
+};
 
 /**
  * Display the account ID -- use of the generic function + templates result in the div not being at the top of the page
@@ -666,6 +673,7 @@ function showPopup(content) {
  * Set up dashboards and dropdown menus
  */
 function load_metadata() {
+
     run_results = get_scoutsuite_results();
 
     // Set title dynamically
