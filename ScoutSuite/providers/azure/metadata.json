@@ -55,6 +55,22 @@
           "path": "services.appgateway.app_gateways"
         }
       }
+    },
+    "watcher": {
+      "resources": {
+        "network_watchers": {
+          "cols": 2,
+          "path": "services.network.network_watchers"
+        }
+      }
+    },
+    "securitygroup": {
+      "resources": {
+        "network_security_groups": {
+          "cols": 2,
+          "path": "services.network.network_security_groups"
+        }
+      }
     }
   },
   "redis": {
