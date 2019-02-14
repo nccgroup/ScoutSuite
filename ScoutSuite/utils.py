@@ -36,7 +36,8 @@ formatted_service_name = {
     'securitycenter': 'Security Center',
     'keyvault': 'Key Vault',
     'appgateway': 'Application Gateway',
-    'rediscache': 'Redis Cache'
+    'rediscache': 'Redis Cache',
+    'network': 'Network',
 }
 
 

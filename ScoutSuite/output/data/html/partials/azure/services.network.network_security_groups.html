@@ -1,0 +1,25 @@
+<!-- Network Security Groups partial -->
+<script id="services.network.network_security_groups.partial" type="text/x-handlebars-template">
+    <div id="ressource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="network.network_security_groups.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Location: <span id="network.network_security_groups.{{@key}}.location">{{ location }}</span></div>
+        <div class="list-group-item-text item-margin">Exposed ports: <span id="network.network_security_groups.{{@key}}.exposed_ports">{{ exposed_ports }}</span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.network.network_security_groups", $("#services\\.network\\.network_security_groups\\.partial").html());
+</script>
+
+<!-- Single security group template -->
+<script id="single_network_network_security_group-template" type="text/x-handlebars-template">
+    {{> modal_template template='services.network.network_security_groups'}}
+</script>
+<script>
+    var single_network_network_security_group_template = Handlebars.compile($("#single_network_network_security_group-template").html());
+</script>

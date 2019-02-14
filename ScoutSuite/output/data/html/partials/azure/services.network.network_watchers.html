@@ -1,0 +1,24 @@
+<!-- Network Watchers partial -->
+<script id="services.network.network_watchers.partial" type="text/x-handlebars-template">
+    <div id="ressource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{location}}</h4>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="network.network_watchers.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Provisioning State: <span id="network.network_watchers.{{@key}}.provisioning_state">{{ provisioning_state }}</span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.network.network_watchers", $("#services\\.network\\.network_watchers\\.partial").html());
+</script>
+
+<!-- Single watcher template -->
+<script id="single_network_network_watcher-template" type="text/x-handlebars-template">
+    {{> modal_template template='services.network.network_watchers'}}
+</script>
+<script>
+    var single_network_network_watcher_template = Handlebars.compile($("#single_network_network_watcher-template").html());
+</script>

@@ -39,7 +39,7 @@ class NetworkConfig(AzureBaseConfig):
 
         network_security_group_dict['security_rules'] = self._parse_security_rules(network_security_group)
 
-        network_security_group_dict['explosed_ports'] = self._parse_exposed_ports(network_security_group)
+        network_security_group_dict['exposed_ports'] = self._parse_exposed_ports(network_security_group)
 
         self.network_security_groups[network_security_group_dict['id']] = network_security_group_dict
 
@@ -85,7 +85,9 @@ class NetworkConfig(AzureBaseConfig):
                     ports.add(p)
             else:
                 ports.add(int(pr))
-        return list(ports)
+        ports = list(ports)
+        ports.sort()
+        return ports
 
     @staticmethod
     def _parse_exposed_ports(network_security_group):
@@ -106,5 +108,6 @@ class NetworkConfig(AzureBaseConfig):
                 else:
                     for p in ports:
                         exposed_ports.discard(p)
-
-        return list(exposed_ports)
+        exposed_ports = list(exposed_ports)
+        exposed_ports.sort()
+        return exposed_ports
