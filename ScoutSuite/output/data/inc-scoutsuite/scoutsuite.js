@@ -96,7 +96,6 @@ function onPageLoad() {
 
     });
 
-    hidePleaseWait();
 };
 
 /**
@@ -704,6 +703,8 @@ function load_metadata() {
             };
         };
     };
+
+    hidePleaseWait();
 };
 
 
@@ -721,7 +722,7 @@ function showAbout() {
 };
 
 /**
- * Hides About Scout Suite modal
+ * Hides Please Wait modal
  */
 function hidePleaseWait() {
     $('#please-wait-modal').fadeOut(500, () => { });
