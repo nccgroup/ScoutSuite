@@ -99,7 +99,7 @@ class NetworkConfig(AzureBaseConfig):
             if sr.direction == "Inbound" and (sr.source_address_prefix == "*"
                                               or sr.source_address_prefix == "Internet"):
                 ports = NetworkConfig._parse_ports(sr.destination_port_range,
-                                          sr.destination_port_ranges)
+                                                   sr.destination_port_ranges)
                 if sr.access == "Allow":
                     for p in ports:
                         exposed_ports.add(p)

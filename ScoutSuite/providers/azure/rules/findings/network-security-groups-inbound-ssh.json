@@ -10,6 +10,11 @@
         ["network.network_security_groups.id.security_rules.id.allow", "true", ""],
         [
             "or",
+            ["network.network_security_groups.id.security_rules.id.protocol", "equal", "*"],
+            ["network.network_security_groups.id.security_rules.id.protocol", "equal", "TCP"]
+        ],
+        [
+            "or",
             ["network.network_security_groups.id.security_rules.id.source_address_prefix", "equal", "*"],
             ["network.network_security_groups.id.security_rules.id.source_address_prefix", "equal", "Internet"]
         ]
