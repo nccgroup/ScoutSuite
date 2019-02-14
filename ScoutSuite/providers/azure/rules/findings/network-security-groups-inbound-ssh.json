@@ -7,7 +7,12 @@
     "conditions": [ "and",
         ["network.network_security_groups.id.security_rules.id.direction", "equal", "Inbound"],
         ["network.network_security_groups.id.security_rules.id.destination_ports", "containAtLeastOneOf", "22"],
-        ["network.network_security_groups.id.security_rules.id.allow", "true", ""]
+        ["network.network_security_groups.id.security_rules.id.allow", "true", ""],
+        [
+            "or",
+            ["network.network_security_groups.id.security_rules.id.source_address_prefix", "equal", "*"],
+            ["network.network_security_groups.id.security_rules.id.source_address_prefix", "equal", "Internet"]
+        ]
     ],
     "id_suffix": "security_groups_inbound_ssh"
 }
