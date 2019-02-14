@@ -39,6 +39,8 @@ class NetworkConfig(AzureBaseConfig):
 
         network_security_group_dict['security_rules'] = self._parse_security_rules(network_security_group)
 
+        network_security_group_dict['explosed_ports'] = self._parse_exposed_ports(network_security_group)
+
         self.network_security_groups[network_security_group_dict['id']] = network_security_group_dict
 
     def _parse_security_rules(self, network_security_group):
@@ -84,3 +86,25 @@ class NetworkConfig(AzureBaseConfig):
             else:
                 ports.add(int(pr))
         return list(ports)
+
+    @staticmethod
+    def _parse_exposed_ports(network_security_group):
+        exposed_ports = set()
+
+        # Sort by priority.
+        rules = network_security_group.default_security_rules + network_security_group.security_rules
+        rules.sort(key=lambda x: x.priority, reverse=True)
+
+        for sr in rules:
+            if sr.direction == "Inbound" and (sr.source_address_prefix == "*"
+                                              or sr.source_address_prefix == "Internet"):
+                ports = NetworkConfig._parse_ports(sr.destination_port_range,
+                                          sr.destination_port_ranges)
+                if sr.access == "Allow":
+                    for p in ports:
+                        exposed_ports.add(p)
+                else:
+                    for p in ports:
+                        exposed_ports.discard(p)
+
+        return list(exposed_ports)
