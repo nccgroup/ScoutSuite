@@ -5,19 +5,9 @@
     "path": "network.network_security_groups.id.security_rules.id",
     "display_path": "network.network_security_groups.id.security_rules",
     "conditions": [ "and",
-        ["network.network_security_groups.id.security_rules.id.direction", "equal", "Inbound"],
         ["network.network_security_groups.id.security_rules.id.destination_ports", "containAtLeastOneOf", "1433"],
-        ["network.network_security_groups.id.security_rules.id.allow", "true", ""],
-        [
-            "or",
-            ["network.network_security_groups.id.security_rules.id.protocol", "equal", "*"],
-            ["network.network_security_groups.id.security_rules.id.protocol", "equal", "TCP"]
-        ],
-        [
-            "or",
-            ["network.network_security_groups.id.security_rules.id.source_address_prefix", "equal", "*"],
-            ["network.network_security_groups.id.security_rules.id.source_address_prefix", "equal", "Internet"]
-        ]
+        ["_INCLUDE_(conditions/exposed-to-the-internet.json)", "", ""],
+        ["_INCLUDE_(conditions/allow-tcp.json)", "", ""]
     ],
     "id_suffix": "security_groups_inbound_sql"
 }
