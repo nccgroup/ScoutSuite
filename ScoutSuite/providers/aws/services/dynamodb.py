@@ -20,7 +20,9 @@ class DynamoDBRegionConfig(RegionConfig):
 
         """
         api_client = api_clients[region]
-        self.tables[len(self.tables)] = api_client.describe_table(TableName=table)['Table']
+        table_details = api_client.describe_table(TableName=table)['Table']
+        table_details['backups'] = api_client.list_backups(TableName=table)['BackupSummaries']
+        self.tables[len(self.tables)] = table_details
 
 
 ########################################
