@@ -66,10 +66,21 @@ class NetworkConfig(AzureBaseConfig):
 
         return security_rules
 
-    def _parse_ports(self, port_range, port_ranges):
+    @staticmethod
+    def _parse_ports(port_range, port_ranges):
         ports = set()
-        port_ranges.append(ports)
+        port_ranges = port_ranges if port_ranges else []
+        if port_range:
+            port_ranges.append(port_range)
         for pr in port_ranges:
-            # Get all port from the port range
-            pass
-        return ports
+            if pr == "*":
+                for p in range(0, 65535 + 1):
+                    ports.add(p)
+                break
+            elif "-" in pr:
+                lower, upper = pr.split("-")
+                for p in range(int(lower), int(upper) + 1):
+                    ports.add(p)
+            else:
+                ports.add(int(pr))
+        return list(ports)
