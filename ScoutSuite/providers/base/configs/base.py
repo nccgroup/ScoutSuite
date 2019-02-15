@@ -44,6 +44,10 @@ class BaseConfig(object):
                                                    '').lower()  # TODO: use regex with EOS instead of plain replace
         self.thread_config = thread_configs[thread_config]
 
+        # Booleans that define if threads should keep running
+        self.run_service_threads = True
+        self.run_target_threads = True
+
     def _is_provider(self, provider_name):
         return False
 
@@ -124,10 +128,11 @@ class BaseConfig(object):
         for target in targets:
             service_queue.put(target)
 
-        # Join
+        # Blocks until all items in the queue have been gotten and processed.
         service_queue.join()
         target_queue.join()
 
+        # Show completion and force newline
         if self._is_provider('aws'):
             # Show completion and force newline
             if self.service != 'iam':
@@ -135,19 +140,29 @@ class BaseConfig(object):
         else:
             self.fetchstatuslogger.show(True)
 
+        # Threads should stop running as queues are empty
+        self.run_target_threads = False
+        self.run_service_threads = False
+        # Put x items in the queues to ensure threads run one last time (and exit)
+        for i in range(self.thread_config['parse']):
+            target_queue.put(None)
+        for j in range(self.thread_config['list']):
+            service_queue.put(None)
+
     def __fetch_target(self, q, params):
         global status
         try:
-            while True:
+            while self.run_target_threads:
                 try:
-                    target_type, target = q.get()
-                    # Make a full copy of the target in case we need to re-queue it
-                    backup = copy.deepcopy(target)
-                    method = getattr(self, 'parse_%s' %
-                                     target_type.replace('.', '_'))  # hack for GCP API Client libs
-                    method(target, params)
-                    self.fetchstatuslogger.counts[target_type]['fetched'] += 1
-                    self.fetchstatuslogger.show()
+                    target_type, target = q.get() or (None, None)
+                    if target_type and target:
+                        # Make a full copy of the target in case we need to re-queue it
+                        backup = copy.deepcopy(target)
+                        method = getattr(self, 'parse_%s' %
+                                         target_type.replace('.', '_'))  # TODO fix this, hack for GCP API Client libs
+                        method(target, params)
+                        self.fetchstatuslogger.counts[target_type]['fetched'] += 1
+                        self.fetchstatuslogger.show()
                 except Exception as e:
                     if hasattr(e, 'response') and \
                             'Error' in e.response and \
@@ -164,30 +179,33 @@ class BaseConfig(object):
     def __fetch_service(self, q, params):
         api_client = params['api_client']
         try:
-            while True:
+            while self.run_service_threads:
                 try:
-                    target_type, response_attribute, list_method_name, list_params, ignore_list_error = q.get()
+                    target_type, response_attribute, list_method_name, list_params, ignore_list_error = q.get() or (None, None, None, None, None)
 
-                    if not list_method_name:
-                        continue
+                    if target_type:
 
-                    try:
-                        method = self._get_method(api_client, target_type, list_method_name)
-                    except Exception as e:
-                        printException(e)
-                        continue
+                        if not list_method_name:
+                            continue
 
-                    try:
-                        targets = self._get_targets(response_attribute, api_client, method, list_params, ignore_list_error)
-                    except Exception as e:
-                        if not ignore_list_error:
+                        try:
+                            method = self._get_method(api_client, target_type, list_method_name)
+                        except Exception as e:
                             printException(e)
-                        targets = []
+                            continue
 
-                    self.fetchstatuslogger.counts[target_type]['discovered'] += len(targets)
+                        try:
+                            targets = self._get_targets(response_attribute, api_client, method, list_params, ignore_list_error)
+                        except Exception as e:
+                            if not ignore_list_error:
+                                printException(e)
+                            targets = []
 
-                    for target in targets:
-                        params['q'].put((target_type, target), )
+                        self.fetchstatuslogger.counts[target_type]['discovered'] += len(targets)
+
+                        for target in targets:
+                            params['q'].put((target_type, target), )
+
                 except Exception as e:
                     printException(e)
                 finally:

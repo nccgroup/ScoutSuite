@@ -47,10 +47,16 @@ class RegionalServiceConfig(object):
 
     def __init__(self, service_metadata=None, thread_config=4):
         service_metadata = {} if service_metadata is None else service_metadata
+
         self.regions = {}
         self.thread_config = thread_configs[thread_config]
         self.service = \
             type(self).__name__.replace('Config', '').lower()  # TODO: use regex with EOS instead of plain replace
+
+        # Booleans that define if threads should keep running
+        self.run_q_threads = True
+        self.run_qr_threads = True
+
         if service_metadata != {}:
             self.resource_types = {'global': [], 'region': [], 'vpc': []}
             self.targets = {'first_region': (), 'other_regions': ()}
@@ -119,23 +125,38 @@ class RegionalServiceConfig(object):
         printInfo('Fetching %s config...' % format_service_name(self.service))
         self.fetchstatuslogger = FetchStatusLogger(targets['first_region'], True)
         api_service = 'ec2' if self.service.lower() == 'vpc' else self.service.lower()
+
         # Init regions
         regions = build_region_list(api_service, regions, partition_name) # TODO: move this code within this class
         self.fetchstatuslogger.counts['regions']['discovered'] = len(regions)
+
         # Threading to fetch & parse resources (queue consumer)
         q = self._init_threading(self._fetch_target, {}, self.thread_config['parse'])
+
         # Threading to list resources (queue feeder)
         qr = self._init_threading(self._fetch_region,
                                   {'api_service': api_service, 'credentials': credentials, 'q': q, 'targets': ()},
                                   self.thread_config['list'])
+
         # Go
         for i, region in enumerate(regions):
             qr.put((region, targets['first_region'] if i == 0 else targets['other_regions']))
-        # Join
+
+        # Blocks until all items in the queue have been gotten and processed.
         qr.join()
         q.join()
+
         # Show completion and force newline
         self.fetchstatuslogger.show(True)
+
+        # Threads should stop running as queues are empty
+        self.run_qr_threads = False
+        self.run_q_threads = False
+        # Put x items in the queues to ensure threads run one last time (and exit)
+        for i in range(self.thread_config['parse']):
+            q.put(None)
+        for j in range(self.thread_config['list']):
+            qr.put(None)
 
     def _init_threading(self, function, params=None, num_threads=10):
         """
@@ -157,16 +178,16 @@ class RegionalServiceConfig(object):
     def _fetch_region(self, q, params):
         global api_clients
         try:
-            while True:
+            while self.run_qr_threads:
                 try:
-                    region, targets = q.get()
-                    #print('Targets for region %s : %s' % (region, str(targets)))
-                    self.init_region_config(region)
-                    api_client = connect_service(params['api_service'], params['credentials'], region, silent = True)
-                    api_clients[region] = api_client
-                    # TODO : something here for single_region stuff
-                    self.regions[region].fetch_all(api_client, self.fetchstatuslogger, params['q'], targets)  # params['targets'])
-                    self.fetchstatuslogger.counts['regions']['fetched'] += 1
+                    region, targets = q.get() or (None, None)
+                    if region:
+                        self.init_region_config(region)
+                        api_client = connect_service(params['api_service'], params['credentials'], region, silent = True)
+                        api_clients[region] = api_client
+                        # TODO : something here for single_region stuff
+                        self.regions[region].fetch_all(api_client, self.fetchstatuslogger, params['q'], targets)  # params['targets'])
+                        self.fetchstatuslogger.counts['regions']['fetched'] += 1
                 except Exception as e:
                     printException(e)
                 finally:
@@ -177,18 +198,19 @@ class RegionalServiceConfig(object):
 
     def _fetch_target(self, q, params):
         try:
-            while True:
+            while self.run_q_threads:
                 try:
-                    method, region, target = q.get()
-                    backup = copy.deepcopy(target)
+                    method, region, target = q.get() or (None, None, None)
+                    if method:
+                        backup = copy.deepcopy(target)
 
-                    if method.__name__ == 'store_target':
-                        target_type = target['scout2_target_type']
-                    else:
-                        target_type = method.__name__.replace('parse_', '') + 's'
-                    method(params, region, target)
-                    self.fetchstatuslogger.counts[target_type]['fetched'] += 1
-                    self.fetchstatuslogger.show()
+                        if method.__name__ == 'store_target':
+                            target_type = target['scout2_target_type']
+                        else:
+                            target_type = method.__name__.replace('parse_', '') + 's'
+                        method(params, region, target)
+                        self.fetchstatuslogger.counts[target_type]['fetched'] += 1
+                        self.fetchstatuslogger.show()
                 except Exception as e:
                     if is_throttled(e):
                         q.put((method, region, backup))
