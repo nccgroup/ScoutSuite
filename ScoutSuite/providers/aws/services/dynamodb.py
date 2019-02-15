@@ -19,9 +19,20 @@ class DynamoDBRegionConfig(RegionConfig):
         :param table:                   Table
 
         """
+
         api_client = api_clients[region]
         table_details = api_client.describe_table(TableName=table)['Table']
-        table_details['backups'] = api_client.list_backups(TableName=table)['BackupSummaries']
+        table_details['name'] = table
+
+        table_details['manual_backups'] = api_client.list_backups(TableName=table)['BackupSummaries']
+
+        continous_backup = api_client.describe_continuous_backups(TableName=table)['ContinuousBackupsDescription']
+        continous_backup = continous_backup['PointInTimeRecoveryDescription']['PointInTimeRecoveryStatus']
+        if continous_backup == 'ENABLED':
+            table_details['automatic_backups_enabled'] = True
+        else:
+            table_details['automatic_backups_enabled'] = False
+
         self.tables[len(self.tables)] = table_details
 
 
