@@ -33,7 +33,7 @@ class DynamoDBRegionConfig(RegionConfig):
         else:
             table_details['automatic_backups_enabled'] = False
 
-        self.tables[len(self.tables)] = table_details
+        self.tables[table] = table_details
 
 
 ########################################
