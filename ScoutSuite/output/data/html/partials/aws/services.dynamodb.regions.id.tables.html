@@ -10,7 +10,7 @@
       <ul>
         <li class="list-group-item-text">Id: {{TableId}}</li>
         <li class="list-group-item-text">Arn: {{TableArn}}</li>
-        <li class="list-group-item-text">Automatic backups enabled: {{automatic_backups_enabled}}</li>
+        <li class="list-group-item-text">Automatic backups enabled: <span id="dynamodb.regions.{{region}}.tables.{{@key}}.automatic_backups_enabled">{{automatic_backups_enabled}}</span></li>
         <li class="list-group-item-text">Encryption type: {{#if SSEDescription}}AWS managed CMK{{else}}AWS owned CMK{{/if}}</li>
       </ul>
     </div>
