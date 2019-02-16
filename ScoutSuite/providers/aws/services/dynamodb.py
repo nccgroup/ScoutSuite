@@ -28,11 +28,8 @@ class DynamoDBRegionConfig(RegionConfig):
 
         continous_backup = api_client.describe_continuous_backups(TableName=table)['ContinuousBackupsDescription']
         continous_backup = continous_backup['PointInTimeRecoveryDescription']['PointInTimeRecoveryStatus']
-        if continous_backup == 'ENABLED':
-            table_details['automatic_backups_enabled'] = True
-        else:
-            table_details['automatic_backups_enabled'] = False
-
+        table_details['automatic_backups_enabled'] = continous_backup == 'ENABLED'
+        
         self.tables[table] = table_details
 
 
