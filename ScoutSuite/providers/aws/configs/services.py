@@ -7,7 +7,6 @@ from ScoutSuite.providers.aws.services.cloudformation import CloudFormationConfi
 from ScoutSuite.providers.aws.services.cloudtrail import CloudTrailConfig
 from ScoutSuite.providers.aws.services.cloudwatch import CloudWatchConfig
 from ScoutSuite.providers.aws.services.directconnect import DirectConnectConfig
-from ScoutSuite.providers.aws.services.dynamodb import DynamoDBConfig
 from ScoutSuite.providers.aws.services.ec2 import EC2Config
 from ScoutSuite.providers.aws.services.efs import EFSConfig
 from ScoutSuite.providers.aws.services.elasticache import ElastiCacheConfig
@@ -26,6 +25,11 @@ from ScoutSuite.providers.aws.services.sqs import SQSConfig
 from ScoutSuite.providers.aws.services.vpc import VPCConfig
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 from ScoutSuite.utils import format_service_name
+
+try:
+    from ScoutSuite.providers.aws.services.dynamodb_private import DynamoDBConfig
+except ImportError:
+    pass
 
 
 class AWSServicesConfig(BaseServicesConfig):
@@ -52,7 +56,6 @@ class AWSServicesConfig(BaseServicesConfig):
         self.cloudtrail = CloudTrailConfig(metadata['management']['cloudtrail'], thread_config)
         self.cloudwatch = CloudWatchConfig(metadata['management']['cloudwatch'], thread_config)
         self.directconnect = DirectConnectConfig(metadata['network']['directconnect'], thread_config)
-        self.dynamodb = DynamoDBConfig(metadata['database']['dynamodb'], thread_config)
         self.ec2 = EC2Config(metadata['compute']['ec2'], thread_config)
         self.efs = EFSConfig(metadata['storage']['efs'], thread_config)
         self.elasticache = ElastiCacheConfig(metadata['database']['elasticache'], thread_config)
@@ -71,6 +74,11 @@ class AWSServicesConfig(BaseServicesConfig):
         self.sns = SNSConfig(metadata['messaging']['sns'], thread_config)
         self.sqs = SQSConfig(metadata['messaging']['sqs'], thread_config)
         self.vpc = VPCConfig(metadata['network']['vpc'], thread_config)
+
+        try:
+            self.dynamodb = DynamoDBConfig(metadata['database']['dynamodb'], thread_config)
+        except NameError as e:
+            pass
 
     def _is_provider(self, provider_name):
         return provider_name == 'aws'
