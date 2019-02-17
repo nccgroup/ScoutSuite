@@ -5,6 +5,9 @@ import re
 import sys
 import traceback
 
+try: input = raw_input
+except NameError: pass
+print("Hi " + input("Say something: "))
 
 
 ########################################
@@ -88,7 +91,7 @@ def prompt(test_input = None):
     else:
         # Coverage: 4 missed statements
         try:
-            choice = raw_input()
+            choice = input()
         except:
             choice = input()
     return choice
