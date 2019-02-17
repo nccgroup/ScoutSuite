@@ -65,12 +65,7 @@
         "network_security_groups": {
           "cols": 2,
           "path": "services.network.network_security_groups"
-        },
-        "security_rules": {
-          "cols": 2,
-          "path": "services.network.network_security_groups.id.security_rules"
         }
-      }
     }
   },
   "redis": {
