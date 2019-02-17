@@ -119,8 +119,8 @@ class AWSProvider(BaseProvider):
         for region in self.services['ec2']['regions'].values():
             for volumeId, volume in region.get('volumes').items():
                 completed_snapshots = [s for s in region['snapshots'].values() if s['VolumeId'] == volumeId and s['State'] == 'completed']
-                mostRecent = sorted(completed_snapshots, key=lambda s: s['StartTime'], reverse=True)[0]
-                volume['LastSnapshotDate'] = mostRecent['StartTime']
+                sorted_snapshots = sorted(completed_snapshots, key=lambda s: s['StartTime'], reverse=True)
+                volume['LastSnapshotDate'] = sorted_snapshots[0]['StartTime'] if len(sorted_snapshots) > 0 else None
 
     def add_security_group_name_to_ec2_grants_callback(self, current_config, path, current_path, ec2_grant, callback_args):
         sg_id = ec2_grant['GroupId']

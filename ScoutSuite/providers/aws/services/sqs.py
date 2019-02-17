@@ -24,10 +24,11 @@ class SQSRegionConfig(RegionConfig):
         :param queue_url:               URL of the AWS queue
         """
         queue = {'QueueUrl': queue_url}
-        attributes = api_clients[region].get_queue_attributes(QueueUrl = queue_url, AttributeNames = ['CreatedTimestamp', 'Policy', 'QueueArn'])['Attributes']
+        attributes = api_clients[region].get_queue_attributes(QueueUrl = queue_url, AttributeNames = ['CreatedTimestamp', 'Policy', 'QueueArn', 'KmsMasterKeyId'])['Attributes']
         queue['arn'] = attributes.pop('QueueArn')
-        for k in ['CreatedTimestamp']:
-            queue[k] = attributes[k] if k in attributes else None
+        queue['kms_master_key_id'] = attributes.pop('KmsMasterKeyId', None)
+        queue['CreatedTimestamp'] = attributes.pop('CreatedTimestamp', None)
+
         if 'Policy' in attributes:
             queue['Policy'] = json.loads(attributes['Policy'])
         else:

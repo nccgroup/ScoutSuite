@@ -6,6 +6,13 @@ var run_results;
  * Event handlers
  */
 $(document).ready(function () {
+    onPageLoad();
+});
+
+/**
+ * Implements page load functionality
+ */
+function onPageLoad() {
     showPageFromHash();
 
     // when button is clicked, return CSV with finding
@@ -89,8 +96,7 @@ $(document).ready(function () {
 
     });
 
-    hidePleaseWait();
-});
+};
 
 /**
  * Display the account ID -- use of the generic function + templates result in the div not being at the top of the page
@@ -666,6 +672,7 @@ function showPopup(content) {
  * Set up dashboards and dropdown menus
  */
 function load_metadata() {
+
     run_results = get_scoutsuite_results();
 
     // Set title dynamically
@@ -696,6 +703,8 @@ function load_metadata() {
             };
         };
     };
+
+    hidePleaseWait();
 };
 
 
@@ -713,7 +722,7 @@ function showAbout() {
 };
 
 /**
- * Hides About Scout Suite modal
+ * Hides Please Wait modal
  */
 function hidePleaseWait() {
     $('#please-wait-modal').fadeOut(500, () => { });
@@ -981,12 +990,13 @@ function make_title (title) {
         return 'CloudFormation';
     } else if (title == 'awslambda') {
         return 'Lambda';
+    } else if (title == 'dynamodb') {
+        return 'DynamoDB';
     } else if (title == 'elasticache') {
         return 'ElastiCache';
     } else if (title == 'redshift') {
         return 'RedShift';
     } else if (title == 'cloudstorage') {
-
         return 'Cloud Storage';
     } else if (title == 'cloudsql') {
         return 'Cloud SQL';

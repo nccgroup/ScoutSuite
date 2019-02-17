@@ -26,6 +26,11 @@ from ScoutSuite.providers.aws.services.vpc import VPCConfig
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 from ScoutSuite.utils import format_service_name
 
+try:
+    from ScoutSuite.providers.aws.services.dynamodb_private import DynamoDBConfig
+except ImportError:
+    pass
+
 
 class AWSServicesConfig(BaseServicesConfig):
     """
@@ -33,6 +38,7 @@ class AWSServicesConfig(BaseServicesConfig):
                                         
     :ivar cloudtrail:                   CloudTrail configuration
     :ivar cloudwatch:                   CloudWatch configuration: TODO
+    :ivar dynamodb:                     DynomaDB configuration
     :ivar ec2:                          EC2 configuration
     :ivar iam:                          IAM configuration
     :ivar kms:                          KMS configuration
@@ -68,6 +74,11 @@ class AWSServicesConfig(BaseServicesConfig):
         self.sns = SNSConfig(metadata['messaging']['sns'], thread_config)
         self.sqs = SQSConfig(metadata['messaging']['sqs'], thread_config)
         self.vpc = VPCConfig(metadata['network']['vpc'], thread_config)
+
+        try:
+            self.dynamodb = DynamoDBConfig(metadata['database']['dynamodb'], thread_config)
+        except NameError as e:
+            pass
 
     def _is_provider(self, provider_name):
         return provider_name == 'aws'
