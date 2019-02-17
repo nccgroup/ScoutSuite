@@ -59,15 +59,20 @@ class NetworkConfig(AzureBaseConfig):
             security_rule_dict['protocol'] = sr.protocol
             security_rule_dict['direction'] = sr.direction
 
-            security_rule_dict['source_address_prefix'] = sr.source_address_prefix
+            source_address_prefixes = self._merge_prefixes_or_ports(sr.source_address_prefix,
+                                                                    sr.source_address_prefixes)
+            security_rule_dict['source_address_prefixes'] = source_address_prefixes
 
             source_port_ranges = self._merge_prefixes_or_ports(sr.source_port_range, sr.source_port_ranges)
             security_rule_dict['source_port_ranges'] = source_port_ranges
             security_rule_dict['source_ports'] = self._parse_ports(source_port_ranges)
 
-            security_rule_dict['destination_address_prefix '] = sr.destination_address_prefix
+            destination_address_prefixes = self._merge_prefixes_or_ports(sr.destination_address_prefix,
+                                                                         sr.destination_address_prefixes)
+            security_rule_dict['destination_address_prefixes'] = destination_address_prefixes
 
-            destination_port_ranges = self._merge_prefixes_or_ports(sr.destination_port_range, sr.destination_port_ranges)
+            destination_port_ranges = self._merge_prefixes_or_ports(sr.destination_port_range,
+                                                                    sr.destination_port_ranges)
             security_rule_dict['destination_port_ranges'] = destination_port_ranges
             security_rule_dict['destination_ports'] = self._parse_ports(destination_port_ranges)
 
@@ -136,9 +141,9 @@ def _format_ports(ports):
                 start = i
         else:
             if start:
-                if i-1 == start:
+                if i - 1 == start:
                     port_ranges.append(str(start))
                 else:
-                    port_ranges.append(str(start) + "-" + str(i-1))
+                    port_ranges.append(str(start) + "-" + str(i - 1))
                 start = None
     return port_ranges

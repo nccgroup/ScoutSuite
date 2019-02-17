@@ -5,8 +5,8 @@
       ["network.network_security_groups.id.security_rules.id.direction", "equal", "Inbound"],
       [
           "or",
-          ["network.network_security_groups.id.security_rules.id.source_address_prefix", "equal", "*"],
-          ["network.network_security_groups.id.security_rules.id.source_address_prefix", "equal", "Internet"]
+          ["network.network_security_groups.id.security_rules.id.source_address_prefixes", "containAtLeastOneOf", "*"],
+          ["network.network_security_groups.id.security_rules.id.source_address_prefixes", "containAtLeastOneOf", "Internet"]
       ]
     ]
 }
