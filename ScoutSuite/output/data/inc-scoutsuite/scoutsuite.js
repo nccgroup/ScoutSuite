@@ -1023,6 +1023,8 @@ function make_title (title) {
         return 'Application Gateway';
     } else if (title == 'rediscache') {
         return 'Redis Cache';
+    } else if (title == 'loadbalancer') {
+        return 'Load Balancer';
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
     };
