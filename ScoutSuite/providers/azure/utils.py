@@ -29,6 +29,8 @@ def azure_connect_service(service, credentials, region_name=None):
             return RedisManagementClient(credentials.credentials, credentials.subscription_id)
         elif service == 'securitycenter':
             return SecurityCenter(credentials.credentials, credentials.subscription_id, '')
+        elif service == 'loadbalancer':
+            return NetworkManagementClient(credentials.credentials, credentials.subscription_id)
         else:
             printException('Service %s not supported' % service)
             return None
