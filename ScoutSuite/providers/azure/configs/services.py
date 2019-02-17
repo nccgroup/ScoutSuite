@@ -14,6 +14,10 @@ try:
     from ScoutSuite.providers.azure.services.rediscache_private import RedisCacheConfig
 except ImportError:
     pass
+try:
+    from ScoutSuite.providers.azure.services.appservice_private import AppServiceConfig
+except ImportError:
+    pass
 
 
 class AzureServicesConfig(BaseServicesConfig):
@@ -32,6 +36,10 @@ class AzureServicesConfig(BaseServicesConfig):
             pass
         try:
             self.rediscache = RedisCacheConfig(thread_config=thread_config)
+        except NameError:
+            pass
+        try:
+            self.appservice = AppServiceConfig(thread_config=thread_config)
         except NameError:
             pass
 
