@@ -41,7 +41,7 @@ class NetworkConfig(AzureBaseConfig):
 
         exposed_ports = self._parse_exposed_ports(network_security_group)
         network_security_group_dict['exposed_ports'] = exposed_ports
-        network_security_group_dict['exposed_port_ranges'] = _format_ports(exposed_ports)
+        network_security_group_dict['exposed_port_ranges'] = self._format_ports(exposed_ports)
 
         self.network_security_groups[network_security_group_dict['id']] = network_security_group_dict
 
@@ -82,8 +82,7 @@ class NetworkConfig(AzureBaseConfig):
 
         return security_rules
 
-    @staticmethod
-    def _parse_ports(port_ranges):
+    def _parse_ports(self, port_ranges):
         ports = set()
         for pr in port_ranges:
             if pr == "*":
@@ -100,8 +99,7 @@ class NetworkConfig(AzureBaseConfig):
         ports.sort()
         return ports
 
-    @staticmethod
-    def _parse_exposed_ports(network_security_group):
+    def _parse_exposed_ports(self, network_security_group):
         exposed_ports = set()
 
         # Sort by priority.
@@ -111,9 +109,9 @@ class NetworkConfig(AzureBaseConfig):
         for sr in rules:
             if sr.direction == "Inbound" and (sr.source_address_prefix == "*"
                                               or sr.source_address_prefix == "Internet"):
-                port_ranges = NetworkConfig._merge_prefixes_or_ports(sr.destination_port_range,
+                port_ranges = self._merge_prefixes_or_ports(sr.destination_port_range,
                                                                      sr.destination_port_ranges)
-                ports = NetworkConfig._parse_ports(port_ranges)
+                ports = self._parse_ports(port_ranges)
                 if sr.access == "Allow":
                     for p in ports:
                         exposed_ports.add(p)
@@ -124,26 +122,24 @@ class NetworkConfig(AzureBaseConfig):
         exposed_ports.sort()
         return exposed_ports
 
-    @staticmethod
-    def _merge_prefixes_or_ports(port_range, port_ranges):
+    def _merge_prefixes_or_ports(self, port_range, port_ranges):
         port_ranges = port_ranges if port_ranges else []
         if port_range:
             port_ranges.append(port_range)
         return port_ranges
 
-
-def _format_ports(ports):
-    port_ranges = []
-    start = None
-    for i in range(0, 65535 + 1):
-        if i in ports:
-            if not start:
-                start = i
-        else:
-            if start:
-                if i - 1 == start:
-                    port_ranges.append(str(start))
-                else:
-                    port_ranges.append(str(start) + "-" + str(i - 1))
-                start = None
-    return port_ranges
+    def _format_ports(self, ports):
+        port_ranges = []
+        start = None
+        for i in range(0, 65535 + 1):
+            if i in ports:
+                if not start:
+                    start = i
+            else:
+                if start:
+                    if i - 1 == start:
+                        port_ranges.append(str(start))
+                    else:
+                        port_ranges.append(str(start) + "-" + str(i - 1))
+                    start = None
+        return port_ranges
