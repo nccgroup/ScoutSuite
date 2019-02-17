@@ -5,9 +5,9 @@ import re
 import sys
 import traceback
 
-try: input = raw_input
+try:
+    input = raw_input
 except NameError: pass
-print("Hi " + input("Say something: "))
 
 
 ########################################
