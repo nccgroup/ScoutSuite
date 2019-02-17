@@ -1,0 +1,11 @@
+{
+    "dashboard_name": "Security contacts",
+    "description": "No security contact email set",
+    "rationale": "You should set at least one security contact email (CIS 2.16).",
+    "path": "securitycenter.security_contacts.id",
+    "display_path": "securitycenter.security_contacts",
+    "conditions": [ "and",
+        ["securitycenter.security_contacts.id.email", "equal", ""]
+    ],
+    "id_suffix": "email_not_set"
+}

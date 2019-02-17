@@ -1,0 +1,11 @@
+{
+    "dashboard_name": "Security contacts",
+    "description": "Sending email to security contact on alert is off",
+    "rationale": "You should set the 'Send email also to subscription owners' to On (CIS 2.19).",
+    "path": "securitycenter.security_contacts.id",
+    "display_path": "securitycenter.security_contacts",
+    "conditions": [ "and",
+        ["securitycenter.security_contacts.id.alerts_to_admins", "false", ""]
+    ],
+    "id_suffix": "no_admin_email_notifications_on_alert"
+}

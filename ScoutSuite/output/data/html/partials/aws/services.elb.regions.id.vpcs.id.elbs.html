@@ -45,7 +45,7 @@
         <div class="list-group-item" style="padding-bottom: 0 !important;">
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Security groups
-              <a class="accordion-toggle" data-toggle="collapse" href="#services\.elb\.regions\.{{region}}\.vpcs\.{{vpc}}\.elbs\.{{@key}}\.security_groups"><span class="badge float-right btn-info">{{security_groups.length}}</span></a>
+              {{> count_badge count=security_groups.length target=(concat '#services.elb.regions' region 'vpcs' vpc 'elbs' @key 'security_groups')}}
             </h4>
             <div id="services.elb.regions.{{region}}.vpcs.{{vpc}}.elbs.{{@key}}.security_groups" class="accordion-body collapse">
               <div class="accordion-inner">

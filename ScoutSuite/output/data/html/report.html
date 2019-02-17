@@ -20,7 +20,6 @@
     
     <!-- Fontawesome CSS -->
     <link href="inc-fontawesome/css/all.min.css" rel="stylesheet">
-
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -90,16 +89,18 @@
 
             <!-- PLACEHOLDER -->
 
-            <!-- Please wait -->
-            <div class="row" id="please_wait.details">
-                <div class="list-group">
-                    <div class="row list-group-item active">
-                        Please wait
-                    </div>
-                    <div class="row list-group-item">
-                        <p>&nbsp;</p>
-                        <p>Loading data, this may take a while...</p>
-                        <p>&nbsp;</p>
+            <div class="modal-backdrop fade show" id="please-wait-backdrop"></div>
+            <div class="modal fade show" tabindex="-1" role="dialog" id="please-wait-modal" style="padding-right: 17px; display: block;" aria-modal="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Please wait</h5>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row list-group-item">
+                                <p>Loading data, this may take a while...</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -159,7 +160,9 @@
         <script src="inc-bootstrap/js/bootstrap.min.js"></script>
 
         <!-- Display dashbord -->
-        <script>load_metadata();</script>
+        <script>
+            load_metadata();
+        </script>
 
         <footer>
             <div class="row" id="footer">

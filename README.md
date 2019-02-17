@@ -16,7 +16,7 @@ environments. Using the APIs exposed by cloud providers, Scout gathers configura
 highlights risk areas. Rather than pouring through dozens of pages on the web consoles, Scout provides a clear view of
 the attack surface automatically.
 
-Scout Suite is stable and actively maintained, but a number of features and internals may change. As such, please bear
+Scout Suite is stable and actively maintained, but a number of features and internals may change. As such, please bare
 with us as we find time to work on, and improve, the tool. Feel free to report a bug with details (please provide
 console output using the `--debug` argument), request a new feature, or send a pull request.
 
@@ -94,8 +94,7 @@ There are two ways to run Scout against a GCP Organization or Project.
 2.  Service Account
     1.  Generate and download service account keys in JSON format
     (refer to <https://cloud.google.com/iam/docs/creating-managing-service-account-keys>)
-    2.  Run Scout with the `--service-account` flag while providing the key file path with
-    `--key-file path/to/key_file.json`
+    2.  Run Scout with the `--service-account` flag while providing the key file path
 
 The following roles can be attached to the member used to run Scout in order to grant necessary permissions:
 
