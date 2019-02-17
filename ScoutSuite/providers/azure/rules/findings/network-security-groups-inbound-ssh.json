@@ -1,6 +1,6 @@
 {
     "dashboard_name": "Network",
-    "description": "SSH inbound access permitted by security group",
+    "description": "Security rule allowing SSH inbound access in security group",
     "rationale": "You should not permit SSH(port 22) inbound access to a network security group (CIS 6.2).",
     "path": "network.network_security_groups.id.security_rules.id",
     "display_path": "network.network_security_groups.id.security_rules",
