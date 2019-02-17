@@ -23,10 +23,38 @@
                 <div class="list-group-item-text item-margin">Provisioning State: <span id="network.network_security_groups.{{@../key}}.security_rule.{{@key}}.provisioning_state">{{ provisioning_state }}</span></div>
                 <div class="list-group-item-text item-margin">Protocol: <span id="network.network_security_groups.{{@../key}}.security_rule.{{@key}}.protocol">{{ protocol }}</span></div>
                 <div class="list-group-item-text item-margin">Direction: <span id="network.network_security_groups.{{@../key}}.security_rule.{{@key}}.direction">{{ direction }}</span></div>
-                <div class="list-group-item-text item-margin">Source Address Prefixes: <span id="network.network_security_groups.{{@../key}}.security_rule.{{@key}}.source_address_prefixes">{{ source_address_prefixes }}</span></div>
-                <div class="list-group-item-text item-margin">Source Ports: <span id="network.network_security_groups.{{@../key}}.security_rule.{{@key}}.source_port_ranges">{{ source_port_ranges }}</span></div>
-                <div class="list-group-item-text item-margin">Destination Address Prefixes: <span id="network.network_security_groups.{{@../key}}.security_rule.{{@key}}.destination_address_prefixes">{{ destination_address_prefixes }}</span></div>
-                <div class="list-group-item-text item-margin">Destination Port Ranges: <span id="network.network_security_groups.{{@../key}}.security_rule.{{@key}}.destination_port_ranges">{{ destination_port_ranges }}</span></div>
+
+                <div class="list-group-item-text item-margin">Source Address Prefixes:
+                    <div class="list-group-item-text item-margin">
+                    {{#each source_address_prefixes}}
+                        <li id="network.network_security_groups.{{@../../key}}.security_rule.{{@../key}}.source_address_prefixes.{{@key}}">{{ this }}</li>
+                    {{/each}}
+                    </div>
+                </div>
+
+                <div class="list-group-item-text item-margin">Source Ports:
+                    <div class="list-group-item-text item-margin">
+                    {{#each source_port_ranges}}
+                        <li id="network.network_security_groups.{{@../../key}}.security_rule.{{@../key}}.source_port_ranges.{{@key}}">{{ this }}</li>
+                    {{/each}}
+                    </div>
+                </div>
+
+                <div class="list-group-item-text item-margin">Destination Address Prefixes:
+                    <div class="list-group-item-text item-margin">
+                    {{#each destination_address_prefixes}}
+                        <li id="network.network_security_groups.{{@../../key}}.security_rule.{{@../key}}.destination_address_prefixes.{{@key}}">{{ this }}</li>
+                    {{/each}}
+                    </div>
+                </div>
+
+                <div class="list-group-item-text item-margin">Destination Port Ranges:
+                    <div class="list-group-item-text item-margin">
+                    {{#each destination_port_ranges}}
+                        <li id="network.network_security_groups.{{@../../key}}.security_rule.{{@../key}}.destination_port_ranges.{{@key}}">{{ this }}</li>
+                    {{/each}}
+                    </div>
+                </div>
             </div>
         {{/each}}
         </div>
