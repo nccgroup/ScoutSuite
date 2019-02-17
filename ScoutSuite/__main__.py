@@ -4,20 +4,10 @@
 import copy
 import json
 import os
-import sys
 import webbrowser
 
-try:
-    from opinel.utils.aws import get_aws_account_id, get_partition_name
-    from opinel.utils.console import configPrintException, printInfo, printDebug
-    from opinel.utils.credentials import read_creds
-    from opinel.utils.globals import check_requirements
-    from opinel.utils.profiles import AWSProfiles
-except Exception as e:
-    print('Error: Scout depends on the opinel package. Install all the requirements with the following command:')
-    print('  $ pip install -r requirements.txt')
-    print(e)
-    sys.exit(42)
+from opinel.utils.console import configPrintException, printInfo, printDebug
+from opinel.utils.profiles import AWSProfiles
 
 from ScoutSuite import AWSCONFIG
 from ScoutSuite.output.html import Scout2Report
