@@ -5,7 +5,7 @@
     "path": "network.network_watchers.id",
     "display_path": "network.network_watchers.id",
     "conditions": [ "and",
-        ["network.network_watchers.id.provisioning_state", "false", ""]
+        ["network.network_watchers.id.provisioning_state", "notEqual", "Succeeded"]
     ],
     "id_suffix": "network_watchers_not_provisioned"
 }

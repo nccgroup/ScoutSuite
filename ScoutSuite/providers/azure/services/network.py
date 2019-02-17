@@ -22,7 +22,7 @@ class NetworkConfig(AzureBaseConfig):
         network_watcher_dict = {}
         network_watcher_dict['id'] = network_watcher.id
         network_watcher_dict['name'] = network_watcher.name
-        network_watcher_dict['provisioning_state'] = network_watcher.provisioning_state == "Succeeded"
+        network_watcher_dict['provisioning_state'] = network_watcher.provisioning_state
         network_watcher_dict['location'] = network_watcher.location
         network_watcher_dict['etag'] = network_watcher.etag
 
