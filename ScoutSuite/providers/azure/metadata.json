@@ -66,6 +66,7 @@
           "cols": 2,
           "path": "services.network.network_security_groups"
         }
+      }
     }
   },
   "redis": {
