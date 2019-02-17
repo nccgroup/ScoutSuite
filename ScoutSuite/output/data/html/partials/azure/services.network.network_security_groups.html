@@ -8,8 +8,14 @@
         <h4 class="list-group-item-heading">Information</h4>
         <div class="list-group-item-text item-margin">Name: <span id="network.network_security_groups.{{@key}}.name">{{name}}</span></div>
         <div class="list-group-item-text item-margin">Location: <span id="network.network_security_groups.{{@key}}.location">{{ location }}</span></div>
-        <div class="list-group-item-text item-margin">Exposed ports: <span id="network.network_security_groups.{{@key}}.exposed_port_ranges">{{ exposed_port_ranges }}</span></div>
-
+        
+        <div class="list-group-item-text item-margin">Exposed Ports:
+            <div class="list-group-item-text item-margin">
+            {{#each exposed_port_ranges}}
+                <li id="network.network_security_groups.{{@../key}}.exposed_port_ranges.{{@key}}">{{ this }}</li>
+            {{/each}}
+            </div>
+        </div>
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Security Rules</h4>
