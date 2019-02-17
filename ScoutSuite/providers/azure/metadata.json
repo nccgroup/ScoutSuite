@@ -55,6 +55,14 @@
           "path": "services.appgateway.app_gateways"
         }
       }
+    },
+    "loadbalancer": {
+      "resources": {
+        "load_balancers": {
+          "cols": 2,
+          "path": "services.loadbalancer.load_balancers"
+        }
+      }
     }
   },
   "redis": {
