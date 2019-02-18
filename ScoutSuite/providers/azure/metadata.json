@@ -56,6 +56,18 @@
         }
       }
     },
+    "network": {
+      "resources": {
+        "network_watchers": {
+          "cols": 2,
+          "path": "services.network.network_watchers"
+        },
+        "network_security_groups": {
+          "cols": 2,
+          "path": "services.network.network_security_groups"
+        }
+      }
+    },
     "loadbalancer": {
       "resources": {
         "load_balancers": {
@@ -71,6 +83,16 @@
         "caches": {
           "cols": 2,
           "path": "services.rediscache.caches"
+        }
+      }
+    }
+  },
+  "apps": {
+    "appservice": {
+      "resources": {
+        "web_apps": {
+          "cols": 2,
+          "path": "services.appservice.web_apps"
         }
       }
     }

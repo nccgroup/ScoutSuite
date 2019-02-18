@@ -35,7 +35,6 @@ class IAMConfig(AWSBaseConfig):
         ('credential_reports', '', '', {}, False),
         ('password_policy', '', '', {}, False)
         # TODO: Federations
-        # TODO: KMS ?
     )
 
     def __init__(self, target_config):

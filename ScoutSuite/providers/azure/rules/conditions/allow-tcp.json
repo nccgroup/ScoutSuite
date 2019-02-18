@@ -1,0 +1,7 @@
+{
+    "conditions":[
+          "or",
+          ["network.network_security_groups.id.security_rules.id.protocol", "equal", "*"],
+          ["network.network_security_groups.id.security_rules.id.protocol", "equal", "TCP"]
+      ]
+}

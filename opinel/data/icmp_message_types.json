@@ -1,0 +1,36 @@
+{
+    "metadata": {
+        "generated_on": "September 14, 2015",
+        "source": "https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml"
+    },
+    "icmp_message_types": {
+        "-1": "ALL",
+        "0": "Echo Reply",
+        "3": "Destination Unreachable",
+        "4": "Source Quench",
+        "5": "Redirect",
+        "6": "Alternate Host Address",
+        "8": "Echo",
+        "9": "Router Advertisement",
+        "10": "Router Selection",
+        "11": "Time Exceeded",
+        "12": "Parameter Problem",
+        "13": "Timestamp",
+        "14": "Timestamp Reply",
+        "15": "Information Request",
+        "16": "Information Reply",
+        "17": "Address Mask Request",
+        "18": "Address Mask Reply",
+        "30": "Traceroute",
+        "31": "Datagram Conversion Error",
+        "32": "Mobile Host Redirect",
+        "33": "IPv6 Where-Are-You",
+        "34": "IPv6 I-Am-Here",
+        "35": "Mobile Registration Request",
+        "36": "Mobile Registration Reply",
+        "37": "Domain Name Request",
+        "38": "Domain Name Reply",
+        "39": "SKIP",
+        "40": "Photuris"
+    }
+}

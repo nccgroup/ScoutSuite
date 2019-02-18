@@ -77,6 +77,7 @@ class AWSProvider(BaseProvider):
         # self.parse_elb_policies()
 
         # Various data processing calls
+        self._check_ec2_zone_distribution()
         self._add_security_group_name_to_ec2_grants()
         self._add_last_snapshot_date_to_ec2_volumes()
         self._process_cloudtrail_trails(self.services['cloudtrail'])
@@ -114,6 +115,10 @@ class AWSProvider(BaseProvider):
                            [],
                            self.add_security_group_name_to_ec2_grants_callback,
                            {'AWSAccountId': self.aws_account_id})
+
+    def _check_ec2_zone_distribution(self):
+        regions = self.services['ec2']['regions'].values()
+        self.services['ec2']['number_of_regions_with_instances'] = sum(r['instances_count'] > 0 for r in regions)
 
     def _add_last_snapshot_date_to_ec2_volumes(self):
         for region in self.services['ec2']['regions'].values():

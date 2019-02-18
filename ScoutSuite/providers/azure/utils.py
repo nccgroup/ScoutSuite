@@ -12,6 +12,8 @@ from azure.mgmt.security import SecurityCenter
 from azure.mgmt.keyvault import KeyVaultManagementClient
 from azure.mgmt.network import NetworkManagementClient
 from azure.mgmt.redis import RedisManagementClient
+from azure.mgmt.web import WebSiteManagementClient
+
 
 def azure_connect_service(service, credentials, region_name=None):
     try:
@@ -25,10 +27,14 @@ def azure_connect_service(service, credentials, region_name=None):
             return KeyVaultManagementClient(credentials.credentials, credentials.subscription_id)
         elif service == 'appgateway':
             return NetworkManagementClient(credentials.credentials, credentials.subscription_id)
+        elif service == 'network':
+            return NetworkManagementClient(credentials.credentials, credentials.subscription_id)
         elif service == 'rediscache':
             return RedisManagementClient(credentials.credentials, credentials.subscription_id)
         elif service == 'securitycenter':
             return SecurityCenter(credentials.credentials, credentials.subscription_id, '')
+        elif service == 'appservice':
+            return WebSiteManagementClient(credentials.credentials, credentials.subscription_id)
         elif service == 'loadbalancer':
             return NetworkManagementClient(credentials.credentials, credentials.subscription_id)
         else:

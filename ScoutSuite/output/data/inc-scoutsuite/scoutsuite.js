@@ -990,12 +990,13 @@ function make_title (title) {
         return 'CloudFormation';
     } else if (title == 'awslambda') {
         return 'Lambda';
+    } else if (title == 'dynamodb') {
+        return 'DynamoDB';
     } else if (title == 'elasticache') {
         return 'ElastiCache';
     } else if (title == 'redshift') {
         return 'RedShift';
     } else if (title == 'cloudstorage') {
-
         return 'Cloud Storage';
     } else if (title == 'cloudsql') {
         return 'Cloud SQL';
@@ -1017,12 +1018,16 @@ function make_title (title) {
         return 'SQL Database';
     } else if (title == 'securitycenter') {
         return 'Security Center';
+    } else if (title == 'network') {
+        return 'Network';
     } else if (title == 'keyvault') {
         return 'Key Vault';
     } else if (title == 'appgateway') {
         return 'Application Gateway';
     } else if (title == 'rediscache') {
         return 'Redis Cache';
+    } else if (title == 'appservice') {
+        return 'App Service';
     } else if (title == 'loadbalancer') {
         return 'Load Balancer';
     } else {

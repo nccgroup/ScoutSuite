@@ -380,6 +380,15 @@
                 ]
             }
         },
+        "dynamodb": {
+            "resources": {
+                "tables": {
+                    "api_call": "list_tables",
+                    "response": "TableNames",
+                    "path": "services.dynamodb.regions.id.tables"
+                }
+            }
+        },
         "elasticache": {
             "resources": {
                 "clusters": {
