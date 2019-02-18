@@ -78,5 +78,15 @@
         }
       }
     }
+  },
+  "apps": {
+    "appservice": {
+      "resources": {
+        "web_apps": {
+          "cols": 2,
+          "path": "services.appservice.web_apps"
+        }
+      }
+    }
   }
 }
