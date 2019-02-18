@@ -38,6 +38,8 @@ formatted_service_name = {
     'appgateway': 'Application Gateway',
     'rediscache': 'Redis Cache',
     'network': 'Network',
+    'appservice': 'App Service',
+    'loadbalancer': 'Load Balancer'
 }
 
 
