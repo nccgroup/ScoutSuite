@@ -11,6 +11,7 @@
                 <li class="list-group-item-text">VPC: {{get_value_at 'services.ec2.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</li>
                 <li class="list-group-item-text">ID: {{id}}</li>
                 <li class="list-group-item-text">Reservation ID: {{reservation_id}}</li>
+                <li class="list-group-item-text">Monitoring: <span id="ec2.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.monitoring_disabled">{{convert_bool_to_enabled monitoring_enabled}}</span></li>
                 <li class="list-group-item-text">Access Key name: {{KeyName}}</li>
                 <li class="list-group-item-text">State: {{make_title State.Name}}</li>
                 <li class="list-group-item-text">Instance Type:
