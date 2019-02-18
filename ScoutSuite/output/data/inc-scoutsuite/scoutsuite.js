@@ -1028,6 +1028,8 @@ function make_title (title) {
         return 'Redis Cache';
     } else if (title == 'appservice') {
         return 'App Service';
+    } else if (title == 'loadbalancer') {
+        return 'Load Balancer';
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
     };

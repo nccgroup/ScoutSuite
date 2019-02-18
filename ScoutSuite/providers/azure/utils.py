@@ -35,6 +35,8 @@ def azure_connect_service(service, credentials, region_name=None):
             return SecurityCenter(credentials.credentials, credentials.subscription_id, '')
         elif service == 'appservice':
             return WebSiteManagementClient(credentials.credentials, credentials.subscription_id)
+        elif service == 'loadbalancer':
+            return NetworkManagementClient(credentials.credentials, credentials.subscription_id)
         else:
             printException('Service %s not supported' % service)
             return None

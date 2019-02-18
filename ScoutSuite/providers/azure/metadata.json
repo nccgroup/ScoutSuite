@@ -67,6 +67,14 @@
           "path": "services.network.network_security_groups"
         }
       }
+    },
+    "loadbalancer": {
+      "resources": {
+        "load_balancers": {
+          "cols": 2,
+          "path": "services.loadbalancer.load_balancers"
+        }
+      }
     }
   },
   "redis": {

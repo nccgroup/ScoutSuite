@@ -19,6 +19,10 @@ try:
     from ScoutSuite.providers.azure.services.appservice_private import AppServiceConfig
 except ImportError:
     pass
+try:
+    from ScoutSuite.providers.azure.services.loadbalancer_private import LoadBalancerConfig
+except ImportError:
+    pass
 
 
 class AzureServicesConfig(BaseServicesConfig):
@@ -42,6 +46,10 @@ class AzureServicesConfig(BaseServicesConfig):
             pass
         try:
             self.appservice = AppServiceConfig(thread_config=thread_config)
+        except NameError:
+            pass
+        try:
+            self.loadbalancer = LoadBalancerConfig(thread_config=thread_config)
         except NameError:
             pass
 
