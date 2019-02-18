@@ -4,7 +4,10 @@ netaddr>=0.7.11
 
 # AWS Provider
 boto3>=1.9.60
-opinel>=3.3.4,<4.0.0
+
+# Opinel
+requests>=2.4.0,<3.0.0
+iampoliciesgonewild>=1.0.6.2
 
 # GCP Provider
 grpcio>=1.18.0

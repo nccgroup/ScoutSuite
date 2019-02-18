@@ -1,6 +1,47 @@
 {
   "about": "Default ruleset for Azure.",
   "rules": {
+    "network-security-groups-rule-inbound-service.json": [
+      {
+        "args": [
+          "RDP",
+          "3389",
+          "6.1"
+        ],
+        "enabled": true,
+        "level": "warning"
+      },
+      {
+        "args": [
+          "SSH",
+          "22",
+          "6.2"
+        ],
+        "enabled": true,
+        "level": "warning"
+      },
+      {
+        "args": [
+          "SQL",
+          "1433",
+          "6.3"
+        ],
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "network-watcher-not-enabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "network-watcher-not-provisioned.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "storageaccount-account-allowing-clear-text.json": [
       {
         "enabled": true,

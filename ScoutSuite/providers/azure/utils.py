@@ -14,6 +14,7 @@ from azure.mgmt.network import NetworkManagementClient
 from azure.mgmt.redis import RedisManagementClient
 from azure.mgmt.web import WebSiteManagementClient
 
+
 def azure_connect_service(service, credentials, region_name=None):
     try:
         if service == 'storageaccounts':
@@ -25,6 +26,8 @@ def azure_connect_service(service, credentials, region_name=None):
         elif service == 'keyvault':
             return KeyVaultManagementClient(credentials.credentials, credentials.subscription_id)
         elif service == 'appgateway':
+            return NetworkManagementClient(credentials.credentials, credentials.subscription_id)
+        elif service == 'network':
             return NetworkManagementClient(credentials.credentials, credentials.subscription_id)
         elif service == 'rediscache':
             return RedisManagementClient(credentials.credentials, credentials.subscription_id)
