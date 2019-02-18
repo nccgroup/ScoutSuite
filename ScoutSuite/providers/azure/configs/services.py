@@ -5,6 +5,7 @@ from ScoutSuite.providers.azure.services.storageaccounts import StorageAccountsC
 from ScoutSuite.providers.azure.services.monitor import MonitorConfig
 from ScoutSuite.providers.azure.services.sqldatabase import SQLDatabaseConfig
 from ScoutSuite.providers.azure.services.securitycenter import SecurityCenterConfig
+from ScoutSuite.providers.azure.services.network import NetworkConfig
 from ScoutSuite.providers.azure.services.keyvault import KeyVaultConfig
 try:
     from ScoutSuite.providers.azure.services.appgateway_private import AppGatewayConfig
@@ -24,6 +25,7 @@ class AzureServicesConfig(BaseServicesConfig):
         self.monitor = MonitorConfig(thread_config=thread_config)
         self.sqldatabase = SQLDatabaseConfig(thread_config=thread_config)
         self.securitycenter = SecurityCenterConfig(thread_config=thread_config)
+        self.network = NetworkConfig(thread_config=thread_config)
         self.keyvault = KeyVaultConfig(thread_config=thread_config)
 
         try:

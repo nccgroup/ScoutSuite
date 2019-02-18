@@ -1,0 +1,11 @@
+{
+    "dashboard_name": "Network",
+    "description": "Network watcher not provisioned",
+    "rationale": "Network watchers should be provisioned to work (CIS 6.5).",
+    "path": "network.network_watchers.id",
+    "display_path": "network.network_watchers.id",
+    "conditions": [ "and",
+        ["network.network_watchers.id.provisioning_state", "notEqual", "Succeeded"]
+    ],
+    "id_suffix": "network_watchers_not_provisioned"
+}

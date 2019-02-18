@@ -1018,6 +1018,8 @@ function make_title (title) {
         return 'SQL Database';
     } else if (title == 'securitycenter') {
         return 'Security Center';
+    } else if (title == 'network') {
+        return 'Network';
     } else if (title == 'keyvault') {
         return 'Key Vault';
     } else if (title == 'appgateway') {
