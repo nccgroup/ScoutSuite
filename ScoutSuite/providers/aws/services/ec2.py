@@ -59,6 +59,7 @@ class EC2RegionConfig(RegionConfig):
             manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
             instance['reservation_id'] = reservation['ReservationId']
             instance['id'] = i['InstanceId']
+            instance['monitoring_enabled'] = i['Monitoring']['State'] == 'enabled'
             get_name(i, instance, 'InstanceId')
             get_keys(i, instance, ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile', 'SubnetId'])
             # Network interfaces & security groups
