@@ -4,4 +4,4 @@ class ResourceConfig(object):
         raise NotImplementedError()
 
     def finalize(self):
-        raise NotImplementedError()
+        pass
