@@ -11,7 +11,7 @@ class BaseServicesConfig(object):
     def _is_provider(self, provider_name):
         return False
 
-    def fetch(self, credentials, services=None, regions=None):
+    async def fetch(self, credentials, services=None, regions=None):
         services = [] if services is None else services
         regions = [] if regions is None else regions
         for service in vars(self):
@@ -30,7 +30,7 @@ class BaseServicesConfig(object):
                         if service != 'iam':
                             method_args['partition_name'] = get_partition_name(credentials)
 
-                    service_config.fetch_all(**method_args)
+                    await service_config.fetch_all(**method_args)
                     if hasattr(service_config, 'finalize'):
                         service_config.finalize()
                 else:

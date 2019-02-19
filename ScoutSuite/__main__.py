@@ -17,7 +17,7 @@ from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.providers import get_provider
 
 
-def main(args):
+async def main(args):
     """
     Main method that runs a scan
 
@@ -77,7 +77,7 @@ def main(args):
 
         # Fetch data from provider APIs
         try:
-            cloud_provider.fetch(regions=args.get('regions'))
+            await cloud_provider.fetch(regions=args.get('regions'))
         except KeyboardInterrupt:
             printInfo('\nCancelled by user')
             return 130
