@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import copy
+import re
 
 from threading import Thread
 
@@ -40,8 +41,7 @@ class BaseConfig(object):
 
         self.library_type = None if not hasattr(self, 'library_type') else self.library_type
 
-        self.service = type(self).__name__.replace('Config',
-                                                   '').lower()  # TODO: use regex with EOS instead of plain replace
+        self.service = re.sub(r'Config$', "", type(self).__name__).lower()
         self.thread_config = thread_configs[thread_config]
 
         # Booleans that define if threads should keep running
