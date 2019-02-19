@@ -136,6 +136,10 @@ Handlebars.registerHelper('count_ec2_in_region', function(region, path) {
     return count;
 });
 
+Handlebars.registerHelper('split_lines', function(text) {
+    return text ? text.split('\n') : [];
+});
+
 Handlebars.registerHelper('count_vpc_network_acls', function(vpc_network_acls) {
     var c = 0;
     for (x in vpc_network_acls) {
