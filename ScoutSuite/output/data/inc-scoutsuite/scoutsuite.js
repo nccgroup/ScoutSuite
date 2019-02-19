@@ -1,19 +1,18 @@
 // Globals
 var loaded_config_array = new Array();
 var run_results;
-const DARK_THEME = "inc-bootstrap/css/bootstrap-dark.min.css";
-const LIGHT_THEME = "inc-bootstrap/css/bootstrap-light.min.css";
 
 /**
  * Event handlers
  */
 $(document).ready(function () {
-    // Loading last theme before window.onload to prevent flickering of styles    
-    if (localStorage.getItem("theme_checkbox") == "true") {
-        document.getElementById("theme_checkbox").checked = true;
-        set_theme(DARK_THEME);
-    }
+    onPageLoad();
+});
 
+/**
+ * Implements page load functionality
+ */
+function onPageLoad() {
     showPageFromHash();
 
     // when button is clicked, return CSV with finding
@@ -92,21 +91,12 @@ $(document).ready(function () {
                 // add item to json
                 json_dict['items'].push(i);
             };
-            // doesn't work as ID is not always last or second to last value in id_array
-            // for (item in items) {
-            //     // get item value
-            //     var id_array = items[item].split('.');
-            //     var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
-            //     var i = get_value_at(id);
-            //     // add item to json
-            //     json_dict[id_array[id_array.length - 2]] = i;
-            // };
             download_as_json(finding_key + '.json', json_dict);
         };
 
     });
 
-});
+};
 
 /**
  * Display the account ID -- use of the generic function + templates result in the div not being at the top of the page
@@ -226,34 +216,28 @@ function hideAll() {
  */
 function showRow(path) {
     path = path.replace(/.id./g, '\.[^.]+\.');
+    showList(path);
+    showDetails(path);
+};
+
+function showList(path) {
     $('div').filter(function () {
         return this.id.match(path + '.list')
     }).show();
+}
+
+function showDetails(path) {
     $('div').filter(function () {
         return this.id.match(path + '.details')
     }).show();
-};
+}
 
-
-/**
- * Hide list and details' containers for a given path
- * @param path
- */
-function hideRow(path) {
-    path = path.replace(/.id./g, '\.[^.]+\.');
-    $('div').filter(function () {
-        return this.id.match(path + '.list')
-    }).hide();
-    $('div').filter(function () {
-        return this.id.match(path + '.details')
-    }).hide();
-};
-
-function hideRegion(path) {
+function hideList(path) {
     $("[id='" + path + "']").hide();
     path = path.replace('.list', '');
     hideItems(path);
 };
+
 
 /**
  * Show links and views for a given path
@@ -308,7 +292,6 @@ function showRowWithItems(path) {
 function showFilters(resource_path) {
     hideFilters();
     service = resource_path.split('.')[1];
-    console.log('Service: ' + service);
     // Show service filters
     $('[id="' + resource_path + '.id.filters"]').show();
     // show region filters
@@ -383,34 +366,6 @@ function toggleDetails(keyword, item) {
     $(id).toggle();
 };
 
-/**
- * Toggles between light and dark themes
- */
-function toggle_theme() {
-    if (document.getElementById("theme_checkbox").checked) {
-        this.set_theme(DARK_THEME)
-    }
-    else {
-        this.set_theme(LIGHT_THEME)
-    }
-};
-
-/**
- * Sets the css file location received as the theme
- * @param file
- */
-function set_theme(file)
-{
-    var oldlink = document.getElementById("theme");
-    oldlink.href = file;
-}
-
-/**
- * Save the current theme on web storage
- */
-window.onunload = function() {
-    localStorage.setItem("theme_checkbox", document.getElementById("theme_checkbox").checked);
-}
 
 /**
  * Update the navigation bar
@@ -748,6 +703,8 @@ function load_metadata() {
             };
         };
     };
+
+    hidePleaseWait();
 };
 
 
@@ -757,16 +714,23 @@ function load_metadata() {
 
 
 /**
- * Show About Scout Suite div
+ * Show About Scout Suite modal
  */
 function showAbout() {
     $('#modal-container').html(about_scoutsuite_template());
     $('#modal-container').modal();
 };
 
+/**
+ * Hides Please Wait modal
+ */
+function hidePleaseWait() {
+    $('#please-wait-modal').fadeOut(500, () => { });
+    $('#please-wait-backdrop').fadeOut(500, () => { });
+};
 
 /**
- * 
+ * Shows last run details modal
  */
 function showLastRunDetails() {
     $('#modal-container').html(last_run_details_template(run_results));
@@ -786,19 +750,6 @@ function show_main_dashboard() {
     $('#section_title-h2').text('');
     // Remove URL hash
     history.pushState("", document.title, window.location.pathname + window.location.search);
-};
-
-/**
- * Show All Resources
- * @param script_id
- */
-function showAllResources(script_id) {
-    var path_array = script_id.split('.');
-    var selector = "[id^='" + path_array.shift() + "." + path_array.shift() + ".']"
-    for (p in path_array) {
-        $(selector).show();
-        selector = selector + "[id*='." + path_array[p] + "']";
-    };
 };
 
 /**
@@ -1000,7 +951,6 @@ function lazy_loading(path) {
  * @returns {*|string};
  */
 function get_resource_path(path) {
-    var path_array = path.split('.');
     if (path.endsWith('.items')) {
         var resource_path = get_value_at(path.replace('items', 'display_path'));
         if (resource_path == undefined) {
@@ -1013,7 +963,7 @@ function get_resource_path(path) {
         // Resource path is not changed (this may break when using `back' button in browser)
         var resource_path = current_resource_path;
     } else {
-        var resource_path = path; // path_array[path_array.length-1];
+        var resource_path = path; 
     };
     return resource_path;
 };
@@ -1024,13 +974,13 @@ function get_resource_path(path) {
  * @param title
  * @returns {string};
  */
-var make_title = function (title) {
+function make_title (title) {
     if (typeof(title) != "string") {
         console.log("Error: received title " + title + " (string expected).");
         return title.toString();
     };
     title = title.toLowerCase();
-    if (['ec2', 'efs', 'iam', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) != -1) {
+    if (['ec2', 'efs', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) != -1) {
         return title.toUpperCase();
     } else if (title == 'cloudtrail') {
         return 'CloudTrail';
@@ -1040,12 +990,13 @@ var make_title = function (title) {
         return 'CloudFormation';
     } else if (title == 'awslambda') {
         return 'Lambda';
+    } else if (title == 'dynamodb') {
+        return 'DynamoDB';
     } else if (title == 'elasticache') {
         return 'ElastiCache';
     } else if (title == 'redshift') {
         return 'RedShift';
     } else if (title == 'cloudstorage') {
-
         return 'Cloud Storage';
     } else if (title == 'cloudsql') {
         return 'Cloud SQL';
@@ -1061,7 +1012,24 @@ var make_title = function (title) {
         return 'Cloud Resource Manager';
     } else if (title == 'storageaccounts') {
         return 'Storage Accounts';
-
+    } else if (title == 'monitor') {
+        return 'Monitor';
+    } else if (title == 'sqldatabase') {
+        return 'SQL Database';
+    } else if (title == 'securitycenter') {
+        return 'Security Center';
+    } else if (title == 'network') {
+        return 'Network';
+    } else if (title == 'keyvault') {
+        return 'Key Vault';
+    } else if (title == 'appgateway') {
+        return 'Application Gateway';
+    } else if (title == 'rediscache') {
+        return 'Redis Cache';
+    } else if (title == 'appservice') {
+        return 'App Service';
+    } else if (title == 'loadbalancer') {
+        return 'Load Balancer';
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
     };
@@ -1076,7 +1044,7 @@ var make_title = function (title) {
  * @param path
  * @param cols
  */
-var add_templates = function (group, service, section, resource_type, path, cols) {
+function add_templates (group, service, section, resource_type, path, cols) {
     if (cols == undefined) {
         cols = 2;
     };
@@ -1085,7 +1053,6 @@ var add_templates = function (group, service, section, resource_type, path, cols
         add_template(group, service, section, resource_type, path, 'list');
     };
 };
-
 
 /**
  * Add resource templates
@@ -1096,7 +1063,7 @@ var add_templates = function (group, service, section, resource_type, path, cols
  * @param path
  * @param suffix
  */
-var add_template = function (group, service, section, resource_type, path, suffix) {
+function add_template(group, service, section, resource_type, path, suffix) {
     var template = document.createElement("script");
     template.type = "text/x-handlebars-template";
     template.id = path + "." + suffix + ".template";
@@ -1125,20 +1092,12 @@ var add_template = function (group, service, section, resource_type, path, suffi
     };
 };
 
-var add_summary_template = function (path) {
-    var template = document.createElement("script");
-    template.type = "text/x-handlebars-template";
-    template.id = path + ".details.template";
-    template.innerHTML = "{{> " + partial_name + " service_name = '" + service + "' resource_type = '" + resource_type + "' partial_name = '" + path + "'}}";
-    $('body').append(template);
-};
-
 /**
  * Rules generator
  * @param group
  * @param service
  */
-var filter_rules = function (group, service) {
+function filter_rules(group, service) {
     if (service == undefined) {
         $("[id*='rule-']").show();
     } else {
@@ -1149,7 +1108,7 @@ var filter_rules = function (group, service) {
     $("[id='" + id + "']").hide();
 };
 
-var download_configuration = function (configuration, name, prefix) {
+function download_configuration(configuration, name, prefix) {
 
     var uriContent = "data:text/json;charset=utf-8," + encodeURIComponent(prefix + JSON.stringify(configuration, null, 4));
     var dlAnchorElem = document.getElementById('downloadAnchorElem');
@@ -1158,7 +1117,7 @@ var download_configuration = function (configuration, name, prefix) {
     dlAnchorElem.click();
 };
 
-var download_exceptions = function () {
+function download_exceptions() {
     var url = window.location.pathname;
     var profile_name = url.substring(url.lastIndexOf('/') + 1).replace('report-', '').replace('.html', '');
     console.log(exceptions);
@@ -1177,7 +1136,7 @@ var toggle_element = function (element_id) {
     $('#' + element_id).toggle();
 };
 
-var set_filter_url = function (region) {
+function set_filter_url(region) {
     tmp = location.hash.split('.');
     tmp[3] = region;
     location.hash = tmp.join('.');

@@ -1,0 +1,40 @@
+<!-- SQL Database partial -->
+<script id="services.sqldatabase.servers.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">SQL Server Name: <span id="sqldatabase.servers.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Azure Active Directory admin configured: <span id="sqldatabase.servers.{{@key}}.ad_admin_configured">{{ad_admin_configured}}</span></div>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">SQL Databases</h4>
+        <div class="list-group-item-text item-margin">
+        {{#each databases}}
+            {{@key}}
+            <div class="list-group-item-text item-margin">
+                <div class="list-group-item-text item-margin">Auditing: <span id="sqldatabase.servers.{{@../key}}.databases.{{@key}}.auditing_enabled">{{ convert_bool_to_enabled auditing_enabled }}</span></div>
+                <div class="list-group-item-text item-margin">Threat detection: <span id="sqldatabase.servers.{{@../key}}.databases.{{@key}}.threat_detection_enabled">{{ convert_bool_to_enabled threat_detection_enabled }}</span></div>
+                <div class="list-group-item-text item-margin">Transparent data encryption: <span id="sqldatabase.servers.{{@../key}}.databases.{{@key}}.transparent_data_encryption_enabled">{{ convert_bool_to_enabled transparent_data_encryption_enabled }}</span></div>
+                <div class="list-group-item-text item-margin">Geo-replication configured: <span id="sqldatabase.servers.{{@../key}}.databases.{{@key}}.replication_configured">{{ replication_configured }}</span></div>
+            </div>
+        {{/each}}
+        </div>
+    </div>
+
+</script>
+
+<script>
+    Handlebars.registerPartial("services.sqldatabase.servers", $("#services\\.sqldatabase\\.servers\\.partial").html());
+</script>
+
+<!-- Single SQL Database template -->
+<script id="single_sqldatabase_servers-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.sqldatabase.servers' }}
+</script>
+<script>
+    var single_sqldatabase_servers_template = Handlebars.compile($("#single_sqldatabase_servers-template").html());
+</script>

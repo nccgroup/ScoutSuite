@@ -8,5 +8,93 @@
         }
       }
     }
+  },
+  "database": {
+    "sqldatabase": {
+      "resources": {
+        "servers": {
+          "cols": 2,
+          "path": "services.sqldatabase.servers"
+        }
+      }
+    }
+  },
+  "securitycenter": {
+    "securitycenter": {
+      "resources": {
+        "pricings": {
+          "cols": 2,
+          "path": "services.securitycenter.pricings"
+        },
+        "security_contacts": {
+          "cols": 2,
+          "path": "services.securitycenter.security_contacts"
+        },
+        "auto_provisioning_settings": {
+          "cols": 2,
+          "path": "services.securitycenter.auto_provisioning_settings"
+        }
+      }
+    }
+  },
+  "security": {
+    "keyvault": {
+      "resources": {
+        "vaults": {
+          "cols": 2,
+          "path": "services.keyvault.vaults"
+        }
+      }
+    }
+  },
+  "network": {
+    "appgateway": {
+      "resources": {
+        "app_gateways": {
+          "cols": 2,
+          "path": "services.appgateway.app_gateways"
+        }
+      }
+    },
+    "network": {
+      "resources": {
+        "network_watchers": {
+          "cols": 2,
+          "path": "services.network.network_watchers"
+        },
+        "network_security_groups": {
+          "cols": 2,
+          "path": "services.network.network_security_groups"
+        }
+      }
+    },
+    "loadbalancer": {
+      "resources": {
+        "load_balancers": {
+          "cols": 2,
+          "path": "services.loadbalancer.load_balancers"
+        }
+      }
+    }
+  },
+  "redis": {
+    "rediscache": {
+      "resources": {
+        "caches": {
+          "cols": 2,
+          "path": "services.rediscache.caches"
+        }
+      }
+    }
+  },
+  "apps": {
+    "appservice": {
+      "resources": {
+        "web_apps": {
+          "cols": 2,
+          "path": "services.appservice.web_apps"
+        }
+      }
+    }
   }
 }

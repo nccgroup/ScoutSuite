@@ -5,7 +5,6 @@ import json
 import os
 import sys
 
-
 try:
     from opinel.utils.globals import check_requirements
     from opinel.utils.console import configPrintException, printError, printException, printInfo
@@ -17,7 +16,6 @@ except Exception as e:
 
 from ScoutSuite import AWSCONFIG
 from ScoutSuite.providers import get_provider
-from ScoutSuite.cli_parser import ListallArgumentParser
 from ScoutSuite.core.ruleset import TmpRuleset
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.output.console import format_listall_output, generate_listall_output
@@ -28,11 +26,7 @@ from ScoutSuite.output.html import Scout2Report
 ##### Main
 ########################################
 
-def main():
-    # Parse arguments
-    parser = ListallArgumentParser()
-    args = parser.parse_args()
-
+def main(args):
     # Configure the debug level
     configPrintException(args.debug)
 
@@ -46,7 +40,7 @@ def main():
 
         # Load the config
         try:
-            #FIXME this is specific to AWS
+            # FIXME this is specific to AWS
             report_file_name = 'aws-%s' % profile_name
             report = Scout2Report('aws', report_file_name, args.report_dir, args.timestamp)
             aws_config = report.jsrw.load_from_file(AWSCONFIG)

@@ -10,13 +10,7 @@
                             {{title}}
                         {{/if}}
                     {{/if}}
-                    {{#if items.length}}
-                        <a class="accordion-toggle" data-toggle="collapse" href="#{{escape_dots accordion_id}}">
-                            <span class="badge float-right btn-info">{{items.length}}</span>
-                        </a>
-                    {{else}}
-                        <span class="badge float-right">0</span>
-                    {{/if}}
+                    {{> count_badge count=items.length target=(concat '#' (escape_dots accordion_id))}}
                 </h4>
                 <div id="{{accordion_id}}" class="accordion-body collapse">
                     <div class="accordion-inner">

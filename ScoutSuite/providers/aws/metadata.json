@@ -359,6 +359,15 @@
                     "path": "services.iam.password_policy"
                 }
             }
+        },        
+        "kms": {
+            "resources": {
+                "keys": {
+                    "api_call": "list_keys",
+                    "response": "Keys",
+                    "path": "services.kms.regions.id.keys"
+                }
+            }
         }
     },
     "database": {
@@ -369,6 +378,15 @@
                 "callbacks": [
                     [ "merge", {"attribute": "external_attack_surface"} ]
                 ]
+            }
+        },
+        "dynamodb": {
+            "resources": {
+                "tables": {
+                    "api_call": "list_tables",
+                    "response": "TableNames",
+                    "path": "services.dynamodb.regions.id.tables"
+                }
             }
         },
         "elasticache": {

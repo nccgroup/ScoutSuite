@@ -30,7 +30,16 @@ formatted_service_name = {
     'kubernetesengine': 'Kubernetes Engine',
     'cloudresourcemanager': 'Cloud Resource Manager',
 
+    'monitor': 'Monitor',
     'storageaccounts': 'Storage Accounts',
+    'sqldatabase': 'SQL Database',
+    'securitycenter': 'Security Center',
+    'keyvault': 'Key Vault',
+    'appgateway': 'Application Gateway',
+    'rediscache': 'Redis Cache',
+    'network': 'Network',
+    'appservice': 'App Service',
+    'loadbalancer': 'Load Balancer'
 }
 
 

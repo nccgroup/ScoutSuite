@@ -5,6 +5,7 @@ EC2-related classes and functions
 
 # TODO: move a lot of this to VPCconfig, and use some sort of filter to only list SGs in EC2 classic
 import netaddr
+import base64
 
 from opinel.utils.aws import get_name
 from opinel.utils.console import printException, printInfo
@@ -59,6 +60,8 @@ class EC2RegionConfig(RegionConfig):
             manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
             instance['reservation_id'] = reservation['ReservationId']
             instance['id'] = i['InstanceId']
+            instance['monitoring_enabled'] = i['Monitoring']['State'] == 'enabled'
+            instance['user_data'] = self._get_user_data(region, instance['id'])
             get_name(i, instance, 'InstanceId')
             get_keys(i, instance, ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile', 'SubnetId'])
             # Network interfaces & security groups
@@ -68,6 +71,14 @@ class EC2RegionConfig(RegionConfig):
                 get_keys(eni, nic, ['Association', 'Groups', 'PrivateIpAddresses', 'SubnetId', 'Ipv6Addresses'])
                 instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
             self.vpcs[vpc_id].instances[i['InstanceId']] = instance
+
+    def _get_user_data(self, region, instance_id):
+        user_data_response = api_clients[region].describe_instance_attribute(Attribute='userData', InstanceId=instance_id)
+
+        if 'Value' not in user_data_response['UserData'].keys():
+            return None
+
+        return base64.b64decode(user_data_response['UserData']['Value']).decode('utf-8')
 
     def parse_image(self, global_params, region, image):
         """

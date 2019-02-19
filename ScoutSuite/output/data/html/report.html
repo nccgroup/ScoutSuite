@@ -14,12 +14,12 @@
 
     <!-- Bootstrap core CSS -->
     <link href="inc-bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    
     <!-- Bootstrap theme -->
-    <link id="theme" href="inc-bootstrap/css/bootstrap-light.min.css" rel="stylesheet">
+    <link id="bootstrap-theme" href="inc-bootstrap/css/bootstrap-light.min.css" rel="stylesheet">
     
     <!-- Fontawesome CSS -->
-    <link id="theme" href="inc-fontawesome/css/all.min.css" rel="stylesheet">
-
+    <link href="inc-fontawesome/css/all.min.css" rel="stylesheet">
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -36,7 +36,8 @@
     <script src="inc-scoutsuite/scoutsuite.js"></script>
     <script src="inc-scoutsuite/provider.js"></script>
     <script src="inc-scoutsuite/helpers.js"></script>
-    <link href="inc-scoutsuite/scoutsuite.css" rel="stylesheet">
+    <link href="inc-scoutsuite/css/scoutsuite.css" rel="stylesheet">
+    <link id="scout-theme" href="inc-scoutsuite/css/scoutsuite-light.css" rel="stylesheet">
 </head>
 
 <body>
@@ -45,16 +46,13 @@
     <!-- Fixed navbar -->
     <!------------------>
 
-    <div class="navbar fixed-top navbar-expand-lg bg-primary" role="navigation" id="metadata.list"></div>
+    <div class="navbar fixed-top navbar-expand-md bg-primary" role="navigation" id="metadata.list"></div>
 
     <!--------------->
     <!-- Container -->
     <!--------------->
 
-    <div class="container theme-showcase" id="container-user">
-
-        <!-- Empty header -->
-        <div class="spacer"></div>
+    <div class="container theme-showcase mt-5 pt-5" id="container-user">
 
         <!-- AWS account ID -->
         <div class="row justify-content-center" id="aws_account_id.details">
@@ -70,9 +68,9 @@
 
         <!-- Title section -->
         <!--<div id="section_title-div">-->
-        <div id="section_title-div" style="display:flex;position:relative;">
+        <div id="section_title-div" style="display:flex;flex-direction:column;position:relative;">
             <h2 id="section_title-h2"></h2>
-            <div id="findings_download_button" style="display:none;position:absolute;right:0;transform:translateY(+50%);">
+            <div id="findings_download_button" style="display:none;position:relative;margin-left:auto">
                 <button id="findings_download_csv_button" type="button" class="btn btn-secondary"><i class="fa fa-download"></i>CSV</button>
                 <button id="findings_download_json_button" type="button" class="btn btn-secondary"><i class="fa fa-download"></i>JSON</button>
             </div>
@@ -91,16 +89,18 @@
 
             <!-- PLACEHOLDER -->
 
-            <!-- Please wait -->
-            <div class="row" id="please_wait.details">
-                <div class="list-group">
-                    <div class="row list-group-item active">
-                        Please wait
-                    </div>
-                    <div class="row list-group-item">
-                        <p>&nbsp;</p>
-                        <p>Loading data, this may take a while...</p>
-                        <p>&nbsp;</p>
+            <div class="modal-backdrop fade show" id="please-wait-backdrop"></div>
+            <div class="modal fade show" tabindex="-1" role="dialog" id="please-wait-modal" style="padding-right: 17px; display: block;" aria-modal="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Please wait</h5>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row list-group-item">
+                                <p>Loading data, this may take a while...</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -160,7 +160,9 @@
         <script src="inc-bootstrap/js/bootstrap.min.js"></script>
 
         <!-- Display dashbord -->
-        <script>load_metadata();</script>
+        <script>
+            load_metadata();
+        </script>
 
         <footer>
             <div class="row" id="footer">
@@ -180,8 +182,6 @@
                 var docHeight = $(window).height();
                 var footerHeight = $('#footer').height();
                 var footerTop = $('#footer').position().top + footerHeight;
-                if (footerTop < docHeight)
-                    $('#footer').css('margin-top', 0 + (docHeight - footerTop) + 'px');
             });
         </script>
     </div>

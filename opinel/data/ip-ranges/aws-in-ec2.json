@@ -1,0 +1,6 @@
+{
+    "source": "ip-ranges/aws.json",
+    "conditions": [ "and",
+        [ "service", "equal", "EC2" ]
+    ]
+}

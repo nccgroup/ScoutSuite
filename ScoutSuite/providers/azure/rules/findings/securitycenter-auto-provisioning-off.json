@@ -1,0 +1,11 @@
+{
+    "dashboard_name": "Security Center",
+    "description": "Automatic provisioning of monitoring agent",
+    "rationale": "You should set automatic provisioning of monitoring agent (CIS 2.2).",
+    "path": "securitycenter.auto_provisioning_settings.id",
+    "display_path": "securitycenter.auto_provisioning_settings",
+    "conditions": [ "and",
+        ["securitycenter.auto_provisioning_settings.id.auto_provision", "false", ""]
+    ],
+    "id_suffix": "provisionning_off"
+}

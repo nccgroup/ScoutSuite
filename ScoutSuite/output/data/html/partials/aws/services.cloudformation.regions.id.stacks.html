@@ -19,9 +19,10 @@
         None
       {{/if}}
     </div>
+    <div class="list-group-item-text item-margin">Termination protection enabled: {{termination_protection}}</div>
   </div>
   <div class="list-group-item">
-    <h4 class="list-group-item-heading">Capabilities <span class="badge float-right">{{#if Capabilities}}{{Capabilities.length}}{{else}}0{{/if}}</span></h4>
+    <h4 class="list-group-item-heading">Capabilities {{> count_badge count=Capabilities.length}}</h4>
     <ul>
       {{#each Capabilities}}
         <li class="list-group-item-text">
@@ -32,7 +33,7 @@
   </div>
   {{#if policy}}
     <div class="list-group-item">
-      {{> accordion_policy name = 'Stack Policy' policy_path = (concat 'cloudformation.regions' region 'stacks' @key 'policy') document = policy}}
+      <code>{{> accordion_policy name = 'Stack Policy' policy_path = (concat 'cloudformation.regions' region 'stacks' @key 'policy') document = policy}}</code>
     </div>
   {{/if}}
 </script>

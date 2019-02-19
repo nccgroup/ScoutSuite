@@ -35,7 +35,6 @@ class IAMConfig(AWSBaseConfig):
         ('credential_reports', '', '', {}, False),
         ('password_policy', '', '', {}, False)
         # TODO: Federations
-        # TODO: KMS ?
     )
 
     def __init__(self, target_config):
@@ -81,7 +80,7 @@ class IAMConfig(AWSBaseConfig):
                 if not ignore_exception:
                     printError('Failed to generate a credential report.')
                 return
-                
+
             report = api_client.get_credential_report()['Content']
             lines = report.splitlines()
             keys = lines[0].decode('utf-8').split(',')
@@ -95,8 +94,10 @@ class IAMConfig(AWSBaseConfig):
                     credential_report[key] = value
 
                 credential_report['password_last_used'] = self._sanitize_date(credential_report['password_last_used'])
-                credential_report['access_key_1_last_used_date'] = self._sanitize_date(credential_report['access_key_1_last_used_date'])
-                credential_report['access_key_2_last_used_date'] = self._sanitize_date(credential_report['access_key_2_last_used_date'])
+                credential_report['access_key_1_last_used_date'] = self._sanitize_date(
+                    credential_report['access_key_1_last_used_date'])
+                credential_report['access_key_2_last_used_date'] = self._sanitize_date(
+                    credential_report['access_key_2_last_used_date'])
                 credential_report['last_used'] = self._compute_last_used(credential_report)
                 credential_report['name'] = user_id
                 credential_report['id'] = user_id
@@ -111,10 +112,9 @@ class IAMConfig(AWSBaseConfig):
             printError('Failed to download a credential report.')
             printException(e)
 
-
     def _compute_last_used(self, credential_report):
-        dates = [credential_report['password_last_used'], 
-                 credential_report['access_key_1_last_used_date'], 
+        dates = [credential_report['password_last_used'],
+                 credential_report['access_key_1_last_used_date'],
                  credential_report['access_key_2_last_used_date']]
 
         dates = [date for date in dates if date is not None]
@@ -124,7 +124,7 @@ class IAMConfig(AWSBaseConfig):
         """
         Returns the date if it is not equal to 'N/A' or 'no_information', else returns None
         """
-        return date  if date != 'no_information' and date != 'N/A' else None
+        return date if date != 'no_information' and date != 'N/A' else None
 
     ########################################
     ##### Groups

@@ -1,0 +1,80 @@
+<!-- Network Security Groups partial -->
+<script id="services.network.network_security_groups.partial" type="text/x-handlebars-template">
+    <div id="ressource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="network.network_security_groups.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Location: <span id="network.network_security_groups.{{@key}}.location">{{ location }}</span></div>
+        
+        <div class="list-group-item-text item-margin">Exposed Ports:
+            <div class="list-group-item-text item-margin">
+            {{#each exposed_port_ranges}}
+                <li id="network.network_security_groups.{{@../key}}.exposed_port_ranges.{{@key}}">{{ this }}</li>
+            {{/each}}
+            </div>
+        </div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Security Rules</h4>
+        <div class="list-group-item-text item-margin">
+        {{#each security_rules}}
+            {{name}}
+            <div class="list-group-item-text item-margin">
+                <div class="list-group-item-text item-margin">Allow: <span id="network.network_security_groups.{{@../key}}.security_rule.{{@key}}.allow">{{ allow }}</span></div>
+                <div class="list-group-item-text item-margin">Priority: <span id="network.network_security_groups.{{@../key}}.security_rule.{{@key}}.priority">{{ priority }}</span></div>
+                <div class="list-group-item-text item-margin">Description: <span id="network.network_security_groups.{{@../key}}.security_rule.{{@key}}.description">{{ description }}</span></div>
+                <div class="list-group-item-text item-margin">Provisioning State: <span id="network.network_security_groups.{{@../key}}.security_rule.{{@key}}.provisioning_state">{{ provisioning_state }}</span></div>
+                <div class="list-group-item-text item-margin">Protocol: <span id="network.network_security_groups.{{@../key}}.security_rule.{{@key}}.protocol">{{ protocol }}</span></div>
+                <div class="list-group-item-text item-margin">Direction: <span id="network.network_security_groups.{{@../key}}.security_rule.{{@key}}.direction">{{ direction }}</span></div>
+
+                <div class="list-group-item-text item-margin">Source Address Prefixes:
+                    <div class="list-group-item-text item-margin">
+                    {{#each source_address_prefixes}}
+                        <li id="network.network_security_groups.{{@../../key}}.security_rule.{{@../key}}.source_address_prefixes.{{@key}}">{{ this }}</li>
+                    {{/each}}
+                    </div>
+                </div>
+
+                <div class="list-group-item-text item-margin">Source Ports:
+                    <div class="list-group-item-text item-margin">
+                    {{#each source_port_ranges}}
+                        <li id="network.network_security_groups.{{@../../key}}.security_rule.{{@../key}}.source_port_ranges.{{@key}}">{{ this }}</li>
+                    {{/each}}
+                    </div>
+                </div>
+
+                <div class="list-group-item-text item-margin">Destination Address Prefixes:
+                    <div class="list-group-item-text item-margin">
+                    {{#each destination_address_prefixes}}
+                        <li id="network.network_security_groups.{{@../../key}}.security_rule.{{@../key}}.destination_address_prefixes.{{@key}}">{{ this }}</li>
+                    {{/each}}
+                    </div>
+                </div>
+
+                <div class="list-group-item-text item-margin">Destination Port Ranges:
+                    <div class="list-group-item-text item-margin">
+                    {{#each destination_port_ranges}}
+                        <li id="network.network_security_groups.{{@../../key}}.security_rule.{{@../key}}.destination_port_ranges.{{@key}}">{{ this }}</li>
+                    {{/each}}
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+        </div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.network.network_security_groups", $("#services\\.network\\.network_security_groups\\.partial").html());
+</script>
+
+<!-- Single security group template -->
+<script id="single_network_network_security_group-template" type="text/x-handlebars-template">
+    {{> modal_template template='services.network.network_security_groups'}}
+</script>
+<script>
+    var single_network_network_security_group_template = Handlebars.compile($("#single_network_network_security_group-template").html());
+</script>

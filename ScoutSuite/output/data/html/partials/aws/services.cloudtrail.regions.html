@@ -10,18 +10,14 @@
         <li class="list-group-item-text">Configured:
           <span>
           <span id="cloudtrail.regions.{{name}}.NotConfigured">
-            {{#ifPositive trails_count}}Yes{{else}}No{{/ifPositive}}</li>
+            {{#ifPositive trails_count}}true{{else}}false{{/ifPositive}}</li>
           </span>
       </ul>
     </div>
     <div class="list-group-item">
       <div class="accordion">
         <h4 class="list-group-item-heading accordion-heading">Trails
-          {{#ifPositive trails_count}}
-            <a class="accordion-toggle" data-toggle="collapse" href="#cloudtrail\.regions\.{{name}}\.trails"><span class="badge float-right btn-info">{{trails_count}}</span></a>
-          {{else}}
-            <span class="badge float-right">{{trails_count}}</span>
-          {{/ifPositive}}
+            {{> count_badge target=(concat '#cloudtrail.regions' name 'trails') count=trails_count}}
         </h4>
         <div id="cloudtrail.regions.{{name}}.trails" class="accordion-body collapse">
           <div class="accordion-inner">

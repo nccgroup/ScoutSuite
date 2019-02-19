@@ -23,13 +23,13 @@ class TestScoutSuiteClass:
 
     def call_scout_suite(self, args):
         args = ['./Scout.py'] + args
+
+        args.append('aws')
+
         if TestScoutSuiteClass.profile_name:
             args.append('--profile')
             args.append(TestScoutSuiteClass.profile_name)
         #FIXME this only tests AWS
-
-        args.append('--provider')
-        args.append('aws')
 
         args.append('--force')
         args.append('--debug')

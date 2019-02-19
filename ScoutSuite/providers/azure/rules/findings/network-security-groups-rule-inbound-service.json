@@ -1,0 +1,15 @@
+{
+    "dashboard_name": "Network",
+    "arg_names": [ "Protocol (ex: SSH, RDP, etc.)", "Protocol's port", "Associated CIS rule" ],
+    "key": "network-security-groups-rule-inbound-_ARG_0_",
+    "description": "Security rule allowing _ARG_0_ inbound access in security group",
+    "rationale": "You should not permit _ARG_0_(port _ARG_1_) inbound access to a network security group (CIS _ARG_2_).",
+    "path": "network.network_security_groups.id.security_rules.id",
+    "display_path": "network.network_security_groups.id",
+    "conditions": [ "and",
+        ["network.network_security_groups.id.security_rules.id.destination_ports", "containAtLeastOneOf", "_ARG_1_"],
+        ["_INCLUDE_(conditions/exposed-to-the-internet.json)", "", ""],
+        ["_INCLUDE_(conditions/allow-tcp.json)", "", ""]
+    ],
+    "id_suffix": "security_groups_rule_inbound__ARG_0_"
+}

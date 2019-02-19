@@ -28,8 +28,6 @@ Handlebars.registerHelper('add_policy_path', function() {
     for (var i = 2; i < arguments.length -1; i++) {
         path = path + '\\.' + arguments[i];
     }
-    console.log(arguments);
-    console.log('policy_path:' + path);
     policy['policy_path'] = path;
     policy['policy_spath'] = path.replace(/\\/g, '');
 });
@@ -120,16 +118,6 @@ Handlebars.registerHelper('count_in', function(service, path) {
 
 Handlebars.registerHelper('count_in_new', function(path) {
     var entities = path.split('.');
-    console.log('Counting ' + path);
-    /*
-    if (service == 'ec2') {
-        var input = run_results['services']['ec2'];
-    } else if(service == 'cloudtrail') {
-        var input = run_results['services']['cloudtrail'];
-    } else {
-        return 0;
-    }
-    */
     return recursive_count(run_results, entities);
 });
 
@@ -146,6 +134,10 @@ Handlebars.registerHelper('count_ec2_in_region', function(region, path) {
         count = 'N/A';
     }
     return count;
+});
+
+Handlebars.registerHelper('split_lines', function(text) {
+    return text ? text.split('\n') : [];
 });
 
 Handlebars.registerHelper('count_vpc_network_acls', function(vpc_network_acls) {
@@ -176,14 +168,12 @@ Handlebars.registerHelper('count_role_instances', function(instance_profiles) {
 
 var recursive_count = function(input, entities) {
     var count = 0;
-    console.log('Entities left: ' + entities + ' (length = ' + entities.length + ')');
     if (entities.length > 0) {
         var entity = entities.shift();
         for (i in input[entity]) {
             count = count + recursive_count(input[entity][i], eval(JSON.stringify(entities)));
         }
     } else {
-        console.log('Found one...');
         count = count + 1;
     }
     return count;
@@ -236,26 +226,6 @@ Handlebars.registerHelper('fixBucketName', function(bucket_name) {
     }
 });
 
-// http://funkjedi.com/technology/412-every-nth-item-in-handlebars, slightly tweaked to work with a dictionary
-// TODO this is duplicated code
-// Handlebars.registerHelper('grouped_each', function(every, context, options) {
-//     var out = "", subcontext = [], i;
-//     var keys = Object.keys(context);
-//     var count = keys.length;
-//     var subcontext = {};
-//     if (context && count > 0) {
-//         for (i = 0; i < count; i++) {
-//             if (i > 0 && i % every === 0) {
-//                 out += options.fn(subcontext);
-//                 subcontext = {};
-//             }
-//             subcontext[keys[i]] = context[keys[i]];
-//         }
-//         out += options.fn(subcontext);
-//     }
-//     return out;
-// });
-
 Handlebars.registerHelper('dashboard_color', function(level, checked, flagged) {
     if (checked == 0) {
         return 'unknown disabled-link';
@@ -283,7 +253,7 @@ Handlebars.registerHelper('unlessEqual', function(v1, v2, options) {
 });
 
 Handlebars.registerHelper('ifPositive', function(v1, options) {
-    if (v1 === 'N/A' || v1 === 0) {
+    if (!v1 || v1 === 'N/A' || v1 === 0) {
         return options.inverse(this);
     } else {
         return options.fn(this);
@@ -461,7 +431,6 @@ Handlebars.registerHelper('get_arg_name', function(rule_filename, arg_index) {
     if ('arg_names' in run_results['rule_definitions'][rule_filename]) {
         return  run_results['rule_definitions'][rule_filename]['arg_names'][arg_index];
     } else {
-        console.log('Error, arg_names is not declared in ' + rule_filename);
         return '';
     }
 });

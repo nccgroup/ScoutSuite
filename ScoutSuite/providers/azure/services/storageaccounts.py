@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import re
-
 from ScoutSuite.providers.azure.configs.base import AzureBaseConfig
-
+from ScoutSuite.providers.azure.utils import get_resource_group_name
 
 class StorageAccountsConfig(AzureBaseConfig):
     targets = (
@@ -53,7 +51,7 @@ class StorageAccountsConfig(AzureBaseConfig):
         storage_accounts = []
         storage_accounts_raw = method(**list_params)
         for storage_account in storage_accounts_raw:
-            resource_group_name = re.findall("/resourceGroups/(.*?)/", storage_account.id)[0]
+            resource_group_name = get_resource_group_name(storage_account.id)
             setattr(storage_account, "blob_containers", \
                     api_client.blob_containers.list(resource_group_name, storage_account.name).value)
             storage_accounts.append(storage_account)
