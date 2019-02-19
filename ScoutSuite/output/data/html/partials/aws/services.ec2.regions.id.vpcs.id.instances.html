@@ -1,4 +1,3 @@
-
     <!-- EC2 instance partial -->
     <script id="services.ec2.regions.id.vpcs.id.instances.partial" type="text/x-handlebars-template">
         <div id="resource-name" class="list-group-item active">
@@ -30,6 +29,14 @@
                 {{/each}}
             </ul>
         </div>
+        {{#if user_data}}
+        <div class="list-group-item" style="padding-bottom: 0 !important;">
+            <h4>User data</h4>
+            <div>
+                <pre><code>{{#each (split_lines user_data)}}   {{this}}<br>{{/each}}</code></pre>
+            </div>
+        </div>
+        {{/if}}
     </script>
     <script>
       Handlebars.registerPartial("services.ec2.regions.id.vpcs.id.instances", $("#services\\.ec2\\.regions\\.id\\.vpcs\\.id\\.instances\\.partial").html());
