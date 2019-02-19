@@ -30,7 +30,7 @@ try:
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.aws.services.kms import KMSConfig
+    from ScoutSuite.providers.aws.services.kms_private import KMSConfig
 except ImportError:
     pass
 
