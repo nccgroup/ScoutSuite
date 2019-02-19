@@ -27,6 +27,10 @@ from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 from ScoutSuite.utils import format_service_name
 
 try:
+    from ScoutSuite.providers.aws.services.config_private import ConfigConfig
+except ImportError:
+    pass
+try:
     from ScoutSuite.providers.aws.services.dynamodb_private import DynamoDBConfig
 except ImportError:
     pass
@@ -38,6 +42,7 @@ class AWSServicesConfig(BaseServicesConfig):
                                         
     :ivar cloudtrail:                   CloudTrail configuration
     :ivar cloudwatch:                   CloudWatch configuration: TODO
+    :ivar config:                       Config configuration
     :ivar dynamodb:                     DynomaDB configuration
     :ivar ec2:                          EC2 configuration
     :ivar iam:                          IAM configuration
@@ -77,6 +82,10 @@ class AWSServicesConfig(BaseServicesConfig):
 
         try:
             self.dynamodb = DynamoDBConfig(metadata['database']['dynamodb'], thread_config)
+        except NameError as e:
+            pass
+        try:
+            self.config = ConfigConfig(metadata['management']['config'], thread_config)
         except NameError as e:
             pass
 
