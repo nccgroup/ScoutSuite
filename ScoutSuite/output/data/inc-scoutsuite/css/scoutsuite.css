@@ -307,6 +307,10 @@ input:checked + .slider:before {
     width: 100%;
 }
 
+.list-group {
+    margin-bottom: 1em;
+}
+
 #double-column-left .list-group {
     margin: 3px 0;
 }
