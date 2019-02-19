@@ -62,8 +62,8 @@
         "config": {
             "resources": {
                 "recorders": {
-                    "api_call": "describe_configuration_recorder_status999",
-                    "response": "Recorders",
+                    "api_call": "describe_configuration_recorders",
+                    "response": "ConfigurationRecorders",
                     "path": "services.config.regions.id.recorders"
                 }
             }

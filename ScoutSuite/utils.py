@@ -15,7 +15,7 @@ formatted_service_name = {
     'cloudformation': 'CloudFormation',
     'cloudtrail': 'CloudTrail',
     'cloudwatch': 'CloudWatch',
-    'configservice': 'ConfigService',
+    'config': 'Config',
     'directconnect': 'Direct Connect',
     'dynamodb': 'DynamoDB',
     'elasticache': 'ElastiCache',
