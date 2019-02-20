@@ -26,10 +26,10 @@ class ServersConfig(ResourceConfig):
         }
 
     # register children resources:
-    children = {
-        'Databases': (DatabasesConfig, _parse_databases_config),
-        'Azure AD Administrators': (ServerAzureAdAdministratorsConfig, _parse_azure_ad_administrators_config)
-    }
+    children = [
+        (DatabasesConfig, _parse_databases_config),
+        (ServerAzureAdAdministratorsConfig, _parse_azure_ad_administrators_config)
+    ]
 
     def __init__(self):
         self.servers = {}
@@ -51,7 +51,7 @@ class ServersConfig(ResourceConfig):
             }
 
             # put the following code in a fetch_children() parent method (typical method for a composite node)?
-            for (resource_config, resource_parser) in self.children.values():
+            for (resource_config, resource_parser) in self.children:
                 resource = resource_config(resource_group_name, server.name)
                 await resource.fetch_all(credentials)
                 for k, v in resource_parser.__func__(resource).items():
