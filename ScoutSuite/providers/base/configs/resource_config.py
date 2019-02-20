@@ -1,5 +1,5 @@
 
-class ResourceConfig(object):
+class ResourceConfig(dict):
 
     def __init__(self, thread_config=4):
         self._thread_config = thread_config
