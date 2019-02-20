@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from ScoutSuite.providers.base.configs.resource_config import ResourceConfig
-from botocore.session import Session
-from collections import Counter
+from ScoutSuite.providers.aws.aws_facade import AwsFacade
 
 
 class RegionsConfig(ResourceConfig):
@@ -11,21 +10,10 @@ class RegionsConfig(ResourceConfig):
         self._child_config_type = child_config_type
 
     async def fetch_all(self, credentials, regions=None, partition_name='aws', targets=None):
-        for region in await self._build_region_list(regions, partition_name):
+        # TODO: Should be injected
+        facade = AwsFacade()
+
+        for region in await facade.build_region_list(self._service, regions, partition_name):
             child = self._child_config_type()
             await child.fetch_all(credentials, region, partition_name, None)
             self.setdefault(region, child)
-
-    async def _build_region_list(self, chosen_regions=None, partition_name='aws'):
-        service = 'ec2containerservice' if self._service == 'ecs' else self._service
-        available_services = Session().get_available_services()
-
-        if service not in available_services:
-            raise Exception('Service ' + service + ' is not available.')
-
-        regions = Session().get_available_regions(service, partition_name)
-
-        if chosen_regions:
-            return list((Counter(regions) & Counter(chosen_regions)).elements())
-        else:
-            return regions
