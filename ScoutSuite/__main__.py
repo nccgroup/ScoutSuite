@@ -18,14 +18,15 @@ from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.providers import get_provider
 
 
-def main():
+def main(args=None):
     """
     Main method that runs a scan
 
     :return:
     """
-    parser = ScoutSuiteArgumentParser()
-    args = parser.parse_args()
+    if not args:
+        parser = ScoutSuiteArgumentParser()
+        args = parser.parse_args()
 
     # Get the dictionnary to get None instead of a crash
     args = args.__dict__
