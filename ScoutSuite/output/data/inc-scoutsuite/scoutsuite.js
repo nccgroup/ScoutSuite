@@ -988,6 +988,8 @@ function make_title (title) {
         return 'CloudWatch';
     } else if (title == 'cloudformation') {
         return 'CloudFormation';
+    } else if (title == 'config') {
+        return 'Config';
     } else if (title == 'awslambda') {
         return 'Lambda';
     } else if (title == 'dynamodb') {
