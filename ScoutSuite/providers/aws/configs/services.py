@@ -2,7 +2,7 @@
 
 from opinel.utils.console import printError, printException, printInfo, printDebug
 
-from ScoutSuite.providers.aws.services.awslambda import LambdaConfig
+from ScoutSuite.providers.aws.services.awslambda import LambdaServiceConfig
 from ScoutSuite.providers.aws.services.cloudformation import CloudFormationConfig
 from ScoutSuite.providers.aws.services.cloudtrail import CloudTrailConfig
 from ScoutSuite.providers.aws.services.cloudwatch import CloudWatchConfig
@@ -64,7 +64,7 @@ class AWSServicesConfig(BaseServicesConfig):
         self.emr = EMRConfig(metadata['analytics']['emr'], thread_config)
         self.iam = IAMConfig(thread_config)
         self.kms = KMSConfig(metadata['security']['kms'], thread_config)
-        self.awslambda = LambdaConfig(metadata['compute']['awslambda'], thread_config)
+        self.awslambda = LambdaServiceConfig()
         self.redshift = RedshiftConfig(metadata['database']['redshift'], thread_config)
         self.rds = RDSConfig(metadata['database']['rds'], thread_config)
         self.route53 = Route53Config(thread_config)
