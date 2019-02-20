@@ -61,6 +61,10 @@
         },
         "config": {
             "resources": {
+                "regions": {
+                    "cols": 2,
+                    "path": "services.config.regions"
+                },
                 "recorders": {
                     "api_call": "describe_configuration_recorders",
                     "response": "ConfigurationRecorders",
