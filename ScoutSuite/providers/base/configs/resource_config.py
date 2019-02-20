@@ -7,5 +7,5 @@ class ResourceConfig(object):
     async def fetch_all(self, credentials, regions=None, partition_name='aws', targets=None):
         raise NotImplementedError()
 
-    def finalize(self):
+    async def finalize(self):
         pass
