@@ -38,12 +38,12 @@ class DatabasesConfig(ResourceConfig):
         }
 
     # register children resources:
-    children = {
-        'Database Auditing Settings': (DatabaseBlobAuditingPoliciesConfig, _parse_auditing_config),
-        'Database Threat Detection Policies': (DatabaseThreatDetectionPoliciesConfig, _parse_threat_detection_config),
-        'Replication Links': (ReplicationLinksConfig, _parse_replication_links_config),
-        'Transparent Data Encryptions': (TransparentDataEncryptionsConfig, _parse_transparent_data_encryption_config)
-    }
+    children = [
+        (DatabaseBlobAuditingPoliciesConfig, _parse_auditing_config),
+        (DatabaseThreatDetectionPoliciesConfig, _parse_threat_detection_config),
+        (ReplicationLinksConfig, _parse_replication_links_config),
+        (TransparentDataEncryptionsConfig, _parse_transparent_data_encryption_config)
+    ]
 
     def __init__(self, resource_group_name, server_name):
         self.resource_group_name = resource_group_name
@@ -62,7 +62,7 @@ class DatabasesConfig(ResourceConfig):
             }
 
             # put the following code in a fetch_children() parent method (typical method for a composite node)?
-            for (resource_config, resource_parser) in self.children.values():
+            for (resource_config, resource_parser) in self.children:
                 resource = resource_config(self.resource_group_name, self.server_name, db.name)
                 await resource.fetch_all(credentials)
                 for k, v in resource_parser.__func__(resource).items():
