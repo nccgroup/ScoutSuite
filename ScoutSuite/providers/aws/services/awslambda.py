@@ -16,7 +16,7 @@ class LambdaServiceConfig(RegionsConfig):
         )
 
         for region in self['regions']:
-            functions = LambdasConfig()
+            self['regions'][region] = await RegionalLambdas().fetch_all(region=region)
             await functions.fetch_all(region=region)
             self['regions'][region] = functions
 
@@ -33,6 +33,7 @@ class LambdasConfig(Resources):
 
         self['functions_count'] = len(functions)
         self['functions'] = functions
+        return self
 
     @staticmethod
     def parse_function(function):
