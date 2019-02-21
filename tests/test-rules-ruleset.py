@@ -3,7 +3,7 @@
 import os
 
 from mock import patch
-from opinel.utils.console import configPrintException, printDebug
+from core.console import configPrintException, printDebug
 
 from ScoutSuite.core.rule import Rule
 from ScoutSuite.core.ruleset import Ruleset

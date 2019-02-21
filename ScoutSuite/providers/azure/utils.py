@@ -2,7 +2,7 @@
 
 import re
 
-from opinel.utils.console import printException, printInfo
+from core.console import printException
 
 from azure.mgmt.storage import StorageManagementClient
 from azure.mgmt.monitor import MonitorManagementClient

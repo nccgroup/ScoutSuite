@@ -8,13 +8,12 @@ import netaddr
 import base64
 
 from opinel.utils.aws import get_name
-from opinel.utils.console import printException, printInfo
+from core.console import printException, printInfo
 from opinel.utils.fs import load_data
 from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
 from ScoutSuite.providers.base.configs.browser import get_attribute_at
-from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.utils import get_keys, ec2_classic
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 

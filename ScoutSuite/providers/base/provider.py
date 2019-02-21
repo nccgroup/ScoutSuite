@@ -7,8 +7,7 @@ import json
 import sys
 import copy
 
-from opinel.utils.console import printException, printInfo
-from opinel.utils.globals import manage_dictionary
+from core.console import printException, printInfo
 
 from ScoutSuite import __version__ as scout2_version
 from ScoutSuite.providers.base.configs.browser import get_object_at

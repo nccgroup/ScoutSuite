@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from opinel.utils.aws import handle_truncated_response
-from opinel.utils.console import printError, printException
+from core.console import printError, printException
 from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients

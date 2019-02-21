@@ -2,9 +2,6 @@
 
 from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
-from googleapiclient.errors import HttpError
-import json
-from opinel.utils.console import printException, printError
 
 class ComputeEngineConfig(GCPBaseConfig):
     targets = (

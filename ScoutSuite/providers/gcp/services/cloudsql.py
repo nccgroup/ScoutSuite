@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.console import printError
+from core.console import printError
 
-import operator
 from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
 

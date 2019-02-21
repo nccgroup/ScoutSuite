@@ -6,7 +6,7 @@ import os
 import re
 
 from opinel import __version__ as OPINEL_VERSION
-from opinel.utils.console import printError
+from core.console import printError
 
 
 ########################################

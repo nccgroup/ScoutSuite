@@ -3,7 +3,7 @@
 import json
 import os
 
-from opinel.utils.console import printDebug, printError, printException
+from core.console import printError
 
 
 class RuleDefinition(object):

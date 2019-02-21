@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.console import printError, printException, printDebug
-from opinel.utils.aws import get_aws_account_id, get_partition_name
+from core.console import printError, printException, printDebug
+from opinel.utils.aws import get_partition_name
 
 class BaseServicesConfig(object):
 

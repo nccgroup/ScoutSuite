@@ -3,7 +3,7 @@
 Exceptions handling
 """
 
-from opinel.utils.console import printDebug
+from core.console import printDebug
 
 from ScoutSuite import EXCEPTIONS
 from ScoutSuite.output.js import JavaScriptReaderWriter

@@ -4,7 +4,7 @@ from __future__ import print_function
 import os
 import sys
 
-from opinel.utils.console import printError
+from core.console import printError
 
 from six.moves import input
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.console import printDebug, printError, printException
+from core.console import printDebug, printError, printException
 from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite.core.utils import recurse

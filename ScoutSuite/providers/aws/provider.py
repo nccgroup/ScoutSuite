@@ -6,7 +6,7 @@ import sys
 
 try:
     from opinel.utils.aws import get_aws_account_id, get_partition_name
-    from opinel.utils.console import configPrintException, printInfo, printDebug
+    from core.console import configPrintException, printInfo, printDebug
     from opinel.utils.credentials import read_creds
     from opinel.utils.globals import check_requirements
     from opinel.utils.profiles import AWSProfiles
@@ -16,7 +16,7 @@ except Exception as e:
     print(e)
     sys.exit(42)
 
-from opinel.utils.console import printDebug, printError, printException, printInfo
+from core.console import printDebug, printError, printException, printInfo
 from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite.providers.aws.configs.services import AWSServicesConfig
