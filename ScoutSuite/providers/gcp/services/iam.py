@@ -2,7 +2,7 @@
 
 from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
-from core.console import printError
+from ScoutSuite.core.console import printError
 
 from googleapiclient import discovery
 

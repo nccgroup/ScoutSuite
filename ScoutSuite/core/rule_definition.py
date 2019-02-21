@@ -3,7 +3,7 @@
 import json
 import os
 
-from core.console import printError
+from ScoutSuite.core.console import printError
 
 
 class RuleDefinition(object):

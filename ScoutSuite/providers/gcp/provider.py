@@ -5,7 +5,7 @@ import warnings
 
 import google.auth
 import googleapiclient
-from core.console import printError, printException, printInfo
+from ScoutSuite.core.console import printError, printException, printInfo
 
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.gcp.configs.services import GCPServicesConfig

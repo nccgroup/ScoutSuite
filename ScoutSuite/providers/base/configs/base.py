@@ -21,7 +21,7 @@ from ScoutSuite.providers.gcp.utils import gcp_connect_service
 from ScoutSuite.providers.azure.utils import azure_connect_service
 
 from opinel.utils.aws import build_region_list
-from core.console import printException, printInfo
+from ScoutSuite.core.console import printException, printInfo
 
 from ScoutSuite.output.console import FetchStatusLogger
 from ScoutSuite.utils import format_service_name

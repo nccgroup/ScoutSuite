@@ -8,7 +8,7 @@ except ImportError:
     # Python3
     from queue import Queue
 
-from core.console import printException
+from ScoutSuite.core.console import printException
 
 
 

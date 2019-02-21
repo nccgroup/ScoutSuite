@@ -5,7 +5,7 @@ from botocore.session import Session
 from collections import Counter
 import time
 
-from core.console import printInfo, printException
+from ScoutSuite.core.console import printInfo, printException
 
 
 

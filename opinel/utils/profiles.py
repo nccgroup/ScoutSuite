@@ -4,7 +4,7 @@ import os
 import re
 
 from opinel.utils.aws import get_aws_account_id
-from core.console import printDebug
+from ScoutSuite.core.console import printDebug
 from opinel.utils.credentials import read_creds
 
 aws_dir = os.path.join(os.path.expanduser('~'), '.aws')

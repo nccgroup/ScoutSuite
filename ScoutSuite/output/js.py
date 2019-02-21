@@ -6,7 +6,7 @@ import dateutil
 import json
 import os
 
-from core.console import printException, printInfo
+from ScoutSuite.core.console import printException, printInfo
 
 from ScoutSuite import DEFAULT_REPORT_DIR
 from ScoutSuite.output.utils import get_filename, prompt_4_overwrite

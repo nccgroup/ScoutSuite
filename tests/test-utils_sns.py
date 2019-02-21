@@ -1,5 +1,5 @@
 from ScoutSuite.utils_sns import *
-from core.console import configPrintException
+from ScoutSuite.core.console import configPrintException
 
 
 #

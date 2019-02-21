@@ -14,7 +14,7 @@ from google.api_core.exceptions import PermissionDenied
 from google.cloud import container_v1
 from googleapiclient.errors import HttpError
 
-from core.console import printException, printError
+from ScoutSuite.core.console import printException, printError
 
 from ScoutSuite.providers.base.configs.base import BaseConfig
 from ScoutSuite.providers.gcp.utils import gcp_connect_service

@@ -6,7 +6,7 @@ import json
 import os
 import yaml
 
-from core.console import printError, printException, prompt_4_overwrite
+from ScoutSuite.core.console import printError, printException, prompt_4_overwrite
 from opinel.utils.conditions import pass_condition
 
 

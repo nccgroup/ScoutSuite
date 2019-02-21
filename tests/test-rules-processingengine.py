@@ -4,7 +4,7 @@ import json
 import os
 import tempfile
 
-from core.console import configPrintException, printError
+from ScoutSuite.core.console import configPrintException, printError
 
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset

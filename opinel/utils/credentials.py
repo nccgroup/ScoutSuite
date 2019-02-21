@@ -11,8 +11,8 @@ import re
 import requests # TODO: get rid of that and make sure urllib2 validates certs ?
 import string
 
-from core.console import printException, printError, printInfo
-from core.console import prompt_4_mfa_code
+from ScoutSuite.core.console import printException, printError, printInfo
+from ScoutSuite.core.console import prompt_4_mfa_code
 from opinel.utils.fs import save_blob_as_json
 from opinel.utils.aws import connect_service
 
