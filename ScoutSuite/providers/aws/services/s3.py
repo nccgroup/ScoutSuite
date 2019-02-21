@@ -6,7 +6,6 @@ S3-related classes and functions
 import json
 
 from botocore.exceptions import ClientError
-from opinel.services.s3 import get_s3_bucket_location
 from opinel.utils.aws import handle_truncated_response
 from ScoutSuite.core.console import printError, printException, printInfo
 from opinel.utils.globals import manage_dictionary
@@ -407,3 +406,14 @@ def get_s3_list_region(region):
         return 'cn-north-1'
     else:
         return region
+
+
+def get_s3_bucket_location(s3_client, bucket_name):
+    """
+
+    :param s3_client:
+    :param bucket_name:
+    :return:
+    """
+    location = s3_client.get_bucket_location(Bucket=bucket_name)
+    return location['LocationConstraint'] if location['LocationConstraint'] else 'us-east-1'
