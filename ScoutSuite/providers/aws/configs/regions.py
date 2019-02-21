@@ -50,9 +50,8 @@ class RegionalServiceConfig(object):
 
         self.regions = {}
         self.thread_config = thread_configs[thread_config]
-        self.service = \
-            type(self).__name__.replace('Config', '').lower()  # TODO: use regex with EOS instead of plain replace
-
+        self.service = re.sub(r'Config$', "", type(self).__name__).lower()
+        
         # Booleans that define if threads should keep running
         self.run_q_threads = True
         self.run_qr_threads = True
