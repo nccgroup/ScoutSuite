@@ -10,7 +10,6 @@ from ScoutSuite.core.console import printError, printException, prompt_4_overwri
 from ScoutSuite.core.conditions import _pass_condition
 
 
-
 class CustomJSONEncoder(json.JSONEncoder):
     """
     JSON encoder class
@@ -104,7 +103,6 @@ def read_file(file_path, mode = 'rt'):
 
     :return:                            Contents of the file
     """
-    contents = ''
     with open(file_path, mode) as f:
         contents = f.read()
     return contents
