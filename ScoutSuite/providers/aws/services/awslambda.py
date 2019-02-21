@@ -21,7 +21,7 @@ class LambdaServiceConfig(RegionsConfig):
             self['regions'][region] = functions
 
 
-class LambdasConfig(Resources):
+class RegionalLambdas(Resources):
     async def fetch_all(self, region):
         # TODO: Should be injected
         facade = AWSFacade()
