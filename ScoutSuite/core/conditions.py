@@ -6,10 +6,64 @@ import json
 import netaddr
 import re
 
-from ScoutSuite.core.console import printError
-
 from iampoliciesgonewild import get_actions_from_statement, _expand_wildcard_action
 
+from ScoutSuite.core.console import printError, printException
+from ScoutSuite.core import condition_operators
+
+re_get_value_at = re.compile(r'_GET_VALUE_AT_\((.*?)\)')
+re_nested_get_value_at = re.compile(r'_GET_VALUE_AT_\(.*')
+
+
+def pass_conditions(all_info, current_path, conditions, unknown_as_pass_condition=False):
+    """
+    Check that all conditions are passed for the current path.
+
+    :param all_info:        All of the services' data
+    :param current_path:    The value of the `path` variable defined in the finding file
+    :param conditions:      The conditions to check as defined in the finding file
+    :param unknown_as_pass_condition:   Consider an undetermined condition as passed
+    :return:
+    """
+
+    # Imported here temporarly to fix cyclic dependency
+    from ScoutSuite.providers.base.configs.browser import get_value_at
+
+    if len(conditions) == 0:
+        return True
+    condition_operator = conditions.pop(0)
+    for condition in conditions:
+        if condition[0] in condition_operators:
+            res = pass_conditions(all_info, current_path, condition, unknown_as_pass_condition)
+        else:
+            # Conditions are formed as "path to value", "type of test", "value(s) for test"
+            path_to_value, test_name, test_values = condition
+            path_to_value = fix_path_string(all_info, current_path, path_to_value)
+            target_obj = get_value_at(all_info, current_path, path_to_value)
+            if type(test_values) != list:
+                dynamic_value = re_get_value_at.match(test_values)
+                if dynamic_value:
+                    test_values = get_value_at(all_info, current_path, dynamic_value.groups()[0], True)
+            try:
+                res = _pass_condition(target_obj, test_name, test_values)
+            except Exception as e:
+                res = True if unknown_as_pass_condition else False
+                printError('Unable to process testcase \'%s\' on value \'%s\', interpreted as %s.' % (
+                    test_name, str(target_obj), res))
+                printException(e, True)
+        # Quick exit and + false
+        if condition_operator == 'and' and not res:
+            return False
+        # Quick exit or + true
+        if condition_operator == 'or' and res:
+            return True
+    # Still here ?
+    # or -> false
+    # and -> true
+    if condition_operator == 'or':
+        return False
+    else:
+        return True
 
 
 def __prepare_age_test(a, b):
@@ -31,7 +85,7 @@ def __prepare_age_test(a, b):
     return age, number
 
 
-def pass_condition(b, test, a):
+def _pass_condition(b, test, a):
     """
     Generic test function used by Scout2 / AWS recipes
                                         .
@@ -51,7 +105,7 @@ def pass_condition(b, test, a):
         b = str(b)
         result = (a == b)
     elif test == 'notEqual':
-        result = (not pass_condition(b, 'equal', a))
+        result = (not _pass_condition(b, 'equal', a))
 
     # More/Less tests
     elif test == 'lessThan':
@@ -67,11 +121,11 @@ def pass_condition(b, test, a):
     elif test == 'empty':
         result = ((type(b) == dict and b == {}) or (type(b) == list and b == []) or (type(b) == list and b == [None]))
     elif test == 'notEmpty':
-        result = (not pass_condition(b, 'empty', 'a'))
+        result = (not _pass_condition(b, 'empty', 'a'))
     elif test == 'null':
-        result = ((b == None) or (type(b) == str and b == 'None'))
+        result = ((b is None) or (type(b) == str and b == 'None'))
     elif test == 'notNull':
-        result = (not pass_condition(b, 'null', a))
+        result = (not _pass_condition(b, 'null', a))
 
     # Boolean tests
     elif test == 'true':
@@ -97,9 +151,9 @@ def pass_condition(b, test, a):
     elif test == 'containAtLeastOneOf':
         result = False
         if not type(b) == list:
-            b = [ b ]
+            b = [b]
         if not type(a) == list:
-            a = [ a ]
+            a = [a]
         for c in b:
             if type(c):
                 c = str(c)
@@ -109,9 +163,9 @@ def pass_condition(b, test, a):
     elif test == 'containAtLeastOneDifferentFrom':
         result = False
         if not type(b) == list:
-            b = [ b ]
+            b = [b]
         if not type(a) == list:
-            a = [ a ]
+            a = [a]
         for c in b:
             if c != None and c != '' and c not in a:
                 result = True
@@ -119,9 +173,9 @@ def pass_condition(b, test, a):
     elif test == 'containNoneOf':
         result = True
         if not type(b) == list:
-            b = [ b ]
+            b = [b]
         if not type(a) == list:
-            a = [ a ]
+            a = [a]
         for c in b:
             if c in a:
                 result = False
@@ -130,14 +184,14 @@ def pass_condition(b, test, a):
     # Regex tests
     elif test == 'match':
         if type(a) != list:
-            a = [ a ]
+            a = [a]
         b = str(b)
         for c in a:
-            if re.match(c, b) != None:
+            if not re.match(c, b):
                 result = True
                 break
     elif test == 'notMatch':
-        result = (not pass_condition(b, 'match', a))
+        result = (not _pass_condition(b, 'match', a))
 
     # Date tests
     elif test == 'priorToDate':
@@ -156,14 +210,14 @@ def pass_condition(b, test, a):
         result = False
         grant = netaddr.IPNetwork(b)
         if type(a) != list:
-            a = [ a ]
+            a = [a]
         for c in a:
             known_subnet = netaddr.IPNetwork(c)
             if grant in known_subnet:
                 result = True
                 break
     elif test == 'notInSubnets':
-        result = (not pass_condition(b, 'inSubnets', a))
+        result = (not _pass_condition(b, 'inSubnets', a))
 
     # Policy statement tests
     elif test == 'containAction':
@@ -177,13 +231,13 @@ def pass_condition(b, test, a):
                 result = True
                 break
     elif test == 'notContainAction':
-        result = (not pass_condition(b, 'containAction', a))
+        result = (not _pass_condition(b, 'containAction', a))
     elif test == 'containAtLeastOneAction':
         result = False
         if type(b) != dict:
             b = json.loads(b)
         if type(a) != list:
-            a = [ a ]
+            a = [a]
         actions = get_actions_from_statement(b)
         for c in a:
             if c.lower() in actions:
@@ -214,3 +268,25 @@ def pass_condition(b, test, a):
         raise Exception
 
     return result
+
+
+def fix_path_string(all_info, current_path, path_to_value):
+    # handle nested _GET_VALUE_AT_...
+
+    # Imported here temporarly to fix cyclic dependency
+    from ScoutSuite.providers.base.configs.browser import get_value_at
+
+    while True:
+        dynamic_path = re_get_value_at.findall(path_to_value)
+        if len(dynamic_path) == 0:
+            break
+        for dp in dynamic_path:
+            tmp = dp
+            while True:
+                nested = re_nested_get_value_at.findall(tmp)
+                if len(nested) == 0:
+                    break
+                tmp = nested[0].replace('_GET_VALUE_AT_(', '', 1)
+            dv = get_value_at(all_info, current_path, tmp)
+            path_to_value = path_to_value.replace('_GET_VALUE_AT_(%s)' % tmp, dv)
+    return path_to_value
