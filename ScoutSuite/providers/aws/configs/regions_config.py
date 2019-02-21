@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from ScoutSuite.providers.base.configs.resource_config import ResourceConfig
+from ScoutSuite.providers.base.configs.resources import Resources
 from ScoutSuite.providers.aws.aws_facade import AwsFacade
 
 
-class RegionsConfig(ResourceConfig):
+class RegionsConfig(Resources):
 
     def __init__(self, service):
         self._service = service
