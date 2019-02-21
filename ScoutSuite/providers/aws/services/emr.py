@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.globals import manage_dictionary
+from ScoutSuite.utils import manage_dictionary
 
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig

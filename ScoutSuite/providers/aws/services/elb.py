@@ -2,12 +2,10 @@
 """
 ELB-related classes and functions
 """
-from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
-from ScoutSuite.utils import ec2_classic, get_keys
-
+from ScoutSuite.utils import ec2_classic, get_keys, manage_dictionary
 
 
 ########################################
