@@ -5,20 +5,19 @@ from ScoutSuite.providers.aws.aws_facade import AWSFacade
 from opinel.utils.aws import build_region_list
 
 
-class LambdaServiceConfig(RegionsConfig):
+class Lambdas(RegionsConfig):
     def __init__(self):
-        super(LambdaServiceConfig, self).__init__('lambda')
+        super(Lambdas, self).__init__('lambda')
 
-    async def fetch_all(self, regions=None, partition_name='aws'):
-        await super(LambdaServiceConfig, self).fetch_all(
+    # TODO: Remove the credentials parameter. We had to keep it for compatibility
+    async def fetch_all(self, credentials=None, regions=None, partition_name='aws'):
+        await super(Lambdas, self).fetch_all(
             chosen_regions=regions,
             partition_name=partition_name
         )
 
         for region in self['regions']:
             self['regions'][region] = await RegionalLambdas().fetch_all(region=region)
-            await functions.fetch_all(region=region)
-            self['regions'][region] = functions
 
 
 class RegionalLambdas(Resources):
