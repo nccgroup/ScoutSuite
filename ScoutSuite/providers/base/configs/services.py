@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from core.console import printError, printException, printDebug
+from ScoutSuite.core.console import printError, printException, printDebug
 from opinel.utils.aws import get_partition_name
 
 class BaseServicesConfig(object):

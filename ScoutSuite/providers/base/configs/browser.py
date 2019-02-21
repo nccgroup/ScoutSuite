@@ -2,7 +2,7 @@
 
 import copy
 
-from core.console import printError, printException
+from ScoutSuite.core.console import printError, printException
 
 
 ########################################

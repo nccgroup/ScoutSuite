@@ -7,7 +7,7 @@ import shutil
 import zipfile
 
 import dateutil.tz
-from core.console import printInfo, printException
+from ScoutSuite.core.console import printInfo, printException
 
 from ScoutSuite import AWSCONFIG, EXCEPTIONS, HTMLREPORT, AWSRULESET, AWSCONFIG_FILE, EXCEPTIONS_FILE, HTMLREPORT_FILE, \
     GENERATOR_FILE

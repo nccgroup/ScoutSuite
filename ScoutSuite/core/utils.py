@@ -8,7 +8,7 @@ import copy
 import re
 
 from opinel.utils.conditions import pass_condition
-from core.console import printError, printException
+from ScoutSuite.core.console import printError, printException
 
 from ScoutSuite.core import condition_operators
 from ScoutSuite.providers.base.configs.browser import get_value_at

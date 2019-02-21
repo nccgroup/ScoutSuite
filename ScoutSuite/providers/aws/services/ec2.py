@@ -8,7 +8,7 @@ import netaddr
 import base64
 
 from opinel.utils.aws import get_name
-from core.console import printException, printInfo
+from ScoutSuite.core.console import printException, printInfo
 from opinel.utils.fs import load_data
 from opinel.utils.globals import manage_dictionary
 

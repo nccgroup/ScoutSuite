@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from core.console import printError
+from ScoutSuite.core.console import printError
 
 from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 

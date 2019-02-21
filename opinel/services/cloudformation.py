@@ -5,7 +5,7 @@ import re
 import time
 
 from opinel.utils.aws import connect_service, handle_truncated_response
-from core.console import printDebug, printInfo, printError, printException
+from ScoutSuite.core.console import printDebug, printInfo, printError, printException
 from opinel.utils.fs import read_file
 from opinel.utils.globals import snake_to_camel
 

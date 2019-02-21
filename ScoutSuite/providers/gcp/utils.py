@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from core.console import printException
+from ScoutSuite.core.console import printException
 
 from google.cloud import storage
 from google.cloud import logging as stackdriver_logging

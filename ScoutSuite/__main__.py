@@ -6,7 +6,7 @@ import json
 import os
 import webbrowser
 
-from core.console import configPrintException, printInfo, printDebug
+from ScoutSuite.core.console import configPrintException, printInfo, printDebug
 from opinel.utils.profiles import AWSProfiles
 
 from ScoutSuite import AWSCONFIG

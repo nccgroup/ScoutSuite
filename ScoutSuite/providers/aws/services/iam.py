@@ -2,7 +2,7 @@
 
 from botocore.exceptions import ClientError
 from opinel.utils.aws import connect_service, handle_truncated_response
-from core.console import printError, printException
+from ScoutSuite.core.console import printError, printException
 from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite.providers.aws.configs.base import AWSBaseConfig

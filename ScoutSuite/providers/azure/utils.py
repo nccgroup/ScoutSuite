@@ -2,7 +2,7 @@
 
 import re
 
-from core.console import printException
+from ScoutSuite.core.console import printException
 
 from azure.mgmt.storage import StorageManagementClient
 from azure.mgmt.monitor import MonitorManagementClient

@@ -6,7 +6,7 @@ import os
 import re
 
 from opinel import __version__ as OPINEL_VERSION
-from core.console import printError
+from ScoutSuite.core.console import printError
 
 
 ########################################

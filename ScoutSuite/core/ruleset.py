@@ -4,7 +4,7 @@ import json
 import os
 import tempfile
 
-from core.console import printDebug, printError, prompt_4_yes_no
+from ScoutSuite.core.console import printDebug, printError, prompt_4_yes_no
 
 from ScoutSuite.core.rule import Rule
 from ScoutSuite.core.rule_definition import RuleDefinition

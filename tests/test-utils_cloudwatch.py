@@ -1,5 +1,5 @@
 from ScoutSuite.utils_cloudwatch import *
-from core.console import configPrintException
+from ScoutSuite.core.console import configPrintException
 
 
 #

@@ -3,7 +3,7 @@ from unittest import TestCase
 from mock import MagicMock, patch
 
 from ScoutSuite.__main__ import main
-from ScoutSuite.cli_parser import ScoutSuiteArgumentParser
+from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
 
 
 class TestMainClass(TestCase):

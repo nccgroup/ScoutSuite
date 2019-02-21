@@ -6,7 +6,7 @@ import json
 import netaddr
 import re
 
-from core.console import printError
+from ScoutSuite.core.console import printError
 
 from iampoliciesgonewild import get_actions_from_statement, _expand_wildcard_action
 

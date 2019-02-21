@@ -4,7 +4,7 @@
 import sys
 
 from ScoutSuite.__main__ import main as scout
-from ScoutSuite.cli_parser import ScoutSuiteArgumentParser
+from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
 
 if __name__ == "__main__":
     parser = ScoutSuiteArgumentParser()
