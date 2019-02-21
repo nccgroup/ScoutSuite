@@ -32,7 +32,7 @@ class BaseServicesConfig(object):
 
                     await service_config.fetch_all(**method_args)
                     if hasattr(service_config, 'finalize'):
-                        service_config.finalize()
+                        await service_config.finalize()
                 else:
                     printDebug('No method to fetch service %s.' % service)
             except Exception as e:
