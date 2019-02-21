@@ -33,14 +33,14 @@ class TestMainClass(TestCase):
     def tearDown(self):
         patch.stopall()
 
-    def test_empty(self):
+    async def test_empty(self):
         args = None
         code = None
 
         with patch("sys.stderr", return_value=MagicMock()):
             with self.assertRaises(SystemExit):
                 args = ScoutSuiteArgumentParser().parse_args(args)
-                code = main(args)
+                code = await main(args)
 
         assert (code is None)
 
