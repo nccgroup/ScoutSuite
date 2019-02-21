@@ -9,7 +9,7 @@ class LambdaServiceConfig(RegionsConfig):
     def __init__(self):
         super(LambdaServiceConfig, self).__init__('lambda')
 
-    async def fetch_all(self, credentials, regions=None, partition_name='aws', targets=None):
+    async def fetch_all(self, regions=None, partition_name='aws'):
         await super(LambdaServiceConfig, self).fetch_all(
             chosen_regions=regions,
             partition_name=partition_name
