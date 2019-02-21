@@ -21,7 +21,7 @@ class LambdasConfig(ResourceConfig):
             name, function = self.parse_function(raw_function)
             functions[name] = function
 
-        self.setdefault('functions_count', len(functions))        
+        self['functions_count'] = len(functions))        
         self.setdefault('functions', functions)
 
     @staticmethod
