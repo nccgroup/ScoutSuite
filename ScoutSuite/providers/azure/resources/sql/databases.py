@@ -2,68 +2,39 @@
 
 from azure.mgmt.sql import SqlManagementClient
 
-from ScoutSuite.providers.base.configs.resource_config import ResourceConfig
+from ScoutSuite.providers.base.configs.resources import Resources
 
-from .database_blob_auditing_policies import DatabaseBlobAuditingPoliciesConfig
-from .database_threat_detection_policies import DatabaseThreatDetectionPoliciesConfig
-from .replication_links import ReplicationLinksConfig
-from .transparent_data_encryptions import TransparentDataEncryptionsConfig
+from .database_blob_auditing_policies import DatabaseBlobAuditingPolicies
+from .database_threat_detection_policies import DatabaseThreatDetectionPolicies
+from .replication_links import ReplicationLinks
+from .transparent_data_encryptions import TransparentDataEncryptions
 
 
-class DatabasesConfig(ResourceConfig):
-    # the following static methods will be used to parse the config of each resource nested in a database config
-    # (defined in 'children' attribute below):
-    @staticmethod
-    def _parse_auditing_config(config):
-        return {
-            'auditing_enabled': config.value.state == "Enabled"
-        }
-
-    @staticmethod
-    def _parse_threat_detection_config(config):
-        return {
-            'threat_detection_enabled': config.value.state == "Enabled"
-        }
-
-    @staticmethod
-    def _parse_replication_links_config(config):
-        return {
-            'replication_configured': len(config.value) > 0
-        }
-
-    @staticmethod
-    def _parse_transparent_data_encryption_config(config):
-        return {
-            'transparent_data_encryption_enabled': config.value.status == "Enabled"
-        }
-
-    # register children resources:
+class Databases(Resources):
     children = [
-        (DatabaseBlobAuditingPoliciesConfig, _parse_auditing_config),
-        (DatabaseThreatDetectionPoliciesConfig, _parse_threat_detection_config),
-        (ReplicationLinksConfig, _parse_replication_links_config),
-        (TransparentDataEncryptionsConfig, _parse_transparent_data_encryption_config)
+        DatabaseBlobAuditingPolicies,
+        DatabaseThreatDetectionPolicies,
+        ReplicationLinks,
+        TransparentDataEncryptions,
     ]
 
     def __init__(self, resource_group_name, server_name):
         self.resource_group_name = resource_group_name
         self.server_name = server_name
 
-        self.databases = {}
-
-    async def fetch_all(self, credentials, regions=None, partition_name='aws', targets=None):
+    async def fetch_all(self, credentials):
         # sdk container:
         api = SqlManagementClient(credentials.credentials, credentials.subscription_id)
 
+        self['databases'] = {}
         # TODO: for db in await api.databases.list_by_server(self.resource_group_name, self.server_name):
         for db in api.databases.list_by_server(self.resource_group_name, self.server_name):
-            self.databases[db.name] = {
+            self['databases'][db.name] = {
                 'id': db.name,
             }
 
             # put the following code in a fetch_children() parent method (typical method for a composite node)?
-            for (resource_config, resource_parser) in self.children:
-                resource = resource_config(self.resource_group_name, self.server_name, db.name)
-                await resource.fetch_all(credentials)
-                for k, v in resource_parser.__func__(resource).items():
-                    self.databases[db.name][k] = v
+            for resources_class in self.simple_children:
+                resources = resources_class(self.resource_group_name, self.server_name, db.name)
+                await resources.fetch_all(credentials)
+                self['databases'][db.name].update(resources)
