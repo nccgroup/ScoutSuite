@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from ScoutSuite.providers.base.configs.resources import Resources
-from ScoutSuite.providers.aws.aws_facade import AwsFacade
+from ScoutSuite.providers.aws.aws_facade import AWSFacade
 
 
 class RegionsConfig(Resources):
@@ -10,7 +10,7 @@ class RegionsConfig(Resources):
 
     async def fetch_all(self, chosen_regions=None, partition_name='aws'):
         # TODO: Should be injected
-        facade = AwsFacade()
+        facade = AWSFacade()
 
         self['regions'] = {}
         for region in await facade.build_region_list(self._service, chosen_regions, partition_name):

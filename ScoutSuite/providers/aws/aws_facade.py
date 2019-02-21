@@ -3,7 +3,7 @@ from botocore.session import Session
 from collections import Counter
 
 # TODO: Handle authentication better. I don't even know how it currently works. I think connect_service is called somewhere.
-class AwsFacade(object):
+class AWSFacade(object):
     def get_lambda_functions(self, region):
         aws_lambda = boto3.client('lambda', region_name=region)
         

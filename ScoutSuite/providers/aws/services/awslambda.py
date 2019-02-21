@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from ScoutSuite.providers.base.configs.resources import Resources
 from ScoutSuite.providers.aws.configs.regions_config import RegionsConfig
-from ScoutSuite.providers.aws.aws_facade import AwsFacade
+from ScoutSuite.providers.aws.aws_facade import AWSFacade
 from opinel.utils.aws import build_region_list
 
 
@@ -24,7 +24,7 @@ class LambdaServiceConfig(RegionsConfig):
 class LambdasConfig(Resources):
     async def fetch_all(self, region):
         # TODO: Should be injected
-        facade = AwsFacade()
+        facade = AWSFacade()
 
         functions = {}
         for raw_function in facade.get_lambda_functions(region):
