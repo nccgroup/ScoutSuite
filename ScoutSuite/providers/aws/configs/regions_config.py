@@ -16,4 +16,4 @@ class RegionsConfig(ResourceConfig):
         for region in await facade.build_region_list(self._service, chosen_regions, partition_name):
             self['regions'][region] = {}
             
-        self.setdefault('regions_count', len(self['regions']))
+        self['regions_count'] = len(self['regions'])
