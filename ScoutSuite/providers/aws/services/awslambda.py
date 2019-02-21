@@ -4,15 +4,24 @@ from ScoutSuite.providers.aws.configs.regions_config import RegionsConfig
 from ScoutSuite.providers.aws.aws_facade import AwsFacade
 from opinel.utils.aws import build_region_list
 
-class LambdaServiceConfig(ResourceConfig):
+class LambdaServiceConfig(RegionsConfig):
+    def __init__(self):
+        super(LambdaServiceConfig, self).__init__('lambda')
+
     async def fetch_all(self, credentials, regions=None, partition_name='aws', targets=None):
-        regions = RegionsConfig('lambda', LambdasConfig)
-        await regions.fetch_all(credentials, regions, partition_name, None)
-        self.setdefault('regions_count', len(regions))
-        self.setdefault('regions', regions)
+        await super(LambdaServiceConfig, self).fetch_all(
+            chosen_regions=regions, 
+            partition_name=partition_name
+        )
+
+        for region in self['regions']:
+            functions = LambdasConfig()
+            await functions.fetch_all(region=region)
+            self['regions'][region] = functions
+        
 
 class LambdasConfig(ResourceConfig):
-    async def fetch_all(self, credentials, region, partition_name='aws', targets=None):
+    async def fetch_all(self, region):
         # TODO: Should be injected
         facade = AwsFacade()
         
