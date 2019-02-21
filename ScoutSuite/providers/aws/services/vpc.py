@@ -4,11 +4,10 @@ import netaddr
 import copy
 
 from opinel.utils.aws import get_name
-from opinel.utils.globals import manage_dictionary
 from opinel.utils.fs import load_data, read_ip_ranges
 
 from ScoutSuite.providers.base.configs.browser import get_value_at
-from ScoutSuite.utils import ec2_classic, get_keys
+from ScoutSuite.utils import ec2_classic, get_keys, manage_dictionary
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig as SingleVPCConfig
 

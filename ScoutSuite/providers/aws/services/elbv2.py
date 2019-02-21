@@ -4,11 +4,10 @@ ELBv2-related classes and functions
 """
 
 from opinel.utils.aws import handle_truncated_response
-from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
-from ScoutSuite.utils import ec2_classic
+from ScoutSuite.utils import ec2_classic, manage_dictionary
 
 
 ########################################

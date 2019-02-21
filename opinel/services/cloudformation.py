@@ -7,9 +7,9 @@ import time
 from opinel.utils.aws import connect_service, handle_truncated_response
 from ScoutSuite.core.console import printDebug, printInfo, printError, printException
 from opinel.utils.fs import read_file
-from opinel.utils.globals import snake_to_camel
 
 re_iam_capability = re.compile('.*?AWS::IAM.*?', re.DOTALL | re.MULTILINE)
+
 
 def create_cloudformation_resource_from_template(api_client, resource_type, name, template_path, template_parameters=[], tags=[], quiet=False, wait_for_completion = False, need_on_failure=False):
     """
@@ -22,7 +22,7 @@ def create_cloudformation_resource_from_template(api_client, resource_type, name
     :return:
     """
     create = getattr(api_client, 'create_%s' % resource_type)
-    api_resource_type = snake_to_camel(resource_type)
+    api_resource_type = _snake_to_camel(resource_type)
     # Add a timestamps
     tags.append({'Key': 'OpinelTimestamp', 'Value': str(time.time())})
     params = prepare_cloudformation_params(name, template_path, template_parameters, api_resource_type, tags)
@@ -274,7 +274,7 @@ def update_cloudformation_resource_from_template(api_client, resource_type, name
     """
     try:
         update = getattr(api_client, 'update_%s' % resource_type)
-        api_resource_type = snake_to_camel(resource_type)
+        api_resource_type = _snake_to_camel(resource_type)
         # Add a timestamps
         tags.append({'Key': 'OpinelTimestamp', 'Value': str(time.time())})
         params = prepare_cloudformation_params(name, template_path, template_parameters, api_resource_type, tags)
@@ -371,3 +371,7 @@ def cloudformation_wait(api_client, resource_type, resource_name, operation_id =
         printInfo('Status: %s... waiting %d seconds until next check...' % (status, increment))
         timer += increment
         time.sleep(increment)
+
+
+def _snake_to_camel(snake):
+    return "".join(val.title() for val in snake.split('_'))

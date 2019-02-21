@@ -14,12 +14,11 @@ except ImportError:
 
 from opinel.utils.aws import build_region_list, connect_service, get_aws_account_id, get_name, handle_truncated_response
 from ScoutSuite.core.console import printException, printInfo
-from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite.providers.base.configs import resource_id_map
 from ScoutSuite.providers.base.configs.threads import thread_configs
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
-from ScoutSuite.utils import format_service_name, is_throttled
+from ScoutSuite.utils import format_service_name, is_throttled, manage_dictionary
 from ScoutSuite.providers.aws.configs.base import BaseConfig
 from ScoutSuite.output.console import FetchStatusLogger
 
