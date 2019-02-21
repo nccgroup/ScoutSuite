@@ -9,7 +9,6 @@ class AwsFacade(object):
         
         functions = []
         
-        marker = None
         while True:
             response = aws_lambda.list_functions()
 
