@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 
-import json
 import os
 import re
 import time
 
 from opinel.utils.aws import connect_service, handle_truncated_response
-from opinel.utils.console import printDebug, printInfo, printError, printException, prompt_4_yes_no
+from core.console import printDebug, printInfo, printError, printException
 from opinel.utils.fs import read_file
-from opinel.utils.globals import snake_to_camel, snake_to_words
+from opinel.utils.globals import snake_to_camel
 
 re_iam_capability = re.compile('.*?AWS::IAM.*?', re.DOTALL | re.MULTILINE)
 

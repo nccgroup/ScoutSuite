@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from opinel.utils.aws import handle_truncated_response
-from opinel.utils.console import printDebug, printInfo
+from core.console import printDebug, printInfo
 
 
 def get_organization_account_ids(api_client, exceptions = [], quiet = True):

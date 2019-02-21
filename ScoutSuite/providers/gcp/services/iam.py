@@ -2,10 +2,9 @@
 
 from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
-from opinel.utils.console import printError, printException, printInfo
+from core.console import printError
 
 from googleapiclient import discovery
-from ScoutSuite.providers.gcp.utils import gcp_connect_service
 
 
 class IAMConfig(GCPBaseConfig):

@@ -1,5 +1,5 @@
 from ScoutSuite.utils_sns import *
-from opinel.utils.console import configPrintException
+from core.console import configPrintException
 
 
 #

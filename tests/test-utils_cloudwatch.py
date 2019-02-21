@@ -1,5 +1,5 @@
 from ScoutSuite.utils_cloudwatch import *
-from opinel.utils.console import configPrintException
+from core.console import configPrintException
 
 
 #

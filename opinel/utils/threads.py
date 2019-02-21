@@ -8,7 +8,7 @@ except ImportError:
     # Python3
     from queue import Queue
 
-from opinel.utils.console import printException
+from core.console import printException
 
 
 

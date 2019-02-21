@@ -5,7 +5,7 @@ from botocore.session import Session
 from collections import Counter
 import time
 
-from opinel.utils.console import printInfo, printException
+from core.console import printInfo, printException
 
 
 

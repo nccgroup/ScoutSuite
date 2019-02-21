@@ -2,7 +2,7 @@
 
 from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
-from opinel.utils.console import printError, printException, printInfo
+from core.console import printException
 
 
 class CloudResourceManager(GCPBaseConfig):

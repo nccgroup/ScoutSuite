@@ -7,10 +7,10 @@ import shutil
 import zipfile
 
 import dateutil.tz
-from opinel.utils.console import printInfo, printException
+from core.console import printInfo, printException
 
 from ScoutSuite import AWSCONFIG, EXCEPTIONS, HTMLREPORT, AWSRULESET, AWSCONFIG_FILE, EXCEPTIONS_FILE, HTMLREPORT_FILE, \
-    GENERATOR_FILE, REPORT_TITLE
+    GENERATOR_FILE
 from ScoutSuite.output.js import JavaScriptReaderWriter
 from ScoutSuite.output.utils import get_filename, prompt_4_overwrite
 

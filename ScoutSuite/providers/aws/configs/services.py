@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.console import printError, printException, printInfo, printDebug
-
 from ScoutSuite.providers.aws.services.awslambda import LambdaConfig
 from ScoutSuite.providers.aws.services.cloudformation import CloudFormationConfig
 from ScoutSuite.providers.aws.services.cloudtrail import CloudTrailConfig
@@ -23,7 +21,6 @@ from ScoutSuite.providers.aws.services.sns import SNSConfig
 from ScoutSuite.providers.aws.services.sqs import SQSConfig
 from ScoutSuite.providers.aws.services.vpc import VPCConfig
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
-from ScoutSuite.utils import format_service_name
 
 try:
     from ScoutSuite.providers.aws.services.config_private import ConfigConfig

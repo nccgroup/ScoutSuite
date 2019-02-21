@@ -2,7 +2,7 @@
 
 import copy
 
-from opinel.utils.console import printError, printException
+from core.console import printError, printException
 
 
 ########################################

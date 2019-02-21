@@ -4,7 +4,7 @@ import json
 import os
 import tempfile
 
-from opinel.utils.console import configPrintException, printError
+from core.console import configPrintException, printError
 
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset

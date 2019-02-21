@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.console import printException
+from core.console import printException
 
 from google.cloud import storage
 from google.cloud import logging as stackdriver_logging

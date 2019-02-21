@@ -8,7 +8,7 @@ import json
 from botocore.exceptions import ClientError
 from opinel.services.s3 import get_s3_bucket_location
 from opinel.utils.aws import handle_truncated_response
-from opinel.utils.console import printError, printException, printInfo
+from core.console import printError, printException, printInfo
 from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite.providers.aws.configs.base import AWSBaseConfig

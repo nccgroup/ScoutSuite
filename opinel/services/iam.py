@@ -4,7 +4,7 @@ import re
 
 from opinel.utils.aws import handle_truncated_response
 from opinel.utils.credentials import generate_password
-from opinel.utils.console import printInfo, printError, printException
+from core.console import printInfo, printError, printException
 
 
 

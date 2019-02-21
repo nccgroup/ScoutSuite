@@ -5,7 +5,7 @@ import json
 
 from getpass import getpass
 
-from opinel.utils.console import printError, printException
+from core.console import printError, printException
 
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.azure.configs.services import AzureServicesConfig

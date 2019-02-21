@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import fileinput
 import os
 import re
 
 from opinel.utils.aws import get_aws_account_id
-from opinel.utils.console import printDebug
+from core.console import printDebug
 from opinel.utils.credentials import read_creds
 
 aws_dir = os.path.join(os.path.expanduser('~'), '.aws')
