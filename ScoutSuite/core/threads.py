@@ -1,18 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from threading import Thread
-try:
-    # Python2
-    from Queue import Queue
-except ImportError:
-    # Python3
-    from queue import Queue
+from six.moves.queue import Queue
 
 from ScoutSuite.core.console import printException
 
 
-
-def thread_work(targets, function, params = {}, num_threads = 0):
+def thread_work(targets, function, params={}, num_threads=0):
     """
     Generic multithreading helper
 
