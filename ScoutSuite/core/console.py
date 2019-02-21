@@ -5,10 +5,7 @@ import re
 import sys
 import traceback
 
-try:
-    input = raw_input
-except NameError:
-    pass
+from six.moves import input
 
 ########################################
 # Globals
