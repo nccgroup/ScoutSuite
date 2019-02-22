@@ -18,8 +18,7 @@ class EC2(Regions):
         await super(EC2, self).fetch_all(chosen_regions=regions, partition_name=partition_name)
 
         for region in self['regions']:
-            vpcs= await Vpcs().fetch_all(region)
-            self['regions'][region]['vpcs'] = vpcs
+            self['regions'][region]['vpcs'] = await Vpcs().fetch_all(region)
             self['regions'][region]['instances_count'] = sum([vpc['instances'].count for vpc in self['regions'][region]['vpcs'].values()])
             self['regions'][region]['images'] = await AmazonMachineImages(get_aws_account_id(credentials)).fetch_all(region)
             self['regions'][region]['images_count'] = self['regions'][region]['images'].count
