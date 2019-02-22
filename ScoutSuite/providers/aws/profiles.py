@@ -13,9 +13,10 @@ aws_config_file = os.path.join(aws_dir, 'config')
 
 re_profile_name = re.compile(r'(\[(profile\s+)?(.*?)\])')
 
+
 class AWSProfile(object):
 
-    def __init__(self, filename = None, raw_profile = None, name = None, credentials = None, account_id = None):
+    def __init__(self, filename=None, raw_profile=None, name=None, credentials=None, account_id=None):
         self.filename = filename
         self.raw_profile = raw_profile
         self.name = name
@@ -23,7 +24,6 @@ class AWSProfile(object):
         self.attributes = {}
         if self.raw_profile:
             self.parse_raw_profile()
-
 
     def get_credentials(self):
         # For now, use the existing code...
@@ -34,10 +34,8 @@ class AWSProfile(object):
             pass
         return self.credentials
 
-
     def set_attribute(self, attribute, value):
         self.attributes[attribute] = value
-
 
     def parse_raw_profile(self):
         for line in self.raw_profile.split('\n')[1:]:
@@ -48,9 +46,8 @@ class AWSProfile(object):
                 value = ''.join(values[1:]).strip()
                 self.attributes[attribute] = value
 
-
     def write(self):
-        tmp = AWSProfiles.get(self.name, quiet = True)
+        tmp = AWSProfiles.get(self.name, quiet=True)
         if not self.raw_profile:
             self.raw_profile = tmp[0].raw_profile if len(tmp) else None
         if not self.filename:
@@ -84,11 +81,10 @@ class AWSProfile(object):
                 f.write(contents)
 
 
-
 class AWSProfiles(object):
 
     @staticmethod
-    def list(names = []):
+    def list(names=[]):
         """
         @brief
 
@@ -96,9 +92,8 @@ class AWSProfiles(object):
         """
         return [p.name for p in AWSProfiles.get(names)]
 
-
     @staticmethod
-    def get(names = [], quiet = False):
+    def get(names=[], quiet=False):
         """
         """
         profiles = []
@@ -106,12 +101,11 @@ class AWSProfiles(object):
         profiles += AWSProfiles.find_profiles_in_file(aws_config_file, names, quiet)
         return profiles
 
-
     @staticmethod
-    def find_profiles_in_file(filename, names = [], quiet = True):
+    def find_profiles_in_file(filename, names=[], quiet=True):
         profiles = []
         if type(names) != list:
-            names = [ names ]
+            names = [names]
         if not quiet:
             printDebug('Searching for profiles matching %s in %s ... ' % (str(names), filename))
         name_filters = []
@@ -130,11 +124,10 @@ class AWSProfiles(object):
                             matching_profile = True
                             i1 = aws_credentials.index(profile[0])
                             if i < profile_count:
-                                i2 = aws_credentials.index(existing_profiles[i+1][0])
+                                i2 = aws_credentials.index(existing_profiles[i + 1][0])
                                 raw_profile = aws_credentials[i1:i2]
                             else:
                                 raw_profile = aws_credentials[i1:]
                     if len(name_filters) == 0 or matching_profile:
-                        profiles.append(AWSProfile(filename = filename, raw_profile = raw_profile, name = profile[2]))
+                        profiles.append(AWSProfile(filename=filename, raw_profile=raw_profile, name=profile[2]))
         return profiles
-
