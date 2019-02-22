@@ -12,7 +12,8 @@ try:
 except ImportError:
     from queue import Queue
 
-from ScoutSuite.providers.aws.aws import build_region_list, connect_service, get_aws_account_id, get_name, handle_truncated_response
+from ScoutSuite.providers.aws.aws import build_region_list, connect_service, get_aws_account_id, get_name, \
+    handle_truncated_response
 from ScoutSuite.core.console import printException, printInfo
 
 from ScoutSuite.providers.base.configs import resource_id_map
@@ -72,7 +73,7 @@ class RegionalServiceConfig(object):
                     continue
                 params = resource_metadata['params'] if 'params' in resource_metadata else {}
                 ignore_exceptions = True if 'no_exceptions' in resource_metadata and \
-                                            resource_metadata['no_exceptions'] == True else False
+                                            resource_metadata['no_exceptions'] else False
                 if not only_first_region:
                     self.targets['other_regions'] += ((resource,
                                                        resource_metadata['response'],
@@ -91,14 +92,13 @@ class RegionalServiceConfig(object):
 
         :param region:                  Name of the region
         """
-        self.regions[region] = self.region_config_class(region_name = region, resource_types = self.resource_types)
+        self.regions[region] = self.region_config_class(region_name=region, resource_types=self.resource_types)
 
-    def fetch_all(self, credentials, regions = None, partition_name = 'aws', targets = None):
+    def fetch_all(self, credentials, regions=None, partition_name='aws', targets=None):
         """
         Fetch all the configuration supported by Scout2 for a given service
 
         :param credentials:             F
-        :param service:                 Name of the service
         :param regions:                 Name of regions to fetch data from
         :param partition_name:          AWS partition to connect to
         :param targets:                 Type of resources to be fetched; defaults to all.
@@ -125,7 +125,8 @@ class RegionalServiceConfig(object):
         api_service = 'ec2' if self.service.lower() == 'vpc' else self.service.lower()
 
         # Init regions
-        regions = build_region_list(api_service, regions, partition_name) # TODO: move this code within this class
+        # TODO: move this code within this class
+        regions = build_region_list(api_service, regions, partition_name)
         self.fetchstatuslogger.counts['regions']['discovered'] = len(regions)
 
         # Threading to fetch & parse resources (queue consumer)
@@ -156,7 +157,8 @@ class RegionalServiceConfig(object):
         for j in range(self.thread_config['list']):
             qr.put(None)
 
-    def _init_threading(self, function, params=None, num_threads=10):
+    @staticmethod
+    def _init_threading(function, params=None, num_threads=10):
         """
         Initialize queue and threads
 
@@ -166,7 +168,8 @@ class RegionalServiceConfig(object):
         :return:
         """
         params = {} if params is None else params
-        q = Queue(maxsize=0) # TODO: find something appropriate
+        # TODO: find something appropriate
+        q = Queue(maxsize=0)
         for i in range(num_threads):
             worker = Thread(target=function, args=(q, params))
             worker.setDaemon(True)
@@ -181,10 +184,10 @@ class RegionalServiceConfig(object):
                     region, targets = q.get() or (None, None)
                     if region:
                         self.init_region_config(region)
-                        api_client = connect_service(params['api_service'], params['credentials'], region, silent = True)
+                        api_client = connect_service(params['api_service'], params['credentials'], region, silent=True)
                         api_clients[region] = api_client
                         # TODO : something here for single_region stuff
-                        self.regions[region].fetch_all(api_client, self.fetchstatuslogger, params['q'], targets)  # params['targets'])
+                        self.regions[region].fetch_all(api_client, self.fetchstatuslogger, params['q'], targets)
                         self.fetchstatuslogger.counts['regions']['fetched'] += 1
                 except Exception as e:
                     printException(e)
@@ -247,12 +250,14 @@ class RegionalServiceConfig(object):
 ########################################
 
 
+# noinspection PyBroadException
 class RegionConfig(BaseConfig):
     """
     Base class for ...
     """
 
-    def __init__(self, region_name, resource_types=None):
+    def __init__(self, region_name, resource_types=None, **kwargs):
+        super().__init__(**kwargs)
         resource_types = {} if resource_types is None else resource_types
         self.region = region_name
         self.name = region_name
@@ -265,7 +270,7 @@ class RegionConfig(BaseConfig):
             self.vpc_resource_types = resource_types['vpc']
 
     def fetch_all(self, api_client, fetchstatuslogger, q, targets):
-        '''
+        """
         Make all API calls as defined in metadata.json
 
         :param api_client:
@@ -273,9 +278,9 @@ class RegionConfig(BaseConfig):
         :param q:
         :param targets:
         :return:
-        '''
+        """
         self.fetchstatuslogger = fetchstatuslogger
-        if targets != None:
+        if targets is not None:
             # Ensure targets is a tuple
             if type(targets) != list and type(targets) != tuple:
                 targets = tuple(targets,)
@@ -285,7 +290,7 @@ class RegionConfig(BaseConfig):
             self._fetch_targets(api_client, q, target)
 
     def _fetch_targets(self, api_client, q, target):
-        '''
+        """
         Make an API call defined in metadata.json.
         Parse the returned object as implemented in the "parse_[object name]" method.
 
@@ -293,7 +298,7 @@ class RegionConfig(BaseConfig):
         :param q:
         :param target:
         :return:
-        '''
+        """
         # Handle & format the target type
         target_type, response_attribute, list_method_name, list_params, ignore_list_error = target
         list_method = getattr(api_client, list_method_name)
@@ -318,7 +323,7 @@ class RegionConfig(BaseConfig):
                 # Add to the queue
                 q.put((callback, region, target))
 
-    def store_target(self, global_params, region, target):
+    def store_target(self, target):
         target_type = target.pop('scout2_target_type')
         if 'VpcId' in target:
             vpc_id = target.pop('VpcId')
@@ -330,4 +335,3 @@ class RegionConfig(BaseConfig):
         target_id = target[resource_id_map[target_type]]
         get_name(target, target, resource_id_map[target_type])
         target_dict[target_id] = target
-
