@@ -4,7 +4,7 @@ from ScoutSuite.providers.aws.facade import AWSFacade
 import abc
 
 
-class RegionsConfig(Resources):
+class Regions(Resources):
     def __init__(self, service):
         self._service = service
 
@@ -20,17 +20,12 @@ class RegionsConfig(Resources):
 
 
 class ScopedResources(Resources):
-    def __init__(self, key):
-        self.key = key
-
     async def fetch_all(self, scope):
-        resources = {}
         for raw_resource in await self.get_resources_in_scope(scope):
             name, ressource = self.parse_resource(raw_resource)
-            resources[name] = ressource
+            self[name] = ressource
 
-        self[self.key + '_count'] = len(resources)
-        self[self.key] = resources
+        self.count = len(self)
         return self
 
     @abc.abstractclassmethod

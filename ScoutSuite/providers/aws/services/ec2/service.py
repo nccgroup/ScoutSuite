@@ -1,90 +1,31 @@
 from ScoutSuite.providers.base.configs.resources import Resources
-from ScoutSuite.providers.aws.configs.regions_config import RegionsConfig, ScopedResources
+from ScoutSuite.providers.aws.configs.regions_config import Regions, ScopedResources
 from ScoutSuite.providers.aws.facade import AWSFacade
+from ScoutSuite.providers.aws.services.ec2.ami import AmazonMachineImages
+from ScoutSuite.providers.aws.services.ec2.vpcs import Vpcs
 
-from opinel.utils.aws import get_name, get_aws_account_id
+from opinel.utils.aws import get_aws_account_id
 from ScoutSuite.utils import get_keys, ec2_classic
 
-class EC2(RegionsConfig):
+
+# TODO: Add docstrings
+
+class EC2(Regions):
     def __init__(self):
         super(EC2, self).__init__('ec2')
 
-    # TODO: Remove the credentials parameter. We had to keep it for compatibility
     async def fetch_all(self, credentials=None, regions=None, partition_name='aws'):
         await super(EC2, self).fetch_all(chosen_regions=regions, partition_name=partition_name)
 
         for region in self['regions']:
-            self['regions'][region] = await Vpcs().fetch_all(region)
-            self['regions'][region].update(await EC2Images(get_aws_account_id(credentials)).fetch_all(region))
+            vpcs= await Vpcs().fetch_all(region)
+            self['regions'][region]['vpcs'] = vpcs
+            self['regions'][region]['instances_count'] = sum([vpc['instances'].count for vpc in self['regions'][region]['vpcs'].values()])
+            self['regions'][region]['images'] = await AmazonMachineImages(get_aws_account_id(credentials)).fetch_all(region)
+            self['regions'][region]['images_count'] = self['regions'][region]['images'].count
 
 
-class Vpcs(ScopedResources):
-    def __init__(self):
-        self.facade = AWSFacade()
-        super(Vpcs, self).__init__('vpcs')
 
-    async def fetch_all(self, region):
-        await super(Vpcs, self).fetch_all(region)
-
-        for vpc in self['vpcs']:
-            # TODO: Add vpc_resource_types
-            instances = await EC2Instances(region).fetch_all(vpc)
-            self['vpcs'][vpc].update(instances)
-
-        self['instances_count'] = sum([vpc['instances_count'] for vpc in self['vpcs'].values()])
-
-        return self
-
-    def parse_resource(self, vpc):
-        return vpc['VpcId'], vpc
-
-    async def get_resources_in_scope(self, region):
-        return self.facade.get_vpcs(region)
-
-
-class EC2Instances(ScopedResources):
-    def __init__(self, region):
-        self.region = region
-        self.facade = AWSFacade()
-        super(EC2Instances, self).__init__('instances')
-
-    def parse_resource(self, raw_instance):
-        instance = {}
-        id = raw_instance['InstanceId']
-        instance['id'] = id
-        instance['monitoring_enabled'] = raw_instance['Monitoring']['State'] == 'enabled'
-        instance['user_data'] = self.facade.get_ec2_instance_user_data(
-            self.region, id)
-
-        # TODO: Those methods are slightly sketchy in my opinion (get methods which set stuff in a dictionary, say what)
-        get_name(raw_instance, instance, 'InstanceId')
-        get_keys(raw_instance, instance, ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile', 'SubnetId'])
-
-        instance['network_interfaces'] = {}
-        for eni in raw_instance['NetworkInterfaces']:
-            nic = {}
-            get_keys(eni, nic, ['Association', 'Groups', 'PrivateIpAddresses', 'SubnetId', 'Ipv6Addresses'])
-            instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
-
-        return id, instance
-
-    async def get_resources_in_scope(self, vpcs): 
-        return self.facade.get_ec2_instances(self.region, vpcs)
-
-class EC2Images(ScopedResources):
-    def __init__(self, owner_id):
-        self.owner_id = owner_id
-        self.facade = AWSFacade()
-        super(EC2Images, self).__init__('images')
-    
-    async def get_resources_in_scope(self, region): 
-        return self.facade.get_ec2_images(region, self.owner_id)
-
-    def parse_resource(self, raw_image):
-        raw_image['id'] = raw_image['ImageId']
-        raw_image['name'] = raw_image['Name']
-
-        return raw_image['id'], raw_image
 
 # # -*- coding: utf-8 -*-
 # """
@@ -123,50 +64,6 @@ class EC2Images(ScopedResources):
 #     """
 #     EC2 configuration for a single AWS region
 #     """
-
-#     def parse_elastic_ip(self, global_params, region, eip):
-#         """
-
-#         :param global_params:
-#         :param region:
-#         :param eip:
-#         :return:
-#         """
-#         self.elastic_ips[eip['PublicIp']] = eip
-
-#     def parse_instance(self, global_params, region, reservation):
-#         """
-#         Parse a single EC2 instance
-
-#         :param global_params:           Parameters shared for all regions
-#         :param region:                  Name of the AWS region
-#         :param instance:                Cluster
-#         """
-#         for i in reservation['Instances']:
-#             instance = {}
-#             vpc_id = i['VpcId'] if 'VpcId' in i and i['VpcId'] else ec2_classic
-#             manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
-#             instance['reservation_id'] = reservation['ReservationId']
-#             instance['id'] = i['InstanceId']
-#             instance['monitoring_enabled'] = i['Monitoring']['State'] == 'enabled'
-#             instance['user_data'] = self._get_user_data(region, instance['id'])
-#             get_name(i, instance, 'InstanceId')
-#             get_keys(i, instance, ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile', 'SubnetId'])
-#             # Network interfaces & security groups
-#             manage_dictionary(instance, 'network_interfaces', {})
-#             for eni in i['NetworkInterfaces']:
-#                 nic = {}
-#                 get_keys(eni, nic, ['Association', 'Groups', 'PrivateIpAddresses', 'SubnetId', 'Ipv6Addresses'])
-#                 instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
-#             self.vpcs[vpc_id].instances[i['InstanceId']] = instance
-
-#     def _get_user_data(self, region, instance_id):
-#         user_data_response = api_clients[region].describe_instance_attribute(Attribute='userData', InstanceId=instance_id)
-
-#         if 'Value' not in user_data_response['UserData'].keys():
-#             return None
-
-#         return base64.b64decode(user_data_response['UserData']['Value']).decode('utf-8')
 
 #     def parse_security_group(self, global_params, region, group):
 #         """

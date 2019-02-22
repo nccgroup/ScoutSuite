@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from ScoutSuite.providers.base.configs.resources import Resources
-from ScoutSuite.providers.aws.configs.regions_config import RegionsConfig
+from ScoutSuite.providers.aws.configs.regions_config import Regions
 from ScoutSuite.providers.aws.facade import AWSFacade
 from opinel.utils.aws import build_region_list
 
 
-class Lambdas(RegionsConfig):
+class Lambdas(Regions):
     def __init__(self):
         super(Lambdas, self).__init__('lambda')
 
