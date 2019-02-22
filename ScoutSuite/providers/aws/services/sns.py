@@ -36,7 +36,6 @@ class SNSRegionConfig(RegionConfig):
             topic['subscriptions']['protocol'][protocol].append(subscription)
             topic['subscriptions_count'] += 1
 
-
     def parse_topic(self, params, region, topic):
         """
         Parse a single topic and fetch additional attributes
@@ -59,7 +58,6 @@ class SNSRegionConfig(RegionConfig):
         self.topics[topic['name']] = topic
 
 
-
 ########################################
 # SNSConfig
 ########################################
@@ -71,5 +69,5 @@ class SNSConfig(RegionalServiceConfig):
 
     region_config_class = SNSRegionConfig
 
-    def __init__(self, service_metadata, thread_config = 4):
+    def __init__(self, service_metadata, thread_config=4):
         super(SNSConfig, self).__init__(service_metadata, thread_config)
