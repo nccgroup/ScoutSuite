@@ -136,7 +136,8 @@ class AWSProvider(BaseProvider):
                 target.append(sg_id)
             ec2_grant['GroupName'] = get_value_at(self.services['ec2'], target, 'name')
 
-    def _process_cloudtrail_trails(self, cloudtrail_config):
+    @staticmethod
+    def _process_cloudtrail_trails(cloudtrail_config):
         printInfo('Processing CloudTrail config...')
         global_events_logging = []
         data_logging_trails_count = 0
@@ -164,7 +165,8 @@ class AWSProvider(BaseProvider):
         self._process_network_acls_check_for_aws_default(current_config, 'ingress')
         self._process_network_acls_check_for_aws_default(current_config, 'egress')
 
-    def _process_network_acls_check_for_allow_all(self, network_acl, direction):
+    @staticmethod
+    def _process_network_acls_check_for_allow_all(network_acl, direction):
         network_acl['allow_all_%s_traffic' % direction] = 0
         for rule_number in network_acl['rules'][direction]:
             rule = network_acl['rules'][direction][rule_number]
@@ -176,7 +178,8 @@ class AWSProvider(BaseProvider):
                 network_acl['allow_all_%s_traffic' % direction] = rule_number
                 break
 
-    def _process_network_acls_check_for_aws_default(self, network_acl, direction):
+    @staticmethod
+    def _process_network_acls_check_for_aws_default(network_acl, direction):
         if len(network_acl['rules'][direction]) == 2 and int(
                 network_acl['allow_all_%s_traffic' % direction]) > 0 and '100' in network_acl['rules'][direction]:
             # Assume it is AWS' default rules because there are 2 rules (100 and 65535) and the first rule allows all
@@ -219,7 +222,8 @@ class AWSProvider(BaseProvider):
                            {'map': subnet_map})
         self.subnet_map = subnet_map
 
-    def map_resource(self, current_config, path, current_path, resource_id, callback_args):
+    @staticmethod
+    def map_resource(current_config, path, current_path, resource_id, callback_args):
         if resource_id not in callback_args['map']:
             callback_args['map'][resource_id] = {'region': current_path[3]}
             if len(current_path) > 5:
@@ -303,7 +307,7 @@ class AWSProvider(BaseProvider):
             bucket = s3_info['buckets'][bucket_name]
             manage_dictionary(bucket, iam_entity, {})
             manage_dictionary(bucket, iam_entity + '_count', 0)
-            if not allowed_iam_entity in bucket[iam_entity]:
+            if allowed_iam_entity not in bucket[iam_entity]:
                 bucket[iam_entity][allowed_iam_entity] = {}
                 bucket[iam_entity + '_count'] = bucket[iam_entity + '_count'] + 1
 
@@ -537,7 +541,8 @@ class AWSProvider(BaseProvider):
         # if 'elbv2' in self.config['services']:
         # Do something too here...
 
-    def parse_elb_policies_callback(self, current_config, path, current_path, region_id, callback_args):
+    @staticmethod
+    def parse_elb_policies_callback(current_config, path, current_path, region_id, callback_args):
         region_config = get_object_at(['services', 'elb', ] + current_path + [region_id])
         region_config['elb_policies'] = current_config['elb_policies']
         for policy_id in region_config['elb_policies']:
