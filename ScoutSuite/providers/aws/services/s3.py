@@ -272,6 +272,7 @@ def get_s3_bucket_versioning(api_client, bucket_name, bucket_info):
         bucket_info['version_mfa_delete_enabled'] = None
         return False
 
+
 def _status_to_bool(value):
     """ Converts a string to True if it is equal to 'Enabled' or to False otherwise. """
     return value == 'Enabled'

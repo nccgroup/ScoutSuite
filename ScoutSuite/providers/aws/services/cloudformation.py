@@ -5,7 +5,6 @@ import json
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 
 
-
 ########################################
 # CloudFormationRegionConfig
 ########################################
@@ -25,7 +24,7 @@ class CloudFormationRegionConfig(RegionConfig):
         """
         stack['id'] = stack.pop('StackId')
         stack['name'] = stack.pop('StackName')
-        
+
         stack_description = api_clients[region].describe_stacks(StackName=stack['name'])
         stack['termination_protection'] = stack_description['Stacks'][0]['EnableTerminationProtection']
 
@@ -33,7 +32,6 @@ class CloudFormationRegionConfig(RegionConfig):
         if 'StackPolicyBody' in stack_policy:
             stack['policy'] = json.loads(stack_policy['StackPolicyBody'])
         self.stacks[stack['name']] = stack
-
 
 
 ########################################
@@ -47,5 +45,5 @@ class CloudFormationConfig(RegionalServiceConfig):
 
     region_config_class = CloudFormationRegionConfig
 
-    def __init__(self, service_metadata, thread_config = 4):
+    def __init__(self, service_metadata, thread_config=4):
         super(CloudFormationConfig, self).__init__(service_metadata, thread_config)

@@ -20,7 +20,8 @@ class AWSProvider(BaseProvider):
     Implements provider for AWS
     """
 
-    def __init__(self, profile=None, report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
+    def __init__(self, profile=None, report_dir=None, timestamp=None, services=None, skipped_services=None,
+                 thread_config=4, **kwargs):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
@@ -112,11 +113,13 @@ class AWSProvider(BaseProvider):
     def _add_last_snapshot_date_to_ec2_volumes(self):
         for region in self.services['ec2']['regions'].values():
             for volumeId, volume in region.get('volumes').items():
-                completed_snapshots = [s for s in region['snapshots'].values() if s['VolumeId'] == volumeId and s['State'] == 'completed']
+                completed_snapshots = [s for s in region['snapshots'].values() if
+                                       s['VolumeId'] == volumeId and s['State'] == 'completed']
                 sorted_snapshots = sorted(completed_snapshots, key=lambda s: s['StartTime'], reverse=True)
                 volume['LastSnapshotDate'] = sorted_snapshots[0]['StartTime'] if len(sorted_snapshots) > 0 else None
 
-    def add_security_group_name_to_ec2_grants_callback(self, current_config, path, current_path, ec2_grant, callback_args):
+    def add_security_group_name_to_ec2_grants_callback(self, current_config, path, current_path, ec2_grant,
+                                                       callback_args):
         sg_id = ec2_grant['GroupId']
         if sg_id in current_path:
             target = current_path[:(current_path.index(sg_id) + 1)]
@@ -239,8 +242,9 @@ class AWSProvider(BaseProvider):
                                     parts = full_path.split('/')
                                     bucket_name = parts[0].split(':')[-1]
                                     self._update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entity,
-                                                                iam_info['permissions']['Action'][action][iam_entity][
-                                                                    'Allow'][allowed_iam_entity]['Resource'][full_path])
+                                                                 iam_info['permissions']['Action'][action][iam_entity][
+                                                                     'Allow'][allowed_iam_entity]['Resource'][
+                                                                     full_path])
                             # For notresource statements, we must fetch the policy document to determine which buckets are not protected
                             if 'NotResource' in iam_info['permissions']['Action'][action][iam_entity]['Allow'][
                                 allowed_iam_entity]:
@@ -352,7 +356,8 @@ class AWSProvider(BaseProvider):
                         role_instances[instance_profile_id]
                     iam_config['roles'][role_id]['instances_count'] += len(role_instances[instance_profile_id])
 
-    def match_roles_and_cloudformation_stacks_callback(self, current_config, path, current_path, stack_id, callback_args):
+    def match_roles_and_cloudformation_stacks_callback(self, current_config, path, current_path, stack_id,
+                                                       callback_args):
         if 'RoleARN' not in current_config:
             return
         role_arn = current_config.pop('RoleARN')
@@ -376,7 +381,8 @@ class AWSProvider(BaseProvider):
     def process_vpc_peering_connections_callback(self, current_config, path, current_path, pc_id, callback_args):
 
         # Create a list of peering connection IDs in each VPC
-        info = 'AccepterVpcInfo' if current_config['AccepterVpcInfo']['OwnerId'] == self.aws_account_id else 'RequesterVpcInfo'
+        info = 'AccepterVpcInfo' if current_config['AccepterVpcInfo'][
+                                        'OwnerId'] == self.aws_account_id else 'RequesterVpcInfo'
         region = current_path[current_path.index('regions') + 1]
         vpc_id = current_config[info]['VpcId']
         if vpc_id not in self.services['vpc']['regions'][region]['vpcs']:
@@ -399,7 +405,8 @@ class AWSProvider(BaseProvider):
         else:
             current_config['peer_info']['name'] = current_config['peer_info']['OwnerId']
 
-    def match_security_groups_and_resources_callback(self, current_config, path, current_path, resource_id, callback_args):
+    def match_security_groups_and_resources_callback(self, current_config, path, current_path, resource_id,
+                                                     callback_args):
         service = current_path[1]
         original_resource_path = combine_paths(copy.deepcopy(current_path), [resource_id])
         resource = get_object_at(self, original_resource_path)
@@ -574,7 +581,8 @@ class AWSProvider(BaseProvider):
                     attached_vpc['subnets'][subnet_id]['flow_logs'].append(flow_log_id)
         elif attached_resource.startswith('subnet-'):
             subnet_path = combine_paths(current_path[0:4],
-                                        ['vpcs', self.subnet_map[attached_resource]['vpc_id'], 'subnets', attached_resource])
+                                        ['vpcs', self.subnet_map[attached_resource]['vpc_id'], 'subnets',
+                                         attached_resource])
             subnet = get_object_at(self, subnet_path)
             manage_dictionary(subnet, 'flow_logs', [])
             if flow_log_id not in subnet['flow_logs']:
