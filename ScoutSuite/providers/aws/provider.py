@@ -250,7 +250,7 @@ class AWSProvider(BaseProvider):
                             # For notresource statements, we must fetch the policy document to determine which
                             # buckets are not protected
                             if 'NotResource' in iam_info['permissions']['Action'][action][iam_entity]['Allow'][
-                                allowed_iam_entity]:
+                                    allowed_iam_entity]:
                                 for full_path in (x for x in
                                                   iam_info['permissions']['Action'][action][iam_entity]['Allow'][
                                                       allowed_iam_entity]['NotResource'] if
@@ -290,8 +290,7 @@ class AWSProvider(BaseProvider):
                     allowed_buckets.remove(bucket_name)
                 elif bucket_name == '*':
                     allowed_buckets = []
-        policy_info = {}
-        policy_info[policy_type] = {}
+        policy_info = {policy_type: {}}
         policy_info[policy_type][policy_name] = \
             iam_info['permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['NotResource'][
                 full_path][
@@ -413,7 +412,7 @@ class AWSProvider(BaseProvider):
         service = current_path[1]
         original_resource_path = combine_paths(copy.deepcopy(current_path), [resource_id])
         resource = get_object_at(self, original_resource_path)
-        if not 'resource_id_path' in callback_args:
+        if 'resource_id_path' not in callback_args:
             resource_type = current_path[-1]
             resource_path = copy.deepcopy(current_path)
             resource_path.append(resource_id)
@@ -459,7 +458,7 @@ class AWSProvider(BaseProvider):
                 manage_dictionary(sg['used_by'][service]['resource_type'], resource_type, {} if resource_status else [])
                 if resource_status:
                     manage_dictionary(sg['used_by'][service]['resource_type'][resource_type], resource_status, [])
-                    if not resource_id in sg['used_by'][service]['resource_type'][resource_type][resource_status]:
+                    if resource_id not in sg['used_by'][service]['resource_type'][resource_type][resource_status]:
                         sg['used_by'][service]['resource_type'][resource_type][resource_status].append(resource_id)
                 else:
                     sg['used_by'][service]['resource_type'][resource_type].append(resource_id)
