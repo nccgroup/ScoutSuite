@@ -8,6 +8,7 @@ from ScoutSuite.providers.aws.configs.base import AWSBaseConfig
 from ScoutSuite.utils import *
 
 
+# noinspection PyBroadException
 class IAMConfig(AWSBaseConfig):
     """
     Object that holds the IAM configuration
@@ -47,7 +48,7 @@ class IAMConfig(AWSBaseConfig):
         super(IAMConfig, self).__init__(target_config)
 
     ########################################
-    ##### Overload to fetch credentials report before and after
+    # Overload to fetch credentials report before and after
     ########################################
 
     def fetch_all(self, credentials, regions=None, partition_name='aws', targets=None):
@@ -59,7 +60,7 @@ class IAMConfig(AWSBaseConfig):
         self.fetchstatuslogger.show(True)
 
     ########################################
-    ##### Credential report
+    # Credential report
     ########################################
 
     def fetch_credential_reports(self, credentials, ignore_exception=False):
@@ -126,7 +127,7 @@ class IAMConfig(AWSBaseConfig):
         return date if date != 'no_information' and date != 'N/A' else None
 
     ########################################
-    ##### Groups
+    # Groups
     ########################################
 
     def parse_groups(self, group, params):
@@ -151,7 +152,7 @@ class IAMConfig(AWSBaseConfig):
         self.groups[group['id']] = group
 
     ########################################
-    ##### Managed policies
+    # Managed policies
     ########################################
 
     def parse_policies(self, fetched_policy, params):
@@ -159,10 +160,8 @@ class IAMConfig(AWSBaseConfig):
         Parse a single IAM policy and fetch additional information
         """
         api_client = params['api_client']
-        policy = {}
-        policy['name'] = fetched_policy.pop('PolicyName')
-        policy['id'] = fetched_policy.pop('PolicyId')
-        policy['arn'] = fetched_policy.pop('Arn')
+        policy = {'name': fetched_policy.pop('PolicyName'), 'id': fetched_policy.pop('PolicyId'),
+                  'arn': fetched_policy.pop('Arn')}
         # Download version and document
         policy_version = api_client.get_policy_version(PolicyArn=policy['arn'],
                                                        VersionId=fetched_policy['DefaultVersionId'])
@@ -184,7 +183,7 @@ class IAMConfig(AWSBaseConfig):
         self.policies[policy['id']] = policy
 
     ########################################
-    ##### Password policy
+    # Password policy
     ########################################
 
     def fetch_password_policy(self, credentials):
@@ -209,30 +208,24 @@ class IAMConfig(AWSBaseConfig):
 
         except ClientError as e:
             if e.response['Error']['Code'] == 'NoSuchEntity':
-                self.password_policy = {}
-                self.password_policy[
-                    'MinimumPasswordLength'] = '1'  # As of 10/10/2016, 1-character passwords were authorized when no policy exists, even though the console displays 6
-                self.password_policy['RequireUppercaseCharacters'] = False
-                self.password_policy['RequireLowercaseCharacters'] = False
-                self.password_policy['RequireNumbers'] = False
-                self.password_policy['RequireSymbols'] = False
-                self.password_policy['PasswordReusePrevention'] = False
-                self.password_policy['ExpirePasswords'] = False
+                self.password_policy = {'MinimumPasswordLength': '1', 'RequireUppercaseCharacters': False,
+                                        'RequireLowercaseCharacters': False, 'RequireNumbers': False,
+                                        'RequireSymbols': False, 'PasswordReusePrevention': False,
+                                        'ExpirePasswords': False}
             else:
                 raise e
         except Exception as e:
             printError(str(e))
 
     ########################################
-    ##### Roles
+    # Roles
     ########################################
 
     def parse_roles(self, fetched_role, params):
         """
         Parse a single IAM role and fetch additional data
         """
-        role = {}
-        role['instances_count'] = 'N/A'
+        role = {'instances_count': 'N/A'}
         # When resuming upon throttling error, skip if already fetched
         if fetched_role['RoleName'] in self.roles:
             return
@@ -263,7 +256,7 @@ class IAMConfig(AWSBaseConfig):
         self.roles[role['id']] = role
 
     ########################################
-    ##### Users
+    # Users
     ########################################
 
     def parse_users(self, user, params):
@@ -288,7 +281,7 @@ class IAMConfig(AWSBaseConfig):
             user['groups'].append(group['GroupName'])
         try:
             user['LoginProfile'] = api_client.get_login_profile(UserName=user['name'])['LoginProfile']
-        except Exception as e:
+        except Exception:
             pass
         user['AccessKeys'] = api_client.list_access_keys(UserName=user['name'])['AccessKeyMetadata']
         user['MFADevices'] = api_client.list_mfa_devices(UserName=user['name'])['MFADevices']
@@ -296,7 +289,7 @@ class IAMConfig(AWSBaseConfig):
         self.users[user['id']] = user
 
     ########################################
-    ##### Finalize IAM config
+    # Finalize IAM config
     ########################################
 
     def finalize(self):
@@ -318,7 +311,7 @@ class IAMConfig(AWSBaseConfig):
         super(IAMConfig, self).finalize()
 
     ########################################
-    ##### Class helpers
+    # Class helpers
     ########################################
 
     def get_id_for_resource(self, iam_resource_type, resource_name):
@@ -334,15 +327,14 @@ class IAMConfig(AWSBaseConfig):
         return users
 
     ########################################
-    ##### Inline policies
+    # Inline policies
     ########################################
 
     def __get_inline_policies(self, api_client, iam_resource_type, resource_id, resource_name):
         fetched_policies = {}
         get_policy_method = getattr(api_client, 'get_' + iam_resource_type + '_policy')
         list_policy_method = getattr(api_client, 'list_' + iam_resource_type + '_policies')
-        args = {}
-        args[iam_resource_type.title() + 'Name'] = resource_name
+        args = {iam_resource_type.title() + 'Name': resource_name}
         try:
             policy_names = list_policy_method(**args)['PolicyNames']
         except Exception as e:
@@ -389,7 +381,7 @@ class IAMConfig(AWSBaseConfig):
         # Condition
         condition = statement['Condition'] if 'Condition' in statement else None
         manage_dictionary(self.permissions, action_string, {})
-        if iam_resource_type == None:
+        if iam_resource_type is None:
             return
         self.__parse_actions(effect, action_string, statement[action_string], resource_string,
                              statement[resource_string], iam_resource_type, resource_name, policy_name, policy_type,

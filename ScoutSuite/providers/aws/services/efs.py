@@ -31,7 +31,7 @@ class EFSRegionConfig(RegionConfig):
             file_system['name'] = None
         # Get tags
         file_system['tags'] = \
-        handle_truncated_response(api_clients[region].describe_tags, {'FileSystemId': fs_id}, ['Tags'])['Tags']
+            handle_truncated_response(api_clients[region].describe_tags, {'FileSystemId': fs_id}, ['Tags'])['Tags']
         # Get mount targets
         mount_targets = handle_truncated_response(api_clients[region].describe_mount_targets, {'FileSystemId': fs_id},
                                                   ['MountTargets'])['MountTargets']
@@ -41,7 +41,7 @@ class EFSRegionConfig(RegionConfig):
             file_system['mount_targets'][mt_id] = mt
             # Get security groups
             file_system['mount_targets'][mt_id]['security_groups'] = \
-            api_clients[region].describe_mount_target_security_groups(MountTargetId=mt_id)['SecurityGroups']
+                api_clients[region].describe_mount_target_security_groups(MountTargetId=mt_id)['SecurityGroups']
         self.file_systems[fs_id] = file_system
 
 

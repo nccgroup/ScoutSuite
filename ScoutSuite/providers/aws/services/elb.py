@@ -20,13 +20,12 @@ class ELBRegionConfig(RegionConfig):
     def parse_elb(self, global_params, region, lb):
         """
 
+        :param lb:
         :param global_params:
         :param region:
-        :param elb:
         :return:
         """
-        elb = {}
-        elb['name'] = lb.pop('LoadBalancerName')
+        elb = {'name': lb.pop('LoadBalancerName')}
         vpc_id = lb['VPCId'] if 'VPCId' in lb and lb['VPCId'] else ec2_classic
         manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
         get_keys(lb, elb, ['DNSName', 'CreatedTime', 'AvailabilityZones', 'Subnets', 'Scheme'])
@@ -44,11 +43,12 @@ class ELBRegionConfig(RegionConfig):
                 if policy_id not in self.elb_policies:
                     policy_names.append(policy_name)
             elb['listeners'][l['Listener']['LoadBalancerPort']] = listener
-        # Fetch LB policies here. This is not ideal, but the alternative is to download all policies and clean up after...
+        # Fetch LB policies here. This is not ideal, but the alternative is to download all policies and clean up
+        # after...
         if len(policy_names):
             policies = \
-            api_clients[region].describe_load_balancer_policies(LoadBalancerName=elb['name'], PolicyNames=policy_names)[
-                'PolicyDescriptions']
+                api_clients[region].describe_load_balancer_policies(LoadBalancerName=elb['name'],
+                                                                    PolicyNames=policy_names)['PolicyDescriptions']
             for policy in policies:
                 policy['name'] = policy.pop('PolicyName')
                 policy_id = self.get_non_provider_id(policy['name'])

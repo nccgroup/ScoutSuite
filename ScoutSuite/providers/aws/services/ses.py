@@ -18,6 +18,7 @@ class SESRegionConfig(RegionConfig):
         """
         Parse a single identity and fetch additional attributes
 
+        :param identity_name:
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
         """

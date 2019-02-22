@@ -16,9 +16,9 @@ class DirectConnectRegionConfig(RegionConfig):
         """
         Parse a single connection and fetch additional attributes
 
+        :param connection:
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
-        :param connection_url:               URL of the AWS connection
         """
         connection['id'] = connection.pop('connectionId')
         connection['name'] = connection.pop('connectionName')

@@ -3,7 +3,7 @@
 CloudWatch-related classes and functions
 """
 
-from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
+from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig
 
 
 ########################################
@@ -27,7 +27,7 @@ class CloudWatchRegionConfig(RegionConfig):
         alarm['name'] = alarm.pop('AlarmName')
         # Drop some data
         for k in ['AlarmConfigurationUpdatedTimestamp', 'StateReason', 'StateReasonData', 'StateUpdatedTimestamp']:
-            foo = alarm.pop(k) if k in alarm else None
+            alarm.pop(k) if k in alarm else None
         alarm_id = self.get_non_provider_id(alarm['arn'])
         self.alarms[alarm_id] = alarm
 

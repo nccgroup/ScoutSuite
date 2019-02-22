@@ -47,9 +47,9 @@ class EC2RegionConfig(RegionConfig):
         """
         Parse a single EC2 instance
 
+        :param reservation:
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
-        :param instance:                Cluster
         """
         for i in reservation['Instances']:
             instance = {}
@@ -82,9 +82,9 @@ class EC2RegionConfig(RegionConfig):
         """
         Parses a single AMI (Amazon Machine Image)
 
+        :param image:
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
-        :param snapshot:                Single image
         """
         id = image['ImageId']
         name = image['Name']
@@ -104,12 +104,8 @@ class EC2RegionConfig(RegionConfig):
         """
         vpc_id = group['VpcId'] if 'VpcId' in group and group['VpcId'] else ec2_classic
         manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
-        security_group = {}
-        security_group['name'] = group['GroupName']
-        security_group['id'] = group['GroupId']
-        security_group['description'] = group['Description']
-        security_group['owner_id'] = group['OwnerId']
-        security_group['rules'] = {'ingress': {}, 'egress': {}}
+        security_group = {'name': group['GroupName'], 'id': group['GroupId'], 'description': group['Description'],
+                          'owner_id': group['OwnerId'], 'rules': {'ingress': {}, 'egress': {}}}
         security_group['rules']['ingress']['protocols'], security_group['rules']['ingress'][
             'count'] = self.__parse_security_group_rules(group['IpPermissions'])
         security_group['rules']['egress']['protocols'], security_group['rules']['egress'][
@@ -209,7 +205,7 @@ class EC2Config(RegionalServiceConfig):
 
 
 ########################################
-##### EC2 analysis functions
+# EC2 analysis functions
 ########################################
 
 def analyze_ec2_config(ec2_info, aws_account_id, force_write):
