@@ -2,28 +2,17 @@
 
 import copy
 import os
-import sys
 
-try:
-    from opinel.utils.aws import get_aws_account_id, get_partition_name
-    from ScoutSuite.core.console import configPrintException, printInfo, printDebug
-    from opinel.utils.credentials import read_creds
-    from opinel.utils.globals import check_requirements
-    from opinel.utils.profiles import AWSProfiles
-except Exception as e:
-    print('Error: Scout2 depends on the opinel package. Install all the requirements with the following command:')
-    print('  $ pip install -r requirements.txt')
-    print(e)
-    sys.exit(42)
+from opinel.utils.aws import get_aws_account_id
+from opinel.utils.credentials import read_creds
 
 from ScoutSuite.core.console import printDebug, printError, printException, printInfo
-from opinel.utils.globals import manage_dictionary
 
 from ScoutSuite.providers.aws.configs.services import AWSServicesConfig
 from ScoutSuite.providers.base.configs.browser import combine_paths, get_object_at, get_value_at
 from ScoutSuite.providers.aws.services.vpc import put_cidr_name
 from ScoutSuite.providers.base.provider import BaseProvider
-from ScoutSuite.utils import ec2_classic
+from ScoutSuite.utils import ec2_classic, manage_dictionary
 
 
 class AWSProvider(BaseProvider):

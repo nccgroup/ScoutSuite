@@ -7,8 +7,7 @@ import os
 import yaml
 
 from ScoutSuite.core.console import printError, printException, prompt_4_overwrite
-from opinel.utils.conditions import pass_condition
-
+from ScoutSuite.core.conditions import _pass_condition
 
 
 class CustomJSONEncoder(json.JSONEncoder):
@@ -82,7 +81,7 @@ def read_ip_ranges(filename, local_file = True, ip_only = False, conditions = []
         for condition in conditions:
             if type(condition) != list or len(condition) < 3:
                 continue
-            condition_passed = pass_condition(d[condition[0]], condition[1], condition[2])
+            condition_passed = _pass_condition(d[condition[0]], condition[1], condition[2])
             if not condition_passed:
                 break
         if condition_passed:
@@ -104,7 +103,6 @@ def read_file(file_path, mode = 'rt'):
 
     :return:                            Contents of the file
     """
-    contents = ''
     with open(file_path, mode) as f:
         contents = f.read()
     return contents

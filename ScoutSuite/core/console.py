@@ -5,11 +5,7 @@ import re
 import sys
 import traceback
 
-try:
-    input = raw_input
-except NameError:
-    pass
-
+from six.moves import input
 
 ########################################
 # Globals
@@ -17,7 +13,7 @@ except NameError:
 
 mfa_serial_format = r'^arn:aws:iam::\d+:mfa/[a-zA-Z0-9\+=,.@_-]+$'
 re_mfa_serial_format = re.compile(mfa_serial_format)
-
+re_mfa_code = re.compile(r'^\d{6}\d*$')
 
 
 ########################################
@@ -36,7 +32,6 @@ def configPrintException(enable):
     verbose_exceptions = enable
 
 
-
 ########################################
 # Print functions
 ########################################
@@ -46,11 +41,11 @@ def printDebug(msg):
         printGeneric(sys.stderr, msg)
 
 
-def printError(msg, newLine = True):
+def printError(msg, newLine=True):
     printGeneric(sys.stderr, msg, newLine)
 
 
-def printException(e, debug_only = False):
+def printException(e, debug_only=False):
     global verbose_exceptions
     if verbose_exceptions:
         printError(str(traceback.format_exc()))
@@ -58,23 +53,22 @@ def printException(e, debug_only = False):
         printError(str(e))
 
 
-def printGeneric(out, msg, newLine = True):
+def printGeneric(out, msg, newLine=True):
     out.write(msg)
     out.flush()
     if newLine == True:
         out.write('\n')
 
 
-def printInfo(msg, newLine = True ):
+def printInfo(msg, newLine=True):
     printGeneric(sys.stdout, msg, newLine)
-
 
 
 ########################################
 # Prompt functions
 ########################################
 
-def prompt(test_input = None):
+def prompt(test_input=None):
     """
     Prompt function that works for Python2 and Python3
 
@@ -98,7 +92,7 @@ def prompt(test_input = None):
     return choice
 
 
-def prompt_4_mfa_code(activate = False, input = None):
+def prompt_4_mfa_code(activate=False, input=None):
     """
     Prompt for an MFA code
 
@@ -112,19 +106,16 @@ def prompt_4_mfa_code(activate = False, input = None):
             prompt_string = 'Enter the next value: '
         else:
             prompt_string = 'Enter your MFA code (or \'q\' to abort): '
-        mfa_code = prompt_4_value(prompt_string, no_confirm = True, input = input)
-        try:
-            if mfa_code == 'q':
-                return mfa_code
-            int(mfa_code)
-            mfa_code[5]
-            break
-        except:
+        mfa_code = prompt_4_value(prompt_string, no_confirm=True, input=input)
+        if mfa_code == 'q':
+            return mfa_code
+        if not re_mfa_code.match():
             printError('Error: your MFA code must only consist of digits and be at least 6 characters long.')
+        break
     return mfa_code
 
 
-def prompt_4_mfa_serial(input = None):
+def prompt_4_mfa_serial(input=None):
     """
     Prompt for an MFA serial number
 
@@ -132,10 +123,11 @@ def prompt_4_mfa_serial(input = None):
 
     :return:                            The MFA serial number
     """
-    return prompt_4_value('Enter your MFA serial:', required = False, regex = re_mfa_serial_format, regex_format = mfa_serial_format, input = input)
+    return prompt_4_value('Enter your MFA serial:', required=False, regex=re_mfa_serial_format,
+                          regex_format=mfa_serial_format, input=input)
 
 
-def prompt_4_overwrite(filename, force_write, input = None):
+def prompt_4_overwrite(filename, force_write, input=None):
     """
     Prompt whether the file should be overwritten
 
@@ -147,10 +139,12 @@ def prompt_4_overwrite(filename, force_write, input = None):
     """
     if not os.path.exists(filename) or force_write:
         return True
-    return prompt_4_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename), input = input)
+    return prompt_4_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename), input=input)
 
 
-def prompt_4_value(question, choices = None, default = None, display_choices = True, display_indices = False, authorize_list = False, is_question = False, no_confirm = False, required = True, regex = None, regex_format = '', max_laps = 5, input = None, return_index = False):
+def prompt_4_value(question, choices=None, default=None, display_choices=True, display_indices=False,
+                   authorize_list=False, is_question=False, no_confirm=False, required=True, regex=None,
+                   regex_format='', max_laps=5, input=None, return_index=False):
     """
     Prompt for a value
                                         .                    .
@@ -192,7 +186,7 @@ def prompt_4_value(question, choices = None, default = None, display_choices = T
         if not choice or choice == '':
             if default:
                 if no_confirm or prompt_4_yes_no('Use the default value (' + default + ')'):
-                    #return default
+                    # return default
                     choice = default
                     can_return = True
             elif not required:
@@ -220,7 +214,7 @@ def prompt_4_value(question, choices = None, default = None, display_choices = T
         # Validate against a regex
         elif regex:
             if regex.match(choice):
-                #return choice
+                # return choice
                 can_return = True
             else:
                 printError('Error: expected format is: %s' % regex_format)
@@ -233,7 +227,7 @@ def prompt_4_value(question, choices = None, default = None, display_choices = T
                 return int(int_choice) if return_index else choice
 
 
-def prompt_4_yes_no(question, input = None):
+def prompt_4_yes_no(question, input=None):
     """
     Prompt for a yes/no or y/n answer
                                         .
