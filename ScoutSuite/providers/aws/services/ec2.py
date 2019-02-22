@@ -2,9 +2,8 @@ from ScoutSuite.providers.base.configs.resources import Resources
 from ScoutSuite.providers.aws.configs.regions_config import RegionsConfig, ScopedResources
 from ScoutSuite.providers.aws.facade import AWSFacade
 
-from opinel.utils.aws import get_name
+from opinel.utils.aws import get_name, get_aws_account_id
 from ScoutSuite.utils import get_keys, ec2_classic
-
 
 class EC2(RegionsConfig):
     def __init__(self):
@@ -16,6 +15,7 @@ class EC2(RegionsConfig):
 
         for region in self['regions']:
             self['regions'][region] = await Vpcs().fetch_all(region)
+            self['regions'][region].update(await EC2Images(get_aws_account_id(credentials)).fetch_all(region))
 
 
 class Vpcs(ScopedResources):
@@ -50,7 +50,6 @@ class EC2Instances(ScopedResources):
 
     def parse_resource(self, raw_instance):
         instance = {}
-        #instance['reservation_id'] = reservation['ReservationId']
         id = raw_instance['InstanceId']
         instance['id'] = id
         instance['monitoring_enabled'] = raw_instance['Monitoring']['State'] == 'enabled'
@@ -73,13 +72,19 @@ class EC2Instances(ScopedResources):
         return self.facade.get_ec2_instances(self.region, vpcs)
 
 class EC2Images(ScopedResources):
-    def __init__(self, region):
-        self.region = region
+    def __init__(self, owner_id):
+        self.owner_id = owner_id
         self.facade = AWSFacade()
         super(EC2Images, self).__init__('images')
     
-    async def get_resources_in_scope(self, vpcs): 
-        return self.facade.get_ec2_instances(self.region, vpcs)
+    async def get_resources_in_scope(self, region): 
+        return self.facade.get_ec2_images(region, self.owner_id)
+
+    def parse_resource(self, raw_image):
+        raw_image['id'] = raw_image['ImageId']
+        raw_image['name'] = raw_image['Name']
+
+        return raw_image['id'], raw_image
 
 # # -*- coding: utf-8 -*-
 # """
@@ -162,22 +167,6 @@ class EC2Images(ScopedResources):
 #             return None
 
 #         return base64.b64decode(user_data_response['UserData']['Value']).decode('utf-8')
-
-#     def parse_image(self, global_params, region, image):
-#         """
-#         Parses a single AMI (Amazon Machine Image)
-
-#         :param global_params:           Parameters shared for all regions
-#         :param region:                  Name of the AWS region
-#         :param snapshot:                Single image
-#         """
-#         id = image['ImageId']
-#         name = image['Name']
-
-#         image['id'] = id
-#         image['name'] = name
-
-#         self.images[id] = image
 
 #     def parse_security_group(self, global_params, region, group):
 #         """

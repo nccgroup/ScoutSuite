@@ -35,8 +35,7 @@ class AWSFacade(object):
         ec2_client = boto3.client('ec2', region_name=region)
 
         return self._get_all_pages(
-            lambda: ec2_client.describe_instances(
-                Filters=[{'Name': 'vpc-id', 'Values': [vpc]}]),
+            lambda: ec2_client.describe_instances(Filters=[{'Name': 'vpc-id', 'Values': [vpc]}]),
             lambda response: itertools.chain.from_iterable(
                 [reservation['Instances'] for reservation in response['Reservations']])
         )
@@ -46,6 +45,13 @@ class AWSFacade(object):
         return self._get_all_pages(
             lambda: vpc_client.describe_vpcs(),
             lambda response: response['Vpcs']
+        )
+
+    def get_ec2_images(self, region, owner_id):
+        vpc_client = boto3.client('ec2', region_name=region)
+        return self._get_all_pages(
+            lambda: vpc_client.describe_images(Filters=[{'Name': 'owner-id', 'Values': [owner_id]}]),
+            lambda response: response['Images']
         )
 
     def _get_all_pages(self, api_call, parse_response):
