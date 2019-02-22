@@ -119,8 +119,7 @@ class AWSProvider(BaseProvider):
                 sorted_snapshots = sorted(completed_snapshots, key=lambda s: s['StartTime'], reverse=True)
                 volume['LastSnapshotDate'] = sorted_snapshots[0]['StartTime'] if len(sorted_snapshots) > 0 else None
 
-    def add_security_group_name_to_ec2_grants_callback(self, current_config, path, current_path, ec2_grant,
-                                                       callback_args):
+    def add_security_group_name_to_ec2_grants_callback(self, current_path, ec2_grant, callback_args):
         sg_id = ec2_grant['GroupId']
         if sg_id in current_path:
             target = current_path[:(current_path.index(sg_id) + 1)]
@@ -185,7 +184,7 @@ class AWSProvider(BaseProvider):
         else:
             network_acl['use_default_%s_rules' % direction] = False
 
-    def list_ec2_network_attack_surface_callback(self, current_config, path, current_path, privateip_id, callback_args):
+    def list_ec2_network_attack_surface_callback(self, current_config, current_path):
         manage_dictionary(self.services['ec2'], 'external_attack_surface', {})
         if 'Association' in current_config and current_config['Association']:
             public_ip = current_config['Association']['PublicIp']
@@ -219,7 +218,7 @@ class AWSProvider(BaseProvider):
                            {'map': subnet_map})
         self.subnet_map = subnet_map
 
-    def map_resource(self, current_config, path, current_path, resource_id, callback_args):
+    def map_resource(self, current_path, resource_id, callback_args):
         if resource_id not in callback_args['map']:
             callback_args['map'][resource_id] = {'region': current_path[3]}
             if len(current_path) > 5:
@@ -290,8 +289,7 @@ class AWSProvider(BaseProvider):
                     allowed_buckets.remove(bucket_name)
                 elif bucket_name == '*':
                     allowed_buckets = []
-        policy_info = {}
-        policy_info[policy_type] = {}
+        policy_info = {policy_type: {}}
         policy_info[policy_type][policy_name] = \
             iam_info['permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['NotResource'][
                 full_path][
@@ -304,7 +302,7 @@ class AWSProvider(BaseProvider):
             bucket = s3_info['buckets'][bucket_name]
             manage_dictionary(bucket, iam_entity, {})
             manage_dictionary(bucket, iam_entity + '_count', 0)
-            if not allowed_iam_entity in bucket[iam_entity]:
+            if allowed_iam_entity not in bucket[iam_entity]:
                 bucket[iam_entity][allowed_iam_entity] = {}
                 bucket[iam_entity + '_count'] = bucket[iam_entity + '_count'] + 1
 
@@ -322,13 +320,13 @@ class AWSProvider(BaseProvider):
             # Could be an error or cross-account access, ignore...
             pass
 
-    def match_network_acls_and_subnets_callback(self, current_config, path, current_path, acl_id, callback_args):
+    def match_network_acls_and_subnets_callback(self, current_config, current_path, acl_id):
         for association in current_config['Associations']:
             subnet_path = current_path[:-1] + ['subnets', association['SubnetId']]
             subnet = get_object_at(self, subnet_path)
             subnet['network_acl'] = acl_id
 
-    def match_instances_and_subnets_callback(self, current_config, path, current_path, instance_id, callback_args):
+    def match_instances_and_subnets_callback(self, current_config, instance_id):
         subnet_id = current_config['SubnetId']
         if subnet_id:
             vpc = self.subnet_map[subnet_id]
@@ -359,14 +357,13 @@ class AWSProvider(BaseProvider):
                         role_instances[instance_profile_id]
                     iam_config['roles'][role_id]['instances_count'] += len(role_instances[instance_profile_id])
 
-    def match_roles_and_cloudformation_stacks_callback(self, current_config, path, current_path, stack_id,
-                                                       callback_args):
+    def match_roles_and_cloudformation_stacks_callback(self, current_config):
         if 'RoleARN' not in current_config:
             return
         role_arn = current_config.pop('RoleARN')
         current_config['iam_role'] = self._get_role_info('arn', role_arn)
 
-    def match_roles_and_vpc_flowlogs_callback(self, current_config, path, current_path, flowlog_id, callback_args):
+    def match_roles_and_vpc_flowlogs_callback(self, current_config):
         if 'DeliverLogsPermissionArn' not in current_config:
             return
         delivery_role_arn = current_config.pop('DeliverLogsPermissionArn')
@@ -381,7 +378,7 @@ class AWSProvider(BaseProvider):
                 break
         return iam_role_info
 
-    def process_vpc_peering_connections_callback(self, current_config, path, current_path, pc_id, callback_args):
+    def process_vpc_peering_connections_callback(self, current_config, current_path, pc_id):
 
         # Create a list of peering connection IDs in each VPC
         info = 'AccepterVpcInfo' if current_config['AccepterVpcInfo'][
@@ -408,12 +405,11 @@ class AWSProvider(BaseProvider):
         else:
             current_config['peer_info']['name'] = current_config['peer_info']['OwnerId']
 
-    def match_security_groups_and_resources_callback(self, current_config, path, current_path, resource_id,
-                                                     callback_args):
+    def match_security_groups_and_resources_callback(self, current_path, resource_id, callback_args):
         service = current_path[1]
         original_resource_path = combine_paths(copy.deepcopy(current_path), [resource_id])
         resource = get_object_at(self, original_resource_path)
-        if not 'resource_id_path' in callback_args:
+        if 'resource_id_path' not in callback_args:
             resource_type = current_path[-1]
             resource_path = copy.deepcopy(current_path)
             resource_path.append(resource_id)
@@ -593,7 +589,7 @@ class AWSProvider(BaseProvider):
         else:
             printError('Resource %s attached to flow logs is not handled' % attached_resource)
 
-    def get_db_attack_surface(self, current_config, path, current_path, db_id, callback_args):
+    def get_db_attack_surface(self, current_config, current_path):
         service = current_path[1]
         service_config = self.services[service]
         manage_dictionary(service_config, 'external_attack_surface', {})
@@ -615,7 +611,7 @@ class AWSProvider(BaseProvider):
                                                    listeners)
             # TODO :: Get Redis endpoint information
 
-    def get_lb_attack_surface(self, current_config, path, current_path, elb_id, callback_args):
+    def get_lb_attack_surface(self, current_config, current_path):
         public_dns = current_config['DNSName']
         elb_config = self.services[current_path[1]]
         manage_dictionary(elb_config, 'external_attack_surface', {})
