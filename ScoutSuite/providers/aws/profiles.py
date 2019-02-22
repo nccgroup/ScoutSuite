@@ -18,6 +18,7 @@ re_profile_name = re.compile(r'(\[(profile\s+)?(.*?)\])')
 class AWSProfile(object):
 
     def __init__(self, filename=None, raw_profile=None, name=None, credentials=None, account_id=None):
+        self.credentials = credentials
         self.filename = filename
         self.raw_profile = raw_profile
         self.name = name
