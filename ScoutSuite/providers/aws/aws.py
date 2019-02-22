@@ -8,8 +8,7 @@ import time
 from ScoutSuite.core.console import printInfo, printException
 
 
-
-def build_region_list(service, chosen_regions = [], partition_name = 'aws'):
+def build_region_list(service, chosen_regions=None, partition_name='aws'):
     """
     Build the list of target region names
 
@@ -19,16 +18,18 @@ def build_region_list(service, chosen_regions = [], partition_name = 'aws'):
 
     :return:
     """
-    service = 'ec2containerservice' if service == 'ecs' else service # Of course things aren't that easy...
+    if chosen_regions is None:
+        chosen_regions = []
+    service = 'ec2containerservice' if service == 'ecs' else service
     # Get list of regions from botocore
-    regions = Session().get_available_regions(service, partition_name = partition_name)
+    regions = Session().get_available_regions(service, partition_name=partition_name)
     if len(chosen_regions):
         return list((Counter(regions) & Counter(chosen_regions)).elements())
     else:
         return regions
 
 
-def connect_service(service, credentials, region_name = None, config = None, silent = False):
+def connect_service(service, credentials, region_name=None, config=None, silent=False):
     """
     Instantiates an AWS API client
 
@@ -42,12 +43,10 @@ def connect_service(service, credentials, region_name = None, config = None, sil
     """
     api_client = None
     try:
-        client_params = {}
-        client_params['service_name'] = service.lower()
-        session_params = {}
-        session_params['aws_access_key_id'] = credentials['AccessKeyId']
-        session_params['aws_secret_access_key'] = credentials['SecretAccessKey']
-        session_params['aws_session_token'] = credentials['SessionToken']
+        client_params = {'service_name': service.lower()}
+        session_params = {'aws_access_key_id': credentials['AccessKeyId'],
+                          'aws_secret_access_key': credentials['SecretAccessKey'],
+                          'aws_session_token': credentials['SessionToken']}
         if region_name:
             client_params['region_name'] = region_name
             session_params['region_name'] = region_name
@@ -55,10 +54,10 @@ def connect_service(service, credentials, region_name = None, config = None, sil
             client_params['config'] = config
         aws_session = boto3.session.Session(**session_params)
         if not silent:
-            infoMessage = 'Connecting to AWS %s' % service
+            info_message = 'Connecting to AWS %s' % service
             if region_name:
-                infoMessage = infoMessage + ' in %s' % region_name
-            printInfo('%s...' % infoMessage)
+                info_message = info_message + ' in %s' % region_name
+            printInfo('%s...' % info_message)
         api_client = aws_session.client(**client_params)
     except Exception as e:
         printException(e)
@@ -86,7 +85,7 @@ def get_name(src, dst, default_attribute):
 
 
 def get_caller_identity(credentials):
-    api_client = connect_service('sts', credentials, silent = True)
+    api_client = connect_service('sts', credentials, silent=True)
     return api_client.get_caller_identity()
 
 
@@ -132,6 +131,7 @@ def handle_truncated_response(callback, params, entities):
             if not marker_found:
                 break
         except Exception as e:
+            # noinspection PyTypeChecker
             if is_throttled(e):
                 time.sleep(1)
             else:
@@ -146,4 +146,6 @@ def is_throttled(e):
     :param e:                           Exception raised
     :return:                            True if it's a throttling exception else False
     """
-    return True if  (hasattr(e, 'response') and 'Error' in e.response and e.response['Error']['Code'] in [ 'Throttling', 'RequestLimitExceeded', 'ThrottlingException', 'TooManyRequestsException' ]) else False
+    return True if (hasattr(e, 'response') and 'Error' in e.response and e.response['Error']['Code'] in
+                    ['Throttling', 'RequestLimitExceeded', 'ThrottlingException', 'TooManyRequestsException']) \
+        else False

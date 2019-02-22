@@ -6,7 +6,7 @@ S3-related classes and functions
 import json
 
 from botocore.exceptions import ClientError
-from opinel.utils.aws import handle_truncated_response
+from ScoutSuite.providers.aws.aws import handle_truncated_response
 from ScoutSuite.core.console import printError, printException, printInfo
 from ScoutSuite.utils import manage_dictionary
 
@@ -271,6 +271,7 @@ def get_s3_bucket_versioning(api_client, bucket_name, bucket_info):
         bucket_info['versioning_status_enabled'] = None
         bucket_info['version_mfa_delete_enabled'] = None
         return False
+
 
 def _status_to_bool(value):
     """ Converts a string to True if it is equal to 'Enabled' or to False otherwise. """

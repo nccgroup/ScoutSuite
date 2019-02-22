@@ -24,13 +24,7 @@ from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 
 try:
     from ScoutSuite.providers.aws.services.config_private import ConfigConfig
-except ImportError:
-    pass
-try:
     from ScoutSuite.providers.aws.services.dynamodb_private import DynamoDBConfig
-except ImportError:
-    pass
-try:
     from ScoutSuite.providers.aws.services.kms_private import KMSConfig
 except ImportError:
     pass
@@ -80,37 +74,10 @@ class AWSServicesConfig(BaseServicesConfig):
 
         try:
             self.config = ConfigConfig(metadata['management']['config'], thread_config)
-        except NameError as e:
-            pass
-        try:
             self.dynamodb = DynamoDBConfig(metadata['database']['dynamodb'], thread_config)
-        except NameError as e:
-            pass
-        try:
             self.kms = KMSConfig(metadata['security']['kms'], thread_config)
         except NameError as e:
             pass
 
     def _is_provider(self, provider_name):
         return provider_name == 'aws'
-
-    # TODO is this ever called?
-    # def single_service_pass(self):
-    #     pass
-
-    # TODO is this ever called?
-    # def multi_service_pass(self):
-    #     pass
-
-    # TODO is this ever called?
-    # def postprocessing(self):
-    #     for service in self.services:
-    #         method_name = '%s_postprocessing' % service
-    #         if method_name in globals():
-    #             try:
-    #                 printInfo('Post-processing %s config...' % format_service_name(service))
-    #                 method = globals()[method_name]
-    #                 method(aws_config)
-    #             except Exception as e:
-    #                 printException(e)
-    #                 pass

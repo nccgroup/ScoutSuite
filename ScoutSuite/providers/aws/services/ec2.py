@@ -7,7 +7,7 @@ EC2-related classes and functions
 import netaddr
 import base64
 
-from opinel.utils.aws import get_name
+from ScoutSuite.providers.aws.aws import get_name
 from ScoutSuite.core.console import printException, printInfo
 from opinel.utils.fs import load_data
 
@@ -15,7 +15,6 @@ from ScoutSuite.providers.aws.configs.vpc import VPCConfig
 from ScoutSuite.providers.base.configs.browser import get_attribute_at
 from ScoutSuite.utils import get_keys, ec2_classic, manage_dictionary
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
-
 
 ########################################
 # Globals
@@ -71,7 +70,8 @@ class EC2RegionConfig(RegionConfig):
             self.vpcs[vpc_id].instances[i['InstanceId']] = instance
 
     def _get_user_data(self, region, instance_id):
-        user_data_response = api_clients[region].describe_instance_attribute(Attribute='userData', InstanceId=instance_id)
+        user_data_response = api_clients[region].describe_instance_attribute(Attribute='userData',
+                                                                             InstanceId=instance_id)
 
         if 'Value' not in user_data_response['UserData'].keys():
             return None
@@ -92,7 +92,7 @@ class EC2RegionConfig(RegionConfig):
         image['id'] = id
         image['name'] = name
 
-        self.images[id] = image 
+        self.images[id] = image
 
     def parse_security_group(self, global_params, region, group):
         """
@@ -172,8 +172,9 @@ class EC2RegionConfig(RegionConfig):
         self.snapshots[snapshot['id']] = snapshot
         # Get snapshot attribute
         snapshot['createVolumePermission'] = \
-        api_clients[region].describe_snapshot_attribute(Attribute='createVolumePermission', SnapshotId=snapshot['id'])[
-            'CreateVolumePermissions']
+            api_clients[region].describe_snapshot_attribute(Attribute='createVolumePermission',
+                                                            SnapshotId=snapshot['id'])[
+                'CreateVolumePermissions']
         snapshot['public'] = self._is_public(snapshot)
 
     def _is_public(self, snapshot):
@@ -224,6 +225,7 @@ def analyze_ec2_config(ec2_info, aws_account_id, force_write):
     except Exception as e:
         printInfo('Error')
         printException(e)
+
 
 def add_security_group_name_to_ec2_grants_callback(ec2_config, current_config, path, current_path, ec2_grant,
                                                    callback_args):
@@ -290,7 +292,7 @@ def link_elastic_ips_callback2(ec2_config, current_config, path, current_path, i
             current_config['PublicIpAddress'] = callback_args['elastic_ip']
         elif current_config['PublicIpAddress'] != callback_args['elastic_ip']:
             printInfo('Warning: public IP address exists (%s) for an instance associated with an elastic IP (%s)' % (
-            current_config['PublicIpAddress'], callback_args['elastic_ip']))
+                current_config['PublicIpAddress'], callback_args['elastic_ip']))
             # This can happen... fix it
 
 

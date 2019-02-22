@@ -46,7 +46,9 @@ class ELBRegionConfig(RegionConfig):
             elb['listeners'][l['Listener']['LoadBalancerPort']] = listener
         # Fetch LB policies here. This is not ideal, but the alternative is to download all policies and clean up after...
         if len(policy_names):
-            policies = api_clients[region].describe_load_balancer_policies(LoadBalancerName = elb['name'], PolicyNames = policy_names)['PolicyDescriptions']
+            policies = \
+            api_clients[region].describe_load_balancer_policies(LoadBalancerName=elb['name'], PolicyNames=policy_names)[
+                'PolicyDescriptions']
             for policy in policies:
                 policy['name'] = policy.pop('PolicyName')
                 policy_id = self.get_non_provider_id(policy['name'])
@@ -55,9 +57,9 @@ class ELBRegionConfig(RegionConfig):
         for i in lb['Instances']:
             elb['instances'].append(i['InstanceId'])
         # Get attributes
-        elb['attributes'] = api_clients[region].describe_load_balancer_attributes(LoadBalancerName=elb['name'])['LoadBalancerAttributes']
+        elb['attributes'] = api_clients[region].describe_load_balancer_attributes(LoadBalancerName=elb['name'])[
+            'LoadBalancerAttributes']
         self.vpcs[vpc_id].elbs[self.get_non_provider_id(elb['name'])] = elb
-
 
 
 ########################################
@@ -71,5 +73,5 @@ class ELBConfig(RegionalServiceConfig):
 
     region_config_class = ELBRegionConfig
 
-    def __init__(self, service_metadata, thread_config = 4):
+    def __init__(self, service_metadata, thread_config=4):
         super(ELBConfig, self).__init__(service_metadata, thread_config)

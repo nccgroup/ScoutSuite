@@ -3,7 +3,7 @@
 import netaddr
 import copy
 
-from opinel.utils.aws import get_name
+from ScoutSuite.providers.aws.aws import get_name
 from opinel.utils.fs import load_data, read_ip_ranges
 
 from ScoutSuite.providers.base.configs.browser import get_value_at
@@ -16,6 +16,7 @@ from ScoutSuite.providers.aws.configs.vpc import VPCConfig as SingleVPCConfig
 ########################################
 
 protocols_dict = load_data('protocols.json', 'protocols')
+
 
 ########################################
 # VPCRegionConfig
@@ -159,6 +160,7 @@ class VPCConfig(RegionalServiceConfig):
 
 known_cidrs = {'0.0.0.0/0': 'All'}
 
+
 def put_cidr_name(aws_config, current_config, path, current_path, resource_id, callback_args):
     """
     Add a display name for all known CIDRs
@@ -186,6 +188,7 @@ def put_cidr_name(aws_config, current_config, path, current_path, resource_id, c
 
 aws_ip_ranges = {}  # read_ip_ranges(aws_ip_ranges_filename, False)
 
+
 def get_cidr_name(cidr, ip_ranges_files, ip_ranges_name_key):
     """
     Read display name for CIDRs from ip-ranges files
@@ -208,6 +211,7 @@ def get_cidr_name(cidr, ip_ranges_files, ip_ranges_name_key):
             return 'Unknown CIDR in %s %s' % (ip_range['service'], ip_range['region'])
     return 'Unknown CIDR'
 
+
 def propagate_vpc_names(aws_config, current_config, path, current_path, resource_id, callback_args):
     """
     Propagate VPC names in VPC-related services (info only fetched during EC2 calls)
@@ -228,6 +232,7 @@ def propagate_vpc_names(aws_config, current_config, path, current_path, resource
         target_path.append('Name')
         target_path = '.'.join(target_path)
         current_config['name'] = get_value_at(aws_config, target_path, target_path)
+
 
 def get_subnet_flow_logs_list(current_config, subnet):
     """

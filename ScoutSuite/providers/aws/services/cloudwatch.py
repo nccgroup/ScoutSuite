@@ -6,7 +6,6 @@ CloudWatch-related classes and functions
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 
 
-
 ########################################
 # CloudWatchRegionConfig
 ########################################
@@ -33,7 +32,6 @@ class CloudWatchRegionConfig(RegionConfig):
         self.alarms[alarm_id] = alarm
 
 
-
 ########################################
 # CloudWatchConfig
 ########################################
@@ -45,5 +43,5 @@ class CloudWatchConfig(RegionalServiceConfig):
 
     region_config_class = CloudWatchRegionConfig
 
-    def __init__(self, service_metadata, thread_config = 4):
+    def __init__(self, service_metadata, thread_config=4):
         super(CloudWatchConfig, self).__init__(service_metadata, thread_config)
