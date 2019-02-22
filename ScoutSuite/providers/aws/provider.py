@@ -274,6 +274,7 @@ class AWSProvider(BaseProvider):
     def _update_bucket_permissions(self, s3_info, iam_info, action, iam_entity, allowed_iam_entity, full_path,
                                    policy_type,
                                    policy_name):
+        global policy
         allowed_buckets = []
         # By default, all buckets are allowed
         for bucket_name in s3_info['buckets']:
@@ -522,6 +523,7 @@ class AWSProvider(BaseProvider):
                     printError('Unable to determine VPC id for %s' % (str(subnet_id) if subnet_id else str(sg_id)))
                     continue
             if vpc_id:
+                # noinspection PyArgumentList
                 region_vpcs_config = get_object_at(current_path)
                 manage_dictionary(region_vpcs_config, vpc_id, {'clusters': {}})
                 region_vpcs_config[vpc_id]['clusters'][cluster_id] = cluster
@@ -541,6 +543,7 @@ class AWSProvider(BaseProvider):
         # if 'elbv2' in self.config['services']:
         # Do something too here...
 
+    # noinspection PyArgumentList
     @staticmethod
     def parse_elb_policies_callback(current_config, path, current_path, region_id, callback_args):
         region_config = get_object_at(['services', 'elb', ] + current_path + [region_id])

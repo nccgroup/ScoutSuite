@@ -53,6 +53,7 @@ class RegionalServiceConfig(object):
         self.regions = {}
         self.thread_config = thread_configs[thread_config]
         self.service = re.sub(r'Config$', "", type(self).__name__).lower()
+        self.fetchstatuslogger = None
 
         # Booleans that define if threads should keep running
         self.run_q_threads = True
@@ -75,7 +76,7 @@ class RegionalServiceConfig(object):
                     continue
                 params = resource_metadata['params'] if 'params' in resource_metadata else {}
                 ignore_exceptions = True if 'no_exceptions' in resource_metadata and \
-                                            resource_metadata['no_exceptions'] == True else False
+                                            resource_metadata['no_exceptions'] else False
                 if not only_first_region:
                     self.targets['other_regions'] += ((resource,
                                                        resource_metadata['response'],
@@ -158,7 +159,8 @@ class RegionalServiceConfig(object):
         for j in range(self.thread_config['list']):
             qr.put(None)
 
-    def _init_threading(self, function, params=None, num_threads=10):
+    @staticmethod
+    def _init_threading(function, params=None, num_threads=10):
         """
         Initialize queue and threads
 
@@ -257,11 +259,13 @@ class RegionConfig(BaseConfig):
     Base class for ...
     """
 
-    def __init__(self, region_name, resource_types=None):
+    def __init__(self, region_name, resource_types=None, **kwargs):
+        super().__init__(**kwargs)
         resource_types = {} if resource_types is None else resource_types
         self.region = region_name
         self.name = region_name
         self.id = region_name
+        self.fetchstatuslogger = None
         for resource_type in resource_types['region'] + resource_types['global']:
             setattr(self, resource_type, {})
             setattr(self, '%s_count' % resource_type, 0)
