@@ -2,7 +2,7 @@
 
 from opinel.utils.console import printError, printException, printInfo, printDebug
 
-from ScoutSuite.providers.aws.services.awslambda import Lambdas
+from ScoutSuite.providers.aws.services.awslambda.service import Lambdas
 from ScoutSuite.providers.aws.services.cloudformation import CloudFormationConfig
 from ScoutSuite.providers.aws.services.cloudtrail import CloudTrailConfig
 from ScoutSuite.providers.aws.services.cloudwatch import CloudWatchConfig
