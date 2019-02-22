@@ -155,7 +155,7 @@ class VPCConfig(RegionalServiceConfig):
 
 
 ########################################
-##### VPC analysis functions
+# VPC analysis functions
 ########################################
 
 known_cidrs = {'0.0.0.0/0': 'All'}

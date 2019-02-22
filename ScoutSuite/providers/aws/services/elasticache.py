@@ -27,8 +27,8 @@ class ElastiCacheRegionConfig(RegionConfig):
         # Must fetch info about the subnet group to retrieve the VPC ID...
         if 'CacheSubnetGroupName' in cluster:
             subnet_group = \
-            api_clients[region].describe_cache_subnet_groups(CacheSubnetGroupName=cluster['CacheSubnetGroupName'])[
-                'CacheSubnetGroups'][0]
+                api_clients[region].describe_cache_subnet_groups(CacheSubnetGroupName=cluster['CacheSubnetGroupName'])[
+                    'CacheSubnetGroups'][0]
             vpc_id = subnet_group['VpcId']
         else:
             vpc_id = ec2_classic

@@ -27,7 +27,10 @@ try:
     from ScoutSuite.providers.aws.services.dynamodb_private import DynamoDBConfig
     from ScoutSuite.providers.aws.services.kms_private import KMSConfig
 except ImportError:
-    pass
+    ConfigConfig = None
+    DynamoDBConfig = None
+    KMSConfig = None
+
 
 class AWSServicesConfig(BaseServicesConfig):
     """

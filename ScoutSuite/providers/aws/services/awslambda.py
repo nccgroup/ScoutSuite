@@ -3,7 +3,7 @@
 Lambda-related classes and functions
 """
 
-from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
+from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig
 
 
 ########################################

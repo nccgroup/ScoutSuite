@@ -21,14 +21,13 @@ class RDSRegionConfig(RegionConfig):
         """
         Parse a single RDS instance
 
+        :param dbi:
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
-        :param instance:                Instance
         """
         vpc_id = dbi['DBSubnetGroup']['VpcId'] if 'DBSubnetGroup' in dbi and 'VpcId' in dbi['DBSubnetGroup'] and \
                                                   dbi['DBSubnetGroup']['VpcId'] else ec2_classic
-        instance = {}
-        instance['name'] = dbi.pop('DBInstanceIdentifier')
+        instance = {'name': dbi.pop('DBInstanceIdentifier')}
         for key in ['InstanceCreateTime', 'Engine', 'DBInstanceStatus', 'AutoMinorVersionUpgrade',
                     'DBInstanceClass', 'MultiAZ', 'Endpoint', 'BackupRetentionPeriod', 'PubliclyAccessible',
                     'StorageEncrypted', 'VpcSecurityGroups', 'DBSecurityGroups', 'DBParameterGroups',
@@ -91,7 +90,7 @@ class RDSRegionConfig(RegionConfig):
             printError('Failed fetching DB parameters for %s' % parameter_group['name'])
         # Save
         parameter_group_id = self.get_non_provider_id(parameter_group['name'])
-        (self).parameter_groups[parameter_group_id] = parameter_group
+        self.parameter_groups[parameter_group_id] = parameter_group
 
     def parse_security_group(self, global_params, region, security_group):
         """
@@ -138,10 +137,8 @@ def get_security_groups_info(rds_client, region_info):
 
 
 def parse_security_group(group):
-    security_group = {}
-    security_group['name'] = group['DBSecurityGroupName']
-    security_group['description'] = group['DBSecurityGroupDescription']
-    security_group['ec2_groups'] = {}
+    security_group = {'name': group['DBSecurityGroupName'], 'description': group['DBSecurityGroupDescription'],
+                      'ec2_groups': {}}
     for grant in group['EC2SecurityGroups']:
         if 'EC2SecurityGroupId' in grant:
             group_id = grant.pop('EC2SecurityGroupId')

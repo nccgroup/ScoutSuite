@@ -20,7 +20,7 @@ class Route53DomainsConfig(AWSBaseConfig):
         super(Route53DomainsConfig, self).__init__(target_config)
 
     ########################################
-    ##### Domains
+    # Domains
     ########################################
     def parse_domains(self, domain, params):
         """
@@ -50,7 +50,7 @@ class Route53Config(AWSBaseConfig):
         super(Route53Config, self).__init__(target_config)
 
     ########################################
-    ##### hosted_zoness
+    # Hosted_zoness
     ########################################
     def parse_hosted_zones(self, hosted_zone, params):
         """

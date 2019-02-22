@@ -14,6 +14,7 @@ from ScoutSuite.utils import ec2_classic, manage_dictionary
 # ELBv2RegionConfig
 ########################################
 
+# noinspection PyBroadException
 class ELBv2RegionConfig(RegionConfig):
     """
     ELBv2 configuration for a single AWS region
@@ -26,7 +27,6 @@ class ELBv2RegionConfig(RegionConfig):
 
         :param global_params:
         :param region:
-        :param source:
         :return:
         """
         lb['arn'] = lb.pop('LoadBalancerArn')

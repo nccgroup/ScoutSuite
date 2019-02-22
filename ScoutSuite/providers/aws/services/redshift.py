@@ -59,9 +59,9 @@ class RedshiftRegionConfig(RegionConfig):
         """
         Parse a single Redsfhit security group
 
+        :param security_group:
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
-        :param security)_group:         Security group
         """
         name = security_group.pop('ClusterSecurityGroupName')
         security_group['name'] = name

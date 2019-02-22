@@ -70,9 +70,6 @@ class S3Config(AWSBaseConfig):
         get_s3_bucket_policy(api_client, bucket['name'], bucket)
         get_s3_bucket_secure_transport(api_client, bucket['name'], bucket)
         # If requested, get key properties
-        # if params['check_encryption'] or params['check_acls']:
-        #    get_s3_bucket_keys(api_client, bucket['name'], bucket, params['check_encryption'],
-        #                       params['check_acls'])
         bucket['id'] = self.get_non_provider_id(bucket['name'])
         self.buckets[bucket['id']] = bucket
 
@@ -156,8 +153,7 @@ def update_bucket_permissions(s3_info, iam_info, action, iam_entity, allowed_iam
                 allowed_buckets.remove(bucket_name)
             elif bucket_name == '*':
                 allowed_buckets = []
-    policy_info = {}
-    policy_info[policy_type] = {}
+    policy_info = {policy_type: {}}
     policy_info[policy_type][policy_name] = \
         iam_info['permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['NotResource'][full_path][
             policy_type][policy_name]
@@ -261,13 +257,14 @@ def get_s3_bucket_secure_transport(api_client, bucket_name, bucket_info):
         return False
 
 
+# noinspection PyBroadException
 def get_s3_bucket_versioning(api_client, bucket_name, bucket_info):
     try:
         versioning = api_client.get_bucket_versioning(Bucket=bucket_name)
         bucket_info['versioning_status_enabled'] = _status_to_bool(versioning.get('Status'))
         bucket_info['version_mfa_delete_enabled'] = _status_to_bool(versioning.get('MFADelete'))
         return True
-    except Exception as e:
+    except Exception:
         bucket_info['versioning_status_enabled'] = None
         bucket_info['version_mfa_delete_enabled'] = None
         return False
@@ -294,12 +291,13 @@ def get_s3_bucket_logging(api_client, bucket_name, bucket_info):
         return False
 
 
+# noinspection PyBroadException
 def get_s3_bucket_webhosting(api_client, bucket_name, bucket_info):
     try:
         result = api_client.get_bucket_website(Bucket=bucket_name)
         bucket_info['web_hosting_enabled'] = 'IndexDocument' in result
         return True
-    except Exception as e:
+    except Exception:
         # TODO: distinguish permission denied from  'NoSuchWebsiteConfiguration' errors
         bucket_info['web_hosting_enabled'] = False
         return False
@@ -387,12 +385,10 @@ def get_s3_bucket_keys(api_client, bucket_name, bucket, check_encryption, check_
             # noinspection PyBroadException
             try:
                 key['grantees'] = get_s3_acls(api_client, bucket_name, bucket, key_name=key['name'])
-            except Exception as e:
+            except Exception:
                 continue
         # Save it
         bucket['keys'].append(key)
-        # FIXME - commented for now as this method doesn't seem to be defined anywhere'
-        # update_status(key_count, bucket['keys_count'], 'keys')
 
 
 def get_s3_list_region(region):
