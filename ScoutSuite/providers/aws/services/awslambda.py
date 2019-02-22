@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from ScoutSuite.providers.base.configs.resources import Resources
 from ScoutSuite.providers.aws.configs.regions_config import RegionsConfig
-from ScoutSuite.providers.aws.aws_facade import AWSFacade
+from ScoutSuite.providers.aws.facade import AWSFacade
 from opinel.utils.aws import build_region_list
 
 
