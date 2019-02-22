@@ -3,7 +3,7 @@
 ELBv2-related classes and functions
 """
 
-from opinel.utils.aws import handle_truncated_response
+from ScoutSuite.providers.aws.aws import handle_truncated_response
 
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig

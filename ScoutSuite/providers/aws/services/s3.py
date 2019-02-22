@@ -6,7 +6,7 @@ S3-related classes and functions
 import json
 
 from botocore.exceptions import ClientError
-from opinel.utils.aws import handle_truncated_response
+from ScoutSuite.providers.aws.aws import handle_truncated_response
 from ScoutSuite.core.console import printError, printException, printInfo
 from ScoutSuite.utils import manage_dictionary
 
