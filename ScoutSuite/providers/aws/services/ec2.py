@@ -1,6 +1,9 @@
 from ScoutSuite.providers.base.configs.resources import Resources
-from ScoutSuite.providers.aws.configs.regions_config import RegionsConfig, RegionalResources
+from ScoutSuite.providers.aws.configs.regions_config import RegionsConfig, ScopedResources
 from ScoutSuite.providers.aws.facade import AWSFacade
+
+from opinel.utils.aws import get_name
+from ScoutSuite.utils import get_keys, ec2_classic
 
 
 class EC2(RegionsConfig):
@@ -12,29 +15,71 @@ class EC2(RegionsConfig):
         await super(EC2, self).fetch_all(chosen_regions=regions, partition_name=partition_name)
 
         for region in self['regions']:
-            self['regions'][region] = await EC2Instances().fetch_all(region)
+            self['regions'][region] = await Vpcs().fetch_all(region)
 
 
-class EC2Instances(RegionalResources):
+class Vpcs(ScopedResources):
     def __init__(self):
+        self.facade = AWSFacade()
+        super(Vpcs, self).__init__('vpcs')
+
+    async def fetch_all(self, region):
+        await super(Vpcs, self).fetch_all(region)
+
+        for vpc in self['vpcs']:
+            # TODO: Add vpc_resource_types
+            instances = await EC2Instances(region).fetch_all(vpc)
+            self['vpcs'][vpc].update(instances)
+
+        self['instances_count'] = sum([vpc['instances_count'] for vpc in self['vpcs'].values()])
+
+        return self
+
+    def parse_resource(self, vpc):
+        return vpc['VpcId'], vpc
+
+    async def get_resources_in_scope(self, region):
+        return self.facade.get_vpcs(region)
+
+
+class EC2Instances(ScopedResources):
+    def __init__(self, region):
+        self.region = region
         self.facade = AWSFacade()
         super(EC2Instances, self).__init__('instances')
 
-    def parse_resource(self, resource):
-        return resource['name'], resource
+    def parse_resource(self, raw_instance):
+        instance = {}
+        #instance['reservation_id'] = reservation['ReservationId']
+        id = raw_instance['InstanceId']
+        instance['id'] = id
+        instance['monitoring_enabled'] = raw_instance['Monitoring']['State'] == 'enabled'
+        instance['user_data'] = self.facade.get_ec2_instance_user_data(
+            self.region, id)
 
-    async def get_regional_resources(self, region):
-        return [
-            {
-                'name': 'lel',
-                'some attribute': True
-            },
-            {
-                'name': 'lel2',
-                'some attribute': True
-            },
-        ]
+        # TODO: Those methods are slightly sketchy in my opinion (get methods which set stuff in a dictionary, say what)
+        get_name(raw_instance, instance, 'InstanceId')
+        get_keys(raw_instance, instance, ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile', 'SubnetId'])
 
+        instance['network_interfaces'] = {}
+        for eni in raw_instance['NetworkInterfaces']:
+            nic = {}
+            get_keys(eni, nic, ['Association', 'Groups', 'PrivateIpAddresses', 'SubnetId', 'Ipv6Addresses'])
+            instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
+
+        return id, instance
+
+    async def get_resources_in_scope(self, vpcs): 
+        return self.facade.get_ec2_instances(self.region, vpcs)
+
+class EC2Images(ScopedResources):
+    def __init__(self, region):
+        self.region = region
+        self.facade = AWSFacade()
+        super(EC2Images, self).__init__('images')
+    
+    async def get_resources_in_scope(self, vpcs): 
+        return self.facade.get_ec2_instances(self.region, vpcs)
 
 # # -*- coding: utf-8 -*-
 # """

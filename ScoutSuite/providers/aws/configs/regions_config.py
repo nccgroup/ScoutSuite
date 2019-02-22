@@ -19,15 +19,15 @@ class RegionsConfig(Resources):
         self['regions_count'] = len(self['regions'])
 
 
-class RegionalResources(Resources):
+class ScopedResources(Resources):
     def __init__(self, key):
         self.key = key
 
-    async def fetch_all(self, region):
+    async def fetch_all(self, scope):
         resources = {}
-        for raw_resource in await self.get_regional_resources(region):
-            name, function = self.parse_resource(raw_resource)
-            resources[name] = function
+        for raw_resource in await self.get_resources_in_scope(scope):
+            name, ressource = self.parse_resource(raw_resource)
+            resources[name] = ressource
 
         self[self.key + '_count'] = len(resources)
         self[self.key] = resources
@@ -38,5 +38,5 @@ class RegionalResources(Resources):
         raise NotImplementedError()
 
     @abc.abstractclassmethod
-    async def get_regional_resources(self, region):
+    async def get_resources_in_scope(self, region):
         raise NotImplementedError()
