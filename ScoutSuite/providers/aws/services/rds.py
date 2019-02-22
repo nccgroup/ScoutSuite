@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from ScoutSuite.providers.aws.aws import handle_truncated_response
 from ScoutSuite.core.console import printError, printException
-
+from ScoutSuite.providers.aws.aws import handle_truncated_response
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
 from ScoutSuite.utils import ec2_classic, manage_dictionary

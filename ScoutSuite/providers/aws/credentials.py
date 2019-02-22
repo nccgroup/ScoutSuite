@@ -1,20 +1,21 @@
 # Import future print
 from __future__ import print_function
 
-import boto3
 import datetime
-import dateutil.parser
-import json
 import fileinput
+import json
 import os
 import re
-import requests  # TODO: get rid of that and make sure urllib2 validates certs ?
 import string
+
+import boto3
+import dateutil.parser
+import requests  # TODO: get rid of that and make sure urllib2 validates certs ?
 
 from ScoutSuite.core.console import printException, printError, printInfo
 from ScoutSuite.core.console import prompt_4_mfa_code
-from opinel.utils.fs import save_blob_as_json
 from ScoutSuite.providers.aws.aws import connect_service
+from opinel.utils.fs import save_blob_as_json
 
 ########################################
 # Globals
