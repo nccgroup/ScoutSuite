@@ -15,6 +15,7 @@ from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.utils import ec2_classic, manage_dictionary
 
 
+# noinspection PyBroadException
 class AWSProvider(BaseProvider):
     """
     Implements provider for AWS
@@ -178,7 +179,8 @@ class AWSProvider(BaseProvider):
     def _process_network_acls_check_for_aws_default(self, network_acl, direction):
         if len(network_acl['rules'][direction]) == 2 and int(
                 network_acl['allow_all_%s_traffic' % direction]) > 0 and '100' in network_acl['rules'][direction]:
-            # Assume it is AWS' default rules because there are 2 rules (100 and 65535) and the first rule allows all traffic
+            # Assume it is AWS' default rules because there are 2 rules (100 and 65535) and the first rule allows all
+            # traffic
             network_acl['use_default_%s_rules' % direction] = True
         else:
             network_acl['use_default_%s_rules' % direction] = False
@@ -234,7 +236,7 @@ class AWSProvider(BaseProvider):
                         for allowed_iam_entity in iam_info['permissions']['Action'][action][iam_entity]['Allow']:
                             # For resource statements, we can easily rely on the existing permissions structure
                             if 'Resource' in iam_info['permissions']['Action'][action][iam_entity]['Allow'][
-                                allowed_iam_entity]:
+                                    allowed_iam_entity]:
                                 for full_path in (x for x in
                                                   iam_info['permissions']['Action'][action][iam_entity]['Allow'][
                                                       allowed_iam_entity]['Resource'] if
@@ -245,7 +247,8 @@ class AWSProvider(BaseProvider):
                                                                  iam_info['permissions']['Action'][action][iam_entity][
                                                                      'Allow'][allowed_iam_entity]['Resource'][
                                                                      full_path])
-                            # For notresource statements, we must fetch the policy document to determine which buckets are not protected
+                            # For notresource statements, we must fetch the policy document to determine which
+                            # buckets are not protected
                             if 'NotResource' in iam_info['permissions']['Action'][action][iam_entity]['Allow'][
                                 allowed_iam_entity]:
                                 for full_path in (x for x in
@@ -567,7 +570,7 @@ class AWSProvider(BaseProvider):
             vpc_path = combine_paths(current_path[0:4], ['vpcs', attached_resource])
             try:
                 attached_vpc = get_object_at(self, vpc_path)
-            except Exception as e:
+            except Exception:
                 printDebug(
                     'It appears that the flow log %s is attached to a resource that was previously deleted (%s).' % (
                         flow_log_id, attached_resource))
@@ -587,14 +590,6 @@ class AWSProvider(BaseProvider):
             manage_dictionary(subnet, 'flow_logs', [])
             if flow_log_id not in subnet['flow_logs']:
                 subnet['flow_logs'].append(flow_log_id)
-            # TODO this is pre-merge (from Loic) code
-            # all_vpcs = get_object_at(self, combine_paths(current_path[0:2], ['vpcs']))
-            # for vpc in self.services['vpc']:
-            #     if attached_resource in all_vpcs[vpc]['subnets']:
-            #         manage_dictionary(all_vpcs[vpc]['subnets'][attached_resource], 'flow_logs', [])
-            #         if flow_log_id not in all_vpcs[vpc]['subnets'][attached_resource]['flow_logs']:
-            #             all_vpcs[vpc]['subnets'][attached_resource]['flow_logs'].append(flow_log_id)
-            #         break
         else:
             printError('Resource %s attached to flow logs is not handled' % attached_resource)
 
@@ -603,7 +598,7 @@ class AWSProvider(BaseProvider):
         service_config = self.services[service]
         manage_dictionary(service_config, 'external_attack_surface', {})
         if (service == 'redshift' or service == 'rds') and 'PubliclyAccessible' in current_config and current_config[
-            'PubliclyAccessible']:
+                'PubliclyAccessible']:
             public_dns = current_config['Endpoint']['Address']
             listeners = [current_config['Endpoint']['Port']]
             security_groups = current_config['VpcSecurityGroups']
@@ -611,8 +606,8 @@ class AWSProvider(BaseProvider):
                                                    current_path, [g['VpcSecurityGroupId'] for g in security_groups],
                                                    listeners)
         elif 'ConfigurationEndpoint' in current_config:
-            public_dns = current_config['ConfigurationEndpoint']['Address'].replace('.cfg',
-                                                                                    '')  # TODO : get the proper addresss
+            # TODO : get the proper addresss
+            public_dns = current_config['ConfigurationEndpoint']['Address'].replace('.cfg', '')
             listeners = [current_config['ConfigurationEndpoint']['Port']]
             security_groups = current_config['SecurityGroups']
             self._security_group_to_attack_surface(service_config['external_attack_surface'], public_dns,
@@ -636,7 +631,6 @@ class AWSProvider(BaseProvider):
                 elb_config['external_attack_surface'][public_dns]['protocols'][protocol]['ports'][listener][
                     'cidrs'].append({'CIDR': '0.0.0.0/0'})
         elif current_path[1] == 'elbv2' and current_config['Scheme'] == 'internet-facing':
-            vpc_id = current_path[5]
             elb_config['external_attack_surface'][public_dns] = {'protocols': {}}
             security_groups = [g['GroupId'] for g in current_config['security_groups']]
             listeners = []
@@ -666,7 +660,6 @@ class AWSProvider(BaseProvider):
             sg_path.append('rules')
             sg_path.append('ingress')
             ingress_rules = get_object_at(self, sg_path)
-            public_ip_grants = {}
             for p in ingress_rules['protocols']:
                 for port in ingress_rules['protocols'][p]['ports']:
                     if len(listeners) == 0 and 'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
@@ -688,8 +681,7 @@ class AWSProvider(BaseProvider):
                         else:
                             port_min = port_max = int(port)
                         for listener in listeners:
-                            if (port_min and port_max) and \
-                                    int(listener) > port_min and int(listener) < port_max and \
+                            if (port_min and port_max) and port_min < int(listener) < port_max and \
                                     'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
                                 manage_dictionary(attack_surface_config[public_ip]['protocols'], p, {'ports': {}})
                                 manage_dictionary(attack_surface_config[public_ip]['protocols'][p]['ports'],

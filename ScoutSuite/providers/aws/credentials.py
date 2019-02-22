@@ -456,6 +456,7 @@ def complete_profile(f, credentials, session_token_written, mfa_serial_written):
 ########################################
 
 
+# noinspection PyBroadException,PyBroadException
 def read_creds(profile_name, csv_file=None, mfa_serial_arg=None, mfa_code=None, force_init=False,
                role_session_name='opinel'):
     """
@@ -515,9 +516,9 @@ def read_creds(profile_name, csv_file=None, mfa_serial_arg=None, mfa_code=None, 
                     if expiration < current:
                         print('Role\'s credentials have expired on %s' % credentials['Expiration'])
                         credentials = oldcred
-            except Exception as e:
+            except Exception:
                 pass
-            if not expiration or expiration < current or credentials['AccessKeyId'] == None:
+            if not expiration or expiration < current or credentials['AccessKeyId'] is None:
                 if source_profile:
                     credentials = read_creds(source_profile)
                 if role_mfa_serial:

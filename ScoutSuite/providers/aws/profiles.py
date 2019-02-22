@@ -14,6 +14,7 @@ aws_config_file = os.path.join(aws_dir, 'config')
 re_profile_name = re.compile(r'(\[(profile\s+)?(.*?)\])')
 
 
+# noinspection PyBroadException
 class AWSProfile(object):
 
     def __init__(self, filename=None, raw_profile=None, name=None, credentials=None, account_id=None):
@@ -84,25 +85,31 @@ class AWSProfile(object):
 class AWSProfiles(object):
 
     @staticmethod
-    def list(names=[]):
+    def list(names=None):
         """
         @brief
 
         :return:                        List of all profile names found in .aws/config and .aws/credentials
         """
+        if names is None:
+            names = []
         return [p.name for p in AWSProfiles.get(names)]
 
     @staticmethod
-    def get(names=[], quiet=False):
+    def get(names=None, quiet=False):
         """
         """
+        if names is None:
+            names = []
         profiles = []
         profiles += AWSProfiles.find_profiles_in_file(aws_credentials_file, names, quiet)
         profiles += AWSProfiles.find_profiles_in_file(aws_config_file, names, quiet)
         return profiles
 
     @staticmethod
-    def find_profiles_in_file(filename, names=[], quiet=True):
+    def find_profiles_in_file(filename, names=None, quiet=True):
+        if names is None:
+            names = []
         profiles = []
         if type(names) != list:
             names = [names]
