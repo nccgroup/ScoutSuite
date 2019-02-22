@@ -33,7 +33,7 @@ re_external_id = re.compile(r'aws_external_id')
 re_gov_region = re.compile(r'(.*?)-gov-(.*?)')
 re_cn_region = re.compile(r'^cn-(.*?)')
 
-re_port_range = re.compile(r'(\d+)\-(\d+)')
+re_port_range = re.compile(r"(\d+)-(\d+)")
 re_single_port = re.compile(r'(\d+)')
 
 mfa_serial = r'(aws_mfa_serial|mfa_serial)'
@@ -105,13 +105,15 @@ def get_cached_credentials_filename(role_name, role_arn):
                         (filename_p1, filename_p2))
 
 
-def get_profiles_from_aws_credentials_file(credentials_files=[aws_credentials_file, aws_config_file]):
+def get_profiles_from_aws_credentials_file(credentials_files=None):
     """
 
     :param credentials_files:
 
     :return:
     """
+    if credentials_files is None:
+        credentials_files = [aws_credentials_file, aws_config_file]
     profiles = []
     for filename in credentials_files:
         if os.path.isfile(filename):
@@ -124,11 +126,10 @@ def get_profiles_from_aws_credentials_file(credentials_files=[aws_credentials_fi
     return sorted(profiles)
 
 
-def generate_password(length=16):
+def generate_password():
     """
     Generate a password using random characters from uppercase, lowercase, digits, and symbols
 
-    :param length:                      Length of the password to be generated
     :return:                            The random password
     """
     chars = string.ascii_letters + string.digits + '!@#$%^&*()_+-=[]{};:,<.>?|'
@@ -150,14 +151,13 @@ def init_creds():
             'Expiration': None, 'SerialNumber': None, 'TokenCode': None}
 
 
-def init_sts_session(profile_name, credentials, duration=28800, session_name=None, save_creds=True):
+def init_sts_session(profile_name, credentials, duration=28800, save_creds=True):
     """
     Fetch STS credentials
 
     :param profile_name:
     :param credentials:
     :param duration:
-    :param session_name:
     :param save_creds:
     :return:
     """
