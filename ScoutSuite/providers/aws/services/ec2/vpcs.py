@@ -1,5 +1,5 @@
 from ScoutSuite.providers.aws.configs.regions_config import ScopedResources
-from ScoutSuite.providers.aws.facade import AWSFacade
+from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.aws.services.ec2.instances import EC2Instances
 
 
@@ -21,4 +21,4 @@ class Vpcs(ScopedResources):
         return vpc['VpcId'], vpc
 
     async def get_resources_in_scope(self, region):
-        return self.facade.get_vpcs(region)
+        return self.facade.ec2.get_vpcs(region)

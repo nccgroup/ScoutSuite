@@ -1,6 +1,5 @@
 from ScoutSuite.providers.base.configs.resources import Resources
 from ScoutSuite.providers.aws.configs.regions_config import Regions, ScopedResources
-from ScoutSuite.providers.aws.facade import AWSFacade
 from ScoutSuite.providers.aws.services.ec2.ami import AmazonMachineImages
 from ScoutSuite.providers.aws.services.ec2.vpcs import Vpcs
 
@@ -22,8 +21,6 @@ class EC2(Regions):
             self['regions'][region]['instances_count'] = sum([vpc['instances'].count for vpc in self['regions'][region]['vpcs'].values()])
             self['regions'][region]['images'] = await AmazonMachineImages(get_aws_account_id(credentials)).fetch_all(region)
             self['regions'][region]['images_count'] = self['regions'][region]['images'].count
-
-
 
 
 # # -*- coding: utf-8 -*-
@@ -128,23 +125,6 @@ class EC2(Regions):
 #                 rules_count = rules_count + 1
 
 #         return protocols, rules_count
-
-#     def parse_snapshot(self, global_params, region, snapshot):
-#         """
-
-#         :param global_params:           Parameters shared for all regions
-#         :param region:                  Name of the AWS region
-#         :param snapshot:                  Single snapshot
-#         :return:
-#         """
-#         snapshot['id'] = snapshot.pop('SnapshotId')
-#         snapshot['name'] = get_name(snapshot, snapshot, 'id')
-#         self.snapshots[snapshot['id']] = snapshot
-#         # Get snapshot attribute
-#         snapshot['createVolumePermission'] = \
-#         api_clients[region].describe_snapshot_attribute(Attribute='createVolumePermission', SnapshotId=snapshot['id'])[
-#             'CreateVolumePermissions']
-#         snapshot['public'] = self._is_public(snapshot)
 
 #     def _is_public(self, snapshot):
 #         return any([permission.get('Group') == 'all' for permission in snapshot['createVolumePermission']])

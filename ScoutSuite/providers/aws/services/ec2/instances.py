@@ -1,5 +1,5 @@
 from ScoutSuite.providers.aws.configs.regions_config import ScopedResources
-from ScoutSuite.providers.aws.facade import AWSFacade
+from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from opinel.utils.aws import get_name
 from ScoutSuite.utils import get_keys
 
@@ -14,7 +14,7 @@ class EC2Instances(ScopedResources):
         id = raw_instance['InstanceId']
         instance['id'] = id
         instance['monitoring_enabled'] = raw_instance['Monitoring']['State'] == 'enabled'
-        instance['user_data'] = self.facade.get_ec2_instance_user_data(
+        instance['user_data'] = self.facade.ec2.get_instance_user_data(
             self.region, id)
 
         # TODO: Those methods are slightly sketchy in my opinion (get methods which set stuff in a dictionary, say what)
@@ -30,4 +30,4 @@ class EC2Instances(ScopedResources):
         return id, instance
 
     async def get_resources_in_scope(self, vpcs): 
-        return self.facade.get_ec2_instances(self.region, vpcs)
+        return self.facade.ec2.get_instances(self.region, vpcs)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from ScoutSuite.providers.base.configs.resources import Resources
-from ScoutSuite.providers.aws.facade import AWSFacade
+from ScoutSuite.providers.aws.facade.facade import AWSFacade
 import abc
 
 
