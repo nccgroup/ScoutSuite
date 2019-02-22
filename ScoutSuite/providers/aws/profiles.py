@@ -5,7 +5,7 @@ import re
 
 from ScoutSuite.providers.aws.aws import get_aws_account_id
 from ScoutSuite.core.console import printDebug
-from opinel.utils.credentials import read_creds
+from ScoutSuite.providers.aws.credentials import read_creds
 
 aws_dir = os.path.join(os.path.expanduser('~'), '.aws')
 aws_credentials_file = os.path.join(aws_dir, 'credentials')
