@@ -20,12 +20,11 @@ class CloudTrailRegionConfig(RegionConfig):
         """
         Parse a single CloudTrail trail
 
+        :param trail:
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
-        :param cluster:                 Trail
         """
-        trail_config = {}
-        trail_config['name'] = trail.pop('Name')
+        trail_config = {'name': trail.pop('Name')}
         trail_id = self.get_non_provider_id(trail_config['name'])
         trail_details = None
 

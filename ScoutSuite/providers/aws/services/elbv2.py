@@ -25,6 +25,7 @@ class ELBv2RegionConfig(RegionConfig):
     def parse_lb(self, global_params, region, lb):
         """
 
+        :param lb:
         :param global_params:
         :param region:
         :return:

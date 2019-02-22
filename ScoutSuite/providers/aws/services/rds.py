@@ -96,9 +96,9 @@ class RDSRegionConfig(RegionConfig):
         """
         Parse a single Redsfhit security group
 
+        :param security_group:
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
-        :param security)_group:         Security group
         """
         # vpc_id = security_group.pop('VpcId') if 'VpcId' in security_group else ec2_classic
         # manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))

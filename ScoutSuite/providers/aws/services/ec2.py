@@ -47,9 +47,9 @@ class EC2RegionConfig(RegionConfig):
         """
         Parse a single EC2 instance
 
+        :param reservation:
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
-        :param instance:                Cluster
         """
         for i in reservation['Instances']:
             instance = {}
@@ -82,6 +82,7 @@ class EC2RegionConfig(RegionConfig):
         """
         Parses a single AMI (Amazon Machine Image)
 
+        :param image:
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
         """

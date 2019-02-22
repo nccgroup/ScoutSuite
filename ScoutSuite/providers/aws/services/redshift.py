@@ -49,11 +49,9 @@ class RedshiftRegionConfig(RegionConfig):
         parameters = handle_truncated_response(api_client.describe_cluster_parameters, {'ParameterGroupName': pg_name},
                                                ['Parameters'])['Parameters']
         for parameter in parameters:
-            param = {}
-            param['value'] = parameter['ParameterValue']
-            param['source'] = parameter['Source']
+            param = {'value': parameter['ParameterValue'], 'source': parameter['Source']}
             parameter_group['parameters'][parameter['ParameterName']] = param
-        (self).parameter_groups[pg_id] = parameter_group
+        self.parameter_groups[pg_id] = parameter_group
 
     def parse_security_group(self, global_params, region, security_group):
         """
