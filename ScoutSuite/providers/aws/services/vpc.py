@@ -3,7 +3,7 @@
 import netaddr
 import copy
 
-from opinel.utils.aws import get_name
+from ScoutSuite.providers.aws.aws import get_name
 from opinel.utils.fs import load_data, read_ip_ranges
 
 from ScoutSuite.providers.base.configs.browser import get_value_at

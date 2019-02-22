@@ -7,7 +7,7 @@ EC2-related classes and functions
 import netaddr
 import base64
 
-from opinel.utils.aws import get_name
+from ScoutSuite.providers.aws.aws import get_name
 from ScoutSuite.core.console import printException, printInfo
 from opinel.utils.fs import load_data
 

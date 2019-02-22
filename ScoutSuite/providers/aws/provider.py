@@ -3,7 +3,7 @@
 import copy
 import os
 
-from opinel.utils.aws import get_aws_account_id
+from ScoutSuite.providers.aws.aws import get_aws_account_id
 from opinel.utils.credentials import read_creds
 
 from ScoutSuite.core.console import printDebug, printError, printException, printInfo

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.aws import handle_truncated_response
+from ScoutSuite.providers.aws.aws import handle_truncated_response
 
 from ScoutSuite.providers.aws.configs.base import AWSBaseConfig
 

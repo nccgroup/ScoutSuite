@@ -12,7 +12,7 @@ try:
 except ImportError:
     from queue import Queue
 
-from opinel.utils.aws import build_region_list, connect_service, get_aws_account_id, get_name, handle_truncated_response
+from ScoutSuite.providers.aws.aws import build_region_list, connect_service, get_aws_account_id, get_name, handle_truncated_response
 from ScoutSuite.core.console import printException, printInfo
 
 from ScoutSuite.providers.base.configs import resource_id_map
