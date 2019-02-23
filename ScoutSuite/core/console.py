@@ -115,18 +115,6 @@ def prompt_4_mfa_code(activate=False, input=None):
     return mfa_code
 
 
-def prompt_4_mfa_serial(input=None):
-    """
-    Prompt for an MFA serial number
-
-    :param input:                       Used for unit testing
-
-    :return:                            The MFA serial number
-    """
-    return prompt_4_value('Enter your MFA serial:', required=False, regex=re_mfa_serial_format,
-                          regex_format=mfa_serial_format, input=input)
-
-
 def prompt_4_overwrite(filename, force_write, input=None):
     """
     Prompt whether the file should be overwritten
