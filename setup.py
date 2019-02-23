@@ -58,8 +58,8 @@ setup(
             'gcp/rules/findings/*.json',
             'gcp/rules/rulesets/*.json'
         ],
-        'opinel': [
-            'data/*.json',
+        'ScoutSuite.data': [
+            '*.json'
         ]
     },
     include_package_data=True,
