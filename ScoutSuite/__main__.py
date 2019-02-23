@@ -9,7 +9,7 @@ import webbrowser
 from ScoutSuite.core.console import configPrintException, printInfo, printDebug
 from ScoutSuite.providers.aws.profiles import AWSProfiles
 
-from ScoutSuite.cli_parser import ScoutSuiteArgumentParser
+from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
 from ScoutSuite import AWSCONFIG
 from ScoutSuite.output.html import Scout2Report
 from ScoutSuite.core.exceptions import RuleExceptions
