@@ -80,7 +80,7 @@ class AWSServicesConfig(BaseServicesConfig):
             self.config = ConfigConfig(metadata['management']['config'], thread_config)
             self.dynamodb = DynamoDBConfig(metadata['database']['dynamodb'], thread_config)
             self.kms = KMSConfig(metadata['security']['kms'], thread_config)
-        except:
+        except (NameError, TypeError):
             pass
 
     def _is_provider(self, provider_name):
