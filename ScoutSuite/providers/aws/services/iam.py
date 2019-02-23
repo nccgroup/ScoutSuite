@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from botocore.exceptions import ClientError
-from ScoutSuite.providers.aws.aws import connect_service, handle_truncated_response
-from ScoutSuite.core.console import printError, printException
 
+from ScoutSuite.core.console import printError, printException
+from ScoutSuite.providers.aws.aws import connect_service, handle_truncated_response
 from ScoutSuite.providers.aws.configs.base import AWSBaseConfig
 from ScoutSuite.utils import *
 

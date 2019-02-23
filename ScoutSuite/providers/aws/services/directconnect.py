@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
+from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig
 
 
 ########################################

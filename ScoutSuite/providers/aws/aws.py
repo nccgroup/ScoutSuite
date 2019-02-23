@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
+import time
+from collections import Counter
+
 import boto3
 from botocore.session import Session
-from collections import Counter
-import time
 
 from ScoutSuite.core.console import printInfo, printException
 

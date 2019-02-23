@@ -3,18 +3,18 @@
 EC2-related classes and functions
 """
 
-# TODO: move a lot of this to VPCconfig, and use some sort of filter to only list SGs in EC2 classic
-import netaddr
 import base64
 
-from ScoutSuite.providers.aws.aws import get_name
-from ScoutSuite.core.console import printException, printInfo
-from opinel.utils.fs import load_data
+# TODO: move a lot of this to VPCconfig, and use some sort of filter to only list SGs in EC2 classic
+import netaddr
 
+from ScoutSuite.core.console import printException, printInfo
+from ScoutSuite.providers.aws.aws import get_name
+from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
 from ScoutSuite.providers.base.configs.browser import get_attribute_at
 from ScoutSuite.utils import get_keys, ec2_classic, manage_dictionary
-from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
+from opinel.utils.fs import load_data
 
 ########################################
 # Globals

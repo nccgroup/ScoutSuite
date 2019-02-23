@@ -5,9 +5,8 @@ SNS-related classes and functions
 
 import json
 
-from ScoutSuite.utils import manage_dictionary
-
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
+from ScoutSuite.utils import manage_dictionary
 
 
 ########################################

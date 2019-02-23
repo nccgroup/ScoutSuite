@@ -7,7 +7,7 @@ import os
 import webbrowser
 
 from ScoutSuite.core.console import configPrintException, printInfo, printDebug
-from opinel.utils.profiles import AWSProfiles
+from ScoutSuite.providers.aws.profiles import AWSProfiles
 
 from ScoutSuite import AWSCONFIG
 from ScoutSuite.output.html import Scout2Report
