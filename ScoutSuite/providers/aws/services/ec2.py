@@ -14,7 +14,7 @@ from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, Regi
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
 from ScoutSuite.providers.base.configs.browser import get_attribute_at
 from ScoutSuite.utils import get_keys, ec2_classic, manage_dictionary
-from opinel.utils.fs import load_data
+from ScoutSuite.core.fs import load_data
 
 ########################################
 # Globals

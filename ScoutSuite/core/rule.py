@@ -3,7 +3,7 @@
 import json
 import re
 
-from opinel.utils.fs import read_ip_ranges
+from ScoutSuite.core.fs import read_ip_ranges
 from ScoutSuite.core.console import printError
 
 from ScoutSuite.utils import format_service_name

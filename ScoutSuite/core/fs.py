@@ -22,7 +22,7 @@ class CustomJSONEncoder(json.JSONEncoder):
             return o.__dict__
 
 
-def load_data(data_file, key_name=None, local_file=False, format='json'):
+def load_data(data_file, key_name=None, local_file=False):
     """
     Load a JSON data file
 
@@ -38,20 +38,10 @@ def load_data(data_file, key_name=None, local_file=False, format='json'):
             src_dir = os.getcwd()
             src_file = os.path.join(src_dir, data_file)
     else:
-        src_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
-        if not os.path.isdir(src_dir):
-            src_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../data')
+        src_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../data')
         src_file = os.path.join(src_dir, data_file)
     with open(src_file) as f:
-        if format == 'json':
-            data = json.load(f)
-        elif format == 'yaml':
-            data = yaml.load(f)
-        elif format not in ['json', 'yaml'] and not key_name:
-            data = f.read()
-        else:
-            printError('Error, argument \'key_name\' may not be used with data in %s format.' % format)
-            return None
+        data = json.load(f)
     if key_name:
         data = data[key_name]
     return data

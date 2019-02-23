@@ -128,6 +128,7 @@ def main(args=None):
         exceptions = exceptions.exceptions
     except Exception as e:
         printDebug('Warning, failed to load exceptions. The file may not exist or may have an invalid format.')
+        print(e)
         exceptions = {}
 
     # Finalize

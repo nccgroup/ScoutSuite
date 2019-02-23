@@ -9,7 +9,7 @@ from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, Regi
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig as SingleVPCConfig
 from ScoutSuite.providers.base.configs.browser import get_value_at
 from ScoutSuite.utils import ec2_classic, get_keys, manage_dictionary
-from opinel.utils.fs import load_data, read_ip_ranges
+from ScoutSuite.core.fs import load_data, read_ip_ranges
 
 ########################################
 # Globals

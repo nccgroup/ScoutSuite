@@ -6,7 +6,7 @@
     "conditions": [ "and",
         [ "this", "notEqual", "0.0.0.0/0" ],
         [ "this", "notEqual", "::/0" ],
-        [ "this", "notInSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges/aws.json, [])" ],
+        [ "this", "notInSubnets", "_IP_RANGES_FROM_FILE_(aws/ip-ranges/aws.json, [])" ],
         [ "this", "notInSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges-from-args, [])" ],
         [ "_INCLUDE_(conditions/ip-not-in-private-space.json)", "", "" ]
     ]

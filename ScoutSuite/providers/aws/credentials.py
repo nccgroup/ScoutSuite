@@ -15,7 +15,7 @@ import requests  # TODO: get rid of that and make sure urllib2 validates certs ?
 from ScoutSuite.core.console import printException, printError, printInfo
 from ScoutSuite.core.console import prompt_4_mfa_code
 from ScoutSuite.providers.aws.aws import connect_service
-from opinel.utils.fs import save_blob_as_json
+from ScoutSuite.core.fs import save_blob_as_json
 
 ########################################
 # Globals
