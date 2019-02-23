@@ -9,6 +9,7 @@ import webbrowser
 from ScoutSuite.core.console import configPrintException, printInfo, printDebug
 from ScoutSuite.providers.aws.profiles import AWSProfiles
 
+from ScoutSuite.cli_parser import ScoutSuiteArgumentParser
 from ScoutSuite import AWSCONFIG
 from ScoutSuite.output.html import Scout2Report
 from ScoutSuite.core.exceptions import RuleExceptions
@@ -17,12 +18,15 @@ from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.providers import get_provider
 
 
-def main(args):
+def main(args=None):
     """
     Main method that runs a scan
 
     :return:
     """
+    if not args:
+        parser = ScoutSuiteArgumentParser()
+        args = parser.parse_args()
 
     # Get the dictionnary to get None instead of a crash
     args = args.__dict__

@@ -3,11 +3,7 @@
 
 import sys
 
-from ScoutSuite.__main__ import main as scout
-from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
+from ScoutSuite.__main__ import main
 
 if __name__ == "__main__":
-    parser = ScoutSuiteArgumentParser()
-    args = parser.parse_args()
-
-    sys.exit(scout(args))
+    sys.exit(main())
