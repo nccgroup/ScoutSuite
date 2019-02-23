@@ -14,6 +14,7 @@ class CustomJSONEncoder(json.JSONEncoder):
     """
     JSON encoder class
     """
+
     def default(self, o):
         if type(o) == datetime.datetime:
             return str(o)
@@ -21,7 +22,7 @@ class CustomJSONEncoder(json.JSONEncoder):
             return o.__dict__
 
 
-def load_data(data_file, key_name = None, local_file = False, format = 'json'):
+def load_data(data_file, key_name=None, local_file=False, format='json'):
     """
     Load a JSON data file
 
@@ -56,7 +57,7 @@ def load_data(data_file, key_name = None, local_file = False, format = 'json'):
     return data
 
 
-def read_ip_ranges(filename, local_file = True, ip_only = False, conditions = []):
+def read_ip_ranges(filename, local_file=True, ip_only=False, conditions=[]):
     """
     Returns the list of IP prefixes from an ip-ranges file
 
@@ -67,12 +68,12 @@ def read_ip_ranges(filename, local_file = True, ip_only = False, conditions = []
     :return:
     """
     targets = []
-    data = load_data(filename, local_file = local_file)
+    data = load_data(filename, local_file=local_file)
     if 'source' in data:
         # Filtered IP ranges
         conditions = data['conditions']
         local_file = data['local_file'] if 'local_file' in data else False
-        data = load_data(data['source'], local_file = local_file, key_name = 'prefixes')
+        data = load_data(data['source'], local_file=local_file, key_name='prefixes')
     else:
         # Plain IP ranges
         data = data['prefixes']
@@ -95,7 +96,7 @@ def read_ip_ranges(filename, local_file = True, ip_only = False, conditions = []
         return targets
 
 
-def read_file(file_path, mode = 'rt'):
+def read_file(file_path, mode='rt'):
     """
     Read the contents of a file
 
@@ -122,13 +123,14 @@ def save_blob_as_json(filename, blob, force_write, debug):
     try:
         if prompt_4_overwrite(filename, force_write):
             with open(filename, 'wt') as f:
-                print('%s' % json.dumps(blob, indent=4 if debug else None, separators=(',', ': '), sort_keys=True, cls=CustomJSONEncoder), file=f)
+                print('%s' % json.dumps(blob, indent=4 if debug else None, separators=(',', ': '), sort_keys=True,
+                                        cls=CustomJSONEncoder), file=f)
     except Exception as e:
         printException(e)
         pass
 
 
-def save_ip_ranges(profile_name, prefixes, force_write, debug, output_format = 'json'):
+def save_ip_ranges(profile_name, prefixes, force_write, debug, output_format='json'):
     """
     Creates/Modifies an ip-range-XXX.json file
 
@@ -157,6 +159,7 @@ def save_ip_ranges(profile_name, prefixes, force_write, debug, output_format = '
         # Write as CSV
         output = 'account_id, region, ip, instance_id, instance_name\n'
         for prefix in unique_prefixes:
-            output += '%s, %s, %s, %s, %s\n' % (prefix['account_id'], prefix['region'], prefix['ip_prefix'], prefix['instance_id'], prefix['name'])
+            output += '%s, %s, %s, %s, %s\n' % (
+            prefix['account_id'], prefix['region'], prefix['ip_prefix'], prefix['instance_id'], prefix['name'])
         with open('ip-ranges-%s.csv' % profile_name, 'wt') as f:
             f.write(output)
