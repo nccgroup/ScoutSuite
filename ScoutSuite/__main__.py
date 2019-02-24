@@ -18,6 +18,7 @@ from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.providers import get_provider
 
 
+# noinspection PyBroadException
 def main(args=None):
     """
     Main method that runs a scan
@@ -128,7 +129,6 @@ def main(args=None):
         exceptions = exceptions.exceptions
     except Exception as e:
         print_debug('Warning, failed to load exceptions. The file may not exist or may have an invalid format.')
-        print(e)
         exceptions = {}
 
     # Finalize
