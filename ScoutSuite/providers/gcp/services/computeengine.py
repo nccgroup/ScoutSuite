@@ -210,8 +210,7 @@ class ComputeEngineConfig(GCPBaseConfig):
         return metadata.get('block-project-ssh-keys') == 'true'
 
     def _get_common_instance_metadata_dict(self, project_id):
-        request = self.api_client.projects().get(project=project_id)
-        project = request.execute()
+        project = self.api_client.projects().get(project=project_id).execute()
         return self._metadata_to_dict(project['commonInstanceMetadata'])
 
     def _is_oslogin_enabled(self, instance, project_id):
