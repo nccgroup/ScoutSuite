@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
-from ScoutSuite.providers.gcp.utils import gcp_connect_service
 
 from googleapiclient.errors import HttpError
 import json
@@ -81,6 +80,8 @@ class ComputeEngineConfig(GCPBaseConfig):
 
     def parse_instances(self, instance, params):
         project_id = self._get_project_id(instance)
+
+        self.api_client = params['api_client']
 
         instance_dict = {}
         instance_dict['id'] = self.get_non_provider_id(instance['name'])
@@ -209,8 +210,7 @@ class ComputeEngineConfig(GCPBaseConfig):
         return metadata.get('block-project-ssh-keys') == 'true'
 
     def _get_common_instance_metadata_dict(self, project_id):
-        computeengine_client = gcp_connect_service(service='computeengine')
-        request = computeengine_client.projects().get(project=project_id)
+        request = self.api_client.projects().get(project=project_id)
         project = request.execute()
         return self._metadata_to_dict(project['commonInstanceMetadata'])
 
