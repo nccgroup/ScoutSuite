@@ -2,28 +2,21 @@
 
 from azure.mgmt.sql import SqlManagementClient
 
-from ScoutSuite.providers.base.configs.resources import Resources
+from ..resources import AzureSimpleResources
 
 
-class TransparentDataEncryptions(Resources):
+class TransparentDataEncryptions(AzureSimpleResources):
 
     def __init__(self, resource_group_name, server_name, database_name):
         self.resource_group_name = resource_group_name
         self.server_name = server_name
         self.database_name = database_name
 
-        self.value = None
-
-    async def fetch_all(self, credentials, regions=None, partition_name='aws', targets=None):
-        # sdk container:
+    # TODO: make it really async.
+    async def get_resources_from_api(self, credentials):
         api = SqlManagementClient(credentials.credentials, credentials.subscription_id)
+        return api.transparent_data_encryptions.get(
+            self.resource_group_name, self.server_name, self.database_name)
 
-        encryptions =\
-            api.transparent_data_encryptions.get(self.resource_group_name, self.server_name, self.database_name)
-            # TODO: await api.transparent_data_encryptions.get(self.resource_group_name, self.server_name, self.database_name)
-
-        self['transparent_data_encryption_enabled'] = self._is_transparent_data_encryption_enabled(encryptions)
-
-    @staticmethod
-    def _is_transparent_data_encryption_enabled(encryptions):
-        return encryptions.status == "Enabled"
+    def parse_resource(self, encryptions):
+        return 'transparent_data_encryption_enabled', encryptions.status == "Enabled"
