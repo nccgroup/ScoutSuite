@@ -15,7 +15,7 @@ class TestScoutSuiteClass:
 
     @classmethod
     def setUpClass(cls):
-        configPrintException(True)
+        config_debug_level(True)
         creds = read_creds_from_environment_variables()
         cls.profile_name = 'travislike' if creds['AccessKeyId'] == None else None
         cls.has_run_scout_suite = False

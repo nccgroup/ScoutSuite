@@ -2,7 +2,7 @@
 
 from botocore.exceptions import ClientError
 
-from ScoutSuite.core.console import printError, printException
+from ScoutSuite.core.console import print_error, print_exception
 from ScoutSuite.providers.aws.aws import connect_service, handle_truncated_response
 from ScoutSuite.providers.aws.configs.base import AWSBaseConfig
 from ScoutSuite.utils import *
@@ -78,7 +78,7 @@ class IAMConfig(AWSBaseConfig):
             response = api_client.generate_credential_report()
             if response['State'] != 'COMPLETE':
                 if not ignore_exception:
-                    printError('Failed to generate a credential report.')
+                    print_error('Failed to generate a credential report.')
                 return
 
             report = api_client.get_credential_report()['Content']
@@ -109,8 +109,8 @@ class IAMConfig(AWSBaseConfig):
         except Exception as e:
             if ignore_exception:
                 return
-            printError('Failed to download a credential report.')
-            printException(e)
+            print_error('Failed to download a credential report.')
+            print_exception(e)
 
     def _compute_last_used(self, credential_report):
         dates = [credential_report['password_last_used'],
@@ -215,7 +215,7 @@ class IAMConfig(AWSBaseConfig):
             else:
                 raise e
         except Exception as e:
-            printError(str(e))
+            print_error(str(e))
 
     ########################################
     # Roles
@@ -341,7 +341,7 @@ class IAMConfig(AWSBaseConfig):
             if is_throttled(e):
                 raise e
             else:
-                printException(e)
+                print_exception(e)
                 return fetched_policies
         try:
             for policy_name in policy_names:
@@ -357,7 +357,7 @@ class IAMConfig(AWSBaseConfig):
             if is_throttled(e):
                 raise e
             else:
-                printException(e)
+                print_exception(e)
         return fetched_policies
 
     def __parse_permissions(self, policy_name, policy_document, policy_type, iam_resource_type, resource_name):

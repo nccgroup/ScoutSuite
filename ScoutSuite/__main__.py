@@ -6,7 +6,7 @@ import json
 import os
 import webbrowser
 
-from ScoutSuite.core.console import configPrintException, printInfo, printDebug
+from ScoutSuite.core.console import config_debug_level, print_info, print_debug
 from ScoutSuite.providers.aws.profiles import AWSProfiles
 
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
@@ -32,7 +32,7 @@ def main(args=None):
     args = args.__dict__
 
     # Configure the debug level
-    configPrintException(args.get('debug'))
+    config_debug_level(args.get('debug'))
 
     # Create a cloud provider object
     cloud_provider = get_provider(provider=args.get('provider'),
@@ -83,7 +83,7 @@ def main(args=None):
         try:
             cloud_provider.fetch(regions=args.get('regions'))
         except KeyboardInterrupt:
-            printInfo('\nCancelled by user')
+            print_info('\nCancelled by user')
             return 130
 
         # Update means we reload the whole config and overwrite part of it
@@ -127,7 +127,7 @@ def main(args=None):
         exceptions.process(cloud_provider)
         exceptions = exceptions.exceptions
     except Exception as e:
-        printDebug('Warning, failed to load exceptions. The file may not exist or may have an invalid format.')
+        print_debug('Warning, failed to load exceptions. The file may not exist or may have an invalid format.')
         print(e)
         exceptions = {}
 
@@ -157,7 +157,7 @@ def main(args=None):
 
     # Open the report by default
     if not args.get('no_browser'):
-        printInfo('Opening the HTML report...')
+        print_info('Opening the HTML report...')
         url = 'file://%s' % os.path.abspath(html_report_path)
         webbrowser.open(url, new=2)
 

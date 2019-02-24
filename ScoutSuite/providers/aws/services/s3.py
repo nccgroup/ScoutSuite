@@ -7,7 +7,7 @@ import json
 
 from botocore.exceptions import ClientError
 
-from ScoutSuite.core.console import printError, printException, printInfo
+from ScoutSuite.core.console import print_error, print_exception, print_info
 from ScoutSuite.providers.aws.aws import handle_truncated_response
 from ScoutSuite.providers.aws.configs.base import AWSBaseConfig
 from ScoutSuite.utils import manage_dictionary
@@ -57,7 +57,7 @@ class S3Config(AWSBaseConfig):
             bucket['region'] = 'eu-west-1'
         # h4ck :: S3 is global but region-aware...
         if bucket['region'] not in params['api_clients']:
-            printInfo('Skipping bucket %s (region %s outside of scope)' % (bucket['name'], bucket['region']))
+            print_info('Skipping bucket %s (region %s outside of scope)' % (bucket['name'], bucket['region']))
             self.buckets_count -= 1
             return
 
@@ -142,7 +142,7 @@ def update_bucket_permissions(s3_info, iam_info, action, iam_entity, allowed_iam
     elif policy_type == 'ManagedPolicies':
         policy = iam_info['ManagedPolicies'][policy_name]['PolicyDocument']
     else:
-        printError('Error, found unknown policy type.')
+        print_error('Error, found unknown policy type.')
     for statement in policy['Statement']:
         for target_path in statement['NotResource']:
             parts = target_path.split('/')
@@ -218,7 +218,7 @@ def get_s3_acls(api_client, bucket_name, bucket, key_name=None):
             set_s3_permissions(grantees[grantee]['permissions'], permission)
         return grantees
     except Exception as e:
-        printError('Failed to get ACL configuration for %s: %s' % (bucket_name, e))
+        print_error('Failed to get ACL configuration for %s: %s' % (bucket_name, e))
         return {}
 
 
@@ -228,7 +228,7 @@ def get_s3_bucket_policy(api_client, bucket_name, bucket_info):
         return True
     except Exception as e:
         if not (type(e) == ClientError and e.response['Error']['Code'] == 'NoSuchBucketPolicy'):
-            printError('Failed to get bucket policy for %s: %s' % (bucket_name, e))
+            print_error('Failed to get bucket policy for %s: %s' % (bucket_name, e))
         return False
 
 
@@ -252,7 +252,7 @@ def get_s3_bucket_secure_transport(api_client, bucket_name, bucket_info):
             bucket_info['secure_transport_enabled'] = False
             return True
     except Exception as e:
-        printError('Failed to get evaluate bucket policy for %s: %s' % (bucket_name, e))
+        print_error('Failed to get evaluate bucket policy for %s: %s' % (bucket_name, e))
         bucket_info['secure_transport'] = None
         return False
 
@@ -286,7 +286,7 @@ def get_s3_bucket_logging(api_client, bucket_name, bucket_info):
             bucket_info['logging'] = 'Disabled'
         return True
     except Exception as e:
-        printError('Failed to get logging configuration for %s: %s' % (bucket_name, e))
+        print_error('Failed to get logging configuration for %s: %s' % (bucket_name, e))
         bucket_info['logging'] = 'Unknown'
         return False
 
@@ -313,11 +313,11 @@ def get_s3_bucket_default_encryption(api_client, bucket_name, bucket_info):
             bucket_info['default_encryption_enabled'] = False
             return True
         else:
-            printError('Failed to get encryption configuration for %s: %s' % (bucket_name, e))
+            print_error('Failed to get encryption configuration for %s: %s' % (bucket_name, e))
             bucket_info['default_encryption_enabled'] = None
             return False
     except Exception as e:
-        printError('Failed to get encryption configuration for %s: %s' % (bucket_name, e))
+        print_error('Failed to get encryption configuration for %s: %s' % (bucket_name, e))
         bucket_info['default_encryption'] = 'Unknown'
         return False
 
@@ -379,7 +379,7 @@ def get_s3_bucket_keys(api_client, bucket_name, bucket, check_encryption, check_
                 key['ServerSideEncryption'] = k['ServerSideEncryption'] if 'ServerSideEncryption' in k else None
                 key['SSEKMSKeyId'] = k['SSEKMSKeyId'] if 'SSEKMSKeyId' in k else None
             except Exception as e:
-                printException(e)
+                print_exception(e)
                 continue
         if check_acls:
             # noinspection PyBroadException

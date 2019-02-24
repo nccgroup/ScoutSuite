@@ -8,8 +8,9 @@ import re
 
 from iampoliciesgonewild import get_actions_from_statement, _expand_wildcard_action
 
-from ScoutSuite.core.console import printError, printException
+from ScoutSuite.core.console import print_error, print_exception
 from ScoutSuite.core import condition_operators
+from ScoutSuite.providers.base.configs.browser import get_value_at
 
 re_get_value_at = re.compile(r'_GET_VALUE_AT_\((.*?)\)')
 re_nested_get_value_at = re.compile(r'_GET_VALUE_AT_\(.*')
@@ -25,9 +26,6 @@ def pass_conditions(all_info, current_path, conditions, unknown_as_pass_conditio
     :param unknown_as_pass_condition:   Consider an undetermined condition as passed
     :return:
     """
-
-    # Imported here temporarly to fix cyclic dependency
-    from ScoutSuite.providers.base.configs.browser import get_value_at
 
     if len(conditions) == 0:
         return True
@@ -48,32 +46,26 @@ def pass_conditions(all_info, current_path, conditions, unknown_as_pass_conditio
                 res = _pass_condition(target_obj, test_name, test_values)
             except Exception as e:
                 res = True if unknown_as_pass_condition else False
-                printError('Unable to process testcase \'%s\' on value \'%s\', interpreted as %s.' % (
+                print_error('Unable to process testcase \'%s\' on value \'%s\', interpreted as %s.' % (
                     test_name, str(target_obj), res))
-                printException(e, True)
+                print_exception(e, True)
         # Quick exit and + false
         if condition_operator == 'and' and not res:
             return False
         # Quick exit or + true
         if condition_operator == 'or' and res:
             return True
-    # Still here ?
-    # or -> false
-    # and -> true
-    if condition_operator == 'or':
-        return False
-    else:
-        return True
+    return not condition_operator == 'or'
 
 
 def __prepare_age_test(a, b):
     if type(a) != list:
-        printError('Error: olderThan requires a list such as [ N , \'days\' ] or [ M, \'hours\'].')
+        print_error('Error: olderThan requires a list such as [ N , \'days\' ] or [ M, \'hours\'].')
         raise Exception
     number = int(a[0])
     unit = a[1]
     if unit not in ['days', 'hours', 'minutes', 'seconds']:
-        printError('Error: only days, hours, minutes, and seconds are supported.')
+        print_error('Error: only days, hours, minutes, and seconds are supported.')
         raise Exception
     if unit == 'hours':
         number *= 3600
@@ -264,7 +256,7 @@ def _pass_condition(b, test, a):
 
     # Unknown test case
     else:
-        printError('Error: unknown test case %s' % test)
+        print_error('Error: unknown test case %s' % test)
         raise Exception
 
     return result
@@ -272,10 +264,6 @@ def _pass_condition(b, test, a):
 
 def fix_path_string(all_info, current_path, path_to_value):
     # handle nested _GET_VALUE_AT_...
-
-    # Imported here temporarly to fix cyclic dependency
-    from ScoutSuite.providers.base.configs.browser import get_value_at
-
     while True:
         dynamic_path = re_get_value_at.findall(path_to_value)
         if len(dynamic_path) == 0:

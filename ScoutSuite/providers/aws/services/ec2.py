@@ -8,7 +8,7 @@ import base64
 # TODO: move a lot of this to VPCconfig, and use some sort of filter to only list SGs in EC2 classic
 import netaddr
 
-from ScoutSuite.core.console import printException, printInfo
+from ScoutSuite.core.console import print_exception, print_info
 from ScoutSuite.providers.aws.aws import get_name
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
@@ -210,17 +210,17 @@ class EC2Config(RegionalServiceConfig):
 
 def analyze_ec2_config(ec2_info, aws_account_id, force_write):
     try:
-        printInfo('Analyzing EC2 config... ', newLine=False)
+        print_info('Analyzing EC2 config... ', newLine=False)
         # Custom EC2 analysis
         #        check_for_elastic_ip(ec2_info)
         # FIXME - commented for now as this method doesn't seem to be defined anywhere'
         # list_network_attack_surface(ec2_info, 'attack_surface', 'PublicIpAddress')
         # TODO: make this optional, commented out for now
         # list_network_attack_surface(ec2_info, 'private_attack_surface', 'PrivateIpAddress')
-        printInfo('Success')
+        print_info('Success')
     except Exception as e:
-        printInfo('Error')
-        printException(e)
+        print_info('Error')
+        print_exception(e)
 
 
 def add_security_group_name_to_ec2_grants_callback(ec2_config, current_config, path, current_path, ec2_grant,
@@ -287,7 +287,7 @@ def link_elastic_ips_callback2(ec2_config, current_config, path, current_path, i
         if not 'PublicIpAddress' in current_config:
             current_config['PublicIpAddress'] = callback_args['elastic_ip']
         elif current_config['PublicIpAddress'] != callback_args['elastic_ip']:
-            printInfo('Warning: public IP address exists (%s) for an instance associated with an elastic IP (%s)' % (
+            print_info('Warning: public IP address exists (%s) for an instance associated with an elastic IP (%s)' % (
                 current_config['PublicIpAddress'], callback_args['elastic_ip']))
             # This can happen... fix it
 

@@ -3,7 +3,7 @@
 import os
 
 from mock import patch
-from ScoutSuite.core.console import configPrintException, printDebug
+from ScoutSuite.core.console import config_debug_level, print_debug
 
 from ScoutSuite.core.rule import Rule
 from ScoutSuite.core.ruleset import Ruleset
@@ -12,7 +12,7 @@ from ScoutSuite.core.ruleset import Ruleset
 class TestAWSScout2RulesRuleset:
 
     def setup(self):
-        configPrintException(True)
+        config_debug_level(True)
         self.test_dir = os.path.dirname(os.path.realpath(__file__))
 
         self.test_ruleset_001 = os.path.join(self.test_dir, 'data/test-ruleset.json')
@@ -32,17 +32,17 @@ class TestAWSScout2RulesRuleset:
         assert (type(test001.rules[test_file_key][0] == Rule))
         assert (hasattr(test001.rules[test_file_key][0], 'path'))
         for rule in test001.rules:
-            printDebug(test001.rules[rule][0].to_string())
+            print_debug(test001.rules[rule][0].to_string())
 
         assert (test_file_key in test001.rule_definitions)
         assert (test001.rule_definitions[test_file_key].description == "Password expiration disabled")
         for rule_def in test001.rule_definitions:
-            printDebug(str(test001.rule_definitions[rule_def]))
+            print_debug(str(test001.rule_definitions[rule_def]))
         assert (printError.call_count == 0)
 
         test002 = Ruleset(filename=self.test_ruleset_002)
         for rule in test002.rules:
-            printDebug(test002.rules[rule][0].to_string())
+            print_debug(test002.rules[rule][0].to_string())
         assert (printError.call_count == 1) # is this expected ??
         assert ("test-ruleset-absolute-path.json does not exist." in printError.call_args_list[0][0][0])
 

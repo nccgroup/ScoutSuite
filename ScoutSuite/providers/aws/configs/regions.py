@@ -15,7 +15,7 @@ except ImportError:
 
 from ScoutSuite.providers.aws.aws import build_region_list, connect_service, get_aws_account_id, get_name, \
     handle_truncated_response
-from ScoutSuite.core.console import printException, printInfo
+from ScoutSuite.core.console import print_exception, print_info
 
 from ScoutSuite.providers.base.configs import resource_id_map
 from ScoutSuite.providers.base.configs.threads import thread_configs
@@ -123,7 +123,7 @@ class RegionalServiceConfig(object):
             realtargets = realtargets + ((target[0], target[1], target[2], params, target[4]),)
         targets['other_regions'] = realtargets
 
-        printInfo('Fetching %s config...' % format_service_name(self.service))
+        print_info('Fetching %s config...' % format_service_name(self.service))
         self.fetchstatuslogger = FetchStatusLogger(targets['first_region'], True)
         api_service = 'ec2' if self.service.lower() == 'vpc' else self.service.lower()
 
@@ -192,11 +192,11 @@ class RegionalServiceConfig(object):
                                                        targets)  # params['targets'])
                         self.fetchstatuslogger.counts['regions']['fetched'] += 1
                 except Exception as e:
-                    printException(e)
+                    print_exception(e)
                 finally:
                     q.task_done()
         except Exception as e:
-            printException(e)
+            print_exception(e)
             pass
 
     def _fetch_target(self, q, params):
@@ -218,11 +218,11 @@ class RegionalServiceConfig(object):
                     if is_throttled(e):
                         q.put((method, region, backup))
                     else:
-                        printException(e)
+                        print_exception(e)
                 finally:
                     q.task_done()
         except Exception as e:
-            printException(e)
+            print_exception(e)
             pass
 
     def finalize(self):
@@ -310,7 +310,7 @@ class RegionConfig(BaseConfig):
             targets = handle_truncated_response(list_method, list_params, [response_attribute])[response_attribute]
         except Exception as e:
             if not ignore_list_error:
-                printException(e)
+                print_exception(e)
             targets = []
         setattr(self, '%s_count' % target_type, len(targets))
         self.fetchstatuslogger.counts[target_type]['discovered'] += len(targets)

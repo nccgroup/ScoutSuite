@@ -3,7 +3,7 @@
 from threading import Thread
 from six.moves.queue import Queue
 
-from ScoutSuite.core.console import printException
+from ScoutSuite.core.console import print_exception
 
 
 def thread_work(targets, function, params={}, num_threads=0):
@@ -44,6 +44,6 @@ def threaded_per_region(q, params):
             method = params['method']
             method(params)
         except Exception as e:
-            printException(e)
+            print_exception(e)
         finally:
             q.task_done()

@@ -3,7 +3,7 @@
 import copy
 import os
 
-from ScoutSuite.core.console import printDebug, printError, printException, printInfo
+from ScoutSuite.core.console import print_debug, print_error, print_exception, print_info
 from ScoutSuite.providers.aws.aws import get_aws_account_id
 from ScoutSuite.providers.aws.configs.services import AWSServicesConfig
 from ScoutSuite.providers.aws.credentials import read_creds
@@ -136,7 +136,7 @@ class AWSProvider(BaseProvider):
 
     @staticmethod
     def _process_cloudtrail_trails(cloudtrail_config):
-        printInfo('Processing CloudTrail config...')
+        print_info('Processing CloudTrail config...')
         global_events_logging = []
         data_logging_trails_count = 0
         for region in cloudtrail_config['regions']:
@@ -282,7 +282,7 @@ class AWSProvider(BaseProvider):
         elif policy_type == 'ManagedPolicies':
             policy = iam_info['ManagedPolicies'][policy_name]['PolicyDocument']
         else:
-            printError('Error, found unknown policy type.')
+            print_error('Error, found unknown policy type.')
         for statement in policy['Statement']:
             for target_path in statement['NotResource']:
                 parts = target_path.split('/')
@@ -340,7 +340,7 @@ class AWSProvider(BaseProvider):
                 subnet['instances'].append(instance_id)
 
     def _match_instances_and_roles(self):
-        printInfo('Matching EC2 instances and IAM roles...')
+        print_info('Matching EC2 instances and IAM roles...')
         ec2_config = self.services['ec2']
         iam_config = self.services['iam']
         role_instances = {}
@@ -471,8 +471,8 @@ class AWSProvider(BaseProvider):
             if vpc_id == ec2_classic and resource_type == 'elbs':
                 pass
             else:
-                printError('Failed to parse %s in %s in %s' % (resource_type, vpc_id, region))
-                printException(e)
+                print_error('Failed to parse %s in %s in %s' % (resource_type, vpc_id, region))
+                print_exception(e)
 
     def _merge_route53_and_route53domains(self):
         if 'route53domains' not in self.services:
@@ -504,7 +504,7 @@ class AWSProvider(BaseProvider):
             elif 'RequestedEc2SubnetIds' in cluster['Ec2InstanceAttributes']:
                 subnet_id = cluster['Ec2InstanceAttributes']['RequestedEc2SubnetIds']
             else:
-                printError('Unable to determine VPC id for EMR cluster %s' % str(cluster_id))
+                print_error('Unable to determine VPC id for EMR cluster %s' % str(cluster_id))
                 continue
             if sg_id in self.sg_map:
                 vpc_id = self.sg_map[sg_id]['vpc_id']
@@ -518,7 +518,7 @@ class AWSProvider(BaseProvider):
                             pop_list.append(cluster_id)
                             sid_found = True
                 if not sid_found:
-                    printError('Unable to determine VPC id for %s' % (str(subnet_id) if subnet_id else str(sg_id)))
+                    print_error('Unable to determine VPC id for %s' % (str(subnet_id) if subnet_id else str(sg_id)))
                     continue
             if vpc_id:
                 # noinspection PyArgumentList
@@ -576,7 +576,7 @@ class AWSProvider(BaseProvider):
             try:
                 attached_vpc = get_object_at(self, vpc_path)
             except Exception:
-                printDebug(
+                print_debug(
                     'It appears that the flow log %s is attached to a resource that was previously deleted (%s).' % (
                         flow_log_id, attached_resource))
                 return
@@ -596,7 +596,7 @@ class AWSProvider(BaseProvider):
             if flow_log_id not in subnet['flow_logs']:
                 subnet['flow_logs'].append(flow_log_id)
         else:
-            printError('Resource %s attached to flow logs is not handled' % attached_resource)
+            print_error('Resource %s attached to flow logs is not handled' % attached_resource)
 
     def get_db_attack_surface(self, current_config, path, current_path, db_id, callback_args):
         service = current_path[1]

@@ -3,7 +3,7 @@
 import os
 import re
 
-from ScoutSuite.core.console import printDebug
+from ScoutSuite.core.console import print_debug
 from ScoutSuite.providers.aws.aws import get_aws_account_id
 from ScoutSuite.providers.aws.credentials import read_creds
 
@@ -115,7 +115,7 @@ class AWSProfiles(object):
         if type(names) != list:
             names = [names]
         if not quiet:
-            printDebug('Searching for profiles matching %s in %s ... ' % (str(names), filename))
+            print_debug('Searching for profiles matching %s in %s ... ' % (str(names), filename))
         name_filters = []
         for name in names:
             name_filters.append(re.compile('^%s$' % name))

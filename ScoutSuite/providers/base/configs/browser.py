@@ -2,7 +2,7 @@
 
 import copy
 
-from ScoutSuite.core.console import printError, printException
+from ScoutSuite.core.console import print_error, print_exception
 
 
 ########################################
@@ -111,12 +111,12 @@ def get_value_at(all_info, current_path, key, to_string=False):
                     try:
                         target_obj = target_obj[p]
                     except Exception as e:
-                        printError('Current path: %s' % str(current_path))
-                        printException(e)
+                        print_error('Current path: %s' % str(current_path))
+                        print_exception(e)
                         raise Exception
             except Exception as e:
-                printError('Current path: %s' % str(current_path))
-                printException(e)
+                print_error('Current path: %s' % str(current_path))
+                print_exception(e)
                 raise Exception
     if to_string:
         return str(target_obj)

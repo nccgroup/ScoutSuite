@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from ScoutSuite.core.console import printError, printException
+from ScoutSuite.core.console import print_error, print_exception
 from ScoutSuite.providers.aws.aws import handle_truncated_response
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
@@ -85,8 +85,8 @@ class RDSRegionConfig(RegionConfig):
                 parameter_name = parameter.pop('ParameterName')
                 parameter_group['parameters'][parameter_name] = parameter
         except Exception as e:
-            printException(e)
-            printError('Failed fetching DB parameters for %s' % parameter_group['name'])
+            print_exception(e)
+            print_error('Failed fetching DB parameters for %s' % parameter_group['name'])
         # Save
         parameter_group_id = self.get_non_provider_id(parameter_group['name'])
         self.parameter_groups[parameter_group_id] = parameter_group

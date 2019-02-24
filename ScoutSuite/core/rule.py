@@ -4,7 +4,7 @@ import json
 import re
 
 from ScoutSuite.core.fs import read_ip_ranges
-from ScoutSuite.core.console import printError
+from ScoutSuite.core.console import print_error
 
 from ScoutSuite.utils import format_service_name
 
@@ -139,4 +139,4 @@ class Rule(object):
                 setattr(self, 'key', '%s-%s' % (self.key, self.key_suffix))
         except Exception as e:
             # printException(e)
-            printError('Failed to set definition %s: %s' % (self.filename, e))
+            print_error('Failed to set definition %s: %s' % (self.filename, e))

@@ -12,8 +12,8 @@ import boto3
 import dateutil.parser
 import requests  # TODO: get rid of that and make sure urllib2 validates certs ?
 
-from ScoutSuite.core.console import printException, printError, printInfo
-from ScoutSuite.core.console import prompt_4_mfa_code
+from ScoutSuite.core.console import print_exception, print_error, print_info
+from ScoutSuite.core.console import prompt_mfa_code
 from ScoutSuite.providers.aws.aws import connect_service
 from ScoutSuite.core.fs import save_blob_as_json
 
@@ -169,7 +169,7 @@ def init_sts_session(profile_name, credentials, duration=28800, save_creds=True)
     # Prompt for MFA code if MFA serial present
     if 'SerialNumber' in credentials and credentials['SerialNumber']:
         if not credentials['TokenCode']:
-            credentials['TokenCode'] = prompt_4_mfa_code()
+            credentials['TokenCode'] = prompt_mfa_code()
             if credentials['TokenCode'] == 'q':
                 credentials['SerialNumber'] = None
         sts_args['TokenCode'] = credentials['TokenCode']
@@ -223,7 +223,7 @@ def read_creds_from_aws_credentials_file(profile_name, credentials_file=aws_cred
     except Exception as e:
         # Silent if error is due to no ~/.aws/credentials file
         if not hasattr(e, 'errno') or e.errno != 2:
-            printException(e)
+            print_exception(e)
     return credentials
 
 
@@ -356,7 +356,7 @@ def read_profile_from_aws_config_file(profile_name, config_file=aws_config_file)
     except Exception as e:
         # Silent if error is due to no .aws/config file
         if not hasattr(e, 'errno') or e.errno != 2:
-            printException(e)
+            print_exception(e)
     return role_arn, source_profile, mfa_serial, external_id
 
 
@@ -371,7 +371,7 @@ def show_profiles_from_aws_credentials_file(credentials_files=None):
         credentials_files = [aws_credentials_file, aws_config_file]
     profiles = get_profiles_from_aws_credentials_file(credentials_files)
     for profile in set(profiles):
-        printInfo(' * %s' % profile)
+        print_info(' * %s' % profile)
 
 
 def write_creds_to_aws_credentials_file(profile_name, credentials, credentials_file=aws_credentials_file):
@@ -530,7 +530,7 @@ def read_creds(profile_name, csv_file=None, mfa_serial_arg=None, mfa_code=None, 
                     credentials['SerialNumber'] = role_mfa_serial
                     # Auto prompt for a code...
                     if not mfa_code:
-                        credentials['TokenCode'] = prompt_4_mfa_code()
+                        credentials['TokenCode'] = prompt_mfa_code()
                 if external_id:
                     credentials['ExternalId'] = external_id
                 credentials = assume_role(profile_name, credentials, role_arn, role_session_name)
@@ -543,7 +543,7 @@ def read_creds(profile_name, csv_file=None, mfa_serial_arg=None, mfa_code=None, 
                     expiration = expiration.replace(tzinfo=None)
                     current = datetime.datetime.utcnow()
                     if expiration < current:
-                        printInfo('Saved STS credentials expired on %s' % credentials['Expiration'])
+                        print_info('Saved STS credentials expired on %s' % credentials['Expiration'])
                         force_init = True
                 else:
                     force_init = True
@@ -554,7 +554,7 @@ def read_creds(profile_name, csv_file=None, mfa_serial_arg=None, mfa_code=None, 
                 credentials = read_creds_from_aws_credentials_file(profile_name if first_sts_session
                                                                    else '%s-nomfa' % profile_name)
                 if not credentials['AccessKeyId']:
-                    printInfo('Warning: Unable to determine STS token expiration; later API calls may fail.')
+                    print_info('Warning: Unable to determine STS token expiration; later API calls may fail.')
                     credentials = sts_credentials
                 else:
                     if mfa_serial_arg:
@@ -566,7 +566,7 @@ def read_creds(profile_name, csv_file=None, mfa_serial_arg=None, mfa_code=None, 
     # If we don't have valid creds by now, print an error message
     if 'AccessKeyId' not in credentials or credentials['AccessKeyId'] is None or \
             'SecretAccessKey' not in credentials or credentials['SecretAccessKey'] is None:
-        printError('Error: could not find AWS credentials. Use the --help option for more information.')
+        print_error('Error: could not find AWS credentials. Use the --help option for more information.')
     if 'AccessKeyId' not in credentials:
         credentials = {'AccessKeyId': None}
     return credentials

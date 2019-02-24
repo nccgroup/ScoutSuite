@@ -6,7 +6,7 @@ import json
 import os
 import yaml
 
-from ScoutSuite.core.console import printError, printException, prompt_4_overwrite
+from ScoutSuite.core.console import print_error, print_exception, prompt_overwrite
 from ScoutSuite.core.conditions import _pass_condition
 
 
@@ -111,12 +111,12 @@ def save_blob_as_json(filename, blob, force_write, debug):
     :return:
     """
     try:
-        if prompt_4_overwrite(filename, force_write):
+        if prompt_overwrite(filename, force_write):
             with open(filename, 'wt') as f:
                 print('%s' % json.dumps(blob, indent=4 if debug else None, separators=(',', ': '), sort_keys=True,
                                         cls=CustomJSONEncoder), file=f)
     except Exception as e:
-        printException(e)
+        print_exception(e)
         pass
 
 

@@ -6,7 +6,7 @@ from collections import Counter
 import boto3
 from botocore.session import Session
 
-from ScoutSuite.core.console import printInfo, printException
+from ScoutSuite.core.console import print_info, print_exception
 
 
 def build_region_list(service, chosen_regions=None, partition_name='aws'):
@@ -58,10 +58,10 @@ def connect_service(service, credentials, region_name=None, config=None, silent=
             info_message = 'Connecting to AWS %s' % service
             if region_name:
                 info_message = info_message + ' in %s' % region_name
-            printInfo('%s...' % info_message)
+            print_info('%s...' % info_message)
         api_client = aws_session.client(**client_params)
     except Exception as e:
-        printException(e)
+        print_exception(e)
     return api_client
 
 

@@ -7,7 +7,7 @@ import json
 import sys
 import copy
 
-from ScoutSuite.core.console import printException, printInfo
+from ScoutSuite.core.console import print_exception, print_info
 
 from ScoutSuite import __version__ as scout2_version
 from ScoutSuite.providers.base.configs.browser import get_object_at
@@ -185,7 +185,7 @@ class BaseProvider(object):
                                 self.metadata[service_group][service]['resources'][resource]['count'] = \
                                     service_config[count]
                             except Exception as e:
-                                printException(e)
+                                print_exception(e)
                     else:
                         self.metadata[service_group][service]['resources'][resource]['count'] = len(service_config['regions'])
 
@@ -333,11 +333,11 @@ class BaseProvider(object):
                                                callback_args)
 
         except Exception as e:
-            printException(e)
-            printInfo('Path: %s' % str(current_path))
-            printInfo('Key = %s' % str(key) if 'key' in locals() else 'not defined')
-            printInfo('Value = %s' % str(value) if 'value' in locals() else 'not defined')
-            printInfo('Path = %s' % path)
+            print_exception(e)
+            print_info('Path: %s' % str(current_path))
+            print_info('Key = %s' % str(key) if 'key' in locals() else 'not defined')
+            print_info('Value = %s' % str(value) if 'value' in locals() else 'not defined')
+            print_info('Path = %s' % path)
 
     def _new_go_to_and_do(self, current_config, path, current_path, callbacks):
         """
@@ -388,8 +388,8 @@ class BaseProvider(object):
                             tmp.append(i)
                             self._new_go_to_and_do(current_config[key][i], copy.deepcopy(path), tmp, callbacks)
         except Exception as e:
-            printException(e)
-            printInfo('Path: %s' % str(current_path))
-            printInfo('Key = %s' % str(key) if 'key' in locals() else 'not defined')
-            printInfo('Value = %s' % str(value) if 'value' in locals() else 'not defined')
-            printInfo('Path = %s' % path)
+            print_exception(e)
+            print_info('Path: %s' % str(current_path))
+            print_info('Key = %s' % str(key) if 'key' in locals() else 'not defined')
+            print_info('Value = %s' % str(value) if 'value' in locals() else 'not defined')
+            print_info('Path = %s' % path)
