@@ -98,7 +98,7 @@ def read_file(file_path):
     return contents
 
 
-def save_blob_as_json(filename, blob, force_write, debug):
+def save_blob_as_json(filename, blob, force_write):
     """
     Creates/Modifies file and saves python object as JSON
 
@@ -112,7 +112,7 @@ def save_blob_as_json(filename, blob, force_write, debug):
     try:
         if prompt_overwrite(filename, force_write):
             with open(filename, 'wt') as f:
-                print('%s' % json.dumps(blob, indent=4 if debug else None, separators=(',', ': '), sort_keys=True,
+                print('%s' % json.dumps(blob, indent=4, separators=(',', ': '), sort_keys=True,
                                         cls=CustomJSONEncoder), file=f)
     except Exception as e:
         print_exception(e)

@@ -3,8 +3,6 @@ from __future__ import print_function
 
 import re
 
-
-
 ########################################
 # Globals
 ########################################
@@ -68,7 +66,6 @@ def get_keys(src, dst, keys):
     :return:
     """
     for key in keys:
-        #dst[no_camel(key)] = src[key] if key in src else None
         dst[key] = src[key] if key in src else None
 
 
@@ -90,7 +87,11 @@ def is_throttled(e):
     :param e:                           Exception raised
     :return:                            True if it's a throttling exception else False
     """
-    return True if  (hasattr(e, 'response') and 'Error' in e.response and e.response['Error']['Code'] in [ 'Throttling', 'RequestLimitExceeded', 'ThrottlingException' ]) else False
+    return True if (hasattr(e, 'response')
+                    and 'Error' in e.response
+                    and e.response['Error']['Code'] in ['Throttling',
+                                                        'RequestLimitExceeded',
+                                                        'ThrottlingException']) else False
 
 
 def manage_dictionary(dictionary, key, init, callback=None):

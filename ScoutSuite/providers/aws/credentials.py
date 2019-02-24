@@ -88,7 +88,7 @@ def assume_role(role_name, credentials, role_arn, role_session_name, silent=Fals
     cached_credentials_path = os.path.dirname(cached_credentials_filename)
     if not os.path.isdir(cached_credentials_path):
         os.makedirs(cached_credentials_path)
-    save_blob_as_json(cached_credentials_filename, sts_response, True, False)  # blob, force_write, debug):
+    save_blob_as_json(cached_credentials_filename, sts_response, True)
     return credentials
 
 
