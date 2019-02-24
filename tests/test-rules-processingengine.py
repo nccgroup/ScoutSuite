@@ -74,8 +74,7 @@ class TestAWSScout2RulesProcessingEngine:
         
         try:
             assert (set(sorted(findings)) == set(sorted(items)))
-        except Exception as e:
-            printError(e)
+        except Exception:
             printError('Expected items:\n %s' % json.dumps(sorted(items)))
             printError('Reported items:\n %s' % json.dumps(sorted(findings)))
             assert (False)

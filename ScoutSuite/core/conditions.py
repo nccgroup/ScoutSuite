@@ -187,7 +187,7 @@ def _pass_condition(b, test, a):
             a = [a]
         b = str(b)
         for c in a:
-            if not re.match(c, b):
+            if re.match(c, b):
                 result = True
                 break
     elif test == 'notMatch':
