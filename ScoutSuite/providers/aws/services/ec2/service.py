@@ -2,6 +2,8 @@ from ScoutSuite.providers.base.configs.resources import Resources
 from ScoutSuite.providers.aws.configs.regions_config import Regions, ScopedResources
 from ScoutSuite.providers.aws.services.ec2.ami import AmazonMachineImages
 from ScoutSuite.providers.aws.services.ec2.vpcs import Vpcs
+from ScoutSuite.providers.aws.services.ec2.snapshots import Snapshots
+from ScoutSuite.providers.aws.services.ec2.volumes import Volumes
 
 from opinel.utils.aws import get_aws_account_id
 from ScoutSuite.utils import get_keys, ec2_classic
@@ -16,11 +18,21 @@ class EC2(Regions):
     async def fetch_all(self, credentials=None, regions=None, partition_name='aws'):
         await super(EC2, self).fetch_all(chosen_regions=regions, partition_name=partition_name)
 
+        # TODO: Is there a way to generalize this? 
         for region in self['regions']:
             self['regions'][region]['vpcs'] = await Vpcs().fetch_all(region)
             self['regions'][region]['instances_count'] = sum([vpc['instances'].count for vpc in self['regions'][region]['vpcs'].values()])
+            self['regions'][region]['security_groups_count'] = sum([vpc['security_groups'].count for vpc in self['regions'][region]['vpcs'].values()])
+
             self['regions'][region]['images'] = await AmazonMachineImages(get_aws_account_id(credentials)).fetch_all(region)
             self['regions'][region]['images_count'] = self['regions'][region]['images'].count
+
+            self['regions'][region]['snapshots'] = await Snapshots(get_aws_account_id(credentials)).fetch_all(region)
+            self['regions'][region]['snapshots_count'] = self['regions'][region]['snapshots'].count
+            
+            self['regions'][region]['volumes'] = await Volumes().fetch_all(region)
+            self['regions'][region]['volumes_count'] = self['regions'][region]['volumes'].count
+            
 
 
 # # -*- coding: utf-8 -*-
@@ -125,22 +137,6 @@ class EC2(Regions):
 #                 rules_count = rules_count + 1
 
 #         return protocols, rules_count
-
-#     def _is_public(self, snapshot):
-#         return any([permission.get('Group') == 'all' for permission in snapshot['createVolumePermission']])
-
-#     def parse_volume(self, global_params, region, volume):
-#         """
-
-#         :param global_params:           Parameters shared for all regions
-#         :param region:                  Name of the AWS region
-#         :param volume:                  Single EBS volume
-#         :return:
-#         """
-#         volume['id'] = volume.pop('VolumeId')
-#         volume['name'] = get_name(volume, volume, 'id')
-#         self.volumes[volume['id']] = volume
-
 
 # ########################################
 # # EC2Config
@@ -263,16 +259,3 @@ class EC2(Regions):
 #                 manage_dictionary(region_info['vpcs'][vpc]['security_groups'][sg_id]['instances'], state, [])
 #                 region_info['vpcs'][vpc]['security_groups'][sg_id]['instances'][state].append(instance)
 
-
-# def manage_vpc(vpc_info, vpc_id):
-#     """
-#     Ensure name and ID are set
-
-#     :param vpc_info:
-#     :param vpc_id:
-#     :return:
-#     """
-#     manage_dictionary(vpc_info, vpc_id, {})
-#     vpc_info[vpc_id]['id'] = vpc_id
-#     if not 'name' in vpc_info[vpc_id]:
-#         vpc_info[vpc_id]['name'] = vpc_id

@@ -5,9 +5,10 @@ class AWSFacadeUtils:
 
         while True:
             response = api_call()
-
             resources.extend(parse_response(response))
-            marker = response.get('NextMarker', None)
+
+            # TODO: this marker should be passed to te api call. Also, some calls return a NextMarker, some return a NextToken.
+            marker = response.get('NextMarker', None) 
             if marker is None:
                 break
 

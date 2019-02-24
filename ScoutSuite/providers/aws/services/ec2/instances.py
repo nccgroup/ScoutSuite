@@ -14,8 +14,7 @@ class EC2Instances(ScopedResources):
         id = raw_instance['InstanceId']
         instance['id'] = id
         instance['monitoring_enabled'] = raw_instance['Monitoring']['State'] == 'enabled'
-        instance['user_data'] = self.facade.ec2.get_instance_user_data(
-            self.region, id)
+        instance['user_data'] = self.facade.ec2.get_instance_user_data(self.region, id)
 
         # TODO: Those methods are slightly sketchy in my opinion (get methods which set stuff in a dictionary, say what)
         get_name(raw_instance, instance, 'InstanceId')

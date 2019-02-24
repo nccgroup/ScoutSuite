@@ -1,6 +1,7 @@
 from ScoutSuite.providers.aws.configs.regions_config import ScopedResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.aws.services.ec2.instances import EC2Instances
+from ScoutSuite.providers.aws.services.ec2.securitygroups import SecurityGroups
 
 
 class Vpcs(ScopedResources):
@@ -12,8 +13,8 @@ class Vpcs(ScopedResources):
 
         for vpc in self:
             # TODO: Add vpc_resource_types
-            instances = await EC2Instances(region).fetch_all(vpc)
-            self[vpc]['instances'] = instances
+            self[vpc]['instances'] = await EC2Instances(region).fetch_all(vpc)
+            self[vpc]['security_groups'] = await SecurityGroups(region).fetch_all(vpc)
 
         return self
 
