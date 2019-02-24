@@ -15,12 +15,13 @@ class EFSRegionConfig(RegionConfig):
     """
     EFS configuration for a single AWS region
     """
+    file_systems = {}
 
     def parse_file_system(self, global_params, region, file_system):
         """
 
         :param global_params:
-        :param region:
+        :param region:          Name of the AWS region
         :param file_system:
         :return:
         """

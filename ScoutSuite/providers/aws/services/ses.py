@@ -13,6 +13,7 @@ class SESRegionConfig(RegionConfig):
     """
     SES configuration for a single AWS region
     """
+    identities = {}
 
     def parse_identitie(self, global_params, region, identity_name):
         """

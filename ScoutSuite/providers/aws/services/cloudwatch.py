@@ -14,6 +14,7 @@ class CloudWatchRegionConfig(RegionConfig):
     """
     CloudWatch configuration for a single AWS region
     """
+    alarms = {}
 
     def parse_alarm(self, global_params, region, alarm):
         """

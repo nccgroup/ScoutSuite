@@ -17,11 +17,13 @@ class SNSRegionConfig(RegionConfig):
     """
     SNS configuration for a single AWS region
     """
+    topics = {}
 
     def parse_subscription(self, params, region, subscription):
         """
         Parse a single subscription and reference it in its corresponding topic
 
+        :param region:
         :param params:                  Global parameters (defaults to {})
         :param subscription:            SNS Subscription
         """
@@ -39,6 +41,7 @@ class SNSRegionConfig(RegionConfig):
         """
         Parse a single topic and fetch additional attributes
 
+        :param region:                  Name of the AWS region
         :param params:                  Global parameters (defaults to {})
         :param topic:                   SNS Topic
         """

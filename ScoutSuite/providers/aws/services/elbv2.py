@@ -21,13 +21,14 @@ class ELBv2RegionConfig(RegionConfig):
 
     :ivar vpcs:                         Dictionary of VPCs [id]
     """
+    ssl_policies = {}
 
     def parse_lb(self, global_params, region, lb):
         """
 
         :param lb:
         :param global_params:
-        :param region:
+        :param region:              Name of the AWS region
         :return:
         """
         lb['arn'] = lb.pop('LoadBalancerArn')

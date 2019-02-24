@@ -32,12 +32,13 @@ class EC2RegionConfig(RegionConfig):
     """
     EC2 configuration for a single AWS region
     """
+    elastic_ips = {}
 
     def parse_elastic_ip(self, global_params, region, eip):
         """
 
         :param global_params:
-        :param region:
+        :param region:          Name of the AWS region
         :param eip:
         :return:
         """

@@ -538,9 +538,6 @@ class AWSProvider(BaseProvider):
                                self.parse_elb_policies_callback,
                                {})
 
-        # if 'elbv2' in self.config['services']:
-        # Do something too here...
-
     # noinspection PyArgumentList
     @staticmethod
     def parse_elb_policies_callback(current_config, path, current_path, region_id, callback_args):

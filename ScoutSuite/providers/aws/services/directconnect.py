@@ -11,6 +11,7 @@ class DirectConnectRegionConfig(RegionConfig):
     """
     DirectConnect configuration for a single AWS region
     """
+    connections = {}
 
     def parse_connection(self, global_params, region, connection):
         """

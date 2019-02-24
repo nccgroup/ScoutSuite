@@ -112,7 +112,7 @@ def update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entity,
         bucket = s3_info['buckets'][bucket_name]
         manage_dictionary(bucket, iam_entity, {})
         manage_dictionary(bucket, iam_entity + '_count', 0)
-        if not allowed_iam_entity in bucket[iam_entity]:
+        if allowed_iam_entity not in bucket[iam_entity]:
             bucket[iam_entity][allowed_iam_entity] = {}
             bucket[iam_entity + '_count'] = bucket[iam_entity + '_count'] + 1
 
@@ -133,6 +133,7 @@ def update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entity,
 
 def update_bucket_permissions(s3_info, iam_info, action, iam_entity, allowed_iam_entity, full_path, policy_type,
                               policy_name):
+    global policy
     allowed_buckets = []
     # By default, all buckets are allowed
     for bucket_name in s3_info['buckets']:
@@ -162,11 +163,7 @@ def update_bucket_permissions(s3_info, iam_info, action, iam_entity, allowed_iam
 
 
 def init_s3_permissions():
-    permissions = {}
-    permissions['read'] = False
-    permissions['write'] = False
-    permissions['read_acp'] = False
-    permissions['write_acp'] = False
+    permissions = {'read': False, 'write': False, 'read_acp': False, 'write_acp': False}
     return permissions
 
 

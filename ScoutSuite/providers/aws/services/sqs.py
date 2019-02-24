@@ -13,6 +13,7 @@ class SQSRegionConfig(RegionConfig):
     """
     SQS configuration for a single AWS region
     """
+    queues = {}
 
     def parse_queue(self, global_params, region, queue_url):
         """

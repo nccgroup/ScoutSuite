@@ -11,6 +11,7 @@ from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, Regi
 ########################################
 
 class LambdaRegionConfig(RegionConfig):
+    functions = {}
 
     def parse_function(self, global_params, region, function):
         function['name'] = function.pop('FunctionName')

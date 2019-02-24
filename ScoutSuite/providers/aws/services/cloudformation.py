@@ -13,14 +13,15 @@ class CloudFormationRegionConfig(RegionConfig):
     """
     CloudFormation configuration for a single AWS region
     """
+    stacks = {}
 
     def parse_stack(self, global_params, region, stack):
         """
         Parse a single stack and fetch additional attributes
 
+        :param stack:
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
-        :param stack_url:               URL of the AWS stack
         """
         stack['id'] = stack.pop('StackId')
         stack['name'] = stack.pop('StackName')

@@ -27,6 +27,10 @@ class VPCRegionConfig(RegionConfig):
     """
     VPC configuration for a single AWS region
     """
+    customer_gateways = {}
+    flow_logs = {}
+    vpn_connections = {}
+    vpn_gateways = {}
 
     def parse_customer_gateway(self, global_params, region, cgw):
         cgw['id'] = cgw.pop('CustomerGatewayId')
@@ -63,7 +67,8 @@ class VPCRegionConfig(RegionConfig):
         manage_dictionary(self.vpcs, vpc_id, SingleVPCConfig(self.vpc_resource_types))
         self.vpcs[vpc_id].network_acls[network_acl['id']] = network_acl
 
-    def __parse_network_acl_entries(self, entries, egress):
+    @staticmethod
+    def __parse_network_acl_entries(entries, egress):
         """
 
         :param entries:

@@ -16,13 +16,14 @@ class ELBRegionConfig(RegionConfig):
     """
     ELB configuration for a single AWS region
     """
+    elb_policies = {}
 
     def parse_elb(self, global_params, region, lb):
         """
 
         :param lb:
         :param global_params:
-        :param region:
+        :param region:          Name of the AWS region
         :return:
         """
         elb = {'name': lb.pop('LoadBalancerName')}

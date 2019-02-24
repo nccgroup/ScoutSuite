@@ -18,6 +18,7 @@ class RedshiftRegionConfig(RegionConfig):
     """
     Redshift configuration for a single AWS region
     """
+    parameter_groups = {}
 
     def parse_cluster(self, global_params, region, cluster):
         """

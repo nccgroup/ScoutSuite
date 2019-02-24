@@ -36,9 +36,6 @@ class AWSProfile(object):
             pass
         return self.credentials
 
-    def set_attribute(self, attribute, value):
-        self.attributes[attribute] = value
-
     def parse_raw_profile(self):
         for line in self.raw_profile.split('\n')[1:]:
             line = line.strip()

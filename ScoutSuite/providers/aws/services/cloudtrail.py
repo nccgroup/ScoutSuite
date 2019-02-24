@@ -15,6 +15,7 @@ class CloudTrailRegionConfig(RegionConfig):
     """
     CloudTrail configuration for a single AWS region
     """
+    trails = {}
 
     def parse_trail(self, global_params, region, trail):
         """

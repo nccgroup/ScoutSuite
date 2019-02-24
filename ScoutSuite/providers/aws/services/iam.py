@@ -112,7 +112,8 @@ class IAMConfig(AWSBaseConfig):
             print_error('Failed to download a credential report.')
             print_exception(e)
 
-    def _compute_last_used(self, credential_report):
+    @staticmethod
+    def _compute_last_used(credential_report):
         dates = [credential_report['password_last_used'],
                  credential_report['access_key_1_last_used_date'],
                  credential_report['access_key_2_last_used_date']]
@@ -120,7 +121,8 @@ class IAMConfig(AWSBaseConfig):
         dates = [date for date in dates if date is not None]
         return max(dates) if len(dates) > 0 else None
 
-    def _sanitize_date(self, date):
+    @staticmethod
+    def _sanitize_date(date):
         """
         Returns the date if it is not equal to 'N/A' or 'no_information', else returns None
         """
@@ -143,7 +145,7 @@ class IAMConfig(AWSBaseConfig):
         group['name'] = group.pop('GroupName')
         group['arn'] = group.pop('Arn')
         # Get group's members
-        group['users'] = self.__fetch_group_users(api_client, group['name']);
+        group['users'] = self.__fetch_group_users(api_client, group['name'])
         # Get inline policies
         policies = self.__get_inline_policies(api_client, 'group', group['id'], group['name'])
         if len(policies):
@@ -319,7 +321,8 @@ class IAMConfig(AWSBaseConfig):
             if getattr(self, iam_resource_type)[resource_id]['name'] == resource_name:
                 return resource_id
 
-    def __fetch_group_users(self, api_client, group_name):
+    @staticmethod
+    def __fetch_group_users(api_client, group_name):
         users = []
         fetched_users = api_client.get_group(GroupName=group_name)['Users']
         for user in fetched_users:
