@@ -57,14 +57,6 @@ class EC2(Regions):
 
 
 # ########################################
-# # Globals
-# ########################################
-
-# icmp_message_types_dict = load_data('icmp_message_types.json', 'icmp_message_types')
-# protocols_dict = load_data('protocols.json', 'protocols')
-
-
-# ########################################
 # # EC2RegionConfig
 # ########################################
 
@@ -72,71 +64,6 @@ class EC2(Regions):
 #     """
 #     EC2 configuration for a single AWS region
 #     """
-
-#     def parse_security_group(self, global_params, region, group):
-#         """
-#         Parse a single Redsfhit security group
-
-#         :param global_params:           Parameters shared for all regions
-#         :param region:                  Name of the AWS region
-#         :param security)_group:         Security group
-#         """
-#         vpc_id = group['VpcId'] if 'VpcId' in group and group['VpcId'] else ec2_classic
-#         manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
-#         security_group = {}
-#         security_group['name'] = group['GroupName']
-#         security_group['id'] = group['GroupId']
-#         security_group['description'] = group['Description']
-#         security_group['owner_id'] = group['OwnerId']
-#         security_group['rules'] = {'ingress': {}, 'egress': {}}
-#         security_group['rules']['ingress']['protocols'], security_group['rules']['ingress'][
-#             'count'] = self.__parse_security_group_rules(group['IpPermissions'])
-#         security_group['rules']['egress']['protocols'], security_group['rules']['egress'][
-#             'count'] = self.__parse_security_group_rules(group['IpPermissionsEgress'])
-#         self.vpcs[vpc_id].security_groups[group['GroupId']] = security_group
-
-#     def __parse_security_group_rules(self, rules):
-#         """
-
-#         :param self:
-#         :param rules:
-#         :return:
-#         """
-#         protocols = {}
-#         rules_count = 0
-#         for rule in rules:
-#             ip_protocol = rule['IpProtocol'].upper()
-#             if ip_protocol == '-1':
-#                 ip_protocol = 'ALL'
-#             protocols = manage_dictionary(protocols, ip_protocol, {})
-#             protocols[ip_protocol] = manage_dictionary(protocols[ip_protocol], 'ports', {})
-#             # Save the port (single port or range)
-#             port_value = 'N/A'
-#             if 'FromPort' in rule and 'ToPort' in rule:
-#                 if ip_protocol == 'ICMP':
-#                     # FromPort with ICMP is the type of message
-#                     port_value = icmp_message_types_dict[str(rule['FromPort'])]
-#                 elif rule['FromPort'] == rule['ToPort']:
-#                     port_value = str(rule['FromPort'])
-#                 else:
-#                     port_value = '%s-%s' % (rule['FromPort'], rule['ToPort'])
-#             manage_dictionary(protocols[ip_protocol]['ports'], port_value, {})
-#             # Save grants, values are either a CIDR or an EC2 security group
-#             for grant in rule['UserIdGroupPairs']:
-#                 manage_dictionary(protocols[ip_protocol]['ports'][port_value], 'security_groups', [])
-#                 protocols[ip_protocol]['ports'][port_value]['security_groups'].append(grant)
-#                 rules_count = rules_count + 1
-#             for grant in rule['IpRanges']:
-#                 manage_dictionary(protocols[ip_protocol]['ports'][port_value], 'cidrs', [])
-#                 protocols[ip_protocol]['ports'][port_value]['cidrs'].append({'CIDR': grant['CidrIp']})
-#                 rules_count = rules_count + 1
-#             # IPv6
-#             for grant in rule['Ipv6Ranges']:
-#                 manage_dictionary(protocols[ip_protocol]['ports'][port_value], 'cidrs', [])
-#                 protocols[ip_protocol]['ports'][port_value]['cidrs'].append({'CIDR': grant['CidrIpv6']})
-#                 rules_count = rules_count + 1
-
-#         return protocols, rules_count
 
 # ########################################
 # # EC2Config
