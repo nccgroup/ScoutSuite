@@ -23,6 +23,7 @@ class EC2(Regions):
             self['regions'][region]['vpcs'] = await Vpcs().fetch_all(region)
             self['regions'][region]['instances_count'] = sum([vpc['instances'].count for vpc in self['regions'][region]['vpcs'].values()])
             self['regions'][region]['security_groups_count'] = sum([vpc['security_groups'].count for vpc in self['regions'][region]['vpcs'].values()])
+            self['regions'][region]['network_interfaces_count'] = sum([vpc['network_interfaces'].count for vpc in self['regions'][region]['vpcs'].values()])
 
             self['regions'][region]['images'] = await AmazonMachineImages(get_aws_account_id(credentials)).fetch_all(region)
             self['regions'][region]['images_count'] = self['regions'][region]['images'].count
@@ -32,6 +33,7 @@ class EC2(Regions):
             
             self['regions'][region]['volumes'] = await Volumes().fetch_all(region)
             self['regions'][region]['volumes_count'] = self['regions'][region]['volumes'].count
+        
             
 
 

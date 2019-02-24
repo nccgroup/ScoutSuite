@@ -14,7 +14,12 @@ class Regions(Resources):
 
         self['regions'] = {}
         for region in await facade.build_region_list(self._service, chosen_regions, partition_name):
-            self['regions'][region] = {}
+            # TODO: Do we really need id, region AND name? 
+            self['regions'][region] = {
+                'id': region,
+                'region': region,
+                'name': region
+            }
 
         self['regions_count'] = len(self['regions'])
 

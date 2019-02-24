@@ -48,6 +48,13 @@ class EC2Facade:
             lambda response: response['Images']
         )
 
+    def get_network_interfaces(self, region, vpc):
+        ec2_client = boto3.client('ec2', region_name=region)
+        return AWSFacadeUtils.get_all_pages(
+            lambda: ec2_client.describe_network_interfaces(Filters=[{'Name': 'vpc-id', 'Values': [vpc]}]),
+            lambda response: response['NetworkInterfaces']
+        )
+
     def get_volumes(self, region):
         ec2_client = boto3.client('ec2', region_name=region)
         return AWSFacadeUtils.get_all_pages(
