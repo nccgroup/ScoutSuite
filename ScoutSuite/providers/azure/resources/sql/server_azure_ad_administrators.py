@@ -12,14 +12,13 @@ class ServerAzureAdAdministrators(Resources):
         self.resource_group_name = resource_group_name
         self.server_name = server_name
 
+    # TODO: make it really async.
     async def fetch_all(self, credentials):
         # sdk container:
         api = SqlManagementClient(credentials.credentials, credentials.subscription_id)
 
         try:
-            admins = \
-                api.server_azure_ad_administrators.get(self.resource_group_name, self.server_name)
-                # TODO: await api.server_azure_ad_administrators.get(self.resource_group_name, self.server_name)
+            _ = api.server_azure_ad_administrators.get(self.resource_group_name, self.server_name)
             self['ad_admin_configured'] = True
         except CloudError:  # no ad admin configured returns a 404 error
             self['ad_admin_configured'] = False
