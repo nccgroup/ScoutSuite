@@ -19,7 +19,7 @@ class TestMainClass(TestCase):
 
         self.mocked_printInfo = MagicMock()
 
-        for import_name, mocked_object in [("printInfo", self.mocked_printInfo),
+        for import_name, mocked_object in [("print_info", self.mocked_printInfo),
                                            ("get_provider", self.mocked_provider),
                                            ("Ruleset", self.mocked_ruleset),
                                            ("ProcessingEngine", self.mocked_engine),
