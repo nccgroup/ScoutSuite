@@ -15,6 +15,8 @@ class RDSRegionConfig(RegionConfig):
     """
     RDS configuration for a single AWS region
     """
+    parameter_groups = {}
+    security_groups = {}
 
     def parse_instance(self, global_params, region, dbi):
         """

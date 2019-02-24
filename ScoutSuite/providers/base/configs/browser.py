@@ -38,7 +38,7 @@ def get_object_at(object, path, attribute_name=None):
     """
     Get arbitrary object given a dictionary and path (list of keys).
 
-    :param dictionary:
+    :param object:
     :param path:
     :param attribute_name:
     :return:

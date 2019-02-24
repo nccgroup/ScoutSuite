@@ -33,6 +33,9 @@ class EC2RegionConfig(RegionConfig):
     EC2 configuration for a single AWS region
     """
     elastic_ips = {}
+    images = {}
+    snapshots = {}
+    volumes = {}
 
     def parse_elastic_ip(self, global_params, region, eip):
         """
@@ -70,7 +73,8 @@ class EC2RegionConfig(RegionConfig):
                 instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
             self.vpcs[vpc_id].instances[i['InstanceId']] = instance
 
-    def _get_user_data(self, region, instance_id):
+    @staticmethod
+    def _get_user_data(region, instance_id):
         user_data_response = api_clients[region].describe_instance_attribute(Attribute='userData',
                                                                              InstanceId=instance_id)
 
@@ -99,9 +103,9 @@ class EC2RegionConfig(RegionConfig):
         """
         Parse a single Redsfhit security group
 
+        :param group:
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
-        :param security)_group:         Security group
         """
         vpc_id = group['VpcId'] if 'VpcId' in group and group['VpcId'] else ec2_classic
         manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
@@ -113,10 +117,10 @@ class EC2RegionConfig(RegionConfig):
             'count'] = self.__parse_security_group_rules(group['IpPermissionsEgress'])
         self.vpcs[vpc_id].security_groups[group['GroupId']] = security_group
 
-    def __parse_security_group_rules(self, rules):
+    @staticmethod
+    def __parse_security_group_rules(rules):
         """
 
-        :param self:
         :param rules:
         :return:
         """
@@ -174,7 +178,8 @@ class EC2RegionConfig(RegionConfig):
                 'CreateVolumePermissions']
         snapshot['public'] = self._is_public(snapshot)
 
-    def _is_public(self, snapshot):
+    @staticmethod
+    def _is_public(snapshot):
         return any([permission.get('Group') == 'all' for permission in snapshot['createVolumePermission']])
 
     def parse_volume(self, global_params, region, volume):
@@ -285,7 +290,7 @@ def check_for_elastic_ip(ec2_info):
 
 def link_elastic_ips_callback2(ec2_config, current_config, path, current_path, instance_id, callback_args):
     if instance_id == callback_args['instance_id']:
-        if not 'PublicIpAddress' in current_config:
+        if 'PublicIpAddress' not in current_config:
             current_config['PublicIpAddress'] = callback_args['elastic_ip']
         elif current_config['PublicIpAddress'] != callback_args['elastic_ip']:
             print_info('Warning: public IP address exists (%s) for an instance associated with an elastic IP (%s)' % (
@@ -302,7 +307,7 @@ def list_instances_in_security_groups(region_info):
     :return:
     """
     for vpc in region_info['vpcs']:
-        if not 'instances' in region_info['vpcs'][vpc]:
+        if 'instances' not in region_info['vpcs'][vpc]:
             return
         for instance in region_info['vpcs'][vpc]['instances']:
             state = region_info['vpcs'][vpc]['instances'][instance]['State']['Name']
@@ -323,5 +328,5 @@ def manage_vpc(vpc_info, vpc_id):
     """
     manage_dictionary(vpc_info, vpc_id, {})
     vpc_info[vpc_id]['id'] = vpc_id
-    if not 'name' in vpc_info[vpc_id]:
+    if 'name' not in vpc_info[vpc_id]:
         vpc_info[vpc_id]['name'] = vpc_id
