@@ -7,7 +7,7 @@ class AWSFacadeUtils:
             response = api_call()
             resources.extend(parse_response(response))
 
-            # TODO: this marker should be passed to te api call. Also, some calls return a NextMarker, some return a NextToken.
+            # TODO: this marker should be passed to the api call. Also, some calls return a NextMarker, some return a NextToken.
             marker = response.get('NextMarker', None) 
             if marker is None:
                 break
