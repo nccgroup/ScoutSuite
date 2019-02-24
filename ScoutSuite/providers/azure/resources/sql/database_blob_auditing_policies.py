@@ -2,26 +2,21 @@
 
 from azure.mgmt.sql import SqlManagementClient
 
-from ScoutSuite.providers.base.configs.resources import Resources
+from ..resources import AzureSimpleResources
 
 
-class DatabaseBlobAuditingPolicies(Resources):
+class DatabaseBlobAuditingPolicies(AzureSimpleResources):
 
     def __init__(self, resource_group_name, server_name, database_name):
         self.resource_group_name = resource_group_name
         self.server_name = server_name
         self.database_name = database_name
 
-    async def fetch_all(self, credentials):
-        # sdk container:
+    # TODO: make it really async.
+    async def get_resources_from_api(self, credentials):
         api = SqlManagementClient(credentials.credentials, credentials.subscription_id)
+        return api.database_blob_auditing_policies.get(
+            self.resource_group_name, self.server_name, self.database_name)
 
-        policies =\
-            api.database_blob_auditing_policies.get(self.resource_group_name, self.server_name, self.database_name)
-            # TODO: await api.database_blob_auditing_policies.get(self.resource_group_name, self.server_name, self.database_name)
-
-        self['auditing_enabled'] = self._is_auditing_enabled(policies)
-
-    @staticmethod
-    def _is_auditing_enabled(policies):
-        return policies.state == "Enabled"
+    def parse_resource(self, policies):
+        return 'auditing_enabled', policies.state == "Enabled"
