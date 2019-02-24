@@ -27,8 +27,8 @@ class Regions(Resources):
 class ScopedResources(Resources):
     async def fetch_all(self, scope):
         for raw_resource in await self.get_resources_in_scope(scope):
-            name, ressource = self.parse_resource(raw_resource)
-            self[name] = ressource
+            name, resource = self.parse_resource(raw_resource)
+            self[name] = resource
 
         self.count = len(self)
         return self
