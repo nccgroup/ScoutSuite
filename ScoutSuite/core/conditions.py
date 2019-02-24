@@ -43,7 +43,7 @@ def pass_conditions(all_info, current_path, conditions, unknown_as_pass_conditio
                 if dynamic_value:
                     test_values = get_value_at(all_info, current_path, dynamic_value.groups()[0], True)
             try:
-                res = _pass_condition(target_obj, test_name, test_values)
+                res = pass_condition(target_obj, test_name, test_values)
             except Exception as e:
                 res = True if unknown_as_pass_condition else False
                 print_error('Unable to process testcase \'%s\' on value \'%s\', interpreted as %s.' % (
@@ -77,7 +77,7 @@ def __prepare_age_test(a, b):
     return age, number
 
 
-def _pass_condition(b, test, a):
+def pass_condition(b, test, a):
     """
     Generic test function used by Scout2 / AWS recipes
                                         .
@@ -97,7 +97,7 @@ def _pass_condition(b, test, a):
         b = str(b)
         result = (a == b)
     elif test == 'notEqual':
-        result = (not _pass_condition(b, 'equal', a))
+        result = (not pass_condition(b, 'equal', a))
 
     # More/Less tests
     elif test == 'lessThan':
@@ -113,11 +113,11 @@ def _pass_condition(b, test, a):
     elif test == 'empty':
         result = ((type(b) == dict and b == {}) or (type(b) == list and b == []) or (type(b) == list and b == [None]))
     elif test == 'notEmpty':
-        result = (not _pass_condition(b, 'empty', 'a'))
+        result = (not pass_condition(b, 'empty', 'a'))
     elif test == 'null':
         result = ((b is None) or (type(b) == str and b == 'None'))
     elif test == 'notNull':
-        result = (not _pass_condition(b, 'null', a))
+        result = (not pass_condition(b, 'null', a))
 
     # Boolean tests
     elif test == 'true':
@@ -183,7 +183,7 @@ def _pass_condition(b, test, a):
                 result = True
                 break
     elif test == 'notMatch':
-        result = (not _pass_condition(b, 'match', a))
+        result = (not pass_condition(b, 'match', a))
 
     # Date tests
     elif test == 'priorToDate':
@@ -209,7 +209,7 @@ def _pass_condition(b, test, a):
                 result = True
                 break
     elif test == 'notInSubnets':
-        result = (not _pass_condition(b, 'inSubnets', a))
+        result = (not pass_condition(b, 'inSubnets', a))
 
     # Policy statement tests
     elif test == 'containAction':
@@ -223,7 +223,7 @@ def _pass_condition(b, test, a):
                 result = True
                 break
     elif test == 'notContainAction':
-        result = (not _pass_condition(b, 'containAction', a))
+        result = (not pass_condition(b, 'containAction', a))
     elif test == 'containAtLeastOneAction':
         result = False
         if type(b) != dict:

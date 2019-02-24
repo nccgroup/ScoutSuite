@@ -4,10 +4,9 @@ from __future__ import print_function
 import datetime
 import json
 import os
-import yaml
 
-from ScoutSuite.core.console import print_error, print_exception, prompt_overwrite
-from ScoutSuite.core.conditions import _pass_condition
+from ScoutSuite.core.console import print_exception, prompt_overwrite
+from ScoutSuite.core.conditions import pass_condition
 
 
 class CustomJSONEncoder(json.JSONEncoder):
@@ -72,7 +71,7 @@ def read_ip_ranges(filename, local_file=True, ip_only=False, conditions=[]):
         for condition in conditions:
             if type(condition) != list or len(condition) < 3:
                 continue
-            condition_passed = _pass_condition(d[condition[0]], condition[1], condition[2])
+            condition_passed = pass_condition(d[condition[0]], condition[1], condition[2])
             if not condition_passed:
                 break
         if condition_passed:
@@ -86,7 +85,7 @@ def read_ip_ranges(filename, local_file=True, ip_only=False, conditions=[]):
         return targets
 
 
-def read_file(file_path, mode='rt'):
+def read_file(file_path):
     """
     Read the contents of a file
 
@@ -94,7 +93,7 @@ def read_file(file_path, mode='rt'):
 
     :return:                            Contents of the file
     """
-    with open(file_path, mode) as f:
+    with open(file_path, 'rt') as f:
         contents = f.read()
     return contents
 
@@ -118,38 +117,3 @@ def save_blob_as_json(filename, blob, force_write, debug):
     except Exception as e:
         print_exception(e)
         pass
-
-
-def save_ip_ranges(profile_name, prefixes, force_write, debug, output_format='json'):
-    """
-    Creates/Modifies an ip-range-XXX.json file
-
-    :param profile_name:
-    :param prefixes:
-    :param force_write:
-    :param debug:
-
-    :return:
-    """
-    filename = 'ip-ranges-%s.json' % profile_name
-    ip_ranges = {}
-    ip_ranges['createDate'] = datetime.datetime.now().strftime('%Y-%m-%d-%H-%M-%S')
-    # Unique prefixes
-    unique_prefixes = {}
-    for prefix in prefixes:
-        if type(prefix) == dict:
-            unique_prefixes[prefix['ip_prefix']] = prefix
-        else:
-            unique_prefixes[prefix] = {'ip_prefix': prefix}
-    unique_prefixes = list(unique_prefixes.values())
-    ip_ranges['prefixes'] = unique_prefixes
-    if output_format == 'json':
-        save_blob_as_json(filename, ip_ranges, force_write, debug)
-    else:
-        # Write as CSV
-        output = 'account_id, region, ip, instance_id, instance_name\n'
-        for prefix in unique_prefixes:
-            output += '%s, %s, %s, %s, %s\n' % (
-            prefix['account_id'], prefix['region'], prefix['ip_prefix'], prefix['instance_id'], prefix['name'])
-        with open('ip-ranges-%s.csv' % profile_name, 'wt') as f:
-            f.write(output)
