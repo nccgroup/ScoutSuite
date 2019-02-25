@@ -75,8 +75,7 @@ class RegionalServiceConfig(object):
                 if 'api_call' not in resource_metadata:
                     continue
                 params = resource_metadata['params'] if 'params' in resource_metadata else {}
-                ignore_exceptions = True if 'no_exceptions' in resource_metadata and \
-                                            resource_metadata['no_exceptions'] else False
+                ignore_exceptions = resource_metadata.get('no_exceptions', False)
                 if not only_first_region:
                     self.targets['other_regions'] += ((resource,
                                                        resource_metadata['response'],

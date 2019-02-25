@@ -28,7 +28,8 @@ class CloudWatchRegionConfig(RegionConfig):
         alarm['name'] = alarm.pop('AlarmName')
         # Drop some data
         for k in ['AlarmConfigurationUpdatedTimestamp', 'StateReason', 'StateReasonData', 'StateUpdatedTimestamp']:
-            alarm.pop(k) if k in alarm else None
+            if k in alarm:
+                alarm.pop(k)
         alarm_id = self.get_non_provider_id(alarm['arn'])
         self.alarms[alarm_id] = alarm
 

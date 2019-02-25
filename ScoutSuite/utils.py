@@ -87,11 +87,10 @@ def is_throttled(e):
     :param e:                           Exception raised
     :return:                            True if it's a throttling exception else False
     """
-    return True if (hasattr(e, 'response')
-                    and 'Error' in e.response
-                    and e.response['Error']['Code'] in ['Throttling',
-                                                        'RequestLimitExceeded',
-                                                        'ThrottlingException']) else False
+    return (hasattr(e, 'response') and 'Error' in e.response
+            and e.response['Error']['Code'] in ['Throttling',
+                                                'RequestLimitExceeded',
+                                                'ThrottlingException'])
 
 
 def manage_dictionary(dictionary, key, init, callback=None):
