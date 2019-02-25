@@ -133,7 +133,7 @@ def update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entity,
 
 def update_bucket_permissions(s3_info, iam_info, action, iam_entity, allowed_iam_entity, full_path, policy_type,
                               policy_name):
-    global policy
+    policy = {}
     allowed_buckets = []
     # By default, all buckets are allowed
     for bucket_name in s3_info['buckets']:
