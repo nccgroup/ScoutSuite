@@ -10,7 +10,8 @@ from ScoutSuite.providers.aws.credentials import read_creds
 from ScoutSuite.providers.aws.services.vpc import put_cidr_name
 from ScoutSuite.providers.base.configs.browser import combine_paths, get_object_at, get_value_at
 from ScoutSuite.providers.base.provider import BaseProvider
-from ScoutSuite.utils import ec2_classic, manage_dictionary
+from ScoutSuite.utils import manage_dictionary
+from ScoutSuite.providers.aws.utils import ec2_classic
 
 
 # noinspection PyBroadException

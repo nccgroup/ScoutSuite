@@ -13,7 +13,8 @@ from ScoutSuite.providers.aws.aws import get_name
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
 from ScoutSuite.providers.base.configs.browser import get_attribute_at
-from ScoutSuite.utils import get_keys, ec2_classic, manage_dictionary
+from ScoutSuite.utils import manage_dictionary
+from ScoutSuite.providers.aws.utils import ec2_classic, get_keys
 from ScoutSuite.core.fs import load_data
 
 ########################################

@@ -5,6 +5,7 @@ from botocore.exceptions import ClientError
 from ScoutSuite.core.console import print_error, print_exception
 from ScoutSuite.providers.aws.aws import connect_service, handle_truncated_response
 from ScoutSuite.providers.aws.configs.base import AWSBaseConfig
+from ScoutSuite.providers.aws.utils import get_keys, is_throttled
 from ScoutSuite.utils import *
 
 

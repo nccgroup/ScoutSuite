@@ -20,7 +20,8 @@ from ScoutSuite.core.console import print_exception, print_info
 from ScoutSuite.providers.base.configs import resource_id_map
 from ScoutSuite.providers.base.configs.threads import thread_configs
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
-from ScoutSuite.utils import format_service_name, is_throttled, manage_dictionary
+from ScoutSuite.utils import format_service_name, manage_dictionary
+from ScoutSuite.providers.aws.utils import is_throttled
 from ScoutSuite.providers.aws.configs.base import BaseConfig
 from ScoutSuite.output.console import FetchStatusLogger
 
