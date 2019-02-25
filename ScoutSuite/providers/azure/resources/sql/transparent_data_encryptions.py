@@ -17,4 +17,6 @@ class TransparentDataEncryptions(AzureSimpleResources):
             self.resource_group_name, self.server_name, self.database_name)
 
     def parse_resource(self, encryptions):
-        return 'transparent_data_encryption_enabled', encryptions.status == "Enabled"
+        return self.update({
+            'transparent_data_encryption_enabled': encryptions.status == "Enabled"
+        })
