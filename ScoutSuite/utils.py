@@ -1,7 +1,38 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 
-from ScoutSuite.providers.aws.utils import formatted_service_name
+formatted_service_name = {
+    'cloudformation': 'CloudFormation',
+    'cloudtrail': 'CloudTrail',
+    'cloudwatch': 'CloudWatch',
+    'config': 'Config',
+    'directconnect': 'Direct Connect',
+    'dynamodb': 'DynamoDB',
+    'elasticache': 'ElastiCache',
+    'lambda': 'Lambda',
+    'redshift': 'RedShift',
+    'route53': 'Route53',
+    'route53domains': 'Route53Domains',
+
+    'cloudstorage': 'Cloud Storage',
+    'cloudsql': 'Cloud SQL',
+    'stackdriverlogging': 'Stackdriver Logging',
+    'stackdrivermonitoring': 'Stackdriver Monitoring',
+    'computeengine': 'Compute Engine',
+    'kubernetesengine': 'Kubernetes Engine',
+    'cloudresourcemanager': 'Cloud Resource Manager',
+
+    'monitor': 'Monitor',
+    'storageaccounts': 'Storage Accounts',
+    'sqldatabase': 'SQL Database',
+    'securitycenter': 'Security Center',
+    'keyvault': 'Key Vault',
+    'appgateway': 'Application Gateway',
+    'rediscache': 'Redis Cache',
+    'network': 'Network',
+    'appservice': 'App Service',
+    'loadbalancer': 'Load Balancer'
+}
 
 
 def manage_dictionary(dictionary, key, init, callback=None):

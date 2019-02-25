@@ -3,38 +3,6 @@
 import re
 
 ec2_classic = 'EC2-Classic'
-formatted_service_name = {
-    'cloudformation': 'CloudFormation',
-    'cloudtrail': 'CloudTrail',
-    'cloudwatch': 'CloudWatch',
-    'config': 'Config',
-    'directconnect': 'Direct Connect',
-    'dynamodb': 'DynamoDB',
-    'elasticache': 'ElastiCache',
-    'lambda': 'Lambda',
-    'redshift': 'RedShift',
-    'route53': 'Route53',
-    'route53domains': 'Route53Domains',
-
-    'cloudstorage': 'Cloud Storage',
-    'cloudsql': 'Cloud SQL',
-    'stackdriverlogging': 'Stackdriver Logging',
-    'stackdrivermonitoring': 'Stackdriver Monitoring',
-    'computeengine': 'Compute Engine',
-    'kubernetesengine': 'Kubernetes Engine',
-    'cloudresourcemanager': 'Cloud Resource Manager',
-
-    'monitor': 'Monitor',
-    'storageaccounts': 'Storage Accounts',
-    'sqldatabase': 'SQL Database',
-    'securitycenter': 'Security Center',
-    'keyvault': 'Key Vault',
-    'appgateway': 'Application Gateway',
-    'rediscache': 'Redis Cache',
-    'network': 'Network',
-    'appservice': 'App Service',
-    'loadbalancer': 'Load Balancer'
-}
 
 
 def get_keys(src, dst, keys):
