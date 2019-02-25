@@ -1,4 +1,4 @@
-from ScoutSuite.providers.aws.configs.regions_config import ScopedResources
+from ScoutSuite.providers.aws.resources.resources import AWSSimpleResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from opinel.utils.aws import get_name
 from ScoutSuite.utils import get_keys, ec2_classic
@@ -6,16 +6,11 @@ from opinel.utils.globals import manage_dictionary
 from opinel.utils.fs import load_data
 
 
-class SecurityGroups(ScopedResources):
+class SecurityGroups(AWSSimpleResources):
     icmp_message_types_dict = load_data('icmp_message_types.json', 'icmp_message_types')
 
-    # TODO: The init could take a "scope" dictionary containing the necessary info. In this case, the owner_id and the region
-    def __init__(self, region):
-        self.region = region
-        self.facade = AWSFacade()
-
-    async def get_resources_in_scope(self, vpc):
-        return self.facade.ec2.get_security_groups(self.region, vpc)
+    async def get_resources_from_api(self):
+        return self.facade.ec2.get_security_groups(self.scope['region'], self.scope['vpc'])
 
     def parse_resource(self, raw_security_group):
         security_group = {}
@@ -25,18 +20,18 @@ class SecurityGroups(ScopedResources):
         security_group['owner_id'] = raw_security_group['OwnerId']
 
         security_group['rules'] = {'ingress': {}, 'egress': {}}
-        ingress_protocols, ingress_rules_count = self.__parse_security_group_rules(
+        ingress_protocols, ingress_rules_count = self._parse_security_group_rules(
             raw_security_group['IpPermissions'])
         security_group['rules']['ingress']['protocols'] = ingress_protocols
         security_group['rules']['ingress']['count'] = ingress_rules_count
 
-        egress_protocols, egress_rules_count = self.__parse_security_group_rules(
+        egress_protocols, egress_rules_count = self._parse_security_group_rules(
             raw_security_group['IpPermissionsEgress'])
         security_group['rules']['egress']['protocols'] = egress_protocols
         security_group['rules']['egress']['count'] = egress_rules_count
         return security_group['id'], security_group
 
-    def __parse_security_group_rules(self, rules):
+    def _parse_security_group_rules(self, rules):
         protocols = {}
         rules_count = 0
         for rule in rules:
