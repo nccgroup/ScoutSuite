@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from azure.mgmt.sql import SqlManagementClient
 from msrestazure.azure_exceptions import CloudError
 
 from ScoutSuite.providers.base.configs.resources import Resources
