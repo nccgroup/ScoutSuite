@@ -11,7 +11,7 @@ from ScoutSuite.output.js import JavaScriptReaderWriter
 
 class RuleExceptions(object):
 
-    def __init__(self, profile, file_path=None, foobar=None):
+    def __init__(self, profile, file_path=None):
         self.profile = profile
         self.file_path = file_path
         self.jsrw = JavaScriptReaderWriter(self.profile)
