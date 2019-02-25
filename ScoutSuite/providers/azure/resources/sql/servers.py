@@ -7,6 +7,7 @@ from ScoutSuite.providers.azure.utils import get_resource_group_name
 
 from .databases import Databases
 from .server_azure_ad_administrators import ServerAzureAdAdministrators
+from .server_blob_auditing_policies import ServerBlobAuditingPolicies
 from ..utils import get_non_provider_id
 
 
@@ -14,6 +15,7 @@ class Servers(AzureCompositeResources):
     children = [
         Databases,
         ServerAzureAdAdministrators,
+        ServerBlobAuditingPolicies
     ]
 
     # TODO: make it really async.
