@@ -1,17 +1,11 @@
-from ScoutSuite.providers.aws.configs.regions_config import ScopedResources
+from ScoutSuite.providers.aws.resources.resources import AWSSimpleResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from opinel.utils.aws import get_name
 
 
-class Snapshots(ScopedResources):
-
-    # TODO: The init could take a "scope" dictionary containing the necessary info. In this case, the owner_id and the region
-    def __init__(self, owner_id):
-        self.owner_id = owner_id
-        self.facade = AWSFacade()
-
-    async def get_resources_in_scope(self, region):
-        return self.facade.ec2.get_snapshots(region, self.owner_id)
+class Snapshots(AWSSimpleResources):
+    async def get_resources_from_api(self):
+        return self.facade.ec2.get_snapshots(self.scope['region'], self.scope['owner_id'])
 
     def parse_resource(self, raw_snapshot):
         raw_snapshot['id'] = raw_snapshot.pop('SnapshotId')
