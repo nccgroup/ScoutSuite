@@ -88,19 +88,6 @@ def read_ip_ranges(filename, local_file=True, ip_only=False, conditions=None):
         return targets
 
 
-def read_file(file_path):
-    """
-    Read the contents of a file
-
-    :param file_path:                   Path of the file to be read
-
-    :return:                            Contents of the file
-    """
-    with open(file_path, 'rt') as f:
-        contents = f.read()
-    return contents
-
-
 def save_blob_as_json(filename, blob, force_write):
     """
     Creates/Modifies file and saves python object as JSON
