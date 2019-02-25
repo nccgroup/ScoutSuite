@@ -46,7 +46,7 @@ def load_data(data_file, key_name=None, local_file=False):
     return data
 
 
-def read_ip_ranges(filename, local_file=True, ip_only=False, conditions=[]):
+def read_ip_ranges(filename, local_file=True, ip_only=False, conditions=None):
     """
     Returns the list of IP prefixes from an ip-ranges file
 
@@ -56,6 +56,9 @@ def read_ip_ranges(filename, local_file=True, ip_only=False, conditions=[]):
     :param ip_only:
     :return:
     """
+    if not conditions:
+        conditions = []
+    
     targets = []
     data = load_data(filename, local_file=local_file)
     if 'source' in data:
@@ -105,7 +108,6 @@ def save_blob_as_json(filename, blob, force_write):
     :param filename:
     :param blob:
     :param force_write:
-    :param debug:
 
     :return:
     """
