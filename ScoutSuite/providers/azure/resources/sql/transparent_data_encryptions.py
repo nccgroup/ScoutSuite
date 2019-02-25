@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from azure.mgmt.sql import SqlManagementClient
-
 from ..resources import AzureSimpleResources
 
 
