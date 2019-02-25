@@ -60,25 +60,6 @@ def pass_conditions(all_info, current_path, conditions, unknown_as_pass_conditio
     return not condition_operator == 'or'
 
 
-def __prepare_age_test(a, b):
-    if type(a) != list:
-        print_error('Error: olderThan requires a list such as [ N , \'days\' ] or [ M, \'hours\'].')
-        raise Exception
-    number = int(a[0])
-    unit = a[1]
-    if unit not in ['days', 'hours', 'minutes', 'seconds']:
-        print_error('Error: only days, hours, minutes, and seconds are supported.')
-        raise Exception
-    if unit == 'hours':
-        number *= 3600
-        unit = 'seconds'
-    elif unit == 'minutes':
-        number *= 60
-        unit = 'seconds'
-    age = getattr((datetime.datetime.today() - dateutil.parser.parse(str(b)).replace(tzinfo=None)), unit)
-    return age, number
-
-
 def pass_condition(b, test, a):
     """
     Generic test function used by Scout2 / AWS recipes
@@ -282,3 +263,22 @@ def fix_path_string(all_info, current_path, path_to_value):
             dv = get_value_at(all_info, current_path, tmp)
             path_to_value = path_to_value.replace('_GET_VALUE_AT_(%s)' % tmp, dv)
     return path_to_value
+
+
+def __prepare_age_test(a, b):
+    if type(a) != list:
+        print_error('Error: olderThan requires a list such as [ N , \'days\' ] or [ M, \'hours\'].')
+        raise Exception
+    number = int(a[0])
+    unit = a[1]
+    if unit not in ['days', 'hours', 'minutes', 'seconds']:
+        print_error('Error: only days, hours, minutes, and seconds are supported.')
+        raise Exception
+    if unit == 'hours':
+        number *= 3600
+        unit = 'seconds'
+    elif unit == 'minutes':
+        number *= 60
+        unit = 'seconds'
+    age = getattr((datetime.datetime.today() - dateutil.parser.parse(str(b)).replace(tzinfo=None)), unit)
+    return age, number
