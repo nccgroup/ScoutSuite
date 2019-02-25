@@ -1,13 +1,10 @@
-from ScoutSuite.providers.aws.configs.regions_config import ScopedResources
+from ScoutSuite.providers.aws.resources.resources import AWSSimpleResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
 
-class AmazonMachineImages(ScopedResources):
-    def __init__(self, owner_id):
-        self.owner_id = owner_id
-        self.facade = AWSFacade()
-    
-    async def get_resources_in_scope(self, region): 
-        return self.facade.ec2.get_images(region, self.owner_id)
+
+class AmazonMachineImages(AWSSimpleResources):
+    async def get_resources_from_api(self):
+        return self.facade.ec2.get_images(self.scope['region'], self.scope['owner_id'])
 
     def parse_resource(self, raw_image):
         raw_image['id'] = raw_image['ImageId']
