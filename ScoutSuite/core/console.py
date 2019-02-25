@@ -76,7 +76,7 @@ def prompt(test_input=None):
 
     :return:                            Value typed by user (or passed in argument when testing)
     """
-    if test_input != None:
+    if not test_input:
         if type(test_input) == list and len(test_input):
             choice = test_input.pop(0)
         elif type(test_input) == list:
@@ -84,20 +84,16 @@ def prompt(test_input=None):
         else:
             choice = test_input
     else:
-        # Coverage: 4 missed statements
-        try:
-            choice = input()
-        except:
-            choice = input()
+        choice = input()
     return choice
 
 
-def prompt_mfa_code(activate=False, input=None):
+def prompt_mfa_code(activate=False, test_input=None):
     """
     Prompt for an MFA code
 
     :param activate:                    Set to true when prompting for the 2nd code when activating a new MFA device
-    :param input:                       Used for unit testing
+    :param test_input:                       Used for unit testing
 
     :return:                            The MFA code
     """
@@ -106,7 +102,7 @@ def prompt_mfa_code(activate=False, input=None):
             prompt_string = 'Enter the next value: '
         else:
             prompt_string = 'Enter your MFA code (or \'q\' to abort): '
-        mfa_code = prompt_value(prompt_string, no_confirm=True, input=input)
+        mfa_code = prompt_value(prompt_string, no_confirm=True, test_input=test_input)
         if mfa_code == 'q':
             return mfa_code
         if not re_mfa_code.match():
@@ -115,24 +111,24 @@ def prompt_mfa_code(activate=False, input=None):
     return mfa_code
 
 
-def prompt_overwrite(filename, force_write, input=None):
+def prompt_overwrite(filename, force_write, test_input=None):
     """
     Prompt whether the file should be overwritten
 
     :param filename:                    Name of the file about to be written
     :param force_write:                 Skip confirmation prompt if this flag is set
-    :param input:                       Used for unit testing
+    :param test_input:                       Used for unit testing
 
     :return:                            Boolean whether file write operation is allowed
     """
     if not os.path.exists(filename) or force_write:
         return True
-    return prompt_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename), input=input)
+    return prompt_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename), test_input=test_input)
 
 
 def prompt_value(question, choices=None, default=None, display_choices=True, display_indices=False,
                  authorize_list=False, is_question=False, no_confirm=False, required=True, regex=None,
-                 regex_format='', max_laps=5, input=None, return_index=False):
+                 regex_format='', max_laps=5, test_input=None, return_index=False):
     """
     Prompt for a value
                                         .                    .
@@ -148,16 +144,18 @@ def prompt_value(question, choices=None, default=None, display_choices=True, dis
     :param regex:                       TODO
     :param regex_format                 TODO
     :param max_laps:                    Exit after N laps
-    :param input:                       Used for unit testing
+    :param test_input:                       Used for unit testing
 
     :return:
     """
+    int_choice = 0
+
     if choices and display_choices and not display_indices:
         question = question + ' (' + '/'.join(choices) + ')'
     lap_n = 0
     while True:
         if lap_n >= max_laps:
-            print_error('Automatically abording prompt loop after 5 failures')
+            print_error('Automatically aborting prompt loop after 5 failures')
             return None
         lap_n += 1
         can_return = False
@@ -169,7 +167,7 @@ def prompt_value(question, choices=None, default=None, display_choices=True, dis
             for c in choices:
                 print_error('%3d. %s' % (choices.index(c), c))
             print_error('Enter the number corresponding to your choice: ', False)
-        choice = prompt(input)
+        choice = prompt(test_input)
         # Set the default value if empty choice
         if not choice or choice == '':
             if default:
@@ -193,7 +191,7 @@ def prompt_value(question, choices=None, default=None, display_choices=True, dis
                     choice = choices[int(choice)]
                 else:
                     for c in user_choices:
-                        if not c in choices:
+                        if c not in choices:
                             print_error('Invalid value (%s).' % c)
                             choice_valid = False
                             break
@@ -210,24 +208,24 @@ def prompt_value(question, choices=None, default=None, display_choices=True, dis
             # No automated validation, can attempt to return
             can_return = True
         if can_return:
-            # Manually onfirm that the entered value is correct if needed
-            if no_confirm or prompt_yes_no('You entered "' + choice + '". Is that correct', input=input):
+            # Manually confirm that the entered value is correct if needed
+            if no_confirm or prompt_yes_no('You entered "' + choice + '". Is that correct', test_input=test_input):
                 return int(int_choice) if return_index else choice
 
 
-def prompt_yes_no(question, input=None):
+def prompt_yes_no(question, test_input=None):
     """
     Prompt for a yes/no or y/n answer
                                         .
     :param question:                    Question to be asked
-    :param input:                       Used for unit testing
+    :param test_input:                       Used for unit testing
 
     :return:                            True for yes/y, False for no/n
     """
     count = 0
     while True:
         print_error(question + ' (y/n)? ')
-        choice = prompt(input).lower()
+        choice = prompt(test_input).lower()
         if choice == 'yes' or choice == 'y':
             return True
         elif choice == 'no' or choice == 'n':
