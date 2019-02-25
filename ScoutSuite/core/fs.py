@@ -58,7 +58,7 @@ def read_ip_ranges(filename, local_file=True, ip_only=False, conditions=None):
     """
     if not conditions:
         conditions = []
-    
+
     targets = []
     data = load_data(filename, local_file=local_file)
     if 'source' in data:
