@@ -1,27 +1,32 @@
-from ScoutSuite.providers.aws.configs.regions_config import ScopedResources
+from ScoutSuite.providers.aws.resources.resources import AWSCompositeResources, AWSSimpleResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.aws.services.ec2.instances import EC2Instances
 from ScoutSuite.providers.aws.services.ec2.securitygroups import SecurityGroups
 from ScoutSuite.providers.aws.services.ec2.networkinterfaces import NetworkInterfaces
 
 
-class Vpcs(ScopedResources):
-    def __init__(self):
+class Vpcs(AWSCompositeResources, AWSSimpleResources):
+    children = [
+        (EC2Instances, 'instances'),
+        (SecurityGroups, 'security_groups'),
+        (NetworkInterfaces, 'network_interfaces')
+    ]
+
+    def __init__(self, scope):
+        self.scope = scope
         self.facade = AWSFacade()
 
-    async def fetch_all(self, region):
-        await super(Vpcs, self).fetch_all(region)
+    async def fetch_all(self):
+        await super(Vpcs, self).fetch_all()
 
         for vpc in self:
-            # TODO: Add vpc_resource_types
-            self[vpc]['instances'] = await EC2Instances(region).fetch_all(vpc)
-            self[vpc]['security_groups'] = await SecurityGroups(region).fetch_all(vpc)
-            self[vpc]['network_interfaces'] = await NetworkInterfaces(region).fetch_all(vpc)
+            scope = {'region': self.scope['region'], 'vpc': vpc}
+            await self.fetch_children(self[vpc], scope=scope)
 
         return self
 
     def parse_resource(self, vpc):
         return vpc['VpcId'], {}
 
-    async def get_resources_in_scope(self, region):
-        return self.facade.ec2.get_vpcs(region)
+    async def get_resources_from_api(self):
+        return self.facade.ec2.get_vpcs(self.scope['region'])
