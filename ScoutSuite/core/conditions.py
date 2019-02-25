@@ -10,7 +10,6 @@ from iampoliciesgonewild import get_actions_from_statement, _expand_wildcard_act
 
 from ScoutSuite.core.console import print_error, print_exception
 from ScoutSuite.core import condition_operators
-from ScoutSuite.providers.base.configs.browser import get_value_at
 
 re_get_value_at = re.compile(r'_GET_VALUE_AT_\((.*?)\)')
 re_nested_get_value_at = re.compile(r'_GET_VALUE_AT_\(.*')
@@ -26,6 +25,9 @@ def pass_conditions(all_info, current_path, conditions, unknown_as_pass_conditio
     :param unknown_as_pass_condition:   Consider an undetermined condition as passed
     :return:
     """
+
+    # Fixes circular dependency
+    from ScoutSuite.providers.base.configs.browser import get_value_at
 
     if len(conditions) == 0:
         return True
@@ -263,6 +265,8 @@ def pass_condition(b, test, a):
 
 
 def fix_path_string(all_info, current_path, path_to_value):
+    # Fixes circulare dependency
+    from ScoutSuite.providers.base.configs.browser import get_value_at
     # handle nested _GET_VALUE_AT_...
     while True:
         dynamic_path = re_get_value_at.findall(path_to_value)

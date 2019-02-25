@@ -18,7 +18,7 @@ class TestAWSScout2RulesRuleset:
         self.test_ruleset_001 = os.path.join(self.test_dir, 'data/test-ruleset.json')
         self.test_ruleset_002 = os.path.join(self.test_dir, 'data/test-ruleset-absolute-path.json')
 
-    @patch("ScoutSuite.core.ruleset.printError")
+    @patch("ScoutSuite.core.ruleset.print_error")
     def test_ruleset_class(self, printError):
         test001 = Ruleset(filename=self.test_ruleset_001)
         assert (os.path.isdir(test001.rules_data_path))
@@ -48,14 +48,14 @@ class TestAWSScout2RulesRuleset:
 
         test005 = Ruleset(filename=self.test_ruleset_001, ruleset_generator=True)
 
-    @patch("ScoutSuite.core.ruleset.printError")
+    @patch("ScoutSuite.core.ruleset.print_error")
     def test_ruleset_file_not_exist(self, printError):
         test003 = Ruleset(cloud_provider='aws', filename='tests/data/no-such-file.json')
         assert (test003.rules == [])
         assert (printError.call_count == 1)
         assert ("no-such-file.json does not exist" in printError.call_args_list[0][0][0])
 
-    @patch("ScoutSuite.core.ruleset.printError")
+    @patch("ScoutSuite.core.ruleset.print_error")
     def test_ruleset_invalid(self, printError):
         test004 = Ruleset(cloud_provider='aws', filename='tests/data/invalid-file.json')
         assert (test004.rules == [])
@@ -88,7 +88,7 @@ class TestAWSScout2RulesRuleset:
         target = Ruleset(filename='filters')
         assert (os.path.samefile(target.filename, rpath + 'rulesets/filters.json'))
 
-    @patch("ScoutSuite.core.ruleset.prompt_4_yes_no")
+    @patch("ScoutSuite.core.ruleset.prompt_yes_no")
     def test_file_search(self, prompt_yes_no):
         prompt_yes_no.return_value = False
 
