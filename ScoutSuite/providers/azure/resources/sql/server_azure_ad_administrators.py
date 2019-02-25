@@ -16,7 +16,7 @@ class ServerAzureAdAdministrators(Resources):
     # TODO: make it really async.
     async def fetch_all(self):
         try:
-            _ = self.facade.server_azure_ad_administrators.get(self.resource_group_name, self.server_name)
+            self.facade.server_azure_ad_administrators.get(self.resource_group_name, self.server_name)
             self['ad_admin_configured'] = True
         except CloudError:  # no ad admin configured returns a 404 error
             self['ad_admin_configured'] = False
