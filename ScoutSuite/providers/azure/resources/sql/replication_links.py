@@ -17,4 +17,6 @@ class ReplicationLinks(AzureSimpleResources):
             self.resource_group_name, self.server_name, self.database_name))
 
     def parse_resource(self, links):
-        return 'replication_configured', len(links) > 0
+        self.update({
+            'replication_configured': len(links) > 0
+        })

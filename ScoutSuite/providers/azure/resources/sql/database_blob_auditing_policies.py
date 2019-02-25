@@ -17,4 +17,6 @@ class DatabaseBlobAuditingPolicies(AzureSimpleResources):
             self.resource_group_name, self.server_name, self.database_name)
 
     def parse_resource(self, policies):
-        return 'auditing_enabled', policies.state == "Enabled"
+        self.update({
+            'auditing_enabled': policies.state == "Enabled"
+        })
