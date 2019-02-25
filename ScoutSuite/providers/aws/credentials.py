@@ -127,21 +127,6 @@ def get_profiles_from_aws_credentials_file(credentials_files=None):
     return sorted(profiles)
 
 
-def generate_password():
-    """
-    Generate a password using random characters from uppercase, lowercase, digits, and symbols
-
-    :return:                            The random password
-    """
-    chars = string.ascii_letters + string.digits + '!@#$%^&*()_+-=[]{};:,<.>?|'
-    modulus = len(chars)
-    pchars = os.urandom(16)
-    if type(pchars) == str:
-        return ''.join(chars[i % modulus] for i in map(ord, pchars))
-    else:
-        return ''.join(chars[i % modulus] for i in pchars)
-
-
 def init_creds():
     """
     Create a dictionary with all the necessary keys set to "None"
@@ -358,20 +343,6 @@ def read_profile_from_aws_config_file(profile_name, config_file=aws_config_file)
         if not hasattr(e, 'errno') or e.errno != 2:
             print_exception(e)
     return role_arn, source_profile, mfa_serial, external_id
-
-
-def show_profiles_from_aws_credentials_file(credentials_files=None):
-    """
-    Show profile names from ~/.aws/credentials
-
-    :param credentials_files:
-    :return:
-    """
-    if credentials_files is None:
-        credentials_files = [aws_credentials_file, aws_config_file]
-    profiles = get_profiles_from_aws_credentials_file(credentials_files)
-    for profile in set(profiles):
-        print_info(' * %s' % profile)
 
 
 def write_creds_to_aws_credentials_file(profile_name, credentials, credentials_file=aws_credentials_file):
