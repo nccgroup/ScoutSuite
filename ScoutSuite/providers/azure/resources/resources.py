@@ -10,8 +10,7 @@ class AzureSimpleResources(SimpleResources, metaclass=abc.ABCMeta):
 
     async def fetch_all(self):
         raw_resource = await self.get_resources_from_api()
-        name, resource = self.parse_resource(raw_resource)
-        self[name] = resource
+        self.parse_resource(raw_resource)
 
 
 class AzureCompositeResources(CompositeResources, metaclass=abc.ABCMeta):

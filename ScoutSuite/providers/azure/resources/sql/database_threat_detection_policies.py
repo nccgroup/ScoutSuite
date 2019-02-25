@@ -17,4 +17,6 @@ class DatabaseThreatDetectionPolicies(AzureSimpleResources):
             self.resource_group_name, self.server_name, self.database_name)
 
     def parse_resource(self, policies):
-        return 'threat_detection_enabled', policies.state == "Enabled"
+        self.update({
+            'threat_detection_enabled': policies.state == "Enabled"
+        })
