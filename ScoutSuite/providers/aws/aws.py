@@ -90,11 +90,6 @@ def get_caller_identity(credentials):
     return api_client.get_caller_identity()
 
 
-def get_username(credentials):
-    caller_identity = get_caller_identity(credentials)
-    return caller_identity['Arn'].split('/')[-1]
-
-
 def get_aws_account_id(credentials):
     caller_identity = get_caller_identity(credentials)
     return caller_identity['Arn'].split(':')[4]
