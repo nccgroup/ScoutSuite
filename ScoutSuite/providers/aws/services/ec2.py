@@ -216,7 +216,7 @@ class EC2Config(RegionalServiceConfig):
 
 def analyze_ec2_config(ec2_info, aws_account_id, force_write):
     try:
-        print_info('Analyzing EC2 config... ', newLine=False)
+        print_info('Analyzing EC2 config... ', new_line=False)
         # Custom EC2 analysis
         #        check_for_elastic_ip(ec2_info)
         # FIXME - commented for now as this method doesn't seem to be defined anywhere'

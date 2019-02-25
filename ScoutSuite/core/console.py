@@ -41,8 +41,8 @@ def print_debug(msg):
         print_generic(sys.stderr, msg)
 
 
-def print_error(msg, newLine=True):
-    print_generic(sys.stderr, msg, newLine)
+def print_error(msg, new_line=True):
+    print_generic(sys.stderr, msg, new_line)
 
 
 def print_exception(e, debug_only=False):
@@ -53,15 +53,15 @@ def print_exception(e, debug_only=False):
         print_error(str(e))
 
 
-def print_generic(out, msg, newLine=True):
+def print_generic(out, msg, new_line=True):
     out.write(msg)
     out.flush()
-    if newLine == True:
+    if new_line:
         out.write('\n')
 
 
-def print_info(msg, newLine=True):
-    print_generic(sys.stdout, msg, newLine)
+def print_info(msg, new_line=True):
+    print_generic(sys.stdout, msg, new_line)
 
 
 ########################################
