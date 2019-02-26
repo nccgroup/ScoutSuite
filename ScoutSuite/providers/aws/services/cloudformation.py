@@ -30,6 +30,12 @@ class CloudFormationRegionConfig(RegionConfig):
         stack['termination_protection'] = stack_description['Stacks'][0]['EnableTerminationProtection']
         stack['drifted'] = stack.pop('DriftInformation')['StackDriftStatus'] == 'DRIFTED'
 
+        template = api_clients[region].get_template(StackName=stack['name'])['TemplateBody']['Resources']
+        for group in template.keys():
+            stack['has_deletion_policy'] = 'DeletionPolicy' in template[group]
+            if stack['has_deletion_policy'] is True:
+                break
+
         stack_policy = api_clients[region].get_stack_policy(StackName=stack['name'])
         if 'StackPolicyBody' in stack_policy:
             stack['policy'] = json.loads(stack_policy['StackPolicyBody'])
