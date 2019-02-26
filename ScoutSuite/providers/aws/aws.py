@@ -144,4 +144,3 @@ def is_throttled(e):
     """
     return (hasattr(e, 'response') and 'Error' in e.response and e.response['Error']['Code'] in
                     ['Throttling', 'RequestLimitExceeded', 'ThrottlingException', 'TooManyRequestsException']) \
-        else False
