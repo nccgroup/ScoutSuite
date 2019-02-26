@@ -4,7 +4,7 @@ import json
 import os
 import tempfile
 
-from opinel.utils.console import configPrintException, printError
+from ScoutSuite.core.console import config_debug_level, print_error
 
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset
@@ -17,7 +17,7 @@ class DummyObject(object):
 class TestAWSScout2RulesProcessingEngine:
 
     def setup(self):
-        configPrintException(True)
+        config_debug_level(True)
         self.rule_counters = {'found': 0, 'tested': 0, 'verified': 0}
         self.test_dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -64,8 +64,8 @@ class TestAWSScout2RulesProcessingEngine:
         
         test_result_file_name = os.path.join(self.test_dir, 'data/rule-results/%s' % rule_file_name)
         if not os.path.isfile(test_result_file_name):
-            printError('Expected findings:: ')
-            printError(json.dumps(findings, indent=4))
+            print_error('Expected findings:: ')
+            print_error(json.dumps(findings, indent=4))
             return
 
         self.rule_counters['verified'] += 1
@@ -74,10 +74,9 @@ class TestAWSScout2RulesProcessingEngine:
         
         try:
             assert (set(sorted(findings)) == set(sorted(items)))
-        except Exception as e:
-            printError(e)
-            printError('Expected items:\n %s' % json.dumps(sorted(items)))
-            printError('Reported items:\n %s' % json.dumps(sorted(findings)))
+        except Exception:
+            print_error('Expected items:\n %s' % json.dumps(sorted(items)))
+            print_error('Reported items:\n %s' % json.dumps(sorted(findings)))
             assert (False)
 
     def _generate_ruleset(self, rule_file_name, rule):

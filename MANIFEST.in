@@ -1,6 +1,7 @@
 include LICENSE
 include README.md
 include requirements.txt
+recursive-include ScoutSuite/data *
 recursive-include ScoutSuite/output/data *
 recursive-include ScoutSuite/providers/aws *
 recursive-include ScoutSuite/providers/aws/rules *

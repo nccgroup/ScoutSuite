@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.console import printError
+from ScoutSuite.core.console import print_error
 
 from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
@@ -56,7 +56,7 @@ def get_cloudstorage_bucket_logging(bucket, bucket_dict):
         bucket_dict['logging_enabled'] = bucket.get_logging() is not None
         return True
     except Exception as e:
-        printError('Failed to get bucket logging configuration for %s: %s' % (bucket.name, e))
+        print_error('Failed to get bucket logging configuration for %s: %s' % (bucket.name, e))
         bucket_dict['logging_enabled'] = None
         return False
 
@@ -77,6 +77,6 @@ def get_cloudstorage_bucket_acl(bucket, bucket_dict):
 
         return True
     except Exception as e:
-        printError('Failed to get bucket ACL configuration for %s: %s' % (bucket.name, e))
+        print_error('Failed to get bucket ACL configuration for %s: %s' % (bucket.name, e))
         bucket_dict['acls'] = 'Unknown'
         return False

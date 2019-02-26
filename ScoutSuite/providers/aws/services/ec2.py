@@ -3,21 +3,19 @@
 EC2-related classes and functions
 """
 
-# TODO: move a lot of this to VPCconfig, and use some sort of filter to only list SGs in EC2 classic
-import netaddr
 import base64
 
-from opinel.utils.aws import get_name
-from opinel.utils.console import printException, printInfo
-from opinel.utils.fs import load_data
-from opinel.utils.globals import manage_dictionary
+# TODO: move a lot of this to VPCconfig, and use some sort of filter to only list SGs in EC2 classic
+import netaddr
 
+from ScoutSuite.core.console import print_exception, print_info
+from ScoutSuite.providers.aws.aws import get_name
+from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
 from ScoutSuite.providers.base.configs.browser import get_attribute_at
-from ScoutSuite.providers.base.provider import BaseProvider
-from ScoutSuite.utils import get_keys, ec2_classic
-from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
-
+from ScoutSuite.utils import manage_dictionary
+from ScoutSuite.providers.aws.utils import ec2_classic, get_keys
+from ScoutSuite.core.fs import load_data
 
 ########################################
 # Globals
@@ -35,12 +33,16 @@ class EC2RegionConfig(RegionConfig):
     """
     EC2 configuration for a single AWS region
     """
+    elastic_ips = {}
+    images = {}
+    snapshots = {}
+    volumes = {}
 
     def parse_elastic_ip(self, global_params, region, eip):
         """
 
         :param global_params:
-        :param region:
+        :param region:          Name of the AWS region
         :param eip:
         :return:
         """
@@ -50,9 +52,9 @@ class EC2RegionConfig(RegionConfig):
         """
         Parse a single EC2 instance
 
+        :param reservation:
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
-        :param instance:                Cluster
         """
         for i in reservation['Instances']:
             instance = {}
@@ -72,8 +74,10 @@ class EC2RegionConfig(RegionConfig):
                 instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
             self.vpcs[vpc_id].instances[i['InstanceId']] = instance
 
-    def _get_user_data(self, region, instance_id):
-        user_data_response = api_clients[region].describe_instance_attribute(Attribute='userData', InstanceId=instance_id)
+    @staticmethod
+    def _get_user_data(region, instance_id):
+        user_data_response = api_clients[region].describe_instance_attribute(Attribute='userData',
+                                                                             InstanceId=instance_id)
 
         if 'Value' not in user_data_response['UserData'].keys():
             return None
@@ -84,9 +88,9 @@ class EC2RegionConfig(RegionConfig):
         """
         Parses a single AMI (Amazon Machine Image)
 
+        :param image:
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
-        :param snapshot:                Single image
         """
         id = image['ImageId']
         name = image['Name']
@@ -94,34 +98,30 @@ class EC2RegionConfig(RegionConfig):
         image['id'] = id
         image['name'] = name
 
-        self.images[id] = image 
+        self.images[id] = image
 
     def parse_security_group(self, global_params, region, group):
         """
         Parse a single Redsfhit security group
 
+        :param group:
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
-        :param security)_group:         Security group
         """
         vpc_id = group['VpcId'] if 'VpcId' in group and group['VpcId'] else ec2_classic
         manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
-        security_group = {}
-        security_group['name'] = group['GroupName']
-        security_group['id'] = group['GroupId']
-        security_group['description'] = group['Description']
-        security_group['owner_id'] = group['OwnerId']
-        security_group['rules'] = {'ingress': {}, 'egress': {}}
+        security_group = {'name': group['GroupName'], 'id': group['GroupId'], 'description': group['Description'],
+                          'owner_id': group['OwnerId'], 'rules': {'ingress': {}, 'egress': {}}}
         security_group['rules']['ingress']['protocols'], security_group['rules']['ingress'][
             'count'] = self.__parse_security_group_rules(group['IpPermissions'])
         security_group['rules']['egress']['protocols'], security_group['rules']['egress'][
             'count'] = self.__parse_security_group_rules(group['IpPermissionsEgress'])
         self.vpcs[vpc_id].security_groups[group['GroupId']] = security_group
 
-    def __parse_security_group_rules(self, rules):
+    @staticmethod
+    def __parse_security_group_rules(rules):
         """
 
-        :param self:
         :param rules:
         :return:
         """
@@ -174,11 +174,13 @@ class EC2RegionConfig(RegionConfig):
         self.snapshots[snapshot['id']] = snapshot
         # Get snapshot attribute
         snapshot['createVolumePermission'] = \
-        api_clients[region].describe_snapshot_attribute(Attribute='createVolumePermission', SnapshotId=snapshot['id'])[
-            'CreateVolumePermissions']
+            api_clients[region].describe_snapshot_attribute(Attribute='createVolumePermission',
+                                                            SnapshotId=snapshot['id'])[
+                'CreateVolumePermissions']
         snapshot['public'] = self._is_public(snapshot)
 
-    def _is_public(self, snapshot):
+    @staticmethod
+    def _is_public(snapshot):
         return any([permission.get('Group') == 'all' for permission in snapshot['createVolumePermission']])
 
     def parse_volume(self, global_params, region, volume):
@@ -210,22 +212,23 @@ class EC2Config(RegionalServiceConfig):
 
 
 ########################################
-##### EC2 analysis functions
+# EC2 analysis functions
 ########################################
 
 def analyze_ec2_config(ec2_info, aws_account_id, force_write):
     try:
-        printInfo('Analyzing EC2 config... ', newLine=False)
+        print_info('Analyzing EC2 config... ', new_line=False)
         # Custom EC2 analysis
         #        check_for_elastic_ip(ec2_info)
         # FIXME - commented for now as this method doesn't seem to be defined anywhere'
         # list_network_attack_surface(ec2_info, 'attack_surface', 'PublicIpAddress')
         # TODO: make this optional, commented out for now
         # list_network_attack_surface(ec2_info, 'private_attack_surface', 'PrivateIpAddress')
-        printInfo('Success')
+        print_info('Success')
     except Exception as e:
-        printInfo('Error')
-        printException(e)
+        print_info('Error')
+        print_exception(e)
+
 
 def add_security_group_name_to_ec2_grants_callback(ec2_config, current_config, path, current_path, ec2_grant,
                                                    callback_args):
@@ -288,11 +291,11 @@ def check_for_elastic_ip(ec2_info):
 
 def link_elastic_ips_callback2(ec2_config, current_config, path, current_path, instance_id, callback_args):
     if instance_id == callback_args['instance_id']:
-        if not 'PublicIpAddress' in current_config:
+        if 'PublicIpAddress' not in current_config:
             current_config['PublicIpAddress'] = callback_args['elastic_ip']
         elif current_config['PublicIpAddress'] != callback_args['elastic_ip']:
-            printInfo('Warning: public IP address exists (%s) for an instance associated with an elastic IP (%s)' % (
-            current_config['PublicIpAddress'], callback_args['elastic_ip']))
+            print_info('Warning: public IP address exists (%s) for an instance associated with an elastic IP (%s)' % (
+                current_config['PublicIpAddress'], callback_args['elastic_ip']))
             # This can happen... fix it
 
 
@@ -305,7 +308,7 @@ def list_instances_in_security_groups(region_info):
     :return:
     """
     for vpc in region_info['vpcs']:
-        if not 'instances' in region_info['vpcs'][vpc]:
+        if 'instances' not in region_info['vpcs'][vpc]:
             return
         for instance in region_info['vpcs'][vpc]['instances']:
             state = region_info['vpcs'][vpc]['instances'][instance]['State']['Name']
@@ -326,5 +329,5 @@ def manage_vpc(vpc_info, vpc_id):
     """
     manage_dictionary(vpc_info, vpc_id, {})
     vpc_info[vpc_id]['id'] = vpc_id
-    if not 'name' in vpc_info[vpc_id]:
+    if 'name' not in vpc_info[vpc_id]:
         vpc_info[vpc_id]['name'] = vpc_id

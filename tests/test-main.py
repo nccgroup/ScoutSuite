@@ -3,7 +3,7 @@ from unittest import TestCase
 from mock import MagicMock, patch
 
 from ScoutSuite.__main__ import main
-from ScoutSuite.cli_parser import ScoutSuiteArgumentParser
+from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
 
 
 class TestMainClass(TestCase):
@@ -19,7 +19,7 @@ class TestMainClass(TestCase):
 
         self.mocked_printInfo = MagicMock()
 
-        for import_name, mocked_object in [("printInfo", self.mocked_printInfo),
+        for import_name, mocked_object in [("print_info", self.mocked_printInfo),
                                            ("get_provider", self.mocked_provider),
                                            ("Ruleset", self.mocked_ruleset),
                                            ("ProcessingEngine", self.mocked_engine),

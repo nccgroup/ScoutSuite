@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.console import printError, printException, printDebug
-
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 from ScoutSuite.providers.gcp.services.cloudstorage import CloudStorageConfig
 from ScoutSuite.providers.gcp.services.cloudsql import CloudSQLConfig
 from ScoutSuite.providers.gcp.services.iam import IAMConfig
 from ScoutSuite.providers.gcp.services.stackdriverlogging import StackdriverLoggingConfig
-from ScoutSuite.providers.gcp.services.stackdrivermonitoring import StackdriverMonitoringConfig
 from ScoutSuite.providers.gcp.services.computeengine import ComputeEngineConfig
 from ScoutSuite.providers.gcp.services.cloudresourcemanager import CloudResourceManager
 

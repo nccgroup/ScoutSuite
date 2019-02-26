@@ -14,7 +14,7 @@ from google.api_core.exceptions import PermissionDenied
 from google.cloud import container_v1
 from googleapiclient.errors import HttpError
 
-from opinel.utils.console import printException, printError
+from ScoutSuite.core.console import print_exception, print_error
 
 from ScoutSuite.providers.base.configs.base import BaseConfig
 from ScoutSuite.providers.gcp.utils import gcp_connect_service
@@ -58,7 +58,7 @@ class GCPBaseConfig(BaseConfig):
                 except HttpError as e:
                     pass
                 except Exception as e:
-                    printException(e)
+                    print_exception(e)
                 if self.regions:
                     break
 
@@ -86,7 +86,7 @@ class GCPBaseConfig(BaseConfig):
                 except HttpError as e:
                     pass
                 except Exception as e:
-                    printException(e)
+                    print_exception(e)
                 if self.zones:
                     break
 
@@ -204,22 +204,22 @@ class GCPBaseConfig(BaseConfig):
                     error_json = json.loads(e.content)
                     if error_json['error']['message'] not in self.error_list:
                         self.error_list.append(error_json['error']['message'])
-                        printError(error_json['error']['message'])
+                        print_error(error_json['error']['message'])
 
                 except PermissionDenied as e:
-                    printError("%s: %s - %s" % (e.message, self.service, self.targets))
+                    print_error("%s: %s - %s" % (e.message, self.service, self.targets))
 
                 except Exception as e:
-                    printException(e)
+                    print_exception(e)
 
         except HttpError as e:
             error_json = json.loads(e.content)
             if error_json['error']['message'] not in self.error_list:
                 self.error_list.append(error_json['error']['message'])
-                printError(error_json['error']['message'])
+                print_error(error_json['error']['message'])
 
         except Exception as e:
-            printException(e)
+            print_exception(e)
 
         finally:
             return targets

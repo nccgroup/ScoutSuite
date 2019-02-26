@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.console import printDebug, printError, printException
-from opinel.utils.globals import manage_dictionary
+from ScoutSuite.core.console import print_debug, print_error, print_exception
+from ScoutSuite.utils import manage_dictionary
 
 from ScoutSuite.core.utils import recurse
 
@@ -22,7 +22,7 @@ class ProcessingEngine(object):
                     manage_dictionary(self.rules, rule.path, [])
                     self.rules[rule.path].append(rule)
                 except Exception as e:
-                    printError('Failed to create rule %s: %s' % (rule.path, e))
+                    print_error('Failed to create rule %s: %s' % (rule.path, e))
 
 
     def run(self, cloud_provider, skip_dashboard = False):
@@ -37,7 +37,7 @@ class ProcessingEngine(object):
                 if not rule.enabled:  # or rule.service not in []: # TODO: handle this...
                     continue
 
-                printDebug('Processing %s rule[%s]: "%s"' % (rule.service, rule.filename, rule.description))
+                print_debug('Processing %s rule[%s]: "%s"' % (rule.service, rule.filename, rule.description))
                 finding_path = rule.path
                 path = finding_path.split('.')
                 service = path[0]
@@ -59,8 +59,8 @@ class ProcessingEngine(object):
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['service'] = rule.service
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['rationale'] = rule.rationale if hasattr(rule, 'rationale') else 'No description available.'
                 except Exception as e:
-                    printException(e)
-                    printError('Failed to process rule defined in %s' % rule.filename)
+                    print_exception(e)
+                    print_error('Failed to process rule defined in %s' % rule.filename)
                     # Fallback if process rule failed to ensure report creation and data dump still happen
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['checked_items'] = 0
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['flagged_items'] = 0

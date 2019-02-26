@@ -1,4 +1,5 @@
 # Import AWS utils
+from ScoutSuite.providers.aws.utils import get_keys, no_camel
 from ScoutSuite.utils import *
 
 

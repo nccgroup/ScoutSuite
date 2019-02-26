@@ -3,7 +3,7 @@
 Exceptions handling
 """
 
-from opinel.utils.console import printDebug
+from ScoutSuite.core.console import print_debug
 
 from ScoutSuite import EXCEPTIONS
 from ScoutSuite.output.js import JavaScriptReaderWriter
@@ -11,7 +11,7 @@ from ScoutSuite.output.js import JavaScriptReaderWriter
 
 class RuleExceptions(object):
 
-    def __init__(self, profile, file_path=None, foobar=None):
+    def __init__(self, profile, file_path=None):
         self.profile = profile
         self.file_path = file_path
         self.jsrw = JavaScriptReaderWriter(self.profile)
@@ -24,7 +24,7 @@ class RuleExceptions(object):
             for rule in self.exceptions[service]:
                 filtered_items = []
                 if rule not in cloud_provider.services[service]['findings']:
-                    printDebug('Warning:: key error should not be happening')
+                    print_debug('Warning:: key error should not be happening')
                     continue
                 for item in cloud_provider.services[service]['findings'][rule]['items']:
                     if item not in self.exceptions[service][rule]:
