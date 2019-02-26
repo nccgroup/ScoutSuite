@@ -37,19 +37,20 @@ formatted_service_name = {
 
 def manage_dictionary(dictionary, key, init, callback=None):
     """
-
     :param dictionary:
     :param key:
     :param init:
     :param callback:
-
     :return:
     """
-    if not str(key) in dictionary:
-        dictionary[str(key)] = init
-        manage_dictionary(dictionary, key, init)
-        if callback:
-            callback(dictionary[key])
+
+    if str(key) in dictionary:
+        return dictionary
+
+    dictionary[str(key)] = init
+    manage_dictionary(dictionary, key, init)
+    if callback:
+        callback(dictionary[key])
     return dictionary
 
 
