@@ -1,5 +1,5 @@
 {
-    "description": "Role passed to stack",
+    "description": "Stack should not have a role",
     "rationale": "Passing a role to CloudFormation stacks may result in privilege escalation because IAM users with privileges within the CloudFormation scope implicitly inherit the stack's role's permissions.",
     "path": "cloudformation.regions.id.stacks.id",
     "dashboard_name": "Stacks",

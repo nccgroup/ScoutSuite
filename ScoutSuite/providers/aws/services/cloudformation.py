@@ -31,9 +31,10 @@ class CloudFormationRegionConfig(RegionConfig):
         stack['drifted'] = stack.pop('DriftInformation')['StackDriftStatus'] == 'DRIFTED'
 
         template = api_clients[region].get_template(StackName=stack['name'])['TemplateBody']['Resources']
+        stack['deletion_policy'] = 'Delete'
         for group in template.keys():
-            stack['has_deletion_policy'] = 'DeletionPolicy' in template[group]
-            if stack['has_deletion_policy'] is True:
+            if 'DeletionPolicy' in template[group]:
+                stack['deletion_policy'] = template[group]['DeletionPolicy']
                 break
 
         stack_policy = api_clients[region].get_stack_policy(StackName=stack['name'])
