@@ -138,5 +138,4 @@ class Rule(object):
             if self.key_suffix:
                 setattr(self, 'key', '%s-%s' % (self.key, self.key_suffix))
         except Exception as e:
-            # printException(e)
             print_error('Failed to set definition %s: %s' % (self.filename, e))
