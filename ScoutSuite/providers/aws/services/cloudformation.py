@@ -28,6 +28,7 @@ class CloudFormationRegionConfig(RegionConfig):
 
         stack_description = api_clients[region].describe_stacks(StackName=stack['name'])
         stack['termination_protection'] = stack_description['Stacks'][0]['EnableTerminationProtection']
+        stack['drifted'] = stack.pop('DriftInformation')['StackDriftStatus'] == 'DRIFTED'
 
         stack_policy = api_clients[region].get_stack_policy(StackName=stack['name'])
         if 'StackPolicyBody' in stack_policy:
