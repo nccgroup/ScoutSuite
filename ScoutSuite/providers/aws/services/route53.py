@@ -63,7 +63,4 @@ class Route53Config(AWSBaseConfig):
         record_sets = handle_truncated_response(api_client.list_resource_record_sets, {'HostedZoneId': hosted_zone_id},
                                                 ['ResourceRecordSets'])
         hosted_zone.update(record_sets)
-        # print(str(record_sets))
-        # record_sets = api_client.list_resource_record_sets()
-        # hosted_zone['RecordSets'] = record_sets['Resourc']
         self.hosted_zones[hosted_zone_id] = hosted_zone
