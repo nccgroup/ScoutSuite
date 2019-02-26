@@ -79,7 +79,6 @@ class RuleDefinition(object):
                     self.string_definition = f.read()
                     self.load_from_string_definition()
             except Exception as e:
-                # printException(e)
                 print_error('Failed to load rule defined in %s: %s' % (self.file_name, e))
 
 
