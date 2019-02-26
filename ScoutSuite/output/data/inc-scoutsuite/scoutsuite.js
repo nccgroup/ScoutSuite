@@ -372,9 +372,9 @@ function toggleDetails(keyword, item) {
  * @param service
  */
 function updateNavbar(service) {
-    $('[id*="dropdown"]').removeClass('active-dropdown');
-    $('#' + service + '_dropdown').addClass('active-dropdown');
-    $('[id*="dropdown"]').show();
+    $('[id*="navbar"]').removeClass('active');
+    $('#' + service + '_navbar').addClass('active');
+    $('[id*="navbar"]').show();
 };
 
 function toggleVisibility(id) {
@@ -750,6 +750,7 @@ function show_main_dashboard() {
     $('#section_title-h2').text('');
     // Remove URL hash
     history.pushState("", document.title, window.location.pathname + window.location.search);
+    updateNavbar('scoutsuite');
 };
 
 /**
@@ -841,13 +842,13 @@ function updateDOM(anchor) {
     // Sub navbar..
     $("*[id^='groups.']").hide();
     if (path.startsWith('groups.')) {
-        id = '#metadata\\.' + current_service_group;
-        $(id).removeClass('active-dropdown');
-        current_service_group = path.replace('groups\.', '').replace('.list', '');
-        id = '#metadata\\.' + current_service_group;
-        $(id).addClass('active-dropdown');
-        id = '#groups\\.' + current_service_group + '\\.list';
-        $(id).show();
+        // id = '#metadata\\.' + current_service_group;
+        // $(id).removeClass('active');
+        // current_service_group = path.replace('groups\.', '').replace('.list', '');
+        // id = '#metadata\\.' + current_service_group;
+        // $(id).addClass('active');
+        // id = '#groups\\.' + current_service_group + '\\.list';
+        // $(id).show();
         return;
     };
 
