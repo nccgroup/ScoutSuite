@@ -76,7 +76,7 @@ def prompt(test_input=None):
 
     :return:                            Value typed by user (or passed in argument when testing)
     """
-    if not test_input:
+    if test_input is not None:
         if type(test_input) == list and len(test_input):
             choice = test_input.pop(0)
         elif type(test_input) == list:
