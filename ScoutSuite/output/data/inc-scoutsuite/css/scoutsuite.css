@@ -135,10 +135,6 @@ ul.no-bullet {
     pointer-events: none;
     cursor: default;
 }
-.active a{
-    text-decoration: none;
-    color: black;
-}
 
 .dropdown-submenu {
     position: relative;
