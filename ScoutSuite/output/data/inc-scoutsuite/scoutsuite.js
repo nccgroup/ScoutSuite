@@ -371,11 +371,35 @@ function toggleDetails(keyword, item) {
  * Update the navigation bar
  * @param service
  */
-function updateNavbar(service) {
+function updateNavbar(path) {
+    const navbarIdSuffix = '_navbar';
+    const subnavbarIdSuffix = '_subnavbar';
+
+    splitPath = path.split('.');
+
     $('[id*="navbar"]').removeClass('active');
-    $('#' + service + '_navbar').addClass('active');
+
+    if(path === '') {
+        $('#scoutsuite_navbar').addClass('active');
+    }
+    else if (splitPath[0] === 'services') {
+        const service = splitPath[1];
+        let element = $('#' + service + subnavbarIdSuffix);
+        while(element && (!element.attr('id') || !element.attr('id').endsWith(navbarIdSuffix))) {
+            element = element.parent();
+        }
+
+        if(element) {
+            element.addClass('active');
+        }
+    }
+    else if (splitPath[0] === 'service_groups' && splitPath.length >= 2) {
+        const group = splitPath[1];
+        $('#' + group + navbarIdSuffix).addClass('active');
+    }
+
     $('[id*="navbar"]').show();
-};
+}
 
 function toggleVisibility(id) {
     id1 = '#' + id;
@@ -750,7 +774,7 @@ function show_main_dashboard() {
     $('#section_title-h2').text('');
     // Remove URL hash
     history.pushState("", document.title, window.location.pathname + window.location.search);
-    updateNavbar('scoutsuite');
+    updateNavbar('');
 };
 
 /**
@@ -839,6 +863,7 @@ function updateDOM(anchor) {
     // Get resource path based on browsed-to path
     var resource_path = get_resource_path(path);
 
+    updateNavbar(path);
     // Sub navbar..
     $("*[id^='groups.']").hide();
     if (path.startsWith('groups.')) {
