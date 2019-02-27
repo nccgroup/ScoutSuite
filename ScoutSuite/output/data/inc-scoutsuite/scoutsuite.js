@@ -192,7 +192,7 @@ function process_template(id1, container_id, list) {
     id1 = id1.replace(/<|>/g, '');
     var template_to_compile = document.getElementById(id1).innerHTML;
     var compiled_template = Handlebars.compile(template_to_compile);
-    var inner_html = compiled_template({items: list});
+    var inner_html = compiled_template({ items: list });
     document.getElementById(container_id).innerHTML += inner_html;
 };
 
@@ -371,13 +371,44 @@ function toggleDetails(keyword, item) {
  * Update the navigation bar
  * @param service
  */
-function updateNavbar(service) {
-    $('[id*="dropdown"]').removeClass('active-dropdown');
-    $('#' + service + '_dropdown').addClass('active-dropdown');
-    $('[id*="dropdown"]').show();
-};
+function updateNavbar(path) {
+    const navbarIdSuffix = '_navbar';
+    const subnavbarIdSuffix = '_subnavbar';
 
-function toggleVisibility(id) {
+    splitPath = path.split('.');
+
+    $('[id*="navbar"]').removeClass('active');
+
+    if(path === '') {
+        $('#scoutsuite_navbar').addClass('active');
+    }
+    else if (splitPath[0] === 'services') {
+        const service = splitPath[1];
+        let element = $('#' + service + subnavbarIdSuffix);
+        while(element && (!element.attr('id') || !element.attr('id').endsWith(navbarIdSuffix))) {
+            element = element.parent();
+        }
+
+        if(element) {
+            element.addClass('active');
+        }
+    }
+    else if (splitPath[0] === 'service_groups' && splitPath.length >= 2) {
+        const group = splitPath[1];
+        $('#' + group + navbarIdSuffix).addClass('active');
+    }
+
+    $('[id*="navbar"]').show();
+}
+
+function hasNavbarSuffix(element) {
+    return element 
+        && (!element.attr('id') || element.attr('id') 
+        && !element.attr('id',).endsWith(navbarIdSuffix));
+}
+
+
+ function toggleVisibility(id) {
     id1 = '#' + id;
     $(id1).toggle()
     id2 = '#bullet-' + id;
@@ -504,7 +535,7 @@ function findAndShowEC2Object(path, id) {
         object['name'] = id;
         showPopup(single_vpc_network_acl_template(object));
     };
-    
+
 };
 
 /**
@@ -676,7 +707,7 @@ function load_metadata() {
     run_results = get_scoutsuite_results();
 
     // Set title dynamically
-    $(function(){
+    $(function () {
         3
         $(document).attr("title", 'Scout Suite Report [' + run_results['aws_account_id'] + ']');
         4
@@ -750,6 +781,7 @@ function show_main_dashboard() {
     $('#section_title-h2').text('');
     // Remove URL hash
     history.pushState("", document.title, window.location.pathname + window.location.search);
+    updateNavbar('');
 };
 
 /**
@@ -763,8 +795,8 @@ function makeTitle(resource_path) {
     resource = resource_path.split('.').pop();
     resource = resource.replace(/_/g, ' ').replace('<', '').replace('>',
         '').replace(/\w\S*/g, function (txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    }).replace("Acl", "ACL").replace("Findings", "Dashboard");
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        }).replace("Acl", "ACL").replace("Findings", "Dashboard");
     return service + ' ' + resource;
 };
 
@@ -838,18 +870,7 @@ function updateDOM(anchor) {
     // Get resource path based on browsed-to path
     var resource_path = get_resource_path(path);
 
-    // Sub navbar..
-    $("*[id^='groups.']").hide();
-    if (path.startsWith('groups.')) {
-        id = '#metadata\\.' + current_service_group;
-        $(id).removeClass('active-dropdown');
-        current_service_group = path.replace('groups\.', '').replace('.list', '');
-        id = '#metadata\\.' + current_service_group;
-        $(id).addClass('active-dropdown');
-        id = '#groups\\.' + current_service_group + '\\.list';
-        $(id).show();
-        return;
-    };
+    updateNavbar(path);
 
     // FIXME this is not a very good implementation
     if (!path.endsWith('.findings') &&
@@ -963,7 +984,7 @@ function get_resource_path(path) {
         // Resource path is not changed (this may break when using `back' button in browser)
         var resource_path = current_resource_path;
     } else {
-        var resource_path = path; 
+        var resource_path = path;
     };
     return resource_path;
 };
@@ -974,8 +995,8 @@ function get_resource_path(path) {
  * @param title
  * @returns {string};
  */
-function make_title (title) {
-    if (typeof(title) != "string") {
+function make_title(title) {
+    if (typeof (title) != "string") {
         console.log("Error: received title " + title + " (string expected).");
         return title.toString();
     };
@@ -1046,7 +1067,7 @@ function make_title (title) {
  * @param path
  * @param cols
  */
-function add_templates (group, service, section, resource_type, path, cols) {
+function add_templates(group, service, section, resource_type, path, cols) {
     if (cols == undefined) {
         cols = 2;
     };
@@ -1180,7 +1201,7 @@ function download_as_csv(filename, rows) {
         csvFile += processRow(rows[i]);
     };
 
-    var blob = new Blob([csvFile], {type: 'text/csv;charset=utf-8;'});
+    var blob = new Blob([csvFile], { type: 'text/csv;charset=utf-8;' });
     if (navigator.msSaveBlob) { // IE 10+
         navigator.msSaveBlob(blob, filename);
     } else {
@@ -1202,7 +1223,7 @@ function download_as_json(filename, dict) {
 
     var json_str = JSON.stringify(dict);
 
-    var blob = new Blob([json_str], {type: 'application/json;'});
+    var blob = new Blob([json_str], { type: 'application/json;' });
     if (navigator.msSaveBlob) { // IE 10+
         navigator.msSaveBlob(blob, filename);
     } else {
