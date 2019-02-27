@@ -872,8 +872,6 @@ function updateDOM(anchor) {
 
     updateNavbar(path);
 
-    // $("*[id^='groups.']").hide();
-
     // FIXME this is not a very good implementation
     if (!path.endsWith('.findings') &&
         !path.endsWith('.statistics') &&
