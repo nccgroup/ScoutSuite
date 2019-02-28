@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.console import printError, printException, printInfo, printDebug
-
 from ScoutSuite.providers.aws.services.awslambda import LambdaConfig
 from ScoutSuite.providers.aws.services.cloudformation import CloudFormationConfig
 from ScoutSuite.providers.aws.services.cloudtrail import CloudTrailConfig
@@ -23,14 +21,16 @@ from ScoutSuite.providers.aws.services.sns import SNSConfig
 from ScoutSuite.providers.aws.services.sqs import SQSConfig
 from ScoutSuite.providers.aws.services.vpc import VPCConfig
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
-from ScoutSuite.utils import format_service_name
 
 try:
     from ScoutSuite.providers.aws.services.config_private import ConfigConfig
     from ScoutSuite.providers.aws.services.dynamodb_private import DynamoDBConfig
     from ScoutSuite.providers.aws.services.kms_private import KMSConfig
 except ImportError:
-    pass
+    ConfigConfig = None
+    DynamoDBConfig = None
+    KMSConfig = None
+
 
 class AWSServicesConfig(BaseServicesConfig):
     """
@@ -53,6 +53,7 @@ class AWSServicesConfig(BaseServicesConfig):
 
     def __init__(self, metadata=None, thread_config=4, **kwargs):
 
+        super().__init__(metadata, thread_config)
         self.cloudformation = CloudFormationConfig(metadata['management']['cloudformation'], thread_config)
         self.cloudtrail = CloudTrailConfig(metadata['management']['cloudtrail'], thread_config)
         self.cloudwatch = CloudWatchConfig(metadata['management']['cloudwatch'], thread_config)
@@ -79,7 +80,7 @@ class AWSServicesConfig(BaseServicesConfig):
             self.config = ConfigConfig(metadata['management']['config'], thread_config)
             self.dynamodb = DynamoDBConfig(metadata['database']['dynamodb'], thread_config)
             self.kms = KMSConfig(metadata['security']['kms'], thread_config)
-        except NameError as e:
+        except (NameError, TypeError):
             pass
 
     def _is_provider(self, provider_name):

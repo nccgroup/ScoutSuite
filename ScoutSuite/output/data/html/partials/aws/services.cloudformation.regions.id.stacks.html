@@ -19,7 +19,9 @@
         None
       {{/if}}
     </div>
-    <div class="list-group-item-text item-margin">Termination protection enabled: {{termination_protection}}</div>
+    <div class="list-group-item-text item-margin">Termination protection enabled: <span id="cloudformation.regions.{{region}}.stacks.{{@key}}.cloudformation_stack_no_termination_protection">{{termination_protection}}</span></div>
+    <div class="list-group-item-text item-margin">Configuration has drifted: <span id="cloudformation.regions.{{region}}.stacks.{{@key}}.cloudformation_stack_drifted">{{drifted}}</span></div>
+    <div class="list-group-item-text item-margin">Deletion policy: <span id="cloudformation.regions.{{region}}.stacks.{{@key}}.cloudformation_stack_no_deletion_policy">{{deletion_policy}}</span></div>
   </div>
   <div class="list-group-item">
     <h4 class="list-group-item-heading">Capabilities {{> count_badge count=Capabilities.length}}</h4>

@@ -2,6 +2,7 @@
   "arg_names": [ "Member", "Description"],
   "key": "cloudstorage-bucket-_ARG_0_",
   "description": "_ARG_1_",
+  "rationale": "Allowing anonymous and/or public access grants permissions to anyone to access bucket content. Such access might not be desired if you are storing any sensitive data. Hence, ensure that anonymous and/or public access to a bucket is not allowed (CIS 5.1).",
   "dashboard_name": "Buckets",
   "display_path": "cloudstorage.buckets.id",
   "path": "cloudstorage.buckets.id.acl_configuration",

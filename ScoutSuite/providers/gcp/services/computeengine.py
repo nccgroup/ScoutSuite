@@ -2,9 +2,6 @@
 
 from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
-from googleapiclient.errors import HttpError
-import json
-from opinel.utils.console import printException, printError
 
 class ComputeEngineConfig(GCPBaseConfig):
     targets = (
@@ -79,9 +76,13 @@ class ComputeEngineConfig(GCPBaseConfig):
     #         return None
 
     def parse_instances(self, instance, params):
+        project_id = self._get_project_id(instance)
+
+        self.api_client = params['api_client']
+
         instance_dict = {}
         instance_dict['id'] = self.get_non_provider_id(instance['name'])
-        instance_dict['project_id'] = instance['selfLink'].split('/')[-5]
+        instance_dict['project_id'] = project_id
         instance_dict['name'] = instance['name']
         instance_dict['description'] = instance['description'] if 'description' in instance and instance['description'] else 'N/A'
         instance_dict['creation_timestamp'] = instance['creationTimestamp']
@@ -92,6 +93,11 @@ class ComputeEngineConfig(GCPBaseConfig):
         instance_dict['network_interfaces'] = instance['networkInterfaces']
         instance_dict['service_accounts'] = instance['serviceAccounts']
         instance_dict['deletion_protection_enabled'] = instance['deletionProtection']
+        instance_dict['block_project_ssh_keys_enabled'] = self._is_block_project_ssh_keys_enabled(instance)
+        instance_dict['oslogin_enabled'] = self._is_oslogin_enabled(instance, project_id)
+        instance_dict['ip_forwarding_enabled'] = instance['canIpForward']
+        instance_dict['serial_port_enabled'] = self._is_serial_port_enabled(instance)
+        instance_dict['has_full_access_cloud_apis'] = self._has_full_access_to_all_cloud_apis(instance)
 
         # TODO this should be done in it's own getter method and merged with instances during postprocessing
         instance_dict['disks'] = {}
@@ -102,8 +108,9 @@ class ComputeEngineConfig(GCPBaseConfig):
                     'mode': disk['mode'],
                     'source_url': disk['source'],
                     'source_device_name': disk['deviceName'],
-                    'bootable': disk['boot']
-                    }
+                    'bootable': disk['boot'],
+                    'encrypted_with_csek': self._is_encrypted_with_csek(disk)
+                }
 
         self.instances[instance_dict['id']] = instance_dict
 
@@ -188,3 +195,37 @@ class ComputeEngineConfig(GCPBaseConfig):
                                     firewall_dict[direction_string][rule['IPProtocol']] = ['0-65535']
 
         self.firewalls[firewall_dict['id']] = firewall_dict
+
+    def _get_project_id(self, instance):
+        return instance['selfLink'].split('/')[-5]
+
+    def _metadata_to_dict(self, metadata):
+        return dict((item['key'], item['value']) for item in metadata['items']) if 'items' in metadata else {}
+
+    def _is_block_project_ssh_keys_enabled(self, instance):
+        metadata = self._metadata_to_dict(instance['metadata'])
+        return metadata.get('block-project-ssh-keys') == 'true'
+
+    def _get_common_instance_metadata_dict(self, project_id):
+        project = self.api_client.projects().get(project=project_id).execute()
+        return self._metadata_to_dict(project['commonInstanceMetadata'])
+
+    def _is_oslogin_enabled(self, instance, project_id):
+        instance_metadata = self._metadata_to_dict(instance['metadata'])
+        if instance_metadata.get('enable-oslogin') == 'FALSE':
+            return False
+        elif instance_metadata.get('enable-oslogin') == 'TRUE':
+            return True
+        project_metadata = self._get_common_instance_metadata_dict(project_id)
+        return project_metadata.get('enable-oslogin') == 'TRUE'
+
+    def _is_serial_port_enabled(self, instance):
+        metadata = self._metadata_to_dict(instance['metadata'])
+        return metadata.get('serial-port-enable') == 'true'
+
+    def _has_full_access_to_all_cloud_apis(self, instance):
+        full_access_scope = 'https://www.googleapis.com/auth/cloud-platform'
+        return any(full_access_scope in service_account['scopes'] for service_account in instance['serviceAccounts'])
+
+    def _is_encrypted_with_csek(self, disk):
+        return 'diskEncryptionKey' in disk and 'sha256' in disk['diskEncryptionKey'] and disk['diskEncryptionKey']['sha256'] != ''

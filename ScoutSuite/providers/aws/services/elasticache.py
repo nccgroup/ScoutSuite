@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.globals import manage_dictionary
-
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
-from ScoutSuite.utils import ec2_classic
-
+from ScoutSuite.utils import manage_dictionary
+from ScoutSuite.providers.aws.utils import ec2_classic
 
 
 ########################################
@@ -16,6 +14,7 @@ class ElastiCacheRegionConfig(RegionConfig):
     """
     ElastiCache configuration for a single AWS region
     """
+    security_groups = {}
 
     def parse_cluster(self, global_params, region, cluster):
         """
@@ -29,7 +28,9 @@ class ElastiCacheRegionConfig(RegionConfig):
         cluster['name'] = cluster_name
         # Must fetch info about the subnet group to retrieve the VPC ID...
         if 'CacheSubnetGroupName' in cluster:
-            subnet_group = api_clients[region].describe_cache_subnet_groups(CacheSubnetGroupName = cluster['CacheSubnetGroupName'])['CacheSubnetGroups'][0]
+            subnet_group = \
+                api_clients[region].describe_cache_subnet_groups(CacheSubnetGroupName=cluster['CacheSubnetGroupName'])[
+                    'CacheSubnetGroups'][0]
             vpc_id = subnet_group['VpcId']
         else:
             vpc_id = ec2_classic
@@ -38,7 +39,6 @@ class ElastiCacheRegionConfig(RegionConfig):
         self.vpcs[vpc_id].clusters[cluster_name] = cluster
         if subnet_group:
             self.vpcs[vpc_id].subnet_groups[subnet_group['CacheSubnetGroupName']] = subnet_group
-
 
     def parse_security_group(self, global_params, region, security_group):
         """
@@ -53,7 +53,6 @@ class ElastiCacheRegionConfig(RegionConfig):
         self.security_groups[security_group['name']] = security_group
 
 
-
 ########################################
 # ElastiCacheConfig
 ########################################
@@ -65,5 +64,5 @@ class ElastiCacheConfig(RegionalServiceConfig):
 
     region_config_class = ElastiCacheRegionConfig
 
-    def __init__(self, service_metadata, thread_config = 4):
+    def __init__(self, service_metadata, thread_config=4):
         super(ElastiCacheConfig, self).__init__(service_metadata, thread_config)

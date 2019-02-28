@@ -7,7 +7,7 @@ import sys
 
 try:
     from opinel.utils.globals import check_requirements
-    from opinel.utils.console import configPrintException, printError, printException, printInfo
+    from ScoutSuite.core.console import config_debug_level, print_error, print_exception, print_info
 except Exception as e:
     print('Error: Scout2 depends on the opinel package. Install all the requirements with the following command:')
     print('  $ pip install -r requirements.txt')
@@ -28,7 +28,7 @@ from ScoutSuite.output.html import Scout2Report
 
 def main(args):
     # Configure the debug level
-    configPrintException(args.debug)
+    config_debug_level(args.debug)
 
     # FIXME check that all requirements are installed
     # # Check version of opinel
@@ -46,8 +46,8 @@ def main(args):
             aws_config = report.jsrw.load_from_file(AWSCONFIG)
             services = aws_config['service_list']
         except Exception as e:
-            printException(e)
-            printError('Error, failed to load the configuration for profile %s' % profile_name)
+            print_exception(e)
+            print_error('Error, failed to load the configuration for profile %s' % profile_name)
             continue
 
         # Create a ruleset with only whatever rules were specified...
@@ -68,7 +68,7 @@ def main(args):
                 f.write(json.dumps(rule_dict))
             ruleset = TmpRuleset(rule_dirs=[os.getcwd()], rule_filename=rule_filename, rule_args=[])
         else:
-            printError(
+            print_error(
                 'Error, you must provide either a rule configuration file or the path to the resources targeted.')
             continue
 
@@ -115,4 +115,4 @@ def main(args):
         (lines, template) = format_listall_output(args.format_file[0], None, args.format, rule)
 
         # Print the output
-        printInfo(generate_listall_output(lines, resources, aws_config, template, []))
+        print_info(generate_listall_output(lines, resources, aws_config, template, []))

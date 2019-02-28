@@ -6,9 +6,10 @@ import json
 import os
 import webbrowser
 
-from opinel.utils.console import configPrintException, printInfo, printDebug
-from opinel.utils.profiles import AWSProfiles
+from ScoutSuite.core.console import config_debug_level, print_info, print_debug
+from ScoutSuite.providers.aws.profiles import AWSProfiles
 
+from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
 from ScoutSuite import AWSCONFIG
 from ScoutSuite.output.html import Scout2Report
 from ScoutSuite.core.exceptions import RuleExceptions
@@ -17,22 +18,27 @@ from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.providers import get_provider
 
 
-async def main(args):
+# noinspection PyBroadException
+async def main(args=None):
     """
     Main method that runs a scan
 
     :return:
     """
+    if not args:
+        parser = ScoutSuiteArgumentParser()
+        args = parser.parse_args()
 
     # Get the dictionnary to get None instead of a crash
     args = args.__dict__
 
     # Configure the debug level
-    configPrintException(args.get('debug'))
+    config_debug_level(args.get('debug'))
 
     # Create a cloud provider object
     cloud_provider = get_provider(provider=args.get('provider'),
-                                  profile=args.get('profile'),
+                                  profile=args.get('profile')[0] if args.get(
+                                      'profile') else None,
                                   project_id=args.get('project_id'),
                                   folder_id=args.get('folder_id'),
                                   organization_id=args.get('organization_id'),
@@ -40,7 +46,8 @@ async def main(args):
                                   report_dir=args.get('report_dir'),
                                   timestamp=args.get('timestamp'),
                                   services=args.get('services'),
-                                  skipped_services=args.get('skipped_services'),
+                                  skipped_services=args.get(
+                                      'skipped_services'),
                                   thread_config=args.get('thread_config'),
                                   )
 
@@ -49,27 +56,41 @@ async def main(args):
     # TODO move this to after authentication, so that the report can be more specific to what's being scanned.
     # For example if scanning with a GCP service account, the SA email can only be known after authenticating...
     # Create a new report
-    report = Scout2Report(args.get('provider'), report_file_name, args.get('report_dir'), args.get('timestamp'))
+    report = Scout2Report(args.get('provider'), report_file_name, args.get(
+        'report_dir'), args.get('timestamp'))
 
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
         # Authenticate to the cloud provider
-        authenticated = cloud_provider.authenticate(profile=args.get('profile'),
-                                                    csv_credentials=args.get('csv_credentials'),
-                                                    mfa_serial=args.get('mfa_serial'),
-                                                    mfa_code=args.get('mfa_code'),
-                                                    user_account=args.get('user_account'),
-                                                    service_account=args.get('service_account'),
+        authenticated = cloud_provider.authenticate(profile=args.get('profile')[0] if args.get('profile') else None,
+                                                    csv_credentials=args.get(
+                                                        'csv_credentials'),
+                                                    mfa_serial=args.get(
+                                                        'mfa_serial'),
+                                                    mfa_code=args.get(
+                                                        'mfa_code'),
+                                                    user_account=args.get(
+                                                        'user_account'),
+                                                    service_account=args.get(
+                                                        'service_account'),
                                                     cli=args.get('cli'),
                                                     msi=args.get('msi'),
-                                                    service_principal=args.get('service_principal'),
-                                                    file_auth=args.get('file_auth'),
-                                                    tenant_id=args.get('tenant_id'),
-                                                    subscription_id=args.get('subscription_id'),
-                                                    client_id=args.get('client_id'),
-                                                    client_secret=args.get('client_secret'),
-                                                    username=args.get('username'),
-                                                    password=args.get('password')
+                                                    service_principal=args.get(
+                                                        'service_principal'),
+                                                    file_auth=args.get(
+                                                        'file_auth'),
+                                                    tenant_id=args.get(
+                                                        'tenant_id'),
+                                                    subscription_id=args.get(
+                                                        'subscription_id'),
+                                                    client_id=args.get(
+                                                        'client_id'),
+                                                    client_secret=args.get(
+                                                        'client_secret'),
+                                                    username=args.get(
+                                                        'username'),
+                                                    password=args.get(
+                                                        'password')
                                                     )
 
         if not authenticated:
@@ -79,7 +100,7 @@ async def main(args):
         try:
             await cloud_provider.fetch(regions=args.get('regions'))
         except KeyboardInterrupt:
-            printInfo('\nCancelled by user')
+            print_info('\nCancelled by user')
             return 130
 
         # Update means we reload the whole config and overwrite part of it
@@ -98,10 +119,11 @@ async def main(args):
             setattr(cloud_provider, key, last_run_dict[key])
 
     # Pre processing
-    cloud_provider.preprocessing(args.get('ip_ranges'), args.get('ip_ranges_name_key'))
+    cloud_provider.preprocessing(
+        args.get('ip_ranges'), args.get('ip_ranges_name_key'))
 
     # Analyze config
-    finding_rules = Ruleset(environment_name=args.get('profile'),
+    finding_rules = Ruleset(environment_name=args.get('profile')[0] if args.get('profile') else None,
                             cloud_provider=args.get('provider'),
                             filename=args.get('ruleset'),
                             ip_ranges=args.get('ip_ranges'),
@@ -119,11 +141,13 @@ async def main(args):
 
     # Handle exceptions
     try:
-        exceptions = RuleExceptions(args.get('profile'), args.get('exceptions')[0])
+        exceptions = RuleExceptions(args.get('profile')[0] if args.get(
+            'profile') else None, args.get('exceptions')[0])
         exceptions.process(cloud_provider)
         exceptions = exceptions.exceptions
     except Exception as e:
-        printDebug('Warning, failed to load exceptions. The file may not exist or may have an invalid format.')
+        print_debug(
+            'Warning, failed to load exceptions. The file may not exist or may have an invalid format.')
         exceptions = {}
 
     # Finalize
@@ -148,11 +172,12 @@ async def main(args):
         pass
 
     # Save config and create HTML report
-    html_report_path = report.save(cloud_provider, exceptions, args.get('force_write'), args.get('debug'))
+    html_report_path = report.save(
+        cloud_provider, exceptions, args.get('force_write'), args.get('debug'))
 
     # Open the report by default
     if not args.get('no_browser'):
-        printInfo('Opening the HTML report...')
+        print_info('Opening the HTML report...')
         url = 'file://%s' % os.path.abspath(html_report_path)
         webbrowser.open(url, new=2)
 

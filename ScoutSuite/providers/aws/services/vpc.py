@@ -1,22 +1,23 @@
 # -*- coding: utf-8 -*-
 
-import netaddr
 import copy
 
-from opinel.utils.aws import get_name
-from opinel.utils.globals import manage_dictionary
-from opinel.utils.fs import load_data, read_ip_ranges
+import netaddr
 
-from ScoutSuite.providers.base.configs.browser import get_value_at
-from ScoutSuite.utils import ec2_classic, get_keys
+from ScoutSuite.providers.aws.aws import get_name
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig as SingleVPCConfig
+from ScoutSuite.providers.base.configs.browser import get_value_at
+from ScoutSuite.utils import manage_dictionary
+from ScoutSuite.providers.aws.utils import ec2_classic, get_keys
+from ScoutSuite.core.fs import load_data, read_ip_ranges
 
 ########################################
 # Globals
 ########################################
 
 protocols_dict = load_data('protocols.json', 'protocols')
+
 
 ########################################
 # VPCRegionConfig
@@ -27,6 +28,10 @@ class VPCRegionConfig(RegionConfig):
     """
     VPC configuration for a single AWS region
     """
+    customer_gateways = {}
+    flow_logs = {}
+    vpn_connections = {}
+    vpn_gateways = {}
 
     def parse_customer_gateway(self, global_params, region, cgw):
         cgw['id'] = cgw.pop('CustomerGatewayId')
@@ -63,7 +68,8 @@ class VPCRegionConfig(RegionConfig):
         manage_dictionary(self.vpcs, vpc_id, SingleVPCConfig(self.vpc_resource_types))
         self.vpcs[vpc_id].network_acls[network_acl['id']] = network_acl
 
-    def __parse_network_acl_entries(self, entries, egress):
+    @staticmethod
+    def __parse_network_acl_entries(entries, egress):
         """
 
         :param entries:
@@ -155,10 +161,11 @@ class VPCConfig(RegionalServiceConfig):
 
 
 ########################################
-##### VPC analysis functions
+# VPC analysis functions
 ########################################
 
 known_cidrs = {'0.0.0.0/0': 'All'}
+
 
 def put_cidr_name(aws_config, current_config, path, current_path, resource_id, callback_args):
     """
@@ -187,6 +194,7 @@ def put_cidr_name(aws_config, current_config, path, current_path, resource_id, c
 
 aws_ip_ranges = {}  # read_ip_ranges(aws_ip_ranges_filename, False)
 
+
 def get_cidr_name(cidr, ip_ranges_files, ip_ranges_name_key):
     """
     Read display name for CIDRs from ip-ranges files
@@ -209,6 +217,7 @@ def get_cidr_name(cidr, ip_ranges_files, ip_ranges_name_key):
             return 'Unknown CIDR in %s %s' % (ip_range['service'], ip_range['region'])
     return 'Unknown CIDR'
 
+
 def propagate_vpc_names(aws_config, current_config, path, current_path, resource_id, callback_args):
     """
     Propagate VPC names in VPC-related services (info only fetched during EC2 calls)
@@ -229,6 +238,7 @@ def propagate_vpc_names(aws_config, current_config, path, current_path, resource
         target_path.append('Name')
         target_path = '.'.join(target_path)
         current_config['name'] = get_value_at(aws_config, target_path, target_path)
+
 
 def get_subnet_flow_logs_list(current_config, subnet):
     """

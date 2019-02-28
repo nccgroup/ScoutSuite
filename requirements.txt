@@ -4,6 +4,7 @@ netaddr>=0.7.11
 
 # AWS Provider
 boto3>=1.9.60
+botocore>=1.12.60
 
 # Opinel
 requests>=2.4.0,<3.0.0
