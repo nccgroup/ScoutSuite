@@ -37,8 +37,7 @@ class ScoutSuiteArgumentParser:
         parser.add_argument('-p',
                             '--profile',
                             dest='profile',
-                            default=[default_profile],
-                            nargs='+',
+                            default=default_profile,
                             help='Name of the profile. Defaults to %(default)s' + default_profile_origin)
         parser.add_argument('-c',
                             '--csv-credentials',
