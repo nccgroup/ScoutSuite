@@ -5,6 +5,7 @@ from ScoutSuite.utils import manage_dictionary
 
 from ScoutSuite.core.utils import recurse
 
+
 class ProcessingEngine(object):
     """
 
@@ -24,8 +25,7 @@ class ProcessingEngine(object):
                 except Exception as e:
                     print_error('Failed to create rule %s: %s' % (rule.path, e))
 
-
-    def run(self, cloud_provider, skip_dashboard = False):
+    def run(self, cloud_provider, skip_dashboard=False):
         # Clean up existing findings
         for service in cloud_provider.services:
             cloud_provider.services[service][self.ruleset.rule_type] = {}
@@ -33,7 +33,7 @@ class ProcessingEngine(object):
         # Process each rule
         for finding_path in self._filter_rules(self.rules, cloud_provider.service_list):
             for rule in self.rules[finding_path]:
-                
+
                 if not rule.enabled:  # or rule.service not in []: # TODO: handle this...
                     continue
 
@@ -50,14 +50,19 @@ class ProcessingEngine(object):
                         cloud_provider.services[service][self.ruleset.rule_type][rule.key][attr] = getattr(rule, attr)
                 try:
                     setattr(rule, 'checked_items', 0)
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['items'] = recurse(cloud_provider.services, cloud_provider.services, path, [], rule, True)
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['items'] = recurse(
+                        cloud_provider.services, cloud_provider.services, path, [], rule, True)
                     if skip_dashboard:
                         continue
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['dashboard_name'] = rule.dashboard_name
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['checked_items'] = rule.checked_items
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['flagged_items'] = len(cloud_provider.services[service][self.ruleset.rule_type][rule.key]['items'])
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key][
+                        'dashboard_name'] = rule.dashboard_name
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key][
+                        'checked_items'] = rule.checked_items
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['flagged_items'] = len(
+                        cloud_provider.services[service][self.ruleset.rule_type][rule.key]['items'])
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['service'] = rule.service
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['rationale'] = rule.rationale if hasattr(rule, 'rationale') else 'No description available.'
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key][
+                        'rationale'] = rule.rationale if hasattr(rule, 'rationale') else 'No description available.'
                 except Exception as e:
                     print_exception(e)
                     print_error('Failed to process rule defined in %s' % rule.filename)
@@ -65,5 +70,6 @@ class ProcessingEngine(object):
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['checked_items'] = 0
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['flagged_items'] = 0
 
-    def _filter_rules(self, rules, services):
-        return { rule_name: rule for rule_name, rule in rules.items() if rule_name.split('.')[0] in services }
+    @staticmethod
+    def _filter_rules(rules, services):
+        return {rule_name: rule for rule_name, rule in rules.items() if rule_name.split('.')[0] in services}
