@@ -1,7 +1,7 @@
 from ScoutSuite.providers.base.configs.resources import SimpleResources
 from ScoutSuite.providers.base.configs.resources import CompositeResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
-from opinel.utils.aws import get_aws_account_id
+from ScoutSuite.providers.aws.aws import get_aws_account_id
 import abc
 
 class AWSSimpleResources(SimpleResources, metaclass=abc.ABCMeta):

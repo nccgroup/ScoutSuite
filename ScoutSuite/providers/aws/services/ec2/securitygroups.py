@@ -1,13 +1,14 @@
 from ScoutSuite.providers.aws.resources.resources import AWSSimpleResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
-from opinel.utils.aws import get_name
+from ScoutSuite.providers.aws.aws import get_name
 from ScoutSuite.providers.aws.utils import ec2_classic, get_keys
-from opinel.utils.globals import manage_dictionary
-from opinel.utils.fs import load_data
+from ScoutSuite.utils import manage_dictionary
+from ScoutSuite.core.fs import load_data
 
 
 class SecurityGroups(AWSSimpleResources):
-    icmp_message_types_dict = load_data('icmp_message_types.json', 'icmp_message_types')
+    icmp_message_types_dict = load_data(
+        'icmp_message_types.json', 'icmp_message_types')
 
     async def get_resources_from_api(self):
         return self.facade.ec2.get_security_groups(self.scope['region'], self.scope['vpc'])

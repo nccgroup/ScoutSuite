@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from ScoutSuite.providers.aws.resources.resources import Regions, AWSSimpleResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
-from opinel.utils.aws import build_region_list
+from ScoutSuite.providers.aws.aws import build_region_list
 
 
 class RegionalLambdas(AWSSimpleResources):
