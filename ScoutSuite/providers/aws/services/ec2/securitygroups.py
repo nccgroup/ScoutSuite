@@ -7,13 +7,15 @@ from ScoutSuite.core.fs import load_data
 
 
 class SecurityGroups(AWSResources):
-    icmp_message_types_dict = load_data(
-        'icmp_message_types.json', 'icmp_message_types')
+    icmp_message_types_dict = load_data('icmp_message_types.json', 'icmp_message_types')
 
-    async def get_resources_from_api(self):
-        return self.facade.ec2.get_security_groups(self.scope['region'], self.scope['vpc'])
+    async def fetch_all(self, **kwargs):
+        raw_security_groups = self.facade.ec2.get_security_groups(self.scope['region'], self.scope['vpc'])
+        for raw_security_groups in raw_security_groups:
+            name, resource = self._parse_security_group(raw_security_groups)
+            self[name] = resource
 
-    def parse_resource(self, raw_security_group):
+    def _parse_security_group(self, raw_security_group):
         security_group = {}
         security_group['name'] = raw_security_group['GroupName']
         security_group['id'] = raw_security_group['GroupId']

@@ -17,14 +17,15 @@ class Vpcs(AWSCompositeResources):
         self.facade = AWSFacade()
 
     async def fetch_all(self, **kwargs):
-        await super(Vpcs, self).fetch_all()
+        vpcs = self.facade.ec2.get_vpcs(self.scope['region'])
+        for vpc in vpcs:
+            name, resource = self._parse_vpc(vpc)
+            self[name] = resource
 
         for vpc in self:
             scope = {'region': self.scope['region'], 'vpc': vpc}
             await self.fetch_children(self[vpc], scope=scope)
 
-    def parse_resource(self, vpc):
+    def _parse_vpc(self, vpc):
         return vpc['VpcId'], {}
 
-    async def get_resources_from_api(self):
-        return self.facade.ec2.get_vpcs(self.scope['region'])

@@ -5,10 +5,13 @@ from ScoutSuite.providers.aws.utils import ec2_classic, get_keys
 
 
 class EC2Instances(AWSResources):
-    async def get_resources_from_api(self):
-        return self.facade.ec2.get_instances(self.scope['region'], self.scope['vpc'])
-        
-    def parse_resource(self, raw_instance):
+    async def fetch_all(self, **kwargs):
+        raw_instances  = self.facade.ec2.get_instances(self.scope['region'], self.scope['vpc'])
+        for raw_instance in raw_instances:
+            name, resource = self._parse_instance(raw_instance)
+            self[name] = resource
+
+    def _parse_instance(self, raw_instance):
         instance = {}
         id = raw_instance['InstanceId']
         instance['id'] = id

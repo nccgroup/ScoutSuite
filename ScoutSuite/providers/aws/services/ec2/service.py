@@ -1,4 +1,4 @@
-from ScoutSuite.providers.aws.resources.resources import Regions
+from ScoutSuite.providers.aws.resources.regions import Regions
 from ScoutSuite.providers.aws.services.ec2.ami import AmazonMachineImages
 from ScoutSuite.providers.aws.services.ec2.vpcs import Vpcs
 from ScoutSuite.providers.aws.services.ec2.snapshots import Snapshots
