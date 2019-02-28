@@ -3,18 +3,14 @@ from ScoutSuite.providers.aws.resources.resources import Regions, AWSSimpleResou
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from opinel.utils.aws import build_region_list
 
+
 class RegionalLambdas(AWSSimpleResources):
     async def get_resources_from_api(self):
         return self.facade.awslambda.get_functions(self.scope['region'])
-        
+
     def parse_resource(self, raw_function):
         raw_function['name'] = raw_function.pop('FunctionName')
         return (raw_function['name'], raw_function)
-
-    @staticmethod
-    def parse_function(function):
-        function['name'] = function.pop('FunctionName')
-        return (function['name'], function)
 
 
 class Lambdas(Regions):
