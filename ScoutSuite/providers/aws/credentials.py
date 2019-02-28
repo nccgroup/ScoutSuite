@@ -53,14 +53,13 @@ aws_config_file = os.path.join(aws_config_dir, 'config')
 ########################################
 
 
-def assume_role(role_name, credentials, role_arn, role_session_name, silent=False):
+def assume_role(role_name, credentials, role_arn, silent=False):
     """
     Assume role and save credentials
 
     :param role_name:
     :param credentials:
     :param role_arn:
-    :param role_session_name:
     :param silent:
     :return:
     """
@@ -68,10 +67,7 @@ def assume_role(role_name, credentials, role_arn, role_session_name, silent=Fals
     # Connect to STS
     sts_client = connect_service('sts', credentials, silent=silent)
     # Set required arguments for assume role call
-    sts_args = {
-        'RoleArn': role_arn,
-        'RoleSessionName': role_session_name
-    }
+    sts_args = {'RoleArn': role_arn}
     # MFA used ?
     if 'mfa_serial' in credentials and 'mfa_code' in credentials:
         sts_args['TokenCode'] = credentials['mfa_code']
@@ -83,8 +79,6 @@ def assume_role(role_name, credentials, role_arn, role_session_name, silent=Fals
     sts_response = sts_client.assume_role(**sts_args)
     credentials = sts_response['Credentials']
     cached_credentials_filename = get_cached_credentials_filename(role_name, role_arn)
-    # with open(cached_credentials_filename, 'wt+') as f:
-    #   write_data_to_file(f, sts_response, True, False)
     cached_credentials_path = os.path.dirname(cached_credentials_filename)
     if not os.path.isdir(cached_credentials_path):
         os.makedirs(cached_credentials_path)
@@ -432,8 +426,7 @@ def complete_profile(f, credentials, session_token_written, mfa_serial_written):
 
 
 # noinspection PyBroadException,PyBroadException
-def read_creds(profile_name, csv_file=None, mfa_serial_arg=None, mfa_code=None, force_init=False,
-               role_session_name='opinel'):
+def read_creds(profile_name, csv_file=None, mfa_serial_arg=None, mfa_code=None, force_init=False):
     """
     Read credentials from anywhere (CSV, Environment, Instance metadata, config/credentials)
 
@@ -442,7 +435,6 @@ def read_creds(profile_name, csv_file=None, mfa_serial_arg=None, mfa_code=None, 
     :param mfa_serial_arg:
     :param mfa_code:
     :param force_init:
-    :param role_session_name:
 
     :return:
     """
@@ -504,7 +496,7 @@ def read_creds(profile_name, csv_file=None, mfa_serial_arg=None, mfa_code=None, 
                         credentials['TokenCode'] = prompt_mfa_code()
                 if external_id:
                     credentials['ExternalId'] = external_id
-                credentials = assume_role(profile_name, credentials, role_arn, role_session_name)
+                credentials = assume_role(profile_name, credentials, role_arn)
         # Read from ~/.aws/credentials
         else:
             credentials = read_creds_from_aws_credentials_file(profile_name)
