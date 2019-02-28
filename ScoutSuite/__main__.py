@@ -37,7 +37,7 @@ def main(args=None):
 
     # Create a cloud provider object
     cloud_provider = get_provider(provider=args.get('provider'),
-                                  profile=args.get('profile'),
+                                  profile=args.get('profile')[0] if args.get('profile') else None,
                                   project_id=args.get('project_id'),
                                   folder_id=args.get('folder_id'),
                                   organization_id=args.get('organization_id'),
@@ -59,7 +59,7 @@ def main(args=None):
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
         # Authenticate to the cloud provider
-        authenticated = cloud_provider.authenticate(profile=args.get('profile'),
+        authenticated = cloud_provider.authenticate(profile=args.get('profile')[0] if args.get('profile') else None,
                                                     csv_credentials=args.get('csv_credentials'),
                                                     mfa_serial=args.get('mfa_serial'),
                                                     mfa_code=args.get('mfa_code'),
@@ -106,7 +106,7 @@ def main(args=None):
     cloud_provider.preprocessing(args.get('ip_ranges'), args.get('ip_ranges_name_key'))
 
     # Analyze config
-    finding_rules = Ruleset(environment_name=args.get('profile'),
+    finding_rules = Ruleset(environment_name=args.get('profile')[0] if args.get('profile') else None,
                             cloud_provider=args.get('provider'),
                             filename=args.get('ruleset'),
                             ip_ranges=args.get('ip_ranges'),
@@ -124,7 +124,7 @@ def main(args=None):
 
     # Handle exceptions
     try:
-        exceptions = RuleExceptions(args.get('profile'), args.get('exceptions')[0])
+        exceptions = RuleExceptions(args.get('profile')[0] if args.get('profile') else None, args.get('exceptions')[0])
         exceptions.process(cloud_provider)
         exceptions = exceptions.exceptions
     except Exception as e:
