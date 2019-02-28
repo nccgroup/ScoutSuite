@@ -41,7 +41,7 @@ class Ruleset:
         self.environment_name = environment_name
         self.rule_type = rule_type
         # Ruleset filename
-        self.filename = self.find_file(filename, provider=cloud_provider)
+        self.filename = self.find_file(filename)
         if not self.filename:
             self.search_ruleset(environment_name)
         print_debug('Loading ruleset %s' % self.filename)
@@ -83,7 +83,7 @@ class Ruleset:
                         self.rules[filename] = []
                         for rule in ruleset['rules'][filename]:
                             self.handle_rule_versions(filename, rule_type, rule)
-            except Exception as e:
+            except Exception:
                 print_error('Error: ruleset file %s contains malformed JSON.' % self.filename)
                 self.rules = []
                 self.about = ''
@@ -92,7 +92,7 @@ class Ruleset:
             if not quiet:
                 print_error('Error: the file %s does not exist.' % self.filename)
 
-    def load_rules(self, file, rule_type, quiet=False):
+    def load_rules(self, file, rule_type):
         file.seek(0)
         ruleset = json.load(file)
         self.about = ruleset['about']
@@ -221,6 +221,6 @@ class TmpRuleset(Ruleset):
         self.rules_data_path = os.path.dirname(
             os.path.dirname(os.path.abspath(__file__))) + '/providers/%s/rules' % cloud_provider
 
-        self.load_rules(file=tmp_ruleset_file, rule_type='findings', quiet=False)
+        self.load_rules(file=tmp_ruleset_file, rule_type='findings')
 
         self.shared_init(False, rule_dirs, '', [])
