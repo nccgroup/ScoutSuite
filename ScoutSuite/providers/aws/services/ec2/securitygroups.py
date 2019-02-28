@@ -1,7 +1,7 @@
 from ScoutSuite.providers.aws.resources.resources import AWSSimpleResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from opinel.utils.aws import get_name
-from ScoutSuite.utils import get_keys, ec2_classic
+from ScoutSuite.providers.aws.utils import ec2_classic, get_keys
 from opinel.utils.globals import manage_dictionary
 from opinel.utils.fs import load_data
 
