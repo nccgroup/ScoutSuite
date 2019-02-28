@@ -3,7 +3,7 @@
 import json
 import os
 
-from opinel.utils.console import printDebug, printError, printException
+from ScoutSuite.core.console import print_error
 
 
 class RuleDefinition(object):
@@ -21,7 +21,7 @@ class RuleDefinition(object):
             self.string_definition = string_definition
             self.load_from_string_definition()
         else:
-            printError('Error')
+            print_error('Error')
 
 
     def __str__(self):
@@ -49,7 +49,7 @@ class RuleDefinition(object):
             try:
                 file_path = os.path.join(rule_dir, self.file_name) if rule_dir else self.file_name
             except Exception as e:
-                printError('Failed to load file %s: %e' % (self.file_name, e))
+                print_error('Failed to load file %s: %e' % (self.file_name, e))
             if os.path.isfile(file_path):
                 self.file_path = file_path
                 file_name_valid = True
@@ -72,15 +72,14 @@ class RuleDefinition(object):
                 if os.path.isfile(self.file_path):
                     file_name_valid = True
         if not file_name_valid:
-            printError('Error: could not find %s' % self.file_name)
+            print_error('Error: could not find %s' % self.file_name)
         else:
             try:
                 with open(self.file_path, 'rt') as f:
                     self.string_definition = f.read()
                     self.load_from_string_definition()
             except Exception as e:
-                # printException(e)
-                printError('Failed to load rule defined in %s: %s' % (self.file_name, e))
+                print_error('Failed to load rule defined in %s: %s' % (self.file_name, e))
 
 
     def load_from_string_definition(self):
@@ -89,4 +88,4 @@ class RuleDefinition(object):
             for attr in definition:
                 setattr(self, attr, definition[attr])
         except Exception as e:
-            printError('Failed to load string definition %s: %e' % (self.string_definition, e))
+            print_error('Failed to load string definition %s: %e' % (self.string_definition, e))

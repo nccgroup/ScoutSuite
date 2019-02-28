@@ -6,9 +6,8 @@ try:
 except ImportError:
     from queue import Queue
 
+from ScoutSuite.providers.aws.aws import handle_truncated_response
 from ScoutSuite.providers.base.configs.base import BaseConfig
-
-from opinel.utils.aws import handle_truncated_response
 
 
 class AWSBaseConfig(BaseConfig):

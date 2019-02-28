@@ -1,5 +1,5 @@
 {
-    "source": "ip-ranges/aws.json",
+    "source": "aws/ip-ranges/aws.json",
     "conditions": [ "and",
         [ "region", "match", [ "us-.*" ] ]
     ]

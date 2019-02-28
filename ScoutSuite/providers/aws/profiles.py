@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import fileinput
 import os
 import re
 
-from opinel.utils.aws import get_aws_account_id
-from opinel.utils.console import printDebug
-from opinel.utils.credentials import read_creds
+from ScoutSuite.core.console import print_debug
+from ScoutSuite.providers.aws.aws import get_aws_account_id
+from ScoutSuite.providers.aws.credentials import read_creds
 
 aws_dir = os.path.join(os.path.expanduser('~'), '.aws')
 aws_credentials_file = os.path.join(aws_dir, 'credentials')
@@ -14,9 +13,12 @@ aws_config_file = os.path.join(aws_dir, 'config')
 
 re_profile_name = re.compile(r'(\[(profile\s+)?(.*?)\])')
 
+
+# noinspection PyBroadException
 class AWSProfile(object):
 
-    def __init__(self, filename = None, raw_profile = None, name = None, credentials = None, account_id = None):
+    def __init__(self, filename=None, raw_profile=None, name=None, credentials=None, account_id=None):
+        self.credentials = credentials
         self.filename = filename
         self.raw_profile = raw_profile
         self.name = name
@@ -24,7 +26,6 @@ class AWSProfile(object):
         self.attributes = {}
         if self.raw_profile:
             self.parse_raw_profile()
-
 
     def get_credentials(self):
         # For now, use the existing code...
@@ -35,11 +36,6 @@ class AWSProfile(object):
             pass
         return self.credentials
 
-
-    def set_attribute(self, attribute, value):
-        self.attributes[attribute] = value
-
-
     def parse_raw_profile(self):
         for line in self.raw_profile.split('\n')[1:]:
             line = line.strip()
@@ -49,9 +45,8 @@ class AWSProfile(object):
                 value = ''.join(values[1:]).strip()
                 self.attributes[attribute] = value
 
-
     def write(self):
-        tmp = AWSProfiles.get(self.name, quiet = True)
+        tmp = AWSProfiles.get(self.name, quiet=True)
         if not self.raw_profile:
             self.raw_profile = tmp[0].raw_profile if len(tmp) else None
         if not self.filename:
@@ -85,36 +80,39 @@ class AWSProfile(object):
                 f.write(contents)
 
 
-
 class AWSProfiles(object):
 
     @staticmethod
-    def list(names = []):
+    def list(names=None):
         """
         @brief
 
         :return:                        List of all profile names found in .aws/config and .aws/credentials
         """
+        if names is None:
+            names = []
         return [p.name for p in AWSProfiles.get(names)]
 
-
     @staticmethod
-    def get(names = [], quiet = False):
+    def get(names=None, quiet=False):
         """
         """
+        if names is None:
+            names = []
         profiles = []
         profiles += AWSProfiles.find_profiles_in_file(aws_credentials_file, names, quiet)
         profiles += AWSProfiles.find_profiles_in_file(aws_config_file, names, quiet)
         return profiles
 
-
     @staticmethod
-    def find_profiles_in_file(filename, names = [], quiet = True):
+    def find_profiles_in_file(filename, names=None, quiet=True):
+        if names is None:
+            names = []
         profiles = []
         if type(names) != list:
-            names = [ names ]
+            names = [names]
         if not quiet:
-            printDebug('Searching for profiles matching %s in %s ... ' % (str(names), filename))
+            print_debug('Searching for profiles matching %s in %s ... ' % (str(names), filename))
         name_filters = []
         for name in names:
             name_filters.append(re.compile('^%s$' % name))
@@ -131,11 +129,10 @@ class AWSProfiles(object):
                             matching_profile = True
                             i1 = aws_credentials.index(profile[0])
                             if i < profile_count:
-                                i2 = aws_credentials.index(existing_profiles[i+1][0])
+                                i2 = aws_credentials.index(existing_profiles[i + 1][0])
                                 raw_profile = aws_credentials[i1:i2]
                             else:
                                 raw_profile = aws_credentials[i1:]
                     if len(name_filters) == 0 or matching_profile:
-                        profiles.append(AWSProfile(filename = filename, raw_profile = raw_profile, name = profile[2]))
+                        profiles.append(AWSProfile(filename=filename, raw_profile=raw_profile, name=profile[2]))
         return profiles
-

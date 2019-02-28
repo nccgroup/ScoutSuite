@@ -1,6 +1,6 @@
 {
     "description": "Role passed to stack",
-    "rationale": "Passing a role to CloudFormation stacks may result in privilege escalation because IAM users with privileges within the CloudFormation scope implicitly inherit the stack's role's permissions.",
+    "rationale": "Passing a role to CloudFormation stacks may result in privilege escalation because IAM users with privileges within the CloudFormation scope implicitly inherit the stack's role's permissions. Consequently, it should be ensured that the IAM privileges assigned to the stack's role follow the principle of least privilege.",
     "path": "cloudformation.regions.id.stacks.id",
     "dashboard_name": "Stacks",
     "conditions": [ "and",

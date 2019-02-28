@@ -4,7 +4,7 @@ from __future__ import print_function
 import os
 import sys
 
-from opinel.utils.console import printError
+from ScoutSuite.core.console import print_error
 
 from six.moves import input
 
@@ -27,7 +27,7 @@ def prompt_4_yes_no(question):
         elif choice == 'no' or choice == 'n':
             return False
         else:
-            printError('\'%s\' is not a valid answer. Enter \'yes\'(y) or \'no\'(n).' % choice)
+            print_error('\'%s\' is not a valid answer. Enter \'yes\'(y) or \'no\'(n).' % choice)
 
 
 def prompt_4_overwrite(filename, force_write):
@@ -58,7 +58,7 @@ def get_filename(config_type, profile, report_dir):
             filename = AWSRULESET_FILE
             first_line = 'scoutsuite_results ='
         else:
-            printError('invalid config type provided (%s)' % config_type)
+            print_error('invalid config type provided (%s)' % config_type)
             raise Exception
         # Append profile name if necessary
         if profile != 'default' and config_type != AWSRULESET:

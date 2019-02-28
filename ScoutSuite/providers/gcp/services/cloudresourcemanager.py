@@ -2,7 +2,7 @@
 
 from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
-from opinel.utils.console import printError, printException, printInfo
+from ScoutSuite.core.console import print_exception
 
 
 class CloudResourceManager(GCPBaseConfig):
@@ -44,7 +44,7 @@ class CloudResourceManager(GCPBaseConfig):
                 elif type == 'serviceAccount':
                     binding_dict['members']['service_accounts'].append(entity)
                 else:
-                    printException('Type %s not handled' % type)
+                    print_exception('Type %s not handled' % type)
 
         self.bindings[binding_dict['id']] = binding_dict
 

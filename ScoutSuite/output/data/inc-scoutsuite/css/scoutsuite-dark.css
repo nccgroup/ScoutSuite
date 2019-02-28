@@ -5,3 +5,17 @@
 .dropdown-item.disabled, .dropdown-item:disabled {
     color: #647273;
 }
+
+a.nav-link {
+    color: rgb(235, 235, 235) ;
+}
+
+.dropdown-submenu a.nav-link {
+    color: rgb(235, 235, 235) ;
+}
+
+.bg-primary .navbar-nav .active>.nav-link, .navbar-brand .active {
+    color: #25e8c2 !important;
+}
+
+

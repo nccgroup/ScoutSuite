@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.console import printError
+from ScoutSuite.core.console import print_error
 
-import operator
 from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
 
@@ -57,7 +56,7 @@ class CloudSQLConfig(GCPBaseConfig):
                 users_dict[user['name']] = self._parse_user(user)
 
         except Exception as e:
-            printError('Failed to fetch users for SQL instance %s: %s' % (instance['name'], e))
+            print_error('Failed to fetch users for SQL instance %s: %s' % (instance['name'], e))
             
         return users_dict
 
@@ -78,7 +77,7 @@ class CloudSQLConfig(GCPBaseConfig):
         except AttributeError as e:
             return backups_dict
         except Exception as e:
-            printError('Failed to fetch backups for SQL instance %s: %s' % (instance['name'], e))
+            print_error('Failed to fetch backups for SQL instance %s: %s' % (instance['name'], e))
             return backups_dict
 
         try:
@@ -95,7 +94,7 @@ class CloudSQLConfig(GCPBaseConfig):
             return backups_dict
 
         except Exception as e:
-            printError('Failed to parse backups for SQL instance %s: %s' % (instance['name'], e))
+            print_error('Failed to parse backups for SQL instance %s: %s' % (instance['name'], e))
             return None
 
     def _is_log_enabled(self, instance) :

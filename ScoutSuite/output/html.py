@@ -7,10 +7,10 @@ import shutil
 import zipfile
 
 import dateutil.tz
-from opinel.utils.console import printInfo, printException
+from ScoutSuite.core.console import print_info, print_exception
 
 from ScoutSuite import AWSCONFIG, EXCEPTIONS, HTMLREPORT, AWSRULESET, AWSCONFIG_FILE, EXCEPTIONS_FILE, HTMLREPORT_FILE, \
-    GENERATOR_FILE, REPORT_TITLE
+    GENERATOR_FILE
 from ScoutSuite.output.js import JavaScriptReaderWriter
 from ScoutSuite.output.utils import get_filename, prompt_4_overwrite
 
@@ -43,7 +43,7 @@ class HTMLReport(object):
                 with open('%s' % filename, 'rt') as f:
                     contents = contents + f.read()
             except Exception as e:
-                printException('Error reading filename %s: %s' % (filename, e))
+                print_exception('Error reading filename %s: %s' % (filename, e))
         return contents
 
     def prepare_html_report_dir(self):
@@ -91,7 +91,7 @@ class Scout2Report(HTMLReport):
         contents += self.get_content_from('summaries')
         contents += self.get_content_from('summaries/%s' % self.provider)
         new_file, first_line = get_filename(HTMLREPORT, self.profile, self.report_dir)
-        printInfo('Creating %s ...' % new_file)
+        print_info('Creating %s ...' % new_file)
         if prompt_4_overwrite(new_file, force_write):
             if os.path.exists(new_file):
                 os.remove(new_file)

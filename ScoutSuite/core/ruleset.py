@@ -4,7 +4,7 @@ import json
 import os
 import tempfile
 
-from opinel.utils.console import printDebug, printError, prompt_4_yes_no
+from ScoutSuite.core.console import print_debug, print_error, prompt_yes_no
 
 from ScoutSuite.core.rule import Rule
 from ScoutSuite.core.rule_definition import RuleDefinition
@@ -44,7 +44,7 @@ class Ruleset:
         self.filename = self.find_file(filename, provider=cloud_provider)
         if not self.filename:
             self.search_ruleset(environment_name)
-        printDebug('Loading ruleset %s' % self.filename)
+        print_debug('Loading ruleset %s' % self.filename)
         self.name = os.path.basename(self.filename).replace('.json', '') if not name else name
         self.load(self.rule_type)
         self.shared_init(ruleset_generator, rules_dir, aws_account_id, ip_ranges)
@@ -84,14 +84,13 @@ class Ruleset:
                         for rule in ruleset['rules'][filename]:
                             self.handle_rule_versions(filename, rule_type, rule)
             except Exception as e:
-                # printException(e)
-                printError('Error: ruleset file %s contains malformed JSON.' % self.filename)
+                print_error('Error: ruleset file %s contains malformed JSON.' % self.filename)
                 self.rules = []
                 self.about = ''
         else:
             self.rules = []
             if not quiet:
-                printError('Error: the file %s does not exist.' % self.filename)
+                print_error('Error: the file %s does not exist.' % self.filename)
 
     def load_rules(self, file, rule_type, quiet=False):
         file.seek(0)
@@ -179,7 +178,7 @@ class Ruleset:
             ruleset_file_name = 'ruleset-%s.json' % environment_name
             ruleset_file_path = os.path.join(self.rules_data_path, 'rulesets/%s' % ruleset_file_name)
             if os.path.exists(ruleset_file_path):
-                if no_prompt or prompt_4_yes_no(
+                if no_prompt or prompt_yes_no(
                         "A ruleset whose name matches your environment name was found in %s. Would you like to use it instead of the default one" % ruleset_file_name):
                     ruleset_found = True
                     self.filename = ruleset_file_path

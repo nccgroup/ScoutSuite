@@ -5,7 +5,7 @@ import warnings
 
 import google.auth
 import googleapiclient
-from opinel.utils.console import printError, printException, printInfo
+from ScoutSuite.core.console import print_error, print_exception, print_info
 
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.gcp.configs.services import GCPServicesConfig
@@ -62,7 +62,7 @@ class GCPProvider(BaseProvider):
             client_secrets_path = os.path.abspath(service_account)
             os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = client_secrets_path
         else:
-            printError('Failed to authenticate to GCP - no supported account type')
+            print_error('Failed to authenticate to GCP - no supported account type')
             return False
 
         try:
@@ -109,7 +109,7 @@ class GCPProvider(BaseProvider):
 
                 # Raise exception if none of the above
                 else:
-                    printInfo("Could not infer the Projects to scan and no default Project ID was found.")
+                    print_info("Could not infer the Projects to scan and no default Project ID was found.")
                     return False
 
                 # TODO this shouldn't be done here? but it has to in order to init with projects...
@@ -120,13 +120,13 @@ class GCPProvider(BaseProvider):
                 return False
 
         except google.auth.exceptions.DefaultCredentialsError as e:
-            printError('Failed to authenticate to GCP')
-            printException(e)
+            print_error('Failed to authenticate to GCP')
+            print_exception(e)
             return False
 
         except googleapiclient.errors.HttpError as e:
-            printError('Failed to authenticate to GCP')
-            printException(e)
+            print_error('Failed to authenticate to GCP')
+            print_exception(e)
             return False
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
@@ -208,11 +208,11 @@ class GCPProvider(BaseProvider):
                     for folder in folder_response['folders']:
                         projects.extend(self._get_projects("folder", folder['name'].strip(u'folders/')))
 
-            printInfo("Found {} project(s) to scan.".format(len(projects)))
+            print_info("Found {} project(s) to scan.".format(len(projects)))
 
         except Exception as e:
-            printError('Unable to list accessible Projects')
-            printException(e)
+            print_error('Unable to list accessible Projects')
+            print_exception(e)
 
         finally:
             return projects

@@ -57,6 +57,9 @@ setup(
             'gcp/rules/filters/*.json',
             'gcp/rules/findings/*.json',
             'gcp/rules/rulesets/*.json'
+        ],
+        'ScoutSuite.data': [
+            '*.json'
         ]
     },
     include_package_data=True,
