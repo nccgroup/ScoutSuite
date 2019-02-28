@@ -19,7 +19,7 @@ from ScoutSuite.providers import get_provider
 
 
 # noinspection PyBroadException
-def main(args=None):
+async def main(args=None):
     """
     Main method that runs a scan
 
