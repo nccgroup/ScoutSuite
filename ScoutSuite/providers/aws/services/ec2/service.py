@@ -4,9 +4,6 @@ from ScoutSuite.providers.aws.services.ec2.vpcs import Vpcs
 from ScoutSuite.providers.aws.services.ec2.snapshots import Snapshots
 from ScoutSuite.providers.aws.services.ec2.volumes import Volumes
 
-from opinel.utils.aws import get_aws_account_id
-from ScoutSuite.utils import get_keys, ec2_classic
-
 
 # TODO: Add docstrings
 
