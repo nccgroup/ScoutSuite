@@ -1,15 +1,14 @@
-from ScoutSuite.providers.base.configs.resources import SimpleResources
-from ScoutSuite.providers.base.configs.resources import CompositeResources
+from ScoutSuite.providers.base.configs.resources import Resources, CompositeResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.aws.aws import get_aws_account_id
 import abc
 
-class AWSSimpleResources(SimpleResources, metaclass=abc.ABCMeta):
+class AWSResources(Resources, metaclass=abc.ABCMeta):
     def __init__(self, scope):
         self.scope = scope
         self.facade = AWSFacade()
 
-    async def fetch_all(self):
+    async def fetch_all(self, **kwargs):
         raw_resources = await self.get_resources_from_api()
         for raw_resource in raw_resources:
             name, resource = self.parse_resource(raw_resource)
@@ -32,6 +31,7 @@ class Regions(AWSCompositeResources, metaclass=abc.ABCMeta):
         self.facade = AWSFacade()
 
     async def fetch_all(self, credentials, chosen_regions=None, partition_name='aws'):
+        
         self['regions'] = {}
         for region in await self.facade.build_region_list(self.service, chosen_regions, partition_name):
             self['regions'][region] = {

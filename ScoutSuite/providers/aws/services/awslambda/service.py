@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from ScoutSuite.providers.aws.resources.resources import Regions, AWSSimpleResources
+from ScoutSuite.providers.aws.resources.resources import Regions, AWSResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.aws.aws import build_region_list
 
 
-class RegionalLambdas(AWSSimpleResources):
+class RegionalLambdas(AWSResources):
     async def get_resources_from_api(self):
         return self.facade.awslambda.get_functions(self.scope['region'])
 

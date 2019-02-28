@@ -1,8 +1,8 @@
-from ScoutSuite.providers.aws.resources.resources import AWSSimpleResources
+from ScoutSuite.providers.aws.resources.resources import AWSResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
 
 
-class AmazonMachineImages(AWSSimpleResources):
+class AmazonMachineImages(AWSResources):
     async def get_resources_from_api(self):
         return self.facade.ec2.get_images(self.scope['region'], self.scope['owner_id'])
 

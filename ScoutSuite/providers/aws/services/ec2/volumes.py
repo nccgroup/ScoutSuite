@@ -1,9 +1,9 @@
-from ScoutSuite.providers.aws.resources.resources import AWSSimpleResources
+from ScoutSuite.providers.aws.resources.resources import AWSResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.aws.aws import get_name
 
 
-class Volumes(AWSSimpleResources):
+class Volumes(AWSResources):
     async def get_resources_from_api(self):
         return self.facade.ec2.get_volumes(self.scope['region'])
 

@@ -1,11 +1,11 @@
-from ScoutSuite.providers.aws.resources.resources import AWSCompositeResources, AWSSimpleResources
+from ScoutSuite.providers.aws.resources.resources import AWSCompositeResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.aws.services.ec2.instances import EC2Instances
 from ScoutSuite.providers.aws.services.ec2.securitygroups import SecurityGroups
 from ScoutSuite.providers.aws.services.ec2.networkinterfaces import NetworkInterfaces
 
 
-class Vpcs(AWSCompositeResources, AWSSimpleResources):
+class Vpcs(AWSCompositeResources):
     children = [
         (EC2Instances, 'instances'),
         (SecurityGroups, 'security_groups'),
@@ -16,7 +16,7 @@ class Vpcs(AWSCompositeResources, AWSSimpleResources):
         self.scope = scope
         self.facade = AWSFacade()
 
-    async def fetch_all(self):
+    async def fetch_all(self, **kwargs):
         await super(Vpcs, self).fetch_all()
 
         for vpc in self:

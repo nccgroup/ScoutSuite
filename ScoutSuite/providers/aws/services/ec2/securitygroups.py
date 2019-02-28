@@ -1,4 +1,4 @@
-from ScoutSuite.providers.aws.resources.resources import AWSSimpleResources
+from ScoutSuite.providers.aws.resources.resources import AWSResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.aws.aws import get_name
 from ScoutSuite.providers.aws.utils import ec2_classic, get_keys
@@ -6,7 +6,7 @@ from ScoutSuite.utils import manage_dictionary
 from ScoutSuite.core.fs import load_data
 
 
-class SecurityGroups(AWSSimpleResources):
+class SecurityGroups(AWSResources):
     icmp_message_types_dict = load_data(
         'icmp_message_types.json', 'icmp_message_types')
 
