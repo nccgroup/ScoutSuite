@@ -6,6 +6,7 @@ import os
 
 from ScoutSuite import DEFAULT_REPORT_DIR
 
+
 class ScoutSuiteArgumentParser:
 
     def __init__(self):

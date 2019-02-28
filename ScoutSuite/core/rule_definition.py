@@ -8,7 +8,7 @@ from ScoutSuite.core.console import print_error
 
 class RuleDefinition(object):
 
-    def __init__(self, data_path, file_name = None, rule_dirs = None, string_definition = None):
+    def __init__(self, data_path, file_name=None, rule_dirs=None, string_definition=None):
         rule_dirs = [] if rule_dirs is None else rule_dirs
         self.rules_data_path = data_path
         self.file_name = file_name
@@ -23,17 +23,16 @@ class RuleDefinition(object):
         else:
             print_error('Error')
 
-
     def __str__(self):
         desription = getattr(self, 'description')
         dlen = len(desription)
         padding = (80 - dlen) // 2 if dlen < 80 else 0
         value = '-' * 80 + '\n' + ' ' * padding + ' %s' % getattr(self, 'description') + '\n' + '-' * 80 + '\n'
         quiet_list = ['descriptions', 'rule_dirs', 'rule_types', 'rules_data_path', 'string_definition']
-        value += '\n'.join(('%s: %s') % (attr, str(getattr(self, attr))) for attr in vars(self) if attr not in quiet_list)
+        value += '\n'.join(
+            '%s: %s' % (attr, str(getattr(self, attr))) for attr in vars(self) if attr not in quiet_list)
         value += '\n'
         return value
-
 
     def load(self):
         """
@@ -80,7 +79,6 @@ class RuleDefinition(object):
                     self.load_from_string_definition()
             except Exception as e:
                 print_error('Failed to load rule defined in %s: %s' % (self.file_name, e))
-
 
     def load_from_string_definition(self):
         try:
