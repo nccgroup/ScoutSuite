@@ -16,8 +16,6 @@ class AWSSimpleResources(SimpleResources, metaclass=abc.ABCMeta):
             self[name] = resource
 
 class AWSCompositeResources(CompositeResources, metaclass=abc.ABCMeta):
-
-    # TODO: get rid of the credentials.
     async def fetch_children(self, parent, **kwargs):
         for child_class, key in self.children:
             child = child_class(**kwargs)
@@ -36,7 +34,6 @@ class Regions(AWSCompositeResources, metaclass=abc.ABCMeta):
     async def fetch_all(self, credentials, chosen_regions=None, partition_name='aws'):
         self['regions'] = {}
         for region in await self.facade.build_region_list(self.service, chosen_regions, partition_name):
-            # TODO: Do we really need id, region AND name? 
             self['regions'][region] = {
                 'id': region,
                 'region': region,
