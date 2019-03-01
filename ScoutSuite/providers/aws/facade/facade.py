@@ -22,7 +22,3 @@ class AWSFacade(object):
             return list((Counter(regions) & Counter(chosen_regions)).elements())
         else:
             return regions
-
-   
-
-   
