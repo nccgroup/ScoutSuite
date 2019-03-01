@@ -7,8 +7,7 @@ from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 
 class EC2Facade:
     def get_instance_user_data(self, region: str, instance_id: str):
-        # TODO: We should save a list of the clients by region, as they are created.
-        ec2_client = boto3.client('ec2', region_name=region)
+        ec2_client = AWSFacadeUtils.get_client('ec2', region)
         user_data_response = ec2_client.describe_instance_attribute(Attribute='userData', InstanceId=instance_id)
 
         if 'Value' not in user_data_response['UserData'].keys():
@@ -17,66 +16,40 @@ class EC2Facade:
         return base64.b64decode(user_data_response['UserData']['Value']).decode('utf-8')
 
     def get_instances(self, region, vpc):
-        ec2_client = boto3.client('ec2', region_name=region)
-
-        return AWSFacadeUtils.get_all_pages(
-            lambda next_token: ec2_client.describe_instances(Filters=[{'Name': 'vpc-id', 'Values': [vpc]}], NextToken=next_token),
-            lambda response: itertools.chain.from_iterable([reservation['Instances'] for reservation in response['Reservations']]),
-            'NextToken'
-        )
+        filters = [{'Name': 'vpc-id', 'Values': [vpc]}]
+        reservations = AWSFacadeUtils.get_all_pages('ec2', region, 'describe_instances', 'Reservations', Filters=filters)
+        return itertools.chain.from_iterable([reservation['Instances'] for reservation in reservations])
 
     def get_security_groups(self, region, vpc):
-        ec2_client = boto3.client('ec2', region_name=region)
-        filter = [{'Name': 'vpc-id', 'Values': [vpc]}]
-
-        return AWSFacadeUtils.get_all_pages(
-            lambda next_token: ec2_client.describe_security_groups(Filters=filter, NextToken=next_token),
-            lambda response: response['SecurityGroups'],
-            'NextToken'
-        )
+        filters = [{'Name': 'vpc-id', 'Values': [vpc]}]
+        return AWSFacadeUtils.get_all_pages('ec2', region, 'describe_security_groups', 'SecurityGroups', Filters=filters)
 
     def get_vpcs(self, region):
-        ec2_client  = boto3.client('ec2', region_name=region)
+        ec2_client = boto3.client('ec2', region_name=region)
         return ec2_client.describe_vpcs()['Vpcs']
 
     def get_images(self, region, owner_id):
-        ec2_client = boto3.client('ec2', region_name=region)
-        filter = [{'Name': 'owner-id', 'Values': [owner_id]}]
-        return ec2_client.describe_images(Filters=filter)['Images']
+        filters = [{'Name': 'owner-id', 'Values': [owner_id]}]
+        response = AWSFacadeUtils.get_client('ec2', region) \
+                                 .describe_images(Filters=filters)
+
+        return response['Images']
 
     def get_network_interfaces(self, region, vpc):
-        ec2_client = boto3.client('ec2', region_name=region)
-        filter = [{'Name': 'vpc-id', 'Values': [vpc]}]
-
-        return AWSFacadeUtils.get_all_pages(
-            lambda next_token: ec2_client.describe_network_interfaces(Filters=filter, NextToken=next_token),
-            lambda response: response['NetworkInterfaces'],
-            'NextToken'
-        )
+        filters = [{'Name': 'vpc-id', 'Values': [vpc]}]
+        return AWSFacadeUtils.get_all_pages('ec2', region, 'describe_network_interfaces', 'NetworkInterfaces', Filters=filters)
 
     def get_volumes(self, region):
-        ec2_client = boto3.client('ec2', region_name=region)
-        return AWSFacadeUtils.get_all_pages(
-            lambda next_token: ec2_client.describe_volumes(NextToken=next_token),
-            lambda response: response['Volumes'],
-            'NextToken'
-        )
-
+        return AWSFacadeUtils.get_all_pages('ec2', region, 'describe_volumes', 'Volumes')
 
     def get_snapshots(self, region, owner_id):
-        ec2_client = boto3.client('ec2', region_name=region)
-        filter = [{'Name': 'owner-id', 'Values': [owner_id]}]
-        snapshots = AWSFacadeUtils.get_all_pages(
-            lambda next_token: ec2_client.describe_snapshots(Filters=filter, NextToken=next_token),
-            lambda response: response['Snapshots'],
-            'NextToken'
-        )
+        filters = [{'Name': 'owner-id', 'Values': [owner_id]}]
+        snapshots = AWSFacadeUtils.get_all_pages('ec2', region, 'describe_snapshots', 'Snapshots', Filters=filters)
 
+        ec2_client = AWSFacadeUtils.get_client('ec2', region)
         for snapshot in snapshots:
             snapshot['CreateVolumePermissions'] = ec2_client.describe_snapshot_attribute(
-                Attribute='createVolumePermission', 
+                Attribute='createVolumePermission',
                 SnapshotId=snapshot['SnapshotId'])['CreateVolumePermissions']
 
         return snapshots
-
-            

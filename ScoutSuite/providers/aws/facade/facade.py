@@ -9,7 +9,7 @@ class AWSFacade(object):
         self.awslambda = LambdaFacade()
 
 
-    async def build_region_list(self, service, chosen_regions=None, partition_name='aws'):
+    async def build_region_list(self, service: str, chosen_regions=None, partition_name='aws'):
         service = 'ec2containerservice' if service == 'ecs' else service
         available_services = Session().get_available_services()
 
