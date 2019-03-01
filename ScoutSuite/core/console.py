@@ -133,6 +133,7 @@ def prompt_value(question, choices=None, default=None, display_choices=True, dis
     """
     Prompt for a value
                                         .                    .
+    :param return_index:
     :param question:                    Question to be asked
     :param choices:                     List of authorized answers
     :param default:                     Value suggested by default

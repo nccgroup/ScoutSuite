@@ -25,7 +25,8 @@ class BaseProvider(object):
     all cloud providers
     """
 
-    def __init__(self, report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
+    def __init__(self, report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4,
+                 **kwargs):
         """
 
         :aws_account_id     AWS account ID
@@ -69,7 +70,6 @@ class BaseProvider(object):
         """
         TODO
 
-        :param config:
         :param current_time:
         :param ruleset:
         :return: None
@@ -81,8 +81,6 @@ class BaseProvider(object):
         """
         Fetch resources for each service
 
-        :param services:
-        :param skipped_services:
         :param regions:
         :param skipped_regions:
         :param partition_name:
@@ -112,21 +110,18 @@ class BaseProvider(object):
         with open(self.metadata_path, 'rt') as f:
             self.metadata = json.load(f)
 
-    def _build_services_list(self, supported_services, services, skipped_services):
+    @staticmethod
+    def _build_services_list(supported_services, services, skipped_services):
         return [s for s in supported_services if (services == [] or s in services) and s not in skipped_services]
 
     def _update_last_run(self, current_time, ruleset):
-        last_run = {}
-        last_run['time'] = current_time.strftime("%Y-%m-%d %H:%M:%S%z")
-        last_run['cmd'] = ' '.join(sys.argv)
-        last_run['version'] = scout2_version
-        last_run['ruleset_name'] = ruleset.name
-        last_run['ruleset_about'] = ruleset.about
-        last_run['summary'] = {}
+        last_run = {'time': current_time.strftime("%Y-%m-%d %H:%M:%S%z"), 'cmd': ' '.join(sys.argv),
+                    'version': scout2_version, 'ruleset_name': ruleset.name, 'ruleset_about': ruleset.about,
+                    'summary': {}}
         for service in self.services:
             last_run['summary'][service] = {'checked_items': 0, 'flagged_items': 0, 'max_level': 'warning',
                                             'rules_count': 0, 'resources_count': 0}
-            if self.services[service] == None:
+            if self.services[service] is None:
                 # Not supported yet
                 continue
             elif 'findings' in self.services[service]:
@@ -166,12 +161,12 @@ class BaseProvider(object):
                             [x for x in
                              self.metadata[service_group][service]['resources'][resource]['full_path'].split(
                                  '.') if x != 'id'])
-                    
+
                     # Update counts
                     service_config = self.services[service]
-                    if not service_config :
+                    if not service_config:
                         continue
-                    
+
                     count = '%s_count' % resource
                     if resource != 'regions':
                         if 'regions' in service_config.keys() and isinstance(service_config['regions'], dict):
@@ -187,8 +182,8 @@ class BaseProvider(object):
                             except Exception as e:
                                 print_exception(e)
                     else:
-                        self.metadata[service_group][service]['resources'][resource]['count'] = len(service_config['regions'])
-
+                        self.metadata[service_group][service]['resources'][resource]['count'] = len(
+                            service_config['regions'])
 
     def manage_object(self, object, attr, init, callback=None):
         """
@@ -249,7 +244,7 @@ class BaseProvider(object):
                         if 'callbacks' in self.metadata[service_group][service]['summaries'][summary]:
                             current_path = ['services', service]
                             for callback in self.metadata[service_group][service]['summaries'][summary][
-                                'callbacks']:
+                                    'callbacks']:
                                 callback_name = callback[0]
                                 callback_args = copy.deepcopy(callback[1])
                                 target_path = callback_args.pop('path').replace('.id', '').split('.')[2:]
@@ -283,7 +278,8 @@ class BaseProvider(object):
                                         summary in self.metadata[service_group][service]['summaries']:
                                     try:
                                         source = get_object_at(self,
-                                                               self.metadata[service_group][service]['summaries'][summary]['path'].split('.'))
+                                                               self.metadata[service_group][service]['summaries'][
+                                                                   summary]['path'].split('.'))
                                     except Exception as e:
                                         source = {}
                                     target_object.update(source)
@@ -309,10 +305,8 @@ class BaseProvider(object):
                         break
                     current_path.append(key)
                     current_config = current_config[key]
-            # if hasattr(current_config, key):
             if key in current_config:
                 current_path.append(key)
-                # current_config_key = getattr(current_config, key)
                 current_config_key = current_config[key]
                 for (i, value) in enumerate(list(current_config_key)):
                     if len(path) == 0:

@@ -14,7 +14,6 @@ from ScoutSuite.utils import manage_dictionary
 from ScoutSuite.providers.aws.utils import ec2_classic
 
 
-# noinspection PyBroadException
 class AWSProvider(BaseProvider):
     """
     Implements provider for AWS
@@ -522,7 +521,6 @@ class AWSProvider(BaseProvider):
                     print_error('Unable to determine VPC id for %s' % (str(subnet_id) if subnet_id else str(sg_id)))
                     continue
             if vpc_id:
-                # noinspection PyArgumentList
                 region_vpcs_config = get_object_at(current_path)
                 manage_dictionary(region_vpcs_config, vpc_id, {'clusters': {}})
                 region_vpcs_config[vpc_id]['clusters'][cluster_id] = cluster
@@ -539,7 +537,6 @@ class AWSProvider(BaseProvider):
                                self.parse_elb_policies_callback,
                                {})
 
-    # noinspection PyArgumentList
     @staticmethod
     def parse_elb_policies_callback(current_config, path, current_path, region_id, callback_args):
         region_config = get_object_at(['services', 'elb', ] + current_path + [region_id])

@@ -164,7 +164,6 @@ def init_sts_session(profile_name, credentials, duration=28800, save_creds=True)
     return sts_response['Credentials']
 
 
-# noinspection PyTypeChecker
 def read_creds_from_aws_credentials_file(profile_name, credentials_file=aws_credentials_file):
     """
     Read credentials from AWS config file
@@ -231,7 +230,6 @@ def read_creds_from_csv(filename):
     return key_id, secret, mfa_serial
 
 
-# noinspection PyBroadException
 def read_creds_from_ec2_instance_metadata():
     """
     Read credentials from EC2 instance metadata (IAM role)
@@ -253,7 +251,6 @@ def read_creds_from_ec2_instance_metadata():
         return False
 
 
-# noinspection PyBroadException
 def read_creds_from_ecs_container_metadata():
     """
     Read credentials from ECS instance metadata (IAM role)
@@ -425,8 +422,6 @@ def complete_profile(f, credentials, session_token_written, mfa_serial_written):
 # Main function
 ########################################
 
-
-# noinspection PyBroadException
 def read_creds(profile_name, csv_file=None, mfa_serial_arg=None, mfa_code=None, force_init=False):
     """
     Read credentials from anywhere (CSV, Environment, Instance metadata, config/credentials)
