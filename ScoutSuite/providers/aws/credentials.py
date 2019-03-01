@@ -6,7 +6,6 @@ import fileinput
 import json
 import os
 import re
-import string
 
 import boto3
 import dateutil.parser
@@ -284,6 +283,8 @@ def read_creds_from_environment_variables():
     if 'AWS_ACCESS_KEY_ID' in os.environ and 'AWS_SECRET_ACCESS_KEY' in os.environ:
         creds['AccessKeyId'] = os.environ['AWS_ACCESS_KEY_ID']
         creds['SecretAccessKey'] = os.environ['AWS_SECRET_ACCESS_KEY']
+        if 'AWS_MFA_SERIAL' in os.environ:
+            creds['SerialNumber'] = os.environ['AWS_MFA_SERIAL']
         if 'AWS_SESSION_TOKEN' in os.environ:
             creds['SessionToken'] = os.environ['AWS_SESSION_TOKEN']
     return creds
@@ -425,7 +426,7 @@ def complete_profile(f, credentials, session_token_written, mfa_serial_written):
 ########################################
 
 
-# noinspection PyBroadException,PyBroadException
+# noinspection PyBroadException
 def read_creds(profile_name, csv_file=None, mfa_serial_arg=None, mfa_code=None, force_init=False):
     """
     Read credentials from anywhere (CSV, Environment, Instance metadata, config/credentials)
@@ -449,6 +450,7 @@ def read_creds(profile_name, csv_file=None, mfa_serial_arg=None, mfa_code=None, 
         # Read credentials from a CSV file that was provided
         credentials['AccessKeyId'], credentials['SecretAccessKey'], credentials['SerialNumber'] = \
             read_creds_from_csv(csv_file)
+        credentials = init_sts_session(profile_name, credentials)
     elif profile_name == 'default':
         # Try reading credentials from environment variables (Issue #11) if the profile name is 'default'
         credentials = read_creds_from_environment_variables()

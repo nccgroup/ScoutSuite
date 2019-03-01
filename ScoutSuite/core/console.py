@@ -13,7 +13,7 @@ from six.moves import input
 
 mfa_serial_format = r'^arn:aws:iam::\d+:mfa/[a-zA-Z0-9\+=,.@_-]+$'
 re_mfa_serial_format = re.compile(mfa_serial_format)
-re_mfa_code = re.compile(r'^\d{6}\d*$')
+re_mfa_code = r'^\d{6}\d*$'
 
 
 ########################################
@@ -105,7 +105,7 @@ def prompt_mfa_code(activate=False, test_input=None):
         mfa_code = prompt_value(prompt_string, no_confirm=True, test_input=test_input)
         if mfa_code == 'q':
             return mfa_code
-        if not re_mfa_code.match():
+        if not re.match(re_mfa_code, mfa_code):
             print_error('Error: your MFA code must only consist of digits and be at least 6 characters long.')
         break
     return mfa_code

@@ -78,7 +78,7 @@ def main(args=None):
                                                     )
 
         if not authenticated:
-            return 42
+            return 401
 
         # Fetch data from provider APIs
         try:
@@ -165,6 +165,7 @@ def main(args=None):
 
 
 def generate_report_name(provider_code, args):
+    report_file_name = {}
     if provider_code == 'aws':
         if args.get('profile'):
             report_file_name = 'aws-%s' % args.get('profile')

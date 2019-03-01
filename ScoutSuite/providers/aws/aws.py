@@ -127,7 +127,6 @@ def handle_truncated_response(callback, params, entities):
             if not marker_found:
                 break
         except Exception as e:
-            # noinspection PyTypeChecker
             if is_throttled(e):
                 time.sleep(1)
             else:
