@@ -12,10 +12,6 @@ class Vpcs(AWSCompositeResources):
         (NetworkInterfaces, 'network_interfaces')
     ]
 
-    def __init__(self, scope):
-        self.scope = scope
-        self.facade = AWSFacade()
-
     async def fetch_all(self, **kwargs):
         vpcs = self.facade.ec2.get_vpcs(self.scope['region'])
         for vpc in vpcs:
