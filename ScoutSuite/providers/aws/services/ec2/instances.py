@@ -18,7 +18,6 @@ class EC2Instances(AWSResources):
         instance['monitoring_enabled'] = raw_instance['Monitoring']['State'] == 'enabled'
         instance['user_data'] = self.facade.ec2.get_instance_user_data(self.scope['region'], id)
 
-        # TODO: Those methods are slightly sketchy in my opinion (get methods which set stuff in a dictionary, say what)
         get_name(raw_instance, instance, 'InstanceId')
         get_keys(raw_instance, instance, ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile', 'SubnetId'])
 

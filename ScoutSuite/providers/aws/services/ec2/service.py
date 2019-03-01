@@ -22,7 +22,6 @@ class EC2(Regions):
         await super(EC2, self).fetch_all(credentials, regions, partition_name)
 
         for region in self['regions']:
-            # TODO: Is there a way to move this elsewhere? 
             self['regions'][region]['instances_count'] = sum([len(vpc['instances']) for vpc in self['regions'][region]['vpcs'].values()])
             self['regions'][region]['security_groups_count'] = sum([len(vpc['security_groups']) for vpc in self['regions'][region]['vpcs'].values()])
             self['regions'][region]['network_interfaces_count'] = sum([len(vpc['network_interfaces']) for vpc in self['regions'][region]['vpcs'].values()])
