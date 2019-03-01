@@ -123,7 +123,8 @@ def prompt_overwrite(filename, force_write, test_input=None):
     """
     if not os.path.exists(filename) or force_write:
         return True
-    return prompt_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename), test_input=test_input)
+    return prompt_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename),
+                         test_input=test_input)
 
 
 def prompt_value(question, choices=None, default=None, display_choices=True, display_indices=False,
@@ -144,7 +145,8 @@ def prompt_value(question, choices=None, default=None, display_choices=True, dis
     :param regex:                       TODO
     :param regex_format                 TODO
     :param max_laps:                    Exit after N laps
-    :param test_input:                       Used for unit testing
+    :param test_input:                  Used for unit testing
+    :param return_index                 TODO
 
     :return:
     """

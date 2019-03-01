@@ -120,7 +120,7 @@ def pass_condition(b, test, a):
     elif test == 'withKey':
         result = (a in b)
     elif test == 'withoutKey':
-        result = (not a in b)
+        result = a not in b
 
     # List tests
     elif test == 'containAtLeastOneOf':
@@ -142,7 +142,7 @@ def pass_condition(b, test, a):
         if not type(a) == list:
             a = [a]
         for c in b:
-            if c != None and c != '' and c not in a:
+            if c and c != '' and c not in a:
                 result = True
                 break
     elif test == 'containNoneOf':

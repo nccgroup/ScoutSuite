@@ -37,8 +37,7 @@ async def main(args=None):
 
     # Create a cloud provider object
     cloud_provider = get_provider(provider=args.get('provider'),
-                                  profile=args.get('profile')[0] if args.get(
-                                      'profile') else None,
+                                  profile=args.get('profile'),
                                   project_id=args.get('project_id'),
                                   folder_id=args.get('folder_id'),
                                   organization_id=args.get('organization_id'),
@@ -62,17 +61,12 @@ async def main(args=None):
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
         # Authenticate to the cloud provider
-        authenticated = cloud_provider.authenticate(profile=args.get('profile')[0] if args.get('profile') else None,
-                                                    csv_credentials=args.get(
-                                                        'csv_credentials'),
-                                                    mfa_serial=args.get(
-                                                        'mfa_serial'),
-                                                    mfa_code=args.get(
-                                                        'mfa_code'),
-                                                    user_account=args.get(
-                                                        'user_account'),
-                                                    service_account=args.get(
-                                                        'service_account'),
+        authenticated = cloud_provider.authenticate(profile=args.get('profile'),
+                                                    csv_credentials=args.get('csv_credentials'),
+                                                    mfa_serial=args.get('mfa_serial'),
+                                                    mfa_code=args.get('mfa_code'),
+                                                    user_account=args.get('user_account'),
+                                                    service_account=args.get('service_account'),
                                                     cli=args.get('cli'),
                                                     msi=args.get('msi'),
                                                     service_principal=args.get(
@@ -123,7 +117,7 @@ async def main(args=None):
         args.get('ip_ranges'), args.get('ip_ranges_name_key'))
 
     # Analyze config
-    finding_rules = Ruleset(environment_name=args.get('profile')[0] if args.get('profile') else None,
+    finding_rules = Ruleset(environment_name=args.get('profile'),
                             cloud_provider=args.get('provider'),
                             filename=args.get('ruleset'),
                             ip_ranges=args.get('ip_ranges'),
@@ -141,8 +135,7 @@ async def main(args=None):
 
     # Handle exceptions
     try:
-        exceptions = RuleExceptions(args.get('profile')[0] if args.get(
-            'profile') else None, args.get('exceptions')[0])
+        exceptions = RuleExceptions(args.get('profile'), args.get('exceptions')[0])
         exceptions.process(cloud_provider)
         exceptions = exceptions.exceptions
     except Exception as e:
@@ -187,7 +180,7 @@ async def main(args=None):
 def generate_report_name(provider_code, args):
     if provider_code == 'aws':
         if args.get('profile'):
-            report_file_name = 'aws-%s' % args.get('profile')[0]
+            report_file_name = 'aws-%s' % args.get('profile')
         else:
             report_file_name = 'aws'
     if provider_code == 'gcp':
