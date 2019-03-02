@@ -18,7 +18,14 @@ class EC2Facade:
     def get_instances(self, region, vpc):
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]
         reservations = AWSFacadeUtils.get_all_pages('ec2', region, 'describe_instances', 'Reservations', Filters=filters)
-        return itertools.chain.from_iterable([reservation['Instances'] for reservation in reservations])
+
+        instances = []
+        for reservation in reservations:
+            for instance in reservation['Instances']:
+                instance['ReservationId'] = reservation['ReservationId']
+                instances.append(instance)
+                
+        return instances
 
     def get_security_groups(self, region, vpc):
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]
