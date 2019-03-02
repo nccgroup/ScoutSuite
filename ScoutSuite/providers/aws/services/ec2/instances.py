@@ -15,6 +15,7 @@ class EC2Instances(AWSResources):
         instance = {}
         id = raw_instance['InstanceId']
         instance['id'] = id
+        instance['reservation_id'] = raw_instance['ReservationId']
         instance['monitoring_enabled'] = raw_instance['Monitoring']['State'] == 'enabled'
         instance['user_data'] = self.facade.ec2.get_instance_user_data(self.scope['region'], id)
 
