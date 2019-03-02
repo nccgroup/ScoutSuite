@@ -5,8 +5,6 @@ from ScoutSuite.providers.aws.services.ec2.snapshots import Snapshots
 from ScoutSuite.providers.aws.services.ec2.volumes import Volumes
 
 
-# TODO: Add docstrings
-
 class EC2(Regions):
     children = [
         (Vpcs, 'vpcs'),

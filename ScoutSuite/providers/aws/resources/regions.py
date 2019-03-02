@@ -19,7 +19,7 @@ class Regions(AWSCompositeResources, metaclass=abc.ABCMeta):
                 'name': region
             }
 
-            await self._fetch_children(self['regions'][region], scope={'region': region, 'owner_id': get_aws_account_id(credentials)})
+            await self._fetch_children(self['regions'][region], {'region': region, 'owner_id': get_aws_account_id(credentials)})
 
         self._set_counts()
 
