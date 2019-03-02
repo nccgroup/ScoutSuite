@@ -10,7 +10,7 @@ class AWSResources(Resources, metaclass=abc.ABCMeta):
 
 
 class AWSCompositeResources(AWSResources, CompositeResources, metaclass=abc.ABCMeta):
-    async def fetch_children(self, parent, **kwargs):
+    async def _fetch_children(self, parent, **kwargs):
         for child_class, key in self.children:
             child = child_class(**kwargs)
             await child.fetch_all()

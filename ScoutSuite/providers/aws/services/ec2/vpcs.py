@@ -20,7 +20,7 @@ class Vpcs(AWSCompositeResources):
 
         for vpc in self:
             scope = {'region': self.scope['region'], 'vpc': vpc}
-            await self.fetch_children(self[vpc], scope=scope)
+            await self._fetch_children(self[vpc], scope=scope)
 
     def _parse_vpc(self, vpc):
         return vpc['VpcId'], {}

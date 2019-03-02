@@ -46,7 +46,7 @@ class CompositeResources(Resources, metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    async def fetch_children(self, **kwargs):
+    async def _fetch_children(self, **kwargs):
         """Fetches, parses and stores instances of nested resources included in a `CompositeResources` and defined
         in the 'children' attribute.
 
