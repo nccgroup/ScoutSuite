@@ -6,7 +6,7 @@ from ScoutSuite.providers.aws.services.ec2.networkinterfaces import NetworkInter
 
 
 class Vpcs(AWSCompositeResources):
-    children = [
+    _children = [
         (EC2Instances, 'instances'),
         (SecurityGroups, 'security_groups'),
         (NetworkInterfaces, 'network_interfaces')

@@ -6,7 +6,7 @@ from ScoutSuite.providers.aws.services.ec2.volumes import Volumes
 
 
 class EC2(Regions):
-    children = [
+    _children = [
         (Vpcs, 'vpcs'),
         (AmazonMachineImages, 'images'),
         (Snapshots, 'snapshots'),

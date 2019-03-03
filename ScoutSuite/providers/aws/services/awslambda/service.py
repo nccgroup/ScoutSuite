@@ -18,7 +18,7 @@ class RegionalLambdas(AWSResources):
 
 
 class Lambdas(Regions):
-    children = [
+    _children = [
         (RegionalLambdas, 'functions')
     ]
 

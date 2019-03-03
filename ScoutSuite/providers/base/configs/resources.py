@@ -11,8 +11,7 @@ import abc
 
 class Resources(dict, metaclass=abc.ABCMeta):
 
-    """
-    This is the base class of a hierarchical structure. Everything is basically `Resources`.
+    """This is the base class of a hierarchical structure. Everything is basically `Resources`.
     It stores in its internal dictionary instances of a given type of resources, with instance ids as keys and
     instance configurations (which store other nested resources) as values.
     """
@@ -29,17 +28,16 @@ class Resources(dict, metaclass=abc.ABCMeta):
 
 class CompositeResources(Resources, metaclass=abc.ABCMeta):
 
-    """
-    This class represents a node in the hierarchical structure.
-    As inherited from `Resources`, it still stores instances of a given type of resources internally but
-    also store some kind of nested resources referred as its 'children'.
+    """This class represents a node in the hierarchical structure. As inherited from `Resources`, it still \
+    stores instances of a given type of resources internally but also stores some kind of nested resources \ 
+    referred to as its 'children'.
     """
 
     @property
     @abc.abstractmethod
-    def children(self):
-        """A class that inherits from 'CompositeResources' should define a 'children' attribute, typically a list of
-         `Resources` classes. That is enforced by this abstract property.
+    def _children(self):
+        """A class that inherits from 'CompositeResources' should define a '_children' attribute, typically a list \
+        of `Resources` classes, or of tuples containing at least a `Resources` class. That is enforced by this abstract property.
 
         :return:
         """
@@ -47,7 +45,7 @@ class CompositeResources(Resources, metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     async def _fetch_children(self, **kwargs):
-        """Fetches, parses and stores instances of nested resources included in a `CompositeResources` and defined
+        """Fetches, parses and stores instances of nested resources included in a `CompositeResources` and defined \
         in the 'children' attribute.
 
         :param kwargs:

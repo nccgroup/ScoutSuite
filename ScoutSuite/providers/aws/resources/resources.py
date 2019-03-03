@@ -1,6 +1,5 @@
-"""
-This module provides implementations for Resources and CompositeResources for AWS.
-"""
+
+"""This module provides implementations for Resources and CompositeResources for AWS."""
 
 from ScoutSuite.providers.base.configs.resources import Resources, CompositeResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
@@ -9,9 +8,7 @@ import abc
 
 class AWSResources(Resources, metaclass=abc.ABCMeta):
 
-    """
-    This is the base class for AWS resources.
-    """
+    """This is the base class for AWS resources."""
 
     def __init__(self, scope: dict):
         """
@@ -26,16 +23,14 @@ class AWSResources(Resources, metaclass=abc.ABCMeta):
 
 class AWSCompositeResources(AWSResources, CompositeResources, metaclass=abc.ABCMeta):
 
-    """
-    This class represents a collection of AWSResources. Classes extending AWSCompositeResources should \
-    define a "children" attribute which consists of a list of tuples describing the children. The tuples \
+    """This class represents a collection of AWSResources. Classes extending AWSCompositeResources should \
+    define a "_children" attribute which consists of a list of tuples describing the children. The tuples \
     are expected to respect the following format: (<child_class>, <child_name>). The child_name is used by \
     indicates the name under which the child will be stored in the parent object.
     """
         
     async def _fetch_children(self, parent: object, scope: dict):
-        """
-        This method calls fetch_all on each child defined in "children" and stores the fetched resources \
+        """This method calls fetch_all on each child defined in "_children" and stores the fetched resources \
         in the parent under the key associated with the child. It also creates a "<child_name>_count" entry \
         for each child.
 
@@ -43,7 +38,7 @@ class AWSCompositeResources(AWSResources, CompositeResources, metaclass=abc.ABCM
         :param scope: The scope passed to the children constructors
         """
 
-        for child_class, child_name in self.children:
+        for child_class, child_name in self._children:
             child = child_class(scope)
             await child.fetch_all()
 
