@@ -49,10 +49,10 @@ class AWSProvider(BaseProvider):
         else:
             session = boto3.Session()
 
-        self.credentials = session.get_credentials().__dict__
+        self.credentials = session.get_credentials()
         self.aws_account_id = get_aws_account_id(self.credentials)
 
-        if self.credentials['access_key'] is None:
+        if self.credentials.access_key is None:
             return False
         else:
             return True

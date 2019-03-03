@@ -45,9 +45,9 @@ def connect_service(service, credentials, region_name=None, config=None, silent=
     api_client = None
     try:
         client_params = {'service_name': service.lower()}
-        session_params = {'aws_access_key_id': credentials['access_key'],
-                          'aws_secret_access_key': credentials['secret_key'],
-                          'aws_session_token': credentials['token']}
+        session_params = {'aws_access_key_id': credentials.access_key,
+                          'aws_secret_access_key': credentials.secret_key,
+                          'aws_session_token': credentials.token}
         if region_name:
             client_params['region_name'] = region_name
             session_params['region_name'] = region_name
