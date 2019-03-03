@@ -530,3 +530,8 @@ def read_creds(profile_name, csv_file=None, mfa_serial_arg=None, mfa_code=None, 
     if 'AccessKeyId' not in credentials:
         credentials = {'AccessKeyId': None}
     return credentials
+
+
+def read_creds_boto(profile_name, mfa_serial_arg=None, mfa_code=None, force_init=False):
+    credentials = {}
+    return credentials

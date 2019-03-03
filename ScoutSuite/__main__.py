@@ -5,6 +5,7 @@ import copy
 import json
 import os
 import webbrowser
+import boto3
 
 from ScoutSuite.core.console import config_debug_level, print_info, print_debug
 from ScoutSuite.providers.aws.profiles import AWSProfiles
@@ -56,26 +57,13 @@ def main(args=None):
     # Create a new report
     report = Scout2Report(args.get('provider'), report_file_name, args.get('report_dir'), args.get('timestamp'))
 
+    # Create a boto3 session
+    session = boto3.Session()
+
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
         # Authenticate to the cloud provider
-        authenticated = cloud_provider.authenticate(profile=args.get('profile'),
-                                                    csv_credentials=args.get('csv_credentials'),
-                                                    mfa_serial=args.get('mfa_serial'),
-                                                    mfa_code=args.get('mfa_code'),
-                                                    user_account=args.get('user_account'),
-                                                    service_account=args.get('service_account'),
-                                                    cli=args.get('cli'),
-                                                    msi=args.get('msi'),
-                                                    service_principal=args.get('service_principal'),
-                                                    file_auth=args.get('file_auth'),
-                                                    tenant_id=args.get('tenant_id'),
-                                                    subscription_id=args.get('subscription_id'),
-                                                    client_id=args.get('client_id'),
-                                                    client_secret=args.get('client_secret'),
-                                                    username=args.get('username'),
-                                                    password=args.get('password')
-                                                    )
+        authenticated = cloud_provider.authenticate(session)
 
         if not authenticated:
             return 401

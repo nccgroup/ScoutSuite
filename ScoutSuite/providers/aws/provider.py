@@ -6,7 +6,6 @@ import os
 from ScoutSuite.core.console import print_debug, print_error, print_exception, print_info
 from ScoutSuite.providers.aws.aws import get_aws_account_id
 from ScoutSuite.providers.aws.configs.services import AWSServicesConfig
-from ScoutSuite.providers.aws.credentials import read_creds
 from ScoutSuite.providers.aws.services.vpc import put_cidr_name
 from ScoutSuite.providers.base.configs.browser import combine_paths, get_object_at, get_value_at
 from ScoutSuite.providers.base.provider import BaseProvider
@@ -38,15 +37,16 @@ class AWSProvider(BaseProvider):
 
         super(AWSProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
-    def authenticate(self, profile, csv_credentials, mfa_serial, mfa_code, **kwargs):
+    def authenticate(self, session):
         """
         Implement authentication for the AWS provider
         :return:
         """
-        self.credentials = read_creds(profile, csv_credentials, mfa_serial, mfa_code)
+
+        self.credentials = session.get_credentials().__dict__
         self.aws_account_id = get_aws_account_id(self.credentials)
 
-        if self.credentials['AccessKeyId'] is None:
+        if self.credentials['access_key'] is None:
             return False
         else:
             return True
