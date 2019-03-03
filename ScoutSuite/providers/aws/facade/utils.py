@@ -6,7 +6,7 @@ class AWSFacadeUtils:
     _clients = {}
     
     @staticmethod
-    def get_all_pages(service, region, paginator_name: str, response_key: str, **paginator_args):
+    def get_all_pages(service: str, region: str, paginator_name: str, response_key: str, **paginator_args):
         pages = AWSFacadeUtils.get_client(service, region) \
                               .get_paginator(paginator_name) \
                               .paginate(**paginator_args)
