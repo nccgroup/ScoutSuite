@@ -9,7 +9,7 @@ from .transparent_data_encryptions import TransparentDataEncryptions
 
 
 class Databases(AzureCompositeResources):
-    children = [
+    _children = [
         DatabaseBlobAuditingPolicies,
         DatabaseThreatDetectionPolicies,
         ReplicationLinks,
@@ -33,7 +33,7 @@ class Databases(AzureCompositeResources):
             self['databases'][db.name] = {
                 'id': db.name,
             }
-            await self.fetch_children(
+            await self._fetch_children(
                 parent=self['databases'][db.name],
                 resource_group_name=self.resource_group_name,
                 server_name=self.server_name,
