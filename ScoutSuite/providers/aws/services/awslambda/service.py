@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 from ScoutSuite.providers.aws.resources.regions import Regions
 from ScoutSuite.providers.aws.resources.resources import AWSResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
-from ScoutSuite.providers.aws.aws import build_region_list
 
 
 class RegionalLambdas(AWSResources):
@@ -24,6 +22,3 @@ class Lambdas(Regions):
 
     def __init__(self):
         super(Lambdas, self).__init__('lambda')
-
-    async def fetch_all(self, credentials=None, regions=None, partition_name='aws'):
-        await super(Lambdas, self).fetch_all(credentials, regions, partition_name)

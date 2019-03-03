@@ -9,10 +9,10 @@ class Regions(AWSCompositeResources, metaclass=abc.ABCMeta):
         # TODO: Should be injected
         self.facade = AWSFacade()
 
-    async def fetch_all(self, credentials, chosen_regions=None, partition_name='aws'):
+    async def fetch_all(self, credentials, regions=None, partition_name='aws'):
 
         self['regions'] = {}
-        for region in await self.facade.build_region_list(self.service, chosen_regions, partition_name):
+        for region in await self.facade.build_region_list(self.service, regions, partition_name):
             self['regions'][region] = {
                 'id': region,
                 'region': region,
