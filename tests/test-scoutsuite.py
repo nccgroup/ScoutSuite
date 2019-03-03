@@ -3,7 +3,6 @@ import subprocess
 import mock
 from nose.plugins.attrib import attr
 
-from ScoutSuite.providers.aws.credentials import read_creds_from_environment_variables
 
 from ScoutSuite.__main__ import *
 

@@ -2,6 +2,7 @@
 
 import copy
 import os
+import boto3
 
 from ScoutSuite.core.console import print_debug, print_error, print_exception, print_info
 from ScoutSuite.providers.aws.aws import get_aws_account_id
@@ -37,11 +38,16 @@ class AWSProvider(BaseProvider):
 
         super(AWSProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
-    def authenticate(self, session):
+    def authenticate(self, profile=None):
         """
         Implement authentication for the AWS provider
         :return:
         """
+
+        if profile[0] is not 'default':
+            session = boto3.Session(profile_name=profile[0])
+        else:
+            session = boto3.Session()
 
         self.credentials = session.get_credentials().__dict__
         self.aws_account_id = get_aws_account_id(self.credentials)

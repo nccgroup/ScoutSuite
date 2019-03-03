@@ -57,13 +57,10 @@ def main(args=None):
     # Create a new report
     report = Scout2Report(args.get('provider'), report_file_name, args.get('report_dir'), args.get('timestamp'))
 
-    # Create a boto3 session
-    session = boto3.Session()
-
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
         # Authenticate to the cloud provider
-        authenticated = cloud_provider.authenticate(session)
+        authenticated = cloud_provider.authenticate(profile=args.get('profile'))
 
         if not authenticated:
             return 401
