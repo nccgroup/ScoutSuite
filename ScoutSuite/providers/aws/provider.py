@@ -38,7 +38,7 @@ class AWSProvider(BaseProvider):
 
         super(AWSProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
-    def authenticate(self, profile=None):
+    def authenticate(self, profile=None, mfa_serial=None, mfa_code=None):
         """
         Implement authentication for the AWS provider
         :return:

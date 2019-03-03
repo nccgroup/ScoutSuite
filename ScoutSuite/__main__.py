@@ -59,7 +59,23 @@ def main(args=None):
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
         # Authenticate to the cloud provider
-        authenticated = cloud_provider.authenticate(profile=args.get('profile')[0])
+        authenticated = cloud_provider.authenticate(profile=args.get('profile'),
+                                                    csv_credentials=args.get('csv_credentials'),
+                                                    mfa_serial=args.get('mfa_serial'),
+                                                    mfa_code=args.get('mfa_code'),
+                                                    user_account=args.get('user_account'),
+                                                    service_account=args.get('service_account'),
+                                                    cli=args.get('cli'),
+                                                    msi=args.get('msi'),
+                                                    service_principal=args.get('service_principal'),
+                                                    file_auth=args.get('file_auth'),
+                                                    tenant_id=args.get('tenant_id'),
+                                                    subscription_id=args.get('subscription_id'),
+                                                    client_id=args.get('client_id'),
+                                                    client_secret=args.get('client_secret'),
+                                                    username=args.get('username'),
+                                                    password=args.get('password')
+                                                    )
 
         if not authenticated:
             return 401
