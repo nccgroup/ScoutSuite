@@ -11,7 +11,7 @@ from ..utils import get_non_provider_id
 
 
 class Servers(AzureCompositeResources):
-    children = [
+    _children = [
         Databases,
         ServerAzureAdAdministrators,
     ]
@@ -30,7 +30,7 @@ class Servers(AzureCompositeResources):
                 'id': id,
                 'name': server.name
             }
-            await self.fetch_children(
+            await self._fetch_children(
                 parent=self['servers'][id],
                 resource_group_name=resource_group_name,
                 server_name=server.name,
