@@ -36,8 +36,8 @@ class CompositeResources(Resources, metaclass=abc.ABCMeta):
     @property
     @abc.abstractmethod
     def _children(self):
-        """A class that inherits from 'CompositeResources' should define a '_children' attribute, typically a list \
-        of `Resources` classes, or of tuples containing at least a `Resources` class. That is enforced by this abstract property.
+        """A class that inherits from 'CompositeResources' should define a private '_children' attribute, typically a
+        list of `Resources` classes. That is enforced by this abstract property.
 
         :return:
         """
@@ -45,8 +45,8 @@ class CompositeResources(Resources, metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
     async def _fetch_children(self, **kwargs):
-        """Fetches, parses and stores instances of nested resources included in a `CompositeResources` and defined \
-        in the 'children' attribute.
+        """Fetches, parses and stores instances of nested resources included in a `CompositeResources` and defined
+        in the '_children' attribute.
 
         :param kwargs:
         :return:
