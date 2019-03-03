@@ -10,7 +10,7 @@ class DummyResources(AWSResources):
         self['resource_b'] = { 'some_id': 2, 'from_scope': self.scope }
 
 class DummyComposite(AWSCompositeResources):
-    children = [
+    _children = [
         (DummyResources, 'some_dummy_resources'),
         (DummyResources, 'other_dummy_resources')
     ]
