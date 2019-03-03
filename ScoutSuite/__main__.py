@@ -5,7 +5,6 @@ import copy
 import json
 import os
 import webbrowser
-import boto3
 
 from ScoutSuite.core.console import config_debug_level, print_info, print_debug
 from ScoutSuite.providers.aws.profiles import AWSProfiles
@@ -60,7 +59,7 @@ def main(args=None):
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
         # Authenticate to the cloud provider
-        authenticated = cloud_provider.authenticate(profile=args.get('profile'))
+        authenticated = cloud_provider.authenticate(profile=args.get('profile')[0])
 
         if not authenticated:
             return 401

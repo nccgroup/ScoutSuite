@@ -3,7 +3,6 @@ import subprocess
 import mock
 from nose.plugins.attrib import attr
 
-
 from ScoutSuite.__main__ import *
 
 
