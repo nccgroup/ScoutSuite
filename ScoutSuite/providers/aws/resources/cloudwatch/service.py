@@ -23,11 +23,11 @@ class Alarms(AWSResources):
 
         raw_alarm['arn'] = raw_alarm.pop('AlarmArn')
         raw_alarm['name'] = raw_alarm.pop('AlarmName')
-        
+
         # Drop some data
-        for k in ['AlarmConfigurationUpdatedTimestamp', 'StateReason', 'StateReasonData', 'StateUpdatedTimestamp']:
-            if k in raw_alarm:
-                raw_alarm.pop(k)
+        for key in ['AlarmConfigurationUpdatedTimestamp', 'StateReason', 'StateReasonData', 'StateUpdatedTimestamp']:
+            if key in raw_alarm:
+                raw_alarm.pop(key)
 
         alarm_id = get_non_provider_id(raw_alarm['arn'])
         return alarm_id, raw_alarm
