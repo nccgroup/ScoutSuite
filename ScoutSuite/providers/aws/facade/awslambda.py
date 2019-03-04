@@ -1,7 +1,3 @@
-import boto3
-import base64
-import itertools
-
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 
 
