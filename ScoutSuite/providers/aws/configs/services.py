@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from ScoutSuite.providers.aws.services.awslambda.service import Lambdas
+from ScoutSuite.providers.aws.resources.awslambda.service import Lambdas
 from ScoutSuite.providers.aws.services.cloudformation import CloudFormationConfig
 from ScoutSuite.providers.aws.services.cloudtrail import CloudTrailConfig
 from ScoutSuite.providers.aws.services.cloudwatch import CloudWatchConfig
 from ScoutSuite.providers.aws.services.directconnect import DirectConnectConfig
-from ScoutSuite.providers.aws.services.ec2.service import EC2
+from ScoutSuite.providers.aws.resources.ec2.service import EC2
 from ScoutSuite.providers.aws.services.efs import EFSConfig
 from ScoutSuite.providers.aws.services.elasticache import ElastiCacheConfig
 from ScoutSuite.providers.aws.services.elb import ELBConfig
