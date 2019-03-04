@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from ScoutSuite.providers.aws.services.awslambda import LambdaConfig
+from ScoutSuite.providers.aws.resources.awslambda.service import Lambdas
 from ScoutSuite.providers.aws.services.cloudformation import CloudFormationConfig
 from ScoutSuite.providers.aws.services.cloudtrail import CloudTrailConfig
 from ScoutSuite.providers.aws.services.cloudwatch import CloudWatchConfig
 from ScoutSuite.providers.aws.services.directconnect import DirectConnectConfig
-from ScoutSuite.providers.aws.services.ec2 import EC2Config
+from ScoutSuite.providers.aws.resources.ec2.service import EC2
 from ScoutSuite.providers.aws.services.efs import EFSConfig
 from ScoutSuite.providers.aws.services.elasticache import ElastiCacheConfig
 from ScoutSuite.providers.aws.services.elb import ELBConfig
@@ -58,14 +58,14 @@ class AWSServicesConfig(BaseServicesConfig):
         self.cloudtrail = CloudTrailConfig(metadata['management']['cloudtrail'], thread_config)
         self.cloudwatch = CloudWatchConfig(metadata['management']['cloudwatch'], thread_config)
         self.directconnect = DirectConnectConfig(metadata['network']['directconnect'], thread_config)
-        self.ec2 = EC2Config(metadata['compute']['ec2'], thread_config)
+        self.ec2 = EC2()
         self.efs = EFSConfig(metadata['storage']['efs'], thread_config)
         self.elasticache = ElastiCacheConfig(metadata['database']['elasticache'], thread_config)
         self.elb = ELBConfig(metadata['compute']['elb'], thread_config)
         self.elbv2 = ELBv2Config(metadata['compute']['elbv2'], thread_config)
         self.emr = EMRConfig(metadata['analytics']['emr'], thread_config)
         self.iam = IAMConfig(thread_config)
-        self.awslambda = LambdaConfig(metadata['compute']['awslambda'], thread_config)
+        self.awslambda = Lambdas()
         self.redshift = RedshiftConfig(metadata['database']['redshift'], thread_config)
         self.rds = RDSConfig(metadata['database']['rds'], thread_config)
         self.route53 = Route53Config(thread_config)
