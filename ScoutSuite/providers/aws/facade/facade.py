@@ -2,11 +2,13 @@ from botocore.session import Session
 from collections import Counter
 from ScoutSuite.providers.aws.facade.ec2 import EC2Facade
 from ScoutSuite.providers.aws.facade.awslambda import LambdaFacade
+from ScoutSuite.providers.aws.facade.cloudtrail import CloudTrailFacade
 
 class AWSFacade(object):
     def __init__(self):
         self.ec2 = EC2Facade()
         self.awslambda = LambdaFacade()
+        self.cloudtrail = CloudTrailFacade()
 
 
     async def build_region_list(self, service: str, chosen_regions=None, partition_name='aws'):
