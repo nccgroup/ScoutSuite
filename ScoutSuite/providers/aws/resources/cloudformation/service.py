@@ -28,7 +28,7 @@ class Stacks(AWSResources):
 
 class CloudFormation(Regions):
     _children = [
-        (Stack, 'stacks')
+        (Stacks, 'stacks')
     ]
 
     def __init__(self):
