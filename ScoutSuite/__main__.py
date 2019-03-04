@@ -51,7 +51,7 @@ def main(args=None):
 
     report_file_name = generate_report_name(cloud_provider.provider_code, args)
 
-    # TODO move this to after authentication, so that the report can be more specific to what's being scanned.
+    # TODO: move this to after authentication, so that the report can be more specific to what's being scanned.
     # For example if scanning with a GCP service account, the SA email can only be known after authenticating...
     # Create a new report
     report = Scout2Report(args.get('provider'), report_file_name, args.get('report_dir'), args.get('timestamp'))
