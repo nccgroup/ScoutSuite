@@ -38,7 +38,3 @@ class BaseServicesConfig(object):
             except Exception as e:
                 print_error('Error: could not fetch %s configuration.' % service)
                 print_exception(e)
-
-    # TODO is this ever called?
-    # def postprocessing(self):
-    #     pass
