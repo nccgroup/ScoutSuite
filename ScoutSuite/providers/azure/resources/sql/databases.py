@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from ..resources import AzureCompositeResources
 
 from .database_blob_auditing_policies import DatabaseBlobAuditingPolicies

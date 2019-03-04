@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import abc
 
 from ScoutSuite.providers.base.configs.resources import CompositeResources

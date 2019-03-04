@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from msrestazure.azure_exceptions import CloudError
 
 from ScoutSuite.providers.base.configs.resources import Resources

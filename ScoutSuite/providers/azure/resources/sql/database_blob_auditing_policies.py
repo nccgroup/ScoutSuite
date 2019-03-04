@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from ScoutSuite.providers.base.configs.resources import Resources
 
 
