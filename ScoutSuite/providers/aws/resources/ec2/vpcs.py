@@ -1,8 +1,8 @@
 from ScoutSuite.providers.aws.resources.resources import AWSCompositeResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
-from ScoutSuite.providers.aws.services.ec2.instances import EC2Instances
-from ScoutSuite.providers.aws.services.ec2.securitygroups import SecurityGroups
-from ScoutSuite.providers.aws.services.ec2.networkinterfaces import NetworkInterfaces
+from ScoutSuite.providers.aws.resources.ec2.instances import EC2Instances
+from ScoutSuite.providers.aws.resources.ec2.securitygroups import SecurityGroups
+from ScoutSuite.providers.aws.resources.ec2.networkinterfaces import NetworkInterfaces
 
 
 class Vpcs(AWSCompositeResources):
