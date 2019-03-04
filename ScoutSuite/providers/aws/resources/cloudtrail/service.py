@@ -1,7 +1,7 @@
 from ScoutSuite.providers.aws.resources.regions import Regions
 from ScoutSuite.providers.aws.resources.resources import AWSResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
-from ScoutSuite.providers.base.utils import get_non_provider_id
+from ScoutSuite.providers.utils import get_non_provider_id
 
 import time
 
