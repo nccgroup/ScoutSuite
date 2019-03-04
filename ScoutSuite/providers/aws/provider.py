@@ -38,7 +38,7 @@ class AWSProvider(BaseProvider):
 
         super(AWSProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
-    def authenticate(self, profile=None, mfa_serial=None, mfa_code=None):
+    def authenticate(self, profile=None, mfa_serial=None, mfa_code=None, **kwargs):
         """
         Implement authentication for the AWS provider
         :return:
@@ -49,13 +49,19 @@ class AWSProvider(BaseProvider):
         else:
             session = boto3.Session()
 
-        self.credentials = session.get_credentials()
+        if mfa_code and mfa_serial:
+            sts = session.client('sts')
+            token = sts.get_session_token(SerialNumber=mfa_serial, TokenCode=mfa_code)
+            creds = token.get('Credentials')
+            self.credentials = {'access_key': creds.get('AccessKeyId'),
+                                'secret_key': creds.get('SecretAccessKey'),
+                                'token': creds.get('SessionToken'),
+                                'method': 'shared-credentials-file'}
+        else:
+            self.credentials = session.get_credentials().__dict__
         self.aws_account_id = get_aws_account_id(self.credentials)
 
-        if self.credentials.access_key is None:
-            return False
-        else:
-            return True
+        return self.credentials.get('access_key') is not None
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
