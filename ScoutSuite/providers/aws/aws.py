@@ -34,11 +34,11 @@ def connect_service(service, credentials, region_name=None, config=None, silent=
     """
     Instantiates an AWS API client
 
-    :param service:
-    :param credentials:
-    :param region_name:
-    :param config:
-    :param silent:
+    :param service:                         Service targeted, e.g. ec2
+    :param credentials:                     Id, secret, token
+    :param region_name:                     Region desired, e.g. us-east-2
+    :param config:                          Configuration (optional)
+    :param silent:                          Whether or not to print messages
 
     :return:
     """

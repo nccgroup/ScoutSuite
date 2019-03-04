@@ -59,7 +59,7 @@ def main(args=None):
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
         # Authenticate to the cloud provider
-        authenticated = cloud_provider.authenticate(profile=args.get('profile')[0],
+        authenticated = cloud_provider.authenticate(profile=args.get('profile'),
                                                     csv_credentials=args.get('csv_credentials'),
                                                     mfa_serial=args.get('mfa_serial'),
                                                     mfa_code=args.get('mfa_code'),
