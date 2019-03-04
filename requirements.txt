@@ -1,13 +1,13 @@
 # Core
 python-dateutil>=2.2
 netaddr>=0.7.11
+iampoliciesgonewild>=1.0.6.2
 
 # AWS Provider
 boto3>=1.9.60
-
-# Opinel
+botocore>=1.12.60
 requests>=2.4.0,<3.0.0
-iampoliciesgonewild>=1.0.6.2
+
 
 # GCP Provider
 grpcio>=1.18.0

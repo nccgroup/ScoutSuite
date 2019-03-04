@@ -6,12 +6,11 @@ S3-related classes and functions
 import json
 
 from botocore.exceptions import ClientError
-from opinel.services.s3 import get_s3_bucket_location
-from opinel.utils.aws import handle_truncated_response
-from opinel.utils.console import printError, printException, printInfo
-from opinel.utils.globals import manage_dictionary
 
+from ScoutSuite.core.console import print_error, print_exception, print_info
+from ScoutSuite.providers.aws.aws import handle_truncated_response
 from ScoutSuite.providers.aws.configs.base import AWSBaseConfig
+from ScoutSuite.utils import manage_dictionary
 
 
 ########################################
@@ -58,7 +57,7 @@ class S3Config(AWSBaseConfig):
             bucket['region'] = 'eu-west-1'
         # h4ck :: S3 is global but region-aware...
         if bucket['region'] not in params['api_clients']:
-            printInfo('Skipping bucket %s (region %s outside of scope)' % (bucket['name'], bucket['region']))
+            print_info('Skipping bucket %s (region %s outside of scope)' % (bucket['name'], bucket['region']))
             self.buckets_count -= 1
             return
 
@@ -71,9 +70,6 @@ class S3Config(AWSBaseConfig):
         get_s3_bucket_policy(api_client, bucket['name'], bucket)
         get_s3_bucket_secure_transport(api_client, bucket['name'], bucket)
         # If requested, get key properties
-        # if params['check_encryption'] or params['check_acls']:
-        #    get_s3_bucket_keys(api_client, bucket['name'], bucket, params['check_encryption'],
-        #                       params['check_acls'])
         bucket['id'] = self.get_non_provider_id(bucket['name'])
         self.buckets[bucket['id']] = bucket
 
@@ -86,10 +82,10 @@ def match_iam_policies_and_buckets(s3_info, iam_info):
                 if 'Allow' in iam_info['permissions']['Action'][action][iam_entity]:
                     for allowed_iam_entity in iam_info['permissions']['Action'][action][iam_entity]['Allow']:
                         # For resource statements, we can easily rely on the existing permissions structure
-                        if 'Resource' in iam_info['permissions']['Action'][action][iam_entity]['Allow'][
-                            allowed_iam_entity]:
+                        if 'Resource' in \
+                                iam_info['permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]:
                             for full_path in (x for x in iam_info['permissions']['Action'][action][iam_entity]['Allow'][
-                                allowed_iam_entity]['Resource'] if x.startswith('arn:aws:s3:') or x == '*'):
+                                    allowed_iam_entity]['Resource'] if x.startswith('arn:aws:s3:') or x == '*'):
                                 parts = full_path.split('/')
                                 bucket_name = parts[0].split(':')[-1]
                                 update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entity,
@@ -98,14 +94,14 @@ def match_iam_policies_and_buckets(s3_info, iam_info):
                         # For notresource statements, we must fetch the policy document to determine which buckets are
                         # not protected
                         if 'NotResource' in iam_info['permissions']['Action'][action][iam_entity]['Allow'][
-                            allowed_iam_entity]:
+                                allowed_iam_entity]:
                             for full_path in (x for x in iam_info['permissions']['Action'][action][iam_entity]['Allow'][
-                                allowed_iam_entity]['NotResource'] if x.startswith('arn:aws:s3:') or x == '*'):
+                                    allowed_iam_entity]['NotResource'] if x.startswith('arn:aws:s3:') or x == '*'):
                                 for policy_type in ['InlinePolicies', 'ManagedPolicies']:
                                     if policy_type in iam_info['permissions']['Action'][action][iam_entity]['Allow'][
-                                        allowed_iam_entity]['NotResource'][full_path]:
+                                            allowed_iam_entity]['NotResource'][full_path]:
                                         for policy in iam_info['permissions']['Action'][action][iam_entity]['Allow'][
-                                            allowed_iam_entity]['NotResource'][full_path][policy_type]:
+                                                allowed_iam_entity]['NotResource'][full_path][policy_type]:
                                             update_bucket_permissions(s3_info, iam_info, action, iam_entity,
                                                                       allowed_iam_entity, full_path, policy_type,
                                                                       policy)
@@ -116,7 +112,7 @@ def update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entity,
         bucket = s3_info['buckets'][bucket_name]
         manage_dictionary(bucket, iam_entity, {})
         manage_dictionary(bucket, iam_entity + '_count', 0)
-        if not allowed_iam_entity in bucket[iam_entity]:
+        if allowed_iam_entity not in bucket[iam_entity]:
             bucket[iam_entity][allowed_iam_entity] = {}
             bucket[iam_entity + '_count'] = bucket[iam_entity + '_count'] + 1
 
@@ -137,6 +133,7 @@ def update_iam_permissions(s3_info, bucket_name, iam_entity, allowed_iam_entity,
 
 def update_bucket_permissions(s3_info, iam_info, action, iam_entity, allowed_iam_entity, full_path, policy_type,
                               policy_name):
+    policy = {}
     allowed_buckets = []
     # By default, all buckets are allowed
     for bucket_name in s3_info['buckets']:
@@ -146,7 +143,7 @@ def update_bucket_permissions(s3_info, iam_info, action, iam_entity, allowed_iam
     elif policy_type == 'ManagedPolicies':
         policy = iam_info['ManagedPolicies'][policy_name]['PolicyDocument']
     else:
-        printError('Error, found unknown policy type.')
+        print_error('Error, found unknown policy type.')
     for statement in policy['Statement']:
         for target_path in statement['NotResource']:
             parts = target_path.split('/')
@@ -157,8 +154,7 @@ def update_bucket_permissions(s3_info, iam_info, action, iam_entity, allowed_iam
                 allowed_buckets.remove(bucket_name)
             elif bucket_name == '*':
                 allowed_buckets = []
-    policy_info = {}
-    policy_info[policy_type] = {}
+    policy_info = {policy_type: {}}
     policy_info[policy_type][policy_name] = \
         iam_info['permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]['NotResource'][full_path][
             policy_type][policy_name]
@@ -167,11 +163,7 @@ def update_bucket_permissions(s3_info, iam_info, action, iam_entity, allowed_iam
 
 
 def init_s3_permissions():
-    permissions = {}
-    permissions['read'] = False
-    permissions['write'] = False
-    permissions['read_acp'] = False
-    permissions['write_acp'] = False
+    permissions = {'read': False, 'write': False, 'read_acp': False, 'write_acp': False}
     return permissions
 
 
@@ -223,7 +215,7 @@ def get_s3_acls(api_client, bucket_name, bucket, key_name=None):
             set_s3_permissions(grantees[grantee]['permissions'], permission)
         return grantees
     except Exception as e:
-        printError('Failed to get ACL configuration for %s: %s' % (bucket_name, e))
+        print_error('Failed to get ACL configuration for %s: %s' % (bucket_name, e))
         return {}
 
 
@@ -233,7 +225,7 @@ def get_s3_bucket_policy(api_client, bucket_name, bucket_info):
         return True
     except Exception as e:
         if not (type(e) == ClientError and e.response['Error']['Code'] == 'NoSuchBucketPolicy'):
-            printError('Failed to get bucket policy for %s: %s' % (bucket_name, e))
+            print_error('Failed to get bucket policy for %s: %s' % (bucket_name, e))
         return False
 
 
@@ -247,9 +239,9 @@ def get_s3_bucket_secure_transport(api_client, bucket_name, bucket_info):
                 if 'Condition' in statement and \
                         'Bool' in statement['Condition'] and \
                         'aws:SecureTransport' in statement['Condition']['Bool'] and \
-                        ((statement['Condition']['Bool']['aws:SecureTransport'] == 'false' and \
+                        ((statement['Condition']['Bool']['aws:SecureTransport'] == 'false' and
                           statement['Effect'] == 'Deny') or
-                         (statement['Condition']['Bool']['aws:SecureTransport'] == 'true' and \
+                         (statement['Condition']['Bool']['aws:SecureTransport'] == 'true' and
                           statement['Effect'] == 'Allow')):
                     bucket_info['secure_transport_enabled'] = True
             return True
@@ -257,21 +249,23 @@ def get_s3_bucket_secure_transport(api_client, bucket_name, bucket_info):
             bucket_info['secure_transport_enabled'] = False
             return True
     except Exception as e:
-        printError('Failed to get evaluate bucket policy for %s: %s' % (bucket_name, e))
+        print_error('Failed to get evaluate bucket policy for %s: %s' % (bucket_name, e))
         bucket_info['secure_transport'] = None
         return False
 
 
+# noinspection PyBroadException
 def get_s3_bucket_versioning(api_client, bucket_name, bucket_info):
     try:
         versioning = api_client.get_bucket_versioning(Bucket=bucket_name)
         bucket_info['versioning_status_enabled'] = _status_to_bool(versioning.get('Status'))
         bucket_info['version_mfa_delete_enabled'] = _status_to_bool(versioning.get('MFADelete'))
         return True
-    except Exception as e:
+    except Exception:
         bucket_info['versioning_status_enabled'] = None
         bucket_info['version_mfa_delete_enabled'] = None
         return False
+
 
 def _status_to_bool(value):
     """ Converts a string to True if it is equal to 'Enabled' or to False otherwise. """
@@ -289,17 +283,18 @@ def get_s3_bucket_logging(api_client, bucket_name, bucket_info):
             bucket_info['logging'] = 'Disabled'
         return True
     except Exception as e:
-        printError('Failed to get logging configuration for %s: %s' % (bucket_name, e))
+        print_error('Failed to get logging configuration for %s: %s' % (bucket_name, e))
         bucket_info['logging'] = 'Unknown'
         return False
 
 
+# noinspection PyBroadException
 def get_s3_bucket_webhosting(api_client, bucket_name, bucket_info):
     try:
         result = api_client.get_bucket_website(Bucket=bucket_name)
         bucket_info['web_hosting_enabled'] = 'IndexDocument' in result
         return True
-    except Exception as e:
+    except Exception:
         # TODO: distinguish permission denied from  'NoSuchWebsiteConfiguration' errors
         bucket_info['web_hosting_enabled'] = False
         return False
@@ -315,11 +310,11 @@ def get_s3_bucket_default_encryption(api_client, bucket_name, bucket_info):
             bucket_info['default_encryption_enabled'] = False
             return True
         else:
-            printError('Failed to get encryption configuration for %s: %s' % (bucket_name, e))
+            print_error('Failed to get encryption configuration for %s: %s' % (bucket_name, e))
             bucket_info['default_encryption_enabled'] = None
             return False
     except Exception as e:
-        printError('Failed to get encryption configuration for %s: %s' % (bucket_name, e))
+        print_error('Failed to get encryption configuration for %s: %s' % (bucket_name, e))
         bucket_info['default_encryption'] = 'Unknown'
         return False
 
@@ -381,17 +376,16 @@ def get_s3_bucket_keys(api_client, bucket_name, bucket, check_encryption, check_
                 key['ServerSideEncryption'] = k['ServerSideEncryption'] if 'ServerSideEncryption' in k else None
                 key['SSEKMSKeyId'] = k['SSEKMSKeyId'] if 'SSEKMSKeyId' in k else None
             except Exception as e:
-                printException(e)
+                print_exception(e)
                 continue
         if check_acls:
+            # noinspection PyBroadException
             try:
                 key['grantees'] = get_s3_acls(api_client, bucket_name, bucket, key_name=key['name'])
-            except Exception as e:
+            except Exception:
                 continue
         # Save it
         bucket['keys'].append(key)
-        # FIXME - commented for now as this method doesn't seem to be defined anywhere'
-        # update_status(key_count, bucket['keys_count'], 'keys')
 
 
 def get_s3_list_region(region):
@@ -407,3 +401,14 @@ def get_s3_list_region(region):
         return 'cn-north-1'
     else:
         return region
+
+
+def get_s3_bucket_location(s3_client, bucket_name):
+    """
+
+    :param s3_client:
+    :param bucket_name:
+    :return:
+    """
+    location = s3_client.get_bucket_location(Bucket=bucket_name)
+    return location['LocationConstraint'] if location['LocationConstraint'] else 'us-east-1'

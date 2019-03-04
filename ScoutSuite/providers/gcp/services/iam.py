@@ -2,10 +2,9 @@
 
 from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
-from opinel.utils.console import printError, printException, printInfo
+from ScoutSuite.core.console import print_error
 
 from googleapiclient import discovery
-from ScoutSuite.providers.gcp.utils import gcp_connect_service
 
 
 class IAMConfig(GCPBaseConfig):
@@ -73,7 +72,7 @@ class IAMConfig(GCPBaseConfig):
             else:
                 return None
         except Exception as e:
-            printError('Failed to get keys for service account %s: %s' % (service_account_email, e))
+            print_error('Failed to get keys for service account %s: %s' % (service_account_email, e))
             return None
 
     def _get_service_account_iam_policy(self, api_client, project_id, service_account_email):
@@ -90,5 +89,5 @@ class IAMConfig(GCPBaseConfig):
             else:
                 return None
         except Exception as e:
-            printError('Failed to get IAM policy for service account %s: %s' % (service_account_email, e))
+            print_error('Failed to get IAM policy for service account %s: %s' % (service_account_email, e))
             return None

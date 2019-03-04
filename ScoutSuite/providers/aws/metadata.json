@@ -58,6 +58,19 @@
                     "path": "services.cloudwatch.statistics"
                 }
             }
+        },
+        "config": {
+            "resources": {
+                "regions": {
+                    "cols": 2,
+                    "path": "services.config.regions"
+                },
+                "recorders": {
+                    "api_call": "describe_configuration_recorders",
+                    "response": "ConfigurationRecorders",
+                    "path": "services.config.regions.id.recorders"
+                }
+            }
         }
     },
     "messaging": {

@@ -3,8 +3,7 @@ import subprocess
 import mock
 from nose.plugins.attrib import attr
 
-from opinel.utils.console import configPrintException
-from opinel.utils.credentials import read_creds_from_environment_variables
+from ScoutSuite.providers.aws.credentials import read_creds_from_environment_variables
 
 from ScoutSuite.__main__ import *
 
@@ -16,7 +15,7 @@ class TestScoutSuiteClass:
 
     @classmethod
     def setUpClass(cls):
-        configPrintException(True)
+        config_debug_level(True)
         creds = read_creds_from_environment_variables()
         cls.profile_name = 'travislike' if creds['AccessKeyId'] == None else None
         cls.has_run_scout_suite = False

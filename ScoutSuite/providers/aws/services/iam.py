@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 
 from botocore.exceptions import ClientError
-from opinel.utils.aws import connect_service, handle_truncated_response
-from opinel.utils.console import printError, printException
-from opinel.utils.globals import manage_dictionary
 
+from ScoutSuite.core.console import print_error, print_exception
+from ScoutSuite.providers.aws.aws import connect_service, handle_truncated_response
 from ScoutSuite.providers.aws.configs.base import AWSBaseConfig
+from ScoutSuite.providers.aws.utils import get_keys, is_throttled
 from ScoutSuite.utils import *
 
 
+# noinspection PyBroadException
 class IAMConfig(AWSBaseConfig):
     """
     Object that holds the IAM configuration
@@ -48,7 +49,7 @@ class IAMConfig(AWSBaseConfig):
         super(IAMConfig, self).__init__(target_config)
 
     ########################################
-    ##### Overload to fetch credentials report before and after
+    # Overload to fetch credentials report before and after
     ########################################
 
     def fetch_all(self, credentials, regions=None, partition_name='aws', targets=None):
@@ -60,7 +61,7 @@ class IAMConfig(AWSBaseConfig):
         self.fetchstatuslogger.show(True)
 
     ########################################
-    ##### Credential report
+    # Credential report
     ########################################
 
     def fetch_credential_reports(self, credentials, ignore_exception=False):
@@ -78,7 +79,7 @@ class IAMConfig(AWSBaseConfig):
             response = api_client.generate_credential_report()
             if response['State'] != 'COMPLETE':
                 if not ignore_exception:
-                    printError('Failed to generate a credential report.')
+                    print_error('Failed to generate a credential report.')
                 return
 
             report = api_client.get_credential_report()['Content']
@@ -109,10 +110,11 @@ class IAMConfig(AWSBaseConfig):
         except Exception as e:
             if ignore_exception:
                 return
-            printError('Failed to download a credential report.')
-            printException(e)
+            print_error('Failed to download a credential report.')
+            print_exception(e)
 
-    def _compute_last_used(self, credential_report):
+    @staticmethod
+    def _compute_last_used(credential_report):
         dates = [credential_report['password_last_used'],
                  credential_report['access_key_1_last_used_date'],
                  credential_report['access_key_2_last_used_date']]
@@ -120,14 +122,15 @@ class IAMConfig(AWSBaseConfig):
         dates = [date for date in dates if date is not None]
         return max(dates) if len(dates) > 0 else None
 
-    def _sanitize_date(self, date):
+    @staticmethod
+    def _sanitize_date(date):
         """
         Returns the date if it is not equal to 'N/A' or 'no_information', else returns None
         """
         return date if date != 'no_information' and date != 'N/A' else None
 
     ########################################
-    ##### Groups
+    # Groups
     ########################################
 
     def parse_groups(self, group, params):
@@ -143,7 +146,7 @@ class IAMConfig(AWSBaseConfig):
         group['name'] = group.pop('GroupName')
         group['arn'] = group.pop('Arn')
         # Get group's members
-        group['users'] = self.__fetch_group_users(api_client, group['name']);
+        group['users'] = self.__fetch_group_users(api_client, group['name'])
         # Get inline policies
         policies = self.__get_inline_policies(api_client, 'group', group['id'], group['name'])
         if len(policies):
@@ -152,7 +155,7 @@ class IAMConfig(AWSBaseConfig):
         self.groups[group['id']] = group
 
     ########################################
-    ##### Managed policies
+    # Managed policies
     ########################################
 
     def parse_policies(self, fetched_policy, params):
@@ -160,10 +163,8 @@ class IAMConfig(AWSBaseConfig):
         Parse a single IAM policy and fetch additional information
         """
         api_client = params['api_client']
-        policy = {}
-        policy['name'] = fetched_policy.pop('PolicyName')
-        policy['id'] = fetched_policy.pop('PolicyId')
-        policy['arn'] = fetched_policy.pop('Arn')
+        policy = {'name': fetched_policy.pop('PolicyName'), 'id': fetched_policy.pop('PolicyId'),
+                  'arn': fetched_policy.pop('Arn')}
         # Download version and document
         policy_version = api_client.get_policy_version(PolicyArn=policy['arn'],
                                                        VersionId=fetched_policy['DefaultVersionId'])
@@ -185,7 +186,7 @@ class IAMConfig(AWSBaseConfig):
         self.policies[policy['id']] = policy
 
     ########################################
-    ##### Password policy
+    # Password policy
     ########################################
 
     def fetch_password_policy(self, credentials):
@@ -210,30 +211,24 @@ class IAMConfig(AWSBaseConfig):
 
         except ClientError as e:
             if e.response['Error']['Code'] == 'NoSuchEntity':
-                self.password_policy = {}
-                self.password_policy[
-                    'MinimumPasswordLength'] = '1'  # As of 10/10/2016, 1-character passwords were authorized when no policy exists, even though the console displays 6
-                self.password_policy['RequireUppercaseCharacters'] = False
-                self.password_policy['RequireLowercaseCharacters'] = False
-                self.password_policy['RequireNumbers'] = False
-                self.password_policy['RequireSymbols'] = False
-                self.password_policy['PasswordReusePrevention'] = False
-                self.password_policy['ExpirePasswords'] = False
+                self.password_policy = {'MinimumPasswordLength': '1', 'RequireUppercaseCharacters': False,
+                                        'RequireLowercaseCharacters': False, 'RequireNumbers': False,
+                                        'RequireSymbols': False, 'PasswordReusePrevention': False,
+                                        'ExpirePasswords': False}
             else:
                 raise e
         except Exception as e:
-            printError(str(e))
+            print_error(str(e))
 
     ########################################
-    ##### Roles
+    # Roles
     ########################################
 
     def parse_roles(self, fetched_role, params):
         """
         Parse a single IAM role and fetch additional data
         """
-        role = {}
-        role['instances_count'] = 'N/A'
+        role = {'instances_count': 'N/A'}
         # When resuming upon throttling error, skip if already fetched
         if fetched_role['RoleName'] in self.roles:
             return
@@ -264,7 +259,7 @@ class IAMConfig(AWSBaseConfig):
         self.roles[role['id']] = role
 
     ########################################
-    ##### Users
+    # Users
     ########################################
 
     def parse_users(self, user, params):
@@ -289,7 +284,7 @@ class IAMConfig(AWSBaseConfig):
             user['groups'].append(group['GroupName'])
         try:
             user['LoginProfile'] = api_client.get_login_profile(UserName=user['name'])['LoginProfile']
-        except Exception as e:
+        except Exception:
             pass
         user['AccessKeys'] = api_client.list_access_keys(UserName=user['name'])['AccessKeyMetadata']
         user['MFADevices'] = api_client.list_mfa_devices(UserName=user['name'])['MFADevices']
@@ -297,7 +292,7 @@ class IAMConfig(AWSBaseConfig):
         self.users[user['id']] = user
 
     ########################################
-    ##### Finalize IAM config
+    # Finalize IAM config
     ########################################
 
     def finalize(self):
@@ -319,7 +314,7 @@ class IAMConfig(AWSBaseConfig):
         super(IAMConfig, self).finalize()
 
     ########################################
-    ##### Class helpers
+    # Class helpers
     ########################################
 
     def get_id_for_resource(self, iam_resource_type, resource_name):
@@ -327,7 +322,8 @@ class IAMConfig(AWSBaseConfig):
             if getattr(self, iam_resource_type)[resource_id]['name'] == resource_name:
                 return resource_id
 
-    def __fetch_group_users(self, api_client, group_name):
+    @staticmethod
+    def __fetch_group_users(api_client, group_name):
         users = []
         fetched_users = api_client.get_group(GroupName=group_name)['Users']
         for user in fetched_users:
@@ -335,22 +331,21 @@ class IAMConfig(AWSBaseConfig):
         return users
 
     ########################################
-    ##### Inline policies
+    # Inline policies
     ########################################
 
     def __get_inline_policies(self, api_client, iam_resource_type, resource_id, resource_name):
         fetched_policies = {}
         get_policy_method = getattr(api_client, 'get_' + iam_resource_type + '_policy')
         list_policy_method = getattr(api_client, 'list_' + iam_resource_type + '_policies')
-        args = {}
-        args[iam_resource_type.title() + 'Name'] = resource_name
+        args = {iam_resource_type.title() + 'Name': resource_name}
         try:
             policy_names = list_policy_method(**args)['PolicyNames']
         except Exception as e:
             if is_throttled(e):
                 raise e
             else:
-                printException(e)
+                print_exception(e)
                 return fetched_policies
         try:
             for policy_name in policy_names:
@@ -366,7 +361,7 @@ class IAMConfig(AWSBaseConfig):
             if is_throttled(e):
                 raise e
             else:
-                printException(e)
+                print_exception(e)
         return fetched_policies
 
     def __parse_permissions(self, policy_name, policy_document, policy_type, iam_resource_type, resource_name):
@@ -390,7 +385,7 @@ class IAMConfig(AWSBaseConfig):
         # Condition
         condition = statement['Condition'] if 'Condition' in statement else None
         manage_dictionary(self.permissions, action_string, {})
-        if iam_resource_type == None:
+        if iam_resource_type is None:
             return
         self.__parse_actions(effect, action_string, statement[action_string], resource_string,
                              statement[resource_string], iam_resource_type, resource_name, policy_name, policy_type,

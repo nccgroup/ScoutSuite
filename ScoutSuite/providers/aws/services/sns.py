@@ -5,9 +5,8 @@ SNS-related classes and functions
 
 import json
 
-from opinel.utils.globals import manage_dictionary
-
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
+from ScoutSuite.utils import manage_dictionary
 
 
 ########################################
@@ -18,11 +17,13 @@ class SNSRegionConfig(RegionConfig):
     """
     SNS configuration for a single AWS region
     """
+    topics = {}
 
     def parse_subscription(self, params, region, subscription):
         """
         Parse a single subscription and reference it in its corresponding topic
 
+        :param region:
         :param params:                  Global parameters (defaults to {})
         :param subscription:            SNS Subscription
         """
@@ -36,11 +37,11 @@ class SNSRegionConfig(RegionConfig):
             topic['subscriptions']['protocol'][protocol].append(subscription)
             topic['subscriptions_count'] += 1
 
-
     def parse_topic(self, params, region, topic):
         """
         Parse a single topic and fetch additional attributes
 
+        :param region:                  Name of the AWS region
         :param params:                  Global parameters (defaults to {})
         :param topic:                   SNS Topic
         """
@@ -59,7 +60,6 @@ class SNSRegionConfig(RegionConfig):
         self.topics[topic['name']] = topic
 
 
-
 ########################################
 # SNSConfig
 ########################################
@@ -71,5 +71,5 @@ class SNSConfig(RegionalServiceConfig):
 
     region_config_class = SNSRegionConfig
 
-    def __init__(self, service_metadata, thread_config = 4):
+    def __init__(self, service_metadata, thread_config=4):
         super(SNSConfig, self).__init__(service_metadata, thread_config)

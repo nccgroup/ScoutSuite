@@ -1,0 +1,74 @@
+{
+    "0": {
+        "some_dummy_resources": {
+            "resource_a": {
+                "some_id": 1,
+                "from_scope": {
+                    "region": "some_region",
+                    "some_inner_scope": "0"
+                }
+            },
+            "resource_b": {
+                "some_id": 2,
+                "from_scope": {
+                    "region": "some_region",
+                    "some_inner_scope": "0"
+                }
+            }
+        },
+        "some_dummy_resources_count": 2,
+        "other_dummy_resources": {
+            "resource_a": {
+                "some_id": 1,
+                "from_scope": {
+                    "region": "some_region",
+                    "some_inner_scope": "0"
+                }
+            },
+            "resource_b": {
+                "some_id": 2,
+                "from_scope": {
+                    "region": "some_region",
+                    "some_inner_scope": "0"
+                }
+            }
+        },
+        "other_dummy_resources_count": 2
+    },
+    "1": {
+        "some_dummy_resources": {
+            "resource_a": {
+                "some_id": 1,
+                "from_scope": {
+                    "region": "some_region",
+                    "some_inner_scope": "1"
+                }
+            },
+            "resource_b": {
+                "some_id": 2,
+                "from_scope": {
+                    "region": "some_region",
+                    "some_inner_scope": "1"
+                }
+            }
+        },
+        "some_dummy_resources_count": 2,
+        "other_dummy_resources": {
+            "resource_a": {
+                "some_id": 1,
+                "from_scope": {
+                    "region": "some_region",
+                    "some_inner_scope": "1"
+                }
+            },
+            "resource_b": {
+                "some_id": 2,
+                "from_scope": {
+                    "region": "some_region",
+                    "some_inner_scope": "1"
+                }
+            }
+        },
+        "other_dummy_resources_count": 2
+    }
+}

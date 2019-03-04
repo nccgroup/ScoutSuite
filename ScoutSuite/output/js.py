@@ -6,7 +6,7 @@ import dateutil
 import json
 import os
 
-from opinel.utils.console import printException, printInfo
+from ScoutSuite.core.console import print_exception, print_info
 
 from ScoutSuite import DEFAULT_REPORT_DIR
 from ScoutSuite.output.utils import get_filename, prompt_4_overwrite
@@ -70,7 +70,7 @@ class JavaScriptReaderWriter(object):
                     print('%s' % first_line, file=f)
                 print('%s' % json.dumps(config, indent=4 if debug else None, separators=(',', ': '), sort_keys=True, cls=Scout2Encoder), file=f)
         except Exception as e:
-            printException(e)
+            print_exception(e)
 
 
     def to_dict(self, config):
@@ -86,7 +86,7 @@ class JavaScriptReaderWriter(object):
         :return:
         """
         if not quiet:
-            printInfo('Saving config...')
+            print_info('Saving config...')
         if prompt_4_overwrite(config_filename, force_write):
             try:
                 config_dirname = os.path.dirname(config_filename)
@@ -94,6 +94,6 @@ class JavaScriptReaderWriter(object):
                     os.makedirs(config_dirname)
                 return open(config_filename, 'wt')
             except Exception as e:
-                printException(e)
+                print_exception(e)
         else:
             return None

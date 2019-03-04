@@ -5,7 +5,7 @@ import json
 
 from getpass import getpass
 
-from opinel.utils.console import printError, printException
+from ScoutSuite.core.console import print_error, print_exception
 
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.azure.configs.services import AzureServicesConfig
@@ -130,8 +130,8 @@ class AzureProvider(BaseProvider):
                 self.credentials = AzureCredentials(credentials, self.aws_account_id)
                 return True
         except Exception as e:
-            printError('Failed to authenticate to Azure')
-            printException(e)
+            print_error('Failed to authenticate to Azure')
+            print_exception(e)
             return False
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):

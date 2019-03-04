@@ -7,7 +7,6 @@ import time
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 
 
-
 ########################################
 # CloudTrailRegionConfig
 ########################################
@@ -16,17 +15,17 @@ class CloudTrailRegionConfig(RegionConfig):
     """
     CloudTrail configuration for a single AWS region
     """
+    trails = {}
 
     def parse_trail(self, global_params, region, trail):
         """
         Parse a single CloudTrail trail
 
+        :param trail:
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
-        :param cluster:                 Trail
         """
-        trail_config = {}
-        trail_config['name'] = trail.pop('Name')
+        trail_config = {'name': trail.pop('Name')}
         trail_id = self.get_non_provider_id(trail_config['name'])
         trail_details = None
 
@@ -45,22 +44,22 @@ class CloudTrailRegionConfig(RegionConfig):
                 if key not in trail_config:
                     trail_config[key] = False
             trail_details = api_client.get_trail_status(Name=trail['TrailARN'])
-            for key in ['KMSKeyId', 'IsLogging', 'LatestDeliveryTime', 'LatestDeliveryError', 'StartLoggingTime', 'StopLoggingTime', 'LatestNotificationTime', 'LatestNotificationError', 'LatestCloudWatchLogsDeliveryError', 'LatestCloudWatchLogsDeliveryTime']:
+            for key in ['KMSKeyId', 'IsLogging', 'LatestDeliveryTime', 'LatestDeliveryError', 'StartLoggingTime',
+                        'StopLoggingTime', 'LatestNotificationTime', 'LatestNotificationError',
+                        'LatestCloudWatchLogsDeliveryError', 'LatestCloudWatchLogsDeliveryTime']:
                 trail_config[key] = trail_details[key] if key in trail_details else None
-                
 
         if trail_details:
             # using trail ARN instead of name as with Organizations the trail would be located in another account
             trail_config['wildcard_data_logging'] = self.data_logging_status(trail_config['TrailARN'],
                                                                              trail_details,
                                                                              api_client)
-            
+
             for es in api_client.get_event_selectors(TrailName=trail_config['TrailARN'])['EventSelectors']:
                 trail_config['DataEventsEnabled'] = len(es['DataResources']) > 0
                 trail_config['ManagementEventsEnabled'] = es['IncludeManagementEvents']
-        
-        self.trails[trail_id] = trail_config
 
+        self.trails[trail_id] = trail_config
 
     def data_logging_status(self, trail_name, trail_details, api_client):
         for es in api_client.get_event_selectors(TrailName=trail_name)['EventSelectors']:
@@ -90,9 +89,8 @@ class CloudTrailConfig(RegionalServiceConfig):
 
     region_config_class = CloudTrailRegionConfig
 
-    def __init__(self, service_metadata, thread_config = 4):
+    def __init__(self, service_metadata, thread_config=4):
         super(CloudTrailConfig, self).__init__(service_metadata, thread_config)
-
 
 
 ########################################
@@ -108,7 +106,8 @@ def cloudtrail_postprocessing(aws_config):
             cloudtrail_config['violations']['cloudtrail-duplicated-global-services-logging']['flagged_items'] = 0
     # Global services logging disabled
     if 'cloudtrail-no-global-services-logging' in cloudtrail_config['violations']:
-        if len(cloudtrail_config['violations']['cloudtrail-no-global-services-logging']['items']) != cloudtrail_config['violations']['cloudtrail-no-global-services-logging']['checked_items']:
+        if len(cloudtrail_config['violations']['cloudtrail-no-global-services-logging']['items']) != \
+                cloudtrail_config['violations']['cloudtrail-no-global-services-logging']['checked_items']:
             cloudtrail_config['violations']['cloudtrail-no-global-services-logging']['items'] = []
             cloudtrail_config['violations']['cloudtrail-no-global-services-logging']['flagged_items'] = 0
     # CloudTrail not enabled at all...

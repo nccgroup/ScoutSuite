@@ -4,7 +4,7 @@
     "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
     "dashboard_name": "Rules",
     "conditions": [ "and",
-        [ "this", "inSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges/aws.json, [])" ],
+        [ "this", "inSubnets", "_IP_RANGES_FROM_FILE_(aws/ip-ranges/aws.json, [])" ],
         [ "this", "notInSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges-from-args, [])" ]
     ]
 }

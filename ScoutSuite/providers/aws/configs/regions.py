@@ -6,20 +6,22 @@ Base classes and functions for region-specific services
 import copy
 import re
 from threading import Thread
+
 # Python2 vs Python3
 try:
     from Queue import Queue
 except ImportError:
     from queue import Queue
 
-from opinel.utils.aws import build_region_list, connect_service, get_aws_account_id, get_name, handle_truncated_response
-from opinel.utils.console import printException, printInfo
-from opinel.utils.globals import manage_dictionary
+from ScoutSuite.providers.aws.aws import build_region_list, connect_service, get_aws_account_id, get_name, \
+    handle_truncated_response
+from ScoutSuite.core.console import print_exception, print_info
 
 from ScoutSuite.providers.base.configs import resource_id_map
 from ScoutSuite.providers.base.configs.threads import thread_configs
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
-from ScoutSuite.utils import format_service_name, is_throttled
+from ScoutSuite.utils import format_service_name, manage_dictionary
+from ScoutSuite.providers.aws.utils import is_throttled
 from ScoutSuite.providers.aws.configs.base import BaseConfig
 from ScoutSuite.output.console import FetchStatusLogger
 
@@ -31,6 +33,7 @@ api_clients = dict()
 
 first_cap_re = re.compile('(.)([A-Z][a-z]+)')
 all_caps_re = re.compile('([a-z0-9])([A-Z])')
+
 
 ########################################
 # RegionalServiceConfig
@@ -50,8 +53,8 @@ class RegionalServiceConfig(object):
 
         self.regions = {}
         self.thread_config = thread_configs[thread_config]
-        self.service = \
-            type(self).__name__.replace('Config', '').lower()  # TODO: use regex with EOS instead of plain replace
+        self.service = re.sub(r'Config$', "", type(self).__name__).lower()
+        self.fetchstatuslogger = None
 
         # Booleans that define if threads should keep running
         self.run_q_threads = True
@@ -73,8 +76,7 @@ class RegionalServiceConfig(object):
                 if 'api_call' not in resource_metadata:
                     continue
                 params = resource_metadata['params'] if 'params' in resource_metadata else {}
-                ignore_exceptions = True if 'no_exceptions' in resource_metadata and \
-                                            resource_metadata['no_exceptions'] == True else False
+                ignore_exceptions = resource_metadata.get('no_exceptions', False)
                 if not only_first_region:
                     self.targets['other_regions'] += ((resource,
                                                        resource_metadata['response'],
@@ -93,14 +95,13 @@ class RegionalServiceConfig(object):
 
         :param region:                  Name of the region
         """
-        self.regions[region] = self.region_config_class(region_name = region, resource_types = self.resource_types)
+        self.regions[region] = self.region_config_class(region_name=region, resource_types=self.resource_types)
 
-    def fetch_all(self, credentials, regions = None, partition_name = 'aws', targets = None):
+    def fetch_all(self, credentials, regions=None, partition_name='aws', targets=None):
         """
         Fetch all the configuration supported by Scout2 for a given service
 
         :param credentials:             F
-        :param service:                 Name of the service
         :param regions:                 Name of regions to fetch data from
         :param partition_name:          AWS partition to connect to
         :param targets:                 Type of resources to be fetched; defaults to all.
@@ -122,12 +123,12 @@ class RegionalServiceConfig(object):
             realtargets = realtargets + ((target[0], target[1], target[2], params, target[4]),)
         targets['other_regions'] = realtargets
 
-        printInfo('Fetching %s config...' % format_service_name(self.service))
+        print_info('Fetching %s config...' % format_service_name(self.service))
         self.fetchstatuslogger = FetchStatusLogger(targets['first_region'], True)
         api_service = 'ec2' if self.service.lower() == 'vpc' else self.service.lower()
 
         # Init regions
-        regions = build_region_list(api_service, regions, partition_name) # TODO: move this code within this class
+        regions = build_region_list(api_service, regions, partition_name)  # TODO: move this code within this class
         self.fetchstatuslogger.counts['regions']['discovered'] = len(regions)
 
         # Threading to fetch & parse resources (queue consumer)
@@ -158,7 +159,8 @@ class RegionalServiceConfig(object):
         for j in range(self.thread_config['list']):
             qr.put(None)
 
-    def _init_threading(self, function, params=None, num_threads=10):
+    @staticmethod
+    def _init_threading(function, params=None, num_threads=10):
         """
         Initialize queue and threads
 
@@ -168,7 +170,7 @@ class RegionalServiceConfig(object):
         :return:
         """
         params = {} if params is None else params
-        q = Queue(maxsize=0) # TODO: find something appropriate
+        q = Queue(maxsize=0)  # TODO: find something appropriate
         for i in range(num_threads):
             worker = Thread(target=function, args=(q, params))
             worker.setDaemon(True)
@@ -183,17 +185,18 @@ class RegionalServiceConfig(object):
                     region, targets = q.get() or (None, None)
                     if region:
                         self.init_region_config(region)
-                        api_client = connect_service(params['api_service'], params['credentials'], region, silent = True)
+                        api_client = connect_service(params['api_service'], params['credentials'], region, silent=True)
                         api_clients[region] = api_client
                         # TODO : something here for single_region stuff
-                        self.regions[region].fetch_all(api_client, self.fetchstatuslogger, params['q'], targets)  # params['targets'])
+                        self.regions[region].fetch_all(api_client, self.fetchstatuslogger, params['q'],
+                                                       targets)  # params['targets'])
                         self.fetchstatuslogger.counts['regions']['fetched'] += 1
                 except Exception as e:
-                    printException(e)
+                    print_exception(e)
                 finally:
                     q.task_done()
         except Exception as e:
-            printException(e)
+            print_exception(e)
             pass
 
     def _fetch_target(self, q, params):
@@ -215,11 +218,11 @@ class RegionalServiceConfig(object):
                     if is_throttled(e):
                         q.put((method, region, backup))
                     else:
-                        printException(e)
+                        print_exception(e)
                 finally:
                     q.task_done()
         except Exception as e:
-            printException(e)
+            print_exception(e)
             pass
 
     def finalize(self):
@@ -244,21 +247,25 @@ class RegionalServiceConfig(object):
                 params = get_aws_account_id(credentials)
         return params
 
+
 ########################################
 # RegionConfig
 ########################################
 
 
+# noinspection PyBroadException
 class RegionConfig(BaseConfig):
     """
     Base class for ...
     """
 
-    def __init__(self, region_name, resource_types=None):
+    def __init__(self, region_name, resource_types=None, **kwargs):
+        super().__init__(**kwargs)
         resource_types = {} if resource_types is None else resource_types
         self.region = region_name
         self.name = region_name
         self.id = region_name
+        self.fetchstatuslogger = None
         for resource_type in resource_types['region'] + resource_types['global']:
             setattr(self, resource_type, {})
             setattr(self, '%s_count' % resource_type, 0)
@@ -267,7 +274,7 @@ class RegionConfig(BaseConfig):
             self.vpc_resource_types = resource_types['vpc']
 
     def fetch_all(self, api_client, fetchstatuslogger, q, targets):
-        '''
+        """
         Make all API calls as defined in metadata.json
 
         :param api_client:
@@ -275,19 +282,19 @@ class RegionConfig(BaseConfig):
         :param q:
         :param targets:
         :return:
-        '''
+        """
         self.fetchstatuslogger = fetchstatuslogger
-        if targets != None:
+        if targets is not None:
             # Ensure targets is a tuple
             if type(targets) != list and type(targets) != tuple:
-                targets = tuple(targets,)
+                targets = tuple(targets, )
             elif type(targets) != tuple:
                 targets = tuple(targets)
         for target in targets:
             self._fetch_targets(api_client, q, target)
 
     def _fetch_targets(self, api_client, q, target):
-        '''
+        """
         Make an API call defined in metadata.json.
         Parse the returned object as implemented in the "parse_[object name]" method.
 
@@ -295,7 +302,7 @@ class RegionConfig(BaseConfig):
         :param q:
         :param target:
         :return:
-        '''
+        """
         # Handle & format the target type
         target_type, response_attribute, list_method_name, list_params, ignore_list_error = target
         list_method = getattr(api_client, list_method_name)
@@ -303,7 +310,7 @@ class RegionConfig(BaseConfig):
             targets = handle_truncated_response(list_method, list_params, [response_attribute])[response_attribute]
         except Exception as e:
             if not ignore_list_error:
-                printException(e)
+                print_exception(e)
             targets = []
         setattr(self, '%s_count' % target_type, len(targets))
         self.fetchstatuslogger.counts[target_type]['discovered'] += len(targets)
@@ -332,4 +339,3 @@ class RegionConfig(BaseConfig):
         target_id = target[resource_id_map[target_type]]
         get_name(target, target, resource_id_map[target_type])
         target_dict[target_id] = target
-

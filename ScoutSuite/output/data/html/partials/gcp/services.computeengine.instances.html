@@ -12,6 +12,10 @@
         <div class="list-group-item-text item-margin">Creation Date: <span id="computeengine.instances.{{@key}}.creation_timestamp">{{creation_timestamp}}</span></div>
         <div class="list-group-item-text item-margin">Status: <span id="computeengine.instances.{{@key}}.status">{{status}}</span></div>
         <div class="list-group-item-text item-margin">Deletion Protection: <span id="computeengine.instances.{{@key}}.deletion_protection_enabled">{{convert_bool_to_enabled deletion_protection_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Block Project SSH Keys: <span id="computeengine.instances.{{@key}}.block_project_ssh_keys_disabled">{{convert_bool_to_enabled block_project_ssh_keys_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">IP Forwarding: <span id="computeengine.instances.{{@key}}.ip_forwarding_enabled">{{convert_bool_to_enabled ip_forwarding_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">OS Login: <span id="computeengine.instances.{{@key}}.oslogin_disabled">{{convert_bool_to_enabled oslogin_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Serial Port Connection: <span id="computeengine.instances.{{@key}}.serial_port_enabled">{{convert_bool_to_enabled serial_port_enabled}}</span></div>        
         {{#if tags}}
         <div class="list-group-item-text item-margin">Tags:</div>
         <ul>
@@ -37,7 +41,7 @@
             {{#each disks}}
             <li><samp>{{source_device_name}}</samp></li>
             <ul>
-                <li>Bootable: <samp>{{bootable}}</samp></li>
+                <li>Bootable: <samp>{{bootable}}</samp></li> 
                 <li>Type: <samp>{{type}}</samp></li>
                 <li>Mode: <samp>{{mode}}</samp></li>
                 {{#if latest_snapshot}}
@@ -45,6 +49,7 @@
                 {{else}}
                 <li id="latest_snapshot">Latest snapshot: <samp>None</samp></li>
                 {{/if}}
+                <li>Customer Supplied Encryption: <span>{{convert_bool_to_enabled encrypted_with_csek}}</span></li>
             </ul>
             {{else}}
             <li><samp>None</samp></li>

@@ -1,12 +1,12 @@
 from ScoutSuite.utils_sns import *
-from opinel.utils.console import configPrintException
+from ScoutSuite.core.console import config_debug_level
 
 
 #
 # Test for Scout2 SNS functions
 #
 class TestScout2SNSUtilsClass:
-    configPrintException(True)
+    config_debug_level(True)
 
     #
     # Test get_sns_region in us-east-1

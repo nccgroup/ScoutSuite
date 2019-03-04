@@ -3,7 +3,7 @@
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 from ScoutSuite.providers.azure.services.storageaccounts import StorageAccountsConfig
 from ScoutSuite.providers.azure.services.monitor import MonitorConfig
-from ScoutSuite.providers.azure.resources.sql.servers import Servers as SQLDatabaseConfig
+from ScoutSuite.providers.azure.resources.sqldatabase.servers import Servers as SQLDatabaseConfig
 from ScoutSuite.providers.azure.services.securitycenter import SecurityCenterConfig
 from ScoutSuite.providers.azure.services.network import NetworkConfig
 from ScoutSuite.providers.azure.services.keyvault import KeyVaultConfig

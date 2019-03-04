@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.aws import handle_truncated_response
+from ScoutSuite.providers.aws.aws import handle_truncated_response
 
 from ScoutSuite.providers.aws.configs.base import AWSBaseConfig
-
 
 
 class Route53DomainsConfig(AWSBaseConfig):
@@ -20,10 +19,8 @@ class Route53DomainsConfig(AWSBaseConfig):
         self.domains_count = 0
         super(Route53DomainsConfig, self).__init__(target_config)
 
-
-
     ########################################
-    ##### Domains
+    # Domains
     ########################################
     def parse_domains(self, domain, params):
         """
@@ -31,12 +28,11 @@ class Route53DomainsConfig(AWSBaseConfig):
         """
         domain_id = self.get_non_provider_id(domain['DomainName'])
         domain['name'] = domain.pop('DomainName')
-        #TODO: Get Dnssec info when available
-        #api_client = params['api_client']
-        #details = api_client.get_domain_detail(DomainName = domain['name'])
-        #get_keys(details, domain, ['Dnssec'])
+        # TODO: Get Dnssec info when available
+        # api_client = params['api_client']
+        # details = api_client.get_domain_detail(DomainName = domain['name'])
+        # get_keys(details, domain, ['Dnssec'])
         self.domains[domain_id] = domain
-
 
 
 class Route53Config(AWSBaseConfig):
@@ -53,10 +49,8 @@ class Route53Config(AWSBaseConfig):
         self.hosted_zones_count = 0
         super(Route53Config, self).__init__(target_config)
 
-
-
     ########################################
-    ##### hosted_zoness
+    # Hosted_zoness
     ########################################
     def parse_hosted_zones(self, hosted_zone, params):
         """
@@ -66,9 +60,7 @@ class Route53Config(AWSBaseConfig):
         hosted_zone_id = hosted_zone.pop('Id')
         hosted_zone['name'] = hosted_zone.pop('Name')
         api_client = params['api_client']
-        record_sets = handle_truncated_response(api_client.list_resource_record_sets, {'HostedZoneId': hosted_zone_id}, ['ResourceRecordSets'])
+        record_sets = handle_truncated_response(api_client.list_resource_record_sets, {'HostedZoneId': hosted_zone_id},
+                                                ['ResourceRecordSets'])
         hosted_zone.update(record_sets)
-        #print(str(record_sets))
-        #record_sets = api_client.list_resource_record_sets()
-        #hosted_zone['RecordSets'] = record_sets['Resourc']
         self.hosted_zones[hosted_zone_id] = hosted_zone

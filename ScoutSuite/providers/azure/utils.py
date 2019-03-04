@@ -2,7 +2,7 @@
 
 import re
 
-from opinel.utils.console import printException, printInfo
+from ScoutSuite.core.console import print_exception
 
 from azure.mgmt.storage import StorageManagementClient
 from azure.mgmt.monitor import MonitorManagementClient
@@ -38,11 +38,11 @@ def azure_connect_service(service, credentials, region_name=None):
         elif service == 'loadbalancer':
             return NetworkManagementClient(credentials.credentials, credentials.subscription_id)
         else:
-            printException('Service %s not supported' % service)
+            print_exception('Service %s not supported' % service)
             return None
 
     except Exception as e:
-        printException(e)
+        print_exception(e)
         return None
 
 

@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.aws import handle_truncated_response
-from opinel.utils.console import printError, printException
-from opinel.utils.globals import manage_dictionary
-
+from ScoutSuite.core.console import print_error, print_exception
+from ScoutSuite.providers.aws.aws import handle_truncated_response
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
-from ScoutSuite.utils import ec2_classic
-
+from ScoutSuite.utils import manage_dictionary
+from ScoutSuite.providers.aws.utils import ec2_classic
 
 
 ########################################
@@ -18,33 +16,34 @@ class RDSRegionConfig(RegionConfig):
     """
     RDS configuration for a single AWS region
     """
+    parameter_groups = {}
+    security_groups = {}
 
     def parse_instance(self, global_params, region, dbi):
         """
         Parse a single RDS instance
 
+        :param dbi:
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
-        :param instance:                Instance
         """
-        vpc_id = dbi['DBSubnetGroup']['VpcId'] if 'DBSubnetGroup' in dbi and 'VpcId' in dbi['DBSubnetGroup'] and dbi['DBSubnetGroup']['VpcId'] else ec2_classic
-        instance = {}
-        instance['name'] = dbi.pop('DBInstanceIdentifier')
+        vpc_id = dbi['DBSubnetGroup']['VpcId'] if 'DBSubnetGroup' in dbi and 'VpcId' in dbi['DBSubnetGroup'] and \
+                                                  dbi['DBSubnetGroup']['VpcId'] else ec2_classic
+        instance = {'name': dbi.pop('DBInstanceIdentifier')}
         for key in ['InstanceCreateTime', 'Engine', 'DBInstanceStatus', 'AutoMinorVersionUpgrade',
                     'DBInstanceClass', 'MultiAZ', 'Endpoint', 'BackupRetentionPeriod', 'PubliclyAccessible',
                     'StorageEncrypted', 'VpcSecurityGroups', 'DBSecurityGroups', 'DBParameterGroups',
                     'EnhancedMonitoringResourceArn', 'StorageEncrypted']:
-                    # parameter_groups , security_groups, vpc_security_groups
+            # parameter_groups , security_groups, vpc_security_groups
             instance[key] = dbi[key] if key in dbi else None
         # If part of a cluster, multi AZ information is only available via cluster information
         if 'DBClusterIdentifier' in dbi:
             api_client = api_clients[region]
-            cluster = api_client.describe_db_clusters(DBClusterIdentifier = dbi['DBClusterIdentifier'])['DBClusters'][0]
+            cluster = api_client.describe_db_clusters(DBClusterIdentifier=dbi['DBClusterIdentifier'])['DBClusters'][0]
             instance['MultiAZ'] = cluster['MultiAZ']
         # Save
         manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
         self.vpcs[vpc_id].instances[instance['name']] = instance
-
 
     def parse_snapshot(self, global_params, region, dbs):
         """
@@ -66,19 +65,21 @@ class RDSRegionConfig(RegionConfig):
         for attribute in attributes:
             snapshot[attribute] = dbs[attribute] if attribute in dbs else None
         api_client = api_clients[region]
-        attributes = api_client.describe_db_snapshot_attributes(DBSnapshotIdentifier = snapshot_id)['DBSnapshotAttributesResult']
+        attributes = api_client.describe_db_snapshot_attributes(DBSnapshotIdentifier=snapshot_id)[
+            'DBSnapshotAttributesResult']
         snapshot['attributes'] = attributes['DBSnapshotAttributes'] if 'DBSnapshotAttributes' in attributes else {}
         # Save
         manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
         self.vpcs[vpc_id].snapshots[snapshot_id] = snapshot
-
 
     def parse_parameter_group(self, global_params, region, parameter_group):
         parameter_group['arn'] = parameter_group.pop('DBParameterGroupArn')
         parameter_group['name'] = parameter_group.pop('DBParameterGroupName')
         api_client = api_clients[region]
         try:
-            parameters = handle_truncated_response(api_client.describe_db_parameters, {'DBParameterGroupName': parameter_group['name']}, ['Parameters'])['Parameters']
+            parameters = handle_truncated_response(api_client.describe_db_parameters,
+                                                   {'DBParameterGroupName': parameter_group['name']}, ['Parameters'])[
+                'Parameters']
             manage_dictionary(parameter_group, 'parameters', {})
             for parameter in parameters:
                 if not parameter['IsModifiable']:
@@ -87,30 +88,28 @@ class RDSRegionConfig(RegionConfig):
                 parameter_name = parameter.pop('ParameterName')
                 parameter_group['parameters'][parameter_name] = parameter
         except Exception as e:
-            printException(e)
-            printError('Failed fetching DB parameters for %s' % parameter_group['name'])
+            print_exception(e)
+            print_error('Failed fetching DB parameters for %s' % parameter_group['name'])
         # Save
         parameter_group_id = self.get_non_provider_id(parameter_group['name'])
-        (self).parameter_groups[parameter_group_id] = parameter_group
-
+        self.parameter_groups[parameter_group_id] = parameter_group
 
     def parse_security_group(self, global_params, region, security_group):
         """
         Parse a single Redsfhit security group
 
+        :param security_group:
         :param global_params:           Parameters shared for all regions
         :param region:                  Name of the AWS region
-        :param security)_group:         Security group
         """
-        #vpc_id = security_group.pop('VpcId') if 'VpcId' in security_group else ec2_classic
-        #manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
+        # vpc_id = security_group.pop('VpcId') if 'VpcId' in security_group else ec2_classic
+        # manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
         security_group['arn'] = security_group.pop('DBSecurityGroupArn')
         security_group['name'] = security_group.pop('DBSecurityGroupName')
         # Save
-        #manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
-        #self.vpcs[vpc_id].security_groups[security_group['name']] = security_group
+        # manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
+        # self.vpcs[vpc_id].security_groups[security_group['name']] = security_group
         self.security_groups[security_group['name']] = security_group
-
 
 
 ########################################
@@ -124,7 +123,7 @@ class RDSConfig(RegionalServiceConfig):
 
     region_config_class = RDSRegionConfig
 
-    def __init__(self, service_metadata, thread_config = 4):
+    def __init__(self, service_metadata, thread_config=4):
         super(RDSConfig, self).__init__(service_metadata, thread_config)
 
 
@@ -138,11 +137,10 @@ def get_security_groups_info(rds_client, region_info):
     for group in groups:
         region_info['vpcs'][ec2_classic]['security_groups'][group['DBSecurityGroupName']] = parse_security_group(group)
 
+
 def parse_security_group(group):
-    security_group = {}
-    security_group['name'] = group['DBSecurityGroupName']
-    security_group['description'] = group['DBSecurityGroupDescription']
-    security_group['ec2_groups'] = {}
+    security_group = {'name': group['DBSecurityGroupName'], 'description': group['DBSecurityGroupDescription'],
+                      'ec2_groups': {}}
     for grant in group['EC2SecurityGroups']:
         if 'EC2SecurityGroupId' in grant:
             group_id = grant.pop('EC2SecurityGroupId')
