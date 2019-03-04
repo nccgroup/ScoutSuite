@@ -1,18 +1,16 @@
-from botocore.session import Session
 from collections import Counter
 from botocore.session import Session
 
 from ScoutSuite.providers.aws.facade.awslambda import LambdaFacade
 from ScoutSuite.providers.aws.facade.cloudwatch import CloudWatch
 from ScoutSuite.providers.aws.facade.ec2 import EC2Facade
-from ScoutSuite.providers.aws.facade.awslambda import LambdaFacade
 
 
 class AWSFacade(object):
     def __init__(self):
         self.ec2 = EC2Facade()
         self.awslambda = LambdaFacade()
-
+        self.cloudwatch = CloudWatch()
 
     async def build_region_list(self, service: str, chosen_regions=None, partition_name='aws'):
         service = 'ec2containerservice' if service == 'ecs' else service
