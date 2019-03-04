@@ -44,6 +44,7 @@ class AWSProvider(BaseProvider):
         :return:
         """
 
+        profile = profile[0] if profile else 'default'
         if profile is not 'default':
             session = boto3.Session(profile_name=profile)
         else:
@@ -444,7 +445,7 @@ class AWSProvider(BaseProvider):
         try:
             try:
                 sg_attribute = get_object_at(resource, callback_args['sg_list_attribute_name'])
-            except:
+            except Exception as e:
                 return
             if type(sg_attribute) != list:
                 sg_attribute = [sg_attribute]
@@ -488,7 +489,7 @@ class AWSProvider(BaseProvider):
     def _merge_route53_and_route53domains(self):
         if 'route53domains' not in self.services:
             return
-        # TODO fix this
+        # TODO: fix this
         self.services['route53'].update(self.services['route53domains'])
         self.services.pop('route53domains')
 

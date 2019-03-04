@@ -46,8 +46,7 @@ def main(args=None):
                                   timestamp=args.get('timestamp'),
                                   services=args.get('services'),
                                   skipped_services=args.get('skipped_services'),
-                                  thread_config=args.get('thread_config'),
-                                  )
+                                  thread_config=args.get('thread_config'))
 
     report_file_name = generate_report_name(cloud_provider.provider_code, args)
 
@@ -74,8 +73,7 @@ def main(args=None):
                                                     client_id=args.get('client_id'),
                                                     client_secret=args.get('client_secret'),
                                                     username=args.get('username'),
-                                                    password=args.get('password')
-                                                    )
+                                                    password=args.get('password'))
 
         if not authenticated:
             return 401
