@@ -32,7 +32,7 @@ class TestAWSResources(TestCase):
     test_dir = os.path.dirname(os.path.realpath(__file__))
 
     def test_lel(self):
-        loop = loop = asyncio.new_event_loop()
+        loop = asyncio.new_event_loop()
         composite = DummyComposite({'region': 'some_region'})
         loop.run_until_complete(composite.fetch_all())
 
