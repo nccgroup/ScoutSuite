@@ -1,11 +1,11 @@
 {
     "dashboard_name": "SQL Servers",
-    "description": "Auditing disabled on SQL servers",
+    "description": "Auditing is disabled for some SQL servers",
     "rationale": "You should enable auditing for all of your SQL servers (CIS 4.1.1).",
     "path": "sqldatabase.servers.id",
     "display_path": "sqldatabase.servers.id",
     "conditions": [ "and",
-        [ "sqldatabase.servers.id.auditing_enabled", "false", "" ]
+        [ "sqldatabase.servers.id.auditing.auditing_enabled", "false", "" ]
     ],
-    "id_suffix": "auditing_enabled"
+    "id_suffix": "server_auditing_disabled"
 }
