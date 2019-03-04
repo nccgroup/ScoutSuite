@@ -54,24 +54,19 @@ class AWSServicesConfig(BaseServicesConfig):
     def __init__(self, metadata=None, thread_config=4, **kwargs):
 
         super().__init__(metadata, thread_config)
-        self.cloudformation = CloudFormationConfig(
-            metadata['management']['cloudformation'], thread_config)
+        self.cloudformation = CloudFormationConfig(metadata['management']['cloudformation'], thread_config)
         self.cloudtrail = CloudTrail()
-        self.cloudwatch = CloudWatchConfig(
-            metadata['management']['cloudwatch'], thread_config)
-        self.directconnect = DirectConnectConfig(
-            metadata['network']['directconnect'], thread_config)
+        self.cloudwatch = CloudWatchConfig(metadata['management']['cloudwatch'], thread_config)
+        self.directconnect = DirectConnectConfig(metadata['network']['directconnect'], thread_config)
         self.ec2 = EC2()
         self.efs = EFSConfig(metadata['storage']['efs'], thread_config)
-        self.elasticache = ElastiCacheConfig(
-            metadata['database']['elasticache'], thread_config)
+        self.elasticache = ElastiCacheConfig(metadata['database']['elasticache'], thread_config)
         self.elb = ELBConfig(metadata['compute']['elb'], thread_config)
         self.elbv2 = ELBv2Config(metadata['compute']['elbv2'], thread_config)
         self.emr = EMRConfig(metadata['analytics']['emr'], thread_config)
         self.iam = IAMConfig(thread_config)
         self.awslambda = Lambdas()
-        self.redshift = RedshiftConfig(
-            metadata['database']['redshift'], thread_config)
+        self.redshift = RedshiftConfig(metadata['database']['redshift'], thread_config)
         self.rds = RDSConfig(metadata['database']['rds'], thread_config)
         self.route53 = Route53Config(thread_config)
         self.route53domains = Route53DomainsConfig(thread_config)
