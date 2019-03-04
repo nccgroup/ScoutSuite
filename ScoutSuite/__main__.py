@@ -18,7 +18,6 @@ from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.providers import get_provider
 
 
-# noinspection PyBroadException
 def main(args=None):
     """
     Main method that runs a scan
@@ -132,7 +131,7 @@ def main(args=None):
     # Finalize
     cloud_provider.postprocessing(report.current_time, finding_rules)
 
-    # TODO this is AWS-specific - move to postprocessing?
+    # TODO: this is AWS-specific - move to postprocessing?
     # Get organization data if it exists
     try:
         profile = AWSProfiles.get(args.get('profile'))[0]

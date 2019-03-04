@@ -221,7 +221,7 @@ def prompt_yes_no(question, test_input=None):
     Prompt for a yes/no or y/n answer
                                         .
     :param question:                    Question to be asked
-    :param test_input:                   Used for unit testing
+    :param test_input:                  Used for unit testing
 
     :return:                            True for yes/y, False for no/n
     """

@@ -37,11 +37,6 @@
                 "enabled": true
             }
         ],
-        "ec2-instance-with-open-nacls.json": [
-            {
-                "enabled": true
-            }
-        ],
         "ec2-security-group-with-public-cidr-grant.json": [
             {
                 "enabled": true
