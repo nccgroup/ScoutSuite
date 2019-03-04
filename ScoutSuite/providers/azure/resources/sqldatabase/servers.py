@@ -6,12 +6,16 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 from .databases import Databases
 from .server_azure_ad_administrators import ServerAzureAdAdministrators
+from .server_blob_auditing_policies import ServerBlobAuditingPolicies
+from .server_security_alert_policies import ServerSecurityAlertPolicies
 
 
 class Servers(AzureCompositeResources):
     _children = [
-        Databases,
-        ServerAzureAdAdministrators,
+        (Databases, 'databases'),
+        (ServerAzureAdAdministrators, None),
+        (ServerBlobAuditingPolicies, 'auditing'),
+        (ServerSecurityAlertPolicies, 'threat_detection')
     ]
 
     # TODO: make it really async.
