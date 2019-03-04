@@ -55,8 +55,7 @@ class AWSProvider(BaseProvider):
             creds = token.get('Credentials')
             self.credentials = {'access_key': creds.get('AccessKeyId'),
                                 'secret_key': creds.get('SecretAccessKey'),
-                                'token': creds.get('SessionToken'),
-                                'method': 'shared-credentials-file'}
+                                'token': creds.get('SessionToken')}
         else:
             self.credentials = session.get_credentials().__dict__
         self.aws_account_id = get_aws_account_id(self.credentials)
