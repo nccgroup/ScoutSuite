@@ -3,7 +3,7 @@ from ScoutSuite.providers.aws.resources.resources import AWSResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
 
 
-class Stack(AWSResources):
+class Stacks(AWSResources):
     async def fetch_all(self, **kwargs):
         raw_stacks  = self.facade.cloudformation.get_stacks(self.scope['region'])
         for raw_stack in raw_stacks:
