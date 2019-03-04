@@ -9,6 +9,6 @@ def get_non_provider_id(name):
     :param name:                    Name of the resource to
     :return:                        SHA1(name)
     """
-    hash = sha1()
-    hash.update(name.encode('utf-8'))
-    return hash.hexdigest()
+    name_hash = sha1()
+    name_hash.update(name.encode('utf-8'))
+    return name_hash.hexdigest()
