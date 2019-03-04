@@ -17,5 +17,6 @@ class DatabaseBlobAuditingPolicies(Resources):
 
     def _parse_policies(self, policies):
         self.update({
-            'auditing_enabled': policies.state == "Enabled"
+            'auditing_enabled': policies.state == "Enabled",
+            'retention_days': policies.retention_days
         })
