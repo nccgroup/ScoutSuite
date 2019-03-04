@@ -44,7 +44,6 @@ class AWSProvider(BaseProvider):
         :return:
         """
 
-        profile = profile[0] if profile else 'default'
         if profile is not 'default':
             session = boto3.Session(profile_name=profile)
         else:
