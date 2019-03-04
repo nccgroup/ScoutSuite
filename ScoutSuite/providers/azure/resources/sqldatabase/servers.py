@@ -1,11 +1,11 @@
 from azure.mgmt.sql import SqlManagementClient
 
-from ..resources import AzureCompositeResources
+from ScoutSuite.providers.azure.resources.resources import AzureCompositeResources
 from ScoutSuite.providers.azure.utils import get_resource_group_name
+from ScoutSuite.providers.utils import get_non_provider_id
 
 from .databases import Databases
 from .server_azure_ad_administrators import ServerAzureAdAdministrators
-from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Servers(AzureCompositeResources):

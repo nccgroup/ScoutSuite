@@ -1,4 +1,4 @@
-from ..resources import AzureCompositeResources
+from ScoutSuite.providers.azure.resources.resources import AzureCompositeResources
 
 from .database_blob_auditing_policies import DatabaseBlobAuditingPolicies
 from .database_threat_detection_policies import DatabaseThreatDetectionPolicies
