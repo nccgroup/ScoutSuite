@@ -38,26 +38,14 @@ class AWSProvider(BaseProvider):
 
         super(AWSProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
-    def authenticate(self, profile=None, mfa_serial=None, mfa_code=None, **kwargs):
+    def authenticate(self, profile=None, **kwargs):
         """
         Implement authentication for the AWS provider
         :return:
         """
 
-        if profile is not 'default':
-            session = boto3.Session(profile_name=profile)
-        else:
-            session = boto3.Session()
-
-        if mfa_code and mfa_serial:
-            sts = session.client('sts')
-            token = sts.get_session_token(SerialNumber=mfa_serial, TokenCode=mfa_code)
-            creds = token.get('Credentials')
-            self.credentials = {'access_key': creds.get('AccessKeyId'),
-                                'secret_key': creds.get('SecretAccessKey'),
-                                'token': creds.get('SessionToken')}
-        else:
-            self.credentials = session.get_credentials().__dict__
+        session = boto3.Session(profile_name=profile)
+        self.credentials = session.get_credentials().__dict__
         self.aws_account_id = get_aws_account_id(self.credentials)
 
         return self.credentials.get('access_key') is not None
