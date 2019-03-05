@@ -1,8 +1,7 @@
-from azure.mgmt.sql import SqlManagementClient
-
 from ScoutSuite.providers.azure.resources.resources import AzureCompositeResources
 from ScoutSuite.providers.azure.utils import get_resource_group_name
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.providers.azure.facade.sqldatabase import SQLDatabaseFacade
 
 from .databases import Databases
 from .server_azure_ad_administrators import ServerAzureAdAdministrators
@@ -17,10 +16,10 @@ class Servers(AzureCompositeResources):
     # TODO: make it really async.
     async def fetch_all(self, credentials, **kwargs):
         # TODO: build that facade somewhere else:
-        facade = SqlManagementClient(credentials.credentials, credentials.subscription_id)
+        facade = SQLDatabaseFacade(credentials.credentials, credentials.subscription_id)
 
         self['servers'] = {}
-        for server in facade.servers.list():
+        for server in await facade.get_servers():
             id = get_non_provider_id(server.id)
             resource_group_name = get_resource_group_name(server.id)
 
