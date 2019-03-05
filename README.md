@@ -61,8 +61,6 @@ may result in the process being killed.
 
 Scout Suite is written in Python and supports the following versions:
 
--   2.7
--   3.4
 -   3.5
 -   3.6
 -   3.7
@@ -81,6 +79,10 @@ permissions:
 
 -   `ReadOnlyAccess`
 -   `SecurityAudit`
+
+If the usage of multi-factor authentication (MFA) is enabled, please consult [this page](https://aws.amazon.com/premiumsupport/knowledge-center/authenticate-mfa-cli/) in order to 
+configure MFA authentication through the management of session tokens.
+
 
 #### Google Cloud Platform
 
@@ -187,10 +189,6 @@ If multiple profiles are configured in your .aws/credentials and .aws/config fil
 to use with the following command:
 
     $ python Scout.py aws --profile <PROFILE_NAME>
-
-If you have a CSV file containing the API access key ID and secret, you may run Scout with the following command:
-
-    $ python Scout.py aws --csv-credentials <CREDENTIALS.CSV>
 
 #### Google Cloud Platform
 
