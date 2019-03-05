@@ -16,5 +16,8 @@ class DatabaseThreatDetectionPolicies(Resources):
 
     def _parse_policies(self, policies):
         self.update({
-            'threat_detection_enabled': policies.state == "Enabled"
+            'threat_detection_enabled': policies.state == "Enabled",
+            'alerts_enabled': policies.disabled_alerts == "",
+            'send_alerts_enabled': policies.email_addresses != "" and policies.email_account_admins == "Enabled",
+            'retention_days': policies.retention_days
         })
