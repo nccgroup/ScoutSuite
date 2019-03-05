@@ -41,7 +41,7 @@ class AWSCompositeResources(AWSResources, CompositeResources, metaclass=abc.ABCM
 
         children = [(child_class(scope), child_name) for (child_class, child_name) in self._children]
         # fetch all children concurrently:
-        await asyncio.wait({asyncio.create_task(child.fetch_all()) for (child, _) in children})
+        await asyncio.wait({asyncio.ensure_future(child.fetch_all()) for (child, _) in children})
         # update parent content:
         for child, child_name in children:
             if parent.get(child_name) is None:
