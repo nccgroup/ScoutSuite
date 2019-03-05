@@ -132,6 +132,7 @@ def main(args=None):
     cloud_provider.postprocessing(report.current_time, finding_rules)
 
     # TODO: this is AWS-specific - move to postprocessing?
+    # This is partially implemented
     # Get organization data if it exists
     try:
         profile = AWSProfiles.get(args.get('profile'))[0]
@@ -162,13 +163,14 @@ def main(args=None):
 
 
 def generate_report_name(provider_code, args):
-    report_file_name = {}
+    # TODO this should be done within the provider
+    # A pre-requisite to this is to generate report AFTER authentication
     if provider_code == 'aws':
         if args.get('profile'):
             report_file_name = 'aws-%s' % args.get('profile')
         else:
             report_file_name = 'aws'
-    if provider_code == 'gcp':
+    elif provider_code == 'gcp':
         if args.get('project_id'):
             report_file_name = 'gcp-%s' % args.get('project_id')
         elif args.get('organization_id'):
@@ -177,6 +179,8 @@ def generate_report_name(provider_code, args):
             report_file_name = 'gcp-%s' % args.get('folder_id')
         else:
             report_file_name = 'gcp'
-    if provider_code == 'azure':
+    elif provider_code == 'azure':
         report_file_name = 'azure'
+    else:
+        report_file_name = 'unknown'
     return report_file_name
