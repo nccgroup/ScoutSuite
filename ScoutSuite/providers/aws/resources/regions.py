@@ -1,7 +1,9 @@
+import abc
+
 from ScoutSuite.providers.aws.aws import get_aws_account_id
 from ScoutSuite.providers.aws.resources.resources import AWSCompositeResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
-import abc
+
 
 class Regions(AWSCompositeResources, metaclass=abc.ABCMeta):
     def __init__(self, service):
@@ -10,7 +12,6 @@ class Regions(AWSCompositeResources, metaclass=abc.ABCMeta):
         self.facade = AWSFacade()
 
     async def fetch_all(self, credentials, regions=None, partition_name='aws'):
-
         self['regions'] = {}
         for region in await self.facade.build_region_list(self.service, regions, partition_name):
             self['regions'][region] = {
