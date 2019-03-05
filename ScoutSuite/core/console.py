@@ -1,18 +1,8 @@
-# -*- coding: utf-8 -*-
-
 import os
-import re
 import sys
 import traceback
 
 from six.moves import input
-
-########################################
-# Globals
-########################################
-
-mfa_serial_format = r'^arn:aws:iam::\d+:mfa/[a-zA-Z0-9\+=,.@_-]+$'
-mfa_code_pattern = r'^\d{6}\d*$'
 
 
 ########################################
@@ -85,29 +75,6 @@ def prompt(test_input=None):
     else:
         choice = input()
     return choice
-
-
-def prompt_mfa_code(activate=False, test_input=None):
-    """
-    Prompt for an MFA code
-
-    :param activate:                    Set to true when prompting for the 2nd code when activating a new MFA device
-    :param test_input:                       Used for unit testing
-
-    :return:                            The MFA code
-    """
-    while True:
-        if activate:
-            prompt_string = 'Enter the next value: '
-        else:
-            prompt_string = 'Enter your MFA code (or \'q\' to abort): '
-        mfa_code = prompt_value(prompt_string, no_confirm=True, test_input=test_input)
-        if mfa_code == 'q':
-            return mfa_code
-        if not re.match(mfa_code_pattern, mfa_code):
-            print_error('Error: your MFA code must only consist of digits and be at least 6 characters long.')
-        break
-    return mfa_code
 
 
 def prompt_overwrite(filename, force_write, test_input=None):
