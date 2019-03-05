@@ -33,13 +33,11 @@ class ScoutSuiteArgumentParser:
 
         parser = aws_parser.add_argument_group('Authentication parameters')
 
-        default_profile = os.environ.get('AWS_PROFILE', 'default')
-        default_profile_origin = " (from AWS_PROFILE)." if 'AWS_PROFILE' in os.environ else "."
         parser.add_argument('-p',
                             '--profile',
                             dest='profile',
-                            default=default_profile,
-                            help='Name of the profile. Defaults to %(default)s' + default_profile_origin)
+                            default=None,
+                            help='Name of the profile')
 
         parser = aws_parser.add_argument_group('Additional arguments')
 
