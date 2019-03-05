@@ -83,7 +83,6 @@ permissions:
 If the usage of multi-factor authentication (MFA) is enabled, please consult [this page](https://aws.amazon.com/premiumsupport/knowledge-center/authenticate-mfa-cli/) in order to 
 configure MFA authentication through the management of session tokens.
 
-
 #### Google Cloud Platform
 
 There are two ways to run Scout against a GCP Organization or Project.
