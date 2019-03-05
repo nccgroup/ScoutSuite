@@ -60,6 +60,15 @@
         "level": "warning"
       }
     ],
+    "sqldatabase-databases-auditing-low-retention.json": [
+      {
+        "args": [
+          "90"
+        ],
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "sqldatabase-databases-no-auditing.json": [
       {
         "enabled": true,
@@ -78,7 +87,70 @@
         "level": "warning"
       }
     ],
+    "sqldatabase-databases-threat-detection-disabled-alerts.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "sqldatabase-databases-threat-detection-low-retention.json": [
+      {
+        "args": [
+          "90"
+        ],
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "sqldatabase-databases-threat-detection-send-alerts-disabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "sqldatabase-servers-auditing-low-retention.json": [
+      {
+        "args": [
+          "90"
+        ],
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "sqldatabase-servers-no-ad-admin-configured.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "sqldatabase-servers-no-auditing.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "sqldatabase-servers-no-threat-detection.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "sqldatabase-servers-threat-detection-disabled-alerts.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "sqldatabase-servers-threat-detection-low-retention.json": [
+      {
+        "args": [
+          "90"
+        ],
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "sqldatabase-servers-threat-detection-send-alerts-disabled.json": [
       {
         "enabled": true,
         "level": "warning"
