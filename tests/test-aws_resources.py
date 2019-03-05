@@ -31,7 +31,7 @@ class DummyComposite(AWSCompositeResources):
 class TestAWSResources(TestCase):
     test_dir = os.path.dirname(os.path.realpath(__file__))
 
-     def test_aws_composite_resource(self):
+    def test_aws_composite_resource(self):
         loop = asyncio.new_event_loop()
         composite = DummyComposite({'region': 'some_region'})
         loop.run_until_complete(composite.fetch_all())
