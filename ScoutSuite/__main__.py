@@ -58,7 +58,6 @@ def main(args=None):
     if not args.get('fetch_local'):
         # Authenticate to the cloud provider
         authenticated = cloud_provider.authenticate(profile=args.get('profile'),
-                                                    csv_credentials=args.get('csv_credentials'),
                                                     user_account=args.get('user_account'),
                                                     service_account=args.get('service_account'),
                                                     cli=args.get('cli'),
