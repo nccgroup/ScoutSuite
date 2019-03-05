@@ -40,14 +40,6 @@ class ScoutSuiteArgumentParser:
                             dest='profile',
                             default=default_profile,
                             help='Name of the profile. Defaults to %(default)s' + default_profile_origin)
-        parser.add_argument('--mfa-serial',
-                            dest='mfa_serial',
-                            default=None,
-                            help='ARN of the user\'s MFA device')
-        parser.add_argument('--mfa-code',
-                            dest='mfa_code',
-                            default=None,
-                            help='Six-digit code displayed on the MFA device.')
 
         parser = aws_parser.add_argument_group('Additional arguments')
 

@@ -59,8 +59,6 @@ def main(args=None):
         # Authenticate to the cloud provider
         authenticated = cloud_provider.authenticate(profile=args.get('profile'),
                                                     csv_credentials=args.get('csv_credentials'),
-                                                    mfa_serial=args.get('mfa_serial'),
-                                                    mfa_code=args.get('mfa_code'),
                                                     user_account=args.get('user_account'),
                                                     service_account=args.get('service_account'),
                                                     cli=args.get('cli'),
