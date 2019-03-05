@@ -73,7 +73,9 @@ class AWSProvider(BaseProvider):
             self._add_last_snapshot_date_to_ec2_volumes()
             self._match_instances_and_roles()
             
-        self._process_cloudtrail_trails(self.services['cloudtrail'])
+        if 'cloudtrail' in self.service_list:
+            self._process_cloudtrail_trails(self.services['cloudtrail'])
+            
         self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
         self._merge_route53_and_route53domains()
         self._match_iam_policies_and_buckets()

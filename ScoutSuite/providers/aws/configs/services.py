@@ -2,8 +2,8 @@
 
 from ScoutSuite.providers.aws.resources.awslambda.service import Lambdas
 from ScoutSuite.providers.aws.services.cloudformation import CloudFormationConfig
-from ScoutSuite.providers.aws.services.cloudtrail import CloudTrailConfig
 from ScoutSuite.providers.aws.resources.cloudwatch.service import CloudWatch
+from ScoutSuite.providers.aws.resources.cloudtrail.service import CloudTrail
 from ScoutSuite.providers.aws.services.directconnect import DirectConnectConfig
 from ScoutSuite.providers.aws.resources.ec2.service import EC2
 from ScoutSuite.providers.aws.services.efs import EFSConfig
@@ -35,7 +35,7 @@ except ImportError:
 class AWSServicesConfig(BaseServicesConfig):
     """
     Object that holds the necessary AWS configuration for all services in scope.
-                                        
+
     :ivar cloudtrail:                   CloudTrail configuration
     :ivar cloudwatch:                   CloudWatch configuration:
     :ivar config:                       Config configuration
@@ -55,8 +55,8 @@ class AWSServicesConfig(BaseServicesConfig):
 
         super().__init__(metadata, thread_config)
         self.cloudformation = CloudFormationConfig(metadata['management']['cloudformation'], thread_config)
-        self.cloudtrail = CloudTrailConfig(metadata['management']['cloudtrail'], thread_config)
         self.cloudwatch = CloudWatch()
+        self.cloudtrail = CloudTrail()
         self.directconnect = DirectConnectConfig(metadata['network']['directconnect'], thread_config)
         self.ec2 = EC2()
         self.efs = EFSConfig(metadata['storage']['efs'], thread_config)
@@ -77,8 +77,10 @@ class AWSServicesConfig(BaseServicesConfig):
         self.vpc = VPCConfig(metadata['network']['vpc'], thread_config)
 
         try:
-            self.config = ConfigConfig(metadata['management']['config'], thread_config)
-            self.dynamodb = DynamoDBConfig(metadata['database']['dynamodb'], thread_config)
+            self.config = ConfigConfig(
+                metadata['management']['config'], thread_config)
+            self.dynamodb = DynamoDBConfig(
+                metadata['database']['dynamodb'], thread_config)
             self.kms = KMSConfig(metadata['security']['kms'], thread_config)
         except (NameError, TypeError):
             pass
