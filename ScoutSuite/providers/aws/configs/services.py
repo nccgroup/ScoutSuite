@@ -5,6 +5,7 @@ from ScoutSuite.providers.aws.services.cloudformation import CloudFormationConfi
 from ScoutSuite.providers.aws.resources.cloudtrail.service import CloudTrail
 from ScoutSuite.providers.aws.services.cloudwatch import CloudWatchConfig
 from ScoutSuite.providers.aws.services.directconnect import DirectConnectConfig
+from ScoutSuite.providers.aws.resources.directconnect.service import DirectConnect
 from ScoutSuite.providers.aws.resources.ec2.service import EC2
 from ScoutSuite.providers.aws.services.efs import EFSConfig
 from ScoutSuite.providers.aws.services.elasticache import ElastiCacheConfig
@@ -57,7 +58,7 @@ class AWSServicesConfig(BaseServicesConfig):
         self.cloudformation = CloudFormationConfig(metadata['management']['cloudformation'], thread_config)
         self.cloudtrail = CloudTrail()
         self.cloudwatch = CloudWatchConfig(metadata['management']['cloudwatch'], thread_config)
-        self.directconnect = DirectConnectConfig(metadata['network']['directconnect'], thread_config)
+        self.directconnect = DirectConnect()
         self.ec2 = EC2()
         self.efs = EFSConfig(metadata['storage']['efs'], thread_config)
         self.elasticache = ElastiCacheConfig(metadata['database']['elasticache'], thread_config)
