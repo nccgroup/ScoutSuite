@@ -94,10 +94,9 @@ class BaseProvider(object):
         # TODO implement this properly
         """
         This is quite ugly but the legacy Scout2 expects the configurations to be dictionaries.
-        Eventually this should be moved to objects/attributes, but that will require significan re-write.
+        Eventually this should be moved to objects/attributes, but that will require significant re-write.
         """
-        report = Scout2Report(self.provider_code,
-                              self.profile)
+        report = Scout2Report(self.provider_code, 'placeholder')
         self.services = report.jsrw.to_dict(self.services)
 
     def _load_metadata(self):
