@@ -1,3 +1,5 @@
+import asyncio
+
 from ScoutSuite.providers.aws.resources.resources import AWSCompositeResources
 from ScoutSuite.providers.aws.resources.ec2.instances import EC2Instances
 from ScoutSuite.providers.aws.resources.ec2.securitygroups import SecurityGroups
@@ -17,9 +19,15 @@ class Vpcs(AWSCompositeResources):
             name, resource = self._parse_vpc(vpc)
             self[name] = resource
 
-        for vpc in self:
-            scope = {'region': self.scope['region'], 'vpc': vpc}
-            await self._fetch_children(self[vpc], scope=scope)
+        tasks = {
+            asyncio.ensure_future(
+                self._fetch_children(
+                    self[vpc],
+                    {'region': self.scope['region'], 'vpc': vpc}
+                )
+            ) for vpc in self
+        }
+        await asyncio.wait(tasks)
 
     def _parse_vpc(self, vpc):
         return vpc['VpcId'], {}
