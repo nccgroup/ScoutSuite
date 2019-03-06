@@ -9,20 +9,23 @@ class AWSFacadeUtils:
 
     @staticmethod
     async def get_all_pages(service: str, region: str, paginator_name: str, response_key: str, **paginator_args):
-        client = await AWSFacadeUtils.get_client(service, region)
-        pages = await run_concurrently(lambda: client.get_paginator(paginator_name).paginate(**paginator_args))
+        client = AWSFacadeUtils.get_client(service, region)
+        # Building a paginator doesn't require any API call so no need to do it concurrently:
+        paginator = client.get_paginator(paginator_name).paginate(**paginator_args)
 
-        return AWSFacadeUtils._get_from_all_pages(pages, response_key)
+        # Getting all pages from a paginator requires API calls so we need to do it concurrently:
+        return await run_concurrently(lambda: AWSFacadeUtils._get_all_pages_from_paginator(paginator, response_key))
 
     @staticmethod
-    def _get_from_all_pages(pages: [], key: str):
+    def _get_all_pages_from_paginator(paginator, key):
         resources = []
-        for page in pages:
+        # There's an API call hidden behind each iteration:
+        for page in paginator:
             resources.extend(page[key])
 
         return resources
 
     @staticmethod
-    async def get_client(service: str, region: str):
-        client = await run_concurrently(lambda: boto3.client(service, region_name=region))
+    def get_client(service: str, region: str):
+        client = boto3.client(service, region_name=region)
         return AWSFacadeUtils._clients.setdefault((service, region), client)
