@@ -19,6 +19,9 @@ class Vpcs(AWSCompositeResources):
             name, resource = self._parse_vpc(vpc)
             self[name] = resource
 
+        # TODO: make a refactoring of the following:
+        if len(self) == 0:
+            return
         tasks = {
             asyncio.ensure_future(
                 self._fetch_children(

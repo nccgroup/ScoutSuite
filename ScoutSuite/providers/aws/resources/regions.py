@@ -22,6 +22,9 @@ class Regions(AWSCompositeResources, metaclass=abc.ABCMeta):
                 'name': region
             }
 
+        # TODO: make a refactoring of the following:
+        if len(self['regions']) == 0:
+            return
         tasks = {
             asyncio.ensure_future(
                 self._fetch_children(
