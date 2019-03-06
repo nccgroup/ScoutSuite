@@ -1,3 +1,5 @@
+import asyncio
+
 from ScoutSuite.providers.azure.resources.resources import AzureCompositeResources
 from ScoutSuite.providers.azure.utils import get_resource_group_name
 from ScoutSuite.providers.utils import get_non_provider_id
@@ -17,7 +19,6 @@ class Servers(AzureCompositeResources):
         (ServerSecurityAlertPolicies, 'threat_detection')
     ]
 
-    # TODO: make it really async.
     async def fetch_all(self, credentials, **kwargs):
         # TODO: build that facade somewhere else:
         facade = SQLDatabaseFacade(credentials.credentials, credentials.subscription_id)
@@ -29,12 +30,23 @@ class Servers(AzureCompositeResources):
 
             self['servers'][id] = {
                 'id': id,
-                'name': server.name
+                'name': server.name,
+                'resource_group_name': resource_group_name
             }
-            await self._fetch_children(
-                parent=self['servers'][id],
-                resource_group_name=resource_group_name,
-                server_name=server.name,
-                facade=facade)
+
+        # TODO: make a refactoring of the following:
+        if len(self['servers']) == 0:
+            return
+        tasks = {
+            asyncio.ensure_future(
+                self._fetch_children(
+                    parent=server,
+                    resource_group_name=server['resource_group_name'],
+                    server_name=server['name'],
+                    facade=facade
+                )
+            ) for server in self['servers'].values()
+        }
+        await asyncio.wait(tasks)
 
         self['servers_count'] = len(self['servers'])
