@@ -27,5 +27,6 @@ class AWSFacadeUtils:
 
     @staticmethod
     def get_client(service: str, region: str):
+        # TODO: investigate the use of a mutex to avoid useless creation of a same type of client among threads:
         client = boto3.client(service, region_name=region)
         return AWSFacadeUtils._clients.setdefault((service, region), client)
