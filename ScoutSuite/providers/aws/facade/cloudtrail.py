@@ -4,7 +4,7 @@ from ScoutSuite.providers.utils import run_concurrently
 
 class CloudTrailFacade:
     async def get_trails(self, region):
-        client = await AWSFacadeUtils.get_client('cloudtrail', region)
+        client = AWSFacadeUtils.get_client('cloudtrail', region)
         trails = await run_concurrently(
             lambda: client.describe_trails()['trailList']
         )
