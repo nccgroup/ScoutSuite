@@ -1,4 +1,5 @@
 import abc
+import asyncio
 
 from ScoutSuite.providers.aws.aws import get_aws_account_id
 from ScoutSuite.providers.aws.resources.resources import AWSCompositeResources
@@ -20,7 +21,15 @@ class Regions(AWSCompositeResources, metaclass=abc.ABCMeta):
                 'name': region
             }
 
-            await self._fetch_children(self['regions'][region], {'region': region, 'owner_id': get_aws_account_id(credentials)})
+        tasks = {
+            asyncio.ensure_future(
+                self._fetch_children(
+                    self['regions'][region],
+                    {'region': region, 'owner_id': get_aws_account_id(credentials)}
+                )
+            ) for region in self['regions']
+        }
+        await asyncio.wait(tasks)
 
         self._set_counts()
 
