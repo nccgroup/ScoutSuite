@@ -1,10 +1,11 @@
 import boto3
 
 from ScoutSuite.providers.utils import run_concurrently
-
+from threading import Lock
 
 # TODO: Add docstrings
 class AWSFacadeUtils:
+    _get_client_lock = Lock()
     _clients = {}
 
     @staticmethod
@@ -24,5 +25,9 @@ class AWSFacadeUtils:
 
     @staticmethod
     async def get_client(service: str, region: str):
-        client = await run_concurrently(lambda: boto3.client(service, region_name=region))
-        return AWSFacadeUtils._clients.setdefault((service, region), client)
+        client_key = (service, region)
+
+        if client_key not in AWSFacadeUtils._clients:
+            AWSFacadeUtils._clients[client_key] = boto3.client(service, region_name=region)
+
+        return AWSFacadeUtils._clients[client_key]
