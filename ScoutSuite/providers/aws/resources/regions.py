@@ -13,6 +13,7 @@ class Regions(AWSCompositeResources, metaclass=abc.ABCMeta):
 
     async def fetch_all(self, credentials, regions=None, partition_name='aws'):
         self['regions'] = {}
+        account_id = get_aws_account_id(credentials)
         for region in await self.facade.build_region_list(self.service, regions, partition_name):
             self['regions'][region] = {
                 'id': region,
@@ -20,7 +21,7 @@ class Regions(AWSCompositeResources, metaclass=abc.ABCMeta):
                 'name': region
             }
 
-            await self._fetch_children(self['regions'][region], {'region': region, 'owner_id': get_aws_account_id(credentials)})
+            await self._fetch_children(self['regions'][region], {'region': region, 'owner_id': account_id})
 
         self._set_counts()
 
