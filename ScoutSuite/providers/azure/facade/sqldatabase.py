@@ -34,6 +34,16 @@ class SQLDatabaseFacade:
             lambda: self._client.server_azure_ad_administrators.get(resource_group_name, server_name)
         )
 
+    async def get_server_blob_auditing_policies(self, resource_group_name, server_name):
+        return await run_concurrently(
+            lambda: self._client.server_blob_auditing_policies.get(resource_group_name, server_name)
+        )
+
+    async def get_server_security_alert_policies(self, resource_group_name, server_name):
+        return await run_concurrently(
+            lambda: self._client.server_security_alert_policies.get(resource_group_name, server_name)
+        )
+
     async def get_servers(self):
         return await run_concurrently(self._client.servers.list)
 
