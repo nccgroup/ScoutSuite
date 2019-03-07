@@ -56,7 +56,7 @@ class TestMainClass(TestCase):
 
         report_init_args = self.constructor[self.mocked_report].call_args_list[0][0]
         assert (report_init_args[0] == "aws")  # provider
-        assert (report_init_args[1] == "aws-default")  # report_file_name
+        assert (report_init_args[1] == "aws")  # report_file_name
         assert (report_init_args[2] == "scoutsuite-report")  # report_dir
 
     async def test_gcp_provider(self):
