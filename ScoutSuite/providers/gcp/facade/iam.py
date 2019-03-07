@@ -27,4 +27,4 @@ class IAMFacade(Facade):
         iam_client = self._get_client()
         request = iam_client.projects().serviceAccounts().list(name=name)
         service_accounts_group = iam_client.projects().serviceAccounts()
-        return GCPFacadeUtils.get_all('accounts', request, service_accounts_group)
+        return await GCPFacadeUtils.get_all('accounts', request, service_accounts_group)
