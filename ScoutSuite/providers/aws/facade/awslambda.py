@@ -2,5 +2,5 @@ from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 
 
 class LambdaFacade:
-    def get_functions(self, region):
-        return AWSFacadeUtils.get_all_pages('lambda', region, 'list_functions', 'Functions')
+    async def get_functions(self, region):
+        return await AWSFacadeUtils.get_all_pages('lambda', region, 'list_functions', 'Functions')
