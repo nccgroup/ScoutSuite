@@ -5,7 +5,7 @@ from ScoutSuite.providers.aws.facade.facade import AWSFacade
 
 class FileSystems(AWSResources):
     async def fetch_all(self, **kwargs):
-        raw_file_systems  = self.facade.efs.get_file_systems(self.scope['region'])
+        raw_file_systems  = await self.facade.efs.get_file_systems(self.scope['region'])
         for raw_file_system in raw_file_systems:
             name, resource = self._parse_file_system(raw_file_system)
             self[name] = resource
