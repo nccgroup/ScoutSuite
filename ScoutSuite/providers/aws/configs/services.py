@@ -53,7 +53,7 @@ class AWSServicesConfig(BaseServicesConfig):
 
     def __init__(self, metadata=None, thread_config=4, **kwargs):
 
-        super().__init__(metadata, thread_config)
+        super(AWSServicesConfig, self).__init__(metadata, thread_config)
         self.cloudformation = CloudFormation()
         self.cloudtrail = CloudTrail()
         self.cloudwatch = CloudWatchConfig(metadata['management']['cloudwatch'], thread_config)

@@ -260,7 +260,7 @@ class RegionConfig(BaseConfig):
     """
 
     def __init__(self, region_name, resource_types=None, **kwargs):
-        super().__init__(**kwargs)
+        super(RegionConfig, self).__init__(**kwargs)
         resource_types = {} if resource_types is None else resource_types
         self.region = region_name
         self.name = region_name

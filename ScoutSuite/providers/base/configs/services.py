@@ -3,6 +3,7 @@
 from ScoutSuite.core.console import print_error, print_exception, print_debug
 from ScoutSuite.providers.aws.aws import get_partition_name
 
+
 class BaseServicesConfig(object):
 
     def __init__(self, metadata=None, thread_config=4):
@@ -22,9 +23,7 @@ class BaseServicesConfig(object):
                 service_config = getattr(self, service)
                 # call fetch method for the service
                 if 'fetch_all' in dir(service_config):
-                    method_args = {}
-                    method_args['credentials'] = credentials
-                    method_args['regions'] = regions
+                    method_args = {'credentials': credentials, 'regions': regions}
 
                     if self._is_provider('aws'):
                         if service != 'iam':

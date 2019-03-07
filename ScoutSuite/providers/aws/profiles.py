@@ -4,8 +4,6 @@ import os
 import re
 
 from ScoutSuite.core.console import print_debug
-from ScoutSuite.providers.aws.aws import get_aws_account_id
-from ScoutSuite.providers.aws.credentials import read_creds
 
 aws_dir = os.path.join(os.path.expanduser('~'), '.aws')
 aws_credentials_file = os.path.join(aws_dir, 'credentials')
@@ -14,7 +12,6 @@ aws_config_file = os.path.join(aws_dir, 'config')
 re_profile_name = re.compile(r'(\[(profile\s+)?(.*?)\])')
 
 
-# noinspection PyBroadException
 class AWSProfile(object):
 
     def __init__(self, filename=None, raw_profile=None, name=None, credentials=None, account_id=None):
@@ -26,15 +23,6 @@ class AWSProfile(object):
         self.attributes = {}
         if self.raw_profile:
             self.parse_raw_profile()
-
-    def get_credentials(self):
-        # For now, use the existing code...
-        self.credentials = read_creds(self.name)
-        try:
-            self.account_id = get_aws_account_id(self.credentials)
-        except:
-            pass
-        return self.credentials
 
     def parse_raw_profile(self):
         for line in self.raw_profile.split('\n')[1:]:
