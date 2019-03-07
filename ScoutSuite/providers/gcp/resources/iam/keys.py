@@ -8,7 +8,7 @@ class Keys(Resources):
 
     async def fetch_all(self):
         raw_keys = await self.iam_facade.get_keys(self.project_id, self.service_account_email)
-        for raw_key in raw_keys.get('keys', []):
+        for raw_key in raw_keys:
             key_id, key = self._parse_key(raw_key)
             self[key_id] = key
 
