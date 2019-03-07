@@ -5,6 +5,7 @@ from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 
 class GCPFacade:
     def __init__(self):
+        self._resourcemanager_client = None
         self.stackdriverlogging = StackdriverLoggingFacade()
 
     def _get_resourcemanager_client(self):
