@@ -1,6 +1,7 @@
 from googleapiclient import discovery
 from ScoutSuite.providers.gcp.utils import MemoryCache
 from ScoutSuite.providers.gcp.facade.stackdriverlogging import StackdriverLoggingFacade
+from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 
 class GCPFacade:
     def __init__(self):
@@ -9,10 +10,7 @@ class GCPFacade:
 
     # TODO: Make truly async    
     async def get_projects(self):
-        projects = []
         request = self._resourcemanager_client.projects().list() 
-        while request is not None:
-            response = request.execute()
-            projects.extend(response.get('projects', []))
-            request = self._resourcemanager_client.projects().list_next(previous_request=request, previous_response=response)
-        return projects
+        projects_group = self._resourcemanager_client.projects()
+        return await GCPFacadeUtils.get_all('projects', request, projects_group)
+
