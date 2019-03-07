@@ -4,4 +4,4 @@ class StackdriverLoggingFacade:
     # TODO: Make truly async
     async def get_sinks(self, project_id):
         client = stackdriver_logging.Client(project=project_id)
-        return client.list_sinks()
+        return [sink for sink in client.list_sinks()]
