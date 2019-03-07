@@ -1,13 +1,13 @@
 from ScoutSuite.providers.aws.resources.regions import Regions
 from ScoutSuite.providers.aws.resources.resources import AWSResources
-from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.utils import get_non_provider_id
 
 import time
 
+
 class Trails(AWSResources):
     async def fetch_all(self, **kwargs):
-        raw_trails = self.facade.cloudtrail.get_trails(self.scope['region'])
+        raw_trails = await self.facade.cloudtrail.get_trails(self.scope['region'])
         for raw_trail in raw_trails:
             name, resource = self._parse(raw_trail)
             self[name] = resource

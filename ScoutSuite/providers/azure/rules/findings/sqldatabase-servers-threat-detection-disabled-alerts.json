@@ -1,0 +1,11 @@
+{
+    "dashboard_name": "SQL Servers",
+    "description": "Some threat detection alerts have been disabled for some SQL servers",
+    "rationale": "You should not disable alerts related to threat detections (CIS 4.1.3).",
+    "path": "sqldatabase.servers.id",
+    "display_path": "sqldatabase.servers.id",
+    "conditions": [ "and",
+        [ "sqldatabase.servers.id.threat_detection.alerts_enabled", "false", "" ]
+    ],
+    "id_suffix": "server_threat_detection_alerts_disabled"
+}

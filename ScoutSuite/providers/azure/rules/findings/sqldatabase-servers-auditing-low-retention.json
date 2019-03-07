@@ -1,0 +1,11 @@
+{
+    "dashboard_name": "SQL Servers",
+    "description": "Auditing retention period for some SQL servers is too short",
+    "rationale": "Auditing retention period should be greater than _ARG_0_ days (CIS 4.1.6).",
+    "path": "sqldatabase.servers.id",
+    "display_path": "sqldatabase.servers.id",
+    "conditions": [ "and",
+        [ "sqldatabase.servers.id.auditing.retention_days", "lessThan", "_ARG_0_" ]
+    ],
+    "id_suffix": "server_low_auditing_retention"
+}
