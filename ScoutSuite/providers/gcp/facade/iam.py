@@ -1,27 +1,30 @@
 from googleapiclient import discovery
 from ScoutSuite.providers.gcp.utils import MemoryCache
+from ScoutSuite.providers.gcp.facade.facade import Facade
+from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 
-class IAMFacade:
-    def __init__(self):
-        self._iam_client = discovery.build('iam', 'v1', cache_discovery=False, cache=MemoryCache())
+class IAMFacade(Facade):
+    def _build_client(self):
+        return discovery.build('iam', 'v1', cache_discovery=False, cache=MemoryCache())
 
     # TODO: Make truly async
     async def get_bindings(self, project_id, service_account_email):
-        resource = f'projects/{project_id}/serviceAccounts/{service_account_email}'
-        return self._iam_client.projects().serviceAccounts().getIamPolicy(resource=resource).execute()
+        resource = 'projects/{}/serviceAccounts/{}'.format(project_id, service_account_email)
+        iam_client = self._get_client()
+        response = iam_client.projects().serviceAccounts().getIamPolicy(resource=resource).execute()
+        return response.get('bindings', [])
 
     # TODO: Make truly async
     async def get_keys(self, project_id, service_account_email):
-        name = f'projects/{project_id}/serviceAccounts/{service_account_email}'
-        return self._iam_client.projects().serviceAccounts().keys().list(name=name).execute()
+        name = 'projects/{}/serviceAccounts/{}'.format(project_id, service_account_email)
+        iam_client = self._get_client()
+        response = iam_client.projects().serviceAccounts().keys().list(name=name).execute()
+        return response.get('keys', [])
 
     # TODO: Make truly async
     async def get_service_accounts(self, project_id):
-        name = f'projects/{project_id}'
-        service_accounts = []      
-        request = self._iam_client.projects().serviceAccounts().list(name=name)
-        while request is not None:
-            response = request.execute()
-            service_accounts.extend(response.get('accounts', []))
-            request = self._iam_client.projects().serviceAccounts().list_next(previous_request=request, previous_response=response)    
-        return service_accounts
+        name = 'projects/{}'.format(project_id)     
+        iam_client = self._get_client()
+        request = iam_client.projects().serviceAccounts().list(name=name)
+        service_accounts_group = iam_client.projects().serviceAccounts()
+        return GCPFacadeUtils.get_all('accounts', request, service_accounts_group)
