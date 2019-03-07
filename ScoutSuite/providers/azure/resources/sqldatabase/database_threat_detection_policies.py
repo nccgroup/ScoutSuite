@@ -9,13 +9,15 @@ class DatabaseThreatDetectionPolicies(Resources):
         self.database_name = database_name
         self.facade = facade
 
-    # TODO: make it really async.
     async def fetch_all(self):
-        policies = self.facade.database_threat_detection_policies.get(
+        policies = await self.facade.get_database_threat_detection_policies(
             self.resource_group_name, self.server_name, self.database_name)
         self._parse_policies(policies)
 
     def _parse_policies(self, policies):
         self.update({
-            'threat_detection_enabled': policies.state == "Enabled"
+            'threat_detection_enabled': policies.state == "Enabled",
+            'alerts_enabled': policies.disabled_alerts == "",
+            'send_alerts_enabled': policies.email_addresses != "" and policies.email_account_admins == "Enabled",
+            'retention_days': policies.retention_days
         })
