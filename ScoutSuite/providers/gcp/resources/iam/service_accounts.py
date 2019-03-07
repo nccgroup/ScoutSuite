@@ -10,12 +10,12 @@ class ServiceAccounts(CompositeResources):
         ('keys', Keys)
     ]
 
-    def __init__(self, iam_facade, project_id):
-        self.iam_facade = iam_facade
+    def __init__(self, gcp_facade, project_id):
+        self.gcp_facade = gcp_facade
         self.project_id = project_id
 
     async def fetch_all(self):
-        raw_service_accounts = await self.iam_facade.get_service_accounts(self.project_id)
+        raw_service_accounts = await self.gcp_facade.iam.get_service_accounts(self.project_id)
         for raw_service_account in raw_service_accounts:
             sa_id, service_account = self._parse_service_account(raw_service_account)
             self[sa_id] = service_account

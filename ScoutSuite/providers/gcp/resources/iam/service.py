@@ -8,5 +8,5 @@ class IAM(Projects):
         ('service_accounts', ServiceAccounts) 
     ]
 
-    def __init__(self, gcp_facade, iam_facade):
-        super(IAM, self).__init__(gcp_facade, iam_facade)
+    def __init__(self, gcp_facade):
+        super(IAM, self).__init__(gcp_facade)

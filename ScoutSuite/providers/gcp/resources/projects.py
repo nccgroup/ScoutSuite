@@ -1,9 +1,8 @@
 from ScoutSuite.providers.base.configs.resources import CompositeResources
 
 class Projects(CompositeResources):
-    def __init__(self, gcp_facade, service_facade):
+    def __init__(self, gcp_facade):
         self.gcp_facade = gcp_facade
-        self.service_facade = service_facade
 
     async def fetch_all(self, **kwargs):
         raw_projects = await self.gcp_facade.get_projects()
@@ -16,7 +15,7 @@ class Projects(CompositeResources):
     async def _fetch_children(self):
         for project_id in self['projects'].keys():
             for child_name, child_class in self._children:
-                child = child_class(self.service_facade, project_id)
+                child = child_class(self.gcp_facade, project_id)
                 await child.fetch_all()
                 self['projects'][project_id][child_name] = child
                 self[child_name + '_count'] = len(child)
