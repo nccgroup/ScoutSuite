@@ -21,7 +21,9 @@ class IAMFacade(Facade):
     async def get_keys(self, project_id, service_account_email):
         name = 'projects/{}/serviceAccounts/{}'.format(project_id, service_account_email)
         iam_client = self._get_client()
-        response = iam_client.projects().serviceAccounts().keys().list(name=name).execute()
+        response = await run_concurrently(
+                lambda: iam_client.projects().serviceAccounts().keys().list(name=name).execute()
+        )
         return response.get('keys', [])
 
     # TODO: Make truly async
