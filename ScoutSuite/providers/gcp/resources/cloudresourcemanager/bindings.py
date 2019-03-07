@@ -10,7 +10,7 @@ class Bindings(Resources):
         self.project_id = project_id
 
     async def fetch_all(self):
-        raw_bindings = await self.resourcemanager_facade.get_iam_policy(self.project_id)
+        raw_bindings = await self.resourcemanager_facade.get_bindings(self.project_id)
         for raw_binding in raw_bindings.get('bindings', []):
             binding_id, binding = self._parse_binding(raw_binding)
             self[binding_id] = binding

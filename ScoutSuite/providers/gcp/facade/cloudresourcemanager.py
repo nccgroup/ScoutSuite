@@ -9,7 +9,7 @@ class CloudResourceManagerFacade:
 
     # TODO: Make truly async
     async def get_bindings(self, project_id):
-        resource = f'projects/{project_id}'
+        resource = f'{project_id}'
         return self._resourcemanager_client.projects().getIamPolicy(resource=resource).execute()
 
 
