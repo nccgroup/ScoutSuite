@@ -5,7 +5,7 @@ from ScoutSuite.providers.gcp.resources.iam.service_accounts import ServiceAccou
 
 class IAM(Projects):
     _children = [ 
-        ('service_accounts', ServiceAccounts) 
+        (ServiceAccounts, 'service_accounts') 
     ]
 
     def __init__(self, gcp_facade):

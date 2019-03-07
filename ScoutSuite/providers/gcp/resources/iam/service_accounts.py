@@ -1,11 +1,11 @@
-from ScoutSuite.providers.base.configs.resources import CompositeResources
+from ScoutSuite.providers.gcp.resources.resources import GCPCompositeResources
 from ScoutSuite.providers.gcp.resources.iam.bindings import Bindings
 from ScoutSuite.providers.gcp.resources.iam.keys import Keys
 
-class ServiceAccounts(CompositeResources):
+class ServiceAccounts(GCPCompositeResources):
     _children = [
-        ('bindings', Bindings),
-        ('keys', Keys)
+        (Bindings, 'bindings'),
+        (Keys, 'keys') 
     ]
 
     def __init__(self, gcp_facade, project_id):
@@ -17,14 +17,11 @@ class ServiceAccounts(CompositeResources):
         for raw_service_account in raw_service_accounts:
             service_account_id, service_account = self._parse_service_account(raw_service_account)
             self[service_account_id] = service_account
-        await self._fetch_children()
-    
-    async def _fetch_children(self):
-        for service_account_id, service_account in self.items():
-            for child_name, child_class in self._children:
-                child = child_class(self.gcp_facade, self.project_id, service_account['email'])
-                await child.fetch_all()
-                self[service_account_id][child_name] = child
+            await self._fetch_children(self[service_account_id], {
+                'gcp_facade': self.gcp_facade, 
+                'project_id': self.project_id, 
+                'service_account_email': service_account['email'] 
+            })
 
     def _parse_service_account(self, raw_service_account):
         service_account_dict = {}
