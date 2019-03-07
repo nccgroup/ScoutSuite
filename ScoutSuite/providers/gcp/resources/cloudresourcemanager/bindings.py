@@ -40,3 +40,5 @@ class Bindings(Resources):
                 members_dict[type_map[member_type]].append(entity)
             else:
                 print_exception('Type %s not handled' % member_type)
+        
+        return members_dict
