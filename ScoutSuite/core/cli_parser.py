@@ -6,6 +6,7 @@ import os
 
 from ScoutSuite import DEFAULT_REPORT_DIR
 
+
 class ScoutSuiteArgumentParser:
 
     def __init__(self):
@@ -32,27 +33,11 @@ class ScoutSuiteArgumentParser:
 
         parser = aws_parser.add_argument_group('Authentication parameters')
 
-        default_profile = os.environ.get('AWS_PROFILE', 'default')
-        default_profile_origin = " (from AWS_PROFILE)." if 'AWS_PROFILE' in os.environ else "."
         parser.add_argument('-p',
                             '--profile',
                             dest='profile',
-                            default=[default_profile],
-                            nargs='+',
-                            help='Name of the profile. Defaults to %(default)s' + default_profile_origin)
-        parser.add_argument('-c',
-                            '--csv-credentials',
-                            dest='csv_credentials',
                             default=None,
-                            help='Path to a CSV file containing the access key ID and secret key')
-        parser.add_argument('--mfa-serial',
-                            dest='mfa_serial',
-                            default=None,
-                            help='ARN of the user\'s MFA device')
-        parser.add_argument('--mfa-code',
-                            dest='mfa_code',
-                            default=None,
-                            help='Six-digit code displayed on the MFA device.')
+                            help='Name of the profile')
 
         parser = aws_parser.add_argument_group('Additional arguments')
 

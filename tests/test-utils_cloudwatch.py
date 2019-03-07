@@ -1,12 +1,12 @@
 from ScoutSuite.utils_cloudwatch import *
-from opinel.utils.console import configPrintException
+from ScoutSuite.core.console import config_debug_level
 
 
 #
 # Test for Scout2 CloudWatch functions
 #
 class TestScout2CloudWatchUtilsClass:
-    configPrintException(True)
+    config_debug_level(True)
 
     #
     # Test get_cloudwatch_region in us-east-1

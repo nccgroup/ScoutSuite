@@ -3,8 +3,7 @@
 Lambda-related classes and functions
 """
 
-from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
-
+from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig
 
 
 ########################################
@@ -12,11 +11,11 @@ from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, Regi
 ########################################
 
 class LambdaRegionConfig(RegionConfig):
+    functions = {}
 
     def parse_function(self, global_params, region, function):
         function['name'] = function.pop('FunctionName')
         self.functions[function['name']] = function
-
 
 
 ########################################
@@ -30,5 +29,5 @@ class LambdaConfig(RegionalServiceConfig):
 
     region_config_class = LambdaRegionConfig
 
-    def __init__(self, service_metadata, thread_config = 4):
+    def __init__(self, service_metadata, thread_config=4):
         super(LambdaConfig, self).__init__(service_metadata, thread_config)

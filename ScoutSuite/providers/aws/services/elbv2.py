@@ -3,31 +3,33 @@
 ELBv2-related classes and functions
 """
 
-from opinel.utils.aws import handle_truncated_response
-from opinel.utils.globals import manage_dictionary
+from ScoutSuite.providers.aws.aws import handle_truncated_response
 
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
-from ScoutSuite.utils import ec2_classic
+from ScoutSuite.utils import manage_dictionary
+from ScoutSuite.providers.aws.utils import ec2_classic
 
 
 ########################################
 # ELBv2RegionConfig
 ########################################
 
+# noinspection PyBroadException
 class ELBv2RegionConfig(RegionConfig):
     """
     ELBv2 configuration for a single AWS region
 
     :ivar vpcs:                         Dictionary of VPCs [id]
     """
+    ssl_policies = {}
 
     def parse_lb(self, global_params, region, lb):
         """
 
+        :param lb:
         :param global_params:
-        :param region:
-        :param source:
+        :param region:              Name of the AWS region
         :return:
         """
         lb['arn'] = lb.pop('LoadBalancerArn')
@@ -44,14 +46,16 @@ class ELBv2RegionConfig(RegionConfig):
             pass
         lb['listeners'] = {}
         # Get listeners
-        listeners = handle_truncated_response(api_clients[region].describe_listeners, {'LoadBalancerArn': lb['arn']}, ['Listeners'])['Listeners']
+        listeners = handle_truncated_response(api_clients[region].describe_listeners, {'LoadBalancerArn': lb['arn']},
+                                              ['Listeners'])['Listeners']
         for listener in listeners:
             listener.pop('ListenerArn')
             listener.pop('LoadBalancerArn')
             port = listener.pop('Port')
             lb['listeners'][port] = listener
         # Get attributes
-        lb['attributes'] = api_clients[region].describe_load_balancer_attributes(LoadBalancerArn = lb['arn'])['Attributes']
+        lb['attributes'] = api_clients[region].describe_load_balancer_attributes(LoadBalancerArn=lb['arn'])[
+            'Attributes']
         self.vpcs[vpc_id].lbs[self.get_non_provider_id(lb['name'])] = lb
 
     def parse_ssl_policie(self, global_params, region, policy):
@@ -69,5 +73,5 @@ class ELBv2Config(RegionalServiceConfig):
     """
     region_config_class = ELBv2RegionConfig
 
-    def __init__(self, service_metadata, thread_config = 4):
+    def __init__(self, service_metadata, thread_config=4):
         super(ELBv2Config, self).__init__(service_metadata, thread_config)

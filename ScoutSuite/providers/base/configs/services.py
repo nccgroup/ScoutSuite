@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from opinel.utils.console import printError, printException, printDebug
-from opinel.utils.aws import get_aws_account_id, get_partition_name
+from ScoutSuite.core.console import print_error, print_exception, print_debug
+from ScoutSuite.providers.aws.aws import get_partition_name
+
 
 class BaseServicesConfig(object):
 
@@ -22,9 +23,7 @@ class BaseServicesConfig(object):
                 service_config = getattr(self, service)
                 # call fetch method for the service
                 if 'fetch_all' in dir(service_config):
-                    method_args = {}
-                    method_args['credentials'] = credentials
-                    method_args['regions'] = regions
+                    method_args = {'credentials': credentials, 'regions': regions}
 
                     if self._is_provider('aws'):
                         if service != 'iam':
@@ -34,11 +33,7 @@ class BaseServicesConfig(object):
                     if hasattr(service_config, 'finalize'):
                         service_config.finalize()
                 else:
-                    printDebug('No method to fetch service %s.' % service)
+                    print_debug('No method to fetch service %s.' % service)
             except Exception as e:
-                printError('Error: could not fetch %s configuration.' % service)
-                printException(e)
-
-    # TODO is this ever called?
-    # def postprocessing(self):
-    #     pass
+                print_error('Error: could not fetch %s configuration.' % service)
+                print_exception(e)

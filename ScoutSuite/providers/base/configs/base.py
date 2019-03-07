@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import copy
+import re
 
 from threading import Thread
 
@@ -15,12 +16,12 @@ from hashlib import sha1
 from ScoutSuite.providers.base.configs.threads import thread_configs
 
 # TODO do this better without name conflict
-from opinel.utils.aws import connect_service
+from ScoutSuite.providers.aws.aws import connect_service
 from ScoutSuite.providers.gcp.utils import gcp_connect_service
 from ScoutSuite.providers.azure.utils import azure_connect_service
 
-from opinel.utils.aws import build_region_list
-from opinel.utils.console import printException, printInfo
+from ScoutSuite.providers.aws.aws import build_region_list
+from ScoutSuite.core.console import print_exception, print_info
 
 from ScoutSuite.output.console import FetchStatusLogger
 from ScoutSuite.utils import format_service_name
@@ -40,8 +41,7 @@ class BaseConfig(object):
 
         self.library_type = None if not hasattr(self, 'library_type') else self.library_type
 
-        self.service = type(self).__name__.replace('Config',
-                                                   '').lower()  # TODO: use regex with EOS instead of plain replace
+        self.service = re.sub(r'Config$', "", type(self).__name__).lower()
         self.thread_config = thread_configs[thread_config]
 
         # Booleans that define if threads should keep running
@@ -78,7 +78,7 @@ class BaseConfig(object):
         # Initialize targets
         if not targets:
             targets = type(self).targets
-        printInfo('Fetching %s config...' % format_service_name(self.service))
+        print_info('Fetching %s config...' % format_service_name(self.service))
         formatted_string = None
 
         # FIXME the below should be in moved to each provider's code
@@ -169,11 +169,11 @@ class BaseConfig(object):
                             e.response['Error']['Code'] in ['Throttling']:
                         q.put((target_type, backup), )
                     else:
-                        printException(e)
+                        print_exception(e)
                 finally:
                     q.task_done()
         except Exception as e:
-            printException(e)
+            print_exception(e)
             pass
 
     def __fetch_service(self, q, params):
@@ -191,14 +191,14 @@ class BaseConfig(object):
                         try:
                             method = self._get_method(api_client, target_type, list_method_name)
                         except Exception as e:
-                            printException(e)
+                            print_exception(e)
                             continue
 
                         try:
                             targets = self._get_targets(response_attribute, api_client, method, list_params, ignore_list_error)
                         except Exception as e:
                             if not ignore_list_error:
-                                printException(e)
+                                print_exception(e)
                             targets = []
 
                         self.fetchstatuslogger.counts[target_type]['discovered'] += len(targets)
@@ -207,11 +207,11 @@ class BaseConfig(object):
                             params['q'].put((target_type, target), )
 
                 except Exception as e:
-                    printException(e)
+                    print_exception(e)
                 finally:
                     q.task_done()
         except Exception as e:
-            printException(e)
+            print_exception(e)
             pass
 
     def _get_method(self, api_client, target_type, list_method_name):
