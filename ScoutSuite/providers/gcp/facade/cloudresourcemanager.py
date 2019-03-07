@@ -3,7 +3,7 @@
 from googleapiclient import discovery
 from ScoutSuite.providers.gcp.utils import MemoryCache
 
-class ResourceManagerFacade:
+class CloudResourceManagerFacade:
     def __init__(self):
         self._resourcemanager_client = discovery.build('cloudresourcemanager', 'v1', cache_discovery=False, cache=MemoryCache())
 
