@@ -8,7 +8,7 @@ class CloudFormation:
     async def get_stacks(self, region: str):
         stacks = await AWSFacadeUtils.get_all_pages('cloudformation', region, 'list_stacks', 'StackSummaries')
 
-        client = await AWSFacadeUtils.get_client('cloudformation', region)
+        client = AWSFacadeUtils.get_client('cloudformation', region)
         for stack in stacks:
             stack_name = stack['StackName']
             stack_description = await run_concurrently(
