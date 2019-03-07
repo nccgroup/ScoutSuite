@@ -37,7 +37,7 @@ class GCPServicesConfig(BaseServicesConfig):
         except NameError as e:
             pass
 
-        self.stackdriverlogging = StackdriverLogging(gcp_facade, StackdriverLoggingFacade)
+        self.stackdriverlogging = StackdriverLogging(gcp_facade, stackdriverlogging_facade)
         # self.stackdrivermonitoring = StackdriverMonitoringConfig(thread_config=thread_config)
 
     def _is_provider(self, provider_name):
