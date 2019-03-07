@@ -5,7 +5,7 @@ class GCPFacadeUtils:
     async def get_all(resource_key, request, resources_group):
         resources = []
         while request is not None:
-            response = request.execute()
+            response = await run_concurrently(request.execute)
             resources.extend(response.get(resource_key, []))
             request = run_concurrently(
                         lambda: resources_group.list_next(previous_request=request, previous_response=response)
