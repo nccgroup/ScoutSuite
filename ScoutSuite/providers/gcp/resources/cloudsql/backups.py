@@ -2,7 +2,7 @@
 
 from ScoutSuite.providers.base.configs.resources import Resources
 
-class Instances(Resources):
+class Backups(Resources):
     def __init__(self, cloudsql_facade, project_id, instance_name):
         self.cloudsql_facade = cloudsql_facade
         self.project_id = project_id
