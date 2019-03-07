@@ -24,7 +24,7 @@ class ServiceAccounts(CompositeResources):
     async def _fetch_children(self):
         for service_account_id, service_account in self.items():
             for child_name, child_class in self._children:
-                child = child_class(self.iam_facade, self.project_id, service_account['email'])
+                child = child_class(self.gcp_facade, self.project_id, service_account['email'])
                 await child.fetch_all()
                 self[service_account_id][child_name] = child
 
