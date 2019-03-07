@@ -2,6 +2,7 @@ from googleapiclient import discovery
 from ScoutSuite.providers.gcp.utils import MemoryCache
 from ScoutSuite.providers.gcp.facade.facade import Facade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
+from ScoutSuite.providers.utils import run_concurrently
 
 class IAMFacade(Facade):
     def _build_client(self):
