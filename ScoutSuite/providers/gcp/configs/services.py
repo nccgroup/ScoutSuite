@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 from ScoutSuite.providers.gcp.facade.facade import GCPFacade
 from ScoutSuite.providers.gcp.facade.iam import IAMFacade

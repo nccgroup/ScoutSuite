@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from googleapiclient import discovery
 from ScoutSuite.providers.gcp.utils import MemoryCache
 
