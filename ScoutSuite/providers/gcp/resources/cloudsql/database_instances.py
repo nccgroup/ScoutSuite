@@ -53,3 +53,4 @@ class DatabaseInstances(CompositeResources):
 
         last_backup_id = max(backups.keys(), key=(lambda k: backups[k]['creation_timestamp']))
         return backups[last_backup_id]['creation_timestamp']
+        

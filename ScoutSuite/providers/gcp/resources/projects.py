@@ -22,3 +22,4 @@ class Projects(CompositeResources):
                 await child.fetch_all()
                 self['projects'][project_id][child_name] = child
                 self[child_name + '_count'] = len(child)
+                

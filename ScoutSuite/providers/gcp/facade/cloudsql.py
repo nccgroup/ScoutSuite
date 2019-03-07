@@ -31,3 +31,4 @@ class CloudSQLFacade:
     async def get_users(self, project_id, instance_name):
         users = self._cloudsql_client.users().list(project=project_id, instance=instance_name).execute()
         return users.get('items', [])
+        

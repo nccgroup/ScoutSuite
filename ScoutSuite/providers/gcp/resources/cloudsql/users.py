@@ -19,3 +19,4 @@ class Users(Resources):
         user_dict['name'] = raw_user['name']
         user_dict['host'] = raw_user.get('host')
         return user_dict['name'], user_dict
+        

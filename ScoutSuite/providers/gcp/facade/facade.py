@@ -16,3 +16,4 @@ class GCPFacade:
             projects.extend(response.get('projects', []))
             request = self._resourcemanager_client.projects().list_next(previous_request=request, previous_response=response)
         return projects
+        
