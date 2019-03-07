@@ -1,3 +1,4 @@
+from ScoutSuite.providers.utils import run_concurrently
 
 class GCPFacadeUtils:
     @staticmethod
