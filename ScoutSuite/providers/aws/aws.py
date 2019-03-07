@@ -34,20 +34,20 @@ def connect_service(service, credentials, region_name=None, config=None, silent=
     """
     Instantiates an AWS API client
 
-    :param service:
-    :param credentials:
-    :param region_name:
-    :param config:
-    :param silent:
+    :param service:                         Service targeted, e.g. ec2
+    :param credentials:                     Id, secret, token
+    :param region_name:                     Region desired, e.g. us-east-2
+    :param config:                          Configuration (optional)
+    :param silent:                          Whether or not to print messages
 
     :return:
     """
     api_client = None
     try:
         client_params = {'service_name': service.lower()}
-        session_params = {'aws_access_key_id': credentials['AccessKeyId'],
-                          'aws_secret_access_key': credentials['SecretAccessKey'],
-                          'aws_session_token': credentials['SessionToken']}
+        session_params = {'aws_access_key_id': credentials.get('access_key'),
+                          'aws_secret_access_key': credentials.get('secret_key'),
+                          'aws_session_token': credentials.get('token')}
         if region_name:
             client_params['region_name'] = region_name
             session_params['region_name'] = region_name
@@ -127,7 +127,6 @@ def handle_truncated_response(callback, params, entities):
             if not marker_found:
                 break
         except Exception as e:
-            # noinspection PyTypeChecker
             if is_throttled(e):
                 time.sleep(1)
             else:
@@ -143,4 +142,4 @@ def is_throttled(e):
     :return:                            True if it's a throttling exception else False
     """
     return (hasattr(e, 'response') and 'Error' in e.response and e.response['Error']['Code'] in
-                    ['Throttling', 'RequestLimitExceeded', 'ThrottlingException', 'TooManyRequestsException'])
+            ['Throttling', 'RequestLimitExceeded', 'ThrottlingException', 'TooManyRequestsException'])
