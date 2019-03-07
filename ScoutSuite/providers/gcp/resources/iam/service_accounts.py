@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from ScoutSuite.providers.base.configs.resources import CompositeResources
 from ScoutSuite.providers.gcp.resources.iam.bindings import Bindings
 from ScoutSuite.providers.gcp.resources.iam.keys import Keys
