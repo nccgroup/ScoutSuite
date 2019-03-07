@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.aws import handle_truncated_response
+from ScoutSuite.providers.utils import run_concurrently
 
 
 class EFSFacade:
