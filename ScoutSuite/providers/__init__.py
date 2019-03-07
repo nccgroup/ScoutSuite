@@ -10,6 +10,7 @@ providers_dict = {'aws': 'AWSProvider',
                   'gcp': 'GCPProvider',
                   'azure': 'AzureProvider'}
 
+
 def get_provider(provider,
                  profile=None,
                  project_id=None, folder_id=None, organization_id=None,
@@ -17,8 +18,17 @@ def get_provider(provider,
     """
     Returns an instance of the requested provider.
 
-    :param provider: a string indicating the provider
-    :return: a child instance of the BaseProvider class or None if no object implemented
+    :param profile:             The name of the profile desired
+    :param project_id:          The identifier of the project
+    :param folder_id:           The identifier of the folder
+    :param organization_id:     The identifier of the organization
+    :param report_dir:          Where to save the report
+    :param timestamp:           Whether to print or not the timestamp on the report
+    :param services:            Exclusive list of services on which to run Scout Suite
+    :param skipped_services:    List of services not to run Scout Suite on
+    :param thread_config:       Represents the level of threads to use
+    :param provider:            A string indicating the provider
+    :return:                    A child instance of the BaseProvider class or None if no object implemented
     """
     services = [] if services is None else services
     skipped_services = [] if skipped_services is None else skipped_services
