@@ -8,7 +8,7 @@ class Projects(CompositeResources):
         self.service_facade = service_facade
 
     async def fetch_all(self, **kwargs):
-        raw_projects = self.gcp_facade.get_projects()
+        raw_projects = await self.gcp_facade.get_projects()
         self['projects'] = {}
         for raw_project in raw_projects:
             project_id = raw_project['projectId']

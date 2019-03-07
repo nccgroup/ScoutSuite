@@ -8,7 +8,7 @@ class Sinks(Resources):
         self.project_id = project_id
 
     async def fetch_all(self):
-        raw_sinks = self.sdl_facade.get_sinks(self.project_id)
+        raw_sinks = await self.sdl_facade.get_sinks(self.project_id)
         for raw_sink in raw_sinks:
             sink_name, sink = self._parse_sink(raw_sink)
             self[sink_name] = sink

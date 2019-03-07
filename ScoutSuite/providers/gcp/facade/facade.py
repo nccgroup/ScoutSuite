@@ -7,7 +7,8 @@ class GCPFacade:
     def __init__(self):
         self._resourcemanager_client = discovery.build('cloudresourcemanager', 'v1', cache_discovery=False, cache=MemoryCache())
 
-    def get_projects(self):
+    # TODO: Make truly async    
+    async def get_projects(self):
         projects = []
         request = self._resourcemanager_client.projects().list() 
         while request is not None:
