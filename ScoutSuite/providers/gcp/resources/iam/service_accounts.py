@@ -17,16 +17,16 @@ class ServiceAccounts(CompositeResources):
     async def fetch_all(self):
         raw_service_accounts = await self.gcp_facade.iam.get_service_accounts(self.project_id)
         for raw_service_account in raw_service_accounts:
-            sa_id, service_account = self._parse_service_account(raw_service_account)
-            self[sa_id] = service_account
+            service_account_id, service_account = self._parse_service_account(raw_service_account)
+            self[service_account_id] = service_account
         await self._fetch_children()
     
     async def _fetch_children(self):
-        for sa_id, service_account in self.items():
+        for service_account_id, service_account in self.items():
             for child_name, child_class in self._children:
                 child = child_class(self.iam_facade, self.project_id, service_account['email'])
                 await child.fetch_all()
-                self[sa_id][child_name] = child
+                self[service_account_id][child_name] = child
 
     def _parse_service_account(self, raw_service_account):
         service_account_dict = {}
