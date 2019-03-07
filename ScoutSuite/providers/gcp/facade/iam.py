@@ -11,7 +11,9 @@ class IAMFacade(Facade):
     async def get_bindings(self, project_id, service_account_email):
         resource = 'projects/{}/serviceAccounts/{}'.format(project_id, service_account_email)
         iam_client = self._get_client()
-        response = iam_client.projects().serviceAccounts().getIamPolicy(resource=resource).execute()
+        response = await run_concurrently(
+                lambda: iam_client.projects().serviceAccounts().getIamPolicy(resource=resource).execute()
+        )
         return response.get('bindings', [])
 
     # TODO: Make truly async
