@@ -8,7 +8,6 @@ class IAMFacade(Facade):
     def _build_client(self):
         return discovery.build('iam', 'v1', cache_discovery=False, cache=MemoryCache())
 
-    # TODO: Make truly async
     async def get_bindings(self, project_id, service_account_email):
         resource = 'projects/{}/serviceAccounts/{}'.format(project_id, service_account_email)
         iam_client = self._get_client()
@@ -17,7 +16,6 @@ class IAMFacade(Facade):
         )
         return response.get('bindings', [])
 
-    # TODO: Make truly async
     async def get_keys(self, project_id, service_account_email):
         name = 'projects/{}/serviceAccounts/{}'.format(project_id, service_account_email)
         iam_client = self._get_client()
@@ -26,7 +24,6 @@ class IAMFacade(Facade):
         )
         return response.get('keys', [])
 
-    # TODO: Make truly async
     async def get_service_accounts(self, project_id):
         name = 'projects/{}'.format(project_id)     
         iam_client = self._get_client()

@@ -12,7 +12,6 @@ class GCPFacade(Facade):
     def _build_client(self):
         return discovery.build('cloudresourcemanager', 'v1', cache_discovery=False, cache=MemoryCache())
 
-    # TODO: Make truly async    
     async def get_projects(self):
         resourcemanager_client = self._get_client()
         request = resourcemanager_client.projects().list() 
