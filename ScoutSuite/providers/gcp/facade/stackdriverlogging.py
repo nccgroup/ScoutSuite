@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from google.cloud import logging as stackdriver_logging
 
 class StackdriverLoggingFacade:

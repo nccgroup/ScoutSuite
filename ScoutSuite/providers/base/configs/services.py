@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from ScoutSuite.core.console import print_error, print_exception, print_debug
 from ScoutSuite.providers.aws.aws import get_partition_name
 
