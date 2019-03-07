@@ -1,12 +1,12 @@
 from ScoutSuite.providers.base.configs.resources import Resources
 
 class Sinks(Resources):
-    def __init__(self, sdl_facade, project_id):
-        self.sdl_facade = sdl_facade
+    def __init__(self, gcp_facade, project_id):
+        self.gcp_facade = gcp_facade
         self.project_id = project_id
 
     async def fetch_all(self):
-        raw_sinks = await self.sdl_facade.get_sinks(self.project_id)
+        raw_sinks = await self.gcp_facade.stackdriverlogging.get_sinks(self.project_id)
         for raw_sink in raw_sinks:
             sink_name, sink = self._parse_sink(raw_sink)
             self[sink_name] = sink

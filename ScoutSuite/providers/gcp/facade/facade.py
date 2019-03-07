@@ -1,9 +1,11 @@
 from googleapiclient import discovery
 from ScoutSuite.providers.gcp.utils import MemoryCache
+from ScoutSuite.providers.gcp.facade.stackdriverlogging import StackdriverLoggingFacade
 
 class GCPFacade:
     def __init__(self):
         self._resourcemanager_client = discovery.build('cloudresourcemanager', 'v1', cache_discovery=False, cache=MemoryCache())
+        self.stackdriverlogging = StackdriverLoggingFacade()
 
     # TODO: Make truly async    
     async def get_projects(self):

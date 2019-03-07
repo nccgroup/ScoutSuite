@@ -6,5 +6,5 @@ class StackdriverLogging(Projects):
         ('sinks', Sinks) 
     ]
 
-    def __init__(self, gcp_facade, sdl_facade):
-        super(StackdriverLogging, self).__init__(gcp_facade, sdl_facade)
+    def __init__(self, gcp_facade):
+        super(StackdriverLogging, self).__init__(gcp_facade)
