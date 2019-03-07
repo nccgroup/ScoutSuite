@@ -2,6 +2,7 @@ from googleapiclient import discovery
 from ScoutSuite.providers.gcp.utils import MemoryCache
 from ScoutSuite.providers.gcp.facade.facade import Facade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
+from ScoutSuite.providers.utils import run_concurrently
 
 class IAMFacade(Facade):
     def _build_client(self):
@@ -11,14 +12,18 @@ class IAMFacade(Facade):
     async def get_bindings(self, project_id, service_account_email):
         resource = 'projects/{}/serviceAccounts/{}'.format(project_id, service_account_email)
         iam_client = self._get_client()
-        response = iam_client.projects().serviceAccounts().getIamPolicy(resource=resource).execute()
+        response = await run_concurrently(
+                lambda: iam_client.projects().serviceAccounts().getIamPolicy(resource=resource).execute()
+        )
         return response.get('bindings', [])
 
     # TODO: Make truly async
     async def get_keys(self, project_id, service_account_email):
         name = 'projects/{}/serviceAccounts/{}'.format(project_id, service_account_email)
         iam_client = self._get_client()
-        response = iam_client.projects().serviceAccounts().keys().list(name=name).execute()
+        response = await run_concurrently(
+                lambda: iam_client.projects().serviceAccounts().keys().list(name=name).execute()
+        )
         return response.get('keys', [])
 
     # TODO: Make truly async
