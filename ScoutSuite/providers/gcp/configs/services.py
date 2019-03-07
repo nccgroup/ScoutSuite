@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
+from ScoutSuite.providers.gcp.facade.facade import GCPFacade
+from ScoutSuite.providers.gcp.facade.cloudresourcemanager import CloudResourceManagerFacade
+from ScoutSuite.providers.gcp.resources.cloudresourcemanager import CloudResourceManager
 from ScoutSuite.providers.gcp.services.cloudstorage import CloudStorageConfig
 from ScoutSuite.providers.gcp.services.cloudsql import CloudSQLConfig
 from ScoutSuite.providers.gcp.services.iam import IAMConfig
 from ScoutSuite.providers.gcp.services.stackdriverlogging import StackdriverLoggingConfig
 from ScoutSuite.providers.gcp.services.computeengine import ComputeEngineConfig
-from ScoutSuite.providers.gcp.services.cloudresourcemanager import CloudResourceManager
 
 try:
     from ScoutSuite.providers.gcp.services.kubernetesengine_private import KubernetesEngineConfig
@@ -20,7 +22,10 @@ class GCPServicesConfig(BaseServicesConfig):
 
         projects = [] if projects is None else projects
 
-        self.cloudresourcemanager = CloudResourceManager(thread_config=thread_config)
+        gcp_facade = GCPFacade()
+        resourcemanager_facade = CloudResourceManagerFacade()
+
+        self.cloudresourcemanager = CloudResourceManager(gcp_facade, resourcemanager_facade)
         self.cloudstorage = CloudStorageConfig(thread_config=thread_config)
         self.cloudsql = CloudSQLConfig(thread_config=thread_config)
         self.computeengine = ComputeEngineConfig(thread_config=thread_config)
