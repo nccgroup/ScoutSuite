@@ -10,7 +10,7 @@ class Bindings(Resources):
 
     async def fetch_all(self):
         raw_bindings = await self.iam_facade.get_bindings(self.project_id, self.service_account_email)
-        for raw_binding in raw_bindings:
+        for raw_binding in raw_bindings.get('bindings', []):
             binding_id, binding = self._parse_binding(raw_binding)
             self[binding_id] = binding
 
