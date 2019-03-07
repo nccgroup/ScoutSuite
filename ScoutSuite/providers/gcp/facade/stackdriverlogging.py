@@ -1,4 +1,5 @@
 from google.cloud import logging as stackdriver_logging
+from ScoutSuite.providers.utils import run_concurrently
 
 class StackdriverLoggingFacade:
     # TODO: Make truly async
