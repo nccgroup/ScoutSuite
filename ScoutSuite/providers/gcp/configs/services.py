@@ -5,7 +5,6 @@ from ScoutSuite.providers.gcp.facade.facade import GCPFacade
 from ScoutSuite.providers.gcp.facade.cloudsql import CloudSQLFacade
 from ScoutSuite.providers.gcp.resources.cloudsql.service import CloudSQL
 from ScoutSuite.providers.gcp.services.cloudstorage import CloudStorageConfig
-from ScoutSuite.providers.gcp.services.cloudsql import CloudSQLConfig
 from ScoutSuite.providers.gcp.services.iam import IAMConfig
 from ScoutSuite.providers.gcp.services.stackdriverlogging import StackdriverLoggingConfig
 from ScoutSuite.providers.gcp.services.computeengine import ComputeEngineConfig
