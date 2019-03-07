@@ -35,7 +35,6 @@ class GCPServicesConfig(BaseServicesConfig):
             pass
 
         self.stackdriverlogging = StackdriverLogging(gcp_facade, stackdriverlogging_facade)
-        # self.stackdrivermonitoring = StackdriverMonitoringConfig(thread_config=thread_config)
 
     def _is_provider(self, provider_name):
         return provider_name == 'gcp'
