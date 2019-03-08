@@ -5,7 +5,7 @@ from ScoutSuite.providers.aws.resources.resources import AWSResources
 
 class Connections(AWSResources):
     async def fetch_all(self, **kwargs):
-        raw_connections  = self.facade.directconnect.get_connections(self.scope['region'])
+        raw_connections  = await self.facade.directconnect.get_connections(self.scope['region'])
         for raw_connection in raw_connections:
             name, resource = self._parse_function(raw_connection)
             self[name] = resource

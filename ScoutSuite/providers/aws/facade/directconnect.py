@@ -1,6 +1,10 @@
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
+from ScoutSuite.providers.utils import run_concurrently
 
 
 class DirectConnectFacade:
-    def get_connections(self, region):
-        return AWSFacadeUtils.get_client('directconnect', region).describe_connections()['connections']
+    async def get_connections(self, region):
+        client = AWSFacadeUtils.get_client('directconnect', region)
+        return await run_concurrently(
+                lambda: client.describe_connections()['connections']
+        )
