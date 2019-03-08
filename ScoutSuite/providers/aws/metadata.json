@@ -43,7 +43,7 @@
                 }
             }
         },
-            "cloudwatch": {
+        "cloudwatch": {
             "resources": {
                 "alarms": {
                     "api_call": "describe_alarms",
