@@ -17,11 +17,7 @@ class ServiceAccounts(GCPCompositeResources):
         for raw_service_account in raw_service_accounts:
             service_account_id, service_account = self._parse_service_account(raw_service_account)
             self[service_account_id] = service_account
-            await self._fetch_children(self[service_account_id], {
-                'gcp_facade': self.gcp_facade, 
-                'project_id': self.project_id, 
-                'service_account_email': service_account['email'] 
-            })
+            await self._fetch_children(self[service_account_id], gcp_facade = self.gcp_facade, project_id = self.project_id, service_account_email = service_account['email'])
 
     def _parse_service_account(self, raw_service_account):
         service_account_dict = {}

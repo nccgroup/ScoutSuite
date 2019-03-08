@@ -10,10 +10,7 @@ class Projects(GCPCompositeResources):
         for raw_project in raw_projects:
             project_id = raw_project['projectId']
             self['projects'][project_id] = {}
-            await self._fetch_children(self['projects'][project_id], {
-                'gcp_facade': self.gcp_facade, 
-                'project_id': project_id
-            })
+            await self._fetch_children(self['projects'][project_id], gcp_facade = self.gcp_facade, project_id = project_id)
         self._set_counts()
 
     def _set_counts(self):
