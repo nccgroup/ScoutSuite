@@ -17,10 +17,12 @@ class Stacks(AWSResources):
 
         template = raw_stack.pop('template')
         raw_stack['deletion_policy'] = 'Delete'
-        for group in template.keys():
-            if 'DeletionPolicy' in template[group]:
-                raw_stack['deletion_policy'] = template[group]['DeletionPolicy']
-                break
+
+        if hasattr(template, 'keys'):
+            for group in template.keys():
+                if 'DeletionPolicy' in template[group]:
+                    raw_stack['deletion_policy'] = template[group]['DeletionPolicy']
+                    break
 
         return raw_stack['name'], raw_stack
 
