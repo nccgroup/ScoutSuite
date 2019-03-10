@@ -1,6 +1,7 @@
 # Core
 python-dateutil>=2.2
 netaddr>=0.7.11
+flask>=1.0.2
 
 # AWS Provider
 boto3>=1.9.60

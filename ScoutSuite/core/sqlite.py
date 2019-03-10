@@ -12,14 +12,12 @@ select_query = 'SELECT value FROM scoutdata WHERE key=?'
 
 
 class SQLConnection:
-    def __init__(self):
-        self.connection = None
-
-    def create_database(self, filename):
-        if os.path.isfile(filename):
+    def __init__(self, filename, create_new=False):
+        if create_new and os.path.isfile(filename):
             os.remove(filename)
         self.connection = sqlite3.connect(filename)
-        self.connection.execute(table_creation_query)
+        if create_new:
+            self.connection.execute(table_creation_query)
 
     def add_value(self, key, value):
         with self.connection:
@@ -34,10 +32,9 @@ class SQLConnection:
         self.connection.close()
 
 
-def manual_testing():
-    database = SQLConnection()
-    database.create_database("/tmp/sqltest1.db")
+# Used for manual testing
+if __name__ == "__main__":
+    database = SQLConnection("/tmp/sqltest1.db")
     database.add_value("test.10.test2", "somevalue")
     print(database.get_value("test.10.test2"))
 
-#manual_testing()
