@@ -107,26 +107,3 @@ class Scout2Report(HTMLReport):
                         newline = newline.replace('<!-- PLACEHOLDER -->', contents)
                         nf.write(newline)
         return new_file
-
-
-class RulesetGenerator(HTMLReport):
-    """
-    HTML ruleset generator for Scout2
-    """
-
-    def __init__(self, ruleset_name, report_dir=None, timestamp=False, exceptions=None):
-        exceptions = {} if exceptions is None else exceptions
-        self.html_root = GENERATOR_FILE
-        self.ruleset_name = ruleset_name
-        super(RulesetGenerator, self).__init__(ruleset_name, report_dir, timestamp, exceptions)
-
-    def create_html_report(self, force_write):
-        src_rule_generator = os.path.join(self.html_data_path, GENERATOR_FILE)
-        rule_generator = os.path.join(self.report_dir, GENERATOR_FILE)
-        shutil.copyfile(src_rule_generator, rule_generator)
-        return rule_generator
-
-    def save(self, config, force_write=False, debug=False):
-        self.prepare_html_report_dir()
-        self.jsrw.save_to_file(config, AWSRULESET, force_write, debug)
-        return self.create_html_report(force_write)

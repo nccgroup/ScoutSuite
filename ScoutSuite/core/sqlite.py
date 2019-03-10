@@ -1,40 +1,27 @@
-import sqlite3
+from sqlitedict import SqliteDict
 import os
-
-table_creation_query = 'CREATE TABLE scoutdata ( \
-    key TEXT NOT NULL UNIQUE, \
-    value TEXT, \
-    PRIMARY KEY(key) \
-);'
-
-insert_query = 'INSERT INTO scoutdata VALUES (?, ?)'
-select_query = 'SELECT value FROM scoutdata WHERE key=?'
 
 
 class SQLConnection:
     def __init__(self, filename, create_new=False):
         if create_new and os.path.isfile(filename):
             os.remove(filename)
-        self.connection = sqlite3.connect(filename)
-        if create_new:
-            self.connection.execute(table_creation_query)
+        self.data = SqliteDict(filename, autocommit=True)
 
-    def add_value(self, key, value):
-        with self.connection:
-            self.connection.execute(insert_query, (key, value))
+    def set(self, key, value):
+        self.data[key] = value
 
-    def get_value(self, key):
-        cursor = self.connection.cursor()
-        cursor.execute(select_query, (key,))
-        return cursor.fetchone()[0]
+    def get(self, key):
+        return self.data.get(key)
 
     def close(self):
-        self.connection.close()
+        self.data.close()
 
 
 # Used for manual testing
 if __name__ == "__main__":
-    database = SQLConnection("/tmp/sqltest1.db")
-    database.add_value("test.10.test2", "somevalue")
-    print(database.get_value("test.10.test2"))
+    database = SQLConnection("/tmp/sqltest1.db", True)
+    database.set("test.10.test2", "somevalue")
+    print(database.get("test.10.test2"))
+    database.close()
 

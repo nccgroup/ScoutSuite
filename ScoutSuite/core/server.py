@@ -1,23 +1,23 @@
-from flask import Flask, request, _app_ctx_stack
-
 from ScoutSuite.core.sqlite import SQLConnection
-
-app = Flask(__name__)
-
-database_filename = None
+import cherrypy
 
 
-@app.route('/api/data', methods=['GET'])
-def data():
-    key = request.args.get('key')
-    return SQLConnection(database_filename).get_value(key)
+class Server(object):
+    def __init__(self, filename):
+        self.results = SQLConnection(filename)
 
+    @cherrypy.expose(['data'])
+    def get(self, key=None):
+        return self.results.get(key)
 
-def start(filename):
-    global database_filename
-    database_filename = filename
-    app.run()
+    @staticmethod
+    def init(database_filename, host, port):
+        cherrypy.config.update({
+                'server.socket_host': host,
+                'server.socket_port': port,
+            })
+        cherrypy.quickstart(Server(database_filename), "/api")
 
 
 if __name__ == "__main__":
-    start("/tmp/sqltest1.db")
+    Server.init("/tmp/sqltest1.db", '127.0.0.1', 8000)
