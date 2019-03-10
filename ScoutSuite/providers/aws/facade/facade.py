@@ -1,9 +1,10 @@
-from botocore.session import Session
 from collections import Counter
-from ScoutSuite.providers.aws.facade.ec2 import EC2Facade
+from botocore.session import Session
 from ScoutSuite.providers.aws.facade.awslambda import LambdaFacade
 from ScoutSuite.providers.aws.facade.cloudformation import CloudFormation
 from ScoutSuite.providers.aws.facade.cloudtrail import CloudTrailFacade
+from ScoutSuite.providers.aws.facade.ec2 import EC2Facade
+from ScoutSuite.providers.aws.facade.efs import EFSFacade
 from ScoutSuite.providers.utils import run_concurrently
 
 
@@ -15,6 +16,7 @@ class AWSFacade(object):
         self.awslambda = LambdaFacade()
         self.cloudformation = CloudFormation()
         self.cloudtrail = CloudTrailFacade()
+        self.efs = EFSFacade()
 
     async def build_region_list(self, service: str, chosen_regions=None, partition_name='aws'):
         service = 'ec2containerservice' if service == 'ecs' else service
