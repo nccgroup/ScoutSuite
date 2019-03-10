@@ -22,11 +22,13 @@
         <div class="list-group-item">
             <h4>Listeners</h4>
             <ul>
+                <span id="elbv2.regions.{{region}}.vpcs.{{vpc}}.lbs.{{@key}}.has_secure_protocol">
                 {{#each listeners}}
                     <li class="list-group-item-text">
                         {{@key}} ({{Protocol}}{{#if SslPolicy}}, {{SslPolicy}}{{/if}})
                     </li>
                 {{/each}}
+                </span>
             </ul>
         </div>
         <div class="list-group-item">

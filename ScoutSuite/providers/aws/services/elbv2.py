@@ -44,6 +44,7 @@ class ELBv2RegionConfig(RegionConfig):
         except Exception as e:
             # Network load balancers do not have security groups
             pass
+        lb['has_secure_protocol'] = False
         lb['listeners'] = {}
         # Get listeners
         listeners = handle_truncated_response(api_clients[region].describe_listeners, {'LoadBalancerArn': lb['arn']},
@@ -53,6 +54,9 @@ class ELBv2RegionConfig(RegionConfig):
             listener.pop('LoadBalancerArn')
             port = listener.pop('Port')
             lb['listeners'][port] = listener
+            if listener['Protocol'] is 'HTTPS':
+                lb['has_secure_protocol'] = True
+
         # Get attributes
         lb['attributes'] = api_clients[region].describe_load_balancer_attributes(LoadBalancerArn=lb['arn'])[
             'Attributes']
