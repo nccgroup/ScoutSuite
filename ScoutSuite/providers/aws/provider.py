@@ -67,6 +67,7 @@ class AWSProvider(BaseProvider):
         # Various data processing calls
         self._check_ec2_zone_distribution()
         self._add_security_group_name_to_ec2_grants()
+        self._add_security_group_data_to_elbv2()
         self._add_last_snapshot_date_to_ec2_volumes()
         self._process_cloudtrail_trails(self.services['cloudtrail'])
         self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
@@ -103,6 +104,20 @@ class AWSProvider(BaseProvider):
                            [],
                            self.add_security_group_name_to_ec2_grants_callback,
                            {'AWSAccountId': self.aws_account_id})
+
+    def _add_security_group_data_to_elbv2(self):
+        ec2_config = self.services['ec2']
+        elbv2_config = self.services['elbv2']
+        for region in elbv2_config['regions']:
+            for vpc in elbv2_config['regions'][region]['vpcs']:
+                for lb in elbv2_config['regions'][region]['vpcs'][vpc]['lbs']:
+                    security_groups = ec2_config['regions'][region]['vpcs'][vpc]['security_groups']
+                    for i in range(0, len(elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'])):
+                        for security_group in security_groups:
+                            if elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i]['GroupId'] \
+                                    is security_group['id']:
+                                elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i] = \
+                                    security_group
 
     def _check_ec2_zone_distribution(self):
         regions = self.services['ec2']['regions'].values()
@@ -597,7 +612,7 @@ class AWSProvider(BaseProvider):
         service_config = self.services[service]
         manage_dictionary(service_config, 'external_attack_surface', {})
         if (service == 'redshift' or service == 'rds') and 'PubliclyAccessible' in current_config and current_config[
-                'PubliclyAccessible']:
+            'PubliclyAccessible']:
             public_dns = current_config['Endpoint']['Address']
             listeners = [current_config['Endpoint']['Port']]
             security_groups = current_config['VpcSecurityGroups']
