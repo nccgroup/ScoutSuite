@@ -7,7 +7,7 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 class Alarms(AWSResources):
     async def fetch_all(self, **kwargs):
-        raw_alarms = self.facade.cloudwatch.get_alarms(self.scope['region'])
+        raw_alarms = await self.facade.cloudwatch.get_alarms(self.scope['region'])
         for raw_alarm in raw_alarms:
             name, resource = self._parse(raw_alarm)
             self[name] = resource
