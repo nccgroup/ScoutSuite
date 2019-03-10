@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from ScoutSuite.providers.aws.resources.awslambda.service import Lambdas
+from ScoutSuite.providers.aws.resources.cloudwatch.service import CloudWatch
 from ScoutSuite.providers.aws.resources.cloudformation.service import CloudFormation
 from ScoutSuite.providers.aws.resources.cloudtrail.service import CloudTrail
-from ScoutSuite.providers.aws.services.cloudwatch import CloudWatchConfig
 from ScoutSuite.providers.aws.services.directconnect import DirectConnectConfig
 from ScoutSuite.providers.aws.resources.ec2.service import EC2
 from ScoutSuite.providers.aws.resources.efs.service import EFS
@@ -37,7 +37,7 @@ class AWSServicesConfig(BaseServicesConfig):
     Object that holds the necessary AWS configuration for all services in scope.
 
     :ivar cloudtrail:                   CloudTrail configuration
-    :ivar cloudwatch:                   CloudWatch configuration: TODO
+    :ivar cloudwatch:                   CloudWatch configuration:
     :ivar config:                       Config configuration
     :ivar dynamodb:                     DynomaDB configuration
     :ivar ec2:                          EC2 configuration
@@ -54,9 +54,9 @@ class AWSServicesConfig(BaseServicesConfig):
     def __init__(self, metadata=None, thread_config=4, **kwargs):
 
         super(AWSServicesConfig, self).__init__(metadata, thread_config)
+        self.cloudwatch = CloudWatch()
         self.cloudformation = CloudFormation()
         self.cloudtrail = CloudTrail()
-        self.cloudwatch = CloudWatchConfig(metadata['management']['cloudwatch'], thread_config)
         self.directconnect = DirectConnectConfig(metadata['network']['directconnect'], thread_config)
         self.ec2 = EC2()
         self.efs = EFS()
