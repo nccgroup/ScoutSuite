@@ -232,6 +232,13 @@ class ScoutSuiteArgumentParser:
                             default=[None],
                             nargs='+',
                             help='Exception file to use during analysis.')
+        parser.add_argument('--result-format',
+                            dest='result_format',
+                            default='json',
+                            type=str,
+                            choices=['json', 'sqlite'],
+                            help="The database file format to use. JSON doesn't require a server to view the report, "
+                                 "but cannot be viewed if the result file is over 400mb.")
 
     def parse_args(self, args=None):
         args = self.parser.parse_args(args)

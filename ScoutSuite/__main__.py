@@ -148,7 +148,8 @@ def main(args=None):
         pass
 
     # Save config and create HTML report
-    html_report_path = report.save(cloud_provider, exceptions, args.get('force_write'), args.get('debug'))
+    html_report_path = report.save(cloud_provider, exceptions, args.get('force_write'),
+                                   args.get('debug'))
 
     # Open the report by default
     if not args.get('no_browser'):
