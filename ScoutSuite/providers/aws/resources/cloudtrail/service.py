@@ -9,10 +9,10 @@ class Trails(AWSResources):
     async def fetch_all(self, **kwargs):
         raw_trails = await self.facade.cloudtrail.get_trails(self.scope['region'])
         for raw_trail in raw_trails:
-            name, resource = self._parse_trail(raw_trail)
+            name, resource = self._parse(raw_trail)
             self[name] = resource
 
-    def _parse_trail(self, raw_trail):
+    def _parse(self, raw_trail):
         trail = {'name': raw_trail.pop('Name')}
         trail_id = get_non_provider_id(trail['name'])
 

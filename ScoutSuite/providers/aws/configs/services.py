@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from ScoutSuite.providers.aws.resources.awslambda.service import Lambdas
-from ScoutSuite.providers.aws.services.cloudformation import CloudFormationConfig
+from ScoutSuite.providers.aws.resources.cloudformation.service import CloudFormation
 from ScoutSuite.providers.aws.resources.cloudtrail.service import CloudTrail
 from ScoutSuite.providers.aws.services.cloudwatch import CloudWatchConfig
 from ScoutSuite.providers.aws.services.directconnect import DirectConnectConfig
@@ -54,7 +54,7 @@ class AWSServicesConfig(BaseServicesConfig):
     def __init__(self, metadata=None, thread_config=4, **kwargs):
 
         super(AWSServicesConfig, self).__init__(metadata, thread_config)
-        self.cloudformation = CloudFormationConfig(metadata['management']['cloudformation'], thread_config)
+        self.cloudformation = CloudFormation()
         self.cloudtrail = CloudTrail()
         self.cloudwatch = CloudWatchConfig(metadata['management']['cloudwatch'], thread_config)
         self.directconnect = DirectConnectConfig(metadata['network']['directconnect'], thread_config)
