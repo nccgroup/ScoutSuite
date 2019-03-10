@@ -13,14 +13,6 @@ class Alarms(AWSResources):
             self[name] = resource
 
     def _parse(self, raw_alarm):
-        """
-        Parse a single CloudWatch trail
-
-        :param global_params:           Parameters shared for all regions
-        :param region:                  Name of the AWS region
-        :param alarm:                   Alarm
-        """
-
         raw_alarm['arn'] = raw_alarm.pop('AlarmArn')
         raw_alarm['name'] = raw_alarm.pop('AlarmName')
 
