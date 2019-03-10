@@ -9,10 +9,10 @@ class Alarms(AWSResources):
     async def fetch_all(self, **kwargs):
         raw_alarms = await self.facade.cloudwatch.get_alarms(self.scope['region'])
         for raw_alarm in raw_alarms:
-            name, resource = self._parse(raw_alarm)
+            name, resource = self._parse_alarm(raw_alarm)
             self[name] = resource
 
-    def _parse(self, raw_alarm):
+    def _parse_alarm(self, raw_alarm):
         raw_alarm['arn'] = raw_alarm.pop('AlarmArn')
         raw_alarm['name'] = raw_alarm.pop('AlarmName')
 
