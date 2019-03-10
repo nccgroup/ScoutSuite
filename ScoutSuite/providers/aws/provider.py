@@ -59,13 +59,13 @@ class AWSProvider(BaseProvider):
         :return: None
         """
         ip_ranges = [] if ip_ranges is None else ip_ranges
-        self._map_all_sgs()
         self._map_all_subnets()
         self._set_emr_vpc_ids()
         # self.parse_elb_policies()
 
         # Various data processing calls
         if 'ec2' in self.service_list:
+            self._map_all_sgs()
             self._check_ec2_zone_distribution()
             self._add_security_group_name_to_ec2_grants()
             self._add_last_snapshot_date_to_ec2_volumes()
