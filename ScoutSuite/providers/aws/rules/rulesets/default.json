@@ -283,7 +283,7 @@
                 "level": "warning"
             }
         ],
-        "ec2-instance-userdata.json": [
+        "ec2-instance-with-user-data-secrets.json": [
             {
                 "enabled": true,
                 "level": "danger"
