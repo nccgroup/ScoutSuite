@@ -2,13 +2,14 @@ import json
 
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently
+from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 
 
-class CloudFormation:
+class CloudFormation(AWSBaseFacade):
     async def get_stacks(self, region: str):
-        stacks = await AWSFacadeUtils.get_all_pages('cloudformation', region, 'list_stacks', 'StackSummaries')
+        stacks = await AWSFacadeUtils.get_all_pages('cloudformation', region, self.session, 'list_stacks', 'StackSummaries')
         stacks = [stack for stack in stacks if not CloudFormation._is_stack_deleted(stack)]
-        client = AWSFacadeUtils.get_client('cloudformation', region)
+        client = AWSFacadeUtils.get_client('cloudformation', region, self.session)
         for stack in stacks:
             stack_name = stack['StackName']
 
