@@ -283,6 +283,12 @@
                 "level": "warning"
             }
         ],
+        "ec2-instance-userdata.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "elb-no-access-logs.json": [
             {
                 "enabled": true,
