@@ -33,8 +33,23 @@
         <div class="list-group-item" style="padding-bottom: 0 !important;">
             <h4>User data</h4>
             <div>
-                <pre><code>{{#each (split_lines user_data)}}   {{this}}<br>{{/each}}</code></pre>
+                <code>{{#each (split_lines user_data)}}   {{this}}<br>{{/each}}</code>
             </div>
+            {{#if user_data_secrets}}
+            <h5 id="ec2.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.potential_secrets">Potential Secrets</h5>
+            <ul>
+                {{#each user_data_secrets}}
+                <li>
+                    {{@key}}
+                    <ul>
+                        {{#each this}}
+                        <li><code>{{this}}</code></li>
+                        {{/each}}
+                    </ul>
+                </li>
+                {{/each}}
+            </ul>
+            {{/if}}
         </div>
         {{/if}}
     </script>
