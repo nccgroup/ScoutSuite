@@ -34,7 +34,7 @@ class EC2Instances(AWSResources):
     @staticmethod
     def _identify_user_data_secrets(user_data):
         """
-        Parses EC2 user data in order to identify secrets.
+        Parses EC2 user data in order to identify secrets and credentials..
         """
         secrets = {}
 
@@ -42,12 +42,22 @@ class EC2Instances(AWSResources):
             aws_access_key_regex = re.compile('AKIA[0-9A-Z]{16}')
             aws_secret_access_key_regex = re.compile('[0-9a-zA-Z/+]{40}')
             rsa_private_key_regex = re.compile('(-----(\bBEGIN\b|\bEND\b) ((\bRSA PRIVATE KEY\b)|(\bCERTIFICATE\b))-----)')
+            keywords = ['password', 'secret']
 
-            if aws_access_key_regex.search(user_data):
-                secrets['aws_access_key']: aws_access_key_regex.search(user_data)
-            if aws_secret_access_key_regex.search(user_data):
-                secrets['aws_secret_access_key']: aws_secret_access_key_regex.search(user_data)
-            if rsa_private_key_regex.search(user_data):
-                secrets['rsa_private_key']: rsa_private_key_regex.search(user_data)
+            aws_access_key_list = aws_access_key_regex.findall(user_data)
+            if aws_access_key_list:
+                secrets['aws_access_key'] = aws_access_key_list
+            aws_secret_access_key_list = aws_secret_access_key_regex.findall(user_data)
+            if aws_secret_access_key_list:
+                secrets['aws_secret_access_key'] = aws_secret_access_key_list
+            rsa_private_key_list = rsa_private_key_regex.findall(user_data)
+            if rsa_private_key_list:
+                secrets['rsa_private_key'] = rsa_private_key_list
+            word_list = []
+            for word in keywords:
+                if word in user_data.lower():
+                    word_list.append(word)
+            if word_list:
+                secrets['word'] = word_list
 
         return secrets
