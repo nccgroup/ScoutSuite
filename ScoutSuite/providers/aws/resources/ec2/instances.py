@@ -1,6 +1,7 @@
 from ScoutSuite.providers.aws.resources.resources import AWSResources
 from ScoutSuite.providers.aws.aws import get_name
 from ScoutSuite.providers.aws.utils import get_keys
+import re
 
 
 class EC2Instances(AWSResources):
@@ -17,6 +18,7 @@ class EC2Instances(AWSResources):
         instance['reservation_id'] = raw_instance['ReservationId']
         instance['monitoring_enabled'] = raw_instance['Monitoring']['State'] == 'enabled'
         instance['user_data'] = await self.facade.ec2.get_instance_user_data(self.scope['region'], id)
+        instance['user_data_secrets'] = self._identify_user_data_secrets(instance['user_data'])
 
         get_name(raw_instance, instance, 'InstanceId')
         get_keys(raw_instance, instance, ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile', 'SubnetId'])
@@ -28,3 +30,24 @@ class EC2Instances(AWSResources):
             instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
 
         return id, instance
+
+    @staticmethod
+    def _identify_user_data_secrets(user_data):
+        """
+        Parses EC2 user data in order to identify secrets.
+        """
+        secrets = {}
+
+        if user_data:
+            aws_access_key_regex = re.compile('AKIA[0-9A-Z]{16}')
+            aws_secret_access_key_regex = re.compile('[0-9a-zA-Z/+]{40}')
+            rsa_private_key_regex = re.compile('(-----(\bBEGIN\b|\bEND\b) ((\bRSA PRIVATE KEY\b)|(\bCERTIFICATE\b))-----)')
+
+            if aws_access_key_regex.search(user_data):
+                secrets['aws_access_key']: aws_access_key_regex.search(user_data)
+            if aws_secret_access_key_regex.search(user_data):
+                secrets['aws_secret_access_key']: aws_secret_access_key_regex.search(user_data)
+            if rsa_private_key_regex.search(user_data):
+                secrets['rsa_private_key']: rsa_private_key_regex.search(user_data)
+
+        return secrets
