@@ -111,13 +111,11 @@ class AWSProvider(BaseProvider):
         for region in elbv2_config['regions']:
             for vpc in elbv2_config['regions'][region]['vpcs']:
                 for lb in elbv2_config['regions'][region]['vpcs'][vpc]['lbs']:
-                    security_groups = ec2_config['regions'][region]['vpcs'][vpc]['security_groups']
                     for i in range(0, len(elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'])):
-                        for security_group in security_groups:
-                            if elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i]['GroupId'] \
-                                    is security_group['id']:
+                        for sg in ec2_config['regions'][region]['vpcs'][vpc]['security_groups']:
+                            if elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i]['GroupId'] == sg:
                                 elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i] = \
-                                    security_group
+                                    ec2_config['regions'][region]['vpcs'][vpc]['security_groups'][sg]
 
     def _check_ec2_zone_distribution(self):
         regions = self.services['ec2']['regions'].values()
