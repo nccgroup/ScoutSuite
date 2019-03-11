@@ -12,9 +12,7 @@ class ElastiCacheFacade(AWSBaseFacade):
     subnets_cache = {}
 
     async def get_clusters(self, region, vpc):
-        # This result could be cached to save some api calls
         await self.cache_clusters(region)
-        
         return [cluster for cluster in self.clusters_cache[region] if cluster['VpcId'] == vpc]
 
     async def cache_clusters(self, region):
