@@ -106,6 +106,7 @@ class AWSProvider(BaseProvider):
                            {'AWSAccountId': self.aws_account_id})
 
     def _add_security_group_data_to_elbv2(self):
+        none = 'N/A'
         ec2_config = self.services['ec2']
         elbv2_config = self.services['elbv2']
         for region in elbv2_config['regions']:
@@ -113,9 +114,31 @@ class AWSProvider(BaseProvider):
                 for lb in elbv2_config['regions'][region]['vpcs'][vpc]['lbs']:
                     for i in range(0, len(elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'])):
                         for sg in ec2_config['regions'][region]['vpcs'][vpc]['security_groups']:
-                            if elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i]['GroupId'] == sg:
-                                elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i] = \
-                                    ec2_config['regions'][region]['vpcs'][vpc]['security_groups'][sg]
+                            try:
+                                if elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
+                                        'GroupId'] == sg:
+                                    elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i] = \
+                                        ec2_config['regions'][region]['vpcs'][vpc]['security_groups'][sg]
+                            except KeyError:
+                                pass
+                        for protocol in elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
+                                'rules']['ingress']['protocols']:
+                            for port in elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
+                                    'rules']['ingress']['protocols'][protocol]['ports']:
+                                elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
+                                    'valid_inbound_rules'] = True
+                                if port not in elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['listeners'] \
+                                        and port != none:
+                                    elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
+                                        'valid_inbound'] = False
+                            for port in elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
+                                    'rules']['egress']['protocols'][protocol]['ports']:
+                                elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
+                                    'valid_outbound_rules'] = True
+                                if port not in elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['listeners'] \
+                                        and port != none:
+                                    elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
+                                        'valid_outbound_rules'] = False
 
     def _check_ec2_zone_distribution(self):
         regions = self.services['ec2']['regions'].values()
