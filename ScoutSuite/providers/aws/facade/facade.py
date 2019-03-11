@@ -26,6 +26,7 @@ class AWSFacade(AWSBaseFacade):
         self.cloudwatch = CloudWatch(self.session)
         self.directconnect = DirectConnectFacade(self.session)
         self.efs = EFSFacade(self.session)
+        self.elasticache = ElastiCacheFacade(self.session)
 
     async def build_region_list(self, service: str, chosen_regions=None, partition_name='aws'):
         service = 'ec2containerservice' if service == 'ecs' else service
@@ -62,3 +63,4 @@ class AWSFacade(AWSBaseFacade):
         self.cloudwatch = CloudWatch(self.session)
         self.directconnect = DirectConnectFacade(self.session)
         self.efs = EFSFacade(self.session)
+        self.elasticache = ElastiCacheFacade(self.session)
