@@ -13,6 +13,9 @@ class Regions(AWSCompositeResources, metaclass=abc.ABCMeta):
         self.facade = AWSFacade()
 
     async def fetch_all(self, credentials, regions=None, partition_name='aws'):
+        # TODO: This should not be set here, the facade should be injected and already authenticated
+        self.facade._set_session(credentials) 
+        
         self['regions'] = {}
         account_id = get_aws_account_id(credentials)
         for region in await self.facade.build_region_list(self.service, regions, partition_name):

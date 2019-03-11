@@ -11,7 +11,7 @@ class AWSResources(Resources, metaclass=abc.ABCMeta):
 
     """This is the base class for AWS resources."""
 
-    def __init__(self, scope: dict):
+    def __init__(self, facade, scope: dict):
         """
         :param scope: The scope holds the scope in which the resource is located. This usually means \
                       at least a region, but can also contain a VPC id, an owner id, etc. It should be \
@@ -19,7 +19,7 @@ class AWSResources(Resources, metaclass=abc.ABCMeta):
         """
         
         self.scope = scope
-        self.facade = AWSFacade()
+        self.facade = facade
 
 
 class AWSCompositeResources(AWSResources, CompositeResources, metaclass=abc.ABCMeta):
@@ -39,7 +39,7 @@ class AWSCompositeResources(AWSResources, CompositeResources, metaclass=abc.ABCM
         :param scope: The scope passed to the children constructors
         """
 
-        children = [(child_class(scope), child_name) for (child_class, child_name) in self._children]
+        children = [(child_class(self.facade, scope), child_name) for (child_class, child_name) in self._children]
         # fetch all children concurrently:
         await asyncio.wait({asyncio.ensure_future(child.fetch_all()) for (child, _) in children})
         # update parent content:
