@@ -16,9 +16,9 @@ def build_region_list(service, chosen_regions=None, partition_name='aws'):
     """
     Build the list of target region names
 
-    :param service:
-    :param chosen_regions:
-    :param partition_name:
+    :param service:                     Service targeted, e.g. ec2
+    :param chosen_regions:              Regions desired, e.g. us-east-2
+    :param partition_name:              Name of the partition, default is aws
 
     :return:
     """
@@ -37,11 +37,11 @@ def connect_service(service, credentials, region_name=None, config=None, silent=
     """
     Instantiates an AWS API client
 
-    :param service:                         Service targeted, e.g. ec2
-    :param credentials:                     Id, secret, token
-    :param region_name:                     Region desired, e.g. us-east-2
-    :param config:                          Configuration (optional)
-    :param silent:                          Whether or not to print messages
+    :param service:                     Service targeted, e.g. ec2
+    :param credentials:                 Id, secret, token
+    :param region_name:                 Region desired, e.g. us-east-2
+    :param config:                      Configuration (optional)
+    :param silent:                      Whether or not to print messages
 
     :return:
     """
@@ -72,9 +72,9 @@ def get_keys(src, dst, keys):
     """
     Copies the value of keys from source object to dest object
 
-    :param src:
-    :param dst:
-    :param keys:
+    :param src:                         Source object
+    :param dst:                         Destination object
+    :param keys:                        Keys
     :return:
     """
     for key in keys:
@@ -84,9 +84,9 @@ def get_keys(src, dst, keys):
 def get_name(src, dst, default_attribute):
     """
 
-    :param src:
-    :param dst:
-    :param default_attribute:
+    :param src:                         Source object
+    :param dst:                         Destination object
+    :param default_attribute:           Default attribute
 
     :return:
     """
@@ -120,9 +120,9 @@ def handle_truncated_response(callback, params, entities):
     """
     Handle truncated responses
 
-    :param callback:
-    :param params:
-    :param entities:
+    :param callback:                    Callback to process
+    :param params:                      Parameters to call callback with
+    :param entities:                    Entities
 
     :return:
     """
@@ -167,7 +167,7 @@ def no_camel(name):
     """
     Converts CamelCase to camel_case
 
-    :param name:
+    :param name:                        Name string to convert
     :return:
     """
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
