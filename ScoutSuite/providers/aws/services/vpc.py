@@ -4,12 +4,11 @@ import copy
 
 import netaddr
 
-from ScoutSuite.providers.aws.aws import get_name
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig as SingleVPCConfig
 from ScoutSuite.providers.base.configs.browser import get_value_at
 from ScoutSuite.utils import manage_dictionary
-from ScoutSuite.providers.aws.utils import ec2_classic, get_keys
+from ScoutSuite.providers.aws.utils import ec2_classic, get_keys, get_name
 from ScoutSuite.core.fs import load_data, read_ip_ranges
 
 ########################################

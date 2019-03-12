@@ -2,7 +2,7 @@
 """
 EFS-related classes and functions
 """
-from ScoutSuite.providers.aws.aws import handle_truncated_response
+from ScoutSuite.providers.aws.utils import handle_truncated_response
 
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 
