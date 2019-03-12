@@ -79,3 +79,16 @@ class ELBv2Config(RegionalServiceConfig):
 
     def __init__(self, service_metadata, thread_config=4):
         super(ELBv2Config, self).__init__(service_metadata, thread_config)
+
+
+def check_security_group_rules(lb, index, traffic_type):
+    none = 'N/A'
+    if traffic_type == 'ingress':
+        output = 'valid_inbound_rules'
+    elif traffic_type == 'egress':
+        output = 'valid_outbound_rules'
+    for protocol in lb['security_groups'][index]['rules'][traffic_type]['protocols']:
+        for port in lb['security_groups'][index]['rules'][traffic_type]['protocols'][protocol]['ports']:
+            lb['security_groups'][index][output] = True
+            if port not in lb['listeners'] and port != none:
+                lb['security_groups'][index][output] = False
