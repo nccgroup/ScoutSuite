@@ -121,24 +121,21 @@ class AWSProvider(BaseProvider):
                                         ec2_config['regions'][region]['vpcs'][vpc]['security_groups'][sg]
                             except KeyError:
                                 pass
-                        for protocol in elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
-                                'rules']['ingress']['protocols']:
-                            for port in elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
-                                    'rules']['ingress']['protocols'][protocol]['ports']:
-                                elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
-                                    'valid_inbound_rules'] = True
-                                if port not in elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['listeners'] \
-                                        and port != none:
-                                    elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
-                                        'valid_inbound'] = False
-                            for port in elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
-                                    'rules']['egress']['protocols'][protocol]['ports']:
-                                elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
-                                    'valid_outbound_rules'] = True
-                                if port not in elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['listeners'] \
-                                        and port != none:
-                                    elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
-                                        'valid_outbound_rules'] = False
+                        self.check_sg_rules(elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb], i, 'ingress')
+                        self.check_sg_rules(elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb], i, 'egress')
+
+    @staticmethod
+    def check_sg_rules(lb, index, traffic_type):
+        none = 'N/A'
+        if traffic_type == 'ingress':
+            output = 'valid_inbound_rules'
+        elif traffic_type == 'egress':
+            output = 'valid_outbound_rules'
+        for protocol in lb['security_groups'][index]['rules'][traffic_type]['protocols']:
+            for port in lb['security_groups'][index]['rules'][traffic_type]['protocols'][protocol]['ports']:
+                lb['security_groups'][index][output] = True
+                if port not in lb['listeners'] and port != none:
+                    lb['security_groups'][index][output] = False
 
     def _check_ec2_zone_distribution(self):
         regions = self.services['ec2']['regions'].values()
