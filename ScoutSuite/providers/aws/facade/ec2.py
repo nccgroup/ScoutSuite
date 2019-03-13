@@ -8,7 +8,7 @@ from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 
 class EC2Facade(AWSBaseFacade):
     async def get_instance_user_data(self, region: str, instance_id: str):
-        ec2_client = AWSFacadeUtils.get_client('ec2', region, self.session)
+        ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)
         user_data_response = await run_concurrently(
             lambda: ec2_client.describe_instance_attribute(Attribute='userData', InstanceId=instance_id))
 
@@ -41,7 +41,7 @@ class EC2Facade(AWSBaseFacade):
 
     async def get_images(self, region, owner_id):
         filters = [{'Name': 'owner-id', 'Values': [owner_id]}]
-        client = AWSFacadeUtils.get_client('ec2', region, self.session)
+        client = AWSFacadeUtils.get_client('ec2', self.session, region)
         response = await run_concurrently(lambda: client.describe_images(Filters=filters))
 
         return response['Images']
@@ -59,7 +59,7 @@ class EC2Facade(AWSBaseFacade):
         snapshots = await AWSFacadeUtils.get_all_pages(
             'ec2', region, self.session, 'describe_snapshots', 'Snapshots', Filters=filters)
 
-        ec2_client = AWSFacadeUtils.get_client('ec2', region, self.session)
+        ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)
         for snapshot in snapshots:
             snapshot['CreateVolumePermissions'] = await run_concurrently(lambda: ec2_client.describe_snapshot_attribute(
                 Attribute='createVolumePermission',
