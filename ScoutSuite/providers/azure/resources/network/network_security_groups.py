@@ -2,16 +2,15 @@ from ScoutSuite.providers.base.configs.resources import Resources
 
 
 class NetworkSecurityGroups(Resources):
-
     def __init__(self, facade):
         self.facade = facade
 
     async def fetch_all(self):
         for raw_group in await self.facade.get_network_security_groups():
-            id, network_security_group = self._parse(raw_group)
+            id, network_security_group = self._parse_network_security_group(raw_group)
             self[id] = network_security_group
 
-    def _parse(self, network_security_group):
+    def _parse_network_security_group(self, network_security_group):
         network_security_group_dict = {}
         network_security_group_dict['id'] = network_security_group.id
         network_security_group_dict['name'] = network_security_group.name
