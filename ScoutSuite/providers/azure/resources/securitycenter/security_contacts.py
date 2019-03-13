@@ -8,10 +8,10 @@ class SecurityContacts(Resources):
 
     async def fetch_all(self):
         for raw_contact in await self.facade.get_security_contacts():
-            id, security_contact = self._parse(raw_contact)
+            id, security_contact = self._parse_security_contact(raw_contact)
             self[id] = security_contact
 
-    def _parse(self, security_contact):
+    def _parse_security_contact(self, security_contact):
         security_contact_dict = {}
         security_contact_dict['id'] = security_contact.id
         security_contact_dict['name'] = security_contact.name
