@@ -4,7 +4,6 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class ActivityLogs(Resources):
-
     async def fetch_all(self, credentials, **kwargs):
         # TODO: build that facade somewhere else:
         facade = MonitorFacade(credentials.credentials, credentials.subscription_id)
@@ -13,9 +12,9 @@ class ActivityLogs(Resources):
         self['activity_logs']['storage_accounts'] = {}
 
         for raw_log in await facade.get_activity_logs():
-            self._parse(raw_log)
+            self._parse_activity_log(raw_log)
 
-    def _parse(self, raw_log):
+    def _parse_activity_log(self, raw_log):
         if raw_log.resource_type.value == 'Microsoft.Storage/storageAccounts':
             self._parse_storage_account_log(raw_log)
 
