@@ -1,10 +1,12 @@
 {
     "dashboard_name": "Storage Accounts",
     "description": "Access Keys Not Rotated",
-    "rationale": "The access keys of your storage accounts should be rotated at least every 90 days. See CIS 3.3.",
+    "rationale": "The access keys of your storage accounts should be rotated at least every _ARG_0_ days. See CIS 3.3.",
     "path": "storageaccounts.storage_accounts.id",
-    "conditions": [ "and",
-        [ "monitor.activity_logs.storage_accounts._GET_VALUE_AT_(storageaccounts.storage_accounts.id).access_keys_rotated", "false", "" ]
+    "conditions": [ "or",
+        [ "monitor.activity_logs.storage_accounts", "withoutKey", "_GET_VALUE_AT_(storageaccounts.storage_accounts.id)"],
+        [ "monitor.activity_logs.storage_accounts._GET_VALUE_AT_(storageaccounts.storage_accounts.id).access_keys_last_rotation_date", "olderThan", ["_ARG_0_", "days"] ]
     ],
-    "id_suffix": "access_keys_rotated"
+
+    "id_suffix": "access_keys_last_rotation_date"
 }
