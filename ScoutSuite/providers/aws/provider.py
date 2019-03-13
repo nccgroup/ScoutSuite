@@ -492,7 +492,7 @@ class AWSProvider(BaseProvider):
                            self.set_emr_vpc_ids_callback,
                            {'clear_list': clear_list})
         for region in clear_list:
-            self.services['emr']['regions']['region']['vpcs'].pop('TODO')
+            self.services['emr']['regions'][region]['vpcs'].pop('TODO')
 
     def set_emr_vpc_ids_callback(self, current_config, path, current_path, vpc_id, callback_args):
         if vpc_id != 'TODO':
