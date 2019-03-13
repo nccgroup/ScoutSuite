@@ -9,7 +9,7 @@ class EMRFacade(AWSBaseFacade):
         client = AWSFacadeUtils.get_client('emr', region, self.session)
         clusters_descriptions = []
         for cluster_id in [cluster['Id'] for cluster in clusters_list]:
-            cluster = run_concurrently(lambda: client.describe_cluster(ClusterId=cluster_id)['Cluster'])
+            cluster = client.describe_cluster(ClusterId=cluster_id)['Cluster']
             clusters_descriptions.append(cluster)
 
-        return cluster
+        return clusters_descriptions
