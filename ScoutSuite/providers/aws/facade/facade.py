@@ -29,7 +29,6 @@ class AWSFacade(AWSBaseFacade):
         self.efs = EFSFacade(self.session)
         self.elasticache = ElastiCacheFacade(self.session)
         self.emr = EMRFacade(self.session)
-        self.emr = EMRFacade(self.session)
 
     async def build_region_list(self, service: str, chosen_regions=None, partition_name='aws'):
         service = 'ec2containerservice' if service == 'ecs' else service
