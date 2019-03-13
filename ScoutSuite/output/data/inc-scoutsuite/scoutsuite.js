@@ -118,11 +118,11 @@ var load_aws_account_id = function () {
  * @returns {number};
  */
 function load_aws_config_from_json(script_id, cols) {
-
+    
     // Abort if data was previously loaded
     if (loaded_config_array.indexOf(script_id) > 0) {
         // When the path does not contain .id.
-        return 0
+        return 0;
     };
     path_array = script_id.split('.');
     for (i = 3; i < path_array.length; i = i + 2) {
@@ -131,13 +131,13 @@ function load_aws_config_from_json(script_id, cols) {
     fixed_path = path_array.join('.');
     if (loaded_config_array.indexOf(fixed_path) > 0) {
         // When the loaded path contains id but browsed-to path contains a specific value
-        return 0
+        return 0;
     };
     path_array[1] = 'id';
     fixed_path = path_array.join('.');
     if (loaded_config_array.indexOf(fixed_path) > 0) {
         // Special case for services.id.findings
-        return 0
+        return 0;
     };
 
     // Build the list based on the path, stopping at the first .id. value
