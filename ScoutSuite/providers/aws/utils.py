@@ -2,7 +2,7 @@
 
 import re
 import time
-from collections.__init__ import Counter
+from collections import Counter
 
 import boto3
 from botocore.session import Session
