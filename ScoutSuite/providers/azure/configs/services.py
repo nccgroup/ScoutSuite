@@ -4,7 +4,7 @@ from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 from ScoutSuite.providers.azure.services.storageaccounts import StorageAccountsConfig
 from ScoutSuite.providers.azure.services.monitor import MonitorConfig
 from ScoutSuite.providers.azure.resources.sqldatabase.servers import Servers as SQLDatabaseConfig
-from ScoutSuite.providers.azure.resources.securitycenter.security_center import SecurityCenter as SecurityCenterConfig
+from ScoutSuite.providers.azure.resources.securitycenter.security_center import SecurityCenter
 from ScoutSuite.providers.azure.services.network import NetworkConfig
 from ScoutSuite.providers.azure.services.keyvault import KeyVaultConfig
 try:
@@ -32,7 +32,7 @@ class AzureServicesConfig(BaseServicesConfig):
         self.storageaccounts = StorageAccountsConfig(thread_config=thread_config)
         self.monitor = MonitorConfig(thread_config=thread_config)
         self.sqldatabase = SQLDatabaseConfig()
-        self.securitycenter = SecurityCenterConfig()
+        self.securitycenter = SecurityCenter()
         self.network = NetworkConfig(thread_config=thread_config)
         self.keyvault = KeyVaultConfig(thread_config=thread_config)
 
