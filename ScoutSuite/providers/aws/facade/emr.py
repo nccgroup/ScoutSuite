@@ -8,8 +8,14 @@ class EMRFacade(AWSBaseFacade):
         clusters_list = await AWSFacadeUtils.get_all_pages('emr', region, self.session, 'list_clusters', 'Clusters')
         client = AWSFacadeUtils.get_client('emr', region, self.session)
         clusters_descriptions = []
-        for cluster_id in [cluster['Id'] for cluster in clusters_list]:
-            cluster = client.describe_cluster(ClusterId=cluster_id)['Cluster']
-            clusters_descriptions.append(cluster)
+        cluster_ids = [cluster['Id'] for cluster in clusters_list]
+        tasks = {
+                asyncio.ensure_future(
+                        run_concurrently(lambda: client.describe_cluster(ClusterId=cluster_id)['Cluster'])
+                 ) for cluster_id in cluster_ids
+        }
+        for task in asyncio.as_completed(tasks):
+                cluster = await task
+                clusters_descriptions.append(cluster)
 
         return clusters_descriptions
