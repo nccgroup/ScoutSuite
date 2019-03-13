@@ -97,7 +97,7 @@ class BaseProvider(object):
         Eventually this should be moved to objects/attributes, but that will require significant re-write.
         """
         report = Scout2Report(self.provider_code, 'placeholder')
-        self.services = report.jsrw.to_dict(self.services)
+        self.services = report.encoder.to_dict(self.services)
 
     def _load_metadata(self):
         """

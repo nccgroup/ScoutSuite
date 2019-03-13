@@ -52,7 +52,8 @@ def main(args=None):
     # TODO: move this to after authentication, so that the report can be more specific to what's being scanned.
     # For example if scanning with a GCP service account, the SA email can only be known after authenticating...
     # Create a new report
-    report = Scout2Report(args.get('provider'), report_file_name, args.get('report_dir'), args.get('timestamp'))
+    report = Scout2Report(args.get('provider'), report_file_name, args.get('report_dir'), args.get('timestamp'),
+                          result_format=args.get('result_format'))
 
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
@@ -84,7 +85,7 @@ def main(args=None):
         # Update means we reload the whole config and overwrite part of it
         if args.get('update'):
             current_run_services = copy.deepcopy(cloud_provider.services)
-            last_run_dict = report.jsrw.load_from_file(AWSCONFIG)
+            last_run_dict = report.encoder.load_from_file(AWSCONFIG)
             cloud_provider.services = last_run_dict['services']
             for service in cloud_provider.service_list:
                 cloud_provider.services[service] = current_run_services[service]
@@ -92,7 +93,7 @@ def main(args=None):
     # Partial run, using pre-pulled data
     else:
         # Reload to flatten everything into a python dictionary
-        last_run_dict = report.jsrw.load_from_file(AWSCONFIG)
+        last_run_dict = report.encoder.load_from_file(AWSCONFIG)
         for key in last_run_dict:
             setattr(cloud_provider, key, last_run_dict[key])
 

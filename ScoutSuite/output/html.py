@@ -11,7 +11,7 @@ from ScoutSuite.core.console import print_info, print_exception
 
 from ScoutSuite import AWSCONFIG, EXCEPTIONS, HTMLREPORT, AWSRULESET, AWSCONFIG_FILE, EXCEPTIONS_FILE, HTMLREPORT_FILE, \
     GENERATOR_FILE
-from ScoutSuite.output.result_encoder import JavaScriptEncoder
+from ScoutSuite.output.result_encoder import JavaScriptEncoder, SqlLiteEncoder
 from ScoutSuite.output.utils import get_filename, prompt_4_overwrite
 
 
@@ -20,7 +20,7 @@ class HTMLReport(object):
     Base HTML report
     """
 
-    def __init__(self, profile, report_dir, timestamp=False, exceptions=None):
+    def __init__(self, profile, report_dir, timestamp=False, exceptions=None, result_format=None):
         exceptions = {} if exceptions is None else exceptions
         self.report_dir = report_dir
         self.profile = profile.replace('/', '_').replace('\\', '_')  # Issue 111
@@ -31,7 +31,11 @@ class HTMLReport(object):
         self.exceptions = exceptions
         self.scout2_report_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
         self.html_data_path = os.path.join(self.scout2_report_data_path, 'html')
-        self.jsrw = JavaScriptEncoder(self.profile, report_dir, timestamp)
+
+        if result_format == "sqlite":
+            self.encoder = SqlLiteEncoder(self.profile, report_dir, timestamp)
+        else:
+            self.encoder = JavaScriptEncoder(self.profile, report_dir, timestamp)
 
     def get_content_from(self, templates_type):
         contents = ''
@@ -70,16 +74,16 @@ class Scout2Report(HTMLReport):
     Scout2 HTML report
     """
 
-    def __init__(self, provider, profile=None, report_dir=None, timestamp=False, exceptions=None):
+    def __init__(self, provider, profile=None, report_dir=None, timestamp=False, exceptions=None, result_format=None):
         exceptions = {} if exceptions is None else exceptions
         self.html_root = HTMLREPORT_FILE
         self.provider = provider
-        super(Scout2Report, self).__init__(profile, report_dir, timestamp, exceptions)
+        super(Scout2Report, self).__init__(profile, report_dir, timestamp, exceptions, result_format)
 
     def save(self, config, exceptions, force_write=False, debug=False):
         self.prepare_html_report_dir()
-        self.jsrw.save_to_file(config, AWSCONFIG, force_write, debug)
-        self.jsrw.save_to_file(exceptions, EXCEPTIONS, force_write, debug)
+        self.encoder.save_to_file(config, AWSCONFIG, force_write, debug)
+        self.encoder.save_to_file(exceptions, EXCEPTIONS, force_write, debug)
         return self.create_html_report(force_write)
 
     def create_html_report(self, force_write):

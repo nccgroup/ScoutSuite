@@ -43,7 +43,7 @@ def main(args):
             # FIXME this is specific to AWS
             report_file_name = 'aws-%s' % profile_name
             report = Scout2Report('aws', report_file_name, args.report_dir, args.timestamp)
-            aws_config = report.jsrw.load_from_file(AWSCONFIG)
+            aws_config = report.encoder.load_from_file(AWSCONFIG)
             services = aws_config['service_list']
         except Exception as e:
             print_exception(e)
