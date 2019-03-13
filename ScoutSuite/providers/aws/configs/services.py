@@ -11,7 +11,7 @@ from ScoutSuite.providers.aws.resources.elasticache.service import ElastiCache
 from ScoutSuite.providers.aws.services.elb import ELBConfig
 from ScoutSuite.providers.aws.services.elbv2 import ELBv2Config
 from ScoutSuite.providers.aws.services.emr import EMRConfig
-from ScoutSuite.providers.aws.services.iam import IAMConfig
+from ScoutSuite.providers.aws.resources.iam.service import IAM
 from ScoutSuite.providers.aws.services.rds import RDSConfig
 from ScoutSuite.providers.aws.services.redshift import RedshiftConfig
 from ScoutSuite.providers.aws.services.route53 import Route53Config, Route53DomainsConfig
@@ -64,9 +64,10 @@ class AWSServicesConfig(BaseServicesConfig):
         self.elb = ELBConfig(metadata['compute']['elb'], thread_config)
         self.elbv2 = ELBv2Config(metadata['compute']['elbv2'], thread_config)
         self.emr = EMRConfig(metadata['analytics']['emr'], thread_config)
-        self.iam = IAMConfig(thread_config)
+        self.iam = IAM()
         self.awslambda = Lambdas()
-        self.redshift = RedshiftConfig(metadata['database']['redshift'], thread_config)
+        self.redshift = RedshiftConfig(
+            metadata['database']['redshift'], thread_config)
         self.rds = RDSConfig(metadata['database']['rds'], thread_config)
         self.route53 = Route53Config(thread_config)
         self.route53domains = Route53DomainsConfig(thread_config)
