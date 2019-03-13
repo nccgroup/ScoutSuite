@@ -42,10 +42,11 @@ class ScoutResultEncoder(object):
         self.report_dir = report_dir if report_dir else DEFAULT_REPORT_DIR
         self.profile = profile.replace('/', '_').replace('\\', '_')  # Issue 111
         self.current_time = datetime.datetime.now(dateutil.tz.tzlocal())
-        if timestamp != False:
+        if timestamp:
             self.timestamp = self.current_time.strftime("%Y-%m-%d_%Hh%M%z") if not timestamp else timestamp
 
-    def to_dict(self, config):
+    @staticmethod
+    def to_dict(config):
         return json.loads(json.dumps(config, separators=(',', ': '), cls=ScoutJsonEncoder))
 
 
@@ -65,7 +66,8 @@ class SqlLiteEncoder(ScoutResultEncoder):
         except Exception as e:
             print_exception(e)
 
-    def __open_file(self, config_filename, force_write, quiet=False):
+    @staticmethod
+    def __open_file(config_filename, force_write, quiet=False):
         """
 
         :param config_filename:
@@ -116,7 +118,8 @@ class JavaScriptEncoder(ScoutResultEncoder):
         except Exception as e:
             print_exception(e)
 
-    def __open_file(self, config_filename, force_write, quiet=False):
+    @staticmethod
+    def __open_file(config_filename, force_write, quiet=False):
         """
 
         :param config_filename:

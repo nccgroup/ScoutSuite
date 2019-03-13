@@ -118,7 +118,7 @@ var load_aws_account_id = function () {
  * @returns {number};
  */
 function load_aws_config_from_json(script_id, cols) {
-
+    /*
     // Abort if data was previously loaded
     if (loaded_config_array.indexOf(script_id) > 0) {
         // When the path does not contain .id.
@@ -178,7 +178,7 @@ function load_aws_config_from_json(script_id, cols) {
 
     // Update the list of loaded data
     loaded_config_array.push(script_id);
-    return 1;
+    return 1;*/
 };
 
 
