@@ -19,7 +19,7 @@ class StorageAccounts(AzureCompositeResources):
 
         self['storage_accounts'] = {}
         for raw_storage_account in await facade.get_storage_accounts():
-            id, storage_account = self._parse(raw_storage_account)
+            id, storage_account = self._parse_storage_account(raw_storage_account)
             self['storage_accounts'][id] = storage_account
 
         # TODO: make a refactoring of the following:
@@ -39,7 +39,7 @@ class StorageAccounts(AzureCompositeResources):
 
         self['storage_accounts_count'] = len(self['storage_accounts'])
 
-    def _parse(self, raw_storage_account):
+    def _parse_storage_account(self, raw_storage_account):
         storage_account = {}
         raw_id = raw_storage_account.id
         storage_account['id'] = get_non_provider_id(raw_id.lower())
