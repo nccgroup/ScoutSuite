@@ -43,4 +43,9 @@ class Regions(AWSCompositeResources, metaclass=abc.ABCMeta):
     def _set_counts(self):
         self['regions_count'] = len(self['regions'])
         for _, key in self._children:
+            # VPCs should not be counted as resources. They exist whether you have resources or not, so
+            # counting them would make the report confusing.
+            if key == 'vpcs':
+                continue
+                
             self[key + '_count'] = sum([region[key + '_count'] for region in self['regions'].values()])
