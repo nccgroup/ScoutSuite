@@ -10,6 +10,7 @@ from ScoutSuite.providers.aws.facade.directconnect import DirectConnectFacade
 from ScoutSuite.providers.aws.facade.ec2 import EC2Facade
 from ScoutSuite.providers.aws.facade.efs import EFSFacade
 from ScoutSuite.providers.aws.facade.elasticache import ElastiCacheFacade
+from ScoutSuite.providers.aws.facade.emr import EMRFacade
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.utils import run_concurrently
 from ScoutSuite.core.console import print_error, print_debug
@@ -27,6 +28,8 @@ class AWSFacade(AWSBaseFacade):
         self.directconnect = DirectConnectFacade(self.session)
         self.efs = EFSFacade(self.session)
         self.elasticache = ElastiCacheFacade(self.session)
+        self.emr = EMRFacade(self.session)
+        self.emr = EMRFacade(self.session)
 
     async def build_region_list(self, service: str, chosen_regions=None, partition_name='aws'):
         service = 'ec2containerservice' if service == 'ecs' else service
@@ -64,3 +67,4 @@ class AWSFacade(AWSBaseFacade):
         self.directconnect = DirectConnectFacade(self.session)
         self.efs = EFSFacade(self.session)
         self.elasticache = ElastiCacheFacade(self.session)
+        self.emr = EMRFacade(self.session)
