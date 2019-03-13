@@ -2,19 +2,16 @@
 # -*- coding: utf-8 -*-
 
 import copy
-import json
 import os
 import webbrowser
 
-from ScoutSuite.core.console import config_debug_level, print_info, print_debug
-from ScoutSuite.providers.aws.profiles import AWSProfiles
-
-from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
 from ScoutSuite import AWSCONFIG
-from ScoutSuite.output.html import Scout2Report
+from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
+from ScoutSuite.core.console import config_debug_level, print_info, print_debug
 from ScoutSuite.core.exceptions import RuleExceptions
-from ScoutSuite.core.ruleset import Ruleset
 from ScoutSuite.core.processingengine import ProcessingEngine
+from ScoutSuite.core.ruleset import Ruleset
+from ScoutSuite.output.html import Scout2Report
 from ScoutSuite.providers import get_provider
 
 
@@ -127,25 +124,6 @@ def main(args=None):
 
     # Finalize
     cloud_provider.postprocessing(report.current_time, finding_rules)
-
-    # TODO: this is AWS-specific - move to postprocessing?
-    # This is partially implemented
-    # Get organization data if it exists
-    try:
-        profile = AWSProfiles.get(args.get('profile'))[0]
-        if 'source_profile' in profile.attributes:
-            organization_info_file = os.path.join(os.path.expanduser('~/.aws/recipes/%s/organization.json' %
-                                                                     profile.attributes['source_profile']))
-            if os.path.isfile(organization_info_file):
-                with open(organization_info_file, 'rt') as f:
-                    org = {}
-                    accounts = json.load(f)
-                    for account in accounts:
-                        account_id = account.pop('Id')
-                        org[account_id] = account
-                    setattr(cloud_provider, 'organization', org)
-    except Exception as e:
-        pass
 
     # Save config and create HTML report
     html_report_path = report.save(cloud_provider, exceptions, args.get('force_write'), args.get('debug'))
