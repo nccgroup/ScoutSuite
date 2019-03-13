@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
-from ScoutSuite.providers.azure.services.monitor import MonitorConfig
+from ScoutSuite.providers.azure.resources.monitor.activity_logs import ActivityLogs
 from ScoutSuite.providers.azure.resources.securitycenter.security_center import SecurityCenter
 from ScoutSuite.providers.azure.resources.sqldatabase.servers import Servers
 from ScoutSuite.providers.azure.resources.storageaccounts.storageaccounts import StorageAccounts
@@ -29,8 +29,8 @@ class AzureServicesConfig(BaseServicesConfig):
 
     def __init__(self, metadata=None, thread_config=4, **kwargs):
 
+        self.monitor = ActivityLogs()
         self.storageaccounts = StorageAccounts()
-        self.monitor = MonitorConfig(thread_config=thread_config)
         self.securitycenter = SecurityCenter()
         self.sqldatabase = Servers()
         self.network = Networks()
