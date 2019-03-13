@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
-from ScoutSuite.providers.azure.services.storageaccounts import StorageAccountsConfig
 from ScoutSuite.providers.azure.services.monitor import MonitorConfig
-from ScoutSuite.providers.azure.resources.sqldatabase.servers import Servers as SQLDatabaseConfig
+from ScoutSuite.providers.azure.resources.sqldatabase.servers import Servers
+from ScoutSuite.providers.azure.resources.storageaccounts.storageaccounts import StorageAccounts
 from ScoutSuite.providers.azure.services.securitycenter import SecurityCenterConfig
-from ScoutSuite.providers.azure.resources.network.networks import Networks as NetworkConfig
-from ScoutSuite.providers.azure.services.keyvault import KeyVaultConfig
+from ScoutSuite.providers.azure.resources.network.networks import Networks
+from ScoutSuite.providers.azure.resources.keyvault.key_vaults import KeyVaults
 try:
     from ScoutSuite.providers.azure.services.appgateway_private import AppGatewayConfig
 except ImportError:
@@ -29,12 +29,12 @@ class AzureServicesConfig(BaseServicesConfig):
 
     def __init__(self, metadata=None, thread_config=4, **kwargs):
 
-        self.storageaccounts = StorageAccountsConfig(thread_config=thread_config)
+        self.storageaccounts = StorageAccounts()
         self.monitor = MonitorConfig(thread_config=thread_config)
-        self.sqldatabase = SQLDatabaseConfig()
+        self.sqldatabase = Servers()
         self.securitycenter = SecurityCenterConfig(thread_config=thread_config)
-        self.network = NetworkConfig()
-        self.keyvault = KeyVaultConfig(thread_config=thread_config)
+        self.network = Networks()
+        self.keyvault = KeyVaults()
 
         try:
             self.appgateway = AppGatewayConfig(thread_config=thread_config)

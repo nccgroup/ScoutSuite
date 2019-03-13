@@ -213,7 +213,7 @@ class BaseProvider(object):
         # Service-level summaries
         for service_group in self.metadata:
             for service in self.metadata[service_group]:
-                if service == 'summaries':
+                if service == 'summaries' or service not in self.service_list:
                     continue
                 # Reset external attack surface
                 if 'summaries' in self.metadata[service_group][service]:
