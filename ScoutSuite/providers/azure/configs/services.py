@@ -6,7 +6,7 @@ from ScoutSuite.providers.azure.resources.sqldatabase.servers import Servers as 
 from ScoutSuite.providers.azure.resources.storageaccounts.storageaccounts import StorageAccounts as StorageAccountsConfig
 from ScoutSuite.providers.azure.services.securitycenter import SecurityCenterConfig
 from ScoutSuite.providers.azure.services.network import NetworkConfig
-from ScoutSuite.providers.azure.services.keyvault import KeyVaultConfig
+from ScoutSuite.providers.azure.resources.keyvault.key_vaults import KeyVaults as KeyVaultConfig
 try:
     from ScoutSuite.providers.azure.services.appgateway_private import AppGatewayConfig
 except ImportError:
@@ -34,7 +34,7 @@ class AzureServicesConfig(BaseServicesConfig):
         self.sqldatabase = SQLDatabaseConfig()
         self.securitycenter = SecurityCenterConfig(thread_config=thread_config)
         self.network = NetworkConfig(thread_config=thread_config)
-        self.keyvault = KeyVaultConfig(thread_config=thread_config)
+        self.keyvault = KeyVaultConfig()
 
         try:
             self.appgateway = AppGatewayConfig(thread_config=thread_config)
