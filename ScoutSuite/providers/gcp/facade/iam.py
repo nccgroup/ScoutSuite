@@ -1,12 +1,10 @@
-from googleapiclient import discovery
-from ScoutSuite.providers.gcp.utils import MemoryCache
 from ScoutSuite.providers.gcp.facade.facade import Facade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently
 
 class IAMFacade(Facade):
-    def _build_client(self):
-        return discovery.build('iam', 'v1', cache_discovery=False, cache=MemoryCache())
+    def __init__(self):
+        super(IAMFacade, self).__init__('iam', 'v1')
 
     async def get_bindings(self, project_id, service_account_email):
         resource = 'projects/{}/serviceAccounts/{}'.format(project_id, service_account_email)

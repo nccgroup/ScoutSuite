@@ -1,16 +1,12 @@
-from googleapiclient import discovery
-from ScoutSuite.providers.gcp.utils import MemoryCache
+
 from ScoutSuite.providers.gcp.facade.facade import Facade
 from ScoutSuite.providers.gcp.facade.iam import IAMFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 
 class GCPFacade(Facade):
     def __init__(self):
-        super(GCPFacade, self).__init__()
+        super(GCPFacade, self).__init__('cloudresourcemanager', 'v1')
         self.iam = IAMFacade()
-
-    def _build_client(self):
-        return discovery.build('cloudresourcemanager', 'v1', cache_discovery=False, cache=MemoryCache())
 
     async def get_projects(self):
         resourcemanager_client = self._get_client()
