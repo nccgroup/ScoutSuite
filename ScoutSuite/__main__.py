@@ -10,7 +10,9 @@ from ScoutSuite.core.console import config_debug_level, print_info, print_debug
 from ScoutSuite.providers.aws.profiles import AWSProfiles
 
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
+from ScoutSuite.core.server import Server
 from ScoutSuite import AWSCONFIG
+from ScoutSuite.output.utils import get_filename
 from ScoutSuite.output.html import Scout2Report
 from ScoutSuite.core.exceptions import RuleExceptions
 from ScoutSuite.core.ruleset import Ruleset
@@ -49,6 +51,13 @@ def main(args=None):
 
     report_file_name = generate_report_name(cloud_provider.provider_code, args)
 
+    if args.get('database_name'):
+        report_name = args.get('database_name') if isinstance(args.get('database_name'), str) else report_file_name
+        database_file, _ = get_filename(AWSCONFIG, args.get('profile'), args.get('report_dir'))
+        Server.init(database_file, args.get('host_ip'), args.get('host_port'))
+        print(report_name)
+        return
+    
     # TODO: move this to after authentication, so that the report can be more specific to what's being scanned.
     # For example if scanning with a GCP service account, the SA email can only be known after authenticating...
     # Create a new report
