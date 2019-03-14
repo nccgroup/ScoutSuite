@@ -94,6 +94,17 @@ class IAMFacade(AWSBaseFacade):
 
         return users
 
+    async def _get_user_acces_keys(self, user_name):
+        client = AWSFacadeUtils.get_client('iam', self.session)
+        response = await run_concurrently(lambda: client.list_access_keys(UserName=user_name))
+        return response['AccessKeyMetadata']
+
+    async def _get_user_mfa_devices(self, user_name):
+        client = AWSFacadeUtils.get_client('iam', self.session)
+        response = await run_concurrently(lambda: client.list_mfa_devices(UserName=user_name))
+        return response['MFADevices']
+
+
     async def _fetch_group_users(self, group_name):
         client = AWSFacadeUtils.get_client('iam', self.session)
         fetched_users = client.get_group(GroupName=group_name)['Users']
