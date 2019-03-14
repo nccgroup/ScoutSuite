@@ -41,6 +41,24 @@ class IAMFacade(AWSBaseFacade):
                 group['inline_policies'] = policies
         return groups
 
+    async def get_policies(self):
+        policies = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_policies', 'Policies', OnlyAttached=True)
+        for policy in policies:
+            policy['attached_to'] = {}
+            attached_entities = await AWSFacadeUtils.get_multiple_entities_from_all_pages('iam', None, self.session, 'list_entities_for_policy',  ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'], PolicyArn=policy['Arn'])
+
+            for entity_type in attached_entities:
+                resource_type = entity_type.replace('Policy', '').lower()
+                if len(attached_entities[entity_type]):
+                    policy['attached_to'][resource_type] = []
+
+                for entity in attached_entities[entity_type]:
+                    name_field = entity_type.replace('Policy', '')[:-1] + 'Name'
+                    resource_name = entity[name_field]
+                    policy['attached_to'][resource_type].append({'name': resource_name})
+
+        return policies
+
     async def _fetch_group_users(self, group_name):
         client =  AWSFacadeUtils.get_client('iam', self.session)
         fetched_users = client.get_group(GroupName=group_name)['Users']
