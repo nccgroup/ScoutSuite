@@ -3,13 +3,15 @@ import asyncio
 from ScoutSuite.providers.aws.resources.resources import AWSCompositeResources
 from ScoutSuite.providers.aws.resources.iam.credentialreports import CredentialReports
 from ScoutSuite.providers.aws.resources.iam.groups import Groups
+from ScoutSuite.providers.aws.resources.iam.policies import Policies
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
 
 
 class IAM(AWSCompositeResources):
     _children = [
         (CredentialReports, 'credential_reports'),
-        (Groups, 'groups')
+        (Groups, 'groups'),
+        (Policies, 'policies')
     ]
 
     def __init__(self):
