@@ -107,7 +107,6 @@ class AWSProvider(BaseProvider):
                            {'AWSAccountId': self.aws_account_id})
 
     def _add_security_group_data_to_elbv2(self):
-        none = 'N/A'
         ec2_config = self.services['ec2']
         elbv2_config = self.services['elbv2']
         for region in elbv2_config['regions']:
@@ -115,13 +114,12 @@ class AWSProvider(BaseProvider):
                 for lb in elbv2_config['regions'][region]['vpcs'][vpc]['lbs']:
                     for i in range(0, len(elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'])):
                         for sg in ec2_config['regions'][region]['vpcs'][vpc]['security_groups']:
-                            try:
-                                if elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
-                                        'GroupId'] == sg:
-                                    elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i] = \
-                                        ec2_config['regions'][region]['vpcs'][vpc]['security_groups'][sg]
-                            except KeyError:
-                                pass
+                            if 'GroupId' in elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i] \
+                                    and elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
+                                    'GroupId'] == sg:
+                                elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i] = \
+                                    ec2_config['regions'][region]['vpcs'][vpc]['security_groups'][sg]
+
                         check_security_group_rules(elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb], i, 'ingress')
                         check_security_group_rules(elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb], i, 'egress')
 
