@@ -3,12 +3,10 @@
 Redshift-related classes and functions
 """
 
-from ScoutSuite.providers.aws.aws import handle_truncated_response
-
 from ScoutSuite.providers.aws.configs.regions import RegionalServiceConfig, RegionConfig, api_clients
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
 from ScoutSuite.utils import manage_dictionary
-from ScoutSuite.providers.aws.utils import ec2_classic
+from ScoutSuite.providers.aws.utils import ec2_classic, handle_truncated_response
 
 
 ########################################

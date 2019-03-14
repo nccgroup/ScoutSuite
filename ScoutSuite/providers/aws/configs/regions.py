@@ -13,15 +13,14 @@ try:
 except ImportError:
     from queue import Queue
 
-from ScoutSuite.providers.aws.aws import build_region_list, connect_service, get_aws_account_id, get_name, \
-    handle_truncated_response
 from ScoutSuite.core.console import print_exception, print_info
 
 from ScoutSuite.providers.base.configs import resource_id_map
 from ScoutSuite.providers.base.configs.threads import thread_configs
 from ScoutSuite.providers.aws.configs.vpc import VPCConfig
 from ScoutSuite.utils import format_service_name, manage_dictionary
-from ScoutSuite.providers.aws.utils import is_throttled
+from ScoutSuite.providers.aws.utils import is_throttled, build_region_list, connect_service, get_name, \
+    get_aws_account_id, handle_truncated_response
 from ScoutSuite.providers.aws.configs.base import BaseConfig
 from ScoutSuite.output.console import FetchStatusLogger
 
