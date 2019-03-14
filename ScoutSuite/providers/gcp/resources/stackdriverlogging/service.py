@@ -3,7 +3,7 @@ from ScoutSuite.providers.gcp.resources.stackdriverlogging.sinks import Sinks
 
 class StackdriverLogging(Projects):
     _children = [ 
-        ('sinks', Sinks) 
+        (Sinks, 'sinks') 
     ]
 
     def __init__(self, gcp_facade):
