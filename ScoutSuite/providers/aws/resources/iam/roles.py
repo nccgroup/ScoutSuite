@@ -12,4 +12,6 @@ class Roles(AWSResources):
         raw_role['id'] = raw_role.pop('RoleId')
         raw_role['name'] = raw_role.pop('RoleName')
         raw_role['arn'] = raw_role.pop('Arn')
+        raw_role.pop('Description')
+        raw_role.pop('MaxSessionDuration')
         return raw_role['id'], raw_role
