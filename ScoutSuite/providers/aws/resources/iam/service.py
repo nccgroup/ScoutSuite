@@ -31,7 +31,12 @@ class IAM(AWSCompositeResources):
     def finalize(self):
         # Update permissions for managed policies
         self['permissions'] = {}
-        for policy in self['policies'].values():
+        policies = [policy for policy in self['policies'].values()]
+        policies.extend(self._get_inline_policies('groups'))
+        policies.extend(self._get_inline_policies('users'))
+        policies.extend(self._get_inline_policies('roles'))
+
+        for policy in policies:
             policy_id = policy['id']
             if 'attached_to' in policy and len(policy['attached_to']) > 0:
                 for entity_type in policy['attached_to']:
@@ -42,12 +47,13 @@ class IAM(AWSCompositeResources):
                         entities[entity['id']].setdefault('policies_counts', 0)
                         entities[entity['id']]['policies'].append(policy_id)
                         entities[entity['id']]['policies_counts'] += 1
-                self._parse_permissions(
-                    policy_id, policy['PolicyDocument'], 'policies', entity_type, entity['id'])
+                self._parse_permissions(policy_id, policy['PolicyDocument'], 'policies', entity_type, entity['id'])
             else:
                 pass
-                self._parse_permissions(
-                    policy_id, policy['PolicyDocument'], 'policies', None, None)
+                self._parse_permissions(policy_id, policy['PolicyDocument'], 'policies', None, None)
+
+    def _get_inline_policies(self, resource_type):
+        return [resource['inline_policies'] for resource in self[resource_type].values() if 'inline_policies' in resource]
 
     def _get_id_for_resource(self, iam_resource_type, resource_name):
         for resource_id in self[iam_resource_type]:
