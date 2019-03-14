@@ -109,12 +109,12 @@ class IAMFacade(AWSBaseFacade):
 
             # Get instance profiles
             profiles = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_instance_profiles_for_role', 'InstanceProfiles', RoleName = role['RoleName'])
-            role['instance_profiles'] = {} # TODO: If does not exist
+            role.setdefault('instance_profiles', {})
             for profile in profiles:
                 profile_id = profile['InstanceProfileId']
-                role['instance_profiles'][profile_id] = {} # TODO: If does not exist
-                role['instance_profiles'][profile_id]['arn'] = profile['Arn'] # TODO: If does not exist
-                role['instance_profiles'][profile_id]['name'] = profile['InstanceProfileName'] # TODO: If does not exist
+                role['instance_profiles'].setdefault(profile_id, {})
+                role['instance_profiles'][profile_id].setdefault('arn', profile['Arn'])
+                role['instance_profiles'][profile_id].setdefault('name', profile['InstanceProfileName'])
 
             # Get trust relationship
             role['assume_role_policy'] = {}

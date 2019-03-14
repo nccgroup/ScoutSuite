@@ -30,21 +30,24 @@ class IAM(AWSCompositeResources):
 
     def finalize(self):
         # Update permissions for managed policies
+        self['permissions'] = {}
         for policy in self['policies'].values():
             policy_id = policy['id']
             if 'attached_to' in policy and len(policy['attached_to']) > 0:
                 for entity_type in policy['attached_to']:
                     for entity in policy['attached_to'][entity_type]:
                         entity['id'] = self._get_id_for_resource(entity_type, entity['name'])
-                        entities = self[entity_type] 
-                        entities[entity['id']]['policies'] = [] # TODO : if does not exist
-                        entities[entity['id']]['policies_counts'] = 0 # TODO : if does not exist
+                        entities = self[entity_type]
+                        entities[entity['id']].setdefault('policies', [])
+                        entities[entity['id']].setdefault('policies_counts', 0)
                         entities[entity['id']]['policies'].append(policy_id)
                         entities[entity['id']]['policies_counts'] += 1
-                # self._parse_permissions(policy_id, policy['PolicyDocument'], 'policies', entity_type, entity['id'])
+                self._parse_permissions(
+                    policy_id, policy['PolicyDocument'], 'policies', entity_type, entity['id'])
             else:
                 pass
-                # self._parse_permissions(policy_id, policy['PolicyDocument'], 'policies', None, None)
+                self._parse_permissions(
+                    policy_id, policy['PolicyDocument'], 'policies', None, None)
 
     def _get_id_for_resource(self, iam_resource_type, resource_name):
         for resource_id in self[iam_resource_type]:
@@ -56,7 +59,8 @@ class IAM(AWSCompositeResources):
         if type(policy_document['Statement']) != list:
             policy_document['Statement'] = [policy_document['Statement']]
         for statement in policy_document['Statement']:
-            self._parse_statement(policy_name, statement, policy_type, iam_resource_type, resource_name)
+            self._parse_statement(policy_name, statement,
+                                  policy_type, iam_resource_type, resource_name)
 
     def _parse_statement(self, policy_name, statement, policy_type, iam_resource_type, resource_name):
         # Effect
@@ -71,32 +75,32 @@ class IAM(AWSCompositeResources):
             statement[resource_string] = [statement[resource_string]]
         # Condition
         condition = statement['Condition'] if 'Condition' in statement else None
-        self['permissions'][action_string] = {} # TODO: If does not exist
+        self['permissions'].setdefault(action_string, {})
         if iam_resource_type is None:
             return
         self._parse_actions(effect, action_string, statement[action_string], resource_string,
-                             statement[resource_string], iam_resource_type, resource_name, policy_name, policy_type,
-                             condition)
+                            statement[resource_string], iam_resource_type, resource_name, policy_name, policy_type,
+                            condition)
 
     def _parse_actions(self, effect, action_string, actions, resource_string, resources, iam_resource_type,
-                        iam_resource_name, policy_name, policy_type, condition):
+                       iam_resource_name, policy_name, policy_type, condition):
         for action in actions:
-            self['permissions'][action_string][action] = {} # TODO: If does not exist
-            self['permissions'][action_string][action][iam_resource_type] = {} # TODO: If does not exist
-            self['permissions'][action_string][action][iam_resource_type][effect] = {} # TODO: If does not exist
-            self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name] = {} # TODO: If does not exist
-            self._parse_action(effect, action_string, action, resource_string, resources, iam_resource_type,
-                                iam_resource_name, policy_name, policy_type, condition)
+            self['permissions'][action_string].setdefault(action, {})
+            self['permissions'][action_string][action].setdefault(iam_resource_type, {})
+            self['permissions'][action_string][action][iam_resource_type].setdefault(effect, {})
+            self['permissions'][action_string][action][iam_resource_type][effect].setdefault(iam_resource_name, {})
+            self._parse_action(effect, action_string, action, resource_string, resources, iam_resource_type, \
+                               iam_resource_name, policy_name, policy_type, condition)
 
     def _parse_action(self, effect, action_string, action, resource_string, resources, iam_resource_type,
-                       iam_resource_name, policy_name, policy_type, condition):
+                      iam_resource_name, policy_name, policy_type, condition):
         for resource in resources:
             self._parse_resource(effect, action_string, action, resource_string, resource, iam_resource_type,
-                                  iam_resource_name, policy_name, policy_type, condition)
+                                 iam_resource_name, policy_name, policy_type, condition)
 
     def _parse_resource(self, effect, action_string, action, resource_string, resource, iam_resource_type, iam_resource_name, policy_name, policy_type, condition):
-        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string] = {} # TODO: If does not exist
-        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][resource] = {} # TODO: If does not exist
-        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][resource][policy_type] = {} # TODO: If does not exist
-        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][resource][policy_type][policy_name] = {} # TODO: If does not exist
-        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][resource][policy_type][policy_name]['condition'] = condition
+        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name].setdefault(resource_string, {})
+        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string].setdefault(resource, {})
+        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][resource].setdefault(policy_type, {})
+        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][resource][policy_type].setdefault(policy_name, {})
+        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][resource][policy_type][policy_name].setdefault('condition', condition)
