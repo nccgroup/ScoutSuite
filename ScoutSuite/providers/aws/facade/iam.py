@@ -68,7 +68,7 @@ class IAMFacade(AWSBaseFacade):
         return policies
 
     async def _fetch_group_users(self, group_name):
-        client =  AWSFacadeUtils.get_client('iam', self.session)
+        client = AWSFacadeUtils.get_client('iam', self.session)
         fetched_users = client.get_group(GroupName=group_name)['Users']
 
         users = []
