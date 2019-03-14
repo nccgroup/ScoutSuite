@@ -45,6 +45,7 @@ class IAMFacade(AWSBaseFacade):
         policies = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_policies', 'Policies', OnlyAttached=True)
         client = AWSFacadeUtils.get_client('iam', self.session)
 
+        # TODO: Parallelize this
         for policy in policies:
             policy_version = client.get_policy_version(PolicyArn=policy['Arn'], VersionId=policy['DefaultVersionId'])
             policy['PolicyDocument'] = policy_version['PolicyVersion']['Document']
