@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from ScoutSuite.providers.aws.resources.awslambda.service import Lambdas
-from ScoutSuite.providers.aws.services.cloudformation import CloudFormationConfig
+from ScoutSuite.providers.aws.resources.cloudwatch.service import CloudWatch
+from ScoutSuite.providers.aws.resources.cloudformation.service import CloudFormation
 from ScoutSuite.providers.aws.resources.cloudtrail.service import CloudTrail
-from ScoutSuite.providers.aws.services.cloudwatch import CloudWatchConfig
-from ScoutSuite.providers.aws.services.directconnect import DirectConnectConfig
+from ScoutSuite.providers.aws.resources.directconnect.service import DirectConnect
 from ScoutSuite.providers.aws.resources.ec2.service import EC2
-from ScoutSuite.providers.aws.services.efs import EFSConfig
-from ScoutSuite.providers.aws.services.elasticache import ElastiCacheConfig
+from ScoutSuite.providers.aws.resources.efs.service import EFS
+from ScoutSuite.providers.aws.resources.elasticache.service import ElastiCache
 from ScoutSuite.providers.aws.services.elb import ELBConfig
 from ScoutSuite.providers.aws.services.elbv2 import ELBv2Config
-from ScoutSuite.providers.aws.services.emr import EMRConfig
+from ScoutSuite.providers.aws.resources.emr.service import EMR
 from ScoutSuite.providers.aws.services.iam import IAMConfig
 from ScoutSuite.providers.aws.services.rds import RDSConfig
 from ScoutSuite.providers.aws.services.redshift import RedshiftConfig
@@ -37,7 +37,7 @@ class AWSServicesConfig(BaseServicesConfig):
     Object that holds the necessary AWS configuration for all services in scope.
 
     :ivar cloudtrail:                   CloudTrail configuration
-    :ivar cloudwatch:                   CloudWatch configuration: TODO
+    :ivar cloudwatch:                   CloudWatch configuration:
     :ivar config:                       Config configuration
     :ivar dynamodb:                     DynomaDB configuration
     :ivar ec2:                          EC2 configuration
@@ -53,17 +53,17 @@ class AWSServicesConfig(BaseServicesConfig):
 
     def __init__(self, metadata=None, thread_config=4, **kwargs):
 
-        super().__init__(metadata, thread_config)
-        self.cloudformation = CloudFormationConfig(metadata['management']['cloudformation'], thread_config)
+        super(AWSServicesConfig, self).__init__(metadata, thread_config)
+        self.cloudwatch = CloudWatch()
+        self.cloudformation = CloudFormation()
         self.cloudtrail = CloudTrail()
-        self.cloudwatch = CloudWatchConfig(metadata['management']['cloudwatch'], thread_config)
-        self.directconnect = DirectConnectConfig(metadata['network']['directconnect'], thread_config)
+        self.directconnect = DirectConnect()
         self.ec2 = EC2()
-        self.efs = EFSConfig(metadata['storage']['efs'], thread_config)
-        self.elasticache = ElastiCacheConfig(metadata['database']['elasticache'], thread_config)
+        self.efs = EFS()
+        self.elasticache = ElastiCache()
         self.elb = ELBConfig(metadata['compute']['elb'], thread_config)
         self.elbv2 = ELBv2Config(metadata['compute']['elbv2'], thread_config)
-        self.emr = EMRConfig(metadata['analytics']['emr'], thread_config)
+        self.emr = EMR()
         self.iam = IAMConfig(thread_config)
         self.awslambda = Lambdas()
         self.redshift = RedshiftConfig(metadata['database']['redshift'], thread_config)

@@ -1,16 +1,17 @@
-
 """This module provides implementations for Resources and CompositeResources for AWS."""
+
+import abc
+import asyncio
 
 from ScoutSuite.providers.base.configs.resources import Resources, CompositeResources
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
-import abc
 
 
 class AWSResources(Resources, metaclass=abc.ABCMeta):
 
     """This is the base class for AWS resources."""
 
-    def __init__(self, scope: dict):
+    def __init__(self, facade, scope: dict):
         """
         :param scope: The scope holds the scope in which the resource is located. This usually means \
                       at least a region, but can also contain a VPC id, an owner id, etc. It should be \
@@ -18,7 +19,7 @@ class AWSResources(Resources, metaclass=abc.ABCMeta):
         """
         
         self.scope = scope
-        self.facade = AWSFacade()
+        self.facade = facade
 
 
 class AWSCompositeResources(AWSResources, CompositeResources, metaclass=abc.ABCMeta):
@@ -38,12 +39,14 @@ class AWSCompositeResources(AWSResources, CompositeResources, metaclass=abc.ABCM
         :param scope: The scope passed to the children constructors
         """
 
-        for child_class, child_name in self._children:
-            child = child_class(scope)
-            await child.fetch_all()
-
+        children = [(child_class(self.facade, scope), child_name) for (child_class, child_name) in self._children]
+        # fetch all children concurrently:
+        await asyncio.wait({asyncio.ensure_future(child.fetch_all()) for (child, _) in children})
+        # update parent content:
+        for child, child_name in children:
             if parent.get(child_name) is None:
                 parent[child_name] = {}
 
             parent[child_name].update(child)
             parent[child_name + '_count'] = len(child)
+

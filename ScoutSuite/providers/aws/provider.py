@@ -2,11 +2,11 @@
 
 import copy
 import os
+import boto3
 
 from ScoutSuite.core.console import print_debug, print_error, print_exception, print_info
 from ScoutSuite.providers.aws.aws import get_aws_account_id
 from ScoutSuite.providers.aws.configs.services import AWSServicesConfig
-from ScoutSuite.providers.aws.credentials import read_creds
 from ScoutSuite.providers.aws.services.vpc import put_cidr_name
 from ScoutSuite.providers.base.configs.browser import combine_paths, get_object_at, get_value_at
 from ScoutSuite.providers.base.provider import BaseProvider
@@ -14,7 +14,6 @@ from ScoutSuite.utils import manage_dictionary
 from ScoutSuite.providers.aws.utils import ec2_classic
 
 
-# noinspection PyBroadException
 class AWSProvider(BaseProvider):
     """
     Implements provider for AWS
@@ -39,18 +38,17 @@ class AWSProvider(BaseProvider):
 
         super(AWSProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
-    def authenticate(self, profile, csv_credentials, mfa_serial, mfa_code, **kwargs):
+    def authenticate(self, profile=None, **kwargs):
         """
         Implement authentication for the AWS provider
         :return:
         """
-        self.credentials = read_creds(profile, csv_credentials, mfa_serial, mfa_code)
+
+        session = boto3.Session(profile_name=profile)
+        self.credentials = session.get_credentials().__dict__
         self.aws_account_id = get_aws_account_id(self.credentials)
 
-        if self.credentials['AccessKeyId'] is None:
-            return False
-        else:
-            return True
+        return self.credentials.get('access_key') is not None
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
@@ -61,13 +59,13 @@ class AWSProvider(BaseProvider):
         :return: None
         """
         ip_ranges = [] if ip_ranges is None else ip_ranges
-        self._map_all_sgs()
         self._map_all_subnets()
         self._set_emr_vpc_ids()
         # self.parse_elb_policies()
 
         # Various data processing calls
         if 'ec2' in self.service_list:
+            self._map_all_sgs()
             self._check_ec2_zone_distribution()
             self._add_security_group_name_to_ec2_grants()
             self._add_last_snapshot_date_to_ec2_volumes()
@@ -438,7 +436,7 @@ class AWSProvider(BaseProvider):
         try:
             try:
                 sg_attribute = get_object_at(resource, callback_args['sg_list_attribute_name'])
-            except:
+            except Exception as e:
                 return
             if type(sg_attribute) != list:
                 sg_attribute = [sg_attribute]
@@ -482,7 +480,7 @@ class AWSProvider(BaseProvider):
     def _merge_route53_and_route53domains(self):
         if 'route53domains' not in self.services:
             return
-        # TODO fix this
+        # TODO: fix this
         self.services['route53'].update(self.services['route53domains'])
         self.services.pop('route53domains')
 
@@ -494,7 +492,7 @@ class AWSProvider(BaseProvider):
                            self.set_emr_vpc_ids_callback,
                            {'clear_list': clear_list})
         for region in clear_list:
-            self.services['emr']['regions']['region']['vpcs'].pop('TODO')
+            self.services['emr']['regions'][region]['vpcs'].pop('TODO')
 
     def set_emr_vpc_ids_callback(self, current_config, path, current_path, vpc_id, callback_args):
         if vpc_id != 'TODO':
@@ -526,7 +524,6 @@ class AWSProvider(BaseProvider):
                     print_error('Unable to determine VPC id for %s' % (str(subnet_id) if subnet_id else str(sg_id)))
                     continue
             if vpc_id:
-                # noinspection PyArgumentList
                 region_vpcs_config = get_object_at(current_path)
                 manage_dictionary(region_vpcs_config, vpc_id, {'clusters': {}})
                 region_vpcs_config[vpc_id]['clusters'][cluster_id] = cluster
@@ -543,7 +540,6 @@ class AWSProvider(BaseProvider):
                                self.parse_elb_policies_callback,
                                {})
 
-    # noinspection PyArgumentList
     @staticmethod
     def parse_elb_policies_callback(current_config, path, current_path, region_id, callback_args):
         region_config = get_object_at(['services', 'elb', ] + current_path + [region_id])

@@ -1,19 +1,8 @@
-# -*- coding: utf-8 -*-
-
 import os
-import re
 import sys
 import traceback
 
 from six.moves import input
-
-########################################
-# Globals
-########################################
-
-mfa_serial_format = r'^arn:aws:iam::\d+:mfa/[a-zA-Z0-9\+=,.@_-]+$'
-re_mfa_serial_format = re.compile(mfa_serial_format)
-re_mfa_code = re.compile(r'^\d{6}\d*$')
 
 
 ########################################
@@ -88,29 +77,6 @@ def prompt(test_input=None):
     return choice
 
 
-def prompt_mfa_code(activate=False, test_input=None):
-    """
-    Prompt for an MFA code
-
-    :param activate:                    Set to true when prompting for the 2nd code when activating a new MFA device
-    :param test_input:                       Used for unit testing
-
-    :return:                            The MFA code
-    """
-    while True:
-        if activate:
-            prompt_string = 'Enter the next value: '
-        else:
-            prompt_string = 'Enter your MFA code (or \'q\' to abort): '
-        mfa_code = prompt_value(prompt_string, no_confirm=True, test_input=test_input)
-        if mfa_code == 'q':
-            return mfa_code
-        if not re_mfa_code.match():
-            print_error('Error: your MFA code must only consist of digits and be at least 6 characters long.')
-        break
-    return mfa_code
-
-
 def prompt_overwrite(filename, force_write, test_input=None):
     """
     Prompt whether the file should be overwritten
@@ -133,6 +99,7 @@ def prompt_value(question, choices=None, default=None, display_choices=True, dis
     """
     Prompt for a value
                                         .                    .
+    :param return_index:
     :param question:                    Question to be asked
     :param choices:                     List of authorized answers
     :param default:                     Value suggested by default
@@ -220,7 +187,7 @@ def prompt_yes_no(question, test_input=None):
     Prompt for a yes/no or y/n answer
                                         .
     :param question:                    Question to be asked
-    :param test_input:                   Used for unit testing
+    :param test_input:                  Used for unit testing
 
     :return:                            True for yes/y, False for no/n
     """

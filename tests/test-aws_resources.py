@@ -33,7 +33,7 @@ class TestAWSResources(TestCase):
 
     def test_aws_composite_resource(self):
         loop = asyncio.new_event_loop()
-        composite = DummyComposite({'region': 'some_region'})
+        composite = DummyComposite(None, {'region': 'some_region'})
         loop.run_until_complete(composite.fetch_all())
 
         with open(os.path.join(self.test_dir, 'data/aws-resources/dummy_resources.json')) as f:
