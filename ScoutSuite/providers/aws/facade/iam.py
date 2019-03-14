@@ -59,7 +59,9 @@ class IAMFacade(AWSBaseFacade):
                 for entity in attached_entities[entity_type]:
                     name_field = entity_type.replace('Policy', '')[:-1] + 'Name'
                     resource_name = entity[name_field]
-                    policy['attached_to'][resource_type].append({'name': resource_name})
+                    id_field = entity_type.replace('Policy', '')[:-1] + 'Id'
+                    resource_id = entity[id_field]
+                    policy['attached_to'][resource_type].append({'name': resource_name, 'id': resource_id})
 
         return policies
 
