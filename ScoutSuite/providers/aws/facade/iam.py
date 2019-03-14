@@ -166,7 +166,6 @@ class IAMFacade(AWSBaseFacade):
                 fetched_policies[policy_id] = {}
                 fetched_policies[policy_id]['PolicyDocument'] = policy_document
                 fetched_policies[policy_id]['name'] = policy_name
-                # self._parse_permissions(policy_id, policy_document, 'inline_policies', iam_resource_type + 's', resource_id)
         except Exception as e:
             if is_throttled(e):
                 raise e
