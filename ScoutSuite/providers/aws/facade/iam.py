@@ -39,6 +39,7 @@ class IAMFacade(AWSBaseFacade):
             policies = self._get_inline_policies('group', group['GroupId'], group['GroupName'])
             if len(policies):
                 group['inline_policies'] = policies
+            group['inline_policies_count'] = len(policies)
         return groups
 
     async def get_policies(self):
