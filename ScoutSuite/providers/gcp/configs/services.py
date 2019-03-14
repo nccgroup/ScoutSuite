@@ -1,5 +1,5 @@
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
-from ScoutSuite.providers.gcp.facade.facade import GCPFacade
+from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.gcp.resources.stackdriverlogging.service import StackdriverLogging
 from ScoutSuite.providers.gcp.services.cloudstorage import CloudStorageConfig
 from ScoutSuite.providers.gcp.services.cloudsql import CloudSQLConfig

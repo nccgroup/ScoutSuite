@@ -1,22 +1,18 @@
 from googleapiclient import discovery
 from ScoutSuite.providers.gcp.utils import MemoryCache
-from ScoutSuite.providers.gcp.facade.stackdriverlogging import StackdriverLoggingFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 
-class GCPFacade:
-    def __init__(self):
-        self._resourcemanager_client = None
-        self.stackdriverlogging = StackdriverLoggingFacade()
+class Facade:
+    def __init__(self, client_name, client_version):
+        self._client_name = client_name
+        self._client_version = client_version
+        self._client = None
 
-    def _get_resourcemanager_client(self):
-        if self._resourcemanager_client is None:
-            self._resourcemanager_client = discovery.build('cloudresourcemanager', 'v1', cache_discovery=False, cache=MemoryCache())
-        return self._resourcemanager_client
+    def _build_client(self):
+        return discovery.build(self._client_name, self._client_version, 
+            cache_discovery=False, cache=MemoryCache())
 
-    # TODO: Make truly async    
-    async def get_projects(self):
-        resourcemanager_client = self._get_resourcemanager_client()
-        request = resourcemanager_client.projects().list() 
-        projects_group = resourcemanager_client.projects()
-        return await GCPFacadeUtils.get_all('projects', request, projects_group)
-
+    # Since the HTTP library used by the Google API Client library is not 
+    # thread-safe, we need to create a new client for each request.
+    def _get_client(self):
+        return self._build_client()
