@@ -114,6 +114,7 @@ class IAMFacade(AWSBaseFacade):
             users.append(user['UserId'])
         return users
 
+    # TODO: Make this async
     def _get_inline_policies(self, iam_resource_type, resource_id, resource_name):
         client = AWSFacadeUtils.get_client('iam', self.session)
         get_policy_method = getattr(client, 'get_' + iam_resource_type + '_policy')
