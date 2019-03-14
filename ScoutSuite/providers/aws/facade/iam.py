@@ -67,6 +67,33 @@ class IAMFacade(AWSBaseFacade):
 
         return policies
 
+    async def get_users(self):
+        client = AWSFacadeUtils.get_client('iam', self.session)
+        users = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_users', 'Users')
+
+        # TODO: Parallelize this
+        for user in users:
+            user_name = user['UserName']
+            user_id = user['UserId']
+
+            policies = self._get_inline_policies('user', user_id, user_name)
+            if len(policies):
+                user['inline_policies'] = policies
+            user['inline_policies_count'] = len(policies)
+            user['groups'] = []
+            groups = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_groups_for_user', 'Groups', UserName=user_name)
+            for group in groups:
+                user['groups'].append(group['GroupName'])
+            try:
+                user['LoginProfile'] = client.get_login_profile(UserName=user_name)[
+                    'LoginProfile']
+            except Exception:
+                pass
+            user['AccessKeys'] = await self._get_user_acces_keys(user_name)
+            user['MFADevices'] = await self._get_user_mfa_devices(user_name)
+
+        return users
+
     async def _fetch_group_users(self, group_name):
         client = AWSFacadeUtils.get_client('iam', self.session)
         fetched_users = client.get_group(GroupName=group_name)['Users']
