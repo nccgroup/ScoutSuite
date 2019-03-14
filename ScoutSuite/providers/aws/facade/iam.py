@@ -94,6 +94,34 @@ class IAMFacade(AWSBaseFacade):
 
         return users
 
+    async def get_roles(self):
+        roles = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_roles', 'Roles')
+
+        # Handle throttling errors
+        for role in roles:
+            role['instances_count'] = 'N/A'
+
+            # Get role policies
+            policies = self._get_inline_policies('role', role['RoleId'], role['RoleName'])
+            if len(policies):
+                role['inline_policies'] = policies
+            role['inline_policies_count'] = len(policies)
+
+            # Get instance profiles
+            profiles = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_instance_profiles_for_role', 'InstanceProfiles', RoleName = role['RoleName'])
+            role['instance_profiles'] = {} # TODO: If does not exist
+            for profile in profiles:
+                profile_id = profile['InstanceProfileId']
+                role['instance_profiles'][profile_id] = {} # TODO: If does not exist
+                role['instance_profiles'][profile_id]['arn'] = profile['Arn'] # TODO: If does not exist
+                role['instance_profiles'][profile_id]['name'] = profile['InstanceProfileName'] # TODO: If does not exist
+
+            # Get trust relationship
+            role['assume_role_policy'] = {}
+            role['assume_role_policy']['PolicyDocument'] = role.pop('AssumeRolePolicyDocument')
+
+        return roles
+
     async def _get_user_acces_keys(self, user_name):
         client = AWSFacadeUtils.get_client('iam', self.session)
         response = await run_concurrently(lambda: client.list_access_keys(UserName=user_name))
