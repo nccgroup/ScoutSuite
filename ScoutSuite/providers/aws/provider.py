@@ -114,11 +114,14 @@ class AWSProvider(BaseProvider):
                 for lb in elbv2_config['regions'][region]['vpcs'][vpc]['lbs']:
                     for i in range(0, len(elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'])):
                         for sg in ec2_config['regions'][region]['vpcs'][vpc]['security_groups']:
-                            if 'GroupId' in elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i] \
-                                    and elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
-                                    'GroupId'] == sg:
+                            group_id = elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
+                                    'GroupId']
+                            if 'GroupId' in elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][
+                                    i] and group_id == sg:
                                 elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i] = \
                                     ec2_config['regions'][region]['vpcs'][vpc]['security_groups'][sg]
+                                elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
+                                    'GroupId'] = group_id
 
                         check_security_group_rules(elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb], i, 'ingress')
                         check_security_group_rules(elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb], i, 'egress')
