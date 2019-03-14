@@ -13,7 +13,8 @@ class IAM(AWSCompositeResources):
         (CredentialReports, 'credential_reports'),
         (Groups, 'groups'),
         (Policies, 'policies'),
-        (Users, 'users')
+        (Users, 'users'),
+        (Roles, 'roles')
     ]
 
     def __init__(self):
