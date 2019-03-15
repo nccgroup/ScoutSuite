@@ -1,31 +1,25 @@
-from ScoutSuite.providers.base.configs.resources import CompositeResources
+from ScoutSuite.providers.gcp.resources.resources import GCPCompositeResources
 from ScoutSuite.providers.gcp.resources.cloudsql.backups import Backups
 from ScoutSuite.providers.gcp.resources.cloudsql.users import Users
 from ScoutSuite.providers.utils import get_non_provider_id
 
-class DatabaseInstances(CompositeResources):
+class DatabaseInstances(GCPCompositeResources):
     _children = [ 
-        ('backups', Backups),
-        ('users', Users)
+        (Backups, 'backups'),
+        (Users, 'users')
     ]
 
-    def __init__(self, cloudsql_facade, project_id):
-        self.cloudsql_facade = cloudsql_facade
+    def __init__(self, gcp_facade, project_id):
+        self.gcp_facade = gcp_facade
         self.project_id = project_id
 
     async def fetch_all(self):
-        raw_instances = await self.cloudsql_facade.get_database_instances(self.project_id)
+        raw_instances = await self.gcp_facade.cloudsql.get_database_instances(self.project_id)
         for raw_instance in raw_instances:
             instance_id, instance = self._parse_instance(raw_instance)
             self[instance_id] = instance
-            await self._fetch_children(instance_id, instance)
+            await self._fetch_children(self[instance_id], gcp_facade = self.gcp_facade, project_id = self.project_id, instance_name = instance['name'])
             self[instance_id]['last_backup_timestamp'] = self._get_last_backup_timestamp(self[instance_id]['backups'])
-
-    async def _fetch_children(self, instance_id, instance):
-        for child_name, child_class in self._children:
-            child = child_class(self.cloudsql_facade, self.project_id, instance['name'])
-            await child.fetch_all()
-            self[instance_id][child_name] = child
 
     def _parse_instance(self, raw_instance):
         instance_dict = {}

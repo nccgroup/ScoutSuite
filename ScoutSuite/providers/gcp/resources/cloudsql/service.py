@@ -3,9 +3,9 @@ from ScoutSuite.providers.gcp.resources.cloudsql.database_instances import Datab
 
 class CloudSQL(Projects):
     _children = [ 
-        ('instances', DatabaseInstances)
+        (DatabaseInstances, 'instances')
      ]
 
-    def __init__(self, gcp_facade, cloudsql_facade):
-        super(CloudSQL, self).__init__(gcp_facade, cloudsql_facade)
+    def __init__(self, gcp_facade):
+        super(CloudSQL, self).__init__(gcp_facade)
         
