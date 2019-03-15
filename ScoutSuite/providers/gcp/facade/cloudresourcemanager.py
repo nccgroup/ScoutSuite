@@ -1,14 +1,15 @@
-# -*- coding: utf-8 -*-
+from ScoutSuite.providers.gcp.facade.facade import Facade
+from ScoutSuite.providers.utils import run_concurrently
 
-from googleapiclient import discovery
-from ScoutSuite.providers.gcp.utils import MemoryCache
-
-class CloudResourceManagerFacade:
+class CloudResourceManagerFacade(Facade):
     def __init__(self):
-        self._resourcemanager_client = discovery.build('cloudresourcemanager', 'v1', cache_discovery=False, cache=MemoryCache())
+        super(CloudResourceManagerFacade, self).__init__('cloudresourcemanager', 'v1')
 
-    # TODO: Make truly async
     async def get_bindings(self, project_id):
-        return self._resourcemanager_client.projects().getIamPolicy(resource=project_id).execute()
+        cloudresourcemanager_client = self._get_client()
+        response = await run_concurrently(
+                lambda: cloudresourcemanager_client.projects().getIamPolicy(resource=project_id).execute()
+        )
+        return response.get('bindings', [])
 
 

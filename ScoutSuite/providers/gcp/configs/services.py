@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
-from ScoutSuite.providers.gcp.facade.facade import GCPFacade
-from ScoutSuite.providers.gcp.facade.cloudresourcemanager import CloudResourceManagerFacade
+from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.gcp.resources.cloudresourcemanager.service import CloudResourceManager
 from ScoutSuite.providers.gcp.services.cloudstorage import CloudStorageConfig
 from ScoutSuite.providers.gcp.services.cloudsql import CloudSQLConfig
@@ -23,9 +22,8 @@ class GCPServicesConfig(BaseServicesConfig):
         projects = [] if projects is None else projects
 
         gcp_facade = GCPFacade()
-        resourcemanager_facade = CloudResourceManagerFacade()
 
-        self.cloudresourcemanager = CloudResourceManager(gcp_facade, resourcemanager_facade)
+        self.cloudresourcemanager = CloudResourceManager(gcp_facade)
         self.cloudstorage = CloudStorageConfig(thread_config=thread_config)
         self.cloudsql = CloudSQLConfig(thread_config=thread_config)
         self.computeengine = ComputeEngineConfig(thread_config=thread_config)
