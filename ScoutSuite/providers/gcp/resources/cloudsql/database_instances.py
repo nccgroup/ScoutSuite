@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from ScoutSuite.providers.base.configs.resources import CompositeResources
 from ScoutSuite.providers.gcp.resources.cloudsql.backups import Backups
 from ScoutSuite.providers.gcp.resources.cloudsql.users import Users

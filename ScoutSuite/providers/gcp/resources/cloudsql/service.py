@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from ScoutSuite.providers.gcp.resources.projects import Projects
 from ScoutSuite.providers.gcp.resources.cloudsql.database_instances import DatabaseInstances
 
