@@ -24,7 +24,7 @@ class HTMLReport(object):
         self.report_dir = report_dir
         self.profile = profile.replace('/', '_').replace('\\', '_')  # Issue 111
         self.current_time = datetime.datetime.now(dateutil.tz.tzlocal())
-        if timestamp != False:
+        if timestamp:
             self.timestamp = self.current_time.strftime("%Y-%m-%d_%Hh%M%z") if not timestamp else timestamp
             self.profile = '%s-%s' % (self.profile, self.timestamp)
         self.exceptions = exceptions
@@ -36,7 +36,7 @@ class HTMLReport(object):
         else:
             self.encoder = JavaScriptEncoder(self.profile, report_dir, timestamp)
 
-    def get_content_from(self, templates_type):
+    def get_content_from_folder(self, templates_type):
         contents = ''
         template_dir = os.path.join(self.html_data_path, templates_type)
         template_files = [os.path.join(template_dir, f) for f in os.listdir(template_dir) if
@@ -47,6 +47,17 @@ class HTMLReport(object):
                     contents = contents + f.read()
             except Exception as e:
                 print_exception('Error reading filename %s: %s' % (filename, e))
+        return contents
+
+    def get_content_from_file(self, filename):
+        contents = ''
+        template_dir = os.path.join(self.html_data_path, 'conditionals')
+        filename = template_dir + filename
+        try:
+            with open('%s' % filename, 'rt') as f:
+                contents = contents + f.read()
+        except Exception as e:
+            print_exception('Error reading filename %s: %s' % (filename, e))
         return contents
 
     def prepare_html_report_dir(self):
@@ -77,6 +88,7 @@ class Scout2Report(HTMLReport):
         exceptions = {} if exceptions is None else exceptions
         self.html_root = HTMLREPORT_FILE
         self.provider = provider
+        self.result_format = result_format
         super(Scout2Report, self).__init__(profile, report_dir, timestamp, exceptions, result_format)
 
     def save(self, config, exceptions, force_write=False, debug=False):
@@ -88,11 +100,14 @@ class Scout2Report(HTMLReport):
     def create_html_report(self, force_write):
         contents = ''
         # Use all scripts under html/partials/
-        contents += self.get_content_from('partials')
-        contents += self.get_content_from('partials/%s' % self.provider)
+        contents += self.get_content_from_folder('partials')
+        contents += self.get_content_from_folder('partials/%s' % self.provider)
         # Use all scripts under html/summaries/
-        contents += self.get_content_from('summaries')
-        contents += self.get_content_from('summaries/%s' % self.provider)
+        contents += self.get_content_from_folder('summaries')
+        contents += self.get_content_from_folder('summaries/%s' % self.provider)
+        # Use the script corresponding to the result format
+        contents += self.get_content_from_file('/%s_format.html' % self.result_format)
+
         new_file, first_line = get_filename(HTMLREPORT, self.profile, self.report_dir)
         print_info('Creating %s ...' % new_file)
         if prompt_for_overwrite(new_file, force_write):
