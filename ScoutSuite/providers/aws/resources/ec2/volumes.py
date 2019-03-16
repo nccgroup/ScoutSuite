@@ -1,5 +1,5 @@
 from ScoutSuite.providers.aws.resources.resources import AWSResources
-from ScoutSuite.providers.aws.aws import get_name
+from ScoutSuite.providers.aws.utils import get_name
 
 
 class Volumes(AWSResources):
