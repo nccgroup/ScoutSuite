@@ -28,11 +28,12 @@ class AzureProvider(BaseProvider):
     """
 
     def __init__(self, project_id=None, organization_id=None,
-                 report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
+                 report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4,
+                 result_format='json', **kwargs):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
-        self.profile = 'azure-profile'  # TODO this is aws-specific
+        self.profile = 'azure-profile'
 
         self.metadata_path = '%s/metadata.json' % os.path.split(os.path.abspath(__file__))[0]
 
@@ -41,7 +42,10 @@ class AzureProvider(BaseProvider):
 
         self.services_config = AzureServicesConfig
 
-        super(AzureProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
+        self.result_format = result_format
+
+        super(AzureProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config,
+                                            result_format)
 
     def authenticate(self, cli=None, msi=None, service_principal=None, file_auth=None, user_account=None,
                      tenant_id=None, subscription_id=None, client_id=None, client_secret=None, username=None,
