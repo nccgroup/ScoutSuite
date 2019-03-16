@@ -13,6 +13,5 @@ AWSCONFIG_FILE = 'scoutsuite-results/scoutsuite_results.js'
 AWSRULESET_FILE = 'scoutsuite-results/scoutsuite_ruleset.js'
 EXCEPTIONS_FILE = 'scoutsuite-results/scoutsuite_exceptions.js'
 HTMLREPORT_FILE = 'report.html'
-GENERATOR_FILE = 'ruleset-generator.html'
 
 REPORT_TITLE = 'Scout Suite Report'

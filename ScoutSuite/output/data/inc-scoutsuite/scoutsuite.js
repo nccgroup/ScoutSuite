@@ -117,12 +117,12 @@ var load_aws_account_id = function () {
  * @param cols
  * @returns {number};
  */
-function load_aws_config_from_json(script_id, cols) {
-    
+function load_config_from_json(script_id, cols) {
+
     // Abort if data was previously loaded
     if (loaded_config_array.indexOf(script_id) > 0) {
         // When the path does not contain .id.
-        return 0;
+        return 0
     };
     path_array = script_id.split('.');
     for (i = 3; i < path_array.length; i = i + 2) {
@@ -131,13 +131,13 @@ function load_aws_config_from_json(script_id, cols) {
     fixed_path = path_array.join('.');
     if (loaded_config_array.indexOf(fixed_path) > 0) {
         // When the loaded path contains id but browsed-to path contains a specific value
-        return 0;
+        return 0
     };
     path_array[1] = 'id';
     fixed_path = path_array.join('.');
     if (loaded_config_array.indexOf(fixed_path) > 0) {
         // Special case for services.id.findings
-        return 0;
+        return 0
     };
 
     // Build the list based on the path, stopping at the first .id. value
@@ -181,6 +181,75 @@ function load_aws_config_from_json(script_id, cols) {
     return 1;
 };
 
+/**
+ * Load SQLite function
+ * @param script_id
+ * @param cols
+ * @returns {number};
+ */
+function load_config_from_sqlite(script_id, cols) {
+
+    // Abort if data was previously loaded
+    if (loaded_config_array.indexOf(script_id) > 0) {
+        // When the path does not contain .id.
+        return 0
+    };
+    path_array = script_id.split('.');
+    for (i = 3; i < path_array.length; i = i + 2) {
+        path_array[i] = 'id';
+    };
+    fixed_path = path_array.join('.');
+    if (loaded_config_array.indexOf(fixed_path) > 0) {
+        // When the loaded path contains id but browsed-to path contains a specific value
+        return 0
+    };
+    path_array[1] = 'id';
+    fixed_path = path_array.join('.');
+    if (loaded_config_array.indexOf(fixed_path) > 0) {
+        // Special case for services.id.findings
+        return 0
+    };
+
+    // Build the list based on the path, stopping at the first .id. value
+    list = run_results;
+    path_array = script_id.split('.id.')[0].split('.');
+    for (i in path_array) {
+        // Allows for creation of regions-filter etc...
+        if (i.endsWith('-filters')) {
+            i = i.replace('-filters', '');
+        };
+        list = list[path_array[i]];
+    };
+
+    // Filters
+    if (path_array[i] == 'items' && i > 3 && path_array[i - 2] == 'filters') {
+        return 1;
+    };
+
+    // Default # of columns is 2
+    if ((cols === undefined) || (cols === null)) {
+        cols = 2;
+    };
+
+    // Update the DOM
+    hideAll();
+    if (cols == 0) {
+        // Metadata
+        script_id = script_id.replace('services.id.', '');
+        process_template(script_id + '.list.template', script_id + '.list', list);
+    } else if (cols == 1) {
+        // Single-column display
+        process_template(script_id + '.details.template', 'single-column', list);
+    } else if (cols == 2) {
+        // Double-column display
+        process_template(script_id + '.list.template', 'double-column-left', list);
+        process_template(script_id + '.details.template', 'double-column-right', list);
+    };
+
+    // Update the list of loaded data
+    loaded_config_array.push(script_id);
+    return 1;
+};
 
 /**
  * Compile Handlebars templates and update the DOM
@@ -379,17 +448,17 @@ function updateNavbar(path) {
 
     $('[id*="navbar"]').removeClass('active');
 
-    if(path === '') {
+    if (path === '') {
         $('#scoutsuite_navbar').addClass('active');
     }
     else if (splitPath[0] === 'services') {
         const service = splitPath[1];
         let element = $('#' + service + subnavbarIdSuffix);
-        while(element && (!element.attr('id') || !element.attr('id').endsWith(navbarIdSuffix))) {
+        while (element && (!element.attr('id') || !element.attr('id').endsWith(navbarIdSuffix))) {
             element = element.parent();
         }
 
-        if(element) {
+        if (element) {
             element.addClass('active');
         }
     }
@@ -402,13 +471,13 @@ function updateNavbar(path) {
 }
 
 function hasNavbarSuffix(element) {
-    return element 
-        && (!element.attr('id') || element.attr('id') 
-        && !element.attr('id',).endsWith(navbarIdSuffix));
+    return element
+        && (!element.attr('id') || element.attr('id')
+            && !element.attr('id').endsWith(navbarIdSuffix));
 }
 
 
- function toggleVisibility(id) {
+function toggleVisibility(id) {
     id1 = '#' + id;
     $(id1).toggle()
     id2 = '#bullet-' + id;
@@ -714,11 +783,11 @@ function load_metadata() {
     });
 
     load_aws_account_id();
-    load_aws_config_from_json('last_run', 1);
-    load_aws_config_from_json('metadata', 0);
-    load_aws_config_from_json('services.id.findings', 1);
-    load_aws_config_from_json('services.id.filters', 0); // service-specific filters
-    load_aws_config_from_json('services.id.regions', 0); // region filters
+    load_config_from_json('last_run', 1);
+    load_config_from_json('metadata', 0);
+    load_config_from_json('services.id.findings', 1);
+    load_config_from_json('services.id.filters', 0); // service-specific filters
+    load_config_from_json('services.id.regions', 0); // region filters
 
     for (group in run_results['metadata']) {
         for (service in run_results['metadata'][group]) {
@@ -945,7 +1014,7 @@ function updateDOM(anchor) {
  * @param path
  * @returns {number};
  */
-// TODO: merge into load_aws_config_from_json...
+// TODO: merge into load_config_from_json...
 function lazy_loading(path) {
     var cols = 1;
     var resource_path_array = path.split('.')
@@ -962,7 +1031,7 @@ function lazy_loading(path) {
             break
         };
     };
-    return load_aws_config_from_json(path, cols);
+    return load_config_from_json(path, cols);
 };
 
 
