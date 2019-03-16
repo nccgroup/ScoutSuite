@@ -5,13 +5,13 @@ import os
 import boto3
 
 from ScoutSuite.core.console import print_debug, print_error, print_exception, print_info
-from ScoutSuite.providers.aws.aws import get_aws_account_id
 from ScoutSuite.providers.aws.configs.services import AWSServicesConfig
 from ScoutSuite.providers.aws.services.vpc import put_cidr_name
+from ScoutSuite.providers.aws.services.elbv2 import check_security_group_rules
 from ScoutSuite.providers.base.configs.browser import combine_paths, get_object_at, get_value_at
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.utils import manage_dictionary
-from ScoutSuite.providers.aws.utils import ec2_classic
+from ScoutSuite.providers.aws.utils import ec2_classic, get_aws_account_id
 
 
 class AWSProvider(BaseProvider):
@@ -70,10 +70,13 @@ class AWSProvider(BaseProvider):
             self._add_security_group_name_to_ec2_grants()
             self._add_last_snapshot_date_to_ec2_volumes()
             self._match_instances_and_roles()
-            
+
         if 'cloudtrail' in self.service_list:
             self._process_cloudtrail_trails(self.services['cloudtrail'])
-            
+
+        if 'elbv2' in self.service_list:
+            self._add_security_group_data_to_elbv2()
+
         self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
         self._merge_route53_and_route53domains()
         self._match_iam_policies_and_buckets()
@@ -107,6 +110,26 @@ class AWSProvider(BaseProvider):
                            [],
                            self.add_security_group_name_to_ec2_grants_callback,
                            {'AWSAccountId': self.aws_account_id})
+
+    def _add_security_group_data_to_elbv2(self):
+        ec2_config = self.services['ec2']
+        elbv2_config = self.services['elbv2']
+        for region in elbv2_config['regions']:
+            for vpc in elbv2_config['regions'][region]['vpcs']:
+                for lb in elbv2_config['regions'][region]['vpcs'][vpc]['lbs']:
+                    for i in range(0, len(elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'])):
+                        for sg in ec2_config['regions'][region]['vpcs'][vpc]['security_groups']:
+                            group_id = elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
+                                    'GroupId']
+                            if 'GroupId' in elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][
+                                    i] and group_id == sg:
+                                elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i] = \
+                                    ec2_config['regions'][region]['vpcs'][vpc]['security_groups'][sg]
+                                elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
+                                    'GroupId'] = group_id
+
+                        check_security_group_rules(elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb], i, 'ingress')
+                        check_security_group_rules(elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb], i, 'egress')
 
     def _check_ec2_zone_distribution(self):
         regions = self.services['ec2']['regions'].values()

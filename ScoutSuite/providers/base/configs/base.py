@@ -16,11 +16,10 @@ from hashlib import sha1
 from ScoutSuite.providers.base.configs.threads import thread_configs
 
 # TODO do this better without name conflict
-from ScoutSuite.providers.aws.aws import connect_service
 from ScoutSuite.providers.gcp.utils import gcp_connect_service
 from ScoutSuite.providers.azure.utils import azure_connect_service
 
-from ScoutSuite.providers.aws.aws import build_region_list
+from ScoutSuite.providers.aws.utils import build_region_list, connect_service
 from ScoutSuite.core.console import print_exception, print_info
 
 from ScoutSuite.output.console import FetchStatusLogger

@@ -8,7 +8,7 @@ import json
 from botocore.exceptions import ClientError
 
 from ScoutSuite.core.console import print_error, print_exception, print_info
-from ScoutSuite.providers.aws.aws import handle_truncated_response
+from ScoutSuite.providers.aws.utils import handle_truncated_response
 from ScoutSuite.providers.aws.configs.base import AWSBaseConfig
 from ScoutSuite.utils import manage_dictionary
 
