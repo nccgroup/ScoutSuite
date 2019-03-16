@@ -11,7 +11,7 @@ from six.moves import input
 from ScoutSuite import AWSCONFIG, EXCEPTIONS, HTMLREPORT, AWSRULESET, AWSCONFIG_FILE, EXCEPTIONS_FILE, HTMLREPORT_FILE, AWSRULESET_FILE
 
 
-def prompt_4_yes_no(question):
+def prompt_for_yes_no(question):
     """
     Ask a question and prompt for yes or no
 
@@ -30,7 +30,7 @@ def prompt_4_yes_no(question):
             print_error('\'%s\' is not a valid answer. Enter \'yes\'(y) or \'no\'(n).' % choice)
 
 
-def prompt_4_overwrite(filename, force_write):
+def prompt_for_overwrite(filename, force_write):
     """
     Confirm before overwriting existing files. Do not prompt if the file does not exist or force_write is set
 
@@ -41,7 +41,7 @@ def prompt_4_overwrite(filename, force_write):
     #
     if not os.path.exists(filename) or force_write:
         return True
-    return prompt_4_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename))
+    return prompt_for_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename))
 
 
 def get_filename(config_type, profile, report_dir):

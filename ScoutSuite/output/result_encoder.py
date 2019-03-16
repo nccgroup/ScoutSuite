@@ -10,7 +10,7 @@ from sqlitedict import SqliteDict
 from ScoutSuite.core.console import print_exception, print_info
 
 from ScoutSuite import DEFAULT_REPORT_DIR
-from ScoutSuite.output.utils import get_filename, prompt_4_overwrite
+from ScoutSuite.output.utils import get_filename, prompt_for_overwrite
 
 
 class ScoutJsonEncoder(json.JSONEncoder):
@@ -80,7 +80,7 @@ class SqlLiteEncoder(ScoutResultEncoder):
         """
         if not quiet:
             print_info('Saving config...')
-        if prompt_4_overwrite(config_filename, force_write):
+        if prompt_for_overwrite(config_filename, force_write):
             try:
                 config_dirname = os.path.dirname(config_filename)
                 if not os.path.isdir(config_dirname):
@@ -132,7 +132,7 @@ class JavaScriptEncoder(ScoutResultEncoder):
         """
         if not quiet:
             print_info('Saving config...')
-        if prompt_4_overwrite(config_filename, force_write):
+        if prompt_for_overwrite(config_filename, force_write):
             try:
                 config_dirname = os.path.dirname(config_filename)
                 if not os.path.isdir(config_dirname):
