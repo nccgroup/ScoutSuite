@@ -8,19 +8,19 @@ from ScoutSuite.providers.azure.resources.storageaccounts.storageaccounts import
 from ScoutSuite.providers.azure.resources.network.networks import Networks
 from ScoutSuite.providers.azure.resources.keyvault.key_vaults import KeyVaults
 try:
-    from ScoutSuite.providers.azure.services.appgateway_private import AppGatewayConfig
+    from ScoutSuite.providers.azure.resources.appgateway_private.application_gateways_private import ApplicationGateways
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.azure.services.rediscache_private import RedisCacheConfig
+    from ScoutSuite.providers.azure.resources.rediscache_private.redis_caches_private import RedisCaches
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.azure.services.appservice_private import AppServiceConfig
+    from ScoutSuite.providers.azure.resources.appservice_private.web_applications_private import WebApplications
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.azure.services.loadbalancer_private import LoadBalancerConfig
+    from ScoutSuite.providers.azure.resources.loadbalancer_private.load_balancers_private import LoadBalancers
 except ImportError:
     pass
 
@@ -37,19 +37,19 @@ class AzureServicesConfig(BaseServicesConfig):
         self.keyvault = KeyVaults()
 
         try:
-            self.appgateway = AppGatewayConfig(thread_config=thread_config)
+            self.appgateway = ApplicationGateways()
         except NameError:
             pass
         try:
-            self.rediscache = RedisCacheConfig(thread_config=thread_config)
+            self.rediscache = RedisCaches()
         except NameError:
             pass
         try:
-            self.appservice = AppServiceConfig(thread_config=thread_config)
+            self.appservice = WebApplications()
         except NameError:
             pass
         try:
-            self.loadbalancer = LoadBalancerConfig(thread_config=thread_config)
+            self.loadbalancer = LoadBalancers()
         except NameError:
             pass
 
