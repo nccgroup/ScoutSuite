@@ -36,7 +36,7 @@ class EC2Facade(AWSBaseFacade):
             'ec2', region, self.session, 'describe_security_groups', 'SecurityGroups', Filters=filters)
 
     async def get_vpcs(self, region):
-        ec2_client = await run_concurrently(lambda: boto3.client('ec2', region_name=region))
+        ec2_client = AWSFacadeUtils.get_client('ec2', region, self.session)
         return await run_concurrently(lambda: ec2_client.describe_vpcs()['Vpcs'])
 
     async def get_images(self, region, owner_id):
