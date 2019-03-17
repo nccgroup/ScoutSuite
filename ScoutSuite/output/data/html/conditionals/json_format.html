@@ -1,6 +1,16 @@
+
+<!-- Results that need to be read from js files -->
+<script-- src="scoutsuite-results/scoutsuite_exceptions.js"></script-->
+
 <!-- Element to notify Scout Suite that we are reading a report in json format -->
 <script id="json_format" type="text/x-handlebars-template">
 </script>
 <script>
     Handlebars.registerPartial("json_format", $("#json_format\\.partial").html());
+</script>
+<script>
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "scoutsuite-results/scoutsuite_results-aws.js";
+    $("head").append(script);
 </script>
