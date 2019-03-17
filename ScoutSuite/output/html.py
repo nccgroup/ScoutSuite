@@ -117,11 +117,11 @@ class Scout2Report(HTMLReport):
                 with open(new_file, 'wt') as nf:
                     for line in f:
                         newline = line
+                        newline = newline.replace('<!-- PLACEHOLDER -->', contents)
                         if self.profile != 'default':
                             newline = newline.replace(AWSCONFIG_FILE,
                                                       AWSCONFIG_FILE.replace('.js', '-%s.js' % self.profile))
                             newline = newline.replace(EXCEPTIONS_FILE,
                                                       EXCEPTIONS_FILE.replace('.js', '-%s.js' % self.profile))
-                        newline = newline.replace('<!-- PLACEHOLDER -->', contents)
                         nf.write(newline)
         return new_file
