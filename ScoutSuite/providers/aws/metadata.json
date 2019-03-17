@@ -481,8 +481,6 @@
         "redshift": {
             "resources": {
                 "clusters": {
-                    "api_call": "describe_clusters",
-                    "response": "Clusters",
                     "cols": 2,
                     "path": "services.redshift.regions.id.vpcs.id.clusters",
                     "callbacks": [
@@ -491,15 +489,10 @@
                     ]
                 },
                 "parameter_groups": {
-                    "api_call": "describe_cluster_parameter_groups",
-                    "response": "ParameterGroups",
                     "cols": 2,
                     "path": "services.redshift.regions.id.parameter_groups"
                 },
                 "security_groups": {
-                    "api_call": "describe_cluster_security_groups",
-                    "response": "ClusterSecurityGroups",
-                    "no_exceptions": true,
                     "cols": 2,
                     "path": "services.redshift.regions.id.security_groups"
                 }
