@@ -71,7 +71,6 @@ function onPageLoad() {
 
             download_as_csv(finding_key + '.csv', csv_array)
         };
-        ;
 
         if (button_clicked == 'findings_download_json_button') {
             json_dict['items'] = [];
@@ -188,6 +187,8 @@ function load_config_from_json(script_id, cols) {
  * @returns {number};
  */
 function load_config_from_sqlite(script_id, cols) {
+    alert("Loading from SQLite is not yet implemented 😞");
+    return 42;
 
     // Abort if data was previously loaded
     if (loaded_config_array.indexOf(script_id) > 0) {
@@ -783,21 +784,21 @@ function load_metadata() {
     });
 
     load_account_id();
-    if (run_results.result_format === "json") {
+    if (document.getElementById('json_format')) {
         load_config_from_json('last_run', 1);
         load_config_from_json('metadata', 0);
         load_config_from_json('services.id.findings', 1);
         load_config_from_json('services.id.filters', 0); // service-specific filters
         load_config_from_json('services.id.regions', 0); // region filters
-    } else {
+    } else if (document.getElementById('sqlite_format')) {
         alert("Loading from SQLite is not implemented.");
-        /*
         load_config_from_sqlite('last_run', 1);
         load_config_from_sqlite('metadata', 0);
         load_config_from_sqlite('services.id.findings', 1);
         load_config_from_sqlite('services.id.filters', 0); // service-specific filters
         load_config_from_sqlite('services.id.regions', 0); // region filters
-        */
+    } else {
+        console.log("Error: the specified format could not determined.");
     }
 
     for (group in run_results['metadata']) {
@@ -1042,10 +1043,12 @@ function lazy_loading(path) {
             break
         };
     };
-    if (run_results.result_format === "json") {
+    if (document.getElementById("json_format")) {
         return load_config_from_json(path, cols);
+    } else if (document.getElementById("sqlite_format")) {
+        return load_config_from_sqlite(path, cols);
     } else {
-        //return load_config_from_sqlite(path, cols);
+        console.log("Error: the specified format could not determined.");
     }
 };
 

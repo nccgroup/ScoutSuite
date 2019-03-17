@@ -81,7 +81,7 @@ class HTMLReport(object):
 
 class Scout2Report(HTMLReport):
     """
-    Scout2 HTML report
+    Scout Suite HTML report
     """
 
     def __init__(self, provider, profile=None, report_dir=None, timestamp=False, exceptions=None, result_format=None):
@@ -99,14 +99,14 @@ class Scout2Report(HTMLReport):
 
     def create_html_report(self, force_write):
         contents = ''
+        # Use the script corresponding to the result format
+        contents += self.get_content_from_file('/%s_format.html' % self.result_format)
         # Use all scripts under html/partials/
         contents += self.get_content_from_folder('partials')
         contents += self.get_content_from_folder('partials/%s' % self.provider)
         # Use all scripts under html/summaries/
         contents += self.get_content_from_folder('summaries')
         contents += self.get_content_from_folder('summaries/%s' % self.provider)
-        # Use the script corresponding to the result format
-        contents += self.get_content_from_file('/%s_format.html' % self.result_format)
 
         new_file, first_line = get_filename(HTMLREPORT, self.profile, self.report_dir)
         print_info('Creating %s ...' % new_file)
