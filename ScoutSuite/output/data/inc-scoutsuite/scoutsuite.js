@@ -772,6 +772,7 @@ function showPopup(content) {
  * Set up dashboards and dropdown menus
  */
 function load_metadata() {
+
     run_results = get_scoutsuite_results();
 
     // Set title dynamically
@@ -815,7 +816,6 @@ function load_metadata() {
     };
 
     hidePleaseWait();
-    showPageFromHash();
 };
 
 
