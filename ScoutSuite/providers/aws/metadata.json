@@ -302,20 +302,12 @@
         "elbv2": {
             "resources": {
                 "lbs": {
-                    "api_call": "describe_load_balancers",
-                    "response": "LoadBalancers",
                     "cols": 2,
                     "path": "services.elbv2.regions.id.vpcs.id.lbs",
                     "callbacks": [
                         [ "match_security_groups_and_resources_callback", {"status_path": ["State", "Code"], "sg_list_attribute_name": ["security_groups"], "sg_id_attribute_name": "GroupId"} ],
                         [ "get_lb_attack_surface", {} ]
                     ]
-                },
-                "ssl_policies": {
-                    "api_call": "describe_ssl_policies",
-                    "response": "SslPolicies",
-                    "hidden": true,
-                    "path": "services.elbv2.ssl_policies"
                 }
             },
             "summaries": {
