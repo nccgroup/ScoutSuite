@@ -100,7 +100,7 @@ function onPageLoad() {
 /**
  * Display the account ID -- use of the generic function + templates result in the div not being at the top of the page
  */
-var load_account_id = function () {
+var load_account_id_from_json = function () {
     var element = document.getElementById('aws_account_id');
     var value = '<i class="fa fa-cloud"></i> ' + run_results['provider_name'] +
         ' <i class="fa fa-chevron-right"></i> ' + run_results['aws_account_id'];
@@ -187,9 +187,7 @@ function load_config_from_json(script_id, cols) {
  * @returns {number};
  */
 function load_config_from_sqlite(script_id, cols) {
-    alert("Loading from SQLite is not yet implemented 😞");
-    return 42;
-
+    return 0;
     // Abort if data was previously loaded
     if (loaded_config_array.indexOf(script_id) > 0) {
         // When the path does not contain .id.
@@ -605,7 +603,6 @@ function findAndShowEC2Object(path, id) {
         object['name'] = id;
         showPopup(single_vpc_network_acl_template(object));
     };
-
 };
 
 /**
@@ -773,50 +770,45 @@ function showPopup(content) {
  * Set up dashboards and dropdown menus
  */
 function load_metadata() {
+    if (document.getElementById('sqlite_format')) {
+        alert("Loading from SQLite is not yet implemented 😞");
+        return;
+    } 
+    else {
+        run_results = get_scoutsuite_results();
 
-    run_results = get_scoutsuite_results();
+        // Set title dynamically
+        $(function () {
+            3
+            $(document).attr("title", 'Scout Suite Report [' + run_results['aws_account_id'] + ']');
+            4
+        });
 
-    // Set title dynamically
-    $(function () {
-        3
-        $(document).attr("title", 'Scout Suite Report [' + run_results['aws_account_id'] + ']');
-        4
-    });
+        load_account_id_from_json();
 
-    load_account_id();
-    if (document.getElementById('json_format')) {
         load_config_from_json('last_run', 1);
         load_config_from_json('metadata', 0);
         load_config_from_json('services.id.findings', 1);
         load_config_from_json('services.id.filters', 0); // service-specific filters
         load_config_from_json('services.id.regions', 0); // region filters
-    } else if (document.getElementById('sqlite_format')) {
-        alert("Loading from SQLite is not implemented.");
-        load_config_from_sqlite('last_run', 1);
-        load_config_from_sqlite('metadata', 0);
-        load_config_from_sqlite('services.id.findings', 1);
-        load_config_from_sqlite('services.id.filters', 0); // service-specific filters
-        load_config_from_sqlite('services.id.regions', 0); // region filters
-    } else {
-        console.log("Error: the specified format could not determined.");
-    }
 
-    for (group in run_results['metadata']) {
-        for (service in run_results['metadata'][group]) {
-            if (service == 'summaries') {
-                continue;
-            };
-            for (section in run_results['metadata'][group][service]) {
-                for (resource_type in run_results['metadata'][group][service][section]) {
-                    add_templates(group, service, section, resource_type,
-                        run_results['metadata'][group][service][section][resource_type]['path'],
-                        run_results['metadata'][group][service][section][resource_type]['cols']);
+        for (group in run_results['metadata']) {
+            for (service in run_results['metadata'][group]) {
+                if (service == 'summaries') {
+                    continue;
+                };
+                for (section in run_results['metadata'][group][service]) {
+                    for (resource_type in run_results['metadata'][group][service][section]) {
+                        add_templates(group, service, section, resource_type,
+                            run_results['metadata'][group][service][section][resource_type]['path'],
+                            run_results['metadata'][group][service][section][resource_type]['cols']);
+                    };
                 };
             };
         };
-    };
 
-    hidePleaseWait();
+        hidePleaseWait();
+    }
 };
 
 
