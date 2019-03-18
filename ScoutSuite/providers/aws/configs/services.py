@@ -18,7 +18,7 @@ from ScoutSuite.providers.aws.services.route53 import Route53Config, Route53Doma
 from ScoutSuite.providers.aws.services.s3 import S3Config
 from ScoutSuite.providers.aws.services.ses import SESConfig
 from ScoutSuite.providers.aws.services.sns import SNSConfig
-from ScoutSuite.providers.aws.services.sqs import SQSConfig
+from ScoutSuite.providers.aws.resources.sqs.service import SQS
 from ScoutSuite.providers.aws.services.vpc import VPCConfig
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 
@@ -73,7 +73,7 @@ class AWSServicesConfig(BaseServicesConfig):
         self.s3 = S3Config(thread_config)
         self.ses = SESConfig(metadata['messaging']['ses'], thread_config)
         self.sns = SNSConfig(metadata['messaging']['sns'], thread_config)
-        self.sqs = SQSConfig(metadata['messaging']['sqs'], thread_config)
+        self.sqs = SQS()
         self.vpc = VPCConfig(metadata['network']['vpc'], thread_config)
 
         try:
