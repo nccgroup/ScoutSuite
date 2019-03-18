@@ -77,16 +77,8 @@
         "sns": {
             "resources": {
                 "topics": {
-                    "api_call": "list_topics",
-                    "response": "Topics",
                     "cols": 2,
                     "path": "services.sns.regions.id.topics"
-                },
-                "subscriptions": {
-                    "api_call": "list_subscriptions",
-                    "response": "Subscriptions",
-                    "hidden": true,
-                    "path": "services.sns.regions.id.subscriptions"
                 }
             }
         },
