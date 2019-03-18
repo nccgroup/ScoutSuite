@@ -6,7 +6,7 @@ try:
 except ImportError:
     from queue import Queue
 
-from ScoutSuite.providers.aws.aws import handle_truncated_response
+from ScoutSuite.providers.aws.utils import handle_truncated_response
 from ScoutSuite.providers.base.configs.base import BaseConfig
 
 
