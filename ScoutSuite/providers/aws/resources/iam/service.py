@@ -30,6 +30,9 @@ class IAM(AWSCompositeResources):
         self.facade._set_session(credentials)
         await self._fetch_children(self, {})
 
+        # We do not want the report to count the password policies as resources, they aren't really resources.
+        self['password_policy_count'] = 0
+
     async def finalize(self):
         # Update permissions for managed policies
         self['permissions'] = {}
