@@ -36,7 +36,8 @@ class IAMFacade(AWSBaseFacade):
         groups = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_groups', 'Groups')
         for group in groups:
             group['Users'] = await self._fetch_group_users(group['GroupName'])
-            policies = self._get_inline_policies('group', group['GroupId'], group['GroupName'])
+            policies = self._get_inline_policies(
+                'group', group['GroupId'], group['GroupName'])
             if len(policies):
                 group['inline_policies'] = policies
             group['inline_policies_count'] = len(policies)
@@ -48,7 +49,8 @@ class IAMFacade(AWSBaseFacade):
 
         # TODO: Parallelize this
         for policy in policies:
-            policy_version = client.get_policy_version(PolicyArn=policy['Arn'], VersionId=policy['DefaultVersionId'])
+            policy_version = client.get_policy_version(
+                PolicyArn=policy['Arn'], VersionId=policy['DefaultVersionId'])
             policy['PolicyDocument'] = policy_version['PolicyVersion']['Document']
 
             policy['attached_to'] = {}
@@ -60,11 +62,13 @@ class IAMFacade(AWSBaseFacade):
                     policy['attached_to'][resource_type] = []
 
                 for entity in attached_entities[entity_type]:
-                    name_field = entity_type.replace('Policy', '')[:-1] + 'Name'
+                    name_field = entity_type.replace('Policy', '')[
+                        :-1] + 'Name'
                     resource_name = entity[name_field]
                     id_field = entity_type.replace('Policy', '')[:-1] + 'Id'
                     resource_id = entity[id_field]
-                    policy['attached_to'][resource_type].append({'name': resource_name, 'id': resource_id})
+                    policy['attached_to'][resource_type].append(
+                        {'name': resource_name, 'id': resource_id})
 
         return policies
 
@@ -103,23 +107,27 @@ class IAMFacade(AWSBaseFacade):
             role['instances_count'] = 'N/A'
 
             # Get role policies
-            policies = self._get_inline_policies('role', role['RoleId'], role['RoleName'])
+            policies = self._get_inline_policies(
+                'role', role['RoleId'], role['RoleName'])
             if len(policies):
                 role['inline_policies'] = policies
             role['inline_policies_count'] = len(policies)
 
             # Get instance profiles
-            profiles = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_instance_profiles_for_role', 'InstanceProfiles', RoleName = role['RoleName'])
+            profiles = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_instance_profiles_for_role', 'InstanceProfiles', RoleName=role['RoleName'])
             role.setdefault('instance_profiles', {})
             for profile in profiles:
                 profile_id = profile['InstanceProfileId']
                 role['instance_profiles'].setdefault(profile_id, {})
-                role['instance_profiles'][profile_id].setdefault('arn', profile['Arn'])
-                role['instance_profiles'][profile_id].setdefault('name', profile['InstanceProfileName'])
+                role['instance_profiles'][profile_id].setdefault(
+                    'arn', profile['Arn'])
+                role['instance_profiles'][profile_id].setdefault(
+                    'name', profile['InstanceProfileName'])
 
             # Get trust relationship
             role['assume_role_policy'] = {}
-            role['assume_role_policy']['PolicyDocument'] = role.pop('AssumeRolePolicyDocument')
+            role['assume_role_policy']['PolicyDocument'] = role.pop(
+                'AssumeRolePolicyDocument')
 
         return roles
 
@@ -138,7 +146,6 @@ class IAMFacade(AWSBaseFacade):
         response = await run_concurrently(lambda: client.list_mfa_devices(UserName=user_name))
         return response['MFADevices']
 
-
     async def _fetch_group_users(self, group_name):
         client = AWSFacadeUtils.get_client('iam', self.session)
         fetched_users = client.get_group(GroupName=group_name)['Users']
@@ -151,9 +158,11 @@ class IAMFacade(AWSBaseFacade):
     # TODO: Make this async
     def _get_inline_policies(self, iam_resource_type, resource_id, resource_name):
         client = AWSFacadeUtils.get_client('iam', self.session)
-        get_policy_method = getattr(client, 'get_' + iam_resource_type + '_policy')
+        get_policy_method = getattr(
+            client, 'get_' + iam_resource_type + '_policy')
         fetched_policies = {}
-        list_policy_method = getattr(client, 'list_' + iam_resource_type + '_policies')
+        list_policy_method = getattr(
+            client, 'list_' + iam_resource_type + '_policies')
         args = {iam_resource_type.title() + 'Name': resource_name}
         try:
             policy_names = list_policy_method(**args)['PolicyNames']
@@ -169,7 +178,8 @@ class IAMFacade(AWSBaseFacade):
                 policy_document = get_policy_method(**args)['PolicyDocument']
                 policy_id = get_non_provider_id(policy_name)
                 fetched_policies[policy_id] = {}
-                fetched_policies[policy_id]['PolicyDocument'] = self._normalize_statements(policy_document)
+                fetched_policies[policy_id]['PolicyDocument'] = self._normalize_statements(
+                    policy_document)
                 fetched_policies[policy_id]['name'] = policy_name
                 fetched_policies[policy_id] = fetched_policies[policy_id]
         except Exception as e:
@@ -178,8 +188,8 @@ class IAMFacade(AWSBaseFacade):
             else:
                 print_exception(e)
         return fetched_policies
-    
-    def _normalize_statements(self, policy_document) :
+
+    def _normalize_statements(self, policy_document):
         for statement in policy_document['Statement']:
             # Action or NotAction
             action_string = 'Action' if 'Action' in statement else 'NotAction'
