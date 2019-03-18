@@ -50,8 +50,7 @@ class IAM(AWSCompositeResources):
                         entities[entity['id']].setdefault('policies_counts', 0)
                         entities[entity['id']]['policies'].append(policy_id)
                         entities[entity['id']]['policies_counts'] += 1
-                self._parse_permissions(
-                    policy_id, policy['PolicyDocument'], 'policies', entity_type, entity['id'])
+                        self._parse_permissions(policy_id, policy['PolicyDocument'], 'policies', entity_type, entity['id'])
             else:
                 self._parse_permissions(
                     policy_id, policy['PolicyDocument'], 'policies', None, None)
