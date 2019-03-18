@@ -41,19 +41,29 @@ class IAM(AWSCompositeResources):
             if 'attached_to' in policy and len(policy['attached_to']) > 0:
                 for entity_type in policy['attached_to']:
                     for entity in policy['attached_to'][entity_type]:
-                        entity['id'] = self._get_id_for_resource(entity_type, entity['name'])
+                        entity['id'] = self._get_id_for_resource(
+                            entity_type, entity['name'])
                         entities = self[entity_type]
                         entities[entity['id']].setdefault('policies', [])
                         entities[entity['id']].setdefault('policies_counts', 0)
                         entities[entity['id']]['policies'].append(policy_id)
                         entities[entity['id']]['policies_counts'] += 1
-                self._parse_permissions(policy_id, policy['PolicyDocument'], 'policies', entity_type, entity['id'])
+                self._parse_permissions(
+                    policy_id, policy['PolicyDocument'], 'policies', entity_type, entity['id'])
             else:
-                pass
-                self._parse_permissions(policy_id, policy['PolicyDocument'], 'policies', None, None)
+                self._parse_permissions(
+                    policy_id, policy['PolicyDocument'], 'policies', None, None)
 
     def _get_inline_policies(self, resource_type):
-        return [resource['inline_policies'] for resource in self[resource_type].values() if 'inline_policies' in resource]
+        inline_policies = []
+        for resource in self[resource_type].values():
+            if 'inline_policies' not in resource:
+                continue
+
+            for policy_id in resource['inline_policies']:
+                resource['inline_policies'][policy_id]['id'] = policy_id
+                inline_policies.append(resource['inline_policies'][policy_id])
+        return inline_policies
 
     def _get_id_for_resource(self, iam_resource_type, resource_name):
         for resource_id in self[iam_resource_type]:
@@ -92,10 +102,13 @@ class IAM(AWSCompositeResources):
                        iam_resource_name, policy_name, policy_type, condition):
         for action in actions:
             self['permissions'][action_string].setdefault(action, {})
-            self['permissions'][action_string][action].setdefault(iam_resource_type, {})
-            self['permissions'][action_string][action][iam_resource_type].setdefault(effect, {})
-            self['permissions'][action_string][action][iam_resource_type][effect].setdefault(iam_resource_name, {})
-            self._parse_action(effect, action_string, action, resource_string, resources, iam_resource_type, \
+            self['permissions'][action_string][action].setdefault(
+                iam_resource_type, {})
+            self['permissions'][action_string][action][iam_resource_type].setdefault(
+                effect, {})
+            self['permissions'][action_string][action][iam_resource_type][effect].setdefault(
+                iam_resource_name, {})
+            self._parse_action(effect, action_string, action, resource_string, resources, iam_resource_type,
                                iam_resource_name, policy_name, policy_type, condition)
 
     def _parse_action(self, effect, action_string, action, resource_string, resources, iam_resource_type,
@@ -105,8 +118,13 @@ class IAM(AWSCompositeResources):
                                  iam_resource_name, policy_name, policy_type, condition)
 
     def _parse_resource(self, effect, action_string, action, resource_string, resource, iam_resource_type, iam_resource_name, policy_name, policy_type, condition):
-        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name].setdefault(resource_string, {})
-        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string].setdefault(resource, {})
-        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][resource].setdefault(policy_type, {})
-        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][resource][policy_type].setdefault(policy_name, {})
-        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][resource][policy_type][policy_name].setdefault('condition', condition)
+        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name].setdefault(
+            resource_string, {})
+        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string].setdefault(resource, {
+        })
+        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][resource].setdefault(
+            policy_type, {})
+        self['permissions'][action_string][action][iam_resource_type][effect][
+            iam_resource_name][resource_string][resource][policy_type].setdefault(policy_name, {})
+        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][
+            resource_string][resource][policy_type][policy_name].setdefault('condition', condition)
