@@ -30,7 +30,7 @@ class IAM(AWSCompositeResources):
         self.facade._set_session(credentials)
         await self._fetch_children(self, {})
 
-    def finalize(self):
+    async def finalize(self):
         # Update permissions for managed policies
         self['permissions'] = {}
         policies = [policy for policy in self['policies'].values()]
