@@ -164,11 +164,25 @@ class IAMFacade(AWSBaseFacade):
                 policy_document = get_policy_method(**args)['PolicyDocument']
                 policy_id = get_non_provider_id(policy_name)
                 fetched_policies[policy_id] = {}
-                fetched_policies[policy_id]['PolicyDocument'] = policy_document
+                fetched_policies[policy_id]['PolicyDocument'] = self._normalize_statements(policy_document)
                 fetched_policies[policy_id]['name'] = policy_name
+                fetched_policies[policy_id] = fetched_policies[policy_id]
         except Exception as e:
             if is_throttled(e):
                 raise e
             else:
                 print_exception(e)
         return fetched_policies
+    
+    def _normalize_statements(self, policy_document) :
+        for statement in policy_document['Statement']:
+            # Action or NotAction
+            action_string = 'Action' if 'Action' in statement else 'NotAction'
+            if type(statement[action_string]) != list:
+                statement[action_string] = [statement[action_string]]
+            # Resource or NotResource
+            resource_string = 'Resource' if 'Resource' in statement else 'NotResource'
+            if type(statement[resource_string]) != list:
+                statement[resource_string] = [statement[resource_string]]
+
+        return policy_document
