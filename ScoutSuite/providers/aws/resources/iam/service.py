@@ -6,6 +6,7 @@ from ScoutSuite.providers.aws.resources.iam.groups import Groups
 from ScoutSuite.providers.aws.resources.iam.policies import Policies
 from ScoutSuite.providers.aws.resources.iam.users import Users
 from ScoutSuite.providers.aws.resources.iam.roles import Roles
+from ScoutSuite.providers.aws.resources.iam.passwordpolicy import PasswordPolicy
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
 
 
@@ -33,9 +34,9 @@ class IAM(AWSCompositeResources):
         # Update permissions for managed policies
         self['permissions'] = {}
         policies = [policy for policy in self['policies'].values()]
-        policies.extend(self._get_inline_policies('groups'))
-        policies.extend(self._get_inline_policies('users'))
-        policies.extend(self._get_inline_policies('roles'))
+        self._get_inline_policies('groups')
+        self._get_inline_policies('users')
+        self._get_inline_policies('roles')
 
         for policy in policies:
             policy_id = policy['id']
@@ -56,15 +57,15 @@ class IAM(AWSCompositeResources):
                     policy_id, policy['PolicyDocument'], 'policies', None, None)
 
     def _get_inline_policies(self, resource_type):
-        inline_policies = []
-        for resource in self[resource_type].values():
+        for resource_id in self[resource_type]:
+            resource = self[resource_type][resource_id]
             if 'inline_policies' not in resource:
                 continue
 
             for policy_id in resource['inline_policies']:
-                resource['inline_policies'][policy_id]['id'] = policy_id
-                inline_policies.append(resource['inline_policies'][policy_id])
-        return inline_policies
+                policy = resource['inline_policies'][policy_id]
+                self._parse_permissions(
+                    policy_id, policy['PolicyDocument'], 'inline_policies', resource_type, resource_id)
 
     def _get_id_for_resource(self, iam_resource_type, resource_name):
         for resource_id in self[iam_resource_type]:
