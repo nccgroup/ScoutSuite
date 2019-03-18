@@ -34,9 +34,9 @@ class IAM(AWSCompositeResources):
         # Update permissions for managed policies
         self['permissions'] = {}
         policies = [policy for policy in self['policies'].values()]
-        self._get_inline_policies('groups')
-        self._get_inline_policies('users')
-        self._get_inline_policies('roles')
+        self._parse_inline_policies_permissions('groups')
+        self._parse_inline_policies_permissions('users')
+        self._parse_inline_policies_permissions('roles')
 
         for policy in policies:
             policy_id = policy['id']
@@ -56,7 +56,7 @@ class IAM(AWSCompositeResources):
                 self._parse_permissions(
                     policy_id, policy['PolicyDocument'], 'policies', None, None)
 
-    def _get_inline_policies(self, resource_type):
+    def _parse_inline_policies_permissions(self, resource_type):
         for resource_id in self[resource_type]:
             resource = self[resource_type][resource_id]
             if 'inline_policies' not in resource:
