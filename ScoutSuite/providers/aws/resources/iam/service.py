@@ -15,7 +15,8 @@ class IAM(AWSCompositeResources):
         (Groups, 'groups'),
         (Policies, 'policies'),
         (Users, 'users'),
-        (Roles, 'roles')
+        (Roles, 'roles'),
+        (PasswordPolicy, 'password_policy')
     ]
 
     def __init__(self):
