@@ -35,7 +35,7 @@ class AWSFacadeUtils:
         return resources
 
     @staticmethod
-    def get_client(service: str, session: boto3.session.Session, region: str = None):
+    def get_client(service: str, session: boto3.session.Session, region: str=None):
         """
         Instantiates an AWS API client
 
