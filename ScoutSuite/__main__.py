@@ -18,7 +18,8 @@ from ScoutSuite.output.html import Scout2Report
 from ScoutSuite.providers import get_provider
 
 
-def main(args=None):
+# noinspection PyBroadException
+async def main(args=None):
     """
     Main method that runs a scan
 
@@ -85,7 +86,7 @@ def main(args=None):
 
         # Fetch data from provider APIs
         try:
-            cloud_provider.fetch(regions=args.get('regions'))
+            await cloud_provider.fetch(regions=args.get('regions'))
         except KeyboardInterrupt:
             print_info('\nCancelled by user')
             return 130
@@ -106,7 +107,8 @@ def main(args=None):
             setattr(cloud_provider, key, last_run_dict[key])
 
     # Pre processing
-    cloud_provider.preprocessing(args.get('ip_ranges'), args.get('ip_ranges_name_key'))
+    cloud_provider.preprocessing(
+        args.get('ip_ranges'), args.get('ip_ranges_name_key'))
 
     # Analyze config
     finding_rules = Ruleset(environment_name=args.get('profile'),
@@ -131,7 +133,8 @@ def main(args=None):
         exceptions.process(cloud_provider)
         exceptions = exceptions.exceptions
     except Exception as e:
-        print_debug('Warning, failed to load exceptions. The file may not exist or may have an invalid format.')
+        print_debug(
+            'Warning, failed to load exceptions. The file may not exist or may have an invalid format.')
         exceptions = {}
 
     # Finalize

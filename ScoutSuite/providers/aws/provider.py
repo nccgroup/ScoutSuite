@@ -7,7 +7,6 @@ import boto3
 from ScoutSuite.core.console import print_debug, print_error, print_exception, print_info
 from ScoutSuite.providers.aws.configs.services import AWSServicesConfig
 from ScoutSuite.providers.aws.services.vpc import put_cidr_name
-from ScoutSuite.providers.aws.services.elbv2 import check_security_group_rules
 from ScoutSuite.providers.base.configs.browser import combine_paths, get_object_at, get_value_at
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.utils import manage_dictionary
@@ -62,20 +61,26 @@ class AWSProvider(BaseProvider):
         :return: None
         """
         ip_ranges = [] if ip_ranges is None else ip_ranges
-        self._map_all_sgs()
         self._map_all_subnets()
         self._set_emr_vpc_ids()
         # self.parse_elb_policies()
 
         # Various data processing calls
-        self._check_ec2_zone_distribution()
-        self._add_security_group_name_to_ec2_grants()
-        self._add_security_group_data_to_elbv2()
-        self._add_last_snapshot_date_to_ec2_volumes()
-        self._process_cloudtrail_trails(self.services['cloudtrail'])
+        if 'ec2' in self.service_list:
+            self._map_all_sgs()
+            self._check_ec2_zone_distribution()
+            self._add_security_group_name_to_ec2_grants()
+            self._add_last_snapshot_date_to_ec2_volumes()
+            self._match_instances_and_roles()
+
+        if 'cloudtrail' in self.service_list:
+            self._process_cloudtrail_trails(self.services['cloudtrail'])
+
+        if 'elbv2' in self.service_list:
+            self._add_security_group_data_to_elbv2()
+
         self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
         self._merge_route53_and_route53domains()
-        self._match_instances_and_roles()
         self._match_iam_policies_and_buckets()
 
         super(AWSProvider, self).preprocessing()
@@ -109,6 +114,18 @@ class AWSProvider(BaseProvider):
                            {'AWSAccountId': self.aws_account_id})
 
     def _add_security_group_data_to_elbv2(self):
+        def check_security_group_rules(lb, index, traffic_type):
+            none = 'N/A'
+            if traffic_type == 'ingress':
+                output = 'valid_inbound_rules'
+            elif traffic_type == 'egress':
+                output = 'valid_outbound_rules'
+            for protocol in lb['security_groups'][index]['rules'][traffic_type]['protocols']:
+                for port in lb['security_groups'][index]['rules'][traffic_type]['protocols'][protocol]['ports']:
+                    lb['security_groups'][index][output] = True
+                    if port not in lb['listeners'] and port != none:
+                        lb['security_groups'][index][output] = False
+
         ec2_config = self.services['ec2']
         elbv2_config = self.services['elbv2']
         for region in elbv2_config['regions']:
@@ -512,7 +529,7 @@ class AWSProvider(BaseProvider):
                            self.set_emr_vpc_ids_callback,
                            {'clear_list': clear_list})
         for region in clear_list:
-            self.services['emr']['regions']['region']['vpcs'].pop('TODO')
+            self.services['emr']['regions'][region]['vpcs'].pop('TODO')
 
     def set_emr_vpc_ids_callback(self, current_config, path, current_path, vpc_id, callback_args):
         if vpc_id != 'TODO':
@@ -621,7 +638,7 @@ class AWSProvider(BaseProvider):
         service_config = self.services[service]
         manage_dictionary(service_config, 'external_attack_surface', {})
         if (service == 'redshift' or service == 'rds') and 'PubliclyAccessible' in current_config and current_config[
-            'PubliclyAccessible']:
+                'PubliclyAccessible']:
             public_dns = current_config['Endpoint']['Address']
             listeners = [current_config['Endpoint']['Port']]
             security_groups = current_config['VpcSecurityGroups']

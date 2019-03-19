@@ -77,7 +77,7 @@ class BaseProvider(object):
         self._update_metadata()
         self._update_last_run(current_time, ruleset)
 
-    def fetch(self, regions=None, skipped_regions=None, partition_name=None):
+    async def fetch(self, regions=None, skipped_regions=None, partition_name=None):
         """
         Fetch resources for each service
 
@@ -89,7 +89,7 @@ class BaseProvider(object):
         regions = [] if regions is None else regions
         skipped_regions = [] if skipped_regions is None else skipped_regions
         # TODO: determine partition name based on regions and warn if multiple partitions...
-        self.services.fetch(self.credentials, self.service_list, regions)
+        await self.services.fetch(self.credentials, self.service_list, regions)
 
         # TODO implement this properly
         """
@@ -213,7 +213,7 @@ class BaseProvider(object):
         # Service-level summaries
         for service_group in self.metadata:
             for service in self.metadata[service_group]:
-                if service == 'summaries':
+                if service == 'summaries' or service not in self.service_list:
                     continue
                 # Reset external attack surface
                 if 'summaries' in self.metadata[service_group][service]:

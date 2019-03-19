@@ -58,7 +58,7 @@ class SqlLiteEncoder(ScoutResultEncoder):
 
     def save_to_file(self, config, config_type, force_write, _debug):
         config_path, first_line = get_filename(config_type, self.profile, self.report_dir)
-        config_path = config_path.strip(".js") + ".db"
+        config_path = config_path.replace(".js", ".db")
         print('Saving data to %s' % config_path)
         try:
             with self.__open_file(config_path, force_write, False) as database:

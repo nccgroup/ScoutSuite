@@ -5,9 +5,8 @@ sqlitedict>=1.6.0
 cherrypy>=18.1.0
 
 # AWS Provider
-boto3>=1.9.60
-botocore>=1.12.60
 iampoliciesgonewild>=1.0.6.2
+
 
 # GCP Provider
 grpcio>=1.18.0
