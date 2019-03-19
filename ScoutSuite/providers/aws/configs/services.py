@@ -11,7 +11,6 @@ from ScoutSuite.providers.aws.resources.elasticache.service import ElastiCache
 from ScoutSuite.providers.aws.services.elb import ELBConfig
 from ScoutSuite.providers.aws.resources.elbv2.service import ELBv2
 from ScoutSuite.providers.aws.resources.iam.service import IAM
-from ScoutSuite.providers.aws.services.elbv2 import ELBv2Config
 from ScoutSuite.providers.aws.resources.emr.service import EMR
 from ScoutSuite.providers.aws.services.rds import RDSConfig
 from ScoutSuite.providers.aws.resources.redshift.service import Redshift
