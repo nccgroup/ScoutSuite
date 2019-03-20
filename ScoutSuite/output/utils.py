@@ -44,7 +44,7 @@ def prompt_for_overwrite(filename, force_write):
     return prompt_for_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename))
 
 
-def get_filename(config_type, profile, report_dir):
+def get_filename(config_type, profile, report_dir, extension=None):
         if config_type == AWSCONFIG:
             filename = AWSCONFIG_FILE
             first_line = 'scoutsuite_results ='
@@ -62,6 +62,7 @@ def get_filename(config_type, profile, report_dir):
             raise Exception
         # Append profile name if necessary
         if profile != 'default' and config_type != AWSRULESET:
-            name, extention = filename.split('.')
-            filename = '%s-%s.%s' % (name, profile, extention)
+            name, original_extension = filename.split('.')
+            extension = extension if extension else original_extension
+            filename = '%s-%s.%s' % (name, profile, extension)
         return (os.path.join(report_dir, filename), first_line)
