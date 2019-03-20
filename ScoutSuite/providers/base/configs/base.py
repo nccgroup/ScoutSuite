@@ -52,7 +52,7 @@ class BaseConfig(object):
 
     def get_non_provider_id(self, name):
         """
-        Not all AWS resources have an ID and some services allow the use of "." in names, which break's Scout2's
+        Not all AWS resources have an ID and some services allow the use of "." in names, which break's ScoutSuite's
         recursion scheme if name is used as an ID. Use SHA1(name) instead.
 
         :param name:                    Name of the resource to

@@ -98,7 +98,7 @@ class RegionalServiceConfig(object):
 
     def fetch_all(self, credentials, regions=None, partition_name='aws', targets=None):
         """
-        Fetch all the configuration supported by Scout2 for a given service
+        Fetch all the configuration supported by ScoutSuite for a given service
 
         :param credentials:             F
         :param regions:                 Name of regions to fetch data from

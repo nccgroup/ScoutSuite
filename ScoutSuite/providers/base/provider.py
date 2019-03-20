@@ -9,7 +9,7 @@ import copy
 
 from ScoutSuite.core.console import print_exception, print_info
 
-from ScoutSuite import __version__ as scout2_version
+from ScoutSuite import __version__ as scoutsuite_version
 from ScoutSuite.providers.base.configs.browser import get_object_at
 from ScoutSuite.output.html import ScoutSuiteReport
 
@@ -115,7 +115,7 @@ class BaseProvider(object):
 
     def _update_last_run(self, current_time, ruleset):
         last_run = {'time': current_time.strftime("%Y-%m-%d %H:%M:%S%z"), 'cmd': ' '.join(sys.argv),
-                    'version': scout2_version, 'ruleset_name': ruleset.name, 'ruleset_about': ruleset.about,
+                    'version': scoutsuite_version, 'ruleset_name': ruleset.name, 'ruleset_about': ruleset.about,
                     'summary': {}}
         for service in self.services:
             last_run['summary'][service] = {'checked_items': 0, 'flagged_items': 0, 'max_level': 'warning',

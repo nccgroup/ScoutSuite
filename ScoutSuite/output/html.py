@@ -28,8 +28,8 @@ class HTMLReport(object):
             self.timestamp = self.current_time.strftime("%Y-%m-%d_%Hh%M%z") if not timestamp else timestamp
             self.profile = '%s-%s' % (self.profile, self.timestamp)
         self.exceptions = exceptions
-        self.scout2_report_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
-        self.html_data_path = os.path.join(self.scout2_report_data_path, 'html')
+        self.scoutsuite_report_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
+        self.html_data_path = os.path.join(self.scoutsuite_report_data_path, 'html')
 
         if result_format == "sqlite":
             self.encoder = SqlLiteEncoder(self.profile, report_dir, timestamp)
@@ -67,16 +67,16 @@ class HTMLReport(object):
         if not os.path.isdir(run_results_dir):
             os.makedirs(run_results_dir)
         # Copy static 3rd-party files
-        archive = os.path.join(self.scout2_report_data_path, 'includes.zip')
+        archive = os.path.join(self.scoutsuite_report_data_path, 'includes.zip')
         zip_ref = zipfile.ZipFile(archive)
         zip_ref.extractall(self.report_dir)
         zip_ref.close()
         # Copy static files
-        inc_scout2_dir = os.path.join(self.report_dir, 'inc-scoutsuite')
-        src_inc_scout2_dir = os.path.join(self.scout2_report_data_path, 'inc-scoutsuite')
-        if os.path.isdir(inc_scout2_dir):
-            shutil.rmtree(inc_scout2_dir)
-        shutil.copytree(src_inc_scout2_dir, inc_scout2_dir)
+        inc_scoutsuite_dir = os.path.join(self.report_dir, 'inc-scoutsuite')
+        src_inc_scoutsuite_dir = os.path.join(self.scoutsuite_report_data_path, 'inc-scoutsuite')
+        if os.path.isdir(inc_scoutsuite_dir):
+            shutil.rmtree(inc_scoutsuite_dir)
+        shutil.copytree(src_inc_scoutsuite_dir, inc_scoutsuite_dir)
 
 
 class ScoutSuiteReport(HTMLReport):

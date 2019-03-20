@@ -2,10 +2,10 @@
 
 import os
 
-scout2_dir = 'ScoutSuite'
+scoutsuite_dir = 'ScoutSuite'
 tests_dir = 'testsbase'
 
-for root, dirnames, filenames in os.walk(scout2_dir):
+for root, dirnames, filenames in os.walk(scoutsuite_dir):
     for filename in filenames:
         if filename.startswith('__') or not filename.endswith('.py'):
             continue
@@ -13,7 +13,8 @@ for root, dirnames, filenames in os.walk(scout2_dir):
         tmp = filepath.split('.')[0].split('/')
         print(str(tmp))
 
-        test = '# Import AWS utils\nfrom %s import *\n\n#\n# Test methods for %s\n#\n\nclass Test%sClass:\n\n' % ('.'.join(tmp), filepath, ''.join(t.title() for t in tmp))
+        test = '# Import AWS utils\nfrom %s import *\n\n#\n# Test methods for %s\n#\n\nclass Test%sClass:\n\n' % \
+               ('.'.join(tmp), filepath, ''.join(t.title() for t in tmp))
 
         test_filename = 'test-%s.py' % '-'.join(tmp[1:])
         print('%s --> %s' % (filepath, test_filename))
@@ -21,4 +22,3 @@ for root, dirnames, filenames in os.walk(scout2_dir):
         if not os.path.isfile(test_file):
             with open(test_file, 'w+') as f:
                 f.write(test)
-
