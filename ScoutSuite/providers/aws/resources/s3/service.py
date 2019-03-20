@@ -31,12 +31,9 @@ class Bucket(AWSResources):
 
         raw_bucket['CreationDate'] = str(raw_bucket['CreationDate'])
 
-        # get_s3_bucket_policy(api_client, bucket['name'], bucket)
-        # get_s3_bucket_secure_transport(api_client, bucket['name'], bucket)
         # # If requested, get key properties
         raw_bucket['id'] = get_non_provider_id(raw_bucket['name'])
         return raw_bucket['id'], raw_bucket
-
 
 
 class S3(AWSCompositeResources):

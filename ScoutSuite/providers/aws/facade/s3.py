@@ -24,6 +24,7 @@ class S3Facade(AWSBaseFacade):
             await self._set_s3_bucket_default_encryption(bucket)
             await self._set_s3_acls(bucket)
             await self._set_s3_bucket_policy(bucket)
+            self._set_s3_bucket_secure_transport(bucket)
 
         return buckets
 
@@ -128,6 +129,27 @@ class S3Facade(AWSBaseFacade):
         except Exception as e:
             if not (type(e) == ClientError and e.response['Error']['Code'] == 'NoSuchBucketPolicy'):
                 print_error('Failed to get bucket policy for %s: %s' % (bucket['Name'], e))
+
+    def _set_s3_bucket_secure_transport(self, bucket):
+        try:
+            if 'policy' in bucket:
+                bucket['secure_transport_enabled'] = False
+                for statement in bucket['policy']['Statement']:
+                    # evaluate statement to see if it contains a condition disallowing HTTP transport
+                    # TODO this might not cover all cases
+                    if 'Condition' in statement and \
+                            'Bool' in statement['Condition'] and \
+                            'aws:SecureTransport' in statement['Condition']['Bool'] and \
+                            ((statement['Condition']['Bool']['aws:SecureTransport'] == 'false' and
+                            statement['Effect'] == 'Deny') or
+                            (statement['Condition']['Bool']['aws:SecureTransport'] == 'true' and
+                            statement['Effect'] == 'Allow')):
+                        bucket['secure_transport_enabled'] = True
+            else:
+                bucket['secure_transport_enabled'] = False
+        except Exception as e:
+            print_error('Failed to get evaluate bucket policy for %s: %s' % (bucket['Name'], e))
+            bucket['secure_transport'] = None
 
     @staticmethod
     def _init_s3_permissions():
