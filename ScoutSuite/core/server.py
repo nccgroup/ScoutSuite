@@ -8,15 +8,18 @@ class Server(object):
         self.results = SqliteDict(filename)
 
     @cherrypy.expose(['data'])
+    @cherrypy.tools.json_out()
     def get(self, key=None):
         result = self.results
+        print(key)
         keyparts = key.split('.')
+        print(keyparts)
         for k in keyparts:
-            if isinstance(result, dict):
+            if isinstance(result, dict) or isinstance(result, SqliteDict):
                 result = result.get(k)
             elif isinstance(result, list):
                 result = result[int(k)]
-        return result
+        return {'data': result}
 
     @staticmethod
     def init(database_filename, host, port):
