@@ -15,7 +15,8 @@ from ScoutSuite.output.html import Scout2Report
 from ScoutSuite.providers import get_provider
 
 
-def main(args=None):
+# noinspection PyBroadException
+async def main(args=None):
     """
     Main method that runs a scan
 
@@ -49,7 +50,8 @@ def main(args=None):
     # TODO: move this to after authentication, so that the report can be more specific to what's being scanned.
     # For example if scanning with a GCP service account, the SA email can only be known after authenticating...
     # Create a new report
-    report = Scout2Report(args.get('provider'), report_file_name, args.get('report_dir'), args.get('timestamp'))
+    report = Scout2Report(args.get('provider'), report_file_name, args.get(
+        'report_dir'), args.get('timestamp'))
 
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
@@ -73,7 +75,7 @@ def main(args=None):
 
         # Fetch data from provider APIs
         try:
-            cloud_provider.fetch(regions=args.get('regions'))
+            await cloud_provider.fetch(regions=args.get('regions'))
         except KeyboardInterrupt:
             print_info('\nCancelled by user')
             return 130
@@ -94,7 +96,8 @@ def main(args=None):
             setattr(cloud_provider, key, last_run_dict[key])
 
     # Pre processing
-    cloud_provider.preprocessing(args.get('ip_ranges'), args.get('ip_ranges_name_key'))
+    cloud_provider.preprocessing(
+        args.get('ip_ranges'), args.get('ip_ranges_name_key'))
 
     # Analyze config
     finding_rules = Ruleset(environment_name=args.get('profile'),
@@ -119,14 +122,16 @@ def main(args=None):
         exceptions.process(cloud_provider)
         exceptions = exceptions.exceptions
     except Exception as e:
-        print_debug('Warning, failed to load exceptions. The file may not exist or may have an invalid format.')
+        print_debug(
+            'Warning, failed to load exceptions. The file may not exist or may have an invalid format.')
         exceptions = {}
 
     # Finalize
     cloud_provider.postprocessing(report.current_time, finding_rules)
 
     # Save config and create HTML report
-    html_report_path = report.save(cloud_provider, exceptions, args.get('force_write'), args.get('debug'))
+    html_report_path = report.save(
+        cloud_provider, exceptions, args.get('force_write'), args.get('debug'))
 
     # Open the report by default
     if not args.get('no_browser'):

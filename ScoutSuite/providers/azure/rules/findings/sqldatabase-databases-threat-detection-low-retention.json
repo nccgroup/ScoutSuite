@@ -1,0 +1,11 @@
+{
+    "dashboard_name": "SQL Databases",
+    "description": "Threat detection retention period for some SQL databases is too short",
+    "rationale": "Threat detection retention period should be greater than _ARG_0_ days (CIS 4.2.8).",
+    "path": "sqldatabase.servers.id.databases.id",
+    "display_path": "sqldatabase.servers.id",
+    "conditions": [ "and",
+        [ "sqldatabase.servers.id.databases.id.threat_detection.retention_days", "lessThan", "_ARG_0_" ]
+    ],
+    "id_suffix": "db_low_threat_detection_retention"
+}
