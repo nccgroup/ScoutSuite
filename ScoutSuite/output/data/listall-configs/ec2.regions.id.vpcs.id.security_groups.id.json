@@ -1,8 +1,0 @@
-{
-    "keys": [
-        "ec2.regions.id",
-        "ec2.regions.id.vpcs.id",
-        "ec2.regions.id.vpcs.id.security_groups.id",
-        "name"
-    ]
-}
