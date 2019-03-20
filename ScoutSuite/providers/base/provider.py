@@ -11,7 +11,7 @@ from ScoutSuite.core.console import print_exception, print_info
 
 from ScoutSuite import __version__ as scout2_version
 from ScoutSuite.providers.base.configs.browser import get_object_at
-from ScoutSuite.output.html import Scout2Report
+from ScoutSuite.output.html import ScoutSuiteReport
 
 
 class BaseProvider(object):
@@ -96,7 +96,7 @@ class BaseProvider(object):
         This is quite ugly but the legacy Scout2 expects the configurations to be dictionaries.
         Eventually this should be moved to objects/attributes, but that will require significant re-write.
         """
-        report = Scout2Report(self.provider_code, 'placeholder')
+        report = ScoutSuiteReport(self.provider_code, 'placeholder')
         self.services = report.encoder.to_dict(self.services)
 
     def _load_metadata(self):

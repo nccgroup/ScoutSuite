@@ -9,7 +9,6 @@ import re
 from iampoliciesgonewild import get_actions_from_statement, _expand_wildcard_action
 
 from ScoutSuite.core.console import print_error, print_exception
-from ScoutSuite.core import condition_operators
 
 re_get_value_at = re.compile(r'_GET_VALUE_AT_\((.*?)\)')
 re_nested_get_value_at = re.compile(r'_GET_VALUE_AT_\(.*')
@@ -25,6 +24,8 @@ def pass_conditions(all_info, current_path, conditions, unknown_as_pass_conditio
     :param unknown_as_pass_condition:   Consider an undetermined condition as passed
     :return:
     """
+
+    condition_operators = ['and', 'or']
 
     # Fixes circular dependency
     from ScoutSuite.providers.base.configs.browser import get_value_at
@@ -62,7 +63,7 @@ def pass_conditions(all_info, current_path, conditions, unknown_as_pass_conditio
 
 def pass_condition(b, test, a):
     """
-    Generic test function used by Scout2 / AWS recipes
+    Generic test function used by Scout Suite
                                         .
     :param b:                           Value to be tested against
     :param test:                        Name of the test case to run

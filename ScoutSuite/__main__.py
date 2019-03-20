@@ -8,13 +8,12 @@ import webbrowser
 from ScoutSuite import AWSCONFIG
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
 from ScoutSuite.core.console import config_debug_level, print_info, print_debug
-from ScoutSuite.core.server import Server
-from ScoutSuite.output.utils import get_filename
-
 from ScoutSuite.core.exceptions import RuleExceptions
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset
-from ScoutSuite.output.html import Scout2Report
+from ScoutSuite.core.server import Server
+from ScoutSuite.output.html import ScoutSuiteReport
+from ScoutSuite.output.utils import get_filename
 from ScoutSuite.providers import get_provider
 
 
@@ -57,12 +56,12 @@ async def main(args=None):
         Server.init(database_file, args.get('host_ip'), args.get('host_port'))
         print(report_name)
         return
-    
+
     # TODO: move this to after authentication, so that the report can be more specific to what's being scanned.
     # For example if scanning with a GCP service account, the SA email can only be known after authenticating...
     # Create a new report
-    report = Scout2Report(args.get('provider'), report_file_name, args.get('report_dir'), args.get('timestamp'),
-                          result_format=args.get('result_format'))
+    report = ScoutSuiteReport(args.get('provider'), report_file_name, args.get('report_dir'), args.get('timestamp'),
+                              result_format=args.get('result_format'))
 
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
