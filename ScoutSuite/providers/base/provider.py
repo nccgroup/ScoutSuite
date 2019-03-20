@@ -151,11 +151,11 @@ class BaseProvider(object):
                 service_map[service] = service_group
                 for resource in self.metadata[service_group][service]['resources']:
                     # full_path = path if needed
-                    if not 'full_path' in self.metadata[service_group][service]['resources'][resource]:
+                    if 'full_path' not in self.metadata[service_group][service]['resources'][resource]:
                         self.metadata[service_group][service]['resources'][resource]['full_path'] = \
                             self.metadata[service_group][service]['resources'][resource]['path']
                     # Script is the full path minus "id" (TODO: change that)
-                    if not 'script' in self.metadata[service_group][service]['resources'][resource]:
+                    if 'script' not in self.metadata[service_group][service]['resources'][resource]:
                         self.metadata[service_group][service]['resources'][resource]['script'] = '.'.join(
                             [x for x in
                              self.metadata[service_group][service]['resources'][resource]['full_path'].split(
