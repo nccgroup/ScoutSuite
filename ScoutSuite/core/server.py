@@ -11,9 +11,7 @@ class Server(object):
     @cherrypy.tools.json_out()
     def get(self, key=None):
         result = self.results
-        print(key)
         keyparts = key.split('.')
-        print(keyparts)
         for k in keyparts:
             if isinstance(result, dict) or isinstance(result, SqliteDict):
                 result = result.get(k)
