@@ -1318,11 +1318,12 @@ function download_as_json(filename, dict) {
 
 function get_data() {
     var request = new XMLHttpRequest();
-    request.open("GET","http://127.0.0.1:8000/api/data?key=test.10.test2", true);
+    request.open("GET","http://127.0.0.1:8000/api/data?key=last_run.time", true);
     
     request.onload = function () {
+        var data = JSON.parse(this.response);
         console.log(this.response);
     }
-
+    
     request.send();
 }
