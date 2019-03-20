@@ -89,15 +89,6 @@ def set_s3_permissions(permissions, name):
         permissions['write_acp'] = True
 
 
-def s3_group_to_string(uri):
-    if uri == 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers':
-        return 'Authenticated users'
-    elif uri == 'http://acs.amazonaws.com/groups/global/AllUsers':
-        return 'Everyone'
-    elif uri == 'http://acs.amazonaws.com/groups/s3/LogDelivery':
-        return 'Log delivery'
-    else:
-        return uri
 
 
 def get_s3_acls(api_client, bucket_name, bucket, key_name=None):
