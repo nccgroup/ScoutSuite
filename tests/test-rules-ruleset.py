@@ -49,18 +49,18 @@ class TestAWSScout2RulesRuleset:
         test005 = Ruleset(filename=self.test_ruleset_001, ruleset_generator=True)
 
     @patch("ScoutSuite.core.ruleset.print_error")
-    def test_ruleset_file_not_exist(self, printError):
+    def test_ruleset_file_not_exist(self, print_error):
         test003 = Ruleset(cloud_provider='aws', filename='tests/data/no-such-file.json')
         assert (test003.rules == [])
-        assert (printError.call_count == 1)
-        assert ("no-such-file.json does not exist" in printError.call_args_list[0][0][0])
+        assert (print_error.call_count == 1)
+        assert ("no-such-file.json does not exist" in print_error.call_args_list[0][0][0])
 
     @patch("ScoutSuite.core.ruleset.print_error")
-    def test_ruleset_invalid(self, printError):
+    def test_ruleset_invalid(self, print_error):
         test004 = Ruleset(cloud_provider='aws', filename='tests/data/invalid-file.json')
         assert (test004.rules == [])
-        assert (printError.call_count == 1)
-        assert ("invalid-file.json contains malformed JSON" in printError.call_args_list[0][0][0])
+        assert (print_error.call_count == 1)
+        assert ("invalid-file.json contains malformed JSON" in print_error.call_args_list[0][0][0])
 
     def test_path_for_cloud_providers(self):
         target = Ruleset(filename=self.test_ruleset_001)

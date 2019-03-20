@@ -41,7 +41,6 @@ class TestAWSScout2RulesProcessingEngine:
         print('Processed rules: %d' % self.rule_counters['tested'])
         print('Verified  rules: %d' % self.rule_counters['verified'])
 
-
     def _test_rule(self, ruleset_file_name, rule_file_name, rule):
         test_config_file_name = os.path.join(self.test_dir, 'data/rule-configs/%s' % rule_file_name)
         if not os.path.isfile(test_config_file_name):
@@ -77,9 +76,10 @@ class TestAWSScout2RulesProcessingEngine:
         except Exception:
             print_error('Expected items:\n %s' % json.dumps(sorted(items)))
             print_error('Reported items:\n %s' % json.dumps(sorted(findings)))
-            assert (False)
+            assert False
 
-    def _generate_ruleset(self, rule_file_name, rule):
+    @staticmethod
+    def _generate_ruleset(rule_file_name, rule):
         test_ruleset = {'rules': {}, 'about': 'regression test'}
         test_ruleset['rules'][rule_file_name] = [rule]
 
