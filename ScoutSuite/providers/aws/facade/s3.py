@@ -1,4 +1,5 @@
 from asyncio import Lock
+import json
 from botocore.exceptions import ClientError
 
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
@@ -21,6 +22,8 @@ class S3Facade(AWSBaseFacade):
             await self._set_s3_bucket_versioning(bucket)
             await self._set_s3_bucket_webhosting(bucket)
             await self._set_s3_bucket_default_encryption(bucket)
+            await self._set_s3_acls(bucket)
+            await self._set_s3_bucket_policy(bucket)
 
         return buckets
 
@@ -86,6 +89,73 @@ class S3Facade(AWSBaseFacade):
             print_error('Failed to get encryption configuration for %s: %s' % (bucket_name, e))
             bucket['default_encryption'] = 'Unknown'
             
+    async def _set_s3_acls(self, bucket, key_name=None):
+        bucket_name = bucket['Name']
+        client = AWSFacadeUtils.get_client('s3', bucket['region'], self.session)
+        try:
+            grantees = {}
+            if key_name:
+                grants = await run_concurrently(lambda: client.get_object_acl(Bucket=bucket_name, Key=key_name))
+            else:
+                grants =  await run_concurrently(lambda: client.get_bucket_acl(Bucket=bucket_name))
+            for grant in grants['Grants']:
+                if 'ID' in grant['Grantee']:
+                    grantee = grant['Grantee']['ID']
+                    display_name = grant['Grantee']['DisplayName'] if \
+                        'DisplayName' in grant['Grantee'] else grant['Grantee']['ID']
+                elif 'URI' in grant['Grantee']:
+                    grantee = grant['Grantee']['URI'].split('/')[-1]
+                    display_name = self._s3_group_to_string(grant['Grantee']['URI'])
+                else:
+                    grantee = display_name = 'Unknown'
+                permission = grant['Permission']
+                grantees.setdefault(grantee, {})
+                grantees[grantee]['DisplayName'] = display_name
+                if 'URI' in grant['Grantee']:
+                    grantees[grantee]['URI'] = grant['Grantee']['URI']
+                grantees[grantee].setdefault('permissions', self._init_s3_permissions())
+                self._set_s3_permissions(grantees[grantee]['permissions'], permission)
+            bucket['grantees'] = grantees
+        except Exception as e:
+            print_error('Failed to get ACL configuration for %s: %s' % (bucket_name, e))
+            bucket['grantees'] = {}            
+
+    async def _set_s3_bucket_policy(self, bucket):
+        client = AWSFacadeUtils.get_client('s3', bucket['region'], self.session)
+        try:
+            bucket_policy =  await run_concurrently(lambda: client.get_bucket_policy(Bucket=bucket['Name']))
+            bucket['policy'] = json.loads(bucket_policy['Policy'])
+        except Exception as e:
+            if not (type(e) == ClientError and e.response['Error']['Code'] == 'NoSuchBucketPolicy'):
+                print_error('Failed to get bucket policy for %s: %s' % (bucket['Name'], e))
+
+    @staticmethod
+    def _init_s3_permissions():
+        permissions = {'read': False, 'write': False, 'read_acp': False, 'write_acp': False}
+        return permissions
+
+    @staticmethod
+    def _set_s3_permissions(permissions, name):
+        if name == 'READ' or name == 'FULL_CONTROL':
+            permissions['read'] = True
+        if name == 'WRITE' or name == 'FULL_CONTROL':
+            permissions['write'] = True
+        if name == 'READ_ACP' or name == 'FULL_CONTROL':
+            permissions['read_acp'] = True
+        if name == 'WRITE_ACP' or name == 'FULL_CONTROL':
+            permissions['write_acp'] = True
+        
+    @staticmethod
+    def _s3_group_to_string(uri):
+        if uri == 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers':
+            return 'Authenticated users'
+        elif uri == 'http://acs.amazonaws.com/groups/global/AllUsers':
+            return 'Everyone'
+        elif uri == 'http://acs.amazonaws.com/groups/s3/LogDelivery':
+            return 'Log delivery'
+        else:
+            return uri
+
     @staticmethod
     def _status_to_bool(value):
         """ Converts a string to True if it is equal to 'Enabled' or to False otherwise. """
