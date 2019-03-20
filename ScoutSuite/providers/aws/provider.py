@@ -78,7 +78,6 @@ class AWSProvider(BaseProvider):
             self._add_security_group_data_to_elbv2()
 
         self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
-        self._merge_route53_and_route53domains()
         self._match_iam_policies_and_buckets()
 
         super(AWSProvider, self).preprocessing()
@@ -499,13 +498,6 @@ class AWSProvider(BaseProvider):
             else:
                 print_error('Failed to parse %s in %s in %s' % (resource_type, vpc_id, region))
                 print_exception(e)
-
-    def _merge_route53_and_route53domains(self):
-        if 'route53domains' not in self.services:
-            return
-        # TODO: fix this
-        self.services['route53'].update(self.services['route53domains'])
-        self.services.pop('route53domains')
 
     def _set_emr_vpc_ids(self):
         clear_list = []

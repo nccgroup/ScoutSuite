@@ -14,7 +14,7 @@ from ScoutSuite.providers.aws.resources.emr.service import EMR
 from ScoutSuite.providers.aws.services.iam import IAMConfig
 from ScoutSuite.providers.aws.services.rds import RDSConfig
 from ScoutSuite.providers.aws.services.redshift import RedshiftConfig
-from ScoutSuite.providers.aws.services.route53 import Route53Config, Route53DomainsConfig
+from ScoutSuite.providers.aws.resources.route53.service import Route53
 from ScoutSuite.providers.aws.services.s3 import S3Config
 from ScoutSuite.providers.aws.services.ses import SESConfig
 from ScoutSuite.providers.aws.services.sns import SNSConfig
@@ -68,8 +68,7 @@ class AWSServicesConfig(BaseServicesConfig):
         self.awslambda = Lambdas()
         self.redshift = RedshiftConfig(metadata['database']['redshift'], thread_config)
         self.rds = RDSConfig(metadata['database']['rds'], thread_config)
-        self.route53 = Route53Config(thread_config)
-        self.route53domains = Route53DomainsConfig(thread_config)
+        self.route53 = Route53()
         self.s3 = S3Config(thread_config)
         self.ses = SESConfig(metadata['messaging']['ses'], thread_config)
         self.sns = SNSConfig(metadata['messaging']['sns'], thread_config)
