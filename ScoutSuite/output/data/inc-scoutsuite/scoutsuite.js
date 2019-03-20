@@ -767,7 +767,7 @@ function showPopup(content) {
  */
 function load_metadata() {
     if (document.getElementById('sqlite_format')) {
-        alert("Loading from SQLite is not yet implemented 😞");
+        get_data();
         return;
     } 
     else {
@@ -1314,4 +1314,15 @@ function download_as_json(filename, dict) {
             document.body.removeChild(link);
         };
     };
+}
+
+function get_data() {
+    var request = new XMLHttpRequest();
+    request.open("GET","http://127.0.0.1:8000/api/data?key=test.10.test2", true);
+    
+    request.onload = function () {
+        console.log(this.response);
+    }
+
+    request.send();
 }
