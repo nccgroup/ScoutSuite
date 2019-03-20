@@ -1,14 +1,21 @@
-from ScoutSuite.core.sqlite import SQLConnection
+from sqlitedict import SqliteDict
 import cherrypy
 
 
 class Server(object):
     def __init__(self, filename):
-        self.results = SQLConnection(filename)
+        self.results = SqliteDict(filename)
 
     @cherrypy.expose(['data'])
     def get(self, key=None):
-        return self.results.get(key)
+        result = self.results
+        keyparts = key.split('.')
+        for k in keyparts:
+            if isinstance(result, dict):
+                result = result.get(k)
+            elif isinstance(result, list):
+                result = result[int(k)]
+        return result
 
     @staticmethod
     def init(database_filename, host, port):

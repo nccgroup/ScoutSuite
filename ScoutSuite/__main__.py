@@ -52,9 +52,8 @@ async def main(args=None):
 
     if args.get('database_name'):
         report_name = args.get('database_name') if isinstance(args.get('database_name'), str) else report_file_name
-        database_file, _ = get_filename(ReportFile.results, args.get('profile'), args.get('report_dir'))
+        database_file, _ = get_filename(ReportFile.results, report_name, args.get('report_dir'), extension="db")
         Server.init(database_file, args.get('host_ip'), args.get('host_port'))
-        print(report_name)
         return
 
     # TODO: move this to after authentication, so that the report can be more specific to what's being scanned.
