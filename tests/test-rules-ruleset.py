@@ -9,7 +9,7 @@ from ScoutSuite.core.rule import Rule
 from ScoutSuite.core.ruleset import Ruleset
 
 
-class TestAWSScout2RulesRuleset:
+class TestAWSScoutSuiteRulesRuleset:
 
     def setup(self):
         config_debug_level(True)
