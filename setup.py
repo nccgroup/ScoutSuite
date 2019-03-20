@@ -26,9 +26,7 @@ setup(
     url='https://github.com/nccgroup/ScoutSuite',
     entry_points={
         'console_scripts': [
-            'Scout = ScoutSuite.__main__:main',
-            'Scout2RulesGenerator = ScoutSuite.__rules_generator__:main',
-            'Scout2Listall = ScoutSuite.__listall__:main'
+            'Scout = ScoutSuite.__main__:main'
         ]
     },
     packages=find_packages(),
@@ -36,13 +34,14 @@ setup(
         'ScoutSuite.output': [
             'data/html/*.html',
             'data/html/partials/*.html',
+            'data/html/conditionals/*.html',
             'data/html/partials/aws/*.html',
             'data/html/partials/azure/*.html',
             'data/html/partials/gcp/*.html',
             'data/html/summaries/*.html',
             'data/includes.zip',
-            'data/inc-scout2/*.js',
-            'data/inc-scout2/*.css'
+            'data/inc-scoutsuite/*.js',
+            'data/inc-scoutsuite/*.css'
         ],
         'ScoutSuite.providers': [
             'aws/rules/conditions/*.json',
@@ -73,10 +72,7 @@ setup(
         'Natural Language :: English',
         'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7'
