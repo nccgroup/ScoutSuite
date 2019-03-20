@@ -5,7 +5,7 @@ import copy
 import os
 import webbrowser
 
-from ScoutSuite import AWSCONFIG
+from ScoutSuite.output.report_file import ReportFile
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
 from ScoutSuite.core.console import config_debug_level, print_info, print_debug
 from ScoutSuite.core.exceptions import RuleExceptions
@@ -52,7 +52,7 @@ async def main(args=None):
 
     if args.get('database_name'):
         report_name = args.get('database_name') if isinstance(args.get('database_name'), str) else report_file_name
-        database_file, _ = get_filename(AWSCONFIG, args.get('profile'), args.get('report_dir'))
+        database_file, _ = get_filename(ReportFile.AWSCONFIG, args.get('profile'), args.get('report_dir'))
         Server.init(database_file, args.get('host_ip'), args.get('host_port'))
         print(report_name)
         return
@@ -93,7 +93,7 @@ async def main(args=None):
         # Update means we reload the whole config and overwrite part of it
         if args.get('update'):
             current_run_services = copy.deepcopy(cloud_provider.services)
-            last_run_dict = report.encoder.load_from_file(AWSCONFIG)
+            last_run_dict = report.encoder.load_from_file(ReportFile.AWSCONFIG)
             cloud_provider.services = last_run_dict['services']
             for service in cloud_provider.service_list:
                 cloud_provider.services[service] = current_run_services[service]
@@ -101,7 +101,7 @@ async def main(args=None):
     # Partial run, using pre-pulled data
     else:
         # Reload to flatten everything into a python dictionary
-        last_run_dict = report.encoder.load_from_file(AWSCONFIG)
+        last_run_dict = report.encoder.load_from_file(ReportFile.AWSCONFIG)
         for key in last_run_dict:
             setattr(cloud_provider, key, last_run_dict[key])
 

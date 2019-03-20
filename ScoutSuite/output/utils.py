@@ -8,7 +8,7 @@ from ScoutSuite.core.console import print_error
 
 from six.moves import input
 
-from ScoutSuite import AWSCONFIG, EXCEPTIONS, HTMLREPORT, AWSRULESET, AWSCONFIG_FILE, EXCEPTIONS_FILE, HTMLREPORT_FILE, AWSRULESET_FILE
+from ScoutSuite.output.report_file import ReportFile
 
 
 def prompt_for_yes_no(question):
@@ -45,24 +45,24 @@ def prompt_for_overwrite(filename, force_write):
 
 
 def get_filename(config_type, profile, report_dir, extension=None):
-        if config_type == AWSCONFIG:
-            filename = AWSCONFIG_FILE
+        if config_type == ReportFile.AWSCONFIG:
+            filename = ReportFile.AWSCONFIG.value
             first_line = 'scoutsuite_results ='
-        elif config_type == EXCEPTIONS:
-            filename = EXCEPTIONS_FILE
+        elif config_type == ReportFile.EXCEPTIONS:
+            filename = ReportFile.EXCEPTIONS.value
             first_line = 'exceptions ='
-        elif config_type == HTMLREPORT:
-            filename = HTMLREPORT_FILE
+        elif config_type == ReportFile.HTMLREPORT:
+            filename = ReportFile.HTMLREPORT.value
             first_line = None
-        elif config_type == AWSRULESET:
-            filename = AWSRULESET_FILE
+        elif config_type == ReportFile.AWSRULESET:
+            filename = ReportFile.AWSRULESET.value
             first_line = 'scoutsuite_results ='
         else:
             print_error('invalid config type provided (%s)' % config_type)
             raise Exception
         # Append profile name if necessary
-        if profile != 'default' and config_type != AWSRULESET:
+        if profile != 'default' and config_type != ReportFile.AWSRULESET:
             name, original_extension = filename.split('.')
             extension = extension if extension else original_extension
             filename = '%s-%s.%s' % (name, profile, extension)
-        return (os.path.join(report_dir, filename), first_line)
+        return os.path.join(report_dir, filename), first_line
