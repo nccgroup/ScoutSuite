@@ -20,7 +20,7 @@ class Trails(AWSResources):
         if 'IsMultiRegionTrail' in raw_trail and raw_trail['IsMultiRegionTrail'] and raw_trail['HomeRegion'] != self.scope['region']:
             for key in ['HomeRegion', 'TrailARN']:
                 trail[key] = raw_trail[key]
-            trail['scout2_link'] = 'services.cloudtrail.regions.%s.trails.%s' % (raw_trail['HomeRegion'], trail_id)
+            trail['scoutsuite_link'] = 'services.cloudtrail.regions.%s.trails.%s' % (raw_trail['HomeRegion'], trail_id)
             return trail_id, trail
 
         for key in raw_trail:

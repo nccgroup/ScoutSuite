@@ -16,8 +16,7 @@ function onPageLoad() {
     showPageFromHash();
 
     // when button is clicked, return CSV with finding
-    $('#findings_download_button').click(function (event) {
-
+    $('#findings_download_button').click(function (event) { 
         var button_clicked = event.target.id;
 
         var anchor = window.location.hash.substr(1);
@@ -92,9 +91,7 @@ function onPageLoad() {
             };
             download_as_json(finding_key + '.json', json_dict);
         };
-
     });
-
 };
 
 /**
@@ -117,7 +114,6 @@ var load_account_id_from_json = function () {
  * @returns {number};
  */
 function load_config_from_json(script_id, cols) {
-
     // Abort if data was previously loaded
     if (loaded_config_array.indexOf(script_id) > 0) {
         // When the path does not contain .id.
@@ -270,7 +266,7 @@ function process_template(id1, container_id, list) {
 function hideAll() {
     $("[id*='.list']").not("[id*='metadata.list']").not("[id='regions.list']").not("[id*='filters.list']").hide();
     $("[id*='.details']").hide();
-    var element = document.getElementById('scout2_display_account_id_on_all_pages');
+    var element = document.getElementById('scoutsuite_display_account_id_on_all_pages');
     if ((element != undefined) && (element.checked == true)) {
         showRow('aws_account_id');
     };

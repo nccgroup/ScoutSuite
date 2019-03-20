@@ -207,7 +207,7 @@ class RegionalServiceConfig(object):
                         backup = copy.deepcopy(target)
 
                         if method.__name__ == 'store_target':
-                            target_type = target['scout2_target_type']
+                            target_type = target['scoutsuite_target_type']
                         else:
                             target_type = method.__name__.replace('parse_', '') + 's'
                         method(params, region, target)
@@ -321,13 +321,13 @@ class RegionConfig(BaseConfig):
                 callback = getattr(self, 'parse_%s' % target_type[0:-1])
             except:
                 callback = self.store_target
-                target['scout2_target_type'] = target_type
+                target['scoutsuite_target_type'] = target_type
             if q:
                 # Add to the queue
                 q.put((callback, region, target))
 
     def store_target(self, global_params, region, target):
-        target_type = target.pop('scout2_target_type')
+        target_type = target.pop('scoutsuite_target_type')
         if 'VpcId' in target:
             vpc_id = target.pop('VpcId')
             manage_dictionary(self.vpcs, vpc_id, VPCConfig(self.vpc_resource_types))
