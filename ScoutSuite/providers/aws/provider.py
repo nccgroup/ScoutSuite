@@ -59,7 +59,9 @@ class AWSProvider(BaseProvider):
         """
         ip_ranges = [] if ip_ranges is None else ip_ranges
         self._map_all_subnets()
-        self._set_emr_vpc_ids()
+
+        if 'emr' in self.service_list:
+            self._set_emr_vpc_ids()
 
         # TODO: Handle that when refactoring is done?
         # self.parse_elb_policies()
