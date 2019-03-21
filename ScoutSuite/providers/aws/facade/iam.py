@@ -3,18 +3,19 @@ from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.core.console import print_error, print_exception
 from ScoutSuite.providers.utils import run_concurrently, get_non_provider_id
 from ScoutSuite.providers.aws.utils import is_throttled
+from ScoutSuite.providers.utils import run_concurrently
 
 
 class IAMFacade(AWSBaseFacade):
     async def get_credential_reports(self):
         client = AWSFacadeUtils.get_client('iam', self.session)
-        response = client.generate_credential_report()
+        response = await run_concurrently(client.generate_credential_report)
 
         if response['State'] != 'COMPLETE':
             print_error('Failed to generate a credential report.')
             return []
 
-        report = client.get_credential_report()['Content']
+        report = (await run_concurrently(client.get_credential_report))['Content']
 
         # The report is a CSV string. The first row contains the name of each column. The next rows
         # each represent an individual account. This algorithm provides a simple initial parsing.
