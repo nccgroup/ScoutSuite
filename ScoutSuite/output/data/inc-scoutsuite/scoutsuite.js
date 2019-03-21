@@ -1,4 +1,6 @@
 // Globals
+var result_formats = {"invalid":0, "json":1, "sqlite":2};
+Object.freeze(result_formats)
 var loaded_config_array = new Array();
 var run_results;
 
@@ -763,14 +765,34 @@ function showPopup(content) {
 };
 
 /**
+ * Get the format of the results that Scout Suite is reading from
+ */
+function get_format() {
+    if (document.getElementById('sqlite_format')) {
+        return result_formats.sqlite;
+    }
+    else if (document.getElementById('json_format')) {
+        return result_formats.json;
+    }
+    return result_formats.invalid;
+}
+
+function load_metadata() {
+    if (get_format() === result_formats.json) {
+        load_metadata_json();
+    }
+    else if (get_format() === result_formats.sqlite) {
+        load_metadata_sqlite();
+    }
+    else {
+        console.log("Error: the result format could not be determined");
+    }
+}
+
+/**
  * Set up dashboards and dropdown menus
  */
-function load_metadata() {
-    if (document.getElementById('sqlite_format')) {
-        get_data();
-        return;
-    } 
-    else {
+function load_metadata_json() {
         run_results = get_scoutsuite_results();
 
         // Set title dynamically
@@ -802,16 +824,12 @@ function load_metadata() {
                 };
             };
         };
-
         hidePleaseWait();
-    }
 };
-
 
 ////////////////////////
 // Browsing functions //
 ////////////////////////
-
 
 /**
  * Show About Scout Suite modal
@@ -892,7 +910,6 @@ function updateTitle(title) {
     $("#section_title-h2").text(title);
 };
 
-
 /**
  * Update the DOM
  */
@@ -932,7 +949,6 @@ var current_resource_path = ''
  * @param anchor
  */
 function updateDOM(anchor) {
-
     // Strip the # sign
     var path = decodeURIComponent(anchor.replace('#', ''));
 
@@ -1007,7 +1023,6 @@ function updateDOM(anchor) {
     // Scroll to the top
     window.scrollTo(0, 0);
 };
-
 
 /**
  *
@@ -1314,16 +1329,4 @@ function download_as_json(filename, dict) {
             document.body.removeChild(link);
         };
     };
-}
-
-function get_data() {
-    var request = new XMLHttpRequest();
-    request.open("GET","http://127.0.0.1:8000/api/data?key=last_run.time", true);
-    
-    request.onload = function () {
-        var data = JSON.parse(this.response);
-        console.log(this.response);
-    }
-    
-    request.send();
 }
