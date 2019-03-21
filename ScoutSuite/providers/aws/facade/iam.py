@@ -134,8 +134,7 @@ class IAMFacade(AWSBaseFacade):
 
     async def get_password_policy(self):
         client = AWSFacadeUtils.get_client('iam', self.session)
-        response = await run_concurrently(lambda: client.get_account_password_policy())
-        return response['PasswordPolicy']
+        return (await run_concurrently(client.get_account_password_policy))['PasswordPolicy']
 
     async def _get_user_acces_keys(self, user_name):
         client = AWSFacadeUtils.get_client('iam', self.session)

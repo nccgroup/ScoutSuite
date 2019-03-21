@@ -47,5 +47,5 @@ class AWSFacadeUtils:
         """
 
         # TODO: investigate the use of a mutex to avoid useless creation of a same type of client among threads:
-        client = session.client(service, region_name=region) if region is not None else session.client(service)
+        client = session.client(service, region_name=region) if region else session.client(service)
         return AWSFacadeUtils._clients.setdefault((service, region), client)
