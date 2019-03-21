@@ -50,8 +50,8 @@ class IAMFacade(AWSBaseFacade):
 
         # TODO: Parallelize this
         for policy in policies:
-            policy_version = client.get_policy_version(
-                PolicyArn=policy['Arn'], VersionId=policy['DefaultVersionId'])
+            policy_version = await run_concurrently(
+                lambda: client.get_policy_version(PolicyArn=policy['Arn'], VersionId=policy['DefaultVersionId']))
             policy['PolicyDocument'] = policy_version['PolicyVersion']['Document']
 
             policy['attached_to'] = {}
@@ -91,8 +91,8 @@ class IAMFacade(AWSBaseFacade):
             for group in groups:
                 user['groups'].append(group['GroupName'])
             try:
-                user['LoginProfile'] = client.get_login_profile(UserName=user_name)[
-                    'LoginProfile']
+                user['LoginProfile'] = await run_concurrently(
+                    lambda: client.get_login_profile(UserName=user_name)['LoginProfile'])
             except Exception:
                 pass
             user['AccessKeys'] = await self._get_user_acces_keys(user_name)
