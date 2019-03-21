@@ -7,9 +7,9 @@ class Server(object):
     def __init__(self, filename):
         self.results = SqliteDict(filename)
 
-    @cherrypy.expose(['data'])
+    @cherrypy.expose()
     @cherrypy.tools.json_out()
-    def get(self, key=None):
+    def data(self, key=None):
         result = self.results
         keyparts = key.split('.')
         for k in keyparts:
@@ -17,6 +17,12 @@ class Server(object):
                 result = result.get(k)
             elif isinstance(result, list):
                 result = result[int(k)]
+
+        # Returns only indexes or length if it's a complex type
+        if isinstance(result, dict) or isinstance(result, SqliteDict):
+            result = list(result.keys())
+        elif isinstance(result, list):
+            result = len(result)
         return {'data': result}
 
     @staticmethod
