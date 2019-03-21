@@ -24,11 +24,11 @@ from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 
 try:
     from ScoutSuite.providers.aws.services.config_private import ConfigConfig
-    from ScoutSuite.providers.aws.services.dynamodb_private import DynamoDBConfig
+    from ScoutSuite.providers.aws.resources.dynamodb.service_private import DynamoDB
     from ScoutSuite.providers.aws.services.kms_private import KMSConfig
 except ImportError:
     ConfigConfig = None
-    DynamoDBConfig = None
+    DynamoDB = None
     KMSConfig = None
 
 
@@ -79,8 +79,7 @@ class AWSServicesConfig(BaseServicesConfig):
         try:
             self.config = ConfigConfig(
                 metadata['management']['config'], thread_config)
-            self.dynamodb = DynamoDBConfig(
-                metadata['database']['dynamodb'], thread_config)
+            self.dynamodb = DynamoDB()
             self.kms = KMSConfig(metadata['security']['kms'], thread_config)
         except (NameError, TypeError):
             pass
