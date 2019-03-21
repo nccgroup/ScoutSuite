@@ -13,9 +13,9 @@ class Server(object):
         result = self.get_item(self.results, key)
         # Returns only indexes or length if it's a complex type
         if isinstance(result, dict) or isinstance(result, SqliteDict):
-            result = list(result.keys())
+            result = {'type': 'dict', 'keys': list(result.keys())}
         elif isinstance(result, list):
-            result = len(result)
+            result = {'type': 'list', 'length': len(result)}
         return {'data': result}
 
     @cherrypy.expose()
@@ -34,7 +34,7 @@ class Server(object):
         if isinstance(result, list):
             page = result[start:end]
 
-        return {'data': page}
+        return {'data': self.strip_nested_data(page)}
 
     @staticmethod
     def init(database_filename, host, port):
@@ -63,6 +63,16 @@ class Server(object):
                 data = data[int(k)]
         return data
 
+    @staticmethod
+    def strip_nested_data(data):
+        if not isinstance(data, dict):
+            return data
 
-if __name__ == "__main__":
-    Server.init("/tmp/sqltest1.db", '127.0.0.1', 8000)
+        result = {}
+        for k, v in data.items():
+            if isinstance(v, dict):
+                result[k] = {'type': 'dict', 'keys': list(v.keys())}
+            elif isinstance(v, list):
+                result[k] = {'type': 'list', 'length': len(v)}
+        return result
+
