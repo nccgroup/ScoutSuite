@@ -10,20 +10,31 @@ class Server(object):
     @cherrypy.expose()
     @cherrypy.tools.json_out()
     def data(self, key=None):
-        result = self.results
-        keyparts = key.split('.')
-        for k in keyparts:
-            if isinstance(result, dict) or isinstance(result, SqliteDict):
-                result = result.get(k)
-            elif isinstance(result, list):
-                result = result[int(k)]
-
+        result = self.get_item(self.results, key)
         # Returns only indexes or length if it's a complex type
         if isinstance(result, dict) or isinstance(result, SqliteDict):
             result = list(result.keys())
         elif isinstance(result, list):
             result = len(result)
         return {'data': result}
+
+    @cherrypy.expose()
+    @cherrypy.tools.json_out()
+    def page(self, key=None, page=None, pagesize=None):
+        result = self.get_item(self.results, key)
+
+        page = int(page)
+        pagesize = int(pagesize)
+
+        start = page * pagesize
+        end = min((page + 1) * pagesize, len(result))
+
+        if isinstance(result, dict) or isinstance(result, SqliteDict):
+            page = {k: result.get(k) for k in list(result)[start:end]}
+        if isinstance(result, list):
+            page = result[start:end]
+
+        return {'data': page}
 
     @staticmethod
     def init(database_filename, host, port):
@@ -38,6 +49,19 @@ class Server(object):
                 'server.socket_port': port,
         })
         cherrypy.quickstart(Server(database_filename), "/api", config=config)
+
+    @staticmethod
+    def get_item(data, key):
+        if not key:
+            return data
+
+        keyparts = key.split('.')
+        for k in keyparts:
+            if isinstance(data, dict) or isinstance(data, SqliteDict):
+                data = data.get(k)
+            elif isinstance(data, list):
+                data = data[int(k)]
+        return data
 
 
 if __name__ == "__main__":
