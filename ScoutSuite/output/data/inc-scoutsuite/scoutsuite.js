@@ -99,7 +99,7 @@ function onPageLoad() {
 /**
  * Display the account ID -- use of the generic function + templates result in the div not being at the top of the page
  */
-var load_account_id_from_json = function () {
+var load_account_id_json = function () {
     var element = document.getElementById('aws_account_id');
     var value = '<i class="fa fa-cloud"></i> ' + run_results['provider_name'] +
         ' <i class="fa fa-chevron-right"></i> ' + run_results['aws_account_id'];
@@ -795,14 +795,7 @@ function load_metadata() {
 function load_metadata_json() {
         run_results = get_scoutsuite_results();
 
-        // Set title dynamically
-        $(function () {
-            3
-            $(document).attr("title", 'Scout Suite Report [' + run_results['aws_account_id'] + ']');
-            4
-        });
-
-        load_account_id_from_json();
+        load_account_id_json();
 
         load_config_from_json('last_run', 1);
         load_config_from_json('metadata', 0);
