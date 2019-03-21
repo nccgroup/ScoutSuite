@@ -30,7 +30,7 @@ class Server(object):
         end = min((page + 1) * pagesize, len(result))
 
         if isinstance(result, dict) or isinstance(result, SqliteDict):
-            page = {k: result.get(k) for k in list(result)[start:end]}
+            page = {k: result.get(k) for k in sorted(list(result))[start:end]}
         if isinstance(result, list):
             page = result[start:end]
 
