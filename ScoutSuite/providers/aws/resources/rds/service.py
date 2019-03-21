@@ -1,7 +1,7 @@
 from ScoutSuite.providers.aws.resources.regions import Regions
 from ScoutSuite.providers.aws.resources.rds.vpcs import RDSVpcs
 from ScoutSuite.providers.aws.resources.rds.parametergroups import ParameterGroups
-from ScoutSuite.providers.aws.resources.rds.securitygroup import SecurityGroups
+from ScoutSuite.providers.aws.resources.rds.securitygroups import SecurityGroups
 
 class RDS(Regions):
     _children = [
