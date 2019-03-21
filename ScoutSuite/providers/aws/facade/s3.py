@@ -13,7 +13,7 @@ class S3Facade(AWSBaseFacade):
 
     async def get_buckets(self):
         client = AWSFacadeUtils.get_client('s3', None, self.session)
-        buckets = (await run_concurrently(lambda: client.list_buckets()))['Buckets']
+        buckets = (await run_concurrently(client.list_buckets))['Buckets']
 
         for bucket in buckets:
             bucket_name = bucket['Name']
