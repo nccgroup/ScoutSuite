@@ -23,7 +23,8 @@ class EC2Facade(AWSBaseFacade):
     async def get_instances(self, region: str, vpc: str):
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]
         reservations =\
-            await AWSFacadeUtils.get_all_pages('ec2', region, self.session, 'describe_instances', 'Reservations', Filters=filters)
+            await AWSFacadeUtils.get_all_pages(
+                'ec2', region, self.session, 'describe_instances', 'Reservations', Filters=filters)
 
         instances = []
         for reservation in reservations:
