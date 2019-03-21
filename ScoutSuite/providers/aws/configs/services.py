@@ -23,7 +23,7 @@ from ScoutSuite.providers.aws.services.vpc import VPCConfig
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 
 try:
-    from ScoutSuite.providers.aws.services.config_private import ConfigConfig
+    from ScoutSuite.providers.aws.resources.config.service_private import Config
     from ScoutSuite.providers.aws.services.dynamodb_private import DynamoDBConfig
     from ScoutSuite.providers.aws.services.kms_private import KMSConfig
 except ImportError:
@@ -77,8 +77,7 @@ class AWSServicesConfig(BaseServicesConfig):
         self.vpc = VPCConfig(metadata['network']['vpc'], thread_config)
 
         try:
-            self.config = ConfigConfig(
-                metadata['management']['config'], thread_config)
+            self.config = Config()
             self.dynamodb = DynamoDBConfig(
                 metadata['database']['dynamodb'], thread_config)
             self.kms = KMSConfig(metadata['security']['kms'], thread_config)
