@@ -18,6 +18,7 @@ from ScoutSuite.providers.utils import run_concurrently
 
 try:
     from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
+    from ScoutSuite.providers.aws.facade.config_private import ConfigFacade
 except:
     pass
 
@@ -71,5 +72,6 @@ class AWSFacade(AWSBaseFacade):
 
         try:
             self.dynamodb = DynamoDBFacade(self.session)
+            self.config = ConfigFacade(self.session)
         except:
             pass
