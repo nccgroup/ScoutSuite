@@ -1,7 +1,7 @@
 // Globals
 var result_formats = {"invalid":0, "json":1, "sqlite":2}
 Object.freeze(result_formats)
-var loaded_config_array = new Array()
+var loadedConfigArray = new Array()
 var run_results
 
 /**
@@ -32,7 +32,7 @@ function onPageLoad() {
 
     var items = get_value_at(path)
     var level = get_value_at(path.replace('items', 'level'))
-    var resource_path_array = resource_path.split('.')
+    var resource_pathArray = resource_path.split('.')
     var split_path = path.split('.')
     var finding_service = split_path[1]
     var finding_key = split_path[split_path.length - 2]
@@ -44,7 +44,7 @@ function onPageLoad() {
         // when path ends in '.items' (findings)
         if (typeof items[item] === 'string') {
           var id_array = items[item].split('.')
-          var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.')
+          var id = 'services.' + id_array.slice(0, resource_pathArray.length).join('.')
           var i = get_value_at(id)
         }
         // all other cases
@@ -80,7 +80,7 @@ function onPageLoad() {
         // when path ends in '.items' (findings)
         if (typeof items[item] === 'string') {
           var id_array = items[item].split('.')
-          var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.')
+          var id = 'services.' + id_array.slice(0, resource_pathArray.length).join('.')
           var i = get_value_at(id)
         }
         // all other cases
@@ -111,51 +111,51 @@ var load_account_id_json = function () {
 
 /**
  * Generic load JSON function
- * @param script_id
+ * @param scriptId
  * @param cols
  * @returns {number}
  */
-function load_config_json(script_id, cols) {
+function load_config_json(scriptId, cols) {
   // Abort if data was previously loaded
-  if (loaded_config_array.indexOf(script_id) > 0) {
+  if (loadedConfigArray.indexOf(scriptId) > 0) {
     // When the path does not contain .id.
     return 0
   }
-  path_array = script_id.split('.')
-  for (i = 3; i < path_array.length; i = i + 2) {
-    path_array[i] = 'id'
+  pathArray = scriptId.split('.')
+  for (i = 3; i < pathArray.length; i = i + 2) {
+    pathArray[i] = 'id'
   }
-  fixed_path = path_array.join('.')
-  if (loaded_config_array.indexOf(fixed_path) > 0) {
+  fixedPath = pathArray.join('.')
+  if (loadedConfigArray.indexOf(fixedPath) > 0) {
     // When the loaded path contains id but browsed-to path contains a specific value
     return 0
   }
-  path_array[1] = 'id'
-  fixed_path = path_array.join('.')
-  if (loaded_config_array.indexOf(fixed_path) > 0) {
+  pathArray[1] = 'id'
+  fixedPath = pathArray.join('.')
+  if (loadedConfigArray.indexOf(fixedPath) > 0) {
     // Special case for services.id.findings
     return 0
   }
 
   // Build the list based on the path, stopping at the first .id. value
   list = run_results
-  path_array = script_id.split('.id.')[0].split('.')
-  //console.log("Path array: ")
-  //console.log(path_array)
-  for (i in path_array) {
+  pathArray = scriptId.split('.id.')[0].split('.')
+  //console.log('Path array: ')
+  //console.log(pathArray)
+  for (i in pathArray) {
     // Allows for creation of regions-filter etc...
     if (i.endsWith('-filters')) {
       i = i.replace('-filters', '')
     }
-    console.log("List before: ")
+    console.log('List before: ')
     console.log(list)
-    list = list[path_array[i]]
-    console.log("List after: ")
+    list = list[pathArray[i]]
+    console.log('List after: ')
     console.log(list)
   }
 
   // Filters
-  if (path_array[i] == 'items' && i > 3 && path_array[i - 2] == 'filters') {
+  if (pathArray[i] == 'items' && i > 3 && pathArray[i - 2] == 'filters') {
     return 1
   }
 
@@ -168,19 +168,19 @@ function load_config_json(script_id, cols) {
   hideAll()
   if (cols == 0) {
     // Metadata
-    script_id = script_id.replace('services.id.', '')
-    process_template(script_id + '.list.template', script_id + '.list', list)
+    scriptId = scriptId.replace('services.id.', '')
+    process_template(scriptId + '.list.template', scriptId + '.list', list)
   } else if (cols == 1) {
     // Single-column display
-    process_template(script_id + '.details.template', 'single-column', list)
+    process_template(scriptId + '.details.template', 'single-column', list)
   } else if (cols == 2) {
     // Double-column display
-    process_template(script_id + '.list.template', 'double-column-left', list)
-    process_template(script_id + '.details.template', 'double-column-right', list)
+    process_template(scriptId + '.list.template', 'double-column-left', list)
+    process_template(scriptId + '.details.template', 'double-column-right', list)
   }
 
   // Update the list of loaded data
-  loaded_config_array.push(script_id)
+  loadedConfigArray.push(scriptId)
   return 1
 }
 
@@ -290,7 +290,6 @@ function showRowWithItems(path) {
   showItems(path)
 }
 
-
 function showFilters(resource_path) {
   hideFilters()
   service = resource_path.split('.')[1]
@@ -318,13 +317,13 @@ function hideFilters() {
 function showFindings(path, resource_path) {
   items = get_value_at(path)
   level = get_value_at(path.replace('items', 'level'))
-  resource_path_array = resource_path.split('.')
+  resource_pathArray = resource_path.split('.')
   split_path = path.split('.')
   finding_service = split_path[1]
   finding_key = split_path[split_path.length - 2]
   for (item in items) {
     var id_array = items[item].split('.')
-    var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.')
+    var id = 'services.' + id_array.slice(0, resource_pathArray.length).join('.')
     showSingleItem(id)
     if ($('[id="' + items[item] + '"]').hasClass('badge')) {
       $('[id="' + items[item] + '"]').addClass('finding-title-' + level)
@@ -586,16 +585,16 @@ function showEC2SecurityGroup(region, vpc, id) {
  *
  */
 function showObject(path, attr_name, attr_value) {
-  const path_array = path.split('.')
-  const path_length = path_array.length
+  const pathArray = path.split('.')
+  const path_length = pathArray.length
   let data = getResource(path)
 
   // Adds the resource path values to the data context
   for (let i = 0; i < path_length - 1; i += 2) {
     if (i + 1 >= path_length) break
 
-    const attribute = makeResourceTypeSingular(path_array[i])
-    data[attribute] = path_array[i + 1]
+    const attribute = makeResourceTypeSingular(pathArray[i])
+    data[attribute] = pathArray[i + 1]
   }
 
   // Filter if ...
@@ -607,9 +606,9 @@ function showObject(path, attr_name, attr_value) {
       break
     }
 
-    resource_type = path_array[1] + '_' + path_array[path_length - 1]
+    resource_type = pathArray[1] + '_' + pathArray[path_length - 1]
   } else {
-    resource_type = path_array[1] + '_' + path_array[path_length - 2]
+    resource_type = pathArray[1] + '_' + pathArray[path_length - 2]
   }
 
   resource = makeResourceTypeSingular(resource_type)
@@ -715,7 +714,7 @@ function load_metadata() {
   if (get_format() === result_formats.json) {
     load_metadata_json()
   } else if (get_format() === result_formats.sqlite) {
-    load_metadata_sqlite()
+    loadMetadataSqlite()
   } else {
     console.log("Error: the result format could not be determined")
   }
@@ -854,11 +853,11 @@ window.onhashchange = showPageFromHash
  * @returns {*}
  */
 function get_value_at(path) {
-  path_array = path.split('.')
+  pathArray = path.split('.')
   value = run_results
-  for (p in path_array) {
+  for (p in pathArray) {
     try {
-      value = value[path_array[p]]
+      value = value[pathArray[p]]
     } catch (err) {
       console.log(err)
     }
@@ -957,9 +956,9 @@ function updateDOM(anchor) {
 // TODO: merge into load_config_from_json...
 function lazy_loading(path) {
   var cols = 1
-  var resource_path_array = path.split('.')
-  var service = resource_path_array[1]
-  var resource_type = resource_path_array[resource_path_array.length - 1]
+  var resource_pathArray = path.split('.')
+  var service = resource_pathArray[1]
+  var resource_type = resource_pathArray[resource_pathArray.length - 1]
   for (group in run_results['metadata']) {
     if (service in run_results['metadata'][group]) {
       if (service == 'summaries') {
@@ -992,9 +991,9 @@ function get_resource_path(path) {
     if (resource_path == undefined) {
       resource_path = get_value_at(path.replace('items', 'path'))
     }
-    resource_path_array = resource_path.split('.')
-    last_value = resource_path_array.pop()
-    resource_path = 'services.' + resource_path_array.join('.')
+    resource_pathArray = resource_path.split('.')
+    last_value = resource_pathArray.pop()
+    resource_path = 'services.' + resource_pathArray.join('.')
   } else if (path.endsWith('.view')) {
     // Resource path is not changed (this may break when using `back' button in browser)
     var resource_path = current_resource_path

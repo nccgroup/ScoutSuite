@@ -10,7 +10,7 @@ $(document).ready(() => {
   }
 })
 
-function loadLastTheme() {
+function loadLastTheme () {
   if (isDarkThemeEnabled()) {
     setBootstrapTheme(DARK_BOOTSTRAP_THEME)
     setScoutTheme(DARK_SCOUT_THEME)
@@ -27,8 +27,7 @@ function toggleTheme () {
   if (darkThemeEnabled) {
     this.setBootstrapTheme(DARK_BOOTSTRAP_THEME)
     this.setScoutTheme(DARK_SCOUT_THEME)
-  }
-  else {
+  } else {
     this.setBootstrapTheme(LIGHT_BOOTSTRAP_THEME)
     this.setScoutTheme(LIGHT_SCOUT_THEME)
   }

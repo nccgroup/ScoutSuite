@@ -70,7 +70,7 @@
               // Filter by button
               $('.btn').click(function() {
                   var value = $(this).attr('id');
-                  if(value.indexOf('finding-title') > -1){
+                  if (value.indexOf('finding-title') > -1){
                       $(".finding_items").filter(function() {
                           $(this).toggle($(this).find(">:first-child").attr("class").indexOf(value) > -1)
                       });
