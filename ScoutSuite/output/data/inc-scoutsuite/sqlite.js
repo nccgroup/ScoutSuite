@@ -1,5 +1,3 @@
-var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
-
 // Keeping this for now for manual debugging, should be removed later on
 function sqliteTest () {
   var request = new XMLHttpRequest()
@@ -22,7 +20,6 @@ function requestDb (query) {
   request.onload = function () {
     if (this.readyState === 4) {
       data = JSON.parse(this.response)
-      console.log(data.data)
     }
   }
 
@@ -31,15 +28,18 @@ function requestDb (query) {
 }
 
 function loadMetadataSqlite () {
+  hidePleaseWait()
   loadAccountIdSqlite()
   loadConfigSqlite('last_run', 1)
   loadConfigSqlite('metadata', 0)
   loadConfigSqlite('services.id.findings', 1)
   loadConfigSqlite('services.id.filters', 0) // service-specific filters
   loadConfigSqlite('services.id.regions', 0) // region filters
-  /*
-  for (group in run_results['metadata']) {
-    for (service in run_results['metadata'][group]) {
+  
+  for (group in requestDb('metadata')) {
+      console.log('groups')
+      console.log(group)
+    /*for (service in run_results['metadata'][group]) {
       if (service == 'summaries') {
         continue
       }
@@ -50,10 +50,8 @@ function loadMetadataSqlite () {
             run_results['metadata'][group][service][section][resource_type]['cols'])
         }
       }
-    }
-  } */
-
-  hidePleaseWait()
+    }*/
+  }
 }
 
 /**
@@ -99,24 +97,17 @@ function loadConfigSqlite (scriptId, cols) {
   }
 
   // Build the list based on the path, stopping at the first .id. value
-  var list = requestDb('')
   pathArray = scriptId.split('.id.')[0].split('.')
-  let i = 0
-  for (i in pathArray) {
+  for (let i in pathArray) {
     // Allows for creation of regions-filter etc...
     if (i.endsWith('-filters')) {
       i = i.replace('-filters', '')
     }
-    for (let key in list) {
-      if (key === pathArray[i]) {
-        list = requestDb(key)
-      }
+    list = requestDb(pathArray + '.' + i)
+    // Filters
+    if (pathArray[i] === 'items' && i > 3 && pathArray[i - 2] === 'filters') {
+      return 1
     }
-  }
-
-  // Filters
-  if (pathArray[i] === 'items' && i > 3 && pathArray[i - 2] === 'filters') {
-    return 1
   }
 
   // Default # of columns is 2
