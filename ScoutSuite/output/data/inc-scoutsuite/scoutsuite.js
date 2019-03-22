@@ -800,7 +800,7 @@ function show_main_dashboard() {
  * @param resource_path
  * @returns {string}
  */
-function make_title(resource_path) {
+function makeTitle(resource_path) {
   resource_path = resource_path.replace('service_groups.', '')
   service = getService(resource_path)
   resource = resource_path.split('.').pop()
@@ -898,7 +898,7 @@ function updateDOM(anchor) {
     title = get_value_at(path.replace('items', 'description'))
     updateTitle(title)
   } else {
-    title = make_title(resource_path)
+    title = makeTitle(resource_path)
     updateTitle(title)
   }
 
