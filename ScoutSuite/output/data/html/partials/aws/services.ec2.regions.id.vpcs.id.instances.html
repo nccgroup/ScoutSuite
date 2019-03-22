@@ -21,13 +21,9 @@
         </div>
         <div class="list-group-item" style="padding-bottom: 0 !important;">
             <h4>Network interfaces</h4>
-            <ul>
-                {{#each network_interfaces}}
-                    <li class="list-group-item-text">
-                        {{> network_interface region = ../region vpc = ../vpc network_interface = @../key}}
-                    </li>
-                {{/each}}
-            </ul>
+            {{#each network_interfaces}}
+                {{> network_interface region = ../region vpc = ../vpc network_interface = @../key}}
+            {{/each}}
         </div>
         {{#if user_data}}
         <div class="list-group-item" style="padding-bottom: 0 !important;">
