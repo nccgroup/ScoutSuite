@@ -1,3 +1,5 @@
+var XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest
+
 // Keeping this for now for manual debugging, should be removed later on
 function sqliteTest () {
   var request = new XMLHttpRequest()
@@ -5,7 +7,7 @@ function sqliteTest () {
 
   request.onload = function () {
     var data = JSON.parse(this.response)
-    console.log(this.response)
+    console.log(data.data)
   }
 
   request.send()
