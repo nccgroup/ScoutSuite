@@ -766,7 +766,7 @@ function showAbout() {
 /**
  * Hides Please Wait modal
  */
-function hidePleaseWait() {
+window.hidePleaseWait = function () {
   $('#please-wait-modal').fadeOut(500, () => { })
   $('#please-wait-backdrop').fadeOut(500, () => { })
 }
