@@ -7,7 +7,7 @@
             {{> count_badge count=inline_policies_count}}
           </h4>
           {{#each inline_policies}}
-            <code>{{> accordion_policy name = name document = PolicyDocument policy_path = (concat 'iam' ../resource_type ../resource_id 'inline_policies' @key 'PolicyDocument')}}</code>
+            {{> accordion_policy name = name document = PolicyDocument policy_path = (concat 'iam' ../resource_type ../resource_id 'inline_policies' @key 'PolicyDocument')}}
           {{/each}}
         </div>
     </script>

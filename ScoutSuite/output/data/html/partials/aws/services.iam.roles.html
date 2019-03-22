@@ -10,7 +10,7 @@
           <div class="list-group-item-text item-margin">ARN: {{arn}}</div>
         </div>
         <div class="list-group-item">
-          <code>{{> accordion_policy name = 'Role Trust Policy' policy_path = (concat 'iam.roles' @key 'assume_role_policy.PolicyDocument') document = assume_role_policy.PolicyDocument}}</code>
+            {{> accordion_policy name = 'Role Trust Policy' policy_path = (concat 'iam.roles' @key 'assume_role_policy.PolicyDocument') document = assume_role_policy.PolicyDocument}}
         </div>
         <div class="list-group-item">
           <div class="accordion">
