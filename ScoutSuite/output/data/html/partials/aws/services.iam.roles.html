@@ -17,7 +17,7 @@
             <h4 class="list-group-item-heading accordion-heading">Instances
                 {{> count_badge count=instances_count target=(concat '#iam.roles' id 'instances')}}
             </h4>
-            <div id="iam.roles.{{id}}.instances" class="accordion-body collapse">
+            <div id="iam.roles.{{id}}.instances" class="accordion-body">
               <div class="accordion-inner">
                 <ul class="no-bullet">
                   {{#each instance_profiles}}
