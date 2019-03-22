@@ -1,6 +1,6 @@
 // Globals
-var result_formats = {"invalid":0, "json":1, "sqlite":2}
-Object.freeze(result_formats)
+var resultFormats = { 'invalid': 0, 'json': 1, 'sqlite': 2 }
+Object.freeze(resultFormats)
 var loadedConfigArray = new Array()
 var run_results
 
@@ -14,12 +14,12 @@ $(document).ready(function () {
 /**
  * Implements page load functionality
  */
-function onPageLoad() {
+function onPageLoad () {
   showPageFromHash()
 
   // when button is clicked, return CSV with finding
-  $('#findings_download_button').click(function (event) { 
-    var button_clicked = event.target.id
+  $('#findings_download_button').click(function (event) {
+    var buttonClicked = event.target.id
 
     var anchor = window.location.hash.substr(1)
     // Strip the # sign
@@ -27,71 +27,66 @@ function onPageLoad() {
     // Get resource path based on browsed-to path
     var resource_path = get_resource_path(path)
 
-    var csv_array = []
-    var json_dict = {}
+    var csvArray = []
+    var jsonDict = {}
 
     var items = get_value_at(path)
     var level = get_value_at(path.replace('items', 'level'))
-    var resource_pathArray = resource_path.split('.')
-    var split_path = path.split('.')
-    var finding_service = split_path[1]
-    var finding_key = split_path[split_path.length - 2]
+    var resourcePathArray = resource_path.split('.')
+    var splitPath = path.split('.')
+    var findingService = splitPath[1]
+    var findingKey = splitPath[splitPath.length - 2]
 
-    if (button_clicked == 'findings_download_csv_button') {
-      var first_entry = 1
-      for (item in items) {
+    if (buttonClicked === 'findings_download_csv_button') {
+      var firstEntry = 1
+      for (let item in items) {
         // get item value
         // when path ends in '.items' (findings)
         if (typeof items[item] === 'string') {
-          var id_array = items[item].split('.')
-          var id = 'services.' + id_array.slice(0, resource_pathArray.length).join('.')
+          var idArray = items[item].split('.')
+          var id = 'services.' + idArray.slice(0, resourcePathArray.length).join('.')
           var i = get_value_at(id)
+        } else {
+          i = items[item]
         }
-        // all other cases
-        else {
-          var i = items[item]
-        }
-        
+
         // for first item, put keys at beginning of csv
-        if (first_entry == 1) {
-          var key_values_array = []
+        if (firstEntry === 1) {
+          var keyValuesArray = []
           Object.keys(i).forEach(function (key) {
-            key_values_array.push(key)
+            keyValuesArray.push(key)
           })
-          csv_array.push(key_values_array)
+          csvArray.push(keyValuesArray)
         }
         // put each value in array
-        var values_array = []
+        var valuesArray = []
         Object.keys(i).forEach(function (key) {
-          values_array.push(JSON.stringify(i[key]).replace(/^"(.*)"$/, '$1'))
+          valuesArray.push(JSON.stringify(i[key]).replace(/^"(.*)"$/, '$1'))
         })
         // append to csv array
-        csv_array.push(values_array)
-        first_entry = 0
+        csvArray.push(valuesArray)
+        firstEntry = 0
       }
 
-      download_as_csv(finding_key + '.csv', csv_array)
+      download_as_csv(findingKey + '.csv', csvArray)
     }
 
-    if (button_clicked == 'findings_download_json_button') {
-      json_dict['items'] = []
-      for (item in items) {
+    if (buttonClicked === 'findings_download_json_button') {
+      jsonDict['items'] = []
+      for (let item in items) {
         // get item value
         // when path ends in '.items' (findings)
         if (typeof items[item] === 'string') {
-          var id_array = items[item].split('.')
-          var id = 'services.' + id_array.slice(0, resource_pathArray.length).join('.')
-          var i = get_value_at(id)
+          idArray = items[item].split('.')
+          id = 'services.' + idArray.slice(0, resourcePathArray.length).join('.')
+          i = get_value_at(id)
+        } else {
+          i = items[item]
         }
-        // all other cases
-        else {
-          var i = items[item]
-        }
-        
         // add item to json
-        json_dict['items'].push(i)
+        jsonDict['items'].push(i)
       }
-      download_as_json(finding_key + '.json', json_dict)
+      downloadAsJson(findingKey + '.json', jsonDict)
     }
   })
 }
@@ -99,7 +94,7 @@ function onPageLoad() {
 /**
  * Display the account ID -- use of the generic function + templates result in the div not being at the top of the page
  */
-var load_account_id_json = function () {
+var loadAccountIdJson = function () {
   var element = document.getElementById('aws_account_id')
   var value = '<i class="fa fa-cloud"></i> ' + run_results['provider_name'] +
     ' <i class="fa fa-chevron-right"></i> ' + run_results['aws_account_id']
@@ -115,17 +110,17 @@ var load_account_id_json = function () {
  * @param cols
  * @returns {number}
  */
-function load_config_json(scriptId, cols) {
+function loadConfigJson (scriptId, cols) {
   // Abort if data was previously loaded
   if (loadedConfigArray.indexOf(scriptId) > 0) {
     // When the path does not contain .id.
     return 0
   }
-  pathArray = scriptId.split('.')
-  for (i = 3; i < pathArray.length; i = i + 2) {
+  let pathArray = scriptId.split('.')
+  for (let i = 3; i < pathArray.length; i = i + 2) {
     pathArray[i] = 'id'
   }
-  fixedPath = pathArray.join('.')
+  let fixedPath = pathArray.join('.')
   if (loadedConfigArray.indexOf(fixedPath) > 0) {
     // When the loaded path contains id but browsed-to path contains a specific value
     return 0
@@ -138,11 +133,11 @@ function load_config_json(scriptId, cols) {
   }
 
   // Build the list based on the path, stopping at the first .id. value
-  list = run_results
+  let list = run_results
   pathArray = scriptId.split('.id.')[0].split('.')
-  //console.log('Path array: ')
-  //console.log(pathArray)
-  for (i in pathArray) {
+  // console.log('Path array: ')
+  // console.log(pathArray)
+  for (let i in pathArray) {
     // Allows for creation of regions-filter etc...
     if (i.endsWith('-filters')) {
       i = i.replace('-filters', '')
@@ -155,7 +150,7 @@ function load_config_json(scriptId, cols) {
   }
 
   // Filters
-  if (pathArray[i] == 'items' && i > 3 && pathArray[i - 2] == 'filters') {
+  if (pathArray[i] === 'items' && i > 3 && pathArray[i - 2] == 'filters') {
     return 1
   }
 
@@ -166,17 +161,17 @@ function load_config_json(scriptId, cols) {
 
   // Update the DOM
   hideAll()
-  if (cols == 0) {
+  if (cols === 0) {
     // Metadata
     scriptId = scriptId.replace('services.id.', '')
-    process_template(scriptId + '.list.template', scriptId + '.list', list)
-  } else if (cols == 1) {
+    processTemplate(scriptId + '.list.template', scriptId + '.list', list)
+  } else if (cols === 1) {
     // Single-column display
-    process_template(scriptId + '.details.template', 'single-column', list)
-  } else if (cols == 2) {
+    processTemplate(scriptId + '.details.template', 'single-column', list)
+  } else if (cols === 2) {
     // Double-column display
-    process_template(scriptId + '.list.template', 'double-column-left', list)
-    process_template(scriptId + '.details.template', 'double-column-right', list)
+    processTemplate(scriptId + '.list.template', 'double-column-left', list)
+    processTemplate(scriptId + '.details.template', 'double-column-right', list)
   }
 
   // Update the list of loaded data
@@ -187,65 +182,63 @@ function load_config_json(scriptId, cols) {
 /**
  * Compile Handlebars templates and update the DOM
  * @param id1
- * @param container_id
+ * @param containerId
  * @param list
  */
-function process_template(id1, container_id, list) {
+function processTemplate (id1, containerId, list) {
   id1 = id1.replace(/<|>/g, '')
-  var template_to_compile = document.getElementById(id1).innerHTML
-  var compiled_template = Handlebars.compile(template_to_compile)
-  var inner_html = compiled_template({ items: list })
-  document.getElementById(container_id).innerHTML += inner_html
+  var templateToCompile = document.getElementById(id1).innerHTML
+  var compiledTemplate = Handlebars.compile(templateToCompile)
+  var innerHtml = compiledTemplate({ items: list })
+  document.getElementById(containerId).innerHTML += innerHtml
 }
 
 /**
  * Hide all lists and details
  */
-function hideAll() {
+function hideAll () {
   $("[id*='.list']").not("[id*='metadata.list']").not("[id='regions.list']").not("[id*='filters.list']").hide()
   $("[id*='.details']").hide()
   var element = document.getElementById('scoutsuite_display_account_id_on_all_pages')
-  if ((element != undefined) && (element.checked == true)) {
+  if ((element !== undefined) && (element.checked === true)) {
     showRow('aws_account_id')
   }
-  current_resource_path = ''
+  currentResourcePath = ''
 }
-
 
 /**
  * Show list and details' container for a given path
  * @param path
  */
-function showRow(path) {
+function showRow (path) {
   path = path.replace(/.id./g, '\.[^.]+\.')
   showList(path)
   showDetails(path)
 }
 
-function showList(path) {
+function showList (path) {
   $('div').filter(function () {
     return this.id.match(path + '.list')
   }).show()
 }
 
-function showDetails(path) {
+function showDetails (path) {
   $('div').filter(function () {
     return this.id.match(path + '.details')
   }).show()
 }
 
-function hideList(path) {
+function hideList (path) {
   $("[id='" + path + "']").hide()
   path = path.replace('.list', '')
   hideItems(path)
 }
 
-
 /**
  * Show links and views for a given path
  * @param path
  */
-function showItems(path) {
+function showItems (path) {
   path = path.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.'
   $('div').filter(function () {
     return this.id.match(path + 'link')
@@ -255,24 +248,22 @@ function showItems(path) {
   }).show()
 }
 
-
 /**
  * Hide resource views for a given path
  * @param resource_path
  */
-function hideItems(resource_path) {
+function hideItems (resource_path) {
   path = resource_path.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.view'
   $('div').filter(function () {
     return this.id.match(path)
   }).hide()
 }
 
-
 /**
  * Hide resource links for a given path
  * @param resource_path
  */
-function hideLinks(resource_path) {
+function hideLinks (resource_path) {
   // TODO: Handle Region and VPC hiding...
   path = resource_path.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.link'
   $('div').filter(function () {
@@ -280,17 +271,16 @@ function hideLinks(resource_path) {
   }).hide()
 }
 
-
 /**
  * Show list, details' container, links, and view for a given path
  * @param path
  */
-function showRowWithItems(path) {
+function showRowWithItems (path) {
   showRow(path)
   showItems(path)
 }
 
-function showFilters(resource_path) {
+function showFilters (resource_path) {
   hideFilters()
   service = resource_path.split('.')[1]
   // Show service filters
@@ -299,12 +289,12 @@ function showFilters(resource_path) {
   $('[id*="regionfilters.' + service + '.regions"]').show()
 }
 
-function hideFilters() {
+function hideFilters () {
   $('[id*=".id.filters"]').hide()
   $('[id*="regionfilters"]').hide()
   // Reset dashboard filters
-  $(".dashboard-filter").val("")
-  $(".finding_items").filter(function () {
+  $('.dashboard-filter').val('')
+  $('.finding_items').filter(function () {
     $(this).show()
   })
 }
@@ -314,16 +304,16 @@ function hideFilters() {
  * @param path
  * @param resource_path
  */
-function showFindings(path, resource_path) {
-  items = get_value_at(path)
-  level = get_value_at(path.replace('items', 'level'))
-  resource_pathArray = resource_path.split('.')
-  split_path = path.split('.')
-  finding_service = split_path[1]
-  finding_key = split_path[split_path.length - 2]
-  for (item in items) {
-    var id_array = items[item].split('.')
-    var id = 'services.' + id_array.slice(0, resource_pathArray.length).join('.')
+function showFindings (path, resource_path) {
+  let items = get_value_at(path)
+  let level = get_value_at(path.replace('items', 'level'))
+  let resourcePathArray = resource_path.split('.')
+  let splitPath = path.split('.')
+  let findingService = splitPath[1]
+  let findingKey = splitPath[splitPath.length - 2]
+  for (let item in items) {
+    var idArray = items[item].split('.')
+    var id = 'services.' + idArray.slice(0, resourcePathArray.length).join('.')
     showSingleItem(id)
     if ($('[id="' + items[item] + '"]').hasClass('badge')) {
       $('[id="' + items[item] + '"]').addClass('finding-title-' + level)
@@ -331,19 +321,19 @@ function showFindings(path, resource_path) {
       $('[id="' + items[item] + '"]').addClass('finding-' + level)
     }
     $('[id="' + items[item] + '"]').removeClass('finding-hidden')
-    $('[id="' + items[item] + '"]').attr('data-finding-service', finding_service)
-    $('[id="' + items[item] + '"]').attr('data-finding-key', finding_key)
+    $('[id="' + items[item] + '"]').attr('data-finding-service', findingService)
+    $('[id="' + items[item] + '"]').attr('data-finding-key', findingKey)
     $('[id="' + items[item] + '"]').click(function (e) {
       finding_id = e.target.id
-      if (!(finding_service in exceptions)) {
-        exceptions[finding_service] = new Object()
+      if (!(findingService in exceptions)) {
+        exceptions[findingService] = new Object()
       }
-      if (!(finding_key in exceptions[finding_service])) {
-        exceptions[finding_service][finding_key] = new Array()
+      if (!(findingKey in exceptions[findingService])) {
+        exceptions[findingService][findingKey] = new Array()
       }
       is_exception = confirm('Mark this item as an exception ?')
-      if (is_exception && (exceptions[finding_service][finding_key].indexOf(finding_id) == -1)) {
-        exceptions[finding_service][finding_key].push(finding_id)
+      if (is_exception && (exceptions[findingService][findingKey].indexOf(finding_id) == -1)) {
+        exceptions[findingService][findingKey].push(finding_id)
       }
     })
   }
@@ -353,7 +343,7 @@ function showFindings(path, resource_path) {
  * Show a single item
  * @param id
  */
-function showSingleItem(id) {
+function showSingleItem (id) {
   if (!id.endsWith('.view')) {
     id = id + '.view'
   }
@@ -362,7 +352,7 @@ function showSingleItem(id) {
   $("[id='" + id + "']").show()
 }
 
-function toggleDetails(keyword, item) {
+function toggleDetails (keyword, item) {
   var id = '#' + keyword + '-' + item
   $(id).toggle()
 }
@@ -371,18 +361,17 @@ function toggleDetails(keyword, item) {
  * Update the navigation bar
  * @param service
  */
-function updateNavbar(path) {
+function updateNavbar (path) {
   const navbarIdSuffix = '_navbar'
   const subnavbarIdSuffix = '_subnavbar'
 
-  splitPath = path.split('.')
+  let splitPath = path.split('.')
 
   $('[id*="navbar"]').removeClass('active')
 
   if (path === '') {
     $('#scoutsuite_navbar').addClass('active')
-  }
-  else if (splitPath[0] === 'services') {
+  } else if (splitPath[0] === 'services') {
     const service = splitPath[1]
     let element = $('#' + service + subnavbarIdSuffix)
     while (element && (!element.attr('id') || !element.attr('id').endsWith(navbarIdSuffix))) {
@@ -392,8 +381,7 @@ function updateNavbar(path) {
     if (element) {
       element.addClass('active')
     }
-  }
-  else if (splitPath[0] === 'service_groups' && splitPath.length >= 2) {
+  } else if (splitPath[0] === 'service_groups' && splitPath.length >= 2) {
     const group = splitPath[1]
     $('#' + group + navbarIdSuffix).addClass('active')
   }
@@ -401,18 +389,17 @@ function updateNavbar(path) {
   $('[id*="navbar"]').show()
 }
 
-function hasNavbarSuffix(element) {
-  return element
-    && (!element.attr('id') || element.attr('id')
-      && !element.attr('id').endsWith(navbarIdSuffix))
+function hasNavbarSuffix (element) {
+  return element &&
+    (!element.attr('id') || element.attr('id') &&
+      !element.attr('id').endsWith(navbarIdSuffix))
 }
 
-
-function toggleVisibility(id) {
-  id1 = '#' + id
+function toggleVisibility (id) {
+  let id1 = '#' + id
   $(id1).toggle()
-  id2 = '#bullet-' + id
-  if ($(id1).is(":visible")) {
+  let id2 = '#bullet-' + id
+  if ($(id1).is(':visible')) {
     $(id2).html('<i class="fa fa-caret-square-o-down"></i>')
   } else {
     $(id2).html('<i class="fa fa-caret-square-o-right"></i>')
@@ -426,11 +413,11 @@ function toggleVisibility(id) {
  * @param callback
  * @param callback_args
  */
-function iterateEC2ObjectsAndCall(data, entities, callback, callback_args) {
+function iterateEC2ObjectsAndCall (data, entities, callback, callback_args) {
   if (entities.length > 0) {
     var entity = entities.shift()
     var recurse = entities.length
-    for (i in data[entity]) {
+    for (let i in data[entity]) {
       if (recurse) {
         iterateEC2ObjectsAndCall(data[entity][i], eval(JSON.stringify(entities)), callback, callback_args)
       } else {
@@ -442,23 +429,23 @@ function iterateEC2ObjectsAndCall(data, entities, callback, callback_args) {
 
 /**
  *
- * @param ec2_data
+ * @param ec2Data
  * @param entities
  * @param id
  * @returns {*}
  */
-function findEC2Object(ec2_data, entities, id) {
+function findEC2Object (ec2Data, entities, id) {
   if (entities.length > 0) {
     var entity = entities.shift()
     var recurse = entities.length
-    for (i in ec2_data[entity]) {
+    for (let i in ec2Data[entity]) {
       if (recurse) {
-        var object = findEC2Object(ec2_data[entity][i], eval(JSON.stringify(entities)), id)
+        var object = findEC2Object(ec2Data[entity][i], eval(JSON.stringify(entities)), id)
         if (object) {
           return object
         }
-      } else if (i == id) {
-        return ec2_data[entity][i]
+      } else if (i === id) {
+        return ec2Data[entity][i]
       }
     }
   }
@@ -467,31 +454,31 @@ function findEC2Object(ec2_data, entities, id) {
 
 /**
  *
- * @param ec2_data
+ * @param ec2Data
  * @param entities
  * @param attributes
  * @returns {*}
  */
-function findEC2ObjectByAttr(ec2_data, entities, attributes) {
+function findEC2ObjectByAttr (ec2Data, entities, attributes) {
   if (entities.length > 0) {
     var entity = entities.shift()
     var recurse = entities.length
-    for (i in ec2_data[entity]) {
+    for (let i in ec2Data[entity]) {
       if (recurse) {
-        var object = findEC2ObjectByAttr(ec2_data[entity][i], eval(JSON.stringify(entities)), attributes)
+        var object = findEC2ObjectByAttr(ec2Data[entity][i], eval(JSON.stringify(entities)), attributes)
         if (object) {
           return object
         }
       } else {
         var found = true
-        for (attr in attributes) {
+        for (let attr in attributes) {
           // h4ck :: EC2 security groups in RDS are lowercased...
-          if (ec2_data[entity][i][attr].toLowerCase() != attributes[attr].toLowerCase()) {
+          if (ec2Data[entity][i][attr].toLowerCase() != attributes[attr].toLowerCase()) {
             found = false
           }
         }
         if (found) {
-          return ec2_data[entity][i]
+          return ec2Data[entity][i]
         }
       }
     }
@@ -507,7 +494,7 @@ function findEC2ObjectByAttr(ec2_data, entities, attributes) {
  * @param attribute
  * @returns {*}
  */
-function findEC2ObjectAttribute(ec2_info, path, id, attribute) {
+function findEC2ObjectAttribute (ec2_info, path, id, attribute) {
   var entities = path.split('.')
   var object = findEC2Object(ec2_info, entities, id)
   if (object[attribute]) {
@@ -521,17 +508,17 @@ function findEC2ObjectAttribute(ec2_info, path, id, attribute) {
  * @param path
  * @param id
  */
-function findAndShowEC2Object(path, id) {
-  entities = path.split('.')
+function findAndShowEC2Object (path, id) {
+  let entities = path.split('.')
   var object = findEC2Object(run_results['services']['ec2'], entities, id)
   var etype = entities.pop()
-  if (etype == 'instances') {
+  if (etype === 'instances') {
     showPopup(single_ec2_instance_template(object))
-  } else if (etype == 'security_groups') {
+  } else if (etype === 'security_groups') {
     showPopup(single_ec2_security_group_template(object))
-  } else if (etype == 'vpcs') {
+  } else if (etype === 'vpcs') {
     showPopup(single_vpc_template(object))
-  } else if (etype == 'network_acls') {
+  } else if (etype === 'network_acls') {
     object['name'] = id
     showPopup(single_vpc_network_acl_template(object))
   }
@@ -542,11 +529,11 @@ function findAndShowEC2Object(path, id) {
  * @param path
  * @param attributes
  */
-function findAndShowEC2ObjectByAttr(path, attributes) {
-  entities = path.split('.')
+function findAndShowEC2ObjectByAttr (path, attributes) {
+  let entities = path.split('.')
   var object = findEC2ObjectByAttr(run_results['services']['ec2'], entities, attributes)
   var etype = entities.pop()
-  if (etype == 'security_groups') {
+  if (etype === 'security_groups') {
     showPopup(single_ec2_security_group_template(object))
   }
 }
@@ -555,7 +542,7 @@ function findAndShowEC2ObjectByAttr(path, attributes) {
  *
  * @param data
  */
-function showEC2Instance2(data) {
+function showEC2Instance2 (data) {
   showPopup(single_ec2_instance_template(data))
 }
 
@@ -565,7 +552,7 @@ function showEC2Instance2(data) {
  * @param vpc
  * @param id
  */
-function showEC2Instance(region, vpc, id) {
+function showEC2Instance (region, vpc, id) {
   var data = run_results['services']['ec2']['regions'][region]['vpcs'][vpc]['instances'][id]
   showPopup(single_ec2_instance_template(data))
 }
@@ -576,7 +563,7 @@ function showEC2Instance(region, vpc, id) {
  * @param vpc
  * @param id
  */
-function showEC2SecurityGroup(region, vpc, id) {
+function showEC2SecurityGroup (region, vpc, id) {
   var data = run_results['services']['ec2']['regions'][region]['vpcs'][vpc]['security_groups'][id]
   showPopup(single_ec2_security_group_template(data))
 }
@@ -584,7 +571,7 @@ function showEC2SecurityGroup(region, vpc, id) {
 /**
  *
  */
-function showObject(path, attr_name, attr_value) {
+function showObject (path, attr_name, attr_value) {
   const pathArray = path.split('.')
   const path_length = pathArray.length
   let data = getResource(path)
@@ -611,16 +598,16 @@ function showObject(path, attr_name, attr_value) {
     resource_type = pathArray[1] + '_' + pathArray[path_length - 2]
   }
 
-  resource = makeResourceTypeSingular(resource_type)
-  template = 'single_' + resource + '_template'
+  let resource = makeResourceTypeSingular(resource_type)
+  let template = 'single_' + resource + '_template'
   showPopup(window[template](data))
 }
 
 /**
  * Gets a resource from the run results.
- * @param {string} path 
+ * @param {string} path
  */
-function getResource(path) {
+function getResource (path) {
   let data = run_results
   for (const attribute of path.split('.')) {
     data = data[attribute]
@@ -631,17 +618,17 @@ function getResource(path) {
 
 /**
  * Makes the resource type singular.
- * @param {string} resource_type 
+ * @param {string} resource_type
  */
-function makeResourceTypeSingular(resource_type) {
-  return resource_type.substring(0, resource_type.length - 1).replace(/\.?ie$/, "y")
+function makeResourceTypeSingular (resource_type) {
+  return resource_type.substring(0, resource_type.length - 1).replace(/\.?ie$/, 'y')
 }
 
 /**
  *
  * @param policy_id
  */
-function showIAMManagedPolicy(policy_id) {
+function showIAMManagedPolicy (policy_id) {
   var data = run_results['services']['iam']['policies'][policy_id]
   data['policy_id'] = policy_id
   showIAMPolicy(data)
@@ -653,7 +640,7 @@ function showIAMManagedPolicy(policy_id) {
  * @param iam_entity_name
  * @param policy_id
  */
-function showIAMInlinePolicy(iam_entity_type, iam_entity_name, policy_id) {
+function showIAMInlinePolicy (iam_entity_type, iam_entity_name, policy_id) {
   var data = run_results['services']['iam'][iam_entity_type][iam_entity_name]['inline_policies'][policy_id]
   data['policy_id'] = policy_id
   showIAMPolicy(data)
@@ -663,7 +650,7 @@ function showIAMInlinePolicy(iam_entity_type, iam_entity_name, policy_id) {
  *
  * @param data
  */
-function showIAMPolicy(data) {
+function showIAMPolicy (data) {
   showPopup(single_iam_policy_template(data))
   var id = '#iam_policy_details-' + data['report_id']
   $(id).toggle()
@@ -673,7 +660,7 @@ function showIAMPolicy(data) {
  *
  * @param bucket_name
  */
-function showS3Bucket(bucket_name) {
+function showS3Bucket (bucket_name) {
   var data = run_results['services']['s3']['buckets'][bucket_name]
   showPopup(single_s3_bucket_template(data))
 }
@@ -683,7 +670,7 @@ function showS3Bucket(bucket_name) {
  * @param bucket_id
  * @param key_id
  */
-function showS3Object(bucket_id, key_id) {
+function showS3Object (bucket_id, key_id) {
   var data = run_results['services']['s3']['buckets'][bucket_id]['keys'][key_id]
   data['key_id'] = key_id
   data['bucket_id'] = bucket_id
@@ -693,7 +680,7 @@ function showS3Object(bucket_id, key_id) {
 /**
  *
  */
-function showPopup(content) {
+function showPopup (content) {
   $('#modal-container').html(content)
   $('#modal-container').modal()
 }
@@ -701,64 +688,64 @@ function showPopup(content) {
 /**
  * Get the format of the results that Scout Suite is reading from
  */
-function get_format() {
+function get_format () {
   if (document.getElementById('sqlite_format')) {
-    return result_formats.sqlite
+    return resultFormats.sqlite
   } else if (document.getElementById('json_format')) {
-    return result_formats.json
+    return resultFormats.json
   }
-  return result_formats.invalid
+  return resultFormats.invalid
 }
 
-function load_metadata() {
-  if (get_format() === result_formats.json) {
+function load_metadata () {
+  if (get_format() === resultFormats.json) {
     load_metadata_json()
-  } else if (get_format() === result_formats.sqlite) {
+  } else if (get_format() === resultFormats.sqlite) {
     loadMetadataSqlite()
   } else {
-    console.log("Error: the result format could not be determined")
+    console.log('Error: the result format could not be determined')
   }
 }
 
 /**
  * Set up dashboards and dropdown menus
  */
-function load_metadata_json() {
-    run_results = getScoutsuiteResults()
+function load_metadata_json () {
+  run_results = getScoutsuiteResults()
 
-    load_account_id_json()
+  loadAccountIdJson()
 
-    load_config_json('last_run', 1)
-    load_config_json('metadata', 0)
-    load_config_json('services.id.findings', 1)
-    load_config_json('services.id.filters', 0) // service-specific filters
-    load_config_json('services.id.regions', 0) // region filters
+  loadConfigJson('last_run', 1)
+  loadConfigJson('metadata', 0)
+  loadConfigJson('services.id.findings', 1)
+  loadConfigJson('services.id.filters', 0) // service-specific filters
+  loadConfigJson('services.id.regions', 0) // region filters
 
-    for (group in run_results['metadata']) {
-      for (service in run_results['metadata'][group]) {
-        if (service == 'summaries') {
-          continue
-        }
-        for (section in run_results['metadata'][group][service]) {
-          for (resource_type in run_results['metadata'][group][service][section]) {
-            add_templates(group, service, section, resource_type,
-              run_results['metadata'][group][service][section][resource_type]['path'],
-              run_results['metadata'][group][service][section][resource_type]['cols'])
-          }
+  for (let group in run_results['metadata']) {
+    for (let service in run_results['metadata'][group]) {
+      if (service === 'summaries') {
+        continue
+      }
+      for (let section in run_results['metadata'][group][service]) {
+        for (let resource_type in run_results['metadata'][group][service][section]) {
+          add_templates(group, service, section, resource_type,
+            run_results['metadata'][group][service][section][resource_type]['path'],
+            run_results['metadata'][group][service][section][resource_type]['cols'])
         }
       }
     }
-    hidePleaseWait()
+  }
+  hidePleaseWait()
 }
 
-////////////////////////
+/// /////////////////////
 // Browsing functions //
-////////////////////////
+/// /////////////////////
 
 /**
  * Show About Scout Suite modal
  */
-function showAbout() {
+function showAbout () {
   $('#modal-container').html(about_scoutsuite_template())
   $('#modal-container').modal()
 }
@@ -766,7 +753,7 @@ function showAbout() {
 /**
  * Hides Please Wait modal
  */
-window.hidePleaseWait = function () {
+function hidePleaseWait () {
   $('#please-wait-modal').fadeOut(500, () => { })
   $('#please-wait-backdrop').fadeOut(500, () => { })
 }
@@ -774,7 +761,7 @@ window.hidePleaseWait = function () {
 /**
  * Shows last run details modal
  */
-function showLastRunDetails() {
+function showLastRunDetails () {
   $('#modal-container').html(last_run_details_template(run_results))
   $('#modal-container').modal()
 }
@@ -782,7 +769,7 @@ function showLastRunDetails() {
 /**
  * Show main dashboard
  */
-function show_main_dashboard() {
+function show_main_dashboard () {
   hideAll()
   // Hide filters
   hideFilters()
@@ -791,7 +778,7 @@ function show_main_dashboard() {
   showRowWithItems('last_run')
   $('#section_title-h2').text('')
   // Remove URL hash
-  history.pushState("", document.title, window.location.pathname + window.location.search)
+  history.pushState('', document.title, window.location.pathname + window.location.search)
   updateNavbar('')
 }
 
@@ -800,14 +787,14 @@ function show_main_dashboard() {
  * @param resource_path
  * @returns {string}
  */
-function makeTitle(resource_path) {
+function makeTitle (resource_path) {
   resource_path = resource_path.replace('service_groups.', '')
   service = getService(resource_path)
   resource = resource_path.split('.').pop()
   resource = resource.replace(/_/g, ' ').replace('<', '').replace('>',
     '').replace(/\w\S*/g, function (txt) {
-      return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
-    }).replace("Acl", "ACL").replace("Findings", "Dashboard")
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+  }).replace('Acl', 'ACL').replace('Findings', 'Dashboard')
   return service + ' ' + resource
 }
 
@@ -816,7 +803,7 @@ function makeTitle(resource_path) {
  * @param resource_path
  * @returns {string}
  */
-function getService(resource_path) {
+function getService (resource_path) {
   if (resource_path.startsWith('services')) {
     service = resource_path.split('.')[1]
   } else {
@@ -830,14 +817,14 @@ function getService(resource_path) {
  * Update title div's contents
  * @param title
  */
-function updateTitle(title) {
-  $("#section_title-h2").text(title)
+function updateTitle (title) {
+  $('#section_title-h2').text(title)
 }
 
 /**
  * Update the DOM
  */
-function showPageFromHash() {
+function showPageFromHash () {
   if (location.hash) {
     updateDOM(location.hash)
   } else {
@@ -852,10 +839,10 @@ window.onhashchange = showPageFromHash
  * @param path
  * @returns {*}
  */
-function get_value_at(path) {
-  pathArray = path.split('.')
-  value = run_results
-  for (p in pathArray) {
+function get_value_at (path) {
+  let pathArray = path.split('.')
+  let value = run_results
+  for (let p in pathArray) {
     try {
       value = value[pathArray[p]]
     } catch (err) {
@@ -865,14 +852,13 @@ function get_value_at(path) {
   return value
 }
 
-var current_service_group = ''
-var current_resource_path = ''
+var currentResourcePath = ''
 
 /**
  *
  * @param anchor
  */
-function updateDOM(anchor) {
+function updateDOM (anchor) {
   // Strip the # sign
   var path = decodeURIComponent(anchor.replace('#', ''))
 
@@ -895,10 +881,10 @@ function updateDOM(anchor) {
 
   // Update title
   if (path.endsWith('.items')) {
-    title = get_value_at(path.replace('items', 'description'))
+    let title = get_value_at(path.replace('items', 'description'))
     updateTitle(title)
   } else {
-    title = makeTitle(resource_path)
+    let title = makeTitle(resource_path)
     updateTitle(title)
   }
 
@@ -907,41 +893,40 @@ function updateDOM(anchor) {
   $('span').removeClass('finding-warning')
 
   // DOM Update
-  if (path == '') {
+  if (path === '') {
     show_main_dashboard()
   } else if (path.endsWith('.items')) {
     // Switch view for findings
-    lazy_loading(resource_path)
+    lazyLoading(resource_path)
     hideAll()
     hideItems(resource_path)
     hideLinks(resource_path)
     showRow(resource_path)
     showFindings(path, resource_path)
-    current_resource_path = resource_path
+    currentResourcePath = resource_path
     showFilters(resource_path)
-  } else if (lazy_loading(resource_path) == 0) {
+  } else if (lazyLoading(resource_path) == 0) {
     // 0 is returned when the data was already loaded, a DOM update is necessary then
     if (path.endsWith('.view')) {
       // Same details, one item
-      hideItems(current_resource_path)
+      hideItems(currentResourcePath)
       showSingleItem(path)
-    } else if (current_resource_path != '' && resource_path.match(current_resource_path.replace(/.id./g, '\.[^.]+\.'))) {
+    } else if (currentResourcePath !== '' && resource_path.match(currentResourcePath.replace(/.id./g, '\.[^.]+\.'))) {
       // Same details, multiple items
-      hideItems(current_resource_path)
+      hideItems(currentResourcePath)
       showItems(path)
     } else {
       // Switch view for resources
       hideAll()
       showRowWithItems(resource_path)
       showFilters(resource_path)
-      current_resource_path = resource_path
+      currentResourcePath = resource_path
     }
     // TODO: Highlight all findings...
-
   } else {
     // The DOM was updated by the lazy loading function, save the current resource path
     showFilters(resource_path)
-    current_resource_path = resource_path
+    currentResourcePath = resource_path
   }
 
   // Scroll to the top
@@ -954,118 +939,116 @@ function updateDOM(anchor) {
  * @returns {number}
  */
 // TODO: merge into load_config_from_json...
-function lazy_loading(path) {
+function lazyLoading (path) {
   var cols = 1
-  var resource_pathArray = path.split('.')
-  var service = resource_pathArray[1]
-  var resource_type = resource_pathArray[resource_pathArray.length - 1]
-  for (group in run_results['metadata']) {
+  var resourcePathArray = path.split('.')
+  var service = resourcePathArray[1]
+  var resource_type = resourcePathArray[resourcePathArray.length - 1]
+  for (let group in run_results['metadata']) {
     if (service in run_results['metadata'][group]) {
-      if (service == 'summaries') {
+      if (service === 'summaries') {
         continue
       }
       if (resource_type in run_results['metadata'][group][service]['resources']) {
-        var cols = run_results['metadata'][group][service]['resources'][resource_type]['cols']
+        cols = run_results['metadata'][group][service]['resources'][resource_type]['cols']
       }
       break
     }
   }
-  if (document.getElementById("json_format")) {
-    return load_config_json(path, cols)
-  } else if (document.getElementById("sqlite_format")) {
-    return load_config_from_sqlite(path, cols)
+  if (document.getElementById('json_format')) {
+    return loadConfigJson(path, cols)
+  } else if (document.getElementById('sqlite_format')) {
+    return loadConfigFromSqlite(path, cols)
   } else {
-    console.log("Error: the specified format could not determined.")
+    console.log('Error: the specified format could not determined.')
   }
 }
-
 
 /**
  * Get the resource path based on a given path
  * @param path
  * @returns {*|string}
  */
-function get_resource_path(path) {
+function get_resource_path (path) {
   if (path.endsWith('.items')) {
     var resource_path = get_value_at(path.replace('items', 'display_path'))
-    if (resource_path == undefined) {
+    if (resource_path === undefined) {
       resource_path = get_value_at(path.replace('items', 'path'))
     }
-    resource_pathArray = resource_path.split('.')
-    last_value = resource_pathArray.pop()
-    resource_path = 'services.' + resource_pathArray.join('.')
+    resourcePathArray = resource_path.split('.')
+    lastValue = resourcePathArray.pop()
+    resource_path = 'services.' + resourcePathArray.join('.')
   } else if (path.endsWith('.view')) {
     // Resource path is not changed (this may break when using `back' button in browser)
-    var resource_path = current_resource_path
+    resource_path = currentResourcePath
   } else {
-    var resource_path = path
+    resource_path = path
   }
   return resource_path
 }
-
 
 /**
  * Format title
  * @param title
  * @returns {string}
  */
-function make_title(title) {
-  if (typeof (title) != "string") {
-    console.log("Error: received title " + title + " (string expected).")
+function make_title (title) {
+  if (typeof (title) !== 'string') {
+    console.log('Error: received title ' + title + ' (string expected).')
     return title.toString()
   }
   title = title.toLowerCase()
-  if (['ec2', 'efs', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) != -1) {
+  if (['ec2', 'efs', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) !== -1) {
     return title.toUpperCase()
-  } else if (title == 'cloudtrail') {
+  } else if (title === 'cloudtrail') {
     return 'CloudTrail'
-  } else if (title == 'cloudwatch') {
+  } else if (title === 'cloudwatch') {
     return 'CloudWatch'
-  } else if (title == 'cloudformation') {
+  } else if (title === 'cloudformation') {
     return 'CloudFormation'
-  } else if (title == 'config') {
+  } else if (title === 'config') {
     return 'Config'
-  } else if (title == 'awslambda') {
+  } else if (title === 'awslambda') {
     return 'Lambda'
-  } else if (title == 'dynamodb') {
+  } else if (title === 'dynamodb') {
     return 'DynamoDB'
-  } else if (title == 'elasticache') {
+  } else if (title === 'elasticache') {
     return 'ElastiCache'
-  } else if (title == 'redshift') {
+  } else if (title === 'redshift') {
     return 'RedShift'
-  } else if (title == 'cloudstorage') {
+  } else if (title === 'cloudstorage') {
     return 'Cloud Storage'
-  } else if (title == 'cloudsql') {
+  } else if (title === 'cloudsql') {
     return 'Cloud SQL'
-  } else if (title == 'stackdriverlogging') {
+  } else if (title === 'stackdriverlogging') {
     return 'Stackdriver Logging'
-  } else if (title == 'stackdrivermonitoring') {
+  } else if (title === 'stackdrivermonitoring') {
     return 'Stackdriver Monitoring'
-  } else if (title == 'computeengine') {
+  } else if (title === 'computeengine') {
     return 'Compute Engine'
-  } else if (title == 'kubernetesengine') {
+  } else if (title === 'kubernetesengine') {
     return 'Kubernetes Engine'
-  } else if (title == 'cloudresourcemanager') {
+  } else if (title === 'cloudresourcemanager') {
     return 'Cloud Resource Manager'
-  } else if (title == 'storageaccounts') {
+  } else if (title === 'storageaccounts') {
     return 'Storage Accounts'
-  } else if (title == 'monitor') {
+  } else if (title === 'monitor') {
     return 'Monitor'
-  } else if (title == 'sqldatabase') {
+  } else if (title === 'sqldatabase') {
     return 'SQL Database'
-  } else if (title == 'securitycenter') {
+  } else if (title === 'securitycenter') {
     return 'Security Center'
-  } else if (title == 'network') {
+  } else if (title === 'network') {
     return 'Network'
-  } else if (title == 'keyvault') {
+  } else if (title === 'keyvault') {
     return 'Key Vault'
-  } else if (title == 'appgateway') {
+  } else if (title === 'appgateway') {
     return 'Application Gateway'
-  } else if (title == 'rediscache') {
+  } else if (title === 'rediscache') {
     return 'Redis Cache'
-  } else if (title == 'appservice') {
+  } else if (title === 'appservice') {
     return 'App Service'
-  } else if (title == 'loadbalancer') {
+  } else if (title === 'loadbalancer') {
     return 'Load Balancer'
   } else {
     return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ')
@@ -1081,8 +1064,8 @@ function make_title(title) {
  * @param path
  * @param cols
  */
-function add_templates(group, service, section, resource_type, path, cols) {
-  if (cols == undefined) {
+function add_templates (group, service, section, resource_type, path, cols) {
+  if (cols === undefined) {
     cols = 2
   }
   add_template(group, service, section, resource_type, path, 'details')
@@ -1100,12 +1083,13 @@ function add_templates(group, service, section, resource_type, path, cols) {
  * @param path
  * @param suffix
  */
-function add_template(group, service, section, resource_type, path, suffix) {
-  var template = document.createElement("script")
-  template.type = "text/x-handlebars-template"
-  template.id = path + "." + suffix + ".template"
-  if (section == 'resources') {
-    if (suffix == 'list') {
+function add_template (group, service, section, resource_type, path, suffix) {
+  var template = document.createElement('script')
+  var partial_name = ''
+  template.type = 'text/x-handlebars-template'
+  template.id = path + '.' + suffix + '.template'
+  if (section === 'resources') {
+    if (suffix === 'list') {
       if (path.indexOf('.vpcs.id.') > 0) {
         partial_name = 'left_menu_for_vpc'
       } else if (path.indexOf('.regions.id.') > 0) {
@@ -1124,7 +1108,7 @@ function add_template(group, service, section, resource_type, path, suffix) {
     } else {
       console.log('Invalid suffix (' + suffix + ') for resources template.')
     }
-    template.innerHTML = "{{> " + partial_name + " service_group = '" + group + "' service_name = '" + service + "' resource_type = '" + resource_type + "' partial_name = '" + path + "'}}"
+    template.innerHTML = '{{> ' + partial_name + " service_group = '" + group + "' service_name = '" + service + "' resource_type = '" + resource_type + "' partial_name = '" + path + "'}}"
     $('body').append(template)
   }
 }
@@ -1134,38 +1118,37 @@ function add_template(group, service, section, resource_type, path, suffix) {
  * @param group
  * @param service
  */
-function filter_rules(group, service) {
-  if (service == undefined) {
+function filter_rules (group, service) {
+  if (service === undefined) {
     $("[id*='rule-']").show()
   } else {
     $("[id*='rule-']").not("[id*='rule-" + service + "']").hide()
     $("[id*='rule-" + service + "']").show()
   }
-  var id = "groups." + group + ".list"
+  var id = 'groups.' + group + '.list'
   $("[id='" + id + "']").hide()
 }
 
-function download_configuration(configuration, name, prefix) {
-
-  var uriContent = "data:text/json;charset=utf-8," + encodeURIComponent(prefix + JSON.stringify(configuration, null, 4))
+function downloadConfiguration (configuration, name, prefix) {
+  var uriContent = 'data:text/json;charset=utf-8,' + encodeURIComponent(prefix + JSON.stringify(configuration, null, 4))
   var dlAnchorElem = document.getElementById('downloadAnchorElem')
-  dlAnchorElem.setAttribute("href", uriContent)
-  dlAnchorElem.setAttribute("download", name + '.json')
+  dlAnchorElem.setAttribute('href', uriContent)
+  dlAnchorElem.setAttribute('download', name + '.json')
   dlAnchorElem.click()
 }
 
-function download_exceptions() {
+function download_exceptions () {
   var url = window.location.pathname
   var profile_name = url.substring(url.lastIndexOf('/') + 1).replace('report-', '').replace('.html', '')
   console.log(exceptions)
-  download_configuration(exceptions, 'exceptions-' + profile_name, 'exceptions = \n')
+  downloadConfiguration(exceptions, 'exceptions-' + profile_name, 'exceptions = \n')
 }
 
-var show_element = function (element_id) {
+var showElement = function (element_id) {
   $('#' + element_id).show()
 }
 
-var hide_element = function (element_id) {
+var hideElement = function (element_id) {
   $('#' + element_id).hide()
 }
 
@@ -1173,8 +1156,8 @@ var toggle_element = function (element_id) {
   $('#' + element_id).toggle()
 }
 
-function set_filter_url(region) {
-  tmp = location.hash.split('.')
+function set_filter_url (region) {
+  let tmp = location.hash.split('.')
   tmp[3] = region
   location.hash = tmp.join('.')
 }
@@ -1191,7 +1174,7 @@ function set_filter_url(region) {
  * @param filename
  * @param rows
  */
-function download_as_csv(filename, rows) {
+function download_as_csv (filename, rows) {
   var processRow = function (row) {
     var finalVal = ''
     for (var j = 0; j < row.length; j++) {
@@ -1199,12 +1182,14 @@ function download_as_csv(filename, rows) {
       if (row[j] instanceof Date) {
         innerValue = row[j].toLocaleString()
       }
-      
+
       var result = innerValue.replace(/"/g, '""')
-      if (result.search(/("|,|\n)/g) >= 0)
+      if (result.search(/("|,|\n)/g) >= 0) {
         result = '"' + result + '"'
-      if (j > 0)
+      }
+      if (j > 0) {
         finalVal += ','
+      }
       finalVal += result
     }
     return finalVal + '\n'
@@ -1219,12 +1204,12 @@ function download_as_csv(filename, rows) {
   if (navigator.msSaveBlob) { // IE 10+
     navigator.msSaveBlob(blob, filename)
   } else {
-    var link = document.createElement("a")
+    var link = document.createElement('a')
     if (link.download !== undefined) { // feature detection
       // Browsers that support HTML5 download attribute
       var url = URL.createObjectURL(blob)
-      link.setAttribute("href", url)
-      link.setAttribute("download", filename)
+      link.setAttribute('href', url)
+      link.setAttribute('download', filename)
       link.style.visibility = 'hidden'
       document.body.appendChild(link)
       link.click()
@@ -1233,20 +1218,19 @@ function download_as_csv(filename, rows) {
   }
 }
 
-function download_as_json(filename, dict) {
+function downloadAsJson (filename, dict) {
+  var jsonStr = JSON.stringify(dict)
 
-  var json_str = JSON.stringify(dict)
-
-  var blob = new Blob([json_str], { type: 'application/json;' })
+  var blob = new Blob([jsonStr], { type: 'application/json;' })
   if (navigator.msSaveBlob) { // IE 10+
     navigator.msSaveBlob(blob, filename)
   } else {
-    var link = document.createElement("a")
+    var link = document.createElement('a')
     if (link.download !== undefined) { // feature detection
       // Browsers that support HTML5 download attribute
       var url = URL.createObjectURL(blob)
-      link.setAttribute("href", url)
-      link.setAttribute("download", filename)
+      link.setAttribute('href', url)
+      link.setAttribute('download', filename)
       link.style.visibility = 'hidden'
       document.body.appendChild(link)
       link.click()

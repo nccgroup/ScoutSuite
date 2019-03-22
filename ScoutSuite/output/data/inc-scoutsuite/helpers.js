@@ -286,7 +286,7 @@ Handlebars.registerHelper('concat', function () {
   return path
 })
 
-Handlebars.registerHelper('json_stringify', function () {
+Handlebars.registerHelper('jsonStringify', function () {
   body = arguments[0]
   delete body['description']
   delete body['args']

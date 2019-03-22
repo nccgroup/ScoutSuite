@@ -129,14 +129,14 @@ function loadConfigSqlite (scriptId, cols) {
   if (cols === 0) {
     // Metadata
     scriptId = scriptId.replace('services.id.', '')
-    process_template(scriptId + '.list.template', scriptId + '.list', list)
+    processTemplate(scriptId + '.list.template', scriptId + '.list', list)
   } else if (cols === 1) {
     // Single-column display
-    process_template(scriptId + '.details.template', 'single-column', list)
+    processTemplate(scriptId + '.details.template', 'single-column', list)
   } else if (cols === 2) {
     // Double-column display
-    process_template(scriptId + '.list.template', 'double-column-left', list)
-    process_template(scriptId + '.details.template', 'double-column-right', list)
+    processTemplate(scriptId + '.list.template', 'double-column-left', list)
+    processTemplate(scriptId + '.details.template', 'double-column-right', list)
   }
 
   // Update the list of loaded data
