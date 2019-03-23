@@ -16,15 +16,15 @@ function requestDb (query) {
   var request = new XMLHttpRequest()
   request.open('GET', 'http://127.0.0.1:8000/api/data?key=' + query, false)
 
-  var data
+  var response
   request.onload = function () {
     if (this.readyState === 4) {
-      data = JSON.parse(this.response)
+      response = JSON.parse(this.response)
     }
   }
 
   request.send()
-  return data.data
+  return response.data
 }
 
 function loadMetadataSqlite () {
@@ -36,21 +36,27 @@ function loadMetadataSqlite () {
   loadConfigSqlite('services.id.filters', 0) // service-specific filters
   loadConfigSqlite('services.id.regions', 0) // region filters
   
-  for (group in requestDb('metadata')) {
-      console.log('groups')
-      console.log(group)
-    /*for (service in run_results['metadata'][group]) {
-      if (service == 'summaries') {
+  let groups = requestDb('metadata')
+  for (let groupKey in groups.keys) {
+      let group = groups.keys[groupKey]
+    let services = requestDb('metadata.' + group)
+    for (let serviceKey in services.keys) {
+        let service = services.keys[serviceKey]
+      if (service === 'summaries') {
         continue
       }
-      for (section in run_results['metadata'][group][service]) {
-        for (resource_type in run_results['metadata'][group][service][section]) {
-          add_templates(group, service, section, resource_type,
-            run_results['metadata'][group][service][section][resource_type]['path'],
-            run_results['metadata'][group][service][section][resource_type]['cols'])
+      let sections = requestDb('metadata.' + group + '.' + service)
+      for (let sectionKey in sections.keys) {
+        let section = sections.keys[sectionKey]
+        let resources_types = requestDb('metadata.' + group + '.' + service + '.' + section)
+        for (let resource_typeKey in resources_types.keys) {
+          let resource_type = resources_types.keys[resource_typeKey]
+          add_templates(group, service, section, resource_type,            
+            requestDb('metadata.' + group + '.' + service + '.' + section + '.' + resource_type + '.path'),
+            requestDb('metadata.' + group + '.' + service + '.' + section + '.' + resource_type + '.cols'),)
         }
       }
-    }*/
+    }
   }
 }
 
