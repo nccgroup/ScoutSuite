@@ -23,11 +23,7 @@
             <ul>
                 {{#each listeners}}
                     <li class="list-group-item-text">
-                        {{> accordion region = ../region items = policies
-                            title_partial = 'services.elb.regions.vpcs.elbs.listener'
-                            item_partial = 'services.elb.regions.vpcs.elbs.linked_policy'
-                            accordion_id = (concat 'services.elb.regions' ../region 'vpcs' ../vpc 'elbs' @../key)
-                        }}
+                        {{@key}} ({{Protocol}}{{#if SslPolicy}}, {{SslPolicy}}{{/if}})
                     </li>
                 {{/each}}
           </ul>
@@ -68,5 +64,14 @@
     </script>
     <script>
       Handlebars.registerPartial("services.elb.regions.id.vpcs.id.elbs", $("#services\\.elb\\.regions\\.id\\.vpcs\\.id\\.elbs\\.partial").html());
+    </script>
+
+    <!-- Single instance template -->
+    <script id="single_elb_elb-template" type="text/x-handlebars-template">
+        {{> modal-template template='services.elb.regions.id.vpcs.id.elbs'}}
+    </script>
+
+    <script>
+        var single_elb_elb_template = Handlebars.compile($("#single_elb_elb-template").html());
     </script>
 

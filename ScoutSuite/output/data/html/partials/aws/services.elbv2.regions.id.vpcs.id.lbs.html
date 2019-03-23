@@ -61,3 +61,11 @@
       Handlebars.registerPartial("services.elbv2.regions.id.vpcs.id.lbs", $("#services\\.elbv2\\.regions\\.id\\.vpcs\\.id\\.lbs\\.partial").html());
     </script>
 
+    <!-- Single instance template -->
+    <script id="single_elbv2_lb-template" type="text/x-handlebars-template">
+        {{> modal-template template='services.elbv2.regions.id.vpcs.id.lbs'}}
+    </script>
+
+    <script>
+        var single_elbv2_lb_template = Handlebars.compile($("#single_elbv2_lb-template").html());
+    </script>
