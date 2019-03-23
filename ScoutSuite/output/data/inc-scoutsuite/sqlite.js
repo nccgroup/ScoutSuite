@@ -28,7 +28,6 @@ function requestDb (query) {
 }
 
 function loadMetadataSqlite () {
-  hidePleaseWait()
   loadAccountIdSqlite()
   loadConfigSqlite('last_run', 1)
   loadConfigSqlite('metadata', 0)
@@ -58,6 +57,7 @@ function loadMetadataSqlite () {
       }
     }
   }
+  hidePleaseWait()
 }
 
 /**
@@ -109,7 +109,14 @@ function loadConfigSqlite (scriptId, cols) {
     if (i.endsWith('-filters')) {
       i = i.replace('-filters', '')
     }
-    list = requestDb(pathArray + '.' + i)
+    // Returns an array with everything in the second layer
+    list = requestDb(pathArray).keys
+    listDict = {}
+    for (let group in list) {
+      listDict[list[group]] = requestDb(pathArray + '.' + list[group])
+    }
+    list = listDict
+    console.log(list)
     // Filters
     if (pathArray[i] === 'items' && i > 3 && pathArray[i - 2] === 'filters') {
       return 1
