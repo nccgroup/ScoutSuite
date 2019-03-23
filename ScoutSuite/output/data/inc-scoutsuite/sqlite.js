@@ -114,6 +114,9 @@ function loadConfigSqlite (scriptId, cols) {
     listDict = {}
     for (let group in list) {
       listDict[list[group]] = requestDb(pathArray + '.' + list[group])
+      if (listDict[list[group]].keys) {
+        listDict[list[group]] = listDict[list[group]].keys
+      }
     }
     list = listDict
     console.log(list)
