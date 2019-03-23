@@ -71,7 +71,6 @@ function onPageLoad() {
 
             download_as_csv(finding_key + '.csv', csv_array)
         };
-        ;
 
         if (button_clicked == 'findings_download_json_button') {
             json_dict['items'] = [];
@@ -768,6 +767,13 @@ function showLastRunDetails() {
     $('#modal-container').modal();
 }
 
+/**
+ * Shows resources details modal
+ */
+function showResourcesDetails() {
+    $('#modal-container').html(resources_details_template(run_results));
+    $('#modal-container').modal();
+}
 /**
  * Show main dashboard
  */
