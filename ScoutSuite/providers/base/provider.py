@@ -111,6 +111,16 @@ class BaseProvider(object):
 
     @staticmethod
     def _build_services_list(supported_services, services, skipped_services):
+
+        # Ensure services and skipped services exist, otherwise log exception
+        error = False
+        for service in services+skipped_services:
+            if service not in supported_services:
+                print_exception('Service \"{}\" does not exist, skipping.'.format(service))
+                error = True
+        if error:
+            print_exception('Available services are: {}'.format(str(list(supported_services)).strip('[]')))
+
         return [s for s in supported_services if (services == [] or s in services) and s not in skipped_services]
 
     def _update_last_run(self, current_time, ruleset):
