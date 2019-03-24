@@ -7,7 +7,7 @@ import webbrowser
 
 from ScoutSuite import AWSCONFIG
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
-from ScoutSuite.core.console import config_debug_level, print_info, print_debug
+from ScoutSuite.core.console import set_config_debug_level, print_info, print_debug
 from ScoutSuite.core.exceptions import RuleExceptions
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset
@@ -30,7 +30,7 @@ async def main(args=None):
     args = args.__dict__
 
     # Configure the debug level
-    config_debug_level(args.get('debug'))
+    set_config_debug_level(args.get('debug'))
 
     # Create a cloud provider object
     cloud_provider = get_provider(provider=args.get('provider'),
