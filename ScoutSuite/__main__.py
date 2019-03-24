@@ -7,7 +7,7 @@ import webbrowser
 
 from ScoutSuite import AWSCONFIG
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
-from ScoutSuite.core.console import set_config_debug_level, print_info, print_debug
+from ScoutSuite.core.console import set_config_debug_level, print_info, print_debug, print_error
 from ScoutSuite.core.exceptions import RuleExceptions
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset
@@ -33,6 +33,7 @@ async def main(args=None):
     set_config_debug_level(args.get('debug'))
 
     # Create a cloud provider object
+    print_info('Creating provider connector')
     cloud_provider = get_provider(provider=args.get('provider'),
                                   profile=args.get('profile'),
                                   project_id=args.get('project_id'),
@@ -50,11 +51,13 @@ async def main(args=None):
     # TODO: move this to after authentication, so that the report can be more specific to what's being scanned.
     # For example if scanning with a GCP service account, the SA email can only be known after authenticating...
     # Create a new report
+    print_info('Initializing report')
     report = Scout2Report(args.get('provider'), report_file_name, args.get(
         'report_dir'), args.get('timestamp'))
 
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
+        print_info('Authenticating to cloud provider')
         # Authenticate to the cloud provider
         authenticated = cloud_provider.authenticate(profile=args.get('profile'),
                                                     user_account=args.get('user_account'),
@@ -71,10 +74,12 @@ async def main(args=None):
                                                     password=args.get('password'))
 
         if not authenticated:
+            print_error("Authentication failure")
             return 401
 
         # Fetch data from provider APIs
         try:
+            print_info('Fetching data from provider APIs')
             await cloud_provider.fetch(regions=args.get('regions'))
         except KeyboardInterrupt:
             print_info('\nCancelled by user')
@@ -82,6 +87,7 @@ async def main(args=None):
 
         # Update means we reload the whole config and overwrite part of it
         if args.get('update'):
+            print_info('Updating existing data')
             current_run_services = copy.deepcopy(cloud_provider.services)
             last_run_dict = report.jsrw.load_from_file(AWSCONFIG)
             cloud_provider.services = last_run_dict['services']
@@ -90,6 +96,7 @@ async def main(args=None):
 
     # Partial run, using pre-pulled data
     else:
+        print_info('Using local data')
         # Reload to flatten everything into a python dictionary
         last_run_dict = report.jsrw.load_from_file(AWSCONFIG)
         for key in last_run_dict:
@@ -100,6 +107,7 @@ async def main(args=None):
         args.get('ip_ranges'), args.get('ip_ranges_name_key'))
 
     # Analyze config
+    print_info('Running rule engine')
     finding_rules = Ruleset(environment_name=args.get('profile'),
                             cloud_provider=args.get('provider'),
                             filename=args.get('ruleset'),
@@ -109,6 +117,7 @@ async def main(args=None):
     processing_engine.run(cloud_provider)
 
     # Create display filters
+    print_info('Applying display filters')
     filter_rules = Ruleset(cloud_provider=args.get('provider'),
                            filename='filters.json',
                            rule_type='filters',
