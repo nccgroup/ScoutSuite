@@ -22,16 +22,14 @@ def set_config_debug_level(is_debug):
     """
     global verbose_exceptions
     verbose_exceptions = is_debug
-    coloredlogs.install(level='DEBUG' if is_debug else 'INFO')
+    coloredlogs.install(level='DEBUG' if is_debug else 'INFO', logger=logger)
 
 
 ########################################
 # Output functions
 ########################################
 
-def print_generic(msg, new_line=True):
-    if new_line:
-        msg = '{}\n'.format(msg)
+def print_generic(msg):
     logger.info(msg)
 
 
@@ -39,9 +37,7 @@ def print_debug(msg):
     logger.debug(msg)
 
 
-def print_error(msg, new_line=True):
-    if new_line:
-        msg = '{}\n'.format(msg)
+def print_error(msg):
     logger.error(msg)
 
 
@@ -54,9 +50,9 @@ def print_exception(e, debug_only=False):
         logger.error(e)
 
 
-def print_info(msg, new_line=True):
+def print_info(msg):
 
-    print_generic(msg, new_line)
+    print_generic(msg)
 
 
 ########################################

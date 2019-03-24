@@ -67,8 +67,8 @@ class JavaScriptReaderWriter(object):
         try:
             with self.__open_file(config_path, force_write, False) as f:
                 if first_line:
-                    print_info('%s' % first_line, file=f)
-                print_info('%s' % json.dumps(config, indent=4 if debug else None, separators=(',', ': '), sort_keys=True, cls=Scout2Encoder), file=f)
+                    print_info('%s' % first_line)
+                print_info('%s' % json.dumps(config, indent=4 if debug else None, separators=(',', ': '), sort_keys=True, cls=Scout2Encoder))
         except Exception as e:
             print_exception(e)
 
