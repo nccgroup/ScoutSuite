@@ -6,16 +6,16 @@
           <div class="accordion-body item-margin">
             <div class="accordion-inner">
               <table class="table-striped" >
-                <tr>
-                  <td width="20%" class="text-center"></td>
-                  <td width="20%" class="text-center">List</td>
-                  <td width="20%" class="test-center">Upload/Delete</td>
-                  <td width="20%" class="text-center">View Permissions</td>
-                  <td width="20%" class="text-center">Edit Permissions</td>
+                <tr class="table-padding">
+                  <td width="20%" class="text-center well"></td>
+                  <td width="20%" class="text-center well">List</td>
+                  <td width="20%" class="test-center well">Upload/Delete</td>
+                  <td width="20%" class="text-center well">View<br>Permissions</td>
+                  <td width="20%" class="text-center well">Edit<br>Permissions</td>
                 </tr>
                 {{#each grantees}}
                 <tr>
-                  <td width="20%" class="text-center">{{DisplayName}}</td>
+                  <td width="20%" class="text-center bucket-name table-hover" onclick="toggleName(this)">{{DisplayName}}</td>
                   <td width="20%" class="text-center">
                     <span id="{{../resource_path}}.grantees.{{@key}}.read">{{{s3_grant_2_icon permissions.read}}}</td></span>
                   </td>

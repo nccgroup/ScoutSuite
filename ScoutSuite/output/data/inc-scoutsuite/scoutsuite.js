@@ -1059,6 +1059,17 @@ function make_title(title) {
 };
 
 /**
+ * Toggles between truncated and full lenght bucket name
+ */
+function toggleName(name) {
+    if (name.style.display !== 'contents') {
+        name.style.display = 'contents'
+    } else {
+        name.style.display = 'block'
+    }
+}
+
+/**
  * Add one or
  * @param group
  * @param service
