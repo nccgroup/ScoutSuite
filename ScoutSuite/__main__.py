@@ -33,7 +33,7 @@ async def main(args=None):
     set_config_debug_level(args.get('debug'))
 
     # Create a cloud provider object
-    print_info('Creating provider connector')
+    print_info('Creating {} connector'.format(args.get('provider')))
     cloud_provider = get_provider(provider=args.get('provider'),
                                   profile=args.get('profile'),
                                   project_id=args.get('project_id'),
@@ -57,7 +57,7 @@ async def main(args=None):
 
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
-        print_info('Authenticating to cloud provider')
+        print_info('Authenticating to {}'.format(args.get('provider')))
         # Authenticate to the cloud provider
         authenticated = cloud_provider.authenticate(profile=args.get('profile'),
                                                     user_account=args.get('user_account'),

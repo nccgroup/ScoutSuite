@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from ScoutSuite.core.console import print_error, print_exception, print_debug
+from ScoutSuite.core.console import print_error, print_exception, print_debug, print_info
 from ScoutSuite.providers.aws.utils import get_partition_name
 
 
@@ -20,6 +20,7 @@ class BaseServicesConfig(object):
                 # skip services
                 if services != [] and service not in services:
                     continue
+                print_info('Fetching resources for the {} service'.format(service)) # TODO pretty name
                 service_config = getattr(self, service)
                 # call fetch method for the service
                 if 'fetch_all' in dir(service_config):

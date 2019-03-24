@@ -12,6 +12,7 @@ import coloredlogs, logging
 
 verbose_exceptions = False
 logger = logging.getLogger('scout')
+# TODO logger should name the file where the error occurred
 
 errors_list = []
 exceptions_list = []
@@ -41,13 +42,17 @@ def print_error(msg):
     logger.error(msg)
 
 
-def print_exception(e, debug_only=False):
-    global verbose_exceptions
+def print_exception(exception, additional_details):
+    logger.error(exception)
 
-    if verbose_exceptions:
-        logger.error(traceback.format_exc())
-    elif not debug_only:
-        logger.error(e)
+    # TODO do something with these
+    global exceptions_list
+    exceptions_list.append({'exception': exception,
+                            'traceback': traceback.format_exc(),
+                           'additional_details': additional_details})
+
+    a = exceptions_list
+    b = 1
 
 
 def print_info(msg):

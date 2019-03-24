@@ -326,11 +326,12 @@ class BaseProvider(object):
                                                callback_args)
 
         except Exception as e:
-            print_exception(e)
-            print_info('Path: %s' % str(current_path))
-            print_info('Key = %s' % str(key) if 'key' in locals() else 'not defined')
-            print_info('Value = %s' % str(value) if 'value' in locals() else 'not defined')
-            print_info('Path = %s' % path)
+            print_exception(e, {'current path': '{}'.format(current_path),
+                                'key': '{}'.format(key if 'key' in locals() else 'not defined'),
+                                'value': '{}'.format(value if 'value' in locals() else 'not defined'),
+                                'path': '{}'.format(path),
+                                }
+                            )
 
     def _new_go_to_and_do(self, current_config, path, current_path, callbacks):
         """
@@ -381,8 +382,9 @@ class BaseProvider(object):
                             tmp.append(i)
                             self._new_go_to_and_do(current_config[key][i], copy.deepcopy(path), tmp, callbacks)
         except Exception as e:
-            print_exception(e)
-            print_info('Path: %s' % str(current_path))
-            print_info('Key = %s' % str(key) if 'key' in locals() else 'not defined')
-            print_info('Value = %s' % str(value) if 'value' in locals() else 'not defined')
-            print_info('Path = %s' % path)
+            print_exception(e, {'current path': '{}'.format(current_path),
+                                'key': '{}'.format(key if 'key' in locals() else 'not defined'),
+                                'value': '{}'.format(value if 'value' in locals() else 'not defined'),
+                                'path': '{}'.format(path),
+                                }
+                            )
