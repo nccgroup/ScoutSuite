@@ -16,6 +16,11 @@ from ScoutSuite.providers.aws.facade.redshift import RedshiftFacade
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.utils import run_concurrently
 
+try:
+    from ScoutSuite.providers.aws.facade.kms_private import KMSFacade
+except NameError:
+    pass
+
 
 class AWSFacade(AWSBaseFacade):
     def __init__(self, credentials: dict = None):
@@ -32,6 +37,11 @@ class AWSFacade(AWSBaseFacade):
         self.emr = EMRFacade(self.session)
         self.elbv2 = ELBv2Facade(self.session)
         self.redshift = RedshiftFacade(self.session)
+
+        try:
+            self.kms = KMSFacade(self.session)
+        except NameError:
+            pass
 
     async def build_region_list(self, service: str, chosen_regions=None, partition_name='aws'):
         service = 'ec2containerservice' if service == 'ecs' else service
@@ -72,3 +82,8 @@ class AWSFacade(AWSBaseFacade):
         self.emr = EMRFacade(self.session)
         self.elbv2 = ELBv2Facade(self.session)
         self.redshift = RedshiftFacade(self.session)
+
+        try:
+            self.kms = KMSFacade(self.session)
+        except NameError:
+            pass
