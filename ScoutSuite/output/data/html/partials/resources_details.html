@@ -22,12 +22,10 @@
                             {{#each this}}
                                 {{#each this.resources}}
                                     <tr>
-                                        <th>{{make_title @../key}}</th>
-                                        <th>{{make_title @key}}</th>
                                         {{#if this.count}}
+                                            <th>{{make_title @../key}}</th>
+                                            <th>{{make_title @key}}</th>
                                             <th>{{this.count}}</th>
-                                        {{else}}
-                                            <th>0</th>
                                         {{/if}}
                                     </tr>
                                 {{/each}}
