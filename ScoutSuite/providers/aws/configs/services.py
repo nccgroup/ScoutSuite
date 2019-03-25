@@ -16,9 +16,9 @@ from ScoutSuite.providers.aws.resources.rds.service import RDS
 from ScoutSuite.providers.aws.resources.redshift.service import Redshift
 from ScoutSuite.providers.aws.services.route53 import Route53Config, Route53DomainsConfig
 from ScoutSuite.providers.aws.services.s3 import S3Config
+from ScoutSuite.providers.aws.resources.sqs.service import SQS
 from ScoutSuite.providers.aws.resources.ses.service import SES
 from ScoutSuite.providers.aws.resources.sns.service import SNS
-from ScoutSuite.providers.aws.services.sqs import SQSConfig
 from ScoutSuite.providers.aws.services.vpc import VPCConfig
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 
@@ -71,9 +71,9 @@ class AWSServicesConfig(BaseServicesConfig):
         self.route53 = Route53Config(thread_config)
         self.route53domains = Route53DomainsConfig(thread_config)
         self.s3 = S3Config(thread_config)
+        self.sqs = SQS()
         self.ses = SES()
         self.sns = SNS()
-        self.sqs = SQSConfig(metadata['messaging']['sqs'], thread_config)
         self.vpc = VPCConfig(metadata['network']['vpc'], thread_config)
 
         try:

@@ -11,6 +11,8 @@ from ScoutSuite.providers.aws.facade.ec2 import EC2Facade
 from ScoutSuite.providers.aws.facade.efs import EFSFacade
 from ScoutSuite.providers.aws.facade.elasticache import ElastiCacheFacade
 from ScoutSuite.providers.aws.facade.emr import EMRFacade
+from ScoutSuite.providers.aws.facade.sqs import SQSFacade
+from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.elbv2 import ELBv2Facade
 from ScoutSuite.providers.aws.facade.rds import RDSFacade
 from ScoutSuite.providers.aws.facade.redshift import RedshiftFacade
@@ -77,6 +79,7 @@ class AWSFacade(AWSBaseFacade):
         self.redshift = RedshiftFacade(self.session)
         self.ses = SESFacade(self.session)
         self.sns = SNSFacade(self.session)
+        self.sqs = SQSFacade(self.session)
 
         try:
             self.dynamodb = DynamoDBFacade(self.session)

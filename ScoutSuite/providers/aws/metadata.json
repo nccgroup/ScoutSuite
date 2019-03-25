@@ -93,8 +93,6 @@
         "sqs" : {
             "resources": {
                 "queues": {
-                    "api_call": "list_queues",
-                    "response": "QueueUrls",
                     "cols": 2,
                     "path": "services.sqs.regions.id.queues"
                 }
