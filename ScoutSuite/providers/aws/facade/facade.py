@@ -17,6 +17,12 @@ from ScoutSuite.providers.aws.facade.sns import SNSFacade
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.utils import run_concurrently
 
+try:
+    from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
+    from ScoutSuite.providers.aws.facade.config_private import ConfigFacade
+except:
+    pass
+
 
 class AWSFacade(AWSBaseFacade):
     def __init__(self, credentials: dict = None):
@@ -63,6 +69,9 @@ class AWSFacade(AWSBaseFacade):
 
         # TODO: This should only be done in the constructor. I put this here for now, because this method is currently
         # called from outside, but it should not happen.
+        self._instantiate_facades()
+
+    def _instantiate_facades(self):
         self.ec2 = EC2Facade(self.session)
         self.awslambda = LambdaFacade(self.session)
         self.cloudformation = CloudFormation(self.session)
@@ -75,3 +84,9 @@ class AWSFacade(AWSBaseFacade):
         self.elbv2 = ELBv2Facade(self.session)
         self.redshift = RedshiftFacade(self.session)
         self.sns = SNSFacade(self.session)
+
+        try:
+            self.dynamodb = DynamoDBFacade(self.session)
+            self.config = ConfigFacade(self.session)
+        except:
+            pass
