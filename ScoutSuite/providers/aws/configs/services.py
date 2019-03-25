@@ -8,7 +8,7 @@ from ScoutSuite.providers.aws.resources.directconnect.service import DirectConne
 from ScoutSuite.providers.aws.resources.ec2.service import EC2
 from ScoutSuite.providers.aws.resources.efs.service import EFS
 from ScoutSuite.providers.aws.resources.elasticache.service import ElastiCache
-from ScoutSuite.providers.aws.services.elb import ELBConfig
+from ScoutSuite.providers.aws.resources.elb.service import ELB
 from ScoutSuite.providers.aws.resources.elbv2.service import ELBv2
 from ScoutSuite.providers.aws.resources.emr.service import EMR
 from ScoutSuite.providers.aws.services.iam import IAMConfig
@@ -16,8 +16,8 @@ from ScoutSuite.providers.aws.resources.rds.service import RDS
 from ScoutSuite.providers.aws.resources.redshift.service import Redshift
 from ScoutSuite.providers.aws.services.route53 import Route53Config, Route53DomainsConfig
 from ScoutSuite.providers.aws.services.s3 import S3Config
-from ScoutSuite.providers.aws.services.ses import SESConfig
 from ScoutSuite.providers.aws.resources.sqs.service import SQS
+from ScoutSuite.providers.aws.resources.ses.service import SES
 from ScoutSuite.providers.aws.resources.sns.service import SNS
 from ScoutSuite.providers.aws.services.vpc import VPCConfig
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
@@ -61,7 +61,7 @@ class AWSServicesConfig(BaseServicesConfig):
         self.ec2 = EC2()
         self.efs = EFS()
         self.elasticache = ElastiCache()
-        self.elb = ELBConfig(metadata['compute']['elb'], thread_config)
+        self.elb = ELB()
         self.elbv2 = ELBv2()
         self.emr = EMR()
         self.iam = IAMConfig(thread_config)
@@ -71,8 +71,8 @@ class AWSServicesConfig(BaseServicesConfig):
         self.route53 = Route53Config(thread_config)
         self.route53domains = Route53DomainsConfig(thread_config)
         self.s3 = S3Config(thread_config)
-        self.ses = SESConfig(metadata['messaging']['ses'], thread_config)
         self.sqs = SQS()
+        self.ses = SES()
         self.sns = SNS()
         self.vpc = VPCConfig(metadata['network']['vpc'], thread_config)
 
