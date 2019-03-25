@@ -17,6 +17,7 @@ from ScoutSuite.providers.aws.facade.redshift import RedshiftFacade
 from ScoutSuite.providers.aws.facade.ses import SESFacade
 from ScoutSuite.providers.aws.facade.sns import SNSFacade
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
+from ScoutSuite.providers.aws.facade.elb import ELBFacade
 from ScoutSuite.providers.utils import run_concurrently
 
 try:
@@ -29,20 +30,6 @@ except:
 class AWSFacade(AWSBaseFacade):
     def __init__(self, credentials: dict = None):
         self._set_session(credentials)
-
-        self.ec2 = EC2Facade(self.session)
-        self.awslambda = LambdaFacade(self.session)
-        self.cloudformation = CloudFormation(self.session)
-        self.cloudtrail = CloudTrailFacade(self.session)
-        self.cloudwatch = CloudWatch(self.session)
-        self.directconnect = DirectConnectFacade(self.session)
-        self.efs = EFSFacade(self.session)
-        self.elasticache = ElastiCacheFacade(self.session)
-        self.emr = EMRFacade(self.session)
-        self.elbv2 = ELBv2Facade(self.session)
-        self.redshift = RedshiftFacade(self.session)
-        self.ses = SESFacade(self.session)
-        self.sns = SNSFacade(self.session)
 
     async def build_region_list(self, service: str, chosen_regions=None, partition_name='aws'):
         service = 'ec2containerservice' if service == 'ecs' else service
@@ -84,6 +71,7 @@ class AWSFacade(AWSBaseFacade):
         self.efs = EFSFacade(self.session)
         self.elasticache = ElastiCacheFacade(self.session)
         self.emr = EMRFacade(self.session)
+        self.elb = ELBFacade(self.session)
         self.elbv2 = ELBv2Facade(self.session)
         self.rds = RDSFacade(self.session)
         self.redshift = RedshiftFacade(self.session)
