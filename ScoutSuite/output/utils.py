@@ -8,7 +8,7 @@ from ScoutSuite.core.console import print_error
 
 from six.moves import input
 
-from ScoutSuite import AWSCONFIG, EXCEPTIONS, HTMLREPORT, AWSRULESET, AWSCONFIG_FILE, EXCEPTIONS_FILE, HTMLREPORT_FILE, AWSRULESET_FILE
+from ScoutSuite import AWSCONFIG, EXCEPTIONS, HTMLREPORT, AWSRULESET, ERRORSLOG, AWSCONFIG_FILE, EXCEPTIONS_FILE, HTMLREPORT_FILE, AWSRULESET_FILE, ERRORSLOG_FILE
 
 
 def prompt_4_yes_no(question):
@@ -57,6 +57,9 @@ def get_filename(config_type, profile, report_dir):
         elif config_type == AWSRULESET:
             filename = AWSRULESET_FILE
             first_line = 'scoutsuite_results ='
+        elif config_type == ERRORSLOG:
+            filename = ERRORSLOG_FILE
+            first_line = None
         else:
             print_error('invalid config type provided (%s)' % config_type)
             raise Exception

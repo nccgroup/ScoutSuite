@@ -14,7 +14,6 @@ verbose_exceptions = False
 logger = logging.getLogger('scout')
 # TODO logger should name the file where the error occurred
 
-errors_list = []
 exceptions_list = []
 
 def set_config_debug_level(is_debug):
@@ -42,17 +41,26 @@ def print_error(msg):
     logger.error(msg)
 
 
-def print_exception(exception, additional_details):
-    logger.error(exception)
+def print_exception(exception, additional_details=None):
 
-    # TODO do something with these
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+
+    str = '{} L{}: {}'.format(fname, exc_tb.tb_lineno, exception)
+    global verbose_exceptions
+    if verbose_exceptions:
+        logger.exception(str)
+    else:
+        logger.error(str)
+
+    # logger.error('{} L{}: {}'.format(fname, exc_tb.tb_lineno, exception))
+
     global exceptions_list
-    exceptions_list.append({'exception': exception,
-                            'traceback': traceback.format_exc(),
+    exceptions_list.append({'file': fname,
+                            'line': exc_tb.tb_lineno,
+                            'exception': '{}'.format(exception),
+                            'traceback': '{}'.format(traceback.format_exc()),
                            'additional_details': additional_details})
-
-    a = exceptions_list
-    b = 1
 
 
 def print_info(msg):

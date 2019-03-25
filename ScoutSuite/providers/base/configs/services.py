@@ -35,7 +35,7 @@ class BaseServicesConfig(object):
                     if hasattr(service_config, 'finalize'):
                         await service_config.finalize()
                 else:
-                    print_debug('No method to fetch service %s.' % service)
+                    print_debug('No method to fetch the {} service'.format(format_service_name(service)))
             except Exception as e:
-                print_error('Error: could not fetch %s configuration.' % service)
+                print_error('Could not fetch the {} service'.format(format_service_name(service)))
                 print_exception(e)
