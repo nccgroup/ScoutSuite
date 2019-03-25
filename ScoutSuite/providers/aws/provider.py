@@ -6,7 +6,7 @@ import boto3
 
 from ScoutSuite.core.console import print_debug, print_error, print_exception, print_info
 from ScoutSuite.providers.aws.configs.services import AWSServicesConfig
-from ScoutSuite.providers.aws.services.vpc import put_cidr_name
+from ScoutSuite.providers.aws.resources.vpc.service import put_cidr_name
 from ScoutSuite.providers.base.configs.browser import combine_paths, get_object_at, get_value_at
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.utils import manage_dictionary
@@ -418,33 +418,6 @@ class AWSProvider(BaseProvider):
                 iam_role_info['id'] = role_id
                 break
         return iam_role_info
-
-    def process_vpc_peering_connections_callback(self, current_config, path, current_path, pc_id, callback_args):
-
-        # Create a list of peering connection IDs in each VPC
-        info = 'AccepterVpcInfo' if current_config['AccepterVpcInfo'][
-                                        'OwnerId'] == self.aws_account_id else 'RequesterVpcInfo'
-        region = current_path[current_path.index('regions') + 1]
-        vpc_id = current_config[info]['VpcId']
-        if vpc_id not in self.services['vpc']['regions'][region]['vpcs']:
-            region = current_config['AccepterVpcInfo']['Region']
-            target = self.services['vpc']['regions'][region]['vpcs'][vpc_id]
-        else:
-            target = self.services['vpc']['regions'][region]['vpcs'][vpc_id]
-        manage_dictionary(target, 'peering_connections', [])
-        if pc_id not in target['peering_connections']:
-            target['peering_connections'].append(pc_id)
-
-        # VPC information for the peer'd VPC
-        current_config['peer_info'] = copy.deepcopy(
-            current_config['AccepterVpcInfo' if info == 'RequesterVpcInfo' else 'RequesterVpcInfo'])
-        if 'PeeringOptions' in current_config['peer_info']:
-            current_config['peer_info'].pop('PeeringOptions')
-        if hasattr(self, 'organization') and current_config['peer_info']['OwnerId'] in self.organization:
-            current_config['peer_info']['name'] = self.organization[current_config['peer_info']['OwnerId']][
-                'Name']
-        else:
-            current_config['peer_info']['name'] = current_config['peer_info']['OwnerId']
 
     def match_security_groups_and_resources_callback(self, current_config, path, current_path, resource_id,
                                                      callback_args):
