@@ -126,8 +126,8 @@ async def main(args=None):
     processing_engine = ProcessingEngine(filter_rules)
     processing_engine.run(cloud_provider)
 
-    print_info('Applying exceptions')
     if args.get('exceptions')[0]:
+        print_info('Applying exceptions')
         try:
             exceptions = RuleExceptions(args.get('profile'), args.get('exceptions')[0])
             exceptions.process(cloud_provider)
