@@ -12,23 +12,23 @@ from ScoutSuite.providers.aws.services.elb import ELBConfig
 from ScoutSuite.providers.aws.resources.elbv2.service import ELBv2
 from ScoutSuite.providers.aws.resources.emr.service import EMR
 from ScoutSuite.providers.aws.services.iam import IAMConfig
-from ScoutSuite.providers.aws.services.rds import RDSConfig
+from ScoutSuite.providers.aws.resources.rds.service import RDS
 from ScoutSuite.providers.aws.resources.redshift.service import Redshift
 from ScoutSuite.providers.aws.services.route53 import Route53Config, Route53DomainsConfig
 from ScoutSuite.providers.aws.services.s3 import S3Config
 from ScoutSuite.providers.aws.resources.ses.service import SES
-from ScoutSuite.providers.aws.services.sns import SNSConfig
+from ScoutSuite.providers.aws.resources.sns.service import SNS
 from ScoutSuite.providers.aws.services.sqs import SQSConfig
 from ScoutSuite.providers.aws.services.vpc import VPCConfig
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 
 try:
-    from ScoutSuite.providers.aws.services.config_private import ConfigConfig
-    from ScoutSuite.providers.aws.services.dynamodb_private import DynamoDBConfig
+    from ScoutSuite.providers.aws.resources.dynamodb.service_private import DynamoDB
+    from ScoutSuite.providers.aws.resources.config.service_private import Config
     from ScoutSuite.providers.aws.services.kms_private import KMSConfig
 except ImportError:
-    ConfigConfig = None
-    DynamoDBConfig = None
+    Config = None
+    DynamoDB = None
     KMSConfig = None
 
 
@@ -67,20 +67,18 @@ class AWSServicesConfig(BaseServicesConfig):
         self.iam = IAMConfig(thread_config)
         self.awslambda = Lambdas()
         self.redshift = Redshift()
-        self.rds = RDSConfig(metadata['database']['rds'], thread_config)
+        self.rds = RDS()
         self.route53 = Route53Config(thread_config)
         self.route53domains = Route53DomainsConfig(thread_config)
         self.s3 = S3Config(thread_config)
         self.ses = SES()
-        self.sns = SNSConfig(metadata['messaging']['sns'], thread_config)
+        self.sns = SNS()
         self.sqs = SQSConfig(metadata['messaging']['sqs'], thread_config)
         self.vpc = VPCConfig(metadata['network']['vpc'], thread_config)
 
         try:
-            self.config = ConfigConfig(
-                metadata['management']['config'], thread_config)
-            self.dynamodb = DynamoDBConfig(
-                metadata['database']['dynamodb'], thread_config)
+            self.dynamodb = DynamoDB()
+            self.config = Config()
             self.kms = KMSConfig(metadata['security']['kms'], thread_config)
         except (NameError, TypeError):
             pass
