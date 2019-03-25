@@ -12,6 +12,7 @@ from ScoutSuite.providers.aws.facade.efs import EFSFacade
 from ScoutSuite.providers.aws.facade.elasticache import ElastiCacheFacade
 from ScoutSuite.providers.aws.facade.emr import EMRFacade
 from ScoutSuite.providers.aws.facade.elbv2 import ELBv2Facade
+from ScoutSuite.providers.aws.facade.rds import RDSFacade
 from ScoutSuite.providers.aws.facade.redshift import RedshiftFacade
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.utils import run_concurrently
@@ -68,6 +69,7 @@ class AWSFacade(AWSBaseFacade):
         self.elasticache = ElastiCacheFacade(self.session)
         self.emr = EMRFacade(self.session)
         self.elbv2 = ELBv2Facade(self.session)
+        self.rds = RDSFacade(self.session)
         self.redshift = RedshiftFacade(self.session)
 
         try:
