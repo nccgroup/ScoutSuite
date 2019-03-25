@@ -44,7 +44,7 @@
                 <h4 class="list-group-item-heading accordion-heading">Security groups
                   {{> count_badge count=security_groups.length target=(concat '#services.elbv2.regions' region 'vpcs' vpc 'lbs' @key 'security_groups')}}
                 </h4>
-                <div id="services.elbv2.regions.{{region}}.vpcs.{{vpc}}.lbs.{{@key}}.security_groups" class="accordion-body collapse">
+                <div id="services.elbv2.regions.{{region}}.vpcs.{{vpc}}.lbs.{{@key}}.security_groups" class="accordion-body">
                     <div class="accordion-inner">
                         <ul class="no-bullet">
                             {{#each security_groups}}
@@ -61,3 +61,11 @@
       Handlebars.registerPartial("services.elbv2.regions.id.vpcs.id.lbs", $("#services\\.elbv2\\.regions\\.id\\.vpcs\\.id\\.lbs\\.partial").html());
     </script>
 
+    <!-- Single instance template -->
+    <script id="single_elbv2_lb-template" type="text/x-handlebars-template">
+        {{> modal-template template='services.elbv2.regions.id.vpcs.id.lbs'}}
+    </script>
+
+    <script>
+        var single_elbv2_lb_template = Handlebars.compile($("#single_elbv2_lb-template").html());
+    </script>
