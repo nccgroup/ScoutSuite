@@ -1,0 +1,26 @@
+from ScoutSuite.providers.aws.resources.regions import Regions
+from ScoutSuite.providers.aws.resources.rds.vpcs import RDSVpcs
+from ScoutSuite.providers.aws.resources.rds.parametergroups import ParameterGroups
+from ScoutSuite.providers.aws.resources.rds.securitygroups import SecurityGroups
+
+class RDS(Regions):
+    _children = [
+        (RDSVpcs, 'vpcs'),
+        (ParameterGroups, 'parameter_groups'),
+        (SecurityGroups, 'security_groups')
+    ]
+
+    def __init__(self):
+        super(RDS, self).__init__('rds')
+
+    async def fetch_all(self, credentials=None, regions=None, partition_name='aws'):
+        await super(RDS, self).fetch_all(credentials, regions, partition_name)
+
+        for region in self['regions']:
+            self['regions'][region]['instances_count'] = sum([len(vpc['instances']) for vpc in self['regions'][region]['vpcs'].values()])
+            self['regions'][region]['snapshots_count'] = sum([len(vpc['snapshots']) for vpc in self['regions'][region]['vpcs'].values()])
+            self['regions'][region]['subnet_groups_count'] = sum([len(vpc['subnet_groups']) for vpc in self['regions'][region]['vpcs'].values()])
+        
+        self['instances_count'] = sum([region['instances_count'] for region in self['regions'].values()])
+        self['snapshots_count'] = sum([region['snapshots_count'] for region in self['regions'].values()])
+        self['subnet_groups_count'] = sum([region['subnet_groups_count'] for region in self['regions'].values()])

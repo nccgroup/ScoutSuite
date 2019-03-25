@@ -77,24 +77,14 @@
         "sns": {
             "resources": {
                 "topics": {
-                    "api_call": "list_topics",
-                    "response": "Topics",
                     "cols": 2,
                     "path": "services.sns.regions.id.topics"
-                },
-                "subscriptions": {
-                    "api_call": "list_subscriptions",
-                    "response": "Subscriptions",
-                    "hidden": true,
-                    "path": "services.sns.regions.id.subscriptions"
                 }
             }
         },
         "ses": {
             "resources": {
                 "identities": {
-                    "api_call": "list_identities",
-                    "response": "Identities",
                     "cols": 2,
                     "path": "services.ses.regions.id.identities"
                 }
@@ -103,8 +93,6 @@
         "sqs" : {
             "resources": {
                 "queues": {
-                    "api_call": "list_queues",
-                    "response": "QueueUrls",
                     "cols": 2,
                     "path": "services.sqs.regions.id.queues"
                 }
@@ -237,18 +225,12 @@
         "elb": {
             "resources": {
                 "elbs": {
-                    "api_call": "describe_load_balancers",
-                    "response": "LoadBalancerDescriptions",
                     "cols": 2,
                     "path": "services.elb.regions.id.vpcs.id.elbs",
                     "callbacks": [
                         [ "match_security_groups_and_resources_callback", {"status_path": ["Scheme"], "sg_list_attribute_name": ["security_groups"], "sg_id_attribute_name": "GroupId"} ],
                         [ "get_lb_attack_surface", {} ]
                     ]
-                },
-                "elb_policies": {
-                    "cols": 2,
-                    "path": "services.elb.regions.id.elb_policies"
                 }
             },
             "summaries": {

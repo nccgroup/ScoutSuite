@@ -60,7 +60,6 @@ class AWSProvider(BaseProvider):
         ip_ranges = [] if ip_ranges is None else ip_ranges
         self._map_all_subnets()
         self._set_emr_vpc_ids()
-        # self.parse_elb_policies()
 
         # Various data processing calls
         if 'ec2' in self.service_list:
@@ -538,41 +537,6 @@ class AWSProvider(BaseProvider):
             current_config['clusters'].pop(cluster_id)
         if len(current_config['clusters']) == 0:
             callback_args['clear_list'].append(region)
-
-    def _parse_elb_policies(self):
-        if 'elb' in self.services:
-            self._go_to_and_do(self.services['elb'],
-                               ['regions'],
-                               [],
-                               self.parse_elb_policies_callback,
-                               {})
-
-    @staticmethod
-    def parse_elb_policies_callback(current_config, path, current_path, region_id, callback_args):
-        region_config = get_object_at(['services', 'elb', ] + current_path + [region_id])
-        region_config['elb_policies'] = current_config['elb_policies']
-        for policy_id in region_config['elb_policies']:
-            if region_config['elb_policies'][policy_id]['PolicyTypeName'] != 'SSLNegotiationPolicyType':
-                continue
-            # protocols, options, ciphers
-            policy = region_config['elb_policies'][policy_id]
-            protocols = {}
-            options = {}
-            ciphers = {}
-            for attribute in policy['PolicyAttributeDescriptions']:
-                if attribute['AttributeName'] in ['Protocol-SSLv3', 'Protocol-TLSv1', 'Protocol-TLSv1.1',
-                                                  'Protocol-TLSv1.2']:
-                    protocols[attribute['AttributeName']] = attribute['AttributeValue']
-                elif attribute['AttributeName'] in ['Server-Defined-Cipher-Order']:
-                    options[attribute['AttributeName']] = attribute['AttributeValue']
-                elif attribute['AttributeName'] == 'Reference-Security-Policy':
-                    policy['reference_security_policy'] = attribute['AttributeValue']
-                else:
-                    ciphers[attribute['AttributeName']] = attribute['AttributeValue']
-                policy['protocols'] = protocols
-                policy['options'] = options
-                policy['ciphers'] = ciphers
-                # TODO: pop ?
 
     def sort_vpc_flow_logs_callback(self, current_config, path, current_path, flow_log_id, callback_args):
         attached_resource = current_config['ResourceId']
