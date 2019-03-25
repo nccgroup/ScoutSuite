@@ -75,7 +75,11 @@ class AWSProvider(BaseProvider):
         if 'elbv2' in self.service_list:
             self._add_security_group_data_to_elbv2()
 
+        if 's3' in self.service_list and 'iam' in self.service_list:
+            self._match_iam_policies_and_buckets()
+            
         self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
+        self._merge_route53_and_route53domains()
         self._match_iam_policies_and_buckets()
 
         super(AWSProvider, self).preprocessing()

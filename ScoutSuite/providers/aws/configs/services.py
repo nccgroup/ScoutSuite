@@ -10,8 +10,8 @@ from ScoutSuite.providers.aws.resources.efs.service import EFS
 from ScoutSuite.providers.aws.resources.elasticache.service import ElastiCache
 from ScoutSuite.providers.aws.resources.elb.service import ELB
 from ScoutSuite.providers.aws.resources.elbv2.service import ELBv2
+from ScoutSuite.providers.aws.resources.iam.service import IAM
 from ScoutSuite.providers.aws.resources.emr.service import EMR
-from ScoutSuite.providers.aws.services.iam import IAMConfig
 from ScoutSuite.providers.aws.resources.route53.service import Route53
 from ScoutSuite.providers.aws.resources.rds.service import RDS
 from ScoutSuite.providers.aws.resources.redshift.service import Redshift
@@ -61,10 +61,10 @@ class AWSServicesConfig(BaseServicesConfig):
         self.ec2 = EC2()
         self.efs = EFS()
         self.elasticache = ElastiCache()
+        self.iam = IAM()
         self.elb = ELB()
         self.elbv2 = ELBv2()
         self.emr = EMR()
-        self.iam = IAMConfig(thread_config)
         self.awslambda = Lambdas()
         self.route53 = Route53()
         self.redshift = Redshift()

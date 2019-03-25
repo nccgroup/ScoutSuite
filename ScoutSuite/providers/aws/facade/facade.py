@@ -16,6 +16,7 @@ from ScoutSuite.providers.aws.facade.emr import EMRFacade
 from ScoutSuite.providers.aws.facade.route53 import Route53Facade
 from ScoutSuite.providers.aws.facade.sqs import SQSFacade
 from ScoutSuite.providers.aws.facade.elbv2 import ELBv2Facade
+from ScoutSuite.providers.aws.facade.iam import IAMFacade
 from ScoutSuite.providers.aws.facade.rds import RDSFacade
 from ScoutSuite.providers.aws.facade.redshift import RedshiftFacade
 from ScoutSuite.providers.aws.facade.ses import SESFacade
@@ -29,7 +30,7 @@ try:
 except ImportError:
     pass
 
-
+  
 class AWSFacade(AWSBaseFacade):
     def __init__(self, credentials: dict = None):
         self._set_session(credentials)
@@ -77,6 +78,7 @@ class AWSFacade(AWSBaseFacade):
         self.route53 = Route53Facade(self.session)
         self.elb = ELBFacade(self.session)
         self.elbv2 = ELBv2Facade(self.session)
+        self.iam = IAMFacade(self.session)
         self.rds = RDSFacade(self.session)
         self.redshift = RedshiftFacade(self.session)
         self.ses = SESFacade(self.session)

@@ -7,7 +7,7 @@ import asyncio
 class EMRFacade(AWSBaseFacade):
     async def get_clusters(self, region):
         clusters_list = await AWSFacadeUtils.get_all_pages('emr', region, self.session, 'list_clusters', 'Clusters')
-        client = AWSFacadeUtils.get_client('emr', region, self.session)
+        client = AWSFacadeUtils.get_client('emr', self.session, region)
         clusters_descriptions = []
         cluster_ids = [cluster['Id'] for cluster in clusters_list]
         tasks = {
