@@ -82,7 +82,8 @@ class Scout2Report(HTMLReport):
         self.jsrw.save_to_file(config, AWSCONFIG, force_write, debug)
         self.jsrw.save_to_file(exceptions, EXCEPTIONS, force_write, debug)
         global exceptions_list
-        self.jsrw.save_to_file(exceptions_list, ERRORSLOG, force_write, debug=True)
+        if exceptions_list:
+            self.jsrw.save_to_file(exceptions_list, ERRORSLOG, force_write, debug=True)
         return self.create_html_report(force_write)
 
     def create_html_report(self, force_write):
