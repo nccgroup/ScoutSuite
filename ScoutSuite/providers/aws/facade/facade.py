@@ -14,6 +14,7 @@ from ScoutSuite.providers.aws.facade.emr import EMRFacade
 from ScoutSuite.providers.aws.facade.elbv2 import ELBv2Facade
 from ScoutSuite.providers.aws.facade.rds import RDSFacade
 from ScoutSuite.providers.aws.facade.redshift import RedshiftFacade
+from ScoutSuite.providers.aws.facade.ses import SESFacade
 from ScoutSuite.providers.aws.facade.sns import SNSFacade
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.utils import run_concurrently
@@ -40,6 +41,7 @@ class AWSFacade(AWSBaseFacade):
         self.emr = EMRFacade(self.session)
         self.elbv2 = ELBv2Facade(self.session)
         self.redshift = RedshiftFacade(self.session)
+        self.ses = SESFacade(self.session)
         self.sns = SNSFacade(self.session)
 
     async def build_region_list(self, service: str, chosen_regions=None, partition_name='aws'):
@@ -85,6 +87,7 @@ class AWSFacade(AWSBaseFacade):
         self.elbv2 = ELBv2Facade(self.session)
         self.rds = RDSFacade(self.session)
         self.redshift = RedshiftFacade(self.session)
+        self.ses = SESFacade(self.session)
         self.sns = SNSFacade(self.session)
 
         try:
