@@ -7,7 +7,6 @@ import boto3
 from ScoutSuite.core.console import print_debug, print_error, print_exception, print_info
 from ScoutSuite.providers.aws.configs.services import AWSServicesConfig
 from ScoutSuite.providers.aws.services.vpc import put_cidr_name
-from ScoutSuite.providers.aws.services.elbv2 import check_security_group_rules
 from ScoutSuite.providers.base.configs.browser import combine_paths, get_object_at, get_value_at
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.utils import manage_dictionary
@@ -111,6 +110,18 @@ class AWSProvider(BaseProvider):
                            {'AWSAccountId': self.aws_account_id})
 
     def _add_security_group_data_to_elbv2(self):
+        def check_security_group_rules(lb, index, traffic_type):
+            none = 'N/A'
+            if traffic_type == 'ingress':
+                output = 'valid_inbound_rules'
+            elif traffic_type == 'egress':
+                output = 'valid_outbound_rules'
+            for protocol in lb['security_groups'][index]['rules'][traffic_type]['protocols']:
+                for port in lb['security_groups'][index]['rules'][traffic_type]['protocols'][protocol]['ports']:
+                    lb['security_groups'][index][output] = True
+                    if port not in lb['listeners'] and port != none:
+                        lb['security_groups'][index][output] = False
+
         ec2_config = self.services['ec2']
         elbv2_config = self.services['elbv2']
         for region in elbv2_config['regions']:

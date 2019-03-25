@@ -11,25 +11,24 @@ from ScoutSuite.providers.aws.facade.ec2 import EC2Facade
 from ScoutSuite.providers.aws.facade.efs import EFSFacade
 from ScoutSuite.providers.aws.facade.elasticache import ElastiCacheFacade
 from ScoutSuite.providers.aws.facade.emr import EMRFacade
+from ScoutSuite.providers.aws.facade.elbv2 import ELBv2Facade
+from ScoutSuite.providers.aws.facade.rds import RDSFacade
+from ScoutSuite.providers.aws.facade.redshift import RedshiftFacade
+from ScoutSuite.providers.aws.facade.sns import SNSFacade
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.elb import ELBFacade
 from ScoutSuite.providers.utils import run_concurrently
+
+try:
+    from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
+    from ScoutSuite.providers.aws.facade.config_private import ConfigFacade
+except:
+    pass
 
 
 class AWSFacade(AWSBaseFacade):
     def __init__(self, credentials: dict = None):
         self._set_session(credentials)
-
-        self.ec2 = EC2Facade(self.session)
-        self.awslambda = LambdaFacade(self.session)
-        self.cloudformation = CloudFormation(self.session)
-        self.cloudtrail = CloudTrailFacade(self.session)
-        self.cloudwatch = CloudWatch(self.session)
-        self.directconnect = DirectConnectFacade(self.session)
-        self.efs = EFSFacade(self.session)
-        self.elasticache = ElastiCacheFacade(self.session)
-        self.emr = EMRFacade(self.session)
-        self.elb = ELBFacade(self.session)
 
     async def build_region_list(self, service: str, chosen_regions=None, partition_name='aws'):
         service = 'ec2containerservice' if service == 'ecs' else service
@@ -59,6 +58,9 @@ class AWSFacade(AWSBaseFacade):
 
         # TODO: This should only be done in the constructor. I put this here for now, because this method is currently
         # called from outside, but it should not happen.
+        self._instantiate_facades()
+
+    def _instantiate_facades(self):
         self.ec2 = EC2Facade(self.session)
         self.awslambda = LambdaFacade(self.session)
         self.cloudformation = CloudFormation(self.session)
@@ -69,3 +71,13 @@ class AWSFacade(AWSBaseFacade):
         self.elasticache = ElastiCacheFacade(self.session)
         self.emr = EMRFacade(self.session)
         self.elb = ELBFacade(self.session)
+        self.elbv2 = ELBv2Facade(self.session)
+        self.rds = RDSFacade(self.session)
+        self.redshift = RedshiftFacade(self.session)
+        self.sns = SNSFacade(self.session)
+
+        try:
+            self.dynamodb = DynamoDBFacade(self.session)
+            self.config = ConfigFacade(self.session)
+        except:
+            pass

@@ -77,16 +77,8 @@
         "sns": {
             "resources": {
                 "topics": {
-                    "api_call": "list_topics",
-                    "response": "Topics",
                     "cols": 2,
                     "path": "services.sns.regions.id.topics"
-                },
-                "subscriptions": {
-                    "api_call": "list_subscriptions",
-                    "response": "Subscriptions",
-                    "hidden": true,
-                    "path": "services.sns.regions.id.subscriptions"
                 }
             }
         },
@@ -296,20 +288,12 @@
         "elbv2": {
             "resources": {
                 "lbs": {
-                    "api_call": "describe_load_balancers",
-                    "response": "LoadBalancers",
                     "cols": 2,
                     "path": "services.elbv2.regions.id.vpcs.id.lbs",
                     "callbacks": [
                         [ "match_security_groups_and_resources_callback", {"status_path": ["State", "Code"], "sg_list_attribute_name": ["security_groups"], "sg_id_attribute_name": "GroupId"} ],
                         [ "get_lb_attack_surface", {} ]
                     ]
-                },
-                "ssl_policies": {
-                    "api_call": "describe_ssl_policies",
-                    "response": "SslPolicies",
-                    "hidden": true,
-                    "path": "services.elbv2.ssl_policies"
                 }
             },
             "summaries": {
@@ -475,8 +459,6 @@
         "redshift": {
             "resources": {
                 "clusters": {
-                    "api_call": "describe_clusters",
-                    "response": "Clusters",
                     "cols": 2,
                     "path": "services.redshift.regions.id.vpcs.id.clusters",
                     "callbacks": [
@@ -485,15 +467,10 @@
                     ]
                 },
                 "parameter_groups": {
-                    "api_call": "describe_cluster_parameter_groups",
-                    "response": "ParameterGroups",
                     "cols": 2,
                     "path": "services.redshift.regions.id.parameter_groups"
                 },
                 "security_groups": {
-                    "api_call": "describe_cluster_security_groups",
-                    "response": "ClusterSecurityGroups",
-                    "no_exceptions": true,
                     "cols": 2,
                     "path": "services.redshift.regions.id.security_groups"
                 }
