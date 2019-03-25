@@ -12,9 +12,9 @@ from ScoutSuite.providers.aws.resources.elb.service import ELB
 from ScoutSuite.providers.aws.resources.elbv2.service import ELBv2
 from ScoutSuite.providers.aws.resources.emr.service import EMR
 from ScoutSuite.providers.aws.services.iam import IAMConfig
+from ScoutSuite.providers.aws.resources.route53.service import Route53
 from ScoutSuite.providers.aws.resources.rds.service import RDS
 from ScoutSuite.providers.aws.resources.redshift.service import Redshift
-from ScoutSuite.providers.aws.services.route53 import Route53Config, Route53DomainsConfig
 from ScoutSuite.providers.aws.services.s3 import S3Config
 from ScoutSuite.providers.aws.resources.vpc.service import VPC
 from ScoutSuite.providers.aws.resources.sqs.service import SQS
@@ -66,10 +66,9 @@ class AWSServicesConfig(BaseServicesConfig):
         self.emr = EMR()
         self.iam = IAMConfig(thread_config)
         self.awslambda = Lambdas()
+        self.route53 = Route53()
         self.redshift = Redshift()
         self.rds = RDS()
-        self.route53 = Route53Config(thread_config)
-        self.route53domains = Route53DomainsConfig(thread_config)
         self.s3 = S3Config(thread_config)
         self.vpc = VPC()
         self.sqs = SQS()

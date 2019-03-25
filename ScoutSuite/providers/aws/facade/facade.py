@@ -1,7 +1,9 @@
-from collections import Counter
-from botocore.session import Session
 import boto3
 
+from collections import Counter
+from botocore.session import Session
+from ScoutSuite.providers.utils import run_concurrently
+from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.awslambda import LambdaFacade
 from ScoutSuite.providers.aws.facade.cloudformation import CloudFormation
 from ScoutSuite.providers.aws.facade.cloudtrail import CloudTrailFacade
@@ -11,16 +13,14 @@ from ScoutSuite.providers.aws.facade.ec2 import EC2Facade
 from ScoutSuite.providers.aws.facade.efs import EFSFacade
 from ScoutSuite.providers.aws.facade.elasticache import ElastiCacheFacade
 from ScoutSuite.providers.aws.facade.emr import EMRFacade
+from ScoutSuite.providers.aws.facade.route53 import Route53Facade
 from ScoutSuite.providers.aws.facade.sqs import SQSFacade
-from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.elbv2 import ELBv2Facade
 from ScoutSuite.providers.aws.facade.rds import RDSFacade
 from ScoutSuite.providers.aws.facade.redshift import RedshiftFacade
 from ScoutSuite.providers.aws.facade.ses import SESFacade
 from ScoutSuite.providers.aws.facade.sns import SNSFacade
-from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.elb import ELBFacade
-from ScoutSuite.providers.utils import run_concurrently
 
 try:
     from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
@@ -74,6 +74,7 @@ class AWSFacade(AWSBaseFacade):
         self.efs = EFSFacade(self.session)
         self.elasticache = ElastiCacheFacade(self.session)
         self.emr = EMRFacade(self.session)
+        self.route53 = Route53Facade(self.session)
         self.elb = ELBFacade(self.session)
         self.elbv2 = ELBv2Facade(self.session)
         self.rds = RDSFacade(self.session)
