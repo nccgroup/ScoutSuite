@@ -127,14 +127,16 @@ async def main(args=None):
     processing_engine.run(cloud_provider)
 
     print_info('Applying exceptions')
-    try:
-        exceptions = RuleExceptions(args.get('profile'), args.get('exceptions')[0])
-        exceptions.process(cloud_provider)
-        exceptions = exceptions.exceptions
-    except Exception as e:
-        print_debug(
-            'Warning, failed to load exceptions. The file may not exist or may have an invalid format.')
-        exceptions = {}
+    if args.get('exceptions')[0]:
+        try:
+            exceptions = RuleExceptions(args.get('profile'), args.get('exceptions')[0])
+            exceptions.process(cloud_provider)
+            exceptions = exceptions.exceptions
+        except Exception as e:
+            print_debug('Failed to load exceptions. The file may not exist or may have an invalid format.')
+            exceptions = {}
+    else:
+            exceptions = {}
 
     # Finalize
     cloud_provider.postprocessing(report.current_time, finding_rules)
