@@ -1402,7 +1402,9 @@ function loadConfigSqlite (scriptId, cols) {
     for (let group in list) {
       listDict[list[group]] = requestDb(pathArray + '.' + list[group])
       if (listDict[list[group]].keys) {
-        listDict[list[group]] = { [listDict[list[group]].keys] : null }
+        for (let service in listDict[list[group]].keys) {
+          listDict[list[group]][listDict[list[group]].keys[service]] = { [null] : null }
+        }
         delete listDict[list[group]].type
         delete listDict[list[group]].keys
       }
