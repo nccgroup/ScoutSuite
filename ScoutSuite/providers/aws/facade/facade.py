@@ -17,6 +17,7 @@ from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.utils import run_concurrently
 
 try:
+    from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
     from ScoutSuite.providers.aws.facade.config_private import ConfigFacade
 except:
     pass
@@ -70,6 +71,7 @@ class AWSFacade(AWSBaseFacade):
         self.redshift = RedshiftFacade(self.session)
 
         try:
+            self.dynamodb = DynamoDBFacade(self.session)
             self.config = ConfigFacade(self.session)
         except:
             pass

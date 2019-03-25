@@ -23,12 +23,12 @@ from ScoutSuite.providers.aws.services.vpc import VPCConfig
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 
 try:
+    from ScoutSuite.providers.aws.resources.dynamodb.service_private import DynamoDB
     from ScoutSuite.providers.aws.resources.config.service_private import Config
-    from ScoutSuite.providers.aws.services.dynamodb_private import DynamoDBConfig
     from ScoutSuite.providers.aws.services.kms_private import KMSConfig
 except ImportError:
-    ConfigConfig = None
-    DynamoDBConfig = None
+    Config = None
+    DynamoDB = None
     KMSConfig = None
 
 
@@ -77,9 +77,8 @@ class AWSServicesConfig(BaseServicesConfig):
         self.vpc = VPCConfig(metadata['network']['vpc'], thread_config)
 
         try:
+            self.dynamodb = DynamoDB()
             self.config = Config()
-            self.dynamodb = DynamoDBConfig(
-                metadata['database']['dynamodb'], thread_config)
             self.kms = KMSConfig(metadata['security']['kms'], thread_config)
         except (NameError, TypeError):
             pass
