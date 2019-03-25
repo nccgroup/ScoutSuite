@@ -36,7 +36,6 @@ async def main(args=None):
     print_info('Launching Scout')
 
     # Create a cloud provider object
-    print_info('Creating provider instance')
     cloud_provider = get_provider(provider=args.get('provider'),
                                   profile=args.get('profile'),
                                   project_id=args.get('project_id'),
@@ -54,7 +53,6 @@ async def main(args=None):
     # TODO: move this to after authentication, so that the report can be more specific to what's being scanned.
     # For example if scanning with a GCP service account, the SA email can only be known after authenticating...
     # Create a new report
-    print_info('Initializing report')
     report = Scout2Report(args.get('provider'), report_file_name, args.get(
         'report_dir'), args.get('timestamp'))
 
