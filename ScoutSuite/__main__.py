@@ -147,7 +147,7 @@ async def main(args=None):
 
     # Open the report by default
     if not args.get('no_browser'):
-        print_info('Opening the HTML report...')
+        print_info('Opening the HTML report')
         url = 'file://%s' % os.path.abspath(html_report_path)
         webbrowser.open(url, new=2)
 

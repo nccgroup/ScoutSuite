@@ -65,7 +65,7 @@ class JavaScriptReaderWriter(object):
         config_path, first_line = get_filename(config_type, self.profile, self.report_dir)
         print_info('Saving data to %s' % config_path)
         try:
-            with self.__open_file(config_path, force_write, False) as f:
+            with self.__open_file(config_path, force_write) as f:
                 if first_line:
                     print('%s' % first_line, file=f)
                 print('%s' % json.dumps(config, indent=4 if debug else None, separators=(',', ': '), sort_keys=True, cls=Scout2Encoder), file=f)
@@ -77,7 +77,7 @@ class JavaScriptReaderWriter(object):
         return json.loads(json.dumps(config, separators=(',', ': '), cls=Scout2Encoder))
 
 
-    def __open_file(self, config_filename, force_write, quiet=False):
+    def __open_file(self, config_filename, force_write):
         """
 
         :param config_filename:
@@ -85,8 +85,6 @@ class JavaScriptReaderWriter(object):
         :param quiet:
         :return:
         """
-        if not quiet:
-            print_info('Saving config...')
         if prompt_4_overwrite(config_filename, force_write):
             try:
                 config_dirname = os.path.dirname(config_filename)
