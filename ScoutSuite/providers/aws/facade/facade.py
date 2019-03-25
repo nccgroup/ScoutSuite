@@ -19,7 +19,7 @@ from ScoutSuite.providers.utils import run_concurrently
 try:
     from ScoutSuite.providers.aws.facade.config_private import ConfigFacade
     from ScoutSuite.providers.aws.facade.kms_private import KMSFacade
-except NameError:
+except ImportError:
     pass
 
 
