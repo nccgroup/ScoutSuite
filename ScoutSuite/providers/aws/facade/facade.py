@@ -25,7 +25,8 @@ from ScoutSuite.providers.utils import run_concurrently
 try:
     from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
     from ScoutSuite.providers.aws.facade.config_private import ConfigFacade
-except:
+    from ScoutSuite.providers.aws.facade.kms_private import KMSFacade
+except ImportError:
     pass
 
 
@@ -84,5 +85,6 @@ class AWSFacade(AWSBaseFacade):
         try:
             self.dynamodb = DynamoDBFacade(self.session)
             self.config = ConfigFacade(self.session)
-        except:
+            self.kms = KMSFacade(self.session)
+        except NameError:
             pass
