@@ -22,6 +22,7 @@ async def main(args=None):
 
     :return:
     """
+
     if not args:
         parser = ScoutSuiteArgumentParser()
         args = parser.parse_args()
@@ -32,8 +33,10 @@ async def main(args=None):
     # Configure the debug level
     set_config_debug_level(args.get('debug'))
 
+    print_info('Launching Scout')
+
     # Create a cloud provider object
-    print_info('Creating {} connector'.format(args.get('provider')))
+    print_info('Creating provider instance')
     cloud_provider = get_provider(provider=args.get('provider'),
                                   profile=args.get('profile'),
                                   project_id=args.get('project_id'),
@@ -57,7 +60,7 @@ async def main(args=None):
 
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
-        print_info('Authenticating to {}'.format(args.get('provider')))
+        print_info('Authenticating to {}'.format(cloud_provider.provider_name))
         # Authenticate to the cloud provider
         authenticated = cloud_provider.authenticate(profile=args.get('profile'),
                                                     user_account=args.get('user_account'),
@@ -79,7 +82,7 @@ async def main(args=None):
 
         # Fetch data from provider APIs
         try:
-            print_info('Fetching data from provider APIs')
+            print_info('Gathering data from APIs')
             await cloud_provider.fetch(regions=args.get('regions'))
         except KeyboardInterrupt:
             print_info('\nCancelled by user')
