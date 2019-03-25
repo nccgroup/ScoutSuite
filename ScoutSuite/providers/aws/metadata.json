@@ -85,8 +85,6 @@
         "ses": {
             "resources": {
                 "identities": {
-                    "api_call": "list_identities",
-                    "response": "Identities",
                     "cols": 2,
                     "path": "services.ses.regions.id.identities"
                 }
