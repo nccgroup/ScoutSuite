@@ -1401,9 +1401,17 @@ function loadConfigSqlite (scriptId, cols) {
     listDict = {}
     for (let group in list) {
       listDict[list[group]] = requestDb(pathArray + '.' + list[group])
-      if (listDict[list[group]].keys) {
-        for (let service in listDict[list[group]].keys) {
-          listDict[list[group]][listDict[list[group]].keys[service]] = { [null] : null }
+      let groupDict = listDict[list[group]]
+      if (groupDict.keys) {
+        if (list[group] === 'summary') {
+          for (let service in groupDict.keys) {
+            listDict[list[group]][groupDict.keys[service]] = { [requestDb('last_run.summary.' + 
+            groupDict.keys[service]).keys] : null }
+          }
+        } else {
+          for (let service in groupDict.keys) {
+            listDict[list[group]][groupDict.keys[service]] = { [null] : null }
+          }
         }
         delete listDict[list[group]].type
         delete listDict[list[group]].keys
@@ -1440,4 +1448,8 @@ function loadConfigSqlite (scriptId, cols) {
   // Update the list of loaded data
   loadedConfigArray.push(scriptId)
   return 1
+}
+
+function fetchSummary () {
+
 }
