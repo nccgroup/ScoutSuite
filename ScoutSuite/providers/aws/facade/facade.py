@@ -11,12 +11,19 @@ from ScoutSuite.providers.aws.facade.ec2 import EC2Facade
 from ScoutSuite.providers.aws.facade.efs import EFSFacade
 from ScoutSuite.providers.aws.facade.elasticache import ElastiCacheFacade
 from ScoutSuite.providers.aws.facade.emr import EMRFacade
-from ScoutSuite.providers.aws.facade.elbv2 import ELBv2Facade
-from ScoutSuite.providers.aws.facade.redshift import RedshiftFacade
+from ScoutSuite.providers.aws.facade.sqs import SQSFacade
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
+from ScoutSuite.providers.aws.facade.elbv2 import ELBv2Facade
+from ScoutSuite.providers.aws.facade.rds import RDSFacade
+from ScoutSuite.providers.aws.facade.redshift import RedshiftFacade
+from ScoutSuite.providers.aws.facade.ses import SESFacade
+from ScoutSuite.providers.aws.facade.sns import SNSFacade
+from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
+from ScoutSuite.providers.aws.facade.elb import ELBFacade
 from ScoutSuite.providers.utils import run_concurrently
 
 try:
+    from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
     from ScoutSuite.providers.aws.facade.config_private import ConfigFacade
     from ScoutSuite.providers.aws.facade.kms_private import KMSFacade
 except ImportError:
@@ -67,10 +74,16 @@ class AWSFacade(AWSBaseFacade):
         self.efs = EFSFacade(self.session)
         self.elasticache = ElastiCacheFacade(self.session)
         self.emr = EMRFacade(self.session)
+        self.elb = ELBFacade(self.session)
         self.elbv2 = ELBv2Facade(self.session)
+        self.rds = RDSFacade(self.session)
         self.redshift = RedshiftFacade(self.session)
+        self.ses = SESFacade(self.session)
+        self.sns = SNSFacade(self.session)
+        self.sqs = SQSFacade(self.session)
 
         try:
+            self.dynamodb = DynamoDBFacade(self.session)
             self.config = ConfigFacade(self.session)
             self.kms = KMSFacade(self.session)
         except NameError:
