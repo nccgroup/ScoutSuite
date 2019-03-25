@@ -85,8 +85,6 @@
         "ses": {
             "resources": {
                 "identities": {
-                    "api_call": "list_identities",
-                    "response": "Identities",
                     "cols": 2,
                     "path": "services.ses.regions.id.identities"
                 }
@@ -95,8 +93,6 @@
         "sqs" : {
             "resources": {
                 "queues": {
-                    "api_call": "list_queues",
-                    "response": "QueueUrls",
                     "cols": 2,
                     "path": "services.sqs.regions.id.queues"
                 }
@@ -107,8 +103,6 @@
         "vpc": {
             "resources": {
                 "network_acls": {
-                    "api_call": "describe_network_acls",
-                    "response": "NetworkAcls",
                     "cols": 2,
                     "path": "services.vpc.regions.id.vpcs.id.network_acls",
                     "callbacks": [
@@ -117,14 +111,10 @@
                     ]
                 },
                 "vpcs": {
-                    "api_call": "describe_vpcs",
-                    "response": "Vpcs",
                     "cols": 2,
                     "path": "services.vpc.regions.id.vpcs"
                 },
                 "flow_logs": {
-                    "api_call": "describe_flow_logs",
-                    "response": "FlowLogs",
                     "hidden": true,
                     "path": "services.vpc.regions.id.flow_logs",
                     "callbacks": [
@@ -133,43 +123,8 @@
                     ]
                 },
                 "subnets": {
-                    "api_call": "describe_subnets",
-                    "response": "Subnets",
                     "cols": 2,
                     "path": "services.vpc.regions.id.vpcs.id.subnets"
-                },
-                "customer_gateways": {
-                    "api_call": "describe_customer_gateways",
-                    "response": "CustomerGateways",
-                    "cols": 2,
-                    "path": "services.vpc.regions.id.customer_gateways"
-                },
-                "vpn_gateways": {
-                    "api_call": "describe_vpn_gateways",
-                    "response": "VpnGateways",
-                    "cols": 2,
-                    "path": "services.vpc.regions.id.vpn_gateways"
-                },
-                "vpn_connections": {
-                    "api_call": "describe_vpn_connections",
-                    "response": "VpnConnections",
-                    "cols": 2,
-                    "path": "services.vpc.regions.id.vpn_connections"
-                },
-                "route_tables": {
-                    "api_call": "describe_route_tables",
-                    "response": "RouteTables",
-                    "hidden": true,
-                    "path": "services.vpc.regions.id.vpcs.id.route_tables"
-                },
-                "peering_connections": {
-                    "api_call": "describe_vpc_peering_connections",
-                    "response": "VpcPeeringConnections",
-                    "hidden": true,
-                    "path": "services.vpc.regions.id.peering_connections",
-                    "callbacks": [
-                        [ "process_vpc_peering_connections_callback", {} ]
-                    ]
                 }
             }
         },
@@ -266,18 +221,12 @@
         "elb": {
             "resources": {
                 "elbs": {
-                    "api_call": "describe_load_balancers",
-                    "response": "LoadBalancerDescriptions",
                     "cols": 2,
                     "path": "services.elb.regions.id.vpcs.id.elbs",
                     "callbacks": [
                         [ "match_security_groups_and_resources_callback", {"status_path": ["Scheme"], "sg_list_attribute_name": ["security_groups"], "sg_id_attribute_name": "GroupId"} ],
                         [ "get_lb_attack_surface", {} ]
                     ]
-                },
-                "elb_policies": {
-                    "cols": 2,
-                    "path": "services.elb.regions.id.elb_policies"
                 }
             },
             "summaries": {
@@ -356,8 +305,6 @@
         "kms": {
             "resources": {
                 "keys": {
-                    "api_call": "list_keys",
-                    "response": "Keys",
                     "path": "services.kms.regions.id.keys"
                 }
             }
