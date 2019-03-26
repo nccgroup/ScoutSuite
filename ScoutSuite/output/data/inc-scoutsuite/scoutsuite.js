@@ -1409,7 +1409,8 @@ function loadConfigSqlite (scriptId, cols) {
           if (list[group] === 'summary') {
             let counters = requestDb('last_run.summary.' + groupDict[service]).keys
             for (counter in counters) {
-              listDict[list[group]][groupDict[service]][counters[counter]] = { [counters[counter]] : null }
+              listDict[list[group]][groupDict[service]][counters[counter]] = 
+                requestDb('last_run.summary.' + groupDict[service] + '.' + counters[counter])
             }
             delete listDict[list[group]][groupDict[service]].null
           }
