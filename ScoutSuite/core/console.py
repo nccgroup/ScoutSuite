@@ -53,8 +53,6 @@ def print_exception(exception, additional_details=None):
     else:
         logger.error(str)
 
-    # logger.error('{} L{}: {}'.format(fname, exc_tb.tb_lineno, exception))
-
     global exceptions_list
     exceptions_list.append({'file': fname,
                             'line': exc_tb.tb_lineno,
