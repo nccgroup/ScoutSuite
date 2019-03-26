@@ -20,12 +20,9 @@ def run_concurrently(func):
 
 async def run_tasks_concurrently(tasks):
     entities = []
-    # tasks = {
-    #     asyncio.ensure_future(run_concurrently(lambda: self._get_table(region, table_name))) for table_name in tables_names
-    # }
 
     parallelized_tasks = {
-        asyncio.ensure_future(run_concurrently(task)) for task in tasks
+        asyncio.ensure_future(task) for task in tasks
     }
 
     for task in asyncio.as_completed(parallelized_tasks):
