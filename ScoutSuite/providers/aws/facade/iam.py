@@ -46,7 +46,9 @@ class IAMFacade(AWSBaseFacade):
 
     async def get_policies(self):
         policies = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_policies', 'Policies', OnlyAttached=True)
-        return await run_tasks_concurrently({ (lambda: self.get_detailed_policy(policy) for policy in policies)} )
+        return await run_tasks_concurrently({
+            self.get_detailed_policy(policy) for policy in policies
+        })
 
     async def get_detailed_policy(self, policy):
         client = AWSFacadeUtils.get_client('iam', self.session)
@@ -73,31 +75,33 @@ class IAMFacade(AWSBaseFacade):
         return policy
 
     async def get_users(self):
-        client = AWSFacadeUtils.get_client('iam', self.session)
         users = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_users', 'Users')
+        return await run_tasks_concurrently({
+            self.get_detailed_user(user) for user in users
+        })
 
-        # TODO: Parallelize this
-        for user in users:
-            user_name = user['UserName']
-            user_id = user['UserId']
+    async def get_detailed_user(self, user):
+        client = AWSFacadeUtils.get_client('iam', self.session)
+        user_name = user['UserName']
+        user_id = user['UserId']
 
-            policies = self._get_inline_policies('user', user_id, user_name)
-            if len(policies):
-                user['inline_policies'] = policies
-            user['inline_policies_count'] = len(policies)
-            user['groups'] = []
-            groups = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_groups_for_user', 'Groups', UserName=user_name)
-            for group in groups:
-                user['groups'].append(group['GroupName'])
-            try:
-                user['LoginProfile'] = await run_concurrently(
-                    lambda: client.get_login_profile(UserName=user_name)['LoginProfile'])
-            except Exception:
-                pass
-            user['AccessKeys'] = await self._get_user_acces_keys(user_name)
-            user['MFADevices'] = await self._get_user_mfa_devices(user_name)
+        policies = self._get_inline_policies('user', user_id, user_name)
+        if len(policies):
+            user['inline_policies'] = policies
+        user['inline_policies_count'] = len(policies)
+        user['groups'] = []
+        groups = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_groups_for_user', 'Groups', UserName=user_name)
+        for group in groups:
+            user['groups'].append(group['GroupName'])
+        try:
+            user['LoginProfile'] = await run_concurrently(
+                lambda: client.get_login_profile(UserName=user_name)['LoginProfile'])
+        except Exception:
+            pass
+        user['AccessKeys'] = await self._get_user_acces_keys(user_name)
+        user['MFADevices'] = await self._get_user_mfa_devices(user_name)
 
-        return users
+        return user
 
     async def get_roles(self):
         roles = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_roles', 'Roles')
@@ -154,8 +158,7 @@ class IAMFacade(AWSBaseFacade):
             users.append(user['UserId'])
         return users
 
-    # TODO: Make this async
-    def _get_inline_policies(self, iam_resource_type, resource_id, resource_name):
+    async def _get_inline_policies(self, iam_resource_type, resource_id, resource_name):
         client = AWSFacadeUtils.get_client('iam', self.session)
         get_policy_method = getattr(
             client, 'get_' + iam_resource_type + '_policy')
@@ -163,14 +166,16 @@ class IAMFacade(AWSBaseFacade):
         list_policy_method = getattr(
             client, 'list_' + iam_resource_type + '_policies')
         args = {iam_resource_type.title() + 'Name': resource_name}
+        
         try:
-            policy_names = list_policy_method(**args)['PolicyNames']
+            policy_names = await run_concurrently(lambda: list_policy_method(**args)['PolicyNames'])
         except Exception as e:
             if is_throttled(e):
                 raise e
             else:
                 print_exception(e)
                 return fetched_policies
+        
         try:
             for policy_name in policy_names:
                 args['PolicyName'] = policy_name
@@ -186,6 +191,7 @@ class IAMFacade(AWSBaseFacade):
                 raise e
             else:
                 print_exception(e)
+
         return fetched_policies
 
     def _normalize_statements(self, policy_document):
