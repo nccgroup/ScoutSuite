@@ -3,7 +3,7 @@ from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.core.console import print_error, print_exception
 from ScoutSuite.providers.utils import run_concurrently, get_non_provider_id
 from ScoutSuite.providers.aws.utils import is_throttled
-from ScoutSuite.providers.utils import run_concurrently
+from ScoutSuite.providers.utils import run_concurrently, run_tasks_concurrently
 
 
 class IAMFacade(AWSBaseFacade):
@@ -46,32 +46,31 @@ class IAMFacade(AWSBaseFacade):
 
     async def get_policies(self):
         policies = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_policies', 'Policies', OnlyAttached=True)
+        return await run_tasks_concurrently({ (lambda: self.get_detailed_policy(policy) for policy in policies)} )
+
+    async def get_detailed_policy(self, policy):
         client = AWSFacadeUtils.get_client('iam', self.session)
+        policy_version = await run_concurrently(lambda: client.get_policy_version(PolicyArn=policy['Arn'], VersionId=policy['DefaultVersionId']))
+        policy['PolicyDocument'] = policy_version['PolicyVersion']['Document']
 
-        # TODO: Parallelize this
-        for policy in policies:
-            policy_version = await run_concurrently(
-                lambda: client.get_policy_version(PolicyArn=policy['Arn'], VersionId=policy['DefaultVersionId']))
-            policy['PolicyDocument'] = policy_version['PolicyVersion']['Document']
+        policy['attached_to'] = {}
+        attached_entities = await AWSFacadeUtils.get_multiple_entities_from_all_pages('iam', None, self.session, 'list_entities_for_policy',  ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'], PolicyArn=policy['Arn'])
 
-            policy['attached_to'] = {}
-            attached_entities = await AWSFacadeUtils.get_multiple_entities_from_all_pages('iam', None, self.session, 'list_entities_for_policy',  ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'], PolicyArn=policy['Arn'])
+        for entity_type in attached_entities:
+            resource_type = entity_type.replace('Policy', '').lower()
+            if len(attached_entities[entity_type]):
+                policy['attached_to'][resource_type] = []
 
-            for entity_type in attached_entities:
-                resource_type = entity_type.replace('Policy', '').lower()
-                if len(attached_entities[entity_type]):
-                    policy['attached_to'][resource_type] = []
+            for entity in attached_entities[entity_type]:
+                name_field = entity_type.replace('Policy', '')[
+                    :-1] + 'Name'
+                resource_name = entity[name_field]
+                id_field = entity_type.replace('Policy', '')[:-1] + 'Id'
+                resource_id = entity[id_field]
+                policy['attached_to'][resource_type].append(
+                    {'name': resource_name, 'id': resource_id})
 
-                for entity in attached_entities[entity_type]:
-                    name_field = entity_type.replace('Policy', '')[
-                        :-1] + 'Name'
-                    resource_name = entity[name_field]
-                    id_field = entity_type.replace('Policy', '')[:-1] + 'Id'
-                    resource_id = entity[id_field]
-                    policy['attached_to'][resource_type].append(
-                        {'name': resource_name, 'id': resource_id})
-
-        return policies
+        return policy
 
     async def get_users(self):
         client = AWSFacadeUtils.get_client('iam', self.session)
