@@ -37,7 +37,7 @@ class AWSFacadeUtils:
 
             :return: A dictionary with the entity keys as keys, and the fetched entities lists as values.
         """
-        
+
         client = AWSFacadeUtils.get_client(service, session, region)
 
         # Building a paginator doesn't require any API call so no need to do it concurrently:
@@ -59,7 +59,7 @@ class AWSFacadeUtils:
         return resources
 
     @staticmethod
-    def get_client(service: str, session: boto3.session.Session, region: str=None):
+    def get_client(service: str, session: boto3.session.Session, region: str = None):
         """
         Instantiates an AWS API client
 
@@ -69,7 +69,5 @@ class AWSFacadeUtils:
 
         :return:
         """
-
-        # TODO: investigate the use of a mutex to avoid useless creation of a same type of client among threads:
-        client = session.client(service, region_name=region) if region else session.client(service)
-        return AWSFacadeUtils._clients.setdefault((service, region), client)
+        return AWSFacadeUtils._clients.setdefault((service, region),
+                                                  session.client(service, region_name=region) if region else session.client(service))
