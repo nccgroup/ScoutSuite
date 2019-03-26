@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from ScoutSuite.core.console import print_error, print_exception, print_debug
+from ScoutSuite.core.console import print_error, print_exception, print_debug, print_info
 from ScoutSuite.providers.aws.utils import get_partition_name
 
 
@@ -17,6 +17,7 @@ class BaseServicesConfig(object):
         regions = [] if regions is None else regions
         for service in vars(self):
             try:
+                print_info('Fetching ' + service + '.')
                 # skip services
                 if services != [] and service not in services:
                     continue
