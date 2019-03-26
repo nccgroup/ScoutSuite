@@ -937,7 +937,7 @@ function updateDOM (anchor) {
     if (getFormat() === resultFormats.json) {
       lazyLoadingJson(resource_path)
     } else if (getFormat() === resultFormats.sqlite) {
-      console.log('TODO (SQLite) 12')
+      lazyLoadingSqlite(resource_path)
     }
     hideAll()
     hideItems(resource_path)
@@ -946,7 +946,8 @@ function updateDOM (anchor) {
     showFindings(path, resource_path)
     currentResourcePath = resource_path
     showFilters(resource_path)
-  } else if (lazyLoadingJson(resource_path) == 0) {
+  } else if (getFormat() === resultFormats.json && lazyLoadingJson(resource_path) == 0 ||
+    getFormat() === resultFormats.sqlite && lazyLoadingSqlite(resource_path) == 0) {
     // 0 is returned when the data was already loaded, a DOM update is necessary then
     if (path.endsWith('.view')) {
       // Same details, one item
@@ -979,34 +980,21 @@ function updateDOM (anchor) {
  * @param path
  * @returns {number}
  */
-// TODO: merge into load_config_from_json...
+// TODO: merge into loadConfigJson...
 function lazyLoadingJson (path) {
-  if (getFormat() === resultFormats.sqlite) {
-    console.log('TODO (SQLite) 13')
-    return 0
-  }
   var cols = 1
   var resourcePathArray = path.split('.')
   var service = resourcePathArray[1]
   var resource_type = resourcePathArray[resourcePathArray.length - 1]
   for (let group in run_results['metadata']) {
     if (service in run_results['metadata'][group]) {
-      if (service === 'summaries') {
-        continue
-      }
       if (resource_type in run_results['metadata'][group][service]['resources']) {
         cols = run_results['metadata'][group][service]['resources'][resource_type]['cols']
       }
       break
     }
   }
-  if (document.getElementById('json_format')) {
-    return loadConfigJson(path, cols)
-  } else if (document.getElementById('sqlite_format')) {
-    return loadConfigFromSqlite(path, cols)
-  } else {
-    console.log('Error: the specified format could not determined.')
-  }
+  return loadConfigJson(path, cols)
 }
 
 /**

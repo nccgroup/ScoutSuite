@@ -86,7 +86,7 @@ function loadConfigSqlite (scriptId, cols) {
     // When the path does not contain .id.
     return 0
   }
-  pathArray = scriptId.split('.')
+  var pathArray = scriptId.split('.')
   for (let i = 3; i < pathArray.length; i = i + 2) {
     pathArray[i] = 'id'
   }
@@ -103,36 +103,34 @@ function loadConfigSqlite (scriptId, cols) {
   }
 
   // Build the list based on the path, stopping at the first .id. value
+  var list = {}
   pathArray = scriptId.split('.id.')[0].split('.')
   for (let i in pathArray) {
     // Allows for creation of regions-filter etc...
     if (i.endsWith('-filters')) {
       i = i.replace('-filters', '')
     }
-    list = requestDb(pathArray).keys
-    listDict = {}
-    for (let group in list) {
-      listDict[list[group]] = requestDb(pathArray + '.' + list[group])
-      let groupDict = listDict[list[group]].keys
-      if (groupDict) {        
-        for (let service in groupDict) {
-          listDict[list[group]][groupDict[service]] = { [null] : null }
+    groups = requestDb(pathArray).keys
+    for (let group in groups) {
+      list[groups[group]] = requestDb(pathArray + '.' + groups[group])
+      let services = list[groups[group]].keys
+      if (services) {        
+        for (let service in services) {
+          list[groups[group]][services[service]] = { [null] : null }
           // If it's a summary we need to go deeper to fill the dashboard
-          if (list[group] === 'summary') {
-            let counters = requestDb('last_run.summary.' + groupDict[service]).keys
+          if (groups[group] === 'summary') {
+            let counters = requestDb('last_run.summary.' + services[service]).keys
             for (counter in counters) {
-              listDict[list[group]][groupDict[service]][counters[counter]] = 
-                requestDb('last_run.summary.' + groupDict[service] + '.' + counters[counter])
+              list[groups[group]][services[service]][counters[counter]] = 
+                requestDb('last_run.summary.' + services[service] + '.' + counters[counter])
             }
-            delete listDict[list[group]][groupDict[service]].null
+            delete list[groups[group]][services[service]].null
           }
         }
-        delete listDict[list[group]].type
-        delete listDict[list[group]].keys
+        delete list[groups[group]].type
+        delete list[groups[group]].keys
       }
     }
-    list = listDict
-    console.log(list)
     // Filters
     if (pathArray[i] === 'items' && i > 3 && pathArray[i - 2] === 'filters') {
       return 1
@@ -162,4 +160,26 @@ function loadConfigSqlite (scriptId, cols) {
   // Update the list of loaded data
   loadedConfigArray.push(scriptId)
   return 1
+}
+
+/**
+ *
+ * @param path
+ * @returns {number}
+ */
+// TODO: merge into loadConfigSqlite...
+function lazyLoadingSqlite (path) {
+  var cols = 1
+  var resourcePathArray = path.split('.')
+  var service = resourcePathArray[1]
+  var resource_type = resourcePathArray[resourcePathArray.length - 1]
+  for (let group in run_results['metadata']) {
+    if (service in run_results['metadata'][group]) {
+      if (resource_type in run_results['metadata'][group][service]['resources']) {
+        cols = run_results['metadata'][group][service]['resources'][resource_type]['cols']
+      }
+      break
+    }
+  }
+  return loadConfigSqlite(path, cols)
 }
