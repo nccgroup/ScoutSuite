@@ -20,6 +20,9 @@ function requestDb (query) {
   request.onload = function () {
     if (this.readyState === 4) {
       response = JSON.parse(this.response)
+      if (response === null || response === undefined) {
+        console.log('Error, bad request: ' + query)
+      }
     }
   }
 
@@ -110,7 +113,12 @@ function loadConfigSqlite (scriptId, cols) {
     if (i.endsWith('-filters')) {
       i = i.replace('-filters', '')
     }
-    groups = requestDb(pathArray).keys
+    groups = requestDb(pathArray)
+    if (groups === null) {
+      return 0
+    } else {
+      groups = groups.keys
+    }
     for (let group in groups) {
       list[groups[group]] = requestDb(pathArray + '.' + groups[group])
       let services = list[groups[group]].keys
@@ -170,15 +178,23 @@ function loadConfigSqlite (scriptId, cols) {
 // TODO: merge into loadConfigSqlite...
 function lazyLoadingSqlite (path) {
   var cols = 1
-  var resourcePathArray = path.split('.')
-  var service = resourcePathArray[1]
-  var resource_type = resourcePathArray[resourcePathArray.length - 1]
-  for (let group in run_results['metadata']) {
-    if (service in run_results['metadata'][group]) {
-      if (resource_type in run_results['metadata'][group][service]['resources']) {
-        cols = run_results['metadata'][group][service]['resources'][resource_type]['cols']
+  var list = {}
+  groups = requestDb('metadata').keys
+  for (let group in groups) {
+    list[groups[group]] = requestDb('metadata.' + groups[group])
+    let services = list[groups[group]].keys
+    if (services) {        
+      for (let service in services) {        
+        let resources = requestDb('metadata.' + groups[group] + '.' + services[service] + '.resources').keys
+        if (resources) {
+          for (let resource in resources) {
+            cols = requestDb('metadata.' + groups[group] + '.' + services[service] + '.resources.' +
+              resources[resource] + '.cols')
+          }
+        }
       }
-      break
+      delete list[groups[group]].type
+      delete list[groups[group]].keys
     }
   }
   return loadConfigSqlite(path, cols)

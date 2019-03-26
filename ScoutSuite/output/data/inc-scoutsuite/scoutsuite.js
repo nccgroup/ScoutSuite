@@ -141,7 +141,6 @@ function loadConfigJson (scriptId, cols) {
       i = i.replace('-filters', '')
     }
     list = list[pathArray[i]]
-    console.log(list)
     // Filters
     if (pathArray[i] === 'items' && i > 3 && pathArray[i - 2] === 'filters') {
       return 1
