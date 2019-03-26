@@ -37,7 +37,7 @@ class IAMFacade(AWSBaseFacade):
         groups = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_groups', 'Groups')
         for group in groups:
             group['Users'] = await self._fetch_group_users(group['GroupName'])
-            policies = self._get_inline_policies(
+            policies = await self._get_inline_policies(
                 'group', group['GroupId'], group['GroupName'])
             if len(policies):
                 group['inline_policies'] = policies
@@ -85,7 +85,7 @@ class IAMFacade(AWSBaseFacade):
         user_name = user['UserName']
         user_id = user['UserId']
 
-        policies = self._get_inline_policies('user', user_id, user_name)
+        policies = await self._get_inline_policies('user', user_id, user_name)
         if len(policies):
             user['inline_policies'] = policies
         user['inline_policies_count'] = len(policies)
@@ -111,7 +111,7 @@ class IAMFacade(AWSBaseFacade):
             role['instances_count'] = 'N/A'
 
             # Get role policies
-            policies = self._get_inline_policies(
+            policies = await self._get_inline_policies(
                 'role', role['RoleId'], role['RoleName'])
             if len(policies):
                 role['inline_policies'] = policies
