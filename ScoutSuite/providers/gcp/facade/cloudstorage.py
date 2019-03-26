@@ -1,9 +1,7 @@
 from google.cloud import storage
+from ScoutSuite.providers.utils import run_concurrently
 
 class CloudStorageFacade:
-    def __init__(self):
-        self._cloudstorage_client = storage.Client()
-
-    # TODO: Make truly async
     async def get_buckets(self, project_id):
-        return self._cloudstorage_client.list_buckets(project=project_id)
+        client = storage.Client(project=project_id)
+        return await run_concurrently(lambda: [bucket for bucket in client.list_buckets()])

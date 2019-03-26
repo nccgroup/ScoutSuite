@@ -3,12 +3,12 @@ from ScoutSuite.providers.base.configs.resources import Resources
 from ScoutSuite.providers.utils import get_non_provider_id
 
 class Buckets(Resources):
-    def __init__(self, storage_facade, project_id):
-        self.storage_facade = storage_facade
+    def __init__(self, gcp_facade, project_id):
+        self.gcp_facade = gcp_facade
         self.project_id = project_id
 
     async def fetch_all(self):
-        raw_buckets = await self.storage_facade.get_buckets(self.project_id)
+        raw_buckets = await self.gcp_facade.cloudstorage.get_buckets(self.project_id)
         for raw_bucket in raw_buckets:
             bucket_id, bucket = self._parse_bucket(raw_bucket)
             self[bucket_id] = bucket
