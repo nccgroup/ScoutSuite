@@ -119,7 +119,7 @@ class BaseProvider(object):
                 print_exception('Service \"{}\" does not exist, skipping.'.format(service))
                 error = True
         if error:
-            print_exception('Available services are: {}'.format(str(list(supported_services)).strip('[]')))
+            print_info('Available services are: {}'.format(str(list(supported_services)).strip('[]')))
 
         return [s for s in supported_services if (services == [] or s in services) and s not in skipped_services]
 

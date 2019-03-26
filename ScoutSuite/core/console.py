@@ -42,20 +42,28 @@ def print_error(msg):
 
 def print_exception(exception, additional_details=None):
 
-    exc_type, exc_obj, exc_tb = sys.exc_info()
-    fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+    try:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        file_name = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        line_number = exc_tb.tb_lineno
+        traceback_exc = traceback.format_exc()
+        str = '{} L{}: {}'.format(file_name, line_number, exception)
+    except Exception as e:
+        file_name = None
+        line_number = None
+        traceback_exc = None
+        str = '{}'.format(exception)
 
-    str = '{} L{}: {}'.format(fname, exc_tb.tb_lineno, exception)
     global verbose_exceptions
     if verbose_exceptions:
         logger.exception(str)
     else:
         logger.error(str)
 
-    ERRORS_LIST.append({'file': fname,
-                        'line': exc_tb.tb_lineno,
+    ERRORS_LIST.append({'file': file_name,
+                        'line': line_number,
                         'exception': '{}'.format(exception),
-                        'traceback': '{}'.format(traceback.format_exc()),
+                        'traceback': '{}'.format(traceback_exc),
                         'additional_details': additional_details})
 
 
