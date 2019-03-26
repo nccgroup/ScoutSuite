@@ -33,7 +33,7 @@ except ImportError:
     pass
 
   
-class AWSFacade(AWSaacade):
+class AWSFacade(AWSBaseFacade):
     def __init__(self, credentials: dict = None):
         self._set_session(credentials)
 
