@@ -8,7 +8,7 @@
               {{> count_badge count=resources.length target=(concat '#services.elb.regions' region 'vpcs' vpc 'elbs' @key resource_type)}}
             </h5>
           </li>
-          <div id="services.elb.regions.{{region}}.vpcs.{{vpc}}.elbs.{{@key}}.{{resource_type}}" class="accordion-body collapse">
+          <div id="services.elb.regions.{{region}}.vpcs.{{vpc}}.elbs.{{@key}}.{{resource_type}}" class="accordion-body">
             <div class="accordion-inner">
               <ul>
               {{#each resources}}

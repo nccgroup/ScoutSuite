@@ -6,7 +6,7 @@ import boto3
 
 from ScoutSuite.core.console import print_debug, print_error, print_exception, print_info
 from ScoutSuite.providers.aws.configs.services import AWSServicesConfig
-from ScoutSuite.providers.aws.services.vpc import put_cidr_name
+from ScoutSuite.providers.aws.resources.vpc.service import put_cidr_name
 from ScoutSuite.providers.base.configs.browser import combine_paths, get_object_at, get_value_at
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.utils import manage_dictionary
@@ -59,8 +59,13 @@ class AWSProvider(BaseProvider):
         """
         ip_ranges = [] if ip_ranges is None else ip_ranges
         self._map_all_subnets()
-        self._set_emr_vpc_ids()
+
+        if 'emr' in self.service_list:
+            self._set_emr_vpc_ids()
+
+        # TODO: Handle that when refactoring is done?
         # self.parse_elb_policies()
+        self._set_emr_vpc_ids()
 
         # Various data processing calls
         if 'ec2' in self.service_list:
@@ -76,9 +81,10 @@ class AWSProvider(BaseProvider):
         if 'elbv2' in self.service_list:
             self._add_security_group_data_to_elbv2()
 
+        if 's3' in self.service_list and 'iam' in self.service_list:
+            self._match_iam_policies_and_buckets()
+            
         self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
-        self._merge_route53_and_route53domains()
-        self._match_iam_policies_and_buckets()
 
         super(AWSProvider, self).preprocessing()
 
@@ -420,33 +426,6 @@ class AWSProvider(BaseProvider):
                 break
         return iam_role_info
 
-    def process_vpc_peering_connections_callback(self, current_config, path, current_path, pc_id, callback_args):
-
-        # Create a list of peering connection IDs in each VPC
-        info = 'AccepterVpcInfo' if current_config['AccepterVpcInfo'][
-                                        'OwnerId'] == self.aws_account_id else 'RequesterVpcInfo'
-        region = current_path[current_path.index('regions') + 1]
-        vpc_id = current_config[info]['VpcId']
-        if vpc_id not in self.services['vpc']['regions'][region]['vpcs']:
-            region = current_config['AccepterVpcInfo']['Region']
-            target = self.services['vpc']['regions'][region]['vpcs'][vpc_id]
-        else:
-            target = self.services['vpc']['regions'][region]['vpcs'][vpc_id]
-        manage_dictionary(target, 'peering_connections', [])
-        if pc_id not in target['peering_connections']:
-            target['peering_connections'].append(pc_id)
-
-        # VPC information for the peer'd VPC
-        current_config['peer_info'] = copy.deepcopy(
-            current_config['AccepterVpcInfo' if info == 'RequesterVpcInfo' else 'RequesterVpcInfo'])
-        if 'PeeringOptions' in current_config['peer_info']:
-            current_config['peer_info'].pop('PeeringOptions')
-        if hasattr(self, 'organization') and current_config['peer_info']['OwnerId'] in self.organization:
-            current_config['peer_info']['name'] = self.organization[current_config['peer_info']['OwnerId']][
-                'Name']
-        else:
-            current_config['peer_info']['name'] = current_config['peer_info']['OwnerId']
-
     def match_security_groups_and_resources_callback(self, current_config, path, current_path, resource_id,
                                                      callback_args):
         service = current_path[1]
@@ -511,13 +490,6 @@ class AWSProvider(BaseProvider):
                 print_error('Failed to parse %s in %s in %s' % (resource_type, vpc_id, region))
                 print_exception(e)
 
-    def _merge_route53_and_route53domains(self):
-        if 'route53domains' not in self.services:
-            return
-        # TODO: fix this
-        self.services['route53'].update(self.services['route53domains'])
-        self.services.pop('route53domains')
-
     def _set_emr_vpc_ids(self):
         clear_list = []
         self._go_to_and_do(self.services['emr'],
@@ -565,41 +537,6 @@ class AWSProvider(BaseProvider):
             current_config['clusters'].pop(cluster_id)
         if len(current_config['clusters']) == 0:
             callback_args['clear_list'].append(region)
-
-    def _parse_elb_policies(self):
-        if 'elb' in self.services:
-            self._go_to_and_do(self.services['elb'],
-                               ['regions'],
-                               [],
-                               self.parse_elb_policies_callback,
-                               {})
-
-    @staticmethod
-    def parse_elb_policies_callback(current_config, path, current_path, region_id, callback_args):
-        region_config = get_object_at(['services', 'elb', ] + current_path + [region_id])
-        region_config['elb_policies'] = current_config['elb_policies']
-        for policy_id in region_config['elb_policies']:
-            if region_config['elb_policies'][policy_id]['PolicyTypeName'] != 'SSLNegotiationPolicyType':
-                continue
-            # protocols, options, ciphers
-            policy = region_config['elb_policies'][policy_id]
-            protocols = {}
-            options = {}
-            ciphers = {}
-            for attribute in policy['PolicyAttributeDescriptions']:
-                if attribute['AttributeName'] in ['Protocol-SSLv3', 'Protocol-TLSv1', 'Protocol-TLSv1.1',
-                                                  'Protocol-TLSv1.2']:
-                    protocols[attribute['AttributeName']] = attribute['AttributeValue']
-                elif attribute['AttributeName'] in ['Server-Defined-Cipher-Order']:
-                    options[attribute['AttributeName']] = attribute['AttributeValue']
-                elif attribute['AttributeName'] == 'Reference-Security-Policy':
-                    policy['reference_security_policy'] = attribute['AttributeValue']
-                else:
-                    ciphers[attribute['AttributeName']] = attribute['AttributeValue']
-                policy['protocols'] = protocols
-                policy['options'] = options
-                policy['ciphers'] = ciphers
-                # TODO: pop ?
 
     def sort_vpc_flow_logs_callback(self, current_config, path, current_path, flow_log_id, callback_args):
         attached_resource = current_config['ResourceId']

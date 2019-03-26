@@ -8,7 +8,7 @@ class EFSFacade(AWSBaseFacade):
         file_systems = await AWSFacadeUtils.get_all_pages(
             'efs', region, self.session, 'describe_file_systems', 'FileSystems')
 
-        client = AWSFacadeUtils.get_client('efs', region, self.session)
+        client = AWSFacadeUtils.get_client('efs', self.session, region)
         for file_system in file_systems:
             file_system_id = file_system['FileSystemId']
             file_system['Tags'] = await run_concurrently(

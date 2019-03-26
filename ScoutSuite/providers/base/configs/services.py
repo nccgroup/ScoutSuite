@@ -20,6 +20,7 @@ class BaseServicesConfig(object):
             try:
                 # skip services
                 if services != [] and service not in services:
+                    print_debug('Skipping ' + service + '.')
                     continue
                 print_info('Fetching resources for the {} service'.format(format_service_name(service)))
                 service_config = getattr(self, service)
@@ -35,7 +36,7 @@ class BaseServicesConfig(object):
                     if hasattr(service_config, 'finalize'):
                         await service_config.finalize()
                 else:
-                    print_debug('No method to fetch the {} service'.format(format_service_name(service)))
+                    print_debug('No method to fetch service %s.' % service)
             except Exception as e:
-                print_error('Could not fetch the {} service'.format(format_service_name(service)))
+                print_error('Error: could not fetch %s configuration.' % service)
                 print_exception(e)

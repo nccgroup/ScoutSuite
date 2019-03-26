@@ -8,28 +8,28 @@ from ScoutSuite.providers.aws.resources.directconnect.service import DirectConne
 from ScoutSuite.providers.aws.resources.ec2.service import EC2
 from ScoutSuite.providers.aws.resources.efs.service import EFS
 from ScoutSuite.providers.aws.resources.elasticache.service import ElastiCache
-from ScoutSuite.providers.aws.services.elb import ELBConfig
+from ScoutSuite.providers.aws.resources.elb.service import ELB
 from ScoutSuite.providers.aws.resources.elbv2.service import ELBv2
+from ScoutSuite.providers.aws.resources.iam.service import IAM
 from ScoutSuite.providers.aws.resources.emr.service import EMR
-from ScoutSuite.providers.aws.services.iam import IAMConfig
-from ScoutSuite.providers.aws.services.rds import RDSConfig
+from ScoutSuite.providers.aws.resources.route53.service import Route53
+from ScoutSuite.providers.aws.resources.rds.service import RDS
 from ScoutSuite.providers.aws.resources.redshift.service import Redshift
-from ScoutSuite.providers.aws.services.route53 import Route53Config, Route53DomainsConfig
-from ScoutSuite.providers.aws.services.s3 import S3Config
-from ScoutSuite.providers.aws.services.ses import SESConfig
-from ScoutSuite.providers.aws.services.sns import SNSConfig
-from ScoutSuite.providers.aws.services.sqs import SQSConfig
-from ScoutSuite.providers.aws.services.vpc import VPCConfig
+from ScoutSuite.providers.aws.resources.s3.service import S3
+from ScoutSuite.providers.aws.resources.vpc.service import VPC
+from ScoutSuite.providers.aws.resources.sqs.service import SQS
+from ScoutSuite.providers.aws.resources.ses.service import SES
+from ScoutSuite.providers.aws.resources.sns.service import SNS
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 
 try:
+    from ScoutSuite.providers.aws.resources.dynamodb.service_private import DynamoDB
     from ScoutSuite.providers.aws.resources.config.service_private import Config
-    from ScoutSuite.providers.aws.services.dynamodb_private import DynamoDBConfig
-    from ScoutSuite.providers.aws.services.kms_private import KMSConfig
+    from ScoutSuite.providers.aws.resources.kms.service_private import KMS
 except ImportError:
-    ConfigConfig = None
-    DynamoDBConfig = None
-    KMSConfig = None
+    DynamoDB = None
+    Config = None
+    KMS = None
 
 
 class AWSServicesConfig(BaseServicesConfig):
@@ -61,26 +61,24 @@ class AWSServicesConfig(BaseServicesConfig):
         self.ec2 = EC2()
         self.efs = EFS()
         self.elasticache = ElastiCache()
-        self.elb = ELBConfig(metadata['compute']['elb'], thread_config)
+        self.iam = IAM()
+        self.elb = ELB()
         self.elbv2 = ELBv2()
         self.emr = EMR()
-        self.iam = IAMConfig(thread_config)
         self.awslambda = Lambdas()
+        self.route53 = Route53()
         self.redshift = Redshift()
-        self.rds = RDSConfig(metadata['database']['rds'], thread_config)
-        self.route53 = Route53Config(thread_config)
-        self.route53domains = Route53DomainsConfig(thread_config)
-        self.s3 = S3Config(thread_config)
-        self.ses = SESConfig(metadata['messaging']['ses'], thread_config)
-        self.sns = SNSConfig(metadata['messaging']['sns'], thread_config)
-        self.sqs = SQSConfig(metadata['messaging']['sqs'], thread_config)
-        self.vpc = VPCConfig(metadata['network']['vpc'], thread_config)
+        self.s3 = S3()
+        self.rds = RDS()
+        self.vpc = VPC()
+        self.sqs = SQS()
+        self.ses = SES()
+        self.sns = SNS()
 
         try:
+            self.dynamodb = DynamoDB()
             self.config = Config()
-            self.dynamodb = DynamoDBConfig(
-                metadata['database']['dynamodb'], thread_config)
-            self.kms = KMSConfig(metadata['security']['kms'], thread_config)
+            self.kms = KMS()
         except (NameError, TypeError):
             pass
 
