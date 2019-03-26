@@ -69,6 +69,9 @@ class JavaScriptReaderWriter(object):
                 if first_line:
                     print('%s' % first_line, file=f)
                 print('%s' % json.dumps(config, indent=4 if debug else None, separators=(',', ': '), sort_keys=True, cls=Scout2Encoder), file=f)
+        except AttributeError as e:
+            # __open_file returned None
+            pass
         except Exception as e:
             print_exception(e)
 
