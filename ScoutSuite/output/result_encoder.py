@@ -115,7 +115,7 @@ class JavaScriptEncoder(ScoutResultEncoder):
             with self.__open_file(config_path, force_write, False) as f:
                 if first_line:
                     print('%s' % first_line, file=f)
-                print('%s' % json.dumps(config, indent=4 if debug else None, separators=(',', ': '), sort_keys=True, cls=Scout2Encoder),
+                print('%s' % json.dumps(config, indent=4 if debug else None, separators=(',', ': '), sort_keys=True,
                                         cls=ScoutJsonEncoder), file=f)
         except AttributeError as e:
             # __open_file returned None
