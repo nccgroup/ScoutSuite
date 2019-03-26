@@ -31,10 +31,10 @@ function requestDb (query) {
 }
 
 function loadMetadataSqlite () {
-  hidePleaseWait()
   loadAccountIdSqlite()
   loadConfigSqlite('last_run', 1)
   loadConfigSqlite('metadata', 0)
+  hidePleaseWait()
   loadConfigSqlite('services.id.findings', 1)
   loadConfigSqlite('services.id.filters', 0) // service-specific filters
   loadConfigSqlite('services.id.regions', 0) // region filters
@@ -198,4 +198,24 @@ function lazyLoadingSqlite (path) {
     }
   }
   return loadConfigSqlite(path, cols)
+}
+
+function getLastRunResultsSqlite () {
+  groups = requestDb('last_run').keys
+  let list = {}
+  for (let group in groups) {
+    list[groups[group]] = requestDb('last_run.' + groups[group])
+    let services = list[groups[group]].keys
+    if (services) {        
+      for (let service in services) {
+        list[groups[group]][services[service]] = { [null] : null }
+        // Summary is not needed for the last run details modal
+        if (groups[group] === 'summary') {
+          break
+        }
+      }
+    }
+  }
+  let run_results = { last_run : list }
+  return run_results
 }

@@ -739,7 +739,7 @@ function load_metadata () {
  * Set up dashboards and dropdown menus
  */
 function loadMetadataJson () {
-  run_results = getScoutsuiteResults()
+  run_results = getScoutsuiteResultsJson()
 
   loadAccountIdJson()
 
@@ -793,7 +793,7 @@ function showLastRunDetails () {
   if (getFormat() === resultFormats.json) {
     $('#modal-container').html(last_run_details_template(run_results))
   } else if (getFormat() === resultFormats.sqlite) {
-    console.log('TODO (SQLite) 10')
+    $('#modal-container').html(last_run_details_template(getLastRunResultsSqlite()))
   }
   $('#modal-container').modal()
 }
@@ -1270,4 +1270,3 @@ function downloadAsJson (filename, dict) {
     }
   }
 }
-
