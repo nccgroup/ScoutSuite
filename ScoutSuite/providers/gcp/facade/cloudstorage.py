@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from google.cloud import storage
 
 class CloudStorageFacade:

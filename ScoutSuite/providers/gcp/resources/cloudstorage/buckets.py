@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from ScoutSuite.core.console import print_error
 from ScoutSuite.providers.base.configs.resources import Resources
 from ScoutSuite.providers.utils import get_non_provider_id

@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+from ScoutSuite.providers.gcp.resources.resources import GCPCompositeResources
 
 from ScoutSuite.providers.base.configs.resources import CompositeResources
 
