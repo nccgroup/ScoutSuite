@@ -50,9 +50,9 @@ class JavaScriptReaderWriter(object):
             self.timestamp = self.current_time.strftime("%Y-%m-%d_%Hh%M%z") if not timestamp else timestamp
 
 
-    def load_from_file(self, config_type, config_path = None, first_line = None):
+    def load_from_file(self, file_type, config_path = None, first_line = None):
         if not config_path:
-            config_path, first_line = get_filename(config_type, self.profile, self.report_dir)
+            config_path, first_line = get_filename(file_type, self.profile, self.report_dir)
         with open(config_path, 'rt') as f:
             json_payload = f.readlines()
             if first_line:
@@ -61,8 +61,8 @@ class JavaScriptReaderWriter(object):
         return json.loads(json_payload)
 
 
-    def save_to_file(self, config, config_type, force_write, debug):
-        config_path, first_line = get_filename(config_type, self.profile, self.report_dir)
+    def save_to_file(self, config, file_type, force_write, debug):
+        config_path, first_line = get_filename(file_type, self.profile, self.report_dir)
         print_info('Saving data to %s' % config_path)
         try:
             with self.__open_file(config_path, force_write) as f:

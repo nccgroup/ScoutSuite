@@ -6,15 +6,14 @@ from six.moves import input
 
 import coloredlogs, logging
 
+from ScoutSuite import ERRORS_LIST
+
 ########################################
 # Output configuration
 ########################################
 
 verbose_exceptions = False
 logger = logging.getLogger('scout')
-# TODO logger should name the file where the error occurred
-
-exceptions_list = []
 
 def set_config_debug_level(is_debug):
     """
@@ -53,12 +52,11 @@ def print_exception(exception, additional_details=None):
     else:
         logger.error(str)
 
-    global exceptions_list
-    exceptions_list.append({'file': fname,
-                            'line': exc_tb.tb_lineno,
-                            'exception': '{}'.format(exception),
-                            'traceback': '{}'.format(traceback.format_exc()),
-                           'additional_details': additional_details})
+    ERRORS_LIST.append({'file': fname,
+                        'line': exc_tb.tb_lineno,
+                        'exception': '{}'.format(exception),
+                        'traceback': '{}'.format(traceback.format_exc()),
+                        'additional_details': additional_details})
 
 
 def print_info(msg):

@@ -5,7 +5,7 @@ import copy
 import os
 import webbrowser
 
-from ScoutSuite import AWSCONFIG
+from ScoutSuite import DEFAULT_RESULT_FILE
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
 from ScoutSuite.core.console import set_config_debug_level, print_info, print_debug, print_error
 from ScoutSuite.core.exceptions import RuleExceptions
@@ -19,8 +19,6 @@ from ScoutSuite.providers import get_provider
 async def main(args=None):
     """
     Main method that runs a scan
-
-    :return:
     """
 
     if not args:
@@ -90,7 +88,7 @@ async def main(args=None):
         if args.get('update'):
             print_info('Updating existing data')
             current_run_services = copy.deepcopy(cloud_provider.services)
-            last_run_dict = report.jsrw.load_from_file(AWSCONFIG)
+            last_run_dict = report.jsrw.load_from_file(DEFAULT_RESULT_FILE)
             cloud_provider.services = last_run_dict['services']
             for service in cloud_provider.service_list:
                 cloud_provider.services[service] = current_run_services[service]
@@ -99,7 +97,7 @@ async def main(args=None):
     else:
         print_info('Using local data')
         # Reload to flatten everything into a python dictionary
-        last_run_dict = report.jsrw.load_from_file(AWSCONFIG)
+        last_run_dict = report.jsrw.load_from_file(DEFAULT_RESULT_FILE)
         for key in last_run_dict:
             setattr(cloud_provider, key, last_run_dict[key])
 
@@ -155,7 +153,7 @@ async def main(args=None):
 
 
 def generate_report_name(provider_code, args):
-    # TODO this should be done within the provider
+    # TODO this should be done within the providers
     # A pre-requisite to this is to generate report AFTER authentication
     if provider_code == 'aws':
         if args.get('profile'):
