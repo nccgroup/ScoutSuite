@@ -963,7 +963,6 @@ function updateDOM (anchor) {
       showFilters(resource_path)
       currentResourcePath = resource_path
     }
-    // TODO: Highlight all findings...
   } else {
     // The DOM was updated by the lazy loading function, save the current resource path
     showFilters(resource_path)
@@ -979,7 +978,6 @@ function updateDOM (anchor) {
  * @param path
  * @returns {number}
  */
-// TODO: merge into loadConfigJson...
 function lazyLoadingJson (path) {
   var cols = 1
   var resourcePathArray = path.split('.')

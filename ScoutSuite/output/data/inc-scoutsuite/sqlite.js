@@ -120,18 +120,26 @@ function loadConfigSqlite (scriptId, cols) {
       groups = groups.keys
     }
     for (let group in groups) {
-      list[groups[group]] = requestDb(pathArray + '.' + groups[group])
+      list[groups[group]] = requestDb(pathArray[i] + '.' + groups[group])
       let services = list[groups[group]].keys
       if (services) {        
         for (let service in services) {
           list[groups[group]][services[service]] = { [null] : null }
           // If it's a summary we need to go deeper to fill the dashboard
           if (groups[group] === 'summary') {
-            let counters = requestDb('last_run.summary.' + services[service]).keys
+            let counters = requestDb('last_run.' + groups[group] + '.' + services[service]).keys
             for (counter in counters) {
               list[groups[group]][services[service]][counters[counter]] = 
                 requestDb('last_run.summary.' + services[service] + '.' + counters[counter])
             }
+            delete list[groups[group]][services[service]].null
+          }
+          if (pathArray[i] === 'services') {
+            let counters = requestDb('services.' + groups[group] + '.' + services[service])
+            if (counters.keys) {
+              counters = counters.keys
+            }
+            list[groups[group]][services[service]] = counters
             delete list[groups[group]][services[service]].null
           }
         }
@@ -139,6 +147,7 @@ function loadConfigSqlite (scriptId, cols) {
         delete list[groups[group]].keys
       }
     }
+    console.log(list)
     // Filters
     if (pathArray[i] === 'items' && i > 3 && pathArray[i - 2] === 'filters') {
       return 1
@@ -175,7 +184,6 @@ function loadConfigSqlite (scriptId, cols) {
  * @param path
  * @returns {number}
  */
-// TODO: merge into loadConfigSqlite...
 function lazyLoadingSqlite (path) {
   var cols = 1
   var list = {}
@@ -219,3 +227,4 @@ function getLastRunResultsSqlite () {
   let run_results = { last_run : list }
   return run_results
 }
+
