@@ -30,8 +30,8 @@ The latest (and final) version of Scout2 can be found in <https://github.com/ncc
 The following cloud providers are currently supported/planned:
 
 -   Amazon Web Services
--   Google Cloud Platform (beta)
--   Azure (alpha)
+-   Google Cloud Platform
+-   Microsoft Azure (beta)
 
 ## Installation
 
@@ -67,7 +67,7 @@ Scout Suite is written in Python and supports the following versions:
 -   3.6
 -   3.7
 
-WARNING: Python 2.7 & 3.4 support will soon be deprecated in the following releases.
+**WARNING**: Python 2.7 & 3.4 support is planned to be deprecated in the following releases.
 
 The required libraries can be found in the
 [requirements.txt](https://github.com/nccgroup/ScoutSuite/blob/master/requirements.txt) file.
@@ -84,7 +84,7 @@ permissions:
 -   `ReadOnlyAccess`
 -   `SecurityAudit`
 
-If the usage of multi-factor authentication (MFA) is enabled, please consult [this page](https://aws.amazon.com/premiumsupport/knowledge-center/authenticate-mfa-cli/) in order to 
+If multi-factor authentication (MFA) is enabled, refer to [the AWS documentation](https://aws.amazon.com/premiumsupport/knowledge-center/authenticate-mfa-cli/) in order to 
 configure MFA authentication through the management of session tokens.
 
 #### Google Cloud Platform
@@ -244,3 +244,5 @@ You can also pass the credentials you want directly with command line arguments.
 interactively:
 
     $ python Scout.py azure --username <USERNAME> --password <PASSWORD>
+
+Additional information can be found in [the wiki](https://github.com/nccgroup/ScoutSuite/wiki).

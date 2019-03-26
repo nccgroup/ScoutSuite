@@ -1,19 +1,22 @@
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
-from ScoutSuite.providers.aws.aws import handle_truncated_response
 from ScoutSuite.providers.utils import run_concurrently
+from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 
 
-class EFSFacade:
+class EFSFacade(AWSBaseFacade):
     async def get_file_systems(self, region: str):
-        file_systems = await AWSFacadeUtils.get_all_pages('efs', region, 'describe_file_systems', 'FileSystems')
+        file_systems = await AWSFacadeUtils.get_all_pages(
+            'efs', region, self.session, 'describe_file_systems', 'FileSystems')
 
-        client = AWSFacadeUtils.get_client('efs', region)
+        client = AWSFacadeUtils.get_client('efs', self.session, region)
         for file_system in file_systems:
             file_system_id = file_system['FileSystemId']
-            file_system['Tags'] = await run_concurrently(lambda: client.describe_tags(FileSystemId=file_system_id)['Tags'])
+            file_system['Tags'] = await run_concurrently(
+                lambda: client.describe_tags(FileSystemId=file_system_id)['Tags'])
 
             # Get mount targets
-            mount_targets = await AWSFacadeUtils.get_all_pages('efs', region, 'describe_mount_targets', 'MountTargets', FileSystemId=file_system_id)
+            mount_targets = await AWSFacadeUtils.get_all_pages(
+                'efs', region, self.session, 'describe_mount_targets', 'MountTargets', FileSystemId=file_system_id)
             file_system['MountTargets'] = {}
             for mount_target in mount_targets:
                 mount_target_id = mount_target['MountTargetId']
