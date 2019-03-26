@@ -20,7 +20,7 @@ class BaseServicesConfig(object):
             try:
                 # skip services
                 if services != [] and service not in services:
-                    print_debug('Skipping ' + service + '.')
+                    print_debug('Skipping the {} service'.format(format_service_name(service)))
                     continue
                 print_info('Fetching resources for the {} service'.format(format_service_name(service)))
                 service_config = getattr(self, service)
