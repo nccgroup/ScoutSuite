@@ -1401,16 +1401,17 @@ function loadConfigSqlite (scriptId, cols) {
     listDict = {}
     for (let group in list) {
       listDict[list[group]] = requestDb(pathArray + '.' + list[group])
-      let groupDict = listDict[list[group]]
-      if (groupDict.keys) {
-        if (list[group] === 'summary') {
-          for (let service in groupDict.keys) {
-            listDict[list[group]][groupDict.keys[service]] = { [requestDb('last_run.summary.' + 
-            groupDict.keys[service]).keys] : null }
-          }
-        } else {
-          for (let service in groupDict.keys) {
-            listDict[list[group]][groupDict.keys[service]] = { [null] : null }
+      let groupDict = listDict[list[group]].keys
+      if (groupDict) {        
+        for (let service in groupDict) {
+          listDict[list[group]][groupDict[service]] = { [null] : null }
+          // If it's a summary we need to go deeper to fill the dashboard
+          if (list[group] === 'summary') {
+            let counters = requestDb('last_run.summary.' + groupDict[service]).keys
+            for (counter in counters) {
+              listDict[list[group]][groupDict[service]][counters[counter]] = { [counters[counter]] : null }
+            }
+            delete listDict[list[group]][groupDict[service]].null
           }
         }
         delete listDict[list[group]].type
