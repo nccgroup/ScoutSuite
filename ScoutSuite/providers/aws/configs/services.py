@@ -16,7 +16,6 @@ from ScoutSuite.providers.aws.resources.route53.service import Route53
 from ScoutSuite.providers.aws.resources.rds.service import RDS
 from ScoutSuite.providers.aws.resources.redshift.service import Redshift
 from ScoutSuite.providers.aws.resources.s3.service import S3
-from ScoutSuite.providers.aws.services.s3 import S3Config
 from ScoutSuite.providers.aws.resources.vpc.service import VPC
 from ScoutSuite.providers.aws.resources.sqs.service import SQS
 from ScoutSuite.providers.aws.resources.ses.service import SES
