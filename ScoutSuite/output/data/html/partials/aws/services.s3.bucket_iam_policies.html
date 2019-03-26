@@ -4,13 +4,8 @@
         {{#if resource_type}}
           <div class="list-group-item">
             <div class="accordion">
-              <h4 class="list-group-item-heading accordion-heading">{{make_title resource_type}} with access via IAM policies
-                <a class="accordion-toggle" data-toggle="collapse" href="#s3_iam_{{resource_type}}_policies_details-{{escape_special_chars ../name}}">
-                  {{> count_badge count=resource_count}}
-
-                </a>
-              </h4>
-              <div id="s3_iam_{{resource_type}}_policies_details-{{escape_special_chars ../name}}" class="accordion-body item-margin collapse">
+              <h4 class="list-group-item-heading accordion-heading">{{make_title resource_type}} with access via IAM policies</h4>
+              <div id="s3_iam_{{resource_type}}_policies_details-{{escape_special_chars ../name}}" class="accordion-body item-margin">
                 <div class="accordion-inner">
                   <table class="table-striped" width="100%" >
                     <tr>

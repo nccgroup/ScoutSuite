@@ -9,20 +9,16 @@
           <div class="list-group-item-text item-margin">Creation date: {{CreateDate}}</div>
         </div>
         <div class="list-group-item" style="padding-bottom: 0 !important;">
-          <div class="accordion">
-            <h4 class="list-group-item-heading accordion-heading">Members
-              {{> count_badge count=security_groups.length target=(concat '#iam.groups' id 'users')}}
+            <h4 class="list-group-item-heading">Members
+                {{> count_badge count=users.length target=(concat '#iam.groups' id 'users')}}
             </h4>
-            <div id="iam.groups.{{id}}.users" class="accordion-body collapse">
-              <div class="accordion-inner">
-                <ul class="no-bullet">
-                  {{#each users}}
+            <div class="accordion-inner">
+                <ul>
+                    {{#each this.users}}
                     <li><a href="javascript:showObject('services.iam.users.{{this}}')">{{get_value_at 'services.iam.users' this 'name'}}</a></li>
-                  {{/each}}
+                    {{/each}}
                 </ul>
-              </div>
             </div>
-          </div>
         </div>
         {{> services.iam.inline_policies resource_type = 'groups' resource_id = @key}}
         {{> services.iam.policies_list}}

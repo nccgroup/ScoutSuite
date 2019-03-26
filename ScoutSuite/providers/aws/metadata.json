@@ -3,8 +3,6 @@
         "emr": {
             "resources": {
                 "clusters": {
-                    "api_call": "list_clusters",
-                    "response": "Clusters",
                     "cols": 2,
                     "path": "services.emr.regions.id.vpcs.id.clusters",
                     "callbacks": [
@@ -19,8 +17,6 @@
         "cloudformation": {
             "resources": {
                 "stacks": {
-                    "api_call": "describe_stacks",
-                    "response": "Stacks",
                     "cols": 2,
                     "path": "services.cloudformation.regions.id.stacks",
                     "callbacks": [
@@ -36,8 +32,6 @@
                     "path": "services.cloudtrail.regions"
                 },
                 "trails": {
-                    "api_call": "describe_trails",
-                    "response": "trailList",
                     "cols": 2,
                     "path": "services.cloudtrail.regions.id.trails"
                 }
@@ -46,8 +40,6 @@
         "cloudwatch": {
             "resources": {
                 "alarms": {
-                    "api_call": "describe_alarms",
-                    "response": "MetricAlarms",
                     "cols": 2,
                     "path": "services.cloudwatch.regions.id.alarms"
                 }
@@ -66,8 +58,6 @@
                     "path": "services.config.regions"
                 },
                 "recorders": {
-                    "api_call": "describe_configuration_recorders",
-                    "response": "ConfigurationRecorders",
                     "path": "services.config.regions.id.recorders"
                 }
             }
@@ -139,8 +129,6 @@
         "directconnect": {
             "resources": {
                 "connections": {
-                    "api_call": "describe_connections",
-                    "response": "connections",
                     "cols": 2,
                     "path": "services.directconnect.connections"
                 }
@@ -160,8 +148,6 @@
         "ec2": {
             "resources": {
                 "instances": {
-                    "api_call": "describe_instances",
-                    "response": "Reservations",
                     "cols": 2,
                     "path": "services.ec2.regions.id.vpcs.id.instances",
                     "callbacks": [
@@ -169,29 +155,18 @@
                     ]
                 },
                 "security_groups": {
-                    "api_call": "describe_security_groups",
-                    "response": "SecurityGroups",
                     "cols": 2,
                     "path": "services.ec2.regions.id.vpcs.id.security_groups"
                 },
                 "volumes": {
-                    "api_call": "describe_volumes",
-                    "response": "Volumes",
                     "cols": 2,
                     "path": "services.ec2.regions.id.volumes"
                 },
                 "snapshots": {
-                    "api_call": "describe_snapshots",
-                    "params": {
-                        "OwnerIds": [ "_AWS_ACCOUNT_ID_" ]
-                    },
-                    "response": "Snapshots",
                     "cols": 2,
                     "path": "services.ec2.regions.id.snapshots"
                 },
                 "network_interfaces": {
-                    "api_call": "describe_network_interfaces",
-                    "response": "NetworkInterfaces",
                     "path": "services.ec2.regions.id.vpcs.id.network_interfaces",
                     "hidden": true,
                     "callbacks": [
@@ -199,11 +174,6 @@
                     ]
                 },
                 "images": {
-                    "api_call": "describe_images",
-                    "params": {
-                        "Owners": [ "_AWS_ACCOUNT_ID_" ]
-                    },
-                    "response": "Images",
                     "cols": 2,
                     "path": "services.ec2.regions.id.images"
                 }
@@ -257,8 +227,6 @@
         "awslambda": {
             "resources": {
                 "functions": {
-                    "api_call": "list_functions",
-                    "response": "Functions",
                     "path": "services.awslambda.regions.id.functions",
                     "callbacks": [
                         [ "match_security_groups_and_resources_callback", {"status_path": ["Runtime"], "sg_list_attribute_name": [ "VpcConfig", "SecurityGroupIds" ]} ]
@@ -323,8 +291,6 @@
         "dynamodb": {
             "resources": {
                 "tables": {
-                    "api_call": "list_tables",
-                    "response": "TableNames",
                     "path": "services.dynamodb.regions.id.tables"
                 }
             }
@@ -332,8 +298,6 @@
         "elasticache": {
             "resources": {
                 "clusters": {
-                    "api_call": "describe_cache_clusters",
-                    "response": "CacheClusters",
                     "cols": 2,
                     "path": "services.elasticache.regions.id.vpcs.id.clusters",
                     "callbacks": [
@@ -342,14 +306,10 @@
                     ]
                 },
                 "parameter_groups": {
-                    "api_to_call": "describe_db_parameter_groups",
-                    "response": "DBParameterGroups",
                     "cols": 2,
                     "path": "services.elasticache.regions.id.parameter_groups"
                 },
                 "security_groups": {
-                    "api_call": "describe_cache_security_groups",
-                    "response": "CacheSecurityGroups",
                     "no_exceptions": true,
                     "cols": 2,
                     "path": "services.elasticache.regions.id.security_groups"
@@ -363,8 +323,6 @@
         "rds": {
             "resources": {
                 "instances": {
-                    "api_call": "describe_db_instances",
-                    "response": "DBInstances",
                     "cols": 2,
                     "path": "services.rds.regions.id.vpcs.id.instances",
                     "callbacks": [
@@ -373,27 +331,19 @@
                     ]
                 },
                 "security_groups": {
-                    "api_call": "describe_db_security_groups",
-                    "response": "DBSecurityGroups",
                     "no_exceptions": true,
                     "cols": 2,
                     "path": "services.rds.regions.id.security_groups"
                 },
                 "snapshots": {
-                    "api_call": "describe_db_snapshots",
-                    "response": "DBSnapshots",
                     "cols": 2,
                     "path": "services.rds.regions.id.vpcs.id.snapshots"
                 },
                 "parameter_groups": {
-                    "api_call": "describe_db_parameter_groups",
-                    "response": "DBParameterGroups",
                     "cols": 2,
                     "path": "services.rds.regions.id.parameter_groups"
                 },
                 "subnet_groups": {
-                    "api_call": "describe_db_subnet_groups",
-                    "response": "DBSubnetGroups",
                     "cols": 2,
                     "path": "services.rds.regions.id.vpcs.id.subnet_groups"
                 }
@@ -437,8 +387,6 @@
             "hidden": true,
             "resources": {
                 "file_systems": {
-                    "api_call": "describe_file_systems",
-                    "response": "FileSystems",
                     "path": "services.efs.regions.id.file_systems",
                     "callbacks": [
                         [ "match_security_groups_and_resources_callback", {"status_path": ["LifeCycleState"], "sg_list_attribute_name": ["security_groups"]} ]
