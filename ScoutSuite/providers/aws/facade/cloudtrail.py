@@ -5,7 +5,7 @@ from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 
 class CloudTrailFacade(AWSBaseFacade):
     async def get_trails(self, region):
-        client = AWSFacadeUtils.get_client('cloudtrail', region, self.session)
+        client = AWSFacadeUtils.get_client('cloudtrail', self.session, region)
         trails = await run_concurrently(
             lambda: client.describe_trails()['trailList']
         )

@@ -30,7 +30,7 @@ class ElastiCacheFacade(AWSBaseFacade):
                     cluster['VpcId'] = subnet_group['VpcId']
 
     async def get_security_groups(self, region):
-        client = AWSFacadeUtils.get_client('elasticache', region, self.session)
+        client = AWSFacadeUtils.get_client('elasticache', self.session, region)
 
         try:
             return await AWSFacadeUtils.get_all_pages('elasticache', region, self.session, 'describe_cache_security_groups', 'CacheSecurityGroups')

@@ -28,7 +28,7 @@ class ELBv2Facade(AWSBaseFacade):
                     load_balancer['VpcId'] if 'VpcId' in load_balancer and load_balancer['VpcId'] else ec2_classic
 
     async def get_load_balancer_attributes(self, region: str, load_balancer_arn: str):
-        elbv2_client = AWSFacadeUtils.get_client('elbv2', region, self.session)
+        elbv2_client = AWSFacadeUtils.get_client('elbv2', self.session, region)
         return await run_concurrently(
             lambda: elbv2_client.describe_load_balancer_attributes(
                 LoadBalancerArn=load_balancer_arn)['Attributes']
