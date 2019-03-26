@@ -79,8 +79,6 @@ class AWSProvider(BaseProvider):
             self._match_iam_policies_and_buckets()
             
         self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
-        self._merge_route53_and_route53domains()
-        self._match_iam_policies_and_buckets()
 
         super(AWSProvider, self).preprocessing()
 
