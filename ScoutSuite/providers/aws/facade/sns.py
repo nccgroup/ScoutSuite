@@ -26,7 +26,7 @@ class SNSFacade(AWSBaseFacade):
         return topics
 
     async def get_and_set_topic_attributes(self, region: str, topic: {}):
-        sns_client = AWSFacadeUtils.get_client('sns', region, self.session)
+        sns_client = AWSFacadeUtils.get_client('sns', self.session, region)
         topic['attributes'] = await run_concurrently(
             lambda: sns_client.get_topic_attributes(TopicArn=topic['TopicArn'])['Attributes']
         )

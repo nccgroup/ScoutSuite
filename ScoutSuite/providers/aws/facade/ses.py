@@ -22,14 +22,14 @@ class SESFacade(AWSBaseFacade):
         return identities
 
     async def get_identity_dkim_attributes(self, region: str, identity_name: str):
-        ses_client = AWSFacadeUtils.get_client('ses', region, self.session)
+        ses_client = AWSFacadeUtils.get_client('ses', self.session, region)
         dkim_attributes = await run_concurrently(
             lambda: ses_client.get_identity_dkim_attributes(Identities=[identity_name])['DkimAttributes'][identity_name]
         )
         return identity_name, dkim_attributes
 
     async def get_identity_policies(self, region: str, identity_name: str):
-        ses_client = AWSFacadeUtils.get_client('ses', region, self.session)
+        ses_client = AWSFacadeUtils.get_client('ses', self.session, region)
         policy_names = await run_concurrently(
             lambda: ses_client.list_identity_policies(Identity=identity_name)['PolicyNames']
         )

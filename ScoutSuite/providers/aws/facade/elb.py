@@ -37,7 +37,7 @@ class ELBFacade(AWSBaseFacade):
                 await asyncio.wait(tasks)
 
     async def _get_and_set_load_balancer_attributes(self, region: str, load_balancer: {}):
-        elb_client = AWSFacadeUtils.get_client('elb', region, self.session)
+        elb_client = AWSFacadeUtils.get_client('elb', self.session, region)
         load_balancer['attributes'] = await run_concurrently(
             lambda: elb_client.describe_load_balancer_attributes(
                 LoadBalancerName=load_balancer['LoadBalancerName'])['LoadBalancerAttributes']

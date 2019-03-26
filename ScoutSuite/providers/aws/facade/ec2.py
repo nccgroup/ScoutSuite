@@ -40,7 +40,7 @@ class EC2Facade(AWSBaseFacade):
             'ec2', region, self.session, 'describe_security_groups', 'SecurityGroups', Filters=filters)
 
     async def get_vpcs(self, region: str):
-        ec2_client = AWSFacadeUtils.get_client('ec2', region, self.session)
+        ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)
         return await run_concurrently(lambda: ec2_client.describe_vpcs()['Vpcs'])
 
     async def get_images(self, region: str, owner_id: str):
@@ -89,7 +89,7 @@ class EC2Facade(AWSBaseFacade):
                 await AWSFacadeUtils.get_all_pages('ec2', region, self.session, 'describe_flow_logs', 'FlowLogs')
 
     async def get_subnets(self, region: str, vpc: str):
-        ec2_client = AWSFacadeUtils.get_client('ec2', region, self.session)
+        ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]
         subnets = await run_concurrently(
             lambda: ec2_client.describe_subnets(Filters=filters)['Subnets']

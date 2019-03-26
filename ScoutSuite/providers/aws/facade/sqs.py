@@ -7,7 +7,7 @@ import asyncio
 
 class SQSFacade(AWSBaseFacade):
     async def get_queues(self, region: str, attribute_names: []):
-        sqs_client = AWSFacadeUtils.get_client('sqs', region, self.session)
+        sqs_client = AWSFacadeUtils.get_client('sqs', self.session, region)
         raw_queues = await run_concurrently(sqs_client.list_queues)
 
         if 'QueueUrls' not in raw_queues:
@@ -28,7 +28,7 @@ class SQSFacade(AWSBaseFacade):
         return queues
 
     async def get_queue_attributes(self, region: str, queue_url: str, attribute_names: []):
-        sqs_client = AWSFacadeUtils.get_client('sqs', region, self.session)
+        sqs_client = AWSFacadeUtils.get_client('sqs', self.session, region)
         queue_attributes = await run_concurrently(
             lambda: sqs_client.get_queue_attributes(QueueUrl=queue_url, AttributeNames=attribute_names)['Attributes']
         )

@@ -26,7 +26,7 @@ class RDSFacade(AWSBaseFacade):
 
             self._instances_cache[region] = await AWSFacadeUtils.get_all_pages('rds', region, self.session, 'describe_db_instances', 'DBInstances')
 
-            client = AWSFacadeUtils.get_client('rds', region, self.session)
+            client = AWSFacadeUtils.get_client('rds', self.session, region)
             for instance in self._instances_cache[region]:
                 instance['VpcId'] = instance['DBSubnetGroup']['VpcId'] \
                     if 'DBSubnetGroup' in instance and 'VpcId' in instance['DBSubnetGroup'] \
@@ -48,7 +48,7 @@ class RDSFacade(AWSBaseFacade):
             if region in self._snapshots_cache:
                 return
 
-            client = AWSFacadeUtils.get_client('rds', region, self.session)
+            client = AWSFacadeUtils.get_client('rds', self.session, region)
             self._snapshots_cache[region] = await AWSFacadeUtils.get_all_pages('rds', region, self.session, 'describe_db_snapshots', 'DBSnapshots')
             for snapshot in self._snapshots_cache[region]:
                 snapshot_id = snapshot['DBSnapshotIdentifier']
