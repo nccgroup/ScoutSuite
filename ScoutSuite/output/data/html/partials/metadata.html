@@ -102,7 +102,7 @@
 <script src="inc-scoutsuite/theme.js"></script>
 <script>
     loadLastTheme();
-    if (isDarkThemeEnabled()) {
+    if (isDarkThemeEnabled() && document.getElementById("theme_checkbox")) {
         document.getElementById("theme_checkbox").checked = true;
     }
 </script>

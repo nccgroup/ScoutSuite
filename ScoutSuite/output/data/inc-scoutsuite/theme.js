@@ -5,7 +5,7 @@ const DARK_SCOUT_THEME = 'inc-scoutsuite/css/scoutsuite-dark.css'
 const LIGHT_SCOUT_THEME = 'inc-scoutsuite/css/scoutsuite-light.css'
 
 $(document).ready(() => {
-  if (isDarkThemeEnabled()) {
+  if (isDarkThemeEnabled() && document.getElementById("theme_checkbox")) {
     document.getElementById('theme_checkbox').checked = true
   }
 })
