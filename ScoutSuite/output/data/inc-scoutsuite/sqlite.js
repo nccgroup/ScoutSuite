@@ -20,7 +20,7 @@ function requestDb (query) {
   request.onload = function () {
     if (this.readyState === 4) {
       response = JSON.parse(this.response)
-      if (response === null || response === undefined) {
+      if (response.data === null || response.data === undefined) {
         console.log('Error, bad request: ' + query)
       }
     }
@@ -113,7 +113,7 @@ function loadConfigSqlite (scriptId, cols) {
     if (i.endsWith('-filters')) {
       i = i.replace('-filters', '')
     }
-    groups = requestDb(pathArray)
+    groups = requestDb(pathArray[i])
     if (groups === null) {
       return 0
     } else {
