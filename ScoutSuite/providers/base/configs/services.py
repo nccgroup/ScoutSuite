@@ -17,10 +17,12 @@ class BaseServicesConfig(object):
         regions = [] if regions is None else regions
         for service in vars(self):
             try:
-                print_info('Fetching ' + service + '.')
                 # skip services
                 if services != [] and service not in services:
+                    print_debug('Skipping ' + service + '.')
                     continue
+                
+                print_info('Fetching ' + service + '.')
                 service_config = getattr(self, service)
                 # call fetch method for the service
                 if 'fetch_all' in dir(service_config):
