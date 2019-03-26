@@ -3,7 +3,7 @@ from ScoutSuite.providers.aws.resources.regions import Regions
 from ScoutSuite.providers.aws.resources.resources import AWSResources
 
 
-class RegionalLambdas(AWSResources):
+class Functions(AWSResources):
     async def fetch_all(self, **kwargs):
         raw_functions = await self.facade.awslambda.get_functions(self.scope['region'])
         for raw_function in raw_functions:
@@ -17,7 +17,7 @@ class RegionalLambdas(AWSResources):
 
 class Lambdas(Regions):
     _children = [
-        (RegionalLambdas, 'functions')
+        (Functions, 'functions')
     ]
 
     def __init__(self):
