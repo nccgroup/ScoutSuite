@@ -799,6 +799,13 @@ function showLastRunDetails () {
 }
 
 /**
+ * Shows resources details modal
+ */
+function showResourcesDetails() {
+    $('#modal-container').html(resources_details_template(run_results));
+    $('#modal-container').modal();
+}
+/**
  * Show main dashboard
  */
 function show_main_dashboard () {
@@ -1083,6 +1090,17 @@ function make_title (title) {
   } else {
     return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ')
   }
+}
+
+/**
+ * Toggles between truncated and full lenght bucket name
+ */
+function toggleName(name) {
+    if (name.style.display !== 'contents') {
+        name.style.display = 'contents'
+    } else {
+        name.style.display = 'block'
+    }
 }
 
 /**
