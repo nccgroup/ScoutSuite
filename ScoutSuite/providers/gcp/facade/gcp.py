@@ -1,4 +1,3 @@
-
 from ScoutSuite.providers.gcp.facade.facade import Facade
 from ScoutSuite.providers.gcp.facade.cloudsql import CloudSQLFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
