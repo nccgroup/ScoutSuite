@@ -1271,9 +1271,9 @@ function downloadAsJson (filename, dict) {
 }
 
 function getScoutsuiteResultsSqlite () {
-  let paths = requestDb('').keys // provider_code, provider_name, result_format...
+  let paths = requestDb('').keys
   run_results = {}
-  for (let i in paths) {
+  for (let i in paths) { // Layer 0
     let list = {}
     let groups = requestDb(paths[i]) 
     if (groups.keys) {
@@ -1282,11 +1282,11 @@ function getScoutsuiteResultsSqlite () {
       run_results[paths[i]] = groups 
       continue
     }
-    for (let group in groups) { // monitor, storageaccounts
+    for (let group in groups) { // Layer 1
       list[groups[group]] = requestDb(paths[i] + '.' + groups[group])
       let services = list[groups[group]].keys
       if (services) {        
-        for (let service in services) {
+        for (let service in services) { // Layer 2
           list[groups[group]][services[service]] = { [null] : null }           
           if (paths[i] === 'services') {
             let counters = requestDb(paths[i] + '.' + groups[group] + '.' + services[service])
@@ -1299,9 +1299,22 @@ function getScoutsuiteResultsSqlite () {
             delete list[groups[group]][services[service]].null
           } else {
             let counters = requestDb(paths[i] + '.' + groups[group] + '.' + services[service]).keys
-            for (counter in counters) {
+            for (let counter in counters) { // Layer 3
               list[groups[group]][services[service]][counters[counter]] = 
                 requestDb(paths[i] + '.' + groups[group] + '.' + services[service] + '.' + counters[counter])
+              let resources = list[groups[group]][services[service]][counters[counter]].keys
+              for (let resource in resources) { // Layer 4
+                list[groups[group]][services[service]][counters[counter]][resources[resource]] = requestDb(paths[i] + '.' + 
+                groups[group] + '.' + services[service] + '.' + counters[counter] + '.' + resources[resource])
+                let items = list[groups[group]][services[service]][counters[counter]][resources[resource]].keys
+                for (let item in items) { // Layer 5
+                  list[groups[group]][services[service]][counters[counter]][resources[resource]][items[item]] = 
+                  requestDb(paths[i] + '.' + groups[group] + '.' + services[service] + '.' + counters[counter] + '.' + 
+                  resources[resource] + '.' + items[item])
+                  delete list[groups[group]][services[service]][counters[counter]].type
+                  delete list[groups[group]][services[service]][counters[counter]].keys
+                }
+              }
             }
             delete list[groups[group]][services[service]].null
           }
