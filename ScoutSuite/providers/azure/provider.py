@@ -1,25 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import os
-import json
-
-from getpass import getpass
 
 from ScoutSuite.core.console import print_error, print_exception
 
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.azure.configs.services import AzureServicesConfig
 
-from msrestazure.azure_active_directory import MSIAuthentication
-from azure.mgmt.resource import SubscriptionClient
-from azure.common.credentials import ServicePrincipalCredentials, UserPassCredentials, get_azure_cli_credentials
-
-
-class AzureCredentials:
-
-    def __init__(self, credentials, subscription_id):
-        self.credentials = credentials
-        self.subscription_id = subscription_id
 
 
 class AzureProvider(BaseProvider):
@@ -40,6 +27,9 @@ class AzureProvider(BaseProvider):
         self.provider_name = 'Microsoft Azure'
 
         self.services_config = AzureServicesConfig
+        
+        self.credentials = kwargs['credentials']
+        self.aws_account_id = self.credentials.aws_account_id # TODO : Get rid of aws_account_id
 
         super(AzureProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
