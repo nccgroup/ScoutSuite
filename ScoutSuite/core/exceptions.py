@@ -5,7 +5,7 @@ Exceptions handling
 
 from ScoutSuite.core.console import print_debug
 
-from ScoutSuite import EXCEPTIONS
+from ScoutSuite import DEFAULT_EXCEPTIONS_FILE
 from ScoutSuite.output.js import JavaScriptReaderWriter
 
 
@@ -15,7 +15,7 @@ class RuleExceptions(object):
         self.profile = profile
         self.file_path = file_path
         self.jsrw = JavaScriptReaderWriter(self.profile)
-        self.exceptions = self.jsrw.load_from_file(config_type=EXCEPTIONS,
+        self.exceptions = self.jsrw.load_from_file(file_type=DEFAULT_EXCEPTIONS_FILE,
                                                    config_path=self.file_path,
                                                    first_line=True)
 

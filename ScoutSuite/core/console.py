@@ -4,53 +4,72 @@ import traceback
 
 from six.moves import input
 
+import coloredlogs, logging
+
+from ScoutSuite import ERRORS_LIST
 
 ########################################
-# Print configuration functions
+# Output configuration
 ########################################
 
-def config_debug_level(enable):
+verbose_exceptions = False
+logger = logging.getLogger('scout')
+
+def set_config_debug_level(is_debug):
     """
     Configure whether full stacktraces should be dumped in the console output
-
-    :param enable:
-
-    :return:
     """
     global verbose_exceptions
-    verbose_exceptions = enable
+    verbose_exceptions = is_debug
+    coloredlogs.install(level='DEBUG' if is_debug else 'INFO', logger=logger)
 
 
 ########################################
-# Print functions
+# Output functions
 ########################################
+
+def print_generic(msg):
+    logger.info(msg)
+
 
 def print_debug(msg):
-    if verbose_exceptions:
-        print_generic(sys.stderr, msg)
+    logger.debug(msg)
 
 
-def print_error(msg, new_line=True):
-    print_generic(sys.stderr, msg, new_line)
+def print_error(msg):
+    logger.error(msg)
 
 
-def print_exception(e, debug_only=False):
+def print_exception(exception, additional_details=None):
+
+    try:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        file_name = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        line_number = exc_tb.tb_lineno
+        traceback_exc = traceback.format_exc()
+        str = '{} L{}: {}'.format(file_name, line_number, exception)
+    except Exception as e:
+        file_name = None
+        line_number = None
+        traceback_exc = None
+        str = '{}'.format(exception)
+
     global verbose_exceptions
     if verbose_exceptions:
-        print_error(str(traceback.format_exc()))
-    elif not debug_only:
-        print_error(str(e))
+        logger.exception(str)
+    else:
+        logger.error(str)
+
+    ERRORS_LIST.append({'file': file_name,
+                        'line': line_number,
+                        'exception': '{}'.format(exception),
+                        'traceback': '{}'.format(traceback_exc),
+                        'additional_details': additional_details})
 
 
-def print_generic(out, msg, new_line=True):
-    out.write(msg)
-    out.flush()
-    if new_line:
-        out.write('\n')
+def print_info(msg):
 
-
-def print_info(msg, new_line=True):
-    print_generic(sys.stdout, msg, new_line)
+    print_generic(msg)
 
 
 ########################################
@@ -94,7 +113,8 @@ def prompt_overwrite(filename, force_write, test_input=None):
 
 
 def prompt_value(question, choices=None, default=None, display_choices=True, display_indices=False,
-                 authorize_list=False, is_question=False, no_confirm=False, required=True, regex=None,
+                 authorize_list=False, is_question=False, no_confirm=False, required=True,
+                 regex=None,
                  regex_format='', max_laps=5, test_input=None, return_index=False):
     """
     Prompt for a value
@@ -152,7 +172,8 @@ def prompt_value(question, choices=None, default=None, display_choices=True, dis
         elif choices:
             user_choices = [item.strip() for item in choice.split(',')]
             if not authorize_list and len(user_choices) > 1:
-                print_error('Error: multiple values are not supported; please enter a single value.')
+                print_error(
+                    'Error: multiple values are not supported; please enter a single value.')
             else:
                 choice_valid = True
                 if display_indices and int(choice) < len(choices):
@@ -178,7 +199,8 @@ def prompt_value(question, choices=None, default=None, display_choices=True, dis
             can_return = True
         if can_return:
             # Manually confirm that the entered value is correct if needed
-            if no_confirm or prompt_yes_no('You entered "' + choice + '". Is that correct', test_input=test_input):
+            if no_confirm or prompt_yes_no('You entered "' + choice + '". Is that correct',
+                                           test_input=test_input):
                 return int(int_choice) if return_index else choice
 
 
