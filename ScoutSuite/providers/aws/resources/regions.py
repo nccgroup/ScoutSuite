@@ -25,18 +25,10 @@ class Regions(AWSCompositeResources, metaclass=abc.ABCMeta):
                 'name': region
             }
 
-        # TODO: make a refactoring of the following:
-        if len(self['regions']) == 0:
-            return
-        tasks = {
-            asyncio.ensure_future(
-                self._fetch_children(
-                    self['regions'][region],
-                    {'region': region, 'owner_id': account_id}
-                )
-            ) for region in self['regions']
-        }
-        await asyncio.wait(tasks)
+        await self._fetch_children_of_all_resources(
+            resources=self['regions'],
+            scopes={region: {'region': region, 'owner_id': account_id} for region in self['regions']}
+        )
 
         self._set_counts()
 
