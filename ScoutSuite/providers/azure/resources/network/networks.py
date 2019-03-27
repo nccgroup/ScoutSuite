@@ -15,7 +15,7 @@ class Networks(AzureCompositeResources):
         # TODO: build that facade somewhere else:
         facade = NetworkFacade(credentials.credentials, credentials.subscription_id)
 
-        await self._fetch_children(parent=self, facade=facade)
+        await self._fetch_children(resource_parent=self, facade=facade)
 
         self['network_security_groups_count'] = len(self['network_security_groups'])
         self['network_watchers_count'] = len(self['network_watchers'])

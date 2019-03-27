@@ -17,7 +17,7 @@ class SecurityCenter(AzureCompositeResources):
         # TODO: build that facade somewhere else:
         facade = SecurityCenterFacade(credentials.credentials, credentials.subscription_id)
 
-        await self._fetch_children(parent=self, facade=facade)
+        await self._fetch_children(resource_parent=self, facade=facade)
 
         self['auto_provisioning_settings_count'] = len(self['auto_provisioning_settings'])
         self['pricings_count'] = len(self['pricings'])
