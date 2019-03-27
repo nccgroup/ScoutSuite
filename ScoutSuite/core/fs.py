@@ -5,7 +5,7 @@ import datetime
 import json
 import os
 
-from ScoutSuite.core.console import print_exception, prompt_overwrite
+from ScoutSuite.core.console import print_exception, prompt_overwrite, print_info
 from ScoutSuite.core.conditions import pass_condition
 
 
@@ -101,8 +101,7 @@ def save_blob_as_json(filename, blob, force_write):
     try:
         if prompt_overwrite(filename, force_write):
             with open(filename, 'wt') as f:
-                print('%s' % json.dumps(blob, indent=4, separators=(',', ': '), sort_keys=True,
-                                        cls=CustomJSONEncoder), file=f)
+                print_info('%s' % json.dumps(blob, indent=4, separators=(',', ': '), sort_keys=True,
+                                             cls=CustomJSONEncoder), file=f)
     except Exception as e:
         print_exception(e)
-        pass

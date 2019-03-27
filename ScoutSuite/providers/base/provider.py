@@ -111,6 +111,16 @@ class BaseProvider(object):
 
     @staticmethod
     def _build_services_list(supported_services, services, skipped_services):
+
+        # Ensure services and skipped services exist, otherwise log exception
+        error = False
+        for service in services+skipped_services:
+            if service not in supported_services:
+                print_exception('Service \"{}\" does not exist, skipping.'.format(service))
+                error = True
+        if error:
+            print_info('Available services are: {}'.format(str(list(supported_services)).strip('[]')))
+
         return [s for s in supported_services if (services == [] or s in services) and s not in skipped_services]
 
     def _update_last_run(self, current_time, ruleset):
@@ -326,11 +336,12 @@ class BaseProvider(object):
                                                callback_args)
 
         except Exception as e:
-            print_exception(e)
-            print_info('Path: %s' % str(current_path))
-            print_info('Key = %s' % str(key) if 'key' in locals() else 'not defined')
-            print_info('Value = %s' % str(value) if 'value' in locals() else 'not defined')
-            print_info('Path = %s' % path)
+            print_exception(e, {'current path': '{}'.format(current_path),
+                                'key': '{}'.format(key if 'key' in locals() else 'not defined'),
+                                'value': '{}'.format(value if 'value' in locals() else 'not defined'),
+                                'path': '{}'.format(path),
+                                }
+                            )
 
     def _new_go_to_and_do(self, current_config, path, current_path, callbacks):
         """
@@ -381,8 +392,9 @@ class BaseProvider(object):
                             tmp.append(i)
                             self._new_go_to_and_do(current_config[key][i], copy.deepcopy(path), tmp, callbacks)
         except Exception as e:
-            print_exception(e)
-            print_info('Path: %s' % str(current_path))
-            print_info('Key = %s' % str(key) if 'key' in locals() else 'not defined')
-            print_info('Value = %s' % str(value) if 'value' in locals() else 'not defined')
-            print_info('Path = %s' % path)
+            print_exception(e, {'current path': '{}'.format(current_path),
+                                'key': '{}'.format(key if 'key' in locals() else 'not defined'),
+                                'value': '{}'.format(value if 'value' in locals() else 'not defined'),
+                                'path': '{}'.format(path),
+                                }
+                            )
