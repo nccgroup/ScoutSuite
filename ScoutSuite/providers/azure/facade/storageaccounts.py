@@ -37,11 +37,11 @@ class StorageAccountsFacade:
     async def get_and_set_activity_logs(self, storage_account):
         client = MonitorManagementClient(self._credentials, self._subscription_id)
 
-        # time format used by Azure API:
+        # Time format used by Azure API:
         time_format = "%Y-%m-%dT%H:%M:%S.%f"
         # Azure API uses UTC time, we need to use the same to avoid bad requests:
         utc_now = datetime.datetime.utcnow()
-        # activity logs are only archived for a period of 90 days max (requesting a timespan of more than that ends up
+        # Activity logs are only archived for a period of 90 days max (requesting a timespan of more than that ends up
         # with a bad request):
         timespan = datetime.timedelta(90)
 
