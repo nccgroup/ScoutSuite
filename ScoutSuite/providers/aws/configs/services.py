@@ -51,7 +51,8 @@ class AWSServicesConfig(BaseServicesConfig):
     :ivar sqs:                          SQS configuration
     """
 
-    def __init__(self, metadata=None, thread_config=4, **kwargs):
+    def __init__(self, credentials=None, thread_config=4, **kwargs):
+        super(AWSServicesConfig, self).__init__(credentials, thread_config)
 
         super(AWSServicesConfig, self).__init__(metadata, thread_config)
         self.cloudwatch = CloudWatch()

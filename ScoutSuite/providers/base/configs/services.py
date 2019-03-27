@@ -7,7 +7,7 @@ from ScoutSuite.providers.aws.utils import get_partition_name
 
 class BaseServicesConfig(object):
 
-    def __init__(self, metadata=None, thread_config=4):
+    def __init__(self, credentials=None, thread_config=4):
         pass
 
     def _is_provider(self, provider_name):
