@@ -6,7 +6,7 @@ from ScoutSuite.core.console import print_error
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
 class GCPAuthenticationStrategy(AuthenticationStrategy):
-   
+
     def authenticate(self, user_account=None, service_account=None, **kargs):
         """
         Implements authentication for the GCP provider
@@ -24,9 +24,10 @@ class GCPAuthenticationStrategy(AuthenticationStrategy):
             print_error('Failed to authenticate to GCP - no supported account type')
             raise AuthenticationException()
 
-        credentials, _ = google.auth.default()
+        credentials, default_project_id = google.auth.default()
         if not credentials:
             raise AuthenticationException()
-        
+
         credentials.is_service_account = service_account is not None
+        credentials.default_project_id = default_project_id
         return credentials

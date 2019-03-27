@@ -75,15 +75,15 @@ class GCPProvider(BaseProvider):
             self.aws_account_id = self.organization_id  # FIXME this is for AWS
             self.profile = self.organization_id  # FIXME this is for AWS
 
-        # # Project inferred from default configuration
-        # elif project_id:
-        #     self.aws_account_id = project_id  # FIXME this is for AWS
-        #     self.profile = project_id  # FIXME this is for AWS
+        # Project inferred from default configuration
+        elif self.credentials.default_project_id:
+            self.aws_account_id = self.credentials.default_project_id  # FIXME this is for AWS
+            self.profile = self.credentials.default_project_id  # FIXME this is for AWS
 
     async def fetch(self, regions=None, skipped_regions=None, partition_name=None):
         self._get_projects()
         self.services.set_projects(projects=self.projects)
-        super(GCPProvider, self).fetch(regions, skipped_regions, partition_name)
+        await super(GCPProvider, self).fetch(regions, skipped_regions, partition_name)
 
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
@@ -119,9 +119,9 @@ class GCPProvider(BaseProvider):
         elif self.organization_id:
             self.projects = self._gcp_facade_get_projects(parent_type='organization', parent_id=self.organization_id)
 
-        # # Project inferred from default configuration
-        # elif project_id:
-        #     self.projects = self._gcp_facade_get_projects(parent_type='project', parent_id=project_id)
+        # Project inferred from default configuration
+        elif self.credentials.default_project_id:
+            self.projects = self._gcp_facade_get_projects(parent_type='project', parent_id=self.credentials.default_project_id)
 
         # Raise exception if none of the above
         else:
