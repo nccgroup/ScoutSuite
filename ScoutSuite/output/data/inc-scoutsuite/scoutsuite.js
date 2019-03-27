@@ -110,7 +110,7 @@ var loadAccountIdJson = function () {
  * @param cols
  * @returns {number}
  */
-function loadConfigJson (scriptId, cols) {
+function loadConfig (scriptId, cols) {
   // Abort if data was previously loaded
   if (loadedConfigArray.indexOf(scriptId) > 0) {
     // When the path does not contain .id.
@@ -617,11 +617,7 @@ function showObject (path, attr_name, attr_value) {
  * @param {string} path
  */
 function getResource (path) {
-  if (getFormat() === resultFormats.json) {
-    let data = run_results
-  } else if (getFormat() === resultFormats.sqlite) {
-    console.log('TODO (SQLite) 5')
-  }
+  let data = run_results
   for (const attribute of path.split('.')) {
     data = data[attribute]
   }
@@ -743,11 +739,11 @@ function loadMetadataJson () {
 
   loadAccountIdJson()
 
-  loadConfigJson('last_run', 1)
-  loadConfigJson('metadata', 0)
-  loadConfigJson('services.id.findings', 1)
-  loadConfigJson('services.id.filters', 0) // service-specific filters
-  loadConfigJson('services.id.regions', 0) // region filters
+  loadConfig('last_run', 1)
+  loadConfig('metadata', 0)
+  loadConfig('services.id.findings', 1)
+  loadConfig('services.id.filters', 0) // service-specific filters
+  loadConfig('services.id.regions', 0) // region filters
 
   for (let group in run_results['metadata']) {
     for (let service in run_results['metadata'][group]) {
@@ -790,11 +786,7 @@ function hidePleaseWait () {
  * Shows last run details modal
  */
 function showLastRunDetails () {
-  if (getFormat() === resultFormats.json) {
-    $('#modal-container').html(last_run_details_template(run_results))
-  } else if (getFormat() === resultFormats.sqlite) {
-    $('#modal-container').html(last_run_details_template(getLastRunResultsSqlite()))
-  }
+  $('#modal-container').html(last_run_details_template(run_results))
   $('#modal-container').modal()
 }
 
@@ -880,11 +872,7 @@ window.onhashchange = showPageFromHash
  */
 function get_value_at (path) {
   let pathArray = path.split('.')
-  if (getFormat() === resultFormats.json) {
-    let value = run_results
-  } else if (getFormat() === resultFormats.sqlite) {
-    console.log('TODO (SQLite) 11')
-  }
+  let value = run_results
   for (let p in pathArray) {
     try {
       value = value[pathArray[p]]
@@ -940,11 +928,7 @@ function updateDOM (anchor) {
     show_main_dashboard()
   } else if (path.endsWith('.items')) {
     // Switch view for findings
-    if (getFormat() === resultFormats.json) {
-      lazyLoadingJson(resource_path)
-    } else if (getFormat() === resultFormats.sqlite) {
-      lazyLoadingSqlite(resource_path)
-    }
+    lazyLoadingJson(resource_path)
     hideAll()
     hideItems(resource_path)
     hideLinks(resource_path)
@@ -952,8 +936,7 @@ function updateDOM (anchor) {
     showFindings(path, resource_path)
     currentResourcePath = resource_path
     showFilters(resource_path)
-  } else if (getFormat() === resultFormats.json && lazyLoadingJson(resource_path) == 0 ||
-    getFormat() === resultFormats.sqlite && lazyLoadingSqlite(resource_path) == 0) {
+  } else if (lazyLoadingJson(resource_path) == 0) {
     // 0 is returned when the data was already loaded, a DOM update is necessary then
     if (path.endsWith('.view')) {
       // Same details, one item
@@ -998,7 +981,7 @@ function lazyLoadingJson (path) {
       break
     }
   }
-  return loadConfigJson(path, cols)
+  return loadConfig(path, cols)
 }
 
 /**
@@ -1285,4 +1268,50 @@ function downloadAsJson (filename, dict) {
       document.body.removeChild(link)
     }
   }
+}
+
+function getScoutsuiteResultsSqlite () {
+  let paths = requestDb('').keys // provider_code, provider_name, result_format...
+  run_results = {}
+  for (let i in paths) {
+    let list = {}
+    let groups = requestDb(paths[i]) 
+    if (groups.keys) {
+      groups = groups.keys
+    } else {
+      run_results[paths[i]] = groups 
+      continue
+    }
+    for (let group in groups) { // monitor, storageaccounts
+      list[groups[group]] = requestDb(paths[i] + '.' + groups[group])
+      let services = list[groups[group]].keys
+      if (services) {        
+        for (let service in services) {
+          list[groups[group]][services[service]] = { [null] : null }           
+          if (paths[i] === 'services') {
+            let counters = requestDb(paths[i] + '.' + groups[group] + '.' + services[service])
+            if (counters.keys) {
+              counters = counters.keys
+            } else {
+              continue
+            }
+            list[groups[group]][services[service]] = counters
+            delete list[groups[group]][services[service]].null
+          } else {
+            let counters = requestDb(paths[i] + '.' + groups[group] + '.' + services[service]).keys
+            for (counter in counters) {
+              list[groups[group]][services[service]][counters[counter]] = 
+                requestDb(paths[i] + '.' + groups[group] + '.' + services[service] + '.' + counters[counter])
+            }
+            delete list[groups[group]][services[service]].null
+          }
+        }
+        delete list[groups[group]].type
+        delete list[groups[group]].keys
+      }
+    }
+    run_results[paths[i]] = list
+  }
+  console.log(run_results)
+  return run_results
 }
