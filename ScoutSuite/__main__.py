@@ -13,6 +13,7 @@ from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset
 from ScoutSuite.output.html import Scout2Report
 from ScoutSuite.providers import get_provider
+from ScoutSuite.providers.base.authentication_strategy_factory import get_authentication_strategy
 
 
 # noinspection PyBroadException
@@ -33,6 +34,27 @@ async def main(args=None):
 
     print_info('Launching Scout')
 
+    auth_strategy = get_authentication_strategy(args.get('provider'))
+    if not args.get('fetch_local'):
+        credentials = auth_strategy.authenticate(profile=args.get('profile'),
+                                                 user_account=args.get('user_account'),
+                                                 service_account=args.get('service_account'),
+                                                 cli=args.get('cli'),
+                                                 msi=args.get('msi'),
+                                                 service_principal=args.get('service_principal'),
+                                                 file_auth=args.get('file_auth'),
+                                                 tenant_id=args.get('tenant_id'),
+                                                 subscription_id=args.get('subscription_id'),
+                                                 client_id=args.get('client_id'),
+                                                 client_secret=args.get('client_secret'),
+                                                 username=args.get('username'),
+                                                 password=args.get('password')
+                                                )
+
+    if not credentials:
+        return 401
+
+
     # Create a cloud provider object
     cloud_provider = get_provider(provider=args.get('provider'),
                                   profile=args.get('profile'),
@@ -44,37 +66,35 @@ async def main(args=None):
                                   timestamp=args.get('timestamp'),
                                   services=args.get('services'),
                                   skipped_services=args.get('skipped_services'),
-                                  thread_config=args.get('thread_config'))
+                                  thread_config=args.get('thread_config'),
+                                  credentials=credentials)
 
     report_file_name = generate_report_name(cloud_provider.provider_code, args)
 
     # TODO: move this to after authentication, so that the report can be more specific to what's being scanned.
     # For example if scanning with a GCP service account, the SA email can only be known after authenticating...
     # Create a new report
-    report = Scout2Report(args.get('provider'), report_file_name, args.get(
-        'report_dir'), args.get('timestamp'))
+    report = Scout2Report(args.get('provider'), report_file_name, args.get('report_dir'), args.get('timestamp'))
 
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
-        print_info('Authenticating to {}'.format(cloud_provider.provider_name))
-        # Authenticate to the cloud provider
-        authenticated = cloud_provider.authenticate(profile=args.get('profile'),
-                                                    user_account=args.get('user_account'),
-                                                    service_account=args.get('service_account'),
-                                                    cli=args.get('cli'),
-                                                    msi=args.get('msi'),
-                                                    service_principal=args.get('service_principal'),
-                                                    file_auth=args.get('file_auth'),
-                                                    tenant_id=args.get('tenant_id'),
-                                                    subscription_id=args.get('subscription_id'),
-                                                    client_id=args.get('client_id'),
-                                                    client_secret=args.get('client_secret'),
-                                                    username=args.get('username'),
-                                                    password=args.get('password'))
+    #     # Authenticate to the cloud provider
+    #     authenticated = cloud_provider.authenticate(profile=args.get('profile'),
+    #                                                 user_account=args.get('user_account'),
+    #                                                 service_account=args.get('service_account'),
+    #                                                 cli=args.get('cli'),
+    #                                                 msi=args.get('msi'),
+    #                                                 service_principal=args.get('service_principal'),
+    #                                                 file_auth=args.get('file_auth'),
+    #                                                 tenant_id=args.get('tenant_id'),
+    #                                                 subscription_id=args.get('subscription_id'),
+    #                                                 client_id=args.get('client_id'),
+    #                                                 client_secret=args.get('client_secret'),
+    #                                                 username=args.get('username'),
+    #                                                 password=args.get('password'))
 
-        if not authenticated:
-            print_error("Authentication failure")
-            return 401
+    #    if not authenticated:
+    #         return 401
 
         # Fetch data from provider APIs
         try:
@@ -135,6 +155,16 @@ async def main(args=None):
             exceptions = {}
     else:
             exceptions = {}
+    # Handle exceptions
+    try:
+        exceptions = RuleExceptions(
+            args.get('profile'), args.get('exceptions')[0])
+        exceptions.process(cloud_provider)
+        exceptions = exceptions.exceptions
+    except Exception as e:
+        print_debug(
+            'Warning, failed to load exceptions. The file may not exist or may have an invalid format.')
+        exceptions = {}
 
     # Finalize
     cloud_provider.postprocessing(report.current_time, finding_rules)

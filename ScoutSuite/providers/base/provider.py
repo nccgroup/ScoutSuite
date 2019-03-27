@@ -25,8 +25,7 @@ class BaseProvider(object):
     all cloud providers
     """
 
-    def __init__(self, report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4,
-                 **kwargs):
+    def __init__(self, report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
         """
 
         :aws_account_id     AWS account ID
@@ -38,7 +37,6 @@ class BaseProvider(object):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
-        self.credentials = None
         self.last_run = None
         self.metadata = None
 
