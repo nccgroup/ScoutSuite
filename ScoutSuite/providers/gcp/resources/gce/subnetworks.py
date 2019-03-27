@@ -1,5 +1,4 @@
 from ScoutSuite.providers.base.configs.resources import Resources
-from ScoutSuite.providers.gcp.resources.projects import Projects
 from ScoutSuite.providers.gcp.resources.gce.regions import Regions
 
 class RegionSubnetworks(Resources):
