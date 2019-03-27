@@ -1,4 +1,4 @@
-from ScoutSuite.providers.gcp.resources.gce import GCPCompositeResources
+from ScoutSuite.providers.gcp.resources.resources import GCPCompositeResources
 from ScoutSuite.providers.gcp.resources.gce.instance_disks import InstanceDisks
 
 class Instances(GCPCompositeResources):

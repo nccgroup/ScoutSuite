@@ -8,10 +8,10 @@ from ScoutSuite.providers.gcp.resources.gce.subnetworks import Subnetworks
 class ComputeEngine(Projects):
     _children = [ 
         (Firewalls, 'firewalls'),
-        (Instances, 'instances')
-        (Networks, 'networks')
-        (Snapshots, 'snapshots')
-        (Subnetworks, 'subnetworks')
+        (Instances, 'instances'),
+        (Networks, 'networks'),
+        (Snapshots, 'snapshots'),
+        (Subnetworks, 'subnetworks'),
      ]
 
     def __init__(self, gcp_facade):
