@@ -21,6 +21,7 @@ from ScoutSuite.providers.aws.resources.sqs.service import SQS
 from ScoutSuite.providers.aws.resources.ses.service import SES
 from ScoutSuite.providers.aws.resources.sns.service import SNS
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
+from ScoutSuite.providers.aws.facade.facade import AWSFacade
 
 try:
     from ScoutSuite.providers.aws.resources.dynamodb.service_private import DynamoDB
@@ -54,27 +55,28 @@ class AWSServicesConfig(BaseServicesConfig):
     def __init__(self, credentials=None, thread_config=4, **kwargs):
         super(AWSServicesConfig, self).__init__(credentials, thread_config)
 
-        super(AWSServicesConfig, self).__init__(metadata, thread_config)
-        self.cloudwatch = CloudWatch()
-        self.cloudformation = CloudFormation()
-        self.cloudtrail = CloudTrail()
-        self.directconnect = DirectConnect()
-        self.ec2 = EC2()
-        self.efs = EFS()
-        self.elasticache = ElastiCache()
-        self.iam = IAM()
-        self.elb = ELB()
-        self.elbv2 = ELBv2()
-        self.emr = EMR()
-        self.awslambda = Lambdas()
-        self.route53 = Route53()
-        self.redshift = Redshift()
-        self.s3 = S3()
-        self.rds = RDS()
-        self.vpc = VPC()
-        self.sqs = SQS()
-        self.ses = SES()
-        self.sns = SNS()
+        facade = AWSFacade(credentials)
+
+        self.cloudwatch = CloudWatch(facade)
+        self.cloudformation = CloudFormation(facade)
+        self.cloudtrail = CloudTrail(facade)
+        self.directconnect = DirectConnect(facade)
+        self.ec2 = EC2(facade)
+        self.efs = EFS(facade)
+        self.elasticache = ElastiCache(facade)
+        self.iam = IAM(facade)
+        self.elb = ELB(facade)
+        self.elbv2 = ELBv2(facade)
+        self.emr = EMR(facade)
+        self.awslambda = Lambdas(facade)
+        self.route53 = Route53(facade)
+        self.redshift = Redshift(facade)
+        self.s3 = S3(facade)
+        self.rds = RDS(facade)
+        self.vpc = VPC(facade)
+        self.sqs = SQS(facade)
+        self.ses = SES(facade)
+        self.sns = SNS(facade)
 
         try:
             self.dynamodb = DynamoDB()

@@ -26,7 +26,7 @@ except ImportError:
 
 class AzureServicesConfig(BaseServicesConfig):
 
-    def __init__(self, metadata=None, thread_config=4, **kwargs):
+    def __init__(self, credentials=None, thread_config=4, **kwargs):
 
         self.storageaccounts = StorageAccounts()
         self.securitycenter = SecurityCenter()

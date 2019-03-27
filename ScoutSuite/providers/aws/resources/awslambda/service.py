@@ -20,5 +20,5 @@ class Lambdas(Regions):
         (Functions, 'functions')
     ]
 
-    def __init__(self):
-        super(Lambdas, self).__init__('lambda')
+    def __init__(self, facade: AWSFacade):
+        super(Lambdas, self).__init__('lambda', facade)

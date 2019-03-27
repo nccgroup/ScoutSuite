@@ -7,15 +7,11 @@ from ScoutSuite.providers.aws.facade.facade import AWSFacade
 
 
 class Regions(AWSCompositeResources, metaclass=abc.ABCMeta):
-    def __init__(self, service):
+    def __init__(self, service, facade):
         self.service = service
-        # TODO: Should be injected
-        self.facade = AWSFacade()
+        self.facade = facade
 
     async def fetch_all(self, credentials, regions=None, partition_name='aws'):
-        # TODO: This should not be set here, the facade should be injected and already authenticated
-        self.facade._set_session(credentials) 
-        
         self['regions'] = {}
         account_id = get_aws_account_id(credentials)
         for region in await self.facade.build_region_list(self.service, regions, partition_name):

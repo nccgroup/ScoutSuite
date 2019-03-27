@@ -1,8 +1,8 @@
-from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.aws.resources.regions import Regions
 from ScoutSuite.providers.aws.resources.resources import AWSResources
 
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.providers.aws.facade.facade import AWSFacade
 
 
 class Alarms(AWSResources):
@@ -30,5 +30,5 @@ class CloudWatch(Regions):
         (Alarms, 'alarms')
     ]
 
-    def __init__(self):
-        super(CloudWatch, self).__init__('cloudwatch')
+    def __init__(self, facade: AWSFacade):
+        super(CloudWatch, self).__init__('cloudwatch', facade)

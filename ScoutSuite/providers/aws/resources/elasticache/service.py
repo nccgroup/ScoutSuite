@@ -1,8 +1,10 @@
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
-from ScoutSuite.providers.aws.resources.regions import Regions
+from ScoutSuite.providers.aws.resources.elasticache.parametergroups import \
+    ParameterGroups
+from ScoutSuite.providers.aws.resources.elasticache.securitygroups import \
+    SecurityGroups
 from ScoutSuite.providers.aws.resources.elasticache.vpcs import ElastiCacheVpcs
-from ScoutSuite.providers.aws.resources.elasticache.securitygroups import SecurityGroups
-from ScoutSuite.providers.aws.resources.elasticache.parametergroups import ParameterGroups
+from ScoutSuite.providers.aws.resources.regions import Regions
 
 
 class ElastiCache(Regions):
@@ -12,8 +14,8 @@ class ElastiCache(Regions):
         (ParameterGroups, 'parameter_groups')
     ]
 
-    def __init__(self):
-        super(ElastiCache, self).__init__('elasticache')
+    def __init__(self, facade: AWSFacade):
+        super(ElastiCache, self).__init__('elasticache', facade)
 
     async def fetch_all(self, credentials=None, regions=None, partition_name='aws'):
         await super(ElastiCache, self).fetch_all(credentials, regions, partition_name)

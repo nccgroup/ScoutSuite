@@ -41,12 +41,8 @@ class S3(AWSCompositeResources):
         (Buckets, 'buckets')
     ]
 
-    def __init__(self):
-        super(S3, self).__init__('s3', {})
-        # TODO: Should be injected
-        self.facade = AWSFacade()
+    def __init__(self, facade: AWSFacade):
+        super(S3, self,).__init__(facade, {})
 
     async def fetch_all(self, credentials, regions=None, partition_name='aws'):
-        # TODO: This should not be set here, the facade should be injected and already authenticated
-        self.facade._set_session(credentials)
         await self._fetch_children(self, {})

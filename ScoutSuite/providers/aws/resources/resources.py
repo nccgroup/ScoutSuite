@@ -4,7 +4,6 @@ import abc
 import asyncio
 
 from ScoutSuite.providers.base.configs.resources import Resources, CompositeResources
-from ScoutSuite.providers.aws.facade.facade import AWSFacade
 
 
 class AWSResources(Resources, metaclass=abc.ABCMeta):

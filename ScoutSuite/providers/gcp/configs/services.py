@@ -16,7 +16,7 @@ except ImportError:
 
 class GCPServicesConfig(BaseServicesConfig):
 
-    def __init__(self, metadata=None, thread_config=4, projects=None, **kwargs):
+    def __init__(self, credentials=None, thread_config=4, projects=None, **kwargs):
 
         projects = [] if projects is None else projects
 
