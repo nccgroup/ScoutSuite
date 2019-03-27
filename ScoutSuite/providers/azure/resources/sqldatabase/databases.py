@@ -32,18 +32,10 @@ class Databases(AzureCompositeResources):
                 'name': db.name
             }
 
-        # TODO: make a refactoring of the following:
-        if len(self) == 0:
-            return
-        tasks = {
-            asyncio.ensure_future(
-                self._fetch_children(
-                    parent=db,
-                    resource_group_name=self.resource_group_name,
-                    server_name=self.server_name,
-                    database_name=db['name'],
-                    facade=self.facade
-                )
-            ) for db in self.values()
-        }
-        await asyncio.wait(tasks)
+        await self._fetch_children_of_all_resources(
+            resources=self,
+            kwargs={db_id: {'resource_group_name': self.resource_group_name,
+                            'server_name': self.server_name,
+                            'database_name': db['name'],
+                            'facade': self.facade} for (db_id, db) in self.items()}
+        )
