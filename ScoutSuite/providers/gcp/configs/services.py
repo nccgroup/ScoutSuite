@@ -28,7 +28,7 @@ class GCPServicesConfig(BaseServicesConfig):
 
         try:
             self.kubernetesengine = KubernetesEngineConfig(thread_config=thread_config)
-        except NameError as e:
+        except NameError as _:
             pass
 
         self.stackdriverlogging = StackdriverLoggingConfig(thread_config=thread_config)

@@ -79,9 +79,9 @@ class AWSServicesConfig(BaseServicesConfig):
         self.sns = SNS(facade)
 
         try:
-            self.dynamodb = DynamoDB()
-            self.config = Config()
-            self.kms = KMS()
+            self.dynamodb = DynamoDB(facade)
+            self.config = Config(facade)
+            self.kms = KMS(facade)
         except (NameError, TypeError):
             pass
 

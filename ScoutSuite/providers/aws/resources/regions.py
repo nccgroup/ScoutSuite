@@ -7,7 +7,7 @@ from ScoutSuite.providers.aws.facade.facade import AWSFacade
 
 
 class Regions(AWSCompositeResources, metaclass=abc.ABCMeta):
-    def __init__(self, service, facade):
+    def __init__(self, service: str, facade: AWSFacade):
         self.service = service
         self.facade = facade
 

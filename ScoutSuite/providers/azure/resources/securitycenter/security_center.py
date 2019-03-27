@@ -1,5 +1,4 @@
 from ScoutSuite.providers.azure.resources.resources import AzureCompositeResources
-from ScoutSuite.providers.azure.facade.securitycenter import SecurityCenterFacade
 
 from .auto_provisioning_settings import AutoProvisioningSettings
 from .pricings import Pricings
@@ -14,11 +13,9 @@ class SecurityCenter(AzureCompositeResources):
     ]
 
     async def fetch_all(self, credentials, **kwargs):
-        # TODO: build that facade somewhere else:
-        facade = SecurityCenterFacade(credentials.credentials, credentials.subscription_id)
+        await self._fetch_children(parent=self, facade=self.facade)
 
-        await self._fetch_children(parent=self, facade=facade)
-
-        self['auto_provisioning_settings_count'] = len(self['auto_provisioning_settings'])
+        self['auto_provisioning_settings_count'] = len(
+            self['auto_provisioning_settings'])
         self['pricings_count'] = len(self['pricings'])
         self['security_contacts_count'] = len(self['security_contacts'])

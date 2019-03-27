@@ -2,10 +2,14 @@ import abc
 import asyncio
 
 from ScoutSuite.providers.base.configs.resources import CompositeResources
+from ScoutSuite.providers.azure.facade.facade import AzureFacade
 
 
 # TODO: add docstrings.
 class AzureCompositeResources(CompositeResources, metaclass=abc.ABCMeta):
+
+    def __init__(self, facade: AzureFacade):
+        self.facade = facade
 
     async def _fetch_children(self, parent, **kwargs):
         children = [(child_class(**kwargs), child_name) for (child_class, child_name) in self._children]
