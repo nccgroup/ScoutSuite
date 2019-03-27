@@ -17,7 +17,7 @@
             <h4 class="list-group-item-heading accordion-heading">Network ACLs
               {{> count_badge count=(count_vpc_network_acls network_acls) target=(concat '#services.vpc.regions' region 'vpcs' @key 'network_acls')}}
             </h4>
-            <div id="services.vpc.regions.{{region}}.vpcs.{{@key}}.network_acls" class="accordion-body collapse">
+            <div id="services.vpc.regions.{{region}}.vpcs.{{@key}}.network_acls" class="accordion-body">
               <div class="accordion-inner">
                 <ul class="no-bullet">
                   {{#each network_acls}}
@@ -33,7 +33,7 @@
             <h4 class="list-group-item-heading accordion-heading">Instances
                 {{> count_badge count=(count_vpc_instances instances) target=(concat '#services.vpc.regions' region 'vpcs' @key 'instances')}}
             </h4>
-            <div id="services.vpc.regions.{{region}}.vpcs.{{@key}}.instances" class="accordion-body collapse">
+            <div id="services.vpc.regions.{{region}}.vpcs.{{@key}}.instances" class="accordion-body">
               <div class="accordion-inner">
                 <ul class="no-bullet">
                   {{#each instances}}

@@ -31,7 +31,7 @@ class StorageAccountsFacade:
 
     async def get_blob_containers(self, resource_group_name, storage_account_name):
         return await run_concurrently(
-            lambda: self._client.blob_containers.list(resource_group_name, storage_account_name).value
+            lambda: list(self._client.blob_containers.list(resource_group_name, storage_account_name).value)
         )
 
     async def get_and_set_activity_logs(self, storage_account):

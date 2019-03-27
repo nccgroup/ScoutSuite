@@ -19,9 +19,11 @@ from ScoutSuite.providers.aws.facade.elbv2 import ELBv2Facade
 from ScoutSuite.providers.aws.facade.iam import IAMFacade
 from ScoutSuite.providers.aws.facade.rds import RDSFacade
 from ScoutSuite.providers.aws.facade.redshift import RedshiftFacade
+from ScoutSuite.providers.aws.facade.s3 import S3Facade
 from ScoutSuite.providers.aws.facade.ses import SESFacade
 from ScoutSuite.providers.aws.facade.sns import SNSFacade
 from ScoutSuite.providers.aws.facade.elb import ELBFacade
+from ScoutSuite.providers.utils import run_concurrently
 
 try:
     from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
@@ -81,6 +83,7 @@ class AWSFacade(AWSBaseFacade):
         self.iam = IAMFacade(self.session)
         self.rds = RDSFacade(self.session)
         self.redshift = RedshiftFacade(self.session)
+        self.s3 = S3Facade(self.session)
         self.ses = SESFacade(self.session)
         self.sns = SNSFacade(self.session)
         self.sqs = SQSFacade(self.session)

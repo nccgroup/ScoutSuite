@@ -1,8 +1,8 @@
 <script id="count_badge.partial" type="text/x-handlebars-template">
     {{#ifPositive count}}
-        <a class="accordion-toggle" data-toggle="collapse" href="{{target}}"><span class="badge float-right btn-info">{{count}}</span></a>
+        <span class="badge float-right badge-dark">{{count}}</span>
     {{else}}
-        <span class="badge float-right btn-info disabled">0</span>
+        <span class="badge float-right badge-light disabled">0</span>
     {{/ifPositive}}
 </script>
 
