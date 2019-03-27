@@ -20,7 +20,7 @@ Scout Suite is stable and actively maintained, but a number of features and inte
 with us as we find time to work on, and improve, the tool. Feel free to report a bug with details (please provide
 console output using the `--debug` argument), request a new feature, or send a pull request.
 
-The project team can be contacted by writing to <scout@nccgroup.com>.
+The project team can be contacted at <scout@nccgroup.com>.
 
 **Note:**
 
