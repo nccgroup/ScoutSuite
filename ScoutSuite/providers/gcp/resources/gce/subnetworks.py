@@ -29,13 +29,10 @@ class RegionSubnetworks(Resources):
 
 
 class Subnetworks(Regions):
-    def __init__(self, gcp_facade, gce_facade):
-        super(Subnetworks, self).__init__(gcp_facade, gce_facade)
-
-    def fetch_all(self):
+    async def fetch_all(self):
         super(Subnetworks, self).fetch_all()
         for project_id in self['projects'].keys():
             for region in self['projects'][project_id]['regions'].keys():
-                region_subnetworks = RegionSubnetworks(self.gce_facade, project_id, region)
-                region_subnetworks.fetch_all()
+                region_subnetworks = RegionSubnetworks(self.gcp_facade, project_id, region)
+                await region_subnetworks.fetch_all()
                 self['projects'][project_id]['regions'][region]['subnetworks'] = region_subnetworks
