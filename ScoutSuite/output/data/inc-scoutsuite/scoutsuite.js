@@ -1041,8 +1041,6 @@ function make_title(title) {
         return 'Cloud Resource Manager';
     } else if (title == 'storageaccounts') {
         return 'Storage Accounts';
-    } else if (title == 'monitor') {
-        return 'Monitor';
     } else if (title == 'sqldatabase') {
         return 'SQL Database';
     } else if (title == 'securitycenter') {
