@@ -203,11 +203,16 @@ class ScoutSuiteArgumentParser:
                             default=False,
                             action='store_true',
                             help='Do not automatically open the report in the browser.')
+        # TODO: This should be removed once the GCP refactoring is done
         parser.add_argument('--thread-config',
                             dest='thread_config',
                             type=int,
                             default=4,
                             help='Level of multi-threading wanted [1-5]; defaults to 4.')
+        parser.add_argument('--max-workers',
+                            dest='max_workers',
+                            type=int,
+                            help='Maximum number of threads used by Scout Suite')
         parser.add_argument('--report-dir',
                             dest='report_dir',
                             default=DEFAULT_REPORT_DIR,

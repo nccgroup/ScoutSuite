@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import asyncio
 import copy
+from concurrent.futures import ThreadPoolExecutor
 import os
 import webbrowser
 
@@ -16,8 +18,7 @@ from ScoutSuite.providers import get_provider
 from ScoutSuite.providers.base.authentication_strategy_factory import get_authentication_strategy
 
 
-# noinspection PyBroadException
-async def main(args=None):
+def main(args=None):
     """
     Main method that runs a scan
     """
@@ -29,6 +30,13 @@ async def main(args=None):
     # Get the dictionnary to get None instead of a crash
     args = args.__dict__
 
+    loop = asyncio.get_event_loop()
+    loop.set_default_executor(ThreadPoolExecutor(max_workers=args.get('max_workers')))
+    loop.run_until_complete(run_scan(args))
+    loop.close()
+
+# noinspection PyBroadException
+async def run_scan(args):
     # Configure the debug level
     set_config_debug_level(args.get('debug'))
 
@@ -54,7 +62,6 @@ async def main(args=None):
         if not credentials:
             return 401
 
-
     # Create a cloud provider object
     cloud_provider = get_provider(provider=args.get('provider'),
                                   profile=args.get('profile'),
@@ -65,7 +72,8 @@ async def main(args=None):
                                   report_dir=args.get('report_dir'),
                                   timestamp=args.get('timestamp'),
                                   services=args.get('services'),
-                                  skipped_services=args.get('skipped_services'),
+                                  skipped_services=args.get(
+                                      'skipped_services'),
                                   thread_config=args.get('thread_config'),
                                   credentials=credentials)
 
@@ -74,7 +82,8 @@ async def main(args=None):
     # TODO: move this to after authentication, so that the report can be more specific to what's being scanned.
     # For example if scanning with a GCP service account, the SA email can only be known after authenticating...
     # Create a new report
-    report = Scout2Report(args.get('provider'), report_file_name, args.get('report_dir'), args.get('timestamp'))
+    report = Scout2Report(args.get('provider'), report_file_name, args.get(
+        'report_dir'), args.get('timestamp'))
 
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
@@ -129,14 +138,16 @@ async def main(args=None):
     if args.get('exceptions')[0]:
         print_info('Applying exceptions')
         try:
-            exceptions = RuleExceptions(args.get('profile'), args.get('exceptions')[0])
+            exceptions = RuleExceptions(
+                args.get('profile'), args.get('exceptions')[0])
             exceptions.process(cloud_provider)
             exceptions = exceptions.exceptions
         except Exception as e:
-            print_debug('Failed to load exceptions. The file may not exist or may have an invalid format.')
+            print_debug(
+                'Failed to load exceptions. The file may not exist or may have an invalid format.')
             exceptions = {}
     else:
-            exceptions = {}
+        exceptions = {}
     # Handle exceptions
     try:
         exceptions = RuleExceptions(
