@@ -22,6 +22,7 @@ class BaseServicesConfig(object):
                 if services != [] and service not in services:
                     print_debug('Skipping the {} service'.format(format_service_name(service)))
                     continue
+                    
                 print_info('Fetching resources for the {} service'.format(format_service_name(service)))
                 service_config = getattr(self, service)
                 # call fetch method for the service
