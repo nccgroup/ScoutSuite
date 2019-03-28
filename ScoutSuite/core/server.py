@@ -55,7 +55,7 @@ class Server(object):
         if not key:
             return data
 
-        keyparts = key.split('.')
+        keyparts = key.split('🐱')
         for k in keyparts:
             if isinstance(data, dict) or isinstance(data, SqliteDict):
                 data = data.get(k)
