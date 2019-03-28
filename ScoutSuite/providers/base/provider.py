@@ -80,7 +80,7 @@ class BaseProvider(object):
         regions = [] if regions is None else regions
         skipped_regions = [] if skipped_regions is None else skipped_regions
         # TODO: determine partition name based on regions and warn if multiple partitions...
-        await self.services.fetch(self.credentials, self.service_list, regions)
+        await self.services.fetch(self.service_list, regions)
 
         # TODO implement this properly
         """

@@ -52,8 +52,8 @@ class AWSServicesConfig(BaseServicesConfig):
     :ivar sqs:                          SQS configuration
     """
 
-    def __init__(self, credentials=None, thread_config=4, **kwargs):
-        super(AWSServicesConfig, self).__init__(credentials, thread_config)
+    def __init__(self, credentials=None, **kwargs):
+        super(AWSServicesConfig, self).__init__(credentials)
 
         facade = AWSFacade(credentials)
 

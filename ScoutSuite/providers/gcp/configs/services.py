@@ -17,7 +17,8 @@ except ImportError:
 class GCPServicesConfig(BaseServicesConfig):
 
     def __init__(self, credentials=None, thread_config=4, projects=None, **kwargs):
-
+        super(GCPServicesConfig, self).__init__(credentials)
+        
         projects = [] if projects is None else projects
 
         self.cloudresourcemanager = CloudResourceManager(thread_config=thread_config)
