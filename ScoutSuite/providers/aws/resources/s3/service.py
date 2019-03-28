@@ -27,11 +27,9 @@ class Buckets(AWSResources):
         :return:
         """
         raw_bucket['name'] = raw_bucket.pop('Name')
-        # api_client = params['api_clients'][get_s3_list_region(list(params['api_clients'].keys())[0])]
-
         raw_bucket['CreationDate'] = str(raw_bucket['CreationDate'])
 
-        # # If requested, get key properties
+        # If requested, get key properties
         raw_bucket['id'] = get_non_provider_id(raw_bucket['name'])
         return raw_bucket['id'], raw_bucket
 
