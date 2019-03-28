@@ -33,37 +33,63 @@ function requestDb (query) {
   return response.data
 }
 
-function loadMetadataSqlite () {
-  getScoutsuiteResultsSqlite()
-  hidePleaseWait()
-
-  loadAccountIdJson()
-  loadConfig('last_run', 1)
-  loadConfig('metadata', 0)
-  loadConfig('services.id.findings', 1)
-  loadConfig('services.id.filters', 0) // service-specific filters
-  loadConfig('services.id.regions', 0) // region filters
-  
-  let groups = requestDb('metadata')
-  for (let groupKey in groups.keys) {
-      let group = groups.keys[groupKey]
-    let services = requestDb('metadata' + qS + group)
-    for (let serviceKey in services.keys) {
-        let service = services.keys[serviceKey]
-      if (service === 'summaries') {
-        continue
-      }
-      let sections = requestDb('metadata' + qS + group + qS + service)
-      for (let sectionKey in sections.keys) {
-        let section = sections.keys[sectionKey]
-        let resources_types = requestDb('metadata' + qS + group + qS + service + qS + section)
-        for (let resource_typeKey in resources_types.keys) {
-          let resource_type = resources_types.keys[resource_typeKey]
-          add_templates(group, service, section, resource_type,            
-            requestDb('metadata' + qS + group + qS + service + qS + section + qS + resource_type + qS + 'path'),
-            requestDb('metadata' + qS + group + qS + service + qS + section + qS + resource_type + qS + 'cols'),)
+function getScoutsuiteResultsSqlite () {
+  // The layers are named here in this fashion, these names don't always make sense depending in which
+  // nested dict you are: paths(0), groups(1), services(2), counters(3), resources(4), items(5)
+  let paths = requestDb('').keys
+  run_results = {}
+  for (let i in paths) { // Layer 0
+    let list = {}
+    let groups = requestDb(paths[i]) 
+    if (groups.keys) {
+      groups = groups.keys
+    } else {
+      run_results[paths[i]] = groups 
+      continue
+    }
+    for (let group in groups) { // Layer 1
+      list[groups[group]] = requestDb(paths[i] + qS + groups[group])
+      let services = list[groups[group]].keys
+      if (services) {        
+        for (let service in services) { // Layer 2
+          list[groups[group]][services[service]] = { [null] : null }
+          let counters = requestDb(paths[i] + qS + groups[group] + qS + services[service])
+          if (counters.keys) {
+            counters = counters.keys
+          } else {
+            continue
+          }              
+          // The only elements for which we do not want to fetch everything are the resources which
+          // are not filters or findings since they will scale with the environment's size
+          if (paths[i] === 'services' && [services[service]] != 'filters' && [services[service]] != 'findings') {
+            continue 
+          }   
+          for (let counter in counters) { // Layer 3
+            list[groups[group]][services[service]][counters[counter]] = 
+              requestDb(paths[i] + qS + groups[group] + qS + services[service] + qS + counters[counter])           
+            let resources = list[groups[group]][services[service]][counters[counter]].keys              
+            for (let resource in resources) { // Layer 4
+              list[groups[group]][services[service]][counters[counter]][resources[resource]] = requestDb(paths[i] + qS + 
+              groups[group] + qS + services[service] + qS + counters[counter] + qS + resources[resource])
+              let items = list[groups[group]][services[service]][counters[counter]][resources[resource]].keys
+              for (let item in items) { // Layer 5
+                list[groups[group]][services[service]][counters[counter]][resources[resource]][items[item]] = 
+                requestDb(paths[i] + qS + groups[group] + qS + services[service] + qS + counters[counter] + qS + 
+                resources[resource] + qS + items[item])
+                delete list[groups[group]][services[service]][counters[counter]].type
+                delete list[groups[group]][services[service]][counters[counter]].keys
+              }
+            }
+          }
+          delete list[groups[group]][services[service]].null
         }
+        delete list[groups[group]].type
+        delete list[groups[group]].keys
       }
     }
+    run_results[paths[i]] = list
   }
+  console.log(run_results)
+  return run_results
 }
+
