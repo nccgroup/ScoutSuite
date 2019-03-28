@@ -1285,52 +1285,40 @@ function getScoutsuiteResultsSqlite () {
       continue
     }
     for (let group in groups) { // Layer 1
-      list[groups[group]] = requestDb(paths[i] + '.' + groups[group])
+      list[groups[group]] = requestDb(paths[i] + qS + groups[group])
       let services = list[groups[group]].keys
       if (services) {        
         for (let service in services) { // Layer 2
-          list[groups[group]][services[service]] = { [null] : null }           
-          /*if (paths[i] === 'services') {
-            let counters = requestDb(paths[i] + '.' + groups[group] + '.' + services[service])
-            if (counters.keys) {
-              counters = counters.keys
-            } else {
-              continue
-            }
-            list[groups[group]][services[service]] = counters
-            delete list[groups[group]][services[service]].null
-          } else {*/
-            let counters = requestDb(paths[i] + '.' + groups[group] + '.' + services[service])
-            if (counters.keys) {
-              counters = counters.keys
-            } else {
-              continue
-            }
-            for (let counter in counters) { // Layer 3
-              list[groups[group]][services[service]][counters[counter]] = 
-                requestDb(paths[i] + '.' + groups[group] + '.' + services[service] + '.' + counters[counter])
-              // The only elements for which we do not want to fetch everything are the resources which
-              // are not filters or findings since they will scale with the environment's size
-              if (paths[i] === 'services' && counters[counter] !== 'filters' && 
-              counters[counter] !== 'findings') { 
-                continue 
+          list[groups[group]][services[service]] = { [null] : null }
+          let counters = requestDb(paths[i] + qS + groups[group] + qS + services[service])
+          if (counters.keys) {
+            counters = counters.keys
+          } else {
+            continue
+          }              
+          // The only elements for which we do not want to fetch everything are the resources which
+          // are not filters or findings since they will scale with the environment's size
+          if (paths[i] === 'services' && [services[service]] != 'filters' && [services[service]] != 'findings') {
+            continue 
+          }   
+          for (let counter in counters) { // Layer 3
+            list[groups[group]][services[service]][counters[counter]] = 
+              requestDb(paths[i] + qS + groups[group] + qS + services[service] + qS + counters[counter])           
+            let resources = list[groups[group]][services[service]][counters[counter]].keys              
+            for (let resource in resources) { // Layer 4
+              list[groups[group]][services[service]][counters[counter]][resources[resource]] = requestDb(paths[i] + qS + 
+              groups[group] + qS + services[service] + qS + counters[counter] + qS + resources[resource])
+              let items = list[groups[group]][services[service]][counters[counter]][resources[resource]].keys
+              for (let item in items) { // Layer 5
+                list[groups[group]][services[service]][counters[counter]][resources[resource]][items[item]] = 
+                requestDb(paths[i] + qS + groups[group] + qS + services[service] + qS + counters[counter] + qS + 
+                resources[resource] + qS + items[item])
+                delete list[groups[group]][services[service]][counters[counter]].type
+                delete list[groups[group]][services[service]][counters[counter]].keys
               }
-              let resources = list[groups[group]][services[service]][counters[counter]].keys
-              for (let resource in resources) { // Layer 4
-                list[groups[group]][services[service]][counters[counter]][resources[resource]] = requestDb(paths[i] + '.' + 
-                groups[group] + '.' + services[service] + '.' + counters[counter] + '.' + resources[resource])
-                let items = list[groups[group]][services[service]][counters[counter]][resources[resource]].keys
-                for (let item in items) { // Layer 5
-                  list[groups[group]][services[service]][counters[counter]][resources[resource]][items[item]] = 
-                  requestDb(paths[i] + '.' + groups[group] + '.' + services[service] + '.' + counters[counter] + '.' + 
-                  resources[resource] + '.' + items[item])
-                  delete list[groups[group]][services[service]][counters[counter]].type
-                  delete list[groups[group]][services[service]][counters[counter]].keys
-                }
-              }
-            //}
-            delete list[groups[group]][services[service]].null
+            }
           }
+          delete list[groups[group]][services[service]].null
         }
         delete list[groups[group]].type
         delete list[groups[group]].keys

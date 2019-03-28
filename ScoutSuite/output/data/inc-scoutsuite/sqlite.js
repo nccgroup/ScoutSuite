@@ -1,3 +1,6 @@
+// Query separator, keeping it really short it will be used often, hence the truncated name
+var qS = '¤'
+
 // Keeping this for now for manual debugging, should be removed later on
 function sqliteTest () {
   var request = new XMLHttpRequest()
@@ -44,21 +47,21 @@ function loadMetadataSqlite () {
   let groups = requestDb('metadata')
   for (let groupKey in groups.keys) {
       let group = groups.keys[groupKey]
-    let services = requestDb('metadata.' + group)
+    let services = requestDb('metadata' + qS + group)
     for (let serviceKey in services.keys) {
         let service = services.keys[serviceKey]
       if (service === 'summaries') {
         continue
       }
-      let sections = requestDb('metadata.' + group + '.' + service)
+      let sections = requestDb('metadata' + qS + group + qS + service)
       for (let sectionKey in sections.keys) {
         let section = sections.keys[sectionKey]
-        let resources_types = requestDb('metadata.' + group + '.' + service + '.' + section)
+        let resources_types = requestDb('metadata' + qS + group + qS + service + qS + section)
         for (let resource_typeKey in resources_types.keys) {
           let resource_type = resources_types.keys[resource_typeKey]
           add_templates(group, service, section, resource_type,            
-            requestDb('metadata.' + group + '.' + service + '.' + section + '.' + resource_type + '.path'),
-            requestDb('metadata.' + group + '.' + service + '.' + section + '.' + resource_type + '.cols'),)
+            requestDb('metadata' + qS + group + qS + service + qS + section + qS + resource_type + qS + 'path'),
+            requestDb('metadata' + qS + group + qS + service + qS + section + qS + resource_type + qS + 'cols'),)
         }
       }
     }
