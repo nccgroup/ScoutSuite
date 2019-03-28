@@ -1,6 +1,6 @@
+from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.aws.resources.regions import Regions
 from ScoutSuite.providers.aws.resources.resources import AWSResources
-from ScoutSuite.providers.aws.facade.facade import AWSFacade
 
 
 class FileSystems(AWSResources):
@@ -24,5 +24,5 @@ class EFS(Regions):
         (FileSystems, 'filesystems')
     ]
 
-    def __init__(self):
-        super(EFS, self).__init__('efs')
+    def __init__(self, facade: AWSFacade):
+        super(EFS, self).__init__('efs', facade)

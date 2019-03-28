@@ -1,10 +1,11 @@
 import netaddr
 
-from ScoutSuite.providers.aws.resources.regions import Regions
 from ScoutSuite.core.fs import read_ip_ranges
+from ScoutSuite.providers.aws.facade.facade import AWSFacade
+from ScoutSuite.providers.aws.resources.regions import Regions
 
-from .vpcs import RegionalVpcs
 from .flow_logs import FlowLogs
+from .vpcs import RegionalVpcs
 
 known_cidrs = {'0.0.0.0/0': 'All'}
 aws_ip_ranges = {}
@@ -16,9 +17,9 @@ class VPC(Regions):
         (FlowLogs, 'flow_logs'),
     ]
 
-    def __init__(self):
+    def __init__(self, facade: AWSFacade):
         # VPC is not a real service but a subset of ec2:
-        super(VPC, self).__init__('ec2')
+        super(VPC, self).__init__('ec2', facade)
 
 
 # TODO: move these helpers elsewhere:
@@ -35,7 +36,8 @@ def put_cidr_name(aws_config, current_config, path, current_path, resource_id, c
             if cidr in known_cidrs:
                 cidr_name = known_cidrs[cidr]
             else:
-                cidr_name = get_cidr_name(cidr, callback_args['ip_ranges'], callback_args['ip_ranges_name_key'])
+                cidr_name = get_cidr_name(
+                    cidr, callback_args['ip_ranges'], callback_args['ip_ranges_name_key'])
                 known_cidrs[cidr] = cidr_name
             cidr_list.append({'CIDR': cidr, 'CIDRName': cidr_name})
         current_config['cidrs'] = cidr_list

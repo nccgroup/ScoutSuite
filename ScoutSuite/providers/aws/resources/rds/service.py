@@ -1,7 +1,9 @@
-from ScoutSuite.providers.aws.resources.regions import Regions
-from ScoutSuite.providers.aws.resources.rds.vpcs import RDSVpcs
+from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.aws.resources.rds.parametergroups import ParameterGroups
 from ScoutSuite.providers.aws.resources.rds.securitygroups import SecurityGroups
+from ScoutSuite.providers.aws.resources.rds.vpcs import RDSVpcs
+from ScoutSuite.providers.aws.resources.regions import Regions
+
 
 class RDS(Regions):
     _children = [
@@ -10,8 +12,8 @@ class RDS(Regions):
         (SecurityGroups, 'security_groups')
     ]
 
-    def __init__(self):
-        super(RDS, self).__init__('rds')
+    def __init__(self, facade: AWSFacade):
+        super(RDS, self).__init__('rds', facade)
 
     async def fetch_all(self, credentials=None, regions=None, partition_name='aws'):
         await super(RDS, self).fetch_all(credentials, regions, partition_name)
