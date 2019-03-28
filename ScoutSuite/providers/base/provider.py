@@ -42,7 +42,7 @@ class BaseProvider(object):
 
         self._load_metadata()
 
-        self.services = self.services_config(self.credentials, thread_config)
+        self.services = self.services_config(self.credentials)
         supported_services = vars(self.services).keys()
         self.service_list = self._build_services_list(supported_services, services, skipped_services)
 
