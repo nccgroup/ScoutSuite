@@ -60,5 +60,5 @@ class CloudFormation(Regions):
         (Stacks, 'stacks')
     ]
 
-    def __init__(self):
-        super(CloudFormation, self).__init__('cloudformation')
+    def __init__(self, facade: AWSFacade):
+        super(CloudFormation, self).__init__('cloudformation', facade)

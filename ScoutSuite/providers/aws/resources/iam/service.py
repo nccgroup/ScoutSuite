@@ -20,14 +20,11 @@ class IAM(AWSCompositeResources):
         (PasswordPolicy, 'password_policy')
     ]
 
-    def __init__(self):
-        # TODO: Should be injected
-        self.facade = AWSFacade()
+    def __init__(self, facade: AWSFacade):
+        self.facade = facade
         self.service = 'iam'
 
     async def fetch_all(self, credentials, regions=None, partition_name='aws'):
-        # TODO: This should not be set here, the facade should be injected and already authenticated
-        self.facade._set_session(credentials)
         await self._fetch_children(self, {})
 
         # We do not want the report to count the password policies as resources, they aren't really resources.

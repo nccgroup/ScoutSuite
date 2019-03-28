@@ -12,7 +12,7 @@ from ScoutSuite.core.console import print_error, print_exception
 class S3Facade(AWSBaseFacade):
 
     async def get_buckets(self):
-        client = AWSFacadeUtils.get_client('s3', None, self.session)
+        client = AWSFacadeUtils.get_client('s3', self.session)
         buckets = (await run_concurrently(client.list_buckets))['Buckets']
 
         for bucket in buckets:
@@ -29,7 +29,7 @@ class S3Facade(AWSBaseFacade):
         return buckets
 
     async def _get_s3_bucket_location(self, bucket_name):
-        client = AWSFacadeUtils.get_client('s3', None, self.session)
+        client = AWSFacadeUtils.get_client('s3', self.session)
         location = client.get_bucket_location(Bucket=bucket_name)
         region = location['LocationConstraint'] if location['LocationConstraint'] else 'us-east-1'
 
@@ -40,7 +40,7 @@ class S3Facade(AWSBaseFacade):
         return region
 
     async def _set_s3_bucket_logging(self, bucket):
-        client = AWSFacadeUtils.get_client('s3', bucket['region'], self.session)
+        client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'],)
         try:
             logging = await run_concurrently(lambda: client.get_bucket_logging(Bucket=bucket['Name']))
         except Exception as e:
@@ -54,7 +54,7 @@ class S3Facade(AWSBaseFacade):
 
     # noinspection PyBroadException
     async def _set_s3_bucket_versioning(self, bucket):
-        client = AWSFacadeUtils.get_client('s3', bucket['region'], self.session)
+        client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
         try:
             versioning = await run_concurrently(lambda: client.get_bucket_versioning(Bucket=bucket['Name']))
             bucket['versioning_status_enabled'] = self._status_to_bool(versioning.get('Status'))
@@ -66,7 +66,7 @@ class S3Facade(AWSBaseFacade):
 
     # noinspection PyBroadException
     async def _set_s3_bucket_webhosting(self, bucket):
-        client = AWSFacadeUtils.get_client('s3', bucket['region'], self.session)
+        client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
         try:
             result = client.get_bucket_website(Bucket=bucket['Name'])
             bucket['web_hosting_enabled'] = 'IndexDocument' in result
@@ -76,7 +76,7 @@ class S3Facade(AWSBaseFacade):
 
     async def _set_s3_bucket_default_encryption(self, bucket):
         bucket_name = bucket['Name']
-        client = AWSFacadeUtils.get_client('s3', bucket['region'], self.session)
+        client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
         try:
             await run_concurrently(lambda: client.get_bucket_encryption(Bucket=bucket['Name']))
             bucket['default_encryption_enabled'] = True
@@ -92,7 +92,7 @@ class S3Facade(AWSBaseFacade):
             
     async def _set_s3_acls(self, bucket, key_name=None):
         bucket_name = bucket['Name']
-        client = AWSFacadeUtils.get_client('s3', bucket['region'], self.session)
+        client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
         try:
             grantees = {}
             if key_name:
@@ -122,12 +122,12 @@ class S3Facade(AWSBaseFacade):
             bucket['grantees'] = {}            
 
     async def _set_s3_bucket_policy(self, bucket):
-        client = AWSFacadeUtils.get_client('s3', bucket['region'], self.session)
+        client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
         try:
             bucket_policy =  await run_concurrently(lambda: client.get_bucket_policy(Bucket=bucket['Name']))
             bucket['policy'] = json.loads(bucket_policy['Policy'])
-        except Exception as e:
-            if not (type(e) == ClientError and e.response['Error']['Code'] == 'NoSuchBucketPolicy'):
+        except ClientError as e:
+            if e.response['Error']['Code'] != 'NoSuchBucketPolicy':
                 print_error('Failed to get bucket policy for %s: %s' % (bucket['Name'], e))
 
     def _set_s3_bucket_secure_transport(self, bucket):

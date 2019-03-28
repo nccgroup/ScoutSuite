@@ -1,7 +1,6 @@
 from ScoutSuite.providers.azure.resources.resources import AzureCompositeResources
 from ScoutSuite.providers.azure.utils import get_resource_group_name
 from ScoutSuite.providers.utils import get_non_provider_id
-from ScoutSuite.providers.azure.facade.storageaccounts import StorageAccountsFacade
 
 from .blob_containers import BlobContainers
 
@@ -12,11 +11,8 @@ class StorageAccounts(AzureCompositeResources):
     ]
 
     async def fetch_all(self, credentials, **kwargs):
-        # TODO: build that facade somewhere else:
-        facade = StorageAccountsFacade(credentials.credentials, credentials.subscription_id)
-
         self['storage_accounts'] = {}
-        for raw_storage_account in await facade.get_storage_accounts():
+        for raw_storage_account in await self.facade.storageaccounts.get_storage_accounts():
             id, storage_account = self._parse_storage_account(raw_storage_account)
             self['storage_accounts'][id] = storage_account
         self['storage_accounts_count'] = len(self['storage_accounts'])
@@ -25,7 +21,7 @@ class StorageAccounts(AzureCompositeResources):
             resources=self['storage_accounts'],
             kwargs={storage_account_id: {'resource_group_name': storage_account['resource_group_name'],
                                          'storage_account_name': storage_account['name'],
-                                         'facade': facade}
+                                         'facade': self.facade}
                     for (storage_account_id, storage_account) in self['storage_accounts'].items()}
         )
 

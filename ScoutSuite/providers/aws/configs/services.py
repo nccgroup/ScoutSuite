@@ -21,6 +21,7 @@ from ScoutSuite.providers.aws.resources.sqs.service import SQS
 from ScoutSuite.providers.aws.resources.ses.service import SES
 from ScoutSuite.providers.aws.resources.sns.service import SNS
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
+from ScoutSuite.providers.aws.facade.facade import AWSFacade
 
 try:
     from ScoutSuite.providers.aws.resources.dynamodb.service_private import DynamoDB
@@ -46,39 +47,41 @@ class AWSServicesConfig(BaseServicesConfig):
     :ivar rds:                          RDS configuration
     :ivar redshift:                     Redshift configuration
     :ivar s3:                           S3 configuration
-    :ivar ses:                          SES configuration: TODO
+    :ivar ses:                          SES configuration:
     "ivar sns:                          SNS configuration
     :ivar sqs:                          SQS configuration
     """
 
-    def __init__(self, metadata=None, thread_config=4, **kwargs):
+    def __init__(self, credentials=None, **kwargs):
+        super(AWSServicesConfig, self).__init__(credentials)
 
-        super(AWSServicesConfig, self).__init__(metadata, thread_config)
-        self.cloudwatch = CloudWatch()
-        self.cloudformation = CloudFormation()
-        self.cloudtrail = CloudTrail()
-        self.directconnect = DirectConnect()
-        self.ec2 = EC2()
-        self.efs = EFS()
-        self.elasticache = ElastiCache()
-        self.iam = IAM()
-        self.elb = ELB()
-        self.elbv2 = ELBv2()
-        self.emr = EMR()
-        self.awslambda = Lambdas()
-        self.route53 = Route53()
-        self.redshift = Redshift()
-        self.s3 = S3()
-        self.rds = RDS()
-        self.vpc = VPC()
-        self.sqs = SQS()
-        self.ses = SES()
-        self.sns = SNS()
+        facade = AWSFacade(credentials)
+
+        self.cloudwatch = CloudWatch(facade)
+        self.cloudformation = CloudFormation(facade)
+        self.cloudtrail = CloudTrail(facade)
+        self.directconnect = DirectConnect(facade)
+        self.ec2 = EC2(facade)
+        self.efs = EFS(facade)
+        self.elasticache = ElastiCache(facade)
+        self.iam = IAM(facade)
+        self.elb = ELB(facade)
+        self.elbv2 = ELBv2(facade)
+        self.emr = EMR(facade)
+        self.awslambda = Lambdas(facade)
+        self.route53 = Route53(facade)
+        self.redshift = Redshift(facade)
+        self.s3 = S3(facade)
+        self.rds = RDS(facade)
+        self.vpc = VPC(facade)
+        self.sqs = SQS(facade)
+        self.ses = SES(facade)
+        self.sns = SNS(facade)
 
         try:
-            self.dynamodb = DynamoDB()
-            self.config = Config()
-            self.kms = KMS()
+            self.dynamodb = DynamoDB(facade)
+            self.config = Config(facade)
+            self.kms = KMS(facade)
         except (NameError, TypeError):
             pass
 

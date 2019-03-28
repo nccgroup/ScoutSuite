@@ -1,5 +1,6 @@
 import json
 
+from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.aws.resources.regions import Regions
 from ScoutSuite.providers.aws.resources.resources import AWSResources
 
@@ -33,5 +34,5 @@ class SQS(Regions):
         (RegionalQueues, 'queues')
     ]
 
-    def __init__(self):
-        super(SQS, self).__init__('sqs')
+    def __init__(self, facade: AWSFacade):
+        super(SQS, self).__init__('sqs', facade)

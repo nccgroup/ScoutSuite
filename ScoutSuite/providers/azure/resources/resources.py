@@ -4,6 +4,7 @@ import abc
 import asyncio
 
 from ScoutSuite.providers.base.configs.resources import CompositeResources
+from ScoutSuite.providers.azure.facade.facade import AzureFacade
 
 
 class AzureCompositeResources(CompositeResources, metaclass=abc.ABCMeta):
@@ -15,6 +16,9 @@ class AzureCompositeResources(CompositeResources, metaclass=abc.ABCMeta):
     stored in the parent object.
     """
 
+    def __init__(self, facade: AzureFacade):
+        self.facade = facade
+  
     async def _fetch_children_of_all_resources(self, resources: dict, kwargs: dict):
         """This method iterates through a collection of resources and fetches all children of each resource, in a
         concurrent way.
