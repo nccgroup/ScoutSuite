@@ -1271,6 +1271,8 @@ function downloadAsJson (filename, dict) {
 }
 
 function getScoutsuiteResultsSqlite () {
+  // The layers are named here in this fashion
+  // paths(0), groups(1), services(2), counters(3), resources(4), items(5)
   let paths = requestDb('').keys
   run_results = {}
   for (let i in paths) { // Layer 0
@@ -1288,7 +1290,7 @@ function getScoutsuiteResultsSqlite () {
       if (services) {        
         for (let service in services) { // Layer 2
           list[groups[group]][services[service]] = { [null] : null }           
-          if (paths[i] === 'services') {
+          /*if (paths[i] === 'services') {
             let counters = requestDb(paths[i] + '.' + groups[group] + '.' + services[service])
             if (counters.keys) {
               counters = counters.keys
@@ -1297,11 +1299,22 @@ function getScoutsuiteResultsSqlite () {
             }
             list[groups[group]][services[service]] = counters
             delete list[groups[group]][services[service]].null
-          } else {
-            let counters = requestDb(paths[i] + '.' + groups[group] + '.' + services[service]).keys
+          } else {*/
+            let counters = requestDb(paths[i] + '.' + groups[group] + '.' + services[service])
+            if (counters.keys) {
+              counters = counters.keys
+            } else {
+              continue
+            }
             for (let counter in counters) { // Layer 3
               list[groups[group]][services[service]][counters[counter]] = 
                 requestDb(paths[i] + '.' + groups[group] + '.' + services[service] + '.' + counters[counter])
+              // The only elements for which we do not want to fetch everything are the resources which
+              // are not filters or findings since they will scale with the environment's size
+              if (paths[i] === 'services' && counters[counter] !== 'filters' && 
+              counters[counter] !== 'findings') { 
+                continue 
+              }
               let resources = list[groups[group]][services[service]][counters[counter]].keys
               for (let resource in resources) { // Layer 4
                 list[groups[group]][services[service]][counters[counter]][resources[resource]] = requestDb(paths[i] + '.' + 
@@ -1315,7 +1328,7 @@ function getScoutsuiteResultsSqlite () {
                   delete list[groups[group]][services[service]][counters[counter]].keys
                 }
               }
-            }
+            //}
             delete list[groups[group]][services[service]].null
           }
         }
