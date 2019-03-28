@@ -41,14 +41,6 @@ class AWSProvider(BaseProvider):
         super(AWSProvider, self).__init__(report_dir, timestamp,
                                           services, skipped_services, thread_config)
 
-
-    def authenticate(self, profile=None, **kwargs):
-        """
-        Implement authentication for the AWS provider
-        :return:
-        """
-        return True
-
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
         Tweak the AWS config to match cross-service resources and clean any fetching artifacts

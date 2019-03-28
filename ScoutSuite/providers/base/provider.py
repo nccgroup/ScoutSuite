@@ -46,13 +46,6 @@ class BaseProvider(object):
         supported_services = vars(self.services).keys()
         self.service_list = self._build_services_list(supported_services, services, skipped_services)
 
-    def authenticate(self):
-        """
-        Authenticate to the provider using provided credentials
-        :return:
-        """
-        pass
-
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
         TODO

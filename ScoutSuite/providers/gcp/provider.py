@@ -43,9 +43,6 @@ class GCPProvider(BaseProvider):
         super(GCPProvider, self).__init__(report_dir, timestamp,
                                           services, skipped_services, thread_config)
 
-    def authenticate(self, user_account=None, service_account=None, **kargs):
-        pass
-
     def _set_aws_account_id(self):
         if self.all_projects:
             if self.credentials.is_service_account and hasattr(self.credentials, 'service_account_email'):
