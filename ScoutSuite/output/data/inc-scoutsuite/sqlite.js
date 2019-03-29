@@ -122,15 +122,20 @@ function getScoutsuiteResultsSqlite () {
 function getResourcePageSqlite (pageIndex, pageSize, service, resource) {
   // e.g. pricings --> run_results.services.securitycenter.pricings
   // Fill the resource elements with the elements of the proper page
-  run_results['services'][service][resource] = requestDbPage(createQuery('services', service, resource), 
-    pageSize, pageIndex)
+  resources = requestDbPage(createQuery('services', service, resource), pageSize, pageIndex)
+  for (let item in resources) {
+    run_results['services'][service][resource][item] = resources[item].keys
+  }
   // Save the current page index to remember which page we have saved
   run_results['services'][service][resource]['current_page'] = pageIndex
-  console.log(run_results['services'][service][resource])
+  // Save the current page size to remember the size of the saved page
+  run_results['services'][service][resource]['page_size'] = pageSize
+  delete run_results['services'][service][resource].null
+  console.log(run_results['services'][service])
 }
 
 /**
- * Creates a query using the query separators to request information from the server
+ * Creates a query using the query separator to request information from the server
  * Scales with the number of params given
  */
 function createQuery () {
