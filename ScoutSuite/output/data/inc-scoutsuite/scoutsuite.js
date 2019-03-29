@@ -795,9 +795,11 @@ function show_main_dashboard () {
   // Hide filters
   hideFilters()
   $('#findings_download_button').hide()
+  $('#paging_buttons').hide()
   showRowWithItems('aws_account_id')
   showRowWithItems('last_run')
   $('#section_title-h2').text('')
+  $('#section_paging-h2').text('')
   // Remove URL hash
   history.pushState('', document.title, window.location.pathname + window.location.search)
   updateNavbar('')
@@ -896,8 +898,10 @@ function updateDOM (anchor) {
     !path.endsWith('.<root_account>') &&
     !path.endsWith('.external_attack_surface')) {
     $('#findings_download_button').show()
+    $('#paging_buttons').show()
   } else {
     $('#findings_download_button').hide()
+    $('#paging_buttons').hide()
   }
 
   // Update title

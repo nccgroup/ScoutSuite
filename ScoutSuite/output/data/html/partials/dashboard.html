@@ -1,81 +1,80 @@
+<!-- Dasboard partial -->
+<script id="services.id.findings.partial" type="text/x-handlebars-template">
+<div class="row" id="services.{{service_name}}.findings.row">
+    <div class="col-sm-12" id="services.{{service_name}}.findings.list">
+        <div class="form-group container row">
+        <div class="col-sm-4">
+            <input class="form-control dashboard-filter" type="text" id="dashboardFilter" placeholder="Filter findings">
+        </div>
+        <div class="col-sm-2">
+            <button class="form-control btn btn-light" id="finding-title">Show All</button>
+        </div>
+        <div class="col-sm-2">
+            <button class="form-control btn btn-success" id="finding-title-good">Good</button>
+        </div>
+        <div class="col-sm-2">
+            <button class="form-control btn btn-warning" id="finding-title-warning">Warning</button>
+        </div>
+        <div class="col-sm-2">
+            <button class="form-control btn btn-danger" id="finding-title-danger">Danger</button>
+        </div>
+        </div>
 
-      <!-- Dasboard partial -->
-      <script id="services.id.findings.partial" type="text/x-handlebars-template">
-        <div class="row" id="services.{{service_name}}.findings.row">
-          <div class="col-sm-12" id="services.{{service_name}}.findings.list">
-              <div class="form-group container row">
-                <div class="col-sm-4">
-                    <input class="form-control dashboard-filter" type="text" id="dashboardFilter" placeholder="Filter findings">
+        <ul class="list-group accordion">
+            {{#each_dict_as_sorted_list findings}}
+                <div id="list-{{key}}" class="card finding_items">
+                <div class="card-header row finding-title finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
+                    <div class="col-sm-11">
+                        <i class="fa finding-badge finding-badge-{{dashboard_color level checked_items flagged_items}}"></i>
+                        <a href="#services.{{../service_name}}.findings.{{key}}.items">{{description}}</a>
+                    </div>
+                    <div class="col-sm-1">
+                        <button class="finding btn fa collapsed" style="background-color:transparent" data-toggle="collapse" data-target="#item-{{key}}" aria-expanded="false" aria-controls="item-{{key}}"></button>
+                    </div>
                 </div>
-                <div class="col-sm-2">
-                    <button class="form-control btn btn-light" id="finding-title">Show All</button>
-                </div>
-                <div class="col-sm-2">
-                    <button class="form-control btn btn-success" id="finding-title-good">Good</button>
-                </div>
-                <div class="col-sm-2">
-                    <button class="form-control btn btn-warning" id="finding-title-warning">Warning</button>
-                </div>
-                <div class="col-sm-2">
-                    <button class="form-control btn btn-danger" id="finding-title-danger">Danger</button>
-                </div>
-              </div>
-
-              <ul class="list-group accordion">
-                  {{#each_dict_as_sorted_list findings}}
-                      <div id="list-{{key}}" class="card finding_items">
-                        <div class="card-header row finding-title finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
-                            <div class="col-sm-11">
-                                <i class="fa finding-badge finding-badge-{{dashboard_color level checked_items flagged_items}}"></i>
-                                <a href="#services.{{../service_name}}.findings.{{key}}.items">{{description}}</a>
-                            </div>
-                            <div class="col-sm-1">
-                                <button class="finding btn fa collapsed" style="background-color:transparent" data-toggle="collapse" data-target="#item-{{key}}" aria-expanded="false" aria-controls="item-{{key}}"></button>
-                            </div>
+                <div class="collapse" id="item-{{key}}" aria-labelledby="item-{{key}}" data-parent="#list-{{key}}">
+                    <div class="card-body row">
+                        <div class="col-sm-9">
+                            <p>{{rationale}}</p>
                         </div>
-                        <div class="collapse" id="item-{{key}}" aria-labelledby="item-{{key}}" data-parent="#list-{{key}}">
-                            <div class="card-body row">
-                                <div class="col-sm-9">
-                                    <p>{{rationale}}</p>
-                                </div>
-                                <div class="col-sm-3">
-                                    <ul>
-                                        <li>{{dashboard_name}} checked: {{checked_items}}</li>
-                                        <li>{{dashboard_name}} flagged: {{flagged_items}}</li>
-                                    </ul>
-                                </div>
-                            </div>
+                        <div class="col-sm-3">
+                            <ul>
+                                <li>{{dashboard_name}} checked: {{checked_items}}</li>
+                                <li>{{dashboard_name}} flagged: {{flagged_items}}</li>
+                            </ul>
                         </div>
                     </div>
-                  {{/each_dict_as_sorted_list}}
-              </ul>
+                </div>
+            </div>
+            {{/each_dict_as_sorted_list}}
+        </ul>
 
-          </div>
-        </div>
-      </script>
-      <script>
-        Handlebars.registerPartial("dashboard", $("#services\\.id\\.findings\\.partial").html());
-      </script>
-      <script>
-          // Dashboard filtering
-          $(document).ready(function(){
-              // Filter by text search
-              $(".dashboard-filter").on("keyup", function() {
-                  var value = $(this).val().toLowerCase();
-                  $(".finding_items").filter(function() {
-                      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                  });
-              });
+    </div>
+</div>
+</script>
+<script>
+Handlebars.registerPartial("dashboard", $("#services\\.id\\.findings\\.partial").html());
+</script>
+<script>
+    // Dashboard filtering
+    $(document).ready(function(){
+        // Filter by text search
+        $(".dashboard-filter").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $(".finding_items").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
 
-              // Filter by button
-              $('.btn').click(function() {
-                  var value = $(this).attr('id');
-                  if (value.indexOf('finding-title') > -1){
-                      $(".finding_items").filter(function() {
-                          $(this).toggle($(this).find(">:first-child").attr("class").indexOf(value) > -1)
-                      });
-                  }
-                  $(".dashboard-filter").val("")
-              })
-          });
-      </script>
+        // Filter by button
+        $('.btn').click(function() {
+            var value = $(this).attr('id');
+            if (value.indexOf('finding-title') > -1){
+                $(".finding_items").filter(function() {
+                    $(this).toggle($(this).find(">:first-child").attr("class").indexOf(value) > -1)
+                });
+            }
+            $(".dashboard-filter").val("")
+        })
+    });
+</script>
