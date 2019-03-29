@@ -1,5 +1,3 @@
-import asyncio
-
 from ScoutSuite.providers.azure.resources.resources import AzureCompositeResources
 from ScoutSuite.providers.azure.utils import get_resource_group_name
 from ScoutSuite.providers.utils import get_non_provider_id
@@ -17,23 +15,15 @@ class StorageAccounts(AzureCompositeResources):
         for raw_storage_account in await self.facade.storageaccounts.get_storage_accounts():
             id, storage_account = self._parse_storage_account(raw_storage_account)
             self['storage_accounts'][id] = storage_account
-
-        # TODO: make a refactoring of the following:
-        if len(self) == 0:
-            return
-        tasks = {
-            asyncio.ensure_future(
-                self._fetch_children(
-                    parent=storage_account,
-                    resource_group_name=storage_account['resource_group_name'],
-                    storage_account_name=storage_account['name'],
-                    facade=self.facade
-                )
-            ) for storage_account in self['storage_accounts'].values()
-        }
-        await asyncio.wait(tasks)
-
         self['storage_accounts_count'] = len(self['storage_accounts'])
+
+        await self._fetch_children_of_all_resources(
+            resources=self['storage_accounts'],
+            kwargs={storage_account_id: {'resource_group_name': storage_account['resource_group_name'],
+                                         'storage_account_name': storage_account['name'],
+                                         'facade': self.facade}
+                    for (storage_account_id, storage_account) in self['storage_accounts'].items()}
+        )
 
     def _parse_storage_account(self, raw_storage_account):
         storage_account = {}

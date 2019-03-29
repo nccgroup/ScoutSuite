@@ -11,14 +11,16 @@ class ClusterParameterGroups(AWSCompositeResources):
 
     async def fetch_all(self, **kwargs):
         raw_parameter_groups = await self.facade.redshift.get_cluster_parameter_groups(self.scope['region'])
-        # TODO: parallelize this async loop:
         for raw_parameter_group in raw_parameter_groups:
             id, parameter_group = self._parse_parameter_group(raw_parameter_group)
-            await self._fetch_children(
-                parent=parameter_group,
-                scope={'region': self.scope['region'], 'parameter_group_name': parameter_group['name']}
-            )
             self[id] = parameter_group
+
+        await self._fetch_children_of_all_resources(
+            resources=self,
+            scopes={parameter_group_id: {'region': self.scope['region'],
+                                         'parameter_group_name': parameter_group['name']}
+                    for (parameter_group_id, parameter_group) in self.items()}
+        )
 
     def _parse_parameter_group(self, raw_parameter_group):
         name = raw_parameter_group.pop('ParameterGroupName')

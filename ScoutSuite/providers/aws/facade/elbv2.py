@@ -1,9 +1,9 @@
+import asyncio
+
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.utils import ec2_classic
 from ScoutSuite.providers.utils import run_concurrently
-
-from asyncio import Lock
 
 
 class ELBv2Facade(AWSBaseFacade):
@@ -15,7 +15,7 @@ class ELBv2Facade(AWSBaseFacade):
         return [load_balancer for load_balancer in self.load_balancers_cache[region] if load_balancer['VpcId'] == vpc]
 
     async def cache_load_balancers(self, region):
-        async with self.regional_load_balancers_cache_locks.setdefault(region, Lock()):
+        async with self.regional_load_balancers_cache_locks.setdefault(region, asyncio.Lock()):
             if region in self.load_balancers_cache:
                 return
 
@@ -27,11 +27,20 @@ class ELBv2Facade(AWSBaseFacade):
                 load_balancer['VpcId'] =\
                     load_balancer['VpcId'] if 'VpcId' in load_balancer and load_balancer['VpcId'] else ec2_classic
 
-    async def get_load_balancer_attributes(self, region: str, load_balancer_arn: str):
+            if len(self.load_balancers_cache[region]) == 0:
+                return
+            tasks = {
+                asyncio.ensure_future(
+                    self.get_and_set_load_balancer_attributes(region, load_balancer)
+                ) for load_balancer in self.load_balancers_cache[region]
+            }
+            await asyncio.wait(tasks)
+
+    async def get_and_set_load_balancer_attributes(self, region: str, load_balancer: dict):
         elbv2_client = AWSFacadeUtils.get_client('elbv2', self.session, region)
-        return await run_concurrently(
+        load_balancer['attributes'] = await run_concurrently(
             lambda: elbv2_client.describe_load_balancer_attributes(
-                LoadBalancerArn=load_balancer_arn)['Attributes']
+                LoadBalancerArn=load_balancer['LoadBalancerArn'])['Attributes']
         )
 
     async def get_listeners(self, region: str, load_balancer_arn: str):
