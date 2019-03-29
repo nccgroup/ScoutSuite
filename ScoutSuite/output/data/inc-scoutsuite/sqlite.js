@@ -1,5 +1,6 @@
-// Query separator, keeping the name truncated it since will be used often
-var qS = '¤'
+var querySeparator = '¤'
+// Making this regex global instead of recreating it at each createQuery function call
+var reQuerySeparator = new RegExp('\\' + querySeparator + '+$')
 
 // TODO: change for something that does not throw XML errors
 /**
@@ -68,13 +69,13 @@ function getScoutsuiteResultsSqlite () {
       run_results[paths[i]] = groups 
       continue
     }
-    for (let group in groups) { // Layer 1
-      list[groups[group]] = requestDb(paths[i] + qS + groups[group])
+    for (let group in groups) { // Layer 1      
+      list[groups[group]] = requestDb(createQuery(paths[i], groups[group]))
       let services = list[groups[group]].keys
       if (services) {        
         for (let service in services) { // Layer 2
-          list[groups[group]][services[service]] = { [null] : null }
-          let counters = requestDb(paths[i] + qS + groups[group] + qS + services[service])
+          list[groups[group]][services[service]] = { [null] : null }          
+          let counters = requestDb(createQuery(paths[i], groups[group], services[service]))
           if (counters.keys) {
             counters = counters.keys
           } else {
@@ -87,17 +88,17 @@ function getScoutsuiteResultsSqlite () {
           }
           // TODO: Make this amalgalm cleaner   
           for (let counter in counters) { // Layer 3
-            list[groups[group]][services[service]][counters[counter]] = 
-              requestDb(paths[i] + qS + groups[group] + qS + services[service] + qS + counters[counter])           
+            list[groups[group]][services[service]][counters[counter]] =             
+              requestDb(createQuery(paths[i], groups[group], services[service], counters[counter]))           
             let resources = list[groups[group]][services[service]][counters[counter]].keys              
-            for (let resource in resources) { // Layer 4
-              list[groups[group]][services[service]][counters[counter]][resources[resource]] = requestDb(paths[i] + qS + 
-              groups[group] + qS + services[service] + qS + counters[counter] + qS + resources[resource])
+            for (let resource in resources) { // Layer 4              
+              list[groups[group]][services[service]][counters[counter]][resources[resource]] = requestDb(
+                createQuery(paths[i], groups[group], services[service], counters[counter], resources[resource]))
               let items = list[groups[group]][services[service]][counters[counter]][resources[resource]].keys
-              for (let item in items) { // Layer 5
+              for (let item in items) { // Layer 5                
                 list[groups[group]][services[service]][counters[counter]][resources[resource]][items[item]] = 
-                requestDb(paths[i] + qS + groups[group] + qS + services[service] + qS + counters[counter] + qS + 
-                resources[resource] + qS + items[item])
+                requestDb(createQuery(paths[i], groups[group], services[service], counters[counter], resources[resource], 
+                  items[item]))
                 delete list[groups[group]][services[service]][counters[counter]].type
                 delete list[groups[group]][services[service]][counters[counter]].keys
               }
@@ -135,9 +136,8 @@ function getResourcePageSqlite (pageIndex, pageSize, service, resource) {
 function createQuery () {
   let query = ''
   for (let i = 0; i < arguments.length; i++) {
-    query += arguments[i] + qS
+    query += arguments[i] + querySeparator
   }
-  regex = new RegExp('\\' + qS + '+$');
-  query = query.replace(regex, '');
+  query = query.replace(reQuerySeparator, '');
   return query
 }
