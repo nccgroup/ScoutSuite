@@ -1,8 +1,9 @@
-from ScoutSuite.providers.aws.resources.regions import Regions
+from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.aws.resources.ec2.ami import AmazonMachineImages
-from ScoutSuite.providers.aws.resources.ec2.vpcs import Ec2Vpcs
 from ScoutSuite.providers.aws.resources.ec2.snapshots import Snapshots
 from ScoutSuite.providers.aws.resources.ec2.volumes import Volumes
+from ScoutSuite.providers.aws.resources.ec2.vpcs import Ec2Vpcs
+from ScoutSuite.providers.aws.resources.regions import Regions
 
 
 class EC2(Regions):
@@ -13,8 +14,8 @@ class EC2(Regions):
         (Volumes, 'volumes')
     ]
 
-    def __init__(self):
-        super(EC2, self).__init__('ec2')
+    def __init__(self, facade):
+        super(EC2, self).__init__('ec2', facade)
 
     async def fetch_all(self, credentials=None, regions=None, partition_name='aws'):
         await super(EC2, self).fetch_all(credentials, regions, partition_name)

@@ -7,7 +7,11 @@ class NetworkFacade:
         self._client = NetworkManagementClient(credentials, subscription_id)
 
     async def get_network_watchers(self):
-        return await run_concurrently(self._client.network_watchers.list_all)
+        return await run_concurrently(
+            lambda: list(self._client.network_watchers.list_all())
+        )
 
     async def get_network_security_groups(self):
-        return await run_concurrently(self._client.network_security_groups.list_all)
+        return await run_concurrently(
+            lambda: list(self._client.network_security_groups.list_all())
+        )

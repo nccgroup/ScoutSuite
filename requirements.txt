@@ -2,6 +2,7 @@
 python-dateutil>=2.2
 netaddr>=0.7.11
 iampoliciesgonewild>=1.0.6.2
+coloredlogs>=10.0
 
 # AWS Provider
 boto3>=1.9.60

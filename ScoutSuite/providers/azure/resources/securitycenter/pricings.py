@@ -1,13 +1,14 @@
+from ScoutSuite.providers.azure.facade.facade import AzureFacade
 from ScoutSuite.providers.base.configs.resources import Resources
 
 
 class Pricings(Resources):
 
-    def __init__(self, facade):
+    def __init__(self, facade: AzureFacade):
         self.facade = facade
 
     async def fetch_all(self):
-        for raw_pricing in await self.facade.get_pricings():
+        for raw_pricing in await self.facade.securitycenter.get_pricings():
             id, pricing = self._parse_pricing(raw_pricing)
             self[id] = pricing
 

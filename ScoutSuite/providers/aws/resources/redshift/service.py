@@ -1,8 +1,9 @@
+from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.aws.resources.regions import Regions
 
-from .vpcs import RedshiftVpcs
 from .cluster_parameter_groups import ClusterParameterGroups
 from .cluster_security_groups import ClusterSecurityGroups
+from .vpcs import RedshiftVpcs
 
 
 class Redshift(Regions):
@@ -12,5 +13,5 @@ class Redshift(Regions):
         (ClusterSecurityGroups, 'security_groups')
     ]
 
-    def __init__(self):
-        super(Redshift, self).__init__('redshift')
+    def __init__(self, facade: AWSFacade):
+        super(Redshift, self).__init__('redshift', facade)

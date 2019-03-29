@@ -1,8 +1,9 @@
+import time
+
+from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.aws.resources.regions import Regions
 from ScoutSuite.providers.aws.resources.resources import AWSResources
 from ScoutSuite.providers.utils import get_non_provider_id
-
-import time
 
 
 class Trails(AWSResources):
@@ -66,5 +67,5 @@ class CloudTrail(Regions):
         (Trails, 'trails')
     ]
 
-    def __init__(self):
-        super(CloudTrail, self).__init__('cloudtrail')
+    def __init__(self, facade: AWSFacade):
+        super(CloudTrail, self).__init__('cloudtrail', facade)

@@ -1,15 +1,15 @@
+from ScoutSuite.providers.azure.facade.facade import AzureFacade
 from ScoutSuite.providers.base.configs.resources import Resources
-from ScoutSuite.providers.azure.facade.keyvault import KeyVaultFacade
 from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class KeyVaults(Resources):
-    async def fetch_all(self, credentials, **kwargs):
-        # TODO: build that facade somewhere else:
-        facade = KeyVaultFacade(credentials.credentials, credentials.subscription_id)
+    def __init__(self, facade: AzureFacade):
+        self.facade = facade
 
+    async def fetch_all(self, credentials, **kwargs):
         self['vaults'] = {}
-        for raw_vault in await facade.get_key_vaults():
+        for raw_vault in await self.facade.keyvault.get_key_vaults():
             id, vault = self._parse_key_vault(raw_vault)
             self['vaults'][id] = vault
 

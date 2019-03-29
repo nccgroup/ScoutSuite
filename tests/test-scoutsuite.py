@@ -1,19 +1,16 @@
 import subprocess
-
 import mock
+
 from nose.plugins.attrib import attr
-
 from ScoutSuite.__main__ import *
+from ScoutSuite.core.console import set_config_debug_level
 
 
-#
-# Test for Scout.py
-#
 class TestScoutSuiteClass:
 
     @classmethod
     def setUpClass(cls):
-        config_debug_level(True)
+        set_config_debug_level(True)
         cls.has_run_scout_suite = False
 
     @staticmethod

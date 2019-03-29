@@ -1,3 +1,4 @@
+from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.aws.resources.regions import Regions
 
 from .topics import Topics
@@ -8,5 +9,5 @@ class SNS(Regions):
         (Topics, 'topics')
     ]
 
-    def __init__(self):
-        super(SNS, self).__init__('sns')
+    def __init__(self, facade: AWSFacade):
+        super(SNS, self).__init__('sns', facade)

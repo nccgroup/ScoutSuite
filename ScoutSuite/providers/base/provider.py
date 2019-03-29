@@ -25,8 +25,7 @@ class BaseProvider(object):
     all cloud providers
     """
 
-    def __init__(self, report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4,
-                 **kwargs):
+    def __init__(self, report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
         """
 
         :aws_account_id     AWS account ID
@@ -38,22 +37,14 @@ class BaseProvider(object):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
-        self.credentials = None
         self.last_run = None
         self.metadata = None
 
         self._load_metadata()
 
-        self.services = self.services_config(self.metadata, thread_config)
+        self.services = self.services_config(self.credentials)
         supported_services = vars(self.services).keys()
         self.service_list = self._build_services_list(supported_services, services, skipped_services)
-
-    def authenticate(self):
-        """
-        Authenticate to the provider using provided credentials
-        :return:
-        """
-        pass
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
@@ -89,7 +80,7 @@ class BaseProvider(object):
         regions = [] if regions is None else regions
         skipped_regions = [] if skipped_regions is None else skipped_regions
         # TODO: determine partition name based on regions and warn if multiple partitions...
-        await self.services.fetch(self.credentials, self.service_list, regions)
+        await self.services.fetch(self.service_list, regions)
 
         # TODO implement this properly
         """
@@ -111,6 +102,16 @@ class BaseProvider(object):
 
     @staticmethod
     def _build_services_list(supported_services, services, skipped_services):
+
+        # Ensure services and skipped services exist, otherwise log exception
+        error = False
+        for service in services+skipped_services:
+            if service not in supported_services:
+                print_exception('Service \"{}\" does not exist, skipping.'.format(service))
+                error = True
+        if error:
+            print_info('Available services are: {}'.format(str(list(supported_services)).strip('[]')))
+
         return [s for s in supported_services if (services == [] or s in services) and s not in skipped_services]
 
     def _update_last_run(self, current_time, ruleset):
@@ -326,11 +327,12 @@ class BaseProvider(object):
                                                callback_args)
 
         except Exception as e:
-            print_exception(e)
-            print_info('Path: %s' % str(current_path))
-            print_info('Key = %s' % str(key) if 'key' in locals() else 'not defined')
-            print_info('Value = %s' % str(value) if 'value' in locals() else 'not defined')
-            print_info('Path = %s' % path)
+            print_exception(e, {'current path': '{}'.format(current_path),
+                                'key': '{}'.format(key if 'key' in locals() else 'not defined'),
+                                'value': '{}'.format(value if 'value' in locals() else 'not defined'),
+                                'path': '{}'.format(path),
+                                }
+                            )
 
     def _new_go_to_and_do(self, current_config, path, current_path, callbacks):
         """
@@ -381,8 +383,9 @@ class BaseProvider(object):
                             tmp.append(i)
                             self._new_go_to_and_do(current_config[key][i], copy.deepcopy(path), tmp, callbacks)
         except Exception as e:
-            print_exception(e)
-            print_info('Path: %s' % str(current_path))
-            print_info('Key = %s' % str(key) if 'key' in locals() else 'not defined')
-            print_info('Value = %s' % str(value) if 'value' in locals() else 'not defined')
-            print_info('Path = %s' % path)
+            print_exception(e, {'current path': '{}'.format(current_path),
+                                'key': '{}'.format(key if 'key' in locals() else 'not defined'),
+                                'value': '{}'.format(value if 'value' in locals() else 'not defined'),
+                                'path': '{}'.format(path),
+                                }
+                            )
