@@ -212,6 +212,7 @@ class ScoutSuiteArgumentParser:
         parser.add_argument('--max-workers',
                             dest='max_workers',
                             type=int,
+                            default=10,
                             help='Maximum number of threads (workers) used by Scout Suite')
         parser.add_argument('--report-dir',
                             dest='report_dir',
