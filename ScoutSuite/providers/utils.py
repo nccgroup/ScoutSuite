@@ -1,5 +1,6 @@
-from hashlib import sha1
 import asyncio
+
+from hashlib import sha1
 
 
 def get_non_provider_id(name):
@@ -16,17 +17,36 @@ def get_non_provider_id(name):
 
 
 def run_concurrently(func):
-        return asyncio.get_event_loop().run_in_executor(executor=None, func=func)
+    """
+    Schedules the execution of function `func` in the default thread pool (referred as 'executor') that has been
+    associated with the global event loop.
 
-async def run_tasks_concurrently(tasks):
-    entities = []
+    :param func: function to be executed concurrently, in a dedicated thread.
+    :return: an asyncio.Future to be awaited.
+    """
 
-    parallelized_tasks = {
-        asyncio.ensure_future(task) for task in tasks
+    return asyncio.get_event_loop().run_in_executor(executor=None, func=func)
+
+
+async def map_concurrently(coro, entities, **kwargs):
+    """
+    Given a list of entities, executes coroutine `coro` concurrently on each entity and returns a list of the obtained
+    results ([await coro(entity_x), await coro(entity_a), ..., await coro(entity_z)]).
+
+    :param coro: coroutine to be executed concurrently. Takes an entity as parameter and returns a new entity.
+    :param entities: a list of the same type of entity (ex: cluster ids)
+
+    :return: a list of new entities (ex: clusters)
+    """
+    results = []
+
+    tasks = {
+        asyncio.ensure_future(
+            coro(entity, **kwargs)
+        ) for entity in entities
     }
+    for task in asyncio.as_completed(tasks):
+        result = await task
+        results.append(result)
 
-    for task in asyncio.as_completed(parallelized_tasks):
-        entity = await task
-        entities.append(entity)
-
-    return entities
+    return results
