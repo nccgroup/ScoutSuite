@@ -1,5 +1,4 @@
 var querySeparator = '¤'
-// Making this regex global instead of recreating it at each createQuery function call
 var reQuerySeparator = new RegExp('\\' + querySeparator + '+$')
 
 // TODO: change for something that does not throw XML errors
@@ -34,6 +33,8 @@ function requestDb (query) {
  */
 function requestDbPage (query, pageSize, pageIndex) {
   var request = new XMLHttpRequest()
+  console.log('http://127.0.0.1:8000/api/page?pagesize=' + pageSize + '&page=' + pageIndex + 
+  '&key=' + query)
   request.open('GET', 'http://127.0.0.1:8000/api/page?pagesize=' + pageSize + '&page=' + pageIndex + 
     '&key=' + query, false)
 
@@ -80,7 +81,7 @@ function getScoutsuiteResultsSqlite () {
             counters = counters.keys
           } else {
             continue
-          }              
+          }
           // The only elements for which we do not want to fetch everything are the resources which
           // are not filters or findings since they will scale with the environment's size
           if (paths[i] === 'services' && [services[service]] != 'filters' && [services[service]] != 'findings') {
@@ -137,7 +138,6 @@ function getResourcePageSqlite (pageIndex, pageSize, service, resource) {
   // Save the current page size to remember the size of the saved page
   run_results['services'][service][resource]['page_size'] = pageSize
   delete run_results['services'][service][resource].null
-  console.log(run_results['services'][service])
 }
 
 /**

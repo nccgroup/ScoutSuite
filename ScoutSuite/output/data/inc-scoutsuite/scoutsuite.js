@@ -1,6 +1,8 @@
 // Globals
-var resultFormats = { 'invalid': 0, 'json': 1, 'sqlite': 2 }
+const resultFormats = { 'invalid': 0, 'json': 1, 'sqlite': 2 }
 Object.freeze(resultFormats)
+const defaultPageSize = 2
+const reCount = new RegExp('_count+$')
 var loadedConfigArray = new Array()
 var run_results
 
@@ -739,8 +741,13 @@ function getFormat () {
  * Set up dashboards and dropdown menus
  */
 function loadMetadata () {
-  run_results = (getFormat() === resultFormats.json) ? getScoutsuiteResultsJson() : getScoutsuiteResultsSqlite()
-
+  if (getFormat() === resultFormats.json) {
+    run_results = getScoutsuiteResultsJson() 
+  } else if (getFormat() === resultFormats.sqlite) {
+    run_results = getScoutsuiteResultsSqlite()
+    loadFirstPageEverywhere()
+  }
+  
   loadAccountId()
 
   loadConfig('last_run', 1)
@@ -1281,10 +1288,12 @@ function downloadAsJson (filename, dict) {
 /**
  * Loads a page based on which page we want to move to
  * @param pathArray       Contains the location of the resource requested
- * @param indexDiff       Tells us wether we want -1/0/+1 page
+ * @param indexDiff       Tells us wether we want to load the previous, current, next page, etc.
  */
 function loadPage (pathArray, indexDiff) {
-  let pageSize, pageIndex = getPageInfo(pathArray)
+  let pageInfo = getPageInfo(pathArray)
+  let pageSize = pageInfo[0]
+  let pageIndex = pageInfo[1]
   pageIndex += indexDiff
   getResourcePageSqlite(pageIndex, pageSize, pathArray[1], pathArray[2])
 }
@@ -1298,10 +1307,23 @@ function getPageInfo (pathArray) {
   pageSize = run_results[pathArray[0]][pathArray[1]][pathArray[2]]['page_size']
   pageIndex = run_results[pathArray[0]][pathArray[1]][pathArray[2]]['page_index']
   if (pageSize === undefined || pageSize === null) {
-    pageSize = 2
+    pageSize = defaultPageSize
   } 
-  if (pageSize === undefined || pageSize === null) {
+  if (pageIndex === undefined || pageIndex === null) {
     pageIndex = 0
-  } 
-  return pageSize, pageIndex
+  }  
+  return [pageSize, pageIndex]
+}
+
+function loadFirstPageEverywhere () {  
+  for (let service in run_results['services']) {
+    for (let resource in run_results['services'][service]) {
+      // Don't make a request for a page when it's a counter of resources
+      if (resource.match(reCount)) {
+        continue
+      }
+      let pathArray = ['services', service, resource]
+      loadPage(pathArray, 0)
+    }
+  }
 }
