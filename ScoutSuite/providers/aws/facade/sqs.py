@@ -1,8 +1,6 @@
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
-from ScoutSuite.providers.utils import run_concurrently
-
-import asyncio
+from ScoutSuite.providers.utils import run_concurrently, map_concurrently
 
 
 class SQSFacade(AWSBaseFacade):
@@ -12,22 +10,12 @@ class SQSFacade(AWSBaseFacade):
 
         if 'QueueUrls' not in raw_queues:
             return []
-
         queue_urls = raw_queues['QueueUrls']
-        # Fetch the attributes of all the queues concurrently::
-        tasks = {
-            asyncio.ensure_future(
-                self.get_queue_attributes(region, queue_url, attribute_names)
-            ) for queue_url in queue_urls
-        }
-        queues = []
-        for result in asyncio.as_completed(tasks):
-            queue_url, queue_attributes = await result
-            queues.append((queue_url, queue_attributes))
 
-        return queues
+        return await map_concurrently(
+            self._get_queue_attributes, queue_urls, region=region, attribute_names=attribute_names)
 
-    async def get_queue_attributes(self, region: str, queue_url: str, attribute_names: []):
+    async def _get_queue_attributes(self, queue_url: str, region: str, attribute_names: []):
         sqs_client = AWSFacadeUtils.get_client('sqs', self.session, region)
         queue_attributes = await run_concurrently(
             lambda: sqs_client.get_queue_attributes(QueueUrl=queue_url, AttributeNames=attribute_names)['Attributes']
