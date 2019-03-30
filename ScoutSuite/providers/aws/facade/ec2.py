@@ -46,9 +46,7 @@ class EC2Facade(AWSBaseFacade):
     async def get_images(self, region: str, owner_id: str):
         filters = [{'Name': 'owner-id', 'Values': [owner_id]}]
         client = AWSFacadeUtils.get_client('ec2', self.session, region)
-        response = await run_concurrently(lambda: client.describe_images(Filters=filters))
-
-        return response['Images']
+        return await run_concurrently(lambda: client.describe_images(Filters=filters)['Images'])
 
     async def get_network_interfaces(self, region: str, vpc: str):
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]
@@ -62,14 +60,15 @@ class EC2Facade(AWSBaseFacade):
         filters = [{'Name': 'owner-id', 'Values': [owner_id]}]
         snapshots = await AWSFacadeUtils.get_all_pages(
             'ec2', region, self.session, 'describe_snapshots', 'Snapshots', Filters=filters)
-
-        ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)
-        for snapshot in snapshots:
-            snapshot['CreateVolumePermissions'] = await run_concurrently(lambda: ec2_client.describe_snapshot_attribute(
-                Attribute='createVolumePermission',
-                SnapshotId=snapshot['SnapshotId'])['CreateVolumePermissions'])
+        await AWSFacadeUtils.get_and_set_concurrently([self._get_and_set_snapshot_attributes], snapshots, region=region)
 
         return snapshots
+
+    async def _get_and_set_snapshot_attributes(self, snapshot: {}, region: str):
+        ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)
+        snapshot['CreateVolumePermissions'] = await run_concurrently(lambda: ec2_client.describe_snapshot_attribute(
+                Attribute='createVolumePermission',
+                SnapshotId=snapshot['SnapshotId'])['CreateVolumePermissions'])
 
     async def get_network_acls(self, region: str, vpc: str):
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]
@@ -91,20 +90,12 @@ class EC2Facade(AWSBaseFacade):
     async def get_subnets(self, region: str, vpc: str):
         ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]
-        subnets = await run_concurrently(
-            lambda: ec2_client.describe_subnets(Filters=filters)['Subnets']
-        )
-        # Fetch and set subnet flow logs concurrently:
-        tasks = {
-            asyncio.ensure_future(
-                self.get_and_set_subnet_flow_logs(region, subnet)
-            ) for subnet in subnets
-        }
-        await asyncio.wait(tasks)
+        subnets = await run_concurrently(lambda: ec2_client.describe_subnets(Filters=filters)['Subnets'])
+        await AWSFacadeUtils.get_and_set_concurrently([self._get_and_set_subnet_flow_logs], subnets, region=region)
 
         return subnets
 
-    async def get_and_set_subnet_flow_logs(self, region: str, subnet: {}):
+    async def _get_and_set_subnet_flow_logs(self, subnet: {}, region: str):
         await self.cache_flow_logs(region)
         subnet['flow_logs'] =\
             [flow_log for flow_log in self.flow_logs_cache[region]
