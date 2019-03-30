@@ -124,7 +124,13 @@ function getResourcePageSqlite (pageIndex, pageSize, service, resource) {
   // Fill the resource elements with the elements of the proper page
   resources = requestDbPage(createQuery('services', service, resource), pageSize, pageIndex)
   for (let item in resources) {
-    run_results['services'][service][resource][item] = resources[item].keys
+    let properties = resources[item].keys
+    run_results['services'][service][resource][item] = { [null] : null }
+    for (let property in properties) {
+      run_results['services'][service][resource][item][properties[property]] = 
+      requestDb(createQuery('services', service, resource, item, properties[property]))
+    }
+    delete run_results['services'][service][resource][item].null
   }
   // Save the current page index to remember which page we have saved
   run_results['services'][service][resource]['current_page'] = pageIndex
