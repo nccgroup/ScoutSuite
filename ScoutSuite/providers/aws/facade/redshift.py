@@ -19,9 +19,8 @@ class RedshiftFacade(AWSBaseFacade):
             if region in self.clusters_cache:
                 return
 
-            self.clusters_cache[region] =\
-                await AWSFacadeUtils.get_all_pages('redshift', region, self.session,
-                                                   'describe_clusters', 'Clusters')
+            self.clusters_cache[region] = await AWSFacadeUtils.get_all_pages(
+                'redshift', region, self.session, 'describe_clusters', 'Clusters')
 
             for cluster in self.clusters_cache[region]:
                 cluster['VpcId'] =\
