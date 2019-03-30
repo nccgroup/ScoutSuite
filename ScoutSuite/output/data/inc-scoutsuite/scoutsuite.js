@@ -1319,7 +1319,7 @@ function loadFirstPageEverywhere () {
   for (let service in run_results['services']) {
     for (let resource in run_results['services'][service]) {
       // Don't make a request for a page when it's a counter of resources
-      if (resource.match(reCount)) {
+      if (resource.match(reCount) || resource === 'findings' || resource === 'filters') {
         continue
       }
       let pathArray = ['services', service, resource]
