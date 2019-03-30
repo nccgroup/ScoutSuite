@@ -133,7 +133,7 @@ function getResourcePageSqlite (pageIndex, pageSize, service, resource) {
     delete run_results['services'][service][resource][item].null
   }
   // Save the current page index to remember which page we have saved
-  run_results['services'][service][resource]['current_page'] = pageIndex
+  run_results['services'][service][resource]['page_index'] = pageIndex
   // Save the current page size to remember the size of the saved page
   run_results['services'][service][resource]['page_size'] = pageSize
   delete run_results['services'][service][resource].null

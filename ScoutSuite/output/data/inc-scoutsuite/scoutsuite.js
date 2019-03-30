@@ -20,7 +20,6 @@ function onPageLoad () {
   // when button is clicked, return CSV with finding
   $('#findings_download_button').click(function (event) {
     var buttonClicked = event.target.id
-
     var anchor = window.location.hash.substr(1)
     // Strip the # sign
     var path = decodeURIComponent(anchor.replace('#', ''))
@@ -31,10 +30,8 @@ function onPageLoad () {
     var jsonDict = {}
 
     var items = get_value_at(path)
-    var level = get_value_at(path.replace('items', 'level'))
     var resourcePathArray = resource_path.split('.')
     var splitPath = path.split('.')
-    var findingService = splitPath[1]
     var findingKey = splitPath[splitPath.length - 2]
 
     if (buttonClicked === 'findings_download_csv_button') {
@@ -87,6 +84,23 @@ function onPageLoad () {
         jsonDict['items'].push(i)
       }
       downloadAsJson(findingKey + '.json', jsonDict)
+    }
+  })
+
+  // When the button is clicked, load the desired page
+  $('#paging_buttons').click(function (event) {
+    let buttonClicked = event.target.id
+    let anchor = window.location.hash.substr(1)
+    // Strip the # sign
+    let path = decodeURIComponent(anchor.replace('#', ''))
+    // Get resource path based on browsed-to path
+    let resourcePath = get_resource_path(path)
+    let pathArray = resourcePath.split('.')
+
+    if (buttonClicked === 'page_forward') {
+      loadPage(pathArray, 1)
+    } else if (buttonClicked === 'page_backward') {
+      loadPage(pathArray, -1)
     }
   })
 }
@@ -1073,11 +1087,11 @@ function make_title (title) {
  * Toggles between truncated and full lenght bucket name
  */
 function toggleName(name) {
-    if (name.style.display !== 'contents') {
-        name.style.display = 'contents'
-    } else {
-        name.style.display = 'block'
-    }
+  if (name.style.display !== 'contents') {
+      name.style.display = 'contents'
+  } else {
+      name.style.display = 'block'
+  }
 }
 
 /**
@@ -1264,3 +1278,30 @@ function downloadAsJson (filename, dict) {
   }
 }
 
+/**
+ * Loads a page based on which page we want to move to
+ * @param pathArray       Contains the location of the resource requested
+ * @param indexDiff       Tells us wether we want -1/0/+1 page
+ */
+function loadPage (pathArray, indexDiff) {
+  let pageSize, pageIndex = getPageInfo(pathArray)
+  pageIndex += indexDiff
+  getResourcePageSqlite(pageIndex, pageSize, pathArray[1], pathArray[2])
+}
+
+/**
+ * Returns the current index of the page and it's size in number of resources
+ * @param pathArray       Contains the location of the resource requested
+ */
+function getPageInfo (pathArray) { 
+  let pageSize, pageIndex
+  pageSize = run_results[pathArray[0]][pathArray[1]][pathArray[2]]['page_size']
+  pageIndex = run_results[pathArray[0]][pathArray[1]][pathArray[2]]['page_index']
+  if (pageSize === undefined || pageSize === null) {
+    pageSize = 2
+  } 
+  if (pageSize === undefined || pageSize === null) {
+    pageIndex = 0
+  } 
+  return pageSize, pageIndex
+}
