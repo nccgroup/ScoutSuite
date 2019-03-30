@@ -27,16 +27,10 @@ class ELBFacade(AWSBaseFacade):
                 load_balancer['VpcId'] =\
                     load_balancer['VPCId'] if 'VPCId' in load_balancer and load_balancer['VPCId'] else ec2_classic
 
-            if len(self.load_balancers_cache[region]) > 0:
-                # Fetch and set the attributes of all the load balancers concurrently:
-                tasks = {
-                    asyncio.ensure_future(
-                        self._get_and_set_load_balancer_attributes(region, load_balancer)
-                    ) for load_balancer in self.load_balancers_cache[region]
-                }
-                await asyncio.wait(tasks)
+            await AWSFacadeUtils.get_and_set_concurrently(
+                [self._get_and_set_load_balancer_attributes], self.load_balancers_cache[region], region=region)
 
-    async def _get_and_set_load_balancer_attributes(self, region: str, load_balancer: {}):
+    async def _get_and_set_load_balancer_attributes(self, load_balancer: {}, region: str):
         elb_client = AWSFacadeUtils.get_client('elb', self.session, region)
         load_balancer['attributes'] = await run_concurrently(
             lambda: elb_client.describe_load_balancer_attributes(
