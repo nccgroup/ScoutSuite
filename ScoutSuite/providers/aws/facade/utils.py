@@ -1,4 +1,5 @@
 import boto3
+import asyncio
 
 from ScoutSuite.providers.utils import run_concurrently
 
@@ -7,7 +8,8 @@ class AWSFacadeUtils:
     _clients = {}
 
     @staticmethod
-    async def get_all_pages(service: str, region: str, session: boto3.session.Session, paginator_name: str, entity: str, **paginator_args):
+    async def get_all_pages(service: str, region: str, session: boto3.session.Session, paginator_name: str,
+                            entity: str, **paginator_args):
         """
         Gets all the entities from a paginator given an entity key
 
@@ -21,11 +23,14 @@ class AWSFacadeUtils:
         :return: A list of the fetched entities.
         """
 
-        results = await AWSFacadeUtils.get_multiple_entities_from_all_pages(service, region, session, paginator_name, [entity], **paginator_args)
+        results = await AWSFacadeUtils.get_multiple_entities_from_all_pages(
+            service, region, session, paginator_name,[entity], **paginator_args)
+
         return results[entity]
 
     @staticmethod
-    async def get_multiple_entities_from_all_pages(service: str, region: str, session: boto3.session.Session, paginator_name: str, entities: list, **paginator_args):
+    async def get_multiple_entities_from_all_pages(service: str, region: str, session: boto3.session.Session,
+                                                   paginator_name: str, entities: list, **paginator_args):
         """
         Gets all the entities from a paginator given multiple entitiy keys
             :param service:str: Name of the AWS service (ec2, iam, etc.)
@@ -69,5 +74,32 @@ class AWSFacadeUtils:
 
         :return:
         """
-        return AWSFacadeUtils._clients.setdefault((service, region),
-                                                  session.client(service, region_name=region) if region else session.client(service))
+
+        return AWSFacadeUtils._clients.setdefault(
+            (service, region),
+            session.client(service, region_name=region) if region else session.client(service))
+
+    @staticmethod
+    async def get_and_set_concurrently(get_and_set_funcs: [], entities: [], **kwargs):
+        """
+        Given a list of get_and_set_* functions (ex: get_and_set_description, get_and_set_attributes,
+        get_and_set_policy, etc.) and a list of entities (ex: stacks, keys, load balancers, vpcs, etc.),
+        get_and_set_concurrently will call each of these functions concurrently on each entity.
+
+        :param get_and_set_funcs: list of functions that takes a region and an entity (they must have the following
+        signature: region: str, entity: {}) and then fetch and set some kind of attributes to this entity.
+        :param entities: list of a same kind of entities
+        :param region: a region
+
+        :return:
+        """
+
+        if len(entities) == 0:
+            return
+
+        tasks = {
+            asyncio.ensure_future(
+                get_and_set_func(entity, **kwargs)
+            ) for entity in entities for get_and_set_func in get_and_set_funcs
+        }
+        await asyncio.wait(tasks)
