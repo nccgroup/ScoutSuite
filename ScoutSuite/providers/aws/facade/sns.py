@@ -1,8 +1,8 @@
+import asyncio
+
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.utils import run_concurrently
-
-import asyncio
 
 
 class SNSFacade(AWSBaseFacade):
@@ -11,21 +11,11 @@ class SNSFacade(AWSBaseFacade):
 
     async def get_topics(self, region: str):
         topics = await AWSFacadeUtils.get_all_pages('sns', region, self.session, 'list_topics', 'Topics')
-
-        if len(topics) == 0:
-            return []
-
-        # Fetch and set the attributes of all topics concurrently:
-        tasks = {
-            asyncio.ensure_future(
-                self.get_and_set_topic_attributes(region, topic)
-            ) for topic in topics
-        }
-        await asyncio.wait(tasks)
+        await AWSFacadeUtils.get_and_set_concurrently([self._get_and_set_topic_attributes], topics, region=region)
 
         return topics
 
-    async def get_and_set_topic_attributes(self, region: str, topic: {}):
+    async def _get_and_set_topic_attributes(self, topic: {}, region: str):
         sns_client = AWSFacadeUtils.get_client('sns', self.session, region)
         topic['attributes'] = await run_concurrently(
             lambda: sns_client.get_topic_attributes(TopicArn=topic['TopicArn'])['Attributes']
