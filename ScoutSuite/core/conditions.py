@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import datetime
 import dateutil.parser
 import json
@@ -9,7 +7,6 @@ import re
 from iampoliciesgonewild import get_actions_from_statement, _expand_wildcard_action
 
 from ScoutSuite.core.console import print_error, print_exception
-from ScoutSuite.core import condition_operators
 
 re_get_value_at = re.compile(r'_GET_VALUE_AT_\((.*?)\)')
 re_nested_get_value_at = re.compile(r'_GET_VALUE_AT_\(.*')
@@ -33,7 +30,7 @@ def pass_conditions(all_info, current_path, conditions, unknown_as_pass_conditio
         return True
     condition_operator = conditions.pop(0)
     for condition in conditions:
-        if condition[0] in condition_operators:
+        if condition[0] in ['and', 'or']:
             res = pass_conditions(all_info, current_path, condition, unknown_as_pass_condition)
         else:
             # Conditions are formed as "path to value", "type of test", "value(s) for test"
