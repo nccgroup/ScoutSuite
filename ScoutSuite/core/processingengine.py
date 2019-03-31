@@ -64,8 +64,8 @@ class ProcessingEngine(object):
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key][
                         'rationale'] = rule.rationale if hasattr(rule, 'rationale') else 'No description available.'
                 except Exception as e:
-                    print_exception(e)
                     print_error('Failed to process rule defined in %s' % rule.filename)
+                    print_exception(e)
                     # Fallback if process rule failed to ensure report creation and data dump still happen
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['checked_items'] = 0
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['flagged_items'] = 0
