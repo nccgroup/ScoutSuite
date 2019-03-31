@@ -33,8 +33,6 @@ function requestDb (query) {
  */
 function requestDbPage (query, pageSize, pageIndex) {
   var request = new XMLHttpRequest()
-  console.log('http://127.0.0.1:8000/api/page?pagesize=' + pageSize + '&page=' + pageIndex + 
-  '&key=' + query)
   request.open('GET', 'http://127.0.0.1:8000/api/page?pagesize=' + pageSize + '&page=' + pageIndex + 
     '&key=' + query, false)
 
@@ -75,12 +73,12 @@ function getScoutsuiteResultsSqlite () {
       let services = list[groups[group]].keys
       if (services) {        
         for (let service in services) { // Layer 2
-          list[groups[group]][services[service]] = { [null] : null }          
-          let counters = requestDb(createQuery(paths[i], groups[group], services[service]))
-          if (counters.keys) {
-            counters = counters.keys
+          counters = requestDb(createQuery(paths[i], groups[group], services[service]))
+          if (!counters.keys) {
+            list[groups[group]][services[service]] = counters
           } else {
-            continue
+            counters = counters.keys
+            list[groups[group]][services[service]] = { [null] : null }
           }
           // The only elements for which we do not want to fetch everything are the resources which
           // are not filters or findings since they will scale with the environment's size
@@ -90,7 +88,7 @@ function getScoutsuiteResultsSqlite () {
           // TODO: Make this amalgalm cleaner   
           for (let counter in counters) { // Layer 3
             list[groups[group]][services[service]][counters[counter]] =             
-              requestDb(createQuery(paths[i], groups[group], services[service], counters[counter]))           
+              requestDb(createQuery(paths[i], groups[group], services[service], counters[counter])) 
             let resources = list[groups[group]][services[service]][counters[counter]].keys              
             for (let resource in resources) { // Layer 4              
               list[groups[group]][services[service]][counters[counter]][resources[resource]] = requestDb(
