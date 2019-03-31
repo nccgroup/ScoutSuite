@@ -6,7 +6,7 @@ import webbrowser
 
 from ScoutSuite import DEFAULT_RESULT_FILE
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
-from ScoutSuite.core.console import set_config_debug_level, print_info, print_debug, print_error, print_exception
+from ScoutSuite.core.console import set_config_debug_level, print_info, print_exception
 from ScoutSuite.core.exceptions import RuleExceptions
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset
