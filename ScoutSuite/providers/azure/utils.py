@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import re
 
 from ScoutSuite.core.console import print_exception
@@ -14,7 +12,7 @@ from azure.mgmt.redis import RedisManagementClient
 from azure.mgmt.web import WebSiteManagementClient
 
 
-def azure_connect_service(service, credentials, region_name=None):
+def azure_connect_service(service, credentials):
     try:
         if service == 'storageaccounts':
             return StorageManagementClient(credentials.credentials, credentials.subscription_id)
