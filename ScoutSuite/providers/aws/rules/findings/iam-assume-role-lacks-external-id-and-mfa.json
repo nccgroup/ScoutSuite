@@ -8,7 +8,7 @@
         [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Effect", "equal", "Allow" ],
         [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.", "containAction", "sts:AssumeRole" ],
         [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Principal", "withKey", "AWS" ],
-        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Principal.AWS", "isCrossAccount", "_AWS_ACCOUNT_ID_" ],
+        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Principal.AWS", "isCrossAccount", "_ACCOUNT_ID_" ],
         [ "or",
             [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.", "withoutKey", "Condition" ],
             [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition", "withoutKey", "Bool" ],
