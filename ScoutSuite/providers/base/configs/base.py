@@ -62,7 +62,7 @@ class BaseConfig(object):
         m.update(name.encode('utf-8'))
         return m.hexdigest()
 
-    def fetch_all(self, credentials, regions=None, partition_name='aws', targets=None):
+    async def fetch_all(self, credentials, regions=None, partition_name='aws', targets=None):
         """
         :param credentials:             F
         :param service:                 Name of the service
@@ -229,7 +229,7 @@ class BaseConfig(object):
         """
         return None
 
-    def finalize(self):
+    async def finalize(self):
         for t in self.fetchstatuslogger.counts:
             setattr(self, '%s_count' % t, self.fetchstatuslogger.counts[t]['fetched'])
         self.__delattr__('fetchstatuslogger')
