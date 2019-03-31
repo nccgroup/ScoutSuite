@@ -117,7 +117,7 @@ class AWSProvider(BaseProvider):
                                'protocols', 'ports', 'security_groups'],
                            [],
                            self.add_security_group_name_to_ec2_grants_callback,
-                           {'AWSAccountId': self.aws_account_id})
+                           {'AWSAccountId': self.account_id})
 
     def _add_security_group_data_to_elbv2(self):
         def check_security_group_rules(lb, index, traffic_type):
