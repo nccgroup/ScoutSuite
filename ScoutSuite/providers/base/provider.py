@@ -28,7 +28,7 @@ class BaseProvider(object):
     def __init__(self, report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
         """
 
-        :aws_account_id     AWS account ID
+        :account_id         account ID
         :last_run           Information about the last run
         :metadata           Metadata used to generate the HTML report
         :ruleset            Ruleset used to perform the analysis

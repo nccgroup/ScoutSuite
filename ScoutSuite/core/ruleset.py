@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import json
 import os
 import tempfile
@@ -23,14 +21,14 @@ class Ruleset:
     """
 
     def __init__(self,
+                 cloud_provider,
                  environment_name='default',
-                 cloud_provider='aws',
                  filename=None,
                  name=None,
                  rules_dir=None,
                  rule_type='findings',
                  ip_ranges=None,
-                 aws_account_id=None,
+                 account_id=None,
                  ruleset_generator=False):
         rules_dir = [] if rules_dir is None else rules_dir
         ip_ranges = [] if ip_ranges is None else ip_ranges
@@ -47,19 +45,19 @@ class Ruleset:
         print_debug('Loading ruleset %s' % self.filename)
         self.name = os.path.basename(self.filename).replace('.json', '') if not name else name
         self.load(self.rule_type)
-        self.shared_init(ruleset_generator, rules_dir, aws_account_id, ip_ranges)
+        self.shared_init(ruleset_generator, rules_dir, account_id, ip_ranges)
 
     def to_string(self):
         return str(vars(self))
 
-    def shared_init(self, ruleset_generator, rule_dirs, aws_account_id, ip_ranges):
+    def shared_init(self, ruleset_generator, rule_dirs, account_id, ip_ranges):
 
         # Load rule definitions
         if not hasattr(self, 'rule_definitions'):
             self.load_rule_definitions(ruleset_generator, rule_dirs)
 
         # Prepare the rules
-        params = {'aws_account_id': aws_account_id}
+        params = {'account_id': account_id}
         if ruleset_generator:
             self.prepare_rules(attributes=['description', 'key', 'rationale'], params=params)
         else:
@@ -205,7 +203,7 @@ class Ruleset:
 
 class TmpRuleset(Ruleset):
 
-    def __init__(self, cloud_provider='aws', rule_dirs=None, rule_filename=None, rule_args=None, rule_level='danger'):
+    def __init__(self, cloud_provider, rule_dirs=None, rule_filename=None, rule_args=None, rule_level='danger'):
         rule_dirs = [] if rule_dirs is None else rule_dirs
         rule_args = [] if rule_args is None else rule_args
         self.rule_type = 'findings'

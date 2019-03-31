@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import os
 
 from ScoutSuite.core.console import print_error, print_exception
@@ -19,17 +17,16 @@ class AzureProvider(BaseProvider):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
-        self.profile = 'azure-profile'  # TODO this is aws-specific
-
         self.metadata_path = '%s/metadata.json' % os.path.split(os.path.abspath(__file__))[0]
 
         self.provider_code = 'azure'
         self.provider_name = 'Microsoft Azure'
+        self.environment = 'default'
 
         self.services_config = AzureServicesConfig
         
         self.credentials = kwargs['credentials']
-        self.aws_account_id = self.credentials.aws_account_id # TODO : Get rid of aws_account_id
+        self.account_id = self.credentials.subscription_id
 
         super(AzureProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 

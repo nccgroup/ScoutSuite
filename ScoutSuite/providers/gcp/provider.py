@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-[d['value'] for d in l]
-
 import os
 import warnings
 
@@ -22,13 +20,12 @@ class GCPProvider(BaseProvider):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
-        self.profile = 'gcp-profile'  # TODO this is aws-specific
-
         self.metadata_path = '%s/metadata.json' % os.path.split(
             os.path.abspath(__file__))[0]
 
         self.provider_code = 'gcp'
         self.provider_name = 'Google Cloud Platform'
+        self.environment = 'default'
 
         self.projects = []
         self.all_projects = all_projects
@@ -38,7 +35,7 @@ class GCPProvider(BaseProvider):
 
         self.services_config = GCPServicesConfig
         self.credentials = kwargs['credentials']
-        self._set_aws_account_id()
+        self._set_account_id()
 
         super(GCPProvider, self).__init__(report_dir, timestamp,
                                           services, skipped_services, thread_config)
@@ -56,33 +53,27 @@ class GCPProvider(BaseProvider):
         else:
             return 'gcp'
 
-    def _set_aws_account_id(self):
+    def _set_account_id(self):
+        # All accessible projects
         if self.all_projects:
+            # Service Account
             if self.credentials.is_service_account and hasattr(self.credentials, 'service_account_email'):
-                self.aws_account_id = self.credentials.service_account_email  # FIXME this is for AWS
+                self.account_id = self.credentials.service_account_email
             else:
-                self.aws_account_id = 'GCP'  # FIXME this is for AWS
-            self.profile = 'GCP'  # FIXME this is for AWS
-
+                # TODO use username email
+                self.account_id = 'GCP'
         # Project passed through the CLI
         elif self.project_id:
-            self.aws_account_id = self.project_id  # FIXME this is for AWS
-            self.profile = self.project_id  # FIXME this is for AWS
-
+            self.account_id = self.project_id
         # Folder passed through the CLI
         elif self.folder_id:
-            self.aws_account_id = self.folder_id  # FIXME this is for AWS
-            self.profile = self.folder_id  # FIXME this is for AWS
-
+            self.account_id = self.folder_id
         # Organization passed through the CLI
         elif self.organization_id:
-            self.aws_account_id = self.organization_id  # FIXME this is for AWS
-            self.profile = self.organization_id  # FIXME this is for AWS
-
+            self.account_id = self.organization_id
         # Project inferred from default configuration
         elif self.credentials.default_project_id:
-            self.aws_account_id = self.credentials.default_project_id  # FIXME this is for AWS
-            self.profile = self.credentials.default_project_id  # FIXME this is for AWS
+            self.account_id = self.credentials.default_project_id
 
     async def fetch(self, regions=None, skipped_regions=None, partition_name=None):
         self._get_projects()

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import copy
 import os
 import boto3
@@ -22,21 +20,20 @@ class AWSProvider(BaseProvider):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
-        self.metadata_path = '%s/metadata.json' % os.path.split(
-            os.path.abspath(__file__))[0]
+        self.metadata_path = '%s/metadata.json' % os.path.split(os.path.abspath(__file__))[0]
 
         self.sg_map = {}
         self.subnet_map = {}
 
         self.profile = profile
-        self.aws_account_id = None
         self.services_config = AWSServicesConfig
 
         self.provider_code = 'aws'
         self.provider_name = 'Amazon Web Services'
+        self.environment = self.profile
 
         self.credentials = kwargs['credentials']
-        self.aws_account_id = get_aws_account_id(self.credentials)
+        self.account_id = get_aws_account_id(self.credentials)
         
         super(AWSProvider, self).__init__(report_dir, timestamp,
                                           services, skipped_services, thread_config)

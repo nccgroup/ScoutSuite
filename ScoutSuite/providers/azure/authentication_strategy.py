@@ -12,10 +12,9 @@ from ScoutSuite.providers.base.authentication_strategy import AuthenticationStra
 
 class AzureCredentials:
 
-    def __init__(self, credentials, subscription_id, aws_account_id):
+    def __init__(self, credentials, subscription_id):
         self.credentials = credentials
         self.subscription_id = subscription_id
-        self.aws_account_id = aws_account_id
 
 
 class AzureAuthenticationStrategy(AuthenticationStrategy):
@@ -28,10 +27,8 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
         """
         try:
             if cli:
-                # TODO: Remove aws_account_id
-                cli_credentials, aws_account_id = get_azure_cli_credentials()
-                credentials = AzureCredentials(
-                    cli_credentials, aws_account_id, aws_account_id)
+                cli_credentials, subscription_id = get_azure_cli_credentials()
+                credentials = AzureCredentials(cli_credentials, subscription_id)
                 return credentials
 
             elif msi:
@@ -42,16 +39,14 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
                 try:
                     # Tries to read the subscription list
-                    subscription = next(
-                        subscription_client.subscriptions.list())
-                    aws_account_id = subscription.subscription_id
+                    subscription = next(subscription_client.subscriptions.list())
+                    subscription_id = subscription.subscription_id
 
                 except StopIteration:
                     # If the VM cannot read subscription list, ask Subscription ID:
-                    aws_account_id = input('Subscription ID: ')
+                    subscription_id = input('Subscription ID: ')
 
-                credentials = AzureCredentials(
-                    credentials, aws_account_id, aws_account_id)
+                credentials = AzureCredentials(credentials, subscription_id)
                 return credentials
 
             elif file_auth:
@@ -61,15 +56,13 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 client_id = data.get('clientId')
                 client_secret = data.get('clientSecret')
 
-                aws_account_id = tenant_id  # TODO this is for AWS
-
                 credentials = ServicePrincipalCredentials(
                     client_id=client_id,
                     secret=client_secret,
                     tenant=tenant_id
                 )
 
-                return AzureCredentials(credentials, subscription_id, aws_account_id)
+                return AzureCredentials(credentials, subscription_id)
 
             elif service_principal:
                 subscription_id = subscription_id if subscription_id else input(
@@ -93,21 +86,18 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
                 credentials = UserPassCredentials(username, password)
 
-                if subscription_id:
-                    aws_account_id = subscription_id
-                else:
+                if not subscription_id:
                     # Get the subscription ID
                     subscription_client = SubscriptionClient(credentials)
                     try:
                         # Tries to read the subscription list
-                        subscription = next(
-                            subscription_client.subscriptions.list())
-                        aws_account_id = subscription.subscription_id
+                        subscription = next(subscription_client.subscriptions.list())
+                        subscription_id = subscription.subscription_id
                     except StopIteration:
                         # If the user cannot read subscription list, ask Subscription ID:
-                        aws_account_id = input('Subscription ID: ')
+                        subscription_id = input('Subscription ID: ')
 
-                return AzureCredentials(credentials, aws_account_id, aws_account_id)
+                return AzureCredentials(credentials, subscription_id)
 
         except Exception as e:
             print_error('Failed to authenticate to Azure')

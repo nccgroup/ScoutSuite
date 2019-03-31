@@ -112,20 +112,20 @@ async def run_scan(args):
 
     # Analyze config
     print_info('Running rule engine')
-    finding_rules = Ruleset(environment_name=args.get('profile'),
-                            cloud_provider=args.get('provider'),
+    finding_rules = Ruleset(cloud_provider=cloud_provider.provider_code,
+                            environment_name=cloud_provider.environment,
                             filename=args.get('ruleset'),
                             ip_ranges=args.get('ip_ranges'),
-                            aws_account_id=cloud_provider.aws_account_id)
+                            account_id=cloud_provider.account_id)
     processing_engine = ProcessingEngine(finding_rules)
     processing_engine.run(cloud_provider)
 
     # Create display filters
     print_info('Applying display filters')
-    filter_rules = Ruleset(cloud_provider=args.get('provider'),
-                           filename='filters.json',
+    filter_rules = Ruleset(cloud_provider=cloud_provider.provider_code,
+                           environment_name=cloud_provider.environment,
                            rule_type='filters',
-                           aws_account_id=cloud_provider.aws_account_id)
+                           account_id=cloud_provider.account_id)
     processing_engine = ProcessingEngine(filter_rules)
     processing_engine.run(cloud_provider)
 
