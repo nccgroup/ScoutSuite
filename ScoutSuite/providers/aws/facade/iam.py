@@ -4,7 +4,7 @@ import functools
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.core.console import print_error
-from ScoutSuite.providers.utils import get_non_provider_id, run_concurrently
+from ScoutSuite.providers.utils import get_non_provider_id, run_concurrently, get_and_set_concurrently
 
 
 class IAMFacade(AWSBaseFacade):
@@ -36,7 +36,7 @@ class IAMFacade(AWSBaseFacade):
 
     async def get_groups(self):
         groups = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_groups', 'Groups')
-        await AWSFacadeUtils.get_and_set_concurrently(
+        await get_and_set_concurrently(
             [self._get_and_set_group_users,
              functools.partial(self._get_and_set_inline_policies, iam_resource_type='group')], groups)
         return groups
@@ -44,7 +44,7 @@ class IAMFacade(AWSBaseFacade):
     async def get_policies(self):
         policies = await AWSFacadeUtils.get_all_pages(
             'iam', None, self.session, 'list_policies', 'Policies', OnlyAttached=True)
-        await AWSFacadeUtils.get_and_set_concurrently([self._get_and_set_policy_details], policies)
+        await get_and_set_concurrently([self._get_and_set_policy_details], policies)
         return policies
 
     async def _get_and_set_policy_details(self, policy):
@@ -74,7 +74,7 @@ class IAMFacade(AWSBaseFacade):
 
     async def get_users(self):
         users = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_users', 'Users')
-        await AWSFacadeUtils.get_and_set_concurrently(
+        await get_and_set_concurrently(
             [functools.partial(self._get_and_set_inline_policies, iam_resource_type='user'),
              self._get_and_set_user_groups,
              self._get_and_set_user_login_profile,
@@ -104,7 +104,7 @@ class IAMFacade(AWSBaseFacade):
             role['assume_role_policy'] = {}
             role['assume_role_policy']['PolicyDocument'] = role.pop(
                 'AssumeRolePolicyDocument')
-        await AWSFacadeUtils.get_and_set_concurrently(
+        await get_and_set_concurrently(
             [functools.partial(self._get_and_set_inline_policies, iam_resource_type='role'),
              self._get_and_set_role_profiles], roles)
 

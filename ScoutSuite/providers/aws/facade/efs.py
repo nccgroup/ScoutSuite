@@ -1,5 +1,5 @@
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
-from ScoutSuite.providers.utils import run_concurrently
+from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 
 
@@ -7,7 +7,7 @@ class EFSFacade(AWSBaseFacade):
     async def get_file_systems(self, region: str):
         file_systems = await AWSFacadeUtils.get_all_pages(
             'efs', region, self.session, 'describe_file_systems', 'FileSystems')
-        await AWSFacadeUtils.get_and_set_concurrently(
+        await get_and_set_concurrently(
             [self._get_and_set_tags, self._get_and_set_mount_targets], file_systems, region=region)
 
         return file_systems
@@ -30,7 +30,7 @@ class EFSFacade(AWSBaseFacade):
             mount_target_id = mount_target['MountTargetId']
             file_system['MountTargets'][mount_target_id] = mount_target
 
-        await AWSFacadeUtils.get_and_set_concurrently(
+        await get_and_set_concurrently(
             [self._get_and_set_mount_target_security_groups], mount_targets, region=region)
 
     async def _get_and_set_mount_target_security_groups(self, mount_target: {}, region: str):

@@ -2,7 +2,7 @@ import asyncio
 
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
-from ScoutSuite.providers.utils import run_concurrently
+from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
 
 
 class SNSFacade(AWSBaseFacade):
@@ -11,7 +11,7 @@ class SNSFacade(AWSBaseFacade):
 
     async def get_topics(self, region: str):
         topics = await AWSFacadeUtils.get_all_pages('sns', region, self.session, 'list_topics', 'Topics')
-        await AWSFacadeUtils.get_and_set_concurrently([self._get_and_set_topic_attributes], topics, region=region)
+        await get_and_set_concurrently([self._get_and_set_topic_attributes], topics, region=region)
 
         return topics
 

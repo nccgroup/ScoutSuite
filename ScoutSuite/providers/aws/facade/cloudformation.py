@@ -3,6 +3,7 @@ import json
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
+from ScoutSuite.providers.utils import get_and_set_concurrently
 
 
 class CloudFormation(AWSBaseFacade):
@@ -11,7 +12,7 @@ class CloudFormation(AWSBaseFacade):
         stacks = await AWSFacadeUtils.get_all_pages(
             'cloudformation', region, self.session, 'list_stacks', 'StackSummaries')
         stacks = [stack for stack in stacks if not CloudFormation._is_stack_deleted(stack)]
-        await AWSFacadeUtils.get_and_set_concurrently(
+        await get_and_set_concurrently(
             [self._get_and_set_description, self._get_and_set_template, self._get_and_set_policy],
             stacks, region=region)
 

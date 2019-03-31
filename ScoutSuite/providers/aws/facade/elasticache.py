@@ -1,6 +1,7 @@
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.utils import ec2_classic
+from ScoutSuite.providers.utils import get_and_set_concurrently
 from asyncio import Lock
 
 
@@ -22,7 +23,7 @@ class ElastiCacheFacade(AWSBaseFacade):
             self.clusters_cache[region] = await AWSFacadeUtils.get_all_pages(
                 'elasticache', region, self.session, 'describe_cache_clusters', 'CacheClusters')
 
-            await AWSFacadeUtils.get_and_set_concurrently(
+            await get_and_set_concurrently(
                 [self._get_and_set_cluster_vpc], self.clusters_cache[region], region=region)
 
     async def _get_and_set_cluster_vpc(self, cluster: {}, region: str):

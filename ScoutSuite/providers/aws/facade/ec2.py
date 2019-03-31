@@ -4,6 +4,7 @@ import asyncio
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
+from ScoutSuite.providers.utils import get_and_set_concurrently
 
 
 class EC2Facade(AWSBaseFacade):
@@ -60,7 +61,7 @@ class EC2Facade(AWSBaseFacade):
         filters = [{'Name': 'owner-id', 'Values': [owner_id]}]
         snapshots = await AWSFacadeUtils.get_all_pages(
             'ec2', region, self.session, 'describe_snapshots', 'Snapshots', Filters=filters)
-        await AWSFacadeUtils.get_and_set_concurrently([self._get_and_set_snapshot_attributes], snapshots, region=region)
+        await get_and_set_concurrently([self._get_and_set_snapshot_attributes], snapshots, region=region)
 
         return snapshots
 
@@ -91,7 +92,7 @@ class EC2Facade(AWSBaseFacade):
         ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]
         subnets = await run_concurrently(lambda: ec2_client.describe_subnets(Filters=filters)['Subnets'])
-        await AWSFacadeUtils.get_and_set_concurrently([self._get_and_set_subnet_flow_logs], subnets, region=region)
+        await get_and_set_concurrently([self._get_and_set_subnet_flow_logs], subnets, region=region)
 
         return subnets
 

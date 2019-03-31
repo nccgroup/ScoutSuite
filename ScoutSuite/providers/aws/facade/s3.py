@@ -3,7 +3,7 @@ from botocore.exceptions import ClientError
 
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
-from ScoutSuite.providers.utils import run_concurrently
+from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
 from ScoutSuite.core.console import print_error
 
 
@@ -13,10 +13,10 @@ class S3Facade(AWSBaseFacade):
         buckets = await run_concurrently(lambda: client.list_buckets()['Buckets'])
 
         # We need first to retrieve bucket locations before retrieving bucket details:
-        await AWSFacadeUtils.get_and_set_concurrently([self._get_and_set_s3_bucket_location], buckets)
+        await get_and_set_concurrently([self._get_and_set_s3_bucket_location], buckets)
 
         # Then we can retrieve bucket details concurrently:
-        await AWSFacadeUtils.get_and_set_concurrently(
+        await get_and_set_concurrently(
             [self._get_and_set_s3_bucket_logging,
              self._get_and_set_s3_bucket_versioning,
              self._get_and_set_s3_bucket_webhosting,

@@ -3,7 +3,7 @@ from asyncio import Lock
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.utils import ec2_classic
-from ScoutSuite.providers.utils import run_concurrently
+from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
 from ScoutSuite.core.console import print_error, print_exception
 
 
@@ -33,7 +33,7 @@ class RDSFacade(AWSBaseFacade):
                     and instance['DBSubnetGroup']['VpcId'] \
                     else ec2_classic
 
-            await AWSFacadeUtils.get_and_set_concurrently(
+            await get_and_set_concurrently(
                 [self._get_and_set_instance_clusters], self._instances_cache[region], region=region)
 
     async def _get_and_set_instance_clusters(self, instance: {}, region: str):
@@ -60,7 +60,7 @@ class RDSFacade(AWSBaseFacade):
             for snapshot in self._snapshots_cache[region]:
                 snapshot['VpcId'] = snapshot['VpcId'] if 'VpcId' in snapshot else ec2_classic
 
-            await AWSFacadeUtils.get_and_set_concurrently(
+            await get_and_set_concurrently(
                 [self._get_and_set_snapshot_attributes], self._snapshots_cache[region], region=region)
 
     async def _get_and_set_snapshot_attributes(self, snapshot: {}, region: str):
@@ -86,7 +86,7 @@ class RDSFacade(AWSBaseFacade):
     async def get_parameter_groups(self, region: str):
         parameter_groups = await AWSFacadeUtils.get_all_pages(
             'rds', region, self.session, 'describe_db_parameter_groups', 'DBParameterGroups')
-        await AWSFacadeUtils.get_and_set_concurrently(
+        await get_and_set_concurrently(
             [self._get_and_set_db_parameters], parameter_groups, region=region)
 
         return parameter_groups
