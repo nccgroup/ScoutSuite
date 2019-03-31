@@ -9,7 +9,6 @@ DEFAULT_RULESET_FILE = 'scoutsuite-results/scoutsuite_ruleset.js'
 DEFAULT_EXCEPTIONS_FILE = 'scoutsuite-results/scoutsuite_exceptions.js'
 DEFAULT_ERRORS_FILE = 'scoutsuite-results/scoutsuite_errors_log.json'
 DEFAULT_HTMLREPORT_FILE = 'report.html'
-DEFAULT_GENERATOR_FILE = 'ruleset-generator.html'
 
 ERRORS_LIST = []
 
