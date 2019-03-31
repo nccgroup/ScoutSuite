@@ -41,6 +41,15 @@ class AWSProvider(BaseProvider):
         super(AWSProvider, self).__init__(report_dir, timestamp,
                                           services, skipped_services, thread_config)
 
+    def get_report_name(self):
+        """
+        Returns the name of the report using the provider's configuration
+        """
+        if self.profile:
+            return 'aws-%s'.format(self.profile)
+        else:
+            return 'aws'
+
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
         Tweak the AWS config to match cross-service resources and clean any fetching artifacts

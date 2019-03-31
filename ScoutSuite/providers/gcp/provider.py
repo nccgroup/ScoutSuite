@@ -43,6 +43,19 @@ class GCPProvider(BaseProvider):
         super(GCPProvider, self).__init__(report_dir, timestamp,
                                           services, skipped_services, thread_config)
 
+    def get_report_name(self):
+        """
+        Returns the name of the report using the provider's configuration
+        """
+        if self.project_id:
+            return 'gcp-%s'.format(self.project_id)
+        elif self.organization_id:
+            return 'gcp-%s'.format(self.organization_id)
+        elif self.folder_id:
+            return 'gcp-%s'.format(self.folder_id)
+        else:
+            return 'gcp'
+
     def _set_aws_account_id(self):
         if self.all_projects:
             if self.credentials.is_service_account and hasattr(self.credentials, 'service_account_email'):

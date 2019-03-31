@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import asyncio
 import copy
 from concurrent.futures import ThreadPoolExecutor
@@ -37,6 +34,7 @@ def main(args=None):
 
 # noinspection PyBroadException
 async def run_scan(args):
+
     # Configure the debug level
     set_config_debug_level(args.get('debug'))
 
@@ -57,7 +55,7 @@ async def run_scan(args):
                                                  client_secret=args.get('client_secret'),
                                                  username=args.get('username'),
                                                  password=args.get('password')
-                                                )
+                                                 )
 
         if not credentials:
             return 401
@@ -77,13 +75,9 @@ async def run_scan(args):
                                   thread_config=args.get('thread_config'),
                                   credentials=credentials)
 
-    report_file_name = generate_report_name(cloud_provider.provider_code, args)
-
-    # TODO: move this to after authentication, so that the report can be more specific to what's being scanned.
-    # For example if scanning with a GCP service account, the SA email can only be known after authenticating...
     # Create a new report
-    report = Scout2Report(args.get('provider'), report_file_name, args.get(
-        'report_dir'), args.get('timestamp'))
+    report = Scout2Report(cloud_provider.provider_code, cloud_provider.get_report_name(),
+                          args.get('report_dir'), args.get('timestamp'))
 
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
@@ -164,27 +158,3 @@ async def run_scan(args):
         webbrowser.open(url, new=2)
 
     return 0
-
-
-def generate_report_name(provider_code, args):
-    # TODO this should be done within the providers
-    # A pre-requisite to this is to generate report AFTER authentication
-    if provider_code == 'aws':
-        if args.get('profile'):
-            report_file_name = 'aws-%s' % args.get('profile')
-        else:
-            report_file_name = 'aws'
-    elif provider_code == 'gcp':
-        if args.get('project_id'):
-            report_file_name = 'gcp-%s' % args.get('project_id')
-        elif args.get('organization_id'):
-            report_file_name = 'gcp-%s' % args.get('organization_id')
-        elif args.get('folder_id'):
-            report_file_name = 'gcp-%s' % args.get('folder_id')
-        else:
-            report_file_name = 'gcp'
-    elif provider_code == 'azure':
-        report_file_name = 'azure'
-    else:
-        report_file_name = 'unknown'
-    return report_file_name

@@ -33,6 +33,12 @@ class AzureProvider(BaseProvider):
 
         super(AzureProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
+    def get_report_name(self):
+        """
+        Returns the name of the report using the provider's configuration
+        """
+        return 'azure'
+
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
         TODO description
