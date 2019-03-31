@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from __future__ import print_function
 
 import datetime
@@ -9,7 +8,7 @@ import zipfile
 import dateutil.tz
 from ScoutSuite.core.console import print_info, print_exception
 
-from ScoutSuite import DEFAULT_RESULT_FILE, DEFAULT_HTMLREPORT_FILE, DEFAULT_GENERATOR_FILE, DEFAULT_EXCEPTIONS_FILE
+from ScoutSuite import DEFAULT_RESULT_FILE, DEFAULT_HTMLREPORT_FILE, DEFAULT_EXCEPTIONS_FILE
 from ScoutSuite import ERRORS_LIST
 from ScoutSuite.output.js import JavaScriptReaderWriter
 from ScoutSuite.output.utils import get_filename, prompt_4_overwrite
@@ -110,25 +109,3 @@ class Scout2Report(HTMLReport):
                         nf.write(newline)
         return new_file
 
-
-class RulesetGenerator(HTMLReport):
-    """
-    HTML ruleset generator for Scout2
-    """
-
-    def __init__(self, ruleset_name, report_dir=None, timestamp=False, exceptions=None):
-        exceptions = {} if exceptions is None else exceptions
-        self.html_root = DEFAULT_GENERATOR_FILE
-        self.ruleset_name = ruleset_name
-        super(RulesetGenerator, self).__init__(ruleset_name, report_dir, timestamp, exceptions)
-
-    def create_html_report(self, force_write):
-        src_rule_generator = os.path.join(self.html_data_path, DEFAULT_GENERATOR_FILE)
-        rule_generator = os.path.join(self.report_dir, DEFAULT_GENERATOR_FILE)
-        shutil.copyfile(src_rule_generator, rule_generator)
-        return rule_generator
-
-    def save(self, config, force_write=False, debug=False):
-        self.prepare_html_report_dir()
-        self.jsrw.save_to_file(config, 'RULESET', force_write, debug)
-        return self.create_html_report(force_write)
