@@ -41,6 +41,7 @@ async def run_scan(args):
     print_info('Launching Scout')
 
     if not args.get('fetch_local'):
+        print_info('Authenticating to cloud provicer')
         auth_strategy = get_authentication_strategy(args.get('provider'))
         credentials = auth_strategy.authenticate(profile=args.get('profile'),
                                                  user_account=args.get('user_account'),
