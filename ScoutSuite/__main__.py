@@ -6,7 +6,7 @@ import webbrowser
 
 from ScoutSuite import DEFAULT_RESULT_FILE
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
-from ScoutSuite.core.console import set_config_debug_level, print_info, print_debug, print_error
+from ScoutSuite.core.console import set_config_debug_level, print_info, print_debug, print_error, print_exception
 from ScoutSuite.core.exceptions import RuleExceptions
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset
@@ -130,16 +130,15 @@ async def run_scan(args):
     processing_engine.run(cloud_provider)
 
     # Handle exceptions
-    if args.get('exceptions')[0]:
+    if args.get('exceptions'):
         print_info('Applying exceptions')
         try:
             exceptions = RuleExceptions(
-                args.get('profile'), args.get('exceptions')[0])
+                args.get('profile'), args.get('exceptions'))
             exceptions.process(cloud_provider)
             exceptions = exceptions.exceptions
         except Exception as e:
-            print_debug(
-                'Failed to load exceptions. The file may not exist or may have an invalid format.')
+            print_exception('Failed to load exceptions: {}'.format(e))
             exceptions = {}
     else:
         exceptions = {}
