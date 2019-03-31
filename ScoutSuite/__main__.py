@@ -135,6 +135,7 @@ async def run_scan(args):
     processing_engine = ProcessingEngine(filter_rules)
     processing_engine.run(cloud_provider)
 
+    # Handle exceptions
     if args.get('exceptions')[0]:
         print_info('Applying exceptions')
         try:
@@ -147,16 +148,6 @@ async def run_scan(args):
                 'Failed to load exceptions. The file may not exist or may have an invalid format.')
             exceptions = {}
     else:
-        exceptions = {}
-    # Handle exceptions
-    try:
-        exceptions = RuleExceptions(
-            args.get('profile'), args.get('exceptions')[0])
-        exceptions.process(cloud_provider)
-        exceptions = exceptions.exceptions
-    except Exception as e:
-        print_debug(
-            'Warning, failed to load exceptions. The file may not exist or may have an invalid format.')
         exceptions = {}
 
     # Finalize
