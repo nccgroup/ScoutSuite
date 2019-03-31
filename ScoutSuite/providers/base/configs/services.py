@@ -14,22 +14,25 @@ class BaseServicesConfig(object):
         return False
 
     async def fetch(self, services=None, regions=None):
-        services = [] if services is None else services
+        # If services is set to None, fetch all services:
+        services = vars(self) if services is None else services
         regions = [] if regions is None else regions
+
+        # First, print services that are going to get skipped:
+        for service in vars(self):
+            if service not in services:
+                print_debug('Skipping the {} service'.format(format_service_name(service)))
+
+        # Then, fetch concurrently all services:
         tasks = {
             asyncio.ensure_future(
-                self._fetch(service, services, regions)
-            ) for service in vars(self)
+                self._fetch(service, regions)
+            ) for service in services
         }
         await asyncio.wait(tasks)
 
-    async def _fetch(self, service, services, regions):
+    async def _fetch(self, service, regions):
         try:
-            # skip services
-            if services != [] and service not in services:
-                print_debug('Skipping the {} service'.format(format_service_name(service)))
-                return
-
             print_info('Fetching resources for the {} service'.format(format_service_name(service)))
             service_config = getattr(self, service)
             # call fetch method for the service
