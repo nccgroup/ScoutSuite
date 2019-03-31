@@ -119,9 +119,11 @@ function getScoutsuiteResultsSqlite () {
  * to make sure the memory never gets capped and crashes the browser, also updates page index of the resource
  */
 function getResourcePageSqlite (pageIndex, pageSize, service, resource) {
-  // e.g. pricings --> run_results.services.securitycenter.pricings
-  // Fill the resource elements with the elements of the proper page
   resources = requestDbPage(createQuery('services', service, resource), pageSize, pageIndex)
+  // Delete the current content
+  run_results['services'][service][resource] = null
+  // Create a spot where to save data
+  run_results['services'][service][resource] = { [null] : null }
   for (let item in resources) {
     let properties = resources[item].keys
     run_results['services'][service][resource][item] = { [null] : null }
