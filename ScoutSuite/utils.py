@@ -11,6 +11,7 @@ formatted_service_name = {
     'dynamodb': 'DynamoDB',
     'elasticache': 'ElastiCache',
     'lambda': 'Lambda',
+    'awslambda': 'Lambda',
     'redshift': 'RedShift',
     'route53': 'Route53',
     'route53domains': 'Route53Domains',
