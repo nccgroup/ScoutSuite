@@ -1,6 +1,5 @@
 import copy
 import os
-import boto3
 
 from ScoutSuite.core.console import print_debug, print_error, print_exception, print_info
 from ScoutSuite.providers.aws.configs.services import AWSServicesConfig
@@ -43,7 +42,7 @@ class AWSProvider(BaseProvider):
         Returns the name of the report using the provider's configuration
         """
         if self.profile:
-            return 'aws-%s'.format(self.profile)
+            return 'aws-{}'.format(self.profile)
         else:
             return 'aws'
 
