@@ -1,9 +1,9 @@
+import asyncio
+
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.utils import ec2_classic
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
-
-import asyncio
 
 
 class ELBFacade(AWSBaseFacade):

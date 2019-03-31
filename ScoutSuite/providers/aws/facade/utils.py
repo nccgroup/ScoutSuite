@@ -1,5 +1,4 @@
 import boto3
-import asyncio
 
 from ScoutSuite.providers.utils import run_concurrently
 

@@ -1,9 +1,9 @@
+from asyncio import Lock
+
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.utils import ec2_classic
 from botocore.utils import ClientError
-
-from asyncio import Lock
 
 
 class RedshiftFacade(AWSBaseFacade):
