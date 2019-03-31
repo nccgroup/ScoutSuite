@@ -214,6 +214,10 @@ class ScoutSuiteArgumentParser:
                             type=int,
                             default=10,
                             help='Maximum number of threads (workers) used by Scout Suite')
+        parser.add_argument('--report-name',
+                            dest='report_name',
+                            default=None,
+                            help='Name of the Scout report.')
         parser.add_argument('--report-dir',
                             dest='report_dir',
                             default=DEFAULT_REPORT_DIR,

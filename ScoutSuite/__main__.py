@@ -76,8 +76,10 @@ async def run_scan(args):
                                   credentials=credentials)
 
     # Create a new report
-    report = Scout2Report(cloud_provider.provider_code, cloud_provider.get_report_name(),
-                          args.get('report_dir'), args.get('timestamp'))
+    report = Scout2Report(cloud_provider.provider_code,
+                          args.get('report_name') if args.get('report_name') else cloud_provider.get_report_name(),
+                          args.get('report_dir'),
+                          args.get('timestamp'))
 
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
