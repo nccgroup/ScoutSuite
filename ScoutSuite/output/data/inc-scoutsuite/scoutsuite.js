@@ -1295,6 +1295,9 @@ function loadPage (pathArray, indexDiff) {
   let pageSize = pageInfo[0]
   let pageIndex = pageInfo[1]
   pageIndex += indexDiff
+  if (document.getElementById('page_backward')) {
+    document.getElementById('page_backward').disabled = (pageIndex === 0) ? true : false
+  }
   getResourcePageSqlite(pageIndex, pageSize, pathArray[1], pathArray[2])
 }
 
