@@ -21,7 +21,8 @@ class EC2Instances(AWSResources):
         instance['user_data_secrets'] = self._identify_user_data_secrets(instance['user_data'])
 
         get_name(raw_instance, instance, 'InstanceId')
-        get_keys(raw_instance, instance, ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile', 'SubnetId'])
+        get_keys(raw_instance, instance,
+                 ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile', 'SubnetId'])
 
         instance['network_interfaces'] = {}
         for eni in raw_instance['NetworkInterfaces']:
