@@ -2,7 +2,7 @@ import json
 import os
 import tempfile
 
-from ScoutSuite.core.console import print_debug, print_error, prompt_yes_no
+from ScoutSuite.core.console import print_debug, print_error, prompt_yes_no, print_exception
 
 from ScoutSuite.core.rule import Rule
 from ScoutSuite.core.rule_definition import RuleDefinition
@@ -82,7 +82,7 @@ class Ruleset:
                         for rule in ruleset['rules'][filename]:
                             self.handle_rule_versions(filename, rule_type, rule)
             except Exception:
-                print_error('Error: ruleset file %s contains malformed JSON.' % self.filename)
+                print_exception('Ruleset file %s contains malformed JSON: %s' % (self.filename, e))
                 self.rules = []
                 self.about = ''
         else:

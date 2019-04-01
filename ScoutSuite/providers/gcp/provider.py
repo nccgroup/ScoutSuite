@@ -3,7 +3,7 @@ import warnings
 
 import google.auth
 import googleapiclient
-from ScoutSuite.core.console import print_error, print_exception, print_info
+from ScoutSuite.core.console import print_exception, print_info
 
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.gcp.configs.services import GCPServicesConfig
@@ -199,8 +199,7 @@ class GCPProvider(BaseProvider):
             print_info("Found {} project(s) to scan.".format(len(projects)))
 
         except Exception as e:
-            print_error('Unable to list accessible Projects')
-            print_exception(e)
+            print_exception('Unable to list accessible Projects: {}'.format(e))
 
         finally:
             return projects
