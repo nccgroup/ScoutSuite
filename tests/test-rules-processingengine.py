@@ -84,6 +84,6 @@ class TestAWSScout2RulesProcessingEngine:
         with tempfile.NamedTemporaryFile('wt', delete=False) as f:
             f.write(json.dumps(test_ruleset, indent=4))
 
-        return Ruleset(filename=f.name)
+        return Ruleset(cloud_provider='aws', filename=f.name)
 
         return None
