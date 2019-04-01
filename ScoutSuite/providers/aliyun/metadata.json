@@ -1,0 +1,13 @@
+{
+  "security": {
+    "iam": {
+      "resources": {
+        "users": {
+          "cols": 2,
+          "path": "services.iam.users"
+        }
+      },
+      "summaries": {}
+    }
+  }
+}

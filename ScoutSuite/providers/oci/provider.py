@@ -4,7 +4,7 @@ from ScoutSuite.providers.azure.configs.services import AzureServicesConfig
 from ScoutSuite.providers.base.provider import BaseProvider
 
 
-class AzureProvider(BaseProvider):
+class OracleProvider(BaseProvider):
     """
     Implements provider for Azure
     """
@@ -26,7 +26,7 @@ class AzureProvider(BaseProvider):
         self.credentials = kwargs['credentials']
         self.account_id = self.credentials.subscription_id
 
-        super(AzureProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
+        super(OracleProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
     def get_report_name(self):
         """
@@ -35,13 +35,6 @@ class AzureProvider(BaseProvider):
         return 'azure'
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
-        """
-        TODO description
-        Tweak the AWS config to match cross-service resources and clean any fetching artifacts
 
-        :param ip_ranges:
-        :param ip_ranges_name_key:
-        :return: None
-        """
-        ip_ranges = [] if ip_ranges is None else ip_ranges
-        super(AzureProvider, self).preprocessing()
+        super(OracleProvider, self).preprocessing()
+

@@ -17,6 +17,7 @@ class AWSProvider(BaseProvider):
 
     def __init__(self, profile='default', report_dir=None, timestamp=None, services=None, skipped_services=None,
                  thread_config=4, **kwargs):
+
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
