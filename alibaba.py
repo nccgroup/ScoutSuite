@@ -1,6 +1,8 @@
+from aliyunsdkcore.client import AcsClient
+
 from aliyunsdkcore.acs_exception.exceptions import ClientException
 from aliyunsdkcore.acs_exception.exceptions import ServerException
-from aliyunsdkcore.client import AcsClient
+
 from aliyunsdkram.request.v20150501 import ListUsersRequest
 
 # Construct an Aliyun Client for initiating a request
