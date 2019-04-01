@@ -81,7 +81,7 @@ class Ruleset:
                         self.rules[filename] = []
                         for rule in ruleset['rules'][filename]:
                             self.handle_rule_versions(filename, rule_type, rule)
-            except Exception:
+            except Exception as e:
                 print_exception('Ruleset file %s contains malformed JSON: %s' % (self.filename, e))
                 self.rules = []
                 self.about = ''
