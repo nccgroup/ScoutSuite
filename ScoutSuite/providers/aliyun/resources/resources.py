@@ -47,9 +47,7 @@ class AzureCompositeResources(CompositeResources, metaclass=abc.ABCMeta):
 
         children = [(child_class(**kwargs), child_name) for (child_class, child_name) in self._children]
         # Fetch all children concurrently:
-        await asyncio.wait(
-            {asyncio.ensure_future(child.fetch_all()) for (child, _) in children}
-        )
+        await asyncio.wait({asyncio.ensure_future(child.fetch_all()) for (child, _) in children})
         # Update parent content:
         for child, name in children:
             if name:

@@ -25,6 +25,8 @@ class ScoutSuiteArgumentParser:
         self._init_aws_parser()
         self._init_gcp_parser()
         self._init_azure_parser()
+        self._init_aliyun_parser()
+        self._init_oci_parser()
 
     def _init_aws_parser(self):
         aws_parser = self.subparsers.add_parser("aws",
@@ -242,6 +244,46 @@ class ScoutSuiteArgumentParser:
                             default=None,
                             nargs='?',
                             help='Exception file to use during analysis.')
+
+    def _init_aliyun_parser(self):
+        aliyun_parser = self.subparsers.add_parser("aliyun",
+                                                   parents=[self.common_providers_args_parser],
+                                                   help="Run Scout against an Alibaba Cloud account")
+
+        aliyun_parser = aliyun_parser.add_argument_group('Authentication modes')
+        aliyun_auth_params = aliyun_parser.add_argument_group('Authentication parameters')
+
+        aliyun_auth_modes = aliyun_parser.add_mutually_exclusive_group(required=True)
+
+
+        aliyun_auth_modes.add_argument('--access-keys',
+                                      action='store_true',
+                                      help='Run Scout with user credentials')
+        aliyun_auth_params.add_argument('-k',
+                                       '--access-key-id',
+                                       action='store',
+                                       default=None,
+                                       dest='access_key_id',
+                                       help='Access Key Id')
+        aliyun_auth_params.add_argument('-s',
+                                       '--access-key-secret',
+                                       action='store',
+                                       default=None,
+                                       dest='access_key_secret',
+                                       help='Access Key Secret')
+
+    def _init_oci_parser(self):
+        oci_parser = self.subparsers.add_parser("oci",
+                                                   parents=[self.common_providers_args_parser],
+                                                   help="Run Scout against an Oracle Cloud Infrastructure account")
+
+        parser = oci_parser.add_argument_group('Authentication parameters')
+
+        parser.add_argument('-p',
+                            '--profile',
+                            dest='profile',
+                            default=None,
+                            help='Name of the profile')
 
     def parse_args(self, args=None):
         args = self.parser.parse_args(args)
