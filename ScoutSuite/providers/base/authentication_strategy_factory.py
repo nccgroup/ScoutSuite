@@ -9,5 +9,11 @@ _strategies = {
 }
 
 
+class InvalidAuthenticationStrategyException(Exception): pass
+
+
 def get_authentication_strategy(provider: str):
+    if provider not in _strategies:
+        raise InvalidAuthenticationStrategyException()
+
     return _strategies[provider]()
