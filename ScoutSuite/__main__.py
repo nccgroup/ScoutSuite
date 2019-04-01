@@ -10,7 +10,7 @@ from ScoutSuite.core.console import set_config_debug_level, print_info, print_ex
 from ScoutSuite.core.exceptions import RuleExceptions
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset
-from ScoutSuite.output.html import Scout2Report
+from ScoutSuite.output.html import ScoutReport
 from ScoutSuite.providers import get_provider
 from ScoutSuite.providers.base.authentication_strategy_factory import get_authentication_strategy
 
@@ -77,10 +77,10 @@ async def run_scan(args):
                                   credentials=credentials)
 
     # Create a new report
-    report = Scout2Report(cloud_provider.provider_code,
-                          args.get('report_name') if args.get('report_name') else cloud_provider.get_report_name(),
-                          args.get('report_dir'),
-                          args.get('timestamp'))
+    report = ScoutReport(cloud_provider.provider_code,
+                         args.get('report_name') if args.get('report_name') else cloud_provider.get_report_name(),
+                         args.get('report_dir'),
+                         args.get('timestamp'))
 
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):

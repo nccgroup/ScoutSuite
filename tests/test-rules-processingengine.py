@@ -11,7 +11,7 @@ class DummyObject(object):
     pass
 
 
-class TestAWSScout2RulesProcessingEngine:
+class TestScoutRulesProcessingEngine:
 
     def setup(self):
         set_config_debug_level(True)

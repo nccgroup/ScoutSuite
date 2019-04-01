@@ -191,7 +191,7 @@ class Ruleset:
         :return:
         """
         if filename and not os.path.isfile(filename):
-            # Not a valid relative / absolute path, check Scout2's data under findings/ or filters/
+            # Not a valid relative / absolute path, check Scout's data under findings/ or filters/
             if not filename.startswith('findings/') and not filename.startswith('filters/'):
                 filename = '%s/%s' % (filetype, filename)
             if not os.path.isfile(filename):

@@ -58,7 +58,7 @@ def pass_conditions(all_info, current_path, conditions, unknown_as_pass_conditio
 
 def pass_condition(b, test, a):
     """
-    Generic test function used by Scout2 / AWS recipes
+    Generic test function used by Scout
                                         .
     :param b:                           Value to be tested against
     :param test:                        Name of the test case to run
