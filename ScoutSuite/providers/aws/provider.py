@@ -190,7 +190,7 @@ class AWSProvider(BaseProvider):
 
     @staticmethod
     def _process_cloudtrail_trails(cloudtrail_config):
-        print_info('Processing CloudTrail config...')
+        print_info('Processing CloudTrail config')
         global_events_logging = []
         data_logging_trails_count = 0
         for region in cloudtrail_config['regions']:
@@ -389,7 +389,7 @@ class AWSProvider(BaseProvider):
                     s3_info, bucket, iam_entity, allowed_iam_entity, policy_info)
             pass
         else:
-            # Could be an error or cross-account access, ignore...
+            # Could be an error or cross-account access, ignore
             pass
 
     def match_network_acls_and_subnets_callback(self, current_config, path, current_path, acl_id, callback_args):
@@ -410,7 +410,7 @@ class AWSProvider(BaseProvider):
                 subnet['instances'].append(instance_id)
 
     def _match_instances_and_roles(self):
-        print_info('Matching EC2 instances and IAM roles...')
+        print_info('Matching EC2 instances and IAM roles')
         ec2_config = self.services['ec2']
         iam_config = self.services['iam']
         role_instances = {}
@@ -527,7 +527,7 @@ class AWSProvider(BaseProvider):
             if vpc_id == ec2_classic and resource_type == 'elbs':
                 pass
             else:
-                print_exception('Failed to parse %s in %s in %s' % (resource_type, vpc_id, region))
+                print_exception('Failed to parse %s in %s (%s): %s' % (resource_type, vpc_id, region, e))
 
     def _set_emr_vpc_ids(self):
         clear_list = []
