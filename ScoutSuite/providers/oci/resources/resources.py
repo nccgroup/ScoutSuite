@@ -1,24 +1,24 @@
-"""This module provides implementations for Resources and CompositeResources for Azure."""
+"""This module provides implementations for Resources and CompositeResources for OCI."""
 
 import abc
 import asyncio
 
 from ScoutSuite.providers.base.configs.resources import CompositeResources
-from ScoutSuite.providers.azure.facade.facade import AzureFacade
+from ScoutSuite.providers.oci.facade.facade import OracleFacade
 
 
-class AzureCompositeResources(CompositeResources, metaclass=abc.ABCMeta):
+class OracleCompositeResources(CompositeResources, metaclass=abc.ABCMeta):
 
     """This class represents a collection of composite Resources (resources that include nested resources referred as
-    their children). Classes extending AzureCompositeResources have to define a '_children' attribute which consists of
+    their children). Classes extending OracleCompositeResources have to define a '_children' attribute which consists of
     a list of tuples describing the children. The tuples are expected to respect the following format:
     (<child_class>, <child_name>). 'child_name' is used to indicate the name under which the child resources will be
     stored in the parent object.
     """
 
-    def __init__(self, facade: AzureFacade):
+    def __init__(self, facade: OracleFacade):
         self.facade = facade
-  
+
     async def _fetch_children_of_all_resources(self, resources: dict, kwargs: dict):
         """This method iterates through a collection of resources and fetches all children of each resource, in a
         concurrent way.
@@ -56,3 +56,4 @@ class AzureCompositeResources(CompositeResources, metaclass=abc.ABCMeta):
                 resource_parent[name] = child
             else:
                 resource_parent.update(child)
+

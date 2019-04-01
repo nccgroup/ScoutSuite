@@ -29,7 +29,9 @@ except ImportError:
 class AzureServicesConfig(BaseServicesConfig):
 
     def __init__(self, credentials: AzureCredentials = None, **kwargs):
+
         super(AzureServicesConfig, self).__init__(credentials)
+
         facade = AzureFacade(credentials)
 
         self.storageaccounts = StorageAccounts(facade)
