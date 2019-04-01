@@ -38,7 +38,8 @@ class GCPProvider(BaseProvider):
 
         self.services_config = GCPServicesConfig
         self.credentials = kwargs['credentials']
-        self._set_aws_account_id()
+        if self.credentials:
+            self._set_aws_account_id()
 
         super(GCPProvider, self).__init__(report_dir, timestamp,
                                           services, skipped_services, thread_config)

@@ -29,7 +29,8 @@ class AzureProvider(BaseProvider):
         self.services_config = AzureServicesConfig
         
         self.credentials = kwargs['credentials']
-        self.aws_account_id = self.credentials.aws_account_id # TODO : Get rid of aws_account_id
+        if self.credentials:
+            self.aws_account_id = self.credentials.aws_account_id # TODO : Get rid of aws_account_id
 
         super(AzureProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
