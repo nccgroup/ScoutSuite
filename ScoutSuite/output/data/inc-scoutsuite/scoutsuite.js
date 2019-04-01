@@ -100,8 +100,10 @@ function onPageLoad () {
     let pathArray = resourcePath.split('.')
 
     if (buttonClicked === 'page_forward') {
+      console.log('Next page')
       loadPage(pathArray, 1)
     } else if (buttonClicked === 'page_backward') {
+      console.log('Previous page')
       loadPage(pathArray, -1)
     }
   })
@@ -1287,8 +1289,8 @@ function downloadAsJson (filename, dict) {
 
 /**
  * Loads a page based on which page we want to move to
- * @param pathArray       Contains the location of the resource requested
- * @param indexDiff       Tells us wether we want to load the previous, current, next page, etc.
+ * @param {array} pathArray
+ * @param {number} indexDiff
  */
 function loadPage (pathArray, indexDiff) {
   let pageInfo = getPageInfo(pathArray)
@@ -1296,14 +1298,18 @@ function loadPage (pathArray, indexDiff) {
   let pageIndex = pageInfo[1]
   pageIndex += indexDiff
   if (document.getElementById('page_backward')) {
-    document.getElementById('page_backward').disabled = (pageIndex === 0) ? true : false
+    document.getElementById('page_backward').disabled = (pageIndex <= 0)
+  }
+  if (document.getElementById('page_forward')) {
+    document.getElementById('page_forward').disabled = (pageIndex >= getLastPageIndex(pathArray, pageSize))
   }
   getResourcePageSqlite(pageIndex, pageSize, pathArray[1], pathArray[2])
 }
 
 /**
  * Returns the current index of the page and it's size in number of resources
- * @param pathArray       Contains the location of the resource requested
+ * @param {array} pathArray
+ * @returns {array}
  */
 function getPageInfo (pathArray) { 
   let pageSize, pageIndex
@@ -1318,6 +1324,9 @@ function getPageInfo (pathArray) {
   return [pageSize, pageIndex]
 }
 
+/**
+ * Loads the first page for every resource
+ */
 function loadFirstPageEverywhere () {  
   for (let service in run_results['services']) {
     for (let resource in run_results['services'][service]) {
@@ -1329,4 +1338,14 @@ function loadFirstPageEverywhere () {
       loadPage(pathArray, 0)
     }
   }
+}
+
+/**
+ * Returns the maximal index for page selection
+ * @param {array} pathArray 
+ * @param {number} pageSize 
+ */
+function getLastPageIndex (pathArray, pageSize) {
+  let resourceCount = run_results[pathArray[0]][pathArray[1]][pathArray[2] + '_count']
+  return Math.ceil(resourceCount / pageSize - 1)
 }
