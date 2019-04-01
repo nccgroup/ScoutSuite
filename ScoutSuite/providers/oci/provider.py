@@ -24,7 +24,7 @@ class OracleProvider(BaseProvider):
         self.services_config = OracleServicesConfig
 
         self.credentials = kwargs['credentials']
-        self.account_id = 'TODO'  # FIXME
+        self.account_id = self.credentials.compartment_id
 
         super(OracleProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
@@ -32,7 +32,11 @@ class OracleProvider(BaseProvider):
         """
         Returns the name of the report using the provider's configuration
         """
-        return 'oracle'
+        if self.credentials.compartment_id:
+            pass
+            return 'oracle-{}'.format(self.credentials.compartment_id)
+        else:
+            return 'oracle'
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
 

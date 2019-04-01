@@ -3,15 +3,19 @@ import sys
 from ScoutSuite.providers.aws.provider import AWSProvider
 from ScoutSuite.providers.azure.provider import AzureProvider
 from ScoutSuite.providers.gcp.provider import GCPProvider
+from ScoutSuite.providers.aliyun.provider import AliyunProvider
+from ScoutSuite.providers.oci.provider import OracleProvider
 
 providers_dict = {'aws': 'AWSProvider',
                   'gcp': 'GCPProvider',
-                  'azure': 'AzureProvider'}
+                  'azure': 'AzureProvider',
+                  'aliyun': 'AliyunProvider',
+                  'oci': 'OracleProvider'}
 
 
 def get_provider(provider,
-                 profile=None,
-                 project_id=None, folder_id=None, organization_id=None,
+                 profile=None,  # AWS
+                 project_id=None, folder_id=None, organization_id=None,  # GCP
                  report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
     """
     Returns an instance of the requested provider.
