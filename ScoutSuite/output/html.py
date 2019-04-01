@@ -12,6 +12,7 @@ from ScoutSuite.output.report_file import ReportFile
 from ScoutSuite.core.console import print_info, print_exception
 from ScoutSuite.output.result_encoder import JavaScriptEncoder, SqlLiteEncoder
 from ScoutSuite.output.utils import get_filename, prompt_for_overwrite
+from ScoutSuite import ERRORS_LIST
 
 
 class HTMLReport(object):
@@ -95,6 +96,8 @@ class ScoutSuiteReport(HTMLReport):
         self.prepare_html_report_dir()
         self.encoder.save_to_file(config, ReportFile.results, force_write, debug)
         self.encoder.save_to_file(exceptions, ReportFile.exceptions, force_write, debug)
+        if ERRORS_LIST:
+            self.encoder.save_to_file(ERRORS_LIST, 'ERRORS', force_write, debug=True)
         return self.create_html_report(force_write)
 
     def create_html_report(self, force_write):
@@ -125,3 +128,4 @@ class ScoutSuiteReport(HTMLReport):
                                                       ReportFile.exceptions.value.replace('.js', '-%s.js' % self.profile))
                         nf.write(newline)
         return new_file
+

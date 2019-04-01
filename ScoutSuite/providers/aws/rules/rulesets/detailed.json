@@ -897,13 +897,13 @@
         ],
         "ses-identity-dkim-not-enabled.json": [
             {
-                "enabled": false,
+                "enabled": true,
                 "level": "warning"
             }
         ],
         "ses-identity-dkim-not-verified.json": [
             {
-                "enabled": false,
+                "enabled": true,
                 "level": "warning"
             }
         ],

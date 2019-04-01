@@ -8,3 +8,4 @@ class ReportFile(Enum):
     exceptions = 'scoutsuite-results/scoutsuite_exceptions.js'
     report = 'report.html'
     ruleset = 'scoutsuite-results/scoutsuite_ruleset.js'
+    errors = 'scoutsuite-results/scoutsuite_errors_log.json'

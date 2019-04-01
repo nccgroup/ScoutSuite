@@ -1,10 +1,7 @@
-# -*- coding: utf-8 -*-
-
 import os
 
 from mock import patch
-from ScoutSuite.core.console import config_debug_level, print_debug
-
+from ScoutSuite.core.console import set_config_debug_level, print_debug
 from ScoutSuite.core.rule import Rule
 from ScoutSuite.core.ruleset import Ruleset
 
@@ -12,7 +9,7 @@ from ScoutSuite.core.ruleset import Ruleset
 class TestAWSScoutSuiteRulesRuleset:
 
     def setup(self):
-        config_debug_level(True)
+        set_config_debug_level(True)
         self.test_dir = os.path.dirname(os.path.realpath(__file__))
 
         self.test_ruleset_001 = os.path.join(self.test_dir, 'data/test-ruleset.json')

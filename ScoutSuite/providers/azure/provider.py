@@ -1,25 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import os
-import json
-
-from getpass import getpass
 
 from ScoutSuite.core.console import print_error, print_exception
 
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.azure.configs.services import AzureServicesConfig
 
-from msrestazure.azure_active_directory import MSIAuthentication
-from azure.mgmt.resource import SubscriptionClient
-from azure.common.credentials import ServicePrincipalCredentials, UserPassCredentials, get_azure_cli_credentials
-
-
-class AzureCredentials:
-
-    def __init__(self, credentials, subscription_id):
-        self.credentials = credentials
-        self.subscription_id = subscription_id
 
 
 class AzureProvider(BaseProvider):
@@ -41,102 +28,14 @@ class AzureProvider(BaseProvider):
         self.provider_name = 'Microsoft Azure'
 
         self.services_config = AzureServicesConfig
+        
+        self.credentials = kwargs['credentials']
+        self.aws_account_id = self.credentials.aws_account_id # TODO : Get rid of aws_account_id
 
         self.result_format = result_format
 
         super(AzureProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config,
                                             result_format)
-
-    def authenticate(self, cli=None, msi=None, service_principal=None, file_auth=None, user_account=None,
-                     tenant_id=None, subscription_id=None, client_id=None, client_secret=None, username=None,
-                     password=None, **kargs):
-        """
-        Implements authentication for the Azure provider using azure-cli.
-        Refer to https://docs.microsoft.com/en-us/python/azure/python-sdk-azure-authenticate?view=azure-python.
-
-        :return:
-        """
-
-        try:
-            if cli:
-                cli_credentials, self.aws_account_id = get_azure_cli_credentials()  # TODO: Remove aws_account_id
-                self.credentials = AzureCredentials(cli_credentials, self.aws_account_id)
-                return True
-            elif msi:
-                credentials = MSIAuthentication()
-
-                # Get the subscription ID
-                subscription_client = SubscriptionClient(credentials)
-                try:
-                    # Tries to read the subscription list
-                    subscription = next(subscription_client.subscriptions.list())
-                    self.aws_account_id = subscription.subscription_id
-                except StopIteration:
-                    # If the VM cannot read subscription list, ask Subscription ID:
-                    self.aws_account_id = input('Subscription ID: ')
-
-                self.credentials = AzureCredentials(credentials, self.aws_account_id)
-                return True
-            elif file_auth:
-                data = json.loads(file_auth.read())
-                subscription_id = data.get('subscriptionId')
-                tenant_id = data.get('tenantId')
-                client_id = data.get('clientId')
-                client_secret = data.get('clientSecret')
-
-                self.aws_account_id = tenant_id  # TODO this is for AWS
-
-                credentials = ServicePrincipalCredentials(
-                    client_id=client_id,
-                    secret=client_secret,
-                    tenant=tenant_id
-                )
-
-                self.credentials = AzureCredentials(credentials, subscription_id)
-
-                return True
-            elif service_principal:
-                subscription_id = subscription_id if subscription_id else input("Subscription ID: ")
-                tenant_id = tenant_id if tenant_id else input("Tenant ID: ")
-                client_id = client_id if client_id else input("Client ID: ")
-                client_secret = client_secret if client_secret else getpass("Client secret: ")
-
-                self.aws_account_id = tenant_id  # TODO this is for AWS
-
-                credentials = ServicePrincipalCredentials(
-                    client_id=client_id,
-                    secret=client_secret,
-                    tenant=tenant_id
-                )
-
-                self.credentials = AzureCredentials(credentials, subscription_id)
-
-                return True
-            elif user_account:
-                username = username if username else input("Username: ")
-                password = password if password else getpass("Password: ")
-
-                credentials = UserPassCredentials(username, password)
-
-                if subscription_id:
-                    self.aws_account_id = subscription_id
-                else:
-                    # Get the subscription ID
-                    subscription_client = SubscriptionClient(credentials)
-                    try:
-                        # Tries to read the subscription list
-                        subscription = next(subscription_client.subscriptions.list())
-                        self.aws_account_id = subscription.subscription_id
-                    except StopIteration:
-                        # If the user cannot read subscription list, ask Subscription ID:
-                        self.aws_account_id = input('Subscription ID: ')
-
-                self.credentials = AzureCredentials(credentials, self.aws_account_id)
-                return True
-        except Exception as e:
-            print_error('Failed to authenticate to Azure')
-            print_exception(e)
-            return False
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """

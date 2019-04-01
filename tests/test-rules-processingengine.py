@@ -1,11 +1,8 @@
-# -*- coding: utf-8 -*-
-
 import json
 import os
 import tempfile
 
-from ScoutSuite.core.console import config_debug_level, print_error
-
+from ScoutSuite.core.console import set_config_debug_level, print_error
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset
 
@@ -17,7 +14,7 @@ class DummyObject(object):
 class TestAWSScoutSuiteRulesProcessingEngine:
 
     def setup(self):
-        config_debug_level(True)
+        set_config_debug_level(True)
         self.rule_counters = {'found': 0, 'tested': 0, 'verified': 0}
         self.test_dir = os.path.dirname(os.path.realpath(__file__))
 
@@ -35,6 +32,7 @@ class TestAWSScoutSuiteRulesProcessingEngine:
             self.rule_counters['found'] += 1
             rule = ruleset['rules'][rule_file_name][0]
             rule['enabled'] = True
+            print(rule_file_name)
             self._test_rule(ruleset_file_name, rule_file_name, rule)
 
         print('Existing  rules: %d' % self.rule_counters['found'])

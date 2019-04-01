@@ -1029,6 +1029,7 @@ function get_resource_path (path) {
  * @param title
  * @returns {string}
  */
+<<<<<<< HEAD
 function make_title (title) {
   if (typeof (title) !== 'string') {
     console.log('Error: received title ' + title + ' (string expected).')
@@ -1091,6 +1092,68 @@ function make_title (title) {
     return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ')
   }
 }
+=======
+function make_title(title) {
+    if (typeof (title) != "string") {
+        console.log("Error: received title " + title + " (string expected).");
+        return title.toString();
+    };
+    title = title.toLowerCase();
+    if (['ec2', 'efs', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) != -1) {
+        return title.toUpperCase();
+    } else if (title == 'cloudtrail') {
+        return 'CloudTrail';
+    } else if (title == 'cloudwatch') {
+        return 'CloudWatch';
+    } else if (title == 'cloudformation') {
+        return 'CloudFormation';
+    } else if (title == 'config') {
+        return 'Config';
+    } else if (title == 'awslambda') {
+        return 'Lambda';
+    } else if (title == 'dynamodb') {
+        return 'DynamoDB';
+    } else if (title == 'elasticache') {
+        return 'ElastiCache';
+    } else if (title == 'redshift') {
+        return 'RedShift';
+    } else if (title == 'cloudstorage') {
+        return 'Cloud Storage';
+    } else if (title == 'cloudsql') {
+        return 'Cloud SQL';
+    } else if (title == 'stackdriverlogging') {
+        return 'Stackdriver Logging';
+    } else if (title == 'stackdrivermonitoring') {
+        return 'Stackdriver Monitoring';
+    } else if (title == 'computeengine') {
+        return 'Compute Engine';
+    } else if (title == 'kubernetesengine') {
+        return 'Kubernetes Engine';
+    } else if (title == 'cloudresourcemanager') {
+        return 'Cloud Resource Manager';
+    } else if (title == 'storageaccounts') {
+        return 'Storage Accounts';
+    } else if (title == 'sqldatabase') {
+        return 'SQL Database';
+    } else if (title == 'securitycenter') {
+        return 'Security Center';
+    } else if (title == 'network') {
+        return 'Network';
+    } else if (title == 'keyvault') {
+        return 'Key Vault';
+    } else if (title == 'appgateway') {
+        return 'Application Gateway';
+    } else if (title == 'rediscache') {
+        return 'Redis Cache';
+    } else if (title == 'appservice') {
+        return 'App Service';
+    } else if (title == 'loadbalancer') {
+        return 'Load Balancer';
+    } else {
+        return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
+    };
+};
+>>>>>>> 29377e37b40f0b0782706464bdbd7d83c699ed68
 
 /**
  * Toggles between truncated and full lenght bucket name

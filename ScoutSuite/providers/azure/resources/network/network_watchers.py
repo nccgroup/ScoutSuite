@@ -1,12 +1,13 @@
+from ScoutSuite.providers.azure.facade.facade import AzureFacade
 from ScoutSuite.providers.base.configs.resources import Resources
 
 
 class NetworkWatchers(Resources):
-    def __init__(self, facade):
+    def __init__(self, facade: AzureFacade):
         self.facade = facade
 
     async def fetch_all(self):
-        for raw_watcher in await self.facade.get_network_watchers():
+        for raw_watcher in await self.facade.network.get_network_watchers():
             id, network_watcher = self._parse_network_watcher(raw_watcher)
             self[id] = network_watcher
 

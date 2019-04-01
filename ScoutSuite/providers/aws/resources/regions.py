@@ -1,5 +1,4 @@
 import abc
-import asyncio
 
 from ScoutSuite.providers.aws.utils import get_aws_account_id
 from ScoutSuite.providers.aws.resources.resources import AWSCompositeResources
@@ -7,15 +6,11 @@ from ScoutSuite.providers.aws.facade.facade import AWSFacade
 
 
 class Regions(AWSCompositeResources, metaclass=abc.ABCMeta):
-    def __init__(self, service):
+    def __init__(self, service: str, facade: AWSFacade):
         self.service = service
-        # TODO: Should be injected
-        self.facade = AWSFacade()
+        self.facade = facade
 
     async def fetch_all(self, credentials, regions=None, partition_name='aws'):
-        # TODO: This should not be set here, the facade should be injected and already authenticated
-        self.facade._set_session(credentials) 
-        
         self['regions'] = {}
         account_id = get_aws_account_id(credentials)
         for region in await self.facade.build_region_list(self.service, regions, partition_name):
@@ -25,18 +20,10 @@ class Regions(AWSCompositeResources, metaclass=abc.ABCMeta):
                 'name': region
             }
 
-        # TODO: make a refactoring of the following:
-        if len(self['regions']) == 0:
-            return
-        tasks = {
-            asyncio.ensure_future(
-                self._fetch_children(
-                    self['regions'][region],
-                    {'region': region, 'owner_id': account_id}
-                )
-            ) for region in self['regions']
-        }
-        await asyncio.wait(tasks)
+        await self._fetch_children_of_all_resources(
+            resources=self['regions'],
+            scopes={region: {'region': region, 'owner_id': account_id} for region in self['regions']}
+        )
 
         self._set_counts()
 

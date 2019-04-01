@@ -11,6 +11,7 @@ class DummyResources(AWSResources):
         self['resource_b'] = {'some_id': 2, 'from_scope': self.scope}
 
 
+
 class DummyComposite(AWSCompositeResources):
     _children = [
         (DummyResources, 'some_dummy_resources'),
@@ -27,7 +28,7 @@ class DummyComposite(AWSCompositeResources):
                 'some_inner_scope': key
             }
 
-            await self._fetch_children(parent=self[key], scope=scope)
+            await self._fetch_children(resource_parent=self[key], scope=scope)
 
 
 class TestAWSResources(TestCase):
