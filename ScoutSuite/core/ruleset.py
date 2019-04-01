@@ -65,7 +65,7 @@ class Ruleset:
 
     def load(self, rule_type, quiet=False):
         """
-        Open a JSON file definiting a ruleset and load it into a Ruleset object
+        Open a JSON file defining a ruleset and load it into a Ruleset object
 
         :param rule_type:           TODO
         :param quiet:               TODO
