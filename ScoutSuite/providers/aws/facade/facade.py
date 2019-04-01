@@ -2,7 +2,6 @@ import boto3
 
 from collections import Counter
 from botocore.session import Session
-from ScoutSuite.providers.utils import run_concurrently
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.awslambda import LambdaFacade
 from ScoutSuite.providers.aws.facade.cloudformation import CloudFormation

@@ -72,7 +72,7 @@ class AWSProvider(BaseProvider):
         if 'cloudtrail' in self.service_list:
             self._process_cloudtrail_trails(self.services['cloudtrail'])
 
-        if 'elbv2' in self.service_list:
+        if 'elbv2' in self.service_list and 'ec2' in self.service_list:
             self._add_security_group_data_to_elbv2()
 
         if 's3' in self.service_list and 'iam' in self.service_list:

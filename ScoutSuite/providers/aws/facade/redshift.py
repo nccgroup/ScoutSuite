@@ -1,9 +1,9 @@
+from asyncio import Lock
+
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.utils import ec2_classic
 from botocore.utils import ClientError
-
-from asyncio import Lock
 
 
 class RedshiftFacade(AWSBaseFacade):
@@ -19,9 +19,8 @@ class RedshiftFacade(AWSBaseFacade):
             if region in self.clusters_cache:
                 return
 
-            self.clusters_cache[region] =\
-                await AWSFacadeUtils.get_all_pages('redshift', region, self.session,
-                                                   'describe_clusters', 'Clusters')
+            self.clusters_cache[region] = await AWSFacadeUtils.get_all_pages(
+                'redshift', region, self.session, 'describe_clusters', 'Clusters')
 
             for cluster in self.clusters_cache[region]:
                 cluster['VpcId'] =\
