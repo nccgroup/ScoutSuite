@@ -1,10 +1,6 @@
 import os
-import warnings
 
-import google.auth
-import googleapiclient
 from ScoutSuite.core.console import print_exception, print_info
-
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.gcp.configs.services import GCPServicesConfig
 from ScoutSuite.providers.gcp.utils import gcp_connect_service
@@ -160,7 +156,7 @@ class GCPProvider(BaseProvider):
         try:
             if parent_type == 'project':
                 project_response = resource_manager_client_v1.projects().list(filter='id:%s' %
-                                                                              parent_id).execute()
+                                                                                     parent_id).execute()
                 if 'projects' in project_response.keys():
                     for project in project_response['projects']:
                         if project['lifecycleState'] == "ACTIVE":

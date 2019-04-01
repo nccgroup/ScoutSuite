@@ -1,10 +1,7 @@
 import os
 
-from ScoutSuite.core.console import print_error, print_exception
-
-from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.azure.configs.services import AzureServicesConfig
-
+from ScoutSuite.providers.base.provider import BaseProvider
 
 
 class AzureProvider(BaseProvider):
@@ -24,7 +21,7 @@ class AzureProvider(BaseProvider):
         self.environment = 'default'
 
         self.services_config = AzureServicesConfig
-        
+
         self.credentials = kwargs['credentials']
         self.account_id = self.credentials.subscription_id
 

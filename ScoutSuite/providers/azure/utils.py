@@ -1,15 +1,14 @@
 import re
 
-from ScoutSuite.core.console import print_exception
-
-from azure.mgmt.storage import StorageManagementClient
-from azure.mgmt.sql import SqlManagementClient
-
-from azure.mgmt.security import SecurityCenter
 from azure.mgmt.keyvault import KeyVaultManagementClient
 from azure.mgmt.network import NetworkManagementClient
 from azure.mgmt.redis import RedisManagementClient
+from azure.mgmt.security import SecurityCenter
+from azure.mgmt.sql import SqlManagementClient
+from azure.mgmt.storage import StorageManagementClient
 from azure.mgmt.web import WebSiteManagementClient
+
+from ScoutSuite.core.console import print_exception
 
 
 def azure_connect_service(service, credentials):
