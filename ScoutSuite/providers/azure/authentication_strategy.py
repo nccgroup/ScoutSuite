@@ -44,7 +44,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     # If the VM cannot read subscription list, ask Subscription ID:
                     subscription_id = input('Subscription ID: ')
 
-                credentials = AzureCredentials(credentials, subscription_id)
+                credentials = AzureCredentials(msi_auth_credentials, subscription_id)
                 return credentials
 
             elif file_auth:
