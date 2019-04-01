@@ -21,7 +21,7 @@ class AliyunProvider(BaseProvider):
         self.provider_name = 'Alibaba Cloud'
         self.environment = 'default'
 
-        self.services_config = AliyunProvider
+        self.services_config = AliyunServicesConfig
 
         self.credentials = kwargs['credentials']
         self.account_id = 'TODO'  # FIXME

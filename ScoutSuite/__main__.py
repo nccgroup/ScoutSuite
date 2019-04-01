@@ -55,7 +55,9 @@ async def run_scan(args):
                                                  client_id=args.get('client_id'),
                                                  client_secret=args.get('client_secret'),
                                                  username=args.get('username'),
-                                                 password=args.get('password')
+                                                 password=args.get('password'),
+                                                 access_key_id=args.get('access_key_id'),
+                                                 access_key_secret=args.get('access_key_secret'),
                                                  )
 
         if not credentials:
