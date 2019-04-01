@@ -41,11 +41,11 @@ class GCPProvider(BaseProvider):
         Returns the name of the report using the provider's configuration
         """
         if self.project_id:
-            return 'gcp-%s'.format(self.project_id)
+            return 'gcp-{}'.format(self.project_id)
         elif self.organization_id:
-            return 'gcp-%s'.format(self.organization_id)
+            return 'gcp-{}'.format(self.organization_id)
         elif self.folder_id:
-            return 'gcp-%s'.format(self.folder_id)
+            return 'gcp-{}'.format(self.folder_id)
         else:
             return 'gcp'
 
