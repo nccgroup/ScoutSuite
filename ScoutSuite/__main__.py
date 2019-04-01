@@ -42,6 +42,7 @@ async def run_scan(args):
 
     print_info('Launching Scout')
 
+    credentials = None
     if not args.get('fetch_local'):
         auth_strategy = get_authentication_strategy(args.get('provider'))
         credentials = auth_strategy.authenticate(profile=args.get('profile'),

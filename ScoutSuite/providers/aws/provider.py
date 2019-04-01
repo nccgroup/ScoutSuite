@@ -36,7 +36,8 @@ class AWSProvider(BaseProvider):
         self.provider_name = 'Amazon Web Services'
 
         self.credentials = kwargs['credentials']
-        self.aws_account_id = get_aws_account_id(self.credentials)
+        if self.credentials:
+            self.aws_account_id = get_aws_account_id(self.credentials)
         
         super(AWSProvider, self).__init__(report_dir, timestamp,
                                           services, skipped_services, thread_config)
