@@ -13,7 +13,7 @@ from ScoutSuite.output.utils import get_filename, prompt_4_overwrite
 
 
 
-class Scout2Encoder(json.JSONEncoder):
+class ScoutEncoder(json.JSONEncoder):
     """
     JSON encoder class
     """
@@ -68,7 +68,7 @@ class JavaScriptReaderWriter(object):
             with self.__open_file(config_path, force_write) as f:
                 if first_line:
                     print('%s' % first_line, file=f)
-                print('%s' % json.dumps(config, indent=4 if debug else None, separators=(',', ': '), sort_keys=True, cls=Scout2Encoder), file=f)
+                print('%s' % json.dumps(config, indent=4 if debug else None, separators=(',', ': '), sort_keys=True, cls=ScoutEncoder), file=f)
         except AttributeError as e:
             # __open_file returned None
             pass
@@ -77,7 +77,7 @@ class JavaScriptReaderWriter(object):
 
 
     def to_dict(self, config):
-        return json.loads(json.dumps(config, separators=(',', ': '), cls=Scout2Encoder))
+        return json.loads(json.dumps(config, separators=(',', ': '), cls=ScoutEncoder))
 
 
     def __open_file(self, config_filename, force_write):

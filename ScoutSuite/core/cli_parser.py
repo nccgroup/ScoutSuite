@@ -214,6 +214,10 @@ class ScoutSuiteArgumentParser:
                             type=int,
                             default=10,
                             help='Maximum number of threads (workers) used by Scout Suite')
+        parser.add_argument('--report-name',
+                            dest='report_name',
+                            default=None,
+                            help='Name of the Scout report.')
         parser.add_argument('--report-dir',
                             dest='report_dir',
                             default=DEFAULT_REPORT_DIR,
@@ -235,8 +239,8 @@ class ScoutSuiteArgumentParser:
                             help='Name of out-of-scope services.')
         parser.add_argument('--exceptions',
                             dest='exceptions',
-                            default=[None],
-                            nargs='+',
+                            default=None,
+                            nargs='?',
                             help='Exception file to use during analysis.')
 
     def parse_args(self, args=None):

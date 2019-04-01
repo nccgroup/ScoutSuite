@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import asyncio
 import copy
 from concurrent.futures import ThreadPoolExecutor
@@ -9,11 +6,11 @@ import webbrowser
 
 from ScoutSuite import DEFAULT_RESULT_FILE
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
-from ScoutSuite.core.console import set_config_debug_level, print_info, print_debug, print_error
+from ScoutSuite.core.console import set_config_debug_level, print_info, print_exception
 from ScoutSuite.core.exceptions import RuleExceptions
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset
-from ScoutSuite.output.html import Scout2Report
+from ScoutSuite.output.html import ScoutReport
 from ScoutSuite.providers import get_provider
 from ScoutSuite.providers.base.authentication_strategy_factory import get_authentication_strategy
 
@@ -37,12 +34,14 @@ def main(args=None):
 
 # noinspection PyBroadException
 async def run_scan(args):
+
     # Configure the debug level
     set_config_debug_level(args.get('debug'))
 
     print_info('Launching Scout')
 
     if not args.get('fetch_local'):
+        print_info('Authenticating to cloud provider')
         auth_strategy = get_authentication_strategy(args.get('provider'))
         credentials = auth_strategy.authenticate(profile=args.get('profile'),
                                                  user_account=args.get('user_account'),
@@ -57,7 +56,7 @@ async def run_scan(args):
                                                  client_secret=args.get('client_secret'),
                                                  username=args.get('username'),
                                                  password=args.get('password')
-                                                )
+                                                 )
 
         if not credentials:
             return 401
@@ -77,13 +76,11 @@ async def run_scan(args):
                                   thread_config=args.get('thread_config'),
                                   credentials=credentials)
 
-    report_file_name = generate_report_name(cloud_provider.provider_code, args)
-
-    # TODO: move this to after authentication, so that the report can be more specific to what's being scanned.
-    # For example if scanning with a GCP service account, the SA email can only be known after authenticating...
     # Create a new report
-    report = Scout2Report(args.get('provider'), report_file_name, args.get(
-        'report_dir'), args.get('timestamp'))
+    report = ScoutReport(cloud_provider.provider_code,
+                         args.get('report_name') if args.get('report_name') else cloud_provider.get_report_name(),
+                         args.get('report_dir'),
+                         args.get('timestamp'))
 
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
@@ -118,45 +115,35 @@ async def run_scan(args):
 
     # Analyze config
     print_info('Running rule engine')
-    finding_rules = Ruleset(environment_name=args.get('profile'),
-                            cloud_provider=args.get('provider'),
+    finding_rules = Ruleset(cloud_provider=cloud_provider.provider_code,
+                            environment_name=cloud_provider.environment,
                             filename=args.get('ruleset'),
                             ip_ranges=args.get('ip_ranges'),
-                            aws_account_id=cloud_provider.aws_account_id)
+                            account_id=cloud_provider.account_id)
     processing_engine = ProcessingEngine(finding_rules)
     processing_engine.run(cloud_provider)
 
     # Create display filters
     print_info('Applying display filters')
-    filter_rules = Ruleset(cloud_provider=args.get('provider'),
-                           filename='filters.json',
+    filter_rules = Ruleset(cloud_provider=cloud_provider.provider_code,
+                           environment_name=cloud_provider.environment,
                            rule_type='filters',
-                           aws_account_id=cloud_provider.aws_account_id)
+                           account_id=cloud_provider.account_id)
     processing_engine = ProcessingEngine(filter_rules)
     processing_engine.run(cloud_provider)
 
-    if args.get('exceptions')[0]:
+    # Handle exceptions
+    if args.get('exceptions'):
         print_info('Applying exceptions')
         try:
             exceptions = RuleExceptions(
-                args.get('profile'), args.get('exceptions')[0])
+                args.get('profile'), args.get('exceptions'))
             exceptions.process(cloud_provider)
             exceptions = exceptions.exceptions
         except Exception as e:
-            print_debug(
-                'Failed to load exceptions. The file may not exist or may have an invalid format.')
+            print_exception('Failed to load exceptions: {}'.format(e))
             exceptions = {}
     else:
-        exceptions = {}
-    # Handle exceptions
-    try:
-        exceptions = RuleExceptions(
-            args.get('profile'), args.get('exceptions')[0])
-        exceptions.process(cloud_provider)
-        exceptions = exceptions.exceptions
-    except Exception as e:
-        print_debug(
-            'Warning, failed to load exceptions. The file may not exist or may have an invalid format.')
         exceptions = {}
 
     # Finalize
@@ -173,27 +160,3 @@ async def run_scan(args):
         webbrowser.open(url, new=2)
 
     return 0
-
-
-def generate_report_name(provider_code, args):
-    # TODO this should be done within the providers
-    # A pre-requisite to this is to generate report AFTER authentication
-    if provider_code == 'aws':
-        if args.get('profile'):
-            report_file_name = 'aws-%s' % args.get('profile')
-        else:
-            report_file_name = 'aws'
-    elif provider_code == 'gcp':
-        if args.get('project_id'):
-            report_file_name = 'gcp-%s' % args.get('project_id')
-        elif args.get('organization_id'):
-            report_file_name = 'gcp-%s' % args.get('organization_id')
-        elif args.get('folder_id'):
-            report_file_name = 'gcp-%s' % args.get('folder_id')
-        else:
-            report_file_name = 'gcp'
-    elif provider_code == 'azure':
-        report_file_name = 'azure'
-    else:
-        report_file_name = 'unknown'
-    return report_file_name

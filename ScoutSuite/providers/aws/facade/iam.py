@@ -13,7 +13,7 @@ class IAMFacade(AWSBaseFacade):
         response = await run_concurrently(client.generate_credential_report)
 
         if response['State'] != 'COMPLETE':
-            print_error('Failed to generate a credential report.')
+            print_error('Failed to generate a credential report')
             return []
 
         report = (await run_concurrently(client.get_credential_report))['Content']
