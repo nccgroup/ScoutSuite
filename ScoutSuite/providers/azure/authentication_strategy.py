@@ -1,12 +1,10 @@
 import json
-
 from getpass import getpass
 
 from azure.common.credentials import ServicePrincipalCredentials, UserPassCredentials, get_azure_cli_credentials
 from azure.mgmt.resource import SubscriptionClient
 from msrestazure.azure_active_directory import MSIAuthentication
 
-from ScoutSuite.core.console import print_error, print_exception
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
 
@@ -100,6 +98,4 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 return AzureCredentials(credentials, subscription_id)
 
         except Exception as e:
-            print_error('Failed to authenticate to Azure')
-            print_exception(e)
-            return False
+            raise AuthenticationException()

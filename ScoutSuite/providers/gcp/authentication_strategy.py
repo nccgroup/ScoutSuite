@@ -1,6 +1,7 @@
-import google
 import os
 import warnings
+
+import google
 
 from ScoutSuite.core.console import print_error
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
@@ -16,15 +17,13 @@ class GCPAuthenticationStrategy(AuthenticationStrategy):
 
         if user_account:
             # disable GCP warning about using User Accounts
-            warnings.filterwarnings(
-                "ignore", "Your application has authenticated using end user credentials")
+            warnings.filterwarnings("ignore", "Your application has authenticated using end user credentials")
             pass  # Nothing more to do
         elif service_account:
             client_secrets_path = os.path.abspath(service_account)
             os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = client_secrets_path
         else:
-            print_error(
-                'Failed to authenticate to GCP - no supported account type')
+            print_error('Failed to authenticate to GCP - no supported account type')
             raise AuthenticationException()
 
         credentials, default_project_id = google.auth.default()
