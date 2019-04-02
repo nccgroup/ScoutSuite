@@ -1,5 +1,3 @@
-import httplib2
-import googleapiclient
 from ScoutSuite.providers.utils import run_concurrently
 
 class GCPFacadeUtils:
