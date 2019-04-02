@@ -1,11 +1,13 @@
 from ScoutSuite.providers.gcp.facade.base import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.cloudresourcemanager import CloudResourceManagerFacade
+from ScoutSuite.providers.gcp.facade.stackdriverlogging import StackdriverLoggingFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 
 class GCPFacade(GCPBaseFacade):
     def __init__(self):
         super(GCPFacade, self).__init__('cloudresourcemanager', 'v1')
         self.cloudresourcemanager = CloudResourceManagerFacade()
+        self.stackdriverlogging = StackdriverLoggingFacade()
 
     async def get_projects(self):
         resourcemanager_client = self._get_client()
