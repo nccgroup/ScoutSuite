@@ -40,26 +40,25 @@ async def run_scan(args):
 
     print_info('Launching Scout')
 
-    if not args.get('fetch_local'):
-        print_info('Authenticating to cloud provider')
-        auth_strategy = get_authentication_strategy(args.get('provider'))
-        credentials = auth_strategy.authenticate(profile=args.get('profile'),
-                                                 user_account=args.get('user_account'),
-                                                 service_account=args.get('service_account'),
-                                                 cli=args.get('cli'),
-                                                 msi=args.get('msi'),
-                                                 service_principal=args.get('service_principal'),
-                                                 file_auth=args.get('file_auth'),
-                                                 tenant_id=args.get('tenant_id'),
-                                                 subscription_id=args.get('subscription_id'),
-                                                 client_id=args.get('client_id'),
-                                                 client_secret=args.get('client_secret'),
-                                                 username=args.get('username'),
-                                                 password=args.get('password')
-                                                 )
+    print_info('Authenticating to cloud provider')
+    auth_strategy = get_authentication_strategy(args.get('provider'))
+    credentials = auth_strategy.authenticate(profile=args.get('profile'),
+                                             user_account=args.get('user_account'),
+                                             service_account=args.get('service_account'),
+                                             cli=args.get('cli'),
+                                             msi=args.get('msi'),
+                                             service_principal=args.get('service_principal'),
+                                             file_auth=args.get('file_auth'),
+                                             tenant_id=args.get('tenant_id'),
+                                             subscription_id=args.get('subscription_id'),
+                                             client_id=args.get('client_id'),
+                                             client_secret=args.get('client_secret'),
+                                             username=args.get('username'),
+                                             password=args.get('password')
+                                             )
 
-        if not credentials:
-            return 401
+    if not credentials:
+        return 401
 
     # Create a cloud provider object
     cloud_provider = get_provider(provider=args.get('provider'),
@@ -71,19 +70,20 @@ async def run_scan(args):
                                   report_dir=args.get('report_dir'),
                                   timestamp=args.get('timestamp'),
                                   services=args.get('services'),
-                                  skipped_services=args.get(
-                                      'skipped_services'),
+                                  skipped_services=args.get('skipped_services'),
                                   thread_config=args.get('thread_config'),
                                   credentials=credentials)
 
     # Create a new report
+    report_name = args.get('report_name') if args.get('report_name') else cloud_provider.get_report_name()
     report = ScoutReport(cloud_provider.provider_code,
-                         args.get('report_name') if args.get('report_name') else cloud_provider.get_report_name(),
+                         report_name,
                          args.get('report_dir'),
                          args.get('timestamp'))
 
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
+
         # Fetch data from provider APIs
         try:
             print_info('Gathering data from APIs')
@@ -96,7 +96,7 @@ async def run_scan(args):
         if args.get('update'):
             print_info('Updating existing data')
             current_run_services = copy.deepcopy(cloud_provider.services)
-            last_run_dict = report.jsrw.load_from_file(DEFAULT_RESULT_FILE)
+            last_run_dict = report.jsrw.load_from_file('RESULTS')
             cloud_provider.services = last_run_dict['services']
             for service in cloud_provider.service_list:
                 cloud_provider.services[service] = current_run_services[service]
@@ -105,7 +105,8 @@ async def run_scan(args):
     else:
         print_info('Using local data')
         # Reload to flatten everything into a python dictionary
-        last_run_dict = report.jsrw.load_from_file(DEFAULT_RESULT_FILE)
+        last_run_dict = report.jsrw.load_from_file('RESULTS')
+        # last_run_dict = report.jsrw.load_from_file(report_name)
         for key in last_run_dict:
             setattr(cloud_provider, key, last_run_dict[key])
 
