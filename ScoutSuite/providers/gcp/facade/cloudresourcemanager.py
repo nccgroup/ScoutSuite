@@ -1,7 +1,7 @@
-from ScoutSuite.providers.gcp.facade.facade import Facade
+from ScoutSuite.providers.gcp.facade.base import GCPBaseFacade
 from ScoutSuite.providers.utils import run_concurrently
 
-class CloudResourceManagerFacade(Facade):
+class CloudResourceManagerFacade(GCPBaseFacade):
     def __init__(self):
         super(CloudResourceManagerFacade, self).__init__('cloudresourcemanager', 'v1')
 
