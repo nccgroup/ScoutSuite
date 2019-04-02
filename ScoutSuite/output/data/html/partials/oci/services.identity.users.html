@@ -6,8 +6,22 @@
   </div>
   <div class="list-group-item">
     <h4 class="list-group-item-heading">Information</h4>
-    <div class="list-group-item-text item-margin">ID: <span id="identity.users.{{@key}}.id">{{id}}</span></div>
+    <div class="list-group-item-text item-margin">Name: <span id="identity.users.{{@key}}.name">{{name}}</span></div>
+    <div class="list-group-item-text item-margin">ID: <span id="identity.users.{{@key}}.id"><samp>{{identifier}}</samp></span></div>
   </div>
+  {{#if api_keys_count }}
+  <div class="list-group-item">
+    <h5 class="list-group-item-heading" id="identity.users.{{@key}}.multiple_api_keys">API Keys</h5>
+    <ul>
+      {{#each api_keys}}
+      <li>Fingerprint: <code>{{fingerprint}}</code></li>
+      <ul>
+        <li>State: <samp>{{state}}</samp></li>
+      </ul>
+      {{/each}}
+    </ul>
+  </div>
+  {{/if}}
 </script>
 
 <script>

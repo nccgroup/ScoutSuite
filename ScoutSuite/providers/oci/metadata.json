@@ -5,6 +5,10 @@
         "users": {
           "cols": 2,
           "path": "services.identity.users"
+        },
+        "policies": {
+          "cols": 2,
+          "path": "services.identity.policies"
         }
       },
       "summaries": {}

@@ -1,5 +1,17 @@
 {
-  "about": "Default ruleset for Alibaba Cloud.",
+  "about": "Default ruleset for Oracle Cloud Infrastructure.",
   "rules": {
+    "identity-policy-affects-user.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "identity-user-with-multiple-api-keys.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ]
   }
 }

@@ -20,4 +20,12 @@ class IdentityFacade:
         response = await run_concurrently(lambda: list_call_get_all_results(self._client.list_users, self.compartment_id))
         return response.data
 
-        # return await OracleFacadeUtils.get_all_pages('identity', credentials, 'list_users', 'Users')
+    async def get_user_api_keys(self, user_id):
+
+        response = await run_concurrently(lambda: list_call_get_all_results(self._client.list_api_keys, user_id))
+        return response.data
+
+    async def get_policies(self):
+
+        response = await run_concurrently(lambda: list_call_get_all_results(self._client.list_policies, self.compartment_id))
+        return response.data

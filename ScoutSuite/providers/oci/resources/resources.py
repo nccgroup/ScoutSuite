@@ -52,8 +52,9 @@ class OracleCompositeResources(CompositeResources, metaclass=abc.ABCMeta):
         )
         # Update parent content:
         for child, name in children:
-            if name:
-                resource_parent[name] = child
-            else:
-                resource_parent.update(child)
 
+            if resource_parent.get(name) is None:
+                resource_parent[name] = {}
+
+            resource_parent[name].update(child)
+            resource_parent[name + '_count'] = len(resource_parent[name])
