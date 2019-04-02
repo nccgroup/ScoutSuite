@@ -1,3 +1,4 @@
+from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.gcp.resources.resources import GCPCompositeResources
 from ScoutSuite.providers.gcp.resources.cloudsql.backups import Backups
 from ScoutSuite.providers.gcp.resources.cloudsql.users import Users
@@ -9,7 +10,7 @@ class DatabaseInstances(GCPCompositeResources):
         (Users, 'users')
     ]
 
-    def __init__(self, gcp_facade, project_id):
+    def __init__(self, gcp_facade: GCPFacade, project_id: str):
         self.gcp_facade = gcp_facade
         self.project_id = project_id
 
@@ -33,7 +34,7 @@ class DatabaseInstances(GCPCompositeResources):
         instance_dict['authorized_networks'] = raw_instance['settings']['ipConfiguration']['authorizedNetworks']
         return instance_dict['id'], instance_dict
 
-    def _is_log_enabled(self, raw_instance) :
+    def _is_log_enabled(self, raw_instance):
         return raw_instance['settings']['backupConfiguration'].get('binaryLogEnabled')
 
     def _is_ssl_required(self, raw_instance):
