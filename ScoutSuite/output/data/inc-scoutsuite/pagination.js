@@ -31,8 +31,8 @@ function loadPage (pathArray, indexDiff) {
  */
 function getPageInfo (pathArray) { 
   let pageSize, pageIndex
-  pageSize = run_results[pathArray[0]][pathArray[1]][pathArray[2] + '_page_size']
-  pageIndex = run_results[pathArray[0]][pathArray[1]][pathArray[2] + '_page_index']
+  pageSize = runResults[pathArray[0]][pathArray[1]][pathArray[2] + '_page_size']
+  pageIndex = runResults[pathArray[0]][pathArray[1]][pathArray[2] + '_page_index']
   if (pageSize === undefined || pageSize === null) {
     pageSize = defaultPageSize
   }
@@ -46,8 +46,8 @@ function getPageInfo (pathArray) {
  * Loads the first page for every resource
  */
 function loadFirstPageEverywhere () {
-  for (let service in run_results['services']) {
-    for (let resource in run_results['services'][service]) {
+  for (let service in runResults['services']) {
+    for (let resource in runResults['services'][service]) {
       // Don't make a request for a page when it's a counter of resources
       if (resource.match(reCount) || resource === 'findings' || resource === 'filters') {
         continue
@@ -65,6 +65,6 @@ function loadFirstPageEverywhere () {
  * @returns {number}
  */
 function getLastPageIndex (pathArray, pageSize) {
-  let resourceCount = run_results[pathArray[0]][pathArray[1]][pathArray[2] + '_count']
+  let resourceCount = runResults[pathArray[0]][pathArray[1]][pathArray[2] + '_count']
   return Math.ceil(resourceCount / pageSize - 1)
 }

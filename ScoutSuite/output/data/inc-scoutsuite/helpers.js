@@ -78,12 +78,12 @@ Handlebars.registerHelper('s3_grant_2_icon', function (value) {
 
 Handlebars.registerHelper('good_bad_icon', function (finding, bucketId, keyId, suffix) {
   var keyPath = 's3.buckets.' + bucketId + '.keys.' + keyId + '.' + suffix
-  var index = run_results['services']['s3']['findings'][finding]['items'].indexOf(keyPath)
-  var level = run_results['services']['s3']['findings'][finding]['level']
+  var index = runResults['services']['s3']['findings'][finding]['items'].indexOf(keyPath)
+  var level = runResults['services']['s3']['findings'][finding]['level']
   if (index > -1) {
     return '<i class="fa fa-times finding-' + level +'"></i>'
   } else {
-    var keyDetails = run_results['services']['s3']['buckets'][bucketId]['keys'][keyId]
+    var keyDetails = runResults['services']['s3']['buckets'][bucketId]['keys'][keyId]
     if ((finding === 's3-object-acls-mismatch-bucket') && ('grantees' in keyDetails)) {
       return '<i class="fa fa-check finding-good"></i>'
     } else if ((finding == 's3-object-unencrypted') && ('ServerSideEncryption' in keyDetails)) {
@@ -105,9 +105,9 @@ Handlebars.registerHelper('finding_entity', function (prefix, entity) {
 Handlebars.registerHelper('count_in', function (service, path) {
   var entities = path.split('.')
   if (service === 'ec2') {
-    var input = run_results['services']['ec2']
+    var input = runResults['services']['ec2']
   } else if (service == 'cloudtrail') {
-    input = run_results['services']['cloudtrail']
+    input = runResults['services']['cloudtrail']
   } else {
     return 0
   }
@@ -116,16 +116,16 @@ Handlebars.registerHelper('count_in', function (service, path) {
 
 Handlebars.registerHelper('count_in_new', function (path) {
   var entities = path.split('.')
-  return recursiveCount(run_results, entities)
+  return recursiveCount(runResults, entities)
 })
 
 Handlebars.registerHelper('count_ec2_in_region', function (region, path) {
-  if (typeof run_results['services']['ec2'] != 'undefined') {
+  if (typeof runResults['services']['ec2'] != 'undefined') {
     var count = 0
     var entities = path.split('.')
-    for (let r in run_results['services']['ec2']['regions']) {
+    for (let r in runResults['services']['ec2']['regions']) {
       if (r === region) {
-        return recursiveCount(run_results['services']['ec2']['regions'][r], entities)
+        return recursiveCount(runResults['services']['ec2']['regions'][r], entities)
       }
     }
   } else {
@@ -178,7 +178,7 @@ var recursiveCount = function (input, entities) {
 }
 
 Handlebars.registerHelper('find_ec2_object_attribute', function (path, id, attribute ) {
-  return findEC2ObjectAttribute(run_results['services']['ec2'], path, id, attribute)
+  return findEC2ObjectAttribute(runResults['services']['ec2'], path, id, attribute)
 })
 
 Handlebars.registerHelper('format_date', function (time) {
@@ -400,7 +400,7 @@ Handlebars.registerHelper('get_rule', function (ruleFilename, attribute) {
   if (attribute === 'service') {
     return ruleFilename.split('-')[0]
   } else {
-    let rule = run_results['rule_definitions'][ruleFilename]
+    let rule = runResults['rule_definitions'][ruleFilename]
     // Clean up some ruleset generator artifacts
     attributeCleanup = ['file_name', 'file_path', 'rule_dirs', 'rule_types', 'rules_data_path', 'string_definition']
     for (let ac in attributeCleanup) {
@@ -422,8 +422,8 @@ var ruleCleanup = function (rule, attribute) {
 }
 
 Handlebars.registerHelper('get_arg_name', function (rule_filename, argIndex) {
-  if ('arg_names' in run_results['rule_definitions'][rule_filename]) {
-    return run_results['rule_definitions'][rule_filename]['arg_names'][argIndex]
+  if ('arg_names' in runResults['rule_definitions'][rule_filename]) {
+    return runResults['rule_definitions'][rule_filename]['arg_names'][argIndex]
   } else {
     return ''
   }

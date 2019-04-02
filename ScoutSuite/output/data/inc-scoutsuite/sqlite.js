@@ -42,14 +42,14 @@ function getScoutsuiteResultsSqlite () {
   // nested dict you are though since our data structure is not consistent :
   // paths(0) --> groups(1) --> services(2) --> counters(3) --> resources(4) --> items(5)
   let paths = requestDb('').keys
-  run_results = {}
+  runResults = {}
   for (let i in paths) { // Layer 0
     let list = {}
     let groups = requestDb(paths[i]) 
     if (groups.keys) {
       groups = groups.keys
     } else {
-      run_results[paths[i]] = groups
+      runResults[paths[i]] = groups
       continue
     }
     for (let group in groups) { // Layer 1    
@@ -93,13 +93,13 @@ function getScoutsuiteResultsSqlite () {
         delete list[groups[group]].keys
       }
     }
-    run_results[paths[i]] = list
+    runResults[paths[i]] = list
   }
-  return run_results
+  return runResults
 }
 
 /**
- * Inserts resource page info into run_results and wipes out the last resource page info from the memory
+ * Inserts resource page info into runResults and wipes out the last resource page info from the memory
  * to make sure the memory never gets capped and crashes the browser, also updates page index of the resource
  * @param {number} pageSize         The amount of resources per page
  * @param {number} pageIndex        The index of the page [0, totalResources / pageSize - 1]
@@ -109,25 +109,25 @@ function getScoutsuiteResultsSqlite () {
 function getResourcePageSqlite (pageIndex, pageSize, service, resource) {
   let resources = requestDb(createQuery('services', service, resource), pageSize, pageIndex)
   // Delete the current content
-  run_results['services'][service][resource] = null
+  runResults['services'][service][resource] = null
   // Create a spot where to save data
-  run_results['services'][service][resource] = { [null]: null }
+  runResults['services'][service][resource] = { [null]: null }
   for (let item in resources) {
     let properties = resources[item].keys
-    run_results['services'][service][resource][item] = { [null]: null }
+    runResults['services'][service][resource][item] = { [null]: null }
     for (let property in properties) {
-      run_results['services'][service][resource][item][properties[property]] =
+      runResults['services'][service][resource][item][properties[property]] =
       requestDb(createQuery('services', service, resource, item, properties[property]))
     }
-    delete run_results['services'][service][resource][item].null
+    delete runResults['services'][service][resource][item].null
   }
   // Save the current page index to remember which page we have saved
   // Originally wanted to save that info under the precise resource, but the handlebar templates create slots for
   // each entry under resource, therefore there were 2 empty slots always added
-  run_results['services'][service][resource + '_page_index'] = pageIndex
+  runResults['services'][service][resource + '_page_index'] = pageIndex
   // Save the current page size to remember the size of the saved page
-  run_results['services'][service][resource + '_page_size'] = pageSize
-  delete run_results['services'][service][resource].null
+  runResults['services'][service][resource + '_page_size'] = pageSize
+  delete runResults['services'][service][resource].null
 }
 
 /**
