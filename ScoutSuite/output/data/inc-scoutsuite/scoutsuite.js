@@ -200,7 +200,7 @@ function process_template(id1, container_id, list) {
  * Hide all lists and details
  */
 function hideAll() {
-    $("[id*='.list']").not("[id*='metadata.list']").not("[id='regions.list']").not("[id*='filters.list']").hide();
+    $("[id*='.list']").not("[id*='metadata.list']").not("[id='regions.list']").not("[id='projects.list']").not("[id*='filters.list']").hide();
     $("[id*='.details']").hide();
     var element = document.getElementById('scout2_display_account_id_on_all_pages');
     if ((element != undefined) && (element.checked == true)) {
@@ -1096,6 +1096,8 @@ function add_template(group, service, section, resource_type, path, suffix) {
                 partial_name = 'left_menu_for_vpc';
             } else if (path.indexOf('.regions.id.') > 0) {
                 partial_name = 'left_menu_for_region';
+            } else if (path.indexOf('.projects.id.') > 0) {
+                partial_name = 'left_menu_for_project';
             } else {
                 partial_name = 'left_menu';
             };
@@ -1104,6 +1106,8 @@ function add_template(group, service, section, resource_type, path, suffix) {
                 partial_name = 'details_for_vpc';
             } else if (path.indexOf('.regions.id.') > 0) {
                 partial_name = 'details_for_region';
+            } else if (path.indexOf('.projects.id.') > 0) {
+                partial_name = 'details_for_project';
             } else {
                 partial_name = 'details';
             };

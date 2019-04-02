@@ -23,7 +23,7 @@ class ServiceAccounts(GCPCompositeResources):
         service_account_dict = {}
         service_account_dict['id'] = raw_service_account['uniqueId']
         service_account_dict['display_name'] = raw_service_account.get('displayName', 'N/A')
-        service_account_dict['name'] = raw_service_account['name']
+        service_account_dict['name'] = raw_service_account['email']
         service_account_dict['email'] = raw_service_account['email']
         service_account_dict['project_id'] = raw_service_account['projectId']
         return service_account_dict['id'], service_account_dict
