@@ -1,7 +1,8 @@
 from ScoutSuite.providers.base.configs.resources import Resources
+from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 
 class Sinks(Resources):
-    def __init__(self, gcp_facade, project_id):
+    def __init__(self, gcp_facade: GCPFacade, project_id: str):
         self.gcp_facade = gcp_facade
         self.project_id = project_id
 
