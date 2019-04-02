@@ -1,10 +1,10 @@
 {
   "security": {
-    "iam": {
+    "identity": {
       "resources": {
         "users": {
           "cols": 2,
-          "path": "services.iam.users"
+          "path": "services.identity.users"
         }
       },
       "summaries": {}

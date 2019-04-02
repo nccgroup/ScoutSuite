@@ -1,0 +1,24 @@
+
+<!-- Identity user -->
+<script id="services.identity.users.partial" type="text/x-handlebars-template">
+  <div id="resource-name" class="list-group-item active">
+    <h4 class="list-group-item-heading">{{name}}</h4>
+  </div>
+  <div class="list-group-item">
+    <h4 class="list-group-item-heading">Information</h4>
+    <div class="list-group-item-text item-margin">ID: <span id="identity.users.{{@key}}.id">{{id}}</span></div>
+  </div>
+</script>
+
+<script>
+  Handlebars.registerPartial("services.identity.users", $("#services\\.identity\\.users\\.partial").html());
+</script>
+
+<!-- Single identity user template -->
+<script id="single_identity_user-template" type="text/x-handlebars-template">
+  {{> modal-template template='services.identity.users'}}
+</script>
+<script>
+  var single_identity_user_template = Handlebars.compile($("#single_identity_user-template").html());
+</script>
+

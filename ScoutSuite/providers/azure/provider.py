@@ -32,7 +32,10 @@ class AzureProvider(BaseProvider):
         """
         Returns the name of the report using the provider's configuration
         """
-        return 'azure'
+        if self.credentials.subscription_id:
+            return 'azure-{}'.format(self.credentials.subscription_id)
+        else:
+            return 'azure'
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
