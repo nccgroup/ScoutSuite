@@ -1,26 +1,25 @@
 var querySeparator = '¤'
 var reQuerySeparator = new RegExp('\\' + querySeparator + '+$')
 
-// TODO: change for something that does not throw XML errors
 /**
  * Requests a list corresponding to the resource
- * @param query           : The resource requested
+ * @param {string} query
  */
 function requestDb (query) {
-  var request = new XMLHttpRequest()
-  request.open('GET', 'http://127.0.0.1:8000/api/data?key=' + query, false)
+  let response =''
 
-  var response
-  request.onload = function () {
-    if (this.readyState === 4) {
-      response = JSON.parse(this.response)
-      if (response.data === null || response.data === undefined) {
-        console.log('This query returned an empty response:  ' + query)
-      }
-    }
+  $.ajax({
+   type: 'GET',
+   url: 'http://127.0.0.1:8000/api/data?key=' + query,
+   async: false,
+   success: function(result) {
+    response = result;
+  }})
+
+  if (response.data === null || response.data === undefined) {
+    console.log('This query returned an empty response:  ' + query)
   }
 
-  request.send()
   return response.data
 }
 
@@ -32,21 +31,20 @@ function requestDb (query) {
  * @param pageIndex       : The index of the page [0, totalResources / pageSize - 1]
  */
 function requestDbPage (query, pageSize, pageIndex) {
-  var request = new XMLHttpRequest()
-  request.open('GET', 'http://127.0.0.1:8000/api/page?pagesize=' + pageSize + '&page=' + pageIndex + 
-    '&key=' + query, false)
+  let response =''
 
-  var response
-  request.onload = function () {
-    if (this.readyState === 4) {
-      response = JSON.parse(this.response)
-      if (response.data === null || response.data === undefined) {
-        console.log('This query returned an empty response: ' + query)
-      }
-    }
+  $.ajax({
+   type: 'GET',
+   url: 'http://127.0.0.1:8000/api/page?pagesize=' + pageSize + '&page=' + pageIndex + '&key=' + query,
+   async: false,
+   success: function(result) {
+    response = result;
+  }})
+
+  if (response.data === null || response.data === undefined) {
+    console.log('This query returned an empty response:  ' + query)
   }
 
-  request.send()
   return response.data
 }
 
@@ -154,4 +152,11 @@ function createQuery () {
   }
   query = query.replace(reQuerySeparator, '');
   return query
+}
+
+function testDb () {
+  $.ajax({url: "http://127.0.0.1:8000/api/data?key=", success: function(result) {
+    console.log(result)
+    return result
+  }});
 }
