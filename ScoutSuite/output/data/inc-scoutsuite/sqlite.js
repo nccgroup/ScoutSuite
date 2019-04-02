@@ -5,11 +5,12 @@ var defaultPort = 8000
 /**
  * Requests a list corresponding to the resource
  * @param {string} query
+ * 
  */
 function requestDb (query, pageSize, pageIndex) {
   let url = 'http://127.0.0.1:' + defaultPort + '/api/'
   let response =''
-  
+
   if (arguments.length === 1) {
     url += 'data?key=' + query
   } else {
@@ -20,6 +21,7 @@ function requestDb (query, pageSize, pageIndex) {
    type: 'GET',
    url: url,
    async: false,
+   dataType: 'json',   
    success: function(result) {
     response = result;
   }})

@@ -42,6 +42,9 @@ class Server(object):
         config = {
             '/': {
                 'cors.expose.on': True,
+                'tools.sessions.on': True,
+                'tools.response_headers.on': True,
+                'tools.response_headers.headers': [('Content-Type', 'text/plain')],
             },
         }
         cherrypy.config.update({
