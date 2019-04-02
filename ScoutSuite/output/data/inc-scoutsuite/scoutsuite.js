@@ -1315,17 +1315,17 @@ function loadPage (pathArray, indexDiff) {
   let pageSize = pageInfo[0]
   let pageIndex = pageInfo[1]
   pageIndex += indexDiff
-  if (document.getElementById('page_backward')) {
+  // getResourcePageSqlite being called in both statements is intentional, I want events to happen in this order to
+  // prevent the user from cliking on next page multiple times and going out of bounds and I want to call loadConfig
+  // to regenerate the page after Iv'e loaded SQLite data
+  if (indexDiff === 0) {
+    getResourcePageSqlite(pageIndex, pageSize, pathArray[1], pathArray[2])
+  } else {
     document.getElementById('page_backward').disabled = (pageIndex <= 0)
-    let scriptId = pathArray[0] + '.' + pathArray[1] + '.' + pathArray[2]
-    loadConfig (scriptId, 2, true)
-  }
-  if (document.getElementById('page_forward')) {
     document.getElementById('page_forward').disabled = (pageIndex >= getLastPageIndex(pathArray, pageSize))
-    let scriptId = pathArray[0] + '.' + pathArray[1] + '.' + pathArray[2]
-    loadConfig (scriptId, 2, true)
+    getResourcePageSqlite(pageIndex, pageSize, pathArray[1], pathArray[2])    
+    loadConfig (pathArray[0] + '.' + pathArray[1] + '.' + pathArray[2], 2, true)
   }
-  getResourcePageSqlite(pageIndex, pageSize, pathArray[1], pathArray[2])
 }
 
 /**
