@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
-
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.gcp.resources.cloudsql.service import CloudSQL
+from ScoutSuite.providers.gcp.resources.stackdriverlogging.service import StackdriverLogging
 from ScoutSuite.providers.gcp.services.cloudstorage import CloudStorageConfig
 from ScoutSuite.providers.gcp.services.iam import IAMConfig
-from ScoutSuite.providers.gcp.services.stackdriverlogging import StackdriverLoggingConfig
 from ScoutSuite.providers.gcp.services.computeengine import ComputeEngineConfig
 from ScoutSuite.providers.gcp.services.cloudresourcemanager import CloudResourceManager
 
@@ -35,8 +33,7 @@ class GCPServicesConfig(BaseServicesConfig):
         except NameError as _:
             pass
 
-        self.stackdriverlogging = StackdriverLoggingConfig(thread_config=thread_config)
-        # self.stackdrivermonitoring = StackdriverMonitoringConfig(thread_config=thread_config)
+        self.stackdriverlogging = StackdriverLogging(gcp_facade)
 
     def _is_provider(self, provider_name):
         return provider_name == 'gcp'

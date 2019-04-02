@@ -76,7 +76,7 @@
       "resources": {
         "sinks": {
           "cols": 2,
-          "path": "services.stackdriverlogging.sinks"
+          "path": "services.stackdriverlogging.projects.id.sinks"
         }
       }
     }
