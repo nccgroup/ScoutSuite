@@ -1,13 +1,13 @@
-////////////////////////
-// Handlebars helpers //
-////////////////////////
+/**********************
+ * Handlebars helpers *
+ **********************/
 
 Handlebars.registerHelper('displayPolicy', function (blob) {
   var policy = '{<br/>'
-  for (attr in blob) {
+  for (let attr in blob) {
     if (attr === 'Statement') {
       policy += '&nbsp;&nbsp;"Statement": [<br/>'
-      for (sid in blob['Statement']) {
+      for (let sid in blob['Statement']) {
         policy += '<span id="foobar">' + JSON.stringify(blob['Statement'][sid], null, 2) + '</span>,\n'
       }
       policy += '  ]'
@@ -31,7 +31,7 @@ Handlebars.registerHelper('add_policy_path', function () {
   policy['policy_spath'] = path.replace(/\\/g, '')
 })
 
-Handlebars.registerHelper('displayKey', function (key_name, blob) {
+Handlebars.registerHelper('displayKey', function (keyName, blob) {
   var key = JSON.stringify(blob, null, 2)
   key = key.replace(/ /g, '&nbsp;')
   key = key.replace(/\n/g, '<br/>')
@@ -46,9 +46,9 @@ Handlebars.registerHelper('has_profiles?', function (logins) {
   }
 })
 
-Handlebars.registerHelper('has_access_keys?', function (access_keys) {
-  if (typeof access_keys !== 'undefined' && access_keys !== '') {
-    return access_keys.length
+Handlebars.registerHelper('has_access_keys?', function (accessKeys) {
+  if (typeof accessKeys !== 'undefined' && accessKeys !== '') {
+    return accessKeys.length
   } else {
     return 0
   }
@@ -76,17 +76,17 @@ Handlebars.registerHelper('s3_grant_2_icon', function (value) {
   return '<i class="' + ((value === true) ? 'fa fa-check' : '') + '"></i>'
 })
 
-Handlebars.registerHelper('good_bad_icon', function (finding, bucket_id, key_id, suffix) {
-  var key_path = 's3.buckets.' + bucket_id + '.keys.' + key_id + '.' + suffix
-  var index = run_results['services']['s3']['findings'][finding]['items'].indexOf(key_path)
+Handlebars.registerHelper('good_bad_icon', function (finding, bucketId, keyId, suffix) {
+  var keyPath = 's3.buckets.' + bucketId + '.keys.' + keyId + '.' + suffix
+  var index = run_results['services']['s3']['findings'][finding]['items'].indexOf(keyPath)
   var level = run_results['services']['s3']['findings'][finding]['level']
   if (index > -1) {
     return '<i class="fa fa-times finding-' + level +'"></i>'
   } else {
-    var key_details = run_results['services']['s3']['buckets'][bucket_id]['keys'][key_id]
-    if ((finding === 's3-object-acls-mismatch-bucket') && ('grantees' in key_details)) {
+    var keyDetails = run_results['services']['s3']['buckets'][bucketId]['keys'][keyId]
+    if ((finding === 's3-object-acls-mismatch-bucket') && ('grantees' in keyDetails)) {
       return '<i class="fa fa-check finding-good"></i>'
-    } else if ((finding == 's3-object-unencrypted') && ('ServerSideEncryption' in key_details)) {
+    } else if ((finding == 's3-object-unencrypted') && ('ServerSideEncryption' in keyDetails)) {
       return '<i class="fa fa-check finding-good"></i>'
     } else {
       return '<i class="fa fa-question-circle"></i></i>'
@@ -104,28 +104,28 @@ Handlebars.registerHelper('finding_entity', function (prefix, entity) {
 
 Handlebars.registerHelper('count_in', function (service, path) {
   var entities = path.split('.')
-  if (service == 'ec2') {
+  if (service === 'ec2') {
     var input = run_results['services']['ec2']
   } else if (service == 'cloudtrail') {
-    var input = run_results['services']['cloudtrail']
+    input = run_results['services']['cloudtrail']
   } else {
     return 0
   }
-  return recursive_count(input, entities)
+  return recursiveCount(input, entities)
 })
 
 Handlebars.registerHelper('count_in_new', function (path) {
   var entities = path.split('.')
-  return recursive_count(run_results, entities)
+  return recursiveCount(run_results, entities)
 })
 
 Handlebars.registerHelper('count_ec2_in_region', function (region, path) {
   if (typeof run_results['services']['ec2'] != 'undefined') {
     var count = 0
     var entities = path.split('.')
-    for (r in run_results['services']['ec2']['regions']) {
-      if (r == region) {
-        return recursive_count(run_results['services']['ec2']['regions'][r], entities)
+    for (let r in run_results['services']['ec2']['regions']) {
+      if (r === region) {
+        return recursiveCount(run_results['services']['ec2']['regions'][r], entities)
       }
     }
   } else {
@@ -138,38 +138,38 @@ Handlebars.registerHelper('split_lines', function (text) {
   return text ? text.split('\n') : []
 })
 
-Handlebars.registerHelper('count_vpc_network_acls', function (vpc_network_acls) {
-  var c = 0
-  for (x in vpc_network_acls) {
-      c = c + 1
+Handlebars.registerHelper('count_vpc_network_acls', function (vpcNetworkAcls) {
+  var counter = 0
+  for (let x in vpcNetworkAcls) {
+    counter = counter + 1
   }
-  return c
+  return counter
 })
 
-Handlebars.registerHelper('count_vpc_instances', function (vpc_instances) {
-  var c = 0
-  for (x in vpc_instances) {
-      c = c + 1
+Handlebars.registerHelper('count_vpc_instances', function (vpcInstances) {
+  var counter = 0
+  for (let x in vpcInstances) {
+    counter = counter + 1
   }
-  return c
+  return counter
 })
 
-Handlebars.registerHelper('count_role_instances', function (instance_profiles) {
+Handlebars.registerHelper('count_role_instances', function (instanceProfiles) {
   var c = 0
-  for (ip in instance_profiles) {
-    for (i in instance_profiles[ip]['instances']) {
+  for (let ip in instanceProfiles) {
+    for (let i in instanceProfiles[ip]['instances']) {
       c = c + 1
     }
   }
   return c
 })
 
-var recursive_count = function (input, entities) {
+var recursiveCount = function (input, entities) {
   var count = 0
   if (entities.length > 0) {
     var entity = entities.shift()
-    for (i in input[entity]) {
-      count = count + recursive_count(input[entity][i], eval(JSON.stringify(entities)))
+    for (let i in input[entity]) {
+      count = count + recursiveCount(input[entity][i], eval(JSON.stringify(entities)))
     }
   } else {
     count = count + 1
@@ -184,14 +184,11 @@ Handlebars.registerHelper('find_ec2_object_attribute', function (path, id, attri
 Handlebars.registerHelper('format_date', function (time) {
   if (typeof time === 'number') {
     return new Date(time * 1000).toString()
-  }
-  else if (typeof time === 'string') {
+  } else if (typeof time === 'string') {
     return new Date(time)
-  }
-  else if (!time || time === null) {
+  } else if (!time || time === null) {
     return 'No date available'
-  }
-  else {
+  } else {
     return 'Invalid date format'
   }
 })
@@ -200,34 +197,34 @@ Handlebars.registerHelper('make_title', function (title) {
   return make_title(title)
 })
 
-Handlebars.registerHelper('addMember', function (member_name, value) {
-  this[member_name] = value
+Handlebars.registerHelper('addMember', function (memberName, value) {
+  this[memberName] = value
 })
 
 Handlebars.registerHelper('ifShow', function (v1, v2, options) {
   if (v1 !== v2) {
-  return options.fn(this)
+    return options.fn(this)
   }
 })
 
 Handlebars.registerHelper('ifType', function (v1, v2, options) {
-  if (typeof v1 == v2) {
+  if (typeof v1 === v2) {
     return options.fn(v1)
   } else {
     return options.inverse(v1)
   }
 })
 
-Handlebars.registerHelper('fixBucketName', function (bucket_name) {
-  if (bucket_name != undefined) {
-    return bucket_name.replace(/\./g, '-')
+Handlebars.registerHelper('fixBucketName', function (bucketName) {
+  if (bucketName !== undefined) {
+    return bucketName.replace(/\./g, '-')
   }
 })
 
 Handlebars.registerHelper('dashboard_color', function (level, checked, flagged) {
-  if (checked == 0) {
+  if (checked === 0) {
     return 'unknown disabled-link'
-  } else if (flagged == 0) {
+  } else if (flagged === 0) {
     return 'good disabled-link'
   } else {
     return level
@@ -258,8 +255,8 @@ Handlebars.registerHelper('ifPositive', function (v1, options) {
   }
 })
 
-Handlebars.registerHelper('has_condition', function (policy_info) {
-  if (('condition' in policy_info) && (policy_info['condition'] != null)) {
+Handlebars.registerHelper('has_condition', function (policyInfo) {
+  if (('condition' in policyInfo) && (policyInfo['condition'] != null)) {
     return true
   } else {
     return false
@@ -272,7 +269,7 @@ Handlebars.registerHelper('escape_special_chars', function (value) {
 
 Handlebars.registerHelper('get_value_at', function () {
   var path = arguments[0]
-  for (var i = 1; i < arguments.length -1; i++) {
+  for (var i = 1; i < arguments.length - 1; i++) {
     path = path + '.' + arguments[i]
   }
   return get_value_at(path)
@@ -280,23 +277,23 @@ Handlebars.registerHelper('get_value_at', function () {
 
 Handlebars.registerHelper('concat', function () {
   var path = arguments[0]
-  for (var i = 1; i < arguments.length -1; i++) {
+  for (var i = 1; i < arguments.length - 1; i++) {
     path = path + '.' + arguments[i]
   }
   return path
 })
 
 Handlebars.registerHelper('jsonStringify', function () {
-  body = arguments[0]
+  let body = arguments[0]
   delete body['description']
   delete body['args']
   return JSON.stringify(body, null, 4)
 })
 
 Handlebars.registerHelper('get_key', function () {
-  rule = arguments[1]
+  let rule = arguments[1]
   if (rule['key']) {
-    key = rule['key']
+    var key = rule['key']
   } else {
     key = arguments[0]
   }
@@ -304,7 +301,7 @@ Handlebars.registerHelper('get_key', function () {
 })
 
 Handlebars.registerHelper('other_level', function () {
-  if (arguments[0] == 'warning') {
+  if (arguments[0] === 'warning') {
     return 'danger'
   } else {
     return 'warning'
@@ -313,7 +310,8 @@ Handlebars.registerHelper('other_level', function () {
 
 // http://funkjedi.com/technology/412-every-nth-item-in-handlebars, slightly tweaked to work with a dictionary
 Handlebars.registerHelper('grouped_each', function (every, context, options) {
-  var out = "", subcontext = [], i
+  var out = ''
+  var i
   var keys = Object.keys(context)
   var count = keys.length
   var subcontext = {}
@@ -336,9 +334,9 @@ Handlebars.registerHelper('each_dict_as_sorted_list', function (context, options
   var ret = ''
 
   var sortedFindingsKeys = Object.keys(context).sort(function (a, b) {
-    if (context[a].flagged_items == 0 && context[b].flagged_items === 0) {
-      if (context[a].checked_items == 0 && context[b].checked_items !== 0) return 1
-      if (context[a].checked_items != 0 && context[b].checked_items === 0) return -1
+    if (context[a].flagged_items === 0 && context[b].flagged_items === 0) {
+      if (context[a].checked_items === 0 && context[b].checked_items !== 0) return 1
+      if (context[a].checked_items !== 0 && context[b].checked_items === 0) return -1
       if (context[a].description.toLowerCase() < context[b].description.toLowerCase()) return -1
       if (context[a].description.toLowerCase() > context[b].description.toLowerCase()) return 1
     }
@@ -374,7 +372,7 @@ Handlebars.registerHelper('each_dict_as_sorted_list', function (context, options
 })
 
 Handlebars.registerHelper('sorted_each', function (array, key, opts) {
-  newarray = array.sort(function (a, b) {
+  let newarray = array.sort(function (a, b) {
     if (a[key] < b[key]) return -1
     if (a[key] > b[key]) return 1
     return 0
@@ -398,14 +396,14 @@ Handlebars.registerHelper('convert_bool_to_enabled', function (value) {
 /* Ruleset generator */
 /*********************/
 
-Handlebars.registerHelper('get_rule', function (rule_filename, attribute) {
+Handlebars.registerHelper('get_rule', function (ruleFilename, attribute) {
   if (attribute === 'service') {
-    return rule_filename.split('-')[0]
+    return ruleFilename.split('-')[0]
   } else {
-    rule = run_results['rule_definitions'][rule_filename]
+    let rule = run_results['rule_definitions'][ruleFilename]
     // Clean up some ruleset generator artifacts
     attributeCleanup = ['file_name', 'file_path', 'rule_dirs', 'rule_types', 'rules_data_path', 'string_definition']
-    for (ac in attributeCleanup) {
+    for (let ac in attributeCleanup) {
       rule = ruleCleanup(rule, attributeCleanup[ac])
     }
     if (attribute === '') {

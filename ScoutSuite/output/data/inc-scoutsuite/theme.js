@@ -10,6 +10,9 @@ $(document).ready(() => {
   }
 })
 
+/**
+ * Load the last theme used by looking into localstorage
+ */
 function loadLastTheme () {
   if (isDarkThemeEnabled()) {
     setBootstrapTheme(DARK_BOOTSTRAP_THEME)
@@ -35,7 +38,7 @@ function toggleTheme () {
 
 /**
  * Sets the css file location received as the bootstrap theme
- * @param file
+ * @param {string} file
  */
 function setBootstrapTheme (file) {
   document.getElementById('bootstrap-theme').href = file
@@ -43,16 +46,24 @@ function setBootstrapTheme (file) {
 
 /**
  * Sets the css file location received as the scout theme
- * @param file
+ * @param {string} file
  */
 function setScoutTheme (file) {
   document.getElementById('scout-theme').href = file
 }
 
+/**
+ * Tells us if the dark theme is enabled or not
+ * @returns {boolean}
+ */
 function isDarkThemeEnabled () {
   return localStorage.getItem('dark_theme_enabled') === 'true'
 }
 
+/**
+ * Saves which theme is selected within the localstorage
+ * @param {boolean} isDarkThemeEnabled 
+ */
 function saveIsDarkThemeEnabled (isDarkThemeEnabled) {
   localStorage.setItem('dark_theme_enabled', isDarkThemeEnabled)
 }
