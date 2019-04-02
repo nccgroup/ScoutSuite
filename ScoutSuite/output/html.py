@@ -9,8 +9,8 @@ import zipfile
 import dateutil.tz
 from ScoutSuite.core.console import print_info, print_exception
 
-from ScoutSuite import AWSCONFIG, EXCEPTIONS, HTMLREPORT, AWSRULESET, AWSCONFIG_FILE, EXCEPTIONS_FILE, HTMLREPORT_FILE, \
-    GENERATOR_FILE
+from ScoutSuite import DEFAULT_RESULT_FILE, DEFAULT_HTMLREPORT_FILE, DEFAULT_GENERATOR_FILE, DEFAULT_EXCEPTIONS_FILE
+from ScoutSuite import ERRORS_LIST
 from ScoutSuite.output.js import JavaScriptReaderWriter
 from ScoutSuite.output.utils import get_filename, prompt_4_overwrite
 
@@ -72,14 +72,16 @@ class Scout2Report(HTMLReport):
 
     def __init__(self, provider, profile=None, report_dir=None, timestamp=False, exceptions=None):
         exceptions = {} if exceptions is None else exceptions
-        self.html_root = HTMLREPORT_FILE
+        self.html_root = DEFAULT_HTMLREPORT_FILE
         self.provider = provider
         super(Scout2Report, self).__init__(profile, report_dir, timestamp, exceptions)
 
     def save(self, config, exceptions, force_write=False, debug=False):
         self.prepare_html_report_dir()
-        self.jsrw.save_to_file(config, AWSCONFIG, force_write, debug)
-        self.jsrw.save_to_file(exceptions, EXCEPTIONS, force_write, debug)
+        self.jsrw.save_to_file(config, 'RESULTS', force_write, debug)
+        self.jsrw.save_to_file(exceptions, 'EXCEPTIONS', force_write, debug)
+        if ERRORS_LIST:
+            self.jsrw.save_to_file(ERRORS_LIST, 'ERRORS', force_write, debug=True)
         return self.create_html_report(force_write)
 
     def create_html_report(self, force_write):
@@ -90,8 +92,8 @@ class Scout2Report(HTMLReport):
         # Use all scripts under html/summaries/
         contents += self.get_content_from('summaries')
         contents += self.get_content_from('summaries/%s' % self.provider)
-        new_file, first_line = get_filename(HTMLREPORT, self.profile, self.report_dir)
-        print_info('Creating %s ...' % new_file)
+        new_file, first_line = get_filename('HTMLREPORT', self.profile, self.report_dir)
+        print_info('Creating %s' % new_file)
         if prompt_4_overwrite(new_file, force_write):
             if os.path.exists(new_file):
                 os.remove(new_file)
@@ -100,10 +102,10 @@ class Scout2Report(HTMLReport):
                     for line in f:
                         newline = line
                         if self.profile != 'default':
-                            newline = newline.replace(AWSCONFIG_FILE,
-                                                      AWSCONFIG_FILE.replace('.js', '-%s.js' % self.profile))
-                            newline = newline.replace(EXCEPTIONS_FILE,
-                                                      EXCEPTIONS_FILE.replace('.js', '-%s.js' % self.profile))
+                            newline = newline.replace(DEFAULT_RESULT_FILE,
+                                                      DEFAULT_RESULT_FILE.replace('.js', '-%s.js' % self.profile))
+                            newline = newline.replace(DEFAULT_EXCEPTIONS_FILE,
+                                                      DEFAULT_EXCEPTIONS_FILE.replace('.js', '-%s.js' % self.profile))
                         newline = newline.replace('<!-- PLACEHOLDER -->', contents)
                         nf.write(newline)
         return new_file
@@ -116,17 +118,17 @@ class RulesetGenerator(HTMLReport):
 
     def __init__(self, ruleset_name, report_dir=None, timestamp=False, exceptions=None):
         exceptions = {} if exceptions is None else exceptions
-        self.html_root = GENERATOR_FILE
+        self.html_root = DEFAULT_GENERATOR_FILE
         self.ruleset_name = ruleset_name
         super(RulesetGenerator, self).__init__(ruleset_name, report_dir, timestamp, exceptions)
 
     def create_html_report(self, force_write):
-        src_rule_generator = os.path.join(self.html_data_path, GENERATOR_FILE)
-        rule_generator = os.path.join(self.report_dir, GENERATOR_FILE)
+        src_rule_generator = os.path.join(self.html_data_path, DEFAULT_GENERATOR_FILE)
+        rule_generator = os.path.join(self.report_dir, DEFAULT_GENERATOR_FILE)
         shutil.copyfile(src_rule_generator, rule_generator)
         return rule_generator
 
     def save(self, config, force_write=False, debug=False):
         self.prepare_html_report_dir()
-        self.jsrw.save_to_file(config, AWSRULESET, force_write, debug)
+        self.jsrw.save_to_file(config, 'RULESET', force_write, debug)
         return self.create_html_report(force_write)

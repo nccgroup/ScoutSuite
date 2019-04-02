@@ -1,22 +1,15 @@
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
-from ScoutSuite.providers.utils import run_concurrently
-import asyncio
+from ScoutSuite.providers.utils import map_concurrently, run_concurrently
 
 
 class EMRFacade(AWSBaseFacade):
     async def get_clusters(self, region):
-        clusters_list = await AWSFacadeUtils.get_all_pages('emr', region, self.session, 'list_clusters', 'Clusters')
-        client = AWSFacadeUtils.get_client('emr', region, self.session)
-        clusters_descriptions = []
-        cluster_ids = [cluster['Id'] for cluster in clusters_list]
-        tasks = {
-                asyncio.ensure_future(
-                        run_concurrently(lambda: client.describe_cluster(ClusterId=cluster_id)['Cluster'])
-                 ) for cluster_id in cluster_ids
-        }
-        for task in asyncio.as_completed(tasks):
-                cluster = await task
-                clusters_descriptions.append(cluster)
+        cluster_list = await AWSFacadeUtils.get_all_pages('emr', region, self.session, 'list_clusters', 'Clusters')
+        cluster_ids = [cluster['Id'] for cluster in cluster_list]
+        client = AWSFacadeUtils.get_client('emr', self.session, region)
 
-        return clusters_descriptions
+        return await map_concurrently(
+            lambda cluster_id: run_concurrently(
+                lambda: client.describe_cluster(ClusterId=cluster_id)['Cluster']),
+            cluster_ids)
