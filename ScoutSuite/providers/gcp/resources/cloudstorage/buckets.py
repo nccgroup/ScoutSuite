@@ -30,7 +30,7 @@ class Buckets(Resources):
 
         return bucket_dict['id'], bucket_dict
 
-    def _is_logging_enabled(raw_bucket):
+    def _is_logging_enabled(self, raw_bucket):
         try:
             return raw_bucket.get_logging() is not None
         except Exception as e:
