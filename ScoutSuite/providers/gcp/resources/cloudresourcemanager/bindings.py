@@ -33,6 +33,10 @@ class Bindings(Resources):
             'serviceAccount': 'service_accounts'
         }
         
+        # We want to group the members by type, so we need to parse their type and entity.
+        # The members are given as strings with the format <member_type>:<member_entity>
+        # See the GCP Resource Manager API reference for more info:
+        # https://cloud.google.com/resource-manager/reference/rest/Shared.Types/Binding 
         for member in raw_binding['members']:
             member_type, entity = member.split(':')[:2]
             if member_type in type_map:
