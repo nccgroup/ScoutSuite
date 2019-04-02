@@ -1,16 +1,24 @@
 var querySeparator = '¤'
 var reQuerySeparator = new RegExp('\\' + querySeparator + '+$')
+var defaultPort = 8000
 
 /**
  * Requests a list corresponding to the resource
  * @param {string} query
  */
-function requestDb (query) {
+function requestDb (query, pageSize, pageIndex) {
+  let url = 'http://127.0.0.1:' + defaultPort + '/api/'
   let response =''
+  
+  if (arguments.length === 1) {
+    url += 'data?key=' + query
+  } else {
+    url += 'page?pagesize=' + pageSize + '&page=' + pageIndex + '&key=' + query
+  }
 
   $.ajax({
    type: 'GET',
-   url: 'http://127.0.0.1:8000/api/data?key=' + query,
+   url: url,
    async: false,
    success: function(result) {
     response = result;
@@ -118,7 +126,7 @@ function getScoutsuiteResultsSqlite () {
  * to make sure the memory never gets capped and crashes the browser, also updates page index of the resource
  */
 function getResourcePageSqlite (pageIndex, pageSize, service, resource) {
-  resources = requestDbPage(createQuery('services', service, resource), pageSize, pageIndex)
+  resources = requestDb(createQuery('services', service, resource), pageSize, pageIndex)
   // Delete the current content
   run_results['services'][service][resource] = null
   // Create a spot where to save data
