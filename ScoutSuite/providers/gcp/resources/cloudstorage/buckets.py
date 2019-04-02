@@ -18,12 +18,7 @@ class Buckets(Resources):
         bucket_dict = {}
         bucket_dict['id'] = get_non_provider_id(raw_bucket.id)
         bucket_dict['name'] = raw_bucket.name
-
-        for project in self.projects:
-            if str(project['projectNumber']) == str(raw_bucket.project_number):
-                bucket_dict['project_id'] = project['projectId']
-                break
-
+        bucket_dict['project_id'] = self.project_id
         bucket_dict['project_number'] = raw_bucket.project_number
         bucket_dict['creation_date'] = raw_bucket.time_created
         bucket_dict['location'] = raw_bucket.location
