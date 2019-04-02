@@ -1,8 +1,7 @@
-from ScoutSuite.providers.aws.resources.resources import AWSCompositeResources
-from ScoutSuite.providers.aws.utils import ec2_classic
+from ScoutSuite.providers.aws.resources.resources import AWSResources
 
 
-class SubnetGroups(AWSCompositeResources):
+class SubnetGroups(AWSResources):
     async def fetch_all(self, **kwargs):
         raw_subnet_groups = await self.facade.elasticache.get_subnet_groups(self.scope['region'], self.scope['vpc'])
         for raw_subnet_group in raw_subnet_groups:

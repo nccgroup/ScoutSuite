@@ -1,6 +1,7 @@
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.aws.resources.regions import Regions
-from ScoutSuite.providers.aws.resources.resources import AWSResources, AWSCompositeResources
+from ScoutSuite.providers.aws.resources.resources import (AWSCompositeResources,
+                                                          AWSResources)
 
 
 class EMRClusters(AWSResources):
@@ -34,13 +35,15 @@ class EMR(Regions):
         (EMRVpcs, 'vpcs')
     ]
 
-    def __init__(self):
-        super(EMR, self).__init__('emr')
+    def __init__(self, facade: AWSFacade):
+        super(EMR, self).__init__('emr', facade)
 
     async def fetch_all(self, credentials=None, regions=None, partition_name='aws'):
         await super(EMR, self).fetch_all(credentials, regions, partition_name)
 
         for region in self['regions']:
-            self['regions'][region]['clusters_count'] = sum([len(vpc['clusters']) for vpc in self['regions'][region]['vpcs'].values()])
-        
-        self['clusters_count'] = sum([region['clusters_count'] for region in self['regions'].values()])
+            self['regions'][region]['clusters_count'] = sum(
+                [len(vpc['clusters']) for vpc in self['regions'][region]['vpcs'].values()])
+
+        self['clusters_count'] = sum(
+            [region['clusters_count'] for region in self['regions'].values()])

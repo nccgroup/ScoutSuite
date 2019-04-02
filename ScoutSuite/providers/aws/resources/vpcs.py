@@ -1,5 +1,3 @@
-import asyncio
-
 from ScoutSuite.providers.aws.resources.resources import AWSCompositeResources
 
 
@@ -14,21 +12,16 @@ class Vpcs(AWSCompositeResources):
         self.add_ec2_classic = add_ec2_classic
 
     async def fetch_all(self, **kwargs):
-        vpcs = await self.facade.ec2.get_vpcs(self.scope['region'])
-        for vpc in vpcs:
-            name, resource = self._parse_vpc(vpc)
-            self[name] = resource
+        raw_vpcs = await self.facade.ec2.get_vpcs(self.scope['region'])
+        for raw_vpc in raw_vpcs:
+            vpc_id, vpc = self._parse_vpc(raw_vpc)
+            self[vpc_id] = vpc
 
-        if len(self) == 0:
-            return
-
-        tasks = {
-            asyncio.ensure_future(
-                self._fetch_children(self[vpc], {'region': self.scope['region'], 'vpc': vpc})
-            ) for vpc in self
-        }
-
-        await asyncio.wait(tasks)
+        await self._fetch_children_of_all_resources(
+            resources=self,
+            scopes={vpc_id: {'region': self.scope['region'], 'vpc': vpc_id}
+                    for vpc_id in self}
+        )
 
     def _parse_vpc(self, vpc):
         return vpc['VpcId'], {}

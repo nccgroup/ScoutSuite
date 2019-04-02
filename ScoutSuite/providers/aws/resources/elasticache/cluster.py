@@ -1,8 +1,7 @@
-from ScoutSuite.providers.aws.resources.resources import AWSCompositeResources
-from ScoutSuite.providers.aws.utils import ec2_classic
+from ScoutSuite.providers.aws.resources.resources import AWSResources
 
 
-class Clusters(AWSCompositeResources):
+class Clusters(AWSResources):
     async def fetch_all(self, **kwargs):
         raw_clusters = await self.facade.elasticache.get_clusters(self.scope['region'], self.scope['vpc'])
         for raw_cluster in raw_clusters:

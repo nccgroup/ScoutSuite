@@ -7,4 +7,6 @@ class KeyVaultFacade:
         self._client = KeyVaultManagementClient(credentials, subscription_id)
 
     async def get_key_vaults(self):
-        return await run_concurrently(self._client.vaults.list_by_subscription)
+        return await run_concurrently(
+            lambda: list(self._client.vaults.list_by_subscription())
+        )

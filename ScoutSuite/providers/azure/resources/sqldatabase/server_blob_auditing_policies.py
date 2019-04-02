@@ -9,7 +9,7 @@ class ServerBlobAuditingPolicies(Resources):
         self.facade = facade
 
     async def fetch_all(self):
-        policies = await self.facade.get_server_blob_auditing_policies(
+        policies = await self.facade.sqldatabase.get_server_blob_auditing_policies(
             self.resource_group_name, self.server_name)
         self._parse_policies(policies)
 

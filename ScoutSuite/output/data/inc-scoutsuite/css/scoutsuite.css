@@ -38,7 +38,6 @@
 
 /* Scout Suite */
 
-
 .item-margin {
     margin-left: 25px;
 }
@@ -326,6 +325,25 @@ input:checked + .slider:before {
 
 .finding_items {
     font-size: 18px;
+}
+
+.list-group-item {
+    overflow: auto;
+}
+
+.bucket-name {
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    width: 150px;
+}
+.bucket-name:hover {
+    cursor: pointer;
+}
+
+.table-padding > * {
+    padding: 10px;
 }
 
 @media only screen and (max-width: 1200px) {
