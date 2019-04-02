@@ -169,3 +169,4 @@ function createQuery () {
   query = query.replace(reQuerySeparator, '');
   return query
 }
+
