@@ -6,5 +6,5 @@
     "conditions": [ "and",
         [ "cloudstorage.projects.id.buckets.id.logging_enabled", "false", "" ]
     ],
-    "id_suffix": "logging"
+    "id_suffix": "logging_enabled"
 }
