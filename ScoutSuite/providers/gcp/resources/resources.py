@@ -12,7 +12,7 @@ class GCPCompositeResources(CompositeResources):
     """
 
     async def _fetch_children(self, resource_parent: object, **kwargs):
-         """This method fetches all children of a given resource (the so called 'resource_parent') by calling fetch_all
+        """This method fetches all children of a given resource (the so called 'resource_parent') by calling fetch_all
         method on each child defined in '_children' and then stores the fetched resources in `resource_parent` under
         the key associated with the child. It also creates a "<child_name>_count" entry for each child.
 
