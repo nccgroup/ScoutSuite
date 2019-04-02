@@ -15,7 +15,7 @@ function requestDb (query) {
     if (this.readyState === 4) {
       response = JSON.parse(this.response)
       if (response.data === null || response.data === undefined) {
-        console.log('Error, bad request: ' + query)
+        console.log('This query returned an empty response:  ' + query)
       }
     }
   }
@@ -41,7 +41,7 @@ function requestDbPage (query, pageSize, pageIndex) {
     if (this.readyState === 4) {
       response = JSON.parse(this.response)
       if (response.data === null || response.data === undefined) {
-        console.log('Error, bad request: ' + query)
+        console.log('This query returned an empty response: ' + query)
       }
     }
   }
@@ -88,7 +88,8 @@ function getScoutsuiteResultsSqlite () {
           // TODO: Make this amalgalm cleaner   
           for (let counter in counters) { // Layer 3
             list[groups[group]][services[service]][counters[counter]] =             
-              requestDb(createQuery(paths[i], groups[group], services[service], counters[counter])) 
+              requestDb(createQuery(paths[i], groups[group], services[service], counters[counter]))
+            if (!list[groups[group]][services[service]][counters[counter]]) { continue }
             let resources = list[groups[group]][services[service]][counters[counter]].keys              
             for (let resource in resources) { // Layer 4              
               list[groups[group]][services[service]][counters[counter]][resources[resource]] = requestDb(

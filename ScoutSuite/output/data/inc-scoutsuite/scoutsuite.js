@@ -124,30 +124,33 @@ var loadAccountId = function () {
 
 /**
  * Generic load JSON function
- * @param scriptId
- * @param cols
+ * @param {string} scriptId
+ * @param {number} cols
+ * @param {boolean} force
  * @returns {number}
  */
-function loadConfig (scriptId, cols) {
-  // Abort if data was previously loaded
-  if (loadedConfigArray.indexOf(scriptId) > 0) {
-    // When the path does not contain .id.
-    return 0
-  }
-  let pathArray = scriptId.split('.')
-  for (let i = 3; i < pathArray.length; i = i + 2) {
-    pathArray[i] = 'id'
-  }
-  let fixedPath = pathArray.join('.')
-  if (loadedConfigArray.indexOf(fixedPath) > 0) {
-    // When the loaded path contains id but browsed-to path contains a specific value
-    return 0
-  }
-  pathArray[1] = 'id'
-  fixedPath = pathArray.join('.')
-  if (loadedConfigArray.indexOf(fixedPath) > 0) {
-    // Special case for services.id.findings
-    return 0
+function loadConfig (scriptId, cols, force) {
+  if (!force) {
+    // Abort if data was previously loaded
+    if (loadedConfigArray.indexOf(scriptId) > 0) {
+      // When the path does not contain .id.
+      return 0
+    }
+    let pathArray = scriptId.split('.')
+    for (let i = 3; i < pathArray.length; i = i + 2) {
+      pathArray[i] = 'id'
+    }
+    let fixedPath = pathArray.join('.')
+    if (loadedConfigArray.indexOf(fixedPath) > 0) {
+      // When the loaded path contains id but browsed-to path contains a specific value
+      return 0
+    }
+    pathArray[1] = 'id'
+    fixedPath = pathArray.join('.')
+    if (loadedConfigArray.indexOf(fixedPath) > 0) {
+      // Special case for services.id.findings
+      return 0
+    }
   }
 
   // Build the list based on the path, stopping at the first .id. value
@@ -175,14 +178,14 @@ function loadConfig (scriptId, cols) {
   if (cols === 0) {
     // Metadata
     scriptId = scriptId.replace('services.id.', '')
-    processTemplate(scriptId + '.list.template', scriptId + '.list', list)
+    processTemplate(scriptId + '.list.template', scriptId + '.list', list, force)
   } else if (cols === 1) {
     // Single-column display
-    processTemplate(scriptId + '.details.template', 'single-column', list)
+    processTemplate(scriptId + '.details.template', 'single-column', list, force)
   } else if (cols === 2) {
     // Double-column display
-    processTemplate(scriptId + '.list.template', 'double-column-left', list)
-    processTemplate(scriptId + '.details.template', 'double-column-right', list)
+    processTemplate(scriptId + '.list.template', 'double-column-left', list, force)
+    processTemplate(scriptId + '.details.template', 'double-column-right', list, force)
   }
 
   // Update the list of loaded data
@@ -192,11 +195,27 @@ function loadConfig (scriptId, cols) {
 
 /**
  * Compile Handlebars templates and update the DOM
+ * @param {string} id1
+ * @param {string} containerId
+ * @param list
+ * @param {boolean} replace
+ */
+function processTemplate (id1, containerId, list, replace) {
+  id1 = id1.replace(/<|>/g, '')
+  var templateToCompile = document.getElementById(id1).innerHTML
+  var compiledTemplate = Handlebars.compile(templateToCompile)
+  var innerHtml = compiledTemplate({ items: list })
+  if (replace) {document.getElementById(containerId).innerHTML = innerHtml}
+  else {document.getElementById(containerId).innerHTML += innerHtml}
+}
+
+/**
+ * Compile Handlebars templates and update the DOM
  * @param id1
  * @param containerId
  * @param list
  */
-function processTemplate (id1, containerId, list) {
+function replaceTemplate (id1, containerId, list) {
   id1 = id1.replace(/<|>/g, '')
   var templateToCompile = document.getElementById(id1).innerHTML
   var compiledTemplate = Handlebars.compile(templateToCompile)
@@ -753,11 +772,11 @@ function loadMetadata () {
   
   loadAccountId()
 
-  loadConfig('last_run', 1)
-  loadConfig('metadata', 0)
-  loadConfig('services.id.findings', 1)
-  loadConfig('services.id.filters', 0) // service-specific filters
-  loadConfig('services.id.regions', 0) // region filters
+  loadConfig('last_run', 1, false)
+  loadConfig('metadata', 0, false)
+  loadConfig('services.id.findings', 1, false)
+  loadConfig('services.id.filters', 0, false) // service-specific filters
+  loadConfig('services.id.regions', 0, false) // region filters
 
   for (let group in run_results['metadata']) {
     for (let service in run_results['metadata'][group]) {
@@ -999,7 +1018,7 @@ function lazyLoadingJson (path) {
       break
     }
   }
-  return loadConfig(path, cols)
+  return loadConfig(path, cols, false)
 }
 
 /**
@@ -1298,9 +1317,13 @@ function loadPage (pathArray, indexDiff) {
   pageIndex += indexDiff
   if (document.getElementById('page_backward')) {
     document.getElementById('page_backward').disabled = (pageIndex <= 0)
+    let scriptId = pathArray[0] + '.' + pathArray[1] + '.' + pathArray[2]
+    loadConfig (scriptId, 2, true)
   }
   if (document.getElementById('page_forward')) {
     document.getElementById('page_forward').disabled = (pageIndex >= getLastPageIndex(pathArray, pageSize))
+    let scriptId = pathArray[0] + '.' + pathArray[1] + '.' + pathArray[2]
+    loadConfig (scriptId, 2, true)
   }
   getResourcePageSqlite(pageIndex, pageSize, pathArray[1], pathArray[2])
 }
@@ -1348,3 +1371,4 @@ function getLastPageIndex (pathArray, pageSize) {
   let resourceCount = run_results[pathArray[0]][pathArray[1]][pathArray[2] + '_count']
   return Math.ceil(resourceCount / pageSize - 1)
 }
+
