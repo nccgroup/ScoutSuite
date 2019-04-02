@@ -1,3 +1,4 @@
+from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.gcp.resources.resources import GCPCompositeResources
 from ScoutSuite.providers.gcp.resources.iam.bindings import Bindings
 from ScoutSuite.providers.gcp.resources.iam.keys import Keys
@@ -8,7 +9,7 @@ class ServiceAccounts(GCPCompositeResources):
         (Keys, 'keys') 
     ]
 
-    def __init__(self, gcp_facade, project_id):
+    def __init__(self, gcp_facade: GCPFacade, project_id: str):
         self.gcp_facade = gcp_facade
         self.project_id = project_id
 

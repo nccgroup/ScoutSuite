@@ -1,7 +1,8 @@
+from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.base.configs.resources import Resources
 
 class Bindings(Resources):
-    def __init__(self, gcp_facade, project_id, service_account_email):
+    def __init__(self, gcp_facade: GCPFacade, project_id: str, service_account_email: str):
         self.gcp_facade = gcp_facade
         self.project_id = project_id
         self.service_account_email = service_account_email 
