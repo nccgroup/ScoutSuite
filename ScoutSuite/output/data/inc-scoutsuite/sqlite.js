@@ -135,9 +135,11 @@ function getResourcePageSqlite (pageIndex, pageSize, service, resource) {
     delete run_results['services'][service][resource][item].null
   }
   // Save the current page index to remember which page we have saved
-  run_results['services'][service][resource]['page_index'] = pageIndex
+  // Originally wanted to save that info under the precise resource, but the handlebar templates create slots for
+  // each entry under resource, therefore there were 2 empty slots always added
+  run_results['services'][service][resource + '_page_index'] = pageIndex
   // Save the current page size to remember the size of the saved page
-  run_results['services'][service][resource]['page_size'] = pageSize
+  run_results['services'][service][resource + '_page_size'] = pageSize
   delete run_results['services'][service][resource].null
 }
 

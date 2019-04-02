@@ -100,10 +100,8 @@ function onPageLoad () {
     let pathArray = resourcePath.split('.')
 
     if (buttonClicked === 'page_forward') {
-      console.log('Next page')
       loadPage(pathArray, 1)
     } else if (buttonClicked === 'page_backward') {
-      console.log('Previous page')
       loadPage(pathArray, -1)
     }
   })
@@ -1335,8 +1333,8 @@ function loadPage (pathArray, indexDiff) {
  */
 function getPageInfo (pathArray) { 
   let pageSize, pageIndex
-  pageSize = run_results[pathArray[0]][pathArray[1]][pathArray[2]]['page_size']
-  pageIndex = run_results[pathArray[0]][pathArray[1]][pathArray[2]]['page_index']
+  pageSize = run_results[pathArray[0]][pathArray[1]][pathArray[2] + '_page_size']
+  pageIndex = run_results[pathArray[0]][pathArray[1]][pathArray[2] + '_page_index']
   if (pageSize === undefined || pageSize === null) {
     pageSize = defaultPageSize
   } 
