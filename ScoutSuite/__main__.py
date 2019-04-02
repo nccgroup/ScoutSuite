@@ -106,7 +106,6 @@ async def run_scan(args):
         print_info('Using local data')
         # Reload to flatten everything into a python dictionary
         last_run_dict = report.jsrw.load_from_file('RESULTS')
-        # last_run_dict = report.jsrw.load_from_file(report_name)
         for key in last_run_dict:
             setattr(cloud_provider, key, last_run_dict[key])
 
