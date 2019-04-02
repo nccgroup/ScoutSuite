@@ -1,55 +1,58 @@
 # -*- coding: utf-8 -*-
 
-from ScoutSuite.providers.base.configs.services import BaseServicesConfig
-from ScoutSuite.providers.azure.resources.monitor.activity_logs import ActivityLogs
+from ScoutSuite.providers.azure.authentication_strategy import AzureCredentials
+from ScoutSuite.providers.azure.facade.facade import AzureFacade
+from ScoutSuite.providers.azure.resources.keyvault.key_vaults import KeyVaults
+from ScoutSuite.providers.azure.resources.network.networks import Networks
 from ScoutSuite.providers.azure.resources.securitycenter.security_center import SecurityCenter
 from ScoutSuite.providers.azure.resources.sqldatabase.servers import Servers
 from ScoutSuite.providers.azure.resources.storageaccounts.storageaccounts import StorageAccounts
-from ScoutSuite.providers.azure.resources.network.networks import Networks
-from ScoutSuite.providers.azure.resources.keyvault.key_vaults import KeyVaults
+from ScoutSuite.providers.base.configs.services import BaseServicesConfig
+
 try:
-    from ScoutSuite.providers.azure.services.appgateway_private import AppGatewayConfig
+    from ScoutSuite.providers.azure.resources.appgateway_private.application_gateways_private import ApplicationGateways
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.azure.services.rediscache_private import RedisCacheConfig
+    from ScoutSuite.providers.azure.resources.rediscache_private.redis_caches_private import RedisCaches
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.azure.services.appservice_private import AppServiceConfig
+    from ScoutSuite.providers.azure.resources.appservice_private.web_applications_private import WebApplications
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.azure.services.loadbalancer_private import LoadBalancerConfig
+    from ScoutSuite.providers.azure.resources.loadbalancer_private.load_balancers_private import LoadBalancers
 except ImportError:
     pass
 
 
 class AzureServicesConfig(BaseServicesConfig):
 
-    def __init__(self, metadata=None, thread_config=4, **kwargs):
+    def __init__(self, credentials: AzureCredentials = None, **kwargs):
+        super(AzureServicesConfig, self).__init__(credentials)
+        facade = AzureFacade(credentials)
 
-        self.monitor = ActivityLogs()
-        self.storageaccounts = StorageAccounts()
-        self.securitycenter = SecurityCenter()
-        self.sqldatabase = Servers()
-        self.network = Networks()
-        self.keyvault = KeyVaults()
+        self.storageaccounts = StorageAccounts(facade)
+        self.securitycenter = SecurityCenter(facade)
+        self.sqldatabase = Servers(facade)
+        self.network = Networks(facade)
+        self.keyvault = KeyVaults(facade)
 
         try:
-            self.appgateway = AppGatewayConfig(thread_config=thread_config)
+            self.appgateway = ApplicationGateways(facade)
         except NameError:
             pass
         try:
-            self.rediscache = RedisCacheConfig(thread_config=thread_config)
+            self.rediscache = RedisCaches(facade)
         except NameError:
             pass
         try:
-            self.appservice = AppServiceConfig(thread_config=thread_config)
+            self.appservice = WebApplications(facade)
         except NameError:
             pass
         try:
-            self.loadbalancer = LoadBalancerConfig(thread_config=thread_config)
+            self.loadbalancer = LoadBalancers(facade)
         except NameError:
             pass
 
