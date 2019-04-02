@@ -1,6 +1,7 @@
 // Globals
 const resultFormats = { 'invalid': 0, 'json': 1, 'sqlite': 2 }
 Object.freeze(resultFormats)
+const $ = window.$
 var loadedConfigArray = []
 var runResults
 
@@ -24,13 +25,13 @@ function onPageLoad () {
     // Strip the # sign
     var path = decodeURIComponent(anchor.replace('#', ''))
     // Get resource path based on browsed-to path
-    var resource_path = get_resource_path(path)
+    var resourcePath = get_resource_path(path)
 
     var csvArray = []
     var jsonDict = {}
 
     var items = get_value_at(path)
-    var resourcePathArray = resource_path.split('.')
+    var resourcePathArray = resourcePath.split('.')
     var splitPath = path.split('.')
     var findingKey = splitPath[splitPath.length - 2]
 
