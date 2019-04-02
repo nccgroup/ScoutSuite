@@ -4,10 +4,12 @@ import asyncio
 import json
 import os 
 
+
 class DummyResources(AWSResources):
     async def fetch_all(self):
         self['resource_a'] = { 'some_id': 1, 'from_scope': self.scope }
         self['resource_b'] = { 'some_id': 2, 'from_scope': self.scope }
+
 
 class DummyComposite(AWSCompositeResources):
     _children = [
@@ -25,7 +27,7 @@ class DummyComposite(AWSCompositeResources):
                 'some_inner_scope': key
             }
 
-            await self._fetch_children(parent=self[key], scope=scope)
+            await self._fetch_children(resource_parent=self[key], scope=scope)
 
 
 class TestAWSResources(TestCase):
@@ -43,4 +45,3 @@ class TestAWSResources(TestCase):
         actual_json = json.dumps(composite)
 
         assert (expected_json == actual_json)
-        

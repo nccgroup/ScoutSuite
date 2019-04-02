@@ -1,5 +1,3 @@
-import asyncio
-
 from ScoutSuite.providers.aws.resources.vpcs import Vpcs
 from ScoutSuite.providers.aws.resources.ec2.instances import EC2Instances
 from ScoutSuite.providers.aws.resources.ec2.securitygroups import SecurityGroups

@@ -15,8 +15,9 @@ except ImportError:
 
 class GCPServicesConfig(BaseServicesConfig):
 
-    def __init__(self, metadata=None, thread_config=4, projects=None, **kwargs):
-
+    def __init__(self, credentials=None, thread_config=4, projects=None, **kwargs):
+        super(GCPServicesConfig, self).__init__(credentials)
+        
         projects = [] if projects is None else projects
 
         gcp_facade = GCPFacade()
@@ -29,7 +30,7 @@ class GCPServicesConfig(BaseServicesConfig):
 
         try:
             self.kubernetesengine = KubernetesEngineConfig(thread_config=thread_config)
-        except NameError as e:
+        except NameError as _:
             pass
 
         self.stackdriverlogging = StackdriverLoggingConfig(thread_config=thread_config)

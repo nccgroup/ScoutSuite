@@ -1,8 +1,9 @@
+import time
+
+from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.aws.resources.regions import Regions
 from ScoutSuite.providers.aws.resources.resources import AWSResources
 from ScoutSuite.providers.utils import get_non_provider_id
-
-import time
 
 
 class Trails(AWSResources):
@@ -17,7 +18,8 @@ class Trails(AWSResources):
         trail_id = get_non_provider_id(trail['name'])
 
         # Do not duplicate entries for multiregion trails
-        if 'IsMultiRegionTrail' in raw_trail and raw_trail['IsMultiRegionTrail'] and raw_trail['HomeRegion'] != self.scope['region']:
+        if 'IsMultiRegionTrail' in raw_trail and raw_trail['IsMultiRegionTrail'] and \
+                raw_trail['HomeRegion'] != self.scope['region']:
             for key in ['HomeRegion', 'TrailARN']:
                 trail[key] = raw_trail[key]
             trail['scout2_link'] = 'services.cloudtrail.regions.%s.trails.%s' % (raw_trail['HomeRegion'], trail_id)
@@ -46,7 +48,8 @@ class Trails(AWSResources):
 
     def data_logging_status(self, trail):
         for event_selector in trail['EventSelectors']:
-            has_wildcard = {u'Values': [u'arn:aws:s3:::'], u'Type': u'AWS::S3::Object'} in event_selector['DataResources']
+            has_wildcard =\
+                {u'Values': [u'arn:aws:s3:::'], u'Type': u'AWS::S3::Object'} in event_selector['DataResources']
             is_logging = trail['IsLogging']
 
             if has_wildcard and is_logging and self.is_fresh(trail):
@@ -66,5 +69,5 @@ class CloudTrail(Regions):
         (Trails, 'trails')
     ]
 
-    def __init__(self):
-        super(CloudTrail, self).__init__('cloudtrail')
+    def __init__(self, facade: AWSFacade):
+        super(CloudTrail, self).__init__('cloudtrail', facade)

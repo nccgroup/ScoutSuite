@@ -1,32 +1,153 @@
 # -*- coding: utf-8 -*-
 
 import re
+import time
+from collections import Counter
+
+import boto3
+from botocore.session import Session
+
+from ScoutSuite.core.console import print_info, print_exception
 
 ec2_classic = 'EC2-Classic'
+
+
+def build_region_list(service, chosen_regions=None, partition_name='aws'):
+    """
+    Build the list of target region names
+
+    :param service:                     Service targeted, e.g. ec2
+    :param chosen_regions:              Regions desired, e.g. us-east-2
+    :param partition_name:              Name of the partition, default is aws
+
+    :return:
+    """
+    if chosen_regions is None:
+        chosen_regions = []
+    service = 'ec2containerservice' if service == 'ecs' else service
+    # Get list of regions from botocore
+    regions = Session().get_available_regions(service, partition_name=partition_name)
+    if len(chosen_regions):
+        return list((Counter(regions) & Counter(chosen_regions)).elements())
+    else:
+        return regions
+
+
+def connect_service(service, credentials, region_name=None, config=None, silent=False):
+    """
+    Instantiates an AWS API client
+
+    :param service:                     Service targeted, e.g. ec2
+    :param credentials:                 Id, secret, token
+    :param region_name:                 Region desired, e.g. us-east-2
+    :param config:                      Configuration (optional)
+    :param silent:                      Whether or not to print messages
+
+    :return:
+    """
+    api_client = None
+    try:
+        client_params = {'service_name': service.lower()}
+        session_params = {'aws_access_key_id': credentials.get('access_key'),
+                          'aws_secret_access_key': credentials.get('secret_key'),
+                          'aws_session_token': credentials.get('token')}
+        if region_name:
+            client_params['region_name'] = region_name
+            session_params['region_name'] = region_name
+        if config:
+            client_params['config'] = config
+        aws_session = boto3.session.Session(**session_params)
+        if not silent:
+            info_message = 'Connecting to AWS %s' % service
+            if region_name:
+                info_message = info_message + ' in %s' % region_name
+            print_info('%s...' % info_message)
+        api_client = aws_session.client(**client_params)
+    except Exception as e:
+        print_exception(e)
+    return api_client
 
 
 def get_keys(src, dst, keys):
     """
     Copies the value of keys from source object to dest object
 
-    :param src:
-    :param dst:
-    :param keys:
+    :param src:                         Source object
+    :param dst:                         Destination object
+    :param keys:                        Keys
     :return:
     """
     for key in keys:
         dst[key] = src[key] if key in src else None
 
 
-def no_camel(name):
+def get_name(src, dst, default_attribute):
     """
-    Converts CamelCase to camel_case
 
-    :param name:
+    :param src:                         Source object
+    :param dst:                         Destination object
+    :param default_attribute:           Default attribute
+
     :return:
     """
-    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+    name_found = False
+    if 'Tags' in src:
+        for tag in src['Tags']:
+            if tag['Key'] == 'Name' and tag['Value'] != '':
+                dst['name'] = tag['Value']
+                name_found = True
+    if not name_found:
+        dst['name'] = src[default_attribute]
+    return dst['name']
+
+
+def get_caller_identity(credentials):
+    api_client = connect_service('sts', credentials, silent=True)
+    return api_client.get_caller_identity()
+
+
+def get_aws_account_id(credentials):
+    caller_identity = get_caller_identity(credentials)
+    return caller_identity['Arn'].split(':')[4]
+
+
+def get_partition_name(credentials):
+    caller_identity = get_caller_identity(credentials)
+    return caller_identity['Arn'].split(':')[1]
+
+
+def handle_truncated_response(callback, params, entities):
+    """
+    Handle truncated responses
+
+    :param callback:                    Callback to process
+    :param params:                      Parameters to call callback with
+    :param entities:                    Entities
+
+    :return:
+    """
+    results = {}
+    for entity in entities:
+        results[entity] = []
+    while True:
+        try:
+            marker_found = False
+            response = callback(**params)
+            for entity in entities:
+                if entity in response:
+                    results[entity] = results[entity] + response[entity]
+            for marker_name in ['NextToken', 'Marker', 'PaginationToken']:
+                if marker_name in response and response[marker_name]:
+                    params[marker_name] = response[marker_name]
+                    marker_found = True
+            if not marker_found:
+                break
+        except Exception as e:
+            if is_throttled(e):
+                time.sleep(1)
+            else:
+                raise e
+    return results
 
 
 def is_throttled(e):
@@ -40,3 +161,14 @@ def is_throttled(e):
             and e.response['Error']['Code'] in ['Throttling',
                                                 'RequestLimitExceeded',
                                                 'ThrottlingException'])
+
+
+def no_camel(name):
+    """
+    Converts CamelCase to camel_case
+
+    :param name:                        Name string to convert
+    :return:
+    """
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()

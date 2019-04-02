@@ -16,6 +16,7 @@ class Stacks(AWSResources):
         raw_stack['id'] = raw_stack.pop('StackId')
         raw_stack['name'] = raw_stack.pop('StackName')
         raw_stack['drifted'] = raw_stack.pop('DriftInformation')['StackDriftStatus'] == 'DRIFTED'
+        raw_stack['termination_protection'] = raw_stack['EnableTerminationProtection']
 
         template = raw_stack.pop('template')
         raw_stack['deletion_policy'] = self.has_deletion_policy(template)
@@ -59,5 +60,5 @@ class CloudFormation(Regions):
         (Stacks, 'stacks')
     ]
 
-    def __init__(self):
-        super(CloudFormation, self).__init__('cloudformation')
+    def __init__(self, facade: AWSFacade):
+        super(CloudFormation, self).__init__('cloudformation', facade)
