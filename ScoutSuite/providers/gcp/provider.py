@@ -41,36 +41,10 @@ class GCPProvider(BaseProvider):
         self.credentials = kwargs['credentials']
         self._set_aws_account_id()
 
-<<<<<<< HEAD
         self.result_format = result_format
 
         super(GCPProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config,
                                           result_format)
-
-    def authenticate(self, user_account=None, service_account=None, **kargs):
-        """
-        Implement authentication for the GCP provider
-        Refer to https://google-auth.readthedocs.io/en/stable/reference/google.auth.html.
-
-        :return:
-        """
-
-        if user_account:
-            # disable GCP warning about using User Accounts
-            warnings.filterwarnings("ignore", "Your application has authenticated using end user credentials")
-            pass  # Nothing more to do
-        elif service_account:
-            client_secrets_path = os.path.abspath(service_account)
-            os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = client_secrets_path
-        else:
-            print_error('Failed to authenticate to GCP - no supported account type')
-            return False
-
-        try:
-=======
-        super(GCPProvider, self).__init__(report_dir, timestamp,
-                                          services, skipped_services, thread_config)
->>>>>>> 29377e37b40f0b0782706464bdbd7d83c699ed68
 
     def _set_aws_account_id(self):
         if self.all_projects:

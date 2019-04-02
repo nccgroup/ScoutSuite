@@ -18,13 +18,8 @@ class Trails(AWSResources):
         trail_id = get_non_provider_id(trail['name'])
 
         # Do not duplicate entries for multiregion trails
-<<<<<<< HEAD
-        if 'IsMultiRegionTrail' in raw_trail and raw_trail['IsMultiRegionTrail'] and raw_trail['HomeRegion'] != \
-                self.scope['region']:
-=======
         if 'IsMultiRegionTrail' in raw_trail and raw_trail['IsMultiRegionTrail'] and \
                 raw_trail['HomeRegion'] != self.scope['region']:
->>>>>>> 29377e37b40f0b0782706464bdbd7d83c699ed68
             for key in ['HomeRegion', 'TrailARN']:
                 trail[key] = raw_trail[key]
             trail['scoutsuite_link'] = 'services.cloudtrail.regions.%s.trails.%s' % (raw_trail['HomeRegion'], trail_id)
@@ -53,13 +48,8 @@ class Trails(AWSResources):
 
     def data_logging_status(self, trail):
         for event_selector in trail['EventSelectors']:
-<<<<<<< HEAD
-            has_wildcard = {u'Values': [u'arn:aws:s3:::'], u'Type': u'AWS::S3::Object'} in \
-                           event_selector['DataResources']
-=======
             has_wildcard =\
                 {u'Values': [u'arn:aws:s3:::'], u'Type': u'AWS::S3::Object'} in event_selector['DataResources']
->>>>>>> 29377e37b40f0b0782706464bdbd7d83c699ed68
             is_logging = trail['IsLogging']
 
             if has_wildcard and is_logging and self.is_fresh(trail):

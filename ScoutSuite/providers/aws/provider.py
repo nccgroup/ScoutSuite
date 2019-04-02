@@ -18,12 +18,8 @@ class AWSProvider(BaseProvider):
     Implements provider for AWS
     """
 
-<<<<<<< HEAD
     def __init__(self, profile='default', report_dir=None, timestamp=None, services=None, skipped_services=None,
                  thread_config=4, result_format='json', **kwargs):
-=======
-    def __init__(self, profile='default', report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
->>>>>>> 29377e37b40f0b0782706464bdbd7d83c699ed68
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
@@ -40,27 +36,13 @@ class AWSProvider(BaseProvider):
         self.provider_code = 'aws'
         self.provider_name = 'Amazon Web Services'
 
-<<<<<<< HEAD
-        self.result_format = result_format
+        self.result_format = result_format        
 
-        super(AWSProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config,
-                                          result_format)
-
-    def authenticate(self, profile=None, **kwargs):
-        """
-        Implement authentication for the AWS provider
-        :return:
-        """
-
-        session = boto3.Session(profile_name=profile)
-        self.credentials = session.get_credentials().__dict__
-=======
         self.credentials = kwargs['credentials']
->>>>>>> 29377e37b40f0b0782706464bdbd7d83c699ed68
         self.aws_account_id = get_aws_account_id(self.credentials)
         
-        super(AWSProvider, self).__init__(report_dir, timestamp,
-                                          services, skipped_services, thread_config)
+        super(AWSProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config,
+                                          result_format)
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """

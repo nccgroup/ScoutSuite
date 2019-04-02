@@ -25,12 +25,8 @@ class BaseProvider(object):
     all cloud providers
     """
 
-<<<<<<< HEAD
     def __init__(self, report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4,
                  result_format='json', **kwargs):
-=======
-    def __init__(self, report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
->>>>>>> 29377e37b40f0b0782706464bdbd7d83c699ed68
         """
 
         :aws_account_id     AWS account ID
