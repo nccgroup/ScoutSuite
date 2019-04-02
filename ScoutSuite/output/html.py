@@ -96,8 +96,8 @@ class ScoutSuiteReport(HTMLReport):
         self.prepare_html_report_dir()
         self.encoder.save_to_file(config, ReportFile.results, force_write, debug)
         self.encoder.save_to_file(exceptions, ReportFile.exceptions, force_write, debug)
-        #if ERRORS_LIST:
-        #    self.encoder.save_to_file(ERRORS_LIST, 'ERRORS', force_write, debug=True)
+        if ERRORS_LIST:
+            self.encoder.save_to_file(ERRORS_LIST, ReportFile.errors, force_write, debug)
         return self.create_html_report(force_write)
 
     def create_html_report(self, force_write):
