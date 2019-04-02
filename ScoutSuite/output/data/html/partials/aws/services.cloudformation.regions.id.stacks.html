@@ -19,7 +19,7 @@
         None
       {{/if}}
     </div>
-    <div class="list-group-item-text item-margin">Termination protection enabled: <span id="cloudformation.regions.{{region}}.stacks.{{@key}}.cloudformation_stack_no_termination_protection">{{termination_protection}}</span></div>
+    <div class="list-group-item-text item-margin">Termination protection enabled: <span id="cloudformation.regions.{{region}}.stacks.{{@key}}.cloudformation_stack_no_termination_protection">{{EnableTerminationProtection}}</span></div>
     <div class="list-group-item-text item-margin">Configuration has drifted: <span id="cloudformation.regions.{{region}}.stacks.{{@key}}.cloudformation_stack_drifted">{{drifted}}</span></div>
     <div class="list-group-item-text item-margin">Deletion policy: <span id="cloudformation.regions.{{region}}.stacks.{{@key}}.cloudformation_stack_no_deletion_policy">{{deletion_policy}}</span></div>
   </div>
@@ -35,7 +35,7 @@
   </div>
   {{#if policy}}
     <div class="list-group-item">
-      <code>{{> accordion_policy name = 'Stack Policy' policy_path = (concat 'cloudformation.regions' region 'stacks' @key 'policy') document = policy}}</code>
+      {{> accordion_policy name = 'Stack Policy' policy_path = (concat 'cloudformation.regions' region 'stacks' @key 'policy') document = policy}}
     </div>
   {{/if}}
 </script>

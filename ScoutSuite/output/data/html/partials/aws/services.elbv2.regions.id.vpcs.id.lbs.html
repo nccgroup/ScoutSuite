@@ -9,7 +9,7 @@
             <ul>
                 <li class="list-group-item-text">VPC: {{get_value_at 'services.elbv2.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</li>
                 <li class="list-group-item-text">DNS: {{DNSName}}</li>
-                <li class="list-group-item-text">Scheme: {{Scheme}}</li>
+                <li class="list-group-item-text"><span id="elbv2.regions.{{region}}.vpcs.{{vpc}}.lbs.{{@key}}.load_balancer_scheme">Scheme: {{Scheme}}</span></li>
                 <li class="list-group-item-text">Type: {{Type}}</li>
                 <li class="list-group-item-text">Availability zones:</li>
                 <ul>
@@ -22,11 +22,13 @@
         <div class="list-group-item">
             <h4>Listeners</h4>
             <ul>
+                <span id="elbv2.regions.{{region}}.vpcs.{{vpc}}.lbs.{{@key}}.has_secure_protocol">
                 {{#each listeners}}
                     <li class="list-group-item-text">
                         {{@key}} ({{Protocol}}{{#if SslPolicy}}, {{SslPolicy}}{{/if}})
                     </li>
                 {{/each}}
+                </span>
             </ul>
         </div>
         <div class="list-group-item">
@@ -42,7 +44,7 @@
                 <h4 class="list-group-item-heading accordion-heading">Security groups
                   {{> count_badge count=security_groups.length target=(concat '#services.elbv2.regions' region 'vpcs' vpc 'lbs' @key 'security_groups')}}
                 </h4>
-                <div id="services.elbv2.regions.{{region}}.vpcs.{{vpc}}.lbs.{{@key}}.security_groups" class="accordion-body collapse">
+                <div id="services.elbv2.regions.{{region}}.vpcs.{{vpc}}.lbs.{{@key}}.security_groups" class="accordion-body">
                     <div class="accordion-inner">
                         <ul class="no-bullet">
                             {{#each security_groups}}
@@ -59,3 +61,11 @@
       Handlebars.registerPartial("services.elbv2.regions.id.vpcs.id.lbs", $("#services\\.elbv2\\.regions\\.id\\.vpcs\\.id\\.lbs\\.partial").html());
     </script>
 
+    <!-- Single instance template -->
+    <script id="single_elbv2_lb-template" type="text/x-handlebars-template">
+        {{> modal-template template='services.elbv2.regions.id.vpcs.id.lbs'}}
+    </script>
+
+    <script>
+        var single_elbv2_lb_template = Handlebars.compile($("#single_elbv2_lb-template").html());
+    </script>

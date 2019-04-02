@@ -9,9 +9,8 @@ class TransparentDataEncryptions(Resources):
         self.database_name = database_name
         self.facade = facade
 
-    # TODO: make it really async.
     async def fetch_all(self):
-        encryptions = self.facade.transparent_data_encryptions.get(
+        encryptions = await self.facade.sqldatabase.get_database_transparent_data_encryptions(
             self.resource_group_name, self.server_name, self.database_name)
         self._parse_encryptions(encryptions)
 

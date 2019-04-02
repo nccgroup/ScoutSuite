@@ -20,6 +20,8 @@ Scout Suite is stable and actively maintained, but a number of features and inte
 with us as we find time to work on, and improve, the tool. Feel free to report a bug with details (please provide
 console output using the `--debug` argument), request a new feature, or send a pull request.
 
+The project team can be contacted at <scout@nccgroup.com>.
+
 **Note:**
 
 The latest (and final) version of Scout2 can be found in <https://github.com/nccgroup/Scout2/releases> and
@@ -30,8 +32,8 @@ The latest (and final) version of Scout2 can be found in <https://github.com/ncc
 The following cloud providers are currently supported/planned:
 
 -   Amazon Web Services
--   Google Cloud Platform (beta)
--   Azure (alpha)
+-   Google Cloud Platform
+-   Microsoft Azure (beta)
 
 ## Installation
 
@@ -67,6 +69,8 @@ Scout Suite is written in Python and supports the following versions:
 -   3.6
 -   3.7
 
+**WARNING**: Python 2.7 & 3.4 support is planned to be deprecated in the following releases.
+
 The required libraries can be found in the
 [requirements.txt](https://github.com/nccgroup/ScoutSuite/blob/master/requirements.txt) file.
 
@@ -81,6 +85,9 @@ permissions:
 
 -   `ReadOnlyAccess`
 -   `SecurityAudit`
+
+If multi-factor authentication (MFA) is enabled, refer to [the AWS documentation](https://aws.amazon.com/premiumsupport/knowledge-center/authenticate-mfa-cli/) in order to 
+configure MFA authentication through the management of session tokens.
 
 #### Google Cloud Platform
 
@@ -188,10 +195,6 @@ to use with the following command:
 
     $ python Scout.py aws --profile <PROFILE_NAME>
 
-If you have a CSV file containing the API access key ID and secret, you may run Scout with the following command:
-
-    $ python Scout.py aws --csv-credentials <CREDENTIALS.CSV>
-
 #### Google Cloud Platform
 
 Using a computer already configured to use gcloud command-line tool, you may use Scout using the following command:
@@ -243,3 +246,5 @@ You can also pass the credentials you want directly with command line arguments.
 interactively:
 
     $ python Scout.py azure --username <USERNAME> --password <PASSWORD>
+
+Additional information can be found in [the wiki](https://github.com/nccgroup/ScoutSuite/wiki).

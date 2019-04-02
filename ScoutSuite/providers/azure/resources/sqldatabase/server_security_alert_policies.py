@@ -8,9 +8,8 @@ class ServerSecurityAlertPolicies(Resources):
         self.server_name = server_name
         self.facade = facade
 
-    # TODO: make it really async.
     async def fetch_all(self):
-        policies = self.facade.server_security_alert_policies.get(
+        policies = await self.facade.sqldatabase.get_server_security_alert_policies(
             self.resource_group_name, self.server_name)
         self._parse_policies(policies)
 

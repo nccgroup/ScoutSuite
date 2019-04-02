@@ -33,26 +33,11 @@ class ScoutSuiteArgumentParser:
 
         parser = aws_parser.add_argument_group('Authentication parameters')
 
-        default_profile = os.environ.get('AWS_PROFILE', 'default')
-        default_profile_origin = " (from AWS_PROFILE)." if 'AWS_PROFILE' in os.environ else "."
         parser.add_argument('-p',
                             '--profile',
                             dest='profile',
-                            default=default_profile,
-                            help='Name of the profile. Defaults to %(default)s' + default_profile_origin)
-        parser.add_argument('-c',
-                            '--csv-credentials',
-                            dest='csv_credentials',
                             default=None,
-                            help='Path to a CSV file containing the access key ID and secret key')
-        parser.add_argument('--mfa-serial',
-                            dest='mfa_serial',
-                            default=None,
-                            help='ARN of the user\'s MFA device')
-        parser.add_argument('--mfa-code',
-                            dest='mfa_code',
-                            default=None,
-                            help='Six-digit code displayed on the MFA device.')
+                            help='Name of the profile')
 
         parser = aws_parser.add_argument_group('Additional arguments')
 
@@ -218,11 +203,17 @@ class ScoutSuiteArgumentParser:
                             default=False,
                             action='store_true',
                             help='Do not automatically open the report in the browser.')
+        # TODO: This should be removed once the GCP refactoring is done
         parser.add_argument('--thread-config',
                             dest='thread_config',
                             type=int,
                             default=4,
                             help='Level of multi-threading wanted [1-5]; defaults to 4.')
+        parser.add_argument('--max-workers',
+                            dest='max_workers',
+                            type=int,
+                            default=10,
+                            help='Maximum number of threads (workers) used by Scout Suite')
         parser.add_argument('--report-dir',
                             dest='report_dir',
                             default=DEFAULT_REPORT_DIR,
