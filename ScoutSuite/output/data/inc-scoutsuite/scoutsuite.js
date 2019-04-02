@@ -599,6 +599,7 @@ function showEC2SecurityGroup (region, vpc, id) {
  *
  */
 function showObject (path, attr_name, attr_value) {
+  console.log('Path: ' + path + ' with attrName ' + attr_name + ' with attrValue ' + attr_value)
   const pathArray = path.split('.')
   const path_length = pathArray.length
   let data = getResource(path)
