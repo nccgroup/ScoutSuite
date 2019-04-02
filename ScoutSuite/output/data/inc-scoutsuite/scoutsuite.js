@@ -151,7 +151,7 @@ function loadConfig (scriptId, cols, force) {
 
   // Build the list based on the path, stopping at the first .id. value
   let list = runResults
-  pathArray = scriptId.split('.id.')[0].split('.')
+  let pathArray = scriptId.split('.id.')[0].split('.')
   for (let i in pathArray) {
     // Allows for creation of regions-filter etc...
     if (i.endsWith('-filters')) {
@@ -365,8 +365,8 @@ function showFindings (path, resourcePath) {
       if (!(findingKey in exceptions[findingService])) {
         exceptions[findingService][findingKey] = []
       }
-      let is_exception = confirm('Mark this item as an exception ?')
-      if (is_exception && (exceptions[findingService][findingKey].indexOf(findingId) == -1)) {
+      let isException = confirm('Mark this item as an exception ?')
+      if (isException && (exceptions[findingService][findingKey].indexOf(findingId) == -1)) {
         exceptions[findingService][findingKey].push(findingId)
       }
     })
@@ -500,7 +500,7 @@ function findEC2Object (ec2Data, entities, id) {
 }
 
 /**
- *
+ * Finds EC2 object by attribute
  * @param ec2Data
  * @param entities
  * @param attributes
@@ -684,10 +684,10 @@ function getResource (path) {
 
 /**
  * Makes the resource type singular.
- * @param {string} resource_type
+ * @param {string} resourceType
  */
-function makeResourceTypeSingular (resource_type) {
-  return resource_type.substring(0, resource_type.length - 1).replace(/\.?ie$/, 'y')
+function makeResourceTypeSingular (resourceType) {
+  return resourceType.substring(0, resourceType.length - 1).replace(/\.?ie$/, 'y')
 }
 
 /**
@@ -1031,11 +1031,11 @@ function lazyLoadingJson (path) {
   var cols = 1
   var resourcePathArray = path.split('.')
   var service = resourcePathArray[1]
-  var resource_type = resourcePathArray[resourcePathArray.length - 1]
+  var resourceType = resourcePathArray[resourcePathArray.length - 1]
   for (let group in runResults['metadata']) {
     if (service in runResults['metadata'][group]) {
-      if (resource_type in runResults['metadata'][group][service]['resources']) {
-        cols = runResults['metadata'][group][service]['resources'][resource_type]['cols']
+      if (resourceType in runResults['metadata'][group][service]['resources']) {
+        cols = runResults['metadata'][group][service]['resources'][resourceType]['cols']
       }
       break
     }
