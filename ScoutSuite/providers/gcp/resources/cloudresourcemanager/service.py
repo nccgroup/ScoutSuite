@@ -10,4 +10,3 @@ class CloudResourceManager(Projects):
     def __init__(self, gcp_facade: GCPFacade):
         super(CloudResourceManager, self).__init__(gcp_facade)
 
-        
