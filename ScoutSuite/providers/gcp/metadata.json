@@ -12,7 +12,7 @@
       "resources": {
         "bindings": {
           "cols": 2,
-          "path": "services.cloudresourcemanager.bindings"
+          "path": "services.cloudresourcemanager.projects.id.bindings"
         }
       }
     }
