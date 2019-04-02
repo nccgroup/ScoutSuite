@@ -1,7 +1,8 @@
+from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.gcp.resources.resources import GCPCompositeResources
 
 class Projects(GCPCompositeResources):
-    def __init__(self, gcp_facade):
+    def __init__(self, gcp_facade: GCPFacade):
         self.gcp_facade = gcp_facade
 
     async def fetch_all(self, **kwargs):
