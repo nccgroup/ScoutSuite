@@ -244,18 +244,30 @@ function showRow (path) {
   showDetails(path)
 }
 
+/**
+ * 
+ * @param {*} path 
+ */
 function showList (path) {
   $('div').filter(function () {
     return this.id.match(path + '.list')
   }).show()
 }
 
+/**
+ * 
+ * @param {*} path 
+ */
 function showDetails (path) {
   $('div').filter(function () {
     return this.id.match(path + '.details')
   }).show()
 }
 
+/**
+ * 
+ * @param {*} path 
+ */
 function hideList (path) {
   $("[id='" + path + "']").hide()
   path = path.replace('.list', '')
@@ -308,6 +320,10 @@ function showRowWithItems (path) {
   showItems(path)
 }
 
+/**
+ * 
+ * @param {*} resource_path 
+ */
 function showFilters (resource_path) {
   hideFilters()
   service = resource_path.split('.')[1]
@@ -317,6 +333,9 @@ function showFilters (resource_path) {
   $('[id*="regionfilters.' + service + '.regions"]').show()
 }
 
+/**
+ * 
+ */
 function hideFilters () {
   $('[id*=".id.filters"]').hide()
   $('[id*="regionfilters"]').hide()
@@ -380,6 +399,11 @@ function showSingleItem (id) {
   $("[id='" + id + "']").show()
 }
 
+/**
+ * 
+ * @param {*} keyword 
+ * @param {*} item 
+ */
 function toggleDetails (keyword, item) {
   var id = '#' + keyword + '-' + item
   $(id).toggle()
@@ -417,12 +441,20 @@ function updateNavbar (path) {
   $('[id*="navbar"]').show()
 }
 
+/**
+ * 
+ * @param {*} element 
+ */
 function hasNavbarSuffix (element) {
   return element &&
     (!element.attr('id') || element.attr('id') &&
       !element.attr('id').endsWith(navbarIdSuffix))
 }
 
+/**
+ * 
+ * @param {*} id 
+ */
 function toggleVisibility (id) {
   let id1 = '#' + id
   $(id1).toggle()
@@ -738,7 +770,8 @@ function showS3Object (bucket_id, key_id) {
 }
 
 /**
- *
+ * 
+ * @param {*} content 
  */
 function showPopup (content) {
   $('#modal-container').html(content)
@@ -828,6 +861,7 @@ function showResourcesDetails() {
     $('#modal-container').html(resources_details_template(run_results));
     $('#modal-container').modal();
 }
+
 /**
  * Show main dashboard
  */
@@ -848,7 +882,7 @@ function show_main_dashboard () {
 
 /**
  * Make title from resource path
- * @param resource_path
+ * @param {string} resource_path
  * @returns {string}
  */
 function makeTitle (resource_path) {
@@ -863,8 +897,8 @@ function makeTitle (resource_path) {
 }
 
 /**
- *
- * @param resource_path
+ * Returns the service
+ * @param {string} resource_path
  * @returns {string}
  */
 function getService (resource_path) {
@@ -879,14 +913,14 @@ function getService (resource_path) {
 
 /**
  * Update title div's contents
- * @param title
+ * @param {string} title
  */
 function updateTitle (title) {
   $('#section_title-h2').text(title)
 }
 
 /**
- * Update the DOM
+ * Updates the Document Object Model
  */
 function showPageFromHash () {
   if (location.hash) {
@@ -900,8 +934,8 @@ window.onhashchange = showPageFromHash
 
 /**
  * Get value at given path
- * @param path
- * @returns {*}
+ * @param {string} path
+ * @returns {string}
  */
 function get_value_at (path) {
   let pathArray = path.split('.')
@@ -919,8 +953,8 @@ function get_value_at (path) {
 var currentResourcePath = ''
 
 /**
- *
- * @param anchor
+ * Updates the Document Object Model
+ * @param {string} anchor
  */
 function updateDOM (anchor) {
   // Strip the # sign
@@ -999,8 +1033,8 @@ function updateDOM (anchor) {
 }
 
 /**
- *
- * @param path
+ * Lazy loading
+ * @param {string} path
  * @returns {number}
  */
 function lazyLoadingJson (path) {
@@ -1022,7 +1056,7 @@ function lazyLoadingJson (path) {
 /**
  * Get the resource path based on a given path
  * @param path
- * @returns {*|string}
+ * @returns {string}
  */
 function get_resource_path (path) {
   if (path.endsWith('.items')) {
@@ -1110,6 +1144,7 @@ function make_title (title) {
 
 /**
  * Toggles between truncated and full lenght bucket name
+ * @param {string} name           Name of the bucket
  */
 function toggleName(name) {
   if (name.style.display !== 'contents') {
@@ -1120,7 +1155,7 @@ function toggleName(name) {
 }
 
 /**
- * Add one or
+ * Add one or multiple
  * @param group
  * @param service
  * @param section
@@ -1193,6 +1228,12 @@ function filter_rules (group, service) {
   $("[id='" + id + "']").hide()
 }
 
+/**
+ * Downloads the configuration
+ * @param {object} configuration 
+ * @param {string} name 
+ * @param {string} prefix 
+ */
 function downloadConfiguration (configuration, name, prefix) {
   var uriContent = 'data:text/json;charset=utf-8,' + encodeURIComponent(prefix + JSON.stringify(configuration, null, 4))
   var dlAnchorElem = document.getElementById('downloadAnchorElem')
@@ -1201,6 +1242,9 @@ function downloadConfiguration (configuration, name, prefix) {
   dlAnchorElem.click()
 }
 
+/**
+ * Downloads execptions
+ */
 function download_exceptions () {
   var url = window.location.pathname
   var profile_name = url.substring(url.lastIndexOf('/') + 1).replace('report-', '').replace('.html', '')
@@ -1208,18 +1252,34 @@ function download_exceptions () {
   downloadConfiguration(exceptions, 'exceptions-' + profile_name, 'exceptions = \n')
 }
 
+/**
+ * Shows an element
+ * @param {*} element_id 
+ */
 var showElement = function (element_id) {
   $('#' + element_id).show()
 }
 
+/**
+ * Hides an element
+ * @param {string} element_id 
+ */
 var hideElement = function (element_id) {
   $('#' + element_id).hide()
 }
 
+/**
+ * Toggles an element
+ * @param {string} element_id 
+ */
 var toggle_element = function (element_id) {
   $('#' + element_id).toggle()
 }
 
+/**
+ * Sets the url to filter a specific region
+ * @param {string} region 
+ */
 function set_filter_url (region) {
   let tmp = location.hash.split('.')
   tmp[3] = region
@@ -1282,6 +1342,11 @@ function download_as_csv (filename, rows) {
   }
 }
 
+ /**
+  * Downloads the dictionary as a .json file
+  * @param {string} filename 
+  * @param {object} dict 
+  */
 function downloadAsJson (filename, dict) {
   var jsonStr = JSON.stringify(dict)
 
@@ -1305,8 +1370,8 @@ function downloadAsJson (filename, dict) {
 
 /**
  * Loads a page based on which page we want to move to
- * @param {array} pathArray
- * @param {number} indexDiff
+ * @param {array} pathArray         The path of where the data is stored
+ * @param {number} indexDiff        Difference between current and desired page index
  */
 function loadPage (pathArray, indexDiff) {
   let pageInfo = getPageInfo(pathArray)
@@ -1328,7 +1393,7 @@ function loadPage (pathArray, indexDiff) {
 
 /**
  * Returns the current index of the page and it's size in number of resources
- * @param {array} pathArray
+ * @param {array} pathArray         The path of where the data is stored
  * @returns {array}
  */
 function getPageInfo (pathArray) { 
@@ -1362,8 +1427,9 @@ function loadFirstPageEverywhere () {
 
 /**
  * Returns the maximal index for page selection
- * @param {array} pathArray 
- * @param {number} pageSize 
+ * @param {array} pathArray         The path of where the data is stored
+ * @param {number} pageSize         The amount of resources per page
+ * @returns {number}
  */
 function getLastPageIndex (pathArray, pageSize) {
   let resourceCount = run_results[pathArray[0]][pathArray[1]][pathArray[2] + '_count']

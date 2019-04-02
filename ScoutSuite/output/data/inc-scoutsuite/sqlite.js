@@ -4,8 +4,8 @@ var defaultPort = 8000
 
 /**
  * Requests a list corresponding to the resource
- * @param {string} query
- * 
+ * @param {string} query              The suffix of the url
+ * @returns {string} 
  */
 function requestDb (query, pageSize, pageIndex) {
   let url = 'http://127.0.0.1:' + defaultPort + '/api/'
@@ -33,12 +33,12 @@ function requestDb (query, pageSize, pageIndex) {
   return response.data
 }
 
-// TODO: change for something that does not throw XML errors
 /**
  * Requests a page of resources
- * @param query           : The type of resource requested
- * @param pageSize        : The amount of resources per page
- * @param pageIndex       : The index of the page [0, totalResources / pageSize - 1]
+ * @param {string} query            The type of resource requested
+ * @param {number} pageSize         The amount of resources per page
+ * @param {number} pageIndex        The index of the page [0, totalResources / pageSize - 1]
+ * @returns {string}
  */
 function requestDbPage (query, pageSize, pageIndex) {
   let response =''
@@ -60,7 +60,8 @@ function requestDbPage (query, pageSize, pageIndex) {
 
 /** 
  * Returns all the data from the server, excepted for resources
-*/ 
+ * @returns {object}
+ */ 
 function getScoutsuiteResultsSqlite () {
   // The layers are named here in this fashion, these names don't always make sense depending in which
   // nested dict you are though since our data structure is not consistent :
@@ -126,6 +127,10 @@ function getScoutsuiteResultsSqlite () {
 /**
  * Inserts resource page info into run_results and wipes out the last resource page info from the memory
  * to make sure the memory never gets capped and crashes the browser, also updates page index of the resource
+ * @param {number} pageSize         The amount of resources per page
+ * @param {number} pageIndex        The index of the page [0, totalResources / pageSize - 1]
+ * @param {string} service          The service targeted
+ * @param {string} resource         The resource targeted
  */
 function getResourcePageSqlite (pageIndex, pageSize, service, resource) {
   resources = requestDb(createQuery('services', service, resource), pageSize, pageIndex)
@@ -154,6 +159,7 @@ function getResourcePageSqlite (pageIndex, pageSize, service, resource) {
 /**
  * Creates a query using the query separator to request information from the server
  * Scales with the number of params given
+ * @returns {string}
  */
 function createQuery () {
   let query = ''
@@ -162,11 +168,4 @@ function createQuery () {
   }
   query = query.replace(reQuerySeparator, '');
   return query
-}
-
-function testDb () {
-  $.ajax({url: "http://127.0.0.1:8000/api/data?key=", success: function(result) {
-    console.log(result)
-    return result
-  }});
 }
