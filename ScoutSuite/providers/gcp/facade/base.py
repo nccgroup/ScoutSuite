@@ -2,7 +2,7 @@ from googleapiclient import discovery
 from ScoutSuite.providers.gcp.utils import MemoryCache
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 
-class Facade:
+class GCPBaseFacade:
     def __init__(self, client_name, client_version):
         self._client_name = client_name
         self._client_version = client_version

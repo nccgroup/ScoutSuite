@@ -1,8 +1,8 @@
-from ScoutSuite.providers.gcp.facade.facade import Facade
+from ScoutSuite.providers.gcp.facade.base import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently
 
-class IAMFacade(Facade):
+class IAMFacade(GCPBaseFacade):
     def __init__(self):
         super(IAMFacade, self).__init__('iam', 'v1')
 
