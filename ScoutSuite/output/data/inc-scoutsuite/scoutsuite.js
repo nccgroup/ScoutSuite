@@ -201,18 +201,20 @@ function loadConfig (scriptId, cols, force) {
  * Compile Handlebars templates and update the DOM
  * @param {string} id1
  * @param {string} containerId
- * @param list
+ * @param {object} list
  * @param {boolean} replace
  */
 function processTemplate (id1, containerId, list, replace) {
   id1 = id1.replace(/<|>/g, '')
-  var templateToCompile = document.getElementById(id1).innerHTML
-  var compiledTemplate = Handlebars.compile(templateToCompile)
-  var innerHtml = compiledTemplate({ items: list })
-  if (replace) {
-    document.getElementById(containerId).innerHTML = innerHtml
-  } else {
-    document.getElementById(containerId).innerHTML += innerHtml
+  if (document.getElementById(id1)) {
+    var templateToCompile = document.getElementById(id1).innerHTML
+    var compiledTemplate = Handlebars.compile(templateToCompile)
+    var innerHtml = compiledTemplate({ items: list })
+    if (replace) {
+      document.getElementById(containerId).innerHTML = innerHtml
+    } else {
+      document.getElementById(containerId).innerHTML += innerHtml
+    }
   }
 }
 
@@ -646,7 +648,6 @@ function showEC2SecurityGroup (region, vpc, id) {
  * @param {string} attrValue
  */
 function showObject (path, attrName, attrValue) {
-  console.log('Path: ' + path + ' with attrName ' + attrName + ' with attrValue ' + attrValue)
   const pathArray = path.split('.')
   const pathLength = pathArray.length
   let data = getResource(path)

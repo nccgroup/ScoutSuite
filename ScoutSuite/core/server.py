@@ -19,7 +19,7 @@ class Server(object):
         for k1, v1 in services.items():
             service = {}
             for k2, v2 in v1.items():
-                if k2 == 'findings' or k2 == "filters" or count_re.match(k2):
+                if k2 == 'findings' or k2 == "filters" or "regions" or count_re.match(k2):
                     service[k2] = v2
             stripped_services[k1] = service
         data['services'] = stripped_services

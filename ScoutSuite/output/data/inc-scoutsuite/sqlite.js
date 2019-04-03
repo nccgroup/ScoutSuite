@@ -33,7 +33,7 @@ function requestDb (query, pageSize, pageIndex, full) {
     } })
 
   if (response.data === null || response.data === undefined) {
-    console.log('This query returned an empty response:  ' + query)
+    //console.log('This query returned an empty response:  ' + query)
   }
 
   return response.data
@@ -61,9 +61,37 @@ function getResourcePageSqlite (pageIndex, pageSize, service, resource) {
   // Originally wanted to save that info under the precise resource, but the handlebar templates create slots for
   // each entry under resource, therefore there were 2 empty slots always added
   runResults['services'][service][resource + '_page_index'] = pageIndex
-  // Save the current page size to remember the size of the saved page
   runResults['services'][service][resource + '_page_size'] = pageSize
+
   delete runResults['services'][service][resource].null
+}
+
+/**
+ * Acts like getResourcePageSqlite but when we're using regions, made a separate function since the order of
+ * the variables are different and it was getting confusing
+ * @param {number} pageSize         The amount of resources per page
+ * @param {number} pageIndex        The index of the page [0, totalResources / pageSize - 1]
+ * @param {string} service          The service targeted
+ * @param {string} region           The region targeted
+ * @param {string} resource         The resource targeted
+ */
+function getResourcePageSqliteRegions (pageIndex, pageSize, service, region, resource) {
+  let resources = requestDb(createQuery('services', service, 'regions', region, resource), pageSize, pageIndex)
+  if (runResults['services'][service]['regions'][region] === undefined) {
+    console.log('BAD ' + runResults + '.services.' + service + '.regions.' + region + '.' + resource)
+  }
+  runResults['services'][service]['regions'][region][resource] = null
+  // Create a spot where to save data
+  runResults['services'][service]['regions'][region][resource] = { [null]: null }
+  for (let item in resources) {
+    runResults['services'][service]['regions'][region][resource][item] =
+      requestDb(createQuery('services', service, 'regions', region, resource, item), null)
+  }
+  // Save the current page index to remember which page we have saved
+  // Originally wanted to save that info under the precise resource, but the handlebar templates create slots for
+  // each entry under resource, therefore there were 2 empty slots always added
+  runResults['services'][service]['regions'][region][resource + '_page_index'] = pageIndex
+  runResults['services'][service]['regions'][region][resource + '_page_size'] = pageSize
 }
 
 /**
