@@ -39,9 +39,6 @@ pyyaml>=4.2b1
 # Oracle Cloud
 oci>=2.2.4
 
-# IBM Watson
-watson-developer-cloud>=2.8.1
-
 # Alibaba
 aliyun-python-sdk-core>=2.13.4
 aliyun-python-sdk-ram>=3.0.1
