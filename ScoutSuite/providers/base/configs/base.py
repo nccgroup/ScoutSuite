@@ -92,19 +92,11 @@ class BaseConfig(object):
         # Threading to fetch & parse resources (queue consumer)
         params = {'api_client': api_client}
 
-        if self._is_provider('aws'):
-            if self.service in ['s3']:
-                params['api_clients'] = api_clients
-
         # Threading to parse resources (queue feeder)
         target_queue = self._init_threading(self.__fetch_target, params, self.thread_config['parse'])
 
         # Threading to list resources (queue feeder)
         params = {'api_client': api_client, 'q': target_queue}
-
-        if self._is_provider('aws'):
-            if self.service in ['s3']:
-                params['api_clients'] = api_clients
 
         service_queue = self._init_threading(self.__fetch_service, params, self.thread_config['list'])
 
