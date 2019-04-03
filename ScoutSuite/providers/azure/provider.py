@@ -1,6 +1,6 @@
 import os
 
-from ScoutSuite.providers.azure.configs.services import AzureServicesConfig
+from ScoutSuite.providers.azure.services import AzureServicesConfig
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.azure.services import AzureServicesConfig
 
