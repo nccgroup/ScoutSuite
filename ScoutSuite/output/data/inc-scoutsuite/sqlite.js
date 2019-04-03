@@ -31,11 +31,7 @@ function requestDb (query, pageSize, pageIndex, full) {
     success: function (result) {
       response = result
     } })
-
-  if (response.data === null || response.data === undefined) {
-    console.log('This query returned an empty response:  ' + query)
-  }
-
+    
   return response.data
 }
 
