@@ -1,3 +1,4 @@
+import asyncio
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.gcp.resources.resources import GCPCompositeResources
 from ScoutSuite.providers.gcp.resources.cloudsql.backups import Backups
@@ -16,11 +17,19 @@ class DatabaseInstances(GCPCompositeResources):
 
     async def fetch_all(self):
         raw_instances = await self.gcp_facade.cloudsql.get_database_instances(self.project_id)
-        for raw_instance in raw_instances:
-            instance_id, instance = self._parse_instance(raw_instance)
+        instances = [self._parse_instance(raw_instance) for raw_instance in raw_instances]
+        for instance_id, instance in instances:
             self[instance_id] = instance
-            await self._fetch_children(self[instance_id], gcp_facade = self.gcp_facade, project_id = self.project_id, instance_name = instance['name'])
-            self[instance_id]['last_backup_timestamp'] = self._get_last_backup_timestamp(self[instance_id]['backups'])
+        await self._fetch_instance_children(instances)
+        self._set_last_backup_timestamps(instances)
+
+    async def _fetch_instance_children(self, instances):
+        tasks = {
+            asyncio.ensure_future(
+                self._fetch_children(self[instance_id], gcp_facade = self.gcp_facade, project_id = self.project_id, instance_name = instance['name'])
+            ) for instance_id, instance in instances
+        }
+        await asyncio.wait(tasks)
 
     def _parse_instance(self, raw_instance):
         instance_dict = {}
@@ -40,10 +49,13 @@ class DatabaseInstances(GCPCompositeResources):
     def _is_ssl_required(self, raw_instance):
         return raw_instance['settings']['ipConfiguration'].get('requireSsl')
 
+    def _set_last_backup_timestamps(self, instances):
+        for instance_id, _ in instances:
+            self[instance_id]['last_backup_timestamp'] = self._get_last_backup_timestamp(self[instance_id]['backups'])
+
     def _get_last_backup_timestamp(self, backups):
         if not backups:
             return 'N/A'
-
         last_backup_id = max(backups.keys(), key=(lambda k: backups[k]['creation_timestamp']))
         return backups[last_backup_id]['creation_timestamp']
         
