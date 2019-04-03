@@ -9,7 +9,7 @@ var defaultPort = 8000
  * @param {number} pageIndex        The index of the page [0, totalResources / pageSize - 1]
  * @returns {string}
  */
-function requestDb (query, pageSize, pageIndex) {
+function requestDb (query, pageSize, pageIndex, full) {
   let url = 'http://127.0.0.1:' + defaultPort + '/api/'
   let response = ''
 
@@ -17,6 +17,8 @@ function requestDb (query, pageSize, pageIndex) {
     url += 'summary'
   } else if (arguments.length === 1) {
     url += 'data?key=' + query
+  } else if (arguments.length === 2) {
+    url += 'full?key=' + query
   } else {
     url += 'page?pagesize=' + pageSize + '&page=' + pageIndex + '&key=' + query
   }
@@ -43,14 +45,6 @@ function requestDb (query, pageSize, pageIndex) {
  */
 function getScoutsuiteResultsSqlite () {
   let runResults = requestDb()
-  /*for (let service in runResults['services']) {
-    for (let resource in runResults['services'][service]) {
-      if (resource.match(reCount)) {
-        runResults['services'][service][resource.replace(reCount, '')] = 
-          requestDb(createQuery(['services'], [service], [resource.replace(reCount, '')]))
-      }
-    }
-  }*/
   return runResults
 }
 
@@ -69,13 +63,8 @@ function getResourcePageSqlite (pageIndex, pageSize, service, resource) {
   // Create a spot where to save data
   runResults['services'][service][resource] = { [null]: null }
   for (let item in resources) {
-    let properties = resources[item].keys
-    runResults['services'][service][resource][item] = { [null]: null }
-    for (let property in properties) {
-      runResults['services'][service][resource][item][properties[property]] =
-      requestDb(createQuery('services', service, resource, item, properties[property]))
-    }
-    delete runResults['services'][service][resource][item].null
+    runResults['services'][service][resource][item] =
+      requestDb(createQuery('services', service, resource, item), null)
   }
   // Save the current page index to remember which page we have saved
   // Originally wanted to save that info under the precise resource, but the handlebar templates create slots for

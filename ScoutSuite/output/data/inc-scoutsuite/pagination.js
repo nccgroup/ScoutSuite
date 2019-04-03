@@ -20,7 +20,7 @@ function loadPage (pathArray, indexDiff) {
     document.getElementById('page_backward').disabled = (pageIndex <= 0)
     document.getElementById('page_forward').disabled = (pageIndex >= getLastPageIndex(pathArray, pageSize))
     getResourcePageSqlite(pageIndex, pageSize, pathArray[1], pathArray[2])    
-    loadConfig (pathArray[0] + '.' + pathArray[1] + '.' + pathArray[2], 2, true)
+    loadConfig(pathArray[0] + '.' + pathArray[1] + '.' + pathArray[2], 2, true)
   }
 }
 
@@ -49,11 +49,11 @@ function loadFirstPageEverywhere () {
   for (let service in runResults['services']) {
     for (let resource in runResults['services'][service]) {
       // Don't make a request for a page when it's a counter of resources
-      if (resource.match(reCount) || resource === 'findings' || resource === 'filters') {
+      if (resource.match(reCount)) {
+        let pathArray = ['services', service, resource.replace(reCount, '')]
+        loadPage(pathArray, 0)
         continue
       }
-      let pathArray = ['services', service, resource]
-      loadPage(pathArray, 0)
     }
   }
 }
