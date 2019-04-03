@@ -74,11 +74,11 @@ function getScoutsuiteResultsSqlite () {
               requestDb(createQuery(paths[i], groups[group], services[service], counters[counter]))
             if (!list[groups[group]][services[service]][counters[counter]]) { continue }
             let resources = list[groups[group]][services[service]][counters[counter]].keys
-            for (let resource in resources) { // Layer 4              
+            for (let resource in resources) { // Layer 4
               list[groups[group]][services[service]][counters[counter]][resources[resource]] = requestDb(
                 createQuery(paths[i], groups[group], services[service], counters[counter], resources[resource]))
               let items = list[groups[group]][services[service]][counters[counter]][resources[resource]].keys
-              for (let item in items) { // Layer 5                
+              for (let item in items) { // Layer 5          
                 list[groups[group]][services[service]][counters[counter]][resources[resource]][items[item]] =
                 requestDb(createQuery(paths[i], groups[group], services[service], counters[counter], resources[resource],
                   items[item]))
@@ -140,6 +140,6 @@ function createQuery () {
   for (let i = 0; i < arguments.length; i++) {
     query += arguments[i] + querySeparator
   }
-  query = query.replace(reQuerySeparator, '');
+  query = query.replace(reQuerySeparator, '')
   return query
 }

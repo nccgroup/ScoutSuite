@@ -421,9 +421,9 @@ var ruleCleanup = function (rule, attribute) {
   return rule
 }
 
-Handlebars.registerHelper('get_arg_name', function (rule_filename, argIndex) {
-  if ('arg_names' in runResults['rule_definitions'][rule_filename]) {
-    return runResults['rule_definitions'][rule_filename]['arg_names'][argIndex]
+Handlebars.registerHelper('get_arg_name', function (ruleFilename, argIndex) {
+  if ('arg_names' in runResults['rule_definitions'][ruleFilename]) {
+    return runResults['rule_definitions'][ruleFilename]['arg_names'][argIndex]
   } else {
     return ''
   }
