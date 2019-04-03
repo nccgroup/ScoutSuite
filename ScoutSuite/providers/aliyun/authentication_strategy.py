@@ -4,7 +4,7 @@ import json
 
 from aliyunsdkcore.client import AcsClient
 from ScoutSuite.core.console import print_error
-from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy
+from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
 from aliyunsdksts.request.v20150401 import GetCallerIdentityRequest
 from aliyunsdkcore.acs_exception.exceptions import ClientException
@@ -25,19 +25,20 @@ class AliyunAuthenticationStrategy(AuthenticationStrategy):
 
     def authenticate(self, access_key_id, access_key_secret, **kwargs):
 
-        access_key_id = access_key_id if access_key_id else input('Access Key ID:')
-        access_key_secret = access_key_secret if access_key_secret else getpass('Secret Access Key:')
-
-        credentials = AccessKeyCredential(access_key_id=access_key_id, access_key_secret=access_key_secret)
-
-        client = AcsClient(credential=credentials)
-
         try:
+
+            access_key_id = access_key_id if access_key_id else input('Access Key ID:')
+            access_key_secret = access_key_secret if access_key_secret else getpass('Secret Access Key:')
+
+            credentials = AccessKeyCredential(access_key_id=access_key_id, access_key_secret=access_key_secret)
+
+            client = AcsClient(credential=credentials)
+
             response = client.do_action_with_exception(GetCallerIdentityRequest.GetCallerIdentityRequest())
             response_decoded = json.loads(response)
-        except Exception as e:
-            print(e)  # TODO log
-            return False
 
-        return AliyunCredentials(credentials, client, response_decoded)
+            return AliyunCredentials(credentials, client, response_decoded)
+
+        except Exception as e:
+            raise AuthenticationException(e)
 

@@ -1,7 +1,7 @@
 from oci.config import from_file
 
 from ScoutSuite.core.console import print_error
-from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy
+from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
 class OracleCredentials:
 
@@ -16,11 +16,12 @@ class OracleAuthenticationStrategy(AuthenticationStrategy):
 
     def authenticate(self, profile=None, **kwargs):
 
-        config = from_file(profile_name="test-user")
-        compartment_id = config["tenancy"]
+        try:
 
-        # if credentials.get('access_key') is None:
-        #     print_error('Failed to authenticate to AWS')
-        #     return False
+            config = from_file(profile_name="test-user")
+            compartment_id = config["tenancy"]
 
-        return OracleCredentials(config, compartment_id)
+            return OracleCredentials(config, compartment_id)
+
+        except Exception as e:
+            raise AuthenticationException(e)
