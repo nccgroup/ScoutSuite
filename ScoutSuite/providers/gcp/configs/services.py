@@ -2,11 +2,12 @@ from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.gcp.resources.cloudstorage.service import CloudStorage
 from ScoutSuite.providers.gcp.resources.stackdriverlogging.service import StackdriverLogging
-from ScoutSuite.providers.gcp.services.cloudsql import CloudSQLConfig
-from ScoutSuite.providers.gcp.services.iam import IAMConfig
-from ScoutSuite.providers.gcp.services.computeengine import ComputeEngineConfig
 from ScoutSuite.providers.gcp.services.cloudresourcemanager import CloudResourceManager
+from ScoutSuite.providers.gcp.services.cloudsql import CloudSQLConfig
+from ScoutSuite.providers.gcp.services.computeengine import ComputeEngineConfig
+from ScoutSuite.providers.gcp.services.iam import IAMConfig
 
+# Try to import proprietary services
 try:
     from ScoutSuite.providers.gcp.services.kubernetesengine_private import KubernetesEngineConfig
 except ImportError:
@@ -17,7 +18,7 @@ class GCPServicesConfig(BaseServicesConfig):
 
     def __init__(self, credentials=None, thread_config=4, projects=None, **kwargs):
         super(GCPServicesConfig, self).__init__(credentials)
-        
+
         projects = [] if projects is None else projects
 
         gcp_facade = GCPFacade()
@@ -49,4 +50,3 @@ class GCPServicesConfig(BaseServicesConfig):
 
         for c in vars(self):
             setattr(getattr(self, c), 'projects', projects)
-

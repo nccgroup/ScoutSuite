@@ -1,4 +1,4 @@
-from ScoutSuite.core.console import print_error
+from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.base.configs.resources import Resources
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.utils import get_non_provider_id
@@ -34,7 +34,7 @@ class Buckets(Resources):
         try:
             return raw_bucket.get_logging() is not None
         except Exception as e:
-            print_error('Failed to get bucket logging configuration for %s: %s' % (raw_bucket.name, e))
+            print_exception('Failed to get bucket logging configuration for %s: %s' % (raw_bucket.name, e))
             return None # Return False instead?
 
 def get_cloudstorage_bucket_acl(bucket, bucket_dict):
@@ -50,6 +50,6 @@ def get_cloudstorage_bucket_acl(bucket, bucket_dict):
                         bucket_dict['acl_configuration'][member].append(role)
         return True
     except Exception as e:
-        print_error('Failed to get bucket ACL configuration for %s: %s' % (bucket.name, e))
+        print_exception('Failed to get bucket ACL configuration for %s: %s' % (bucket.name, e))
         bucket_dict['acls'] = 'Unknown'
         return False

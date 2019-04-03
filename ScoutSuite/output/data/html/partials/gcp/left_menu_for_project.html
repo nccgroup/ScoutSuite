@@ -1,8 +1,9 @@
 <!-- Generic left-menu link partial for project-then-resource -->
 <script id="left_menu_for_project.partial" type="text/x-handlebars-template">
+  <div id="services.{{service_name}}.projects.id.{{resource_type}}.list">
   <div class="list-group" >
     <div class="list-group-item">
-      <a href="javascript:showRowWithItems('services.{{service_name}}.projects.id.{{resource_type}}')">Show all <span class="badge float-right">XXX</span></a>
+      <a href="javascript:showRowWithItems('services.{{service_name}}.projects.id.{{resource_type}}')">Show all <span class="badge float-right btn-info">{{get_value_at 'metadata' service_group service_name 'resources' resource_type 'count'}}</span></a>
     </div>
   </div>
   {{#each items}}

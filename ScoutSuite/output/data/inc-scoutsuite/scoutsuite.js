@@ -100,10 +100,9 @@ function onPageLoad() {
 /**
  * Display the account ID -- use of the generic function + templates result in the div not being at the top of the page
  */
-var load_aws_account_id = function () {
-    var element = document.getElementById('aws_account_id');
-    var value = '<i class="fa fa-cloud"></i> ' + run_results['provider_name'] +
-        ' <i class="fa fa-chevron-right"></i> ' + run_results['aws_account_id'];
+var load_account_id = function () {
+    var element = document.getElementById('account_id');
+    var value = '<i class="fa fa-cloud"></i> ' + run_results['provider_name'] + ' <i class="fa fa-chevron-right"></i> ' + run_results['account_id'];
     if (('organization' in run_results) && (value in run_results['organization'])) {
         value += ' (' + run_results['organization'][value]['Name'] + ')'
     };
@@ -116,7 +115,7 @@ var load_aws_account_id = function () {
  * @param cols
  * @returns {number};
  */
-function load_aws_config_from_json(script_id, cols) {
+function load_config_from_json(script_id, cols) {
 
     // Abort if data was previously loaded
     if (loaded_config_array.indexOf(script_id) > 0) {
@@ -199,11 +198,11 @@ function process_template(id1, container_id, list) {
  * Hide all lists and details
  */
 function hideAll() {
-    $("[id*='.list']").not("[id*='metadata.list']").not("[id='regions.list']").not("[id='projects.list']").not("[id*='filters.list']").hide();
+    $("[id*='.list']").not("[id*='metadata.list']").not("[id='regions.list']").not("[id*='filters.list']").hide();
     $("[id*='.details']").hide();
-    var element = document.getElementById('scout2_display_account_id_on_all_pages');
+    var element = document.getElementById('scout_display_account_id_on_all_pages');
     if ((element != undefined) && (element.checked == true)) {
-        showRow('aws_account_id');
+        showRow('account_id');
     };
     current_resource_path = ''
 };
@@ -708,16 +707,16 @@ function load_metadata() {
     // Set title dynamically
     $(function () {
         3
-        $(document).attr("title", 'Scout Suite Report [' + run_results['aws_account_id'] + ']');
+        $(document).attr("title", 'Scout Suite Report [' + run_results['account_id'] + ']');
         4
     });
 
-    load_aws_account_id();
-    load_aws_config_from_json('last_run', 1);
-    load_aws_config_from_json('metadata', 0);
-    load_aws_config_from_json('services.id.findings', 1);
-    load_aws_config_from_json('services.id.filters', 0); // service-specific filters
-    load_aws_config_from_json('services.id.regions', 0); // region filters
+    load_account_id();
+    load_config_from_json('last_run', 1);
+    load_config_from_json('metadata', 0);
+    load_config_from_json('services.id.findings', 1);
+    load_config_from_json('services.id.filters', 0); // service-specific filters
+    load_config_from_json('services.id.regions', 0); // region filters
 
     for (group in run_results['metadata']) {
         for (service in run_results['metadata'][group]) {
@@ -782,7 +781,7 @@ function show_main_dashboard() {
     // Hide filters
     hideFilters();
     $('#findings_download_button').hide();
-    showRowWithItems('aws_account_id');
+    showRowWithItems('account_id');
     showRowWithItems('last_run');
     $('#section_title-h2').text('');
     // Remove URL hash
@@ -951,7 +950,7 @@ function updateDOM(anchor) {
  * @param path
  * @returns {number};
  */
-// TODO: merge into load_aws_config_from_json...
+// TODO: merge into load_config_from_json...
 function lazy_loading(path) {
     var cols = 1;
     var resource_path_array = path.split('.')
@@ -968,7 +967,7 @@ function lazy_loading(path) {
             break
         };
     };
-    return load_aws_config_from_json(path, cols);
+    return load_config_from_json(path, cols);
 };
 
 
