@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from ScoutSuite.core.console import print_error
+from ScoutSuite.core.console import print_exception
 
 from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
@@ -56,7 +56,7 @@ class CloudSQLConfig(GCPBaseConfig):
                 users_dict[user['name']] = self._parse_user(user)
 
         except Exception as e:
-            print_error('Failed to fetch users for SQL instance %s: %s' % (instance['name'], e))
+            print_exception('Failed to fetch users for SQL instance %s: %s' % (instance['name'], e))
             
         return users_dict
 
@@ -77,7 +77,7 @@ class CloudSQLConfig(GCPBaseConfig):
         except AttributeError as e:
             return backups_dict
         except Exception as e:
-            print_error('Failed to fetch backups for SQL instance %s: %s' % (instance['name'], e))
+            print_exception('Failed to fetch backups for SQL instance %s: %s' % (instance['name'], e))
             return backups_dict
 
         try:
@@ -94,7 +94,7 @@ class CloudSQLConfig(GCPBaseConfig):
             return backups_dict
 
         except Exception as e:
-            print_error('Failed to parse backups for SQL instance %s: %s' % (instance['name'], e))
+            print_exception('Failed to parse backups for SQL instance %s: %s' % (instance['name'], e))
             return None
 
     def _is_log_enabled(self, instance) :
