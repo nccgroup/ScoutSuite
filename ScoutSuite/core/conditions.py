@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import datetime
 import dateutil.parser
 import json
@@ -9,7 +7,6 @@ import re
 from iampoliciesgonewild import get_actions_from_statement, _expand_wildcard_action
 
 from ScoutSuite.core.console import print_error, print_exception
-from ScoutSuite.core import condition_operators
 
 re_get_value_at = re.compile(r'_GET_VALUE_AT_\((.*?)\)')
 re_nested_get_value_at = re.compile(r'_GET_VALUE_AT_\(.*')
@@ -33,7 +30,7 @@ def pass_conditions(all_info, current_path, conditions, unknown_as_pass_conditio
         return True
     condition_operator = conditions.pop(0)
     for condition in conditions:
-        if condition[0] in condition_operators:
+        if condition[0] in ['and', 'or']:
             res = pass_conditions(all_info, current_path, condition, unknown_as_pass_condition)
         else:
             # Conditions are formed as "path to value", "type of test", "value(s) for test"
@@ -48,9 +45,8 @@ def pass_conditions(all_info, current_path, conditions, unknown_as_pass_conditio
                 res = pass_condition(target_obj, test_name, test_values)
             except Exception as e:
                 res = True if unknown_as_pass_condition else False
-                print_error('Unable to process testcase \'%s\' on value \'%s\', interpreted as %s.' % (
-                    test_name, str(target_obj), res))
-                print_exception(e, True)
+                print_exception('Unable to process testcase \'%s\' on value \'%s\', interpreted as %s: %s' % (
+                    test_name, str(target_obj), res, e))
         # Quick exit and + false
         if condition_operator == 'and' and not res:
             return False
@@ -62,7 +58,7 @@ def pass_conditions(all_info, current_path, conditions, unknown_as_pass_conditio
 
 def pass_condition(b, test, a):
     """
-    Generic test function used by Scout2 / AWS recipes
+    Generic test function used by Scout
                                         .
     :param b:                           Value to be tested against
     :param test:                        Name of the test case to run

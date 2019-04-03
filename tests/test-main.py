@@ -23,7 +23,7 @@ class TestMainClass(TestCase):
                                            ("get_provider", self.mocked_provider),
                                            ("Ruleset", self.mocked_ruleset),
                                            ("ProcessingEngine", self.mocked_engine),
-                                           ("Scout2Report", self.mocked_report),
+                                           ("ScoutReport", self.mocked_report),
                                            ("webbrowser", self.mocked_browser)]:
             constructor_obj = patch("ScoutSuite.__main__.%s" % import_name, return_value=mocked_object).start()
             self.constructor[mocked_object] = constructor_obj

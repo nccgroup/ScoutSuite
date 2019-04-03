@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from __future__ import print_function
 
 import datetime
@@ -9,7 +8,7 @@ import zipfile
 import dateutil.tz
 from ScoutSuite.core.console import print_info, print_exception
 
-from ScoutSuite import DEFAULT_RESULT_FILE, DEFAULT_HTMLREPORT_FILE, DEFAULT_GENERATOR_FILE, DEFAULT_EXCEPTIONS_FILE
+from ScoutSuite import DEFAULT_RESULT_FILE, DEFAULT_HTMLREPORT_FILE, DEFAULT_EXCEPTIONS_FILE
 from ScoutSuite import ERRORS_LIST
 from ScoutSuite.output.js import JavaScriptReaderWriter
 from ScoutSuite.output.utils import get_filename, prompt_4_overwrite
@@ -29,8 +28,8 @@ class HTMLReport(object):
             self.timestamp = self.current_time.strftime("%Y-%m-%d_%Hh%M%z") if not timestamp else timestamp
             self.profile = '%s-%s' % (self.profile, self.timestamp)
         self.exceptions = exceptions
-        self.scout2_report_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
-        self.html_data_path = os.path.join(self.scout2_report_data_path, 'html')
+        self.scout_report_data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
+        self.html_data_path = os.path.join(self.scout_report_data_path, 'html')
         self.jsrw = JavaScriptReaderWriter(self.profile, report_dir, timestamp)
 
     def get_content_from(self, templates_type):
@@ -53,28 +52,28 @@ class HTMLReport(object):
         if not os.path.isdir(run_results_dir):
             os.makedirs(run_results_dir)
         # Copy static 3rd-party files
-        archive = os.path.join(self.scout2_report_data_path, 'includes.zip')
+        archive = os.path.join(self.scout_report_data_path, 'includes.zip')
         zip_ref = zipfile.ZipFile(archive)
         zip_ref.extractall(self.report_dir)
         zip_ref.close()
         # Copy static files
-        inc_scout2_dir = os.path.join(self.report_dir, 'inc-scoutsuite')
-        src_inc_scout2_dir = os.path.join(self.scout2_report_data_path, 'inc-scoutsuite')
-        if os.path.isdir(inc_scout2_dir):
-            shutil.rmtree(inc_scout2_dir)
-        shutil.copytree(src_inc_scout2_dir, inc_scout2_dir)
+        inc_scout_dir = os.path.join(self.report_dir, 'inc-scoutsuite')
+        src_inc_scout_dir = os.path.join(self.scout_report_data_path, 'inc-scoutsuite')
+        if os.path.isdir(inc_scout_dir):
+            shutil.rmtree(inc_scout_dir)
+        shutil.copytree(src_inc_scout_dir, inc_scout_dir)
 
 
-class Scout2Report(HTMLReport):
+class ScoutReport(HTMLReport):
     """
-    Scout2 HTML report
+    Scout HTML report
     """
 
     def __init__(self, provider, profile=None, report_dir=None, timestamp=False, exceptions=None):
         exceptions = {} if exceptions is None else exceptions
         self.html_root = DEFAULT_HTMLREPORT_FILE
         self.provider = provider
-        super(Scout2Report, self).__init__(profile, report_dir, timestamp, exceptions)
+        super(ScoutReport, self).__init__(profile, report_dir, timestamp, exceptions)
 
     def save(self, config, exceptions, force_write=False, debug=False):
         self.prepare_html_report_dir()
@@ -110,25 +109,3 @@ class Scout2Report(HTMLReport):
                         nf.write(newline)
         return new_file
 
-
-class RulesetGenerator(HTMLReport):
-    """
-    HTML ruleset generator for Scout2
-    """
-
-    def __init__(self, ruleset_name, report_dir=None, timestamp=False, exceptions=None):
-        exceptions = {} if exceptions is None else exceptions
-        self.html_root = DEFAULT_GENERATOR_FILE
-        self.ruleset_name = ruleset_name
-        super(RulesetGenerator, self).__init__(ruleset_name, report_dir, timestamp, exceptions)
-
-    def create_html_report(self, force_write):
-        src_rule_generator = os.path.join(self.html_data_path, DEFAULT_GENERATOR_FILE)
-        rule_generator = os.path.join(self.report_dir, DEFAULT_GENERATOR_FILE)
-        shutil.copyfile(src_rule_generator, rule_generator)
-        return rule_generator
-
-    def save(self, config, force_write=False, debug=False):
-        self.prepare_html_report_dir()
-        self.jsrw.save_to_file(config, 'RULESET', force_write, debug)
-        return self.create_html_report(force_write)
