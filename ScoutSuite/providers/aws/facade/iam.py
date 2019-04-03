@@ -1,6 +1,8 @@
 import asyncio
 import functools
 
+from botocore.utils import ClientError
+
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.core.console import print_error
@@ -10,29 +12,46 @@ from ScoutSuite.providers.utils import get_non_provider_id, run_concurrently, ge
 class IAMFacade(AWSBaseFacade):
     async def get_credential_reports(self):
         client = AWSFacadeUtils.get_client('iam', self.session)
-        response = await run_concurrently(client.generate_credential_report)
-
-        if response['State'] != 'COMPLETE':
-            print_error('Failed to generate a credential report')
+        # When no credential report exists, we first need to initiate the creation of a new report by calling
+        # client.generate_credential_report and then check for COMPLETE status before trying to download it:
+        report_generated, n_attempts = False, 3
+        try:
+            while not report_generated and n_attempts > 0:
+                response = await run_concurrently(client.generate_credential_report)
+                if response['State'] == 'COMPLETE':
+                    report_generated = True
+                else:
+                    n_attempts -= 1
+                    await asyncio.sleep(0.1) # Wait for 100ms before doing a new attempt.
+        except ClientError:
+            print_error('Failed to generate credential report.')
             return []
+        finally:
+            if not report_generated and n_attempts == 0:
+                print_error('Failed to complete credential report generation in {} attempts.'.format(n_attempts))
+                return []
 
-        report = (await run_concurrently(client.get_credential_report))['Content']
+        try:
+            report = await run_concurrently(lambda: client.get_credential_report()['Content'])
 
-        # The report is a CSV string. The first row contains the name of each column. The next rows
-        # each represent an individual account. This algorithm provides a simple initial parsing.
-        lines = report.splitlines()
-        keys = lines[0].decode('utf-8').split(',')
+            # The report is a CSV string. The first row contains the name of each column. The next rows
+            # each represent an individual account. This algorithm provides a simple initial parsing.
+            lines = report.splitlines()
+            keys = lines[0].decode('utf-8').split(',')
 
-        credential_reports = []
-        for line in lines[1:]:
-            credential_report = {}
-            values = line.decode('utf-8').split(',')
-            for key, value in zip(keys, values):
-                credential_report[key] = value
+            credential_reports = []
+            for line in lines[1:]:
+                credential_report = {}
+                values = line.decode('utf-8').split(',')
+                for key, value in zip(keys, values):
+                    credential_report[key] = value
 
-            credential_reports.append(credential_report)
+                credential_reports.append(credential_report)
 
-        return credential_reports
+            return credential_reports
+        except ClientError:
+            print_error('Failed to download credential report.')
+            return []
 
     async def get_groups(self):
         groups = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_groups', 'Groups')
