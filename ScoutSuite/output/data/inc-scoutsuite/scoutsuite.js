@@ -646,6 +646,7 @@ function showEC2SecurityGroup (region, vpc, id) {
  * @param {string} attrValue
  */
 function showObject (path, attrName, attrValue) {
+  console.log('Path: ' + path + ' with attrName ' + attrName + ' with attrValue ' + attrValue)
   const pathArray = path.split('.')
   const pathLength = pathArray.length
   let data = getResource(path)
