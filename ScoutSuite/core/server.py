@@ -9,6 +9,21 @@ class Server(object):
 
     @cherrypy.expose()
     @cherrypy.tools.json_out()
+    def summary(self):
+        data = dict(self.results)
+        services = data.get('services')
+        stripped_services = {}
+        for k1, v1 in services.items():
+            service = {}
+            for k2, v2 in v1.items():
+                if k2 == 'findings' or k2 == "filters":
+                    service[k2] = v2
+            stripped_services[k1] = service
+        data['services'] = stripped_services
+        return {'data': data}
+
+    @cherrypy.expose()
+    @cherrypy.tools.json_out()
     def data(self, key=None):
         result = self.get_item(self.results, key)
         # Returns only indexes or length if it's a complex type
