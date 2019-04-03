@@ -68,3 +68,27 @@ function getLastPageIndex (pathArray, pageSize) {
   let resourceCount = runResults[pathArray[0]][pathArray[1]][pathArray[2] + '_count']
   return Math.ceil(resourceCount / pageSize - 1)
 }
+
+/**
+ * Turns off or on the pagination buttons depending on the resource page currently consulted
+ */
+function updateButtons () {
+  let pathArray = getPathArray()
+  if (pathArray.length > 1) {
+    if (getFormat() === resultFormats.json) {
+      hidePaginationButtons()
+    } else {
+      let pageInfo = getPageInfo(pathArray)
+      document.getElementById('page_backward').disabled = (pageInfo[1] <= 0)
+      document.getElementById('page_forward').disabled = (pageInfo[1] >= getLastPageIndex(pathArray, pageInfo[0]))
+    }
+  }
+}
+
+/**
+ * Hides the pagination buttons
+ */
+function hidePaginationButtons () {
+  document.getElementById('page_backward').hidden = true;
+  document.getElementById('page_forward').hidden = true;
+}
