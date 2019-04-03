@@ -278,10 +278,10 @@ function showItems (path) {
 
 /**
  * Hide resource views for a given path
- * @param resource_path
+ * @param resourcePath
  */
-function hideItems (resource_path) {
-  let path = resource_path.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.view'
+function hideItems (resourcePath) {
+  let path = resourcePath.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.view'
   $('div').filter(function () {
     return this.id.match(path)
   }).hide()
@@ -289,11 +289,11 @@ function hideItems (resource_path) {
 
 /**
  * Hide resource links for a given path
- * @param resource_path
+ * @param resourcePath
  */
-function hideLinks (resource_path) {
+function hideLinks (resourcePath) {
   // TODO: Handle Region and VPC hiding...
-  let path = resource_path.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.link'
+  let path = resourcePath.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.link'
   $('div').filter(function () {
     return this.id.match(path)
   }).hide()
@@ -441,7 +441,7 @@ function hasNavbarSuffix (element) {
 
 /**
  * Toggles visibility
- * @param {string} id 
+ * @param {string} id
  */
 function toggleVisibility (id) {
   let id1 = '#' + id
