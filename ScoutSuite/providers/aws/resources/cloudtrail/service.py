@@ -22,7 +22,7 @@ class Trails(AWSResources):
                 raw_trail['HomeRegion'] != self.scope['region']:
             for key in ['HomeRegion', 'TrailARN']:
                 trail[key] = raw_trail[key]
-            trail['scout2_link'] = 'services.cloudtrail.regions.%s.trails.%s' % (raw_trail['HomeRegion'], trail_id)
+            trail['scout_link'] = 'services.cloudtrail.regions.%s.trails.%s' % (raw_trail['HomeRegion'], trail_id)
             return trail_id, trail
 
         for key in raw_trail:

@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-
 import sys
 
 from ScoutSuite.providers.aws.provider import AWSProvider
-from ScoutSuite.providers.gcp.provider import GCPProvider
 from ScoutSuite.providers.azure.provider import AzureProvider
+from ScoutSuite.providers.gcp.provider import GCPProvider
 
 providers_dict = {'aws': 'AWSProvider',
                   'gcp': 'GCPProvider',
