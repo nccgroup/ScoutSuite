@@ -258,6 +258,7 @@ class ScoutSuiteArgumentParser:
                             help="Address on which you want the server to listen. Defaults to localhost.")
         parser.add_argument('--port',
                             dest="host_port",
+                            type=int,
                             default=8000,
                             help="Port on which you want the server to listen. Defaults to 8000.")
 
