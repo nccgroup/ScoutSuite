@@ -1,36 +1,39 @@
-# -*- coding: utf-8 -*-
-
+from ScoutSuite.providers.aws.facade import AWSFacade
 from ScoutSuite.providers.aws.resources.awslambda import Lambdas
-from ScoutSuite.providers.aws.resources.cloudwatch import CloudWatch
 from ScoutSuite.providers.aws.resources.cloudformation import CloudFormation
 from ScoutSuite.providers.aws.resources.cloudtrail import CloudTrail
+from ScoutSuite.providers.aws.resources.cloudwatch import CloudWatch
 from ScoutSuite.providers.aws.resources.directconnect import DirectConnect
 from ScoutSuite.providers.aws.resources.ec2 import EC2
 from ScoutSuite.providers.aws.resources.efs import EFS
 from ScoutSuite.providers.aws.resources.elasticache import ElastiCache
 from ScoutSuite.providers.aws.resources.elb import ELB
 from ScoutSuite.providers.aws.resources.elbv2 import ELBv2
-from ScoutSuite.providers.aws.resources.iam import IAM
 from ScoutSuite.providers.aws.resources.emr import EMR
-from ScoutSuite.providers.aws.resources.route53 import Route53
+from ScoutSuite.providers.aws.resources.iam import IAM
 from ScoutSuite.providers.aws.resources.rds import RDS
 from ScoutSuite.providers.aws.resources.redshift import Redshift
+from ScoutSuite.providers.aws.resources.route53 import Route53
 from ScoutSuite.providers.aws.resources.s3 import S3
-from ScoutSuite.providers.aws.resources.vpc import VPC
-from ScoutSuite.providers.aws.resources.sqs import SQS
 from ScoutSuite.providers.aws.resources.ses import SES
 from ScoutSuite.providers.aws.resources.sns import SNS
+from ScoutSuite.providers.aws.resources.sqs import SQS
+from ScoutSuite.providers.aws.resources.vpc import VPC
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
-from ScoutSuite.providers.aws.facade import AWSFacade
 
+# Try to import proprietary services
 try:
     from ScoutSuite.providers.aws.resources.private_dynamodb import DynamoDB
+except ImportError:
+    pass
+try:
     from ScoutSuite.providers.aws.resources.private_config import Config
+except ImportError:
+    pass
+try:
     from ScoutSuite.providers.aws.resources.private_kms import KMS
 except ImportError:
-    DynamoDB = None
-    Config = None
-    KMS = None
+    pass
 
 
 class AWSServicesConfig(BaseServicesConfig):
@@ -80,9 +83,15 @@ class AWSServicesConfig(BaseServicesConfig):
 
         try:
             self.dynamodb = DynamoDB(facade)
+        except NameError as _:
+            pass
+        try:
             self.config = Config(facade)
+        except NameError as _:
+            pass
+        try:
             self.kms = KMS(facade)
-        except (NameError, TypeError):
+        except NameError as _:
             pass
 
     def _is_provider(self, provider_name):

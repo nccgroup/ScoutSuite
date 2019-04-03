@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from ScoutSuite.providers.azure.authentication_strategy import AzureCredentials
 from ScoutSuite.providers.azure.facade import AzureFacade
 from ScoutSuite.providers.azure.resources.keyvault import KeyVaults
@@ -9,6 +7,7 @@ from ScoutSuite.providers.azure.resources.sqldatabase import Servers
 from ScoutSuite.providers.azure.resources.storageaccounts import StorageAccounts
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 
+# Try to import proprietary services
 try:
     from ScoutSuite.providers.azure.resources.private_appgateway import ApplicationGateways
 except ImportError:
@@ -41,19 +40,19 @@ class AzureServicesConfig(BaseServicesConfig):
 
         try:
             self.appgateway = ApplicationGateways(facade)
-        except NameError:
+        except NameError as _:
             pass
         try:
             self.rediscache = RedisCaches(facade)
-        except NameError:
+        except NameError as _:
             pass
         try:
             self.appservice = WebApplications(facade)
-        except NameError:
+        except NameError as _:
             pass
         try:
             self.loadbalancer = LoadBalancers(facade)
-        except NameError:
+        except NameError as _:
             pass
 
     def _is_provider(self, provider_name):

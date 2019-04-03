@@ -2,7 +2,7 @@
 
 from ScoutSuite.providers.gcp.configs.base import GCPBaseConfig
 
-from ScoutSuite.core.console import print_error
+from ScoutSuite.core.console import print_exception
 
 from googleapiclient import discovery
 
@@ -72,7 +72,7 @@ class IAMConfig(GCPBaseConfig):
             else:
                 return None
         except Exception as e:
-            print_error('Failed to get keys for service account %s: %s' % (service_account_email, e))
+            print_exception('Failed to get keys for service account %s: %s' % (service_account_email, e))
             return None
 
     def _get_service_account_iam_policy(self, api_client, project_id, service_account_email):
@@ -89,5 +89,5 @@ class IAMConfig(GCPBaseConfig):
             else:
                 return None
         except Exception as e:
-            print_error('Failed to get IAM policy for service account %s: %s' % (service_account_email, e))
+            print_exception('Failed to get IAM policy for service account %s: %s' % (service_account_email, e))
             return None
