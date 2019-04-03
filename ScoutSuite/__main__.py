@@ -42,22 +42,26 @@ async def run_scan(args):
 
     print_info('Authenticating to cloud provider')
     auth_strategy = get_authentication_strategy(args.get('provider'))
-    credentials = auth_strategy.authenticate(profile=args.get('profile'),
-                                             user_account=args.get('user_account'),
-                                             service_account=args.get('service_account'),
-                                             cli=args.get('cli'),
-                                             msi=args.get('msi'),
-                                             service_principal=args.get('service_principal'),
-                                             file_auth=args.get('file_auth'),
-                                             tenant_id=args.get('tenant_id'),
-                                             subscription_id=args.get('subscription_id'),
-                                             client_id=args.get('client_id'),
-                                             client_secret=args.get('client_secret'),
-                                             username=args.get('username'),
-                                             password=args.get('password')
-                                             )
+    try:
+        credentials = auth_strategy.authenticate(profile=args.get('profile'),
+                                                 user_account=args.get('user_account'),
+                                                 service_account=args.get('service_account'),
+                                                 cli=args.get('cli'),
+                                                 msi=args.get('msi'),
+                                                 service_principal=args.get('service_principal'),
+                                                 file_auth=args.get('file_auth'),
+                                                 tenant_id=args.get('tenant_id'),
+                                                 subscription_id=args.get('subscription_id'),
+                                                 client_id=args.get('client_id'),
+                                                 client_secret=args.get('client_secret'),
+                                                 username=args.get('username'),
+                                                 password=args.get('password')
+                                                 )
 
-    if not credentials:
+        if not credentials:
+            return 401
+    except Exception as e:
+        print_exception('Authentication failure: {}'.format(e))
         return 401
 
     # Create a cloud provider object

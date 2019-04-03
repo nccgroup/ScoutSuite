@@ -98,4 +98,4 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 return AzureCredentials(credentials, subscription_id)
 
         except Exception as e:
-            raise AuthenticationException()
+            raise AuthenticationException(e)
