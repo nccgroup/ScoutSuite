@@ -4,14 +4,18 @@ var defaultPort = 8000
 
 /**
  * Requests a list corresponding to the resource
- * @param {string} query              The suffix of the url
+ * @param {string} query            The suffix of the url
+ * @param {number} pageSize         The amount of resources per page
+ * @param {number} pageIndex        The index of the page [0, totalResources / pageSize - 1]
  * @returns {string}
  */
 function requestDb (query, pageSize, pageIndex) {
   let url = 'http://127.0.0.1:' + defaultPort + '/api/'
   let response = ''
 
-  if (arguments.length === 1) {
+  if (arguments.length === 0) {
+    url += 'summary'
+  } else if (arguments.length === 1) {
     url += 'data?key=' + query
   } else {
     url += 'page?pagesize=' + pageSize + '&page=' + pageIndex + '&key=' + query
@@ -37,7 +41,7 @@ function requestDb (query, pageSize, pageIndex) {
  * Returns all the data from the server, excepted for resources
  * @returns {object}
  */
-function getScoutsuiteResultsSqlite () {
+function getScoutsuiteResultsSqlite3 () {
   // The layers are named here in this fashion, these names don't always make sense depending in which
   // nested dict you are though since our data structure is not consistent :
   // paths(0) --> groups(1) --> services(2) --> counters(3) --> resources(4) --> items(5)
@@ -94,6 +98,22 @@ function getScoutsuiteResultsSqlite () {
       }
     }
     runResults[paths[i]] = list
+  }
+  return runResults
+}
+
+/**
+ * Returns all the data from the server, excepted for resources
+ * @returns {object}
+ */
+function getScoutsuiteResultsSqlite () {
+  let runResults = requestDb()
+  for (let service in runResults['services']) {
+    for (let resource in runResults['services'][service]) {
+      if (resource.match(reCount)) {
+        runResults['services'][service][resource] = requestDb(createQuery(['services'], [service], [resource]))
+      }
+    }
   }
   return runResults
 }
