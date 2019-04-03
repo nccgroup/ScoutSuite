@@ -1,14 +1,11 @@
-from aliyunsdkcore.auth.credentials import AccessKeyCredential
-from getpass import getpass
 import json
+from getpass import getpass
 
+from aliyunsdkcore.auth.credentials import AccessKeyCredential
 from aliyunsdkcore.client import AcsClient
-from ScoutSuite.core.console import print_error
-from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
-
 from aliyunsdksts.request.v20150401 import GetCallerIdentityRequest
-from aliyunsdkcore.acs_exception.exceptions import ClientException
-from aliyunsdkcore.acs_exception.exceptions import ServerException
+
+from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
 
 class AliyunCredentials:
@@ -17,6 +14,7 @@ class AliyunCredentials:
         self.credentials = credentials
         self.client = client
         self.caller_details = caller_details
+
 
 class AliyunAuthenticationStrategy(AuthenticationStrategy):
     """
@@ -41,4 +39,3 @@ class AliyunAuthenticationStrategy(AuthenticationStrategy):
 
         except Exception as e:
             raise AuthenticationException(e)
-

@@ -1,13 +1,14 @@
 from oci.config import from_file
 
-from ScoutSuite.core.console import print_error
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
+
 
 class OracleCredentials:
 
     def __init__(self, config, compartment_id):
         self.config = config
         self.compartment_id = compartment_id
+
 
 class OracleAuthenticationStrategy(AuthenticationStrategy):
     """
