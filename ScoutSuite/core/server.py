@@ -38,6 +38,12 @@ class Server(object):
 
     @cherrypy.expose()
     @cherrypy.tools.json_out()
+    def full(self, key=None):
+        result = self.get_item(self.results, key)
+        return {'data': dict(result)}
+
+    @cherrypy.expose()
+    @cherrypy.tools.json_out()
     def page(self, key=None, page=None, pagesize=None):
         result = self.get_item(self.results, key)
 
