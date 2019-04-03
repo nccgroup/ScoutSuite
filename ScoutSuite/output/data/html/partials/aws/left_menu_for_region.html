@@ -1,6 +1,6 @@
 <!-- Generic left-menu link partial for region-then-resource -->
 <script id="left_menu_for_region.partial" type="text/x-handlebars-template">
-  <div id="services.cloudtrail.regions.id.trails.list" />
+  <div id="services.cloudtrail.regions.id.trails.list">
   <div class="list-group" >
     <div class="list-group-item">
       <a href="javascript:showRowWithItems('services.{{service_name}}.regions.id.{{resource_type}}')">Show all <span class="badge float-right btn-info">{{get_value_at 'metadata' service_group service_name 'resources' resource_type 'count'}}</span></a>
