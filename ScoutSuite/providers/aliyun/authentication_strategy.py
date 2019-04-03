@@ -1,16 +1,22 @@
 from aliyunsdkcore.auth.credentials import AccessKeyCredential
 from getpass import getpass
+import json
 
 from aliyunsdkcore.client import AcsClient
 from ScoutSuite.core.console import print_error
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy
 
+from aliyunsdksts.request.v20150401 import GetCallerIdentityRequest
+from aliyunsdkcore.acs_exception.exceptions import ClientException
+from aliyunsdkcore.acs_exception.exceptions import ServerException
+
 
 class AliyunCredentials:
 
-    def __init__(self, credentials, client):
+    def __init__(self, credentials, client, caller_details):
         self.credentials = credentials
         self.client = client
+        self.caller_details = caller_details
 
 class AliyunAuthenticationStrategy(AuthenticationStrategy):
     """
@@ -24,12 +30,14 @@ class AliyunAuthenticationStrategy(AuthenticationStrategy):
 
         credentials = AccessKeyCredential(access_key_id=access_key_id, access_key_secret=access_key_secret)
 
-        # apiClient = AcsClient(ak='TODO', secret='TODO', region_id='cn-hangzhou')
-        # client = AcsClient(credential=credentials)
+        client = AcsClient(credential=credentials)
 
-        # if credentials.get('access_key') is None:
-        #     print_error('Failed to authenticate to AWS')
-        #     return False
+        try:
+            response = client.do_action_with_exception(GetCallerIdentityRequest.GetCallerIdentityRequest())
+            response_decoded = json.loads(response)
+        except Exception as e:
+            print(e)  # TODO log
+            return False
 
-        return credentials
+        return AliyunCredentials(credentials, client, response_decoded)
 

@@ -32,9 +32,8 @@ class OracleProvider(BaseProvider):
         """
         Returns the name of the report using the provider's configuration
         """
-        if self.credentials.compartment_id:
-            pass
-            return 'oracle-{}'.format(self.credentials.compartment_id)
+        if self.account_id:
+            return 'oracle-{}'.format(self.account_id)
         else:
             return 'oracle'
 

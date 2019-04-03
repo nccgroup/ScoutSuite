@@ -45,3 +45,4 @@ watson-developer-cloud>=2.8.1
 # Alibaba
 aliyun-python-sdk-core>=2.13.4
 aliyun-python-sdk-ram>=3.0.1
+aliyun-python-sdk-sts>=3.0.1

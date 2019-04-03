@@ -24,7 +24,7 @@ class AliyunProvider(BaseProvider):
         self.services_config = AliyunServicesConfig
 
         self.credentials = kwargs['credentials']
-        self.account_id = 'TODO'  # FIXME
+        self.account_id = self.credentials.caller_details['AccountId']
 
         super(AliyunProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
 
@@ -32,7 +32,10 @@ class AliyunProvider(BaseProvider):
         """
         Returns the name of the report using the provider's configuration
         """
-        return 'aliyun'
+        if self.account_id:
+            return 'aliyun-{}'.format(self.account_id)
+        else:
+            return 'aliyun'
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
 
