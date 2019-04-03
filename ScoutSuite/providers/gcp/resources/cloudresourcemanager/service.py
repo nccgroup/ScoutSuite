@@ -6,7 +6,3 @@ class CloudResourceManager(Projects):
     _children = [  
         (Bindings, 'bindings') 
     ]
-
-    def __init__(self, gcp_facade: GCPFacade):
-        super(CloudResourceManager, self).__init__(gcp_facade)
-
