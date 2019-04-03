@@ -1,8 +1,8 @@
-import google
 import os
 import warnings
 
-from ScoutSuite.core.console import print_error
+import google
+
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
 
@@ -14,23 +14,27 @@ class GCPAuthenticationStrategy(AuthenticationStrategy):
         Refer to https://google-auth.readthedocs.io/en/stable/reference/google.auth.html.
         """
 
-        if user_account:
-            # disable GCP warning about using User Accounts
-            warnings.filterwarnings(
-                "ignore", "Your application has authenticated using end user credentials")
-            pass  # Nothing more to do
-        elif service_account:
-            client_secrets_path = os.path.abspath(service_account)
-            os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = client_secrets_path
-        else:
-            print_error(
-                'Failed to authenticate to GCP - no supported account type')
-            raise AuthenticationException()
+        try:
 
-        credentials, default_project_id = google.auth.default()
-        if not credentials:
-            raise AuthenticationException()
+            if user_account:
+                # disable GCP warning about using User Accounts
+                warnings.filterwarnings("ignore", "Your application has authenticated using end user credentials")
+                pass  # Nothing more to do
+            elif service_account:
+                client_secrets_path = os.path.abspath(service_account)
+                os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = client_secrets_path
+            else:
+                raise AuthenticationException('Failed to authenticate to GCP - no supported account type')
 
-        credentials.is_service_account = service_account is not None
-        credentials.default_project_id = default_project_id
-        return credentials
+            credentials, default_project_id = google.auth.default()
+
+            if not credentials:
+                raise AuthenticationException('No credentials')
+
+            credentials.is_service_account = service_account is not None
+            credentials.default_project_id = default_project_id
+
+            return credentials
+
+        except Exception as e:
+            raise AuthenticationException(e)

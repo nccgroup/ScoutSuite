@@ -4,7 +4,7 @@ from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.utils import ec2_classic
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
-from ScoutSuite.core.console import print_error, print_exception
+from ScoutSuite.core.console import print_exception
 
 
 class RDSFacade(AWSBaseFacade):
@@ -104,8 +104,7 @@ class RDSFacade(AWSBaseFacade):
                 parameter_name = parameter.pop('ParameterName')
                 parameter_group['Parameters'][parameter_name] = parameter
         except Exception as e:
-            print_exception(e)
-            print_error('Failed fetching DB parameters for %s' % name)
+            print_exception('Failed fetching DB parameters for %s: %s' % (name, e))
 
     async def get_security_groups(self, region: str) :
         return await AWSFacadeUtils.get_all_pages(
