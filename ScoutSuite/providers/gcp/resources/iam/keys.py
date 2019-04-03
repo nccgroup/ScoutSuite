@@ -15,6 +15,9 @@ class Keys(Resources):
 
     def _parse_key(self, raw_key):
         key_dict = {}
+        # The name of the key has the following format:
+        # projects/{PROJECT_ID}/serviceAccounts/{ACCOUNT}/keys/{key}
+        # https://cloud.google.com/iam/reference/rest/v1/projects.serviceAccounts.keys
         key_dict['id'] = raw_key['name'].split('/')[-1]
         key_dict['valid_after'] = raw_key['validAfterTime']
         key_dict['valid_before'] = raw_key['validBeforeTime']
