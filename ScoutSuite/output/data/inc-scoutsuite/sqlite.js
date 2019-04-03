@@ -27,7 +27,7 @@ function requestDb (query, pageSize, pageIndex, full) {
     type: 'GET',
     url: url,
     async: false,
-    dataType: 'json',   
+    dataType: 'json',
     success: function (result) {
       response = result
     } })
@@ -37,15 +37,6 @@ function requestDb (query, pageSize, pageIndex, full) {
   }
 
   return response.data
-}
-
-/**
- * Returns all the data from the server, excepted for resources
- * @returns {object}
- */
-function getScoutsuiteResultsSqlite () {
-  let runResults = requestDb()
-  return runResults
 }
 
 /**

@@ -795,7 +795,7 @@ function loadMetadata () {
   if (getFormat() === resultFormats.json) {
     runResults = getScoutsuiteResultsJson() 
   } else if (getFormat() === resultFormats.sqlite) {
-    runResults = getScoutsuiteResultsSqlite()
+    runResults = requestDb()
     loadFirstPageEverywhere()
   }
 
