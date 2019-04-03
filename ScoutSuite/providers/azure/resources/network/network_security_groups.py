@@ -1,12 +1,13 @@
+from ScoutSuite.providers.azure.facade.facade import AzureFacade
 from ScoutSuite.providers.base.configs.resources import Resources
 
 
 class NetworkSecurityGroups(Resources):
-    def __init__(self, facade):
+    def __init__(self, facade: AzureFacade):
         self.facade = facade
 
     async def fetch_all(self):
-        for raw_group in await self.facade.get_network_security_groups():
+        for raw_group in await self.facade.network.get_network_security_groups():
             id, network_security_group = self._parse_network_security_group(raw_group)
             self[id] = network_security_group
 

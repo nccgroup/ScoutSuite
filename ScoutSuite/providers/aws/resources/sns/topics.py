@@ -1,8 +1,8 @@
+import json
+
 from ScoutSuite.providers.aws.resources.resources import AWSCompositeResources
 
 from .subscriptions import Subscriptions
-
-import json
 
 
 class Topics(AWSCompositeResources):
@@ -12,16 +12,19 @@ class Topics(AWSCompositeResources):
 
     async def fetch_all(self, **kwargs):
         raw_topics = await self.facade.sns.get_topics(self.scope['region'])
-        # TODO: parallelize this async loop:
         for raw_topic in raw_topics:
             topic_name, topic = self._parse_topic(raw_topic)
-            await self._fetch_children(
-                parent=topic,
-                scope={'region': self.scope['region'], 'topic_name': topic_name}
-            )
-            # Fix subscriptions count:
-            topic['subscriptions_count'] = topic['subscriptions'].pop('subscriptions_count')
             self[topic_name] = topic
+
+        await self._fetch_children_of_all_resources(
+            resources=self,
+            scopes={topic_id: {'region': self.scope['region'], 'topic_name': topic['name']}
+                    for (topic_id, topic) in self.items()}
+        )
+
+        # Fix subscriptions count:
+        for topic in self.values():
+            topic['subscriptions_count'] = topic['subscriptions'].pop('subscriptions_count')
 
     def _parse_topic(self, raw_topic):
         raw_topic['arn'] = raw_topic.pop('TopicArn')

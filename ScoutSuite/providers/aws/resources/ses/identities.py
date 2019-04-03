@@ -11,14 +11,15 @@ class Identities(AWSCompositeResources):
 
     async def fetch_all(self, **kwargs):
         raw_identities = await self.facade.ses.get_identities(self.scope['region'])
-        # TODO: parallelize the following async loop:
         for raw_identity in raw_identities:
             id, identity = self._parse_identity(raw_identity)
-            await self._fetch_children(
-                parent=identity,
-                scope={'region': self.scope['region'], 'identity_name': identity['name']}
-            )
             self[id] = identity
+
+        await self._fetch_children_of_all_resources(
+            resources=self,
+            scopes={identity_id: {'region': self.scope['region'], 'identity_name': identity['name']}
+                    for (identity_id, identity) in self.items()}
+        )
 
     def _parse_identity(self, raw_identity):
         identity_name, dkim_attributes = raw_identity

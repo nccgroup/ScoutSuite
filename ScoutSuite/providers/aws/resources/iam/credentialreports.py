@@ -13,8 +13,10 @@ class CredentialReports(AWSResources):
         raw_credential_report['name'] = user_id
         raw_credential_report['id'] = user_id
         raw_credential_report['password_last_used'] = self._sanitize_date(raw_credential_report['password_last_used'])
-        raw_credential_report['access_key_1_last_used_date'] = self._sanitize_date(raw_credential_report['access_key_1_last_used_date'])
-        raw_credential_report['access_key_2_last_used_date'] = self._sanitize_date(raw_credential_report['access_key_2_last_used_date'])
+        raw_credential_report['access_key_1_last_used_date'] =\
+            self._sanitize_date(raw_credential_report['access_key_1_last_used_date'])
+        raw_credential_report['access_key_2_last_used_date'] =\
+            self._sanitize_date(raw_credential_report['access_key_2_last_used_date'])
         raw_credential_report['last_used'] = self._compute_last_used(raw_credential_report)
         return user_id, raw_credential_report
 
