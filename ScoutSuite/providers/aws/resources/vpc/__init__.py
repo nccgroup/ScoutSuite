@@ -1,7 +1,7 @@
 import netaddr
 
 from ScoutSuite.core.fs import read_ip_ranges
-from ScoutSuite.providers.aws.facade.facade import AWSFacade
+from ScoutSuite.providers.aws.facade import AWSFacade
 from ScoutSuite.providers.aws.resources.regions import Regions
 
 from .flow_logs import FlowLogs

@@ -5,7 +5,7 @@ from ScoutSuite.providers.aws.resources.iam.policies import Policies
 from ScoutSuite.providers.aws.resources.iam.users import Users
 from ScoutSuite.providers.aws.resources.iam.roles import Roles
 from ScoutSuite.providers.aws.resources.iam.passwordpolicy import PasswordPolicy
-from ScoutSuite.providers.aws.facade.facade import AWSFacade
+from ScoutSuite.providers.aws.facade import AWSFacade
 
 
 class IAM(AWSCompositeResources):

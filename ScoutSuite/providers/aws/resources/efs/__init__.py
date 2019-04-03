@@ -1,4 +1,4 @@
-from ScoutSuite.providers.aws.facade.facade import AWSFacade
+from ScoutSuite.providers.aws.facade import AWSFacade
 from ScoutSuite.providers.aws.resources.regions import Regions
 from ScoutSuite.providers.aws.resources.resources import AWSResources
 

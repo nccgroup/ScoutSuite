@@ -2,7 +2,7 @@ import abc
 
 from ScoutSuite.providers.aws.utils import get_aws_account_id
 from ScoutSuite.providers.aws.resources.resources import AWSCompositeResources
-from ScoutSuite.providers.aws.facade.facade import AWSFacade
+from ScoutSuite.providers.aws.facade import AWSFacade
 
 
 class Regions(AWSCompositeResources, metaclass=abc.ABCMeta):

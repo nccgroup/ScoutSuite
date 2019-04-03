@@ -1,4 +1,4 @@
-from ScoutSuite.providers.aws.facade.facade import AWSFacade
+from ScoutSuite.providers.aws.facade import AWSFacade
 from ScoutSuite.providers.aws.resources.resources import AWSResources, AWSCompositeResources
 
 from ScoutSuite.providers.utils import get_non_provider_id

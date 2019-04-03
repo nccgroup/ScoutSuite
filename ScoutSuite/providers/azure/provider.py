@@ -5,8 +5,7 @@ import os
 from ScoutSuite.core.console import print_error, print_exception
 
 from ScoutSuite.providers.base.provider import BaseProvider
-from ScoutSuite.providers.azure.configs.services import AzureServicesConfig
-
+from ScoutSuite.providers.azure.services import AzureServicesConfig
 
 
 class AzureProvider(BaseProvider):
@@ -21,17 +20,20 @@ class AzureProvider(BaseProvider):
 
         self.profile = 'azure-profile'  # TODO this is aws-specific
 
-        self.metadata_path = '%s/metadata.json' % os.path.split(os.path.abspath(__file__))[0]
+        self.metadata_path = '%s/metadata.json' % os.path.split(
+            os.path.abspath(__file__))[0]
 
         self.provider_code = 'azure'
         self.provider_name = 'Microsoft Azure'
 
         self.services_config = AzureServicesConfig
-        
-        self.credentials = kwargs['credentials']
-        self.aws_account_id = self.credentials.aws_account_id # TODO : Get rid of aws_account_id
 
-        super(AzureProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
+        self.credentials = kwargs['credentials']
+        # TODO : Get rid of aws_account_id
+        self.aws_account_id = self.credentials.aws_account_id
+
+        super(AzureProvider, self).__init__(report_dir, timestamp,
+                                            services, skipped_services, thread_config)
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """

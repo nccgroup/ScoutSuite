@@ -1,6 +1,6 @@
 import asyncio
 
-from ScoutSuite.providers.azure.facade.facade import AzureFacade
+from ScoutSuite.providers.azure.facade import AzureFacade
 from ScoutSuite.providers.azure.resources.resources import AzureCompositeResources
 
 from .database_blob_auditing_policies import DatabaseBlobAuditingPolicies

@@ -5,8 +5,8 @@ import os
 import boto3
 
 from ScoutSuite.core.console import print_debug, print_error, print_exception, print_info
-from ScoutSuite.providers.aws.configs.services import AWSServicesConfig
-from ScoutSuite.providers.aws.resources.vpc.service import put_cidr_name
+from ScoutSuite.providers.aws.services import AWSServicesConfig
+from ScoutSuite.providers.aws.resources.vpc import put_cidr_name
 from ScoutSuite.providers.base.configs.browser import combine_paths, get_object_at, get_value_at
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.utils import manage_dictionary
