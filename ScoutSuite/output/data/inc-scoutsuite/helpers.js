@@ -155,26 +155,26 @@ Handlebars.registerHelper('count_vpc_instances', function (vpcInstances) {
 })
 
 Handlebars.registerHelper('count_role_instances', function (instanceProfiles) {
-  var c = 0
+  var counter = 0
   for (let ip in instanceProfiles) {
     for (let i in instanceProfiles[ip]['instances']) {
-      c = c + 1
+      counter = counter + 1
     }
   }
-  return c
+  return counter
 })
 
 var recursiveCount = function (input, entities) {
-  var count = 0
+  var counter = 0
   if (entities.length > 0) {
     var entity = entities.shift()
     for (let i in input[entity]) {
-      count = count + recursiveCount(input[entity][i], eval(JSON.stringify(entities)))
+      counter = counter + recursiveCount(input[entity][i], eval(JSON.stringify(entities)))
     }
   } else {
-    count = count + 1
+    counter = counter + 1
   }
-  return count
+  return counter
 }
 
 Handlebars.registerHelper('find_ec2_object_attribute', function (path, id, attribute ) {
@@ -193,8 +193,8 @@ Handlebars.registerHelper('format_date', function (time) {
   }
 })
 
-Handlebars.registerHelper('make_title', function (title) {
-  return make_title(title)
+Handlebars.registerHelper('makeTitle', function (title) {
+  return makeTitle(title)
 })
 
 Handlebars.registerHelper('addMember', function (memberName, value) {
@@ -267,12 +267,12 @@ Handlebars.registerHelper('escape_special_chars', function (value) {
   return value.replace(/\./g, 'nccdot').replace(/,/g, 'ncccoma')
 })
 
-Handlebars.registerHelper('get_value_at', function () {
+Handlebars.registerHelper('getValueAt', function () {
   var path = arguments[0]
   for (var i = 1; i < arguments.length - 1; i++) {
     path = path + '.' + arguments[i]
   }
-  return get_value_at(path)
+  return getValueAt(path)
 })
 
 Handlebars.registerHelper('concat', function () {
@@ -392,9 +392,9 @@ Handlebars.registerHelper('convert_bool_to_enabled', function (value) {
   return value ? 'Enabled' : 'Disabled'
 })
 
-/*********************/
-/* Ruleset generator */
-/*********************/
+/*********************
+ * Ruleset generator *
+ *********************/
 
 Handlebars.registerHelper('get_rule', function (ruleFilename, attribute) {
   if (attribute === 'service') {

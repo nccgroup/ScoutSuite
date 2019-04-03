@@ -25,12 +25,12 @@ function onPageLoad () {
     // Strip the # sign
     var path = decodeURIComponent(anchor.replace('#', ''))
     // Get resource path based on browsed-to path
-    var resourcePath = get_resource_path(path)
+    var resourcePath = getResourcePath(path)
 
     var csvArray = []
     var jsonDict = {}
 
-    var items = get_value_at(path)
+    var items = getValueAt(path)
     var resourcePathArray = resourcePath.split('.')
     var splitPath = path.split('.')
     var findingKey = splitPath[splitPath.length - 2]
@@ -43,7 +43,7 @@ function onPageLoad () {
         if (typeof items[item] === 'string') {
           var idArray = items[item].split('.')
           var id = 'services.' + idArray.slice(0, resourcePathArray.length).join('.')
-          var i = get_value_at(id)
+          var i = getValueAt(id)
         } else {
           i = items[item]
         }
@@ -66,7 +66,7 @@ function onPageLoad () {
         firstEntry = 0
       }
 
-      download_as_csv(findingKey + '.csv', csvArray)
+      downloadAsCsv(findingKey + '.csv', csvArray)
     }
 
     if (buttonClicked === 'findings_download_json_button') {
@@ -77,7 +77,7 @@ function onPageLoad () {
         if (typeof items[item] === 'string') {
           idArray = items[item].split('.')
           id = 'services.' + idArray.slice(0, resourcePathArray.length).join('.')
-          i = get_value_at(id)
+          i = getValueAt(id)
         } else {
           i = items[item]
         }
@@ -95,7 +95,7 @@ function onPageLoad () {
     // Strip the # sign
     let path = decodeURIComponent(anchor.replace('#', ''))
     // Get resource path based on browsed-to path
-    let resourcePath = get_resource_path(path)
+    let resourcePath = getResourcePath(path)
     let pathArray = resourcePath.split('.')
 
     if (buttonClicked === 'page_forward') {
@@ -340,8 +340,8 @@ function hideFilters () {
  * @param {string} resourcePath
  */
 function showFindings (path, resourcePath) {
-  let items = get_value_at(path)
-  let level = get_value_at(path.replace('items', 'level'))
+  let items = getValueAt(path)
+  let level = getValueAt(path.replace('items', 'level'))
   let resourcePathArray = resourcePath.split('.')
   let splitPath = path.split('.')
   let findingService = splitPath[1]
@@ -807,7 +807,7 @@ function loadMetadata () {
       }
       for (let section in runResults['metadata'][group][service]) {
         for (let resourceType in runResults['metadata'][group][service][section]) {
-          add_templates(group, service, section, resourceType,
+          addTemplates(group, service, section, resourceType,
             runResults['metadata'][group][service][section][resourceType]['path'],
             runResults['metadata'][group][service][section][resourceType]['cols'])
         }
@@ -817,9 +817,9 @@ function loadMetadata () {
   hidePleaseWait()
 }
 
-/// /////////////////////
-// Browsing functions //
-/// /////////////////////
+/**********************
+ * Browsing functions *
+ **********************/
 
 /**
  * Show About Scout Suite modal
@@ -856,7 +856,7 @@ function showResourcesDetails() {
 /**
  * Show main dashboard
  */
-function show_main_dashboard () {
+function showMainDashboard () {
   hideAll()
   // Hide filters
   hideFilters()
@@ -876,7 +876,7 @@ function show_main_dashboard () {
  * @param {string} resourcePath
  * @returns {string}
  */
-function makeTitle (resourcePath) {
+function makeTitleAcl (resourcePath) {
   resourcePath = resourcePath.replace('service_groups.', '')
   let service = getService(resourcePath)
   let resource = resourcePath.split('.').pop()
@@ -898,7 +898,7 @@ function getService (resourcePath) {
   } else {
     service = resourcePath.split('.')[0]
   }
-  service = make_title(service)
+  service = makeTitle(service)
   return service
 }
 
@@ -928,7 +928,7 @@ window.onhashchange = showPageFromHash
  * @param {string} path
  * @returns {string}
  */
-function get_value_at (path) {
+function getValueAt (path) {
   let pathArray = path.split('.')
   let value = runResults
   for (let p in pathArray) {
@@ -952,7 +952,7 @@ function updateDOM (anchor) {
   var path = decodeURIComponent(anchor.replace('#', ''))
 
   // Get resource path based on browsed-to path
-  var resourcePath = get_resource_path(path)
+  var resourcePath = getResourcePath(path)
 
   updateNavbar(path)
 
@@ -972,10 +972,10 @@ function updateDOM (anchor) {
 
   // Update title
   if (path.endsWith('.items')) {
-    let title = get_value_at(path.replace('items', 'description'))
+    let title = getValueAt(path.replace('items', 'description'))
     updateTitle(title)
   } else {
-    let title = makeTitle(resourcePath)
+    let title = makeTitleAcl(resourcePath)
     updateTitle(title)
   }
 
@@ -985,7 +985,7 @@ function updateDOM (anchor) {
 
   // DOM Update
   if (path === '') {
-    show_main_dashboard()
+    showMainDashboard()
   } else if (path.endsWith('.items')) {
     // Switch view for findings
     lazyLoadingJson(resourcePath)
@@ -1049,11 +1049,11 @@ function lazyLoadingJson (path) {
  * @param path
  * @returns {string}
  */
-function get_resource_path (path) {
+function getResourcePath (path) {
   if (path.endsWith('.items')) {
-    var resourcePath = get_value_at(path.replace('items', 'display_path'))
+    var resourcePath = getValueAt(path.replace('items', 'display_path'))
     if (resourcePath === undefined) {
-      resourcePath = get_value_at(path.replace('items', 'path'))
+      resourcePath = getValueAt(path.replace('items', 'path'))
     }
     let resourcePathArray = resourcePath.split('.')
     resourcePathArray.pop()
@@ -1072,7 +1072,7 @@ function get_resource_path (path) {
  * @param title
  * @returns {string}
  */
-function make_title (title) {
+function makeTitle (title) {
   if (typeof (title) !== 'string') {
     console.log('Error: received title ' + title + ' (string expected).')
     return title.toString()
@@ -1137,7 +1137,7 @@ function make_title (title) {
  * Toggles between truncated and full lenght bucket name
  * @param {string} name           Name of the bucket
  */
-function toggleName(name) {
+function toggleName (name) {
   if (name.style.display !== 'contents') {
     name.style.display = 'contents'
   } else {
@@ -1154,13 +1154,13 @@ function toggleName(name) {
  * @param path
  * @param cols
  */
-function add_templates (group, service, section, resourceType, path, cols) {
+function addTemplates (group, service, section, resourceType, path, cols) {
   if (cols === undefined) {
     cols = 2
   }
-  add_template(group, service, section, resourceType, path, 'details')
+  addTemplate(group, service, section, resourceType, path, 'details')
   if (cols > 1) {
-    add_template(group, service, section, resourceType, path, 'list')
+    addTemplate(group, service, section, resourceType, path, 'list')
   }
 }
 
@@ -1173,7 +1173,7 @@ function add_templates (group, service, section, resourceType, path, cols) {
  * @param path
  * @param suffix
  */
-function add_template (group, service, section, resourceType, path, suffix) {
+function addTemplate (group, service, section, resourceType, path, suffix) {
   var template = document.createElement('script')
   var partialName = ''
   template.type = 'text/x-handlebars-template'
@@ -1208,7 +1208,7 @@ function add_template (group, service, section, resourceType, path, suffix) {
  * @param group
  * @param service
  */
-function filter_rules (group, service) {
+function filterRules (group, service) {
   if (service === undefined) {
     $("[id*='rule-']").show()
   } else {
@@ -1236,7 +1236,7 @@ function downloadConfiguration (configuration, name, prefix) {
 /**
  * Downloads execptions
  */
-function download_exceptions () {
+function downloadExceptions () {
   var url = window.location.pathname
   var profileName = url.substring(url.lastIndexOf('/') + 1).replace('report-', '').replace('.html', '')
   console.log(exceptions)
@@ -1263,7 +1263,7 @@ var hideElement = function (elementId) {
  * Toggles an element
  * @param {string} elementId
  */
-var toggle_element = function (elementId) {
+var toggleElement = function (elementId) {
   $('#' + elementId).toggle()
 }
 
@@ -1271,7 +1271,7 @@ var toggle_element = function (elementId) {
  * Sets the url to filter a specific region
  * @param {string} region
  */
-function set_filter_url (region) {
+function setFilterUrl (region) {
   let tmp = location.hash.split('.')
   tmp[3] = region
   location.hash = tmp.join('.')
@@ -1289,7 +1289,7 @@ function set_filter_url (region) {
  * @param filename
  * @param rows
  */
-function download_as_csv (filename, rows) {
+function downloadAsCsv (filename, rows) {
   var processRow = function (row) {
     var finalVal = ''
     for (var j = 0; j < row.length; j++) {

@@ -3,7 +3,7 @@
       {{#if resources}}
         <div class="accordion">
           <li>
-            <h5 class="list-group-item-heading accordion-heading">{{ make_title service }} {{ make_title resource_type }}
+            <h5 class="list-group-item-heading accordion-heading">{{ makeTitle service }} {{ makeTitle resource_type }}
                 <!--{{> count_badge count=resources.length}}-->
             </h5>
           </li>
@@ -14,7 +14,7 @@
                   <li class="list-group-item-text">
                     <a href="javascript:showObject('services.{{../service}}.regions.{{../region}}.vpcs.{{../vpc}}.{{../resource_type}}.{{this}}')">
                         {{this}}
-                        <!--{{get_value_at 'services' ../service 'regions' ../region 'vpcs' ../vpc ../resource_type this 'name'}}-->
+                        <!--{{getValueAt 'services' ../service 'regions' ../region 'vpcs' ../vpc ../resource_type this 'name'}}-->
                     </a>
                   </li>
                 {{/each}}

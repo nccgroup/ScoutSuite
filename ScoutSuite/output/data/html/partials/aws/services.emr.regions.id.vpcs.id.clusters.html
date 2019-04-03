@@ -8,7 +8,7 @@
             <h4>Information</h4>
             <ul>
                 <li class="list-group-item-text">Region: {{region}}</li>
-                <li class="list-group-item-text">VPC: {{get_value_at 'services.ec2.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</li>
+                <li class="list-group-item-text">VPC: {{getValueAt 'services.ec2.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</li>
                 <li class="list-group-item-text">Id: {{id}}</li>
                 <li class="list-group-item-text">Availability zone: {{Ec2InstanceAttributes.Ec2AvailabilityZone}}</li>
                 <li class="list-group-item-text">Status: {{Status.State}}</li>
@@ -23,7 +23,7 @@
                 <li class="list-group-item-text">Security group:
                     {{#if Ec2InstanceAttributes.EmrManagedMasterSecurityGroup}}
                         <a href="javascript:showObject('services.ec2.regions.{{region}}.vpcs.{{vpc}}.security_groups.{{Ec2InstanceAttributes.EmrManagedMasterSecurityGroup}}')">
-                            {{get_value_at 'services.ec2.regions' region 'vpcs' vpc 'security_groups' Ec2InstanceAttributes.EmrManagedMasterSecurityGroup 'name'}}
+                            {{getValueAt 'services.ec2.regions' region 'vpcs' vpc 'security_groups' Ec2InstanceAttributes.EmrManagedMasterSecurityGroup 'name'}}
                         </a>
                     {{else}}
                         N/A
@@ -37,7 +37,7 @@
                 <li class="list-group-item-text">Security group:
                     {{#if Ec2InstanceAttributes.EmrManagedSlaveSecurityGroup}}
                         <a href="javascript:showObject('services.ec2.regions.{{region}}.vpcs.{{vpc}}.security_groups.{{Ec2InstanceAttributes.EmrManagedSlaveSecurityGroup}}')">
-                            {{get_value_at 'services.ec2.regions' region 'vpcs' vpc 'security_groups' Ec2InstanceAttributes.EmrManagedSlaveSecurityGroup 'name'}}
+                            {{getValueAt 'services.ec2.regions' region 'vpcs' vpc 'security_groups' Ec2InstanceAttributes.EmrManagedSlaveSecurityGroup 'name'}}
                         </a>
                     {{else}}
                         N/A
