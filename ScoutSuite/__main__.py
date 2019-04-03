@@ -39,30 +39,31 @@ def main(args=None):
 
 # noinspection PyBroadException
 async def run_scan(args):
+
     # Configure the debug level
     set_config_debug_level(args.get('debug'))
 
     print_info('Launching Scout')
 
-    if not args.get('fetch_local'):
-        auth_strategy = get_authentication_strategy(args.get('provider'))
-        credentials = auth_strategy.authenticate(profile=args.get('profile'),
-                                                 user_account=args.get('user_account'),
-                                                 service_account=args.get('service_account'),
-                                                 cli=args.get('cli'),
-                                                 msi=args.get('msi'),
-                                                 service_principal=args.get('service_principal'),
-                                                 file_auth=args.get('file_auth'),
-                                                 tenant_id=args.get('tenant_id'),
-                                                 subscription_id=args.get('subscription_id'),
-                                                 client_id=args.get('client_id'),
-                                                 client_secret=args.get('client_secret'),
-                                                 username=args.get('username'),
-                                                 password=args.get('password')
-                                                )
+    print_info('Authenticating to cloud provider')
+    auth_strategy = get_authentication_strategy(args.get('provider'))
+    credentials = auth_strategy.authenticate(profile=args.get('profile'),
+                                             user_account=args.get('user_account'),
+                                             service_account=args.get('service_account'),
+                                             cli=args.get('cli'),
+                                             msi=args.get('msi'),
+                                             service_principal=args.get('service_principal'),
+                                             file_auth=args.get('file_auth'),
+                                             tenant_id=args.get('tenant_id'),
+                                             subscription_id=args.get('subscription_id'),
+                                             client_id=args.get('client_id'),
+                                             client_secret=args.get('client_secret'),
+                                             username=args.get('username'),
+                                             password=args.get('password')
+                                             )
 
-        if not credentials:
-            return 401
+    if not credentials:
+        return 401
 
     # Create a cloud provider object
     cloud_provider = get_provider(provider=args.get('provider'),
@@ -78,6 +79,7 @@ async def run_scan(args):
                                   thread_config=args.get('thread_config'),
                                   result_format=args.get('result_format'),
                                   credentials=credentials)
+
 
     report_file_name = generate_report_name(cloud_provider.provider_code, args)
 
@@ -95,6 +97,7 @@ async def run_scan(args):
 
     # Complete run, including pulling data from provider
     if not args.get('fetch_local'):
+
         # Fetch data from provider APIs
         try:
             print_info('Gathering data from APIs')
