@@ -10,9 +10,10 @@ from ScoutSuite.providers.base.authentication_strategy import AuthenticationStra
 
 class AzureCredentials:
 
-    def __init__(self, credentials, subscription_id):
+    def __init__(self, credentials, subscription_id=None, tenant_id=None):
         self.credentials = credentials
         self.subscription_id = subscription_id
+        self.tenant_id = tenant_id
 
 
 class AzureAuthenticationStrategy(AuthenticationStrategy):
@@ -26,8 +27,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
         try:
             if cli:
                 cli_credentials, subscription_id = get_azure_cli_credentials()
-                credentials = AzureCredentials(cli_credentials, subscription_id)
-                return credentials
+                return AzureCredentials(cli_credentials, subscription_id)
 
             elif msi:
                 msi_auth_credentials = MSIAuthentication()
@@ -44,8 +44,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     # If the VM cannot read subscription list, ask Subscription ID:
                     subscription_id = input('Subscription ID: ')
 
-                credentials = AzureCredentials(msi_auth_credentials, subscription_id)
-                return credentials
+                return AzureCredentials(msi_auth_credentials, subscription_id)
 
             elif file_auth:
                 data = json.loads(file_auth.read())
