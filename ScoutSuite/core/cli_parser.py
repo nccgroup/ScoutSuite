@@ -243,7 +243,7 @@ class ScoutSuiteArgumentParser:
                             default='json',
                             type=str,
                             choices=['json', 'sqlite'],
-                            help="The database file format to use. JSON doesn't require a server to view the report, "
+                            help="[EXPERIMENTAL FEATURE] The database file format to use. JSON doesn't require a server to view the report, "
                                  "but cannot be viewed if the result file is over 400mb.")
         parser.add_argument('--serve',
                             dest="database_name",
