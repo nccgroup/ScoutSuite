@@ -91,19 +91,26 @@ function onPageLoad () {
   // When the button is clicked, load the desired page
   $('#paging_buttons').click(function (event) {
     let buttonClicked = event.target.id
-    let anchor = window.location.hash.substr(1)
-    // Strip the # sign
-    let path = decodeURIComponent(anchor.replace('#', ''))
-    // Get resource path based on browsed-to path
-    let resourcePath = getResourcePath(path)
-    let pathArray = resourcePath.split('.')
-
+    let pathArray = getPathArray()
     if (buttonClicked === 'page_forward') {
       loadPage(pathArray, 1)
     } else if (buttonClicked === 'page_backward') {
       loadPage(pathArray, -1)
     }
   })
+}
+
+/**
+ * Get an array containing the current path subdivided
+ * @returns {object}
+ */
+function getPathArray () {
+  let anchor = window.location.hash.substr(1)
+  // Strip the # sign
+  let path = decodeURIComponent(anchor.replace('#', ''))
+  // Get resource path based on browsed-to path
+  let resourcePath = getResourcePath(path)
+  return resourcePath.split('.')
 }
 
 /**
@@ -948,6 +955,9 @@ var currentResourcePath = ''
  * @param {string} anchor
  */
 function updateDOM (anchor) {
+  // Enable or disable the buttons depending on which page you are
+  updateButtons()
+
   // Strip the # sign
   var path = decodeURIComponent(anchor.replace('#', ''))
 

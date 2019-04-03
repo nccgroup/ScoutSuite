@@ -76,6 +76,18 @@ function getResourcePageSqlite (pageIndex, pageSize, service, resource) {
 }
 
 /**
+ * Turns off or on the pagination buttons depending on the resource page currently consulted
+ */
+function updateButtons () {
+  let pathArray = getPathArray()
+  if (pathArray.length > 1) {
+    let pageInfo = getPageInfo(pathArray)
+    document.getElementById('page_backward').disabled = (pageInfo[1] <= 0)
+    document.getElementById('page_forward').disabled = (pageInfo[1] >= getLastPageIndex(pathArray, pageInfo[0]))
+  }
+}
+
+/**
  * Creates a query using the query separator to request information from the server
  * Scales with the number of params given
  * @returns {string}
