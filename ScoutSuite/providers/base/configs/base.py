@@ -17,10 +17,8 @@ from ScoutSuite.providers.base.configs.threads import thread_configs
 
 # TODO do this better without name conflict
 from ScoutSuite.providers.gcp.utils import gcp_connect_service
-from ScoutSuite.providers.azure.utils import azure_connect_service
 
-from ScoutSuite.providers.aws.utils import build_region_list, connect_service
-from ScoutSuite.core.console import print_exception, print_info
+from ScoutSuite.core.console import print_exception, print_info, print_error
 
 from ScoutSuite.output.console import FetchStatusLogger
 from ScoutSuite.utils import format_service_name
@@ -84,22 +82,13 @@ class BaseConfig(object):
 
         # Connect to the service
         if self._is_provider('aws'):
-            if self.service in ['s3']:  # S3 namespace is global but APIs aren't....
-                api_clients = {}
-                for region in build_region_list(self.service, regions, partition_name):
-                    api_clients[region] = connect_service('s3', credentials, region, silent=True)
-                api_client = api_clients[list(api_clients.keys())[0]]
-            elif self.service == 'route53domains':
-                api_client = connect_service(self.service, credentials, 'us-east-1',
-                                             silent=True)  # TODO: use partition's default region
-            else:
-                api_client = connect_service(self.service, credentials, silent=True)
+            print_error('You should not use BaseConfig for AWS services. Please refer to the wiki: https://bit.ly/2IbiWtA.')
 
         elif self._is_provider('gcp'):
             api_client = gcp_connect_service(service=self.service, credentials=credentials)
 
         elif self._is_provider('azure'):
-            api_client = azure_connect_service(service=self.service, credentials=credentials)
+            print_error('You should not use BaseConfig for Azure services. Please refer to the wiki: https://bit.ly/2IbiWtA.')
 
         # Threading to fetch & parse resources (queue consumer)
         params = {'api_client': api_client}
