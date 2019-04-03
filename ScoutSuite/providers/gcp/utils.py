@@ -36,7 +36,6 @@ def gcp_connect_service(service, credentials=None, region_name=None):
             return discovery.build('iam', 'v1', cache_discovery=False, cache=MemoryCache())
 
         if service == 'stackdriverlogging':
-            # return stackdriver_logging.LoggingServiceV2Client()
             return stackdriver_logging.Client(project='placeholder')  # need a project value to instantiate the client
             # even though it won't be used afterwards
 
