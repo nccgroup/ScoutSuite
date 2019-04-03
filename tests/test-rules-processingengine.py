@@ -11,7 +11,7 @@ class DummyObject(object):
     pass
 
 
-class TestAWSScout2RulesProcessingEngine:
+class TestScoutRulesProcessingEngine:
 
     def setup(self):
         set_config_debug_level(True)
@@ -84,6 +84,6 @@ class TestAWSScout2RulesProcessingEngine:
         with tempfile.NamedTemporaryFile('wt', delete=False) as f:
             f.write(json.dumps(test_ruleset, indent=4))
 
-        return Ruleset(filename=f.name)
+        return Ruleset(cloud_provider='aws', filename=f.name)
 
         return None

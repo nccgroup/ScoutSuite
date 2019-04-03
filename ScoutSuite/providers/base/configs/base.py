@@ -22,7 +22,6 @@ from ScoutSuite.providers.azure.utils import azure_connect_service
 from ScoutSuite.providers.aws.utils import build_region_list, connect_service
 from ScoutSuite.core.console import print_exception, print_info
 
-from ScoutSuite.output.console import FetchStatusLogger
 from ScoutSuite.utils import format_service_name
 
 # TODO global is trash
@@ -52,7 +51,7 @@ class BaseConfig(object):
 
     def get_non_provider_id(self, name):
         """
-        Not all AWS resources have an ID and some services allow the use of "." in names, which break's Scout2's
+        Not all AWS resources have an ID and some services allow the use of "." in names, which break's Scout's
         recursion scheme if name is used as an ID. Use SHA1(name) instead.
 
         :param name:                    Name of the resource to
@@ -120,9 +119,6 @@ class BaseConfig(object):
 
         service_queue = self._init_threading(self.__fetch_service, params, self.thread_config['list'])
 
-        # Init display
-        self.fetchstatuslogger = FetchStatusLogger(targets)
-
         # Go
         for target in targets:
             service_queue.put(target)
@@ -130,14 +126,6 @@ class BaseConfig(object):
         # Blocks until all items in the queue have been gotten and processed.
         service_queue.join()
         target_queue.join()
-
-        # Show completion and force newline
-        if self._is_provider('aws'):
-            # Show completion and force newline
-            if self.service != 'iam':
-                self.fetchstatuslogger.show(True)
-        else:
-            self.fetchstatuslogger.show(True)
 
         # Threads should stop running as queues are empty
         self.run_target_threads = False
@@ -160,8 +148,6 @@ class BaseConfig(object):
                         method = getattr(self, 'parse_%s' %
                                          target_type.replace('.', '_'))  # TODO fix this, hack for GCP API Client libs
                         method(target, params)
-                        self.fetchstatuslogger.counts[target_type]['fetched'] += 1
-                        self.fetchstatuslogger.show()
                 except Exception as e:
                     if hasattr(e, 'response') and \
                             'Error' in e.response and \
@@ -200,8 +186,6 @@ class BaseConfig(object):
                                 print_exception(e)
                             targets = []
 
-                        self.fetchstatuslogger.counts[target_type]['discovered'] += len(targets)
-
                         for target in targets:
                             params['q'].put((target_type, target), )
 
@@ -228,11 +212,6 @@ class BaseConfig(object):
         :return:
         """
         return None
-
-    async def finalize(self):
-        for t in self.fetchstatuslogger.counts:
-            setattr(self, '%s_count' % t, self.fetchstatuslogger.counts[t]['fetched'])
-        self.__delattr__('fetchstatuslogger')
 
     def _init_threading(self, function, params=None, num_threads=10):
         params = {} if params is None else params

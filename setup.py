@@ -27,8 +27,6 @@ setup(
     entry_points={
         'console_scripts': [
             'Scout = ScoutSuite.__main__:main',
-            'Scout2RulesGenerator = ScoutSuite.__rules_generator__:main',
-            'Scout2Listall = ScoutSuite.__listall__:main'
         ]
     },
     packages=find_packages(),
@@ -41,8 +39,8 @@ setup(
             'data/html/partials/gcp/*.html',
             'data/html/summaries/*.html',
             'data/includes.zip',
-            'data/inc-scout2/*.js',
-            'data/inc-scout2/*.css'
+            'data/inc-scoutsuite/*.js',
+            'data/inc-scoutsuite/*.css'
         ],
         'ScoutSuite.providers': [
             'aws/rules/conditions/*.json',

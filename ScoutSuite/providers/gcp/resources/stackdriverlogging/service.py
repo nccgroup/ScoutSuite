@@ -6,6 +6,3 @@ class StackdriverLogging(Projects):
     _children = [ 
         (Sinks, 'sinks') 
     ]
-
-    def __init__(self, gcp_facade: GCPFacade):
-        super(StackdriverLogging, self).__init__(gcp_facade)
