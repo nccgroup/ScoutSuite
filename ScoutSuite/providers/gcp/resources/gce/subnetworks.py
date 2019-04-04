@@ -1,7 +1,6 @@
 from ScoutSuite.providers.base.configs.resources import Resources
-from ScoutSuite.providers.gcp.resources.gce.regions import Regions
 
-class RegionSubnetworks(Resources):
+class Subnetworks(Resources):
     def __init__(self, gcp_facade, project_id, region):
         self.gcp_facade = gcp_facade
         self.project_id = project_id
@@ -25,13 +24,3 @@ class RegionSubnetworks(Resources):
         subnetwork_dict['creation_timestamp'] = raw_subnetwork['creationTimestamp']
         subnetwork_dict['private_ip_google_access'] = raw_subnetwork['privateIpGoogleAccess']
         return subnetwork_dict['id'], subnetwork_dict
-
-
-class Subnetworks(Regions):
-    async def fetch_all(self):
-        super(Subnetworks, self).fetch_all()
-        for project_id in self['projects'].keys():
-            for region in self['projects'][project_id]['regions'].keys():
-                region_subnetworks = RegionSubnetworks(self.gcp_facade, project_id, region)
-                await region_subnetworks.fetch_all()
-                self['projects'][project_id]['regions'][region]['subnetworks'] = region_subnetworks

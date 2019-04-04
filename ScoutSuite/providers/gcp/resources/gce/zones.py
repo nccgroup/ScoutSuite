@@ -1,22 +1,23 @@
-from ScoutSuite.providers.base.configs.resources import Resources
-from ScoutSuite.providers.gcp.resources.projects import Projects
+import asyncio
+from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
+from ScoutSuite.providers.gcp.resources.gce.instances import Instances
+from ScoutSuite.providers.gcp.resources.resources import GCPCompositeResources
 
-class ProjectZones(Resources):
+class Zones(GCPCompositeResources):
+    _children =[
+        (Instances, 'instances'),
+    ]
+
     def __init__(self, gcp_facade, project_id):
         self.gcp_facade = gcp_facade
         self.project_id = project_id
 
     async def fetch_all(self):
         raw_zones = await self.gcp_facade.gce.get_zones(self.project_id)
-        for raw_zone in raw_zones:
-            zone_name = raw_zone['name']
-            self[zone_name] = {}
-
-
-class Zones(Projects):
-    async def fetch_all(self):
-        super(Zones, self).fetch_all()
-        for project_id in self['projects'].keys():
-            project_zones = ProjectZones(self.gcp_facade, project_id)
-            await project_zones.fetch_all()
-            self['projects'][project_id]['zones'] = project_zones
+        self['zones'] = { raw_zone['name'] : {} for raw_zone in raw_zones }
+        tasks = {
+            asyncio.ensure_future(
+                self._fetch_children(self[raw_zone['name']], gcp_facade = self.gcp_facade, project_id = self.project_id, zone = raw_zone['name'])
+            ) for raw_zone in raw_zones
+        }
+        await asyncio.wait(tasks)
