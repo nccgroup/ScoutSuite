@@ -3,7 +3,7 @@
   "description": "Firewall rule allows internal traffic",
   "rationale": "Firewall rule allows ingress connections for all protocols and ports among instances in the network.",
   "path": "computeengine.projects.id.firewalls.id.allowed_traffic.id.ports.id",
-  "display_path": "computeengine.firewalls.id",
+  "display_path": "computeengine.projects.id.firewalls.id",
   "conditions": [ "and",
     [ "computeengine.projects.id.firewalls.id.action", "equal", "allowed"],
     [ "computeengine.projects.id.firewalls.id.disabled", "notTrue", "" ],

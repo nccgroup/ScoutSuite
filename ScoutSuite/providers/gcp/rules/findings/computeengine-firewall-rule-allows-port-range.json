@@ -2,7 +2,7 @@
   "dashboard_name": "Firewall Rule Elements",
   "description": "Firewall rule allows port range(s)",
   "path": "computeengine.projects.id.firewalls.id.allowed_traffic.id.ports.id",
-  "display_path": "computeengine.firewalls.id",
+  "display_path": "computeengine.projects.id.firewalls.id",
   "conditions": [ "and",
     [ "computeengine.projects.id.firewalls.id.action", "equal", "allowed"],
     [ "computeengine.projects.id.firewalls.id.disabled", "notTrue", "" ],

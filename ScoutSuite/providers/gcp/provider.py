@@ -88,7 +88,7 @@ class GCPProvider(BaseProvider):
         ip_ranges = [] if ip_ranges is None else ip_ranges
 
         # self._match_instances_and_snapshots()
-        # self._match_networks_and_instances()
+        self._match_networks_and_instances()
 
         super(GCPProvider, self).preprocessing()
 
@@ -209,28 +209,32 @@ class GCPProvider(BaseProvider):
     #     """
 
     #     if 'computeengine' in self.services:
-    #         for instance in self.services['computeengine']['instances'].values():
-    #             for instance_disk in instance['disks'].values():
-    #                 instance_disk['snapshots'] = []
-    #                 for disk in self.services['computeengine']['snapshots'].values():
-    #                     if disk['status'] == 'READY' and disk['source_disk_url'] == instance_disk['source_url']:
-    #                         instance_disk['snapshots'].append(disk)
+    #         for project in self.service['computeengine']['projects'].values():
+    #             for zone in project['zones'].values():
+    #                 for instance in zone['instances'].values():
+    #                     for instance_disk in instance['disks'].values():
+    #                         instance_disk['snapshots'] = []
+    #                         for disk in self.services['computeengine']['snapshots'].values():
+    #                             if disk['status'] == 'READY' and disk['source_disk_url'] == instance_disk['source_url']:
+    #                                 instance_disk['snapshots'].append(disk)
 
-    #                 instance_disk['latest_snapshot'] = max(instance_disk['snapshots'],
-    #                                                        key=lambda x: x['creation_timestamp']) \
-    #                     if instance_disk['snapshots'] else None
+    #                         instance_disk['latest_snapshot'] = max(instance_disk['snapshots'],
+    #                                                             key=lambda x: x['creation_timestamp']) \
+    #                             if instance_disk['snapshots'] else None
 
-    # def _match_networks_and_instances(self):
-    #     """
-    #     For each network, math instances in that network
+    def _match_networks_and_instances(self):
+        """
+        For each network, math instances in that network
 
-    #     :return:
-    #     """
+        :return:
+        """
 
-    #     if 'computeengine' in self.services:
-    #         for network in self.services['computeengine']['networks'].values():
-    #             network['instances'] = []
-    #             for instance in self.services['computeengine']['instances'].values():
-    #                 for network_interface in instance['network_interfaces']:
-    #                     if network_interface['network'] == network['network_url']:
-    #                         network['instances'].append(instance['id'])
+        if 'computeengine' in self.services:
+            for project in self.services['computeengine']['projects'].values():
+                for network in project['networks'].values():
+                    network['instances'] = []
+                    for zone in project['zones'].values():
+                        for instance in zone['instances'].values():
+                            for network_interface in instance['network_interfaces']:
+                                if network_interface['network'] == network['network_url']:
+                                    network['instances'].append(instance['id'])
