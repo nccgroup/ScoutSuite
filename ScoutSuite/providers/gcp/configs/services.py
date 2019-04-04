@@ -24,8 +24,8 @@ class GCPServicesConfig(BaseServicesConfig):
         gcp_facade = GCPFacade()
 
         self.cloudresourcemanager = CloudResourceManager(gcp_facade)
-        self.cloudstorage = CloudStorage(gcp_facade)
         self.cloudsql = CloudSQL(gcp_facade)
+        self.cloudstorage = CloudStorage(gcp_facade)
         self.computeengine = ComputeEngineConfig(thread_config=thread_config)
         self.iam = IAM(gcp_facade)
 
