@@ -66,7 +66,7 @@
       "resources": {
         "instances": {
           "cols": 2,
-          "path": "services.cloudsql.instances"
+          "path": "services.cloudsql.projects.id.instances"
         }
       }
     }

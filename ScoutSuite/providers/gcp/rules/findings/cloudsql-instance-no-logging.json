@@ -1,10 +1,10 @@
 {
   "description": "Binary logging disabled",
-  "path": "cloudsql.instances.id",
+  "path": "cloudsql.projects.id.instances.id",
   "dashboard_name": "Instances",
   "conditions": [ "or",
-    [ "cloudsql.instances.id.log_enabled", "false", "" ],
-    [ "cloudsql.instances.id.log_enabled", "null", ""]
+    [ "cloudsql.projects.id.instances.id.log_enabled", "false", "" ],
+    [ "cloudsql.projects.id.instances.id.log_enabled", "null", ""]
 
   ],
   "id_suffix": "log_enabled"

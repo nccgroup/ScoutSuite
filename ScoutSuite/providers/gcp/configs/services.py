@@ -1,9 +1,9 @@
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
+from ScoutSuite.providers.gcp.resources.cloudsql.service import CloudSQL
 from ScoutSuite.providers.gcp.resources.iam.service import IAM
 from ScoutSuite.providers.gcp.resources.stackdriverlogging.service import StackdriverLogging
 from ScoutSuite.providers.gcp.services.cloudresourcemanager import CloudResourceManager
-from ScoutSuite.providers.gcp.services.cloudsql import CloudSQLConfig
 from ScoutSuite.providers.gcp.services.cloudstorage import CloudStorageConfig
 from ScoutSuite.providers.gcp.services.computeengine import ComputeEngineConfig
 
@@ -25,7 +25,7 @@ class GCPServicesConfig(BaseServicesConfig):
 
         self.cloudresourcemanager = CloudResourceManager(thread_config=thread_config)
         self.cloudstorage = CloudStorageConfig(thread_config=thread_config)
-        self.cloudsql = CloudSQLConfig(thread_config=thread_config)
+        self.cloudsql = CloudSQL(gcp_facade)
         self.computeengine = ComputeEngineConfig(thread_config=thread_config)
         self.iam = IAM(gcp_facade)
 

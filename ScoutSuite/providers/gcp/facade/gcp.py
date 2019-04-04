@@ -1,4 +1,5 @@
 from ScoutSuite.providers.gcp.facade.base import GCPBaseFacade
+from ScoutSuite.providers.gcp.facade.cloudsql import CloudSQLFacade
 from ScoutSuite.providers.gcp.facade.iam import IAMFacade
 from ScoutSuite.providers.gcp.facade.stackdriverlogging import StackdriverLoggingFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
@@ -6,6 +7,7 @@ from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 class GCPFacade(GCPBaseFacade):
     def __init__(self):
         super(GCPFacade, self).__init__('cloudresourcemanager', 'v1')
+        self.cloudsql = CloudSQLFacade()
         self.iam = IAMFacade()
         self.stackdriverlogging = StackdriverLoggingFacade()
 
