@@ -1,4 +1,4 @@
-from ScoutSuite.providers.aws.facade import AWSFacade
+from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.regions import Regions
 
 from .cluster_parameter_groups import ClusterParameterGroups

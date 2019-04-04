@@ -4,7 +4,7 @@ import abc
 import asyncio
 
 from ScoutSuite.providers.base.configs.resources import CompositeResources
-from ScoutSuite.providers.azure.facade import AzureFacade
+from ScoutSuite.providers.azure.facade.base import AzureFacade
 
 
 class AzureCompositeResources(CompositeResources, metaclass=abc.ABCMeta):

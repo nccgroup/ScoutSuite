@@ -1,4 +1,4 @@
-from ScoutSuite.providers.aws.facade import AWSFacade
+from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.elasticache.parametergroups import ParameterGroups
 from ScoutSuite.providers.aws.resources.elasticache.securitygroups import SecurityGroups
 from ScoutSuite.providers.aws.resources.elasticache.vpcs import ElastiCacheVpcs

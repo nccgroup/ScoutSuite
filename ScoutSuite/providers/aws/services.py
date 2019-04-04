@@ -1,37 +1,37 @@
-from ScoutSuite.providers.aws.facade import AWSFacade
-from ScoutSuite.providers.aws.resources.awslambda import Lambdas
-from ScoutSuite.providers.aws.resources.cloudformation import CloudFormation
-from ScoutSuite.providers.aws.resources.cloudtrail import CloudTrail
-from ScoutSuite.providers.aws.resources.cloudwatch import CloudWatch
-from ScoutSuite.providers.aws.resources.directconnect import DirectConnect
-from ScoutSuite.providers.aws.resources.ec2 import EC2
-from ScoutSuite.providers.aws.resources.efs import EFS
-from ScoutSuite.providers.aws.resources.elasticache import ElastiCache
-from ScoutSuite.providers.aws.resources.elb import ELB
-from ScoutSuite.providers.aws.resources.elbv2 import ELBv2
-from ScoutSuite.providers.aws.resources.emr import EMR
-from ScoutSuite.providers.aws.resources.iam import IAM
-from ScoutSuite.providers.aws.resources.rds import RDS
-from ScoutSuite.providers.aws.resources.redshift import Redshift
-from ScoutSuite.providers.aws.resources.route53 import Route53
-from ScoutSuite.providers.aws.resources.s3 import S3
-from ScoutSuite.providers.aws.resources.ses import SES
-from ScoutSuite.providers.aws.resources.sns import SNS
-from ScoutSuite.providers.aws.resources.sqs import SQS
-from ScoutSuite.providers.aws.resources.vpc import VPC
+from ScoutSuite.providers.aws.facade.base import AWSFacade
+from ScoutSuite.providers.aws.resources.awslambda.base import Lambdas
+from ScoutSuite.providers.aws.resources.cloudformation.base import CloudFormation
+from ScoutSuite.providers.aws.resources.cloudtrail.base import CloudTrail
+from ScoutSuite.providers.aws.resources.cloudwatch.base import CloudWatch
+from ScoutSuite.providers.aws.resources.directconnect.base import DirectConnect
+from ScoutSuite.providers.aws.resources.ec2.base import EC2
+from ScoutSuite.providers.aws.resources.efs.base import EFS
+from ScoutSuite.providers.aws.resources.elasticache.base import ElastiCache
+from ScoutSuite.providers.aws.resources.elb.base import ELB
+from ScoutSuite.providers.aws.resources.elbv2.base import ELBv2
+from ScoutSuite.providers.aws.resources.emr.base import EMR
+from ScoutSuite.providers.aws.resources.iam.base import IAM
+from ScoutSuite.providers.aws.resources.rds.base import RDS
+from ScoutSuite.providers.aws.resources.redshift.base import Redshift
+from ScoutSuite.providers.aws.resources.route53.base import Route53
+from ScoutSuite.providers.aws.resources.s3.base import S3
+from ScoutSuite.providers.aws.resources.ses.base import SES
+from ScoutSuite.providers.aws.resources.sns.base import SNS
+from ScoutSuite.providers.aws.resources.sqs.base import SQS
+from ScoutSuite.providers.aws.resources.vpc.base import VPC
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 
 # Try to import proprietary services
 try:
-    from ScoutSuite.providers.aws.resources.private_dynamodb import DynamoDB
+    from ScoutSuite.providers.aws.resources.private_dynamodb.base import DynamoDB
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.aws.resources.private_config import Config
+    from ScoutSuite.providers.aws.resources.private_config.base import Config
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.aws.resources.private_kms import KMS
+    from ScoutSuite.providers.aws.resources.private_kms.base import KMS
 except ImportError:
     pass
 

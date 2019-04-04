@@ -1,4 +1,4 @@
-from ScoutSuite.providers.azure.resources.resources import AzureCompositeResources
+from ScoutSuite.providers.azure.resources.base import AzureCompositeResources
 
 from .auto_provisioning_settings import AutoProvisioningSettings
 from .pricings import Pricings
