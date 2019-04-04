@@ -1,10 +1,11 @@
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
+from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
+from ScoutSuite.providers.gcp.resources.stackdriverlogging.service import StackdriverLogging
 from ScoutSuite.providers.gcp.services.cloudresourcemanager import CloudResourceManager
 from ScoutSuite.providers.gcp.services.cloudsql import CloudSQLConfig
 from ScoutSuite.providers.gcp.services.cloudstorage import CloudStorageConfig
 from ScoutSuite.providers.gcp.services.computeengine import ComputeEngineConfig
 from ScoutSuite.providers.gcp.services.iam import IAMConfig
-from ScoutSuite.providers.gcp.services.stackdriverlogging import StackdriverLoggingConfig
 
 # Try to import proprietary services
 try:
@@ -20,6 +21,8 @@ class GCPServicesConfig(BaseServicesConfig):
 
         projects = [] if projects is None else projects
 
+        gcp_facade = GCPFacade()
+
         self.cloudresourcemanager = CloudResourceManager(thread_config=thread_config)
         self.cloudstorage = CloudStorageConfig(thread_config=thread_config)
         self.cloudsql = CloudSQLConfig(thread_config=thread_config)
@@ -31,8 +34,7 @@ class GCPServicesConfig(BaseServicesConfig):
         except NameError as _:
             pass
 
-        self.stackdriverlogging = StackdriverLoggingConfig(thread_config=thread_config)
-        # self.stackdrivermonitoring = StackdriverMonitoringConfig(thread_config=thread_config)
+        self.stackdriverlogging = StackdriverLogging(gcp_facade)
 
     def _is_provider(self, provider_name):
         return provider_name == 'gcp'

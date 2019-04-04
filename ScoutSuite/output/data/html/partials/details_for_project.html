@@ -1,0 +1,17 @@
+
+  <!-- Generic partial showing details about projects and their resources -->
+  <script id="details_for_project.partial" type="text/x-handlebars-template">
+    <div id="services.{{service_name}}.projects.id.{{resource_type}}.details">
+      {{#each items}}
+        {{#each (lookup . ../resource_type)}}
+          <div class="list-group" id="services.{{../../service_name}}.projects.{{@../key}}.{{../../resource_type}}.{{@key}}.view">
+            {{> (lookup ../.. 'partial_name') service_name = ../../service_name project = @../key resource_type = ../../resource_type resource_key = @key resource = this}}
+          </div>
+        {{/each}}
+      {{/each}}
+    </div>
+  </script>
+  <script>
+    Handlebars.registerPartial("details_for_project", $("#details_for_project\\.partial").html());
+  </script>
+
