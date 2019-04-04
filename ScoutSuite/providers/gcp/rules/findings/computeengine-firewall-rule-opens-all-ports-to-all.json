@@ -1,13 +1,13 @@
 {
   "dashboard_name": "Firewall Rule Elements",
   "description": "Firewall rule allows public access (0.0.0.0/0) to all ports (0-65535)",
-  "path": "computeengine.firewalls.id.allowed_traffic.id.ports.id",
+  "path": "computeengine.projects.id.firewalls.id.allowed_traffic.id.ports.id",
   "display_path": "computeengine.firewalls.id",
   "conditions": [ "and",
-    [ "computeengine.firewalls.id.action", "equal", "allowed"],
-    [ "computeengine.firewalls.id.disabled", "notTrue", "" ],
-    [ "computeengine.firewalls.id.direction", "equal", "INGRESS" ],
-    [ "computeengine.firewalls.id.allowed_traffic.id.", "equal", "0-65535" ],
-    [ "computeengine.firewalls.id.source_ranges", "containAtLeastOneOf", "0.0.0.0/0" ]
+    [ "computeengine.projects.id.firewalls.id.action", "equal", "allowed"],
+    [ "computeengine.projects.id.firewalls.id.disabled", "notTrue", "" ],
+    [ "computeengine.projects.id.firewalls.id.direction", "equal", "INGRESS" ],
+    [ "computeengine.projects.id.firewalls.id.allowed_traffic.id.", "equal", "0-65535" ],
+    [ "computeengine.projects.id.firewalls.id.source_ranges", "containAtLeastOneOf", "0.0.0.0/0" ]
   ]
 }

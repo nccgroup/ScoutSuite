@@ -1,10 +1,10 @@
 {
   "dashboard_name": "Instances",
   "description": "Instance disk with no snapshot",
-  "path": "computeengine.instances.id.disks.id",
+  "path": "computeengine.projects.id.zones.id.instances.id.disks.id",
   "display_path": "computeengine.instances.id",
   "conditions": [ "and",
-    [ "computeengine.instances.id.disks.id.snapshots", "empty", "" ]
+    [ "computeengine.projects.id.zones.id.instances.id.disks.id.snapshots", "empty", "" ]
   ],
   "id_suffix": "latest_snapshot"
 }
