@@ -13,6 +13,3 @@ class ComputeEngine(Projects):
         (Snapshots, 'snapshots'),
         (Subnetworks, 'subnetworks'),
      ]
-
-    def __init__(self, gcp_facade):
-        super(ComputeEngine, self).__init__(gcp_facade)
