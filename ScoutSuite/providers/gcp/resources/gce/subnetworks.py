@@ -10,7 +10,7 @@ class Subnetworks(Resources):
         raw_subnetworks = await self.gcp_facade.gce.get_subnetworks(self.project_id, self.region)
         for raw_subnetwork in raw_subnetworks:
             subnetwork_id, subnetwork = self._parse_subnetwork(raw_subnetwork)
-            self[nasubnetwork_idme] = subnetwork
+            self[subnetwork_id] = subnetwork
 
     def _parse_subnetwork(self, raw_subnetwork):
         subnetwork_dict = {}

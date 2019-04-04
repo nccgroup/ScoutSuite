@@ -14,7 +14,8 @@ class Regions(GCPCompositeResources):
 
     async def fetch_all(self):
         raw_regions = await self.gcp_facade.gce.get_regions(self.project_id)
-        self['regions'] = { raw_region['name'] : {} for raw_region in raw_regions }
+        for raw_region in raw_regions:
+            self[raw_region['name']] = {}
         tasks = {
             asyncio.ensure_future(
                 self._fetch_children(self[raw_region['name']], gcp_facade = self.gcp_facade, project_id = self.project_id, region = raw_region['name'])

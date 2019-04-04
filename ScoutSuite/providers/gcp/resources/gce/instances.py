@@ -1,5 +1,6 @@
 from ScoutSuite.providers.gcp.resources.resources import GCPCompositeResources
 from ScoutSuite.providers.gcp.resources.gce.instance_disks import InstanceDisks
+from ScoutSuite.providers.utils import get_non_provider_id
 
 class Instances(GCPCompositeResources):
     _children = [ 
@@ -19,7 +20,7 @@ class Instances(GCPCompositeResources):
   
     async def _parse_instance(self, raw_instance):
         instance_dict = {}
-        instance_dict['id'] = self.get_non_provider_id(raw_instance['name'])
+        instance_dict['id'] = get_non_provider_id(raw_instance['name'])
         instance_dict['project_id'] = self.project_id
         instance_dict['name'] = raw_instance['name']
         instance_dict['description'] = self._get_description(raw_instance)
