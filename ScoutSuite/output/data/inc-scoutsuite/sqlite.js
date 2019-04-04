@@ -77,13 +77,10 @@ function getResourcePageSqlite (pageIndex, pageSize, service, resource) {
  */
 function getResourcePageSqliteRegions (pageIndex, pageSize, service, region, resource) {
   let resources = requestDb(createQuery('services', service, 'regions', region, resource), pageSize, pageIndex)
-  if (runResults['services'][service]['regions'][region] === undefined) {
-    console.log('BAD ' + runResults + '.services.' + service + '.regions.' + region + '.' + resource)
-  }
-  runResults['services'][service]['regions'][region][resource] = null
   // Create a spot where to save data
-  runResults['services'][service]['regions'][region][resource] = { [null]: null }
+  runResults['services'][service]['regions'][region] = { [resource]: null }
   for (let item in resources) {
+    runResults['services'][service]['regions'][region][resource] = { [item]: null }
     runResults['services'][service]['regions'][region][resource][item] =
       requestDb(createQuery('services', service, 'regions', region, resource, item), null)
   }
