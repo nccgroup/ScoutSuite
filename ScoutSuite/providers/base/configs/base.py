@@ -16,11 +16,10 @@ from hashlib import sha1
 from ScoutSuite.providers.base.configs.threads import thread_configs
 
 # TODO do this better without name conflict
-from ScoutSuite.providers.aws.aws import connect_service
 from ScoutSuite.providers.gcp.utils import gcp_connect_service
 from ScoutSuite.providers.azure.utils import azure_connect_service
 
-from ScoutSuite.providers.aws.aws import build_region_list
+from ScoutSuite.providers.aws.utils import build_region_list, connect_service
 from ScoutSuite.core.console import print_exception, print_info
 
 from ScoutSuite.output.console import FetchStatusLogger
@@ -63,7 +62,7 @@ class BaseConfig(object):
         m.update(name.encode('utf-8'))
         return m.hexdigest()
 
-    def fetch_all(self, credentials, regions=None, partition_name='aws', targets=None):
+    async def fetch_all(self, credentials, regions=None, partition_name='aws', targets=None):
         """
         :param credentials:             F
         :param service:                 Name of the service
@@ -230,7 +229,7 @@ class BaseConfig(object):
         """
         return None
 
-    def finalize(self):
+    async def finalize(self):
         for t in self.fetchstatuslogger.counts:
             setattr(self, '%s_count' % t, self.fetchstatuslogger.counts[t]['fetched'])
         self.__delattr__('fetchstatuslogger')
