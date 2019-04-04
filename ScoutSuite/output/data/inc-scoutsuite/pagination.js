@@ -1,4 +1,5 @@
 var defaultPageSize = 2
+var regionPageSize = 1
 var reCount = new RegExp('_count+$')
 
 /**
@@ -20,7 +21,7 @@ function loadPage (pathArray, indexDiff) {
     } else if (pathArray.length === 5) {
       // Need to iterate through the regions here or else it will try to get some data at regions.id because that
       // is the path of the resource in the URI
-      for (let region in runResults[pathArray[0]][pathArray[1]][pathArray[2]]) {
+      for (let region in runResults['services'][pathArray[1]]['regions']) {
         getResourcePageSqliteRegions(pageIndex, pageSize, pathArray[1], region, pathArray[4])
       }
     }
@@ -31,11 +32,11 @@ function loadPage (pathArray, indexDiff) {
       getResourcePageSqlite(pageIndex, pageSize, pathArray[1], pathArray[2])
       loadConfig(pathArray[0] + '.' + pathArray[1] + '.' + pathArray[2], 2, true)
     } else if (pathArray.length === 5) {
-      for (let region in runResults[pathArray[0]][pathArray[1]][pathArray[2]]) {
+      for (let region in runResults['services'][pathArray[1]]['regions']) {
+        // pathArray = ['services', service, 'regions', region, resources[resource]]
         getResourcePageSqliteRegions(pageIndex, pageSize, pathArray[1], region, pathArray[4])
       }
-      loadConfig(pathArray[0] + '.' + pathArray[1] + '.' + pathArray[2] + '.' + pathArray[3] + '.' + pathArray[4], 
-        2, true)
+      loadConfig('services.' + pathArray[1] + '.' + pathArray[2] + '.' + pathArray[3] + '.' + pathArray[4], 2, true)
     }
   }
 }
@@ -45,14 +46,18 @@ function loadPage (pathArray, indexDiff) {
  * @param {array} pathArray         The path of where the data is stored
  * @returns {array}
  */
-function getPageInfo (pathArray) { 
+function getPageInfo (pathArray) {
   let pageSize, pageIndex
    if (pathArray.length === 3) {
     pageSize = runResults[pathArray[0]][pathArray[1]][pathArray[2] + '_page_size']
     pageIndex = runResults[pathArray[0]][pathArray[1]][pathArray[2] + '_page_index']
   } else if (pathArray.length === 5) {
-    pageSize = runResults[pathArray[0]][pathArray[1]][pathArray[2]][pathArray[3]][pathArray[4] + '_page_size']
-    pageIndex = runResults[pathArray[0]][pathArray[1]][pathArray[2]][pathArray[3]][pathArray[4] + '_page_index']
+    // Instead of following the pathArray save the data to id since that's the path of pages with regions
+    if (runResults[pathArray[0]][pathArray[1]][pathArray[2]]['id'] !== null &&
+    runResults[pathArray[0]][pathArray[1]][pathArray[2]]['id'] !== undefined) {
+      pageSize = runResults[pathArray[0]][pathArray[1]][pathArray[2]]['id'][pathArray[4] + '_page_size']
+      pageIndex = runResults[pathArray[0]][pathArray[1]][pathArray[2]]['id'][pathArray[4] + '_page_index']
+    }
   } 
   if (pageSize === undefined || pageSize === null) {
     pageSize = defaultPageSize
@@ -64,24 +69,38 @@ function getPageInfo (pathArray) {
 }
 
 /**
- * Loads the first page for every resource
+ * Loads the first page for every resource or every resource of every region
  */
 function loadFirstPageEverywhere () {
   for (let service in runResults['services']) {
-    if (runResults['services'][service]['regions']) {
-      // If there is not already a propriety for regions.id we need to create one since the regions resources
-      // are viewable under that path and we read the path to know what to show to the user
-      if (!runResults['services'][service]['regions']['id']) {
-        runResults['services'][service]['regions']['id'] = null
-      }
-      for (let region in runResults['services'][service]['regions']) {
-        for (let resource in runResults['services'][service]['regions'][region]) {
-          if (resource.match(reCount)) {
-            let pathArray = ['services', service, 'regions', region, resource.replace(reCount, '')]
-            loadPage(pathArray, 0)
+    // Check if the service we are dealing with contains regions (most AWS services do)
+    let regions = requestDb(createQuery('services', service, 'regions'))
+    if (regions) {
+      regions = regions.keys
+      // Create a 'regions' key for each service
+      runResults['services'][service]['regions'] = {[null]: null}
+      for (let region in regions) {
+        // Create an 'id' key for each region, this is were we will read the page index/size and load
+        // the proper template
+        runResults['services'][service]['regions'][regions[region]] = {id: null}
+        let resources = requestDb(createQuery('services', service, 'regions', regions[region]))
+        if (resources) {
+          resources = resources.keys
+          for (let resource in resources) {
+            // For everything that does not scale up with the ammount of resources fetch everything
+            if (resources[resource] === 'id' || resources[resource] === 'region' || 
+              resources[resource] === 'name' || resources[resource].match(reCount)) {
+              runResults['services'][service]['regions'][regions[region]][resources[resource]] =
+                requestDb(createQuery('services', service, 'regions', regions[region], [resources[resource]]), null)
+            // Else (if it scales) only fetch one page per region
+            } else {
+              let pathArray = ['services', service, 'regions', regions[region], resources[resource]]
+              loadPage(pathArray, 0)
+            }
           }
         }
       }
+      delete runResults['services'][service]['regions'].null
     } else {
       for (let resource in runResults['services'][service]) {
         if (resource.match(reCount)) {
@@ -104,7 +123,7 @@ function getLastPageIndex (pathArray, pageSize) {
   if (pathArray.length === 3) {
     resourceCount = runResults[pathArray[0]][pathArray[1]][pathArray[2] + '_count']
   } else {
-    resourceCount = runResults[pathArray[0]][pathArray[1]][pathArray[2]][pathArray[3]][pathArray[4] + '_count']
+    resourceCount = runResults[pathArray[0]][pathArray[1]][pathArray[2]]['id'][pathArray[4] + '_count']
   }
   return Math.ceil(resourceCount / pageSize - 1)
 }
