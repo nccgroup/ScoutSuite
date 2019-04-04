@@ -1,4 +1,5 @@
 # Contributing 
+
 ## Table of Contents
  * [Introduction](#introduction)
  * [Getting started](#getting-started)
@@ -32,7 +33,7 @@ So you want to contribute some code, that's great! This project follows the [Git
 
 ## How to report a bug
 
- When filing an issue, make sure to answer these five questions:
+When filing an issue, make sure to answer these five questions:
 
  1. What version of Python are you using?
  2. What operating system and processor architecture are you using?
@@ -46,4 +47,4 @@ If you find yourself wishing for a feature that doesn't exist in Scout Suite, yo
 
 ## Code review process
 
-The pull request are reviewed on a regular basis by the core team. We require a minimum of two reviewers before it is merged. 
+Pull requests are regularly reviewed by the core team. We require a minimum of two reviewers before allowing to merge. 

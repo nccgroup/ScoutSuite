@@ -1,12 +1,12 @@
 
 <!-- Cloud Resources Manager bindings' partial -->
-<script id="services.cloudresourcemanager.bindings.partial" type="text/x-handlebars-template">
+<script id="services.cloudresourcemanager.projects.id.bindings.partial" type="text/x-handlebars-template">
     <div id="resource-name" class="list-group-item active">
         <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Information</h4>
-        <div class="list-group-item-text item-margin">Role Name: <span id="cloudresourcemanager.bindings.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Role Name: <span id="cloudresourcemanager.projects.{{@../key}}.bindings.{{@key}}.name">{{name}}</span></div>
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Bindings</h4>
@@ -44,12 +44,12 @@
 </script>
 
 <script>
-    Handlebars.registerPartial("services.cloudresourcemanager.bindings", $("#services\\.cloudresourcemanager\\.bindings\\.partial").html());
+    Handlebars.registerPartial("services.cloudresourcemanager.projects.id.bindings", $("#services\\.cloudresourcemanager\\.projects\\.id\\.bindings\\.partial").html());
 </script>
 
 <!-- Single cloudresourcemanager binding template -->
 <script id="single_cloudresourcemanager_binding-template" type="text/x-handlebars-template">
-    {{> modal-template template='services.cloudresourcemanager.bindings'}}
+    {{> modal-template template='services.cloudresourcemanager.projects.id.bindings'}}
 </script>
 <script>
     var single_cloudresourcemanager_binding_template = Handlebars.compile($("#single_cloudresourcemanager_binding-template").html());

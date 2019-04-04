@@ -1,5 +1,3 @@
-import asyncio
-
 from ScoutSuite.providers.aws.resources.resources import AWSCompositeResources
 from ScoutSuite.providers.aws.resources.iam.credentialreports import CredentialReports
 from ScoutSuite.providers.aws.resources.iam.groups import Groups
@@ -20,14 +18,11 @@ class IAM(AWSCompositeResources):
         (PasswordPolicy, 'password_policy')
     ]
 
-    def __init__(self):
-        # TODO: Should be injected
-        self.facade = AWSFacade()
+    def __init__(self, facade: AWSFacade):
+        self.facade = facade
         self.service = 'iam'
 
     async def fetch_all(self, credentials, regions=None, partition_name='aws'):
-        # TODO: This should not be set here, the facade should be injected and already authenticated
-        self.facade._set_session(credentials)
         await self._fetch_children(self, {})
 
         # We do not want the report to count the password policies as resources, they aren't really resources.
@@ -53,7 +48,8 @@ class IAM(AWSCompositeResources):
                         entities[entity['id']].setdefault('policies_counts', 0)
                         entities[entity['id']]['policies'].append(policy_id)
                         entities[entity['id']]['policies_counts'] += 1
-                        self._parse_permissions(policy_id, policy['PolicyDocument'], 'policies', entity_type, entity['id'])
+                        self._parse_permissions(
+                            policy_id, policy['PolicyDocument'], 'policies', entity_type, entity['id'])
             else:
                 self._parse_permissions(
                     policy_id, policy['PolicyDocument'], 'policies', None, None)
@@ -121,14 +117,15 @@ class IAM(AWSCompositeResources):
             self._parse_resource(effect, action_string, action, resource_string, resource, iam_resource_type,
                                  iam_resource_name, policy_name, policy_type, condition)
 
-    def _parse_resource(self, effect, action_string, action, resource_string, resource, iam_resource_type, iam_resource_name, policy_name, policy_type, condition):
+    def _parse_resource(self, effect, action_string, action, resource_string, resource, iam_resource_type,
+                        iam_resource_name, policy_name, policy_type, condition):
         self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name].setdefault(
             resource_string, {})
-        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string].setdefault(resource, {
-        })
-        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][resource].setdefault(
-            policy_type, {})
-        self['permissions'][action_string][action][iam_resource_type][effect][
-            iam_resource_name][resource_string][resource][policy_type].setdefault(policy_name, {})
-        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][
-            resource_string][resource][policy_type][policy_name].setdefault('condition', condition)
+        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string].\
+            setdefault(resource, {})
+        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][
+            resource].setdefault(policy_type, {})
+        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][
+            resource][policy_type].setdefault(policy_name, {})
+        self['permissions'][action_string][action][iam_resource_type][effect][iam_resource_name][resource_string][
+            resource][policy_type][policy_name].setdefault('condition', condition)

@@ -1,12 +1,13 @@
-# -*- coding: utf-8 -*-
-
-from ScoutSuite.providers.base.configs.services import BaseServicesConfig
-from ScoutSuite.providers.azure.resources.monitor.activity_logs import ActivityLogs
+from ScoutSuite.providers.azure.authentication_strategy import AzureCredentials
+from ScoutSuite.providers.azure.facade.facade import AzureFacade
+from ScoutSuite.providers.azure.resources.keyvault.key_vaults import KeyVaults
+from ScoutSuite.providers.azure.resources.network.networks import Networks
 from ScoutSuite.providers.azure.resources.securitycenter.security_center import SecurityCenter
 from ScoutSuite.providers.azure.resources.sqldatabase.servers import Servers
 from ScoutSuite.providers.azure.resources.storageaccounts.storageaccounts import StorageAccounts
-from ScoutSuite.providers.azure.resources.network.networks import Networks
-from ScoutSuite.providers.azure.resources.keyvault.key_vaults import KeyVaults
+from ScoutSuite.providers.base.configs.services import BaseServicesConfig
+
+# Try to import proprietary services
 try:
     from ScoutSuite.providers.azure.resources.appgateway_private.application_gateways_private import ApplicationGateways
 except ImportError:
@@ -27,30 +28,31 @@ except ImportError:
 
 class AzureServicesConfig(BaseServicesConfig):
 
-    def __init__(self, metadata=None, thread_config=4, **kwargs):
+    def __init__(self, credentials: AzureCredentials = None, **kwargs):
+        super(AzureServicesConfig, self).__init__(credentials)
+        facade = AzureFacade(credentials)
 
-        self.monitor = ActivityLogs()
-        self.storageaccounts = StorageAccounts()
-        self.securitycenter = SecurityCenter()
-        self.sqldatabase = Servers()
-        self.network = Networks()
-        self.keyvault = KeyVaults()
+        self.storageaccounts = StorageAccounts(facade)
+        self.securitycenter = SecurityCenter(facade)
+        self.sqldatabase = Servers(facade)
+        self.network = Networks(facade)
+        self.keyvault = KeyVaults(facade)
 
         try:
-            self.appgateway = ApplicationGateways()
-        except NameError:
+            self.appgateway = ApplicationGateways(facade)
+        except NameError as _:
             pass
         try:
-            self.rediscache = RedisCaches()
-        except NameError:
+            self.rediscache = RedisCaches(facade)
+        except NameError as _:
             pass
         try:
-            self.appservice = WebApplications()
-        except NameError:
+            self.appservice = WebApplications(facade)
+        except NameError as _:
             pass
         try:
-            self.loadbalancer = LoadBalancers()
-        except NameError:
+            self.loadbalancer = LoadBalancers(facade)
+        except NameError as _:
             pass
 
     def _is_provider(self, provider_name):

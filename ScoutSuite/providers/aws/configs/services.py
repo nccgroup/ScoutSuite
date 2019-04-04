@@ -1,35 +1,44 @@
-# -*- coding: utf-8 -*-
-
+from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.aws.resources.awslambda.service import Lambdas
-from ScoutSuite.providers.aws.resources.cloudwatch.service import CloudWatch
 from ScoutSuite.providers.aws.resources.cloudformation.service import CloudFormation
 from ScoutSuite.providers.aws.resources.cloudtrail.service import CloudTrail
+from ScoutSuite.providers.aws.resources.cloudwatch.service import CloudWatch
 from ScoutSuite.providers.aws.resources.directconnect.service import DirectConnect
 from ScoutSuite.providers.aws.resources.ec2.service import EC2
 from ScoutSuite.providers.aws.resources.efs.service import EFS
 from ScoutSuite.providers.aws.resources.elasticache.service import ElastiCache
 from ScoutSuite.providers.aws.resources.elb.service import ELB
 from ScoutSuite.providers.aws.resources.elbv2.service import ELBv2
-from ScoutSuite.providers.aws.resources.iam.service import IAM
 from ScoutSuite.providers.aws.resources.emr.service import EMR
-from ScoutSuite.providers.aws.resources.route53.service import Route53
+from ScoutSuite.providers.aws.resources.iam.service import IAM
 from ScoutSuite.providers.aws.resources.rds.service import RDS
 from ScoutSuite.providers.aws.resources.redshift.service import Redshift
+from ScoutSuite.providers.aws.resources.route53.service import Route53
 from ScoutSuite.providers.aws.resources.s3.service import S3
-from ScoutSuite.providers.aws.resources.vpc.service import VPC
-from ScoutSuite.providers.aws.resources.sqs.service import SQS
 from ScoutSuite.providers.aws.resources.ses.service import SES
 from ScoutSuite.providers.aws.resources.sns.service import SNS
+from ScoutSuite.providers.aws.resources.sqs.service import SQS
+from ScoutSuite.providers.aws.resources.vpc.service import VPC
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
+
+# Try to import proprietary services
+try:
+    from ScoutSuite.providers.gcp.services.kubernetesengine_private import KubernetesEngineConfig
+except ImportError:
+    pass
 
 try:
     from ScoutSuite.providers.aws.resources.dynamodb.service_private import DynamoDB
+except ImportError:
+    pass
+try:
     from ScoutSuite.providers.aws.resources.config.service_private import Config
+except ImportError:
+    pass
+try:
     from ScoutSuite.providers.aws.resources.kms.service_private import KMS
 except ImportError:
-    DynamoDB = None
-    Config = None
-    KMS = None
+    pass
 
 
 class AWSServicesConfig(BaseServicesConfig):
@@ -46,40 +55,48 @@ class AWSServicesConfig(BaseServicesConfig):
     :ivar rds:                          RDS configuration
     :ivar redshift:                     Redshift configuration
     :ivar s3:                           S3 configuration
-    :ivar ses:                          SES configuration: TODO
+    :ivar ses:                          SES configuration:
     "ivar sns:                          SNS configuration
     :ivar sqs:                          SQS configuration
     """
 
-    def __init__(self, metadata=None, thread_config=4, **kwargs):
+    def __init__(self, credentials=None, **kwargs):
+        super(AWSServicesConfig, self).__init__(credentials)
 
-        super(AWSServicesConfig, self).__init__(metadata, thread_config)
-        self.cloudwatch = CloudWatch()
-        self.cloudformation = CloudFormation()
-        self.cloudtrail = CloudTrail()
-        self.directconnect = DirectConnect()
-        self.ec2 = EC2()
-        self.efs = EFS()
-        self.elasticache = ElastiCache()
-        self.iam = IAM()
-        self.elb = ELB()
-        self.elbv2 = ELBv2()
-        self.emr = EMR()
-        self.awslambda = Lambdas()
-        self.route53 = Route53()
-        self.redshift = Redshift()
-        self.s3 = S3()
-        self.rds = RDS()
-        self.vpc = VPC()
-        self.sqs = SQS()
-        self.ses = SES()
-        self.sns = SNS()
+        facade = AWSFacade(credentials)
+
+        self.cloudwatch = CloudWatch(facade)
+        self.cloudformation = CloudFormation(facade)
+        self.cloudtrail = CloudTrail(facade)
+        self.directconnect = DirectConnect(facade)
+        self.ec2 = EC2(facade)
+        self.efs = EFS(facade)
+        self.elasticache = ElastiCache(facade)
+        self.iam = IAM(facade)
+        self.elb = ELB(facade)
+        self.elbv2 = ELBv2(facade)
+        self.emr = EMR(facade)
+        self.awslambda = Lambdas(facade)
+        self.route53 = Route53(facade)
+        self.redshift = Redshift(facade)
+        self.s3 = S3(facade)
+        self.rds = RDS(facade)
+        self.vpc = VPC(facade)
+        self.sqs = SQS(facade)
+        self.ses = SES(facade)
+        self.sns = SNS(facade)
 
         try:
-            self.dynamodb = DynamoDB()
-            self.config = Config()
-            self.kms = KMS()
-        except (NameError, TypeError):
+            self.dynamodb = DynamoDB(facade)
+        except NameError as _:
+            pass
+        try:
+            self.config = Config(facade)
+        except NameError as _:
+            pass
+        try:
+            self.kms = KMS(facade)
+        except NameError as _:
             pass
 
     def _is_provider(self, provider_name):

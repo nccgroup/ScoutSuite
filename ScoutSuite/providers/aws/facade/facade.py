@@ -2,7 +2,6 @@ import boto3
 
 from collections import Counter
 from botocore.session import Session
-from ScoutSuite.providers.utils import run_concurrently
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.awslambda import LambdaFacade
 from ScoutSuite.providers.aws.facade.cloudformation import CloudFormation
@@ -34,8 +33,9 @@ except ImportError:
 
   
 class AWSFacade(AWSBaseFacade):
-    def __init__(self, credentials: dict = None):
+    def __init__(self, credentials = None):
         self._set_session(credentials)
+        self._instantiate_facades()
 
     async def build_region_list(self, service: str, chosen_regions=None, partition_name='aws'):
         service = 'ec2containerservice' if service == 'ecs' else service
@@ -62,10 +62,6 @@ class AWSFacade(AWSBaseFacade):
                           'aws_session_token': credentials.get('token')}
 
         self.session = boto3.session.Session(**session_params)
-
-        # TODO: This should only be done in the constructor. I put this here for now, because this method is currently
-        # called from outside, but it should not happen.
-        self._instantiate_facades()
 
     def _instantiate_facades(self):
         self.ec2 = EC2Facade(self.session)

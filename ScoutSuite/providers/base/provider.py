@@ -9,9 +9,9 @@ import copy
 
 from ScoutSuite.core.console import print_exception, print_info
 
-from ScoutSuite import __version__ as scout2_version
+from ScoutSuite import __version__ as scout_version
 from ScoutSuite.providers.base.configs.browser import get_object_at
-from ScoutSuite.output.html import Scout2Report
+from ScoutSuite.output.html import ScoutReport
 
 
 class BaseProvider(object):
@@ -25,11 +25,10 @@ class BaseProvider(object):
     all cloud providers
     """
 
-    def __init__(self, report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4,
-                 **kwargs):
+    def __init__(self, report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
         """
 
-        :aws_account_id     AWS account ID
+        :account_id         account ID
         :last_run           Information about the last run
         :metadata           Metadata used to generate the HTML report
         :ruleset            Ruleset used to perform the analysis
@@ -38,22 +37,20 @@ class BaseProvider(object):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
-        self.credentials = None
         self.last_run = None
         self.metadata = None
 
         self._load_metadata()
 
-        self.services = self.services_config(self.metadata, thread_config)
+        self.services = self.services_config(self.credentials)
         supported_services = vars(self.services).keys()
         self.service_list = self._build_services_list(supported_services, services, skipped_services)
 
-    def authenticate(self):
+    def get_report_name(self):
         """
-        Authenticate to the provider using provided credentials
-        :return:
+        Returns the name of the report using the provider's configuration
         """
-        pass
+        return 'base'
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
@@ -89,14 +86,14 @@ class BaseProvider(object):
         regions = [] if regions is None else regions
         skipped_regions = [] if skipped_regions is None else skipped_regions
         # TODO: determine partition name based on regions and warn if multiple partitions...
-        await self.services.fetch(self.credentials, self.service_list, regions)
+        await self.services.fetch(self.service_list, regions)
 
         # TODO implement this properly
         """
-        This is quite ugly but the legacy Scout2 expects the configurations to be dictionaries.
+        This is quite ugly but the legacy Scout expects the configurations to be dictionaries.
         Eventually this should be moved to objects/attributes, but that will require significant re-write.
         """
-        report = Scout2Report(self.provider_code, 'placeholder')
+        report = ScoutReport(self.provider_code, 'placeholder')
         self.services = report.jsrw.to_dict(self.services)
 
     def _load_metadata(self):
@@ -111,11 +108,21 @@ class BaseProvider(object):
 
     @staticmethod
     def _build_services_list(supported_services, services, skipped_services):
+
+        # Ensure services and skipped services exist, otherwise log exception
+        error = False
+        for service in services+skipped_services:
+            if service not in supported_services:
+                print_exception('Service \"{}\" does not exist, skipping.'.format(service))
+                error = True
+        if error:
+            print_info('Available services are: {}'.format(str(list(supported_services)).strip('[]')))
+
         return [s for s in supported_services if (services == [] or s in services) and s not in skipped_services]
 
     def _update_last_run(self, current_time, ruleset):
         last_run = {'time': current_time.strftime("%Y-%m-%d %H:%M:%S%z"), 'cmd': ' '.join(sys.argv),
-                    'version': scout2_version, 'ruleset_name': ruleset.name, 'ruleset_about': ruleset.about,
+                    'version': scout_version, 'ruleset_name': ruleset.name, 'ruleset_about': ruleset.about,
                     'summary': {}}
         for service in self.services:
             last_run['summary'][service] = {'checked_items': 0, 'flagged_items': 0, 'max_level': 'warning',
@@ -261,7 +268,7 @@ class BaseProvider(object):
                         callback_name = callback[0]
                         callback_args = copy.deepcopy(callback[1])
                         target_path = self.metadata[service_group]['summaries'][summary]['path'].split('.')
-                        # quick fix as legacy Scout2 expects "self" to be a dict
+                        # quick fix as legacy Scout expects "self" to be a dict
                         target_object = self
                         for p in target_path:
                             self.manage_object(target_object, p, {})
@@ -326,11 +333,12 @@ class BaseProvider(object):
                                                callback_args)
 
         except Exception as e:
-            print_exception(e)
-            print_info('Path: %s' % str(current_path))
-            print_info('Key = %s' % str(key) if 'key' in locals() else 'not defined')
-            print_info('Value = %s' % str(value) if 'value' in locals() else 'not defined')
-            print_info('Path = %s' % path)
+            print_exception(e, {'current path': '{}'.format(current_path),
+                                'key': '{}'.format(key if 'key' in locals() else 'not defined'),
+                                'value': '{}'.format(value if 'value' in locals() else 'not defined'),
+                                'path': '{}'.format(path),
+                                }
+                            )
 
     def _new_go_to_and_do(self, current_config, path, current_path, callbacks):
         """
@@ -381,8 +389,9 @@ class BaseProvider(object):
                             tmp.append(i)
                             self._new_go_to_and_do(current_config[key][i], copy.deepcopy(path), tmp, callbacks)
         except Exception as e:
-            print_exception(e)
-            print_info('Path: %s' % str(current_path))
-            print_info('Key = %s' % str(key) if 'key' in locals() else 'not defined')
-            print_info('Value = %s' % str(value) if 'value' in locals() else 'not defined')
-            print_info('Path = %s' % path)
+            print_exception(e, {'current path': '{}'.format(current_path),
+                                'key': '{}'.format(key if 'key' in locals() else 'not defined'),
+                                'value': '{}'.format(value if 'value' in locals() else 'not defined'),
+                                'path': '{}'.format(path),
+                                }
+                            )

@@ -1,22 +1,9 @@
-# -*- coding: utf-8 -*-[d['value'] for d in l]
-
 import os
-import warnings
 
-import google.auth
-import googleapiclient
-from ScoutSuite.core.console import print_error, print_exception, print_info
-
+from ScoutSuite.core.console import print_exception, print_info
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.gcp.configs.services import GCPServicesConfig
 from ScoutSuite.providers.gcp.utils import gcp_connect_service
-
-
-class GCPCredentials():
-
-    def __init__(self, api_client_credentials, cloud_client_credentials):
-        self.api_client_credentials = api_client_credentials
-        self.cloud_client_credentials = cloud_client_credentials
 
 
 class GCPProvider(BaseProvider):
@@ -29,12 +16,12 @@ class GCPProvider(BaseProvider):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
-        self.profile = 'gcp-profile'  # TODO this is aws-specific
-
-        self.metadata_path = '%s/metadata.json' % os.path.split(os.path.abspath(__file__))[0]
+        self.metadata_path = '%s/metadata.json' % os.path.split(
+            os.path.abspath(__file__))[0]
 
         self.provider_code = 'gcp'
         self.provider_name = 'Google Cloud Platform'
+        self.environment = 'default'
 
         self.projects = []
         self.all_projects = all_projects
@@ -43,91 +30,51 @@ class GCPProvider(BaseProvider):
         self.organization_id = organization_id
 
         self.services_config = GCPServicesConfig
+        self.credentials = kwargs['credentials']
+        self._set_account_id()
 
-        super(GCPProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
+        super(GCPProvider, self).__init__(report_dir, timestamp,
+                                          services, skipped_services, thread_config)
 
-    def authenticate(self, user_account=None, service_account=None, **kargs):
+    def get_report_name(self):
         """
-        Implement authentication for the GCP provider
-        Refer to https://google-auth.readthedocs.io/en/stable/reference/google.auth.html.
-
-        :return:
+        Returns the name of the report using the provider's configuration
         """
-
-        if user_account:
-            # disable GCP warning about using User Accounts
-            warnings.filterwarnings("ignore", "Your application has authenticated using end user credentials")
-            pass  # Nothing more to do
-        elif service_account:
-            client_secrets_path = os.path.abspath(service_account)
-            os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = client_secrets_path
+        if self.project_id:
+            return 'gcp-{}'.format(self.project_id)
+        elif self.organization_id:
+            return 'gcp-{}'.format(self.organization_id)
+        elif self.folder_id:
+            return 'gcp-{}'.format(self.folder_id)
         else:
-            print_error('Failed to authenticate to GCP - no supported account type')
-            return False
+            return 'gcp'
 
-        try:
-
-            self.credentials, project_id = google.auth.default()
-            if self.credentials:
-
-                # All projects to which the user / Service Account has access to
-                if self.all_projects:
-                    self.projects = self._get_projects(parent_type='all',
-                                                       parent_id=None)
-                    if service_account and hasattr(self.credentials, 'service_account_email'):
-                        self.aws_account_id = self.credentials.service_account_email  # FIXME this is for AWS
-                    else:
-                        self.aws_account_id = 'GCP'  # FIXME this is for AWS
-                    self.profile = 'GCP'  # FIXME this is for AWS
-                # Project passed through the CLI
-                elif self.project_id:
-                    self.projects = self._get_projects(parent_type='project',
-                                                       parent_id=self.project_id)
-                    self.aws_account_id = self.project_id  # FIXME this is for AWS
-                    self.profile = self.project_id  # FIXME this is for AWS
-
-                # Folder passed through the CLI
-                elif self.folder_id:
-                    self.projects = self._get_projects(parent_type='folder',
-                                                       parent_id=self.folder_id)
-                    self.aws_account_id = self.folder_id  # FIXME this is for AWS
-                    self.profile = self.folder_id  # FIXME this is for AWS
-
-                # Organization passed through the CLI
-                elif self.organization_id:
-                    self.projects = self._get_projects(parent_type='organization',
-                                                       parent_id=self.organization_id)
-                    self.aws_account_id = self.organization_id  # FIXME this is for AWS
-                    self.profile = self.organization_id  # FIXME this is for AWS
-
-                # Project inferred from default configuration
-                elif project_id:
-                    self.projects = self._get_projects(parent_type='project',
-                                                       parent_id=project_id)
-                    self.aws_account_id = project_id  # FIXME this is for AWS
-                    self.profile = project_id  # FIXME this is for AWS
-
-                # Raise exception if none of the above
-                else:
-                    print_info("Could not infer the Projects to scan and no default Project ID was found.")
-                    return False
-
-                # TODO this shouldn't be done here? but it has to in order to init with projects...
-                self.services.set_projects(projects=self.projects)
-
-                return True
+    def _set_account_id(self):
+        # All accessible projects
+        if self.all_projects:
+            # Service Account
+            if self.credentials.is_service_account and hasattr(self.credentials, 'service_account_email'):
+                self.account_id = self.credentials.service_account_email
             else:
-                return False
+                # TODO use username email
+                self.account_id = 'GCP'
+        # Project passed through the CLI
+        elif self.project_id:
+            self.account_id = self.project_id
+        # Folder passed through the CLI
+        elif self.folder_id:
+            self.account_id = self.folder_id
+        # Organization passed through the CLI
+        elif self.organization_id:
+            self.account_id = self.organization_id
+        # Project inferred from default configuration
+        elif self.credentials.default_project_id:
+            self.account_id = self.credentials.default_project_id
 
-        except google.auth.exceptions.DefaultCredentialsError as e:
-            print_error('Failed to authenticate to GCP')
-            print_exception(e)
-            return False
-
-        except googleapiclient.errors.HttpError as e:
-            print_error('Failed to authenticate to GCP')
-            print_exception(e)
-            return False
+    async def fetch(self, regions=None, skipped_regions=None, partition_name=None):
+        self._get_projects()
+        self.services.set_projects(projects=self.projects)
+        await super(GCPProvider, self).fetch(regions, skipped_regions, partition_name)
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
@@ -145,7 +92,40 @@ class GCPProvider(BaseProvider):
 
         super(GCPProvider, self).preprocessing()
 
-    def _get_projects(self, parent_type, parent_id):
+    def _get_projects(self):
+        # All projects to which the user / Service Account has access to
+        if self.all_projects:
+            self.projects = self._gcp_facade_get_projects(
+                parent_type='all', parent_id=None)
+
+        # Project passed through the CLI
+        elif self.project_id:
+            self.projects = self._gcp_facade_get_projects(
+                parent_type='project', parent_id=self.project_id)
+
+        # Folder passed through the CLI
+        elif self.folder_id:
+            self.projects = self._gcp_facade_get_projects(
+                parent_type='folder', parent_id=self.folder_id)
+
+        # Organization passed through the CLI
+        elif self.organization_id:
+            self.projects = self._gcp_facade_get_projects(
+                parent_type='organization', parent_id=self.organization_id)
+
+        # Project inferred from default configuration
+        elif self.credentials.default_project_id:
+            self.projects = self._gcp_facade_get_projects(
+                parent_type='project', parent_id=self.credentials.default_project_id)
+
+        # Raise exception if none of the above
+        else:
+            print_info(
+                "Could not infer the Projects to scan and no default Project ID was found.")
+
+    # TODO: This should be moved to the GCP facade
+
+    def _gcp_facade_get_projects(self, parent_type, parent_id):
         """
         Returns all the projects in a given organization or folder. For a project_id it only returns the project
         details.
@@ -168,13 +148,15 @@ class GCPProvider(BaseProvider):
                 projects.append(p.project_id)
         """
 
-        resource_manager_client_v1 = gcp_connect_service(service='cloudresourcemanager', credentials=self.credentials)
-        resource_manager_client_v2 = gcp_connect_service(service='cloudresourcemanager-v2',
-                                                         credentials=self.credentials)
+        resource_manager_client_v1 = gcp_connect_service(
+            service='cloudresourcemanager', credentials=self.credentials)
+        resource_manager_client_v2 = gcp_connect_service(
+            service='cloudresourcemanager-v2', credentials=self.credentials)
 
         try:
             if parent_type == 'project':
-                project_response = resource_manager_client_v1.projects().list(filter='id:%s' % parent_id).execute()
+                project_response = resource_manager_client_v1.projects().list(filter='id:%s' %
+                                                                                     parent_id).execute()
                 if 'projects' in project_response.keys():
                     for project in project_response['projects']:
                         if project['lifecycleState'] == "ACTIVE":
@@ -189,7 +171,8 @@ class GCPProvider(BaseProvider):
             else:
 
                 # get parent children projects
-                request = resource_manager_client_v1.projects().list(filter='parent.id:%s' % parent_id)
+                request = resource_manager_client_v1.projects().list(
+                    filter='parent.id:%s' % parent_id)
                 while request is not None:
                     response = request.execute()
 
@@ -206,13 +189,13 @@ class GCPProvider(BaseProvider):
                     parent='%ss/%s' % (parent_type, parent_id)).execute()
                 if 'folders' in folder_response.keys():
                     for folder in folder_response['folders']:
-                        projects.extend(self._get_projects("folder", folder['name'].strip(u'folders/')))
+                        projects.extend(self._get_projects(
+                            "folder", folder['name'].strip(u'folders/')))
 
             print_info("Found {} project(s) to scan.".format(len(projects)))
 
         except Exception as e:
-            print_error('Unable to list accessible Projects')
-            print_exception(e)
+            print_exception('Unable to list accessible Projects: {}'.format(e))
 
         finally:
             return projects

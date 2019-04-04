@@ -203,11 +203,21 @@ class ScoutSuiteArgumentParser:
                             default=False,
                             action='store_true',
                             help='Do not automatically open the report in the browser.')
+        # TODO: This should be removed once the GCP refactoring is done
         parser.add_argument('--thread-config',
                             dest='thread_config',
                             type=int,
                             default=4,
                             help='Level of multi-threading wanted [1-5]; defaults to 4.')
+        parser.add_argument('--max-workers',
+                            dest='max_workers',
+                            type=int,
+                            default=10,
+                            help='Maximum number of threads (workers) used by Scout Suite')
+        parser.add_argument('--report-name',
+                            dest='report_name',
+                            default=None,
+                            help='Name of the Scout report.')
         parser.add_argument('--report-dir',
                             dest='report_dir',
                             default=DEFAULT_REPORT_DIR,
@@ -229,8 +239,8 @@ class ScoutSuiteArgumentParser:
                             help='Name of out-of-scope services.')
         parser.add_argument('--exceptions',
                             dest='exceptions',
-                            default=[None],
-                            nargs='+',
+                            default=None,
+                            nargs='?',
                             help='Exception file to use during analysis.')
 
     def parse_args(self, args=None):

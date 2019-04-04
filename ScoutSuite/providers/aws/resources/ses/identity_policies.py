@@ -1,6 +1,6 @@
-from ScoutSuite.providers.aws.resources.resources import AWSResources
-
 import json
+
+from ScoutSuite.providers.aws.resources.resources import AWSResources
 
 
 class IdentityPolicies(AWSResources):

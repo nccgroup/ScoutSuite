@@ -1,5 +1,4 @@
 from ScoutSuite.providers.aws.facade.facade import AWSFacade
-from ScoutSuite.providers.aws.resources.regions import Regions
 from ScoutSuite.providers.aws.resources.resources import AWSResources, AWSCompositeResources
 
 from ScoutSuite.providers.utils import get_non_provider_id
@@ -27,11 +26,9 @@ class Buckets(AWSResources):
         :return:
         """
         raw_bucket['name'] = raw_bucket.pop('Name')
-        # api_client = params['api_clients'][get_s3_list_region(list(params['api_clients'].keys())[0])]
-
         raw_bucket['CreationDate'] = str(raw_bucket['CreationDate'])
 
-        # # If requested, get key properties
+        # If requested, get key properties
         raw_bucket['id'] = get_non_provider_id(raw_bucket['name'])
         return raw_bucket['id'], raw_bucket
 
@@ -41,12 +38,8 @@ class S3(AWSCompositeResources):
         (Buckets, 'buckets')
     ]
 
-    def __init__(self):
-        super(S3, self).__init__('s3', {})
-        # TODO: Should be injected
-        self.facade = AWSFacade()
+    def __init__(self, facade: AWSFacade):
+        super(S3, self,).__init__(facade, {})
 
     async def fetch_all(self, credentials, regions=None, partition_name='aws'):
-        # TODO: This should not be set here, the facade should be injected and already authenticated
-        self.facade._set_session(credentials)
         await self._fetch_children(self, {})

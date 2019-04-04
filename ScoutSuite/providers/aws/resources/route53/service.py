@@ -1,3 +1,4 @@
+from ScoutSuite.providers.aws.facade.facade import AWSFacade
 from ScoutSuite.providers.aws.resources.regions import Regions
 from ScoutSuite.providers.aws.resources.resources import AWSResources
 from ScoutSuite.providers.utils import get_non_provider_id
@@ -21,5 +22,5 @@ class Route53(Regions):
         (Route53Domains, 'domains')
     ]
 
-    def __init__(self):
-        super(Route53, self).__init__('route53domains')
+    def __init__(self, facade: AWSFacade):
+        super(Route53, self).__init__('route53domains', facade)
