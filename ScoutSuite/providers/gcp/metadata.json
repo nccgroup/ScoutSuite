@@ -22,23 +22,23 @@
       "resources": {
         "instances": {
           "cols": 2,
-          "path": "services.computeengine.instances"
+          "path": "services.computeengine.projects.id.zones.id.instances"
         },
         "snapshots": {
           "cols": 2,
-          "path": "services.computeengine.snapshots"
+          "path": "services.computeengine.projects.id.snapshots"
         },
         "firewalls": {
           "cols": 2,
-          "path": "services.computeengine.firewalls"
+          "path": "services.computeengine.projects.id.firewalls"
         },
         "networks": {
           "cols": 2,
-          "path": "services.computeengine.networks"
+          "path": "services.computeengine.projects.id.networks"
         },
         "subnetworks": {
           "cols": 2,
-          "path": "services.computeengine.subnetworks"
+          "path": "services.computeengine.projects.id.regions.id.subnetworks"
         }
       }
     },
