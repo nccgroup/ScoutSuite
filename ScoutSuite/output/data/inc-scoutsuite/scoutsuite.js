@@ -1110,6 +1110,8 @@ function add_template(group, service, section, resource_type, path, suffix) {
                 partial_name = 'left_menu_for_vpc';
             } else if (path.indexOf('.regions.id.') > 0) {
                 partial_name = 'left_menu_for_region';
+            } else if (path.indexOf('.projects.id.') > 0) {
+                partial_name = 'left_menu_for_project';
             } else {
                 partial_name = 'left_menu';
             };
@@ -1118,6 +1120,8 @@ function add_template(group, service, section, resource_type, path, suffix) {
                 partial_name = 'details_for_vpc';
             } else if (path.indexOf('.regions.id.') > 0) {
                 partial_name = 'details_for_region';
+            } else if (path.indexOf('.projects.id.') > 0) {
+                partial_name = 'details_for_project';
             } else {
                 partial_name = 'details';
             };
