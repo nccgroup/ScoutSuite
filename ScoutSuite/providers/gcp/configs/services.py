@@ -1,11 +1,11 @@
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.gcp.resources.cloudresourcemanager.service import CloudResourceManager
+from ScoutSuite.providers.gcp.resources.cloudsql.service import CloudSQL
+from ScoutSuite.providers.gcp.resources.iam.service import IAM
 from ScoutSuite.providers.gcp.resources.stackdriverlogging.service import StackdriverLogging
-from ScoutSuite.providers.gcp.services.cloudsql import CloudSQLConfig
 from ScoutSuite.providers.gcp.services.cloudstorage import CloudStorageConfig
 from ScoutSuite.providers.gcp.services.computeengine import ComputeEngineConfig
-from ScoutSuite.providers.gcp.services.iam import IAMConfig
 
 # Try to import proprietary services
 try:
@@ -25,9 +25,9 @@ class GCPServicesConfig(BaseServicesConfig):
 
         self.cloudresourcemanager = CloudResourceManager(gcp_facade)
         self.cloudstorage = CloudStorageConfig(thread_config=thread_config)
-        self.cloudsql = CloudSQLConfig(thread_config=thread_config)
+        self.cloudsql = CloudSQL(gcp_facade)
         self.computeengine = ComputeEngineConfig(thread_config=thread_config)
-        self.iam = IAMConfig(thread_config=thread_config)
+        self.iam = IAM(gcp_facade)
 
         try:
             self.kubernetesengine = KubernetesEngineConfig(thread_config=thread_config)
