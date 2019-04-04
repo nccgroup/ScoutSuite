@@ -6,6 +6,3 @@ class CloudStorage(Projects):
     _children = [ 
         (Buckets, 'buckets')
     ]
-
-    def __init__(self, gcp_facade: GCPFacade):
-        super(CloudStorage, self).__init__(gcp_facade)
