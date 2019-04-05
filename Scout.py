@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys
 
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
