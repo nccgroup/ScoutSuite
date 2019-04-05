@@ -3,7 +3,7 @@ import sys
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
 from ScoutSuite.scout import run
 
-if __name__ == "__main__":
+def main():
     parser = ScoutSuiteArgumentParser()
     args = parser.parse_args()
 
@@ -31,4 +31,6 @@ if __name__ == "__main__":
         args.get('debug'),
         args.get('no_browser'))
 
+if __name__ == "__main__":
+    main()
     sys.exit()
