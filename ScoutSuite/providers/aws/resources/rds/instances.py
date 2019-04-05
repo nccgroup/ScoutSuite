@@ -23,5 +23,5 @@ class RDSInstances(AWSResources):
 
     @staticmethod
     def _is_read_replica(instance):
-        # The StatusInfos attribute is only defined for read replicas. Ref.: https://bit.ly/2UhKPqP
-       return 'ReadReplicaSourceDBInstanceIdentifier' in instance and instance['ReadReplicaSourceDBInstanceIdentifier'] is not None
+        # The ReadReplicaSourceDBInstanceIdentifier  attribute is only defined for read replicas. Ref.: https://bit.ly/2UhKPqP
+       return instance.get('ReadReplicaSourceDBInstanceIdentifier') is not None
