@@ -3,6 +3,7 @@ import sys
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
 from ScoutSuite.scout import run
 
+
 def main():
     parser = ScoutSuiteArgumentParser()
     args = parser.parse_args()
@@ -30,6 +31,7 @@ def main():
         args.get('force_write'),
         args.get('debug'),
         args.get('no_browser'))
+
 
 if __name__ == "__main__":
     main()
