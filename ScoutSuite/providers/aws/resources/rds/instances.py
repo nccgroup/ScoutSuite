@@ -24,4 +24,4 @@ class RDSInstances(AWSResources):
     @staticmethod
     def _is_read_replica(instance):
         # The ReadReplicaSourceDBInstanceIdentifier attribute is only defined for read replicas. Ref.: https://bit.ly/2UhKPqP
-       return instance.get('ReadReplicaSourceDBInstanceIdentifier') is not None
+        return instance.get('ReadReplicaSourceDBInstanceIdentifier') is not None
