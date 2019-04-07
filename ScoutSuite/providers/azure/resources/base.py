@@ -64,8 +64,9 @@ class AzureCompositeResources(AzureResources, CompositeResources, metaclass=abc.
             {asyncio.ensure_future(child.fetch_all()) for (child, _) in children}
         )
         # Update parent content:
-        for child, name in children:
-            if name:
-                resource_parent[name] = child
+        for child, child_name in children:
+            if child_name:
+                resource_parent[child_name] = child
+                resource_parent[child_name + '_count'] = len(child)
             else:
                 resource_parent.update(child)
