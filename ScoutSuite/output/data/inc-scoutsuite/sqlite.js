@@ -78,16 +78,22 @@ function getResourcePageSqlite (pageIndex, pageSize, service, resource) {
 function getResourcePageSqliteRegions (pageIndex, pageSize, service, region, resource) {
   let resources = requestDb(createQuery('services', service, 'regions', region, resource), pageSize, pageIndex)
   // Create a spot where to save data
-  runResults['services'][service]['regions'][region] = { [resource]: null }
+  runResults['services'][service]['regions'][region][resource] = null 
   for (let item in resources) {
     runResults['services'][service]['regions'][region][resource] = { [item]: 
       requestDb(createQuery('services', service, 'regions', region, resource, item), null) }
+  }
+  if (runResults['services'][service]['regions']['id'] === undefined) {
+    runResults['services'][service]['regions']['id'] = {[null]: null}
   }
   // Save the current page index to remember which page we have saved
   // Originally wanted to save that info under the precise resource, but the handlebar templates create slots for
   // each entry under resource, therefore there were 2 empty slots always added
   runResults['services'][service]['regions']['id'][resource + '_page_index'] = pageIndex
   runResults['services'][service]['regions']['id'][resource + '_page_size'] = pageSize
+  if (runResults['services'][service]['regions']['id'][null]) {
+    delete runResults['services'][service]['regions']['id'][null]
+  }
 }
 
 /**

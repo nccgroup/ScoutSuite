@@ -19,11 +19,7 @@ function loadPage (pathArray, indexDiff) {
     if (pathArray.length === 3) {
       getResourcePageSqlite(pageIndex, pageSize, pathArray[1], pathArray[2])
     } else if (pathArray.length === 5) {
-      // Need to iterate through the regions here or else it will try to get some data at regions.id because that
-      // is the path of the resource in the URI
-      for (let region in runResults['services'][pathArray[1]]['regions']) {
-        getResourcePageSqliteRegions(pageIndex, pageSize, pathArray[1], region, pathArray[4])
-      }
+      getResourcePageSqliteRegions(pageIndex, pageSize, pathArray[1], pathArray[3], pathArray[4])
     }
   } else {
     document.getElementById('page_backward').disabled = (pageIndex <= 0)
