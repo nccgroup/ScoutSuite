@@ -9,7 +9,8 @@ var defaultPort = 8000
  * @param {number} pageIndex        The index of the page [0, totalResources / pageSize - 1]
  * @returns {string}
  */
-function requestDb (query, pageSize, pageIndex, full) {
+function requestDb (query, pageSize, pageIndex) {
+  // TODO: Add the option of using a different port
   let url = 'http://127.0.0.1:' + defaultPort + '/api/'
   let response = ''
 
@@ -32,9 +33,11 @@ function requestDb (query, pageSize, pageIndex, full) {
       response = result
     } })
 
-  if (response.data === null || response.data === undefined) {
-    //console.log('This query returned an empty response:  ' + query)
-  }
+  // Use this when debugging, it is intended that a few requests return an empty response
+  // e.g. when looking if the resource has regions or not
+  /*if (response.data === null || response.data === undefined) {
+    console.log('This query returned an empty response:  ' + query)
+  }*/
 
   return response.data
 }
@@ -55,6 +58,7 @@ function getResourcePageSqlite (pageIndex, pageSize, service, resource) {
     runResults['services'][service][resource][item] =
       requestDb(createQuery('services', service, resource, item), null)
   }
+
   // Save the current page index to remember which page we have saved
   // Originally wanted to save that info under the precise resource, but the handlebar templates create slots for
   // each entry under resource, therefore there were 2 empty slots always added
@@ -82,6 +86,7 @@ function getResourcePageSqliteRegions (pageIndex, pageSize, service, region, res
   if (runResults['services'][service]['regions']['id'] === undefined) {
     runResults['services'][service]['regions']['id'] = {}
   }
+  
   // Save the current page index to remember which page we have saved
   // Originally wanted to save that info under the precise resource, but the handlebar templates create slots for
   // each entry under resource, therefore there were 2 empty slots always added

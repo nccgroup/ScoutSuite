@@ -116,9 +116,25 @@ function getLastPageIndex (pathArray, pageSize) {
   if (pathArray.length === 3) {
     resourceCount = runResults[pathArray[0]][pathArray[1]][pathArray[2] + '_count']
   } else {
-    resourceCount = runResults[pathArray[0]][pathArray[1]][pathArray[2]]['id'][pathArray[4] + '_count']
+    resourceCount = getHighestResourceCount(pathArray)
   }
   return Math.ceil(resourceCount / pageSize - 1)
+}
+
+/**
+ * Returns the highest value of a resource count throughout regions in order to restrict pagination
+ * to the proper indexes
+ * @param {array} pathArray
+ * @returns {number}
+ */
+function getHighestResourceCount (pathArray) {
+  let max = 0
+  for (let region in runResults[pathArray[0]][pathArray[1]][pathArray[2]]) {
+    if (max < runResults[pathArray[0]][pathArray[1]][pathArray[2]][region][pathArray[4] + '_count']) {
+      max = runResults[pathArray[0]][pathArray[1]][pathArray[2]][region][pathArray[4] + '_count']
+    }
+  }
+  return max
 }
 
 /**
