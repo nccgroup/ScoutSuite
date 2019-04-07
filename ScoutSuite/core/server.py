@@ -40,6 +40,8 @@ class Server(object):
     @cherrypy.tools.json_out()
     def full(self, key=None):
         result = self.get_item(self.results, key)
+        if isinstance(result, str):
+            return {'data': result}
         return {'data': dict(result)}
 
     @cherrypy.expose()

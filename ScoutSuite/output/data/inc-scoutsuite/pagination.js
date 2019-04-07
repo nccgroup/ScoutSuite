@@ -77,9 +77,11 @@ function loadFirstPageEverywhere () {
     let regions = requestDb(createQuery('services', service, 'regions'))
     if (regions) {
       regions = regions.keys
-      // Create a 'regions' key for each service
+      // Create a 'regions' key for each service, if you know a way to not have to add in this, please fixme
       runResults['services'][service]['regions'] = {[null]: null}
       for (let region in regions) {
+        // Ignore the null we've just added
+        if (regions[region] === null) {continue}
         // Create an 'id' key for each region, this is were we will read the page index/size and load
         // the proper template
         runResults['services'][service]['regions'][regions[region]] = {id: null}

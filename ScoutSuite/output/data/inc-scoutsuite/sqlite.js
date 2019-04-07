@@ -76,9 +76,6 @@ function getResourcePageSqlite (pageIndex, pageSize, service, resource) {
  * @param {string} resource         The resource targeted
  */
 function getResourcePageSqliteRegions (pageIndex, pageSize, service, region, resource) {
-  if (region === null || region === 'null' || region === undefined) {
-    return
-  }
   let resources = requestDb(createQuery('services', service, 'regions', region, resource), pageSize, pageIndex)
   // Create a spot where to save data
   runResults['services'][service]['regions'][region] = { [resource]: null }
