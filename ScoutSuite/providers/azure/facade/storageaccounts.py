@@ -1,9 +1,8 @@
-import asyncio
 import datetime
 
 from azure.mgmt.storage import StorageManagementClient
 from azure.mgmt.monitor import MonitorManagementClient
-from ScoutSuite.providers.utils import run_concurrently
+from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
 
 
 class StorageAccountsFacade:
@@ -16,16 +15,7 @@ class StorageAccountsFacade:
         storage_accounts = await run_concurrently(
             lambda: list(self._client.storage_accounts.list())
         )
-
-        if len(storage_accounts) == 0:
-            return []
-
-        tasks = {
-            asyncio.ensure_future(
-                self.get_and_set_activity_logs(storage_account)
-            ) for storage_account in storage_accounts
-        }
-        await asyncio.wait(tasks)
+        await get_and_set_concurrently([self._get_and_set_activity_logs], storage_accounts)
 
         return storage_accounts
 
@@ -34,7 +24,7 @@ class StorageAccountsFacade:
             lambda: list(self._client.blob_containers.list(resource_group_name, storage_account_name).value)
         )
 
-    async def get_and_set_activity_logs(self, storage_account):
+    async def _get_and_set_activity_logs(self, storage_account):
         client = MonitorManagementClient(self._credentials, self._subscription_id)
 
         # Time format used by Azure API:
