@@ -12,6 +12,3 @@ class Networks(AzureCompositeResources):
 
     async def fetch_all(self, credentials, **kwargs):
         await self._fetch_children(resource_parent=self)
-
-        self['network_security_groups_count'] = len(self['network_security_groups'])
-        self['network_watchers_count'] = len(self['network_watchers'])
