@@ -1,4 +1,4 @@
-from ScoutSuite.providers.aws.facade.facade import AWSFacade
+from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.regions import Regions
 
 from .vpcs import ELBv2Vpcs

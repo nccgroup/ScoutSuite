@@ -1,4 +1,4 @@
-from ScoutSuite.providers.aws.resources.resources import AWSCompositeResources
+from ScoutSuite.providers.aws.resources.base import AWSCompositeResources
 from ScoutSuite.providers.utils import get_non_provider_id
 from .listeners import Listeners
 

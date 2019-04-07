@@ -1,27 +1,27 @@
 from ScoutSuite.providers.azure.authentication_strategy import AzureCredentials
-from ScoutSuite.providers.azure.facade.facade import AzureFacade
-from ScoutSuite.providers.azure.resources.keyvault.key_vaults import KeyVaults
-from ScoutSuite.providers.azure.resources.network.networks import Networks
-from ScoutSuite.providers.azure.resources.securitycenter.security_center import SecurityCenter
-from ScoutSuite.providers.azure.resources.sqldatabase.servers import Servers
-from ScoutSuite.providers.azure.resources.storageaccounts.storageaccounts import StorageAccounts
+from ScoutSuite.providers.azure.facade.base import AzureFacade
+from ScoutSuite.providers.azure.resources.keyvault.base import KeyVaults
+from ScoutSuite.providers.azure.resources.network.base import Networks
+from ScoutSuite.providers.azure.resources.securitycenter.base import SecurityCenter
+from ScoutSuite.providers.azure.resources.sqldatabase.base import Servers
+from ScoutSuite.providers.azure.resources.storageaccounts.base import StorageAccounts
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 
 # Try to import proprietary services
 try:
-    from ScoutSuite.providers.azure.resources.appgateway_private.application_gateways_private import ApplicationGateways
+    from ScoutSuite.providers.azure.resources.private_appgateway.base import ApplicationGateways
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.azure.resources.rediscache_private.redis_caches_private import RedisCaches
+    from ScoutSuite.providers.azure.resources.private_rediscache.base import RedisCaches
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.azure.resources.appservice_private.web_applications_private import WebApplications
+    from ScoutSuite.providers.azure.resources.appservice_private.base import WebApplications
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.azure.resources.loadbalancer_private.load_balancers_private import LoadBalancers
+    from ScoutSuite.providers.azure.resources.private_loadbalancer.base import LoadBalancers
 except ImportError:
     pass
 

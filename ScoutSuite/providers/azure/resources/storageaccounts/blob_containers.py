@@ -1,5 +1,5 @@
 from ScoutSuite.providers.base.configs.resources import Resources
-from ScoutSuite.providers.azure.facade.facade import AzureFacade
+from ScoutSuite.providers.azure.facade.base import AzureFacade
 
 
 class BlobContainers(Resources):

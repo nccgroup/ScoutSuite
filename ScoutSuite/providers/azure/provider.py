@@ -1,7 +1,8 @@
 import os
 
-from ScoutSuite.providers.azure.configs.services import AzureServicesConfig
+from ScoutSuite.providers.azure.services import AzureServicesConfig
 from ScoutSuite.providers.base.provider import BaseProvider
+from ScoutSuite.providers.azure.services import AzureServicesConfig
 
 
 class AzureProvider(BaseProvider):
@@ -25,7 +26,8 @@ class AzureProvider(BaseProvider):
         self.credentials = kwargs['credentials']
         self.account_id = self.credentials.subscription_id
 
-        super(AzureProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
+        super(AzureProvider, self).__init__(report_dir, timestamp,
+                                            services, skipped_services, thread_config)
 
     def get_report_name(self):
         """

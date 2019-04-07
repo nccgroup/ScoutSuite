@@ -1,5 +1,5 @@
 from ScoutSuite.providers.aws.resources.regions import Regions
-from ScoutSuite.providers.aws.resources.resources import AWSResources
+from ScoutSuite.providers.aws.resources.base import AWSResources
 
 
 class RDSInstances(AWSResources):

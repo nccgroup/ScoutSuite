@@ -1,4 +1,4 @@
-from ScoutSuite.providers.aws.facade.facade import AWSFacade
+from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.rds.parametergroups import ParameterGroups
 from ScoutSuite.providers.aws.resources.rds.securitygroups import SecurityGroups
 from ScoutSuite.providers.aws.resources.rds.vpcs import RDSVpcs
