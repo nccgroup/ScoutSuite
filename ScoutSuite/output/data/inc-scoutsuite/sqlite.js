@@ -49,10 +49,8 @@ function requestDb (query, pageSize, pageIndex, full) {
  */
 function getResourcePageSqlite (pageIndex, pageSize, service, resource) {
   let resources = requestDb(createQuery('services', service, resource), pageSize, pageIndex)
-  // Delete the current content
-  runResults['services'][service][resource] = null
-  // Create a spot where to save data
-  runResults['services'][service][resource] = { [null]: null }
+  // Create an object where to save data and overwrite the current content
+  runResults['services'][service][resource] = {}
   for (let item in resources) {
     runResults['services'][service][resource][item] =
       requestDb(createQuery('services', service, resource, item), null)
@@ -62,8 +60,6 @@ function getResourcePageSqlite (pageIndex, pageSize, service, resource) {
   // each entry under resource, therefore there were 2 empty slots always added
   runResults['services'][service][resource + '_page_index'] = pageIndex
   runResults['services'][service][resource + '_page_size'] = pageSize
-
-  delete runResults['services'][service][resource].null
 }
 
 /**
@@ -84,16 +80,13 @@ function getResourcePageSqliteRegions (pageIndex, pageSize, service, region, res
       requestDb(createQuery('services', service, 'regions', region, resource, item), null) })
   }
   if (runResults['services'][service]['regions']['id'] === undefined) {
-    runResults['services'][service]['regions']['id'] = {[null]: null}
+    runResults['services'][service]['regions']['id'] = {}
   }
   // Save the current page index to remember which page we have saved
   // Originally wanted to save that info under the precise resource, but the handlebar templates create slots for
   // each entry under resource, therefore there were 2 empty slots always added
   runResults['services'][service]['regions']['id'][resource + '_page_index'] = pageIndex
   runResults['services'][service]['regions']['id'][resource + '_page_size'] = pageSize
-  if (runResults['services'][service]['regions']['id'][null]) {
-    delete runResults['services'][service]['regions']['id'][null]
-  }
 }
 
 /**

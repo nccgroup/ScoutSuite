@@ -29,7 +29,6 @@ function loadPage (pathArray, indexDiff) {
       loadConfig(pathArray[0] + '.' + pathArray[1] + '.' + pathArray[2], 2, true)
     } else if (pathArray.length === 5) {
       for (let region in runResults['services'][pathArray[1]]['regions']) {
-        // pathArray = ['services', service, 'regions', region, resources[resource]]
         getResourcePageSqliteRegions(pageIndex, pageSize, pathArray[1], region, pathArray[4])
       }
       loadConfig('services.' + pathArray[1] + '.' + pathArray[2] + '.' + pathArray[3] + '.' + pathArray[4], 2, true)
@@ -49,8 +48,7 @@ function getPageInfo (pathArray) {
     pageIndex = runResults[pathArray[0]][pathArray[1]][pathArray[2] + '_page_index']
   } else if (pathArray.length === 5) {
     // Instead of following the pathArray save the data to id since that's the path of pages with regions
-    if (runResults[pathArray[0]][pathArray[1]][pathArray[2]]['id'] !== null &&
-    runResults[pathArray[0]][pathArray[1]][pathArray[2]]['id'] !== undefined) {
+    if (runResults[pathArray[0]][pathArray[1]][pathArray[2]]['id'] !== undefined) {
       pageSize = runResults[pathArray[0]][pathArray[1]][pathArray[2]]['id'][pathArray[4] + '_page_size']
       pageIndex = runResults[pathArray[0]][pathArray[1]][pathArray[2]]['id'][pathArray[4] + '_page_index']
     }
@@ -74,10 +72,8 @@ function loadFirstPageEverywhere () {
     if (regions) {
       regions = regions.keys
       // Create a 'regions' key for each service, if you know a way to not have to add in this, please fixme
-      runResults['services'][service]['regions'] = {[null]: null}
+      runResults['services'][service]['regions'] = {}
       for (let region in regions) {
-        // Ignore the null we've just added
-        if (regions[region] === null) {continue}
         // Create an 'id' key for each region, this is were we will read the page index/size and load
         // the proper template
         runResults['services'][service]['regions'][regions[region]] = {id: null}
@@ -98,7 +94,6 @@ function loadFirstPageEverywhere () {
           }
         }
       }
-      delete runResults['services'][service]['regions'].null
     } else {
       for (let resource in runResults['services'][service]) {
         if (resource.match(reCount)) {
