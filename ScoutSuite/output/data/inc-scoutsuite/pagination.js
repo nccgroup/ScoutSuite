@@ -69,7 +69,7 @@ function loadFirstPageEverywhere () {
   for (let service in runResults['services']) {
     // Check if the service we are dealing with contains regions (most AWS services do)
     let regions = requestDb(createQuery('services', service, 'regions'))
-    if (regions.keys) {
+    if (regions !== null && regions.keys) {
       regions = regions.keys
       // Create a 'regions' key for each service, if you know a way to not have to add in this, please fixme
       runResults['services'][service]['regions'] = {}
