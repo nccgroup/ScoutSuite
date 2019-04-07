@@ -1,0 +1,25 @@
+
+<!-- Stackdriver Logging sinks partial -->
+<script id="services.stackdriverlogging.projects.id.sinks.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Sink Name: <span id="stackdriverlogging.projects.{{@../key}}.sinks.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Filter: <span id="stackdriverlogging.projects.{{@../key}}.sinks.{{@key}}.filter"><code>{{filter}}</code></span></div>
+        <div class="list-group-item-text item-margin">Destination: <span id="stackdriverlogging.projects.{{@../key}}.sinks.{{@key}}.destination"><samp>{{destination}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.stackdriverlogging.projects.id.sinks", $("#services\\.stackdriverlogging\\.projects\\.id\\.sinks\\.partial").html());
+</script>
+
+<!-- Single stackdriverlogging sink template -->
+<script id="single_stackdriverlogging_sink-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.stackdriverlogging.projects.id.sinks'}}
+</script>
+<script>
+    var single_stackdriverlogging_sink_template = Handlebars.compile($("#single_stackdriverlogging_sink-template").html());
+</script>

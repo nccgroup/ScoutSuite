@@ -1,9 +1,9 @@
 {
   "dashboard_name": "Bindings",
   "description": "IAM Role Assigned to User",
-  "path": "cloudresourcemanager.bindings.id",
+  "path": "cloudresourcemanager.projects.id.bindings.id",
   "conditions": [ "and",
-    [ "cloudresourcemanager.bindings.id.members.users", "notEmpty", "" ]
+    [ "cloudresourcemanager.projects.id.bindings.id.members.users", "notEmpty", "" ]
   ],
   "id_suffix": "users"
 }
