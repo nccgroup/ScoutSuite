@@ -234,6 +234,8 @@ class GCPProvider(BaseProvider):
                 for network in project['networks'].values():
                     network['instances'] = []
                     for zone in project['zones'].values():
+                        if zone is not dict:
+                            continue
                         for instance in zone['instances'].values():
                             for network_interface in instance['network_interfaces']:
                                 if network_interface['network'] == network['network_url']:
