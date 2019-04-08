@@ -3,9 +3,9 @@ from ScoutSuite.core.console import config_debug_level
 
 
 #
-# Test for Scout Suite SNS functions
+# Test for Scout SNS functions
 #
-class TestScoutSuiteSNSUtilsClass:
+class TestScoutSNSUtilsClass:
     config_debug_level(True)
 
     #

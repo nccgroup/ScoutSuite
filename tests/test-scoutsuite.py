@@ -2,7 +2,7 @@ import subprocess
 import mock
 
 from nose.plugins.attrib import attr
-from ScoutSuite.__main__ import *
+from Scout import main
 from ScoutSuite.core.console import set_config_debug_level
 
 

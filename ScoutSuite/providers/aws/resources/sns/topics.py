@@ -1,6 +1,6 @@
 import json
 
-from ScoutSuite.providers.aws.resources.resources import AWSCompositeResources
+from ScoutSuite.providers.aws.resources.base import AWSCompositeResources
 
 from .subscriptions import Subscriptions
 

@@ -1,6 +1,6 @@
 from msrestazure.azure_exceptions import CloudError
 
-from ScoutSuite.providers.azure.facade.facade import AzureFacade
+from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.base.configs.resources import Resources
 
 

@@ -6,7 +6,7 @@ from ScoutSuite.utils import *
 #
 # Test methods for ScoutSuite/utils.py
 #
-class TestAWSScoutSuiteUtilsClass:
+class TestScoutUtilsClass:
 
     def test_format_service_name(self):
         assert (format_service_name('iAm') == 'IAM')

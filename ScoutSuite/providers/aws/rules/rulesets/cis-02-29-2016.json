@@ -158,5 +158,5 @@
             }
         ]
     },
-    "about": "This ruleset attempts to cover as many recommendations from the CIS Amazon Web Services Foundation v1.0.0 - 02-29-2016. However, ScoutSuite does not fetch data from CloudWatch. As a result, no recommendations from section 3 \"Monitoring\" are assessed. Furthermore, this ruleset is a work in progress and coverage of sections 1, 2, and 4 is incomplete."
+    "about": "This ruleset attempts to cover as many recommendations from the CIS Amazon Web Services Foundation v1.0.0 - 02-29-2016. However, Scout does not fetch data from CloudWatch. As a result, no recommendations from section 3 \"Monitoring\" are assessed. Furthermore, this ruleset is a work in progress and coverage of sections 1, 2, and 4 is incomplete."
 }

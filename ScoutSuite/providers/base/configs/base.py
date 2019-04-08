@@ -17,12 +17,9 @@ from ScoutSuite.providers.base.configs.threads import thread_configs
 
 # TODO do this better without name conflict
 from ScoutSuite.providers.gcp.utils import gcp_connect_service
-from ScoutSuite.providers.azure.utils import azure_connect_service
 
-from ScoutSuite.providers.aws.utils import build_region_list, connect_service
-from ScoutSuite.core.console import print_exception, print_info
+from ScoutSuite.core.console import print_exception, print_info, print_error
 
-from ScoutSuite.output.console import FetchStatusLogger
 from ScoutSuite.utils import format_service_name
 
 # TODO global is trash
@@ -52,7 +49,7 @@ class BaseConfig(object):
 
     def get_non_provider_id(self, name):
         """
-        Not all AWS resources have an ID and some services allow the use of "." in names, which break's ScoutSuite's
+        Not all AWS resources have an ID and some services allow the use of "." in names, which break's Scout's
         recursion scheme if name is used as an ID. Use SHA1(name) instead.
 
         :param name:                    Name of the resource to
@@ -84,29 +81,16 @@ class BaseConfig(object):
 
         # Connect to the service
         if self._is_provider('aws'):
-            if self.service in ['s3']:  # S3 namespace is global but APIs aren't....
-                api_clients = {}
-                for region in build_region_list(self.service, regions, partition_name):
-                    api_clients[region] = connect_service('s3', credentials, region, silent=True)
-                api_client = api_clients[list(api_clients.keys())[0]]
-            elif self.service == 'route53domains':
-                api_client = connect_service(self.service, credentials, 'us-east-1',
-                                             silent=True)  # TODO: use partition's default region
-            else:
-                api_client = connect_service(self.service, credentials, silent=True)
+            print_error('You should not use BaseConfig for AWS services. Please refer to the wiki: https://bit.ly/2IbiWtA.')
 
         elif self._is_provider('gcp'):
             api_client = gcp_connect_service(service=self.service, credentials=credentials)
 
         elif self._is_provider('azure'):
-            api_client = azure_connect_service(service=self.service, credentials=credentials)
+            print_error('You should not use BaseConfig for Azure services. Please refer to the wiki: https://bit.ly/2IbiWtA.')
 
         # Threading to fetch & parse resources (queue consumer)
         params = {'api_client': api_client}
-
-        if self._is_provider('aws'):
-            if self.service in ['s3']:
-                params['api_clients'] = api_clients
 
         # Threading to parse resources (queue feeder)
         target_queue = self._init_threading(self.__fetch_target, params, self.thread_config['parse'])
@@ -114,14 +98,7 @@ class BaseConfig(object):
         # Threading to list resources (queue feeder)
         params = {'api_client': api_client, 'q': target_queue}
 
-        if self._is_provider('aws'):
-            if self.service in ['s3']:
-                params['api_clients'] = api_clients
-
         service_queue = self._init_threading(self.__fetch_service, params, self.thread_config['list'])
-
-        # Init display
-        self.fetchstatuslogger = FetchStatusLogger(targets)
 
         # Go
         for target in targets:
@@ -130,14 +107,6 @@ class BaseConfig(object):
         # Blocks until all items in the queue have been gotten and processed.
         service_queue.join()
         target_queue.join()
-
-        # Show completion and force newline
-        if self._is_provider('aws'):
-            # Show completion and force newline
-            if self.service != 'iam':
-                self.fetchstatuslogger.show(True)
-        else:
-            self.fetchstatuslogger.show(True)
 
         # Threads should stop running as queues are empty
         self.run_target_threads = False
@@ -160,8 +129,6 @@ class BaseConfig(object):
                         method = getattr(self, 'parse_%s' %
                                          target_type.replace('.', '_'))  # TODO fix this, hack for GCP API Client libs
                         method(target, params)
-                        self.fetchstatuslogger.counts[target_type]['fetched'] += 1
-                        self.fetchstatuslogger.show()
                 except Exception as e:
                     if hasattr(e, 'response') and \
                             'Error' in e.response and \
@@ -200,8 +167,6 @@ class BaseConfig(object):
                                 print_exception(e)
                             targets = []
 
-                        self.fetchstatuslogger.counts[target_type]['discovered'] += len(targets)
-
                         for target in targets:
                             params['q'].put((target_type, target), )
 
@@ -228,11 +193,6 @@ class BaseConfig(object):
         :return:
         """
         return None
-
-    async def finalize(self):
-        for t in self.fetchstatuslogger.counts:
-            setattr(self, '%s_count' % t, self.fetchstatuslogger.counts[t]['fetched'])
-        self.__delattr__('fetchstatuslogger')
 
     def _init_threading(self, function, params=None, num_threads=10):
         params = {} if params is None else params

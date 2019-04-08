@@ -1,4 +1,4 @@
-from ScoutSuite.providers.aws.resources.resources import AWSCompositeResources
+from ScoutSuite.providers.aws.resources.base import AWSCompositeResources
 
 
 class Vpcs(AWSCompositeResources):
