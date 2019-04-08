@@ -1,10 +1,11 @@
-import base64
 import asyncio
+import base64
 
-from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
-from ScoutSuite.providers.utils import run_concurrently
+from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
+from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import get_and_set_concurrently
+from ScoutSuite.providers.utils import run_concurrently
 
 
 class EC2Facade(AWSBaseFacade):
@@ -13,17 +14,20 @@ class EC2Facade(AWSBaseFacade):
 
     async def get_instance_user_data(self, region: str, instance_id: str):
         ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)
-        user_data_response = await run_concurrently(
-            lambda: ec2_client.describe_instance_attribute(Attribute='userData', InstanceId=instance_id))
-
-        if 'Value' not in user_data_response['UserData'].keys():
+        try:
+            user_data_response = await run_concurrently(
+                lambda: ec2_client.describe_instance_attribute(Attribute='userData', InstanceId=instance_id))
+        except Exception as e:
+            print_exception('Failed to describe EC2 instance attributes: {}'.format(e))
             return None
-
-        return base64.b64decode(user_data_response['UserData']['Value']).decode('utf-8')
+        else:
+            if 'Value' not in user_data_response['UserData'].keys():
+                return None
+            return base64.b64decode(user_data_response['UserData']['Value']).decode('utf-8')
 
     async def get_instances(self, region: str, vpc: str):
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]
-        reservations =\
+        reservations = \
             await AWSFacadeUtils.get_all_pages(
                 'ec2', region, self.session, 'describe_instances', 'Reservations', Filters=filters)
 
@@ -42,12 +46,18 @@ class EC2Facade(AWSBaseFacade):
 
     async def get_vpcs(self, region: str):
         ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)
-        return await run_concurrently(lambda: ec2_client.describe_vpcs()['Vpcs'])
+        try:
+            return await run_concurrently(lambda: ec2_client.describe_vpcs()['Vpcs'])
+        except Exception as e:
+            print_exception('Failed to describe EC2 VPC: {}'.format(e))
 
     async def get_images(self, region: str, owner_id: str):
         filters = [{'Name': 'owner-id', 'Values': [owner_id]}]
         client = AWSFacadeUtils.get_client('ec2', self.session, region)
-        return await run_concurrently(lambda: client.describe_images(Filters=filters)['Images'])
+        try:
+            return await run_concurrently(lambda: client.describe_images(Filters=filters)['Images'])
+        except Exception as e:
+            print_exception('Failed to get EC2 images: {}'.format(e))
 
     async def get_network_interfaces(self, region: str, vpc: str):
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]
@@ -63,7 +73,12 @@ class EC2Facade(AWSBaseFacade):
         kms_client = AWSFacadeUtils.get_client('kms', self.session, region)
         if 'KmsKeyId' in volume:
             key_id = volume['KmsKeyId']
-            volume['KeyManager'] = await run_concurrently(lambda: kms_client.describe_key(KeyId=key_id)['KeyMetadata']['KeyManager'])
+            try:
+                volume['KeyManager'] = await run_concurrently(
+                    lambda: kms_client.describe_key(KeyId=key_id)['KeyMetadata']['KeyManager'])
+            except Exception as e:
+                print_exception('Failed to describe KMS key: {}'.format(e))
+                volume['KeyManager'] = None
         else:
             volume['KeyManager'] = None
 
@@ -77,9 +92,12 @@ class EC2Facade(AWSBaseFacade):
 
     async def _get_and_set_snapshot_attributes(self, snapshot: {}, region: str):
         ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)
-        snapshot['CreateVolumePermissions'] = await run_concurrently(lambda: ec2_client.describe_snapshot_attribute(
-            Attribute='createVolumePermission',
-            SnapshotId=snapshot['SnapshotId'])['CreateVolumePermissions'])
+        try:
+            snapshot['CreateVolumePermissions'] = await run_concurrently(lambda: ec2_client.describe_snapshot_attribute(
+                Attribute='createVolumePermission',
+                SnapshotId=snapshot['SnapshotId'])['CreateVolumePermissions'])
+        except Exception as e:
+            print_exception('Failed to describe EC2 snapshot attributes: {}'.format(e))
 
     async def get_network_acls(self, region: str, vpc: str):
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]
@@ -95,19 +113,23 @@ class EC2Facade(AWSBaseFacade):
             if region in self.flow_logs_cache:
                 return
 
-            self.flow_logs_cache[region] =\
+            self.flow_logs_cache[region] = \
                 await AWSFacadeUtils.get_all_pages('ec2', region, self.session, 'describe_flow_logs', 'FlowLogs')
 
     async def get_subnets(self, region: str, vpc: str):
         ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]
-        subnets = await run_concurrently(lambda: ec2_client.describe_subnets(Filters=filters)['Subnets'])
-        await get_and_set_concurrently([self._get_and_set_subnet_flow_logs], subnets, region=region)
-
-        return subnets
+        try:
+            subnets = await run_concurrently(lambda: ec2_client.describe_subnets(Filters=filters)['Subnets'])
+        except Exception as e:
+            print_exception('Failed to describe EC2 subnets: {}'.format(e))
+            return None
+        else:
+            await get_and_set_concurrently([self._get_and_set_subnet_flow_logs], subnets, region=region)
+            return subnets
 
     async def _get_and_set_subnet_flow_logs(self, subnet: {}, region: str):
         await self.cache_flow_logs(region)
-        subnet['flow_logs'] =\
+        subnet['flow_logs'] = \
             [flow_log for flow_log in self.flow_logs_cache[region]
              if flow_log['ResourceId'] == subnet['SubnetId'] or flow_log['ResourceId'] == subnet['VpcId']]

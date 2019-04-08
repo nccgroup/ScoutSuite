@@ -3,15 +3,14 @@
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import copy
 import json
 import sys
-import copy
-
-from ScoutSuite.core.console import print_exception, print_info
 
 from ScoutSuite import __version__ as scout_version
-from ScoutSuite.providers.base.configs.browser import get_object_at
+from ScoutSuite.core.console import print_exception, print_info
 from ScoutSuite.output.html import ScoutReport
+from ScoutSuite.providers.base.configs.browser import get_object_at
 
 
 class BaseProvider(object):
@@ -25,7 +24,8 @@ class BaseProvider(object):
     all cloud providers
     """
 
-    def __init__(self, report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
+    def __init__(self, report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4,
+                 **kwargs):
         """
 
         :account_id         account ID
@@ -111,7 +111,7 @@ class BaseProvider(object):
 
         # Ensure services and skipped services exist, otherwise log exception
         error = False
-        for service in services+skipped_services:
+        for service in services + skipped_services:
             if service not in supported_services:
                 print_exception('Service \"{}\" does not exist, skipping.'.format(service))
                 error = True
@@ -250,7 +250,7 @@ class BaseProvider(object):
                         if 'callbacks' in self.metadata[service_group][service]['summaries'][summary]:
                             current_path = ['services', service]
                             for callback in self.metadata[service_group][service]['summaries'][summary][
-                                    'callbacks']:
+                                'callbacks']:
                                 callback_name = callback[0]
                                 callback_args = copy.deepcopy(callback[1])
                                 target_path = callback_args.pop('path').replace('.id', '').split('.')[2:]
@@ -297,7 +297,6 @@ class BaseProvider(object):
         Recursively go to a target and execute a callback
         """
         try:
-
             key = path.pop(0)
             if not current_config:
                 current_config = self.config
@@ -345,7 +344,6 @@ class BaseProvider(object):
         Recursively go to a target and execute a callback
         """
         try:
-
             key = path.pop(0)
             if not current_config:
                 current_config = self.config
@@ -365,19 +363,28 @@ class BaseProvider(object):
                     if len(path) == 0:
                         for callback_info in callbacks:
                             callback_name = callback_info[0]
+                            try:
+                                callback = getattr(self, callback_name)
 
-                            # callback = globals()[callback_name]
-                            callback = getattr(self, callback_name)
-
-                            callback_args = callback_info[1]
-                            if type(current_config[key] == dict) and type(value) != dict and type(value) != list:
-                                callback(current_config[key][value],
-                                         path,
-                                         current_path,
-                                         value,
-                                         callback_args)
-                            else:
-                                callback(current_config, path, current_path, value, callback_args)
+                                callback_args = callback_info[1]
+                                if type(current_config[key] == dict) and type(value) != dict and type(value) != list:
+                                    callback(current_config[key][value],
+                                             path,
+                                             current_path,
+                                             value,
+                                             callback_args)
+                                else:
+                                    callback(current_config, path, current_path, value, callback_args)
+                            except Exception as e:
+                                print_exception(e, {'callback': callback_name,
+                                                    'callback arguments': callback_args,
+                                                    'current path': '{}'.format(current_path),
+                                                    'key': '{}'.format(key if 'key' in locals() else 'not defined'),
+                                                    'value': '{}'.format(
+                                                        value if 'value' in locals() else 'not defined'),
+                                                    'path': '{}'.format(path),
+                                                    }
+                                                )
                     else:
                         tmp = copy.deepcopy(current_path)
                         try:

@@ -1,5 +1,6 @@
 from asyncio import Lock
 
+from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.utils import ec2_classic
@@ -40,10 +41,13 @@ class RDSFacade(AWSBaseFacade):
         client = AWSFacadeUtils.get_client('rds', self.session, region)
         if 'DBClusterIdentifier' in instance:
             cluster_id = instance['DBClusterIdentifier']
-            clusters = await run_concurrently(
-                lambda: client.describe_db_clusters(DBClusterIdentifier=cluster_id))
-            cluster = clusters['DBClusters'][0]
-            instance['MultiAZ'] = cluster['MultiAZ']
+            try:
+                clusters = await run_concurrently(
+                    lambda: client.describe_db_clusters(DBClusterIdentifier=cluster_id))
+                cluster = clusters['DBClusters'][0]
+                instance['MultiAZ'] = cluster['MultiAZ']
+            except Exception as e:
+                print_exception('Failed to describe RDS clusters: {}'.format(e))
 
     async def get_snapshots(self, region: str, vpc: str):
         await self._cache_snapshots(region)
@@ -65,11 +69,14 @@ class RDSFacade(AWSBaseFacade):
 
     async def _get_and_set_snapshot_attributes(self, snapshot: {}, region: str):
         client = AWSFacadeUtils.get_client('rds', self.session, region)
-        attributes = await run_concurrently(
-            lambda: client.describe_db_snapshot_attributes(
-                DBSnapshotIdentifier=snapshot['DBSnapshotIdentifier'])['DBSnapshotAttributesResult'])
-        snapshot['Attributes'] =\
-            attributes['DBSnapshotAttributes'] if 'DBSnapshotAttributes' in attributes else {}
+        try:
+            attributes = await run_concurrently(
+                lambda: client.describe_db_snapshot_attributes(
+                    DBSnapshotIdentifier=snapshot['DBSnapshotIdentifier'])['DBSnapshotAttributesResult'])
+            snapshot['Attributes'] =\
+                attributes['DBSnapshotAttributes'] if 'DBSnapshotAttributes' in attributes else {}
+        except Exception as e:
+            print_exception('Failed to describe RDS snapshot attributes: {}'.format(e))
 
     async def get_subnet_groups(self, region: str, vpc: str):
         await self._cache_subnet_groups(region)
