@@ -5,11 +5,14 @@ import webbrowser
 
 from concurrent.futures import ThreadPoolExecutor
 
+from ScoutSuite.output.report_file import ReportFile
 from ScoutSuite.core.console import set_config_debug_level, print_info, print_exception
 from ScoutSuite.core.exceptions import RuleExceptions
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset
+from ScoutSuite.core.server import Server
 from ScoutSuite.output.html import ScoutReport
+from ScoutSuite.output.utils import get_filename
 from ScoutSuite.providers import get_provider
 from ScoutSuite.providers.base.authentication_strategy_factory import get_authentication_strategy
 
@@ -116,6 +119,11 @@ async def _run(provider,
                          report_dir,
                          timestamp)
 
+    if database_name:
+        database_file, _ = get_filename(ReportFile.results, report_name, report_dir, extension="db")
+        Server.init(database_file, host_ip, host_port)
+            return
+
     # Complete run, including pulling data from provider
     if not fetch_local:
 
@@ -131,7 +139,7 @@ async def _run(provider,
         if update:
             print_info('Updating existing data')
             current_run_services = copy.deepcopy(cloud_provider.services)
-            last_run_dict = report.jsrw.load_from_file('RESULTS')
+            last_run_dict = report.encoder.load_from_file(ReportFile.results)
             cloud_provider.services = last_run_dict['services']
             for service in cloud_provider.service_list:
                 cloud_provider.services[service] = current_run_services[service]
@@ -140,7 +148,7 @@ async def _run(provider,
     else:
         print_info('Using local data')
         # Reload to flatten everything into a python dictionary
-        last_run_dict = report.jsrw.load_from_file('RESULTS')
+        last_run_dict = report.encoder.load_from_file(ReportFile.results)
         for key in last_run_dict:
             setattr(cloud_provider, key, last_run_dict[key])
 
