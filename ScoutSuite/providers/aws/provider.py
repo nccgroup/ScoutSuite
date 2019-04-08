@@ -702,6 +702,8 @@ class AWSProvider(BaseProvider):
                         elif port == 'ALL':
                             port_min = 0
                             port_max = 65535
+                        elif p == 'ICMP':
+                            port_min = port_max = None
                         else:
                             port_min = port_max = int(port)
                         for listener in listeners:
