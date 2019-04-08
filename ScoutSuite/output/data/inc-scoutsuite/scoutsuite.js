@@ -700,7 +700,7 @@ function showPopup(content) {
 /**
  * Set up dashboards and dropdown menus
  */
-function load_metadata() {
+function loadMetadata() {
 
     run_results = get_scoutsuite_results();
 
@@ -776,7 +776,7 @@ function showResourcesDetails() {
 /**
  * Show main dashboard
  */
-function show_main_dashboard() {
+function showMainDashboard() {
     hideAll();
     // Hide filters
     hideFilters();
@@ -904,7 +904,7 @@ function updateDOM(anchor) {
 
     // DOM Update
     if (path == '') {
-        show_main_dashboard()
+        showMainDashboard()
     } else if (path.endsWith('.items')) {
         // Switch view for findings
         lazy_loading(resource_path);
@@ -1158,7 +1158,7 @@ function download_configuration(configuration, name, prefix) {
     dlAnchorElem.click();
 };
 
-function download_exceptions() {
+function downloadExceptions() {
     var url = window.location.pathname;
     var profile_name = url.substring(url.lastIndexOf('/') + 1).replace('report-', '').replace('.html', '');
     console.log(exceptions);
@@ -1177,7 +1177,7 @@ var toggle_element = function (element_id) {
     $('#' + element_id).toggle();
 };
 
-function set_filter_url(region) {
+function setFilterUrl(region) {
     tmp = location.hash.split('.');
     tmp[3] = region;
     location.hash = tmp.join('.');

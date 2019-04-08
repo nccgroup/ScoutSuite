@@ -2,7 +2,7 @@
 <script id="metadata.list.template" type="text/x-handlebars-template">
       <div class="container">
         <div class="navbar-header">
-          <span class="navbar-brand"><a id="scoutsuite_navbar" class="text-white" href="javascript:show_main_dashboard()">Scout Suite</a></span>
+          <span class="navbar-brand"><a id="scoutsuite_navbar" class="text-white" href="javascript:showMainDashboard()">Scout Suite</a></span>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -86,7 +86,7 @@
                   <li><a class="dropdown-item" href="javascript:showLastRunDetails()">Execution Details</a></li>
                   <li><a class="dropdown-item" href="javascript:showResourcesDetails()">Resources Details</a></li>
                   <li><a class="dropdown-item" href="javascript:showAbout()">About Scout Suite</a></li>
-                  <li><a class="dropdown-item" href="javascript:download_exceptions()">Export Exceptions</a><a id="downloadAnchorElem" style="display:none"></a></li>
+                  <li><a class="dropdown-item" href="javascript:downloadExceptions()">Export Exceptions</a><a id="downloadAnchorElem" style="display:none"></a></li>
                   <li><a class="dropdown-item" href="javascript:void(0)">Dark theme
                     <label class="switch">
                       <input type="checkbox" id="theme_checkbox" onclick="toggleTheme()">
@@ -103,7 +103,7 @@
 <script src="inc-scoutsuite/theme.js"></script>
 <script>
     loadLastTheme();
-    if (isDarkThemeEnabled()) {
+    if (isDarkThemeEnabled() && document.getElementById("theme_checkbox")) {
         document.getElementById("theme_checkbox").checked = true;
     }
 </script>
