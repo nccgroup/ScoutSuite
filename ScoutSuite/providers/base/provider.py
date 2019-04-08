@@ -364,7 +364,6 @@ class BaseProvider(object):
                         for callback_info in callbacks:
                             callback_name = callback_info[0]
                             try:
-                                # callback = globals()[callback_name]
                                 callback = getattr(self, callback_name)
 
                                 callback_args = callback_info[1]
