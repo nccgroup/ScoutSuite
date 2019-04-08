@@ -9,7 +9,7 @@
           <ul>
             <li class="list-group-item-text">Region: {{region}}</li>
             <li class="list-group-item-text">Engine: {{Engine}}</li>
-            <li class="list-group-item-text">Status: {{make_title DBInstanceStatus}}</li>
+            <li class="list-group-item-text">Status: {{makeTitle DBInstanceStatus}}</li>
             <li class="list-group-item-text">Is read replica: {{is_read_replica}}</li>
             <li class="list-group-item-text">Auto Minor Version Upgrade: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.AutoMinorVersionUpgrade">{{#if AutoMinorVersionUpgrade}} Enabled {{else}} Disabled {{/if}}</span></li>
             <li class="list-group-item-text">Multi Availability Zones: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.MultiAZ">{{#if MultiAZ}} Enabled {{else}} Disabled {{/if}}</span></li>

@@ -4,7 +4,7 @@
       {{#if resources.length}}
         <div class="accordion">
           <li>
-            <h5 class="list-group-item-heading accordion-heading">{{make_title resource_type}}:
+            <h5 class="list-group-item-heading accordion-heading">{{makeTitle resource_type}}:
               {{> count_badge count=resources.length target=(concat '#services.elb.regions' region 'vpcs' vpc 'elbs' @key resource_type)}}
             </h5>
           </li>
@@ -19,7 +19,7 @@
           </div>
         </div>
       {{else}}
-        <h5 class="list-group-item-heading item-margin accordion-heading">{{make_title resource_type}}:<span class="badge float-right">{{resources.length}}</span></h5>
+        <h5 class="list-group-item-heading item-margin accordion-heading">{{makeTitle resource_type}}:<span class="badge float-right">{{resources.length}}</span></h5>
       {{/if}}
     </script>
     <script>

@@ -29,8 +29,8 @@ function onPageLoad() {
         var csv_array = [];
         var json_dict = {};
 
-        var items = get_value_at(path);
-        var level = get_value_at(path.replace('items', 'level'));
+        var items = getValueAt(path);
+        var level = getValueAt(path.replace('items', 'level'));
         var resource_path_array = resource_path.split('.');
         var split_path = path.split('.');
         var finding_service = split_path[1];
@@ -44,7 +44,7 @@ function onPageLoad() {
                 if (typeof items[item] === 'string') {
                     var id_array = items[item].split('.');
                     var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
-                    var i = get_value_at(id)
+                    var i = getValueAt(id)
                 }
                 // all other cases
                 else {
@@ -80,7 +80,7 @@ function onPageLoad() {
                 if (typeof items[item] === 'string') {
                     var id_array = items[item].split('.');
                     var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
-                    var i = get_value_at(id)
+                    var i = getValueAt(id)
                 }
                 // all other cases
                 else {
@@ -312,8 +312,8 @@ function hideFilters() {
  * @param resource_path
  */
 function showFindings(path, resource_path) {
-    items = get_value_at(path);
-    level = get_value_at(path.replace('items', 'level'));
+    items = getValueAt(path);
+    level = getValueAt(path.replace('items', 'level'));
     resource_path_array = resource_path.split('.');
     split_path = path.split('.');
     finding_service = split_path[1];
@@ -816,7 +816,7 @@ function getService(resource_path) {
     } else {
         service = resource_path.split('.')[0];
     };
-    service = make_title(service);
+    service = makeTitle(service);
     return service;
 };
 
@@ -847,7 +847,7 @@ window.onhashchange = showPageFromHash;
  * @param path
  * @returns {*};
  */
-function get_value_at(path) {
+function getValueAt(path) {
     path_array = path.split('.');
     value = run_results;
     for (p in path_array) {
@@ -891,7 +891,7 @@ function updateDOM(anchor) {
 
     // Update title
     if (path.endsWith('.items')) {
-        title = get_value_at(path.replace('items', 'description'));
+        title = getValueAt(path.replace('items', 'description'));
         updateTitle(title);
     } else {
         title = makeTitle(resource_path);
@@ -978,9 +978,9 @@ function lazy_loading(path) {
  */
 function get_resource_path(path) {
     if (path.endsWith('.items')) {
-        var resource_path = get_value_at(path.replace('items', 'display_path'));
+        var resource_path = getValueAt(path.replace('items', 'display_path'));
         if (resource_path == undefined) {
-            resource_path = get_value_at(path.replace('items', 'path'));
+            resource_path = getValueAt(path.replace('items', 'path'));
         };
         resource_path_array = resource_path.split('.');
         last_value = resource_path_array.pop();
@@ -1000,7 +1000,7 @@ function get_resource_path(path) {
  * @param title
  * @returns {string};
  */
-function make_title(title) {
+function makeTitle(title) {
     if (typeof (title) != "string") {
         console.log("Error: received title " + title + " (string expected).");
         return title.toString();

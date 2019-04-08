@@ -13,7 +13,7 @@
             <li class="list-group-item-text">State: <span id="ec2.regions.{{region}}.snapshots.{{id}}.snapshot_errored">{{State}}</span></li>
             <li class="list-group-item-text">Encrypted: {{Encrypted}}</li>
             <li class="list-group-item-text">Volume:  {{> resource_link resource_path = (concat 'services.ec2.regions' region 'volumes' VolumeId )}}</li>
-            <li class="list-group-item-text">Is public: <span id="ec2.regions.{{region}}.snapshots.{{id}}.ebs_snapshot_public">{{get_value_at 'services.ec2.regions' region 'snapshots' id 'public'}}</span></li>
+            <li class="list-group-item-text">Is public: <span id="ec2.regions.{{region}}.snapshots.{{id}}.ebs_snapshot_public">{{getValueAt 'services.ec2.regions' region 'snapshots' id 'public'}}</span></li>
         </ul>
     </div>
 </script>

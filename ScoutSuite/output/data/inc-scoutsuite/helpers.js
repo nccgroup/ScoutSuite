@@ -198,8 +198,8 @@ Handlebars.registerHelper('format_date', function(time) {
     }
 });
 
-Handlebars.registerHelper('make_title', function(title) {
-    return make_title(title);
+Handlebars.registerHelper('makeTitle', function(title) {
+    return makeTitle(title);
 });
 
 Handlebars.registerHelper('addMember', function(member_name, value) {
@@ -272,12 +272,12 @@ Handlebars.registerHelper('escape_special_chars', function(value) {
     return value.replace(/\./g, 'nccdot').replace(/,/g, 'ncccoma');
 });
 
-Handlebars.registerHelper('get_value_at', function() {
+Handlebars.registerHelper('getValueAt', function() {
     var path = arguments[0];
     for (var i = 1; i < arguments.length -1; i++) {
         path = path + '.' + arguments[i];
     }
-    return get_value_at(path);
+    return getValueAt(path);
 });
 
 Handlebars.registerHelper('concat', function() {

@@ -1,34 +1,33 @@
-
-    <!-- Accordion partial -->
-    <script id="accordion.partial" type="text/x-handlebars-template">
-            <div class="accordion">
-                <h4 class="list-group-item-heading accordion-heading">
-                    {{#if title_partial}}
-                        {{> (lookup . 'title_partial') item = this}}
-                    {{else}}
-                        {{#if title}}
-                            {{title}}
-                        {{/if}}
+<!-- Accordion partial -->
+<script id="accordion.partial" type="text/x-handlebars-template">
+        <div class="accordion">
+            <h4 class="list-group-item-heading accordion-heading">
+                {{#if title_partial}}
+                    {{> (lookup . 'title_partial') item = this}}
+                {{else}}
+                    {{#if title}}
+                        {{title}}
                     {{/if}}
-                    {{> count_badge count=items.length target=(concat '#' (escape_dots accordion_id))}}
-                </h4>
-                <div id="{{accordion_id}}" class="accordion-body collapse">
-                    <div class="accordion-inner">
-                        <ul class="no-bullet">
-                            {{#each items}}
-                                <li>
-                                    {{#if ../item_partial}}
-                                        {{> (lookup ../.. 'item_partial') region = ../../region vpc = ../../vpc item = this}}
-                                    {{else}}
-                                        {{this}}
-                                    {{/if}}
-                                </li>
-                            {{/each}}
-                        </ul>
-                    </div>
+                {{/if}}
+                {{> count_badge count=items.length target=(concat '#' (escape_dots accordion_id))}}
+            </h4>
+            <div id="{{accordion_id}}" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <ul class="no-bullet">
+                        {{#each items}}
+                            <li>
+                                {{#if ../item_partial}}
+                                    {{> (lookup ../.. 'item_partial') region = ../../region vpc = ../../vpc item = this}}
+                                {{else}}
+                                    {{this}}
+                                {{/if}}
+                            </li>
+                        {{/each}}
+                    </ul>
                 </div>
             </div>
-    </script>
-    <script>
-        Handlebars.registerPartial("accordion", $("#accordion\\.partial").html());
-    </script>
+        </div>
+</script>
+<script>
+    Handlebars.registerPartial("accordion", $("#accordion\\.partial").html());
+</script>
