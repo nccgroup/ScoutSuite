@@ -19,9 +19,8 @@ class StorageAccounts(AzureCompositeResources):
 
         await self._fetch_children_of_all_resources(
             resources=self['storage_accounts'],
-            kwargs={storage_account_id: {'resource_group_name': storage_account['resource_group_name'],
-                                         'storage_account_name': storage_account['name'],
-                                         'facade': self.facade}
+            scopes={storage_account_id: {'resource_group_name': storage_account['resource_group_name'],
+                                         'storage_account_name': storage_account['name']}
                     for (storage_account_id, storage_account) in self['storage_accounts'].items()}
         )
 

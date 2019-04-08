@@ -1,9 +1,6 @@
-import asyncio
-
 from ScoutSuite.providers.azure.resources.base import AzureCompositeResources
 from ScoutSuite.providers.azure.utils import get_resource_group_name
 from ScoutSuite.providers.utils import get_non_provider_id
-from ScoutSuite.providers.azure.facade.sqldatabase import SQLDatabaseFacade
 
 from .databases import Databases
 from .server_azure_ad_administrators import ServerAzureAdAdministrators
@@ -34,7 +31,7 @@ class Servers(AzureCompositeResources):
 
         await self._fetch_children_of_all_resources(
             resources=self['servers'],
-            kwargs={server_id: {'resource_group_name': server['resource_group_name'],
-                                'server_name': server['name'],
-                                'facade': self.facade} for (server_id, server) in self['servers'].items()}
+            scopes={server_id: {'resource_group_name': server['resource_group_name'],
+                                'server_name': server['name']}
+                    for (server_id, server) in self['servers'].items()}
         )
