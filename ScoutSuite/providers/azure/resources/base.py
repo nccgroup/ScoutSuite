@@ -13,9 +13,9 @@ class AzureResources(Resources, metaclass=abc.ABCMeta):
 
     def __init__(self, facade: AzureFacade, scope: dict = None):
         """
-        :param scope: The scope holds the scope in which the resource is located. This usually means at least a region,
-                      but can also contain a VPC id, an owner id, etc. It should be used when fetching the data through
-                      the facade.
+        :param scope: The scope holds the scope in which the resource is located. This could be a resource group name or any other
+                      resource parent name. For example, scope of a SQL database would be {'resource_group_name': 'groupX', 'server_name': 'serverY'}.
+                      This scope will be used when fetching data through the facade.
         """
 
         self.scope = scope
