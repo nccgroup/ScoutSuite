@@ -87,7 +87,7 @@ class ScoutReport(HTMLReport):
     Scout HTML report
     """
 
-    def __init__(self, provider, profile=None, report_dir=None, timestamp=False, exceptions=None, result_format=None):
+    def __init__(self, provider, profile=None, report_dir=None, timestamp=False, exceptions=None, result_format='json'):
         exceptions = {} if exceptions is None else exceptions
         self.html_root = ReportFile.report.value
         self.provider = provider

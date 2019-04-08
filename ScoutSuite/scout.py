@@ -28,6 +28,7 @@ def run(provider,
         timestamp,
         services, skipped_services,
         thread_config,  # TODO deprecate
+        database_name,
         max_workers,
         regions,
         fetch_local, update,
@@ -46,7 +47,6 @@ def run(provider,
     loop.close()
 
 
-# noinspection PyBroadException
 async def _run(provider,
                profile,
                user_account, service_account,
@@ -58,6 +58,7 @@ async def _run(provider,
                timestamp,
                services, skipped_services,
                thread_config,  # TODO deprecate
+               database_name,
                regions,
                fetch_local, update,
                ip_ranges, ip_ranges_name_key,
@@ -122,7 +123,7 @@ async def _run(provider,
     if database_name:
         database_file, _ = get_filename(ReportFile.results, report_name, report_dir, extension="db")
         Server.init(database_file, host_ip, host_port)
-            return
+        return
 
     # Complete run, including pulling data from provider
     if not fetch_local:
@@ -179,8 +180,7 @@ async def _run(provider,
     if exceptions:
         print_info('Applying exceptions')
         try:
-            exceptions = RuleExceptions(
-                profile, exceptions)
+            exceptions = RuleExceptions(profile, exceptions)
             exceptions.process(cloud_provider)
             exceptions = exceptions.exceptions
         except Exception as e:
