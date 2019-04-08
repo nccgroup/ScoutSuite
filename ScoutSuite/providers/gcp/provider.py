@@ -12,7 +12,8 @@ class GCPProvider(BaseProvider):
     """
 
     def __init__(self, project_id=None, folder_id=None, organization_id=None, all_projects=None,
-                 report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
+                 report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4,
+                 result_format='json', **kwargs):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
@@ -33,8 +34,10 @@ class GCPProvider(BaseProvider):
         self.credentials = kwargs['credentials']
         self._set_account_id()
 
+        self.result_format = result_format
+
         super(GCPProvider, self).__init__(report_dir, timestamp,
-                                          services, skipped_services, thread_config)
+                                          services, skipped_services, thread_config, result_format)
 
     def get_report_name(self):
         """

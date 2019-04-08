@@ -33,6 +33,7 @@ setup(
     package_data={
         'ScoutSuite.output': [
             'data/html/*.html',
+            'data/html/conditionals/*.html',
             'data/html/partials/*.html',
             'data/html/partials/aws/*.html',
             'data/html/partials/azure/*.html',
