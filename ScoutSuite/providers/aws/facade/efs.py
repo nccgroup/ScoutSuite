@@ -1,6 +1,7 @@
+from ScoutSuite.core.console import print_exception
+from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
-from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 
 
 class EFSFacade(AWSBaseFacade):
@@ -14,8 +15,11 @@ class EFSFacade(AWSBaseFacade):
 
     async def _get_and_set_tags(self, file_system: {}, region: str):
         client = AWSFacadeUtils.get_client('efs', self.session, region)
-        file_system['Tags'] = await run_concurrently(
-            lambda: client.describe_tags(FileSystemId=file_system['FileSystemId'])['Tags'])
+        try:
+            file_system['Tags'] = await run_concurrently(
+                lambda: client.describe_tags(FileSystemId=file_system['FileSystemId'])['Tags'])
+        except Exception as e:
+            print_exception('Failed to describe EFS tags: {}'.format(e))
 
     async def _get_and_set_mount_targets(self, file_system: {}, region: str):
         file_system['MountTargets'] = {}
@@ -35,5 +39,8 @@ class EFSFacade(AWSBaseFacade):
 
     async def _get_and_set_mount_target_security_groups(self, mount_target: {}, region: str):
         client = AWSFacadeUtils.get_client('efs', self.session, region)
-        mount_target['SecurityGroups'] = run_concurrently(lambda: client.describe_mount_target_security_groups(
+        try:
+            mount_target['SecurityGroups'] = run_concurrently(lambda: client.describe_mount_target_security_groups(
                 MountTargetId=mount_target['MountTargetId'])['SecurityGroups'])
+        except Exception as e:
+            print_exception('Failed to describe EFS mount target security groups: {}'.format(e))

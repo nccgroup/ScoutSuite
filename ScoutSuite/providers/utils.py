@@ -1,6 +1,7 @@
 import asyncio
-
 from hashlib import sha1
+
+from ScoutSuite.core.console import print_exception
 
 
 def get_non_provider_id(name):
@@ -45,12 +46,15 @@ async def get_and_set_concurrently(get_and_set_funcs: [], entities: [], **kwargs
     if len(entities) == 0:
         return
 
-    tasks = {
-        asyncio.ensure_future(
-            get_and_set_func(entity, **kwargs)
-        ) for entity in entities for get_and_set_func in get_and_set_funcs
-    }
-    await asyncio.wait(tasks)
+    try:
+        tasks = {
+            asyncio.ensure_future(
+                get_and_set_func(entity, **kwargs)
+            ) for entity in entities for get_and_set_func in get_and_set_funcs
+        }
+        await asyncio.wait(tasks)
+    except Exception as e:
+        print_exception('Failed to run function concurrently: {}'.format(e))
 
 
 async def map_concurrently(coro, entities, **kwargs):
@@ -68,13 +72,16 @@ async def map_concurrently(coro, entities, **kwargs):
         return []
 
     results = []
-    tasks = {
-        asyncio.ensure_future(
-            coro(entity, **kwargs)
-        ) for entity in entities
-    }
-    for task in asyncio.as_completed(tasks):
-        result = await task
-        results.append(result)
+    try:
+        tasks = {
+            asyncio.ensure_future(
+                coro(entity, **kwargs)
+            ) for entity in entities
+        }
+        for task in asyncio.as_completed(tasks):
+            result = await task
+            results.append(result)
+    except Exception as e:
+        print_exception('Failed to map concurrently: {}'.format(e))
 
     return results

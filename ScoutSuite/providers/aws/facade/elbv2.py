@@ -1,7 +1,8 @@
 import asyncio
 
-from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
+from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
+from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.utils import ec2_classic
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
 
@@ -19,12 +20,12 @@ class ELBv2Facade(AWSBaseFacade):
             if region in self.load_balancers_cache:
                 return
 
-            self.load_balancers_cache[region] =\
+            self.load_balancers_cache[region] = \
                 await AWSFacadeUtils.get_all_pages('elbv2', region, self.session,
                                                    'describe_load_balancers', 'LoadBalancers')
 
             for load_balancer in self.load_balancers_cache[region]:
-                load_balancer['VpcId'] =\
+                load_balancer['VpcId'] = \
                     load_balancer['VpcId'] if 'VpcId' in load_balancer and load_balancer['VpcId'] else ec2_classic
 
             await get_and_set_concurrently(
@@ -32,10 +33,13 @@ class ELBv2Facade(AWSBaseFacade):
 
     async def _get_and_set_load_balancer_attributes(self, load_balancer: dict, region: str):
         elbv2_client = AWSFacadeUtils.get_client('elbv2', self.session, region)
-        load_balancer['attributes'] = await run_concurrently(
-            lambda: elbv2_client.describe_load_balancer_attributes(
-                LoadBalancerArn=load_balancer['LoadBalancerArn'])['Attributes']
-        )
+        try:
+            load_balancer['attributes'] = await run_concurrently(
+                lambda: elbv2_client.describe_load_balancer_attributes(
+                    LoadBalancerArn=load_balancer['LoadBalancerArn'])['Attributes']
+            )
+        except Exception as e:
+            print_exception('Failed to describe ELBv2 attributes: {}'.format(e))
 
     async def get_listeners(self, region: str, load_balancer_arn: str):
         return await AWSFacadeUtils.get_all_pages(
