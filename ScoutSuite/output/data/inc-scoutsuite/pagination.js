@@ -1,4 +1,3 @@
-// TODO change to const after remove it from other file
 var defaultPageSize = 2
 var regionPageSize = 1
 var reCount = new RegExp('_count$')
