@@ -31,7 +31,7 @@ def prompt_4_yes_no(question):
             print_error('\'%s\' is not a valid answer. Enter \'yes\'(y) or \'no\'(n).' % choice)
 
 
-def prompt_4_overwrite(filename, force_write):
+def prompt_for_overwrite(filename, force_write):
     """
     Confirm before overwriting existing files. Do not prompt if the file does not exist or force_write is set
 
