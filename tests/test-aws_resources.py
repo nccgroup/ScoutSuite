@@ -1,5 +1,5 @@
 from unittest import TestCase
-from ScoutSuite.providers.aws.resources.base import AWSResources, AWSCompositeResources
+from ScoutSuite.providers.aws.resources.resources import AWSResources, AWSCompositeResources
 import asyncio
 import json
 import os 

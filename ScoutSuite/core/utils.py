@@ -6,7 +6,7 @@ Single-service rule processing functions
 from six import string_types
 import copy
 
-from ScoutSuite.core.console import print_error, print_exception
+from ScoutSuite.core.console import print_error
 from ScoutSuite.core.conditions import pass_conditions, fix_path_string
 
 

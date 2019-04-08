@@ -1,7 +1,7 @@
 import asyncio
 
 from ScoutSuite.utils import format_service_name
-from ScoutSuite.core.console import print_exception, print_debug, print_info
+from ScoutSuite.core.console import print_error, print_exception, print_debug, print_info
 from ScoutSuite.providers.aws.utils import get_partition_name
 
 
@@ -49,4 +49,5 @@ class BaseServicesConfig(object):
             else:
                 print_debug('No method to fetch service %s.' % service)
         except Exception as e:
-            print_exception('Could not fetch {} configuration: {}'.format(service, e))
+            print_error('Error: could not fetch %s configuration.' % service)
+            print_exception(e)

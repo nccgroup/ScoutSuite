@@ -117,8 +117,9 @@ function getPathArray () {
  * Display the account ID -- use of the generic function + templates result in the div not being at the top of the page
  */
 var loadAccountId = function () {
-  var element = document.getElementById('account_id');
-  var value = '<i class="fa fa-cloud"></i> ' + runResults['provider_name'] + ' <i class="fa fa-chevron-right"></i> ' + runResults['account_id'];
+  var element = document.getElementById('aws_account_id')
+  var value = '<i class="fa fa-cloud"></i> ' + runResults['provider_name'] +
+    ' <i class="fa fa-chevron-right"></i> ' + runResults['aws_account_id']
   if (('organization' in runResults) && (value in runResults['organization'])) {
     value += ' (' + runResults['organization'][value]['Name'] + ')'
   }
@@ -223,9 +224,9 @@ function processTemplate (id1, containerId, list, replace) {
 function hideAll () {
   $("[id*='.list']").not("[id*='metadata.list']").not("[id='regions.list']").not("[id*='filters.list']").hide()
   $("[id*='.details']").hide()
-  var element = document.getElementById('scout_display_account_id_on_all_pages')
+  var element = document.getElementById('scoutsuite_display_account_id_on_all_pages')
   if ((element !== undefined) && (element.checked === true)) {
-    showRow('account_id');
+    showRow('aws_account_id')
   }
   currentResourcePath = ''
 }
@@ -799,14 +800,8 @@ function loadMetadata () {
     loadFirstPageEverywhere()
   }
 
-  // Set title dynamically
-  $(function () {
-    3
-    $(document).attr('title', 'Scout Suite Report [' + runResults['account_id'] + ']')
-    4
-  })
-
   loadAccountId()
+
   loadConfig('last_run', 1, false)
   loadConfig('metadata', 0, false)
   loadConfig('services.id.findings', 1, false)
@@ -875,7 +870,7 @@ function showMainDashboard () {
   hideFilters()
   $('#findings_download_button').hide()
   $('#paging_buttons').hide()
-  showRowWithItems('account_id')
+  showRowWithItems('aws_account_id')
   showRowWithItems('last_run')
   $('#section_title-h2').text('')
   $('#section_paging-h2').text('')
@@ -1051,9 +1046,6 @@ function lazyLoadingJson (path) {
   var resourceType = resourcePathArray[resourcePathArray.length - 1]
   for (let group in runResults['metadata']) {
     if (service in runResults['metadata'][group]) {
-      if (service === 'summaries') {
-        continue
-      }
       if (resourceType in runResults['metadata'][group][service]['resources']) {
         cols = runResults['metadata'][group][service]['resources'][resourceType]['cols']
       }
@@ -1203,8 +1195,6 @@ function addTemplate (group, service, section, resourceType, path, suffix) {
         partialName = 'left_menu_for_vpc'
       } else if (path.indexOf('.regions.id.') > 0) {
         partialName = 'left_menu_for_region'
-      } else if (path.indexOf('.projects.id.') > 0) {
-        partialName = 'left_menu_for_project'
       } else {
         partialName = 'left_menu'
       }
@@ -1213,8 +1203,6 @@ function addTemplate (group, service, section, resourceType, path, suffix) {
         partialName = 'details_for_vpc'
       } else if (path.indexOf('.regions.id.') > 0) {
         partialName = 'details_for_region'
-      } else if (path.indexOf('.projects.id.') > 0) {
-        partialName = 'details_for_project'
       } else {
         partialName = 'details'
       }

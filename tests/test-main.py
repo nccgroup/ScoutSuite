@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from mock import MagicMock, patch
 
-from Scout import main
+from ScoutSuite.__main__ import main
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
 
 
@@ -23,9 +23,9 @@ class TestMainClass(TestCase):
                                            ("get_provider", self.mocked_provider),
                                            ("Ruleset", self.mocked_ruleset),
                                            ("ProcessingEngine", self.mocked_engine),
-                                           ("ScoutReport", self.mocked_report),
+                                           ("ScoutSuiteReport", self.mocked_report),
                                            ("webbrowser", self.mocked_browser)]:
-            constructor_obj = patch("ScoutSuite.scout.%s" % import_name, return_value=mocked_object).start()
+            constructor_obj = patch("ScoutSuite.__main__.%s" % import_name, return_value=mocked_object).start()
             self.constructor[mocked_object] = constructor_obj
 
         self.mocked_report.save = MagicMock(return_value="dummyfile")

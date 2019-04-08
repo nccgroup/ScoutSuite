@@ -111,10 +111,12 @@ def get_value_at(all_info, current_path, key, to_string=False):
                     try:
                         target_obj = target_obj[p]
                     except Exception as e:
-                        print_exception(e, additional_details={'current_path': current_path})
+                        print_error('Current path: %s' % str(current_path))
+                        print_exception(e)
                         raise Exception
             except Exception as e:
-                print_exception(e, additional_details={'current_path': current_path})
+                print_error('Current path: %s' % str(current_path))
+                print_exception(e)
                 raise Exception
     if to_string:
         return str(target_obj)

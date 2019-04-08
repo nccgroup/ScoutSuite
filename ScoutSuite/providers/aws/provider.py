@@ -1,13 +1,16 @@
+# -*- coding: utf-8 -*-
+
 import copy
 import os
+import boto3
 
 from ScoutSuite.core.console import print_debug, print_error, print_exception, print_info
-from ScoutSuite.providers.aws.services import AWSServicesConfig
-from ScoutSuite.providers.aws.resources.vpc.base import put_cidr_name
-from ScoutSuite.providers.aws.utils import ec2_classic, get_aws_account_id
+from ScoutSuite.providers.aws.configs.services import AWSServicesConfig
+from ScoutSuite.providers.aws.resources.vpc.service import put_cidr_name
 from ScoutSuite.providers.base.configs.browser import combine_paths, get_object_at, get_value_at
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.utils import manage_dictionary
+from ScoutSuite.providers.aws.utils import ec2_classic, get_aws_account_id
 
 
 class AWSProvider(BaseProvider):
@@ -20,33 +23,26 @@ class AWSProvider(BaseProvider):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
-        self.metadata_path = '%s/metadata.json' % os.path.split(os.path.abspath(__file__))[0]
+        self.metadata_path = '%s/metadata.json' % os.path.split(
+            os.path.abspath(__file__))[0]
 
         self.sg_map = {}
         self.subnet_map = {}
 
         self.profile = profile
+        self.aws_account_id = None
         self.services_config = AWSServicesConfig
 
         self.provider_code = 'aws'
         self.provider_name = 'Amazon Web Services'
-        self.environment = self.profile
 
         self.result_format = result_format        
 
         self.credentials = kwargs['credentials']
-        self.account_id = get_aws_account_id(self.credentials)
+        self.aws_account_id = get_aws_account_id(self.credentials)
+        
         super(AWSProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config,
                                           result_format)
-
-    def get_report_name(self):
-        """
-        Returns the name of the report using the provider's configuration
-        """
-        if self.profile:
-            return 'aws-{}'.format(self.profile)
-        else:
-            return 'aws'
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
@@ -104,7 +100,7 @@ class AWSProvider(BaseProvider):
                              'ip_ranges_name_key': ip_ranges_name_key}
             self._go_to_and_do(self.services['ec2'],
                                ['regions', 'vpcs', 'security_groups',
-                                'rules', 'protocols', 'ports'],
+                                   'rules', 'protocols', 'ports'],
                                ['services', 'ec2'],
                                put_cidr_name,
                                callback_args)
@@ -115,10 +111,10 @@ class AWSProvider(BaseProvider):
         """
         self._go_to_and_do(self.services['ec2'],
                            ['regions', 'vpcs', 'security_groups', 'rules',
-                            'protocols', 'ports', 'security_groups'],
+                               'protocols', 'ports', 'security_groups'],
                            [],
                            self.add_security_group_name_to_ec2_grants_callback,
-                           {'AWSAccountId': self.account_id})
+                           {'AWSAccountId': self.aws_account_id})
 
     def _add_security_group_data_to_elbv2(self):
         def check_security_group_rules(lb, index, traffic_type):
@@ -143,7 +139,7 @@ class AWSProvider(BaseProvider):
                             group_id = elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
                                 'GroupId']
                             if 'GroupId' in elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][
-                                i] and group_id == sg:
+                                    i] and group_id == sg:
                                 elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i] = \
                                     ec2_config['regions'][region]['vpcs'][vpc]['security_groups'][sg]
                                 elbv2_config['regions'][region]['vpcs'][vpc]['lbs'][lb]['security_groups'][i][
@@ -184,14 +180,14 @@ class AWSProvider(BaseProvider):
                 target.append(sg_id)
             else:
                 target = current_path[:(
-                        current_path.index('security_groups') + 1)]
+                    current_path.index('security_groups') + 1)]
                 target.append(sg_id)
             ec2_grant['GroupName'] = get_value_at(
                 self.services['ec2'], target, 'name')
 
     @staticmethod
     def _process_cloudtrail_trails(cloudtrail_config):
-        print_info('Processing CloudTrail config')
+        print_info('Processing CloudTrail config...')
         global_events_logging = []
         data_logging_trails_count = 0
         for region in cloudtrail_config['regions']:
@@ -254,7 +250,7 @@ class AWSProvider(BaseProvider):
             self._security_group_to_attack_surface(self.services['ec2']['external_attack_surface'],
                                                    public_ip, current_path,
                                                    [g['GroupId']
-                                                    for g in current_config['Groups']],
+                                                       for g in current_config['Groups']],
                                                    [])
         # IPv6
         if 'Ipv6Addresses' in current_config and len(current_config['Ipv6Addresses']) > 0:
@@ -300,7 +296,7 @@ class AWSProvider(BaseProvider):
                         for allowed_iam_entity in iam_info['permissions']['Action'][action][iam_entity]['Allow']:
                             # For resource statements, we can easily rely on the existing permissions structure
                             if 'Resource' in iam_info['permissions']['Action'][action][iam_entity]['Allow'][
-                                allowed_iam_entity]:
+                                    allowed_iam_entity]:
                                 for full_path in (x for x in
                                                   iam_info['permissions']['Action'][action][iam_entity]['Allow'][
                                                       allowed_iam_entity]['Resource'] if
@@ -314,7 +310,7 @@ class AWSProvider(BaseProvider):
                             # For notresource statements, we must fetch the policy document to determine which
                             # buckets are not protected
                             if 'NotResource' in iam_info['permissions']['Action'][action][iam_entity]['Allow'][
-                                allowed_iam_entity]:
+                                    allowed_iam_entity]:
                                 for full_path in (x for x in
                                                   iam_info['permissions']['Action'][action][iam_entity]['Allow'][
                                                       allowed_iam_entity]['NotResource'] if
@@ -390,13 +386,13 @@ class AWSProvider(BaseProvider):
                     s3_info, bucket, iam_entity, allowed_iam_entity, policy_info)
             pass
         else:
-            # Could be an error or cross-account access, ignore
+            # Could be an error or cross-account access, ignore...
             pass
 
     def match_network_acls_and_subnets_callback(self, current_config, path, current_path, acl_id, callback_args):
         for association in current_config['Associations']:
             subnet_path = current_path[:-1] + \
-                          ['subnets', association['SubnetId']]
+                ['subnets', association['SubnetId']]
             subnet = get_object_at(self, subnet_path)
             subnet['network_acl'] = acl_id
 
@@ -405,13 +401,13 @@ class AWSProvider(BaseProvider):
         if subnet_id:
             vpc = self.subnet_map[subnet_id]
             subnet = self.services['vpc']['regions'][vpc['region']
-            ]['vpcs'][vpc['vpc_id']]['subnets'][subnet_id]
+                                                     ]['vpcs'][vpc['vpc_id']]['subnets'][subnet_id]
             manage_dictionary(subnet, 'instances', [])
             if instance_id not in subnet['instances']:
                 subnet['instances'].append(instance_id)
 
     def _match_instances_and_roles(self):
-        print_info('Matching EC2 instances and IAM roles')
+        print_info('Matching EC2 instances and IAM roles...')
         ec2_config = self.services['ec2']
         iam_config = self.services['iam']
         role_instances = {}
@@ -499,7 +495,7 @@ class AWSProvider(BaseProvider):
                     sg_base_path = copy.deepcopy(current_path[0:4])
                     sg_base_path[1] = 'ec2'
                     sg_base_path = sg_base_path + \
-                                   ['vpcs', vpc_id, 'security_groups']
+                        ['vpcs', vpc_id, 'security_groups']
                 else:
                     sg_base_path = copy.deepcopy(current_path[0:6])
                     sg_base_path[1] = 'ec2'
@@ -528,7 +524,9 @@ class AWSProvider(BaseProvider):
             if vpc_id == ec2_classic and resource_type == 'elbs':
                 pass
             else:
-                print_exception('Failed to parse %s in %s (%s): %s' % (resource_type, vpc_id, region, e))
+                print_error('Failed to parse %s in %s in %s' %
+                            (resource_type, vpc_id, region))
+                print_exception(e)
 
     def _set_emr_vpc_ids(self):
         clear_list = []
@@ -553,7 +551,8 @@ class AWSProvider(BaseProvider):
             elif 'RequestedEc2SubnetIds' in cluster['Ec2InstanceAttributes']:
                 subnet_id = cluster['Ec2InstanceAttributes']['RequestedEc2SubnetIds']
             else:
-                print_exception('Unable to determine VPC id for EMR cluster %s' % str(cluster_id))
+                print_error(
+                    'Unable to determine VPC id for EMR cluster %s' % str(cluster_id))
                 continue
             if sg_id in self.sg_map:
                 vpc_id = self.sg_map[sg_id]['vpc_id']
@@ -567,7 +566,8 @@ class AWSProvider(BaseProvider):
                             pop_list.append(cluster_id)
                             sid_found = True
                 if not sid_found:
-                    print_exception('Unable to determine VPC id for %s' % (str(subnet_id) if subnet_id else str(sg_id)))
+                    print_error('Unable to determine VPC id for %s' %
+                                (str(subnet_id) if subnet_id else str(sg_id)))
                     continue
             if vpc_id:
                 region_vpcs_config = get_object_at(current_path)
@@ -608,14 +608,15 @@ class AWSProvider(BaseProvider):
             if flow_log_id not in subnet['flow_logs']:
                 subnet['flow_logs'].append(flow_log_id)
         else:
-            print_exception('Resource %s attached to flow logs is not handled' % attached_resource)
+            print_error(
+                'Resource %s attached to flow logs is not handled' % attached_resource)
 
     def get_db_attack_surface(self, current_config, path, current_path, db_id, callback_args):
         service = current_path[1]
         service_config = self.services[service]
         manage_dictionary(service_config, 'external_attack_surface', {})
         if (service == 'redshift' or service == 'rds') and 'PubliclyAccessible' in current_config and current_config[
-            'PubliclyAccessible']:
+                'PubliclyAccessible']:
             public_dns = current_config['Endpoint']['Address']
             listeners = [current_config['Endpoint']['Port']]
             security_groups = current_config['VpcSecurityGroups']
@@ -665,7 +666,7 @@ class AWSProvider(BaseProvider):
             # Classic ELbs do not have a security group, lookup listeners instead
             public_dns = current_config['DNSName']
             manage_dictionary(elb_config['external_attack_surface'], public_dns, {
-                'protocols': {'TCP': {'ports': {}}}})
+                              'protocols': {'TCP': {'ports': {}}}})
             for listener in current_config['listeners']:
                 manage_dictionary(elb_config['external_attack_surface'][public_dns]['protocols']['TCP']['ports'],
                                   listener, {'cidrs': []})

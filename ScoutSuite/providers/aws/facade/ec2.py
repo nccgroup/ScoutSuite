@@ -32,7 +32,7 @@ class EC2Facade(AWSBaseFacade):
             for instance in reservation['Instances']:
                 instance['ReservationId'] = reservation['ReservationId']
                 instances.append(instance)
-
+                
         return instances
 
     async def get_security_groups(self, region: str, vpc: str):
@@ -55,17 +55,7 @@ class EC2Facade(AWSBaseFacade):
             'ec2', region, self.session, 'describe_network_interfaces', 'NetworkInterfaces', Filters=filters)
 
     async def get_volumes(self, region: str):
-        volumes = await AWSFacadeUtils.get_all_pages('ec2', region, self.session, 'describe_volumes', 'Volumes')
-        await get_and_set_concurrently([self._get_and_set_key_manager], volumes, region=region)
-        return volumes
-
-    async def _get_and_set_key_manager(self, volume: {}, region: str):
-        kms_client = AWSFacadeUtils.get_client('kms', self.session, region)
-        if 'KmsKeyId' in volume:
-            key_id = volume['KmsKeyId']
-            volume['KeyManager'] = await run_concurrently(lambda: kms_client.describe_key(KeyId=key_id)['KeyMetadata']['KeyManager'])
-        else:
-            volume['KeyManager'] = None
+        return await AWSFacadeUtils.get_all_pages('ec2', region, self.session, 'describe_volumes', 'Volumes')
 
     async def get_snapshots(self, region: str, owner_id: str):
         filters = [{'Name': 'owner-id', 'Values': [owner_id]}]
@@ -78,8 +68,8 @@ class EC2Facade(AWSBaseFacade):
     async def _get_and_set_snapshot_attributes(self, snapshot: {}, region: str):
         ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)
         snapshot['CreateVolumePermissions'] = await run_concurrently(lambda: ec2_client.describe_snapshot_attribute(
-            Attribute='createVolumePermission',
-            SnapshotId=snapshot['SnapshotId'])['CreateVolumePermissions'])
+                Attribute='createVolumePermission',
+                SnapshotId=snapshot['SnapshotId'])['CreateVolumePermissions'])
 
     async def get_network_acls(self, region: str, vpc: str):
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]

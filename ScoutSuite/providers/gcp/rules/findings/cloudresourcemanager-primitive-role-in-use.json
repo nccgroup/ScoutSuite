@@ -1,9 +1,9 @@
 {
   "dashboard_name": "Bindings",
   "description": "Primitive Role In Use",
-  "path": "cloudresourcemanager.projects.id.bindings.id",
+  "path": "cloudresourcemanager.bindings.id",
   "conditions": [ "and",
-    [ "cloudresourcemanager.projects.id.bindings.id.name", "containAtLeastOneOf", ["owner", "editor", "viewer"] ]
+    [ "cloudresourcemanager.bindings.id.name", "containAtLeastOneOf", ["owner", "editor", "viewer"] ]
   ],
   "id_suffix": "this"
 }

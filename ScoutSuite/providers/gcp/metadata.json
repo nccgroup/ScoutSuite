@@ -4,7 +4,7 @@
       "resources": {
         "service_accounts": {
           "cols": 2,
-          "path": "services.iam.projects.id.service_accounts"
+          "path": "services.iam.service_accounts"
         }
       }
     },
@@ -12,7 +12,7 @@
       "resources": {
         "bindings": {
           "cols": 2,
-          "path": "services.cloudresourcemanager.projects.id.bindings"
+          "path": "services.cloudresourcemanager.bindings"
         }
       }
     }
@@ -66,7 +66,7 @@
       "resources": {
         "instances": {
           "cols": 2,
-          "path": "services.cloudsql.projects.id.instances"
+          "path": "services.cloudsql.instances"
         }
       }
     }
@@ -76,7 +76,7 @@
       "resources": {
         "sinks": {
           "cols": 2,
-          "path": "services.stackdriverlogging.projects.id.sinks"
+          "path": "services.stackdriverlogging.sinks"
         }
       }
     }

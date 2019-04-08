@@ -1,5 +1,5 @@
 {
-    "account_id": "123456789012",
+    "aws_account_id": "123456789012",
     "services": {
         "ec2": {
             "instances_count": 69,

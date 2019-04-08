@@ -204,10 +204,10 @@ class GCPBaseConfig(BaseConfig):
                     error_json = json.loads(e.content)
                     if error_json['error']['message'] not in self.error_list:
                         self.error_list.append(error_json['error']['message'])
-                        print_exception('HTTP error {}: {}'.format(error_json['error']['message'], e))
+                        print_error(error_json['error']['message'])
 
                 except PermissionDenied as e:
-                    print_exception("Permission Denied %s: %s - %s" % (e.message, self.service, self.targets))
+                    print_error("%s: %s - %s" % (e.message, self.service, self.targets))
 
                 except Exception as e:
                     print_exception(e)
@@ -216,7 +216,7 @@ class GCPBaseConfig(BaseConfig):
             error_json = json.loads(e.content)
             if error_json['error']['message'] not in self.error_list:
                 self.error_list.append(error_json['error']['message'])
-                print_error('HTTP error {}: {}'.format(error_json['error']['message'], e))
+                print_error(error_json['error']['message'])
 
         except Exception as e:
             print_exception(e)

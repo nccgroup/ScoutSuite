@@ -1,8 +1,10 @@
+# -*- coding: utf-8 -*-
+
 import json
 import os
 import tempfile
 
-from ScoutSuite.core.console import print_debug, print_error, prompt_yes_no, print_exception
+from ScoutSuite.core.console import print_debug, print_error, prompt_yes_no
 
 from ScoutSuite.core.rule import Rule
 from ScoutSuite.core.rule_definition import RuleDefinition
@@ -21,14 +23,14 @@ class Ruleset:
     """
 
     def __init__(self,
-                 cloud_provider,
                  environment_name='default',
+                 cloud_provider='aws',
                  filename=None,
                  name=None,
                  rules_dir=None,
                  rule_type='findings',
                  ip_ranges=None,
-                 account_id=None,
+                 aws_account_id=None,
                  ruleset_generator=False):
         rules_dir = [] if rules_dir is None else rules_dir
         ip_ranges = [] if ip_ranges is None else ip_ranges
@@ -45,19 +47,19 @@ class Ruleset:
         print_debug('Loading ruleset %s' % self.filename)
         self.name = os.path.basename(self.filename).replace('.json', '') if not name else name
         self.load(self.rule_type)
-        self.shared_init(ruleset_generator, rules_dir, account_id, ip_ranges)
+        self.shared_init(ruleset_generator, rules_dir, aws_account_id, ip_ranges)
 
     def to_string(self):
         return str(vars(self))
 
-    def shared_init(self, ruleset_generator, rule_dirs, account_id, ip_ranges):
+    def shared_init(self, ruleset_generator, rule_dirs, aws_account_id, ip_ranges):
 
         # Load rule definitions
         if not hasattr(self, 'rule_definitions'):
             self.load_rule_definitions(ruleset_generator, rule_dirs)
 
         # Prepare the rules
-        params = {'account_id': account_id}
+        params = {'aws_account_id': aws_account_id}
         if ruleset_generator:
             self.prepare_rules(attributes=['description', 'key', 'rationale'], params=params)
         else:
@@ -65,7 +67,7 @@ class Ruleset:
 
     def load(self, rule_type, quiet=False):
         """
-        Open a JSON file defining a ruleset and load it into a Ruleset object
+        Open a JSON file definiting a ruleset and load it into a Ruleset object
 
         :param rule_type:           TODO
         :param quiet:               TODO
@@ -81,8 +83,8 @@ class Ruleset:
                         self.rules[filename] = []
                         for rule in ruleset['rules'][filename]:
                             self.handle_rule_versions(filename, rule_type, rule)
-            except Exception as e:
-                print_exception('Ruleset file %s contains malformed JSON: %s' % (self.filename, e))
+            except Exception:
+                print_error('Error: ruleset file %s contains malformed JSON.' % self.filename)
                 self.rules = []
                 self.about = ''
         else:
@@ -191,7 +193,7 @@ class Ruleset:
         :return:
         """
         if filename and not os.path.isfile(filename):
-            # Not a valid relative / absolute path, check Scout's data under findings/ or filters/
+            # Not a valid relative / absolute path, check Scout Suite's data under findings/ or filters/
             if not filename.startswith('findings/') and not filename.startswith('filters/'):
                 filename = '%s/%s' % (filetype, filename)
             if not os.path.isfile(filename):
@@ -203,7 +205,7 @@ class Ruleset:
 
 class TmpRuleset(Ruleset):
 
-    def __init__(self, cloud_provider, rule_dirs=None, rule_filename=None, rule_args=None, rule_level='danger'):
+    def __init__(self, cloud_provider='aws', rule_dirs=None, rule_filename=None, rule_args=None, rule_level='danger'):
         rule_dirs = [] if rule_dirs is None else rule_dirs
         rule_args = [] if rule_args is None else rule_args
         self.rule_type = 'findings'

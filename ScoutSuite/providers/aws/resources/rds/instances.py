@@ -1,5 +1,5 @@
 from ScoutSuite.providers.aws.resources.regions import Regions
-from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.aws.resources.resources import AWSResources
 
 
 class RDSInstances(AWSResources):
@@ -18,10 +18,4 @@ class RDSInstances(AWSResources):
                     'EnhancedMonitoringResourceArn', 'StorageEncrypted']:
             instance[key] = raw_instance[key] if key in raw_instance else None
 
-        instance['is_read_replica'] = self._is_read_replica(raw_instance)
         return instance['name'], instance
-
-    @staticmethod
-    def _is_read_replica(instance):
-        # The ReadReplicaSourceDBInstanceIdentifier attribute is only defined for read replicas. Ref.: https://bit.ly/2UhKPqP
-        return instance.get('ReadReplicaSourceDBInstanceIdentifier') is not None

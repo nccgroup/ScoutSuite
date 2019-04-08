@@ -1,0 +1,56 @@
+
+<!-- Cloud Resources Manager bindings' partial -->
+<script id="services.cloudresourcemanager.bindings.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Role Name: <span id="cloudresourcemanager.bindings.{{@key}}.name">{{name}}</span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Bindings</h4>
+        <h5 class="list-group-item-heading">Attached Users:</h5>
+        <div class="accordion-inner">
+            <ul>
+                {{#each members.users}}
+                <li><samp>{{this}}</samp></li>
+                {{else}}
+                <li><samp>None</samp></li>
+                {{/each}}
+            </ul>
+        </div>
+        <h5 class="list-group-item-heading">Attached Groups:</h5>
+        <div class="accordion-inner">
+            <ul>
+                {{#each members.groups}}
+                <li><samp>{{this}}</samp></li>
+                {{else}}
+                <li><samp>None</samp></li>
+                {{/each}}
+            </ul>
+        </div>
+        <h5 class="list-group-item-heading">Attached Service Accounts:</h5>
+        <div class="accordion-inner">
+            <ul>
+                {{#each members.service_accounts}}
+                <li><samp>{{this}}</samp></li>
+                {{else}}
+                <li><samp>None</samp></li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.cloudresourcemanager.bindings", $("#services\\.cloudresourcemanager\\.bindings\\.partial").html());
+</script>
+
+<!-- Single cloudresourcemanager binding template -->
+<script id="single_cloudresourcemanager_binding-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.cloudresourcemanager.bindings'}}
+</script>
+<script>
+    var single_cloudresourcemanager_binding_template = Handlebars.compile($("#single_cloudresourcemanager_binding-template").html());
+</script>

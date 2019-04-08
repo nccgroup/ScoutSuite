@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from ScoutSuite.core.console import print_debug, print_exception
+from ScoutSuite.core.console import print_debug, print_error, print_exception
 from ScoutSuite.utils import manage_dictionary
 
 from ScoutSuite.core.utils import recurse
@@ -23,7 +23,7 @@ class ProcessingEngine(object):
                     manage_dictionary(self.rules, rule.path, [])
                     self.rules[rule.path].append(rule)
                 except Exception as e:
-                    print_exception('Failed to create rule %s: %s' % (rule.path, e))
+                    print_error('Failed to create rule %s: %s' % (rule.path, e))
 
     def run(self, cloud_provider, skip_dashboard=False):
         # Clean up existing findings
@@ -64,7 +64,8 @@ class ProcessingEngine(object):
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key][
                         'rationale'] = rule.rationale if hasattr(rule, 'rationale') else 'No description available.'
                 except Exception as e:
-                    print_exception('Failed to process rule defined in %s: %s' % (rule.filename, e))
+                    print_exception(e)
+                    print_error('Failed to process rule defined in %s' % rule.filename)
                     # Fallback if process rule failed to ensure report creation and data dump still happen
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['checked_items'] = 0
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['flagged_items'] = 0

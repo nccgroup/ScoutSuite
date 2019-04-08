@@ -1,6 +1,12 @@
-import os
+# -*- coding: utf-8 -*-[d['value'] for d in l]
 
-from ScoutSuite.core.console import print_exception, print_info
+import os
+import warnings
+
+import google.auth
+import googleapiclient
+from ScoutSuite.core.console import print_error, print_exception, print_info
+
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.gcp.configs.services import GCPServicesConfig
 from ScoutSuite.providers.gcp.utils import gcp_connect_service
@@ -17,12 +23,13 @@ class GCPProvider(BaseProvider):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
+        self.profile = 'gcp-profile'
+
         self.metadata_path = '%s/metadata.json' % os.path.split(
             os.path.abspath(__file__))[0]
 
         self.provider_code = 'gcp'
         self.provider_name = 'Google Cloud Platform'
-        self.environment = 'default'
 
         self.projects = []
         self.all_projects = all_projects
@@ -32,47 +39,40 @@ class GCPProvider(BaseProvider):
 
         self.services_config = GCPServicesConfig
         self.credentials = kwargs['credentials']
-        self._set_account_id()
+        self._set_aws_account_id()
 
         self.result_format = result_format
 
         super(GCPProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config,
                                           result_format)
 
-    def get_report_name(self):
-        """
-        Returns the name of the report using the provider's configuration
-        """
-        if self.project_id:
-            return 'gcp-{}'.format(self.project_id)
-        elif self.organization_id:
-            return 'gcp-{}'.format(self.organization_id)
-        elif self.folder_id:
-            return 'gcp-{}'.format(self.folder_id)
-        else:
-            return 'gcp'
-
-    def _set_account_id(self):
-        # All accessible projects
+    def _set_aws_account_id(self):
         if self.all_projects:
-            # Service Account
             if self.credentials.is_service_account and hasattr(self.credentials, 'service_account_email'):
-                self.account_id = self.credentials.service_account_email
+                self.aws_account_id = self.credentials.service_account_email  # FIXME this is for AWS
             else:
-                # TODO use username email
-                self.account_id = 'GCP'
+                self.aws_account_id = 'GCP'  # FIXME this is for AWS
+            self.profile = 'GCP'  # FIXME this is for AWS
+
         # Project passed through the CLI
         elif self.project_id:
-            self.account_id = self.project_id
+            self.aws_account_id = self.project_id  # FIXME this is for AWS
+            self.profile = self.project_id  # FIXME this is for AWS
+
         # Folder passed through the CLI
         elif self.folder_id:
-            self.account_id = self.folder_id
+            self.aws_account_id = self.folder_id  # FIXME this is for AWS
+            self.profile = self.folder_id  # FIXME this is for AWS
+
         # Organization passed through the CLI
         elif self.organization_id:
-            self.account_id = self.organization_id
+            self.aws_account_id = self.organization_id  # FIXME this is for AWS
+            self.profile = self.organization_id  # FIXME this is for AWS
+
         # Project inferred from default configuration
         elif self.credentials.default_project_id:
-            self.account_id = self.credentials.default_project_id
+            self.aws_account_id = self.credentials.default_project_id  # FIXME this is for AWS
+            self.profile = self.credentials.default_project_id  # FIXME this is for AWS
 
     async def fetch(self, regions=None, skipped_regions=None, partition_name=None):
         self._get_projects()
@@ -159,7 +159,7 @@ class GCPProvider(BaseProvider):
         try:
             if parent_type == 'project':
                 project_response = resource_manager_client_v1.projects().list(filter='id:%s' %
-                                                                                     parent_id).execute()
+                                                                              parent_id).execute()
                 if 'projects' in project_response.keys():
                     for project in project_response['projects']:
                         if project['lifecycleState'] == "ACTIVE":
@@ -198,7 +198,8 @@ class GCPProvider(BaseProvider):
             print_info("Found {} project(s) to scan.".format(len(projects)))
 
         except Exception as e:
-            print_exception('Unable to list accessible Projects: {}'.format(e))
+            print_error('Unable to list accessible Projects')
+            print_exception(e)
 
         finally:
             return projects

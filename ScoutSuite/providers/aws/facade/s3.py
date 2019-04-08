@@ -4,7 +4,7 @@ from botocore.exceptions import ClientError
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_error
 
 
 class S3Facade(AWSBaseFacade):
@@ -47,8 +47,8 @@ class S3Facade(AWSBaseFacade):
         try:
             logging = await run_concurrently(lambda: client.get_bucket_logging(Bucket=bucket['Name']))
         except Exception as e:
+            print_error('Failed to get logging configuration for %s: %s' % (bucket['Name'], e))
             bucket['logging'] = 'Unknown'
-            print_exception('Failed to get logging configuration for %s: %s' % (bucket['Name'], e))
 
         if 'LoggingEnabled' in logging:
             bucket['logging'] =\
@@ -85,12 +85,12 @@ class S3Facade(AWSBaseFacade):
             if 'ServerSideEncryptionConfigurationNotFoundError' in e.response['Error']['Code']:
                 bucket['default_encryption_enabled'] = False
             else:
+                print_error('Failed to get encryption configuration for %s: %s' % (bucket_name, e))
                 bucket['default_encryption_enabled'] = None
-                print_exception('Failed to get encryption configuration for %s: %s' % (bucket_name, e))
         except Exception as e:
+            print_error('Failed to get encryption configuration for %s: %s' % (bucket_name, e))
             bucket['default_encryption'] = 'Unknown'
-            print_exception('Failed to get encryption configuration for %s: %s' % (bucket_name, e))
-
+            
     async def _get_and_set_s3_acls(self, bucket, key_name=None):
         bucket_name = bucket['Name']
         client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
@@ -119,8 +119,8 @@ class S3Facade(AWSBaseFacade):
                 self._set_s3_permissions(grantees[grantee]['permissions'], permission)
             bucket['grantees'] = grantees
         except Exception as e:
-            bucket['grantees'] = {}
-            print_exception('Failed to get ACL configuration for %s: %s' % (bucket_name, e))
+            print_error('Failed to get ACL configuration for %s: %s' % (bucket_name, e))
+            bucket['grantees'] = {}            
 
     async def _get_and_set_s3_bucket_policy(self, bucket):
         client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
@@ -129,7 +129,7 @@ class S3Facade(AWSBaseFacade):
             bucket['policy'] = json.loads(bucket_policy['Policy'])
         except ClientError as e:
             if e.response['Error']['Code'] != 'NoSuchBucketPolicy':
-                print_exception('Failed to get bucket policy for %s: %s' % (bucket['Name'], e))
+                print_error('Failed to get bucket policy for %s: %s' % (bucket['Name'], e))
 
     def _set_s3_bucket_secure_transport(self, bucket):
         try:
@@ -149,7 +149,7 @@ class S3Facade(AWSBaseFacade):
             else:
                 bucket['secure_transport_enabled'] = False
         except Exception as e:
-            print_exception('Failed to get evaluate bucket policy for %s: %s' % (bucket['Name'], e))
+            print_error('Failed to get evaluate bucket policy for %s: %s' % (bucket['Name'], e))
             bucket['secure_transport'] = None
 
     @staticmethod

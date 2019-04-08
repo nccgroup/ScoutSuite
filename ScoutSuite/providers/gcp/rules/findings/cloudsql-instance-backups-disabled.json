@@ -1,9 +1,9 @@
 {
     "description": "Automatic backups disabled",
-    "path": "cloudsql.projects.id.instances.id",
+    "path": "cloudsql.instances.id",
     "dashboard_name": "Instances",
     "conditions": [ "and",
-        [ "cloudsql.projects.id.instances.id.automatic_backup_enabled", "false", "" ]
+        [ "cloudsql.instances.id.automatic_backup_enabled", "false", "" ]
     ],
     "id_suffix": "automatic_backup_enabled"
 }

@@ -2,10 +2,10 @@
   "dashboard_name": "Instances",
   "description": "SSL not required",
   "Rationale": "All incoming connections to database servers should use SSL (CIS 6.1).",
-  "path": "cloudsql.projects.id.instances.id",
+  "path": "cloudsql.instances.id",
   "conditions": [ "or",
-    [ "cloudsql.projects.id.instances.id.ssl_required", "false", ""],
-    [ "cloudsql.projects.id.instances.id.ssl_required", "null", ""]
+    [ "cloudsql.instances.id.ssl_required", "false", ""],
+    [ "cloudsql.instances.id.ssl_required", "null", ""]
   ],
   "id_suffix": "ssl_required"
 }
