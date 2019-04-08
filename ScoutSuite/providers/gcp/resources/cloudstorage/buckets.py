@@ -24,32 +24,18 @@ class Buckets(Resources):
         bucket_dict['location'] = raw_bucket.location
         bucket_dict['storage_class'] = raw_bucket.storage_class.lower()
         bucket_dict['versioning_status_enabled'] = raw_bucket.versioning_enabled
-        bucket_dict['logging_enabled'] = self._is_logging_enabled(raw_bucket)
-
-        get_cloudstorage_bucket_acl(raw_bucket, bucket_dict)
-
+        bucket_dict['logging_enabled'] = raw_bucket.logging is not None
+        bucket_dict['acl_configuration'] = self._get_cloudstorage_bucket_acl(raw_bucket)
         return bucket_dict['id'], bucket_dict
 
-    def _is_logging_enabled(self, raw_bucket):
-        try:
-            return raw_bucket.get_logging() is not None
-        except Exception as e:
-            print_exception('Failed to get bucket logging configuration for %s: %s' % (raw_bucket.name, e))
-            return None # Return False instead?
-
-def get_cloudstorage_bucket_acl(bucket, bucket_dict):
-    try:
-        bucket_acls = bucket.get_iam_policy()
-        bucket_dict['acl_configuration'] = {}
+    def _get_cloudstorage_bucket_acl(self, raw_bucket):
+        bucket_acls = raw_bucket.iam_policy      
+        acl_config = {}
         for role in bucket_acls._bindings:
             for member in bucket_acls[role]:
                 if member.split(':')[0] not in ['projectEditor', 'projectViewer', 'projectOwner']:
-                    if member not in bucket_dict['acl_configuration']:
-                        bucket_dict['acl_configuration'][member] = [role]
+                    if member not in acl_config:
+                        acl_config[member] = [role]
                     else:
-                        bucket_dict['acl_configuration'][member].append(role)
-        return True
-    except Exception as e:
-        print_exception('Failed to get bucket ACL configuration for %s: %s' % (bucket.name, e))
-        bucket_dict['acls'] = 'Unknown'
-        return False
+                        acl_config[member].append(role)
+        return acl_config
