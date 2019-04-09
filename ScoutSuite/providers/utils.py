@@ -56,7 +56,7 @@ async def get_and_set_concurrently(get_and_set_funcs: [], entities: [], **kwargs
 
 async def map_concurrently(coroutine, entities, **kwargs):
     """
-    Given a list of entities, executes coroutine `coro` concurrently on each entity and returns a list of the obtained
+    Given a list of entities, executes coroutine `coroutine` concurrently on each entity and returns a list of the obtained
     results ([await coro(entity_x), await coro(entity_a), ..., await coro(entity_z)]).
 
     :param coroutine: coroutine to be executed concurrently. Takes an entity as parameter and returns a new entity.
