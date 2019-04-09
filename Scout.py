@@ -25,6 +25,7 @@ def main():
         args.get('timestamp'),
         args.get('services'), args.get('skipped_services'),
         args.get('thread_config'),  # todo deprecate
+        args.get('result_format'),
         args.get('database_name'),
         args.get('host_ip'),
         args.get('host_port'),

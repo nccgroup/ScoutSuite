@@ -28,9 +28,8 @@ def run(provider,
         timestamp,
         services, skipped_services,
         thread_config,  # TODO deprecate
-        database_name,
-        host_ip,
-        host_port,
+        result_format,
+        database_name, host_ip, host_port,
         max_workers,
         regions,
         fetch_local, update,
@@ -60,9 +59,8 @@ async def _run(provider,
                timestamp,
                services, skipped_services,
                thread_config,  # TODO deprecate
-               database_name,
-               host_ip,
-               host_port,
+               result_format,
+               database_name, host_ip, host_port,
                regions,
                fetch_local, update,
                ip_ranges, ip_ranges_name_key,
@@ -122,7 +120,8 @@ async def _run(provider,
     report = ScoutReport(cloud_provider.provider_code,
                          report_name,
                          report_dir,
-                         timestamp)
+                         timestamp,
+                         result_format=result_format)
 
     if database_name:
         database_file, _ = get_filename(ReportFile.results, report_name, report_dir, extension="db")
