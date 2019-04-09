@@ -1,5 +1,4 @@
-var defaultPageSize = 2
-var regionPageSize = 1
+const defaultPageSize = 2
 var reCount = new RegExp('_count$')
 
 /**
@@ -16,23 +15,22 @@ function loadPage (pathArray, indexDiff) {
   // prevent the user from cliking on next page multiple times and going out of bounds and I want to call loadConfig
   // to regenerate the page after Iv'e loaded SQLite data
   if (indexDiff === 0) {
-    // TODO: Make "less provider specific"
-    if (pathArray.length === 3) {
-      getResourcePageSqlite(pageIndex, pageSize, pathArray[1], pathArray[2])
-    } else if (pathArray.length === 5) {
+    if (pathArray[2] === 'regions') {
       getResourcePageSqliteRegions(pageIndex, pageSize, pathArray[1], pathArray[3], pathArray[4])
+    } else {
+      getResourcePageSqlite(pageIndex, pageSize, pathArray[1], pathArray[2])
     }
   } else {
     document.getElementById('page_backward').disabled = (pageIndex <= 0)
     document.getElementById('page_forward').disabled = (pageIndex >= getLastPageIndex(pathArray, pageSize))
-    if (pathArray.length === 3) {
-      getResourcePageSqlite(pageIndex, pageSize, pathArray[1], pathArray[2])
-      loadConfig(pathArray[0] + '.' + pathArray[1] + '.' + pathArray[2], 2, true)
-    } else if (pathArray.length === 5) {
+    if (pathArray[2] === 'regions') {
       for (let region in runResults['services'][pathArray[1]]['regions']) {
         getResourcePageSqliteRegions(pageIndex, pageSize, pathArray[1], region, pathArray[4])
       }
-      loadConfig('services.' + pathArray[1] + '.' + pathArray[2] + '.' + pathArray[3] + '.' + pathArray[4], 2, true)
+      loadConfig('services.' + pathArray[1] + '.regions.' + pathArray[3] + '.' + pathArray[4], 2, true)
+    } else {
+      getResourcePageSqlite(pageIndex, pageSize, pathArray[1], pathArray[2])
+      loadConfig(pathArray[0] + '.' + pathArray[1] + '.' + pathArray[2], 2, true)
     }
   }
 }
