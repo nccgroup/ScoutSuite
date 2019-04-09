@@ -156,8 +156,19 @@ class IAMFacade(AWSBaseFacade):
         try:
             return (await run_concurrently(client.get_account_password_policy))['PasswordPolicy']
         except Exception as e:
-            print_exception('Failed to get account password policy: {}'.format(e))
-            return []
+            if e.response['Error']['Code'] == 'NoSuchEntity':
+                return {
+                    'MinimumPasswordLength': '1',
+                    'RequireUppercaseCharacters': False,
+                    'RequireLowercaseCharacters': False, 
+                    'RequireNumbers': False,
+                    'RequireSymbols': False, 
+                    'PasswordReusePrevention': False,
+                    'ExpirePasswords': False
+                }
+            else:
+                print_exception('Failed to get account password policy: {}'.format(e))
+                return []
 
     async def _get_and_set_user_acces_keys(self, user: {}):
         client = AWSFacadeUtils.get_client('iam', self.session)
