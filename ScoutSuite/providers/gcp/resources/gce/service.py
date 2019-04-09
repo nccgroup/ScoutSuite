@@ -20,7 +20,7 @@ class ComputeEngine(Projects):
         # (project and region/zone), so we need to propagate their count up.
         # Normally this would be done by setting the resource counts in the Regions
         # and Zones classes, but having a "resource_name_count" field in their 
-        # dictionary causes errors in the rule engine since they are accessed
+        # dictionary causes errors in the rule engine.
         instances_count = 0
         subnetworks_count = 0
         for project in self['projects'].values():
