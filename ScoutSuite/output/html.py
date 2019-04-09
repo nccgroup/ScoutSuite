@@ -114,7 +114,7 @@ class ScoutReport(HTMLReport):
         contents += self.get_content_from_folder('summaries')
         contents += self.get_content_from_folder('summaries/%s' % self.provider)
         new_file, first_line = get_filename(ReportFile.report, self.profile, self.report_dir)
-        print_info('Creating %s ...' % new_file)
+        print_info('Creating %s' % new_file)
         if prompt_for_overwrite(new_file, force_write):
             if os.path.exists(new_file):
                 os.remove(new_file)
