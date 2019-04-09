@@ -78,19 +78,7 @@ function loadFirstPageEverywhere () {
         runResults['services'][service]['regions'][regions[region]] = {id: null}
         let resources = requestDb(createQuery('services', service, 'regions', regions[region]))
         if (resources) {
-          resources = resources.keys
-          for (let resource in resources) {
-            // For everything that does not scale up with the ammount of resources fetch everything
-            if (resources[resource] === 'id' || resources[resource] === 'region' || 
-              resources[resource] === 'name' || resources[resource].match(reCount)) {
-              runResults['services'][service]['regions'][regions[region]][resources[resource]] =
-                requestDb(createQuery('services', service, 'regions', regions[region], [resources[resource]]), null)
-            // Else (if it scales) only fetch one page per region
-            } else {
-              let pathArray = ['services', service, 'regions', regions[region], resources[resource]]
-              loadPage(pathArray, 0)
-            }
-          }
+          getRegionsResourcesFirstPage([regions[region]], service, resources.keys)          
         }
       }
     } else {
@@ -102,6 +90,27 @@ function loadFirstPageEverywhere () {
       }
     }
   }  
+}
+
+/**
+ * Loads the resources for the first page of each region in each service
+ * @param {string} region           The current region we are fetching resources for 
+ * @param {string} service          The current service we are fetching resources for
+ * @param {object} resources        The resources we need to fetch
+ */
+function getRegionsResourcesFirstPage (region, service, resources) {
+  for (let resource in resources) {
+    // For everything that does not scale up with the ammount of resources fetch everything
+    if (resources[resource] === 'id' || resources[resource] === 'region' || 
+      resources[resource] === 'name' || resources[resource].match(reCount)) {
+      runResults['services'][service]['regions'][region][resources[resource]] =
+        requestDb(createQuery('services', service, 'regions', region, [resources[resource]]), null)
+    // Else (if it scales) only fetch one page per region
+    } else {
+      let pathArray = ['services', service, 'regions', region, resources[resource]]
+      loadPage(pathArray, 0)
+    }
+  }
 }
 
 /**

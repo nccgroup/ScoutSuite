@@ -1,3 +1,4 @@
+// TODO: Change this for something less goofy
 var querySeparator = '¤'
 var reQuerySeparator = new RegExp('\\' + querySeparator + '+$')
 var defaultPort = 8000
@@ -32,12 +33,6 @@ function requestDb (query, pageSize, pageIndex) {
     success: function (result) {
       response = result
     } })
-
-  // Use this when debugging, it is intended that a few requests return an empty response
-  // e.g. when looking if the resource has regions or not
-  /*if (response.data === null || response.data === undefined) {
-    console.log('This query returned an empty response:  ' + query)
-  }*/
 
   return response.data
 }
