@@ -201,26 +201,26 @@ class GCPProvider(BaseProvider):
             return projects
 
 
-    # def _match_instances_and_snapshots(self):
-    #     """
-    #     Compare Compute Engine instances and snapshots to identify instance disks that do not have a snapshot.
+    def _match_instances_and_snapshots(self):
+        """
+        Compare Compute Engine instances and snapshots to identify instance disks that do not have a snapshot.
 
-    #     :return:
-    #     """
+        :return:
+        """
 
-    #     if 'computeengine' in self.services:
-    #         for project in self.service['computeengine']['projects'].values():
-    #             for zone in project['zones'].values():
-    #                 for instance in zone['instances'].values():
-    #                     for instance_disk in instance['disks'].values():
-    #                         instance_disk['snapshots'] = []
-    #                         for disk in self.services['computeengine']['snapshots'].values():
-    #                             if disk['status'] == 'READY' and disk['source_disk_url'] == instance_disk['source_url']:
-    #                                 instance_disk['snapshots'].append(disk)
+        if 'computeengine' in self.services:
+            for project in self.service['computeengine']['projects'].values():
+                for zone in project['zones'].values():
+                    for instance in zone['instances'].values():
+                        for instance_disk in instance['disks'].values():
+                            instance_disk['snapshots'] = []
+                            for disk in self.services['computeengine']['snapshots'].values():
+                                if disk['status'] == 'READY' and disk['source_disk_url'] == instance_disk['source_url']:
+                                    instance_disk['snapshots'].append(disk)
 
-    #                         instance_disk['latest_snapshot'] = max(instance_disk['snapshots'],
-    #                                                             key=lambda x: x['creation_timestamp']) \
-    #                             if instance_disk['snapshots'] else None
+                            instance_disk['latest_snapshot'] = max(instance_disk['snapshots'],
+                                                                key=lambda x: x['creation_timestamp']) \
+                                if instance_disk['snapshots'] else None
 
     def _match_networks_and_instances(self):
         """
