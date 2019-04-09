@@ -15,7 +15,7 @@
             <div class="accordion-inner">
                 <ul>
                     {{#each this.users}}
-                    <li><a href="javascript:showObject('services.iam.users.{{this}}')">{{get_value_at 'services.iam.users' this 'name'}}</a></li>
+                    <li><a href="javascript:showObject('services.iam.users.{{this}}')">{{getValueAt 'services.iam.users' this 'name'}}</a></li>
                     {{/each}}
                 </ul>
             </div>

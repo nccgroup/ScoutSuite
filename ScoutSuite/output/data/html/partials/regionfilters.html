@@ -3,7 +3,7 @@
     {{#each items}}
         {{#if regions}}
             {{#each regions}}
-                <li id="regionfilters.{{@../key}}.regions.{{@key}}"><a class="dropdown-item" href="javascript:set_filter_url('{{@key}}');">{{@key}}</a></li>
+                <li id="regionfilters.{{@../key}}.regions.{{@key}}"><a class="dropdown-item" href="javascript:setFilterUrl('{{@key}}');">{{@key}}</a></li>
             {{/each}}
         {{/if}}
     {{/each}}

@@ -18,7 +18,7 @@
                 <ul>
                     {{#each instances}}
                         <li class="list-group-item-text"><a href="javascript:showObject('services.ec2.regions.{{../region}}.vpcs.{{../vpc}}.instances.{{this}}')">
-                        {{get_value_at 'services.ec2.regions' ../region 'vpcs' ../vpc 'instances' this 'name'}}
+                        {{getValueAt 'services.ec2.regions' ../region 'vpcs' ../vpc 'instances' this 'name'}}
                         </a></li>
                     {{/each}}
                 </ul>

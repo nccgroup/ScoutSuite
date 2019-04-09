@@ -7,8 +7,8 @@
         <h4>Information</h4>
         <ul>
             <li class="list-group-item-text">Id: {{id}}</li>
-            <li class="list-group-item-text">Architecture: {{get_value_at 'services.ec2.regions' region 'images' id 'Architecture'}}</li>
-            <li class="list-group-item-text">Is public: <span id="ec2.regions.{{region}}.images.{{id}}.image_is_public">{{get_value_at 'services.ec2.regions' region 'images' id 'Public'}}</span></li>
+            <li class="list-group-item-text">Architecture: {{getValueAt 'services.ec2.regions' region 'images' id 'Architecture'}}</li>
+            <li class="list-group-item-text">Is public: <span id="ec2.regions.{{region}}.images.{{id}}.image_is_public">{{getValueAt 'services.ec2.regions' region 'images' id 'Public'}}</span></li>
         </ul>
     </div>
 </script>

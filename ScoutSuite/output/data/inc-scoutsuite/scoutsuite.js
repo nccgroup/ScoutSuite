@@ -1,1187 +1,1296 @@
 // Globals
-var loaded_config_array = new Array();
-var run_results;
+const resultFormats = { 'invalid': 0, 'json': 1, 'sqlite': 2 }
+Object.freeze(resultFormats)
+const $ = window.$
+var loadedConfigArray = []
+var runResults
 
 /**
  * Event handlers
  */
 $(document).ready(function () {
-    onPageLoad();
-});
+  onPageLoad()
+})
 
 /**
  * Implements page load functionality
  */
-function onPageLoad() {
-    showPageFromHash();
+function onPageLoad () {
+  showPageFromHash()
 
-    // when button is clicked, return CSV with finding
-    $('#findings_download_button').click(function (event) {
+  // when button is clicked, return CSV with finding
+  $('#findings_download_button').click(function (event) {
+    var buttonClicked = event.target.id
+    var anchor = window.location.hash.substr(1)
+    // Strip the # sign
+    var path = decodeURIComponent(anchor.replace('#', ''))
+    // Get resource path based on browsed-to path
+    var resourcePath = getResourcePath(path)
 
-        var button_clicked = event.target.id;
+    var csvArray = []
+    var jsonDict = {}
 
-        var anchor = window.location.hash.substr(1);
-        // Strip the # sign
-        var path = decodeURIComponent(anchor.replace('#', ''));
-        // Get resource path based on browsed-to path
-        var resource_path = get_resource_path(path);
+    var items = getValueAt(path)
+    var resourcePathArray = resourcePath.split('.')
+    var splitPath = path.split('.')
+    var findingKey = splitPath[splitPath.length - 2]
 
-        var csv_array = [];
-        var json_dict = {};
+    if (buttonClicked === 'findings_download_csv_button') {
+      var firstEntry = 1
+      for (let item in items) {
+        // get item value
+        // when path ends in '.items' (findings)
+        if (typeof items[item] === 'string') {
+          var idArray = items[item].split('.')
+          var id = 'services.' + idArray.slice(0, resourcePathArray.length).join('.')
+          var i = getValueAt(id)
+        } else {
+          i = items[item]
+        }
 
-        var items = get_value_at(path);
-        var level = get_value_at(path.replace('items', 'level'));
-        var resource_path_array = resource_path.split('.');
-        var split_path = path.split('.');
-        var finding_service = split_path[1];
-        var finding_key = split_path[split_path.length - 2];
+        // for first item, put keys at beginning of csv
+        if (firstEntry === 1) {
+          var keyValuesArray = []
+          Object.keys(i).forEach(function (key) {
+            keyValuesArray.push(key)
+          })
+          csvArray.push(keyValuesArray)
+        }
+        // put each value in array
+        var valuesArray = []
+        Object.keys(i).forEach(function (key) {
+          valuesArray.push(JSON.stringify(i[key]).replace(/^"(.*)"$/, '$1'))
+        })
+        // append to csv array
+        csvArray.push(valuesArray)
+        firstEntry = 0
+      }
 
-        if (button_clicked == 'findings_download_csv_button') {
-            var first_entry = 1;
-            for (item in items) {
-                // get item value
-                // when path ends in '.items' (findings)
-                if (typeof items[item] === 'string') {
-                    var id_array = items[item].split('.');
-                    var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
-                    var i = get_value_at(id)
-                }
-                // all other cases
-                else {
-                    var i = items[item];
-                };
-                ;
-                // for first item, put keys at beginning of csv
-                if (first_entry == 1) {
-                    var key_values_array = []
-                    Object.keys(i).forEach(function (key) {
-                        key_values_array.push(key);
-                    });
-                    csv_array.push(key_values_array);
-                };
-                // put each value in array
-                var values_array = []
-                Object.keys(i).forEach(function (key) {
-                    values_array.push(JSON.stringify(i[key]).replace(/^"(.*)"$/, '$1'));
-                });
-                // append to csv array
-                csv_array.push(values_array);
-                first_entry = 0;
-            };
+      downloadAsCsv(findingKey + '.csv', csvArray)
+    }
 
-            download_as_csv(finding_key + '.csv', csv_array)
-        };
+    if (buttonClicked === 'findings_download_json_button') {
+      jsonDict['items'] = []
+      for (let item in items) {
+        // get item value
+        // when path ends in '.items' (findings)
+        if (typeof items[item] === 'string') {
+          idArray = items[item].split('.')
+          id = 'services.' + idArray.slice(0, resourcePathArray.length).join('.')
+          i = getValueAt(id)
+        } else {
+          i = items[item]
+        }
+        // add item to json
+        jsonDict['items'].push(i)
+      }
+      downloadAsJson(findingKey + '.json', jsonDict)
+    }
+  })
 
-        if (button_clicked == 'findings_download_json_button') {
-            json_dict['items'] = [];
-            for (item in items) {
-                // get item value
-                // when path ends in '.items' (findings)
-                if (typeof items[item] === 'string') {
-                    var id_array = items[item].split('.');
-                    var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
-                    var i = get_value_at(id)
-                }
-                // all other cases
-                else {
-                    var i = items[item];
-                };
-                ;
-                // add item to json
-                json_dict['items'].push(i);
-            };
-            download_as_json(finding_key + '.json', json_dict);
-        };
+  // When the button is clicked, load the desired page
+  $('#paging_buttons').click(function (event) {
+    let buttonClicked = event.target.id
+    let pathArray = getPathArray()
+    if (buttonClicked === 'page_forward') {
+      loadPage(pathArray, 1)
+    } else if (buttonClicked === 'page_backward') {
+      loadPage(pathArray, -1)
+    }
+  })
+}
 
-    });
-
-};
+/**
+ * Get an array containing the current path subdivided
+ * @returns {object}
+ */
+function getPathArray () {
+  let anchor = window.location.hash.substr(1)
+  // Strip the # sign
+  let path = decodeURIComponent(anchor.replace('#', ''))
+  // Get resource path based on browsed-to path
+  let resourcePath = getResourcePath(path)
+  return resourcePath.split('.')
+}
 
 /**
  * Display the account ID -- use of the generic function + templates result in the div not being at the top of the page
  */
-var load_account_id = function () {
-    var element = document.getElementById('account_id');
-    var value = '<i class="fa fa-cloud"></i> ' + run_results['provider_name'] + ' <i class="fa fa-chevron-right"></i> ' + run_results['account_id'];
-    if (('organization' in run_results) && (value in run_results['organization'])) {
-        value += ' (' + run_results['organization'][value]['Name'] + ')'
-    };
-    element.innerHTML = value;
-};
+var loadAccountId = function () {
+  var element = document.getElementById('account_id')
+  var value = '<i class="fa fa-cloud"></i> ' + runResults['provider_name'] +
+    ' <i class="fa fa-chevron-right"></i> ' + runResults['account_id']
+  if (('organization' in runResults) && (value in runResults['organization'])) {
+    value += ' (' + runResults['organization'][value]['Name'] + ')'
+  }
+  element.innerHTML = value
+}
 
 /**
  * Generic load JSON function
- * @param script_id
- * @param cols
- * @returns {number};
+ * @param {string} scriptId
+ * @param {number} cols
+ * @param {boolean} force
+ * @returns {number}
  */
-function load_config_from_json(script_id, cols) {
-
+function loadConfig (scriptId, cols, force) {
+  if (!force) {
     // Abort if data was previously loaded
-    if (loaded_config_array.indexOf(script_id) > 0) {
-        // When the path does not contain .id.
-        return 0
-    };
-    path_array = script_id.split('.');
-    for (i = 3; i < path_array.length; i = i + 2) {
-        path_array[i] = 'id';
-    };
-    fixed_path = path_array.join('.');
-    if (loaded_config_array.indexOf(fixed_path) > 0) {
-        // When the loaded path contains id but browsed-to path contains a specific value
-        return 0
-    };
-    path_array[1] = 'id';
-    fixed_path = path_array.join('.');
-    if (loaded_config_array.indexOf(fixed_path) > 0) {
-        // Special case for services.id.findings
-        return 0
-    };
+    if (loadedConfigArray.indexOf(scriptId) > 0) {
+      // When the path does not contain .id.
+      return 0
+    }
+    let pathArray = scriptId.split('.')
+    for (let i = 3; i < pathArray.length; i = i + 2) {
+      pathArray[i] = 'id'
+    }
+    let fixedPath = pathArray.join('.')
+    if (loadedConfigArray.indexOf(fixedPath) > 0) {
+      // When the loaded path contains id but browsed-to path contains a specific value
+      return 0
+    }
+    pathArray[1] = 'id'
+    fixedPath = pathArray.join('.')
+    if (loadedConfigArray.indexOf(fixedPath) > 0) {
+      // Special case for services.id.findings
+      return 0
+    }
+  }
 
-    // Build the list based on the path, stopping at the first .id. value
-    list = run_results;
-    path_array = script_id.split('.id.')[0].split('.');
-    for (i in path_array) {
-        // Allows for creation of regions-filter etc...
-        if (i.endsWith('-filters')) {
-            i = i.replace('-filters', '');
-        };
-        list = list[path_array[i]];
-    };
-
+  // Build the list based on the path, stopping at the first .id. value
+  let list = runResults
+  let pathArray = scriptId.split('.id.')[0].split('.')
+  for (let i in pathArray) {
+    // Allows for creation of regions-filter etc...
+    if (i.endsWith('-filters')) {
+      i = i.replace('-filters', '')
+    }
+    list = list[pathArray[i]]
     // Filters
-    if (path_array[i] == 'items' && i > 3 && path_array[i - 2] == 'filters') {
-        return 1;
-    };
+    if (pathArray[i] === 'items' && i > 3 && pathArray[i - 2] === 'filters') {
+      return 1
+    }
+  }
 
-    // Default # of columns is 2
-    if ((cols === undefined) || (cols === null)) {
-        cols = 2;
-    };
+  // Default # of columns is 2
+  if ((cols === undefined) || (cols === null)) {
+    cols = 2
+  }
 
-    // Update the DOM
-    hideAll();
-    if (cols == 0) {
-        // Metadata
-        script_id = script_id.replace('services.id.', '');
-        process_template(script_id + '.list.template', script_id + '.list', list);
-    } else if (cols == 1) {
-        // Single-column display
-        process_template(script_id + '.details.template', 'single-column', list);
-    } else if (cols == 2) {
-        // Double-column display
-        process_template(script_id + '.list.template', 'double-column-left', list);
-        process_template(script_id + '.details.template', 'double-column-right', list);
-    };
+  // Update the DOM
+  hideAll()
+  if (cols === 0) {
+    // Metadata
+    scriptId = scriptId.replace('services.id.', '')
+    processTemplate(scriptId + '.list.template', scriptId + '.list', list, force)
+  } else if (cols === 1) {
+    // Single-column display
+    processTemplate(scriptId + '.details.template', 'single-column', list, force)
+  } else if (cols === 2) {
+    // Double-column display
+    processTemplate(scriptId + '.list.template', 'double-column-left', list, force)
+    processTemplate(scriptId + '.details.template', 'double-column-right', list, force)
+  }
 
-    // Update the list of loaded data
-    loaded_config_array.push(script_id);
-    return 1;
-};
-
+  // Update the list of loaded data
+  loadedConfigArray.push(scriptId)
+  return 1
+}
 
 /**
  * Compile Handlebars templates and update the DOM
- * @param id1
- * @param container_id
- * @param list
+ * @param {string} id1
+ * @param {string} containerId
+ * @param {object} list
+ * @param {boolean} replace
  */
-function process_template(id1, container_id, list) {
-    id1 = id1.replace(/<|>/g, '');
-    var template_to_compile = document.getElementById(id1).innerHTML;
-    var compiled_template = Handlebars.compile(template_to_compile);
-    var inner_html = compiled_template({ items: list });
-    document.getElementById(container_id).innerHTML += inner_html;
-};
+function processTemplate (id1, containerId, list, replace) {
+  id1 = id1.replace(/<|>/g, '')
+  if (document.getElementById(id1)) {
+    var templateToCompile = document.getElementById(id1).innerHTML
+    var compiledTemplate = Handlebars.compile(templateToCompile)
+    var innerHtml = compiledTemplate({ items: list })
+    if (replace) {
+      document.getElementById(containerId).innerHTML = innerHtml
+    } else {
+      document.getElementById(containerId).innerHTML += innerHtml
+    }
+  }
+}
 
 /**
  * Hide all lists and details
  */
-function hideAll() {
-    $("[id*='.list']").not("[id*='metadata.list']").not("[id='regions.list']").not("[id*='filters.list']").hide();
-    $("[id*='.details']").hide();
-    var element = document.getElementById('scout_display_account_id_on_all_pages');
-    if ((element != undefined) && (element.checked == true)) {
-        showRow('account_id');
-    };
-    current_resource_path = ''
-};
-
+function hideAll () {
+  $("[id*='.list']").not("[id*='metadata.list']").not("[id='regions.list']").not("[id*='filters.list']").hide()
+  $("[id*='.details']").hide()
+  var element = document.getElementById('scout_display_account_id_on_all_pages')
+  if ((element !== undefined) && (element.checked === true)) {
+    showRow('account_id')
+  }
+  currentResourcePath = ''
+}
 
 /**
  * Show list and details' container for a given path
  * @param path
  */
-function showRow(path) {
-    path = path.replace(/.id./g, '\.[^.]+\.');
-    showList(path);
-    showDetails(path);
-};
-
-function showList(path) {
-    $('div').filter(function () {
-        return this.id.match(path + '.list')
-    }).show();
+function showRow (path) {
+  path = path.replace(/.id./g, '\.[^.]+\.')
+  showList(path)
+  showDetails(path)
 }
 
-function showDetails(path) {
-    $('div').filter(function () {
-        return this.id.match(path + '.details')
-    }).show();
+/**
+ * Shows the list
+ * @param {string} path
+ */
+function showList (path) {
+  $('div').filter(function () {
+    return this.id.match(path + '.list')
+  }).show()
 }
 
-function hideList(path) {
-    $("[id='" + path + "']").hide();
-    path = path.replace('.list', '');
-    hideItems(path);
-};
+/**
+ * Shows the details
+ * @param {string} path
+ */
+function showDetails (path) {
+  $('div').filter(function () {
+    return this.id.match(path + '.details')
+  }).show()
+}
 
+/**
+ *  Hides the list
+ * @param {string} path
+ */
+function hideList (path) {
+  $("[id='" + path + "']").hide()
+  path = path.replace('.list', '')
+  hideItems(path)
+}
 
 /**
  * Show links and views for a given path
  * @param path
  */
-function showItems(path) {
-    path = path.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.';
-    $('div').filter(function () {
-        return this.id.match(path + 'link')
-    }).show();
-    $('div').filter(function () {
-        return this.id.match(path + 'view')
-    }).show();
-};
-
+function showItems (path) {
+  path = path.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.'
+  $('div').filter(function () {
+    return this.id.match(path + 'link')
+  }).show()
+  $('div').filter(function () {
+    return this.id.match(path + 'view')
+  }).show()
+}
 
 /**
  * Hide resource views for a given path
- * @param resource_path
+ * @param resourcePath
  */
-function hideItems(resource_path) {
-    path = resource_path.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.view';
-    $('div').filter(function () {
-        return this.id.match(path)
-    }).hide();
-};
-
+function hideItems (resourcePath) {
+  let path = resourcePath.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.view'
+  $('div').filter(function () {
+    return this.id.match(path)
+  }).hide()
+}
 
 /**
  * Hide resource links for a given path
- * @param resource_path
+ * @param resourcePath
  */
-function hideLinks(resource_path) {
-    // TODO: Handle Region and VPC hiding...
-    path = resource_path.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.link';
-    $('div').filter(function () {
-        return this.id.match(path)
-    }).hide();
-};
-
+function hideLinks (resourcePath) {
+  // TODO: Handle Region and VPC hiding...
+  let path = resourcePath.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.link'
+  $('div').filter(function () {
+    return this.id.match(path)
+  }).hide()
+}
 
 /**
  * Show list, details' container, links, and view for a given path
  * @param path
  */
-function showRowWithItems(path) {
-    showRow(path);
-    showItems(path);
-};
+function showRowWithItems (path) {
+  showRow(path)
+  showItems(path)
+}
 
+/**
+ * Shows filters
+ * @param {string} resourcePath
+ */
+function showFilters (resourcePath) {
+  hideFilters()
+  let service = resourcePath.split('.')[1]
+  // Show service filters
+  $('[id="' + resourcePath + '.id.filters"]').show()
+  // show region filters
+  $('[id*="regionfilters.' + service + '.regions"]').show()
+}
 
-function showFilters(resource_path) {
-    hideFilters();
-    service = resource_path.split('.')[1];
-    // Show service filters
-    $('[id="' + resource_path + '.id.filters"]').show();
-    // show region filters
-    $('[id*="regionfilters.' + service + '.regions"]').show();
-};
-
-function hideFilters() {
-    $('[id*=".id.filters"]').hide();
-    $('[id*="regionfilters"]').hide();
-    // Reset dashboard filters
-    $(".dashboard-filter").val("");
-    $(".finding_items").filter(function () {
-        $(this).show()
-    });
-};
+/**
+ * Hides filters
+ */
+function hideFilters () {
+  $('[id*=".id.filters"]').hide()
+  $('[id*="regionfilters"]').hide()
+  // Reset dashboard filters
+  $('.dashboard-filter').val('')
+  $('.finding_items').filter(function () {
+    $(this).show()
+  })
+}
 
 /**
  * Show findings
- * @param path
- * @param resource_path
+ * @param {string} path
+ * @param {string} resourcePath
  */
-function showFindings(path, resource_path) {
-    items = get_value_at(path);
-    level = get_value_at(path.replace('items', 'level'));
-    resource_path_array = resource_path.split('.');
-    split_path = path.split('.');
-    finding_service = split_path[1];
-    finding_key = split_path[split_path.length - 2];
-    for (item in items) {
-        var id_array = items[item].split('.');
-        var id = 'services.' + id_array.slice(0, resource_path_array.length).join('.');
-        showSingleItem(id);
-        if ($('[id="' + items[item] + '"]').hasClass('badge')) {
-            $('[id="' + items[item] + '"]').addClass('finding-title-' + level);
-        } else {
-            $('[id="' + items[item] + '"]').addClass('finding-' + level);
-        };
-        $('[id="' + items[item] + '"]').removeClass('finding-hidden');
-        $('[id="' + items[item] + '"]').attr('data-finding-service', finding_service);
-        $('[id="' + items[item] + '"]').attr('data-finding-key', finding_key);
-        $('[id="' + items[item] + '"]').click(function (e) {
-            finding_id = e.target.id;
-            if (!(finding_service in exceptions)) {
-                exceptions[finding_service] = new Object();
-            };
-            if (!(finding_key in exceptions[finding_service])) {
-                exceptions[finding_service][finding_key] = new Array();
-            };
-            is_exception = confirm('Mark this item as an exception ?');
-            if (is_exception && (exceptions[finding_service][finding_key].indexOf(finding_id) == -1)) {
-                exceptions[finding_service][finding_key].push(finding_id);
-            };
-        });
-    };
-};
+function showFindings (path, resourcePath) {
+  let items = getValueAt(path)
+  let level = getValueAt(path.replace('items', 'level'))
+  let resourcePathArray = resourcePath.split('.')
+  let splitPath = path.split('.')
+  let findingService = splitPath[1]
+  let findingKey = splitPath[splitPath.length - 2]
+  for (let item in items) {
+    var idArray = items[item].split('.')
+    var id = 'services.' + idArray.slice(0, resourcePathArray.length).join('.')
+    showSingleItem(id)
+    if ($('[id="' + items[item] + '"]').hasClass('badge')) {
+      $('[id="' + items[item] + '"]').addClass('finding-title-' + level)
+    } else {
+      $('[id="' + items[item] + '"]').addClass('finding-' + level)
+    }
+    $('[id="' + items[item] + '"]').removeClass('finding-hidden')
+    $('[id="' + items[item] + '"]').attr('data-finding-service', findingService)
+    $('[id="' + items[item] + '"]').attr('data-finding-key', findingKey)
+    $('[id="' + items[item] + '"]').click(function (e) {
+      let findingId = e.target.id
+      if (!(findingService in exceptions)) {
+        exceptions[findingService] = {}
+      }
+      if (!(findingKey in exceptions[findingService])) {
+        exceptions[findingService][findingKey] = []
+      }
+      let isException = confirm('Mark this item as an exception ?')
+      if (isException && (exceptions[findingService][findingKey].indexOf(findingId) == -1)) {
+        exceptions[findingService][findingKey].push(findingId)
+      }
+    })
+  }
+}
 
 /**
  * Show a single item
  * @param id
  */
-function showSingleItem(id) {
-    if (!id.endsWith('.view')) {
-        id = id + '.view';
-    };
-    $("[id='" + id + "']").show();
-    id = id.replace('.view', '.link');
-    $("[id='" + id + "']").show();
-};
+function showSingleItem (id) {
+  if (!id.endsWith('.view')) {
+    id = id + '.view'
+  }
+  $("[id='" + id + "']").show()
+  id = id.replace('.view', '.link')
+  $("[id='" + id + "']").show()
+}
 
-function toggleDetails(keyword, item) {
-    var id = '#' + keyword + '-' + item;
-    $(id).toggle();
-};
-
+/**
+ * Toggles details
+ * @param {string} keyword
+ * @param {string} item
+ */
+function toggleDetails (keyword, item) {
+  var id = '#' + keyword + '-' + item
+  $(id).toggle()
+}
 
 /**
  * Update the navigation bar
  * @param service
  */
-function updateNavbar(path) {
-    const navbarIdSuffix = '_navbar';
-    const subnavbarIdSuffix = '_subnavbar';
+function updateNavbar (path) {
+  const navbarIdSuffix = '_navbar'
+  const subnavbarIdSuffix = '_subnavbar'
 
-    splitPath = path.split('.');
+  let splitPath = path.split('.')
 
-    $('[id*="navbar"]').removeClass('active');
+  $('[id*="navbar"]').removeClass('active')
 
-    if(path === '') {
-        $('#scoutsuite_navbar').addClass('active');
-    }
-    else if (splitPath[0] === 'services') {
-        const service = splitPath[1];
-        let element = $('#' + service + subnavbarIdSuffix);
-        while(element && (!element.attr('id') || !element.attr('id').endsWith(navbarIdSuffix))) {
-            element = element.parent();
-        }
-
-        if(element) {
-            element.addClass('active');
-        }
-    }
-    else if (splitPath[0] === 'service_groups' && splitPath.length >= 2) {
-        const group = splitPath[1];
-        $('#' + group + navbarIdSuffix).addClass('active');
+  if (path === '') {
+    $('#scoutsuite_navbar').addClass('active')
+  } else if (splitPath[0] === 'services') {
+    const service = splitPath[1]
+    let element = $('#' + service + subnavbarIdSuffix)
+    while (element && (!element.attr('id') || !element.attr('id').endsWith(navbarIdSuffix))) {
+      element = element.parent()
     }
 
-    $('[id*="navbar"]').show();
+    if (element) {
+      element.addClass('active')
+    }
+  } else if (splitPath[0] === 'service_groups' && splitPath.length >= 2) {
+    const group = splitPath[1]
+    $('#' + group + navbarIdSuffix).addClass('active')
+  }
+
+  $('[id*="navbar"]').show()
 }
-
-function hasNavbarSuffix(element) {
-    return element 
-        && (!element.attr('id') || element.attr('id') 
-        && !element.attr('id',).endsWith(navbarIdSuffix));
-}
-
-
- function toggleVisibility(id) {
-    id1 = '#' + id;
-    $(id1).toggle()
-    id2 = '#bullet-' + id;
-    if ($(id1).is(":visible")) {
-        $(id2).html('<i class="fa fa-caret-square-o-down"></i>');
-    } else {
-        $(id2).html('<i class="fa fa-caret-square-o-right"></i>');
-    };
-};
 
 /**
- *
+ * Tells if navbar has suff
+ * @param {*} element
+ */
+function hasNavbarSuffix (element) {
+  return element &&
+    (!element.attr('id') || element.attr('id') &&
+      !element.attr('id').endsWith(navbarIdSuffix))
+}
+
+/**
+ * Toggles visibility
+ * @param {string} id
+ */
+function toggleVisibility (id) {
+  let id1 = '#' + id
+  $(id1).toggle()
+  let id2 = '#bullet-' + id
+  if ($(id1).is(':visible')) {
+    $(id2).html('<i class="fa fa-caret-square-o-down"></i>')
+  } else {
+    $(id2).html('<i class="fa fa-caret-square-o-right"></i>')
+  }
+}
+
+/**
+ * Iterates through EC2 objects and calls
  * @param data
  * @param entities
  * @param callback
- * @param callback_args
+ * @param callbackArgs
  */
-function iterateEC2ObjectsAndCall(data, entities, callback, callback_args) {
-    if (entities.length > 0) {
-        var entity = entities.shift();
-        var recurse = entities.length;
-        for (i in data[entity]) {
-            if (recurse) {
-                iterateEC2ObjectsAndCall(data[entity][i], eval(JSON.stringify(entities)), callback, callback_args);
-            } else {
-                callback(data[entity][i], callback_args);
-            };
-        };
-    };
-};
+function iterateEC2ObjectsAndCall (data, entities, callback, callbackArgs) {
+  if (entities.length > 0) {
+    var entity = entities.shift()
+    var recurse = entities.length
+    for (let i in data[entity]) {
+      if (recurse) {
+        iterateEC2ObjectsAndCall(data[entity][i], eval(JSON.stringify(entities)), callback, callbackArgs)
+      } else {
+        callback(data[entity][i], callbackArgs)
+      }
+    }
+  }
+}
 
 /**
  *
- * @param ec2_data
+ * @param ec2Data
  * @param entities
  * @param id
  * @returns {*}
  */
-function findEC2Object(ec2_data, entities, id) {
-    if (entities.length > 0) {
-        var entity = entities.shift();
-        var recurse = entities.length;
-        for (i in ec2_data[entity]) {
-            if (recurse) {
-                var object = findEC2Object(ec2_data[entity][i], eval(JSON.stringify(entities)), id);
-                if (object) {
-                    return object;
-                };
-            } else if (i == id) {
-                return ec2_data[entity][i];
-            };
-        };
-    };
-    return '';
-};
+function findEC2Object (ec2Data, entities, id) {
+  if (entities.length > 0) {
+    var entity = entities.shift()
+    var recurse = entities.length
+    for (let i in ec2Data[entity]) {
+      if (recurse) {
+        var object = findEC2Object(ec2Data[entity][i], eval(JSON.stringify(entities)), id)
+        if (object) {
+          return object
+        }
+      } else if (i === id) {
+        return ec2Data[entity][i]
+      }
+    }
+  }
+  return ''
+}
 
 /**
- *
- * @param ec2_data
+ * Finds EC2 object by attribute
+ * @param ec2Data
  * @param entities
  * @param attributes
  * @returns {*}
  */
-function findEC2ObjectByAttr(ec2_data, entities, attributes) {
-    if (entities.length > 0) {
-        var entity = entities.shift();
-        var recurse = entities.length;
-        for (i in ec2_data[entity]) {
-            if (recurse) {
-                var object = findEC2ObjectByAttr(ec2_data[entity][i], eval(JSON.stringify(entities)), attributes);
-                if (object) {
-                    return object;
-                };
-            } else {
-                var found = true;
-                for (attr in attributes) {
-                    // h4ck :: EC2 security groups in RDS are lowercased...
-                    if (ec2_data[entity][i][attr].toLowerCase() != attributes[attr].toLowerCase()) {
-                        found = false;
-                    };
-                };
-                if (found) {
-                    return ec2_data[entity][i];
-                };
-            };
-        };
-    };
-    return '';
-};
+function findEC2ObjectByAttr (ec2Data, entities, attributes) {
+  if (entities.length > 0) {
+    var entity = entities.shift()
+    var recurse = entities.length
+    for (let i in ec2Data[entity]) {
+      if (recurse) {
+        var object = findEC2ObjectByAttr(ec2Data[entity][i], eval(JSON.stringify(entities)), attributes)
+        if (object) {
+          return object
+        }
+      } else {
+        var found = true
+        for (let attr in attributes) {
+          // h4ck :: EC2 security groups in RDS are lowercased...
+          if (ec2Data[entity][i][attr].toLowerCase() != attributes[attr].toLowerCase()) {
+            found = false
+          }
+        }
+        if (found) {
+          return ec2Data[entity][i]
+        }
+      }
+    }
+  }
+  return ''
+}
 
 /**
- *
- * @param ec2_info
+ * Finds EC2 object attribute
+ * @param ec2Info
  * @param path
  * @param id
  * @param attribute
  * @returns {*}
  */
-function findEC2ObjectAttribute(ec2_info, path, id, attribute) {
-    var entities = path.split('.');
-    var object = findEC2Object(ec2_info, entities, id);
-    if (object[attribute]) {
-        return object[attribute];
-    };
-    return '';
-};
+function findEC2ObjectAttribute (ec2Info, path, id, attribute) {
+  var entities = path.split('.')
+  var object = findEC2Object(ec2Info, entities, id)
+  if (object[attribute]) {
+    return object[attribute]
+  }
+  return ''
+}
 
 /**
- *
+ * Finds and shows EC2 object
  * @param path
  * @param id
  */
-function findAndShowEC2Object(path, id) {
-    entities = path.split('.');
-    var object = findEC2Object(run_results['services']['ec2'], entities, id);
-    var etype = entities.pop();
-    if (etype == 'instances') {
-        showPopup(single_ec2_instance_template(object));
-    } else if (etype == 'security_groups') {
-        showPopup(single_ec2_security_group_template(object));
-    } else if (etype == 'vpcs') {
-        showPopup(single_vpc_template(object));
-    } else if (etype == 'network_acls') {
-        object['name'] = id;
-        showPopup(single_vpc_network_acl_template(object));
-    };
-
-};
+function findAndShowEC2Object (path, id) {
+  let entities = path.split('.')
+  if (getFormat() === resultFormats.json) {
+    var object = findEC2Object(runResults['services']['ec2'], entities, id)
+  } else if (getFormat() === resultFormats.sqlite) {
+    console.log('TODO (SQlite) 1')
+  }
+  var etype = entities.pop()
+  if (etype === 'instances') {
+    showPopup(single_ec2_instance_template(object))
+  } else if (etype === 'security_groups') {
+    showPopup(single_ec2_security_group_template(object))
+  } else if (etype === 'vpcs') {
+    showPopup(single_vpc_template(object))
+  } else if (etype === 'network_acls') {
+    object['name'] = id
+    showPopup(single_vpc_network_acl_template(object))
+  }
+}
 
 /**
- *
+ * Finds and shows EC2 object by attribute
  * @param path
  * @param attributes
  */
-function findAndShowEC2ObjectByAttr(path, attributes) {
-    entities = path.split('.');
-    var object = findEC2ObjectByAttr(run_results['services']['ec2'], entities, attributes);
-    var etype = entities.pop();
-    if (etype == 'security_groups') {
-        showPopup(single_ec2_security_group_template(object));
-    };
-};
+function findAndShowEC2ObjectByAttr (path, attributes) {
+  let entities = path.split('.')
+  if (getFormat() === resultFormats.json) {
+    var object = findEC2ObjectByAttr(runResults['services']['ec2'], entities, attributes)
+  } else if (getFormat() === resultFormats.sqlite) {
+    console.log('TODO (SQLite) 2')
+  }
+  var etype = entities.pop()
+  if (etype === 'security_groups') {
+    showPopup(single_ec2_security_group_template(object))
+  }
+}
 
 /**
- *
+ * Shows EC2 instance
  * @param data
  */
-function showEC2Instance2(data) {
-    showPopup(single_ec2_instance_template(data));
-};
+function showEC2Instance2 (data) {
+  showPopup(single_ec2_instance_template(data))
+}
 
 /**
- *
+ * Shows EC2 instance
  * @param region
  * @param vpc
  * @param id
  */
-function showEC2Instance(region, vpc, id) {
-    var data = run_results['services']['ec2']['regions'][region]['vpcs'][vpc]['instances'][id];
-    showPopup(single_ec2_instance_template(data));
-};
+function showEC2Instance (region, vpc, id) {
+  if (getFormat() === resultFormats.json) {
+    var data = runResults['services']['ec2']['regions'][region]['vpcs'][vpc]['instances'][id]
+  } else if (getFormat() === resultFormats.sqlite) {
+    console.log('TODO (SQLite) 3')
+  }
+  showPopup(single_ec2_instance_template(data))
+}
 
 /**
- *
+ * Shows EC2 security group
  * @param region
  * @param vpc
  * @param id
  */
-function showEC2SecurityGroup(region, vpc, id) {
-    var data = run_results['services']['ec2']['regions'][region]['vpcs'][vpc]['security_groups'][id];
-    showPopup(single_ec2_security_group_template(data));
-};
+function showEC2SecurityGroup (region, vpc, id) {
+  if (getFormat() === resultFormats.json) {
+    var data = runResults['services']['ec2']['regions'][region]['vpcs'][vpc]['security_groups'][id]
+  } else if (getFormat() === resultFormats.sqlite) {
+    console.log('TODO (SQLite) 4')
+  }
+  showPopup(single_ec2_security_group_template(data))
+}
 
 /**
- *
+ * Shows object
+ * @param {string} path
+ * @param {string} attrName
+ * @param {string} attrValue
  */
-function showObject(path, attr_name, attr_value) {
-    const path_array = path.split('.');
-    const path_length = path_array.length;
-    let data = getResource(path);
+function showObject (path, attrName, attrValue) {
+  const pathArray = path.split('.')
+  const pathLength = pathArray.length
+  let data = getResource(path)
 
-    // Adds the resource path values to the data context
-    for (let i = 0; i < path_length - 1; i += 2) {
-        if (i + 1 >= path_length) break;
+  // Adds the resource path values to the data context
+  for (let i = 0; i < pathLength - 1; i += 2) {
+    if (i + 1 >= pathLength) break
 
-        const attribute = makeResourceTypeSingular(path_array[i]);
-        data[attribute] = path_array[i + 1];
+    const attribute = makeResourceTypeSingular(pathArray[i])
+    data[attribute] = pathArray[i + 1]
+  }
+
+  // Filter if ...
+  let resourceType
+  if (attrName && attrValue) {
+    for (const resource in data) {
+      if (data[resource][attrName] !== attrValue) continue
+      data = data[resource]
+      break
     }
 
-    // Filter if ...
-    let resource_type;
-    if (attr_name && attr_value) {
-        for (const resource in data) {
-            if (data[resource][attr_name] !== attr_value) continue;
-            data = data[resource];
-            break;
-        };
+    resourceType = pathArray[1] + '_' + pathArray[pathLength - 1]
+  } else {
+    resourceType = pathArray[1] + '_' + pathArray[pathLength - 2]
+  }
 
-        resource_type = path_array[1] + '_' + path_array[path_length - 1];
-    } else {
-        resource_type = path_array[1] + '_' + path_array[path_length - 2];
-    };
-
-    resource = makeResourceTypeSingular(resource_type);
-    template = 'single_' + resource + '_template';
-    showPopup(window[template](data));
-};
+  let resource = makeResourceTypeSingular(resourceType)
+  let template = 'single_' + resource + '_template'
+  showPopup(window[template](data))
+}
 
 /**
  * Gets a resource from the run results.
- * @param {string} path 
+ * @param {string} path
  */
-function getResource(path) {
-    let data = run_results;
-    for (const attribute of path.split('.')) {
-        data = data[attribute];
-    };
-
-    return data;
+function getResource (path) {
+  let data = runResults
+  for (const attribute of path.split('.')) {
+    data = data[attribute]
+  }
+  return data
 }
 
 /**
  * Makes the resource type singular.
- * @param {string} resource_type 
+ * @param {string} resourceType
  */
-function makeResourceTypeSingular(resource_type) {
-    return resource_type.substring(0, resource_type.length - 1).replace(/\.?ie$/, "y");
+function makeResourceTypeSingular (resourceType) {
+  return resourceType.substring(0, resourceType.length - 1).replace(/\.?ie$/, 'y')
 }
 
 /**
- *
- * @param policy_id
+ * Displays IAM Managed Policy
+ * @param policyId
  */
-function showIAMManagedPolicy(policy_id) {
-    var data = run_results['services']['iam']['policies'][policy_id];
-    data['policy_id'] = policy_id;
-    showIAMPolicy(data);
-};
+function showIAMManagedPolicy (policyId) {
+  if (getFormat() === resultFormats.json) {
+    var data = runResults['services']['iam']['policies'][policyId]
+  } else if (getFormat() === resultFormats.sqlite) {
+    console.log('TODO (SQLite) 6')
+  }
+  data['policy_id'] = policyId
+  showIAMPolicy(data)
+}
 
 /**
- *
- * @param iam_entity_type
- * @param iam_entity_name
- * @param policy_id
+ * Displays IAM Inline Policy
+ * @param iamEntityType
+ * @param iamEntityName
+ * @param policyId
  */
-function showIAMInlinePolicy(iam_entity_type, iam_entity_name, policy_id) {
-    var data = run_results['services']['iam'][iam_entity_type][iam_entity_name]['inline_policies'][policy_id];
-    data['policy_id'] = policy_id;
-    showIAMPolicy(data);
-};
+function showIAMInlinePolicy (iamEntityType, iamEntityName, policyId) {
+  if (getFormat() === resultFormats.json) {
+    var data = runResults['services']['iam'][iamEntityType][iamEntityName]['inline_policies'][policyId]
+  } else if (getFormat() === resultFormats.sqlite) {
+    console.log('TODO (SQLite) 7')
+  }
+  data['policy_id'] = policyId
+  showIAMPolicy(data)
+}
 
 /**
- *
+ * Displays IAM Policy
  * @param data
  */
-function showIAMPolicy(data) {
-    showPopup(single_iam_policy_template(data));
-    var id = '#iam_policy_details-' + data['report_id'];
-    $(id).toggle();
-};
+function showIAMPolicy (data) {
+  showPopup(single_iam_policy_template(data))
+  var id = '#iam_policy_details-' + data['report_id']
+  $(id).toggle()
+}
 
 /**
- *
- * @param bucket_name
+ * Display S3 bucket
+ * @param bucketName
  */
-function showS3Bucket(bucket_name) {
-    var data = run_results['services']['s3']['buckets'][bucket_name];
-    showPopup(single_s3_bucket_template(data));
-};
+function showS3Bucket (bucketName) {
+  if (getFormat() === resultFormats.json) {
+    var data = runResults['services']['s3']['buckets'][bucketName]
+  } else if (getFormat() === resultFormats.sqlite) {
+    console.log('TODO (SQLite) 8')
+  }  
+  showPopup(single_s3_bucket_template(data))
+}
 
 /**
- *
- * @param bucket_id
- * @param key_id
+ * Displays S3 object
+ * @param bucketId
+ * @param keyId
  */
-function showS3Object(bucket_id, key_id) {
-    var data = run_results['services']['s3']['buckets'][bucket_id]['keys'][key_id];
-    data['key_id'] = key_id;
-    data['bucket_id'] = bucket_id;
-    showPopup(single_s3_object_template(data));
-};
+function showS3Object (bucketId, keyId) {
+  if (getFormat() === resultFormats.json) {
+    var data = runResults['services']['s3']['buckets'][bucketId]['keys'][keyId]
+  } else if (getFormat() === resultFormats.sqlite) {
+    console.log('TODO (SQLite) 9')
+  }
+  data['key_id'] = keyId
+  data['bucket_id'] = bucketId
+  showPopup(single_s3_object_template(data))
+}
 
 /**
- *
+ * Displays the popup
+ * @param {*} content
  */
-function showPopup(content) {
-    $('#modal-container').html(content);
-    $('#modal-container').modal();
-};
+function showPopup (content) {
+  $('#modal-container').html(content)
+  $('#modal-container').modal()
+}
+
+/**
+ * Get the format of the results that Scout Suite is reading from
+ */
+function getFormat () {
+  if (document.getElementById('sqlite_format')) {
+    return resultFormats.sqlite
+  } else if (document.getElementById('json_format')) {
+    return resultFormats.json
+  }
+  return resultFormats.invalid
+}
 
 /**
  * Set up dashboards and dropdown menus
  */
-function load_metadata() {
+function loadMetadata () {
+  if (getFormat() === resultFormats.json) {
+    runResults = getScoutsuiteResultsJson() 
+  } else if (getFormat() === resultFormats.sqlite) {
+    runResults = requestDb()
+    loadFirstPageEverywhere()
+  }
 
-    run_results = get_scoutsuite_results();
+  loadAccountId()
 
-    // Set title dynamically
-    $(function () {
-        3
-        $(document).attr("title", 'Scout Suite Report [' + run_results['account_id'] + ']');
-        4
-    });
+  loadConfig('last_run', 1, false)
+  loadConfig('metadata', 0, false)
+  loadConfig('services.id.findings', 1, false)
+  loadConfig('services.id.filters', 0, false) // service-specific filters
+  loadConfig('services.id.regions', 0, false) // region filters
 
-    load_account_id();
-    load_config_from_json('last_run', 1);
-    load_config_from_json('metadata', 0);
-    load_config_from_json('services.id.findings', 1);
-    load_config_from_json('services.id.filters', 0); // service-specific filters
-    load_config_from_json('services.id.regions', 0); // region filters
+  for (let group in runResults['metadata']) {
+    for (let service in runResults['metadata'][group]) {
+      if (service === 'summaries') {
+        continue
+      }
+      for (let section in runResults['metadata'][group][service]) {
+        for (let resourceType in runResults['metadata'][group][service][section]) {
+          addTemplates(group, service, section, resourceType,
+            runResults['metadata'][group][service][section][resourceType]['path'],
+            runResults['metadata'][group][service][section][resourceType]['cols'])
+        }
+      }
+    }
+  }
+  hidePleaseWait()
+}
 
-    for (group in run_results['metadata']) {
-        for (service in run_results['metadata'][group]) {
-            if (service == 'summaries') {
-                continue;
-            };
-            for (section in run_results['metadata'][group][service]) {
-                for (resource_type in run_results['metadata'][group][service][section]) {
-                    add_templates(group, service, section, resource_type,
-                        run_results['metadata'][group][service][section][resource_type]['path'],
-                        run_results['metadata'][group][service][section][resource_type]['cols']);
-                };
-            };
-        };
-    };
-
-    hidePleaseWait();
-};
-
-
-////////////////////////
-// Browsing functions //
-////////////////////////
-
+/**********************
+ * Browsing functions *
+ **********************/
 
 /**
  * Show About Scout Suite modal
  */
-function showAbout() {
-    $('#modal-container').html(about_scoutsuite_template());
-    $('#modal-container').modal();
-};
+function showAbout () {
+  $('#modal-container').html(about_scoutsuite_template())
+  $('#modal-container').modal()
+}
 
 /**
  * Hides Please Wait modal
  */
-function hidePleaseWait() {
-    $('#please-wait-modal').fadeOut(500, () => { });
-    $('#please-wait-backdrop').fadeOut(500, () => { });
-};
+function hidePleaseWait () {
+  $('#please-wait-modal').fadeOut(500, () => { })
+  $('#please-wait-backdrop').fadeOut(500, () => { })
+}
 
 /**
  * Shows last run details modal
  */
-function showLastRunDetails() {
-    $('#modal-container').html(last_run_details_template(run_results));
-    $('#modal-container').modal();
+function showLastRunDetails () {
+  $('#modal-container').html(last_run_details_template(runResults))
+  $('#modal-container').modal()
 }
 
 /**
  * Shows resources details modal
  */
 function showResourcesDetails() {
-    $('#modal-container').html(resources_details_template(run_results));
-    $('#modal-container').modal();
+  $('#modal-container').html(resources_details_template(runResults));
+  $('#modal-container').modal()
 }
+
 /**
  * Show main dashboard
  */
-function show_main_dashboard() {
-    hideAll();
-    // Hide filters
-    hideFilters();
-    $('#findings_download_button').hide();
-    showRowWithItems('account_id');
-    showRowWithItems('last_run');
-    $('#section_title-h2').text('');
-    // Remove URL hash
-    history.pushState("", document.title, window.location.pathname + window.location.search);
-    updateNavbar('');
-};
+function showMainDashboard () {
+  hideAll()
+  // Hide filters
+  hideFilters()
+  $('#findings_download_button').hide()
+  $('#paging_buttons').hide()
+  showRowWithItems('account_id')
+  showRowWithItems('last_run')
+  $('#section_title-h2').text('')
+  $('#section_paging-h2').text('')
+  // Remove URL hash
+  history.pushState('', document.title, window.location.pathname + window.location.search)
+  updateNavbar('')
+}
 
 /**
  * Make title from resource path
- * @param resource_path
- * @returns {string};
- */
-function makeTitle(resource_path) {
-    resource_path = resource_path.replace('service_groups.', '');
-    service = getService(resource_path);
-    resource = resource_path.split('.').pop();
-    resource = resource.replace(/_/g, ' ').replace('<', '').replace('>',
-        '').replace(/\w\S*/g, function (txt) {
-            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-        }).replace("Acl", "ACL").replace("Findings", "Dashboard");
-    return service + ' ' + resource;
-};
-
-/**
- *
- * @param resource_path
+ * @param {string} resourcePath
  * @returns {string}
  */
-function getService(resource_path) {
-    if (resource_path.startsWith('services')) {
-        service = resource_path.split('.')[1];
-    } else {
-        service = resource_path.split('.')[0];
-    };
-    service = make_title(service);
-    return service;
-};
+function makeTitleAcl (resourcePath) {
+  resourcePath = resourcePath.replace('service_groups.', '')
+  let service = getService(resourcePath)
+  let resource = resourcePath.split('.').pop()
+  resource = resource.replace(/_/g, ' ').replace('<', '').replace('>',
+    '').replace(/\w\S*/g, function (txt) {
+    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+  }).replace('Acl', 'ACL').replace('Findings', 'Dashboard')
+  return service + ' ' + resource
+}
+
+/**
+ * Returns the service
+ * @param {string} resourcePath
+ * @returns {string}
+ */
+function getService (resourcePath) {
+  if (resourcePath.startsWith('services')) {
+    var service = resourcePath.split('.')[1]
+  } else {
+    service = resourcePath.split('.')[0]
+  }
+  service = makeTitle(service)
+  return service
+}
 
 /**
  * Update title div's contents
- * @param title
+ * @param {string} title
  */
-function updateTitle(title) {
-    $("#section_title-h2").text(title);
-};
-
+function updateTitle (title) {
+  $('#section_title-h2').text(title)
+}
 
 /**
- * Update the DOM
+ * Updates the Document Object Model
  */
-function showPageFromHash() {
-    if (location.hash) {
-        updateDOM(location.hash);
-    } else {
-        updateDOM('');
-    };
-};
+function showPageFromHash () {
+  if (location.hash) {
+    updateDOM(location.hash)
+  } else {
+    updateDOM('')
+  }
+}
 
-window.onhashchange = showPageFromHash;
+window.onhashchange = showPageFromHash
 
 /**
  * Get value at given path
- * @param path
- * @returns {*};
+ * @param {string} path
+ * @returns {string}
  */
-function get_value_at(path) {
-    path_array = path.split('.');
-    value = run_results;
-    for (p in path_array) {
-        try {
-            value = value[path_array[p]];
-        } catch (err) {
-            console.log(err);
-        };
-    };
-    return value;
-};
+function getValueAt (path) {
+  let pathArray = path.split('.')
+  let value = runResults
+  for (let p in pathArray) {
+    try {
+      value = value[pathArray[p]]
+    } catch (err) {
+      console.log(err)
+    }
+  }
+  return value
+}
 
-var current_service_group = ''
-var current_resource_path = ''
+var currentResourcePath = ''
 
 /**
- *
- * @param anchor
+ * Updates the Document Object Model
+ * @param {string} anchor
  */
-function updateDOM(anchor) {
+function updateDOM (anchor) {
+  // Enable or disable the buttons depending on which page you are
+  updateButtons()
 
-    // Strip the # sign
-    var path = decodeURIComponent(anchor.replace('#', ''));
+  // Strip the # sign
+  var path = decodeURIComponent(anchor.replace('#', ''))
 
-    // Get resource path based on browsed-to path
-    var resource_path = get_resource_path(path);
+  // Get resource path based on browsed-to path
+  var resourcePath = getResourcePath(path)
 
-    updateNavbar(path);
+  updateNavbar(path)
 
-    // FIXME this is not a very good implementation
-    if (!path.endsWith('.findings') &&
-        !path.endsWith('.statistics') &&
-        !path.endsWith('.password_policy') &&
-        !path.endsWith('.permissions') &&
-        !path.endsWith('.<root_account>') &&
-        !path.endsWith('.external_attack_surface')) {
-        $('#findings_download_button').show();
+  // FIXME this is not a very good implementation
+  if (!path.endsWith('.findings') &&
+    !path.endsWith('.statistics') &&
+    !path.endsWith('.password_policy') &&
+    !path.endsWith('.permissions') &&
+    !path.endsWith('.<root_account>') &&
+    !path.endsWith('.external_attack_surface')) {
+    $('#findings_download_button').show()
+    $('#paging_buttons').show()
+  } else {
+    $('#findings_download_button').hide()
+    $('#paging_buttons').hide()
+  }
+
+  // Update title
+  if (path.endsWith('.items')) {
+    let title = getValueAt(path.replace('items', 'description'))
+    updateTitle(title)
+  } else {
+    let title = makeTitleAcl(resourcePath)
+    updateTitle(title)
+  }
+
+  // Clear findings highlighting
+  $('span').removeClass('finding-danger')
+  $('span').removeClass('finding-warning')
+
+  // DOM Update
+  if (path === '') {
+    showMainDashboard()
+  } else if (path.endsWith('.items')) {
+    // Switch view for findings
+    lazyLoadingJson(resourcePath)
+    hideAll()
+    hideItems(resourcePath)
+    hideLinks(resourcePath)
+    showRow(resourcePath)
+    showFindings(path, resourcePath)
+    currentResourcePath = resourcePath
+    showFilters(resourcePath)
+  } else if (lazyLoadingJson(resourcePath) == 0) {
+    // 0 is returned when the data was already loaded, a DOM update is necessary then
+    if (path.endsWith('.view')) {
+      // Same details, one item
+      hideItems(currentResourcePath)
+      showSingleItem(path)
+    } else if (currentResourcePath !== '' && resourcePath.match(currentResourcePath.replace(/.id./g, '\.[^.]+\.'))) {
+      // Same details, multiple items
+      hideItems(currentResourcePath)
+      showItems(path)
     } else {
-        $('#findings_download_button').hide();
-    };
+      // Switch view for resources
+      hideAll()
+      showRowWithItems(resourcePath)
+      showFilters(resourcePath)
+      currentResourcePath = resourcePath
+    }
+  } else {
+    // The DOM was updated by the lazy loading function, save the current resource path
+    showFilters(resourcePath)
+    currentResourcePath = resourcePath
+  }
 
-    // Update title
-    if (path.endsWith('.items')) {
-        title = get_value_at(path.replace('items', 'description'));
-        updateTitle(title);
-    } else {
-        title = makeTitle(resource_path);
-        updateTitle(title);
-    };
-
-    // Clear findings highlighting
-    $('span').removeClass('finding-danger');
-    $('span').removeClass('finding-warning');
-
-    // DOM Update
-    if (path == '') {
-        show_main_dashboard()
-    } else if (path.endsWith('.items')) {
-        // Switch view for findings
-        lazy_loading(resource_path);
-        hideAll();
-        hideItems(resource_path);
-        hideLinks(resource_path);
-        showRow(resource_path);
-        showFindings(path, resource_path);
-        current_resource_path = resource_path;
-        showFilters(resource_path);
-    } else if (lazy_loading(resource_path) == 0) {
-        // 0 is returned when the data was already loaded, a DOM update is necessary then
-        if (path.endsWith('.view')) {
-            // Same details, one item
-            hideItems(current_resource_path);
-            showSingleItem(path);
-        } else if (current_resource_path != '' && resource_path.match(current_resource_path.replace(/.id./g, '\.[^.]+\.'))) {
-            // Same details, multiple items
-            hideItems(current_resource_path);
-            showItems(path);
-        } else {
-            // Switch view for resources
-            hideAll();
-            showRowWithItems(resource_path);
-            showFilters(resource_path);
-            current_resource_path = resource_path;
-        };
-        // TODO: Highlight all findings...
-
-    } else {
-        // The DOM was updated by the lazy loading function, save the current resource path
-        showFilters(resource_path);
-        current_resource_path = resource_path;
-    };
-
-    // Scroll to the top
-    window.scrollTo(0, 0);
-};
-
+  // Scroll to the top
+  window.scrollTo(0, 0)
+}
 
 /**
- *
- * @param path
- * @returns {number};
+ * Lazy loading
+ * @param {string} path
+ * @returns {number}
  */
-// TODO: merge into load_config_from_json...
-function lazy_loading(path) {
-    var cols = 1;
-    var resource_path_array = path.split('.')
-    var service = resource_path_array[1];
-    var resource_type = resource_path_array[resource_path_array.length - 1];
-    for (group in run_results['metadata']) {
-        if (service in run_results['metadata'][group]) {
-            if (service == 'summaries') {
-                continue;
-            };
-            if (resource_type in run_results['metadata'][group][service]['resources']) {
-                var cols = run_results['metadata'][group][service]['resources'][resource_type]['cols'];
-            };
-            break
-        };
-    };
-    return load_config_from_json(path, cols);
-};
-
+function lazyLoadingJson (path) {
+  var cols = 1
+  var resourcePathArray = path.split('.')
+  var service = resourcePathArray[1]
+  var resourceType = resourcePathArray[resourcePathArray.length - 1]
+  for (let group in runResults['metadata']) {
+    if (service in runResults['metadata'][group]) {
+      if (resourceType in runResults['metadata'][group][service]['resources']) {
+        cols = runResults['metadata'][group][service]['resources'][resourceType]['cols']
+      }
+      break
+    }
+  }
+  return loadConfig(path, cols, false)
+}
 
 /**
  * Get the resource path based on a given path
  * @param path
- * @returns {*|string};
+ * @returns {string}
  */
-function get_resource_path(path) {
-    if (path.endsWith('.items')) {
-        var resource_path = get_value_at(path.replace('items', 'display_path'));
-        if (resource_path == undefined) {
-            resource_path = get_value_at(path.replace('items', 'path'));
-        };
-        resource_path_array = resource_path.split('.');
-        last_value = resource_path_array.pop();
-        resource_path = 'services.' + resource_path_array.join('.');
-    } else if (path.endsWith('.view')) {
-        // Resource path is not changed (this may break when using `back' button in browser)
-        var resource_path = current_resource_path;
-    } else {
-        var resource_path = path;
-    };
-    return resource_path;
-};
-
+function getResourcePath (path) {
+  if (path.endsWith('.items')) {
+    var resourcePath = getValueAt(path.replace('items', 'display_path'))
+    if (resourcePath === undefined) {
+      resourcePath = getValueAt(path.replace('items', 'path'))
+    }
+    let resourcePathArray = resourcePath.split('.')
+    resourcePathArray.pop()
+    resourcePath = 'services.' + resourcePathArray.join('.')
+  } else if (path.endsWith('.view')) {
+    // Resource path is not changed (this may break when using `back' button in browser)
+    resourcePath = currentResourcePath
+  } else {
+    resourcePath = path
+  }
+  return resourcePath
+}
 
 /**
  * Format title
  * @param title
- * @returns {string};
+ * @returns {string}
  */
-function make_title(title) {
-    if (typeof (title) != "string") {
-        console.log("Error: received title " + title + " (string expected).");
-        return title.toString();
-    };
-    title = title.toLowerCase();
-    if (['ec2', 'efs', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) != -1) {
-        return title.toUpperCase();
-    } else if (title == 'cloudtrail') {
-        return 'CloudTrail';
-    } else if (title == 'cloudwatch') {
-        return 'CloudWatch';
-    } else if (title == 'cloudformation') {
-        return 'CloudFormation';
-    } else if (title == 'config') {
-        return 'Config';
-    } else if (title == 'awslambda') {
-        return 'Lambda';
-    } else if (title == 'dynamodb') {
-        return 'DynamoDB';
-    } else if (title == 'elasticache') {
-        return 'ElastiCache';
-    } else if (title == 'redshift') {
-        return 'RedShift';
-    } else if (title == 'cloudstorage') {
-        return 'Cloud Storage';
-    } else if (title == 'cloudsql') {
-        return 'Cloud SQL';
-    } else if (title == 'stackdriverlogging') {
-        return 'Stackdriver Logging';
-    } else if (title == 'stackdrivermonitoring') {
-        return 'Stackdriver Monitoring';
-    } else if (title == 'computeengine') {
-        return 'Compute Engine';
-    } else if (title == 'kubernetesengine') {
-        return 'Kubernetes Engine';
-    } else if (title == 'cloudresourcemanager') {
-        return 'Cloud Resource Manager';
-    } else if (title == 'storageaccounts') {
-        return 'Storage Accounts';
-    } else if (title == 'sqldatabase') {
-        return 'SQL Database';
-    } else if (title == 'securitycenter') {
-        return 'Security Center';
-    } else if (title == 'network') {
-        return 'Network';
-    } else if (title == 'keyvault') {
-        return 'Key Vault';
-    } else if (title == 'appgateway') {
-        return 'Application Gateway';
-    } else if (title == 'rediscache') {
-        return 'Redis Cache';
-    } else if (title == 'appservice') {
-        return 'App Service';
-    } else if (title == 'loadbalancer') {
-        return 'Load Balancer';
-    } else {
-        return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ');
-    };
-};
-
-/**
- * Toggles between truncated and full lenght bucket name
- */
-function toggleName(name) {
-    if (name.style.display !== 'contents') {
-        name.style.display = 'contents'
-    } else {
-        name.style.display = 'block'
-    }
+function makeTitle (title) {
+  if (typeof (title) !== 'string') {
+    console.log('Error: received title ' + title + ' (string expected).')
+    return title.toString()
+  }
+  title = title.toLowerCase()
+  if (['ec2', 'efs', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) !== -1) {
+    return title.toUpperCase()
+  } else if (title === 'cloudtrail') {
+    return 'CloudTrail'
+  } else if (title === 'cloudwatch') {
+    return 'CloudWatch'
+  } else if (title === 'cloudformation') {
+    return 'CloudFormation'
+  } else if (title === 'config') {
+    return 'Config'
+  } else if (title === 'awslambda') {
+    return 'Lambda'
+  } else if (title === 'dynamodb') {
+    return 'DynamoDB'
+  } else if (title === 'elasticache') {
+    return 'ElastiCache'
+  } else if (title === 'redshift') {
+    return 'RedShift'
+  } else if (title === 'cloudstorage') {
+    return 'Cloud Storage'
+  } else if (title === 'cloudsql') {
+    return 'Cloud SQL'
+  } else if (title === 'stackdriverlogging') {
+    return 'Stackdriver Logging'
+  } else if (title === 'stackdrivermonitoring') {
+    return 'Stackdriver Monitoring'
+  } else if (title === 'computeengine') {
+    return 'Compute Engine'
+  } else if (title === 'kubernetesengine') {
+    return 'Kubernetes Engine'
+  } else if (title === 'cloudresourcemanager') {
+    return 'Cloud Resource Manager'
+  } else if (title === 'storageaccounts') {
+    return 'Storage Accounts'
+  } else if (title === 'sqldatabase') {
+    return 'SQL Database'
+  } else if (title === 'securitycenter') {
+    return 'Security Center'
+  } else if (title === 'network') {
+    return 'Network'
+  } else if (title === 'keyvault') {
+    return 'Key Vault'
+  } else if (title === 'appgateway') {
+    return 'Application Gateway'
+  } else if (title === 'rediscache') {
+    return 'Redis Cache'
+  } else if (title === 'appservice') {
+    return 'App Service'
+  } else if (title === 'loadbalancer') {
+    return 'Load Balancer'
+  } else {
+    return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ')
+  }
 }
 
 /**
- * Add one or
+ * Toggles between truncated and full lenght bucket name
+ * @param {string} name           Name of the bucket
+ */
+function toggleName (name) {
+  if (name.style.display !== 'contents') {
+    name.style.display = 'contents'
+  } else {
+    name.style.display = 'block'
+  }
+}
+
+/**
+ * Add one or multiple
  * @param group
  * @param service
  * @param section
- * @param resource_type
+ * @param resourceType
  * @param path
  * @param cols
  */
-function add_templates(group, service, section, resource_type, path, cols) {
-    if (cols == undefined) {
-        cols = 2;
-    };
-    add_template(group, service, section, resource_type, path, 'details');
-    if (cols > 1) {
-        add_template(group, service, section, resource_type, path, 'list');
-    };
-};
+function addTemplates (group, service, section, resourceType, path, cols) {
+  if (cols === undefined) {
+    cols = 2
+  }
+  addTemplate(group, service, section, resourceType, path, 'details')
+  if (cols > 1) {
+    addTemplate(group, service, section, resourceType, path, 'list')
+  }
+}
 
 /**
  * Add resource templates
  * @param group
  * @param service
  * @param section
- * @param resource_type
+ * @param resourceType
  * @param path
  * @param suffix
  */
-function add_template(group, service, section, resource_type, path, suffix) {
-    var template = document.createElement("script");
-    template.type = "text/x-handlebars-template";
-    template.id = path + "." + suffix + ".template";
-    if (section == 'resources') {
-        if (suffix == 'list') {
-            if (path.indexOf('.vpcs.id.') > 0) {
-                partial_name = 'left_menu_for_vpc';
-            } else if (path.indexOf('.regions.id.') > 0) {
-                partial_name = 'left_menu_for_region';
-            } else if (path.indexOf('.projects.id.') > 0) {
-                partial_name = 'left_menu_for_project';
-            } else {
-                partial_name = 'left_menu';
-            };
-        } else if (suffix == 'details') {
-            if (path.indexOf('.vpcs.id.') > 0) {
-                partial_name = 'details_for_vpc';
-            } else if (path.indexOf('.regions.id.') > 0) {
-                partial_name = 'details_for_region';
-            } else if (path.indexOf('.projects.id.') > 0) {
-                partial_name = 'details_for_project';
-            } else {
-                partial_name = 'details';
-            };
-        } else {
-            console.log('Invalid suffix (' + suffix + ') for resources template.');
-        };
-        template.innerHTML = "{{> " + partial_name + " service_group = '" + group + "' service_name = '" + service + "' resource_type = '" + resource_type + "' partial_name = '" + path + "'}}";
-        $('body').append(template);
-    };
-};
+function addTemplate (group, service, section, resourceType, path, suffix) {
+  var template = document.createElement('script')
+  var partialName = ''
+  template.type = 'text/x-handlebars-template'
+  template.id = path + '.' + suffix + '.template'
+  if (section === 'resources') {
+    if (suffix === 'list') {
+      if (path.indexOf('.vpcs.id.') > 0) {
+        partialName = 'left_menu_for_vpc'
+      } else if (path.indexOf('.regions.id.') > 0) {
+        partialName = 'left_menu_for_region'
+      } else if (path.indexOf('.projects.id.') > 0) {
+        partialName = 'left_menu_for_project'
+      } else {
+        partialName = 'left_menu'
+      }
+    } else if (suffix === 'details') {
+      if (path.indexOf('.vpcs.id.') > 0) {
+        partialName = 'details_for_vpc'
+      } else if (path.indexOf('.regions.id.') > 0) {
+        partialName = 'details_for_region'
+      } else if (path.indexOf('.projects.id.') > 0) {
+        partialName = 'details_for_project'
+      } else {
+        partialName = 'details'
+      }
+    } else {
+      console.log('Invalid suffix (' + suffix + ') for resources template.')
+    }
+    template.innerHTML = '{{> ' + partialName + " service_group = '" + group + "' service_name = '" + service + "' resource_type = '" + resourceType + "' partial_name = '" + path + "'}}"
+    $('body').append(template)
+  }
+}
 
 /**
  * Rules generator
  * @param group
  * @param service
  */
-function filter_rules(group, service) {
-    if (service == undefined) {
-        $("[id*='rule-']").show();
-    } else {
-        $("[id*='rule-']").not("[id*='rule-" + service + "']").hide();
-        $("[id*='rule-" + service + "']").show();
-    };
-    var id = "groups." + group + ".list";
-    $("[id='" + id + "']").hide();
-};
+function filterRules (group, service) {
+  if (service === undefined) {
+    $("[id*='rule-']").show()
+  } else {
+    $("[id*='rule-']").not("[id*='rule-" + service + "']").hide()
+    $("[id*='rule-" + service + "']").show()
+  }
+  var id = 'groups.' + group + '.list'
+  $("[id='" + id + "']").hide()
+}
 
-function download_configuration(configuration, name, prefix) {
+/**
+ * Downloads the configuration
+ * @param {object} configuration
+ * @param {string} name
+ * @param {string} prefix
+ */
+function downloadConfiguration (configuration, name, prefix) {
+  var uriContent = 'data:text/json;charset=utf-8,' + encodeURIComponent(prefix + JSON.stringify(configuration, null, 4))
+  var dlAnchorElem = document.getElementById('downloadAnchorElem')
+  dlAnchorElem.setAttribute('href', uriContent)
+  dlAnchorElem.setAttribute('download', name + '.json')
+  dlAnchorElem.click()
+}
 
-    var uriContent = "data:text/json;charset=utf-8," + encodeURIComponent(prefix + JSON.stringify(configuration, null, 4));
-    var dlAnchorElem = document.getElementById('downloadAnchorElem');
-    dlAnchorElem.setAttribute("href", uriContent);
-    dlAnchorElem.setAttribute("download", name + '.json');
-    dlAnchorElem.click();
-};
+/**
+ * Downloads execptions
+ */
+function downloadExceptions () {
+  var url = window.location.pathname
+  var profileName = url.substring(url.lastIndexOf('/') + 1).replace('report-', '').replace('.html', '')
+  console.log(exceptions)
+  downloadConfiguration(exceptions, 'exceptions-' + profileName, 'exceptions = \n')
+}
 
-function download_exceptions() {
-    var url = window.location.pathname;
-    var profile_name = url.substring(url.lastIndexOf('/') + 1).replace('report-', '').replace('.html', '');
-    console.log(exceptions);
-    download_configuration(exceptions, 'exceptions-' + profile_name, 'exceptions = \n');
-};
+/**
+ * Shows an element
+ * @param {string} elementId
+ */
+var showElement = function (elementId) {
+  $('#' + elementId).show()
+}
 
-var show_element = function (element_id) {
-    $('#' + element_id).show();
-};
+/**
+ * Hides an element
+ * @param {string} elementId
+ */
+var hideElement = function (elementId) {
+  $('#' + elementId).hide()
+}
 
-var hide_element = function (element_id) {
-    $('#' + element_id).hide();
-};
+/**
+ * Toggles an element
+ * @param {string} elementId
+ */
+var toggleElement = function (elementId) {
+  $('#' + elementId).toggle()
+}
 
-var toggle_element = function (element_id) {
-    $('#' + element_id).toggle();
-};
-
-function set_filter_url(region) {
-    tmp = location.hash.split('.');
-    tmp[3] = region;
-    location.hash = tmp.join('.');
-};
+/**
+ * Sets the url to filter a specific region
+ * @param {string} region
+ */
+function setFilterUrl (region) {
+  let tmp = location.hash.split('.')
+  tmp[3] = region
+  location.hash = tmp.join('.')
+}
 
 /**
  * Returns a csv file to download
@@ -1195,66 +1304,72 @@ function set_filter_url(region) {
  * @param filename
  * @param rows
  */
-function download_as_csv(filename, rows) {
-    var processRow = function (row) {
-        var finalVal = '';
-        for (var j = 0; j < row.length; j++) {
-            var innerValue = row[j] === null ? '' : row[j].toString();
-            if (row[j] instanceof Date) {
-                innerValue = row[j].toLocaleString();
-            };
-            ;
-            var result = innerValue.replace(/"/g, '""');
-            if (result.search(/("|,|\n)/g) >= 0)
-                result = '"' + result + '"';
-            if (j > 0)
-                finalVal += ',';
-            finalVal += result;
-        };
-        return finalVal + '\n';
-    };
+function downloadAsCsv (filename, rows) {
+  var processRow = function (row) {
+    var finalVal = ''
+    for (var j = 0; j < row.length; j++) {
+      var innerValue = row[j] === null ? '' : row[j].toString()
+      if (row[j] instanceof Date) {
+        innerValue = row[j].toLocaleString()
+      }
 
-    var csvFile = '';
-    for (var i = 0; i < rows.length; i++) {
-        csvFile += processRow(rows[i]);
-    };
+      var result = innerValue.replace(/"/g, '""')
+      if (result.search(/("|,|\n)/g) >= 0) {
+        result = '"' + result + '"'
+      }
+      if (j > 0) {
+        finalVal += ','
+      }
+      finalVal += result
+    }
+    return finalVal + '\n'
+  }
 
-    var blob = new Blob([csvFile], { type: 'text/csv;charset=utf-8;' });
-    if (navigator.msSaveBlob) { // IE 10+
-        navigator.msSaveBlob(blob, filename);
-    } else {
-        var link = document.createElement("a");
-        if (link.download !== undefined) { // feature detection
-            // Browsers that support HTML5 download attribute
-            var url = URL.createObjectURL(blob);
-            link.setAttribute("href", url);
-            link.setAttribute("download", filename);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        };
-    };
-};
+  var csvFile = ''
+  for (var i = 0; i < rows.length; i++) {
+    csvFile += processRow(rows[i])
+  }
 
-function download_as_json(filename, dict) {
+  var blob = new Blob([csvFile], { type: 'text/csv;charset=utf-8;' })
+  if (navigator.msSaveBlob) { // IE 10+
+    navigator.msSaveBlob(blob, filename)
+  } else {
+    var link = document.createElement('a')
+    if (link.download !== undefined) { // feature detection
+      // Browsers that support HTML5 download attribute
+      var url = URL.createObjectURL(blob)
+      link.setAttribute('href', url)
+      link.setAttribute('download', filename)
+      link.style.visibility = 'hidden'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
+  }
+}
 
-    var json_str = JSON.stringify(dict);
+/**
+  * Downloads the dictionary as a .json file
+  * @param {string} filename
+  * @param {object} dict
+  */
+function downloadAsJson (filename, dict) {
+  var jsonStr = JSON.stringify(dict)
 
-    var blob = new Blob([json_str], { type: 'application/json;' });
-    if (navigator.msSaveBlob) { // IE 10+
-        navigator.msSaveBlob(blob, filename);
-    } else {
-        var link = document.createElement("a");
-        if (link.download !== undefined) { // feature detection
-            // Browsers that support HTML5 download attribute
-            var url = URL.createObjectURL(blob);
-            link.setAttribute("href", url);
-            link.setAttribute("download", filename);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        };
-    };
+  var blob = new Blob([jsonStr], { type: 'application/json;' })
+  if (navigator.msSaveBlob) { // IE 10+
+    navigator.msSaveBlob(blob, filename)
+  } else {
+    var link = document.createElement('a')
+    if (link.download !== undefined) { // feature detection
+      // Browsers that support HTML5 download attribute
+      var url = URL.createObjectURL(blob)
+      link.setAttribute('href', url)
+      link.setAttribute('download', filename)
+      link.style.visibility = 'hidden'
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
+  }
 }

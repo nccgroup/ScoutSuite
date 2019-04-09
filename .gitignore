@@ -50,6 +50,7 @@ tests/data/ruleset-test.json
 scoutsuite-report*
 inc-scoutsuite-run*
 report-*
+*.db
 
 # PyCharm
 .idea/

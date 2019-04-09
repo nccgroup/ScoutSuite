@@ -63,13 +63,9 @@ may result in the process being killed.
 
 Scout Suite is written in Python and supports the following versions:
 
--   2.7
--   3.4
 -   3.5
 -   3.6
 -   3.7
-
-**WARNING**: Python 2.7 & 3.4 support is planned to be deprecated in the following releases.
 
 The required libraries can be found in the
 [requirements.txt](https://github.com/nccgroup/ScoutSuite/blob/master/requirements.txt) file.

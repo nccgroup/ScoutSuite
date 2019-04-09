@@ -1,0 +1,18 @@
+<!-- Element to notify Scout Suite that we are reading a report in sqlite format -->
+<script id="sqlite_format" type="text/x-handlebars-template"></script>
+<script>
+    Handlebars.registerPartial("sqlite_format", document.getElementById("sqlite_format").innerHTML);
+
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "inc-scoutsuite/sqlite.js";
+    $("head").append(script);
+</script>
+
+<!-- Import sqlite related functions -->
+<script>
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = "inc-scoutsuite/sqlite.js";
+    $("head").append(script);
+</script>
