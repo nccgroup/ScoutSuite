@@ -1108,6 +1108,10 @@ function add_template(group, service, section, resource_type, path, suffix) {
         if (suffix == 'list') {
             if (path.indexOf('.vpcs.id.') > 0) {
                 partial_name = 'left_menu_for_vpc';
+            } else if (path.indexOf('projects.id.zones.id.') > 0) {
+                partial_name = 'left_menu_for_gcp_zone';
+            } else if (path.indexOf('projects.id.regions.id.') > 0) {
+                partial_name = 'left_menu_for_gcp_region';
             } else if (path.indexOf('.regions.id.') > 0) {
                 partial_name = 'left_menu_for_region';
             } else if (path.indexOf('.projects.id.') > 0) {
@@ -1118,6 +1122,10 @@ function add_template(group, service, section, resource_type, path, suffix) {
         } else if (suffix == 'details') {
             if (path.indexOf('.vpcs.id.') > 0) {
                 partial_name = 'details_for_vpc';
+            } else if (path.indexOf('projects.id.zones.id') > 0) {
+                partial_name = 'details_for_gcp_zone';
+            } else if (path.indexOf('projects.id.regions.id') > 0) {
+                partial_name = 'details_for_gcp_region';
             } else if (path.indexOf('.regions.id.') > 0) {
                 partial_name = 'details_for_region';
             } else if (path.indexOf('.projects.id.') > 0) {
