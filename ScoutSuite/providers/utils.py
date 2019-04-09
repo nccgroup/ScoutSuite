@@ -1,8 +1,6 @@
 import asyncio
 from hashlib import sha1
 
-from ScoutSuite.core.console import print_exception
-
 
 def get_non_provider_id(name):
     """
@@ -38,7 +36,8 @@ async def get_and_set_concurrently(get_and_set_funcs: [], entities: [], **kwargs
     :param get_and_set_funcs: list of functions that takes a region and an entity (they must have the following
     signature: region: str, entity: {}) and then fetch and set some kind of attributes to this entity.
     :param entities: list of a same kind of entities
-    :param region: a region
+    :param kwargs: used to pass cloud provider specific parameters (ex: region or vpc for AWS, etc.) to the given
+    functions.
 
     :return:
     """
@@ -56,10 +55,13 @@ async def get_and_set_concurrently(get_and_set_funcs: [], entities: [], **kwargs
 
 async def map_concurrently(coroutine, entities, **kwargs):
     """
-    Given a list of entities, executes coroutine `coroutine` concurrently on each entity and returns a list of the obtained
-    results ([await coro(entity_x), await coro(entity_a), ..., await coro(entity_z)]).
+    Given a list of entities, executes coroutine `coroutine` concurrently on each entity and returns a list of the
+    obtained results ([await coroutine(entity_x), await coroutine(entity_a), ..., await coroutine(entity_z)]).
 
     :param coroutine: coroutine to be executed concurrently. Takes an entity as parameter and returns a new entity.
+    If the given coroutine does some exception handling, it should ensure to propagate the handled exceptions so
+    `map_concurrently` can handle them as well (in particular ignoring them) to avoid `None` values in the list
+    returned.
     :param entities: a list of the same type of entity (ex: cluster ids)
 
     :return: a list of new entities (ex: clusters)
@@ -77,7 +79,11 @@ async def map_concurrently(coroutine, entities, **kwargs):
     }
 
     for task in asyncio.as_completed(tasks):
-        result = await task
-        results.append(result)
+        try:
+            result = await task
+        except Exception:
+            pass
+        else:
+            results.append(result)
 
     return results
