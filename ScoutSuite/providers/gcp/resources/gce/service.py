@@ -16,13 +16,17 @@ class ComputeEngine(Projects):
 
     async def fetch_all(self, **kwargs):
         await Projects.fetch_all(self, **kwargs)
+        # Instances and Subnetworks are resources with 2 levels of filtering 
+        # (project and region/zone), so we need to propagate their count up.
+        # Normally this would be done by setting the resource counts in the Regions
+        # and Zones classes, but having a "resource_name_count" field in their 
+        # dictionary causes errors in the rule engine since they are accessed
         instances_count = 0
-        for project in self['projects'].values():
-            for zone in project['zones'].values():
-                    instances_count += zone['instances_count']
-        self['instances_count'] = instances_count
         subnetworks_count = 0
         for project in self['projects'].values():
+            for zone in project['zones'].values():
+                instances_count += zone['instances_count']
             for region in project['regions'].values():
-                    subnetworks_count += region['subnetworks_count']
+                subnetworks_count += region['subnetworks_count']
+        self['instances_count'] = instances_count
         self['subnetworks_count'] = subnetworks_count
