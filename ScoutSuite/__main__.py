@@ -5,16 +5,50 @@ import webbrowser
 
 from concurrent.futures import ThreadPoolExecutor
 
-from ScoutSuite.output.report_file import ReportFile
+from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
 from ScoutSuite.core.console import set_config_debug_level, print_info, print_exception
 from ScoutSuite.core.exceptions import RuleExceptions
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset
 from ScoutSuite.core.server import Server
 from ScoutSuite.output.html import ScoutReport
+from ScoutSuite.output.report_file import ReportFile
 from ScoutSuite.output.utils import get_filename
 from ScoutSuite.providers import get_provider
 from ScoutSuite.providers.base.authentication_strategy_factory import get_authentication_strategy
+
+
+def run_from_cli():
+    parser = ScoutSuiteArgumentParser()
+    args = parser.parse_args()
+
+    # Get the dictionary to get None instead of a crash
+    args = args.__dict__
+
+    run(args.get('provider'),
+        args.get('profile'),
+        args.get('user_account'), args.get('service_account'),
+        args.get('cli'), args.get('msi'), args.get('service_principal'), args.get('file_auth'), args.get('tenant_id'),
+        args.get('subscription_id'),
+        args.get('client_id'), args.get('client_secret'),
+        args.get('username'), args.get('password'),
+        args.get('project_id'), args.get('folder_id'), args.get('organization_id'), args.get('all_projects'),
+        args.get('report_name'), args.get('report_dir'),
+        args.get('timestamp'),
+        args.get('services'), args.get('skipped_services'),
+        args.get('thread_config'),  # todo deprecate
+        args.get('result_format'),
+        args.get('database_name'),
+        args.get('host_ip'),
+        args.get('host_port'),
+        args.get('max_workers'),
+        args.get('regions'),
+        args.get('fetch_local'), args.get('update'),
+        args.get('ip_ranges'), args.get('ip_ranges_name_key'),
+        args.get('ruleset'), args.get('exceptions'),
+        args.get('force_write'),
+        args.get('debug'),
+        args.get('no_browser'))
 
 
 def run(provider,
