@@ -40,7 +40,7 @@ The following cloud providers are currently supported/planned:
 Install via `pip`:
 
     $ pip install scoutsuite
-    $ scout.py --help
+    $ scout --help
 
 Install from source:
 
