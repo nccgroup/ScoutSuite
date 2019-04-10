@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from __future__ import print_function
 from __future__ import unicode_literals
 
@@ -8,7 +6,7 @@ import json
 import sys
 
 from ScoutSuite import __version__ as scout_version
-from ScoutSuite.core.console import print_exception, print_info
+from ScoutSuite.core.console import print_exception, print_info, print_error
 from ScoutSuite.output.html import ScoutReport
 from ScoutSuite.providers.base.configs.browser import get_object_at
 
@@ -113,7 +111,7 @@ class BaseProvider(object):
         error = False
         for service in services + skipped_services:
             if service not in supported_services:
-                print_exception('Service \"{}\" does not exist, skipping.'.format(service))
+                print_error('Service \"{}\" does not exist, skipping'.format(service))
                 error = True
         if error:
             print_info('Available services are: {}'.format(str(list(supported_services)).strip('[]')))
@@ -298,7 +296,7 @@ class BaseProvider(object):
         """
         try:
             key = path.pop(0)
-            if not current_config:
+            if not current_config and hasattr(self, 'config'):
                 current_config = self.config
             if not current_path:
                 current_path = []
