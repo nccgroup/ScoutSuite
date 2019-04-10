@@ -298,7 +298,7 @@ class BaseProvider(object):
         """
         try:
             key = path.pop(0)
-            if not current_config:
+            if not current_config and hasattr(self, 'config'):
                 current_config = self.config
             if not current_path:
                 current_path = []
