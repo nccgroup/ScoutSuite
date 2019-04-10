@@ -15,7 +15,7 @@ class TestScoutSuiteClass:
 
     @staticmethod
     def call_scout_suite(args):
-        args = ['./Scout.py'] + args
+        args = ['./scout.py'] + args
 
         args.append('aws')
 
@@ -39,7 +39,7 @@ class TestScoutSuiteClass:
     # Make sure that ScoutSuite does not crash with --help
     #
     def test_scout_suite_help(self):
-        command = './Scout.py --help'
+        command = './scout.py --help'
         process = subprocess.Popen(command, shell=True, stdout=None)
         process.wait()
         assert process.returncode == 0
