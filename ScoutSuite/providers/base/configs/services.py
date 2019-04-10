@@ -13,12 +13,13 @@ class BaseServicesConfig(object):
     def _is_provider(self, provider_name):
         return False
 
-    async def fetch(self, services=None, regions=None):
-        # If services is set to None, fetch all services:
-        services = vars(self) if services is None else services
-        regions = [] if regions is None else regions
+    async def fetch(self, services: list, regions: list):
 
-        # First, print services that are going to get skipped:
+        if not services:
+            print_debug('No services to scan')
+            return
+
+        # Print services that are going to get skipped:
         for service in vars(self):
             if service not in services:
                 print_debug('Skipping the {} service'.format(format_service_name(service)))
