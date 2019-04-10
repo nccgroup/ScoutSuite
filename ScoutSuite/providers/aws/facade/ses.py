@@ -21,7 +21,7 @@ class SESFacade(AWSBaseFacade):
             )
         except Exception as e:
             print_exception('Failed to get SES DKIM attributes: {}'.format(e))
-            dkim_attributes = None
+            raise
         return identity_name, dkim_attributes
 
     async def get_identity_policies(self, region: str, identity_name: str):

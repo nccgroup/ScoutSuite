@@ -29,6 +29,6 @@ class SQSFacade(AWSBaseFacade):
             )
         except Exception as e:
             print_exception('Failed to get SQS queue attributes: {}'.format(e))
-            queue_attributes = None
+            raise
 
         return queue_url, queue_attributes

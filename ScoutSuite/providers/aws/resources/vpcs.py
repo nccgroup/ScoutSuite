@@ -13,25 +13,17 @@ class Vpcs(AWSCompositeResources):
         self.add_ec2_classic = add_ec2_classic
 
     async def fetch_all(self, **kwargs):
+        raw_vpcs = await self.facade.ec2.get_vpcs(self.scope['region'])
 
-        try:
-            raw_vpcs = await self.facade.ec2.get_vpcs(self.scope['region'])
-        except Exception as e:
-            print_exception('Failed to get VPCs for region {}: {}'.format(self.scope['region'], e))
-        else:
-            if raw_vpcs:
-                for raw_vpc in raw_vpcs:
-                    vpc_id, vpc = self._parse_vpc(raw_vpc)
-                    self[vpc_id] = vpc
+        for raw_vpc in raw_vpcs:
+            vpc_id, vpc = self._parse_vpc(raw_vpc)
+            self[vpc_id] = vpc
 
-                try:
-                    await self._fetch_children_of_all_resources(
-                        resources=self,
-                        scopes={vpc_id: {'region': self.scope['region'], 'vpc': vpc_id}
-                                for vpc_id in self}
-                    )
-                except Exception as e:
-                    print_exception('Failed to fetch resources for VPC {}: {}'.format(vpc_id, e))
+        await self._fetch_children_of_all_resources(
+            resources=self,
+            scopes={vpc_id: {'region': self.scope['region'], 'vpc': vpc_id}
+                    for vpc_id in self}
+        )
 
     def _parse_vpc(self, vpc):
         return vpc['VpcId'], {}
