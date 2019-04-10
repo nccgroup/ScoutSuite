@@ -20,6 +20,7 @@
         {{else}}
         <a href="#services.{{../../service_name}}.projects.{{@../key}}.zones.{{@key}}.view">{{@key}}</a>
         {{/if}}
+        <span class="float-right"><a href="javascript:hideList('services.{{../../service_name}}.projects.{{@../key}}.zones.{{@key}}.link')"><i class="fa fa-times-circle"></i></a></span>
         {{#each (lookup . ../../resource_type)}}
         <div class="list-group-item-text list-sub-element">
             <a href="#services.{{../../../service_name}}.projects.{{@../../key}}.zones.{{@../key}}.{{../../../resource_type}}.{{@key}}">{{@key}}</a>
