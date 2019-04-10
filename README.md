@@ -40,6 +40,7 @@ The following cloud providers are currently supported/planned:
 Install via `pip`:
 
     $ pip install scoutsuite
+    $ scout.py --help
 
 Install from source:
 
@@ -48,7 +49,7 @@ Install from source:
     $ virtualenv -p python3 venv
     $ source venv/bin/activate
     $ pip install -r requirements.txt
-    $ python Scout.py --help
+    $ python scout.py --help
 
 ## Requirements
 
