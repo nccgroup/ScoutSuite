@@ -423,11 +423,11 @@ function updateNavbar (path) {
   } else if (splitPath[0] === 'services') {
     const service = splitPath[1]
     let element = $('#' + service + subnavbarIdSuffix)
-    while (element && (!element.attr('id') || !element.attr('id').endsWith(navbarIdSuffix))) {
+    while (element.length > 0 && (!element.attr('id') || !element.attr('id').endsWith(navbarIdSuffix))) {
       element = element.parent()
     }
 
-    if (element) {
+    if (element.length > 0) {
       element.addClass('active')
     }
   } else if (splitPath[0] === 'service_groups' && splitPath.length >= 2) {
