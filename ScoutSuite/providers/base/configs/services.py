@@ -1,8 +1,8 @@
 import asyncio
 
-from ScoutSuite.utils import format_service_name
 from ScoutSuite.core.console import print_exception, print_debug, print_info
 from ScoutSuite.providers.aws.utils import get_partition_name
+from ScoutSuite.utils import format_service_name
 
 
 class BaseServicesConfig(object):
@@ -17,20 +17,19 @@ class BaseServicesConfig(object):
 
         if not services:
             print_debug('No services to scan')
-            return
+        else:
+            # Print services that are going to get skipped:
+            for service in vars(self):
+                if service not in services:
+                    print_debug('Skipping the {} service'.format(format_service_name(service)))
 
-        # Print services that are going to get skipped:
-        for service in vars(self):
-            if service not in services:
-                print_debug('Skipping the {} service'.format(format_service_name(service)))
-
-        # Then, fetch concurrently all services:
-        tasks = {
-            asyncio.ensure_future(
-                self._fetch(service, regions)
-            ) for service in services
-        }
-        await asyncio.wait(tasks)
+            # Then, fetch concurrently all services:
+            tasks = {
+                asyncio.ensure_future(
+                    self._fetch(service, regions)
+                ) for service in services
+            }
+            await asyncio.wait(tasks)
 
     async def _fetch(self, service, regions):
         try:
