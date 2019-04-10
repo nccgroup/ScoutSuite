@@ -21,9 +21,9 @@ class HTMLReport(object):
     Base HTML report
     """
 
-    def __init__(self, profile, report_dir, timestamp=False, exceptions=None, result_format=None):
+    def __init__(self, profile, report_dir=None, timestamp=False, exceptions=None, result_format=None):
         exceptions = {} if exceptions is None else exceptions
-        self.report_dir = report_dir
+        self.report_dir = report_dir if report_dir else ReportFile.directory.value
         self.profile = profile.replace('/', '_').replace('\\', '_')  # Issue 111
         self.current_time = datetime.datetime.now(dateutil.tz.tzlocal())
         if timestamp:

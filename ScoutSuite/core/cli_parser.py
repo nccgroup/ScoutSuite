@@ -1,10 +1,6 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import argparse
-import os
-
-from ScoutSuite import DEFAULT_REPORT_DIR
 
 
 class ScoutSuiteArgumentParser:
@@ -216,8 +212,12 @@ class ScoutSuiteArgumentParser:
                             help='Maximum number of threads (workers) used by Scout Suite')
         parser.add_argument('--report-dir',
                             dest='report_dir',
-                            default=DEFAULT_REPORT_DIR,
+                            default=None,
                             help='Path of the Scout report.')
+        parser.add_argument('--report-name',
+                            dest='report_name',
+                            default=None,
+                            help='Name of the Scout report.')
         parser.add_argument('--timestamp',
                             dest='timestamp',
                             default=False,
@@ -236,6 +236,7 @@ class ScoutSuiteArgumentParser:
         parser.add_argument('--exceptions',
                             dest='exceptions',
                             default=None,
+                            nargs='?',
                             help='Exception file to use during analysis.')
         parser.add_argument('--result-format',
                             dest='result_format',
