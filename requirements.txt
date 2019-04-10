@@ -4,14 +4,12 @@ netaddr>=0.7.11
 sqlitedict>=1.6.0
 cherrypy>=18.1.0
 cherrypy-cors>=1.6
-iampoliciesgonewild>=1.0.6.2
 coloredlogs>=10.0
 
 # AWS Provider
 boto3>=1.9.60
 botocore>=1.12.118
 iampoliciesgonewild>=1.0.6.2
-
 
 # GCP Provider
 grpcio>=1.18.0
