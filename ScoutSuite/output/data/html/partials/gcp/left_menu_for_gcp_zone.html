@@ -12,9 +12,22 @@
       <a href="#services.{{../service_name}}.projects.{{@key}}.zones">{{@key}}</a>
       <span class="float-right"><a href="javascript:hideList('services.{{../service_name}}.projects.{{@key}}.zones.list')"><i class="fa fa-times-circle"></i></a></span>
     </div>
-    {{#each (lookup . ../zones)}}
-    <a>{{@key}}</a>
-    {{/each}}
+    <div class="list-group-item list-sub-element">
+      {{#each (lookup . "zones")}}
+      <div class="list-group-item" id="services.{{../../service_name}}.projects.{{@../key}}.zones.{{@key}}.link">
+        {{#if scout2_link}}
+        <a href="#{{scout2_link}}.view">{{@key}}</a>
+        {{else}}
+        <a href="#services.{{../../service_name}}.projects.{{@../key}}.zones.{{@key}}.view">{{@key}}</a>
+        {{/if}}
+        {{#each (lookup . ../../resource_type)}}
+        <div class="list-group-item-text list-sub-element">
+            <a href="#services.{{../../../service_name}}.projects.{{@../../key}}.zones.{{@../key}}.{{../../../resource_type}}.{{@key}}">{{@key}}</a>
+        </div>
+        {{/each}} 
+      </div>   
+      {{/each}}     
+    </div>
   </div>
   {{/each}}
   </div>
