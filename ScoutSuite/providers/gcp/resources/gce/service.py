@@ -21,5 +21,5 @@ class ComputeEngine(Projects):
         # Normally this would be done by setting the resource counts in the Regions
         # and Zones classes, but having a "resource_name_count" field in their 
         # dictionary causes errors in the rule engine.
-        self['instances_count'] = sum([zone['instances_count'] for zone in project['zones'].values()] for project in self['projects'].values())
-        self['subnetworks_count'] = sum([region['subnetworks_count'] for region in project['regions'].values()] for project in self['projects'].values())
+        self['instances_count'] = sum(sum(zone['instances_count'] for zone in project['zones'].values()) for project in self['projects'].values())
+        self['subnetworks_count'] = sum(sum(region['subnetworks_count'] for region in project['regions'].values()) for project in self['projects'].values())
