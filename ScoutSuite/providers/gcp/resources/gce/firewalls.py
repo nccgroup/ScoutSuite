@@ -26,8 +26,10 @@ class Firewalls(Resources):
         firewall_dict['target_tags'] = raw_firewall.get('targetTags', [])
         firewall_dict['direction'] = raw_firewall['direction']
         firewall_dict['disabled'] = raw_firewall['disabled']
+        self._parse_firewall_rules(firewall_dict, raw_firewall)
+        return firewall_dict['id'], firewall_dict
 
-        # Parse FW rules
+    def _parse_firewall_rules(self, firewall_dict, raw_firewall):
         for direction in ['allowed', 'denied']:
             direction_string = '%s_traffic' % direction
             firewall_dict[direction_string] = {
@@ -51,8 +53,6 @@ class Firewalls(Resources):
                                     firewall_dict[direction_string][rule['IPProtocol']] += rule['ports']
                                 else:
                                     firewall_dict[direction_string][rule['IPProtocol']] = ['0-65535']
-
-        return firewall_dict['id'], firewall_dict
 
     def _get_description(self, raw_firewall):
         description = raw_firewall.get('description')
