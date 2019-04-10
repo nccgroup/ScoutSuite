@@ -235,8 +235,7 @@ class ScoutSuiteArgumentParser:
                             help='Name of out-of-scope services.')
         parser.add_argument('--exceptions',
                             dest='exceptions',
-                            default=[None],
-                            nargs='+',
+                            default=None,
                             help='Exception file to use during analysis.')
         parser.add_argument('--result-format',
                             dest='result_format',
