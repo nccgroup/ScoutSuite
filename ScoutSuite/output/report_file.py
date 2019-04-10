@@ -2,6 +2,7 @@ from enum import Enum
 
 
 class ReportFile(Enum):
+    directory = 'scoutsuite-report'
     results = 'scoutsuite-results/scoutsuite_results.js'
     exceptions = 'scoutsuite-results/scoutsuite_exceptions.js'
     report = 'report.html'

@@ -1,14 +1,14 @@
 from __future__ import print_function
 
 import datetime
-import dateutil
 import json
 import os
+
+import dateutil
 from sqlitedict import SqliteDict
 
 from ScoutSuite.core.console import print_exception, print_info
-
-from ScoutSuite import DEFAULT_REPORT_DIR
+from ScoutSuite.output.report_file import ReportFile
 from ScoutSuite.output.utils import get_filename, prompt_for_overwrite
 
 
@@ -38,7 +38,7 @@ class ScoutJsonEncoder(json.JSONEncoder):
 
 class ScoutResultEncoder(object):
     def __init__(self, profile, report_dir=None, timestamp=None):
-        self.report_dir = report_dir if report_dir else DEFAULT_REPORT_DIR
+        self.report_dir = report_dir if report_dir else ReportFile.directory.value
         self.profile = profile.replace('/', '_').replace('\\', '_')  # Issue 111
         self.current_time = datetime.datetime.now(dateutil.tz.tzlocal())
         if timestamp:
