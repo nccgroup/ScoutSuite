@@ -2,7 +2,7 @@ import subprocess
 import mock
 
 from nose.plugins.attrib import attr
-from Scout import main
+from ScoutSuite.__main__ import run_from_cli
 from ScoutSuite.core.console import set_config_debug_level
 
 
@@ -33,7 +33,7 @@ class TestScoutSuiteClass:
 
         sys = None
         with mock.patch.object(sys, 'argv', args):
-            return main()
+            return run_from_cli()
 
     #
     # Make sure that ScoutSuite does not crash with --help
