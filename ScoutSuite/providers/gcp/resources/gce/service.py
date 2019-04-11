@@ -23,3 +23,5 @@ class ComputeEngine(Projects):
         # dictionary causes errors in the rule engine.
         self['instances_count'] = sum(sum(zone['instances_count'] for zone in project['zones'].values()) for project in self['projects'].values())
         self['subnetworks_count'] = sum(sum(region['subnetworks_count'] for region in project['regions'].values()) for project in self['projects'].values())
+        del self['regions_count']
+        del self['zones_count']
