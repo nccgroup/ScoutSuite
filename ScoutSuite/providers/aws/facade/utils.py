@@ -53,12 +53,7 @@ class AWSFacadeUtils:
             paginator_name).paginate(**paginator_args)
 
         # Getting all pages from a paginator requires API calls so we need to do it concurrently:
-        try:
-            return await run_concurrently(lambda: AWSFacadeUtils._get_all_pages_from_paginator(paginator, entities))
-        except Exception as e:
-            print_exception('Failed to get all pages from paginator for the {} service: {}'.format(service, e))
-
-            return []
+        return await run_concurrently(lambda: AWSFacadeUtils._get_all_pages_from_paginator(paginator, entities))
 
     @staticmethod
     def _get_all_pages_from_paginator(paginator, entities: list):
