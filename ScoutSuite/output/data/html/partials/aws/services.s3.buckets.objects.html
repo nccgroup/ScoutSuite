@@ -3,7 +3,7 @@
     <script id="services.s3.buckets.objects.partial" type="text/x-handlebars-template">
       <div class="list-group" id="services.s3.buckets.objects.{{name}}.details">
         <div id="resource-name" class="list-group-item active">
-          <h4 class="list-group-item-heading">{{get_value_at 'services.s3.buckets' bucket_id 'name'}}/{{get_value_at 'services.s3.buckets' bucket_id 'keys' key_id 'name'}}</h4>
+          <h4 class="list-group-item-heading">{{getValueAt 'services.s3.buckets' bucket_id 'name'}}/{{getValueAt 'services.s3.buckets' bucket_id 'keys' key_id 'name'}}</h4>
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Information</h4>

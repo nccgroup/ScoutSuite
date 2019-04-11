@@ -1,4 +1,4 @@
-from ScoutSuite.providers.aws.resources.resources import AWSResources
+from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.utils import get_keys
 from ScoutSuite.providers.utils import get_non_provider_id
 

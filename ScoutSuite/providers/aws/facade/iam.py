@@ -1,11 +1,11 @@
 import asyncio
 import functools
 
-from botocore.utils import ClientError
+from botocore.exceptions import ClientError
 
-from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
+from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
-from ScoutSuite.core.console import print_error
+from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import get_non_provider_id, run_concurrently, get_and_set_concurrently
 
 
@@ -22,13 +22,13 @@ class IAMFacade(AWSBaseFacade):
                     report_generated = True
                 else:
                     n_attempts -= 1
-                    await asyncio.sleep(0.1) # Wait for 100ms before doing a new attempt.
-        except ClientError:
-            print_error('Failed to generate credential report.')
+                    await asyncio.sleep(0.1)  # Wait for 100ms before doing a new attempt.
+        except Exception as e:
+            print_exception('Failed to generate credential report: {}'.format(e))
             return []
         finally:
             if not report_generated and n_attempts == 0:
-                print_error('Failed to complete credential report generation in {} attempts.'.format(n_attempts))
+                print_exception('Failed to complete credential report generation in {} attempts'.format(n_attempts))
                 return []
 
         try:
@@ -49,8 +49,8 @@ class IAMFacade(AWSBaseFacade):
                 credential_reports.append(credential_report)
 
             return credential_reports
-        except ClientError:
-            print_error('Failed to download credential report.')
+        except Exception as e:
+            print_exception('Failed to download credential report: {}'.format(e))
             return []
 
     async def get_groups(self):
@@ -68,28 +68,31 @@ class IAMFacade(AWSBaseFacade):
 
     async def _get_and_set_policy_details(self, policy):
         client = AWSFacadeUtils.get_client('iam', self.session)
-        policy_version = await run_concurrently(
-            lambda: client.get_policy_version(PolicyArn=policy['Arn'], VersionId=policy['DefaultVersionId']))
-        policy['PolicyDocument'] = policy_version['PolicyVersion']['Document']
+        try:
+            policy_version = await run_concurrently(
+                lambda: client.get_policy_version(PolicyArn=policy['Arn'], VersionId=policy['DefaultVersionId']))
+            policy['PolicyDocument'] = policy_version['PolicyVersion']['Document']
+        except Exception as e:
+            print_exception('Failed to get policy version: {}'.format(e))
+        else:
+            policy['attached_to'] = {}
+            attached_entities = await AWSFacadeUtils.get_multiple_entities_from_all_pages(
+                'iam', None, self.session, 'list_entities_for_policy', ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'],
+                PolicyArn=policy['Arn'])
 
-        policy['attached_to'] = {}
-        attached_entities = await AWSFacadeUtils.get_multiple_entities_from_all_pages(
-            'iam', None, self.session, 'list_entities_for_policy',  ['PolicyGroups', 'PolicyRoles', 'PolicyUsers'],
-            PolicyArn=policy['Arn'])
+            for entity_type in attached_entities:
+                resource_type = entity_type.replace('Policy', '').lower()
+                if len(attached_entities[entity_type]):
+                    policy['attached_to'][resource_type] = []
 
-        for entity_type in attached_entities:
-            resource_type = entity_type.replace('Policy', '').lower()
-            if len(attached_entities[entity_type]):
-                policy['attached_to'][resource_type] = []
-
-            for entity in attached_entities[entity_type]:
-                name_field = entity_type.replace('Policy', '')[
-                    :-1] + 'Name'
-                resource_name = entity[name_field]
-                id_field = entity_type.replace('Policy', '')[:-1] + 'Id'
-                resource_id = entity[id_field]
-                policy['attached_to'][resource_type].append(
-                    {'name': resource_name, 'id': resource_id})
+                for entity in attached_entities[entity_type]:
+                    name_field = entity_type.replace('Policy', '')[
+                                 :-1] + 'Name'
+                    resource_name = entity[name_field]
+                    id_field = entity_type.replace('Policy', '')[:-1] + 'Id'
+                    resource_id = entity[id_field]
+                    policy['attached_to'][resource_type].append(
+                        {'name': resource_name, 'id': resource_id})
 
     async def get_users(self):
         users = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_users', 'Users')
@@ -107,12 +110,18 @@ class IAMFacade(AWSBaseFacade):
         try:
             user['LoginProfile'] = await run_concurrently(
                 lambda: client.get_login_profile(UserName=user['UserName'])['LoginProfile'])
-        except Exception:
-            pass
+        except ClientError as e:
+            if e.response["Error"]["Code"] == "NoSuchEntity":
+                #  If the user has not been assigned a password, the operation returns a 404 (NoSuchEntity ) error.
+                pass
+            else:
+                print_exception('Failed to get login profile: {}'.format(e))
+        except Exception as e:
+            print_exception('Failed to get login profile: {}'.format(e))
 
     async def _get_and_set_user_groups(self, user: {}):
         groups = await AWSFacadeUtils.get_all_pages(
-            'iam', None, self.session, 'list_groups_for_user', 'Groups',UserName=user['UserName'])
+            'iam', None, self.session, 'list_groups_for_user', 'Groups', UserName=user['UserName'])
         user['groups'] = [group['GroupName'] for group in groups]
 
     async def get_roles(self):
@@ -144,22 +153,36 @@ class IAMFacade(AWSBaseFacade):
 
     async def get_password_policy(self):
         client = AWSFacadeUtils.get_client('iam', self.session)
-        return (await run_concurrently(client.get_account_password_policy))['PasswordPolicy']
+        try:
+            return (await run_concurrently(client.get_account_password_policy))['PasswordPolicy']
+        except ClientError as e:
+            if e.response['Error']['Code'] != 'NoSuchEntity':
+                print_exception('Failed to get account password policy: {}'.format(e))
+            return None
 
     async def _get_and_set_user_acces_keys(self, user: {}):
         client = AWSFacadeUtils.get_client('iam', self.session)
-        user['AccessKeys'] = await run_concurrently(
-            lambda: client.list_access_keys(UserName=user['UserName'])['AccessKeyMetadata'])
+        try:
+            user['AccessKeys'] = await run_concurrently(
+                lambda: client.list_access_keys(UserName=user['UserName'])['AccessKeyMetadata'])
+        except Exception as e:
+            print_exception('Failed to list access keys: {}'.format(e))
 
     async def _get_and_set_user_mfa_devices(self, user: {}):
         client = AWSFacadeUtils.get_client('iam', self.session)
-        user['MFADevices'] = await run_concurrently(
-            lambda: client.list_mfa_devices(UserName=user['UserName'])['MFADevices'])
+        try:
+            user['MFADevices'] = await run_concurrently(
+                lambda: client.list_mfa_devices(UserName=user['UserName'])['MFADevices'])
+        except Exception as e:
+            print_exception('Failed to list MFA devices: {}'.format(e))
 
     async def _get_and_set_group_users(self, group: {}):
         client = AWSFacadeUtils.get_client('iam', self.session)
-        users = await run_concurrently(lambda: client.get_group(GroupName=group['GroupName'])['Users'])
-        group['Users'] = [user['UserId'] for user in users]
+        try:
+            users = await run_concurrently(lambda: client.get_group(GroupName=group['GroupName'])['Users'])
+            group['Users'] = [user['UserId'] for user in users]
+        except Exception as e:
+            print_exception('Failed to get IAM group {}: {}'.format(group['GroupName'], e))
 
     async def _get_and_set_inline_policies(self, resource, iam_resource_type):
         client = AWSFacadeUtils.get_client('iam', self.session)
@@ -168,28 +191,35 @@ class IAMFacade(AWSBaseFacade):
         args = {iam_resource_type.title() + 'Name': resource_name}
 
         resource['inline_policies'] = {}
-        policy_names = await run_concurrently(lambda: list_policy_method(**args)['PolicyNames'])
-        if len(policy_names) == 0:
-            resource['inline_policies_count'] = 0
-            return
 
-        get_policy_method = getattr(client, 'get_' + iam_resource_type + '_policy')
-        tasks = {
-            asyncio.ensure_future(
-                run_concurrently(lambda: get_policy_method(**dict(args, PolicyName=policy_name)))
-            ) for policy_name in policy_names
-        }
-        for task in asyncio.as_completed(tasks):
-            policy = await task
-            policy_name = policy['PolicyName']
-            policy_id = get_non_provider_id(policy_name)
-            policy_document = policy['PolicyDocument']
+        try:
+            policy_names = await run_concurrently(lambda: list_policy_method(**args)['PolicyNames'])
+            if len(policy_names) == 0:
+                resource['inline_policies_count'] = 0
+        except Exception as e:
+            print_exception('Failed to list IAM policy: {}'.format(e))
+        else:
+            get_policy_method = getattr(client, 'get_' + iam_resource_type + '_policy')
+            try:
+                tasks = {
+                    asyncio.ensure_future(
+                        run_concurrently(lambda: get_policy_method(**dict(args, PolicyName=policy_name)))
+                    ) for policy_name in policy_names
+                }
+            except Exception as e:
+                print_exception('Failed to get policy methods: {}'.format(e))
+            else:
+                for task in asyncio.as_completed(tasks):
+                    policy = await task
+                    policy_name = policy['PolicyName']
+                    policy_id = get_non_provider_id(policy_name)
+                    policy_document = policy['PolicyDocument']
 
-            resource['inline_policies'][policy_id] = {}
-            resource['inline_policies'][policy_id]['PolicyDocument'] = self._normalize_statements(
-                policy_document)
-            resource['inline_policies'][policy_id]['name'] = policy_name
-        resource['inline_policies_count'] = len(resource['inline_policies'])
+                    resource['inline_policies'][policy_id] = {}
+                    resource['inline_policies'][policy_id]['PolicyDocument'] = self._normalize_statements(
+                        policy_document)
+                    resource['inline_policies'][policy_id]['name'] = policy_name
+                resource['inline_policies_count'] = len(resource['inline_policies'])
 
     def _normalize_statements(self, policy_document):
         for statement in policy_document['Statement']:

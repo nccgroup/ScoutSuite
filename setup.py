@@ -26,13 +26,14 @@ setup(
     url='https://github.com/nccgroup/ScoutSuite',
     entry_points={
         'console_scripts': [
-            'Scout = ScoutSuite.__main__:main',
+            'scout = ScoutSuite.__main__:run_from_cli',
         ]
     },
     packages=find_packages(),
     package_data={
         'ScoutSuite.output': [
             'data/html/*.html',
+            'data/html/conditionals/*.html',
             'data/html/partials/*.html',
             'data/html/partials/aws/*.html',
             'data/html/partials/azure/*.html',

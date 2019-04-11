@@ -1,11 +1,7 @@
-from ScoutSuite.providers.azure.facade.facade import AzureFacade
-from ScoutSuite.providers.base.configs.resources import Resources
+from ScoutSuite.providers.azure.resources.base import AzureResources
 
 
-class AutoProvisioningSettings(Resources):
-    def __init__(self, facade: AzureFacade):
-        self.facade = facade
-
+class AutoProvisioningSettings(AzureResources):
     async def fetch_all(self):
         for raw_settings in await self.facade.securitycenter.get_auto_provisioning_settings():
             id, auto_provisioning_settings = self._parse_auto_provisioning_settings(
