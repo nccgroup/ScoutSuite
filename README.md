@@ -121,7 +121,7 @@ example, this will work and use the selected profile:
 
 Assuming you already have your provider's CLI up and running you should have your credentials already set up and be able to run Scout Suite by using one of the following commands. If that is not the case, please consult the wiki page for the provider desired.
 
-#### [Amazon Web Services](https://github.com/nccgroup/ScoutSuite/wiki/Amazon-Web-Server)
+#### [Amazon Web Services](https://github.com/nccgroup/ScoutSuite/wiki/Amazon-Web-Services)
 
     $ python scout.py aws
 
