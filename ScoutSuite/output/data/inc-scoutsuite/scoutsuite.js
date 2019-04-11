@@ -13,7 +13,6 @@ $(document).ready(function () {
  * Implements page load functionality
  */
 function onPageLoad() {
-    registerHandlebarHelpers();
     showPageFromHash();
 
     // when button is clicked, return CSV with finding
