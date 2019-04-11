@@ -428,8 +428,7 @@ class AWSProvider(BaseProvider):
     def process_vpc_peering_connections_callback(self, current_config, path, current_path, pc_id, callback_args):
 
         # Create a list of peering connection IDs in each VPC
-        info = 'AccepterVpcInfo' if current_config['AccepterVpcInfo'][
-                                        'OwnerId'] == self.aws_account_id else 'RequesterVpcInfo'
+        info = 'AccepterVpcInfo' if current_config['AccepterVpcInfo']['OwnerId'] == self.account_id else 'RequesterVpcInfo'
         region = current_path[current_path.index('regions') + 1]
         vpc_id = current_config[info]['VpcId']
         if vpc_id not in self.services['vpc']['regions'][region]['vpcs']:
