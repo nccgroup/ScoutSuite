@@ -23,9 +23,9 @@ class EMRVpcs(AWSCompositeResources):
     ]
 
     async def fetch_all(self, **kwargs):
-        # EMR won't disclose its VPC, so we put everything in a VPC named "TODO", and we
+        # EMR won't disclose its VPC, so we put everything in a VPC named "EMR-UNKNOWN-VPC", and we
         # infer the VPC afterwards during the preprocessing.
-        tmp_vpc = 'TODO'
+        tmp_vpc = 'EMR-UNKNOWN-VPC'
         self[tmp_vpc] = {}
         await self._fetch_children(self[tmp_vpc], {'region': self.scope['region'], 'vpc': tmp_vpc})
 
