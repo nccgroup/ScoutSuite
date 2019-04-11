@@ -425,6 +425,33 @@ class AWSProvider(BaseProvider):
                     iam_config['roles'][role_id]['instances_count'] += len(
                         role_instances[instance_profile_id])
 
+    def process_vpc_peering_connections_callback(self, current_config, path, current_path, pc_id, callback_args):
+
+        # Create a list of peering connection IDs in each VPC
+        info = 'AccepterVpcInfo' if current_config['AccepterVpcInfo'][
+                                        'OwnerId'] == self.aws_account_id else 'RequesterVpcInfo'
+        region = current_path[current_path.index('regions') + 1]
+        vpc_id = current_config[info]['VpcId']
+        if vpc_id not in self.services['vpc']['regions'][region]['vpcs']:
+            region = current_config['AccepterVpcInfo']['Region']
+            target = self.services['vpc']['regions'][region]['vpcs'][vpc_id]
+        else:
+            target = self.services['vpc']['regions'][region]['vpcs'][vpc_id]
+        manage_dictionary(target, 'peering_connections', [])
+        if pc_id not in target['peering_connections']:
+            target['peering_connections'].append(pc_id)
+
+        # VPC information for the peer'd VPC
+        current_config['peer_info'] = copy.deepcopy(
+            current_config['AccepterVpcInfo' if info == 'RequesterVpcInfo' else 'RequesterVpcInfo'])
+        if 'PeeringOptions' in current_config['peer_info']:
+            current_config['peer_info'].pop('PeeringOptions')
+        if hasattr(self, 'organization') and current_config['peer_info']['OwnerId'] in self.organization:
+            current_config['peer_info']['name'] = self.organization[current_config['peer_info']['OwnerId']][
+                'Name']
+        else:
+            current_config['peer_info']['name'] = current_config['peer_info']['OwnerId']
+
     def match_roles_and_cloudformation_stacks_callback(self, current_config, path, current_path, stack_id,
                                                        callback_args):
         if 'RoleARN' not in current_config:
