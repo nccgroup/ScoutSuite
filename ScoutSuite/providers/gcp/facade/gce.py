@@ -22,7 +22,16 @@ class GCEFacade(GCPBaseFacade):
         gce_client = self._get_client()
         request = gce_client.instances().list(project=project_id, zone=zone)
         instances_group = gce_client.instances()
-        return await GCPFacadeUtils.get_all('items', request, instances_group)
+        instances = await GCPFacadeUtils.get_all('items', request, instances_group)
+        await self._add_metadata(project_id, instances)
+        return instances
+
+    async def _add_metadata(self, project_id, instances):
+        project = await self.get_project(project_id)
+        common_instance_metadata = GCPFacadeUtils.metadata_to_dict(project['commonInstanceMetadata'])
+        for instance in instances:
+            instance['metadata'] = GCPFacadeUtils.metadata_to_dict(instance['metadata'])
+            instance['commonInstanceMetadata'] = common_instance_metadata
 
     async def get_networks(self, project_id):
         gce_client = self._get_client()
