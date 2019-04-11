@@ -9,4 +9,5 @@ class PeeringConnections(AWSResources):
             self[id] = peering_connection
 
     def _parse_peering_connections(self, raw_peering_connection):
-        return raw_peering_connection[raw_peering_connection['VpcPeeringConnectionId']], raw_peering_connection
+        peering_connection_id = raw_peering_connection['VpcPeeringConnectionId']
+        return peering_connection_id, raw_peering_connection
