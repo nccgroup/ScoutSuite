@@ -81,8 +81,7 @@ class GCPProvider(BaseProvider):
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
-        TODO description
-        Tweak the AWS config to match cross-resources and clean any fetching artifacts
+        Tweak the GCP config to match cross-resources and clean any fetching artifacts
 
         :param ip_ranges:
         :param ip_ranges_name_key:

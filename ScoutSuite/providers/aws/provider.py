@@ -89,15 +89,6 @@ class AWSProvider(BaseProvider):
 
         super(AWSProvider, self).preprocessing()
 
-    def postprocessing(self, current_time, ruleset):
-        """
-
-        :param current_time:
-        :param ruleset:
-        :return: None
-        """
-        super(AWSProvider, self).postprocessing(current_time, ruleset)
-
     def _add_cidr_display_name(self, ip_ranges, ip_ranges_name_key):
         if len(ip_ranges):
             callback_args = {'ip_ranges': ip_ranges,
