@@ -15,9 +15,10 @@ class Instances(GCPCompositeResources):
     async def fetch_all(self):
         raw_instances = await self.gcp_facade.gce.get_instances(self.project_id, self.zone)
         for raw_instance in raw_instances:
-            name, instance = self._parse_instance(raw_instance)
-            self[name] = instance
-  
+            instance_id, instance = self._parse_instance(raw_instance)
+            self[instance_id] = instance
+            self[instance_id]['disks'].fetch_all()
+            
     def _parse_instance(self, raw_instance):
         instance_dict = {}
         instance_dict['id'] = get_non_provider_id(raw_instance['name'])

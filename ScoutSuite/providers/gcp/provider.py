@@ -87,7 +87,7 @@ class GCPProvider(BaseProvider):
         """
         ip_ranges = [] if ip_ranges is None else ip_ranges
 
-        # self._match_instances_and_snapshots()
+        self._match_instances_and_snapshots()
         self._match_networks_and_instances()
 
         super(GCPProvider, self).preprocessing()
@@ -209,12 +209,12 @@ class GCPProvider(BaseProvider):
         """
 
         if 'computeengine' in self.services:
-            for project in self.service['computeengine']['projects'].values():
+            for project in self.services['computeengine']['projects'].values():
                 for zone in project['zones'].values():
                     for instance in zone['instances'].values():
                         for instance_disk in instance['disks'].values():
                             instance_disk['snapshots'] = []
-                            for disk in self.services['computeengine']['snapshots'].values():
+                            for disk in project['snapshots'].values():
                                 if disk['status'] == 'READY' and disk['source_disk_url'] == instance_disk['source_url']:
                                     instance_disk['snapshots'].append(disk)
 
