@@ -57,16 +57,11 @@ class AWSProvider(BaseProvider):
         :return: None
         """
         ip_ranges = [] if ip_ranges is None else ip_ranges
+
         self._map_all_subnets()
 
-        if 'emr' in self.service_list:
-            self._set_emr_vpc_ids()
-
-        # TODO: Handle that when refactoring is done?
-        # self.parse_elb_policies()
-        self._set_emr_vpc_ids()
-
         # Various data processing calls
+
         if 'ec2' in self.service_list:
             self._map_all_sgs()
             self._check_ec2_zone_distribution()
@@ -82,8 +77,16 @@ class AWSProvider(BaseProvider):
         if 'elbv2' in self.service_list and 'ec2' in self.service_list:
             self._add_security_group_data_to_elbv2()
 
+        if 'elb' in self.service_list and 'ec2' in self.service_list:
+            # TODO: Handle that when refactoring is done?
+            # self.parse_elb_policies()
+            pass
+
         if 's3' in self.service_list and 'iam' in self.service_list:
             self._match_iam_policies_and_buckets()
+
+        if 'emr' in self.service_list and 'ec2' in self.service_list:
+            self._set_emr_vpc_ids()
 
         self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
 
@@ -529,10 +532,10 @@ class AWSProvider(BaseProvider):
                            self.set_emr_vpc_ids_callback,
                            {'clear_list': clear_list})
         for region in clear_list:
-            self.services['emr']['regions'][region]['vpcs'].pop('TODO')
+            self.services['emr']['regions'][region]['vpcs'].pop('EMR-UNKNOWN-VPC')
 
     def set_emr_vpc_ids_callback(self, current_config, path, current_path, vpc_id, callback_args):
-        if vpc_id != 'TODO':
+        if vpc_id != 'EMR-UNKNOWN-VPC':
             return
         region = current_path[3]
         vpc_id = sg_id = subnet_id = None
