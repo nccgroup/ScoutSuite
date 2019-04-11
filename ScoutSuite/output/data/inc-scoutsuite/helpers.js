@@ -288,6 +288,10 @@ Handlebars.registerHelper('concat', function() {
     return path;
 });
 
+Handlebars.registerHelper('concat_with', function(str1, str2, sep='') {
+    return [str1, str2].join(sep);
+});
+
 Handlebars.registerHelper('json_stringify', function() {
     body = arguments[0];
     delete body['description'];

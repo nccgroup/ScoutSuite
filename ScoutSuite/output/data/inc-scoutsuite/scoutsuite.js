@@ -98,12 +98,6 @@ function onPageLoad() {
 
 };
 
-function registerHandlebarHelpers() {
-    Handlebars.registerHelper('concat', function(str1, str2) {
-        return [str1, str2].join('');
-    });
-}
-
 /**
  * Display the account ID -- use of the generic function + templates result in the div not being at the top of the page
  */
