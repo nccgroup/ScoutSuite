@@ -42,8 +42,7 @@ class AzureProvider(BaseProvider):
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
-        TODO description
-        Tweak the AWS config to match cross-service resources and clean any fetching artifacts
+        Tweak the Azure config to match cross-service resources and clean any fetching artifacts
 
         :param ip_ranges:
         :param ip_ranges_name_key:

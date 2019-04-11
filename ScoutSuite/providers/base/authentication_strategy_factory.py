@@ -10,4 +10,8 @@ _strategies = {
 
 
 def get_authentication_strategy(provider: str):
+    """
+        Returns an authentication strategy implementation for a provider.
+        :param provider: The authentication strategy 
+    """
     return _strategies[provider]()

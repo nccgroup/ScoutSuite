@@ -52,9 +52,7 @@ class BaseProvider(object):
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
-        TODO
-
-        :return: None
+        Used for adding cross-services configs.
         """
         ip_ranges = [] if ip_ranges is None else ip_ranges
 
@@ -63,11 +61,7 @@ class BaseProvider(object):
 
     def postprocessing(self, current_time, ruleset):
         """
-        TODO
-
-        :param current_time:
-        :param ruleset:
-        :return: None
+        Sets post-run information.
         """
         self._update_metadata()
         self._update_last_run(current_time, ruleset)
@@ -191,7 +185,7 @@ class BaseProvider(object):
 
     def manage_object(self, object, attr, init, callback=None):
         """
-        This is a quick-fix copy of Opine's manage_dictionary in order to support the new ScoutSuite object which isn't
+        This is a quick-fix copy of Opinel's manage_dictionary in order to support the new ScoutSuite object which isn't
         a dict
         """
         if type(object) == dict:
