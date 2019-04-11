@@ -14,7 +14,7 @@
     </div>
     <div class="list-group-item list-sub-element">
       {{#each (lookup . "zones")}}
-      {{#if (lookup . (concat_with ../../resource_type "_count"))}}
+      {{#if (lookup . (concat_with ../../resource_type "_count" ""))}}
       <div class="list-group-item" id="services.{{../../service_name}}.projects.{{@../key}}.zones.{{@key}}.link">
         {{#if scout2_link}}
         <a href="#{{scout2_link}}.view">{{@key}}</a>

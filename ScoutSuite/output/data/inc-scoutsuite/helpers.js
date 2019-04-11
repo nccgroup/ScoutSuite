@@ -288,7 +288,7 @@ Handlebars.registerHelper('concat', function() {
     return path;
 });
 
-Handlebars.registerHelper('concat_with', function(str1, str2, sep='') {
+Handlebars.registerHelper('concat_with', function(str1, str2, sep) {
     return [str1, str2].join(sep);
 });
 
