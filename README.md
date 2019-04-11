@@ -115,7 +115,7 @@ After performing a number of API calls, Scout will create a local HTML report an
 Also note that the command line will try to infer the argument name if possible when receiving partial switch. For
 example, this will work and use the selected profile:
 
-    $python scout.py aws --profile PROFILE
+    $ python scout.py aws --profile PROFILE
 
 ### Credentials and Utilisation
 
