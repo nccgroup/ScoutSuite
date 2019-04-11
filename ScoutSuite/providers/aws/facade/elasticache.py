@@ -78,6 +78,6 @@ class ElastiCacheFacade(AWSBaseFacade):
         try:
             return await AWSFacadeUtils.get_all_pages(
                 'elasticache', region, self.session, 'describe_cache_parameter_groups', 'CacheParameterGroups')
-        except ClientError as ex:
-            if ex.response['Error']['Code'] != 'InvalidParameterValue':
-                print_exception('Failed to get parameter groups: {}'.format(e))
+        except ClientError as e:
+            if e.response['Error']['Code'] != 'InvalidParameterValue':
+                print_exception('Failed to describe cache parameter groups: {}'.format(e))
