@@ -1,6 +1,6 @@
 from asyncio import Lock
-from botocore.exceptions import ClientError
 
+from botocore.exceptions import ClientError
 
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
