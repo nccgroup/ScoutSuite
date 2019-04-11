@@ -1,8 +1,8 @@
 import boto3
-
 from botocore.exceptions import ClientError
-from ScoutSuite.providers.utils import run_concurrently
+
 from ScoutSuite.core.conditions import print_exception
+from ScoutSuite.providers.utils import run_concurrently
 
 
 class AWSFacadeUtils:
@@ -57,7 +57,10 @@ class AWSFacadeUtils:
         try:
             return await run_concurrently(lambda: AWSFacadeUtils._get_all_pages_from_paginator(paginator, entities))
         except ClientError as e:
-            if e.response['Error']['Code'] in ['AccessDenied', 'AccessDeniedException', 'UnauthorizedOperation', 'AuthorizationError']:
+            if e.response['Error']['Code'] in ['AccessDenied',
+                                               'AccessDeniedException',
+                                               'UnauthorizedOperation',
+                                               'AuthorizationError']:
                 print_exception('Failed to get all pages from paginator for the {} service: {}'.format(service, e))
                 return []
             else:
