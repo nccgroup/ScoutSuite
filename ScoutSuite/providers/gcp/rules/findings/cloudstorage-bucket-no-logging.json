@@ -2,9 +2,9 @@
     "dashboard_name": "Buckets",
     "description": "Buckets should have logging enabled",
     "rationale": "By enabling access and storage logs on target Storage buckets, it is possible to capture all events which may affect objects within target buckets (CIS 5.3).",
-    "path": "cloudstorage.buckets.id",
+    "path": "cloudstorage.projects.id.buckets.id",
     "conditions": [ "and",
-        [ "cloudstorage.buckets.id.logging_enabled", "false", "" ]
+        [ "cloudstorage.projects.id.buckets.id.logging_enabled", "false", "" ]
     ],
-    "id_suffix": "logging"
+    "id_suffix": "logging_enabled"
 }
