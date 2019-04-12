@@ -2,6 +2,7 @@ from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.gcp.facade.base import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.cloudresourcemanager import CloudResourceManagerFacade
 from ScoutSuite.providers.gcp.facade.cloudsql import CloudSQLFacade
+from ScoutSuite.providers.gcp.facade.cloudstorage import CloudStorageFacade
 from ScoutSuite.providers.gcp.facade.gce import GCEFacade
 from ScoutSuite.providers.gcp.facade.iam import IAMFacade
 from ScoutSuite.providers.gcp.facade.stackdriverlogging import StackdriverLoggingFacade
@@ -12,6 +13,7 @@ class GCPFacade(GCPBaseFacade):
         super(GCPFacade, self).__init__('cloudresourcemanager', 'v1')
         self.cloudresourcemanager = CloudResourceManagerFacade()
         self.cloudsql = CloudSQLFacade()
+        self.cloudstorage = CloudStorageFacade()
         self.gce = GCEFacade()
         self.iam = IAMFacade()
         self.stackdriverlogging = StackdriverLoggingFacade()

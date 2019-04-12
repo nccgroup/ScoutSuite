@@ -56,7 +56,7 @@
       "resources": {
         "buckets": {
           "cols": 2,
-          "path": "services.cloudstorage.buckets"
+          "path": "services.cloudstorage.projects.id.buckets"
         }
       }
     }
