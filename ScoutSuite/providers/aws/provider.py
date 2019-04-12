@@ -436,9 +436,8 @@ class AWSProvider(BaseProvider):
         vpc_id = current_config[info]['VpcId']
         if vpc_id not in self.services['vpc']['regions'][region]['vpcs']:
             region = current_config['AccepterVpcInfo']['Region']
-            target = self.services['vpc']['regions'][region]['vpcs'][vpc_id]
-        else:
-            target = self.services['vpc']['regions'][region]['vpcs'][vpc_id]
+            
+        target = self.services['vpc']['regions'][region]['vpcs'][vpc_id]
         manage_dictionary(target, 'peering_connections', [])
         if pc_id not in target['peering_connections']:
             target['peering_connections'].append(pc_id)
