@@ -19,12 +19,12 @@
         {{#if scout2_link}}
         <a href="#{{scout2_link}}.view">{{@key}}</a>
         {{else}}
-        <a href="#services.{{../../../service_name}}.projects.{{@../key}}.regions.{{@key}}.view">{{@key}}</a>
+        <a href="#services.{{../../../../service_name}}.projects.{{@../key}}.regions.{{@key}}.view">{{@key}}</a>
         {{/if}}
         <span class="float-right"><a href="javascript:hideList('services.{{../../../service_name}}.projects.{{@../key}}.regions.{{@key}}.link')"><i class="fa fa-times-circle"></i></a></span>
         {{#each (lookup . ../../../resource_type)}}
         <div class="list-group-item-text list-sub-element">
-            <a href="#services.{{../../../service_name}}.projects.{{@../../key}}.regions.{{@../key}}.{{../../../resource_type}}.{{@key}}">{{@key}}</a>
+            <a href="#services.{{../../../../service_name}}.projects.{{@../../key}}.regions.{{@../key}}.{{../../../../resource_type}}.{{@key}}.view">{{@key}}</a>
         </div>
         {{/each}}    
       </div>
