@@ -1,3 +1,4 @@
+from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.gcp.resources.resources import GCPCompositeResources
 from ScoutSuite.providers.gcp.resources.gce.instance_disks import InstanceDisks
 from ScoutSuite.providers.utils import get_non_provider_id
@@ -7,7 +8,7 @@ class Instances(GCPCompositeResources):
         (InstanceDisks, 'disks')
     ]
 
-    def __init__(self, gcp_facade, project_id, zone):
+    def __init__(self, gcp_facade: GCPFacade, project_id: str, zone: str):
         self.gcp_facade = gcp_facade
         self.project_id = project_id
         self.zone = zone

@@ -1,4 +1,3 @@
-from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.base.configs.resources import Resources
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.utils import get_non_provider_id
