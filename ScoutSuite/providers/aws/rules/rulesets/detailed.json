@@ -113,6 +113,12 @@
                 "level": "warning"
             }
         ],
+        "ec2-security-group-opens-icmp-to-all.json": [
+            {
+                "enabled": false,
+                "level": "warning"
+            }
+        ],
         "ec2-security-group-opens-known-port-to-all.json": [
             {
                 "args": [
