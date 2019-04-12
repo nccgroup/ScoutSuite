@@ -202,6 +202,7 @@ class GCPProvider(BaseProvider):
         finally:
             return projects
 
+
     def _match_instances_and_snapshots(self):
         """
         Compare Compute Engine instances and snapshots to identify instance disks that do not have a snapshot.
@@ -210,16 +211,18 @@ class GCPProvider(BaseProvider):
         """
 
         if 'computeengine' in self.services:
-            for instance in self.services['computeengine']['instances'].values():
-                for instance_disk in instance['disks'].values():
-                    instance_disk['snapshots'] = []
-                    for disk in self.services['computeengine']['snapshots'].values():
-                        if disk['status'] == 'READY' and disk['source_disk_url'] == instance_disk['source_url']:
-                            instance_disk['snapshots'].append(disk)
+            for project in self.services['computeengine']['projects'].values():
+                for zone in project['zones'].values():
+                    for instance in zone['instances'].values():
+                        for instance_disk in instance['disks'].values():
+                            instance_disk['snapshots'] = []
+                            for disk in project['snapshots'].values():
+                                if disk['status'] == 'READY' and disk['source_disk_url'] == instance_disk['source_url']:
+                                    instance_disk['snapshots'].append(disk)
 
-                    instance_disk['latest_snapshot'] = max(instance_disk['snapshots'],
-                                                           key=lambda x: x['creation_timestamp']) \
-                        if instance_disk['snapshots'] else None
+                            instance_disk['latest_snapshot'] = max(instance_disk['snapshots'],
+                                                                key=lambda x: x['creation_timestamp']) \
+                                if instance_disk['snapshots'] else None
 
     def _match_networks_and_instances(self):
         """
@@ -229,9 +232,14 @@ class GCPProvider(BaseProvider):
         """
 
         if 'computeengine' in self.services:
-            for network in self.services['computeengine']['networks'].values():
-                network['instances'] = []
-                for instance in self.services['computeengine']['instances'].values():
-                    for network_interface in instance['network_interfaces']:
-                        if network_interface['network'] == network['network_url']:
-                            network['instances'].append(instance['id'])
+            for project in self.services['computeengine']['projects'].values():
+                for network in project['networks'].values():
+                    network['instances'] = []
+                    for zone in project['zones'].values():
+                        # Skip the counts contained in the zones dictionary
+                        if zone is int:
+                            continue
+                        for instance in zone['instances'].values():
+                            for network_interface in instance['network_interfaces']:
+                                if network_interface['network'] == network['network_url']:
+                                    network['instances'].append(instance['id'])

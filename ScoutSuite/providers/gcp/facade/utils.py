@@ -15,3 +15,7 @@ class GCPFacadeUtils:
             lambda: GCPFacadeUtils._get_all(resources, resource_key, request, resources_group)
         )
         return resources
+
+    @staticmethod
+    def metadata_to_dict(metadata):
+        return dict((item['key'], item['value']) for item in metadata['items']) if 'items' in metadata else {}
