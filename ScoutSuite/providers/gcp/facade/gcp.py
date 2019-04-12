@@ -9,6 +9,12 @@ from ScoutSuite.providers.gcp.facade.iam import IAMFacade
 from ScoutSuite.providers.gcp.facade.stackdriverlogging import StackdriverLoggingFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 
+# Try to import proprietary facades
+try:
+    from ScoutSuite.providers.gcp.facade.private_gke import GKEFacade
+except ImportError:
+    pass
+
 class GCPFacade(GCPBaseFacade):
     def __init__(self):
         super(GCPFacade, self).__init__('cloudresourcemanager', 'v1')
@@ -18,6 +24,10 @@ class GCPFacade(GCPBaseFacade):
         self.gce = GCEFacade()
         self.iam = IAMFacade()
         self.stackdriverlogging = StackdriverLoggingFacade()
+        try:
+            self.gke = GKEFacade(self.gce)
+        except NameError as _:
+            pass
 
         # Set logging level to error for GCP services as otherwise generates a lot of warnings
         logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.ERROR)
