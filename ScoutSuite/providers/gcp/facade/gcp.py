@@ -1,3 +1,4 @@
+import logging
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.gcp.facade.base import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.cloudresourcemanager import CloudResourceManagerFacade
@@ -17,6 +18,10 @@ class GCPFacade(GCPBaseFacade):
         self.gce = GCEFacade()
         self.iam = IAMFacade()
         self.stackdriverlogging = StackdriverLoggingFacade()
+
+        # Set logging level to error for GCP services as otherwise generates a lot of warnings
+        logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.ERROR)
+        logging.getLogger().setLevel(logging.ERROR)
 
     async def get_projects(self):
         try:
