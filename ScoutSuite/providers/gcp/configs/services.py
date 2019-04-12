@@ -9,7 +9,7 @@ from ScoutSuite.providers.gcp.resources.stackdriverlogging.base import Stackdriv
 
 # Try to import proprietary services
 try:
-    from ScoutSuite.providers.gcp.services.kubernetesengine_private import KubernetesEngineConfig
+    from ScoutSuite.providers.gcp.resources.private_kubernetesengine.base import KubernetesEngine
 except ImportError:
     pass
 
@@ -24,7 +24,7 @@ class GCPServicesConfig(BaseServicesConfig):
         self.iam = IAM(gcp_facade)
         self.stackdriverlogging = StackdriverLogging(gcp_facade)
         try:
-            self.kubernetesengine = KubernetesEngineConfig(thread_config=thread_config)
+            self.kubernetesengine = KubernetesEngine(gcp_facade)
         except NameError as _:
             pass
 
