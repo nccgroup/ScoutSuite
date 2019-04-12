@@ -236,7 +236,8 @@ class GCPProvider(BaseProvider):
                 for network in project['networks'].values():
                     network['instances'] = []
                     for zone in project['zones'].values():
-                        if zone is not dict:
+                        # Skip the counts contained in the zones dictionary
+                        if zone is int:
                             continue
                         for instance in zone['instances'].values():
                             for network_interface in instance['network_interfaces']:
