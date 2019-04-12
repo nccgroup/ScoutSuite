@@ -1,11 +1,11 @@
 from ScoutSuite.providers.base.configs.services import BaseServicesConfig
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
-from ScoutSuite.providers.gcp.resources.cloudresourcemanager.service import CloudResourceManager
-from ScoutSuite.providers.gcp.resources.cloudsql.service import CloudSQL
-from ScoutSuite.providers.gcp.resources.cloudstorage.service import CloudStorage
-from ScoutSuite.providers.gcp.resources.gce.service import ComputeEngine
-from ScoutSuite.providers.gcp.resources.iam.service import IAM
-from ScoutSuite.providers.gcp.resources.stackdriverlogging.service import StackdriverLogging
+from ScoutSuite.providers.gcp.resources.cloudresourcemanager.base import CloudResourceManager
+from ScoutSuite.providers.gcp.resources.cloudsql.base import CloudSQL
+from ScoutSuite.providers.gcp.resources.cloudstorage.base import CloudStorage
+from ScoutSuite.providers.gcp.resources.gce.base import ComputeEngine
+from ScoutSuite.providers.gcp.resources.iam.base import IAM
+from ScoutSuite.providers.gcp.resources.stackdriverlogging.base import StackdriverLogging
 
 # Try to import proprietary services
 try:
