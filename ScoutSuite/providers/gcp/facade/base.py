@@ -1,3 +1,4 @@
+import logging
 from googleapiclient import discovery
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 
@@ -6,6 +7,10 @@ class GCPBaseFacade:
         self._client_name = client_name
         self._client_version = client_version
         self._client = None
+
+        # Set logging level to error for GCP services as otherwise generates a lot of warnings
+        logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.ERROR)
+        logging.getLogger().setLevel(logging.ERROR)
 
     def _build_client(self) -> discovery.Resource:
         return discovery.build(self._client_name, self._client_version, 
