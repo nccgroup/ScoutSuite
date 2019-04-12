@@ -21,6 +21,7 @@ class CloudStorageFacade:
             setattr(bucket, 'logging', bucket_logging)
         except Exception as e:
             print_exception('Failed to retrieve bucket logging: {}'.format(e))
+            setattr(bucket, 'logging', None)
 
     async def _get_and_set_bucket_iam_policy(self, bucket):
         try:
@@ -28,3 +29,4 @@ class CloudStorageFacade:
             setattr(bucket, 'iam_policy', bucket_iam_policy)
         except Exception as e:
             print_exception('Failed to retrieve bucket IAM policy: {}'.format(e))
+            setattr(bucket, 'iam_policy',  None)
