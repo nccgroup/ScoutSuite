@@ -1,8 +1,8 @@
 import asyncio
 
-from ScoutSuite.utils import format_service_name
-from ScoutSuite.core.console import print_error, print_exception, print_debug, print_info
+from ScoutSuite.core.console import print_exception, print_debug, print_info
 from ScoutSuite.providers.aws.utils import get_partition_name
+from ScoutSuite.utils import format_service_name
 
 
 class BaseServicesConfig(object):
@@ -13,23 +13,23 @@ class BaseServicesConfig(object):
     def _is_provider(self, provider_name):
         return False
 
-    async def fetch(self, services=None, regions=None):
-        # If services is set to None, fetch all services:
-        services = vars(self) if services is None else services
-        regions = [] if regions is None else regions
+    async def fetch(self, services: list, regions: list):
 
-        # First, print services that are going to get skipped:
-        for service in vars(self):
-            if service not in services:
-                print_debug('Skipping the {} service'.format(format_service_name(service)))
+        if not services:
+            print_debug('No services to scan')
+        else:
+            # Print services that are going to get skipped:
+            for service in vars(self):
+                if service not in services:
+                    print_debug('Skipping the {} service'.format(format_service_name(service)))
 
-        # Then, fetch concurrently all services:
-        tasks = {
-            asyncio.ensure_future(
-                self._fetch(service, regions)
-            ) for service in services
-        }
-        await asyncio.wait(tasks)
+            # Then, fetch concurrently all services:
+            tasks = {
+                asyncio.ensure_future(
+                    self._fetch(service, regions)
+                ) for service in services
+            }
+            await asyncio.wait(tasks)
 
     async def _fetch(self, service, regions):
         try:
@@ -49,5 +49,4 @@ class BaseServicesConfig(object):
             else:
                 print_debug('No method to fetch service %s.' % service)
         except Exception as e:
-            print_error('Error: could not fetch %s configuration.' % service)
-            print_exception(e)
+            print_exception('Could not fetch {} configuration: {}'.format(service, e))

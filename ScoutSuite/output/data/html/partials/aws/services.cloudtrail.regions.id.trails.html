@@ -1,7 +1,7 @@
 
 <!-- Trail partial -->
 <script id="services.cloudtrail.regions.id.trails.partial" type="text/x-handlebars-template">
-  {{#unless scout2_link}}
+  {{#unless scout_link}}
     <div id="resource-name" class="list-group-item active">
       <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
@@ -28,7 +28,7 @@
           </span>
         </li>
         <li class="list-group-item-text">Log File Validation Enabled: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.LogFileValidationDisabled">{{LogFileValidationEnabled}}</span></li>
-        <li class="list-group-item-text">Destination S3 bucket name: <a href="javascript:showObject('services.s3.buckets.{{bucket_id}}')">{{get_value_at 'services.s3.buckets' bucket_id 'name'}}</a>/{{S3KeyPrefix}}</li>
+        <li class="list-group-item-text">Destination S3 bucket name: <a href="javascript:showObject('services.s3.buckets.{{bucket_id}}')">{{getValueAt 'services.s3.buckets' bucket_id 'name'}}</a>/{{S3KeyPrefix}}</li>
         <li class="list-group-item-text">KMS key: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.cloudtrail-kms-key-unused">{{#if KmsKeyId}} true {{else}} false {{/if}}</span></li>
       </ul>
     </div>

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import re
 import time
 from collections import Counter
@@ -7,30 +5,9 @@ from collections import Counter
 import boto3
 from botocore.session import Session
 
-from ScoutSuite.core.console import print_info, print_exception
+from ScoutSuite.core.console import print_exception, print_info
 
 ec2_classic = 'EC2-Classic'
-
-
-def build_region_list(service, chosen_regions=None, partition_name='aws'):
-    """
-    Build the list of target region names
-
-    :param service:                     Service targeted, e.g. ec2
-    :param chosen_regions:              Regions desired, e.g. us-east-2
-    :param partition_name:              Name of the partition, default is aws
-
-    :return:
-    """
-    if chosen_regions is None:
-        chosen_regions = []
-    service = 'ec2containerservice' if service == 'ecs' else service
-    # Get list of regions from botocore
-    regions = Session().get_available_regions(service, partition_name=partition_name)
-    if len(chosen_regions):
-        return list((Counter(regions) & Counter(chosen_regions)).elements())
-    else:
-        return regions
 
 
 def connect_service(service, credentials, region_name=None, config=None, silent=False):
@@ -114,41 +91,6 @@ def get_aws_account_id(credentials):
 def get_partition_name(credentials):
     caller_identity = get_caller_identity(credentials)
     return caller_identity['Arn'].split(':')[1]
-
-
-def handle_truncated_response(callback, params, entities):
-    """
-    Handle truncated responses
-
-    :param callback:                    Callback to process
-    :param params:                      Parameters to call callback with
-    :param entities:                    Entities
-
-    :return:
-    """
-    results = {}
-    for entity in entities:
-        results[entity] = []
-    while True:
-        try:
-            marker_found = False
-            response = callback(**params)
-            for entity in entities:
-                if entity in response:
-                    results[entity] = results[entity] + response[entity]
-            for marker_name in ['NextToken', 'Marker', 'PaginationToken']:
-                if marker_name in response and response[marker_name]:
-                    params[marker_name] = response[marker_name]
-                    marker_found = True
-            if not marker_found:
-                break
-        except Exception as e:
-            if is_throttled(e):
-                time.sleep(1)
-            else:
-                raise e
-    return results
-
 
 def is_throttled(e):
     """

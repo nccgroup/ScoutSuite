@@ -1,5 +1,7 @@
 import boto3
+from botocore.exceptions import ClientError
 
+from ScoutSuite.core.conditions import print_exception
 from ScoutSuite.providers.utils import run_concurrently
 
 
@@ -23,9 +25,12 @@ class AWSFacadeUtils:
         """
 
         results = await AWSFacadeUtils.get_multiple_entities_from_all_pages(
-            service, region, session, paginator_name,[entity], **paginator_args)
+            service, region, session, paginator_name, [entity], **paginator_args)
 
-        return results[entity]
+        if len(results) > 0:
+            return results[entity]
+        else:
+            return []
 
     @staticmethod
     async def get_multiple_entities_from_all_pages(service: str, region: str, session: boto3.session.Session,
@@ -49,7 +54,17 @@ class AWSFacadeUtils:
             paginator_name).paginate(**paginator_args)
 
         # Getting all pages from a paginator requires API calls so we need to do it concurrently:
-        return await run_concurrently(lambda: AWSFacadeUtils._get_all_pages_from_paginator(paginator, entities))
+        try:
+            return await run_concurrently(lambda: AWSFacadeUtils._get_all_pages_from_paginator(paginator, entities))
+        except ClientError as e:
+            if e.response['Error']['Code'] in ['AccessDenied',
+                                               'AccessDeniedException',
+                                               'UnauthorizedOperation',
+                                               'AuthorizationError']:
+                print_exception('Failed to get all pages from paginator for the {} service: {}'.format(service, e))
+                return []
+            else:
+                raise
 
     @staticmethod
     def _get_all_pages_from_paginator(paginator, entities: list):
@@ -74,6 +89,10 @@ class AWSFacadeUtils:
         :return:
         """
 
-        return AWSFacadeUtils._clients.setdefault(
-            (service, region),
-            session.client(service, region_name=region) if region else session.client(service))
+        try:
+            return AWSFacadeUtils._clients.setdefault(
+                (service, region),
+                session.client(service, region_name=region) if region else session.client(service))
+        except Exception as e:
+            print_exception('Failed to create client for the {} service: {}'.format(service, e))
+            return None

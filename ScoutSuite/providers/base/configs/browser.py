@@ -103,6 +103,8 @@ def get_value_at(all_info, current_path, key, to_string=False):
                 # TODO ensure this additional condition didn't break anything
                 elif type(target_obj) == list and type(p) == int:
                     target_obj = target_obj[p]
+                elif type(target_obj) == list and p.isdigit():
+                    target_obj = target_obj[int(p)]
                 elif type(target_obj) == list:
                     target_obj = p
                 elif p == '':
@@ -111,12 +113,10 @@ def get_value_at(all_info, current_path, key, to_string=False):
                     try:
                         target_obj = target_obj[p]
                     except Exception as e:
-                        print_error('Current path: %s' % str(current_path))
-                        print_exception(e)
+                        print_exception(e, additional_details={'current_path': current_path})
                         raise Exception
             except Exception as e:
-                print_error('Current path: %s' % str(current_path))
-                print_exception(e)
+                print_exception(e, additional_details={'current_path': current_path})
                 raise Exception
     if to_string:
         return str(target_obj)

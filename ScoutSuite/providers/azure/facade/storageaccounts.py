@@ -1,9 +1,9 @@
-import asyncio
 import datetime
 
 from azure.mgmt.storage import StorageManagementClient
 from azure.mgmt.monitor import MonitorManagementClient
-from ScoutSuite.providers.utils import run_concurrently
+from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
+from ScoutSuite.core.console import print_exception
 
 
 class StorageAccountsFacade:
@@ -13,28 +13,27 @@ class StorageAccountsFacade:
         self._client = StorageManagementClient(credentials, subscription_id)
 
     async def get_storage_accounts(self):
-        storage_accounts = await run_concurrently(
-            lambda: list(self._client.storage_accounts.list())
-        )
-
-        if len(storage_accounts) == 0:
+        try:
+            storage_accounts = await run_concurrently(
+                lambda: list(self._client.storage_accounts.list())
+            )
+        except Exception as e:
+            print_exception('Failed to retrieve storage accounts: {}'.format(e))
             return []
-
-        tasks = {
-            asyncio.ensure_future(
-                self.get_and_set_activity_logs(storage_account)
-            ) for storage_account in storage_accounts
-        }
-        await asyncio.wait(tasks)
-
-        return storage_accounts
+        else:
+            await get_and_set_concurrently([self._get_and_set_activity_logs], storage_accounts)
+            return storage_accounts
 
     async def get_blob_containers(self, resource_group_name, storage_account_name):
-        return await run_concurrently(
-            lambda: list(self._client.blob_containers.list(resource_group_name, storage_account_name).value)
-        )
+        try:
+            return await run_concurrently(
+                lambda: list(self._client.blob_containers.list(resource_group_name, storage_account_name).value)
+            )
+        except Exception as e:
+            print_exception('Failed to retrieve blob containers: {}'.format(e))
+            return []
 
-    async def get_and_set_activity_logs(self, storage_account):
+    async def _get_and_set_activity_logs(self, storage_account):
         client = MonitorManagementClient(self._credentials, self._subscription_id)
 
         # Time format used by Azure API:
@@ -50,7 +49,12 @@ class StorageAccountsFacade:
             "eventTimestamp le {}".format(utc_now.strftime(time_format)),
             "resourceId eq {}".format(storage_account.id),
         ])
-        activity_logs = await run_concurrently(
-            lambda: list(client.activity_logs.list(filter=logs_filter, select="eventTimestamp, operationName"))
-        )
-        setattr(storage_account, 'activity_logs', activity_logs)
+        try:
+            activity_logs = await run_concurrently(
+                lambda: list(client.activity_logs.list(filter=logs_filter, select="eventTimestamp, operationName"))
+            )
+        except Exception as e:
+            print_exception('Failed to retrieve activity logs: {}'.format(e))
+            setattr(storage_account, 'activity_logs', [])
+        else:
+            setattr(storage_account, 'activity_logs', activity_logs)

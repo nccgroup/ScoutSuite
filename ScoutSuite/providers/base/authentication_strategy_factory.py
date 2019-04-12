@@ -13,7 +13,8 @@ class InvalidAuthenticationStrategyException(Exception): pass
 
 
 def get_authentication_strategy(provider: str):
-    if provider not in _strategies:
-        raise InvalidAuthenticationStrategyException()
-
+    """
+        Returns an authentication strategy implementation for a provider.
+        :param provider: The authentication strategy 
+    """
     return _strategies[provider]()

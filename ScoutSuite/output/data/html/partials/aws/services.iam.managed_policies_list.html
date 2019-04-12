@@ -5,7 +5,7 @@
           <h4 class="list-group-item-heading">Managed Policies {{> count_badge count=this.policies.length}}</h4>
           <ul class="no-bullet">
           {{#each policies}}
-            <li class="list-group-item-text"><a href="javascript:showObject('services.iam.policies.{{this}}')">{{get_value_at 'services.iam.policies' this 'name'}}</a></li>
+            <li class="list-group-item-text"><a href="javascript:showObject('services.iam.policies.{{this}}')">{{getValueAt 'services.iam.policies' this 'name'}}</a></li>
           {{/each}}
           </ul>
         </div>

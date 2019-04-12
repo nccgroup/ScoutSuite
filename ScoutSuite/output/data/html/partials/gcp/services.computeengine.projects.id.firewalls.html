@@ -1,0 +1,98 @@
+
+<!-- Compute Engine firewalls partial -->
+<script id="services.computeengine.projects.id.firewalls.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Firewall name: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Description: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.description">{{description}}</span></div>
+        <div class="list-group-item-text item-margin">VPC network: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.network">{{network}}</span></div>
+        <div class="list-group-item-text item-margin">Project ID: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.project_id">{{project_id}}</span></div>
+        <div class="list-group-item-text item-margin">Creation Date: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.creation_timestamp">{{creation_timestamp}}</span></div>
+        <div class="list-group-item-text item-margin">Priority: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.priority">{{priority}}</span></div>
+        <div class="list-group-item-text item-margin">Disabled: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.disabled">{{disabled}}</span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Configuration</h4>
+        <div class="list-group-item-text item-margin">Direction: <span id="computeengine.projects.{{@../key}}.firewalls.{{@key}}.direction">{{direction}}</span></div>
+        {{#if source_ranges}}
+        <div class="list-group-item-text item-margin">Source Ranges:</div>
+        <ul>
+            {{#each source_ranges}}
+            <li><samp>{{this}}</samp></li>
+            {{else}}
+            <li><samp>None</samp></li>
+            {{/each}}
+        </ul>
+        {{/if}}
+        {{#if source_tags}}
+        <div class="list-group-item-text item-margin">Source Tags:</div>
+        <ul>
+            {{#each source_tags}}
+            <li><samp>{{this}}</samp></li>
+            {{else}}
+            <li><samp>None</samp></li>
+            {{/each}}
+        </ul>
+        {{/if}}
+        {{#if target_tags}}
+        <div class="list-group-item-text item-margin">Target Tags:</div>
+        <ul>
+            {{#each target_tags}}
+            <li><samp>{{this}}</samp></li>
+            {{else}}
+            <li><samp>None</samp></li>
+            {{/each}}
+        </ul>
+        {{/if}}
+    </div>
+    <div class="list-group-item">
+        {{#ifEqual action "allowed"}}
+            <h4 class="list-group-item-heading">Allowed Traffic</h4>
+            <ul>
+                {{#each allowed_traffic}}
+                    <li><samp>{{@key}}</samp></li>
+                    <ul>
+                    {{#each this}}
+                        <li><samp>{{this}}</samp></li>
+                    {{else}}
+                        <li><samp>None</samp></li>
+                    {{/each}}
+                    </ul>
+                {{else}}
+                    <li><samp>None</samp></li>
+                {{/each}}
+            </ul>
+        {{else}}
+            <h4 class="list-group-item-heading">Denied Traffic</h4>
+            <ul>
+                {{#each denied_traffic}}
+                <li><samp>{{@key}}</samp></li>
+                <ul>
+                    {{#each this}}
+                    <li><samp>{{this}}</samp></li>
+                    {{else}}
+                    <li><samp>None</samp></li>
+                    {{/each}}
+                </ul>
+                {{else}}
+                <li><samp>None</samp></li>
+                {{/each}}
+            </ul>
+        {{/ifEqual}}
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.computeengine.projects.id.firewalls", $("#services\\.computeengine\\.projects\\.id\\.firewalls\\.partial").html());
+</script>
+
+<!-- Single computeengine firewall template -->
+<script id="single_computeengine_firewall-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.computeengine.projects.id.firewalls'}}
+</script>
+<script>
+    var single_computeengine_firewall_template = Handlebars.compile($("#single_computeengine_firewall-template").html());
+</script>

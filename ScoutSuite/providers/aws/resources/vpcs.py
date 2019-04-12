@@ -1,4 +1,5 @@
-from ScoutSuite.providers.aws.resources.resources import AWSCompositeResources
+from ScoutSuite.core.console import print_exception
+from ScoutSuite.providers.aws.resources.base import AWSCompositeResources
 
 
 class Vpcs(AWSCompositeResources):
@@ -13,6 +14,7 @@ class Vpcs(AWSCompositeResources):
 
     async def fetch_all(self, **kwargs):
         raw_vpcs = await self.facade.ec2.get_vpcs(self.scope['region'])
+
         for raw_vpc in raw_vpcs:
             vpc_id, vpc = self._parse_vpc(raw_vpc)
             self[vpc_id] = vpc

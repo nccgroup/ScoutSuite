@@ -348,6 +348,6 @@ input:checked + .slider:before {
 
 @media only screen and (max-width: 1200px) {
     #container-user {
-      margin-top: 5rem !important;
+        margin-top: 5rem !important;
     }
-  }
+}

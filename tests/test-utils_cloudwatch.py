@@ -3,9 +3,9 @@ from ScoutSuite.core.console import config_debug_level
 
 
 #
-# Test for Scout2 CloudWatch functions
+# Test for Scout CloudWatch functions
 #
-class TestScout2CloudWatchUtilsClass:
+class TestScoutCloudWatchUtilsClass:
     config_debug_level(True)
 
     #

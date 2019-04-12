@@ -1,16 +1,10 @@
-from ScoutSuite.providers.base.configs.resources import Resources
-from ScoutSuite.providers.azure.facade.facade import AzureFacade
+from ScoutSuite.providers.azure.resources.base import AzureResources
 
 
-class BlobContainers(Resources):
-    def __init__(self, resource_group_name, storage_account_name, facade: AzureFacade):
-        self.resource_group_name = resource_group_name
-        self.storage_account_name = storage_account_name
-        self.facade = facade
-
+class BlobContainers(AzureResources):
     async def fetch_all(self):
         raw_blob_containers = await self.facade.storageaccounts.get_blob_containers(
-            self.resource_group_name, self.storage_account_name
+            self.scope['resource_group_name'], self.scope['storage_account_name']
         )
         for raw_blob_container in raw_blob_containers:
             id, blob_container = self._parse_blob_container(raw_blob_container)
