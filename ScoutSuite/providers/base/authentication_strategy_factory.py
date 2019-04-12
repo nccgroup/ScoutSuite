@@ -9,9 +9,6 @@ _strategies = {
 }
 
 
-class InvalidAuthenticationStrategyException(Exception): pass
-
-
 def get_authentication_strategy(provider: str):
     """
         Returns an authentication strategy implementation for a provider.

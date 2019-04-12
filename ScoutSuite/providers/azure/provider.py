@@ -25,12 +25,12 @@ class AzureProvider(BaseProvider):
         self.services_config = AzureServicesConfig
 
         self.credentials = kwargs['credentials']
-
         self.account_id = self.credentials.subscription_id
         self.result_format = result_format
 
         super(AzureProvider, self).__init__(report_dir, timestamp,
                                             services, skipped_services, thread_config, result_format)
+
     def get_report_name(self):
         """
         Returns the name of the report using the provider's configuration
