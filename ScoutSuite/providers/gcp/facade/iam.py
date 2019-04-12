@@ -16,7 +16,7 @@ class IAMFacade(GCPBaseFacade):
             )
             return response.get('bindings', [])
         except Exception as e:
-            print_exception('Failed to retrieve service account bindings: {}'.format(e))
+            print_exception('Failed to retrieve service account IAM policy bindings: {}'.format(e))
             return []
 
     async def get_keys(self, project_id: str, service_account_email: str):
