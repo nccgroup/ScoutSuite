@@ -26,10 +26,10 @@ class MemoryCache:
     """
     Workaround https://github.com/googleapis/google-api-python-client/issues/325#issuecomment-274349841
     """
-    _CACHE = {}
+    _cache = {}
 
     def get(self, url):
-        return MemoryCache._CACHE.get(url)
+        return MemoryCache._cache.get(url)
 
     def set(self, url, content):
-        MemoryCache._CACHE[url] = content
+        MemoryCache._cache[url] = content
