@@ -9,7 +9,7 @@ from ScoutSuite.providers.gcp.resources.stackdriverlogging.base import Stackdriv
 
 # Try to import proprietary services
 try:
-    from ScoutSuite.providers.gcp.resources.private_kubernetesengine.base import KubernetesEngine
+    from ScoutSuite.providers.gcp.resources.private_gke.base import KubernetesEngine
 except ImportError:
     pass
 
