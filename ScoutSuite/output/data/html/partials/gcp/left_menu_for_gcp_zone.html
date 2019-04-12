@@ -9,17 +9,17 @@
   {{#each items}}
   <div class="list-group" id="services.{{../service_name}}.projects.{{@key}}.zones">
     <div class="list-group-item active">
-      <a href="#services.{{../service_name}}.projects.{{@key}}.zones">{{@key}}</a>
+      <a href="#services.{{../service_name}}.projects.{{@key}}.zones.id.{{../resource_type}}">{{@key}}</a>
       <span class="float-right"><a href="javascript:hideList('services.{{../service_name}}.projects.{{@key}}.zones')"><i class="fa fa-times-circle"></i></a></span>
     </div>
-    <div class="list-group-item list-sub-element">
+    <div>
       {{#each (lookup . "zones")}}
       {{#if (lookup . (concatWith ../../resource_type "_count" ""))}}
       <div class="list-group-item" id="services.{{../../../service_name}}.projects.{{@../key}}.zones.{{@key}}.link">
         {{#if scout2_link}}
         <a href="#{{scout2_link}}.view">{{@key}}</a>
         {{else}}
-        <a href="#services.{{../../../../service_name}}.projects.{{@../key}}.zones.{{@key}}.view">{{@key}}</a>
+        <a href="#services.{{../../../../service_name}}.projects.{{@../key}}.zones.{{@key}}.{{../../../../resource_type}}">{{@key}}</a>
         {{/if}}
         <span class="float-right"><a href="javascript:hideList('services.{{../../../service_name}}.projects.{{@../key}}.zones.{{@key}}.link')"><i class="fa fa-times-circle"></i></a></span>
         {{#each (lookup . ../../../resource_type)}}

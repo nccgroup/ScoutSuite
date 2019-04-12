@@ -12,9 +12,9 @@
       <a href="#services.{{../service_name}}.projects.{{@key}}.{{../resource_type}}">{{@key}}</a>
       <span class="float-right"><a href="javascript:hideList('services.{{../service_name}}.projects.{{@key}}.{{../resource_type}}.list')"><i class="fa fa-times-circle"></i></a></span>
     </div>
-    <div class="list-group-item list-sub-element">
+    <div>
       {{#each (lookup . ../resource_type)}}
-      <div class="list-group-item-text" id="services.{{../../service_name}}.projects.{{@../key}}.{{../../resource_type}}.{{@key}}.link">
+      <div class="list-group-item" id="services.{{../../service_name}}.projects.{{@../key}}.{{../../resource_type}}.{{@key}}.link">
         {{#if scout2_link}}
         <a href="#{{scout2_link}}.view">{{name}}</a>
         {{else}}
