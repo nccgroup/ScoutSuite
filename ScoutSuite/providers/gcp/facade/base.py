@@ -1,5 +1,4 @@
 from googleapiclient import discovery
-from ScoutSuite.providers.gcp.utils import MemoryCache
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 
 class GCPBaseFacade:
@@ -16,3 +15,16 @@ class GCPBaseFacade:
     # thread-safe, we need to create a new client for each request.
     def _get_client(self) -> discovery.Resource:
         return self._build_client()
+
+
+class MemoryCache:
+    """
+    Workaround https://github.com/googleapis/google-api-python-client/issues/325#issuecomment-274349841
+    """
+    _CACHE = {}
+
+    def get(self, url):
+        return MemoryCache._CACHE.get(url)
+
+    def set(self, url, content):
+        MemoryCache._CACHE[url] = content
