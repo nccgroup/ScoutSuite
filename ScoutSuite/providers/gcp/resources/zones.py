@@ -3,7 +3,7 @@ from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.gcp.resources.resources import GCPCompositeResources
 
 class Zones(GCPCompositeResources):
-    def __init__(self, gcp_facade, project_id):
+    def __init__(self, gcp_facade: GCPFacade, project_id: str):
         self.gcp_facade = gcp_facade
         self.project_id = project_id
 
