@@ -13,28 +13,20 @@ try:
 except ImportError:
     pass
 
-
 class GCPServicesConfig(BaseServicesConfig):
-
     def __init__(self, credentials=None, thread_config=4, projects=None, **kwargs):
         super(GCPServicesConfig, self).__init__(credentials)
-
-        projects = [] if projects is None else projects
-
         gcp_facade = GCPFacade()
-
         self.cloudresourcemanager = CloudResourceManager(gcp_facade)
         self.cloudsql = CloudSQL(gcp_facade)
         self.cloudstorage = CloudStorage(gcp_facade)
         self.computeengine = ComputeEngine(gcp_facade)
         self.iam = IAM(gcp_facade)
-
+        self.stackdriverlogging = StackdriverLogging(gcp_facade)
         try:
             self.kubernetesengine = KubernetesEngineConfig(thread_config=thread_config)
         except NameError as _:
             pass
-
-        self.stackdriverlogging = StackdriverLogging(gcp_facade)
 
     def _is_provider(self, provider_name):
         return provider_name == 'gcp'
