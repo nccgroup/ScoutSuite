@@ -1,4 +1,4 @@
-from ScoutSuite.providers.aws.resources.resources import AWSResources
+from ScoutSuite.providers.aws.resources.base import AWSResources
 
 
 class SubnetGroups(AWSResources):

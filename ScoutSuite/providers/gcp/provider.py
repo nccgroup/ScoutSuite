@@ -12,7 +12,8 @@ class GCPProvider(BaseProvider):
     """
 
     def __init__(self, project_id=None, folder_id=None, organization_id=None, all_projects=None,
-                 report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
+                 report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4,
+                 result_format='json', **kwargs):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
@@ -33,8 +34,10 @@ class GCPProvider(BaseProvider):
         self.credentials = kwargs['credentials']
         self._set_account_id()
 
+        self.result_format = result_format
+
         super(GCPProvider, self).__init__(report_dir, timestamp,
-                                          services, skipped_services, thread_config)
+                                          services, skipped_services, thread_config, result_format)
 
     def get_report_name(self):
         """
@@ -78,8 +81,7 @@ class GCPProvider(BaseProvider):
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
-        TODO description
-        Tweak the AWS config to match cross-resources and clean any fetching artifacts
+        Tweak the GCP config to match cross-resources and clean any fetching artifacts
 
         :param ip_ranges:
         :param ip_ranges_name_key:
@@ -200,6 +202,7 @@ class GCPProvider(BaseProvider):
         finally:
             return projects
 
+
     def _match_instances_and_snapshots(self):
         """
         Compare Compute Engine instances and snapshots to identify instance disks that do not have a snapshot.
@@ -208,16 +211,18 @@ class GCPProvider(BaseProvider):
         """
 
         if 'computeengine' in self.services:
-            for instance in self.services['computeengine']['instances'].values():
-                for instance_disk in instance['disks'].values():
-                    instance_disk['snapshots'] = []
-                    for disk in self.services['computeengine']['snapshots'].values():
-                        if disk['status'] == 'READY' and disk['source_disk_url'] == instance_disk['source_url']:
-                            instance_disk['snapshots'].append(disk)
+            for project in self.services['computeengine']['projects'].values():
+                for zone in project['zones'].values():
+                    for instance in zone['instances'].values():
+                        for instance_disk in instance['disks'].values():
+                            instance_disk['snapshots'] = []
+                            for disk in project['snapshots'].values():
+                                if disk['status'] == 'READY' and disk['source_disk_url'] == instance_disk['source_url']:
+                                    instance_disk['snapshots'].append(disk)
 
-                    instance_disk['latest_snapshot'] = max(instance_disk['snapshots'],
-                                                           key=lambda x: x['creation_timestamp']) \
-                        if instance_disk['snapshots'] else None
+                            instance_disk['latest_snapshot'] = max(instance_disk['snapshots'],
+                                                                key=lambda x: x['creation_timestamp']) \
+                                if instance_disk['snapshots'] else None
 
     def _match_networks_and_instances(self):
         """
@@ -227,9 +232,14 @@ class GCPProvider(BaseProvider):
         """
 
         if 'computeengine' in self.services:
-            for network in self.services['computeengine']['networks'].values():
-                network['instances'] = []
-                for instance in self.services['computeengine']['instances'].values():
-                    for network_interface in instance['network_interfaces']:
-                        if network_interface['network'] == network['network_url']:
-                            network['instances'].append(instance['id'])
+            for project in self.services['computeengine']['projects'].values():
+                for network in project['networks'].values():
+                    network['instances'] = []
+                    for zone in project['zones'].values():
+                        # Skip the counts contained in the zones dictionary
+                        if zone is int:
+                            continue
+                        for instance in zone['instances'].values():
+                            for network_interface in instance['network_interfaces']:
+                                if network_interface['network'] == network['network_url']:
+                                    network['instances'].append(instance['id'])

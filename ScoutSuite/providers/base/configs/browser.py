@@ -103,6 +103,8 @@ def get_value_at(all_info, current_path, key, to_string=False):
                 # TODO ensure this additional condition didn't break anything
                 elif type(target_obj) == list and type(p) == int:
                     target_obj = target_obj[p]
+                elif type(target_obj) == list and p.isdigit():
+                    target_obj = target_obj[int(p)]
                 elif type(target_obj) == list:
                     target_obj = p
                 elif p == '':
