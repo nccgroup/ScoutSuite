@@ -1,3 +1,4 @@
+from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.gcp.facade.base import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.cloudresourcemanager import CloudResourceManagerFacade
 from ScoutSuite.providers.gcp.facade.cloudsql import CloudSQLFacade
@@ -16,7 +17,11 @@ class GCPFacade(GCPBaseFacade):
         self.stackdriverlogging = StackdriverLoggingFacade()
 
     async def get_projects(self):
-        resourcemanager_client = self._get_client()
-        request = resourcemanager_client.projects().list() 
-        projects_group = resourcemanager_client.projects()
-        return await GCPFacadeUtils.get_all('projects', request, projects_group)
+        try:
+            resourcemanager_client = self._get_client()
+            request = resourcemanager_client.projects().list() 
+            projects_group = resourcemanager_client.projects()
+            return await GCPFacadeUtils.get_all('projects', request, projects_group)
+        except Exception as e:
+            print_exception('Failed to retrieve projects: {}'.format(e))
+            return []
