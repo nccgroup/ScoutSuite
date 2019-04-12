@@ -38,15 +38,3 @@ class GCPServicesConfig(BaseServicesConfig):
 
     def _is_provider(self, provider_name):
         return provider_name == 'gcp'
-
-    def set_projects(self, projects):
-        """
-        Set the projects attribute of each of the configs. This is because before authentication (when configs
-        are instanciated, the projects within an organization are not known).
-
-        :param projects: List of projects to set
-        :return: None
-        """
-
-        for c in vars(self):
-            setattr(getattr(self, c), 'projects', projects)

@@ -74,11 +74,6 @@ class GCPProvider(BaseProvider):
         elif self.credentials.default_project_id:
             self.account_id = self.credentials.default_project_id
 
-    async def fetch(self, regions=None, skipped_regions=None, partition_name=None):
-        self._get_projects()
-        self.services.set_projects(projects=self.projects)
-        await super(GCPProvider, self).fetch(regions, skipped_regions, partition_name)
-
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
         Tweak the GCP config to match cross-resources and clean any fetching artifacts
