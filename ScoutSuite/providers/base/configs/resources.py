@@ -70,7 +70,6 @@ class CompositeResources(Resources, metaclass=abc.ABCMeta):
         :param resource_parent: The resource in which the children will be stored.
         :param scope: The scope passed to the children constructors.
         """
-
         children = [(child_class(self.facade, **scope), child_name) for (child_class, child_name) in self._children]
         # Fetch all children concurrently:
         await asyncio.wait(
