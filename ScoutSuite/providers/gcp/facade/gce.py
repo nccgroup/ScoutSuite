@@ -41,10 +41,13 @@ class GCEFacade(GCPBaseFacade):
 
     async def _add_metadata(self, project_id, instances):
         project = await self.get_project(project_id)
-        common_instance_metadata = GCPFacadeUtils.metadata_to_dict(project['commonInstanceMetadata'])
+        common_instance_metadata = self.metadata_to_dict(project['commonInstanceMetadata'])
         for instance in instances:
-            instance['metadata'] = GCPFacadeUtils.metadata_to_dict(instance['metadata'])
+            instance['metadata'] = self.metadata_to_dict(instance['metadata'])
             instance['commonInstanceMetadata'] = common_instance_metadata
+
+    def metadata_to_dict(self, metadata):
+        return dict((item['key'], item['value']) for item in metadata['items']) if 'items' in metadata else {}
 
     async def get_networks(self, project_id):
         try:
