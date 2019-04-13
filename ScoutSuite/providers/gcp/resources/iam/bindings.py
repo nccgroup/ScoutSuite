@@ -2,13 +2,13 @@ from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.base.configs.resources import Resources
 
 class Bindings(Resources):
-    def __init__(self, gcp_facade: GCPFacade, project_id: str, service_account_email: str):
-        self.gcp_facade = gcp_facade
+    def __init__(self, facade: GCPFacade, project_id: str, service_account_email: str):
+        self.facade = facade
         self.project_id = project_id
         self.service_account_email = service_account_email 
 
     async def fetch_all(self):
-        raw_bindings = await self.gcp_facade.iam.get_bindings(self.project_id, self.service_account_email)
+        raw_bindings = await self.facade.iam.get_bindings(self.project_id, self.service_account_email)
         for raw_binding in raw_bindings:
             binding_id, binding = self._parse_binding(raw_binding)
             self[binding_id] = binding

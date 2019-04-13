@@ -4,12 +4,12 @@ from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.utils import get_non_provider_id
 
 class Bindings(Resources):
-    def __init__(self, gcp_facade: GCPFacade, project_id: str):
-        self.gcp_facade = gcp_facade
+    def __init__(self, facade: GCPFacade, project_id: str):
+        self.facade = facade
         self.project_id = project_id
 
     async def fetch_all(self):
-        raw_bindings = await self.gcp_facade.cloudresourcemanager.get_bindings(self.project_id)
+        raw_bindings = await self.facade.cloudresourcemanager.get_bindings(self.project_id)
         for raw_binding in raw_bindings:
             binding_id, binding = self._parse_binding(raw_binding)
             self[binding_id] = binding

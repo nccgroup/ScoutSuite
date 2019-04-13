@@ -8,13 +8,13 @@ class Instances(GCPCompositeResources):
         (InstanceDisks, 'disks')
     ]
 
-    def __init__(self, gcp_facade: GCPFacade, project_id: str, zone: str):
-        self.gcp_facade = gcp_facade
+    def __init__(self, facade: GCPFacade, project_id: str, zone: str):
+        self.facade = facade
         self.project_id = project_id
         self.zone = zone
 
     async def fetch_all(self):
-        raw_instances = await self.gcp_facade.gce.get_instances(self.project_id, self.zone)
+        raw_instances = await self.facade.gce.get_instances(self.project_id, self.zone)
         for raw_instance in raw_instances:
             instance_id, instance = self._parse_instance(raw_instance)
             self[instance_id] = instance

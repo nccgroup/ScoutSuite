@@ -4,18 +4,18 @@ from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
 
 
 class Regions(GCPCompositeResources):
-    def __init__(self, gcp_facade: GCPFacade, project_id: str):
-        self.gcp_facade = gcp_facade
+    def __init__(self, facade: GCPFacade, project_id: str):
+        self.facade = facade
         self.project_id = project_id
 
     async def fetch_all(self):
-        raw_regions = await self.gcp_facade.gce.get_regions(self.project_id)
+        raw_regions = await self.facade.gce.get_regions(self.project_id)
         for raw_region in raw_regions:
             self[raw_region['name']] = {}
         tasks = {
             asyncio.ensure_future(
                 self._fetch_children(self[raw_region['name']], scope={
-                                     'gcp_facade': self.gcp_facade, 'project_id': self.project_id, 'region': raw_region['name']})
+                                     'facade': self.facade, 'project_id': self.project_id, 'region': raw_region['name']})
             ) for raw_region in raw_regions
         }
         await asyncio.wait(tasks)

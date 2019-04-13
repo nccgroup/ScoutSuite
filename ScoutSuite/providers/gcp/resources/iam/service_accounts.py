@@ -10,17 +10,17 @@ class ServiceAccounts(GCPCompositeResources):
         (Keys, 'keys')
     ]
 
-    def __init__(self, gcp_facade: GCPFacade, project_id: str):
-        self.gcp_facade = gcp_facade
+    def __init__(self, facade: GCPFacade, project_id: str):
+        self.facade = facade
         self.project_id = project_id
 
     async def fetch_all(self):
-        raw_service_accounts = await self.gcp_facade.iam.get_service_accounts(self.project_id)
+        raw_service_accounts = await self.facade.iam.get_service_accounts(self.project_id)
         for raw_service_account in raw_service_accounts:
             service_account_id, service_account = self._parse_service_account(
                 raw_service_account)
             self[service_account_id] = service_account
-            await self._fetch_children(self[service_account_id], scope={'gcp_facade': self.gcp_facade, 'project_id': self.project_id, 'service_account_email': service_account['email']})
+            await self._fetch_children(self[service_account_id], scope={'facade': self.facade, 'project_id': self.project_id, 'service_account_email': service_account['email']})
 
     def _parse_service_account(self, raw_service_account):
         service_account_dict = {}

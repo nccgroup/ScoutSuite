@@ -2,13 +2,13 @@ from ScoutSuite.providers.base.configs.resources import Resources
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 
 class Subnetworks(Resources):
-    def __init__(self, gcp_facade: GCPFacade, project_id: str, region: str):
-        self.gcp_facade = gcp_facade
+    def __init__(self, facade: GCPFacade, project_id: str, region: str):
+        self.facade = facade
         self.project_id = project_id
         self.region = region
 
     async def fetch_all(self):
-        raw_subnetworks = await self.gcp_facade.gce.get_subnetworks(self.project_id, self.region)
+        raw_subnetworks = await self.facade.gce.get_subnetworks(self.project_id, self.region)
         for raw_subnetwork in raw_subnetworks:
             subnetwork_id, subnetwork = self._parse_subnetwork(raw_subnetwork)
             self[subnetwork_id] = subnetwork

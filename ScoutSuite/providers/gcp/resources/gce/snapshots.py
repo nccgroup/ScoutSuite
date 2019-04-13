@@ -3,12 +3,12 @@ from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.gcp.resources.projects import Projects
 
 class Snapshots(Resources):
-    def __init__(self, gcp_facade: GCPFacade, project_id: str):
-        self.gcp_facade = gcp_facade
+    def __init__(self, facade: GCPFacade, project_id: str):
+        self.facade = facade
         self.project_id = project_id
 
     async def fetch_all(self):
-        raw_snapshots = await self.gcp_facade.gce.get_snapshots(self.project_id)
+        raw_snapshots = await self.facade.gce.get_snapshots(self.project_id)
         for raw_snapshot in raw_snapshots:
             snapshot_id, snapshot = self._parse_snapshot(raw_snapshot)
             self[snapshot_id] = snapshot

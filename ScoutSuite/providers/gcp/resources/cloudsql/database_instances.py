@@ -12,12 +12,12 @@ class DatabaseInstances(GCPCompositeResources):
         (Users, 'users')
     ]
 
-    def __init__(self, gcp_facade: GCPFacade, project_id: str):
-        self.gcp_facade = gcp_facade
+    def __init__(self, facade: GCPFacade, project_id: str):
+        self.facade = facade
         self.project_id = project_id
 
     async def fetch_all(self):
-        raw_instances = await self.gcp_facade.cloudsql.get_database_instances(self.project_id)
+        raw_instances = await self.facade.cloudsql.get_database_instances(self.project_id)
         instances = [self._parse_instance(raw_instance)
                      for raw_instance in raw_instances]
         for instance_id, instance in instances:
@@ -31,7 +31,7 @@ class DatabaseInstances(GCPCompositeResources):
         tasks = {
             asyncio.ensure_future(
                 self._fetch_children(self[instance_id], scope={
-                                     'gcp_facade': self.gcp_facade, 'project_id': self.project_id, 'instance_name': instance['name']})
+                                     'facade': self.facade, 'project_id': self.project_id, 'instance_name': instance['name']})
             ) for instance_id, instance in instances
         }
         await asyncio.wait(tasks)
