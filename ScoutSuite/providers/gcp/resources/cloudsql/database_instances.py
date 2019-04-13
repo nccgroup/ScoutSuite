@@ -24,6 +24,8 @@ class DatabaseInstances(GCPCompositeResources):
         self._set_last_backup_timestamps(instances)
 
     async def _fetch_instance_children(self, instances):
+        if len(instances) == 0:
+            return
         tasks = {
             asyncio.ensure_future(
                 self._fetch_children(self[instance_id], gcp_facade = self.gcp_facade, project_id = self.project_id, instance_name = instance['name'])
