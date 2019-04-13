@@ -5,7 +5,7 @@ from ScoutSuite.providers.azure.resources.network.base import Networks
 from ScoutSuite.providers.azure.resources.securitycenter.base import SecurityCenter
 from ScoutSuite.providers.azure.resources.sqldatabase.base import Servers
 from ScoutSuite.providers.azure.resources.storageaccounts.base import StorageAccounts
-from ScoutSuite.providers.base.configs.services import BaseServicesConfig
+from ScoutSuite.providers.base.services import BaseServicesConfig
 
 # Try to import proprietary services
 try:

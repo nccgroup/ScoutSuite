@@ -1,5 +1,5 @@
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
-from ScoutSuite.providers.base.configs.resources import Resources
+from ScoutSuite.providers.base.resources.base import Resources
 
 class Users(Resources):
     def __init__(self, facade: GCPFacade, project_id: str, instance_name: str):

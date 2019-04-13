@@ -19,7 +19,7 @@ from ScoutSuite.providers.aws.resources.ses.base import SES
 from ScoutSuite.providers.aws.resources.sns.base import SNS
 from ScoutSuite.providers.aws.resources.sqs.base import SQS
 from ScoutSuite.providers.aws.resources.vpc.base import VPC
-from ScoutSuite.providers.base.configs.services import BaseServicesConfig
+from ScoutSuite.providers.base.services import BaseServicesConfig
 
 # Try to import proprietary services
 try:

@@ -1,4 +1,4 @@
-from ScoutSuite.providers.base.configs.resources import Resources
+from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 
 class Sinks(Resources):

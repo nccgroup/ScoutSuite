@@ -3,7 +3,7 @@
 import abc
 import asyncio
 
-from ScoutSuite.providers.base.configs.resources import Resources, CompositeResources
+from ScoutSuite.providers.base.resources.base import Resources, CompositeResources
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 
 

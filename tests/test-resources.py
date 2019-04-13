@@ -1,5 +1,5 @@
 from unittest import TestCase
-from ScoutSuite.providers.base.configs.resources import (
+from ScoutSuite.providers.base.resources.base import (
     Resources, CompositeResources)
 import asyncio
 import json
@@ -27,7 +27,7 @@ class DummyComposite(CompositeResources):
     def __init__(self):
         self.facade = None
 
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         for key in range(2):
             self[str(key)] = {}
 
