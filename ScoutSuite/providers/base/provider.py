@@ -22,7 +22,7 @@ class BaseProvider(object):
     all cloud providers
     """
 
-    def __init__(self, report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4,
+    def __init__(self, report_dir=None, timestamp=None, services=None, skipped_services=None,
                  result_format='json', **kwargs):
         """
 

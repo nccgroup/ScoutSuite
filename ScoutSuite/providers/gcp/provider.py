@@ -4,14 +4,14 @@ from ScoutSuite.core.console import print_exception, print_info
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.gcp.configs.services import GCPServicesConfig
 
+
 class GCPProvider(BaseProvider):
     """
     Implements provider for GCP
     """
 
     def __init__(self, project_id=None, folder_id=None, organization_id=None, all_projects=None,
-                 report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4,
-                 result_format='json', **kwargs):
+                 report_dir=None, timestamp=None, services=None, skipped_services=None, result_format='json', **kwargs):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
@@ -35,7 +35,7 @@ class GCPProvider(BaseProvider):
         self.result_format = result_format
 
         super(GCPProvider, self).__init__(report_dir, timestamp,
-                                          services, skipped_services, thread_config, result_format)
+                                          services, skipped_services, result_format)
 
     def get_report_name(self):
         """
@@ -105,7 +105,7 @@ class GCPProvider(BaseProvider):
                                     instance_disk['snapshots'].append(disk)
 
                             instance_disk['latest_snapshot'] = max(instance_disk['snapshots'],
-                                                                key=lambda x: x['creation_timestamp']) \
+                                                                   key=lambda x: x['creation_timestamp']) \
                                 if instance_disk['snapshots'] else None
 
     def _match_networks_and_instances(self):
