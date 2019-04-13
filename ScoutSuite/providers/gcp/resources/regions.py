@@ -1,6 +1,6 @@
 import asyncio
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
-from ScoutSuite.providers.gcp.resources.resources import GCPCompositeResources
+from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
 
 class Regions(GCPCompositeResources):
     def __init__(self, gcp_facade: GCPFacade, project_id: str):

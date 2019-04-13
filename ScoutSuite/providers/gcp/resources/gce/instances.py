@@ -1,5 +1,5 @@
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
-from ScoutSuite.providers.gcp.resources.resources import GCPCompositeResources
+from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
 from ScoutSuite.providers.gcp.resources.gce.instance_disks import InstanceDisks
 from ScoutSuite.providers.utils import get_non_provider_id
 

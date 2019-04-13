@@ -1,5 +1,5 @@
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
-from ScoutSuite.providers.gcp.resources.resources import GCPCompositeResources
+from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
 from ScoutSuite.providers.gcp.resources.iam.bindings import Bindings
 from ScoutSuite.providers.gcp.resources.iam.keys import Keys
 
