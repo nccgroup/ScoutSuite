@@ -11,7 +11,7 @@ from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 
 # Try to import proprietary facades
 try:
-    from ScoutSuite.providers.gcp.facade.private_gke import GKEFacade
+    from ScoutSuite.providers.gcp.facade.gke_private import GKEFacade
 except ImportError:
     pass
 
