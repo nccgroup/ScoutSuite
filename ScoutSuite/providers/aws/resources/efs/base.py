@@ -4,7 +4,7 @@ from ScoutSuite.providers.aws.resources.regions import Regions
 
 
 class FileSystems(AWSResources):
-    def __init__(self, facade: AWSFacade, region: str):
+    def __init__(self, facade: AWSFacade, region: str, **kwargs):
         self.facade = facade
         self.region = region
 

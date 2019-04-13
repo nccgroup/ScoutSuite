@@ -7,7 +7,7 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Trails(AWSResources):
-    def __init__(self, facade: AWSFacade, region: str):
+    def __init__(self, facade: AWSFacade, region: str, **kwargs):
         self.facade = facade
         self.region = region
 

@@ -5,7 +5,7 @@ from ScoutSuite.providers.aws.resources.base import (AWSCompositeResources,
 
 
 class EMRClusters(AWSResources):
-    def __init__(self, facade: AWSFacade, region: str):
+    def __init__(self, facade: AWSFacade, region: str, **kwargs):
         self.facade = facade
         self.region = region
 
@@ -26,7 +26,7 @@ class EMRVpcs(AWSCompositeResources):
         (EMRClusters, 'clusters')
     ]
 
-    def __init__(self, facade: AWSFacade, region: str):
+    def __init__(self, facade: AWSFacade, region: str, **kwargs):
         self.facade = facade
         self.region = region
 

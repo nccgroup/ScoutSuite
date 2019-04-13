@@ -11,7 +11,7 @@ class Topics(AWSCompositeResources):
         (Subscriptions, 'subscriptions')
     ]
 
-    def __init__(self, facade: AWSFacade, region: str):
+    def __init__(self, facade: AWSFacade, region: str, **kwargs):
         self.facade = facade
         self.region = region
 

@@ -6,7 +6,7 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 
 class RegionalQueues(AWSResources):
-    def __init__(self, facade: AWSFacade, region: str):
+    def __init__(self, facade: AWSFacade, region: str, **kwargs):
         self.facade = facade
         self.region = region
 
