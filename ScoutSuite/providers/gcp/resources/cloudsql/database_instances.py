@@ -5,8 +5,9 @@ from ScoutSuite.providers.gcp.resources.cloudsql.backups import Backups
 from ScoutSuite.providers.gcp.resources.cloudsql.users import Users
 from ScoutSuite.providers.utils import get_non_provider_id
 
+
 class DatabaseInstances(GCPCompositeResources):
-    _children = [ 
+    _children = [
         (Backups, 'backups'),
         (Users, 'users')
     ]
@@ -17,7 +18,8 @@ class DatabaseInstances(GCPCompositeResources):
 
     async def fetch_all(self):
         raw_instances = await self.gcp_facade.cloudsql.get_database_instances(self.project_id)
-        instances = [self._parse_instance(raw_instance) for raw_instance in raw_instances]
+        instances = [self._parse_instance(raw_instance)
+                     for raw_instance in raw_instances]
         for instance_id, instance in instances:
             self[instance_id] = instance
         await self._fetch_instance_children(instances)
@@ -28,7 +30,8 @@ class DatabaseInstances(GCPCompositeResources):
             return
         tasks = {
             asyncio.ensure_future(
-                self._fetch_children(self[instance_id], gcp_facade = self.gcp_facade, project_id = self.project_id, instance_name = instance['name'])
+                self._fetch_children(self[instance_id], scope={
+                                     'gcp_facade': self.gcp_facade, 'project_id': self.project_id, 'instance_name': instance['name']})
             ) for instance_id, instance in instances
         }
         await asyncio.wait(tasks)
@@ -53,11 +56,12 @@ class DatabaseInstances(GCPCompositeResources):
 
     def _set_last_backup_timestamps(self, instances):
         for instance_id, _ in instances:
-            self[instance_id]['last_backup_timestamp'] = self._get_last_backup_timestamp(self[instance_id]['backups'])
+            self[instance_id]['last_backup_timestamp'] = self._get_last_backup_timestamp(
+                self[instance_id]['backups'])
 
     def _get_last_backup_timestamp(self, backups):
         if not backups:
             return 'N/A'
-        last_backup_id = max(backups.keys(), key=(lambda k: backups[k]['creation_timestamp']))
+        last_backup_id = max(backups.keys(), key=(
+            lambda k: backups[k]['creation_timestamp']))
         return backups[last_backup_id]['creation_timestamp']
-        

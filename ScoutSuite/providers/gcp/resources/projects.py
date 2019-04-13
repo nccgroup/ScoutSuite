@@ -2,6 +2,7 @@ import asyncio
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
 
+
 class Projects(GCPCompositeResources):
 
     """This class represents a collection of GCP Resources that are grouped by project. 
@@ -18,10 +19,12 @@ class Projects(GCPCompositeResources):
         """
 
         raw_projects = await self.gcp_facade.get_projects()
-        self['projects'] = { raw_project['projectId'] : {} for raw_project in raw_projects }
+        self['projects'] = {raw_project['projectId']: {}
+                            for raw_project in raw_projects}
         tasks = {
             asyncio.ensure_future(
-                self._fetch_children(self['projects'][raw_project['projectId']], gcp_facade = self.gcp_facade, project_id = raw_project['projectId'])
+                self._fetch_children(self['projects'][raw_project['projectId']], scope={
+                                     'gcp_facade': self.gcp_facade, 'project_id': raw_project['projectId']})
             ) for raw_project in raw_projects
         }
         await asyncio.wait(tasks)
@@ -29,4 +32,5 @@ class Projects(GCPCompositeResources):
 
     def _set_counts(self):
         for _, child_name in self._children:
-            self[child_name + '_count'] = sum([project[child_name + '_count'] for project in self['projects'].values()])
+            self[child_name + '_count'] = sum([project[child_name + '_count']
+                                               for project in self['projects'].values()])
