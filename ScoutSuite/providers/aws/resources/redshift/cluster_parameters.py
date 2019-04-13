@@ -1,10 +1,16 @@
+from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 
 
 class ClusterParameters(AWSResources):
+    def __init__(self, facade: AWSFacade, region: str, parameter_group_name: str):
+        self.facade = facade
+        self.region = region
+        self.parameter_group_name = parameter_group_name
+
     async def fetch_all(self, **kwargs):
         raw_parameters = await self.facade.redshift.get_cluster_parameters(
-            self.scope['region'], self.scope['parameter_group_name'])
+            self.region, self.parameter_group_name)
         for raw_parameter in raw_parameters:
             id, parameter = self._parse_parameter(raw_parameter)
             self[id] = parameter

@@ -1,9 +1,15 @@
+from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 
 
 class Listeners(AWSResources):
+    def __init__(self, facade: AWSFacade, region: str, load_balancer_arn: str):
+        self.facade = facade
+        self.region = region
+        self.load_balancer_arn = load_balancer_arn
+
     async def fetch_all(self, **kwargs):
-        listeners = await self.facade.elbv2.get_listeners(self.scope['region'], self.scope['load_balancer_arn'])
+        listeners = await self.facade.elbv2.get_listeners(self.region, self.load_balancer_arn)
         for raw_listener in listeners:
             id, listener = self._parse_listener(raw_listener)
             self[id] = listener

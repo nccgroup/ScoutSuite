@@ -4,8 +4,12 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 
 class Functions(AWSResources):
+    def __init__(self, facade: AWSFacade, region: str):
+        self.facade = facade
+        self.region = region
+
     async def fetch_all(self, **kwargs):
-        raw_functions = await self.facade.awslambda.get_functions(self.scope['region'])
+        raw_functions = await self.facade.awslambda.get_functions(self.region)
         for raw_function in raw_functions:
             name, resource = self._parse_function(raw_function)
             self[name] = resource

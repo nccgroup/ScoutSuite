@@ -30,8 +30,7 @@ class DatabaseInstances(GCPCompositeResources):
             return
         tasks = {
             asyncio.ensure_future(
-                self._fetch_children(self[instance_id], scope={
-                                     'facade': self.facade, 'project_id': self.project_id, 'instance_name': instance['name']})
+                self._fetch_children(self[instance_id], scope={'project_id': self.project_id, 'instance_name': instance['name']})
             ) for instance_id, instance in instances
         }
         await asyncio.wait(tasks)

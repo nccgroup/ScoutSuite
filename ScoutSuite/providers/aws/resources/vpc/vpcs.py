@@ -9,6 +9,3 @@ class RegionalVpcs(Vpcs):
         (NetworkACLs, 'network_acls'),
         (Subnets, 'subnets')
     ]
-
-    def __init__(self, facade, scope: dict):
-        super(RegionalVpcs, self).__init__(facade, scope, add_ec2_classic=True)

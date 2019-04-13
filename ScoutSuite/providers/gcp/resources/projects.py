@@ -23,8 +23,7 @@ class Projects(GCPCompositeResources):
                             for raw_project in raw_projects}
         tasks = {
             asyncio.ensure_future(
-                self._fetch_children(self['projects'][raw_project['projectId']], scope={
-                                     'facade': self.facade, 'project_id': raw_project['projectId']})
+                self._fetch_children(self['projects'][raw_project['projectId']], scope={'project_id': raw_project['projectId']})
             ) for raw_project in raw_projects
         }
         await asyncio.wait(tasks)

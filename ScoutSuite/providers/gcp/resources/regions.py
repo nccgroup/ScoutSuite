@@ -15,7 +15,7 @@ class Regions(GCPCompositeResources):
         tasks = {
             asyncio.ensure_future(
                 self._fetch_children(self[raw_region['name']], scope={
-                                     'facade': self.facade, 'project_id': self.project_id, 'region': raw_region['name']})
+                                     'project_id': self.project_id, 'region': raw_region['name']})
             ) for raw_region in raw_regions
         }
         await asyncio.wait(tasks)

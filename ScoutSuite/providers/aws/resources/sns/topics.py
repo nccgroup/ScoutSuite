@@ -1,5 +1,6 @@
 import json
 
+from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSCompositeResources
 
 from .subscriptions import Subscriptions
@@ -10,15 +11,19 @@ class Topics(AWSCompositeResources):
         (Subscriptions, 'subscriptions')
     ]
 
+    def __init__(self, facade: AWSFacade, region: str):
+        self.facade = facade
+        self.region = region
+
     async def fetch_all(self, **kwargs):
-        raw_topics = await self.facade.sns.get_topics(self.scope['region'])
+        raw_topics = await self.facade.sns.get_topics(self.region)
         for raw_topic in raw_topics:
             topic_name, topic = self._parse_topic(raw_topic)
             self[topic_name] = topic
 
         await self._fetch_children_of_all_resources(
             resources=self,
-            scopes={topic_id: {'region': self.scope['region'], 'topic_name': topic['name']}
+            scopes={topic_id: {'region': self.region, 'topic_name': topic['name']}
                     for (topic_id, topic) in self.items()}
         )
 

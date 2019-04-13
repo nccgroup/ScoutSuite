@@ -38,8 +38,5 @@ class S3(AWSCompositeResources):
         (Buckets, 'buckets')
     ]
 
-    def __init__(self, facade: AWSFacade):
-        super(S3, self,).__init__(facade, {})
-
     async def fetch_all(self, credentials, regions=None, partition_name='aws'):
         await self._fetch_children(self, {})

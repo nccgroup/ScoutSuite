@@ -1,10 +1,16 @@
+from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.utils import get_name
 
 
 class Subnets(AWSResources):
+    def __init__(self, facade: AWSFacade, region: str, vpc: str):
+        self.facade = facade
+        self.region = region
+        self.vpc = vpc
+
     async def fetch_all(self, **kwargs):
-        raw_subnets = await self.facade.ec2.get_subnets(self.scope['region'], self.scope['vpc'])
+        raw_subnets = await self.facade.ec2.get_subnets(self.region, self.vpc)
         for raw_subnet in raw_subnets:
             id, subnet = self._parse_subnet(raw_subnet)
             self[id] = subnet

@@ -1,4 +1,5 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.utils import manage_dictionary
 from ScoutSuite.core.fs import load_data
 
@@ -6,8 +7,13 @@ from ScoutSuite.core.fs import load_data
 class SecurityGroups(AWSResources):
     icmp_message_types_dict = load_data('icmp_message_types.json', 'icmp_message_types')
 
+    def __init__(self, facade: AWSFacade, region: str, vpc: str):
+        self.facade = facade
+        self.region = region
+        self.vpc = vpc
+
     async def fetch_all(self, **kwargs):
-        raw_security_groups = await self.facade.ec2.get_security_groups(self.scope['region'], self.scope['vpc'])
+        raw_security_groups = await self.facade.ec2.get_security_groups(self.region, self.vpc)
         for raw_security_groups in raw_security_groups:
             name, resource = self._parse_security_group(raw_security_groups)
             self[name] = resource

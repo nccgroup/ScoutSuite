@@ -1,10 +1,15 @@
+from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.utils import get_name
 
 
 class FlowLogs(AWSResources):
+    def __init__(self, facade: AWSFacade, region: str, **kwargs):
+        self.facade = facade
+        self.region = region
+
     async def fetch_all(self, **kwargs):
-        raw_logs = await self.facade.ec2.get_flow_logs(self.scope['region'])
+        raw_logs = await self.facade.ec2.get_flow_logs(self.region)
         for raw_log in raw_logs:
             id, log = self._parse_log(raw_log)
             self[id] = log

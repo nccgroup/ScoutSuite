@@ -1,9 +1,15 @@
+from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 
 
 class Snapshots(AWSResources):
+    def __init__(self, facade: AWSFacade, region: str, vpc: str):
+        self.facade = facade
+        self.region = region
+        self.vpc = vpc
+
     async def fetch_all(self, **kwargs):
-        raw_snapshots = await self.facade.rds.get_snapshots(self.scope['region'], self.scope['vpc'])
+        raw_snapshots = await self.facade.rds.get_snapshots(self.region, self.vpc)
         for raw_snapshot in raw_snapshots:
             name, resource = self._parse_snapshot(raw_snapshot)
             self[name] = resource

@@ -1,11 +1,15 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
-from ScoutSuite.providers.aws.resources.regions import Regions
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.aws.resources.regions import Regions
 
 
 class FileSystems(AWSResources):
+    def __init__(self, facade: AWSFacade, region: str):
+        self.facade = facade
+        self.region = region
+
     async def fetch_all(self, **kwargs):
-        raw_file_systems  = await self.facade.efs.get_file_systems(self.scope['region'])
+        raw_file_systems = await self.facade.efs.get_file_systems(self.region)
         for raw_file_system in raw_file_systems:
             name, resource = self._parse_file_system(raw_file_system)
             self[name] = resource

@@ -15,7 +15,7 @@ class Zones(GCPCompositeResources):
         tasks = {
             asyncio.ensure_future(
                 self._fetch_children(self[raw_zone['name']], scope={
-                                     'facade': self.facade, 'project_id': self.project_id, 'zone': raw_zone['name']})
+                                     'project_id': self.project_id, 'zone': raw_zone['name']})
             ) for raw_zone in raw_zones
         }
         await asyncio.wait(tasks)

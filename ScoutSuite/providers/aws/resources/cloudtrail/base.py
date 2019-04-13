@@ -7,8 +7,12 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Trails(AWSResources):
+    def __init__(self, facade: AWSFacade, region: str):
+        self.facade = facade
+        self.region = region
+
     async def fetch_all(self, **kwargs):
-        raw_trails = await self.facade.cloudtrail.get_trails(self.scope['region'])
+        raw_trails = await self.facade.cloudtrail.get_trails(self.region)
         for raw_trail in raw_trails:
             name, resource = self._parse_trail(raw_trail)
             self[name] = resource
@@ -19,7 +23,7 @@ class Trails(AWSResources):
 
         # Do not duplicate entries for multiregion trails
         if 'IsMultiRegionTrail' in raw_trail and raw_trail['IsMultiRegionTrail'] and \
-                raw_trail['HomeRegion'] != self.scope['region']:
+                raw_trail['HomeRegion'] != self.region:
             for key in ['HomeRegion', 'TrailARN']:
                 trail[key] = raw_trail[key]
             trail['scout_link'] = 'services.cloudtrail.regions.%s.trails.%s' % (raw_trail['HomeRegion'], trail_id)

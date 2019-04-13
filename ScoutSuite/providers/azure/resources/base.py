@@ -11,14 +11,7 @@ class AzureResources(Resources, metaclass=abc.ABCMeta):
 
     """This is the base class for Azure resources."""
 
-    def __init__(self, facade: AzureFacade, scope: dict = None):
-        """
-        :param scope: The scope holds the scope in which the resource is located. This could be a resource group name or any other
-                      resource parent name. For example, scope of a SQL database would be {'resource_group_name': 'groupX', 'server_name': 'serverY'}.
-                      This scope will be used when fetching data through the facade.
-        """
-
-        self.scope = scope
+    def __init__(self, facade: AzureFacade):
         self.facade = facade
 
 

@@ -1,10 +1,16 @@
+from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.regions import Regions
 from ScoutSuite.providers.aws.resources.base import AWSResources
 
 
 class RDSInstances(AWSResources):
+    def __init__(self, facade: AWSFacade, region: str, vpc: str):
+        self.facade = facade
+        self.region = region
+        self.vpc = vpc
+
     async def fetch_all(self, **kwargs):
-        raw_instances = await self.facade.rds.get_instances(self.scope['region'], self.scope['vpc'])
+        raw_instances = await self.facade.rds.get_instances(self.region, self.vpc)
         for raw_instance in raw_instances:
             name, resource = self._parse_instance(raw_instance)
             self[name] = resource

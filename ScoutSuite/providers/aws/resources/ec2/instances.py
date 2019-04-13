@@ -1,12 +1,18 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.utils import get_name
 from ScoutSuite.providers.aws.utils import get_keys
 import re
 
 
 class EC2Instances(AWSResources):
+    def __init__(self, facade: AWSFacade, region: str, vpc: str):
+        self.facade = facade
+        self.region = region
+        self.vpc = vpc
+
     async def fetch_all(self, **kwargs):
-        raw_instances = await self.facade.ec2.get_instances(self.scope['region'], self.scope['vpc'])
+        raw_instances = await self.facade.ec2.get_instances(self.region, self.vpc)
         for raw_instance in raw_instances:
             name, resource = await self._parse_instance(raw_instance)
             self[name] = resource
@@ -17,7 +23,7 @@ class EC2Instances(AWSResources):
         instance['id'] = id
         instance['reservation_id'] = raw_instance['ReservationId']
         instance['monitoring_enabled'] = raw_instance['Monitoring']['State'] == 'enabled'
-        instance['user_data'] = await self.facade.ec2.get_instance_user_data(self.scope['region'], id)
+        instance['user_data'] = await self.facade.ec2.get_instance_user_data(self.region, id)
         instance['user_data_secrets'] = self._identify_user_data_secrets(instance['user_data'])
 
         get_name(raw_instance, instance, 'InstanceId')
