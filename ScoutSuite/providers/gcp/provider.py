@@ -2,7 +2,7 @@ import os
 
 from ScoutSuite.core.console import print_exception, print_info
 from ScoutSuite.providers.base.provider import BaseProvider
-from ScoutSuite.providers.gcp.configs.services import GCPServicesConfig
+from ScoutSuite.providers.gcp.services import GCPServicesConfig
 
 
 class GCPProvider(BaseProvider):
