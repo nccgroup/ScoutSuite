@@ -7,6 +7,7 @@ used to reflect that.
 """
 
 import abc
+import asyncio
 
 
 class Resources(dict, metaclass=abc.ABCMeta):
@@ -43,12 +44,42 @@ class CompositeResources(Resources, metaclass=abc.ABCMeta):
         """
         raise NotImplementedError
 
-    @abc.abstractmethod
-    async def _fetch_children(self, **kwargs):
-        """Fetches, parses and stores instances of nested resources included in a `CompositeResources` and defined
-        in the '_children' attribute.
+    async def _fetch_children_of_all_resources(self, resources: dict, scopes: dict):
+        """ This method iterates through a collection of resources and fetches all children of each resource, in a
+        concurrent way.
 
-        :param kwargs:
-        :return:
+        :param resources: list of (composite) resources
+        :param scopes: dict that maps resource parent keys to scopes (dict) that should be used to retrieve children
+        of each resource.
         """
-        raise NotImplementedError
+        if len(resources) == 0:
+            return
+
+        tasks = {
+            asyncio.ensure_future(
+                self._fetch_children(resource_parent=resource_parent, scope=scopes[resource_parent_key])
+            ) for (resource_parent_key, resource_parent) in resources.items()
+        }
+        await asyncio.wait(tasks)
+
+    async def _fetch_children(self, resource_parent: object, scope: dict):
+        """This method fetches all children of a given resource (the so called 'resource_parent') by calling fetch_all
+        method on each child defined in '_children' and then sto.res the fetched resources in `resource_parent` under
+        the key associated with the child. It also creates a "<child_name>_count" entry for each child.
+
+        :param resource_parent: The resource in which the children will be stored.
+        :param scope: The scope passed to the children constructors.
+        """
+
+        children = [(child_class(self.facade, scope), child_name) for (child_class, child_name) in self._children]
+        # Fetch all children concurrently:
+        await asyncio.wait(
+            {asyncio.ensure_future(child.fetch_all()) for (child, _) in children}
+        )
+        # Update parent content:
+        for child, child_name in children:
+            if resource_parent.get(child_name) is None:
+                resource_parent[child_name] = {}
+
+            resource_parent[child_name].update(child)
+            resource_parent[child_name + '_count'] = len(child)
