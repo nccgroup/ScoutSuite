@@ -163,5 +163,9 @@ class EC2Facade(AWSBaseFacade):
              if flow_log['ResourceId'] == subnet['SubnetId'] or flow_log['ResourceId'] == subnet['VpcId']]
 
     async def get_peering_connections(self, region):
-        peering_connections = await AWSFacadeUtils.get_all_pages('ec2', region, self.session, 'describe_vpc_peering_connections', 'VpcPeeringConnections')
-        return peering_connections
+        try:
+            peering_connections = await AWSFacadeUtils.get_all_pages('ec2', region, self.session, 'describe_vpc_peering_connections', 'VpcPeeringConnections')
+            return peering_connections
+        except Exception as e:
+            print_exception('Failed to get peering connections: {}'.format(e))
+            return []
