@@ -37,5 +37,5 @@ class S3(AWSCompositeResources):
         (Buckets, 'buckets')
     ]
 
-    async def fetch_all(self, credentials, regions=None, partition_name='aws'):
-        await self._fetch_children(self, {})
+    async def fetch_all(self, regions=None, partition_name='aws'):
+        await self._fetch_children(self)

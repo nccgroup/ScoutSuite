@@ -7,11 +7,10 @@ from ScoutSuite.providers.aws.facade.base import AWSFacade
 
 class Stacks(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
+        super(Stacks, self).__init__(facade)
         self.region = region
 
-        super(Stacks, self).__init__(facade)
-
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         raw_stacks = await self.facade.cloudformation.get_stacks(self.region)
         for raw_stack in raw_stacks:
             name, stack = self._parse_stack(raw_stack)

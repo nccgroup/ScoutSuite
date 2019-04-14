@@ -11,9 +11,8 @@ class Identities(AWSCompositeResources):
     ]
 
     def __init__(self, facade: AWSFacade, region: str):
-        self.region = region
-
         super(Identities, self).__init__(facade)
+        self.region = region
 
     async def fetch_all(self):
         raw_identities = await self.facade.ses.get_identities(self.region)

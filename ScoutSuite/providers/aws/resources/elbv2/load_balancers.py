@@ -10,12 +10,11 @@ class LoadBalancers(AWSCompositeResources):
     ]
 
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
+        super(LoadBalancers, self).__init__(facade)
         self.region = region
         self.vpc = vpc
 
-        super(LoadBalancers, self).__init__(facade)
-
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         raw_load_balancers = await self.facade.elbv2.get_load_balancers(self.region, self.vpc)
         for raw_load_balancer in raw_load_balancers:
             id, load_balancer = self._parse_load_balancer(raw_load_balancer)

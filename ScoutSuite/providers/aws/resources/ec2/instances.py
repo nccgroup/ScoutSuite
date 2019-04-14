@@ -7,12 +7,11 @@ import re
 
 class EC2Instances(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
+        super(EC2Instances, self).__init__(facade)
         self.region = region
         self.vpc = vpc
 
-        super(EC2Instances, self).__init__(facade)
-
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         raw_instances = await self.facade.ec2.get_instances(self.region, self.vpc)
         for raw_instance in raw_instances:
             name, resource = await self._parse_instance(raw_instance)

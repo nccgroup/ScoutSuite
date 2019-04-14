@@ -7,9 +7,8 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 class RegionalQueues(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
-        self.region = region
-
         super(RegionalQueues, self).__init__(facade)
+        self.region = region
 
     async def fetch_all(self):
         queues = await self.facade.sqs.get_queues(

@@ -36,7 +36,6 @@ except ImportError:
 class AWSFacade(AWSBaseFacade):
     def __init__(self, credentials=None):
         super(AWSFacade, self).__init__()
-
         self.owner_id = get_aws_account_id(credentials)
 
         self._set_session(credentials)

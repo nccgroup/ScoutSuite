@@ -12,9 +12,8 @@ class Topics(AWSCompositeResources):
     ]
 
     def __init__(self, facade: AWSFacade, region: str):
-        self.region = region
-
         super(Topics, self).__init__(facade)
+        self.region = region
 
     async def fetch_all(self):
         raw_topics = await self.facade.sns.get_topics(self.region)

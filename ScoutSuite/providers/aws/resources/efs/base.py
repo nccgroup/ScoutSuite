@@ -5,11 +5,10 @@ from ScoutSuite.providers.aws.resources.regions import Regions
 
 class FileSystems(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
+        super(FileSystems, self).__init__(facade)
         self.region = region
 
-        super(FileSystems, self).__init__(facade)
-
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         raw_file_systems = await self.facade.efs.get_file_systems(self.region)
         for raw_file_system in raw_file_systems:
             name, resource = self._parse_file_system(raw_file_system)

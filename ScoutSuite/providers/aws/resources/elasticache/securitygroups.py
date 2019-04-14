@@ -4,11 +4,10 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 class SecurityGroups(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
+        super(SecurityGroups, self).__init__(facade)
         self.region = region
 
-        super(SecurityGroups, self).__init__(facade)
-
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         raw_security_groups = await self.facade.elasticache.get_security_groups(self.region)
 
         for raw_security_group in raw_security_groups:

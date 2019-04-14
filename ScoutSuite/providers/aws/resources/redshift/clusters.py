@@ -4,10 +4,9 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 class Clusters(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
+        super(Clusters, self).__init__(facade)
         self.region = region
         self.vpc = vpc
-
-        super(Clusters, self).__init__(facade)
 
     async def fetch_all(self):
         raw_clusters = await self.facade.redshift.get_clusters(self.region, self.vpc)

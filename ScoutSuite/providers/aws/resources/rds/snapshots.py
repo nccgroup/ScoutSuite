@@ -4,10 +4,9 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 class Snapshots(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
+        super(Snapshots, self).__init__(facade)
         self.region = region
         self.vpc = vpc
-
-        super(Snapshots, self).__init__(facade)
 
     async def fetch_all(self):
         raw_snapshots = await self.facade.rds.get_snapshots(self.region, self.vpc)

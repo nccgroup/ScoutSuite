@@ -5,11 +5,10 @@ from ScoutSuite.providers.aws.resources.base import AWSCompositeResources, AWSRe
 
 class EMRClusters(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
+        super(EMRClusters, self).__init__(facade)
         self.region = region
 
-        super(EMRClusters, self).__init__(facade)
-
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         raw_clusters = await self.facade.emr.get_clusters(self.region)
         for raw_cluster in raw_clusters:
             name, resource = self._parse_cluster(raw_cluster)
@@ -31,7 +30,7 @@ class EMRVpcs(AWSCompositeResources):
 
         super(EMRVpcs, self).__init__(facade)
 
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         # EMR won't disclose its VPC, so we put everything in a VPC named "EMR-UNKNOWN-VPC", and we
         # infer the VPC afterwards during the preprocessing.
         tmp_vpc = 'EMR-UNKNOWN-VPC'
@@ -47,8 +46,8 @@ class EMR(Regions):
     def __init__(self, facade: AWSFacade):
         super(EMR, self).__init__('emr', facade)
 
-    async def fetch_all(self, credentials=None, regions=None, partition_name='aws'):
-        await super(EMR, self).fetch_all(credentials, regions, partition_name)
+    async def fetch_all(self, regions=None, partition_name='aws'):
+        await super(EMR, self).fetch_all(regions, partition_name)
 
         for region in self['regions']:
             self['regions'][region]['clusters_count'] = sum(

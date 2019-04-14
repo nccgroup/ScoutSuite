@@ -4,12 +4,11 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 class RDSInstances(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
+        super(RDSInstances, self).__init__(facade)
         self.region = region
         self.vpc = vpc
 
-        super(RDSInstances, self).__init__(facade)
-
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         raw_instances = await self.facade.rds.get_instances(self.region, self.vpc)
         for raw_instance in raw_instances:
             name, resource = self._parse_instance(raw_instance)

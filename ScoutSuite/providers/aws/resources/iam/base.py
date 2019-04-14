@@ -19,12 +19,11 @@ class IAM(AWSCompositeResources):
     ]
 
     def __init__(self, facade: AWSFacade):
+        super(IAM, self).__init__(facade)
         self.service = 'iam'
 
-        super(IAM, self).__init__(facade)
-
-    async def fetch_all(self, credentials, regions=None, partition_name='aws'):
-        await self._fetch_children(self, {})
+    async def fetch_all(self, regions=None, partition_name='aws'):
+        await self._fetch_children(self)
 
         # We do not want the report to count the password policies as resources, they aren't really resources.
         self['password_policy_count'] = 0

@@ -4,12 +4,11 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 class SubnetGroups(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
+        super(SubnetGroups, self).__init__(facade)
         self.region = region
         self.vpc = vpc
 
-        super(SubnetGroups, self).__init__(facade)
-
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         raw_subnet_groups = await self.facade.elasticache.get_subnet_groups(self.region, self.vpc)
         for raw_subnet_group in raw_subnet_groups:
             name, resource = self._parse_subnet_group(raw_subnet_group)

@@ -4,11 +4,10 @@ from ScoutSuite.providers.aws.facade.base import AWSFacade
 
 class AmazonMachineImages(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
+        super(AmazonMachineImages, self).__init__(facade)
         self.region = region
 
-        super(AmazonMachineImages, self).__init__(facade)
-
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         raw_images = await self.facade.ec2.get_images(self.region)
         for raw_image in raw_images:
             name, resource = self._parse_image(raw_image)

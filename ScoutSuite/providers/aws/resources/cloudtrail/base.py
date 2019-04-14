@@ -8,11 +8,10 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 class Trails(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
+        super(Trails, self).__init__(facade)
         self.region = region
 
-        super(Trails, self).__init__(facade)
-
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         raw_trails = await self.facade.cloudtrail.get_trails(self.region)
         for raw_trail in raw_trails:
             name, resource = self._parse_trail(raw_trail)

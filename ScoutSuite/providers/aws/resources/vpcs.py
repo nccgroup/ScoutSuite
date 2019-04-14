@@ -8,12 +8,11 @@ class Vpcs(AWSCompositeResources):
     """
 
     def __init__(self, facade, region: str, add_ec2_classic=False):
+        super(Vpcs, self).__init__(facade)
         self.region = region
         self.add_ec2_classic = add_ec2_classic
 
-        super(Vpcs, self).__init__(facade)
-
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         raw_vpcs = await self.facade.ec2.get_vpcs(self.region)
 
         for raw_vpc in raw_vpcs:
