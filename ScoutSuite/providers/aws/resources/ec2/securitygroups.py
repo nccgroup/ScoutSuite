@@ -13,7 +13,7 @@ class SecurityGroups(AWSResources):
 
         super(SecurityGroups, self).__init__(facade)
 
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         raw_security_groups = await self.facade.ec2.get_security_groups(self.region, self.vpc)
         for raw_security_groups in raw_security_groups:
             name, resource = self._parse_security_group(raw_security_groups)
