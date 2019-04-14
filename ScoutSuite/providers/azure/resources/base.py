@@ -3,15 +3,13 @@
 import abc
 
 from ScoutSuite.providers.base.resources.base import Resources, CompositeResources
-from ScoutSuite.providers.azure.facade.base import AzureFacade
 
 
 class AzureResources(Resources, metaclass=abc.ABCMeta):
 
     """This is the base class for Azure resources."""
 
-    def __init__(self, facade: AzureFacade):
-        self.facade = facade
+    pass
 
 
 class AzureCompositeResources(AzureResources, CompositeResources, metaclass=abc.ABCMeta):

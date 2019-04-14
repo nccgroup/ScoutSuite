@@ -33,9 +33,6 @@ class CompositeResources(Resources, metaclass=abc.ABCMeta):
     referred to as its 'children'.
     """
 
-    def __init__(self, facade):
-        self.facade = facade
-
     @property
     @abc.abstractmethod
     def _children(self):

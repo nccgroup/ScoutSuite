@@ -9,8 +9,7 @@ class AWSResources(Resources, metaclass=abc.ABCMeta):
 
     """This is the base class for AWS resources."""
 
-    def __init__(self, facade):
-        self.facade = facade
+    pass
 
 
 class AWSCompositeResources(AWSResources, CompositeResources, metaclass=abc.ABCMeta):
