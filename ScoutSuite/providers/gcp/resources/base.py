@@ -1,7 +1,7 @@
 """This module provides implementations for CompositeResources for GCP."""
 
-import asyncio
 from ScoutSuite.providers.base.resources.base import CompositeResources
+
 
 class GCPCompositeResources(CompositeResources):
 

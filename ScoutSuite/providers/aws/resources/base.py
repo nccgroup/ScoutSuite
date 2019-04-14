@@ -1,7 +1,6 @@
 """This module provides implementations for Resources and CompositeResources for AWS."""
 
 import abc
-import asyncio
 
 from ScoutSuite.providers.base.resources.base import Resources, CompositeResources
 
