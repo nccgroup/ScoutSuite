@@ -35,7 +35,7 @@ class EMRVpcs(AWSCompositeResources):
         # infer the VPC afterwards during the preprocessing.
         tmp_vpc = 'EMR-UNKNOWN-VPC'
         self[tmp_vpc] = {}
-        await self._fetch_children(self[tmp_vpc], {'region': self.region, 'vpc': tmp_vpc})
+        await self._fetch_children(self[tmp_vpc], {'region': self.region})
 
 
 class EMR(Regions):
