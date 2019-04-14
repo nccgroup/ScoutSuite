@@ -1,14 +1,14 @@
-from ScoutSuite.providers.base.configs.resources import Resources
+from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
-from ScoutSuite.providers.gcp.resources.projects import Projects
+
 
 class Networks(Resources):
-    def __init__(self, gcp_facade: GCPFacade, project_id: str):
-        self.gcp_facade = gcp_facade
+    def __init__(self, facade: GCPFacade, project_id: str):
+        super(Networks, self).__init__(facade)
         self.project_id = project_id
 
     async def fetch_all(self):
-        raw_networks = await self.gcp_facade.gce.get_networks(self.project_id)
+        raw_networks = await self.facade.gce.get_networks(self.project_id)
         for raw_network in raw_networks:
             network_id, network = self._parse_network(raw_network)
             self[network_id] = network

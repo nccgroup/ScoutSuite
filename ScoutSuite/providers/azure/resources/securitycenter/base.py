@@ -12,5 +12,5 @@ class SecurityCenter(AzureCompositeResources):
         (SecurityContacts, 'security_contacts')
     ]
 
-    async def fetch_all(self, credentials, **kwargs):
+    async def fetch_all(self):
         await self._fetch_children(resource_parent=self)

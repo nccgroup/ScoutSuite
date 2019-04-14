@@ -5,8 +5,12 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Route53Domains(AWSResources):
-    async def fetch_all(self, **kwargs):
-        raw_domains = await self.facade.route53.get_domains(self.scope['region'])
+    def __init__(self, facade: AWSFacade, region: str):
+        super(Route53Domains, self).__init__(facade)
+        self.region = region
+
+    async def fetch_all(self):
+        raw_domains = await self.facade.route53.get_domains(self.region)
         for raw_domain in raw_domains:
             id, domain = self._parse_domain(raw_domain)
             self[id] = domain

@@ -1,11 +1,17 @@
+from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.utils import get_keys
 from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class LoadBalancers(AWSResources):
-    async def fetch_all(self, **kwargs):
-        raw_load_balancers = await self.facade.elb.get_load_balancers(self.scope['region'], self.scope['vpc'])
+    def __init__(self, facade: AWSFacade, region: str, vpc: str):
+        super(LoadBalancers, self).__init__(facade)
+        self.region = region
+        self.vpc = vpc
+
+    async def fetch_all(self):
+        raw_load_balancers = await self.facade.elb.get_load_balancers(self.region, self.vpc)
         for raw_load_balancer in raw_load_balancers:
             id, load_balancer = self._parse_load_balancer(raw_load_balancer)
             self[id] = load_balancer
@@ -22,7 +28,8 @@ class LoadBalancers(AWSResources):
         load_balancer['listeners'] = {}
         for l in raw_load_balancer['ListenerDescriptions']:
             listener = l['Listener']
-            load_balancer['listeners'][l['Listener']['LoadBalancerPort']] = listener
+            load_balancer['listeners'][l['Listener']
+                                       ['LoadBalancerPort']] = listener
 
         load_balancer['instances'] = []
         for i in raw_load_balancer['Instances']:

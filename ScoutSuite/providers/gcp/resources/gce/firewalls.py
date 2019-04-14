@@ -1,13 +1,14 @@
-from ScoutSuite.providers.base.configs.resources import Resources
+from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 
+
 class Firewalls(Resources):
-    def __init__(self, gcp_facade: GCPFacade, project_id: str):
-        self.gcp_facade = gcp_facade
+    def __init__(self, facade: GCPFacade, project_id: str):
+        super(Firewalls, self).__init__(facade)
         self.project_id = project_id
 
     async def fetch_all(self):
-        raw_firewalls = await self.gcp_facade.gce.get_firewalls(self.project_id)
+        raw_firewalls = await self.facade.gce.get_firewalls(self.project_id)
         for raw_firewall in raw_firewalls:
             firewall_id, firewall = self._parse_firewall(raw_firewall)
             self[firewall_id] = firewall

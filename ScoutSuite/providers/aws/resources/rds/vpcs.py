@@ -10,6 +10,3 @@ class RDSVpcs(Vpcs):
         (Snapshots, 'snapshots'),
         (SubnetGroups, 'subnet_groups'),
     ]
-    
-    def __init__(self, facade, scope: dict):
-        super(RDSVpcs, self).__init__(facade, scope, add_ec2_classic=True)

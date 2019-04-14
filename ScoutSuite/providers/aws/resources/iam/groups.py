@@ -2,7 +2,7 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 
 class Groups(AWSResources):
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         raw_groups = await self.facade.iam.get_groups()
         for raw_group in raw_groups:
             name, resource = self._parse_group(raw_group)

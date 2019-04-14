@@ -1,11 +1,10 @@
-from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources, AWSCompositeResources
 
 from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Buckets(AWSResources):
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         raw_buckets = await self.facade.s3.get_buckets()
         for raw_bucket in raw_buckets:
             name, resource = self._parse_bucket(raw_bucket)
@@ -38,8 +37,5 @@ class S3(AWSCompositeResources):
         (Buckets, 'buckets')
     ]
 
-    def __init__(self, facade: AWSFacade):
-        super(S3, self,).__init__(facade, {})
-
-    async def fetch_all(self, credentials, regions=None, partition_name='aws'):
-        await self._fetch_children(self, {})
+    async def fetch_all(self, regions=None, partition_name='aws'):
+        await self._fetch_children(self)

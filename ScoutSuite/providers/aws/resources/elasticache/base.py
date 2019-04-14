@@ -15,12 +15,14 @@ class ElastiCache(Regions):
     def __init__(self, facade: AWSFacade):
         super(ElastiCache, self).__init__('elasticache', facade)
 
-    async def fetch_all(self, credentials=None, regions=None, partition_name='aws'):
-        await super(ElastiCache, self).fetch_all(credentials, regions, partition_name)
+    async def fetch_all(self, regions=None, partition_name='aws'):
+        await super(ElastiCache, self).fetch_all(regions, partition_name)
 
         for region in self['regions']:
-            self['regions'][region]['clusters_count'] = sum([len(vpc['clusters']) for vpc in self['regions'][region]['vpcs'].values()])
-            self['regions'][region]['subnet_groups_count'] = sum([len(vpc['subnet_groups']) for vpc in self['regions'][region]['vpcs'].values()])
+            self['regions'][region]['clusters_count'] = \
+                sum([len(vpc['clusters']) for vpc in self['regions'][region]['vpcs'].values()])
+            self['regions'][region]['subnet_groups_count'] = \
+                sum([len(vpc['subnet_groups']) for vpc in self['regions'][region]['vpcs'].values()])
         
         self['clusters_count'] = sum([region['clusters_count'] for region in self['regions'].values()])
 

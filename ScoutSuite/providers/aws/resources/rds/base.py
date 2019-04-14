@@ -15,8 +15,8 @@ class RDS(Regions):
     def __init__(self, facade: AWSFacade):
         super(RDS, self).__init__('rds', facade)
 
-    async def fetch_all(self, credentials=None, regions=None, partition_name='aws'):
-        await super(RDS, self).fetch_all(credentials, regions, partition_name)
+    async def fetch_all(self, regions=None, partition_name='aws'):
+        await super(RDS, self).fetch_all(regions, partition_name)
 
         for region in self['regions']:
             self['regions'][region]['instances_count'] =\

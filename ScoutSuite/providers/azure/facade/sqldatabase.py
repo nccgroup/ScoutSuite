@@ -1,3 +1,5 @@
+from msrestazure.azure_exceptions import CloudError
+
 from azure.mgmt.sql import SqlManagementClient
 from ScoutSuite.providers.utils import run_concurrently
 from ScoutSuite.core.console import print_exception
@@ -51,8 +53,13 @@ class SQLDatabaseFacade:
             return await run_concurrently(
                 lambda: list(self._client.server_azure_ad_administrators.get(resource_group_name, server_name))
             )
+        except CloudError as e:
+            # No ad admin configured returns a 404 error:
+            if e.status_code != 404:
+                print_exception('Failed to retrieve server azure ad administrators: {}'.format(e))
         except Exception as e:
             print_exception('Failed to retrieve server azure ad administrators: {}'.format(e))
+        finally:
             return []
 
     async def get_server_blob_auditing_policies(self, resource_group_name, server_name):

@@ -1,20 +1,21 @@
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
-from ScoutSuite.providers.gcp.resources.resources import GCPCompositeResources
+from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
 from ScoutSuite.providers.gcp.resources.gce.instance_disks import InstanceDisks
 from ScoutSuite.providers.utils import get_non_provider_id
+
 
 class Instances(GCPCompositeResources):
     _children = [ 
         (InstanceDisks, 'disks')
     ]
 
-    def __init__(self, gcp_facade: GCPFacade, project_id: str, zone: str):
-        self.gcp_facade = gcp_facade
+    def __init__(self, facade: GCPFacade, project_id: str, zone: str):
+        super(GCPCompositeResources, self).__init__(facade)
         self.project_id = project_id
         self.zone = zone
 
     async def fetch_all(self):
-        raw_instances = await self.gcp_facade.gce.get_instances(self.project_id, self.zone)
+        raw_instances = await self.facade.gce.get_instances(self.project_id, self.zone)
         for raw_instance in raw_instances:
             instance_id, instance = self._parse_instance(raw_instance)
             self[instance_id] = instance
@@ -52,11 +53,13 @@ class Instances(GCPCompositeResources):
     def _is_oslogin_enabled(self, raw_instance):
         instance_logging_enabled = raw_instance['metadata'].get('enable-oslogin')
         project_logging_enabled = raw_instance['commonInstanceMetadata'].get('enable-oslogin')
-        return instance_logging_enabled == 'TRUE' or instance_logging_enabled is None and project_logging_enabled == 'TRUE'
+        return instance_logging_enabled == 'TRUE' \
+            or instance_logging_enabled is None and project_logging_enabled == 'TRUE'
         
     def _is_serial_port_enabled(self, raw_instance):
         return raw_instance['metadata'].get('serial-port-enable') == 'true'
 
     def _has_full_access_to_all_cloud_apis(self, raw_instance):
         full_access_scope = 'https://www.googleapis.com/auth/cloud-platform'
-        return any(full_access_scope in service_account['scopes'] for service_account in raw_instance['serviceAccounts'])
+        return any(
+            full_access_scope in service_account['scopes'] for service_account in raw_instance['serviceAccounts'])

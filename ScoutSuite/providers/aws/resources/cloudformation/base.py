@@ -6,8 +6,12 @@ from ScoutSuite.providers.aws.facade.base import AWSFacade
 
 
 class Stacks(AWSResources):
-    async def fetch_all(self, **kwargs):
-        raw_stacks  = await self.facade.cloudformation.get_stacks(self.scope['region'])
+    def __init__(self, facade: AWSFacade, region: str):
+        super(Stacks, self).__init__(facade)
+        self.region = region
+
+    async def fetch_all(self):
+        raw_stacks = await self.facade.cloudformation.get_stacks(self.region)
         for raw_stack in raw_stacks:
             name, stack = self._parse_stack(raw_stack)
             self[name] = stack
@@ -15,7 +19,8 @@ class Stacks(AWSResources):
     def _parse_stack(self, raw_stack):
         raw_stack['id'] = raw_stack.pop('StackId')
         raw_stack['name'] = raw_stack.pop('StackName')
-        raw_stack['drifted'] = raw_stack.pop('DriftInformation')['StackDriftStatus'] == 'DRIFTED'
+        raw_stack['drifted'] = raw_stack.pop('DriftInformation')[
+            'StackDriftStatus'] == 'DRIFTED'
         raw_stack['termination_protection'] = raw_stack['EnableTerminationProtection']
 
         template = raw_stack.pop('template')

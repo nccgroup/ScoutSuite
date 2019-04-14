@@ -1,9 +1,8 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
-from botocore.exceptions import ClientError
 
 
 class PasswordPolicy(AWSResources):
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         raw_password_policy = await self.facade.iam.get_password_policy()
         password_policy = self._parse_password_policy(raw_password_policy)
         self.update(password_policy)

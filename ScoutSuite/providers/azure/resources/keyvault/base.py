@@ -3,7 +3,7 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class KeyVaults(AzureResources):
-    async def fetch_all(self, credentials, **kwargs):
+    async def fetch_all(self):
         self['vaults'] = {}
         for raw_vault in await self.facade.keyvault.get_key_vaults():
             id, vault = self._parse_key_vault(raw_vault)

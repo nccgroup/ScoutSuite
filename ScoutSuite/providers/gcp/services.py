@@ -1,4 +1,4 @@
-from ScoutSuite.providers.base.configs.services import BaseServicesConfig
+from ScoutSuite.providers.base.services import BaseServicesConfig
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.gcp.resources.cloudresourcemanager.base import CloudResourceManager
 from ScoutSuite.providers.gcp.resources.cloudsql.base import CloudSQL
@@ -16,15 +16,15 @@ except ImportError:
 class GCPServicesConfig(BaseServicesConfig):
     def __init__(self, credentials=None, projects=None, **kwargs):
         super(GCPServicesConfig, self).__init__(credentials)
-        gcp_facade = GCPFacade()
-        self.cloudresourcemanager = CloudResourceManager(gcp_facade)
-        self.cloudsql = CloudSQL(gcp_facade)
-        self.cloudstorage = CloudStorage(gcp_facade)
-        self.computeengine = ComputeEngine(gcp_facade)
-        self.iam = IAM(gcp_facade)
-        self.stackdriverlogging = StackdriverLogging(gcp_facade)
+        facade = GCPFacade()
+        self.cloudresourcemanager = CloudResourceManager(facade)
+        self.cloudsql = CloudSQL(facade)
+        self.cloudstorage = CloudStorage(facade)
+        self.computeengine = ComputeEngine(facade)
+        self.iam = IAM(facade)
+        self.stackdriverlogging = StackdriverLogging(facade)
         try:
-            self.kubernetesengine = KubernetesEngine(gcp_facade)
+            self.kubernetesengine = KubernetesEngine(facade)
         except NameError as _:
             pass
 
