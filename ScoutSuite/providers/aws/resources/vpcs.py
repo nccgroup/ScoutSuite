@@ -1,4 +1,3 @@
-from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.aws.resources.base import AWSCompositeResources
 
 
@@ -8,10 +7,11 @@ class Vpcs(AWSCompositeResources):
     :param add_ec2_classic: Setting this parameter to True will add 'EC2-Classic' to the list of VPCs.
     """
 
-    def __init__(self, facade, region: str, add_ec2_classic=False, **kwargs):
-        super(Vpcs, self).__init__(facade)
+    def __init__(self, facade, region: str, add_ec2_classic=False):
         self.region = region
         self.add_ec2_classic = add_ec2_classic
+
+        super(Vpcs, self).__init__(facade)
 
     async def fetch_all(self, **kwargs):
         raw_vpcs = await self.facade.ec2.get_vpcs(self.region)

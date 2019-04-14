@@ -6,9 +6,10 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 class LoadBalancers(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
-        self.facade = facade
         self.region = region
         self.vpc = vpc
+
+        super(LoadBalancers, self).__init__(facade)
 
     async def fetch_all(self, **kwargs):
         raw_load_balancers = await self.facade.elb.get_load_balancers(self.region, self.vpc)

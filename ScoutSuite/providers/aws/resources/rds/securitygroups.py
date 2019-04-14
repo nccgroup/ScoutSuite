@@ -1,14 +1,14 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
-from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class SecurityGroups(AWSResources):
-    def __init__(self, facade: AWSFacade, region: str, **kwargs):
-        self.facade = facade
+    def __init__(self, facade: AWSFacade, region: str):
         self.region = region
 
-    async def fetch_all(self, **kwargs):
+        super(SecurityGroups, self).__init__(facade)
+
+    async def fetch_all(self):
         raw_security_groups = await self.facade.rds.get_security_groups(self.region)
         for raw_security_group in raw_security_groups:
             name, resource = self._parse_security_group(raw_security_group)

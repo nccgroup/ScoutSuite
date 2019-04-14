@@ -4,9 +4,10 @@ from ScoutSuite.providers.aws.utils import get_name
 
 
 class Volumes(AWSResources):
-    def __init__(self, facade: AWSFacade, region: str, **kwargs):
-        self.facade = facade
+    def __init__(self, facade: AWSFacade, region: str):
         self.region = region
+
+        super(Volumes, self).__init__(facade)
 
     async def fetch_all(self, **kwargs):
         raw_volumes = await self.facade.ec2.get_volumes(self.region)

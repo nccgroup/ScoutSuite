@@ -8,9 +8,10 @@ class SecurityGroups(AWSResources):
     icmp_message_types_dict = load_data('icmp_message_types.json', 'icmp_message_types')
 
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
-        self.facade = facade
         self.region = region
         self.vpc = vpc
+
+        super(SecurityGroups, self).__init__(facade)
 
     async def fetch_all(self, **kwargs):
         raw_security_groups = await self.facade.ec2.get_security_groups(self.region, self.vpc)

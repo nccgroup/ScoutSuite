@@ -3,9 +3,10 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 
 class ClusterSecurityGroups(AWSResources):
-    def __init__(self, facade: AWSFacade, region: str, **kwargs):
-        self.facade = facade
+    def __init__(self, facade: AWSFacade, region: str):
         self.region = region
+
+        super(ClusterSecurityGroups, self).__init__(facade)
 
     async def fetch_all(self, **kwargs):
         raw_security_groups = await self.facade.redshift.get_cluster_security_groups(self.region)

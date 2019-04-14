@@ -6,9 +6,10 @@ from ScoutSuite.providers.aws.facade.base import AWSFacade
 
 
 class Alarms(AWSResources):
-    def __init__(self, facade: AWSFacade, region: str, **kwargs):
-        self.facade = facade
+    def __init__(self, facade: AWSFacade, region: str):
         self.region = region
+
+        super(Alarms, self).__init__(facade)
 
     async def fetch_all(self, **kwargs):
         raw_alarms = await self.facade.cloudwatch.get_alarms(self.region)

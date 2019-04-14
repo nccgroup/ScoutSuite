@@ -3,9 +3,10 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 
 class ParameterGroups(AWSResources):
-    def __init__(self, facade: AWSFacade, region: str, **kwargs):
-        self.facade = facade
+    def __init__(self, facade: AWSFacade, region: str):
         self.region = region
+
+        super(ParameterGroups, self).__init__(facade)
 
     async def fetch_all(self, **kwargs):
         raw_parameter_groups = await self.facade.elasticache.get_parameter_groups(self.region)

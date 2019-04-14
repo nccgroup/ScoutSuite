@@ -4,9 +4,10 @@ from ScoutSuite.providers.aws.facade.base import AWSFacade
 
 class NetworkInterfaces(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
-        self.facade = facade
         self.region = region
         self.vpc = vpc
+
+        super(NetworkInterfaces, self).__init__(facade)
 
     async def fetch_all(self, **kwargs):
         raw_security_groups = await self.facade.ec2.get_network_interfaces(self.region, self.vpc)

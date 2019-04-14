@@ -10,11 +10,12 @@ class ClusterParameterGroups(AWSCompositeResources):
         (ClusterParameters, 'parameters')
     ]
 
-    def __init__(self, facade: AWSFacade, region: str, **kwargs):
-        self.facade = facade
+    def __init__(self, facade: AWSFacade, region: str):
         self.region = region
 
-    async def fetch_all(self, **kwargs):
+        super(ClusterParameterGroups, self).__init__(facade)
+
+    async def fetch_all(self):
         raw_parameter_groups = await self.facade.redshift.get_cluster_parameter_groups(self.region)
         for raw_parameter_group in raw_parameter_groups:
             id, parameter_group = self._parse_parameter_group(raw_parameter_group)

@@ -8,11 +8,12 @@ protocols_dict = load_data('protocols.json', 'protocols')
 
 class NetworkACLs(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
-        self.facade = facade
         self.region = region
         self.vpc = vpc
 
-    async def fetch_all(self, **kwargs):
+        super(NetworkACLs, self).__init__(facade)
+
+    async def fetch_all(self):
         raw_network_acls = await self.facade.ec2.get_network_acls(self.region, self.vpc)
         for raw_network_acl in raw_network_acls:
             id, network_acl = self._parse_network_acl(raw_network_acl)

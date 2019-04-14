@@ -6,11 +6,12 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 
 class RegionalQueues(AWSResources):
-    def __init__(self, facade: AWSFacade, region: str, **kwargs):
-        self.facade = facade
+    def __init__(self, facade: AWSFacade, region: str):
         self.region = region
 
-    async def fetch_all(self, **kwargs):
+        super(RegionalQueues, self).__init__(facade)
+
+    async def fetch_all(self):
         queues = await self.facade.sqs.get_queues(
             self.region, ['CreatedTimestamp', 'Policy', 'QueueArn', 'KmsMasterKeyId'])
         for queue_url, queue_attributes in queues:

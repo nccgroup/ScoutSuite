@@ -1,13 +1,13 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.regions import Regions
-from ScoutSuite.providers.aws.resources.base import (AWSCompositeResources,
-                                                     AWSResources)
+from ScoutSuite.providers.aws.resources.base import AWSCompositeResources, AWSResources
 
 
 class EMRClusters(AWSResources):
-    def __init__(self, facade: AWSFacade, region: str, **kwargs):
-        self.facade = facade
+    def __init__(self, facade: AWSFacade, region: str):
         self.region = region
+
+        super(EMRClusters, self).__init__(facade)
 
     async def fetch_all(self, **kwargs):
         raw_clusters = await self.facade.emr.get_clusters(self.region)
@@ -26,9 +26,10 @@ class EMRVpcs(AWSCompositeResources):
         (EMRClusters, 'clusters')
     ]
 
-    def __init__(self, facade: AWSFacade, region: str, **kwargs):
-        self.facade = facade
+    def __init__(self, facade: AWSFacade, region: str):
         self.region = region
+
+        super(EMRVpcs, self).__init__(facade)
 
     async def fetch_all(self, **kwargs):
         # EMR won't disclose its VPC, so we put everything in a VPC named "EMR-UNKNOWN-VPC", and we

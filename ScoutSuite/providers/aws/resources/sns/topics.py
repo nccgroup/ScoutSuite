@@ -11,11 +11,12 @@ class Topics(AWSCompositeResources):
         (Subscriptions, 'subscriptions')
     ]
 
-    def __init__(self, facade: AWSFacade, region: str, **kwargs):
-        self.facade = facade
+    def __init__(self, facade: AWSFacade, region: str):
         self.region = region
 
-    async def fetch_all(self, **kwargs):
+        super(Topics, self).__init__(facade)
+
+    async def fetch_all(self):
         raw_topics = await self.facade.sns.get_topics(self.region)
         for raw_topic in raw_topics:
             topic_name, topic = self._parse_topic(raw_topic)

@@ -19,8 +19,9 @@ class IAM(AWSCompositeResources):
     ]
 
     def __init__(self, facade: AWSFacade):
-        self.facade = facade
         self.service = 'iam'
+
+        super(IAM, self).__init__(facade)
 
     async def fetch_all(self, credentials, regions=None, partition_name='aws'):
         await self._fetch_children(self, {})

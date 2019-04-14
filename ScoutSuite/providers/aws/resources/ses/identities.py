@@ -10,11 +10,12 @@ class Identities(AWSCompositeResources):
         (IdentityPolicies, 'policies')
     ]
 
-    def __init__(self, facade: AWSFacade, region: str, **kwargs):
-        self.facade = facade
+    def __init__(self, facade: AWSFacade, region: str):
         self.region = region
 
-    async def fetch_all(self, **kwargs):
+        super(Identities, self).__init__(facade)
+
+    async def fetch_all(self):
         raw_identities = await self.facade.ses.get_identities(self.region)
         for raw_identity in raw_identities:
             id, identity = self._parse_identity(raw_identity)
