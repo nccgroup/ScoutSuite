@@ -1,4 +1,3 @@
-import asyncio
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
 from ScoutSuite.providers.gcp.resources.cloudsql.backups import Backups
@@ -18,22 +17,14 @@ class DatabaseInstances(GCPCompositeResources):
 
     async def fetch_all(self):
         raw_instances = await self.facade.cloudsql.get_database_instances(self.project_id)
-        instances = [self._parse_instance(raw_instance)
-                     for raw_instance in raw_instances]
-        for instance_id, instance in instances:
+        for raw_instance in raw_instances:
+            instance_id, instance = self._parse_instance(raw_instance)
             self[instance_id] = instance
-        await self._fetch_instance_children(instances)
-        self._set_last_backup_timestamps(instances)
-
-    async def _fetch_instance_children(self, instances):
-        if len(instances) == 0:
-            return
-        tasks = {
-            asyncio.ensure_future(
-                self._fetch_children(self[instance_id], scope={'project_id': self.project_id, 'instance_name': instance['name']})
-            ) for instance_id, instance in instances
-        }
-        await asyncio.wait(tasks)
+        await self._fetch_children_of_all_resources(
+            resources=self,
+            scopes={instance_id: {'project_id': self.project_id, 'instance_name': instance['name']}
+                    for instance_id, instance in self.items()})
+        self._set_last_backup_timestamps(self.items())
 
     def _parse_instance(self, raw_instance):
         instance_dict = {}

@@ -1,4 +1,3 @@
-import asyncio
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
 
@@ -12,10 +11,6 @@ class Regions(GCPCompositeResources):
         raw_regions = await self.facade.gce.get_regions(self.project_id)
         for raw_region in raw_regions:
             self[raw_region['name']] = {}
-        tasks = {
-            asyncio.ensure_future(
-                self._fetch_children(self[raw_region['name']], scope={
-                                     'project_id': self.project_id, 'region': raw_region['name']})
-            ) for raw_region in raw_regions
-        }
-        await asyncio.wait(tasks)
+        await self._fetch_children_of_all_resources(
+            resources=self,
+            scopes={region: {'project_id': self.project_id, 'region': region} for region in self})

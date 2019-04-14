@@ -1,4 +1,3 @@
-import asyncio
 from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
 
 
@@ -17,12 +16,9 @@ class Projects(GCPCompositeResources):
         raw_projects = await self.facade.get_projects()
         self['projects'] = {raw_project['projectId']: {}
                             for raw_project in raw_projects}
-        tasks = {
-            asyncio.ensure_future(
-                self._fetch_children(self['projects'][raw_project['projectId']], scope={'project_id': raw_project['projectId']})
-            ) for raw_project in raw_projects
-        }
-        await asyncio.wait(tasks)
+        await self._fetch_children_of_all_resources(
+            resources=self['projects'],
+            scopes={project_id: {'project_id': project_id} for project_id in self['projects']})
         self._set_counts()
 
     def _set_counts(self):
