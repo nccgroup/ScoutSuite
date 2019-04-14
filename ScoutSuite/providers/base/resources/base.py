@@ -16,6 +16,11 @@ class Resources(dict, metaclass=abc.ABCMeta):
     instance configurations (which store other nested resources) as values.
     """
 
+    def __init__(self, service_facade):
+        self.facade = service_facade
+
+        super(Resources, self).__init__()
+
     @abc.abstractmethod
     async def fetch_all(self, **kwargs):
         """Fetches, parses and stores instances of a given type of resources from a cloud provider API.
@@ -38,8 +43,6 @@ class CompositeResources(Resources, metaclass=abc.ABCMeta):
     def _children(self):
         """A class that inherits from 'CompositeResources' should define a private '_children' attribute, typically a
         list of `Resources` classes. That is enforced by this abstract property.
-
-        :return:
         """
         raise NotImplementedError
 
@@ -62,7 +65,7 @@ class CompositeResources(Resources, metaclass=abc.ABCMeta):
         }
         await asyncio.wait(tasks)
 
-    async def _fetch_children(self, resource_parent: object, scope: dict):
+    async def _fetch_children(self, resource_parent: object, scope: dict = {}):
         """This method fetches all children of a given resource (the so called 'resource_parent') by calling fetch_all
         method on each child defined in '_children' and then sto.res the fetched resources in `resource_parent` under
         the key associated with the child. It also creates a "<child_name>_count" entry for each child.
