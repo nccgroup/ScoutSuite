@@ -13,7 +13,7 @@ class DatabaseInstances(GCPCompositeResources):
     ]
 
     def __init__(self, facade: GCPFacade, project_id: str):
-        self.facade = facade
+        super(DatabaseInstances, self).__init__(facade)
         self.project_id = project_id
 
     async def fetch_all(self):

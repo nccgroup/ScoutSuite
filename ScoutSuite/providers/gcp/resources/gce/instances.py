@@ -3,13 +3,14 @@ from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
 from ScoutSuite.providers.gcp.resources.gce.instance_disks import InstanceDisks
 from ScoutSuite.providers.utils import get_non_provider_id
 
+
 class Instances(GCPCompositeResources):
     _children = [ 
         (InstanceDisks, 'disks')
     ]
 
     def __init__(self, facade: GCPFacade, project_id: str, zone: str):
-        self.facade = facade
+        super(GCPCompositeResources, self).__init__(facade)
         self.project_id = project_id
         self.zone = zone
 
@@ -52,7 +53,8 @@ class Instances(GCPCompositeResources):
     def _is_oslogin_enabled(self, raw_instance):
         instance_logging_enabled = raw_instance['metadata'].get('enable-oslogin')
         project_logging_enabled = raw_instance['commonInstanceMetadata'].get('enable-oslogin')
-        return instance_logging_enabled == 'TRUE' or instance_logging_enabled is None and project_logging_enabled == 'TRUE'
+        return instance_logging_enabled == 'TRUE' \
+            or instance_logging_enabled is None and project_logging_enabled == 'TRUE'
         
     def _is_serial_port_enabled(self, raw_instance):
         return raw_instance['metadata'].get('serial-port-enable') == 'true'

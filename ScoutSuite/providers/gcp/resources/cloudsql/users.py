@@ -1,9 +1,10 @@
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.base.resources.base import Resources
 
+
 class Users(Resources):
     def __init__(self, facade: GCPFacade, project_id: str, instance_name: str):
-        self.facade = facade
+        super(Users, self).__init__(facade)
         self.project_id = project_id
         self.instance_name = instance_name
 
@@ -18,4 +19,3 @@ class Users(Resources):
         user_dict['name'] = raw_user['name']
         user_dict['host'] = raw_user.get('host')
         return user_dict['name'], user_dict
-        

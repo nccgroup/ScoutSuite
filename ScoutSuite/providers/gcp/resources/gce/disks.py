@@ -1,6 +1,7 @@
 from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.utils import get_non_provider_id
 
+
 class Disks(Resources):
     def _parse_disk(self, raw_disk):
         disk_dict = {}
@@ -14,4 +15,6 @@ class Disks(Resources):
         return disk_dict['id'], disk_dict
 
     def _is_encrypted_with_csek(self, raw_disk):
-        return 'diskEncryptionKey' in raw_disk and 'sha256' in raw_disk['diskEncryptionKey'] and raw_disk['diskEncryptionKey']['sha256'] != ''
+        return 'diskEncryptionKey' in raw_disk \
+               and 'sha256' in raw_disk['diskEncryptionKey'] \
+               and raw_disk['diskEncryptionKey']['sha256'] != ''

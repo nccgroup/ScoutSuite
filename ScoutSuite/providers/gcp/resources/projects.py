@@ -1,5 +1,4 @@
 import asyncio
-from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
 
 
@@ -10,10 +9,7 @@ class Projects(GCPCompositeResources):
     The children resources will be stored with the following structure {<projects>: {<project_id>: {<child_name>: {<child_id>: <child_instance>}}}}.
     """
 
-    def __init__(self, facade: GCPFacade):
-        self.facade = facade
-
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         """This method fetches all the GCP projects that can be accessed with the given run configuration.
         It then fetches all the children defined in _children and groups them by project.
         """

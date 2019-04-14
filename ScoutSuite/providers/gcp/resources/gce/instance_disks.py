@@ -1,5 +1,6 @@
 from ScoutSuite.providers.gcp.resources.gce.disks import Disks
 
+
 class InstanceDisks(Disks):
     def __init__(self, instance):
         super(InstanceDisks, self).__init__()

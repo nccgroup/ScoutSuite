@@ -1,9 +1,10 @@
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 from ScoutSuite.providers.base.resources.base import Resources
 
+
 class Keys(Resources):
     def __init__(self, facade: GCPFacade, project_id: str, service_account_email: str):
-        self.facade = facade
+        super(Keys, self).__init__(facade)
         self.project_id = project_id
         self.service_account_email = service_account_email 
 

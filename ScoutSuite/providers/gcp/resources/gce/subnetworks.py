@@ -1,9 +1,10 @@
 from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 
+
 class Subnetworks(Resources):
     def __init__(self, facade: GCPFacade, project_id: str, region: str):
-        self.facade = facade
+        super(Subnetworks, self).__init__(facade)
         self.project_id = project_id
         self.region = region
 

@@ -1,9 +1,10 @@
 from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
 
+
 class Sinks(Resources):
     def __init__(self, facade: GCPFacade, project_id: str):
-        self.facade = facade
+        super(Sinks, self).__init__(facade)
         self.project_id = project_id
 
     async def fetch_all(self):
@@ -18,4 +19,3 @@ class Sinks(Resources):
         sink_dict['filter'] = raw_sink.filter_
         sink_dict['destination'] = raw_sink.destination
         return sink_dict['name'], sink_dict
-    

@@ -5,7 +5,7 @@ from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
 
 class Regions(GCPCompositeResources):
     def __init__(self, facade: GCPFacade, project_id: str):
-        self.facade = facade
+        super(Regions, self).__init__(facade)
         self.project_id = project_id
 
     async def fetch_all(self):
