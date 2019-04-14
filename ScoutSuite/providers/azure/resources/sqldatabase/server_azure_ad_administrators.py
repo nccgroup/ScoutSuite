@@ -6,9 +6,10 @@ from ScoutSuite.providers.azure.resources.base import AzureResources
 
 class ServerAzureAdAdministrators(AzureResources):
     def __init__(self, facade: AzureFacade, resource_group_name: str, server_name: str):
-        self.facade = facade
         self.resource_group_name = resource_group_name
         self.server_name = server_name
+
+        super(ServerAzureAdAdministrators, self).__init__(facade)
 
     async def fetch_all(self):
         try:
