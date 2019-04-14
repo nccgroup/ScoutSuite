@@ -37,7 +37,7 @@ class BaseServicesConfig(object):
             service_config = getattr(self, service)
             # call fetch method for the service
             if 'fetch_all' in dir(service_config):
-                method_args = {'credentials': self.credentials, 'regions': regions}
+                method_args = {'regions': regions}
 
                 if self._is_provider('aws'):
                     if service != 'iam':
