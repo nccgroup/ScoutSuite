@@ -17,7 +17,7 @@ try:
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.azure.resources.appservice_private.base import WebApplications
+    from ScoutSuite.providers.azure.resources.private_appservice.base import WebApplications
 except ImportError:
     pass
 try:
