@@ -1,35 +1,30 @@
-import asyncio
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
-from ScoutSuite.providers.gcp.resources.resources import GCPCompositeResources
+from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
 from ScoutSuite.providers.gcp.resources.cloudsql.backups import Backups
 from ScoutSuite.providers.gcp.resources.cloudsql.users import Users
 from ScoutSuite.providers.utils import get_non_provider_id
 
+
 class DatabaseInstances(GCPCompositeResources):
-    _children = [ 
+    _children = [
         (Backups, 'backups'),
         (Users, 'users')
     ]
 
-    def __init__(self, gcp_facade: GCPFacade, project_id: str):
-        self.gcp_facade = gcp_facade
+    def __init__(self, facade: GCPFacade, project_id: str):
+        super(DatabaseInstances, self).__init__(facade)
         self.project_id = project_id
 
     async def fetch_all(self):
-        raw_instances = await self.gcp_facade.cloudsql.get_database_instances(self.project_id)
-        instances = [self._parse_instance(raw_instance) for raw_instance in raw_instances]
-        for instance_id, instance in instances:
+        raw_instances = await self.facade.cloudsql.get_database_instances(self.project_id)
+        for raw_instance in raw_instances:
+            instance_id, instance = self._parse_instance(raw_instance)
             self[instance_id] = instance
-        await self._fetch_instance_children(instances)
-        self._set_last_backup_timestamps(instances)
-
-    async def _fetch_instance_children(self, instances):
-        tasks = {
-            asyncio.ensure_future(
-                self._fetch_children(self[instance_id], gcp_facade = self.gcp_facade, project_id = self.project_id, instance_name = instance['name'])
-            ) for instance_id, instance in instances
-        }
-        await asyncio.wait(tasks)
+        await self._fetch_children_of_all_resources(
+            resources=self,
+            scopes={instance_id: {'project_id': self.project_id, 'instance_name': instance['name']}
+                    for instance_id, instance in self.items()})
+        self._set_last_backup_timestamps(self.items())
 
     def _parse_instance(self, raw_instance):
         instance_dict = {}
@@ -51,11 +46,12 @@ class DatabaseInstances(GCPCompositeResources):
 
     def _set_last_backup_timestamps(self, instances):
         for instance_id, _ in instances:
-            self[instance_id]['last_backup_timestamp'] = self._get_last_backup_timestamp(self[instance_id]['backups'])
+            self[instance_id]['last_backup_timestamp'] = self._get_last_backup_timestamp(
+                self[instance_id]['backups'])
 
     def _get_last_backup_timestamp(self, backups):
         if not backups:
             return 'N/A'
-        last_backup_id = max(backups.keys(), key=(lambda k: backups[k]['creation_timestamp']))
+        last_backup_id = max(backups.keys(), key=(
+            lambda k: backups[k]['creation_timestamp']))
         return backups[last_backup_id]['creation_timestamp']
-        

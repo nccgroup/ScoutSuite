@@ -1,0 +1,27 @@
+
+<!-- Compute Engine networks partial -->
+<script id="services.computeengine.projects.id.networks.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">ID: <span id="computeengine.projects.{{@../key}}.networks.{{@key}}.id">{{id}}</span></div>
+        <div class="list-group-item-text item-margin">Project ID: <span id="computeengine.projects.{{@../key}}.networks.{{@key}}.project_id">{{project_id}}</span></div>
+        <div class="list-group-item-text item-margin">Name: <span id="computeengine.projects.{{@../key}}.networks.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Description: <span id="computeengine.projects.{{@../key}}.networks.{{@key}}.description">{{description}}</span></div>
+        <div class="list-group-item-text item-margin">Creation Date: <span id="computeengine.projects.{{@../key}}.networks.{{@key}}.creation_timestamp">{{creation_timestamp}}</span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.computeengine.projects.id.networks", $("#services\\.computeengine\\.projects\\.id\\.networks\\.partial").html());
+</script>
+
+<!-- Single computeengine network template -->
+<script id="single_computeengine_network-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.computeengine.projects.id.networks'}}
+</script>
+<script>
+    var single_computeengine_network_template = Handlebars.compile($("#single_computeengine_network-template").html());
+</script>

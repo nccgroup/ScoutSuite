@@ -2,6 +2,7 @@ import boto3
 
 from collections import Counter
 from botocore.session import Session
+from ScoutSuite.providers.aws.utils import get_aws_account_id
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.awslambda import LambdaFacade
 from ScoutSuite.providers.aws.facade.cloudformation import CloudFormation
@@ -33,7 +34,10 @@ except ImportError:
 
   
 class AWSFacade(AWSBaseFacade):
-    def __init__(self, credentials = None):
+    def __init__(self, credentials=None):
+        super(AWSFacade, self).__init__()
+        self.owner_id = get_aws_account_id(credentials)
+
         self._set_session(credentials)
         self._instantiate_facades()
 
@@ -64,7 +68,7 @@ class AWSFacade(AWSBaseFacade):
         self.session = boto3.session.Session(**session_params)
 
     def _instantiate_facades(self):
-        self.ec2 = EC2Facade(self.session)
+        self.ec2 = EC2Facade(self.session, self.owner_id)
         self.awslambda = LambdaFacade(self.session)
         self.cloudformation = CloudFormation(self.session)
         self.cloudtrail = CloudTrailFacade(self.session)

@@ -1,14 +1,15 @@
 from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
-from ScoutSuite.providers.base.configs.resources import Resources
+from ScoutSuite.providers.base.resources.base import Resources
+
 
 class Keys(Resources):
-    def __init__(self, gcp_facade: GCPFacade, project_id: str, service_account_email: str):
-        self.gcp_facade = gcp_facade
+    def __init__(self, facade: GCPFacade, project_id: str, service_account_email: str):
+        super(Keys, self).__init__(facade)
         self.project_id = project_id
         self.service_account_email = service_account_email 
 
     async def fetch_all(self):
-        raw_keys = await self.gcp_facade.iam.get_keys(self.project_id, self.service_account_email)
+        raw_keys = await self.facade.iam.get_keys(self.project_id, self.service_account_email)
         for raw_key in raw_keys:
             key_id, key = self._parse_key(raw_key)
             self[key_id] = key

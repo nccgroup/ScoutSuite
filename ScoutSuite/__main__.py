@@ -36,7 +36,6 @@ def run_from_cli():
         args.get('report_name'), args.get('report_dir'),
         args.get('timestamp'),
         args.get('services'), args.get('skipped_services'),
-        args.get('thread_config'),  # todo deprecate
         args.get('result_format'),
         args.get('database_name'),
         args.get('host_ip'),
@@ -61,7 +60,6 @@ def run(provider,
         report_name, report_dir,
         timestamp,
         services, skipped_services,
-        thread_config,  # TODO deprecate
         result_format,
         database_name, host_ip, host_port,
         max_workers,
@@ -92,7 +90,6 @@ async def _run(provider,
                report_name, report_dir,
                timestamp,
                services, skipped_services,
-               thread_config,  # TODO deprecate
                result_format,
                database_name, host_ip, host_port,
                regions,
@@ -146,7 +143,6 @@ async def _run(provider,
                                   timestamp=timestamp,
                                   services=services,
                                   skipped_services=skipped_services,
-                                  thread_config=thread_config,
                                   credentials=credentials)
 
     # Create a new report

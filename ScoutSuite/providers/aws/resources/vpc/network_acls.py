@@ -1,3 +1,4 @@
+from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.utils import get_name
 from ScoutSuite.core.fs import load_data
@@ -6,8 +7,14 @@ protocols_dict = load_data('protocols.json', 'protocols')
 
 
 class NetworkACLs(AWSResources):
-    async def fetch_all(self, **kwargs):
-        raw_network_acls = await self.facade.ec2.get_network_acls(self.scope['region'], self.scope['vpc'])
+    def __init__(self, facade: AWSFacade, region: str, vpc: str):
+        self.region = region
+        self.vpc = vpc
+
+        super(NetworkACLs, self).__init__(facade)
+
+    async def fetch_all(self):
+        raw_network_acls = await self.facade.ec2.get_network_acls(self.region, self.vpc)
         for raw_network_acl in raw_network_acls:
             id, network_acl = self._parse_network_acl(raw_network_acl)
             self[id] = network_acl

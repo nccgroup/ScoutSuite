@@ -16,7 +16,7 @@ class Servers(AzureCompositeResources):
         (ServerSecurityAlertPolicies, 'threat_detection')
     ]
 
-    async def fetch_all(self, credentials, **kwargs):
+    async def fetch_all(self):
         self['servers'] = {}
         for server in await self.facade.sqldatabase.get_servers():
             id = get_non_provider_id(server.id)

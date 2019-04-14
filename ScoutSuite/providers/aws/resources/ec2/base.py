@@ -16,8 +16,8 @@ class EC2(Regions):
     def __init__(self, facade):
         super(EC2, self).__init__('ec2', facade)
 
-    async def fetch_all(self, credentials=None, regions=None, partition_name='aws'):
-        await super(EC2, self).fetch_all(credentials, regions, partition_name)
+    async def fetch_all(self, regions=None, partition_name='aws'):
+        await super(EC2, self).fetch_all(regions, partition_name)
 
         for region in self['regions']:
             self['regions'][region]['instances_count'] =\

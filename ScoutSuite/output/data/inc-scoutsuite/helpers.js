@@ -282,6 +282,10 @@ Handlebars.registerHelper('displayPolicy', function (blob) {
     }
     return path
   })
+
+  Handlebars.registerHelper('concatWith', function (str1, str2, sep) {
+    return [str1, str2].join(sep);
+  })
   
   Handlebars.registerHelper('jsonStringify', function () {
     let body = arguments[0]

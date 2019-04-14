@@ -1,5 +1,6 @@
 import asyncio
 import base64
+import boto3
 
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
@@ -11,6 +12,11 @@ from ScoutSuite.providers.utils import run_concurrently
 class EC2Facade(AWSBaseFacade):
     regional_flow_logs_cache_locks = {}
     flow_logs_cache = {}
+
+    def __init__(self, session: boto3.session.Session, owner_id: str):
+        self.owner_id = owner_id
+
+        super(EC2Facade, self).__init__(session)
 
     async def get_instance_user_data(self, region: str, instance_id: str):
         ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)
@@ -61,8 +67,8 @@ class EC2Facade(AWSBaseFacade):
             print_exception('Failed to describe EC2 VPC: {}'.format(e))
             return []
 
-    async def get_images(self, region: str, owner_id: str):
-        filters = [{'Name': 'owner-id', 'Values': [owner_id]}]
+    async def get_images(self, region: str):
+        filters = [{'Name': 'owner-id', 'Values': [self.owner_id]}]
         client = AWSFacadeUtils.get_client('ec2', self.session, region)
         try:
             return await run_concurrently(lambda: client.describe_images(Filters=filters)['Images'])
@@ -101,8 +107,8 @@ class EC2Facade(AWSBaseFacade):
         else:
             volume['KeyManager'] = None
 
-    async def get_snapshots(self, region: str, owner_id: str):
-        filters = [{'Name': 'owner-id', 'Values': [owner_id]}]
+    async def get_snapshots(self, region: str):
+        filters = [{'Name': 'owner-id', 'Values': [self.owner_id]}]
         snapshots = await AWSFacadeUtils.get_all_pages(
             'ec2', region, self.session, 'describe_snapshots', 'Snapshots', Filters=filters)
         await get_and_set_concurrently([self._get_and_set_snapshot_attributes], snapshots, region=region)

@@ -10,7 +10,7 @@ class StorageAccounts(AzureCompositeResources):
         (BlobContainers, 'blob_containers')
     ]
 
-    async def fetch_all(self, credentials, **kwargs):
+    async def fetch_all(self):
         self['storage_accounts'] = {}
         for raw_storage_account in await self.facade.storageaccounts.get_storage_accounts():
             id, storage_account = self._parse_storage_account(raw_storage_account)

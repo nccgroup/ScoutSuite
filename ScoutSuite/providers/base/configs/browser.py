@@ -19,21 +19,6 @@ def combine_paths(path1, path2):
     return path
 
 
-def get_attribute_at(config, target_path, key, default_value=None):
-    """
-    Return attribute value at a given path.
-
-    :param config:
-    :param target_path:
-    :param key:
-    :param default_value:
-    :return:
-    """
-    for target in target_path:
-        config = config[target]
-    return config[key] if key in config else default_value
-
-
 def get_object_at(object, path, attribute_name=None):
     """
     Get arbitrary object given a dictionary and path (list of keys).

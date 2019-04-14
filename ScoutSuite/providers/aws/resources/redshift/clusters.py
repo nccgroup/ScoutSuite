@@ -1,9 +1,15 @@
+from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 
 
 class Clusters(AWSResources):
-    async def fetch_all(self, **kwargs):
-        raw_clusters = await self.facade.redshift.get_clusters(self.scope['region'], self.scope['vpc'])
+    def __init__(self, facade: AWSFacade, region: str, vpc: str):
+        super(Clusters, self).__init__(facade)
+        self.region = region
+        self.vpc = vpc
+
+    async def fetch_all(self):
+        raw_clusters = await self.facade.redshift.get_clusters(self.region, self.vpc)
         for raw_cluster in raw_clusters:
             id, cluster = self._parse_cluster(raw_cluster)
             self[id] = cluster

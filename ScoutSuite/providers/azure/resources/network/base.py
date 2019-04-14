@@ -10,5 +10,5 @@ class Networks(AzureCompositeResources):
         (NetworkWatchers, 'network_watchers')
     ]
 
-    async def fetch_all(self, credentials, **kwargs):
+    async def fetch_all(self):
         await self._fetch_children(resource_parent=self)
