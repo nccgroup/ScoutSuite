@@ -1,0 +1,47 @@
+
+    <!-- VPC peering connection partial -->
+    <script id="services.vpc.regions.id.peering_connections.partial" type="text/x-handlebars-template">
+        <div id="resource-name" class="list-group-item active">
+            <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        <div class="list-group-item">
+            <div class="list-group-item-text">Status: {{Status.Message}}</div>
+        </div>
+        {{> services.vpc.regions.id.peering_connections.vpc_info vpc_info = RequesterVpcInfo vpc_role = 'Requester'}}
+        {{> services.vpc.regions.id.peering_connections.vpc_info vpc_info = AccepterVpcInfo vpc_role = 'Accepter'}}
+    </script>
+    <script>
+      Handlebars.registerPartial("services.vpc.regions.id.peering_connections", $("#services\\.vpc\\.regions\\.id\\.peering_connections\\.partial").html());
+    </script>
+
+    <!-- VPC info (accepter & requester) info -->
+    <script id="services.vpc.regions.id.peering_connections.vpc_info" type="text/x-handlebars-template">
+        <div class="list-group-item">
+            <h4 class="list-group-item-heading">{{vpc_role}} VPC</h4>
+            <ul>
+                <li class="list-group-item-text">Account Id: {{vpc_info.OwnerId}}</li>
+                <li class="list-group-item-text">VPC Id: {{vpc_info.VpcId}}</li> 
+                <li class="list-group-item-text">CIDR: {{vpc_info.CidrBlock}}</li>
+                {{#if vpc_info.PeeringOptions}}
+                <li class="list-group-item-text">Peering options:
+                    <ul>
+                        {{#each vpc_info.PeeringOptions}}
+                            <li class="list-group-item-text">{{@key}}: {{this}}</li>
+                        {{/each}}
+                    </ul>
+                </li>
+                {{/if}}
+            </ul>
+        </div>
+    </script>
+    <script>
+        Handlebars.registerPartial("services.vpc.regions.id.peering_connections.vpc_info", $("#services\\.vpc\\.regions\\.id\\.peering_connections\\.vpc_info").html());
+    </script>
+
+    <!-- Single VPC Subnet template -->
+    <script id="single_vpc_peering_connection-template" type="text/x-handlebars-template">
+        {{> modal-template template='services.vpc.regions.id.peering_connections'}}
+    </script>
+    <script>
+        var single_vpc_peering_connection_template = Handlebars.compile($("#single_vpc_peering_connection-template").html());
+    </script>

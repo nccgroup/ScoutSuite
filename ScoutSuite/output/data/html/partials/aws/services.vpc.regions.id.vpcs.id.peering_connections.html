@@ -1,0 +1,12 @@
+
+    <!-- Default accordion item -->
+    <script id="services.vpc.regions.vpcs.peering_connections.partial" type="text/x-handlebars-template">
+        <a href="javascript:showObject('services.vpc.regions.{{region}}.peering_connections.{{item}}')">
+            {{getValueAt (concat 'services.vpc.regions' region 'peering_connections' item 'name')}}
+            ({{getValueAt (concat 'services.vpc.regions' region 'peering_connections' item 'Status.Message')}},
+             {{getValueAt (concat 'services.vpc.regions' region 'peering_connections' item 'peer_info.name')}})
+        </a>
+    </script>
+    <script>
+        Handlebars.registerPartial("services.vpc.regions.vpcs.peering_connections", $("#services\\.vpc\\.regions\\.vpcs\\.peering_connections\\.partial").html());
+    </script>

@@ -24,7 +24,8 @@ class EC2Facade(AWSBaseFacade):
             user_data_response = await run_concurrently(
                 lambda: ec2_client.describe_instance_attribute(Attribute='userData', InstanceId=instance_id))
         except Exception as e:
-            print_exception('Failed to describe EC2 instance attributes: {}'.format(e))
+            print_exception(
+                'Failed to describe EC2 instance attributes: {}'.format(e))
             return None
         else:
             if 'Value' not in user_data_response['UserData'].keys():
@@ -121,7 +122,8 @@ class EC2Facade(AWSBaseFacade):
                 Attribute='createVolumePermission',
                 SnapshotId=snapshot['SnapshotId'])['CreateVolumePermissions'])
         except Exception as e:
-            print_exception('Failed to describe EC2 snapshot attributes: {}'.format(e))
+            print_exception(
+                'Failed to describe EC2 snapshot attributes: {}'.format(e))
 
     async def get_network_acls(self, region: str, vpc: str):
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]
@@ -165,3 +167,11 @@ class EC2Facade(AWSBaseFacade):
         subnet['flow_logs'] = \
             [flow_log for flow_log in self.flow_logs_cache[region]
              if flow_log['ResourceId'] == subnet['SubnetId'] or flow_log['ResourceId'] == subnet['VpcId']]
+
+    async def get_peering_connections(self, region):
+        try:
+            peering_connections = await AWSFacadeUtils.get_all_pages('ec2', region, self.session, 'describe_vpc_peering_connections', 'VpcPeeringConnections')
+            return peering_connections
+        except Exception as e:
+            print_exception('Failed to get peering connections: {}'.format(e))
+            return []
