@@ -77,13 +77,11 @@ class AWSProvider(BaseProvider):
         if 'elbv2' in self.service_list and 'ec2' in self.service_list:
             self._add_security_group_data_to_elbv2()
 
-        if 'elb' in self.service_list and 'ec2' in self.service_list:
-            # TODO: Handle that when refactoring is done?
-            # self.parse_elb_policies()
-            pass
-
         if 's3' in self.service_list and 'iam' in self.service_list:
             self._match_iam_policies_and_buckets()
+
+        if 'elb' in self.services:
+            self._parse_elb_policies()
 
         if 'emr' in self.service_list and 'ec2' in self.service_list:
             self._set_emr_vpc_ids()
@@ -436,7 +434,7 @@ class AWSProvider(BaseProvider):
         vpc_id = current_config[info]['VpcId']
         if vpc_id not in self.services['vpc']['regions'][region]['vpcs']:
             region = current_config['AccepterVpcInfo']['Region']
-            
+
         target = self.services['vpc']['regions'][region]['vpcs'][vpc_id]
         manage_dictionary(target, 'peering_connections', [])
         if pc_id not in target['peering_connections']:
@@ -735,3 +733,36 @@ class AWSProvider(BaseProvider):
                                                   str(listener), {'cidrs': []})
                                 attack_surface_config[public_ip]['protocols'][p]['ports'][str(listener)]['cidrs'] += \
                                     ingress_rules['protocols'][p]['ports'][port]['cidrs']
+
+    def _parse_elb_policies(self):
+        self._go_to_and_do(self.services['elb'],
+                           ['regions'],
+                           [],
+                           self.parse_elb_policies_callback,
+                           {})
+
+    @staticmethod
+    def parse_elb_policies_callback(current_config, path, current_path, region_id, callback_args):
+        region_config = get_object_at(['services', 'elb', ] + current_path + [region_id])
+        region_config['elb_policies'] = current_config['elb_policies']
+        for policy_id in region_config['elb_policies']:
+            if region_config['elb_policies'][policy_id]['PolicyTypeName'] != 'SSLNegotiationPolicyType':
+                continue
+            # protocols, options, ciphers
+            policy = region_config['elb_policies'][policy_id]
+            protocols = {}
+            options = {}
+            ciphers = {}
+            for attribute in policy['PolicyAttributeDescriptions']:
+                if attribute['AttributeName'] in ['Protocol-SSLv3', 'Protocol-TLSv1', 'Protocol-TLSv1.1',
+                                                  'Protocol-TLSv1.2']:
+                    protocols[attribute['AttributeName']] = attribute['AttributeValue']
+                elif attribute['AttributeName'] in ['Server-Defined-Cipher-Order']:
+                    options[attribute['AttributeName']] = attribute['AttributeValue']
+                elif attribute['AttributeName'] == 'Reference-Security-Policy':
+                    policy['reference_security_policy'] = attribute['AttributeValue']
+                else:
+                    ciphers[attribute['AttributeName']] = attribute['AttributeValue']
+                policy['protocols'] = protocols
+                policy['options'] = options
+                policy['ciphers'] = ciphers
