@@ -47,6 +47,8 @@ class GCPProvider(BaseProvider):
             return 'gcp-{}'.format(self.organization_id)
         elif self.folder_id:
             return 'gcp-{}'.format(self.folder_id)
+        elif self.account_id:
+            return 'gcp-{}'.format(self.account_id)
         else:
             return 'gcp'
 
