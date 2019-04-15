@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from ScoutSuite.core.console import print_debug, print_exception
 from ScoutSuite.utils import manage_dictionary
 
