@@ -37,12 +37,14 @@ The following cloud providers are currently supported/planned:
 
 ## Installation
 
-Install via `pip`:
+Install via `pip` (we recommend using a virtual environment):
 
+    $ virtualenv -p python3 venv
+    $ source venv/bin/activate
     $ pip install scoutsuite
     $ scout --help
 
-Install from source:
+Or install from source:
 
     $ git clone https://github.com/nccgroup/ScoutSuite
     $ cd ScoutSuite
