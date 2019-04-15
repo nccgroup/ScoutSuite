@@ -31,7 +31,7 @@ class ScoutSuiteArgumentParser:
     def _init_aws_parser(self):
         aws_parser = self.subparsers.add_parser("aws",
                                                 parents=[self.common_providers_args_parser],
-                                                help="Run Scout against an Amazon web Services account")
+                                                help="Run Scout against an Amazon Web Services account")
 
         parser = aws_parser.add_argument_group('Authentication parameters')
 
