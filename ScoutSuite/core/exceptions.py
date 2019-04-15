@@ -4,18 +4,15 @@ Exceptions handling
 
 from ScoutSuite.core.console import print_debug
 
-from ScoutSuite.output.report_file import ReportFile
 from ScoutSuite.output.result_encoder import JavaScriptEncoder
 
 
 class RuleExceptions(object):
 
-    def __init__(self, profile, file_path=None):
-        self.profile = profile
-        self.file_path = file_path
-        self.jsrw = JavaScriptEncoder(self.profile)
-        self.exceptions = self.jsrw.load_from_file(config_type=ReportFile.exceptions,
-                                                   config_path=self.file_path,
+    def __init__(self, file_path=None):
+        self.jsrw = JavaScriptEncoder()
+        self.exceptions = self.jsrw.load_from_file(file_type='EXCEPTIONS',
+                                                   file_path=file_path,
                                                    first_line=True)
 
     def process(self, cloud_provider):
