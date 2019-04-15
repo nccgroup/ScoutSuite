@@ -204,6 +204,10 @@
                         [ "match_security_groups_and_resources_callback", {"status_path": ["Scheme"], "sg_list_attribute_name": ["security_groups"], "sg_id_attribute_name": "GroupId"} ],
                         [ "get_lb_attack_surface", {} ]
                     ]
+                },
+                "elb_policies": {
+                    "cols": 2,
+                    "path": "services.elb.regions.id.elb_policies"
                 }
             },
             "summaries": {
