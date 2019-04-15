@@ -96,7 +96,7 @@ class GCPProvider(BaseProvider):
         :return:
         """
 
-        if 'computeengine' in self.services:
+        if 'computeengine' in self.service_list:
             for project in self.services['computeengine']['projects'].values():
                 for zone in project['zones'].values():
                     for instance in zone['instances'].values():
@@ -117,7 +117,7 @@ class GCPProvider(BaseProvider):
         :return:
         """
 
-        if 'computeengine' in self.services:
+        if 'computeengine' in self.service_list:
             for project in self.services['computeengine']['projects'].values():
                 for network in project['networks'].values():
                     network['instances'] = []
