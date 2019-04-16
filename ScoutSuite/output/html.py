@@ -7,6 +7,7 @@ import zipfile
 
 import dateutil.tz
 
+from ScoutSuite import DEFAULT_INCLUDES_DIRECTORY
 from ScoutSuite import DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY, DEFAULT_INCLUDES_DIRECTORY
 from ScoutSuite import ERRORS_LIST
 from ScoutSuite.core.console import print_info, print_exception
@@ -132,5 +133,7 @@ class ScoutReport(HTMLReport):
                                                                self.report_name,
                                                                self.report_dir,
                                                                relative_path=True)[0])
+                        newline = newline.replace('<!-- SQLITE JS PLACEHOLDER -->',
+                                                  '{}/sqlite.js'.format(DEFAULT_INCLUDES_DIRECTORY))
                         nf.write(newline)
         return new_file
