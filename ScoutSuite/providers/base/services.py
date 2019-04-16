@@ -24,7 +24,7 @@ class BaseServicesConfig(object):
                     print_debug('Skipping the {} service'.format(format_service_name(service)))
 
             # Remove "credentials" as it isn't a service
-            services.remove('credentials')
+            if 'credentials' in services: services.remove('credentials')
 
             # Then, fetch concurrently all services:
             if services:
