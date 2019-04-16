@@ -746,9 +746,8 @@ class AWSProvider(BaseProvider):
                            self.parse_elb_policies_callback,
                            {})
 
-    @staticmethod
-    def parse_elb_policies_callback(current_config, path, current_path, region_id, callback_args):
-        region_config = get_object_at(['services', 'elb', ] + current_path + [region_id])
+    def parse_elb_policies_callback(self, current_config, path, current_path, region_id, callback_args):
+        region_config = get_object_at(self, ['services', 'elb', ] + current_path + [region_id])
         region_config['elb_policies'] = current_config['elb_policies']
         for policy_id in region_config['elb_policies']:
             if region_config['elb_policies'][policy_id]['PolicyTypeName'] != 'SSLNegotiationPolicyType':
