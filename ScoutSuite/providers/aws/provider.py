@@ -60,15 +60,19 @@ class AWSProvider(BaseProvider):
         """
         ip_ranges = [] if ip_ranges is None else ip_ranges
 
-        self._map_all_subnets()
-
         # Various data processing calls
+        # Note that order of processing can matter
+
+        self._map_all_subnets()
 
         if 'ec2' in self.service_list:
             self._map_all_sgs()
-            self._check_ec2_zone_distribution()
             self._add_security_group_name_to_ec2_grants()
+            self._check_ec2_zone_distribution()
             self._add_last_snapshot_date_to_ec2_volumes()
+
+        if 'emr' in self.service_list and 'ec2' in self.service_list and 'vpc' in self.service_list:
+            self._set_emr_vpc_ids()
 
         if 'ec2' in self.service_list and 'iam' in self.service_list:
             self._match_instances_and_roles()
@@ -494,8 +498,7 @@ class AWSProvider(BaseProvider):
         if 'status_path' in callback_args:
             status_path = combine_paths(copy.deepcopy(
                 original_resource_path), callback_args['status_path'])
-            resource_status = get_object_at(
-                self, status_path).replace('.', '_')
+            resource_status = get_object_at(self, status_path).replace('.', '_')
         else:
             resource_status = None
         unknown_vpc_id = True if current_path[4] != 'vpcs' else False
@@ -589,7 +592,7 @@ class AWSProvider(BaseProvider):
                     print_exception('Unable to determine VPC id for %s' % (str(subnet_id) if subnet_id else str(sg_id)))
                     continue
             if vpc_id:
-                region_vpcs_config = get_object_at(current_path)
+                region_vpcs_config = get_object_at(self, current_path)
                 manage_dictionary(region_vpcs_config, vpc_id, {'clusters': {}})
                 region_vpcs_config[vpc_id]['clusters'][cluster_id] = cluster
         for cluster_id in pop_list:
