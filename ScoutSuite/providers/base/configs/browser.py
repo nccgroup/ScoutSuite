@@ -1,6 +1,6 @@
 import copy
 
-from ScoutSuite.core.console import print_error, print_exception
+from ScoutSuite.core.console import print_exception
 
 
 ########################################
