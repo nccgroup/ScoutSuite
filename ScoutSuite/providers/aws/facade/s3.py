@@ -41,7 +41,7 @@ class S3Facade(AWSBaseFacade):
         try:
             location = await run_concurrently(lambda: client.get_bucket_location(Bucket=bucket['Name']))
         except Exception as e:
-            print_exception('Failed to get bucket location for %s: {}'.format(bucket['Name'], e))
+            print_exception('Failed to get bucket location for {}: {}'.format(bucket['Name'], e))
             location = None
 
         if location:

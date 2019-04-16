@@ -36,6 +36,7 @@ class CloudFormation(AWSBaseFacade):
                 lambda: client.get_template(StackName=stack['StackName'])['TemplateBody'])
         except Exception as e:
             print_exception('Failed to get CloudFormation template: {}'.format(e))
+            stack['template'] = None
 
     async def _get_and_set_policy(self, stack: {}, region: str):
         client = AWSFacadeUtils.get_client('cloudformation', self.session, region)

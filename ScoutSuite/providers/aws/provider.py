@@ -45,6 +45,8 @@ class AWSProvider(BaseProvider):
         """
         if self.profile:
             return 'aws-{}'.format(self.profile)
+        elif self.account_id:
+            return 'aws-{}'.format(self.account_id)
         else:
             return 'aws'
 

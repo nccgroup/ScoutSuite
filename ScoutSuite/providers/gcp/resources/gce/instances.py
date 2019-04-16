@@ -40,7 +40,7 @@ class Instances(GCPCompositeResources):
         instance_dict['ip_forwarding_enabled'] = raw_instance['canIpForward']
         instance_dict['serial_port_enabled'] = self._is_serial_port_enabled(raw_instance)
         instance_dict['has_full_access_cloud_apis'] = self._has_full_access_to_all_cloud_apis(raw_instance)
-        instance_dict['disks'] = InstanceDisks(raw_instance)
+        instance_dict['disks'] = InstanceDisks(self.facade, raw_instance)
         return instance_dict['id'], instance_dict
 
     def _get_description(self, raw_instance):

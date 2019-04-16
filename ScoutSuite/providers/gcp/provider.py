@@ -47,6 +47,8 @@ class GCPProvider(BaseProvider):
             return 'gcp-{}'.format(self.organization_id)
         elif self.folder_id:
             return 'gcp-{}'.format(self.folder_id)
+        elif self.account_id:
+            return 'gcp-{}'.format(self.account_id)
         else:
             return 'gcp'
 
@@ -94,7 +96,7 @@ class GCPProvider(BaseProvider):
         :return:
         """
 
-        if 'computeengine' in self.services:
+        if 'computeengine' in self.service_list:
             for project in self.services['computeengine']['projects'].values():
                 for zone in project['zones'].values():
                     for instance in zone['instances'].values():
@@ -115,7 +117,7 @@ class GCPProvider(BaseProvider):
         :return:
         """
 
-        if 'computeengine' in self.services:
+        if 'computeengine' in self.service_list:
             for project in self.services['computeengine']['projects'].values():
                 for network in project['networks'].values():
                     network['instances'] = []

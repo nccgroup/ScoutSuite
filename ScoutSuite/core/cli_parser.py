@@ -1,6 +1,5 @@
-#!/usr/bin/env python
-
 import argparse
+from ScoutSuite import __version__
 
 
 class ScoutSuiteArgumentParser:
@@ -9,7 +8,14 @@ class ScoutSuiteArgumentParser:
         self.parser = argparse.ArgumentParser()
 
         # People will still be able to use the old --provider syntax
-        self.parser.add_argument("--provider", action='store_true', dest='sinkhole', help=argparse.SUPPRESS)
+        self.parser.add_argument("--provider",
+                                 action='store_true',
+                                 dest='sinkhole',
+                                 help=argparse.SUPPRESS)
+
+        self.parser.add_argument('-v', '--version',
+                                 action='version',
+                                 version='Scout Suite {}'.format(__version__))
 
         self.common_providers_args_parser = argparse.ArgumentParser(add_help=False)
 
@@ -25,7 +31,7 @@ class ScoutSuiteArgumentParser:
     def _init_aws_parser(self):
         aws_parser = self.subparsers.add_parser("aws",
                                                 parents=[self.common_providers_args_parser],
-                                                help="Run Scout against an Amazon web Services account")
+                                                help="Run Scout against an Amazon Web Services account")
 
         parser = aws_parser.add_argument_group('Authentication parameters')
 
