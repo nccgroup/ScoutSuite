@@ -37,6 +37,8 @@ class AzureProvider(BaseProvider):
         """
         if self.credentials.subscription_id:
             return 'azure-{}'.format(self.credentials.subscription_id)
+        elif self.account_id:
+            return 'azure-{}'.format(self.account_id)
         else:
             return 'azure'
 

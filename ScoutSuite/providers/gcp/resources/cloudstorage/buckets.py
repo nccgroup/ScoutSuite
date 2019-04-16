@@ -29,13 +29,14 @@ class Buckets(Resources):
         return bucket_dict['id'], bucket_dict
 
     def _get_cloudstorage_bucket_acl(self, raw_bucket):
-        bucket_acls = raw_bucket.iam_policy      
+        bucket_acls = raw_bucket.iam_policy
         acl_config = {}
-        for role in bucket_acls._bindings:
-            for member in bucket_acls[role]:
-                if member.split(':')[0] not in ['projectEditor', 'projectViewer', 'projectOwner']:
-                    if member not in acl_config:
-                        acl_config[member] = [role]
-                    else:
-                        acl_config[member].append(role)
+        if bucket_acls:
+            for role in bucket_acls._bindings:
+                for member in bucket_acls[role]:
+                    if member.split(':')[0] not in ['projectEditor', 'projectViewer', 'projectOwner']:
+                        if member not in acl_config:
+                            acl_config[member] = [role]
+                        else:
+                            acl_config[member].append(role)
         return acl_config

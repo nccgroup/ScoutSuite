@@ -8,7 +8,6 @@ import dateutil
 from sqlitedict import SqliteDict
 
 from ScoutSuite.core.console import print_exception, print_info
-from ScoutSuite.output.report_file import ReportFile
 from ScoutSuite.output.utils import get_filename, prompt_for_overwrite
 
 
@@ -37,12 +36,13 @@ class ScoutJsonEncoder(json.JSONEncoder):
 
 
 class ScoutResultEncoder(object):
-    def __init__(self, profile, report_dir=None, timestamp=None):
-        self.report_dir = report_dir if report_dir else ReportFile.directory.value
-        self.profile = profile.replace('/', '_').replace('\\', '_')  # Issue 111
+    def __init__(self, report_name=None, report_dir=None, timestamp=None):
+        self.report_name = report_name
+        if self.report_name:
+            self.report_name = report_name.replace('/', '_').replace('\\', '_')  # Issue 111
+        self.report_dir = report_dir
         self.current_time = datetime.datetime.now(dateutil.tz.tzlocal())
-        if timestamp:
-            self.timestamp = self.current_time.strftime("%Y-%m-%d_%Hh%M%z") if not timestamp else timestamp
+        self.timestamp = self.current_time.strftime("%Y-%m-%d_%Hh%M%z") if not timestamp else timestamp
 
     @staticmethod
     def to_dict(config):
@@ -52,11 +52,11 @@ class ScoutResultEncoder(object):
 class SqlLiteEncoder(ScoutResultEncoder):
     def load_from_file(self, config_type, config_path=None):
         if not config_path:
-            config_path, _ = get_filename(config_type, self.profile, self.report_dir)
+            config_path, _ = get_filename(config_type, self.report_name, self.report_dir)
         return SqliteDict(config_path, autocommit=True).data
 
     def save_to_file(self, config, config_type, force_write, _debug):
-        config_path, first_line = get_filename(config_type, self.profile, self.report_dir, extension="db")
+        config_path, first_line = get_filename(config_type, self.report_name, self.report_dir, file_extension="db")
         print_info('Saving data to %s' % config_path)
         try:
             with self.__open_file(config_path, force_write) as database:
@@ -95,24 +95,24 @@ class JavaScriptEncoder(ScoutResultEncoder):
     Reader/Writer for JS and JSON files
     """
 
-    def load_from_file(self, config_type, config_path=None, first_line=None):
-        if not config_path:
-            config_path, first_line = get_filename(config_type, self.profile, self.report_dir)
-        with open(config_path, 'rt') as f:
+    def load_from_file(self, file_type, file_path=None, first_line=None):
+        if not file_path:
+            file_path, first_line = get_filename(file_type, self.report_name, self.report_dir)
+        with open(file_path, 'rt') as f:
             json_payload = f.readlines()
             if first_line:
                 json_payload.pop(0)
             json_payload = ''.join(json_payload)
         return json.loads(json_payload)
 
-    def save_to_file(self, config, config_type, force_write, debug):
-        config_path, first_line = get_filename(config_type, self.profile, self.report_dir)
+    def save_to_file(self, content, file_type, force_write, debug):
+        config_path, first_line = get_filename(file_type, self.report_name, self.report_dir)
         print_info('Saving data to %s' % config_path)
         try:
             with self.__open_file(config_path, force_write) as f:
                 if first_line:
                     print('%s' % first_line, file=f)
-                print('%s' % json.dumps(config, indent=4 if debug else None, separators=(',', ': '), sort_keys=True,
+                print('%s' % json.dumps(content, indent=4 if debug else None, separators=(',', ': '), sort_keys=True,
                                         cls=ScoutJsonEncoder), file=f)
         except AttributeError as e:
             # __open_file returned None
