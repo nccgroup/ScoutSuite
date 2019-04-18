@@ -17,7 +17,7 @@ class LoadBalancers(AWSResources):
             self[id] = load_balancer
 
     def _parse_load_balancer(self, raw_load_balancer):
-        load_balancer = {'name': raw_load_balancer.pop('LoadBalancerName')}
+        load_balancer = {'name': raw_load_balancer['LoadBalancerName']}
         get_keys(raw_load_balancer, load_balancer,
                  ['DNSName', 'CreatedTime', 'AvailabilityZones', 'Subnets', 'Scheme', 'attributes'])
 
