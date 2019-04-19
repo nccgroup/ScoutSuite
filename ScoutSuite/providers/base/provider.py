@@ -117,8 +117,11 @@ class BaseProvider(object):
                     'version': scout_version, 'ruleset_name': ruleset.name, 'ruleset_about': ruleset.about,
                     'summary': {}}
         for service in self.services:
-            last_run['summary'][service] = {'checked_items': 0, 'flagged_items': 0, 'max_level': 'warning',
-                                            'rules_count': 0, 'resources_count': 0}
+            last_run['summary'][service] = {'checked_items': 0,
+                                            'flagged_items': 0,
+                                            'max_level': 'warning',
+                                            'rules_count': 0,
+                                            'resources_count': 0}
             if self.services[service] is None:
                 # Not supported yet
                 continue
