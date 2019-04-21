@@ -25,5 +25,9 @@ class Vpcs(AWSCompositeResources):
                     for vpc_id in self}
         )
 
-    def _parse_vpc(self, vpc):
-        return vpc['VpcId'], {}
+    def _parse_vpc(self, raw_vpc):
+        vpc = {}
+        vpc['cidr_block'] = raw_vpc['CidrBlock']
+        vpc['default'] = raw_vpc['IsDefault']
+        vpc['state'] = raw_vpc['State']
+        return raw_vpc['VpcId'], vpc
