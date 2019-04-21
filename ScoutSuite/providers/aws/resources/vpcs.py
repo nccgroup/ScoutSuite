@@ -27,6 +27,7 @@ class Vpcs(AWSCompositeResources):
 
     def _parse_vpc(self, raw_vpc):
         vpc = {}
+        vpc['name'] = raw_vpc['VpcId']
         vpc['cidr_block'] = raw_vpc['CidrBlock']
         vpc['default'] = raw_vpc['IsDefault']
         vpc['state'] = raw_vpc['State']
