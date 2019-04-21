@@ -164,27 +164,23 @@ class BaseProvider(object):
                                  '.') if x != 'id'])
 
                     # Update counts
-                    service_config = self.services[service]
-                    if not service_config:
-                        continue
+                    self.metadata[service_group][service]['resources'][resource]['count'] = \
+                        self.recursive_get_count(resource,
+                                                 self.services[service])
 
-                    count = '%s_count' % resource
-                    if resource != 'regions':
-                        if 'regions' in service_config.keys() and isinstance(service_config['regions'], dict):
-                            self.metadata[service_group][service]['resources'][resource]['count'] = 0
-                            for region in service_config['regions']:
-                                if count in service_config['regions'][region].keys():
-                                    self.metadata[service_group][service]['resources'][resource]['count'] += \
-                                        service_config['regions'][region][count]
-                        else:
-                            try:
-                                self.metadata[service_group][service]['resources'][resource]['count'] = \
-                                    service_config[count]
-                            except Exception as e:
-                                print_exception(e)
-                    else:
-                        self.metadata[service_group][service]['resources'][resource]['count'] = len(
-                            service_config['regions'])
+    def recursive_get_count(self, resource, resources):
+        """
+        Recursively look for counts of a specific resource in a resource tree.
+        """
+        count = 0
+        resource_count = '%s_count' % resource
+        if isinstance(resources, dict):
+            if resource_count in resources.keys():
+                count += resources[resource_count]
+            else:
+                for k in resources.keys():
+                    count += self.recursive_get_count(resource, resources[k])
+        return count
 
     def manage_object(self, object, attr, init, callback=None):
         """
