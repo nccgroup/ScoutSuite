@@ -55,7 +55,7 @@ Handlebars.registerHelper('displayPolicy', function (blob) {
   })
   
   Handlebars.registerHelper('has_mfa?', function (mfaDevices) {
-    if (typeof mfaDevices !== 'undefined' && mfaDevices !== '') {
+    if (typeof mfaDevices !== 'undefined' && mfaDevices !== '' && mfaDevices.length > 0) {
       return 'Yes'
     } else {
       return 'No'
