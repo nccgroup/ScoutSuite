@@ -1,3 +1,4 @@
+from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.utils import run_concurrently
