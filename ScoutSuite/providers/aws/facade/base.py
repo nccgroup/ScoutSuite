@@ -8,6 +8,7 @@ from ScoutSuite.providers.aws.facade.awslambda import LambdaFacade
 from ScoutSuite.providers.aws.facade.cloudformation import CloudFormation
 from ScoutSuite.providers.aws.facade.cloudtrail import CloudTrailFacade
 from ScoutSuite.providers.aws.facade.cloudwatch import CloudWatch
+from ScoutSuite.providers.aws.facade.config import ConfigFacade
 from ScoutSuite.providers.aws.facade.directconnect import DirectConnectFacade
 from ScoutSuite.providers.aws.facade.ec2 import EC2Facade
 from ScoutSuite.providers.aws.facade.efs import EFSFacade
@@ -27,7 +28,6 @@ from ScoutSuite.providers.utils import run_concurrently
 
 try:
     from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
-    from ScoutSuite.providers.aws.facade.config_private import ConfigFacade
     from ScoutSuite.providers.aws.facade.kms_private import KMSFacade
 except ImportError:
     pass
@@ -73,6 +73,7 @@ class AWSFacade(AWSBaseFacade):
         self.cloudformation = CloudFormation(self.session)
         self.cloudtrail = CloudTrailFacade(self.session)
         self.cloudwatch = CloudWatch(self.session)
+        self.config = ConfigFacade(self.session)
         self.directconnect = DirectConnectFacade(self.session)
         self.efs = EFSFacade(self.session)
         self.elasticache = ElastiCacheFacade(self.session)
@@ -90,7 +91,6 @@ class AWSFacade(AWSBaseFacade):
 
         try:
             self.dynamodb = DynamoDBFacade(self.session)
-            self.config = ConfigFacade(self.session)
             self.kms = KMSFacade(self.session)
         except NameError:
             pass

@@ -11,10 +11,10 @@
 
 ## Description
 
-Scout Suite is a multi-cloud security auditing tool, which enables assessing the security posture of cloud
-environments. Using the APIs exposed by cloud providers, Scout gathers configuration data for manual inspection and
-highlights risk areas. Rather than pouring through dozens of pages on the web consoles, Scout provides a clear view of
-the attack surface automatically.
+Scout Suite is an open source multi-cloud security-auditing tool, which enables security posture assessment of cloud 
+environments. Using the APIs exposed by cloud providers, Scout Suite gathers configuration data for manual inspection 
+and highlights risk areas. Rather than going through dozens of pages on the web consoles, Scout Suite presents a clear 
+view of the attack surface automatically.
 
 Scout Suite is stable and actively maintained, but a number of features and internals may change. As such, please bare
 with us as we find time to work on, and improve, the tool. Feel free to report a bug with details (please provide
@@ -32,8 +32,8 @@ The latest (and final) version of Scout2 can be found in <https://github.com/ncc
 The following cloud providers are currently supported/planned:
 
 -   Amazon Web Services
--   Google Cloud Platform
 -   Microsoft Azure
+-   Google Cloud Platform
 
 ## Installation
 
@@ -75,11 +75,20 @@ The required libraries can be found in the
 
 ### Compliance
 
-#### AWS Acceptable Use Policy
+#### AWS
 
 Use of Scout Suite does not require AWS users to complete and submit the AWS Vulnerability / Penetration Testing
 Request Form. Scout Suite only performs API calls to fetch configuration data and identify security gaps, which is not
 considered security scanning as it does not impact AWS' network and applications.
+
+#### Azure
+
+Use of Scout Suite does not require Azure users to contact Microsoft to begin testing. The only requirement is that
+users abide by the Microsoft Cloud Unified Penetration Testing Rules of Engagement.
+
+References:
+- https://docs.microsoft.com/en-us/azure/security/azure-security-pen-testing
+- https://www.microsoft.com/en-us/msrc/pentest-rules-of-engagement
 
 #### Google Cloud Platform
 
@@ -90,15 +99,6 @@ you own (and not other customers' applications).
 References:
 - https://cloud.google.com/terms/aup
 - https://cloud.google.com/terms/
-
-#### Azure
-
-Use of Scout Suite does not require Azure users to contact Microsoft to begin testing. The only requirement is that
-users abide by the Microsoft Cloud Unified Penetration Testing Rules of Engagement.
-
-References:
-- https://docs.microsoft.com/en-us/azure/security/azure-security-pen-testing
-- https://www.microsoft.com/en-us/msrc/pentest-rules-of-engagement
 
 ### Usage
 
@@ -135,4 +135,4 @@ Assuming you already have your provider's CLI up and running you should have you
 
     $ python scout.py gcp --user-account
 
-Additional information can be found in other pages of [the wiki](https://github.com/nccgroup/ScoutSuite/wiki).
+Additional information can be found in other pages of the [wiki](https://github.com/nccgroup/ScoutSuite/wiki).

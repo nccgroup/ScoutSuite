@@ -4,12 +4,14 @@ from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.utils import ec2_classic
-from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
+from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently, map_concurrently
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class ELBFacade(AWSBaseFacade):
     regional_load_balancers_cache_locks = {}
     load_balancers_cache = {}
+    policies_cache = set()
 
     async def get_load_balancers(self, region: str, vpc: str):
         await self.cache_load_balancers(region)
@@ -40,3 +42,32 @@ class ELBFacade(AWSBaseFacade):
             )
         except Exception as e:
             print_exception('Failed to describe ELB load balancer attributes: {}'.format(e))
+
+    async def get_policies(self, region: str):
+        await self.cache_load_balancers(region)
+        for load_balancer in self.load_balancers_cache[region]:
+            load_balancer['policy_names'] = []
+            for listener_description in load_balancer['ListenerDescriptions']:
+                for policy_name in listener_description['PolicyNames']:
+                    policy_id = get_non_provider_id(policy_name)
+                    if policy_id not in self.policies_cache:
+                        load_balancer['policy_names'].append(policy_name)
+                        self.policies_cache.add(policy_id)
+
+        policies = await map_concurrently(self._get_policies, self.load_balancers_cache[region], region=region)
+        # Because _get_policies returns a list, policies has to be flatten:
+        return [policy for nested_policy in policies for policy in nested_policy]
+
+    async def _get_policies(self, load_balancer: dict, region: str):
+            if len(load_balancer['policy_names']) == 0:
+                return []
+
+            elb_client = AWSFacadeUtils.get_client('elb', self.session, region)
+            try:
+                return await run_concurrently(lambda: elb_client.describe_load_balancer_policies(
+                    LoadBalancerName=load_balancer['LoadBalancerName'],
+                    PolicyNames=load_balancer['policy_names'])['PolicyDescriptions']
+                )
+            except Exception as e:
+                print_exception('Failed to retrieve load balancer policies: {}'.format(e))
+                raise

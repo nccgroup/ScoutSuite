@@ -23,13 +23,17 @@ class BaseServicesConfig(object):
                 if service not in services:
                     print_debug('Skipping the {} service'.format(format_service_name(service)))
 
+            # Remove "credentials" as it isn't a service
+            if 'credentials' in services: services.remove('credentials')
+
             # Then, fetch concurrently all services:
-            tasks = {
-                asyncio.ensure_future(
-                    self._fetch(service, regions)
-                ) for service in services
-            }
-            await asyncio.wait(tasks)
+            if services:
+                tasks = {
+                    asyncio.ensure_future(
+                        self._fetch(service, regions)
+                    ) for service in services
+                }
+                await asyncio.wait(tasks)
 
     async def _fetch(self, service, regions):
         try:
