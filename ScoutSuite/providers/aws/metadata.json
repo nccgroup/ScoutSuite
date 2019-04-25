@@ -59,6 +59,9 @@
                 },
                 "recorders": {
                     "path": "services.config.regions.id.recorders"
+                },
+                "rules": {
+                    "path": "services.config.regions.id.rules"
                 }
             }
         }
