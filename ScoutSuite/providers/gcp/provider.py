@@ -10,7 +10,8 @@ class GCPProvider(BaseProvider):
     Implements provider for GCP
     """
 
-    def __init__(self, project_id=None, folder_id=None, organization_id=None, all_projects=None,
+    def __init__(self,
+                 project_id=None, folder_id=None, organization_id=None, all_projects=None,
                  report_dir=None, timestamp=None, services=None, skipped_services=None, result_format='json', **kwargs):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
@@ -22,15 +23,16 @@ class GCPProvider(BaseProvider):
         self.provider_name = 'Google Cloud Platform'
         self.environment = 'default'
 
-        self.projects = []
         self.all_projects = all_projects
         self.project_id = project_id
         self.folder_id = folder_id
         self.organization_id = organization_id
 
-        self.services_config = GCPServicesConfig
         self.credentials = kwargs['credentials']
         self._set_account_id()
+
+        self.services = GCPServicesConfig(self.credentials, self.credentials.default_project_id,
+                                          self.project_id, self.folder_id, self.organization_id, self.all_projects)
 
         self.result_format = result_format
 
@@ -41,13 +43,7 @@ class GCPProvider(BaseProvider):
         """
         Returns the name of the report using the provider's configuration
         """
-        if self.project_id:
-            return 'gcp-{}'.format(self.project_id)
-        elif self.organization_id:
-            return 'gcp-{}'.format(self.organization_id)
-        elif self.folder_id:
-            return 'gcp-{}'.format(self.folder_id)
-        elif self.account_id:
+        if self.account_id:
             return 'gcp-{}'.format(self.account_id)
         else:
             return 'gcp'
@@ -73,6 +69,8 @@ class GCPProvider(BaseProvider):
         # Project inferred from default configuration
         elif self.credentials.default_project_id:
             self.account_id = self.credentials.default_project_id
+        else:
+            self.account_id = 'unknown-project-id'
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
