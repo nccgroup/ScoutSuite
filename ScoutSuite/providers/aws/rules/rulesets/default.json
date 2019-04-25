@@ -45,8 +45,8 @@
         ],
         "config-recorder-not-configured.json": [
             {
-                "enabled": false,
-                "level": "danger"
+                "enabled": true,
+                "level": "warning"
             }
         ],
         "ec2-default-security-group-in-use.json": [
