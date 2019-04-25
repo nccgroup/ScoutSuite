@@ -15,13 +15,13 @@ class Rules(AWSResources):
 
     def _parse_rule(self, raw_rule):
         rule = {}
-        rule['id'] = raw_rule.pop('ConfigRuleId')
-        rule['arn'] = raw_rule.pop('ConfigRuleArn')
-        rule['name'] = raw_rule.pop('ConfigRuleName')
-        rule['description'] = raw_rule.pop('Description')
-        rule['scope'] = raw_rule.pop('Scope')
-        rule['source'] = raw_rule.pop('Source')
-        rule['input_parameters'] = raw_rule.pop('InputParameters')
-        rule['maximum_execution_frequency'] = raw_rule.pop('MaximumExecutionFrequency')
-        rule['state'] = raw_rule.pop('ConfigRuleState')
+        rule['id'] = raw_rule.pop('ConfigRuleId', None)
+        rule['arn'] = raw_rule.pop('ConfigRuleArn', None)
+        rule['name'] = raw_rule.pop('ConfigRuleName', None)
+        rule['description'] = raw_rule.pop('Description', None)
+        rule['scope'] = raw_rule.pop('Scope', None)
+        rule['source'] = raw_rule.pop('Source', None)
+        rule['input_parameters'] = raw_rule.pop('InputParameters', None)
+        rule['maximum_execution_frequency'] = raw_rule.pop('MaximumExecutionFrequency', None)
+        rule['state'] = raw_rule.pop('ConfigRuleState', None)
         return rule['name'], rule
