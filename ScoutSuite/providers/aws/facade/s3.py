@@ -62,12 +62,12 @@ class S3Facade(AWSBaseFacade):
         except Exception as e:
             print_exception('Failed to get logging configuration for %s: %s' % (bucket['Name'], e))
             bucket['logging'] = 'Unknown'
-
-        if 'LoggingEnabled' in logging:
-            bucket['logging'] = \
-                logging['LoggingEnabled']['TargetBucket'] + '/' + logging['LoggingEnabled']['TargetPrefix']
         else:
-            bucket['logging'] = 'Disabled'
+            if 'LoggingEnabled' in logging:
+                bucket['logging'] = \
+                    logging['LoggingEnabled']['TargetBucket'] + '/' + logging['LoggingEnabled']['TargetPrefix']
+            else:
+                bucket['logging'] = 'Disabled'
 
     async def _get_and_set_s3_bucket_versioning(self, bucket):
         client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
