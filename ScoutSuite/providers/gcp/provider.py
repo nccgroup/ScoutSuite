@@ -55,8 +55,8 @@ class GCPProvider(BaseProvider):
             if self.credentials.is_service_account and hasattr(self.credentials, 'service_account_email'):
                 self.account_id = self.credentials.service_account_email
             else:
-                # TODO use username email
-                self.account_id = 'GCP'
+                # TODO use username email (can't find it...)
+                self.account_id = 'user-account'
         # Project passed through the CLI
         elif self.project_id:
             self.account_id = self.project_id
