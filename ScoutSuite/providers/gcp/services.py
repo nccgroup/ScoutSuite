@@ -14,9 +14,11 @@ except ImportError:
     pass
 
 class GCPServicesConfig(BaseServicesConfig):
-    def __init__(self, credentials=None, projects=None, **kwargs):
+    def __init__(self, credentials=None, default_project_id=None,
+                 project_id=None, folder_id=None, organization_id=None, all_projects=None,
+                 **kwargs):
         super(GCPServicesConfig, self).__init__(credentials)
-        facade = GCPFacade()
+        facade = GCPFacade(default_project_id, project_id, folder_id, organization_id, all_projects)
         self.cloudresourcemanager = CloudResourceManager(facade)
         self.cloudsql = CloudSQL(facade)
         self.cloudstorage = CloudStorage(facade)
