@@ -80,20 +80,12 @@ class GCPFacade(GCPBaseFacade):
             print_exception('Failed to retrieve projects: {}'.format(e))
             return []
 
-
     async def _get_projects_recursively(self, parent_type, parent_id):
         """
         Returns all the projects in a given organization or folder. For a project_id it only returns the project
         details.
-        """
-
-        if parent_type not in ['project', 'organization', 'folder', 'all']:
-            return None
-
-        projects = []
 
         # FIXME can't currently be done with API client library as it consumes v1 which doesn't support folders
-        """
         resource_manager_client = resource_manager.Client(credentials=self.credentials)
         project_list = resource_manager_client.list_projects()
         for p in project_list:
@@ -101,55 +93,35 @@ class GCPFacade(GCPBaseFacade):
                 projects.append(p.project_id)
         """
 
+        if parent_type not in ['project', 'organization', 'folder', 'all']:
+            return None
+
         resourcemanager_client = self._get_client()
-        # resource_manager_client_v1 = gcp_connect_service(
-        #     service='cloudresourcemanager', credentials=self.credentials)
-        # resource_manager_client_v2 = gcp_connect_service(
-        #     service='cloudresourcemanager-v2', credentials=self.credentials)
+        resourcemanager_client_v2 = self._build_arbitrary_client('cloudresourcemanager', 'v2')
+
+        projects = []
 
         try:
-            if parent_type == 'project':
-                request = resourcemanager_client.projects().list(filter='id:%s' %
-                                                                        parent_id)
-                projects_group = resourcemanager_client.projects()
-                project_response = await GCPFacadeUtils.get_all('projects', request, projects_group)
-                # if 'projects' in project_response.keys():
-                #     for project in project_response['projects']:
-                for project in project_response:
-                    if project['lifecycleState'] == "ACTIVE":
-                        projects.append(project)
+            projects_group = resourcemanager_client.projects()
 
+            if parent_type == 'project':
+                request = resourcemanager_client.projects().list(filter='id:%s' % parent_id)
             elif parent_type == 'all':
                 request = resourcemanager_client.projects().list()
-                projects_group = resourcemanager_client.projects()
-                project_response = await GCPFacadeUtils.get_all('projects', request, projects_group)
-                if 'projects' in project_response.keys():
-                    for project in project_response['projects']:
-                        if project['lifecycleState'] == "ACTIVE":
-                            projects.append(project)
+            # get parent children projects
             else:
-
-                # get parent children projects
                 request = resourcemanager_client.projects().list(filter='parent.id:%s' % parent_id)
-                while request is not None:
 
-                    projects_group = resourcemanager_client.projects()
-                    response = await GCPFacadeUtils.get_all('projects', request, projects_group)
-                    if 'projects' in response.keys():
-                        for project in response['projects']:
-                            if project['lifecycleState'] == "ACTIVE":
-                                projects.append(project)
+                # get parent children projects in children folders recursively
+                folder_request = resourcemanager_client_v2.folders().list(parent='%ss/%s' % (parent_type, parent_id))
+                folder_response = await GCPFacadeUtils.get_all('folders', folder_request, projects_group)
+                for folder in folder_response:
+                    projects.extend(await self._get_projects_recursively("folder", folder['name'].strip(u'folders/')))
 
-                    request = resourcemanager_client.projects().list_next(previous_request=request,
-                                                                          previous_response=response)
-
-                # # get parent children projects in children folders recursively
-                # folder_response = resource_manager_client_v2.folders().list(
-                #     parent='%ss/%s' % (parent_type, parent_id)).execute()
-                # if 'folders' in folder_response.keys():
-                #     for folder in folder_response['folders']:
-                #         projects.extend(self._get_projects(
-                #             "folder", folder['name'].strip(u'folders/')))
+            project_response = await GCPFacadeUtils.get_all('projects', request, projects_group)
+            for project in project_response:
+                if project['lifecycleState'] == "ACTIVE":
+                    projects.append(project)
 
         except Exception as e:
             print_exception('Unable to list accessible Projects: {}'.format(e))
