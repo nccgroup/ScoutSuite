@@ -3,6 +3,7 @@ from ScoutSuite.providers.aws.resources.awslambda.base import Lambdas
 from ScoutSuite.providers.aws.resources.cloudformation.base import CloudFormation
 from ScoutSuite.providers.aws.resources.cloudtrail.base import CloudTrail
 from ScoutSuite.providers.aws.resources.cloudwatch.base import CloudWatch
+from ScoutSuite.providers.aws.resources.config.base import Config
 from ScoutSuite.providers.aws.resources.directconnect.base import DirectConnect
 from ScoutSuite.providers.aws.resources.ec2.base import EC2
 from ScoutSuite.providers.aws.resources.efs.base import EFS
@@ -24,10 +25,6 @@ from ScoutSuite.providers.base.services import BaseServicesConfig
 # Try to import proprietary services
 try:
     from ScoutSuite.providers.aws.resources.private_dynamodb.base import DynamoDB
-except ImportError:
-    pass
-try:
-    from ScoutSuite.providers.aws.resources.private_config.base import Config
 except ImportError:
     pass
 try:

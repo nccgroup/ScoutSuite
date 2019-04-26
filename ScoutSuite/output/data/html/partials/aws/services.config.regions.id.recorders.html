@@ -1,0 +1,29 @@
+<!-- Recorder partial -->
+<script id="services.config.regions.id.recorders.partial" type="text/x-handlebars-template">
+  <div id="resource-name" class="list-group-item active">
+    <h4 class="list-group-item-heading">{{name}}</h4>
+  </div>
+  <div class="list-group-item">
+    <h4>Information</h4>
+    <ul>
+      <li class="list-group-item-text">Enabled: {{enabled}}</li>
+      <li class="list-group-item-text">Region: {{region}}</li>
+      <li class="list-group-item-text">Role arn: <samp>{{role_ARN}}</samp></li>
+      <li class="list-group-item-text">Last Status: {{last_status}}</li>
+      <li class="list-group-item-text">Last Start Time: {{last_start_time}}</li>
+      <li class="list-group-item-text">Last Status Change Time: {{last_status_change_time}}</li>
+    </ul>
+  </div>
+</script>
+<script>
+  Handlebars.registerPartial("services.config.regions.id.recorders", $("#services\\.config\\.regions\\.id\\.recorders\\.partial").html());
+</script>
+
+<!-- Single Config instance template -->
+<script id="single_config_recorder-template" type="text/x-handlebars-template">
+  {{> modal-template template='services.config.regions.id.recorders' }}
+</script>
+<script>
+  var single_config_recorder_template = Handlebars.compile($("#single_config_recorder-template").html());
+</script>
+

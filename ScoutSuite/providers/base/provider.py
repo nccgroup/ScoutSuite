@@ -22,7 +22,8 @@ class BaseProvider(object):
     all cloud providers
     """
 
-    def __init__(self, report_dir=None, timestamp=None, services=None, skipped_services=None,
+    def __init__(self, report_dir=None, timestamp=None,
+                 services=None, skipped_services=None,
                  result_format='json', **kwargs):
         """
 
@@ -40,8 +41,10 @@ class BaseProvider(object):
 
         self._load_metadata()
 
-        self.services = self.services_config(self.credentials)
+        if not hasattr(self, 'services'):
+            self.services = self.services_config(self.credentials)
         supported_services = vars(self.services).keys()
+
         self.service_list = self._build_services_list(supported_services, services, skipped_services)
 
     def get_report_name(self):
