@@ -40,7 +40,8 @@ class EFSFacade(AWSBaseFacade):
     async def _get_and_set_mount_target_security_groups(self, mount_target: {}, region: str):
         client = AWSFacadeUtils.get_client('efs', self.session, region)
         try:
-            mount_target['SecurityGroups'] = run_concurrently(lambda: client.describe_mount_target_security_groups(
+            mount_target['SecurityGroups'] = \
+                await run_concurrently(lambda: client.describe_mount_target_security_groups(
                 MountTargetId=mount_target['MountTargetId'])['SecurityGroups'])
         except Exception as e:
             print_exception('Failed to describe EFS mount target security groups: {}'.format(e))

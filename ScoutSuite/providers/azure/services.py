@@ -29,31 +29,32 @@ except ImportError:
 class AzureServicesConfig(BaseServicesConfig):
 
     def __init__(self, credentials: AzureCredentials = None, **kwargs):
-        super(AzureServicesConfig, self).__init__(credentials)
-        facade = AzureFacade(credentials)
 
-        self.storageaccounts = StorageAccounts(facade)
-        self.securitycenter = SecurityCenter(facade)
-        self.sqldatabase = Servers(facade)
-        self.network = Networks(facade)
-        self.keyvault = KeyVaults(facade)
+        super(AzureServicesConfig, self).__init__(credentials)
+
+        facade = AzureFacade(credentials)
 
         try:
             self.appgateway = ApplicationGateways(facade)
         except NameError as _:
             pass
         try:
-            self.rediscache = RedisCaches(facade)
-        except NameError as _:
-            pass
-        try:
             self.appservice = WebApplications(facade)
         except NameError as _:
             pass
+        self.keyvault = KeyVaults(facade)
         try:
             self.loadbalancer = LoadBalancers(facade)
         except NameError as _:
             pass
+        self.network = Networks(facade)
+        try:
+            self.rediscache = RedisCaches(facade)
+        except NameError as _:
+            pass
+        self.securitycenter = SecurityCenter(facade)
+        self.sqldatabase = Servers(facade)
+        self.storageaccounts = StorageAccounts(facade)
 
     def _is_provider(self, provider_name):
         return provider_name == 'azure'

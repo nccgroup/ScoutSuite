@@ -22,7 +22,8 @@ class BaseProvider(object):
     all cloud providers
     """
 
-    def __init__(self, report_dir=None, timestamp=None, services=None, skipped_services=None,
+    def __init__(self, report_dir=None, timestamp=None,
+                 services=None, skipped_services=None,
                  result_format='json', **kwargs):
         """
 
@@ -40,9 +41,10 @@ class BaseProvider(object):
 
         self._load_metadata()
 
-        if not self.services:
+        if not hasattr(self, 'services'):
             self.services = self.services_config(self.credentials)
         supported_services = vars(self.services).keys()
+
         self.service_list = self._build_services_list(supported_services, services, skipped_services)
 
     def get_report_name(self):
@@ -118,8 +120,11 @@ class BaseProvider(object):
                     'version': scout_version, 'ruleset_name': ruleset.name, 'ruleset_about': ruleset.about,
                     'summary': {}}
         for service in self.services:
-            last_run['summary'][service] = {'checked_items': 0, 'flagged_items': 0, 'max_level': 'warning',
-                                            'rules_count': 0, 'resources_count': 0}
+            last_run['summary'][service] = {'checked_items': 0,
+                                            'flagged_items': 0,
+                                            'max_level': 'warning',
+                                            'rules_count': 0,
+                                            'resources_count': 0}
             if self.services[service] is None:
                 # Not supported yet
                 continue
@@ -162,27 +167,23 @@ class BaseProvider(object):
                                  '.') if x != 'id'])
 
                     # Update counts
-                    service_config = self.services[service]
-                    if not service_config:
-                        continue
+                    self.metadata[service_group][service]['resources'][resource]['count'] = \
+                        self.recursive_get_count(resource,
+                                                 self.services[service])
 
-                    count = '%s_count' % resource
-                    if resource != 'regions':
-                        if 'regions' in service_config.keys() and isinstance(service_config['regions'], dict):
-                            self.metadata[service_group][service]['resources'][resource]['count'] = 0
-                            for region in service_config['regions']:
-                                if count in service_config['regions'][region].keys():
-                                    self.metadata[service_group][service]['resources'][resource]['count'] += \
-                                        service_config['regions'][region][count]
-                        else:
-                            try:
-                                self.metadata[service_group][service]['resources'][resource]['count'] = \
-                                    service_config[count]
-                            except Exception as e:
-                                print_exception(e)
-                    else:
-                        self.metadata[service_group][service]['resources'][resource]['count'] = len(
-                            service_config['regions'])
+    def recursive_get_count(self, resource, resources):
+        """
+        Recursively look for counts of a specific resource in a resource tree.
+        """
+        count = 0
+        resource_count = '%s_count' % resource
+        if isinstance(resources, dict):
+            if resource_count in resources.keys():
+                count += resources[resource_count]
+            else:
+                for k in resources.keys():
+                    count += self.recursive_get_count(resource, resources[k])
+        return count
 
     def manage_object(self, object, attr, init, callback=None):
         """

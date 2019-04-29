@@ -601,6 +601,9 @@ class AWSProvider(BaseProvider):
             callback_args['clear_list'].append(region)
 
     def sort_vpc_flow_logs_callback(self, current_config, path, current_path, flow_log_id, callback_args):
+        # FIXME it's not clear if the below is still necessary/useful
+        return
+
         attached_resource = current_config['ResourceId']
         if attached_resource.startswith('vpc-'):
             vpc_path = combine_paths(

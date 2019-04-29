@@ -2,15 +2,15 @@
     <!-- VPC partial -->
     <script id="services.vpc.regions.id.vpcs.partial" type="text/x-handlebars-template">
         <div id="resource-name" class="list-group-item active">
-          <h4 class="list-group-item-heading">{{name}}</h4>
+          <h4 class="list-group-item-heading">{{@key}}</h4>
         </div>
         <div class="list-group-item">
-          <h4>Information</h4>
-          <ul>
-            <li class="list-group-item-text">Region: {{region}}</li>
-            <li class="list-group-item-text">ID: {{@key}}</li>
-            <li class="list-group-item-text">name: {{name}}</li>
-          </ul>
+            <h4 class="list-group-item-heading">Information</h4>
+            <div class="list-group-item-text">ID: {{@key}}</div>
+            <div class="list-group-item-text">Region: {{region}}</div>
+            <div class="list-group-item-text">State: {{state}}</div>
+            <div class="list-group-item-text">CIDR Block: {{cidr_block}}</div>
+            <div class="list-group-item-text">Default: {{default}}</div>
         </div>
         <div class="list-group-item" style="padding-bottom: 0 !important;">
           <div class="accordion">
@@ -46,7 +46,7 @@
         </div>
         <div class="list-group-item" style="padding-bottom: 0 !important">
             {{> accordion region = region items = peering_connections
-                title = 'Peering connections'
+                title = 'Peering Connections'
                 item_partial = 'services.vpc.regions.vpcs.peering_connections'
                 accordion_id = (concat 'services.vpc.regions' region 'vpcs' @key 'peering_connections')
             }}
