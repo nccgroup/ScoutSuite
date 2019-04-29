@@ -41,7 +41,9 @@
             </li>
           </ul>
         </div>
+        {{!--
         {{> accordion service_name = 'redshift' resource_type = 'clusters' resource_id = name member_type = 'Nodes' members = ClusterNodes member_partial_name = 'services.redshift.regions.vpcs.cluster_nodes'}}
+        --}}
     </script>
     <script>
         Handlebars.registerPartial("services.redshift.regions.id.vpcs.id.clusters", $("#services\\.redshift\\.regions\\.id\\.vpcs\\.id\\.clusters\\.partial").html());
