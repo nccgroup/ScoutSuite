@@ -1140,7 +1140,7 @@ function makeTitle (title) {
   } else if (title === 'loadbalancer') {
     return 'Load Balancer'
   } else {
-    return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).replace('_', ' ')
+    return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).split('_').join(' ')
   }
 }
 

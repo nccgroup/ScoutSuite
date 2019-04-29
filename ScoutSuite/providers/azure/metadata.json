@@ -17,9 +17,25 @@
           "path": "services.sqldatabase.servers"
         }
       }
+    },
+    "rediscache": {
+      "resources": {
+        "caches": {
+          "cols": 2,
+          "path": "services.rediscache.caches"
+        }
+      }
     }
   },
-  "securitycenter": {
+  "security": {
+    "keyvault": {
+      "resources": {
+        "vaults": {
+          "cols": 2,
+          "path": "services.keyvault.vaults"
+        }
+      }
+    },
     "securitycenter": {
       "resources": {
         "pricings": {
@@ -37,17 +53,7 @@
       }
     }
   },
-  "security": {
-    "keyvault": {
-      "resources": {
-        "vaults": {
-          "cols": 2,
-          "path": "services.keyvault.vaults"
-        }
-      }
-    }
-  },
-  "network": {
+  "networking": {
     "appgateway": {
       "resources": {
         "app_gateways": {
@@ -77,17 +83,7 @@
       }
     }
   },
-  "redis": {
-    "rediscache": {
-      "resources": {
-        "caches": {
-          "cols": 2,
-          "path": "services.rediscache.caches"
-        }
-      }
-    }
-  },
-  "apps": {
+  "applications": {
     "appservice": {
       "resources": {
         "web_apps": {

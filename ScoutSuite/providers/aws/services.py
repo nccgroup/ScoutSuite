@@ -57,39 +57,35 @@ class AWSServicesConfig(BaseServicesConfig):
 
         facade = AWSFacade(credentials)
 
-        self.cloudwatch = CloudWatch(facade)
+        self.awslambda = Lambdas(facade)
         self.cloudformation = CloudFormation(facade)
         self.cloudtrail = CloudTrail(facade)
+        self.cloudwatch = CloudWatch(facade)
+        self.config = Config(facade)
         self.directconnect = DirectConnect(facade)
-        self.ec2 = EC2(facade)
-        self.efs = EFS(facade)
-        self.elasticache = ElastiCache(facade)
-        self.iam = IAM(facade)
-        self.elb = ELB(facade)
-        self.elbv2 = ELBv2(facade)
-        self.emr = EMR(facade)
-        self.awslambda = Lambdas(facade)
-        self.route53 = Route53(facade)
-        self.redshift = Redshift(facade)
-        self.s3 = S3(facade)
-        self.rds = RDS(facade)
-        self.vpc = VPC(facade)
-        self.sqs = SQS(facade)
-        self.ses = SES(facade)
-        self.sns = SNS(facade)
-
         try:
             self.dynamodb = DynamoDB(facade)
         except NameError as _:
             pass
-        try:
-            self.config = Config(facade)
-        except NameError as _:
-            pass
+        self.ec2 = EC2(facade)
+        self.efs = EFS(facade)
+        self.elasticache = ElastiCache(facade)
+        self.elb = ELB(facade)
+        self.elbv2 = ELBv2(facade)
+        self.emr = EMR(facade)
+        self.iam = IAM(facade)
         try:
             self.kms = KMS(facade)
         except NameError as _:
             pass
+        self.rds = RDS(facade)
+        self.redshift = Redshift(facade)
+        self.route53 = Route53(facade)
+        self.s3 = S3(facade)
+        self.ses = SES(facade)
+        self.sns = SNS(facade)
+        self.sqs = SQS(facade)
+        self.vpc = VPC(facade)
 
     def _is_provider(self, provider_name):
         return provider_name == 'aws'
