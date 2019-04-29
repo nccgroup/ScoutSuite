@@ -1,9 +1,10 @@
 import json
 
-from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
-from ScoutSuite.providers.utils import run_concurrently
+from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
+from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import get_and_set_concurrently
+from ScoutSuite.providers.utils import run_concurrently
 
 
 class CloudFormation(AWSBaseFacade):
@@ -20,21 +21,33 @@ class CloudFormation(AWSBaseFacade):
 
     async def _get_and_set_description(self, stack: {}, region: str):
         client = AWSFacadeUtils.get_client('cloudformation', self.session, region)
-        stack_description = await run_concurrently(
-            lambda: client.describe_stacks(StackName=stack['StackName'])['Stacks'][0])
-        stack.update(stack_description)
+        try:
+            stack_description = await run_concurrently(
+                lambda: client.describe_stacks(StackName=stack['StackName'])['Stacks'][0])
+        except Exception as e:
+            print_exception('Failed to describe CloudFormation stack: {}'.format(e))
+        else:
+            stack.update(stack_description)
 
     async def _get_and_set_template(self, stack: {}, region: str):
         client = AWSFacadeUtils.get_client('cloudformation', self.session, region)
-        stack['template'] = await run_concurrently(
-            lambda: client.get_template(StackName=stack['StackName'])['TemplateBody'])
+        try:
+            stack['template'] = await run_concurrently(
+                lambda: client.get_template(StackName=stack['StackName'])['TemplateBody'])
+        except Exception as e:
+            print_exception('Failed to get CloudFormation template: {}'.format(e))
+            stack['template'] = None
 
     async def _get_and_set_policy(self, stack: {}, region: str):
         client = AWSFacadeUtils.get_client('cloudformation', self.session, region)
-        stack_policy = await run_concurrently(
-                    lambda: client.get_stack_policy(StackName=stack['StackName']))
-        if 'StackPolicyBody' in stack_policy:
-            stack['policy'] = json.loads(stack_policy['StackPolicyBody'])
+        try:
+            stack_policy = await run_concurrently(
+                lambda: client.get_stack_policy(StackName=stack['StackName']))
+        except Exception as e:
+            print_exception('Failed to get CloudFormation stack policy: {}'.format(e))
+        else:
+            if 'StackPolicyBody' in stack_policy:
+                stack['policy'] = json.loads(stack_policy['StackPolicyBody'])
 
     @staticmethod
     def _is_stack_deleted(stack):

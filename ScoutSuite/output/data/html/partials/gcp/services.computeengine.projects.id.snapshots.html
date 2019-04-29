@@ -1,0 +1,26 @@
+
+<!-- Compute Engine snapshots partial -->
+<script id="services.computeengine.projects.id.snapshots.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="computeengine.projects.{{@../key}}.snapshots.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Description: <span id="computeengine.projects.{{@../key}}.snapshots.{{@key}}.description">{{description}}</span></div>
+        <div class="list-group-item-text item-margin">Creation Date: <span id="computeengine.projects.{{@../key}}.snapshots.{{@key}}.creation_timestamp">{{creation_timestamp}}</span></div>
+        <div class="list-group-item-text item-margin">Status: <span id="computeengine.projects.{{@../key}}.snapshots.{{@key}}.status">{{status}}</span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.computeengine.projects.id.snapshots", $("#services\\.computeengine\\.projects\\.id\\.snapshots\\.partial").html());
+</script>
+
+<!-- Single computeengine snapshot template -->
+<script id="single_computeengine_snapshot-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.computeengine.projects.id.snapshots'}}
+</script>
+<script>
+    var single_computeengine_snapshot_template = Handlebars.compile($("#single_computeengine_snapshot-template").html());
+</script>

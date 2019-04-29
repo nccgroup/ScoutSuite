@@ -1,8 +1,8 @@
-from ScoutSuite.providers.aws.resources.resources import AWSResources
+from ScoutSuite.providers.aws.resources.base import AWSResources
 
 
 class Policies(AWSResources):
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         raw_policies = await self.facade.iam.get_policies()
         for raw_policy in raw_policies:
             name, resource = self._parse_policy(raw_policy)

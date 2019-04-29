@@ -5,7 +5,7 @@ class AuthenticationStrategy(metaclass=ABCMeta):
     """
     This class represents an authentication strategy.
     """
-    
+
     @abstractmethod
     def authenticate(self, **kwargs):
         """
@@ -13,5 +13,8 @@ class AuthenticationStrategy(metaclass=ABCMeta):
         """
         raise NotImplementedError()
 
+
 class AuthenticationException(Exception):
-    pass
+    def __init__(self, message, errors=None):
+        super().__init__(message)
+        self.errors = errors

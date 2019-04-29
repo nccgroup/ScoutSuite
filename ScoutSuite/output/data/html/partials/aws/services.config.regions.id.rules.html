@@ -1,0 +1,30 @@
+
+<!-- Rule partial -->
+<script id="services.config.regions.id.rules.partial" type="text/x-handlebars-template">
+  {{#unless scout_link}}
+    <div id="resource-name" class="list-group-item active">
+      <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+    <h4>Information</h4>
+      <ul>
+        <li class="list-group-item-text">ID: {{id}}</li>
+        <li class="list-group-item-text">ARN: <samp>{{arn}}</samp></li>
+        <li class="list-group-item-text">Region: {{region}}</li>
+        <li class="list-group-item-text">Description: <i>{{description}}</i></li>
+        <li class="list-group-item-text">State: {{state}}</li>
+      </ul>
+    </div>
+  {{/unless}}
+</script>
+<script>
+  Handlebars.registerPartial("services.config.regions.id.rules", $("#services\\.config\\.regions\\.id\\.rules\\.partial").html());
+</script>
+
+<!-- Single Config rule template -->
+<script id="single_config_rule-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.config.regions.id.rules' }}
+</script>
+<script>
+    var single_config_rule_template = Handlebars.compile($("#single_config_rule-template").html());
+</script>

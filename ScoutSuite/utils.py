@@ -1,15 +1,17 @@
-# -*- coding: utf-8 -*-
 from __future__ import print_function
 
 formatted_service_name = {
     'cloudformation': 'CloudFormation',
     'cloudtrail': 'CloudTrail',
     'cloudwatch': 'CloudWatch',
+    'credentials': 'Credentials',
     'config': 'Config',
     'directconnect': 'Direct Connect',
     'dynamodb': 'DynamoDB',
+    'elbv2': 'ELBv2',
     'elasticache': 'ElastiCache',
     'lambda': 'Lambda',
+    'awslambda': 'Lambda',
     'redshift': 'RedShift',
     'route53': 'Route53',
     'route53domains': 'Route53Domains',

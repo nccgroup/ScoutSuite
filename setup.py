@@ -26,23 +26,22 @@ setup(
     url='https://github.com/nccgroup/ScoutSuite',
     entry_points={
         'console_scripts': [
-            'Scout = ScoutSuite.__main__:main',
-            'Scout2RulesGenerator = ScoutSuite.__rules_generator__:main',
-            'Scout2Listall = ScoutSuite.__listall__:main'
+            'scout = ScoutSuite.__main__:run_from_cli',
         ]
     },
     packages=find_packages(),
     package_data={
         'ScoutSuite.output': [
             'data/html/*.html',
+            'data/html/conditionals/*.html',
             'data/html/partials/*.html',
             'data/html/partials/aws/*.html',
             'data/html/partials/azure/*.html',
             'data/html/partials/gcp/*.html',
             'data/html/summaries/*.html',
             'data/includes.zip',
-            'data/inc-scout2/*.js',
-            'data/inc-scout2/*.css'
+            'data/inc-scoutsuite/*.js',
+            'data/inc-scoutsuite/*.css'
         ],
         'ScoutSuite.providers': [
             'aws/rules/conditions/*.json',

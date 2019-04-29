@@ -2,7 +2,7 @@ from unittest import TestCase
 
 from mock import MagicMock, patch
 
-from ScoutSuite.__main__ import main
+from ScoutSuite.__main__ import run_from_cli
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
 
 
@@ -23,7 +23,7 @@ class TestMainClass(TestCase):
                                            ("get_provider", self.mocked_provider),
                                            ("Ruleset", self.mocked_ruleset),
                                            ("ProcessingEngine", self.mocked_engine),
-                                           ("Scout2Report", self.mocked_report),
+                                           ("ScoutReport", self.mocked_report),
                                            ("webbrowser", self.mocked_browser)]:
             constructor_obj = patch("ScoutSuite.__main__.%s" % import_name, return_value=mocked_object).start()
             self.constructor[mocked_object] = constructor_obj
@@ -40,7 +40,7 @@ class TestMainClass(TestCase):
         with patch("sys.stderr", return_value=MagicMock()):
             with self.assertRaises(SystemExit):
                 args = ScoutSuiteArgumentParser().parse_args(args)
-                code = await main(args)
+                code = await run_from_cli(args)
 
         assert (code is None)
 
@@ -49,7 +49,7 @@ class TestMainClass(TestCase):
         self.mocked_provider.provider_code = "aws"
 
         args = ScoutSuiteArgumentParser().parse_args(args)
-        code = await main(args)
+        code = await run_from_cli(args)
 
         success_code = 0
         assert (code == success_code)
@@ -64,7 +64,7 @@ class TestMainClass(TestCase):
         self.mocked_provider.provider_code = "gcp"
 
         args = ScoutSuiteArgumentParser().parse_args(args)
-        code = await main(args)
+        code = await run_from_cli(args)
 
         success_code = 0
         assert (code == success_code)
@@ -79,7 +79,7 @@ class TestMainClass(TestCase):
         self.mocked_provider.provider_code = "azure"
 
         args = ScoutSuiteArgumentParser().parse_args(args)
-        code = await main(args)
+        code = await run_from_cli(args)
 
         success_code = 0
         assert (code == success_code)
@@ -95,7 +95,7 @@ class TestMainClass(TestCase):
         self.mocked_provider.authenticate = MagicMock(return_value=False)
 
         args = ScoutSuiteArgumentParser().parse_args(args)
-        code = await main(args)
+        code = await run_from_cli(args)
 
         unauthenticated_code = 42
         assert (code == unauthenticated_code)
@@ -110,7 +110,7 @@ class TestMainClass(TestCase):
         self.mocked_provider.fetch = MagicMock(side_effect=_raise(KeyboardInterrupt))
 
         args = ScoutSuiteArgumentParser().parse_args(args)
-        code = await main(args)
+        code = await run_from_cli(args)
 
         keyboardinterrupted_code = 130
         assert (code == keyboardinterrupted_code)

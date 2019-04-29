@@ -1,9 +1,7 @@
-# -*- coding: utf-8 -*-
-
 import json
 import os
 
-from ScoutSuite.core.console import print_error
+from ScoutSuite.core.console import print_error, print_exception
 
 
 class RuleDefinition(object):
@@ -48,7 +46,7 @@ class RuleDefinition(object):
             try:
                 file_path = os.path.join(rule_dir, self.file_name) if rule_dir else self.file_name
             except Exception as e:
-                print_error('Failed to load file %s: %s' % (self.file_name, str(e)))
+                print_exception('Failed to load file %s: %s' % (self.file_name, str(e)))
             if os.path.isfile(file_path):
                 self.file_path = file_path
                 file_name_valid = True
@@ -78,7 +76,7 @@ class RuleDefinition(object):
                     self.string_definition = f.read()
                     self.load_from_string_definition()
             except Exception as e:
-                print_error('Failed to load rule defined in %s: %s' % (self.file_name, str(e)))
+                print_exception('Failed to load rule defined in %s: %s' % (self.file_name, str(e)))
 
     def load_from_string_definition(self):
         try:
@@ -86,4 +84,4 @@ class RuleDefinition(object):
             for attr in definition:
                 setattr(self, attr, definition[attr])
         except Exception as e:
-            print_error('Failed to load string definition %s: %s' % (self.string_definition, str(e)))
+            print_exception('Failed to load string definition %s: %s' % (self.string_definition, str(e)))

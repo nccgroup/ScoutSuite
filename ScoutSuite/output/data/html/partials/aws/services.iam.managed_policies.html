@@ -11,7 +11,7 @@
         <h4 class="list-group-item-heading">Attached Entities</h4>
         <ul>
           {{#each attached_to}}
-            <li>{{make_title @key}}</li>
+            <li>{{makeTitle @key}}</li>
             <ul>
               {{#each this}}
                 <li><a href="javascript:showObject('services.iam.{{@../key}}.{{id}}')">{{name}}</a></li>

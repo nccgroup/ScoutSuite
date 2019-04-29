@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-
 import sys
 
 from ScoutSuite.providers.aws.provider import AWSProvider
-from ScoutSuite.providers.gcp.provider import GCPProvider
 from ScoutSuite.providers.azure.provider import AzureProvider
+from ScoutSuite.providers.gcp.provider import GCPProvider
 
 providers_dict = {'aws': 'AWSProvider',
                   'gcp': 'GCPProvider',
@@ -14,7 +12,7 @@ providers_dict = {'aws': 'AWSProvider',
 def get_provider(provider,
                  profile=None,
                  project_id=None, folder_id=None, organization_id=None,
-                 report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
+                 report_dir=None, timestamp=None, services=None, skipped_services=None, **kwargs):
     """
     Returns an instance of the requested provider.
 
@@ -26,7 +24,6 @@ def get_provider(provider,
     :param timestamp:           Whether to print or not the timestamp on the report
     :param services:            Exclusive list of services on which to run Scout Suite
     :param skipped_services:    List of services not to run Scout Suite on
-    :param thread_config:       Represents the level of threads to use
     :param provider:            A string indicating the provider
     :return:                    A child instance of the BaseProvider class or None if no object implemented
     """
@@ -43,7 +40,6 @@ def get_provider(provider,
                                         timestamp=timestamp,
                                         services=services,
                                         skipped_services=skipped_services,
-                                        thread_config=thread_config,
                                         **kwargs)
 
     return provider_instance

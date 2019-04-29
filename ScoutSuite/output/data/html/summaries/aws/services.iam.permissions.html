@@ -18,30 +18,30 @@
                 {{#each this}}
                   <!-- IAM Resource type -->
                   {{addMember 'type' @key}}
-                  <div class="list-group-item-text">{{make_title @key}}:</div>
+                  <div class="list-group-item-text">{{makeTitle @key}}:</div>
                   <ul>
                     {{#each this}}
                       <!-- Effect -->
                       {{#ifShow @key 'type'}}
-                        <li class="list-group-item-text">{{make_title @key}}:</li>
+                        <li class="list-group-item-text">{{makeTitle @key}}:</li>
                         <ul>
                           {{#each this}}
                             <div id="services.iam.permissions.{{../../../type}}.{{@key}}"> <!-- filter -->
                             <!-- IAM Resource ID -->
                             {{addMember 'name' @key}}
-                            <li class="list-group-item-text"><a href="javascript:showObject('services.iam.{{../../../type}}.{{@key}}')">{{get_value_at 'services.iam' ../../../type @key 'name'}}</a></li>
+                            <li class="list-group-item-text"><a href="javascript:showObject('services.iam.{{../../../type}}.{{@key}}')">{{getValueAt 'services.iam' ../../../type @key 'name'}}</a></li>
                             <ul>
                               {{#each this}}
                                 <!-- Resource / NotResource -->
                                 {{#ifShow @key 'name'}}
-                                  <li class="list-group-item-text">{{make_title @key}}s</li>
+                                  <li class="list-group-item-text">{{makeTitle @key}}s</li>
                                   <ul class="no-bullet">
                                     {{#each this}}
                                       <!-- Resource ARN -->
                                       {{addMember 'Resource' @key}}
                                       {{#each inline_policies}}
                                         <li>
-                                          {{../Resource}} granted in <a href="javascript:showObject('services.iam.{{../../../../../../../type}}.{{../../../../name}}.inline_policies.{{@key}}')">{{get_value_at 'services.iam' ../../../../../../../type ../../../../name 'inline_policies' @key 'name'}}</a>
+                                          {{../Resource}} granted in <a href="javascript:showObject('services.iam.{{../../../../../../../type}}.{{../../../../name}}.inline_policies.{{@key}}')">{{getValueAt 'services.iam' ../../../../../../../type ../../../../name 'inline_policies' @key 'name'}}</a>
                                           {{#if condition}}
                                             <ul class="no-bullet">
                                               <li class="list-group-item-text">Condition: {{condition}}</li>
@@ -51,7 +51,7 @@
                                       {{/each}}
                                       {{#each policies}}
                                         <li>
-                                          {{../Resource}} granted in <a href="javascript:showObject('services.iam.policies.{{@key}}')">{{get_value_at 'services.iam.policies' @key 'name'}}</a>
+                                          {{../Resource}} granted in <a href="javascript:showObject('services.iam.policies.{{@key}}')">{{getValueAt 'services.iam.policies' @key 'name'}}</a>
                                           {{#if condition}}
                                             <ul class="no-bullet">
                                               <li class="list-group-item-text">Condition: {{condition}}</li>

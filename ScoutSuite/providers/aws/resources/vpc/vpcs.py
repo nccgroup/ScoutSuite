@@ -7,8 +7,5 @@ from .subnets import Subnets
 class RegionalVpcs(Vpcs):
     _children = [
         (NetworkACLs, 'network_acls'),
-        (Subnets, 'subnets')
+        (Subnets, 'subnets'),
     ]
-
-    def __init__(self, facade, scope: dict):
-        super(RegionalVpcs, self).__init__(facade, scope, add_ec2_classic=True)

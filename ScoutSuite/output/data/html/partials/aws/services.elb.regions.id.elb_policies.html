@@ -1,0 +1,53 @@
+    <!-- ELB Policy partial -->
+    <script id="services.elb.regions.id.elb_policies.partial" type="text/x-handlebars-template">
+        <div id="resource-name" class="list-group-item active">
+          <h4 class="list-group-item-heading">{{name}}</h4>
+        </div>
+        {{#ifEqual PolicyTypeName 'SSLNegotiationPolicyType'}}
+            <div class="list-group-item">
+                <h4>Protocols</h4>
+                <ul>
+                    {{#each protocols}}
+                        <li class="list-group-item-text">{{@key}}: {{this}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+            <div class="list-group-item">
+                <h4>Options</h4>
+                <ul>
+                    {{#each options}}
+                        <li class="list-group-item-text">{{@key}}: {{this}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+            <div class="list-group-item">
+                <h4>Ciphers</h4>
+                <ul>
+                    {{#each ciphers}}
+                        {{#ifEqual this 'true'}}
+                            <li class="list-group-item-text">{{@key}}: {{this}}</li>
+                        {{/ifEqual}}
+                    {{/each}}
+                </ul>
+        {{else}}
+            <div class="list-group-item">
+                <h4>Attributes</h4>
+                <ul class="no-bullet">
+                    {{#each PolicyAttributeDescriptions}}
+                        <li class="list-group-item-text">{{AttributeName}}: {{AttributeValue}}</li>
+                    {{/each}}
+                </ul>
+            </div>
+        {{/ifEqual}}
+    </script>
+    <script>
+      Handlebars.registerPartial("services.elb.regions.id.elb_policies", $("#services\\.elb\\.regions\\.id\\.elb_policies\\.partial").html());
+    </script>
+
+    <!-- Single elb security group template -->
+    <script id="single_elb_elb_policy-template" type="text/x-handlebars-template">
+        {{> modal-template template='services.elb.regions.id.elb_policies'}}
+    </script>
+    <script>
+        var single_elb_elb_policy_template = Handlebars.compile($("#single_elb_elb_policy-template").html());
+    </script>

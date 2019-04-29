@@ -1,8 +1,8 @@
-from ScoutSuite.providers.aws.resources.resources import AWSResources
+from ScoutSuite.providers.aws.resources.base import AWSResources
 
 
 class Users(AWSResources):
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         raw_users = await self.facade.iam.get_users()
         for raw_user in raw_users:
             name, resource = self._parse_user(raw_user)

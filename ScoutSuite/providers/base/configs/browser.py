@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
-
 import copy
 
-from ScoutSuite.core.console import print_error, print_exception
+from ScoutSuite.core.console import print_exception
 
 
 ########################################
@@ -17,21 +15,6 @@ def combine_paths(path1, path2):
         else:
             path.append(p)
     return path
-
-
-def get_attribute_at(config, target_path, key, default_value=None):
-    """
-    Return attribute value at a given path.
-
-    :param config:
-    :param target_path:
-    :param key:
-    :param default_value:
-    :return:
-    """
-    for target in target_path:
-        config = config[target]
-    return config[key] if key in config else default_value
 
 
 def get_object_at(object, path, attribute_name=None):
@@ -103,21 +86,17 @@ def get_value_at(all_info, current_path, key, to_string=False):
                 # TODO ensure this additional condition didn't break anything
                 elif type(target_obj) == list and type(p) == int:
                     target_obj = target_obj[p]
+                elif type(target_obj) == list and p.isdigit():
+                    target_obj = target_obj[int(p)]
                 elif type(target_obj) == list:
                     target_obj = p
                 elif p == '':
                     target_obj = target_obj
                 else:
-                    try:
-                        target_obj = target_obj[p]
-                    except Exception as e:
-                        print_error('Current path: %s' % str(current_path))
-                        print_exception(e)
-                        raise Exception
+                    target_obj = target_obj[p]
             except Exception as e:
-                print_error('Current path: %s' % str(current_path))
-                print_exception(e)
-                raise Exception
+                print_exception(e, additional_details={'current_path': current_path})
+                # raise Exception
     if to_string:
         return str(target_obj)
     else:

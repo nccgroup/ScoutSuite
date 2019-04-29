@@ -8,6 +8,3 @@ class ElastiCacheVpcs(Vpcs):
         (Clusters, 'clusters'),
         (SubnetGroups, 'subnet_groups')
     ]
-
-    def __init__(self, facade, scope: dict):
-        super(ElastiCacheVpcs, self).__init__(facade, scope, add_ec2_classic=True)

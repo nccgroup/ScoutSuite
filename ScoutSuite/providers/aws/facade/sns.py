@@ -1,7 +1,8 @@
 import asyncio
 
-from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
+from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
+from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
 
 
@@ -17,9 +18,12 @@ class SNSFacade(AWSBaseFacade):
 
     async def _get_and_set_topic_attributes(self, topic: {}, region: str):
         sns_client = AWSFacadeUtils.get_client('sns', self.session, region)
-        topic['attributes'] = await run_concurrently(
-            lambda: sns_client.get_topic_attributes(TopicArn=topic['TopicArn'])['Attributes']
-        )
+        try:
+            topic['attributes'] = await run_concurrently(
+                lambda: sns_client.get_topic_attributes(TopicArn=topic['TopicArn'])['Attributes']
+            )
+        except Exception as e:
+            print_exception('Failed to get SNS topic attributes: {}'.format(e))
 
     async def get_subscriptions(self, region: str, topic_name: str):
         await self.cache_subscriptions(region)
@@ -31,7 +35,7 @@ class SNSFacade(AWSBaseFacade):
             if region in self.subscriptions_cache:
                 return
 
-            self.subscriptions_cache[region] =\
+            self.subscriptions_cache[region] = \
                 await AWSFacadeUtils.get_all_pages('sns', region, self.session, 'list_subscriptions', 'Subscriptions')
 
             for subscription in self.subscriptions_cache[region]:
