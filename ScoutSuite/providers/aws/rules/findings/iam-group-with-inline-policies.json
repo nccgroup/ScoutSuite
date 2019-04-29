@@ -3,7 +3,8 @@
     "path": "iam.groups.id",
     "dashboard_name": "groups",
     "conditions": [ "and",
-        [ "iam.groups.id.", "withKey", "inline_policies" ]
+        [ "iam.groups.id.", "withKey", "inline_policies" ],
+        [ "iam.groups.id.inline_policies", "notEmpty", "" ]
     ],
     "id_suffix": "inline_policies"
 }
