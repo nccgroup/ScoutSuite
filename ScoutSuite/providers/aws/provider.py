@@ -2,8 +2,8 @@ import copy
 import os
 
 from ScoutSuite.core.console import print_debug, print_error, print_exception, print_info
-from ScoutSuite.providers.aws.configs.services import AWSServicesConfig
-from ScoutSuite.providers.aws.resources.vpc.service import put_cidr_name
+from ScoutSuite.providers.aws.services import AWSServicesConfig
+from ScoutSuite.providers.aws.resources.vpc.base import put_cidr_name
 from ScoutSuite.providers.aws.utils import ec2_classic, get_aws_account_id
 from ScoutSuite.providers.base.configs.browser import combine_paths, get_object_at, get_value_at
 from ScoutSuite.providers.base.provider import BaseProvider
@@ -16,8 +16,7 @@ class AWSProvider(BaseProvider):
     """
 
     def __init__(self, profile='default', report_dir=None, timestamp=None, services=None, skipped_services=None,
-                 thread_config=4, **kwargs):
-
+                 result_format='json', **kwargs):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
@@ -32,12 +31,13 @@ class AWSProvider(BaseProvider):
         self.provider_code = 'aws'
         self.provider_name = 'Amazon Web Services'
         self.environment = self.profile
+        self.result_format = result_format 
 
         self.credentials = kwargs['credentials']
         self.account_id = get_aws_account_id(self.credentials)
 
         super(AWSProvider, self).__init__(report_dir, timestamp,
-                                          services, skipped_services, thread_config)
+                                          services, skipped_services, result_format)
 
     def get_report_name(self):
         """
@@ -45,6 +45,8 @@ class AWSProvider(BaseProvider):
         """
         if self.profile:
             return 'aws-{}'.format(self.profile)
+        elif self.account_id:
+            return 'aws-{}'.format(self.account_id)
         else:
             return 'aws'
 
@@ -57,21 +59,20 @@ class AWSProvider(BaseProvider):
         :return: None
         """
         ip_ranges = [] if ip_ranges is None else ip_ranges
-        self._map_all_subnets()
-
-        if 'emr' in self.service_list:
-            self._set_emr_vpc_ids()
-
-        # TODO: Handle that when refactoring is done?
-        # self.parse_elb_policies()
-        self._set_emr_vpc_ids()
 
         # Various data processing calls
+        # Note that order of processing can matter
+
+        self._map_all_subnets()
+
         if 'ec2' in self.service_list:
             self._map_all_sgs()
-            self._check_ec2_zone_distribution()
             self._add_security_group_name_to_ec2_grants()
+            self._check_ec2_zone_distribution()
             self._add_last_snapshot_date_to_ec2_volumes()
+
+        if 'emr' in self.service_list and 'ec2' in self.service_list and 'vpc' in self.service_list:
+            self._set_emr_vpc_ids()
 
         if 'ec2' in self.service_list and 'iam' in self.service_list:
             self._match_instances_and_roles()
@@ -85,18 +86,15 @@ class AWSProvider(BaseProvider):
         if 's3' in self.service_list and 'iam' in self.service_list:
             self._match_iam_policies_and_buckets()
 
+        if 'elb' in self.services:
+            self._parse_elb_policies()
+
+        if 'emr' in self.service_list and 'ec2' in self.service_list:
+            self._set_emr_vpc_ids()
+
         self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
 
         super(AWSProvider, self).preprocessing()
-
-    def postprocessing(self, current_time, ruleset):
-        """
-
-        :param current_time:
-        :param ruleset:
-        :return: None
-        """
-        super(AWSProvider, self).postprocessing(current_time, ruleset)
 
     def _add_cidr_display_name(self, ip_ranges, ip_ranges_name_key):
         if len(ip_ranges):
@@ -434,6 +432,31 @@ class AWSProvider(BaseProvider):
                     iam_config['roles'][role_id]['instances_count'] += len(
                         role_instances[instance_profile_id])
 
+    def process_vpc_peering_connections_callback(self, current_config, path, current_path, pc_id, callback_args):
+
+        # Create a list of peering connection IDs in each VPC
+        info = 'AccepterVpcInfo' if current_config['AccepterVpcInfo']['OwnerId'] == self.account_id else 'RequesterVpcInfo'
+        region = current_path[current_path.index('regions') + 1]
+        vpc_id = current_config[info]['VpcId']
+        if vpc_id not in self.services['vpc']['regions'][region]['vpcs']:
+            region = current_config['AccepterVpcInfo']['Region']
+
+        target = self.services['vpc']['regions'][region]['vpcs'][vpc_id]
+        manage_dictionary(target, 'peering_connections', [])
+        if pc_id not in target['peering_connections']:
+            target['peering_connections'].append(pc_id)
+
+        # VPC information for the peer'd VPC
+        current_config['peer_info'] = copy.deepcopy(
+            current_config['AccepterVpcInfo' if info == 'RequesterVpcInfo' else 'RequesterVpcInfo'])
+        if 'PeeringOptions' in current_config['peer_info']:
+            current_config['peer_info'].pop('PeeringOptions')
+        if hasattr(self, 'organization') and current_config['peer_info']['OwnerId'] in self.organization:
+            current_config['peer_info']['name'] = self.organization[current_config['peer_info']['OwnerId']][
+                'Name']
+        else:
+            current_config['peer_info']['name'] = current_config['peer_info']['OwnerId']
+
     def match_roles_and_cloudformation_stacks_callback(self, current_config, path, current_path, stack_id,
                                                        callback_args):
         if 'RoleARN' not in current_config:
@@ -475,8 +498,7 @@ class AWSProvider(BaseProvider):
         if 'status_path' in callback_args:
             status_path = combine_paths(copy.deepcopy(
                 original_resource_path), callback_args['status_path'])
-            resource_status = get_object_at(
-                self, status_path).replace('.', '_')
+            resource_status = get_object_at(self, status_path).replace('.', '_')
         else:
             resource_status = None
         unknown_vpc_id = True if current_path[4] != 'vpcs' else False
@@ -538,10 +560,10 @@ class AWSProvider(BaseProvider):
                            self.set_emr_vpc_ids_callback,
                            {'clear_list': clear_list})
         for region in clear_list:
-            self.services['emr']['regions'][region]['vpcs'].pop('TODO')
+            self.services['emr']['regions'][region]['vpcs'].pop('EMR-UNKNOWN-VPC')
 
     def set_emr_vpc_ids_callback(self, current_config, path, current_path, vpc_id, callback_args):
-        if vpc_id != 'TODO':
+        if vpc_id != 'EMR-UNKNOWN-VPC':
             return
         region = current_path[3]
         vpc_id = sg_id = subnet_id = None
@@ -570,7 +592,7 @@ class AWSProvider(BaseProvider):
                     print_exception('Unable to determine VPC id for %s' % (str(subnet_id) if subnet_id else str(sg_id)))
                     continue
             if vpc_id:
-                region_vpcs_config = get_object_at(current_path)
+                region_vpcs_config = get_object_at(self, current_path)
                 manage_dictionary(region_vpcs_config, vpc_id, {'clusters': {}})
                 region_vpcs_config[vpc_id]['clusters'][cluster_id] = cluster
         for cluster_id in pop_list:
@@ -579,6 +601,9 @@ class AWSProvider(BaseProvider):
             callback_args['clear_list'].append(region)
 
     def sort_vpc_flow_logs_callback(self, current_config, path, current_path, flow_log_id, callback_args):
+        # FIXME it's not clear if the below is still necessary/useful
+        return
+
         attached_resource = current_config['ResourceId']
         if attached_resource.startswith('vpc-'):
             vpc_path = combine_paths(
@@ -703,6 +728,8 @@ class AWSProvider(BaseProvider):
                         elif port == 'ALL':
                             port_min = 0
                             port_max = 65535
+                        elif p == 'ICMP':
+                            port_min = port_max = None
                         else:
                             port_min = port_max = int(port)
                         for listener in listeners:
@@ -714,3 +741,35 @@ class AWSProvider(BaseProvider):
                                                   str(listener), {'cidrs': []})
                                 attack_surface_config[public_ip]['protocols'][p]['ports'][str(listener)]['cidrs'] += \
                                     ingress_rules['protocols'][p]['ports'][port]['cidrs']
+
+    def _parse_elb_policies(self):
+        self._go_to_and_do(self.services['elb'],
+                           ['regions'],
+                           [],
+                           self.parse_elb_policies_callback,
+                           {})
+
+    def parse_elb_policies_callback(self, current_config, path, current_path, region_id, callback_args):
+        region_config = get_object_at(self, ['services', 'elb', ] + current_path + [region_id])
+        region_config['elb_policies'] = current_config['elb_policies']
+        for policy_id in region_config['elb_policies']:
+            if region_config['elb_policies'][policy_id]['PolicyTypeName'] != 'SSLNegotiationPolicyType':
+                continue
+            # protocols, options, ciphers
+            policy = region_config['elb_policies'][policy_id]
+            protocols = {}
+            options = {}
+            ciphers = {}
+            for attribute in policy['PolicyAttributeDescriptions']:
+                if attribute['AttributeName'] in ['Protocol-SSLv3', 'Protocol-TLSv1', 'Protocol-TLSv1.1',
+                                                  'Protocol-TLSv1.2']:
+                    protocols[attribute['AttributeName']] = attribute['AttributeValue']
+                elif attribute['AttributeName'] in ['Server-Defined-Cipher-Order']:
+                    options[attribute['AttributeName']] = attribute['AttributeValue']
+                elif attribute['AttributeName'] == 'Reference-Security-Policy':
+                    policy['reference_security_policy'] = attribute['AttributeValue']
+                else:
+                    ciphers[attribute['AttributeName']] = attribute['AttributeValue']
+                policy['protocols'] = protocols
+                policy['options'] = options
+                policy['ciphers'] = ciphers

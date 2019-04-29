@@ -1,0 +1,45 @@
+
+<!-- Cloud Storage bucket partial -->
+<script id="services.cloudstorage.projects.id.buckets.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Project ID: <span id="cloudstorage.projects.{{@../key}}.buckets.{{@key}}.project_id">{{project_id}}</span></div>
+        <div class="list-group-item-text item-margin">Creation Date: <span id="cloudstorage.projects.{{@../key}}.buckets.{{@key}}.creation_date">{{creation_date}}</span></div>
+        <div class="list-group-item-text item-margin">Location: <span id="cloudstorage.projects.{{@../key}}.buckets.{{@key}}.location">{{location}}</span></div>
+        <div class="list-group-item-text item-margin">Storage Class: <span id="cloudstorage.projects.{{@../key}}.buckets.{{@key}}.storage_class">{{storage_class}}</span></div>
+        <div class="list-group-item-text item-margin">Logging: <span id="cloudstorage.projects.{{@../key}}.buckets.{{@key}}.logging_enabled">{{convert_bool_to_enabled logging_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Versioning: <span id="cloudstorage.projects.{{@../key}}.buckets.{{@key}}.versioning">{{convert_bool_to_enabled versioning_status}}</span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 id="cloudstorage.projects.{{@../key}}.buckets.{{@key}}.permissions" class="list-group-item-heading">Permissions</h4>
+        <div class="accordion-inner">
+            <ul>
+                {{#each acl_configuration}}
+                <li>Member <samp>{{@key}}</samp></li>
+                <ul>
+                    {{#each this}}
+                    <li>{{this}}</li>
+                    {{/each}}
+                </ul>
+                {{else}}
+                <li><samp>None</samp></li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.cloudstorage.projects.id.buckets", $("#services\\.cloudstorage\\.projects\\.id\\.buckets\\.partial").html());
+</script>
+
+<!-- Single cloudstorage bucket template -->
+<script id="single_cloudstorage_bucket-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.cloudstorage.projects.id.buckets'}}
+</script>
+<script>
+    var single_cloudstorage_bucket_template = Handlebars.compile($("#single_cloudstorage_bucket-template").html());
+</script>

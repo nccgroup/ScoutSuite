@@ -1,10 +1,5 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import argparse
-import os
-
-from ScoutSuite import DEFAULT_REPORT_DIR
+from ScoutSuite import __version__
 
 
 class ScoutSuiteArgumentParser:
@@ -13,7 +8,14 @@ class ScoutSuiteArgumentParser:
         self.parser = argparse.ArgumentParser()
 
         # People will still be able to use the old --provider syntax
-        self.parser.add_argument("--provider", action='store_true', dest='sinkhole', help=argparse.SUPPRESS)
+        self.parser.add_argument("--provider",
+                                 action='store_true',
+                                 dest='sinkhole',
+                                 help=argparse.SUPPRESS)
+
+        self.parser.add_argument('-v', '--version',
+                                 action='version',
+                                 version='Scout Suite {}'.format(__version__))
 
         self.common_providers_args_parser = argparse.ArgumentParser(add_help=False)
 
@@ -31,7 +33,7 @@ class ScoutSuiteArgumentParser:
     def _init_aws_parser(self):
         aws_parser = self.subparsers.add_parser("aws",
                                                 parents=[self.common_providers_args_parser],
-                                                help="Run Scout against an Amazon web Services account")
+                                                help="Run Scout against an Amazon Web Services account")
 
         parser = aws_parser.add_argument_group('Authentication parameters')
 
@@ -205,25 +207,19 @@ class ScoutSuiteArgumentParser:
                             default=False,
                             action='store_true',
                             help='Do not automatically open the report in the browser.')
-        # TODO: This should be removed once the GCP refactoring is done
-        parser.add_argument('--thread-config',
-                            dest='thread_config',
-                            type=int,
-                            default=4,
-                            help='Level of multi-threading wanted [1-5]; defaults to 4.')
         parser.add_argument('--max-workers',
                             dest='max_workers',
                             type=int,
                             default=10,
                             help='Maximum number of threads (workers) used by Scout Suite')
+        parser.add_argument('--report-dir',
+                            dest='report_dir',
+                            default=None,
+                            help='Path of the Scout report.')
         parser.add_argument('--report-name',
                             dest='report_name',
                             default=None,
                             help='Name of the Scout report.')
-        parser.add_argument('--report-dir',
-                            dest='report_dir',
-                            default=DEFAULT_REPORT_DIR,
-                            help='Path of the Scout report.')
         parser.add_argument('--timestamp',
                             dest='timestamp',
                             default=False,
@@ -244,6 +240,29 @@ class ScoutSuiteArgumentParser:
                             default=None,
                             nargs='?',
                             help='Exception file to use during analysis.')
+        parser.add_argument('--result-format',
+                            dest='result_format',
+                            default='json',
+                            type=str,
+                            choices=['json', 'sqlite'],
+                            help="[EXPERIMENTAL FEATURE] The database file format to use. JSON doesn't require a server to view the report, "
+                                 "but cannot be viewed if the result file is over 400mb.")
+        parser.add_argument('--serve',
+                            dest="database_name",
+                            default=None,
+                            const=True,
+                            nargs="?",
+                            help="Serve the specified result database on the server to show the report. "
+                                 "This must be used when the results are exported as an sqlite database.")
+        parser.add_argument('--host',
+                            dest="host_ip",
+                            default="127.0.0.1",
+                            help="Address on which you want the server to listen. Defaults to localhost.")
+        parser.add_argument('--port',
+                            dest="host_port",
+                            type=int,
+                            default=8000,
+                            help="Port on which you want the server to listen. Defaults to 8000.")
 
     def _init_aliyun_parser(self):
         aliyun_parser = self.subparsers.add_parser("aliyun",

@@ -7,7 +7,7 @@
         <div class="list-group-item">
             <h4>Network</h4>
             <ul>
-                <li class="list-group-item-text">VPC: {{get_value_at 'services.elbv2.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</li>
+                <li class="list-group-item-text">VPC: {{getValueAt 'services.elbv2.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</li>
                 <li class="list-group-item-text">DNS: {{DNSName}}</li>
                 <li class="list-group-item-text"><span id="elbv2.regions.{{region}}.vpcs.{{vpc}}.lbs.{{@key}}.load_balancer_scheme">Scheme: {{Scheme}}</span></li>
                 <li class="list-group-item-text">Type: {{Type}}</li>

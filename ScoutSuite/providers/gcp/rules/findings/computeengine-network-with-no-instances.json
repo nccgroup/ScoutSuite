@@ -1,8 +1,8 @@
 {
   "dashboard_name": "Networks",
   "description": "Network with no instances",
-  "path": "computeengine.networks.id",
+  "path": "computeengine.projects.id.networks.id",
   "conditions": [ "and",
-    [ "computeengine.networks.id.instances", "empty", "" ]
+    [ "computeengine.projects.id.networks.id.instances", "empty", "" ]
   ]
 }

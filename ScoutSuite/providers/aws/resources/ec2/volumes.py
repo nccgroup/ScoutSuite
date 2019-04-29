@@ -1,10 +1,15 @@
-from ScoutSuite.providers.aws.resources.resources import AWSResources
+from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.utils import get_name
 
 
 class Volumes(AWSResources):
-    async def fetch_all(self, **kwargs):
-        raw_volumes = await self.facade.ec2.get_volumes(self.scope['region'])
+    def __init__(self, facade: AWSFacade, region: str):
+        super(Volumes, self).__init__(facade)
+        self.region = region
+
+    async def fetch_all(self):
+        raw_volumes = await self.facade.ec2.get_volumes(self.region)
         for raw_volume in raw_volumes:
             name, resource = self._parse_volume(raw_volume)
             self[name] = resource

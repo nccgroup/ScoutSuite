@@ -1,9 +1,14 @@
-from ScoutSuite.providers.aws.resources.resources import AWSResources
+from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.aws.facade.base import AWSFacade
 
 
 class AmazonMachineImages(AWSResources):
-    async def fetch_all(self, **kwargs):
-        raw_images = await self.facade.ec2.get_images(self.scope['region'], self.scope['owner_id'])
+    def __init__(self, facade: AWSFacade, region: str):
+        super(AmazonMachineImages, self).__init__(facade)
+        self.region = region
+
+    async def fetch_all(self):
+        raw_images = await self.facade.ec2.get_images(self.region)
         for raw_image in raw_images:
             name, resource = self._parse_image(raw_image)
             self[name] = resource

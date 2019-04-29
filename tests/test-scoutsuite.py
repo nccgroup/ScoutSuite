@@ -2,7 +2,7 @@ import subprocess
 import mock
 
 from nose.plugins.attrib import attr
-from ScoutSuite.__main__ import *
+from ScoutSuite.__main__ import run_from_cli
 from ScoutSuite.core.console import set_config_debug_level
 
 
@@ -15,7 +15,7 @@ class TestScoutSuiteClass:
 
     @staticmethod
     def call_scout_suite(args):
-        args = ['./Scout.py'] + args
+        args = ['./scout.py'] + args
 
         args.append('aws')
 
@@ -33,13 +33,13 @@ class TestScoutSuiteClass:
 
         sys = None
         with mock.patch.object(sys, 'argv', args):
-            return main()
+            return run_from_cli()
 
     #
     # Make sure that ScoutSuite does not crash with --help
     #
     def test_scout_suite_help(self):
-        command = './Scout.py --help'
+        command = './scout.py --help'
         process = subprocess.Popen(command, shell=True, stdout=None)
         process.wait()
         assert process.returncode == 0

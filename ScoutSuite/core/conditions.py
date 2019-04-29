@@ -45,8 +45,8 @@ def pass_conditions(all_info, current_path, conditions, unknown_as_pass_conditio
                 res = pass_condition(target_obj, test_name, test_values)
             except Exception as e:
                 res = True if unknown_as_pass_condition else False
-                print_exception('Unable to process testcase \'%s\' on value \'%s\', interpreted as %s: %s' % (
-                    test_name, str(target_obj), res, e))
+                print_exception('Unable to process testcase \'%s\' on value \'%s\', interpreted as %s: %s' %
+                                (test_name, str(target_obj), res, e))
         # Quick exit and + false
         if condition_operator == 'and' and not res:
             return False

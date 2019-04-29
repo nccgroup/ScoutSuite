@@ -1,0 +1,9 @@
+    <!-- elb ELB partial -->
+    <script id="services.elb.regions.vpcs.elbs.linked_policy.partial" type="text/x-handlebars-template">
+        <a href="javascript:showObject('services.elb.regions.{{region}}.elb_policies.{{item}}')">
+            {{get_value_at (concat 'services.elb.regions' region 'elb_policies' item 'name')}}
+        </a>
+    </script>
+    <script>
+        Handlebars.registerPartial("services.elb.regions.vpcs.elbs.linked_policy", $("#services\\.elb\\.regions\\.vpcs\\.elbs\\.linked_policy\\.partial").html());
+    </script>

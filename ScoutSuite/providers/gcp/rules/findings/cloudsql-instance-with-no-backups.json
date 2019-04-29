@@ -1,9 +1,9 @@
 {
   "description": "Instance with no backups",
   "dashboard_name": "Instances",
-  "path": "cloudsql.instances.id",
+  "path": "cloudsql.projects.id.instances.id",
   "conditions": [ "and",
-    [ "cloudsql.instances.id.backups", "empty", "" ]
+    [ "cloudsql.projects.id.instances.id.backups", "empty", "" ]
   ],
   "id_suffix": "last_backup_timestamp"
 }

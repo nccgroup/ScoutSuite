@@ -1,8 +1,9 @@
-from ScoutSuite.providers.aws.resources.resources import AWSResources
+from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class CredentialReports(AWSResources):
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         raw_credential_reports = await self.facade.iam.get_credential_reports()
         for raw_credential_report in raw_credential_reports:
             name, resource = self._parse_credential_reports(raw_credential_report)
@@ -18,7 +19,7 @@ class CredentialReports(AWSResources):
         raw_credential_report['access_key_2_last_used_date'] =\
             self._sanitize_date(raw_credential_report['access_key_2_last_used_date'])
         raw_credential_report['last_used'] = self._compute_last_used(raw_credential_report)
-        return user_id, raw_credential_report
+        return get_non_provider_id(user_id), raw_credential_report
 
     @staticmethod
     def _sanitize_date(date):

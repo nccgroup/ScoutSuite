@@ -1,18 +1,15 @@
-# -*- coding: utf-8 -*-
 from __future__ import print_function
 
 import os
 import sys
 
-from ScoutSuite.core.console import print_error
-
 from six.moves import input
 
-from ScoutSuite import DEFAULT_RESULT_FILE, DEFAULT_HTMLREPORT_FILE, DEFAULT_EXCEPTIONS_FILE, DEFAULT_RULESET_FILE, \
-    DEFAULT_ERRORS_FILE
+from ScoutSuite import DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY
+from ScoutSuite.core.console import print_error
 
 
-def prompt_4_yes_no(question):
+def prompt_for_yes_no(question):
     """
     Ask a question and prompt for yes or no
 
@@ -31,7 +28,7 @@ def prompt_4_yes_no(question):
             print_error('\'%s\' is not a valid answer. Enter \'yes\'(y) or \'no\'(n).' % choice)
 
 
-def prompt_4_overwrite(filename, force_write):
+def prompt_for_overwrite(filename, force_write):
     """
     Confirm before overwriting existing files. Do not prompt if the file does not exist or force_write is set
 
@@ -42,44 +39,44 @@ def prompt_4_overwrite(filename, force_write):
     #
     if not os.path.exists(filename) or force_write:
         return True
-    return prompt_4_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename))
+    return prompt_for_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename))
 
 
-def get_filename(file_type, profile, report_dir):
-    """
-    Returns the file name for a given file type
-    
-    :param file_type: can be one of the following:
-            'RESULTS' - results JSON/JS file
-            'EXCEPTIONS' - exceptions file
-            'HTMLREPORT' - HTML report
-            'RULESET' - ruleset file
-            'ERRORS' - errors file
-    """
-
-    if file_type == 'RESULTS':
-        filename = DEFAULT_RESULT_FILE
+def get_filename(file_type, file_name=None, file_dir=None, relative_path=False, file_extension=None):
+    if file_type == 'REPORT':
+        name = file_name if file_name else 'report'
+        directory = file_dir if file_dir else DEFAULT_REPORT_DIRECTORY
+        extension = 'html'
+        first_line = None
+    elif file_type == 'RESULTS':
+        name = 'scoutsuite_results_{}'.format(file_name) if file_name else 'scoutsuite_results'
+        if not relative_path:
+            directory = os.path.join(file_dir if file_dir else DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY)
+        else:
+            directory = DEFAULT_REPORT_RESULTS_DIRECTORY
+        extension = 'js'
         first_line = 'scoutsuite_results ='
     elif file_type == 'EXCEPTIONS':
-        filename = DEFAULT_EXCEPTIONS_FILE
+        name = 'scoutsuite_exceptions_{}'.format(file_name) if file_name else 'scoutsuite_exceptions'
+        if not relative_path:
+            directory = os.path.join(file_dir if file_dir else DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY)
+        else:
+            directory = DEFAULT_REPORT_RESULTS_DIRECTORY
+        extension = 'js'
         first_line = 'exceptions ='
-    elif file_type == 'HTMLREPORT':
-        filename = DEFAULT_HTMLREPORT_FILE
-        first_line = None
-    elif file_type == 'RULESET':
-        filename = DEFAULT_RULESET_FILE
-        first_line = 'scoutsuite_results ='
     elif file_type == 'ERRORS':
-        filename = DEFAULT_ERRORS_FILE
+        name = 'scoutsuite_errors_{}'.format(file_name) if file_name else 'scoutsuite_errors'
+        if not relative_path:
+            directory = os.path.join(file_dir if file_dir else DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY)
+        else:
+            directory = DEFAULT_REPORT_RESULTS_DIRECTORY
+        extension = 'json'
         first_line = None
     else:
-        print_error('Invalid file type provided: {}'.format(file_type))
-        raise Exception
+        raise Exception('Invalid file type provided: {}'.format(file_type))
 
-    # Append profile name if necessary
-    if profile != 'default' and file_type != 'RULESET':
-        name, extention = filename.split('.')
-        filename = '%s-%s.%s' % (name, profile, extention)
+    full_path = os.path.join(directory,
+                             '{}.{}'.format(name,
+                                            file_extension if file_extension else extension))
 
-    return (os.path.join(report_dir, filename), first_line)
-
+    return full_path, first_line

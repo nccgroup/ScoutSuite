@@ -43,6 +43,12 @@
                 "level": "warning"
             }
         ],
+        "config-recorder-not-configured.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "ec2-default-security-group-in-use.json": [
             {
                 "enabled": true,
@@ -110,6 +116,12 @@
         "ec2-security-group-opens-all-ports.json": [
             {
                 "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "ec2-security-group-opens-icmp-to-all.json": [
+            {
+                "enabled": false,
                 "level": "warning"
             }
         ],

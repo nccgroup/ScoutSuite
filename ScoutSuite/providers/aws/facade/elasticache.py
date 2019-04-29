@@ -1,8 +1,12 @@
-from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
+from asyncio import Lock
+
+from botocore.exceptions import ClientError
+
+from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
+from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 from ScoutSuite.providers.aws.utils import ec2_classic
 from ScoutSuite.providers.utils import get_and_set_concurrently
-from asyncio import Lock
 
 
 class ElastiCacheFacade(AWSBaseFacade):
@@ -19,7 +23,7 @@ class ElastiCacheFacade(AWSBaseFacade):
         async with self.regional_clusters_cache_locks.setdefault(region, Lock()):
             if region in self.clusters_cache:
                 return
-            
+
             self.clusters_cache[region] = await AWSFacadeUtils.get_all_pages(
                 'elasticache', region, self.session, 'describe_cache_clusters', 'CacheClusters')
 
@@ -42,11 +46,12 @@ class ElastiCacheFacade(AWSBaseFacade):
         try:
             return await AWSFacadeUtils.get_all_pages(
                 'elasticache', region, self.session, 'describe_cache_security_groups', 'CacheSecurityGroups')
-
         except client.exceptions.InvalidParameterValueException:
             # Recent account are not allowed to use security groups at this level. Calling
             # describe_cache_security_groups will throw an InvalidParameterValueException exception.
             pass
+        except Exception as e:
+            print_exception('Failed to get ElastiCache security groups: {}'.format(e))
 
         return []
 
@@ -58,10 +63,21 @@ class ElastiCacheFacade(AWSBaseFacade):
         async with self.regional_subnets_cache_locks.setdefault(region, Lock()):
             if region in self.subnets_cache:
                 return
-            
+
             self.subnets_cache[region] = await AWSFacadeUtils.get_all_pages(
                 'elasticache', region, self.session, 'describe_cache_subnet_groups', 'CacheSubnetGroups')
 
     async def get_parameter_groups(self, region):
-        return await AWSFacadeUtils.get_all_pages(
-            'elasticache', region, self.session, 'describe_cache_parameter_groups', 'CacheParameterGroups')
+
+        # If EC2-Classic isn't available (e.g., a new account)
+        # this method will fail with:
+        #   Code:    "InvalidParameterValue"
+        #   Message: "Use of cache security groups is not permitted in
+        #             this API version for your account."
+        #   Type:    "Sender"
+        try:
+            return await AWSFacadeUtils.get_all_pages(
+                'elasticache', region, self.session, 'describe_cache_parameter_groups', 'CacheParameterGroups')
+        except ClientError as e:
+            if e.response['Error']['Code'] != 'InvalidParameterValue':
+                print_exception('Failed to describe cache parameter groups: {}'.format(e))

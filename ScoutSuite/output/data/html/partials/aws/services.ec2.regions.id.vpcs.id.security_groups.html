@@ -8,7 +8,7 @@
       <h4 class="list-group-item-heading">Information</h4>
       <div class="list-group-item-text">Description: {{description}}</div>
       <div class="list-group-item-text">Region: {{region}}</div>
-      <div class="list-group-item-text">VPC: {{get_value_at 'services.vpc.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</div>
+      <div class="list-group-item-text">VPC: {{getValueAt 'services.vpc.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</div>
       <div class="list-group-item-text">ID: {{id}}</div>
     </div>
 

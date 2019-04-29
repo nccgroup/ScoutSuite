@@ -59,6 +59,9 @@
                 },
                 "recorders": {
                     "path": "services.config.regions.id.recorders"
+                },
+                "rules": {
+                    "path": "services.config.regions.id.rules"
                 }
             }
         }
@@ -115,6 +118,13 @@
                 "subnets": {
                     "cols": 2,
                     "path": "services.vpc.regions.id.vpcs.id.subnets"
+                },
+                "peering_connections": {
+                    "hidden": true,
+                    "path": "services.vpc.regions.id.peering_connections",
+                    "callbacks": [
+                        [ "process_vpc_peering_connections_callback", {} ]
+                    ]
                 }
             }
         },
@@ -197,6 +207,10 @@
                         [ "match_security_groups_and_resources_callback", {"status_path": ["Scheme"], "sg_list_attribute_name": ["security_groups"], "sg_id_attribute_name": "GroupId"} ],
                         [ "get_lb_attack_surface", {} ]
                     ]
+                },
+                "elb_policies": {
+                    "cols": 2,
+                    "path": "services.elb.regions.id.elb_policies"
                 }
             },
             "summaries": {

@@ -1,10 +1,15 @@
-from ScoutSuite.providers.aws.resources.regions import Regions
-from ScoutSuite.providers.aws.resources.resources import AWSResources
+from ScoutSuite.providers.aws.facade.base import AWSFacade
+from ScoutSuite.providers.aws.resources.base import AWSResources
 
 
 class RDSInstances(AWSResources):
-    async def fetch_all(self, **kwargs):
-        raw_instances = await self.facade.rds.get_instances(self.scope['region'], self.scope['vpc'])
+    def __init__(self, facade: AWSFacade, region: str, vpc: str):
+        super(RDSInstances, self).__init__(facade)
+        self.region = region
+        self.vpc = vpc
+
+    async def fetch_all(self):
+        raw_instances = await self.facade.rds.get_instances(self.region, self.vpc)
         for raw_instance in raw_instances:
             name, resource = self._parse_instance(raw_instance)
             self[name] = resource
@@ -18,4 +23,10 @@ class RDSInstances(AWSResources):
                     'EnhancedMonitoringResourceArn', 'StorageEncrypted']:
             instance[key] = raw_instance[key] if key in raw_instance else None
 
+        instance['is_read_replica'] = self._is_read_replica(raw_instance)
         return instance['name'], instance
+
+    @staticmethod
+    def _is_read_replica(instance):
+        # The ReadReplicaSourceDBInstanceIdentifier attribute is only defined for read replicas. Ref.: https://bit.ly/2UhKPqP
+        return instance.get('ReadReplicaSourceDBInstanceIdentifier') is not None

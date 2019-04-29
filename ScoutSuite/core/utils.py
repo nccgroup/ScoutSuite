@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Single-service rule processing functions
 """

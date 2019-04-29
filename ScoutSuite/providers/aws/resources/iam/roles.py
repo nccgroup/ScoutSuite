@@ -1,8 +1,8 @@
-from ScoutSuite.providers.aws.resources.resources import AWSResources
+from ScoutSuite.providers.aws.resources.base import AWSResources
 
 
 class Roles(AWSResources):
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         raw_roles = await self.facade.iam.get_roles()
         for raw_role in raw_roles:
             name, resource = self._parse_role(raw_role)
