@@ -368,7 +368,7 @@ function showFindings (path, resourcePath) {
     $('[id="' + items[item] + '"]').attr('data-finding-service', findingService)
     $('[id="' + items[item] + '"]').attr('data-finding-key', findingKey)
     $('[id="' + items[item] + '"]').click(function (e) {
-      let findingId = e.target.id
+      let findingId = getId(e.target);
       if (!(findingService in exceptions)) {
         exceptions[findingService] = {}
       }
@@ -381,6 +381,14 @@ function showFindings (path, resourcePath) {
       }
     })
   }
+}
+
+/**
+ * Returns the ID from an element - if none is found, returns the ID of the closest parent that does
+ * @param element
+ */
+function getId(element) {
+  return $(element).closest('[id]').attr('id');
 }
 
 /**
