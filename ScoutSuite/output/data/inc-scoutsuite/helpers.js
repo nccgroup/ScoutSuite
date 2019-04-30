@@ -72,10 +72,6 @@ Handlebars.registerHelper('list_permissions', function (permissions) {
     return r
 })
 
-Handlebars.registerHelper('s3_grant_2_icon', function (value) {
-    return '<i class="' + ((value === true) ? 'fa fa-check' : '') + '"></i>'
-})
-
 Handlebars.registerHelper('good_bad_icon', function (finding, bucketId, keyId, suffix) {
     var keyPath = 's3.buckets.' + bucketId + '.keys.' + keyId + '.' + suffix
     var index = runResults['services']['s3']['findings'][finding]['items'].indexOf(keyPath)
