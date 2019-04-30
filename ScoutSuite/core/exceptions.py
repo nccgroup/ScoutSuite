@@ -1,13 +1,12 @@
-"""
-Exceptions handling
-"""
-
 from ScoutSuite.core.console import print_debug
 
 from ScoutSuite.output.result_encoder import JavaScriptEncoder
 
 
 class RuleExceptions(object):
+    """
+    Exceptions handling
+    """
 
     def __init__(self, file_path=None):
         self.jsrw = JavaScriptEncoder()
