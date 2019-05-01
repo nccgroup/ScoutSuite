@@ -309,6 +309,14 @@ function hideLinks (resourcePath) {
 }
 
 /**
+ * Updates the hash with a given path
+ * @param path
+ */
+function updateHash (path) {
+    window.location.hash = path;
+}
+
+/**
  * Show list, details' container, links, and view for a given path
  * @param path
  */
