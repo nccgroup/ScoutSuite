@@ -30,7 +30,7 @@ function onPageLoad () {
     var csvArray = []
     var jsonDict = {}
 
-    var items = getValueAt(path)
+    var items = getValueAt(path);
     var resourcePathArray = resourcePath.split('.')
     var splitPath = path.split('.')
     var findingKey = splitPath[splitPath.length - 2]
