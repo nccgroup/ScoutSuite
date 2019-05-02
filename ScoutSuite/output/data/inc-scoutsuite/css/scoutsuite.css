@@ -81,6 +81,7 @@ body {
     content: '\f06a';
     color:#ee293d; 
 }
+
 .finding-badge-unknown:before {  
     content: '\f111';
     color: rgb(225, 225, 225);
@@ -129,7 +130,7 @@ ul.no-bullet {
 .plain-link a:link,
 .plain-link a:visited,
 .plain-link a:active {
-    color: #fff;
+    color: black;
     text-decoration: none;
 }
 
@@ -493,3 +494,6 @@ input:checked + .slider:before {
     padding-right: 0;
 }
 
+.finding_items {
+    color: black !important;
+}

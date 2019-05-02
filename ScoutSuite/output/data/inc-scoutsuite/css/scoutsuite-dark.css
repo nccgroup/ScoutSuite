@@ -15,7 +15,10 @@ a.nav-link {
 }
 
 .bg-primary .navbar-nav .active>.nav-link, .navbar-brand .active {
-    color: #c41230 !important;
+    color: #fff !important;
+    font-weight: bolder;
+    font-size: 15px;
+    transition: font-size 0.4s ease;
 }
 
 #double-column-left .list-group {
@@ -80,4 +83,26 @@ span.slider.round {
     
 }
 
+.plain-link a:link,
+.plain-link a:visited,
+.plain-link a:active {
+    color: #fff;
+    text-decoration: none;
+}
 
+.disabled-link a:link,
+.disabled-link a:active,
+.disabled-link a:visited,
+.disabled-link a:hover {
+    color: rgb(173, 173, 173);
+    pointer-events: none;
+    cursor: default;
+}
+
+.plain-link a:hover {
+    text-decoration: underline;
+}
+
+.card-body {
+    color: #fff;
+}
