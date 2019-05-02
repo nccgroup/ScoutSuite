@@ -15,7 +15,10 @@
             [ "iam.policies.id.PolicyDocument.Statement.id.", "withKey", "NotAction" ]
         ],
         [ "iam.policies.id.PolicyDocument.Statement.id.", "containAction", "_ARG_0_:_ARG_1_" ],
-        [ "iam.policies.id.PolicyDocument.Statement.id.Resource", "containAtLeastOneOf", [ "*" ] ]
+        [ "and",
+            [ "iam.policies.id.PolicyDocument.Statement.id.", "withKey", "Resource" ],
+            [ "iam.policies.id.PolicyDocument.Statement.id.Resource", "containAtLeastOneOf", [ "*" ] ]
+        ]
     ],
     "keys": [
         "iam.policies.id.name"
