@@ -414,8 +414,11 @@ input:checked + .slider:before {
 }
 
 .dropdown-item {
+    line-height: 2;
     font-size: 14px;
+    height: 2.5rem; 
 }
+
 .dropdown-item:hover {
     background: transparent;
     color: black;
