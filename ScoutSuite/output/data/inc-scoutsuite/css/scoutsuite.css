@@ -416,7 +416,8 @@ input:checked + .slider:before {
 .dropdown-item {
     line-height: 2;
     font-size: 14px;
-    height: 2.5rem; 
+    height: 2.5rem;
+    border-radius: unset !important;
 }
 
 .dropdown-item:hover {
@@ -486,3 +487,9 @@ input:checked + .slider:before {
     font-weight: bold;
     font-size: 15px;
 }
+
+.dropdown-menu li span {
+    padding: 0.25rem 1.5rem;
+    padding-right: 0;
+}
+

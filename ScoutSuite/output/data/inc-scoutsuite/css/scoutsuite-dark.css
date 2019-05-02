@@ -15,7 +15,63 @@ a.nav-link {
 }
 
 .bg-primary .navbar-nav .active>.nav-link, .navbar-brand .active {
-    color: #25e8c2 !important;
+    color: #c41230 !important;
 }
 
+#double-column-left .list-group {
+    border: 1px solid #444;
+}
+
+.dropdown-header { 
+    background: #414042;
+    color: #fff;
+}
+
+.dropdown-item:hover {
+    background: transparent;
+    color: #fff;
+    border-left: 10px solid #c41230 ;
+    -webkit-transition: border 0.2s ease-in-out; /* Safari */
+    transition: border 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar {
+    background: transparent;
+    padding: 2px;
+ }
+ ::-webkit-scrollbar-corner {
+     background: transparent;
+   }
+ ::-webkit-scrollbar-thumb {
+     background-clip: padding-box;
+     background-color: rgba(168, 168, 168, 0.733);
+     -webkit-box-shadow: inset -1px -1px 0px rgba(0, 0, 0, 0.05), inset 1px 1px 0px rgba(0, 0, 0, 0.05);
+ }
+ ::-webkit-scrollbar-button {
+     width: 0;
+     height: 0;
+     display: none;
+ }
+
+ .show {
+     border-bottom: unset;
+ }
+
+ .card-header {
+    background-color: #626164;
+    color: #fff !important;
+    font-size: 14px;
+}
+
+span.slider.round {
+    background: #c41230 !important;
+}
+
+.btn-light {
+    background-color: #626164;
+}
+
+.btn-light:hover {
+    background-color: #86858a;
+}
 
