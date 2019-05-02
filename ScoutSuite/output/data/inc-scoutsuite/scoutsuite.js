@@ -963,29 +963,48 @@ window.onhashchange = showPageFromHash
  * @returns {string}
  */
 function getValueAt(path) {
-    let pathArray = path.split('.');
-    let value = runResults;
-    for (let p in pathArray) {
+    return getValueAtRecursive(path, runResults)
+}
+
+function getValueAtRecursive(path, source) {
+    let value = source;
+    let current_path = path;
+    let key;
+    while (current_path) {
+
+        if(current_path.indexOf('.') != -1){
+            key = current_path.substr(0, current_path.indexOf('.'));
+        }
+        else {
+            key = current_path;
+        }
+
         try {
-            // if(pathArray[p] == 'id')
-            // {
-            //     let v = [];
-            //     for(let p2 in value[pathArray[p]]){
-            //         v.concat(
-            //             getValueAt(path.replace('id', value[pathArray[p]][p2]))
-            //         );
-            //     }
-            //     value = v;
-            // }
-            // else {
-            //     value = value[pathArray[p]];
-            // }
-            value = value[pathArray[p]];
+            if(key == 'id')
+            {
+                let v = [];
+                for(let k in value){
+                    v = v.concat(
+                        getValueAtRecursive(k + current_path.substr(current_path.indexOf('.'), current_path.length), value)
+                    );
+                }
+                return v;
+            }
+            else {
+                value = value[key];
+            }
         } catch (err) {
             console.log(err)
         }
+
+        if(current_path.indexOf('.') != -1){
+            current_path = current_path.substr(current_path.indexOf('.')+1, current_path.length);
+        }
+        else {
+            current_path = false;
+        }
     }
-    return value
+    return value;
 }
 
 var currentResourcePath = ''
