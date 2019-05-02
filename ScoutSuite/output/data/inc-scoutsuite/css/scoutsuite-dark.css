@@ -23,11 +23,11 @@ a.nav-link {
 }
 
 .dropdown-header { 
-    background: #414042;
+    background: #7672779c;
     color: #fff;
 }
 
-.dropdown-item:hover {
+.dropdown-submenu:hover, .dropdown-item:hover {
     background: transparent;
     color: #fff;
     border-left: 10px solid #c41230 ;
@@ -74,4 +74,10 @@ span.slider.round {
 .btn-light:hover {
     background-color: #86858a;
 }
+
+.dropdown-menu {
+    background: #414042;
+    
+}
+
 
