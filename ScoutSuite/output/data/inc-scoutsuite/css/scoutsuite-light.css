@@ -19,7 +19,10 @@ a.nav-link:hover {
 }
 
 .bg-primary .navbar-nav .active>.nav-link, .navbar-brand .active {
-    color: #c41230 !important;
+    color: #fff !important;
+    font-weight: bolder;
+    font-size: 15px;
+    transition: font-size 0.4s ease;
 }
 
 
