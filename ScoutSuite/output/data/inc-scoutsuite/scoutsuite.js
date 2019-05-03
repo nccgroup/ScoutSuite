@@ -983,9 +983,11 @@ function getValueAtRecursive(path, source) {
             if(key == 'id')
             {
                 let v = [];
+                let w;
                 for(let k in value){
+                    w = getValueAtRecursive(k + current_path.substr(current_path.indexOf('.'), current_path.length), value);
                     v = v.concat(
-                        getValueAtRecursive(k + current_path.substr(current_path.indexOf('.'), current_path.length), value)
+                        Object.values(w)
                     );
                 }
                 return v;
