@@ -25,4 +25,11 @@ a.nav-link:hover {
     transition: font-size 0.4s ease;
 }
 
+.navbar-brand .active {
+    color: #fff !important;
+    font-weight: bolder;
+    font-size: 18px;
+    transition: font-size 0.4s ease;
+}
+
 

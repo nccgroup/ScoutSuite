@@ -1,11 +1,11 @@
 @import url("./modal.css");
 
 a {
-    color: #c41230;
+    color: #4990e2;
 }
 
 a:hover {
-    color: #a10f27;
+    color: #67acfc;
     text-decoration: none !important;
 }
 body {
@@ -88,7 +88,8 @@ body {
 }
 
 .finding-warning { color: #fdbe00; }
-.finding-danger { color:#ee293d; }
+.finding-danger { color:#ee293d; 
+                  font-weight: bold;}
 
 ul.no-bullet {
     list-style-type: none;
@@ -378,7 +379,7 @@ input:checked + .slider:before {
 }
 
 #account_id .fa-cloud {
-    color: orange;
+    color: black;
     margin-right: 5px;
 }
 
@@ -440,11 +441,6 @@ input:checked + .slider:before {
 .show { 
     border-bottom: 1px solid #d8d5d5;
 }
-
-.list-group-item a {
-    color: #c41230 !important;
-}
-
 .fa-download:before {
     padding-right: 6px !important;
 }
@@ -452,6 +448,7 @@ input:checked + .slider:before {
 .col-sm-9.w-100.pr-0 div .list-group .list-group-item {
     overflow: unset;
 }
+
 .col-sm-9.w-100.pr-0 div .list-group .list-group-item:last-child {
     overflow: scroll;
     max-height: 40rem;
@@ -463,14 +460,15 @@ input:checked + .slider:before {
     border-bottom: 1px solid #414042 ;
 } 
 
-
  ::-webkit-scrollbar {
    background: transparent;
    padding: 2px;
 }
+
 ::-webkit-scrollbar-corner {
     background: transparent;
   }
+
 ::-webkit-scrollbar-thumb {
     background-clip: padding-box;
     background-color: rgba(0, 0, 0, 0.15);
@@ -496,4 +494,18 @@ input:checked + .slider:before {
 
 .finding_items {
     color: black !important;
+}
+
+/* added scroll bar to filters as they were going off the page */
+#filters\.list {
+    overflow-x: scroll;
+    max-height: 90vh;
+}
+
+footer a { 
+    color: #c41230;
+}
+
+footer a:hover { 
+    color: #ee173a;
 }

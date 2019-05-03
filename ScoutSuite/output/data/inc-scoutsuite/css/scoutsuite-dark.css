@@ -14,10 +14,17 @@ a.nav-link {
     color: rgb(235, 235, 235) ;
 }
 
-.bg-primary .navbar-nav .active>.nav-link, .navbar-brand .active {
+.bg-primary .navbar-nav .active>.nav-link {
     color: #fff !important;
     font-weight: bolder;
     font-size: 15px;
+    transition: font-size 0.4s ease;
+}
+
+.navbar-brand .active {
+    color: #fff !important;
+    font-weight: bolder;
+    font-size: 18px;
     transition: font-size 0.4s ease;
 }
 
@@ -105,4 +112,9 @@ span.slider.round {
 
 .card-body {
     color: #fff;
+}
+
+#account_id .fa-cloud {
+    color: #fff;
+    margin-right: 5px;
 }
