@@ -963,29 +963,57 @@ window.onhashchange = showPageFromHash
  * @returns {string}
  */
 function getValueAt(path) {
-    let pathArray = path.split('.');
-    let value = runResults;
-    for (let p in pathArray) {
+    return getValueAtRecursive(path, runResults)
+}
+
+function getValueAtRecursive(path, source) {
+    let value = source;
+    let current_path = path;
+    let key;
+    // iterate over each path elements
+    while (current_path) {
+        // check if there are more elements to the path
+        if(current_path.indexOf('.') != -1){
+            key = current_path.substr(0, current_path.indexOf('.'));
+        }
+        // last element
+        else {
+            key = current_path;
+        }
+
         try {
-            // if(pathArray[p] == 'id')
-            // {
-            //     let v = [];
-            //     for(let p2 in value[pathArray[p]]){
-            //         v.concat(
-            //             getValueAt(path.replace('id', value[pathArray[p]][p2]))
-            //         );
-            //     }
-            //     value = v;
-            // }
-            // else {
-            //     value = value[pathArray[p]];
-            // }
-            value = value[pathArray[p]];
+            // path containing an ".id"
+            if(key == 'id')
+            {
+                let v = [];
+                let w;
+                for(let k in value){
+                    // process recursively
+                    w = getValueAtRecursive(k + current_path.substr(current_path.indexOf('.'), current_path.length), value);
+                    v = v.concat(
+                        Object.values(w) // get values from array, otherwise it will be an array of key/values
+                    );
+                }
+                return v;
+            }
+            // simple path, just return element in value
+            else {
+                value = value[key];
+            }
         } catch (err) {
             console.log(err)
         }
+
+        // check if there are more elements to process
+        if(current_path.indexOf('.') != -1){
+            current_path = current_path.substr(current_path.indexOf('.')+1, current_path.length);
+        }
+        // otherwise we're done
+        else {
+            current_path = false;
+        }
     }
-    return value
+    return value;
 }
 
 var currentResourcePath = ''
