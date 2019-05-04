@@ -31,6 +31,9 @@ setup(
     },
     packages=find_packages(),
     package_data={
+        'ScoutSuite.data': [
+            '*.json'
+        ],
         'ScoutSuite.output': [
             'data/html/*.html',
             'data/html/conditionals/*.html',
@@ -56,9 +59,6 @@ setup(
             'gcp/rules/filters/*.json',
             'gcp/rules/findings/*.json',
             'gcp/rules/rulesets/*.json'
-        ],
-        'ScoutSuite.data': [
-            '*.json'
         ]
     },
     include_package_data=True,
