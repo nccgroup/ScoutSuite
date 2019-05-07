@@ -31,6 +31,9 @@ setup(
     },
     packages=find_packages(),
     package_data={
+        'ScoutSuite.data': [
+            '*.json'
+        ],
         'ScoutSuite.output': [
             'data/html/*.html',
             'data/html/conditionals/*.html',
@@ -56,9 +59,6 @@ setup(
             'gcp/rules/filters/*.json',
             'gcp/rules/findings/*.json',
             'gcp/rules/rulesets/*.json'
-        ],
-        'ScoutSuite.data': [
-            '*.json'
         ]
     },
     include_package_data=True,
@@ -72,10 +72,7 @@ setup(
         'Natural Language :: English',
         'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7'
