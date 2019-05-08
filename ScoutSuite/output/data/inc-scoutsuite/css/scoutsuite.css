@@ -1,5 +1,17 @@
 @import url("./modal.css");
 
+a {
+    color: #4990e2;
+}
+
+a:hover {
+    color: #67acfc;
+    text-decoration: none !important;
+}
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+}
 /* Bootstrap overrides */
 
 .btn-success,
@@ -46,9 +58,8 @@
 }
 
 .finding-title {
-    background: #f5f5f5;
+    font-size: 14px !important;
 }
-
 .finding-badge {
     margin-bottom: 1px;
     margin-right: 8px;
@@ -70,13 +81,15 @@
     content: '\f06a';
     color:#ee293d; 
 }
+
 .finding-badge-unknown:before {  
     content: '\f111';
     color: rgb(225, 225, 225);
 }
 
 .finding-warning { color: #fdbe00; }
-.finding-danger { color:#ee293d; }
+.finding-danger { color:#ee293d; 
+                  font-weight: bold;}
 
 ul.no-bullet {
     list-style-type: none;
@@ -84,6 +97,10 @@ ul.no-bullet {
 .list-sub-element {
     border: 0 !important;
     padding-left: 25px;
+}
+
+.list-group-item > .list-group-item {
+    background: transparent;
 }
 
 .active-dropdown {
@@ -130,7 +147,7 @@ ul.no-bullet {
 .disabled-link a:active,
 .disabled-link a:visited,
 .disabled-link a:hover {
-    color: rgb(110, 110, 110);
+    color: rgb(173, 173, 173);
     pointer-events: none;
     cursor: default;
 }
@@ -282,7 +299,7 @@ input:checked + .slider:before {
 }
 
 .finding:before {
-    color: black;
+    color: #FFF;
     content: "\f068"; /* Fontawesome '+' */
     left:5px;
     position:absolute;
@@ -291,7 +308,7 @@ input:checked + .slider:before {
 
 
 .collapsed.finding:before {
-    color: black;
+    color: #FFF;
     content: "\f067"; /* Fontawesome '-' */
     left:5px;
     position:absolute;
@@ -312,11 +329,11 @@ input:checked + .slider:before {
 
 #double-column-left .active a,
 #double-column-left .active .fa {
-    color: rgba(24, 188, 155);
+    color: #FFF !important;
 }
 
 #double-column-left .active .fa:hover {
-    color: rgba(24, 188, 155);
+    color: #c41230 !important;
 }
 
 .finding-learn-more i {
@@ -329,6 +346,16 @@ input:checked + .slider:before {
 
 .list-group-item {
     overflow: auto;
+    background: rgba(0,0,0,.05);
+}
+
+.list-group-item.list-group-item {
+    background: transparent;
+}
+
+.list-group-item.active {
+    border: 0;
+    background: #414042; 
 }
 
 .bucket-name {
@@ -350,4 +377,142 @@ input:checked + .slider:before {
     #container-user {
         margin-top: 5rem !important;
     }
+}
+
+/* ------------------ Oliver CSS -------------------- */
+
+#account_id {
+    font-weight: bold;
+}
+
+#account_id .fa-cloud {
+    color: black;
+    margin-right: 5px;
+}
+
+#account_id .fa-chevron-right {
+    margin-left: 5px; 
+    margin-right: 5px;
+}
+
+.navbar { 
+    background: #414042 !important;
+    border-bottom: 10px solid #c41230;
+}
+
+.card-body {
+    margin-bottom: -1px;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    color: inherit;
+    font-size: 14px;
+}
+
+.card-body:nth-of-type(even) {
+    background-color: #f7f7f7;
+}
+
+.card-header-dark {
+    background-color: #414042 !important;
+    color: #fff !important;
+    font-size: 16px !important;
+}
+
+.card-body:first-child {
+    border-radius: calc(0.25rem - 1px) calc(0.25rem - 1px) 0 0;
+}
+
+.dropdown-item {
+    line-height: 2;
+    font-size: 14px;
+    height: 2.5rem;
+    border-radius: unset !important;
+}
+
+.dropdown-item:hover {
+    background: transparent;
+    color: black;
+    border-left: 10px solid #c41230 ;
+    -webkit-transition: border 0.2s ease-in-out; /* Safari */
+    transition: border 0.2s ease-in-out;
+}
+
+.findings-filter {
+    padding: 0;
+}
+
+#section_title-h2 {
+    font-weight: bolder;
+}
+
+.show { 
+    border-bottom: 1px solid #d8d5d5;
+}
+.fa-download:before {
+    padding-right: 6px !important;
+}
+
+.col-sm-9.w-100.pr-0 div .list-group .list-group-item {
+    overflow: unset;
+}
+
+.col-sm-9.w-100.pr-0 div .list-group .list-group-item:last-child {
+    overflow: auto;
+    max-height: 40rem;
+}
+
+.table-striped tbody tr:first-of-type td {
+    font-size: 16px;
+    font-weight: bold;
+    border-bottom: 1px solid #414042 ;
+} 
+
+ ::-webkit-scrollbar {
+   background: transparent;
+   padding: 2px;
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    background-color: rgba(0, 0, 0, 0.15);
+    -webkit-box-shadow: inset -1px -1px 0px rgba(0, 0, 0, 0.05), inset 1px 1px 0px rgba(0, 0, 0, 0.05);
+}
+::-webkit-scrollbar-button {
+    width: 0;
+    height: 0;
+    display: none;
+}
+
+.dropdown-header {
+    background: #f0f0f0b2;
+    color: black;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.dropdown-menu li span {
+    padding: 0.25rem 1.5rem;
+    padding-right: 0;
+}
+
+.finding_items {
+    color: black !important;
+}
+
+/* added scroll bar to filters as they were going off the page */
+#filters\.list {
+    overflow-x: auto;
+    max-height: 90vh;
+}
+
+footer a { 
+    color: #c41230;
+}
+
+footer a:hover { 
+    color: #ee173a;
 }
