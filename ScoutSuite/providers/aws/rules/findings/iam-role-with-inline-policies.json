@@ -3,7 +3,8 @@
     "path": "iam.roles.id",
     "dashboard_name": "Roles",
     "conditions": [ "and",
-        [ "iam.roles.id.", "withKey", "inline_policies" ]
+        [ "iam.roles.id.", "withKey", "inline_policies" ],
+        [ "iam.roles.id.inline_policies", "notEmpty", "" ]
     ],
     "id_suffix": "inline_policies"
 }

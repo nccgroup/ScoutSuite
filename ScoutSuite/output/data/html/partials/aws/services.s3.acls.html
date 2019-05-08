@@ -17,16 +17,32 @@
                 <tr>
                   <td width="20%" class="text-center bucket-name table-hover" onclick="toggleName(this)">{{DisplayName}}</td>
                   <td width="20%" class="text-center">
-                    <span id="{{../resource_path}}.grantees.{{@key}}.read">{{{s3_grant_2_icon permissions.read}}}</td></span>
+                    {{#if permissions.read}}
+                    <i id="{{../../resource_path}}.grantees.{{@key}}.read" class="fa fa-check"></i>
+                    {{else}}
+                    <i id="{{../../resource_path}}.grantees.{{@key}}.read" class="fa fa-times"></i>
+                    {{/if}}
                   </td>
                   <td width="20%" class="text-center">
-                    <span id="{{../resource_path}}.grantees.{{@key}}.write">{{{s3_grant_2_icon permissions.write}}}</td></span>
+                    {{#if permissions.write}}
+                    <i id="{{../../resource_path}}.grantees.{{@key}}.write" class="fa fa-check"></i>
+                    {{else}}
+                    <i id="{{../../resource_path}}.grantees.{{@key}}.write" class="fa fa-times"></i>
+                    {{/if}}
                   </td>
                   <td width="20%" class="text-center">
-                    <span id="{{../resource_path}}.grantees.{{@key}}.read_acp">{{{s3_grant_2_icon permissions.read_acp}}}</td></span>
+                    {{#if permissions.read_acp}}
+                    <i id="{{../../resource_path}}.grantees.{{@key}}.read_acp" class="fa fa-check"></i>
+                    {{else}}
+                    <i id="{{../../resource_path}}.grantees.{{@key}}.read_acp" class="fa fa-times"></i>
+                    {{/if}}
                   </td>
                   <td width="20%" class="text-center">
-                    <span id="{{../resource_path}}.grantees.{{@key}}.write_acp">{{{s3_grant_2_icon permissions.write_acp}}}</td></span>
+                    {{#if permissions.write_acp}}
+                    <i id="{{../../resource_path}}.grantees.{{@key}}.write_acp" class="fa fa-check"></i>
+                    {{else}}
+                    <i id="{{../../resource_path}}.grantees.{{@key}}.write_acp" class="fa fa-times"></i>
+                    {{/if}}
                   </td>
                 </tr>
                 {{/each}}
