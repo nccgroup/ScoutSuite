@@ -99,6 +99,10 @@ ul.no-bullet {
     padding-left: 25px;
 }
 
+.list-group-item > .list-group-item {
+    background: transparent;
+}
+
 .active-dropdown {
     color: #428bca;
 }
@@ -343,7 +347,10 @@ input:checked + .slider:before {
 .list-group-item {
     overflow: auto;
     background: rgba(0,0,0,.05);
+}
 
+.list-group-item.list-group-item {
+    background: transparent;
 }
 
 .list-group-item.active {
