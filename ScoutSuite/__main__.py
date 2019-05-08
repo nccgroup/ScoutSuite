@@ -24,29 +24,29 @@ def run_from_cli():
     # Get the dictionary to get None instead of a crash
     args = args.__dict__
 
-    run(args.get('provider'),
-        args.get('profile'),
-        args.get('user_account'), args.get('service_account'),
-        args.get('cli'), args.get('msi'), args.get('service_principal'), args.get('file_auth'), args.get('tenant_id'),
-        args.get('subscription_id'),
-        args.get('client_id'), args.get('client_secret'),
-        args.get('username'), args.get('password'),
-        args.get('project_id'), args.get('folder_id'), args.get('organization_id'), args.get('all_projects'),
-        args.get('report_name'), args.get('report_dir'),
-        args.get('timestamp'),
-        args.get('services'), args.get('skipped_services'),
-        args.get('result_format'),
-        args.get('database_name'),
-        args.get('host_ip'),
-        args.get('host_port'),
-        args.get('max_workers'),
-        args.get('regions'),
-        args.get('fetch_local'), args.get('update'),
-        args.get('ip_ranges'), args.get('ip_ranges_name_key'),
-        args.get('ruleset'), args.get('exceptions'),
-        args.get('force_write'),
-        args.get('debug'),
-        args.get('no_browser'))
+    return run(args.get('provider'),
+               args.get('profile'),
+               args.get('user_account'), args.get('service_account'),
+               args.get('cli'), args.get('msi'), args.get('service_principal'), args.get('file_auth'), args.get('tenant_id'),
+               args.get('subscription_id'),
+               args.get('client_id'), args.get('client_secret'),
+               args.get('username'), args.get('password'),
+               args.get('project_id'), args.get('folder_id'), args.get('organization_id'), args.get('all_projects'),
+               args.get('report_name'), args.get('report_dir'),
+               args.get('timestamp'),
+               args.get('services'), args.get('skipped_services'),
+               args.get('result_format'),
+               args.get('database_name'),
+               args.get('host_ip'),
+               args.get('host_port'),
+               args.get('max_workers'),
+               args.get('regions'),
+               args.get('fetch_local'), args.get('update'),
+               args.get('ip_ranges'), args.get('ip_ranges_name_key'),
+               args.get('ruleset'), args.get('exceptions'),
+               args.get('force_write'),
+               args.get('debug'),
+               args.get('no_browser'))
 
 
 def run(provider,
@@ -75,8 +75,9 @@ def run(provider,
 
     loop = asyncio.get_event_loop()
     loop.set_default_executor(ThreadPoolExecutor(max_workers=max_workers))
-    loop.run_until_complete(_run(**locals()))  # pass through all the parameters
+    result = loop.run_until_complete(_run(**locals()))  # pass through all the parameters
     loop.close()
+    return result
 
 
 async def _run(provider,
