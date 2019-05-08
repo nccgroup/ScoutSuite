@@ -450,7 +450,7 @@ input:checked + .slider:before {
 }
 
 .col-sm-9.w-100.pr-0 div .list-group .list-group-item:last-child {
-    overflow: scroll;
+    overflow: auto;
     max-height: 40rem;
 }
 
@@ -498,7 +498,7 @@ input:checked + .slider:before {
 
 /* added scroll bar to filters as they were going off the page */
 #filters\.list {
-    overflow-x: scroll;
+    overflow-x: auto;
     max-height: 90vh;
 }
 
