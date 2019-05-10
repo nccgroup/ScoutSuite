@@ -9,7 +9,7 @@ class NetworkSecurityGroups(AzureResources):
 
     def _parse_network_security_group(self, network_security_group):
         network_security_group_dict = {}
-        network_security_group_dict['id'] = network_security_group.id
+        network_security_group_dict['id'] = network_security_group.resource_guid
         network_security_group_dict['name'] = network_security_group.name
         network_security_group_dict['provisioning_state'] = network_security_group.provisioning_state
         network_security_group_dict['location'] = network_security_group.location
