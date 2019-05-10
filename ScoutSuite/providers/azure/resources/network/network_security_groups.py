@@ -18,9 +18,10 @@ class NetworkSecurityGroups(AzureResources):
 
         network_security_group_dict['security_rules'] = self._parse_security_rules(network_security_group)
 
-        exposed_ports = self._parse_exposed_ports(network_security_group)
-        network_security_group_dict['exposed_ports'] = exposed_ports
-        network_security_group_dict['exposed_port_ranges'] = self._format_ports(exposed_ports)
+        # FIXME this is broken and badly implemented (not efficient at all)
+        # exposed_ports = self._parse_exposed_ports(network_security_group)
+        # network_security_group_dict['exposed_ports'] = exposed_ports
+        # network_security_group_dict['exposed_port_ranges'] = self._format_ports(exposed_ports)
 
         return network_security_group_dict['id'], network_security_group_dict
 
@@ -62,6 +63,7 @@ class NetworkSecurityGroups(AzureResources):
         return security_rules
 
     def _parse_ports(self, port_ranges):
+        # FIXME this is inefficient
         ports = set()
         for pr in port_ranges:
             if pr == "*":
@@ -108,6 +110,7 @@ class NetworkSecurityGroups(AzureResources):
         return port_ranges
 
     def _format_ports(self, ports):
+        # FIXME this is inefficient
         port_ranges = []
         start = None
         for i in range(0, 65535 + 1):
