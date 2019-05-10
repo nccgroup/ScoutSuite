@@ -33,7 +33,7 @@ class Instances(GCPCompositeResources):
         instance_dict['status'] = raw_instance['status']
         instance_dict['zone_url_'] = raw_instance['zone']
         instance_dict['network_interfaces'] = raw_instance['networkInterfaces']
-        instance_dict['service_accounts'] = raw_instance['serviceAccounts']
+        instance_dict['service_accounts'] = raw_instance.get('serviceAccounts', [])
         instance_dict['deletion_protection_enabled'] = raw_instance['deletionProtection']
         instance_dict['block_project_ssh_keys_enabled'] = self._is_block_project_ssh_keys_enabled(raw_instance)
         instance_dict['oslogin_enabled'] = self._is_oslogin_enabled(raw_instance)
@@ -61,5 +61,5 @@ class Instances(GCPCompositeResources):
 
     def _has_full_access_to_all_cloud_apis(self, raw_instance):
         full_access_scope = 'https://www.googleapis.com/auth/cloud-platform'
-        return any(
-            full_access_scope in service_account['scopes'] for service_account in raw_instance['serviceAccounts'])
+        return any(full_access_scope in service_account['scopes']
+                   for service_account in raw_instance.get('serviceAccounts', []))
