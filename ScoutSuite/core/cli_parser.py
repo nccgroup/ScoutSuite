@@ -175,16 +175,22 @@ class ScoutSuiteArgumentParser:
                             default=False,
                             action='store_true',
                             help='Use local data previously fetched and re-run the analysis.')
-        parser.add_argument('--no-logging',
-                            dest='no_logging',
-                            default=False,
-                            action='store_true',
-                            help='Disables logging')
         parser.add_argument('--debug',
                             dest='debug',
                             default=False,
                             action='store_true',
                             help='Print the stack trace when exception occurs')
+        parser.add_argument('--quiet',
+                            dest='quiet',
+                            default=False,
+                            action='store_true',
+                            help='Disables CLI output')
+        parser.add_argument('--logfile',
+                            dest='log_file',
+                            default=None,
+                            action='store',
+                            nargs='?',
+                            help='Additional output to the specified file')
         # parser.add_argument('--resume',
         #                     dest='resume',
         #                     default=False,

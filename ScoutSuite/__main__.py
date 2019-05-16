@@ -46,7 +46,8 @@ def run_from_cli():
                args.get('ruleset'), args.get('exceptions'),
                args.get('force_write'),
                args.get('debug'),
-               args.get('no_logging'),
+               args.get('quiet'),
+               args.get('log_file'),
                args.get('no_browser'))
 
 
@@ -69,7 +70,8 @@ def run(provider,
         ruleset='default.json', exceptions=None,
         force_write=False,
         debug=False,
-        no_logging=False,
+        quiet=False,
+        log_file=None,
         no_browser=False):
     """
     Run a scout job in an async event loop.
@@ -100,7 +102,8 @@ async def _run(provider,
                ruleset, exceptions,
                force_write,
                debug,
-               no_logging,
+               quiet,
+               log_file,
                no_browser,
                **kwargs):
     """
@@ -108,7 +111,7 @@ async def _run(provider,
     """
 
     # Configure the debug level
-    set_logger_configuration(debug, no_logging)
+    set_logger_configuration(debug, quiet, log_file)
 
     print_info('Launching Scout')
 
