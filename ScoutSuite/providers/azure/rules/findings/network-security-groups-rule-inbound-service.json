@@ -10,6 +10,5 @@
         ["network.network_security_groups.id.security_rules.id.destination_ports", "containAtLeastOneOf", "_ARG_1_"],
         ["_INCLUDE_(conditions/exposed-to-the-internet.json)", "", ""],
         ["_INCLUDE_(conditions/allow-tcp.json)", "", ""]
-    ],
-    "id_suffix": "security_groups_rule_inbound__ARG_0_"
+    ]
 }

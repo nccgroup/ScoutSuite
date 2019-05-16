@@ -1,7 +1,7 @@
 import os
 
 from mock import patch
-from ScoutSuite.core.console import set_config_debug_level, print_debug
+from ScoutSuite.core.console import set_logger_configuration, print_debug
 from ScoutSuite.core.rule import Rule
 from ScoutSuite.core.ruleset import Ruleset
 
@@ -9,7 +9,7 @@ from ScoutSuite.core.ruleset import Ruleset
 class TestScoutRulesRuleset:
 
     def setup(self):
-        set_config_debug_level(True)
+        set_logger_configuration(is_debug=True)
         self.test_dir = os.path.dirname(os.path.realpath(__file__))
 
         self.test_ruleset_001 = os.path.join(self.test_dir, 'data/test-ruleset.json')
