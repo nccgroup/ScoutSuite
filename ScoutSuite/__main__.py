@@ -6,7 +6,7 @@ import webbrowser
 from concurrent.futures import ThreadPoolExecutor
 
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
-from ScoutSuite.core.console import set_config_debug_level, print_info, print_exception
+from ScoutSuite.core.console import set_logger_configuration, print_info, print_exception
 from ScoutSuite.core.exceptions import RuleExceptions
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset
@@ -46,6 +46,7 @@ def run_from_cli():
                args.get('ruleset'), args.get('exceptions'),
                args.get('force_write'),
                args.get('debug'),
+               args.get('no_logging'),
                args.get('no_browser'))
 
 
@@ -68,6 +69,7 @@ def run(provider,
         ruleset='default.json', exceptions=None,
         force_write=False,
         debug=False,
+        no_logging=False,
         no_browser=False):
     """
     Run a scout job in an async event loop.
@@ -98,6 +100,7 @@ async def _run(provider,
                ruleset, exceptions,
                force_write,
                debug,
+               no_logging,
                no_browser,
                **kwargs):
     """
@@ -105,7 +108,7 @@ async def _run(provider,
     """
 
     # Configure the debug level
-    set_config_debug_level(debug)
+    set_logger_configuration(debug, no_logging)
 
     print_info('Launching Scout')
 

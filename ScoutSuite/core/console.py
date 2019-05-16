@@ -15,13 +15,15 @@ from ScoutSuite import ERRORS_LIST
 verbose_exceptions = False
 logger = logging.getLogger('scout')
 
-def set_config_debug_level(is_debug):
+def set_logger_configuration(is_debug=False, no_logging=False):
     """
     Configure whether full stacktraces should be dumped in the console output
     """
     global verbose_exceptions
     verbose_exceptions = is_debug
-    coloredlogs.install(level='DEBUG' if is_debug else 'INFO', logger=logger)
+    # if "no logging" is set, don't output anything
+    if not no_logging:
+        coloredlogs.install(level='DEBUG' if is_debug else 'INFO', logger=logger)
 
 
 ########################################

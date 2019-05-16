@@ -175,6 +175,11 @@ class ScoutSuiteArgumentParser:
                             default=False,
                             action='store_true',
                             help='Use local data previously fetched and re-run the analysis.')
+        parser.add_argument('--no-logging',
+                            dest='no_logging',
+                            default=False,
+                            action='store_true',
+                            help='Disables logging')
         parser.add_argument('--debug',
                             dest='debug',
                             default=False,
