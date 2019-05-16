@@ -2,7 +2,7 @@ import json
 import os
 import tempfile
 
-from ScoutSuite.core.console import set_config_debug_level, print_error
+from ScoutSuite.core.console import set_logger_configuration, print_error
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset
 
@@ -14,7 +14,7 @@ class DummyObject(object):
 class TestScoutRulesProcessingEngine:
 
     def setup(self):
-        set_config_debug_level(True)
+        set_logger_configuration(is_debug=True)
         self.rule_counters = {'found': 0, 'tested': 0, 'verified': 0}
         self.test_dir = os.path.dirname(os.path.realpath(__file__))
 
