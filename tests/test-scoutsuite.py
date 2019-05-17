@@ -3,14 +3,14 @@ import mock
 
 from nose.plugins.attrib import attr
 from ScoutSuite.__main__ import run_from_cli
-from ScoutSuite.core.console import set_config_debug_level
+from ScoutSuite.core.console import set_logger_configuration
 
 
 class TestScoutSuiteClass:
 
     @classmethod
     def setUpClass(cls):
-        set_config_debug_level(True)
+        set_logger_configuration(is_debug=True)
         cls.has_run_scout_suite = False
 
     @staticmethod

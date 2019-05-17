@@ -32,4 +32,7 @@ a.nav-link:hover {
     transition: font-size 0.4s ease;
 }
 
+.finding.btn::before {
+    color: black !important;
+}
 
