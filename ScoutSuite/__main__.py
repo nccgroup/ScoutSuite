@@ -2,6 +2,7 @@ import asyncio
 import copy
 import os
 import webbrowser
+import inspect
 
 from concurrent.futures import ThreadPoolExecutor
 
@@ -228,8 +229,13 @@ async def _run(provider,
     else:
         exceptions = {}
 
+    # Build dict with function arguments
+    frame = inspect.currentframe()
+    function_args, _, _, function_values = inspect.getargvalues(frame)
+    function_arguments_dict = dict([(i, function_values[i]) for i in function_args if function_values[i]])
+
     # Finalize
-    cloud_provider.postprocessing(report.current_time, finding_rules)
+    cloud_provider.postprocessing(report.current_time, finding_rules, function_arguments_dict)
 
     # Save config and create HTML report
     html_report_path = report.save(
