@@ -20,7 +20,7 @@
           "Bucket with 'allUsers' permissions"
         ],
         "enabled": true,
-        "level": "warning"
+        "level": "danger"
       },
       {
         "args": [
@@ -28,7 +28,7 @@
           "Bucket with 'allAuthenticatedUsers' permissions"
         ],
         "enabled": true,
-        "level": "warning"
+        "level": "danger"
       }
     ],
     "cloudsql-instance-backups-disabled.json": [
