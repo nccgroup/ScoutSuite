@@ -11,6 +11,28 @@
       {
         "args": [
           "allUsers",
+        ],
+        "enabled": true,
+        "level": "danger"
+      },
+      {
+        "args": [
+          "allAuthenticatedUsers",
+        ],
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "cloudstorage-bucket-no-logging.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "cloudstorage-bucket-member.json": [
+      {
+        "args": [
+          "allUsers",
           "Bucket with 'allUsers' permissions"
         ],
         "enabled": true,
