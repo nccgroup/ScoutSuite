@@ -1,5 +1,5 @@
 {
-    "description": "Automatic backups disabled",
+    "description": "Instance with automatic backups disabled",
     "path": "cloudsql.projects.id.instances.id",
     "dashboard_name": "Instances",
     "conditions": [ "and",
