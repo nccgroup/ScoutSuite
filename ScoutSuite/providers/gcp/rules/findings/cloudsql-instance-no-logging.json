@@ -1,5 +1,5 @@
 {
-  "description": "Binary logging disabled",
+  "description": "Instance with binary logging disabled",
   "path": "cloudsql.projects.id.instances.id",
   "dashboard_name": "Instances",
   "conditions": [ "or",
