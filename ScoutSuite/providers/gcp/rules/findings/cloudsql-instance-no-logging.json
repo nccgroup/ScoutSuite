@@ -1,6 +1,7 @@
 {
   "description": "Instance with binary logging disabled",
   "path": "cloudsql.projects.id.instances.id",
+  "rationale": "The benefits of enabling binary logs (replication, scalability, auditability, point-in-time data recovery, etc.) can improve the security posture of the Cloud SQL instance.",
   "dashboard_name": "Instances",
   "conditions": [ "or",
     [ "cloudsql.projects.id.instances.id.log_enabled", "false", "" ],
