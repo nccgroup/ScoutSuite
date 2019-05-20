@@ -1,5 +1,5 @@
 {
-    "about": "This ruleset consists of numerous rules that are considered standard by the project's maintainers in an effort to avoid false-positive warnings. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of AWS-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configured, and some of them being applicable to a limited number of users. Consider using the RulesetGenerator tool to make the most of Scout.",
+    "about": "This ruleset consists of numerous rules that are considered standard by NCC Group. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of provider-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configured, and some of them being applicable to a limited number of users.",
     "rules": {
         "cloudformation-stack-with-role.json": [
             {
@@ -8,6 +8,12 @@
             }
         ],
         "cloudtrail-duplicated-global-services-logging.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudtrail-no-data-logging.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -81,7 +87,7 @@
                 "args": [
                     "t2.micro"
                 ],
-                "enabled": false,
+                "enabled": true,
                 "level": "warning"
             }
         ],
@@ -91,14 +97,20 @@
                     "beefy",
                     "g3.4xlarge,g3.8xlarge,g3.16xlarge"
                 ],
-                "enabled": false,
+                "enabled": true,
                 "level": "warning"
             }
         ],
         "ec2-instance-with-public-ip.json": [
             {
-                "enabled": false,
+                "enabled": true,
                 "level": "warning"
+            }
+        ],
+        "ec2-instance-with-user-data-secrets.json": [
+            {
+                "enabled": true,
+                "level": "danger"
             }
         ],
         "ec2-security-group-opens-all-ports-to-all.json": [
@@ -121,7 +133,7 @@
         ],
         "ec2-security-group-opens-icmp-to-all.json": [
             {
-                "enabled": false,
+                "enabled": true,
                 "level": "warning"
             }
         ],
@@ -199,13 +211,21 @@
                 "versions": {
                     "in_use": {
                         "conditions": [
-                            [ "_INCLUDE_(conditions/ec2-security-group-in-use.json)", "", "" ]
+                            [
+                                "_INCLUDE_(conditions/ec2-security-group-in-use.json)",
+                                "",
+                                ""
+                            ]
                         ],
                         "level": "danger"
                     },
                     "not_used": {
                         "conditions": [
-                            [ "_INCLUDE_(conditions/ec2-security-group-not-used.json)", "", "" ]
+                            [
+                                "_INCLUDE_(conditions/ec2-security-group-not-used.json)",
+                                "",
+                                ""
+                            ]
                         ],
                         "level": "warning"
                     }
@@ -340,7 +360,7 @@
         ],
         "iam-assume-role-no-mfa.json": [
             {
-                "enabled": false,
+                "enabled": true,
                 "level": "danger"
             }
         ],
@@ -357,6 +377,12 @@
             }
         ],
         "iam-group-with-inline-policies.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-group-with-no-users.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -488,18 +514,24 @@
                 "level": "danger"
             }
         ],
+        "iam-managed-policy-no-attachments.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "iam-password-policy-expiration-threshold.json": [
             {
                 "args": [
                     "90"
                 ],
-                "enabled": false,
+                "enabled": true,
                 "level": "danger"
             }
         ],
         "iam-password-policy-lowercase-required.json": [
             {
-                "enabled": false,
+                "enabled": true,
                 "level": "danger"
             }
         ],
@@ -520,25 +552,25 @@
         ],
         "iam-password-policy-no-lowercase-required.json": [
             {
-                "enabled": false,
+                "enabled": true,
                 "level": "danger"
             }
         ],
         "iam-password-policy-no-number-required.json": [
             {
-                "enabled": false,
+                "enabled": true,
                 "level": "danger"
             }
         ],
         "iam-password-policy-no-symbol-required.json": [
             {
-                "enabled": false,
+                "enabled": true,
                 "level": "danger"
             }
         ],
         "iam-password-policy-no-uppercase-required.json": [
             {
-                "enabled": false,
+                "enabled": true,
                 "level": "danger"
             }
         ],
@@ -631,7 +663,7 @@
         ],
         "iam-user-with-password-and-key.json": [
             {
-                "enabled": false,
+                "enabled": true,
                 "level": "warning"
             }
         ],
@@ -683,7 +715,7 @@
         ],
         "rds-postgres-instance-with-invalid-certificate.json": [
             {
-                "enabled": false,
+                "enabled": true,
                 "level": "warning"
             }
         ],
@@ -751,6 +783,18 @@
             {
                 "enabled": true,
                 "level": "danger"
+            }
+        ],
+        "s3-bucket-allowing-cleartext.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "s3-bucket-no-default-encryption.json": [
+            {
+                "enabled": true,
+                "level": "warning"
             }
         ],
         "s3-bucket-no-logging.json": [
@@ -1086,7 +1130,7 @@
                     "source"
                 ],
                 "enabled": true,
-                "level": "danger"
+                "level": "warning"
             },
             {
                 "args": [
@@ -1094,13 +1138,13 @@
                     "destination"
                 ],
                 "enabled": true,
-                "level": "danger"
+                "level": "warning"
             }
         ],
         "vpc-subnet-with-default-acls.json": [
             {
-                "enabled": false,
-                "level": "danger"
+                "enabled": true,
+                "level": "warning"
             }
         ],
         "vpc-subnet-without-flow-log.json": [

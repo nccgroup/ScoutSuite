@@ -16,16 +16,14 @@
     "cloudstorage-bucket-member.json": [
       {
         "args": [
-          "allUsers",
-          "Bucket with 'allUsers' permissions"
+          "allUsers"
         ],
         "enabled": true,
         "level": "danger"
       },
       {
         "args": [
-          "allAuthenticatedUsers",
-          "Bucket with 'allAuthenticatedUsers' permissions"
+          "allAuthenticatedUsers"
         ],
         "enabled": true,
         "level": "danger"
