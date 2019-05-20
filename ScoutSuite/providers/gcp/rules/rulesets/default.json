@@ -29,6 +29,12 @@
         "level": "danger"
       }
     ],
+        "cloudsql-allows-root-login-from-any-host.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "cloudsql-instance-backups-disabled.json": [
       {
         "enabled": true,
@@ -51,6 +57,12 @@
       {
         "enabled": true,
         "level": "warning"
+      }
+    ],
+    "cloudsql-instance-is-open-to-the-world.json": [
+      {
+        "enabled": true,
+        "level": "danger"
       }
     ],
     "stackdriverlogging-no-export-sinks.json": [

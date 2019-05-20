@@ -46,6 +46,24 @@
         "enabled": true,
         "level": "danger"
       }
+    ],
+    "cloudsql-instance-ssl-not-required.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "cloudsql-allows-root-login-from-any-host.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "cloudsql-instance-ssl-not-required.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }

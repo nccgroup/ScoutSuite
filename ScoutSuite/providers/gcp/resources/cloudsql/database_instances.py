@@ -28,6 +28,7 @@ class DatabaseInstances(GCPCompositeResources):
 
     def _parse_instance(self, raw_instance):
         instance_dict = {}
+
         instance_dict['id'] = get_non_provider_id(raw_instance['name'])
         instance_dict['name'] = raw_instance['name']
         instance_dict['project_id'] = raw_instance['project']
@@ -36,6 +37,11 @@ class DatabaseInstances(GCPCompositeResources):
         instance_dict['log_enabled'] = self._is_log_enabled(raw_instance)
         instance_dict['ssl_required'] = self._is_ssl_required(raw_instance)
         instance_dict['authorized_networks'] = raw_instance['settings']['ipConfiguration']['authorizedNetworks']
+
+        # check if is or has a failover replica
+        instance_dict['has_failover_replica'] = raw_instance.get('failoverReplica', []) != []
+        instance_dict['is_failover_replica'] = raw_instance.get('masterInstanceName', '') != ''
+
         return instance_dict['id'], instance_dict
 
     def _is_log_enabled(self, raw_instance):
