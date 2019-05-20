@@ -1,6 +1,7 @@
 {
   "description": "Instance with no backups",
   "dashboard_name": "Instances",
+  "rationale": "Weekly or monthly backups should be created of all databases holding sensitive information.",
   "path": "cloudsql.projects.id.instances.id",
   "conditions": [ "and",
     [ "cloudsql.projects.id.instances.id.backups", "empty", "" ]
