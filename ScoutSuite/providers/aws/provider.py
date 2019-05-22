@@ -174,7 +174,7 @@ class AWSProvider(BaseProvider):
             target = current_path[:(current_path.index(sg_id) + 1)]
             ec2_grant['GroupName'] = get_value_at(
                 self.services['ec2'], target, 'name')
-        elif ec2_grant['UserId'] == callback_args['AWSAccountId']:
+        elif 'UserId' in ec2_grant and ec2_grant['UserId'] == callback_args['AWSAccountId']:
             if 'VpcId' in ec2_grant:
                 target = current_path[:(current_path.index('vpcs') + 1)]
                 target.append(ec2_grant['VpcId'])
@@ -186,6 +186,8 @@ class AWSProvider(BaseProvider):
                 target.append(sg_id)
             ec2_grant['GroupName'] = get_value_at(
                 self.services['ec2'], target, 'name')
+        else:
+            print_exception('Failed to handle EC2 grant: %s' % ec2_grant)
 
     @staticmethod
     def _process_cloudtrail_trails(cloudtrail_config):
