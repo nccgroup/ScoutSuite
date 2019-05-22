@@ -3,6 +3,7 @@ from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
 from ScoutSuite.providers.gcp.resources.cloudsql.backups import Backups
 from ScoutSuite.providers.gcp.resources.cloudsql.users import Users
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class DatabaseInstances(GCPCompositeResources):
@@ -41,6 +42,17 @@ class DatabaseInstances(GCPCompositeResources):
         # check if is or has a failover replica
         instance_dict['has_failover_replica'] = raw_instance.get('failoverReplica', []) != []
         instance_dict['is_failover_replica'] = raw_instance.get('masterInstanceName', '') != ''
+
+        # network interfaces
+        instance_dict['public_ip'] = None
+        instance_dict['private_ip'] = None
+        for address in raw_instance.get('ipAddresses', []):
+            if address['type'] == 'PRIMARY':
+                instance_dict['public_ip'] = address['ipAddress']
+            elif address['type'] == 'PRIVATE':
+                instance_dict['private_ip'] = address['ipAddress']
+            else:
+                print_exception('Unknown Cloud SQL instance IP address type: {}'.format(address['type']))
 
         return instance_dict['id'], instance_dict
 

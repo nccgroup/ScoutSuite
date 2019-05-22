@@ -12,6 +12,8 @@
         <div class="list-group-item-text item-margin">Last Backup: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.last_backup_timestamp">{{last_backup_timestamp}}</span></div>
         <div class="list-group-item-text item-margin">Logs: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.log_enabled">{{convert_bool_to_enabled log_enabled}}</span></div>
         <div class="list-group-item-text item-margin">SSL Required: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.ssl_required">{{convert_bool_to_enabled ssl_required}}</span></div>
+        <div class="list-group-item-text item-margin">Public IP Address: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.public_ip">{{public_ip}}</span></div>
+        <div class="list-group-item-text item-margin">Private IP Address: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.private_ip">{{private_ip}}</span></div>
         <div class="list-group-item-text item-margin">Authorized Networks:</div>
         <ul>
             {{#each authorized_networks }}
