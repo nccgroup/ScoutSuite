@@ -62,12 +62,12 @@ class BaseProvider(object):
         # Preprocessing dictated by metadata
         self._process_metadata_callbacks()
 
-    def postprocessing(self, current_time, ruleset):
+    def postprocessing(self, current_time, ruleset, run_parameters):
         """
         Sets post-run information.
         """
         self._update_metadata()
-        self._update_last_run(current_time, ruleset)
+        self._update_last_run(current_time, ruleset, run_parameters)
 
     async def fetch(self, regions=None, skipped_regions=None, partition_name=None):
         """
@@ -115,10 +115,17 @@ class BaseProvider(object):
 
         return [s for s in supported_services if (services == [] or s in services) and s not in skipped_services]
 
-    def _update_last_run(self, current_time, ruleset):
-        last_run = {'time': current_time.strftime("%Y-%m-%d %H:%M:%S%z"), 'cmd': ' '.join(sys.argv),
-                    'version': scout_version, 'ruleset_name': ruleset.name, 'ruleset_about': ruleset.about,
-                    'summary': {}}
+    def _update_last_run(self, current_time, ruleset, run_parameters):
+
+        last_run = {
+            'time': current_time.strftime("%Y-%m-%d %H:%M:%S%z"),
+            'run_parameters': run_parameters,
+            'version': scout_version,
+            'ruleset_name': ruleset.name,
+            'ruleset_about': ruleset.about,
+            'summary': {}
+        }
+
         for service in self.services:
             last_run['summary'][service] = {'checked_items': 0,
                                             'flagged_items': 0,
