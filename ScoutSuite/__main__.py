@@ -233,8 +233,13 @@ async def _run(provider,
     else:
         exceptions = {}
 
+    run_parameters = {
+        'services': services,
+        'skipped_services': skipped_services,
+        'regions': regions,
+    }
     # Finalize
-    cloud_provider.postprocessing(report.current_time, finding_rules)
+    cloud_provider.postprocessing(report.current_time, finding_rules, run_parameters)
 
     # Save config and create HTML report
     html_report_path = report.save(
