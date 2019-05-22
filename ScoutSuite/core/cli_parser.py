@@ -49,11 +49,6 @@ class ScoutSuiteArgumentParser:
                             default=[],
                             nargs='+',
                             help='Name of regions to run the tool in, defaults to all')
-        parser.add_argument('--vpc',
-                            dest='vpc',
-                            default=[],
-                            nargs='+',
-                            help='Name of VPC to run the tool in, defaults to all')
         parser.add_argument('--ip-ranges',
                             dest='ip_ranges',
                             default=[],
@@ -185,11 +180,22 @@ class ScoutSuiteArgumentParser:
                             default=False,
                             action='store_true',
                             help='Print the stack trace when exception occurs')
-        parser.add_argument('--resume',
-                            dest='resume',
+        parser.add_argument('--quiet',
+                            dest='quiet',
                             default=False,
                             action='store_true',
-                            help='Complete a partial (throttled) run')
+                            help='Disables CLI output')
+        parser.add_argument('--logfile',
+                            dest='log_file',
+                            default=None,
+                            action='store',
+                            nargs='?',
+                            help='Additional output to the specified file')
+        # parser.add_argument('--resume',
+        #                     dest='resume',
+        #                     default=False,
+        #                     action='store_true',
+        #                     help='Complete a partial (throttled) run')
         parser.add_argument('--update',
                             dest='update',
                             default=False,

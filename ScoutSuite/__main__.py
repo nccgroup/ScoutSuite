@@ -6,7 +6,7 @@ import webbrowser
 from concurrent.futures import ThreadPoolExecutor
 
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
-from ScoutSuite.core.console import set_config_debug_level, print_info, print_exception
+from ScoutSuite.core.console import set_logger_configuration, print_info, print_exception
 from ScoutSuite.core.exceptions import RuleExceptions
 from ScoutSuite.core.processingengine import ProcessingEngine
 from ScoutSuite.core.ruleset import Ruleset
@@ -24,59 +24,64 @@ def run_from_cli():
     # Get the dictionary to get None instead of a crash
     args = args.__dict__
 
-    run(args.get('provider'),
-        args.get('profile'),
-        args.get('user_account'), args.get('service_account'),
-        args.get('cli'), args.get('msi'), args.get('service_principal'), args.get('file_auth'), args.get('tenant_id'),
-        args.get('subscription_id'),
-        args.get('client_id'), args.get('client_secret'),
-        args.get('username'), args.get('password'),
-        args.get('project_id'), args.get('folder_id'), args.get('organization_id'), args.get('all_projects'),
-        args.get('report_name'), args.get('report_dir'),
-        args.get('timestamp'),
-        args.get('services'), args.get('skipped_services'),
-        args.get('result_format'),
-        args.get('database_name'),
-        args.get('host_ip'),
-        args.get('host_port'),
-        args.get('max_workers'),
-        args.get('regions'),
-        args.get('fetch_local'), args.get('update'),
-        args.get('ip_ranges'), args.get('ip_ranges_name_key'),
-        args.get('ruleset'), args.get('exceptions'),
-        args.get('force_write'),
-        args.get('debug'),
-        args.get('no_browser'))
+    return run(args.get('provider'),
+               args.get('profile'),
+               args.get('user_account'), args.get('service_account'),
+               args.get('cli'), args.get('msi'), args.get('service_principal'), args.get('file_auth'), args.get('tenant_id'),
+               args.get('subscription_id'),
+               args.get('client_id'), args.get('client_secret'),
+               args.get('username'), args.get('password'),
+               args.get('project_id'), args.get('folder_id'), args.get('organization_id'), args.get('all_projects'),
+               args.get('report_name'), args.get('report_dir'),
+               args.get('timestamp'),
+               args.get('services'), args.get('skipped_services'),
+               args.get('result_format'),
+               args.get('database_name'),
+               args.get('host_ip'),
+               args.get('host_port'),
+               args.get('max_workers'),
+               args.get('regions'),
+               args.get('fetch_local'), args.get('update'),
+               args.get('ip_ranges'), args.get('ip_ranges_name_key'),
+               args.get('ruleset'), args.get('exceptions'),
+               args.get('force_write'),
+               args.get('debug'),
+               args.get('quiet'),
+               args.get('log_file'),
+               args.get('no_browser'))
 
 
 def run(provider,
-        profile,
-        user_account, service_account,
-        cli, msi, service_principal, file_auth, tenant_id, subscription_id,
-        client_id, client_secret,
-        username, password,
-        project_id, folder_id, organization_id, all_projects,
-        report_name, report_dir,
-        timestamp,
-        services, skipped_services,
-        result_format,
-        database_name, host_ip, host_port,
-        max_workers,
-        regions,
-        fetch_local, update,
-        ip_ranges, ip_ranges_name_key,
-        ruleset, exceptions,
-        force_write,
-        debug,
-        no_browser):
+        profile=None,
+        user_account=False, service_account=None,
+        cli=False, msi=False, service_principal=False, file_auth=None, tenant_id=None, subscription_id=None,
+        client_id=None, client_secret=None,
+        username=None, password=None,
+        project_id=None, folder_id=None, organization_id=None, all_projects=False,
+        report_name=None, report_dir=None,
+        timestamp=False,
+        services=[], skipped_services=[],
+        result_format='json',
+        database_name=None, host_ip='127.0.0.1', host_port=8000,
+        max_workers=10,
+        regions=[],
+        fetch_local=False, update=False,
+        ip_ranges=[], ip_ranges_name_key='name',
+        ruleset='default.json', exceptions=None,
+        force_write=False,
+        debug=False,
+        quiet=False,
+        log_file=None,
+        no_browser=False):
     """
     Run a scout job in an async event loop.
     """
 
     loop = asyncio.get_event_loop()
     loop.set_default_executor(ThreadPoolExecutor(max_workers=max_workers))
-    loop.run_until_complete(_run(**locals()))  # pass through all the parameters
+    result = loop.run_until_complete(_run(**locals()))  # pass through all the parameters
     loop.close()
+    return result
 
 
 async def _run(provider,
@@ -97,6 +102,8 @@ async def _run(provider,
                ruleset, exceptions,
                force_write,
                debug,
+               quiet,
+               log_file,
                no_browser,
                **kwargs):
     """
@@ -104,7 +111,7 @@ async def _run(provider,
     """
 
     # Configure the debug level
-    set_config_debug_level(debug)
+    set_logger_configuration(debug, quiet, log_file)
 
     print_info('Launching Scout')
 
@@ -221,8 +228,13 @@ async def _run(provider,
     else:
         exceptions = {}
 
+    run_parameters = {
+        'services': services,
+        'skipped_services': skipped_services,
+        'regions': regions,
+    }
     # Finalize
-    cloud_provider.postprocessing(report.current_time, finding_rules)
+    cloud_provider.postprocessing(report.current_time, finding_rules, run_parameters)
 
     # Save config and create HTML report
     html_report_path = report.save(

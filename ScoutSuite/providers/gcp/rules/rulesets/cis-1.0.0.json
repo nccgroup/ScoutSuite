@@ -1,0 +1,29 @@
+{
+  "about": "This ruleset attempts to cover as many recommendations from the CIS Google Cloud Platform Foundation v1.0.0.",
+  "rules": {
+    "cloudstorage-bucket-no-logging.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "cloudstorage-bucket-member.json": [
+      {
+        "args": [
+          "allUsers",
+          "Bucket with 'allUsers' permissions"
+        ],
+        "enabled": true,
+        "level": "danger"
+      },
+      {
+        "args": [
+          "allAuthenticatedUsers",
+          "Bucket with 'allAuthenticatedUsers' permissions"
+        ],
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+  }
+}

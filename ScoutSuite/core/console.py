@@ -15,13 +15,26 @@ from ScoutSuite import ERRORS_LIST
 verbose_exceptions = False
 logger = logging.getLogger('scout')
 
-def set_config_debug_level(is_debug):
+def set_logger_configuration(is_debug=False, quiet=False, output_file_path=None):
     """
     Configure whether full stacktraces should be dumped in the console output
     """
     global verbose_exceptions
     verbose_exceptions = is_debug
-    coloredlogs.install(level='DEBUG' if is_debug else 'INFO', logger=logger)
+    # if "quiet" is set, don't output anything
+    if not quiet:
+        coloredlogs.install(level='DEBUG' if is_debug else 'INFO', logger=logger)
+
+    if output_file_path:
+        # create file handler which logs messages
+        fh = logging.FileHandler(output_file_path, 'w+')
+        fh.setLevel(logging.DEBUG if is_debug else logging.INFO)
+        # create formatter and add it to the handlers
+        formatter = logging.Formatter(fmt='%(asctime)s %(hostname)s %(name)s[%(process)d] %(levelname)s %(message)s',
+                                      datefmt='%Y-%m-%d %H:%M:%S')
+        fh.setFormatter(formatter)
+        # add the handlers to the logger
+        logger.addHandler(fh)
 
 
 ########################################
