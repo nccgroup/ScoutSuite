@@ -183,6 +183,9 @@ class AWSProvider(BaseProvider):
                         current_path.index('security_groups') + 1)]
                 target.append(sg_id)
             ec2_grant['GroupName'] = get_value_at(self.services['ec2'], target, 'name')
+        elif 'PeeringStatus' in ec2_grant:
+            # Can't infer the name of the SG in the peered account
+            pass
         else:
             print_exception('Failed to handle EC2 grant: %s' % ec2_grant)
 
