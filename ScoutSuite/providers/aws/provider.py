@@ -112,8 +112,7 @@ class AWSProvider(BaseProvider):
         Github issue #24: display the security group names in the list of grants (added here to have ligher JS code)
         """
         self._go_to_and_do(self.services['ec2'],
-                           ['regions', 'vpcs', 'security_groups', 'rules',
-                            'protocols', 'ports', 'security_groups'],
+                           ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports', 'security_groups'],
                            [],
                            self.add_security_group_name_to_ec2_grants_callback,
                            {'AWSAccountId': self.account_id})
@@ -172,8 +171,7 @@ class AWSProvider(BaseProvider):
         sg_id = ec2_grant['GroupId']
         if sg_id in current_path:
             target = current_path[:(current_path.index(sg_id) + 1)]
-            ec2_grant['GroupName'] = get_value_at(
-                self.services['ec2'], target, 'name')
+            ec2_grant['GroupName'] = get_value_at(self.services['ec2'], target, 'name')
         elif 'UserId' in ec2_grant and ec2_grant['UserId'] == callback_args['AWSAccountId']:
             if 'VpcId' in ec2_grant:
                 target = current_path[:(current_path.index('vpcs') + 1)]
@@ -184,8 +182,7 @@ class AWSProvider(BaseProvider):
                 target = current_path[:(
                         current_path.index('security_groups') + 1)]
                 target.append(sg_id)
-            ec2_grant['GroupName'] = get_value_at(
-                self.services['ec2'], target, 'name')
+            ec2_grant['GroupName'] = get_value_at(self.services['ec2'], target, 'name')
         else:
             print_exception('Failed to handle EC2 grant: %s' % ec2_grant)
 
@@ -547,12 +544,10 @@ class AWSProvider(BaseProvider):
                     sg['used_by'][service]['resource_type'][resource_type].append(
                         resource_id)
         except Exception as e:
-            region = current_path[3]
-            vpc_id = current_path[5]
-            if vpc_id == ec2_classic and resource_type == 'elbs':
+            if resource_type == 'elbs' and current_path[5] == ec2_classic:
                 pass
             else:
-                print_exception('Failed to parse %s in %s (%s): %s' % (resource_type, vpc_id, region, e))
+                print_exception('Failed to parse %s: %s' % (resource_type, e))
 
     def _set_emr_vpc_ids(self):
         clear_list = []
