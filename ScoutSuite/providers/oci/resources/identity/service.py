@@ -14,5 +14,5 @@ class Identity(OracleCompositeResources):
         self.facade = facade
         self.service = 'identity'
 
-    async def fetch_all(self, credentials, **kwargs):
+    async def fetch_all(self, credentials):
         await self._fetch_children(resource_parent=self, facade=self.facade)

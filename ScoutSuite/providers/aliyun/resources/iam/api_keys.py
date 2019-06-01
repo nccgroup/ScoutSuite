@@ -8,7 +8,7 @@ class ApiKeys(AliyunResources):
         self.facade = facade
         self.user = user
 
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         for raw_user_api_key in await self.facade.iam.get_user_api_keys(username=self.user['name']):
             id, api_key = self._parse_api_key(raw_user_api_key)
             self[id] = api_key

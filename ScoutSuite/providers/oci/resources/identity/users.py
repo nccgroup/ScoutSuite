@@ -13,7 +13,7 @@ class Users(OracleCompositeResources):
     def __init__(self, facade: OracleFacade):
         self.facade = facade
 
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         for raw_user in await self.facade.identity.get_users():
             id, user = self._parse_user(raw_user)
             self[id] = user

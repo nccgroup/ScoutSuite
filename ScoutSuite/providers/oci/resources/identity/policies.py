@@ -7,7 +7,7 @@ class Policies(OracleResources):
     def __init__(self, facade: OracleFacade):
         self.facade = facade
 
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         for raw_policy in await self.facade.identity.get_policies():
             id, policy = self._parse_policy(raw_policy)
             self[id] = policy
