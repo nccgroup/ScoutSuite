@@ -11,7 +11,7 @@ class OracleResources(Resources, metaclass=abc.ABCMeta):
     pass
 
 
-class OracleCompositeResources(OracleResources, metaclass=abc.ABCMeta):
+class OracleCompositeResources(OracleResources, CompositeResources, metaclass=abc.ABCMeta):
     """This class represents a collection of composite Resources (resources that include nested resources referred as
     their children). Classes extending OracleCompositeResources have to define a '_children' attribute which consists of
     a list of tuples describing the children. The tuples are expected to respect the following format:

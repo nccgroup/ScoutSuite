@@ -12,6 +12,6 @@ class IAM(AliyunCompositeResources):
         self.facade = facade
         self.service = 'iam'
 
-    async def fetch_all(self, credentials):
+    async def fetch_all(self):
 
-        await self._fetch_children(resource_parent=self, facade=self.facade)
+        await self._fetch_children(resource_parent=self)
