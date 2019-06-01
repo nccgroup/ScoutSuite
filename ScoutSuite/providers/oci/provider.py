@@ -1,6 +1,6 @@
 import os
 
-from ScoutSuite.providers.oci.configs.services import OracleServicesConfig
+from ScoutSuite.providers.oci.services import OracleServicesConfig
 from ScoutSuite.providers.base.provider import BaseProvider
 
 

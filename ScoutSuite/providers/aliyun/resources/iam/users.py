@@ -1,4 +1,4 @@
-from ScoutSuite.providers.aliyun.resources.resources import AliyunCompositeResources
+from ScoutSuite.providers.aliyun.resources.base import AliyunCompositeResources
 from ScoutSuite.providers.aliyun.facade.facade import AliyunFacade
 from ScoutSuite.providers.aliyun.resources.utils import get_non_provider_id
 

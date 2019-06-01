@@ -1,9 +1,8 @@
-from ScoutSuite.providers.base.configs.resources import Resources
+from ScoutSuite.providers.aliyun.resources.base import AliyunResources
 from ScoutSuite.providers.aliyun.facade.facade import AliyunFacade
-# from ScoutSuite.providers.aliyun.resources.utils import get_non_provider_id
 
 
-class ApiKeys(Resources):
+class ApiKeys(AliyunResources):
 
     def __init__(self, user, facade: AliyunFacade):
         self.facade = facade

@@ -1,10 +1,9 @@
-from ScoutSuite.providers.base.configs.resources import Resources
+from ScoutSuite.providers.oci.resources.base import OracleResources
 from ScoutSuite.providers.oci.facade.facade import OracleFacade
 from ScoutSuite.providers.oci.resources.utils import get_non_provider_id
 
 
-class Policies(Resources):
-
+class Policies(OracleResources):
     def __init__(self, facade: OracleFacade):
         self.facade = facade
 

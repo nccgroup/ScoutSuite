@@ -1,6 +1,6 @@
 import os
 
-from ScoutSuite.providers.aliyun.configs.services import AliyunServicesConfig
+from ScoutSuite.providers.aliyun.services import AliyunServicesConfig
 from ScoutSuite.providers.base.provider import BaseProvider
 
 

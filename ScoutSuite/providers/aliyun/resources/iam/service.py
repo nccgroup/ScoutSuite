@@ -1,4 +1,4 @@
-from ScoutSuite.providers.aliyun.resources.resources import AliyunCompositeResources
+from ScoutSuite.providers.aliyun.resources.base import AliyunCompositeResources
 from ScoutSuite.providers.aliyun.resources.iam.users import Users
 
 
