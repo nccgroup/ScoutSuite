@@ -1,6 +1,6 @@
 from ScoutSuite.providers.oci.authentication_strategy import OracleCredentials
 from ScoutSuite.providers.oci.facade.facade import OracleFacade
-from ScoutSuite.providers.oci.resources.identity.service import Identity
+from ScoutSuite.providers.oci.resources.identity.base import Identity
 from ScoutSuite.providers.base.services import BaseServicesConfig
 
 
