@@ -5,4 +5,3 @@ from ScoutSuite.providers.aliyun.authentication_strategy import AliyunCredential
 class AliyunFacade():
     def __init__(self, credentials: AliyunCredentials):
         self.iam = IAMFacade(credentials)
-

@@ -1,6 +1,6 @@
 from ScoutSuite.providers.aliyun.facade.facade import AliyunFacade
 from ScoutSuite.providers.base.services import BaseServicesConfig
-from ScoutSuite.providers.aliyun.resources.iam.service import IAM
+from ScoutSuite.providers.aliyun.resources.iam.base import IAM
 
 
 class AliyunServicesConfig(BaseServicesConfig):
