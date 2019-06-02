@@ -43,4 +43,5 @@ oci>=2.2.4
 # Alibaba
 aliyun-python-sdk-core>=2.13.4
 aliyun-python-sdk-ram>=3.0.1
+aliyun-python-sdk-ocs>=0.0.4
 aliyun-python-sdk-sts>=3.0.1
