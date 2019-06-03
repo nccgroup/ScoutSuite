@@ -11,7 +11,7 @@ class AliyunServicesConfig(BaseServicesConfig):
         facade = AliyunFacade(credentials)
 
         self.iam = IAM(facade)
-        self.actiontrail = Actiontrail(facade)
+        # self.actiontrail = Actiontrail(facade)
 
     def _is_provider(self, provider_name):
         return provider_name == 'aliyun'

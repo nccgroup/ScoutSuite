@@ -10,7 +10,7 @@ class Users(AliyunCompositeResources):
 
     async def fetch_all(self):
         for raw_user in await self.facade.iam.get_users():
-            id, user = self._parse_user(raw_user)
+            id, user = await self._parse_user(raw_user)
             self[id] = user
 
         await self._fetch_children_of_all_resources(
@@ -19,9 +19,25 @@ class Users(AliyunCompositeResources):
                     for user_id, user in self.items()}
         )
 
-    def _parse_user(self, raw_user):
+    async def _parse_user(self, raw_user):
         user = {}
         user['id'] = raw_user['UserId']
         user['name'] = raw_user['UserName']
+        user['display_name'] = raw_user['DisplayName']
+        user['commments'] = raw_user['Comments']
+        user['creation_datetime'] = raw_user['CreateDate']
+        user['update_datetime'] = raw_user['CreateDate']
+        user['creation_date'] = raw_user['CreateDate']
+
+        # get additional details for the user
+        user_details = await self.facade.iam.get_user_details(user['name'])
+        user['email'] = user_details.get('Email')
+        user['mobile_phone'] = user_details.get('MobilePhone')
+        user['last_login_datetime'] = user_details.get('LastLoginDate')
+
+        # get the MFA status for the user
+        mfa_enabled, mfa_serial_number = await self.facade.iam.get_user_mfa_status(user['name'])
+        user['mfa_status'] = mfa_enabled
+        user['mfa_serial_number'] = mfa_serial_number
 
         return user['id'], user

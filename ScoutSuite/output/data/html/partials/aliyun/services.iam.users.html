@@ -1,37 +1,45 @@
 
 <!-- iam user -->
 <script id="services.iam.users.partial" type="text/x-handlebars-template">
-  <div id="resource-name" class="list-group-item active">
-    <h4 class="list-group-item-heading">{{name}}</h4>
-  </div>
-  <div class="list-group-item">
-    <h4 class="list-group-item-heading">Information</h4>
-    <div class="list-group-item-text item-margin">ID: <span id="iam.users.{{@key}}.id"><samp>{{id}}</samp></span></div>
-  </div>
-  {{#if api_keys_count }}
-  <div class="list-group-item">
-    <h5 class="list-group-item-heading" id="iam.users.{{@key}}.multiple_api_keys">API Keys</h5>
-    <ul>
-      {{#each api_keys}}
-      <li>ID: <code>{{id}}</code></li>
-      <ul>
-        <li>Status: <samp>{{status}}</samp></li>
-      </ul>
-      {{/each}}
-    </ul>
-  </div>
-  {{/if}}
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">ID: <span id="iam.users.{{@key}}.id"><samp>{{id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Display Name: <span id="iam.users.{{@key}}.display_name"><samp>{{display_name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Creation Date: <span id="iam.users.{{@key}}.creation_datetime"><samp>{{creation_date}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Update Date: <span id="iam.users.{{@key}}.update_datetime"><samp>{{update_date}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Last Login Date: <span id="iam.users.{{@key}}.last_login_datetime"><samp>{{last_login_datetime}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Email: <span id="iam.users.{{@key}}.email"><samp>{{email}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Mobile Phone: <span id="iam.users.{{@key}}.mobile_phone"><samp>{{mobile_phone}}</samp></span></div>
+        <div class="list-group-item-text item-margin">MFA Configured: <span id="iam.users.{{@key}}.mfa_status"><samp>{{mfa_status}}</samp></span></div>
+    </div>
+    {{#if api_keys_count }}
+    <div class="list-group-item">
+        <h5 class="list-group-item-heading" id="iam.users.{{@key}}.multiple_api_keys">API Keys</h5>
+        <ul>
+            {{#each api_keys}}
+            <li>ID: <code>{{id}}</code></li>
+            <ul>
+                <li>Status: <samp>{{status}}</samp></li>
+                <li>Last Used: <samp>{{last_usage}}</samp></li>
+            </ul>
+            {{/each}}
+        </ul>
+    </div>
+    {{/if}}
 </script>
 
 <script>
-  Handlebars.registerPartial("services.iam.users", $("#services\\.iam\\.users\\.partial").html());
+    Handlebars.registerPartial("services.iam.users", $("#services\\.iam\\.users\\.partial").html());
 </script>
 
 <!-- Single iam user template -->
 <script id="single_iam_user-template" type="text/x-handlebars-template">
-  {{> modal-template template='services.iam.users'}}
+    {{> modal-template template='services.iam.users'}}
 </script>
 <script>
-  var single_iam_user_template = Handlebars.compile($("#single_iam_user-template").html());
+    var single_iam_user_template = Handlebars.compile($("#single_iam_user-template").html());
 </script>
 
