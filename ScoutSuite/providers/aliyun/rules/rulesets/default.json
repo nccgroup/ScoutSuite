@@ -1,7 +1,7 @@
 {
   "about": "Default ruleset for Alibaba Cloud.",
   "rules": {
-    "iam-user-with-multiple-api-keys.json": [
+    "ram-user-with-multiple-api-keys.json": [
       {
         "enabled": true,
         "level": "warning"

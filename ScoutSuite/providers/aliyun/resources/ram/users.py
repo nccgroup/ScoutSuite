@@ -9,7 +9,7 @@ class Users(AliyunCompositeResources):
     ]
 
     async def fetch_all(self):
-        for raw_user in await self.facade.iam.get_users():
+        for raw_user in await self.facade.ram.get_users():
             id, user = await self._parse_user(raw_user)
             self[id] = user
 
@@ -30,13 +30,13 @@ class Users(AliyunCompositeResources):
         user['creation_date'] = raw_user['CreateDate']
 
         # get additional details for the user
-        user_details = await self.facade.iam.get_user_details(user['name'])
+        user_details = await self.facade.ram.get_user_details(user['name'])
         user['email'] = user_details.get('Email')
         user['mobile_phone'] = user_details.get('MobilePhone')
         user['last_login_datetime'] = user_details.get('LastLoginDate')
 
         # get the MFA status for the user
-        mfa_enabled, mfa_serial_number = await self.facade.iam.get_user_mfa_status(user['name'])
+        mfa_enabled, mfa_serial_number = await self.facade.ram.get_user_mfa_status(user['name'])
         user['mfa_status'] = mfa_enabled
         user['mfa_serial_number'] = mfa_serial_number
 

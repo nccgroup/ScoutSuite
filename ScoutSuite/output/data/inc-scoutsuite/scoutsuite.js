@@ -1201,6 +1201,8 @@ function makeTitle(title) {
         return 'App Service'
     } else if (title === 'loadbalancer') {
         return 'Load Balancer'
+    } else if (title === 'ram') {
+        return 'RAM'
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).split('_').join(' ')
     }

@@ -1,8 +1,8 @@
 from ScoutSuite.providers.aliyun.resources.base import AliyunCompositeResources
-from ScoutSuite.providers.aliyun.resources.iam.users import Users
+from ScoutSuite.providers.aliyun.resources.ram.users import Users
 
 
-class IAM(AliyunCompositeResources):
+class RAM(AliyunCompositeResources):
     _children = [
         (Users, 'users'),
     ]

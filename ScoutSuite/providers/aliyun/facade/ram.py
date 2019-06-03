@@ -5,7 +5,7 @@ from ScoutSuite.core.console import print_exception
 from aliyunsdkram.request.v20150501 import ListUsersRequest, ListAccessKeysRequest, GetUserMFAInfoRequest, GetUserRequest, GetAccessKeyLastUsedRequest
 
 
-class IAMFacade:
+class RAMFacade:
     def __init__(self, credentials: AliyunCredentials):
         self._client = credentials.client
 
