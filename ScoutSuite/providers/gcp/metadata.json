@@ -10,6 +10,14 @@
     },
     "cloudresourcemanager": {
       "resources": {
+        "users": {
+          "cols": 2,
+          "path": "services.cloudresourcemanager.projects.id.users"
+        },
+        "groups": {
+          "cols": 2,
+          "path": "services.cloudresourcemanager.projects.id.groups"
+        },
         "bindings": {
           "cols": 2,
           "path": "services.cloudresourcemanager.projects.id.bindings"
