@@ -152,7 +152,7 @@
         "level": "warning"
       }
     ],
-    "iam-old-service-account-keys.json": [
+    "iam-lack-of-service-account-key-rotation.json": [
       {
         "enabled": true,
         "level": "warning"

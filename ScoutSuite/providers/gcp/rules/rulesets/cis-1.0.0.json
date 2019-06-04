@@ -64,6 +64,12 @@
         "enabled": true,
         "level": "warning"
       }
-    ]
+    ],
+    "iam-lack-of-service-account-key-rotation.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
   }
 }
