@@ -1,8 +1,9 @@
-from collections import Counter
-
 import boto3
-from botocore.session import Session
 
+from collections import Counter
+from botocore.session import Session
+from ScoutSuite.providers.aws.utils import get_aws_account_id
+from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.awslambda import LambdaFacade
 from ScoutSuite.providers.aws.facade.cloudformation import CloudFormation
 from ScoutSuite.providers.aws.facade.cloudtrail import CloudTrailFacade
@@ -12,18 +13,17 @@ from ScoutSuite.providers.aws.facade.directconnect import DirectConnectFacade
 from ScoutSuite.providers.aws.facade.ec2 import EC2Facade
 from ScoutSuite.providers.aws.facade.efs import EFSFacade
 from ScoutSuite.providers.aws.facade.elasticache import ElastiCacheFacade
-from ScoutSuite.providers.aws.facade.elb import ELBFacade
-from ScoutSuite.providers.aws.facade.elbv2 import ELBv2Facade
 from ScoutSuite.providers.aws.facade.emr import EMRFacade
+from ScoutSuite.providers.aws.facade.route53 import Route53Facade
+from ScoutSuite.providers.aws.facade.sqs import SQSFacade
+from ScoutSuite.providers.aws.facade.elbv2 import ELBv2Facade
 from ScoutSuite.providers.aws.facade.iam import IAMFacade
 from ScoutSuite.providers.aws.facade.rds import RDSFacade
 from ScoutSuite.providers.aws.facade.redshift import RedshiftFacade
-from ScoutSuite.providers.aws.facade.route53 import Route53Facade
 from ScoutSuite.providers.aws.facade.s3 import S3Facade
 from ScoutSuite.providers.aws.facade.ses import SESFacade
 from ScoutSuite.providers.aws.facade.sns import SNSFacade
-from ScoutSuite.providers.aws.facade.sqs import SQSFacade
-from ScoutSuite.providers.aws.utils import get_aws_account_id
+from ScoutSuite.providers.aws.facade.elb import ELBFacade
 from ScoutSuite.providers.utils import run_concurrently
 
 try:
@@ -32,12 +32,7 @@ try:
 except ImportError:
     pass
 
-
-class AWSBaseFacade(object):
-    def __init__(self, session: boto3.session.Session = None):
-        self.session = session
-
-
+  
 class AWSFacade(AWSBaseFacade):
     def __init__(self, credentials=None):
         super(AWSFacade, self).__init__()
