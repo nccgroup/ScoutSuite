@@ -19,14 +19,27 @@ class IAMFacade(GCPBaseFacade):
             print_exception('Failed to retrieve service account IAM policy bindings: {}'.format(e))
             return []
 
-    async def get_keys(self, project_id: str, service_account_email: str):
+    async def get_keys(self, project_id: str, service_account_email: str, key_types: list=[]):
         try:
             name = 'projects/{}/serviceAccounts/{}'.format(project_id, service_account_email)
             iam_client = self._get_client()
             response = await run_concurrently(
-                    lambda: iam_client.projects().serviceAccounts().keys().list(name=name).execute()
+                    lambda: iam_client.projects().serviceAccounts().keys().list(name=name,
+                                                                                keyTypes=key_types).execute()
             )
             return response.get('keys', [])
+        except Exception as e:
+            print_exception('Failed to retrieve service account keys: {}'.format(e))
+            return []
+
+    async def get_key(self, key_name: str):
+        try:
+            iam_client = self._get_client()
+            response = await run_concurrently(
+                lambda: iam_client.projects().serviceAccounts().keys().get(name=key_name,
+                                                                           fields='').execute()
+            )
+            return response
         except Exception as e:
             print_exception('Failed to retrieve service account keys: {}'.format(e))
             return []
