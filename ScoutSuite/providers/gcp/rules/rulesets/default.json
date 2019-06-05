@@ -1,6 +1,18 @@
 {
   "about": "This ruleset consists of numerous rules that are considered standard by NCC Group. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of provider-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configured, and some of them being applicable to a limited number of users.",
   "rules": {
+    "cloudresourcemanager-sa-has-admin-privileges.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "cloudresourcemanager-user-has-sa-user-role.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "cloudresourcemanager-gmail-accounts-used.json": [
       {
         "enabled": true,
