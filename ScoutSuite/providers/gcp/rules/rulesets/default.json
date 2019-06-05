@@ -176,6 +176,12 @@
         "level": "warning"
       }
     ],
+    "iam-service-account-with-user-managed-keys.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "iam-service-account-user-member.json": [
       {
         "args": [
