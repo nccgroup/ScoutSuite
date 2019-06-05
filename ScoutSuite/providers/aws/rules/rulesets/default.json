@@ -1122,7 +1122,19 @@
         ],
         "vpc-subnet-with-default-acls.json": [
             {
-                "enabled": true,
+                "args": [
+                    "ingress",
+                    "source"
+                ],
+                "enabled": false,
+                "level": "warning"
+            },
+            {
+                "args": [
+                    "egress",
+                    "destination"
+                ],
+                "enabled": false,
                 "level": "warning"
             }
         ],
