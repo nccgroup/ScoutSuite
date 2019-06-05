@@ -8,6 +8,14 @@
         }
       }
     },
+    "kms": {
+      "resources": {
+        "keyrings": {
+          "cols": 2,
+          "path": "services.kms.projects.id.keyrings"
+        }
+      }
+    },
     "cloudresourcemanager": {
       "resources": {
         "users": {
