@@ -1,5 +1,5 @@
 from ScoutSuite.core.console import print_exception
-from ScoutSuite.providers.gcp.facade.base import GCPBaseFacade
+from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
 from ScoutSuite.providers.utils import run_concurrently
 
 class CloudResourceManagerFacade(GCPBaseFacade):

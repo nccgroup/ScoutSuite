@@ -1,5 +1,5 @@
 from ScoutSuite.providers.base.services import BaseServicesConfig
-from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
+from ScoutSuite.providers.gcp.facade.base import GCPFacade
 from ScoutSuite.providers.gcp.resources.cloudresourcemanager.base import CloudResourceManager
 from ScoutSuite.providers.gcp.resources.cloudsql.base import CloudSQL
 from ScoutSuite.providers.gcp.resources.cloudstorage.base import CloudStorage

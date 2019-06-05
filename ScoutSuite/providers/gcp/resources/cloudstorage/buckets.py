@@ -1,5 +1,5 @@
 from ScoutSuite.providers.base.resources.base import Resources
-from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
+from ScoutSuite.providers.gcp.facade.base import GCPFacade
 from ScoutSuite.providers.utils import get_non_provider_id
 
 
