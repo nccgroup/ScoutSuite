@@ -5,7 +5,8 @@
   "path": "cloudsql.projects.id.instances.id",
   "conditions": [ "or",
     [ "cloudsql.projects.id.instances.id.ssl_required", "false", ""],
-    [ "cloudsql.projects.id.instances.id.ssl_required", "null", ""]
+    [ "cloudsql.projects.id.instances.id.ssl_required", "null", ""],
+    [ "cloudsql.projects.id.instances.id.is_failover_replica", "false", ""]
   ],
   "id_suffix": "ssl_required"
 }

@@ -5,8 +5,8 @@
   "dashboard_name": "Instances",
   "conditions": [ "or",
     [ "cloudsql.projects.id.instances.id.log_enabled", "false", "" ],
-    [ "cloudsql.projects.id.instances.id.log_enabled", "null", ""]
-
+    [ "cloudsql.projects.id.instances.id.log_enabled", "null", ""],
+    [ "cloudsql.projects.id.instances.id.is_failover_replica", "false", ""]
   ],
   "id_suffix": "log_enabled"
 }
