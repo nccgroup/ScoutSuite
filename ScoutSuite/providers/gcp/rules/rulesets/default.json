@@ -25,7 +25,7 @@
         "level": "warning"
       }
     ],
-    "cloudstorage-bucket-no-logging.json": [
+    "cloudstorage-bucket-no-binary-logging.json": [
       {
         "enabled": true,
         "level": "warning"
