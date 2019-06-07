@@ -1,4 +1,4 @@
-from ScoutSuite.providers.oci.resources.resources import OracleCompositeResources
+from ScoutSuite.providers.oci.resources.base import OracleCompositeResources
 from ScoutSuite.providers.oci.facade.facade import OracleFacade
 from ScoutSuite.providers.oci.resources.utils import get_non_provider_id
 
@@ -13,7 +13,7 @@ class Users(OracleCompositeResources):
     def __init__(self, facade: OracleFacade):
         self.facade = facade
 
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         for raw_user in await self.facade.identity.get_users():
             id, user = self._parse_user(raw_user)
             self[id] = user
@@ -25,7 +25,6 @@ class Users(OracleCompositeResources):
                     for user_id, user in self.items()}
         )
 
-
     def _parse_user(self, raw_user):
         user = {}
         user['id'] = get_non_provider_id(raw_user.id)
@@ -34,4 +33,3 @@ class Users(OracleCompositeResources):
         user['mfa_activated'] = raw_user.is_mfa_activated
 
         return user['id'], user
-

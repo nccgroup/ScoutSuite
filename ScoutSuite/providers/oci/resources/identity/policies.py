@@ -1,14 +1,13 @@
-from ScoutSuite.providers.base.configs.resources import Resources
+from ScoutSuite.providers.oci.resources.base import OracleResources
 from ScoutSuite.providers.oci.facade.facade import OracleFacade
 from ScoutSuite.providers.oci.resources.utils import get_non_provider_id
 
 
-class Policies(Resources):
-
+class Policies(OracleResources):
     def __init__(self, facade: OracleFacade):
         self.facade = facade
 
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         for raw_policy in await self.facade.identity.get_policies():
             id, policy = self._parse_policy(raw_policy)
             self[id] = policy

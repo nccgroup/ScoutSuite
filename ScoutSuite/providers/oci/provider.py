@@ -1,6 +1,6 @@
 import os
 
-from ScoutSuite.providers.oci.configs.services import OracleServicesConfig
+from ScoutSuite.providers.oci.services import OracleServicesConfig
 from ScoutSuite.providers.base.provider import BaseProvider
 
 
@@ -10,7 +10,7 @@ class OracleProvider(BaseProvider):
     """
 
     def __init__(self,
-                 report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
+                 report_dir=None, timestamp=None, services=None, skipped_services=None, **kwargs):
 
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
@@ -26,7 +26,7 @@ class OracleProvider(BaseProvider):
         self.credentials = kwargs['credentials']
         self.account_id = self.credentials.compartment_id
 
-        super(OracleProvider, self).__init__(report_dir, timestamp, services, skipped_services, thread_config)
+        super(OracleProvider, self).__init__(report_dir, timestamp, services, skipped_services)
 
     def get_report_name(self):
         """
