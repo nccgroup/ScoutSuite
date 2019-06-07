@@ -1,6 +1,40 @@
 {
   "about": "This ruleset attempts to cover as many recommendations from the CIS Google Cloud Platform Foundation v1.0.0.",
   "rules": {
+    "cloudresourcemanager-sa-has-admin-privileges.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "cloudresourcemanager-user-has-sa-user-role.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "cloudresourcemanager-gmail-accounts-used.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "cloudstorage-bucket-member.json": [
+      {
+        "args": [
+          "allUsers"
+        ],
+        "enabled": true,
+        "level": "danger"
+      },
+      {
+        "args": [
+          "allAuthenticatedUsers"
+        ],
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
     "cloudstorage-bucket-no-logging.json": [
       {
         "enabled": true,
@@ -25,5 +59,35 @@
         "level": "danger"
       }
     ],
+    "cloudsql-instance-ssl-not-required.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "cloudsql-allows-root-login-from-any-host.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "cloudsql-instance-ssl-not-required.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "iam-lack-of-service-account-key-rotation.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "iam-service-account-with-user-managed-keys.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ]
   }
 }

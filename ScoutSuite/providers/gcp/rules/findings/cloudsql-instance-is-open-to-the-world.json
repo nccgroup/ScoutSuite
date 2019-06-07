@@ -1,0 +1,11 @@
+{
+  "description": "Instance allowing all incoming connections",
+  "Rationale": "Database instances should accept connections from trusted IPs and networks only (CIS 6.2).",
+  "dashboard_name": "Instances",
+  "path": "cloudsql.projects.id.instances.id.authorized_networks.id",
+  "display_path": "cloudsql.projects.id.instances.id",
+  "conditions": [ "and",
+    [ "cloudsql.projects.id.instances.id.authorized_networks.id.value", "match", ".*/0" ]
+  ],
+  "id_suffix": "open_to_the_world"
+}

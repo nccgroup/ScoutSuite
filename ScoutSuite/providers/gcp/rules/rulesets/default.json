@@ -1,6 +1,24 @@
 {
   "about": "This ruleset consists of numerous rules that are considered standard by NCC Group. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of provider-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configured, and some of them being applicable to a limited number of users.",
   "rules": {
+    "cloudresourcemanager-sa-has-admin-privileges.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "cloudresourcemanager-user-has-sa-user-role.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "cloudresourcemanager-gmail-accounts-used.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
     "cloudstorage-bucket-no-versioning.json": [
       {
         "enabled": true,
@@ -16,19 +34,23 @@
     "cloudstorage-bucket-member.json": [
       {
         "args": [
-          "allUsers",
-          "Bucket with 'allUsers' permissions"
+          "allUsers"
         ],
         "enabled": true,
         "level": "danger"
       },
       {
         "args": [
-          "allAuthenticatedUsers",
-          "Bucket with 'allAuthenticatedUsers' permissions"
+          "allAuthenticatedUsers"
         ],
         "enabled": true,
         "level": "danger"
+      }
+    ],
+        "cloudsql-allows-root-login-from-any-host.json": [
+      {
+        "enabled": true,
+        "level": "warning"
       }
     ],
     "cloudsql-instance-backups-disabled.json": [
@@ -37,7 +59,7 @@
         "level": "warning"
       }
     ],
-    "cloudsql-instance-no-logging.json": [
+    "cloudsql-instance-no-binary-logging.json": [
       {
         "enabled": true,
         "level": "warning"
@@ -53,6 +75,12 @@
       {
         "enabled": true,
         "level": "warning"
+      }
+    ],
+    "cloudsql-instance-is-open-to-the-world.json": [
+      {
+        "enabled": true,
+        "level": "danger"
       }
     ],
     "stackdriverlogging-no-export-sinks.json": [
@@ -142,7 +170,13 @@
         "level": "warning"
       }
     ],
-    "iam-old-service-account-keys.json": [
+    "iam-lack-of-service-account-key-rotation.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "iam-service-account-with-user-managed-keys.json": [
       {
         "enabled": true,
         "level": "warning"

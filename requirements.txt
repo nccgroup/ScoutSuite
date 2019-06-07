@@ -21,6 +21,7 @@ google-cloud-logging>=1.10.0
 google-cloud-monitoring>=0.31.1
 google-cloud-resource-manager>=0.28.3
 google-cloud-storage>=1.13.2
+google-cloud-kms>=1.0.0
 ## API Client Libraries
 google-api-python-client>=1.7.8
 oauth2client>=4.1.3

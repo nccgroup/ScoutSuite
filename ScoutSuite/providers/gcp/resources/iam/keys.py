@@ -1,4 +1,4 @@
-from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
+from ScoutSuite.providers.gcp.facade.base import GCPFacade
 from ScoutSuite.providers.base.resources.base import Resources
 
 
@@ -9,12 +9,18 @@ class Keys(Resources):
         self.service_account_email = service_account_email 
 
     async def fetch_all(self):
-        raw_keys = await self.facade.iam.get_keys(self.project_id, self.service_account_email)
+        # fetch system managed keys
+        raw_keys = await self.facade.iam.get_keys(self.project_id, self.service_account_email, ['SYSTEM_MANAGED'])
         for raw_key in raw_keys:
-            key_id, key = self._parse_key(raw_key)
+            key_id, key = await self._parse_key(raw_key, 'SYSTEM_MANAGED')
+            self[key_id] = key
+        # fetch user managed keys
+        raw_keys = await self.facade.iam.get_keys(self.project_id, self.service_account_email, ['USER_MANAGED'])
+        for raw_key in raw_keys:
+            key_id, key = await self._parse_key(raw_key, 'USER_MANAGED')
             self[key_id] = key
 
-    def _parse_key(self, raw_key):
+    async def _parse_key(self, raw_key, key_type):
         key_dict = {}
         # The name of the key has the following format:
         # projects/{PROJECT_ID}/serviceAccounts/{ACCOUNT}/keys/{key}
@@ -23,4 +29,6 @@ class Keys(Resources):
         key_dict['valid_after'] = raw_key['validAfterTime']
         key_dict['valid_before'] = raw_key['validBeforeTime']
         key_dict['key_algorithm'] = raw_key['keyAlgorithm']
+        key_dict['key_type'] = key_type
+
         return key_dict['id'], key_dict

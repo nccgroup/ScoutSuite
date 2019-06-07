@@ -1,11 +1,11 @@
-from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
+from ScoutSuite.providers.gcp.facade.base import GCPFacade
 from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
 from ScoutSuite.providers.gcp.resources.gce.instance_disks import InstanceDisks
 from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Instances(GCPCompositeResources):
-    _children = [ 
+    _children = [
         (InstanceDisks, 'disks')
     ]
 
@@ -20,7 +20,7 @@ class Instances(GCPCompositeResources):
             instance_id, instance = self._parse_instance(raw_instance)
             self[instance_id] = instance
             self[instance_id]['disks'].fetch_all()
-            
+
     def _parse_instance(self, raw_instance):
         instance_dict = {}
         instance_dict['id'] = get_non_provider_id(raw_instance['name'])
@@ -44,7 +44,7 @@ class Instances(GCPCompositeResources):
         return instance_dict['id'], instance_dict
 
     def _get_description(self, raw_instance):
-        description = raw_instance.get('description')   
+        description = raw_instance.get('description')
         return description if description else 'N/A'
 
     def _is_block_project_ssh_keys_enabled(self, raw_instance):
@@ -54,8 +54,8 @@ class Instances(GCPCompositeResources):
         instance_logging_enabled = raw_instance['metadata'].get('enable-oslogin')
         project_logging_enabled = raw_instance['commonInstanceMetadata'].get('enable-oslogin')
         return instance_logging_enabled == 'TRUE' \
-            or instance_logging_enabled is None and project_logging_enabled == 'TRUE'
-        
+               or instance_logging_enabled is None and project_logging_enabled == 'TRUE'
+
     def _is_serial_port_enabled(self, raw_instance):
         return raw_instance['metadata'].get('serial-port-enable') == 'true'
 

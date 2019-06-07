@@ -13,6 +13,12 @@
                 "level": "warning"
             }
         ],
+        "cloudtrail-no-data-logging.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "cloudtrail-no-global-services-logging.json": [
             {
                 "enabled": true,
@@ -99,6 +105,12 @@
             {
                 "enabled": false,
                 "level": "warning"
+            }
+        ],
+        "ec2-instance-with-user-data-secrets.json": [
+            {
+                "enabled": true,
+                "level": "danger"
             }
         ],
         "ec2-security-group-opens-all-ports-to-all.json": [
@@ -295,12 +307,6 @@
                 "level": "warning"
             }
         ],
-        "ec2-instance-with-user-data-secrets.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
         "elb-no-access-logs.json": [
             {
                 "enabled": true,
@@ -350,6 +356,12 @@
             }
         ],
         "iam-group-with-inline-policies.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-group-with-no-users.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -479,6 +491,12 @@
                 ],
                 "enabled": true,
                 "level": "danger"
+            }
+        ],
+        "iam-managed-policy-no-attachments.json": [
+            {
+                "enabled": true,
+                "level": "warning"
             }
         ],
         "iam-password-policy-expiration-threshold.json": [
@@ -644,18 +662,6 @@
                 "level": "danger"
             }
         ],
-        "iam-group-with-no-users.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "iam-managed-policy-no-attachments.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
         "rds-instance-backup-disabled.json": [
             {
                 "enabled": true,
@@ -758,25 +764,7 @@
                 "level": "danger"
             }
         ],
-        "s3-bucket-no-logging.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "cloudtrail-no-data-logging.json": [
-            {
-                "enabled": false,
-                "level": "warning"
-            }
-        ],
-        "s3-bucket-no-mfa-delete.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "s3-bucket-no-versioning.json": [
+        "s3-bucket-allowing-cleartext.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -788,7 +776,19 @@
                 "level": "warning"
             }
         ],
-        "s3-bucket-allowing-cleartext.json": [
+        "s3-bucket-no-logging.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "s3-bucket-no-mfa-delete.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "s3-bucket-no-versioning.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -1122,17 +1122,11 @@
         ],
         "vpc-subnet-with-default-acls.json": [
             {
-                "enabled": false,
-                "level": "warning"
-            }
-        ],
-        "vpc-subnet-without-flow-log.json": [
-            {
                 "args": [
                     "ingress",
                     "source"
                 ],
-                "enabled": true,
+                "enabled": false,
                 "level": "warning"
             },
             {
@@ -1140,6 +1134,12 @@
                     "egress",
                     "destination"
                 ],
+                "enabled": false,
+                "level": "warning"
+            }
+        ],
+        "vpc-subnet-without-flow-log.json": [
+            {
                 "enabled": true,
                 "level": "warning"
             }

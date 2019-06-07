@@ -1,6 +1,8 @@
 from google.cloud import logging as stackdriverlogging
+
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently
+
 
 class StackdriverLoggingFacade:
     async def get_sinks(self, project_id: str):
