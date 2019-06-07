@@ -1,11 +1,15 @@
 {
   "dashboard_name": "Instances",
   "description": "Instance not requiring SSL for incoming connections",
-  "Rationale": "All incoming connections to databases should require the use of SSL (CIS 6.1).",
+  "rationale": "All incoming connections to databases should require the use of SSL (CIS 6.1).",
   "path": "cloudsql.projects.id.instances.id",
-  "conditions": [ "or",
-    [ "cloudsql.projects.id.instances.id.ssl_required", "false", ""],
-    [ "cloudsql.projects.id.instances.id.ssl_required", "null", ""]
+  "conditions": [ "and",
+    [
+      "or",
+      [ "cloudsql.projects.id.instances.id.ssl_required", "false", ""],
+      [ "cloudsql.projects.id.instances.id.ssl_required", "null", ""]
+    ],
+    [ "cloudsql.projects.id.instances.id.is_failover_replica", "false", ""]
   ],
   "id_suffix": "ssl_required"
 }

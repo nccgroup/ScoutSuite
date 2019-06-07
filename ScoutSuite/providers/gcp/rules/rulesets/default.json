@@ -59,7 +59,7 @@
         "level": "warning"
       }
     ],
-    "cloudsql-instance-no-logging.json": [
+    "cloudsql-instance-no-binary-logging.json": [
       {
         "enabled": true,
         "level": "warning"

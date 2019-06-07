@@ -19,12 +19,6 @@
         "level": "warning"
       }
     ],
-    "cloudstorage-bucket-no-logging.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
     "cloudstorage-bucket-member.json": [
       {
         "args": [
