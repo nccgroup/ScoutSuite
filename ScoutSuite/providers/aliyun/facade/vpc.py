@@ -17,4 +17,4 @@ class VPCFacade:
         """
         response = await get_response(client=self._client,
                                       request=DescribeVpcsRequest.DescribeVpcsRequest())
-        return response['Vpcs']
+        return response['Vpcs']['Vpc']

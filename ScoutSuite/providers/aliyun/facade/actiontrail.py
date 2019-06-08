@@ -8,7 +8,7 @@ class ActiontrailFacade:
     def __init__(self, credentials: AliyunCredentials):
         self._client = credentials.client
 
-    async def describe_trails(self):
+    async def get_trails(self):
         """
         Get all users
 
@@ -16,4 +16,4 @@ class ActiontrailFacade:
         """
         response = await get_response(client=self._client,
                                       request=DescribeTrailsRequest.DescribeTrailsRequest())
-        return response
+        return response['TrailList']

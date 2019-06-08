@@ -21,4 +21,3 @@ async def get_response(client, request):
             print_exception(e)
         else:
             raise
-

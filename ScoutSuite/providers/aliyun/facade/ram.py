@@ -18,9 +18,8 @@ class RAMFacade:
         :return: a list of all users
         """
         response = await get_response(client=self._client,
-                                request=ListUsersRequest.ListUsersRequest())
+                                      request=ListUsersRequest.ListUsersRequest())
         return response['Users']['User']
-
 
     async def get_user_details(self, username):
         """

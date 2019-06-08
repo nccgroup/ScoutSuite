@@ -1203,6 +1203,8 @@ function makeTitle(title) {
         return 'Load Balancer'
     } else if (title === 'ram') {
         return 'RAM'
+    } else if (title === 'actiontrail') {
+        return 'ActionTrail'
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).split('_').join(' ')
     }
