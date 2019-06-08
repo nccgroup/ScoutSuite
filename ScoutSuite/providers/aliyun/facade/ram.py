@@ -2,7 +2,7 @@ from ScoutSuite.providers.aliyun.authentication_strategy import AliyunCredential
 from ScoutSuite.providers.aliyun.facade.utils import get_response
 
 from ScoutSuite.core.console import print_exception
-from aliyunsdkram.request.v20150501 import ListUsersRequest, ListAccessKeysRequest, GetUserMFAInfoRequest, GetUserRequest, GetAccessKeyLastUsedRequest
+from aliyunsdkram.request.v20150501 import ListUsersRequest, ListAccessKeysRequest, GetUserMFAInfoRequest, GetUserRequest, GetAccessKeyLastUsedRequest, GetPasswordPolicyRequest
 
 
 class RAMFacade:
@@ -85,3 +85,14 @@ class RAMFacade:
                 return False, None
         else:
             return True, response['MFADevice']['SerialNumber']
+
+    async def get_password_policy(self):
+        """
+        Get the account's password policy
+
+        :return: the password policy
+        """
+        request = GetPasswordPolicyRequest.GetPasswordPolicyRequest()
+        response = await get_response(client=self._client,
+                                      request=request)
+        return response['PasswordPolicy']

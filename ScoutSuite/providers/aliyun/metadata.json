@@ -7,7 +7,12 @@
           "path": "services.ram.users"
         }
       },
-      "summaries": {}
+      "summaries": {
+        "password_policy": {
+          "cols": 1,
+          "path": "services.ram.password_policy"
+        }
+      }
     }
   }
 }

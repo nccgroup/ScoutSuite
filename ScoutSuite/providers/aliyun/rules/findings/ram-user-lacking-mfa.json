@@ -1,0 +1,10 @@
+{
+  "description": "User with console access lacking MFA",
+  "rationale": "",
+  "path": "ram.users.id",
+  "dashboard_name": "Users",
+  "conditions": [ "and",
+    [ "ram.users.id.mfa_status", "true", "" ]
+  ],
+  "id_suffix": "mfa_enabled"
+}
