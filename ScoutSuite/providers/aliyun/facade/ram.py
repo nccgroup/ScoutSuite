@@ -2,7 +2,9 @@ from ScoutSuite.providers.aliyun.authentication_strategy import AliyunCredential
 from ScoutSuite.providers.aliyun.facade.utils import get_response
 
 from ScoutSuite.core.console import print_exception
-from aliyunsdkram.request.v20150501 import ListUsersRequest, ListAccessKeysRequest, GetUserMFAInfoRequest, GetUserRequest, GetAccessKeyLastUsedRequest, GetPasswordPolicyRequest
+from aliyunsdkram.request.v20150501 import ListUsersRequest, ListAccessKeysRequest, \
+    GetUserMFAInfoRequest, GetUserRequest, GetAccessKeyLastUsedRequest, GetPasswordPolicyRequest, \
+    GetSecurityPreferenceRequest
 
 
 class RAMFacade:
@@ -96,3 +98,14 @@ class RAMFacade:
         response = await get_response(client=self._client,
                                       request=request)
         return response['PasswordPolicy']
+
+    async def get_security_policy(self):
+        """
+        Get the account's security policy
+
+        :return: the security policy
+        """
+        request = GetSecurityPreferenceRequest.GetSecurityPreferenceRequest()
+        response = await get_response(client=self._client,
+                                      request=request)
+        return response['SecurityPreference']
