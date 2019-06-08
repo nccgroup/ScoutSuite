@@ -6,7 +6,7 @@ from ScoutSuite.core.console import print_exception
 
 
 async def get_response(client, request):
-    # TODO handle truncated response
+    # TODO handle truncated responses
     try:
         response = await run_concurrently(lambda: client.do_action_with_exception(request))
         response_decoded = json.loads(response)

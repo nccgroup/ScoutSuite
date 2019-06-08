@@ -2,6 +2,7 @@ from ScoutSuite.providers.aliyun.facade.facade import AliyunFacade
 from ScoutSuite.providers.base.services import BaseServicesConfig
 from ScoutSuite.providers.aliyun.resources.ram.base import RAM
 from ScoutSuite.providers.aliyun.resources.actiontrail.base import Actiontrail
+from ScoutSuite.providers.aliyun.resources.vpc.base import VPC
 
 
 class AliyunServicesConfig(BaseServicesConfig):
@@ -11,7 +12,8 @@ class AliyunServicesConfig(BaseServicesConfig):
         facade = AliyunFacade(credentials)
 
         self.ram = RAM(facade)
-        # self.actiontrail = Actiontrail(facade)
+        self.actiontrail = Actiontrail(facade)
+        self.vpc = VPC(facade)
 
     def _is_provider(self, provider_name):
         return provider_name == 'aliyun'

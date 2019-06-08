@@ -13,6 +13,22 @@
           "path": "services.ram.password_policy"
         }
       }
+    },
+    "vpc": {
+      "resources": {
+        "vpcs": {
+          "cols": 2,
+          "path": "services.vpc.vpc"
+        }
+      }
+    },
+    "actiontrail": {
+      "resources": {
+        "trails": {
+          "cols": 2,
+          "path": "services.actiontrail.trails"
+        }
+      }
     }
   }
 }
