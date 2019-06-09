@@ -1,0 +1,52 @@
+<!-- ActionTrail trails -->
+<script id="services.actiontrail.trails.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">name: <span
+                id="actiontrail.trail.{{@key}}.name"><samp>{{name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">role_name: <span
+                id="actiontrail.trail.{{@key}}.role_name"><samp>{{role_name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">home_region: <span
+                id="actiontrail.trail.{{@key}}.home_region"><samp>{{home_region}}</samp></span>
+        </div>
+        <div class="list-group-item-text item-margin">oss_bucket_name: <span
+                id="actiontrail.trail.{{@key}}.oss_bucket_name"><samp>{{oss_bucket_name}}</samp></span>
+        </div>
+        <div class="list-group-item-text item-margin">include_global_service_event: <span
+                id="actiontrail.trail.{{@key}}.include_global_service_event"><samp>{{include_global_service_event}}</samp></span>
+        </div>
+        <div class="list-group-item-text item-margin">status: <span
+                id="actiontrail.trail.{{@key}}.status"><samp>{{status}}</samp></span></div>
+        <div class="list-group-item-text item-margin">oss_key_prefix: <span
+                id="actiontrail.trail.{{@key}}.oss_key_prefix"><samp>{{oss_key_prefix}}</samp></span>
+        </div>
+        <div class="list-group-item-text item-margin">region: <span
+                id="actiontrail.trail.{{@key}}.region"><samp>{{region}}</samp></span></div>
+        <div class="list-group-item-text item-margin">event_rw: <span
+                id="actiontrail.trail.{{@key}}.event_rw"><samp>{{event_rw}}</samp></span></div>
+        <div class="list-group-item-text item-margin">type: <span
+                id="actiontrail.trail.{{@key}}.type"><samp>{{type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">sls_write_role_arn: <span
+                id="actiontrail.trail.{{@key}}.sls_write_role_arn"><samp>{{sls_write_role_arn}}</samp></span>
+        </div>
+        <div class="list-group-item-text item-margin">sls_project_arn: <span
+                id="actiontrail.trail.{{@key}}.sls_project_arn"><samp>{{sls_project_arn}}</samp></span>
+        </div>
+
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.actiontrail.trails", $("#services\\.actiontrail\\.trails\\.partial").html());
+</script>
+
+<!-- Single trail template -->
+<script id="single_actiontrail_trail-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.actiontrail.trails'}}
+</script>
+<script>
+    var single_actiontrail_trail_template = Handlebars.compile($("#single_actiontrail_trail-template").html());
+</script>
