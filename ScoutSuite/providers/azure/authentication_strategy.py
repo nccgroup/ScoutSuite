@@ -123,7 +123,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                         else:
                             AuthenticationException('Unable to infer a Subscription ID')
 
-            return AzureCredentials(credentials, subscription_id)
+            return AzureCredentials(credentials, subscription_id, tenant_id)
 
         except Exception as e:
             raise AuthenticationException(e)
