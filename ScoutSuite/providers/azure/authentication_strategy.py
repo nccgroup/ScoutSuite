@@ -62,12 +62,10 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 return AzureCredentials(credentials, subscription_id)
 
             elif service_principal:
-                subscription_id = subscription_id if subscription_id else input(
-                    "Subscription ID: ")
+                subscription_id = subscription_id if subscription_id else input("Subscription ID: ")
                 tenant_id = tenant_id if tenant_id else input("Tenant ID: ")
                 client_id = client_id if client_id else input("Client ID: ")
-                client_secret = client_secret if client_secret else getpass(
-                    "Client secret: ")
+                client_secret = client_secret if client_secret else getpass("Client secret: ")
 
                 credentials = ServicePrincipalCredentials(
                     client_id=client_id,
