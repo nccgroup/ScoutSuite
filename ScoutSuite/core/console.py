@@ -21,9 +21,12 @@ def set_logger_configuration(is_debug=False, quiet=False, output_file_path=None)
     """
     global verbose_exceptions
     verbose_exceptions = is_debug
+
     # if "quiet" is set, don't output anything
     if not quiet:
         coloredlogs.install(level='DEBUG' if is_debug else 'INFO', logger=logger)
+    else:
+        coloredlogs.install(level='CRITICAL', logger=logger)  # we don't use critical so should never output
 
     if output_file_path:
         # create file handler which logs messages
