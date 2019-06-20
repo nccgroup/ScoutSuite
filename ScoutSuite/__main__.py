@@ -24,40 +24,50 @@ def run_from_cli():
     # Get the dictionary to get None instead of a crash
     args = args.__dict__
 
-    return run(args.get('provider'),
-               args.get('profile'),
-               args.get('user_account'), args.get('service_account'),
-               args.get('cli'), args.get('msi'), args.get('service_principal'), args.get('file_auth'), args.get('tenant_id'),
-               args.get('subscription_id'),
-               args.get('client_id'), args.get('client_secret'),
-               args.get('username'), args.get('password'),
-               args.get('project_id'), args.get('folder_id'), args.get('organization_id'), args.get('all_projects'),
-               args.get('report_name'), args.get('report_dir'),
-               args.get('timestamp'),
-               args.get('services'), args.get('skipped_services'),
-               args.get('result_format'),
-               args.get('database_name'),
-               args.get('host_ip'),
-               args.get('host_port'),
-               args.get('max_workers'),
-               args.get('regions'),
-               args.get('fetch_local'), args.get('update'),
-               args.get('ip_ranges'), args.get('ip_ranges_name_key'),
-               args.get('ruleset'), args.get('exceptions'),
-               args.get('force_write'),
-               args.get('debug'),
-               args.get('quiet'),
-               args.get('log_file'),
-               args.get('no_browser'))
+    return run(provider=args.get('provider'),
+               # AWS
+               profile=args.get('profile'),
+               # Azure
+               user_account=args.get('user_account'), service_account=args.get('service_account'),
+               cli=args.get('cli'), msi=args.get('msi'), service_principal=args.get('service_principal'), file_auth=args.get('file_auth'),
+               tenant_id=args.get('tenant_id'), subscription_id=args.get('subscription_id'),
+               client_id=args.get('client_id'), client_secret=args.get('client_secret'),
+               username=args.get('username'), password=args.get('password'),
+               # GCP
+               project_id=args.get('project_id'), folder_id=args.get('folder_id'), organization_id=args.get('organization_id'), all_projects=args.get('all_projects'),
+               # General
+               report_name=args.get('report_name'), report_dir=args.get('report_dir'),
+               timestamp=args.get('timestamp'),
+               services=args.get('services'), skipped_services=args.get('skipped_services'),
+               result_format=args.get('result_format'),
+               database_name=args.get('database_name'),
+               host_ip=args.get('host_ip'),
+               host_port=args.get('host_port'),
+               max_workers=args.get('max_workers'),
+               regions=args.get('regions'),
+               fetch_local=args.get('fetch_local'), update=args.get('update'),
+               ip_ranges=args.get('ip_ranges'), ip_ranges_name_key=args.get('ip_ranges_name_key'),
+               ruleset=args.get('ruleset'), exceptions=args.get('exceptions'),
+               force_write=args.get('force_write'),
+               debug=args.get('debug'),
+               quiet=args.get('quiet'),
+               log_file=args.get('log_file'),
+               no_browser=args.get('no_browser'),
+               programmatic_execution=False)
 
 
 def run(provider,
+        # AWS
         profile=None,
+        # Azure
         user_account=False, service_account=None,
-        cli=False, msi=False, service_principal=False, file_auth=None, tenant_id=None, subscription_id=None,
+        cli=False, msi=False, service_principal=False, file_auth=None,
+        tenant_id=None, subscription_id=None,
         client_id=None, client_secret=None,
         username=None, password=None,
+        # GCP
         project_id=None, folder_id=None, organization_id=None, all_projects=False,
+        # General
         report_name=None, report_dir=None,
         timestamp=False,
         services=[], skipped_services=[],
@@ -72,7 +82,8 @@ def run(provider,
         debug=False,
         quiet=False,
         log_file=None,
-        no_browser=False):
+        no_browser=False,
+        programmatic_execution=True):
     """
     Run a scout job in an async event loop.
     """
@@ -85,12 +96,16 @@ def run(provider,
 
 
 async def _run(provider,
+               # AWS
                profile,
+               # Azure
                user_account, service_account,
                cli, msi, service_principal, file_auth, tenant_id, subscription_id,
                client_id, client_secret,
                username, password,
+               # GCP
                project_id, folder_id, organization_id, all_projects,
+               # General
                report_name, report_dir,
                timestamp,
                services, skipped_services,
@@ -105,6 +120,7 @@ async def _run(provider,
                quiet,
                log_file,
                no_browser,
+               programmatic_execution,
                **kwargs):
     """
     Run a scout job.
@@ -130,7 +146,8 @@ async def _run(provider,
                                                  client_id=client_id,
                                                  client_secret=client_secret,
                                                  username=username,
-                                                 password=password)
+                                                 password=password,
+                                                 programmatic_execution=programmatic_execution)
 
         if not credentials:
             return 401

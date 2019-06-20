@@ -4,6 +4,7 @@ from getpass import getpass
 from azure.common.credentials import ServicePrincipalCredentials, UserPassCredentials, get_azure_cli_credentials
 from azure.mgmt.resource import SubscriptionClient
 from msrestazure.azure_active_directory import MSIAuthentication
+from ScoutSuite.core.console import print_info, print_exception
 
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
@@ -18,33 +19,37 @@ class AzureCredentials:
 
 class AzureAuthenticationStrategy(AuthenticationStrategy):
 
-    def authenticate(self, cli=None, msi=None, service_principal=None, file_auth=None, user_account=None,
+    def authenticate(self,
+                     cli=None, msi=None, service_principal=None, file_auth=None, user_account=None,
                      tenant_id=None, subscription_id=None, client_id=None, client_secret=None, username=None,
-                     password=None, **kargs):
+                     password=None,
+                     programmatic_execution=False,
+                     **kargs):
         """
         Implements authentication for the Azure provider
         """
         try:
             if cli:
-                cli_credentials, subscription_id = get_azure_cli_credentials()
-                return AzureCredentials(cli_credentials, subscription_id)
+                credentials, subscription_id = get_azure_cli_credentials()
 
             elif msi:
-                msi_auth_credentials = MSIAuthentication()
+                credentials = MSIAuthentication()
 
                 # Get the subscription ID
-                subscription_client = SubscriptionClient(msi_auth_credentials)
+                subscription_client = SubscriptionClient(credentials)
 
                 try:
+                    print_info('No subscription set, inferring ID')
                     # Tries to read the subscription list
                     subscription = next(subscription_client.subscriptions.list())
                     subscription_id = subscription.subscription_id
-
+                    print_info('Running against the {} subscription'.format(subscription_id))
                 except StopIteration:
                     # If the VM cannot read subscription list, ask Subscription ID:
-                    subscription_id = input('Subscription ID: ')
-
-                return AzureCredentials(msi_auth_credentials, subscription_id)
+                    if not programmatic_execution:
+                        subscription_id = input('Subscription ID: ')
+                    else:
+                        AuthenticationException('Unable to infer a Subscription ID')
 
             elif file_auth:
                 data = json.loads(file_auth.read())
@@ -59,15 +64,30 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     tenant=tenant_id
                 )
 
-                return AzureCredentials(credentials, subscription_id)
-
             elif service_principal:
-                subscription_id = subscription_id if subscription_id else input(
-                    "Subscription ID: ")
-                tenant_id = tenant_id if tenant_id else input("Tenant ID: ")
-                client_id = client_id if client_id else input("Client ID: ")
-                client_secret = client_secret if client_secret else getpass(
-                    "Client secret: ")
+                if not subscription_id:
+                    if not programmatic_execution:
+                        subscription_id = input('Subscription ID: ')
+                    else:
+                        AuthenticationException('No Subscription ID set')
+
+                if not tenant_id:
+                    if not programmatic_execution:
+                        tenant_id = input("Tenant ID: ")
+                    else:
+                        AuthenticationException('No Tenant ID set')
+
+                if not client_id:
+                    if not programmatic_execution:
+                        client_id = input("Client ID: ")
+                    else:
+                        AuthenticationException('No Client ID set')
+
+                if not client_secret:
+                    if not programmatic_execution:
+                        client_secret = getpass("Client secret: ")
+                    else:
+                        AuthenticationException('No Client Secret set')
 
                 credentials = ServicePrincipalCredentials(
                     client_id=client_id,
@@ -75,11 +95,14 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     tenant=tenant_id
                 )
 
-                return AzureCredentials(credentials, subscription_id, tenant_id)
-
             elif user_account:
-                username = username if username else input("Username: ")
-                password = password if password else getpass("Password: ")
+
+                if not username and password:
+                    if not programmatic_execution:
+                        username = username if username else input("Username: ")
+                        password = password if password else getpass("Password: ")
+                    else:
+                        AuthenticationException('Username and/or password not set')
 
                 credentials = UserPassCredentials(username, password)
 
@@ -88,13 +111,19 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     subscription_client = SubscriptionClient(credentials)
                     try:
                         # Tries to read the subscription list
+                        print_info('No subscription set, inferring ID')
                         subscription = next(subscription_client.subscriptions.list())
                         subscription_id = subscription.subscription_id
+                        print_info('Running against the {} subscription'.format(subscription_id))
                     except StopIteration:
+                        print_info('Unable to infer a subscription')
                         # If the user cannot read subscription list, ask Subscription ID:
-                        subscription_id = input('Subscription ID: ')
+                        if not programmatic_execution:
+                            subscription_id = input('Subscription ID: ')
+                        else:
+                            AuthenticationException('Unable to infer a Subscription ID')
 
-                return AzureCredentials(credentials, subscription_id)
+            return AzureCredentials(credentials, subscription_id, tenant_id)
 
         except Exception as e:
             raise AuthenticationException(e)
