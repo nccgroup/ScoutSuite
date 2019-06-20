@@ -408,6 +408,14 @@ Handlebars.registerHelper('convert_bool_to_enabled', function (value) {
     return value ? 'Enabled' : 'Disabled'
 })
 
+/**
+ * Checks if value is indefined/null and returns 'None', otherwise returns value
+ */
+Handlebars.registerHelper('value_or_none', function (value) {
+    if (value === undefined || value === null) return 'None'
+    return value
+})
+
 /*********************
  * Ruleset generator *
  *********************/
