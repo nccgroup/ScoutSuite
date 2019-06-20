@@ -274,7 +274,15 @@ class ScoutSuiteArgumentParser:
         # Cannot simply use required for backward compatibility
         if not args.provider:
             self.parser.error('You need to input a provider')
+
         # If local analysis, overwrite results
         if args.__dict__.get('fetch_local'):
             args.force_write = True
+
+        # Test conditions
+        if args.tenant_id and not args.service_principal:
+            self.parser.error('--tenant can only be set when using --service-principal')
+        # TODO add more conditions
+
         return args
+
