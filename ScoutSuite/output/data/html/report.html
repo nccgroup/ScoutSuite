@@ -123,18 +123,19 @@
                                 </div>
                             </a>
                             {{#each items.summary}}
-                            <a href="#services.{{@key}}.findings" class="card" style="color: black !important">
-                                <div class="finding-title card-header">
-                                    <i class="fa finding-badge finding-badge-{{dashboard_color max_level checked_items flagged_items}}"></i>
-                                    {{makeTitle @key}}
-                                    <div class="col-sm-2 float-right" style="text-align: center">{{checked_items}}</div>
-                                    <div class="col-sm-2 float-right" style="text-align: center">{{flagged_items}}</div>
-                                    <div class="col-sm-2 float-right" style="text-align: center">{{rules_count}}</div>
-                                    <div class="col-sm-2 float-right" style="text-align: center">{{resources_count}}</div>
-                                </div>
-                            </a>
-                            {{/each}}
+                            <div class="card finding-title finding-title-{{dashboard_color level rules_count rules_count}} plain-link">
+                                <a href="#services.{{@key}}.findings">
+                                    <div class="finding-title card-header">
+                                        <i class="fa finding-badge finding-badge-{{dashboard_color max_level checked_items flagged_items}}"></i>
+                                        {{makeTitle @key}}
+                                        <div class="col-sm-2 float-right" style="text-align: center">{{checked_items}}</div>
+                                        <div class="col-sm-2 float-right" style="text-align: center">{{flagged_items}}</div>
+                                        <div class="col-sm-2 float-right" style="text-align: center">{{rules_count}}</div>
+                                        <div class="col-sm-2 float-right" style="text-align: center">{{resources_count}}</div>
+                                    </div>
+                                </a>
                             </div>
+                            {{/each}}
                         </div>
                     </div>
                 </h4>
