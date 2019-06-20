@@ -6,6 +6,30 @@
         "enabled": true,
         "level": "warning"
       }
+    ],
+    "ram-user-lacking-mfa.json": [
+      {
+        "enabled": false,
+        "level": "warning"
+      }
+    ],
+    "ram-user-with-old-api-key.json": [
+      {
+        "enabled": false,
+        "level": "warning"
+      }
+    ],
+    "ram-user-unused-console-password.json": [
+      {
+        "enabled": false,
+        "level": "warning"
+      }
+    ],
+    "ram-user-unused-api-key.json": [
+      {
+        "enabled": false,
+        "level": "warning"
+      }
     ]
   }
 }

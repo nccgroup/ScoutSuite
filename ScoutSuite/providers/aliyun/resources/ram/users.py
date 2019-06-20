@@ -24,7 +24,7 @@ class Users(AliyunCompositeResources):
         user['id'] = raw_user['UserId']
         user['name'] = raw_user['UserName']
         user['display_name'] = raw_user['DisplayName']
-        user['commments'] = raw_user['Comments']
+        user['comments'] = raw_user['Comments']
         user['creation_datetime'] = raw_user['CreateDate']
         user['update_datetime'] = raw_user['CreateDate']
         user['creation_date'] = raw_user['CreateDate']

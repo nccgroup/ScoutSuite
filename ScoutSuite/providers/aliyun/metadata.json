@@ -7,7 +7,32 @@
           "path": "services.ram.users"
         }
       },
-      "summaries": {}
+      "summaries": {
+        "password_policy": {
+          "cols": 1,
+          "path": "services.ram.password_policy"
+        }
+      }
+    }
+  },
+  "network": {
+    "vpc": {
+      "resources": {
+        "vpcs": {
+          "cols": 2,
+          "path": "services.vpc.vpcs"
+        }
+      }
+    }
+  },
+  "management": {
+    "actiontrail": {
+      "resources": {
+        "trails": {
+          "cols": 2,
+          "path": "services.actiontrail.trails"
+        }
+      }
     }
   }
 }

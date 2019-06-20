@@ -1,0 +1,58 @@
+<!-- VPC VPCs -->
+<script id="services.vpc.vpcs.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">name: <span
+                id="vpc.vpc.{{@key}}.name"><samp>{{name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">description: <span
+                id="vpc.vpc.{{@key}}.description"><samp>{{description}}</samp></span></div>
+        <div class="list-group-item-text item-margin">is_default: <span
+                id="vpc.vpc.{{@key}}.is_default"><samp>{{is_default}}</samp></span></div>
+        <div class="list-group-item-text item-margin">cen_status: <span
+                id="vpc.vpc.{{@key}}.cen_status"><samp>{{cen_status}}</samp></span></div>
+        <div class="list-group-item-text item-margin">nat_gateway_ids: <span
+                id="vpc.vpc.{{@key}}.nat_gateway_ids"><samp>{{nat_gateway_ids}}</samp></span></div>
+        <div class="list-group-item-text item-margin">resource_group_id: <span
+                id="vpc.vpc.{{@key}}.resource_group_id"><samp>{{resource_group_id}}</samp></span>
+        </div>
+        <div class="list-group-item-text item-margin">user_cidrs: <span
+                id="vpc.vpc.{{@key}}.user_cidrs"><samp>{{user_cidrs}}</samp></span></div>
+        <div class="list-group-item-text item-margin">network_acl_num: <span
+                id="vpc.vpc.{{@key}}.network_acl_num"><samp>{{network_acl_num}}</samp></span></div>
+        <div class="list-group-item-text item-margin">router_table_ids: <span
+                id="vpc.vpc.{{@key}}.router_table_ids"><samp>{{router_table_ids}}</samp></span>
+        </div>
+        <div class="list-group-item-text item-margin">vpc_id: <span
+                id="vpc.vpc.{{@key}}.vpc_id"><samp>{{vpc_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">v_router_id: <span
+                id="vpc.vpc.{{@key}}.v_router_id"><samp>{{v_router_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">creation_time: <span
+                id="vpc.vpc.{{@key}}.creation_time"><samp>{{creation_time}}</samp></span></div>
+        <div class="list-group-item-text item-margin">status: <span
+                id="vpc.vpc.{{@key}}.status"><samp>{{status}}</samp></span></div>
+        <div class="list-group-item-text item-margin">cidr_block: <span
+                id="vpc.vpc.{{@key}}.cidr_block"><samp>{{cidr_block}}</samp></span></div>
+        <div class="list-group-item-text item-margin">v_switch_ids: <span
+                id="vpc.vpc.{{@key}}.v_switch_ids"><samp>{{v_switch_ids}}</samp></span></div>
+        <div class="list-group-item-text item-margin">region_id: <span
+                id="vpc.vpc.{{@key}}.region_id"><samp>{{region_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">ipv6_cidr_block: <span
+                id="vpc.vpc.{{@key}}.ipv6_cidr_block"><samp>{{ipv6_cidr_block}}</samp></span></div>
+
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.vpc.vpcs", $("#services\\.vpc\\.vpcs\\.partial").html());
+</script>
+
+<!-- Single VPC vpc template -->
+<script id="single_vpc_vpc-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.vpc.vpcs'}}
+</script>
+<script>
+    var single_vpc_vpc_template = Handlebars.compile($("#single_vpc_vpc-template").html());
+</script>

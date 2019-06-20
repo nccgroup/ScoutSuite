@@ -1,10 +1,10 @@
 from ScoutSuite.providers.aliyun.resources.base import AliyunCompositeResources
-from ScoutSuite.providers.aliyun.resources.actiontrail.trails import Trails
+from ScoutSuite.providers.aliyun.resources.vpc.vpcs import VPCs
 
 
-class ActionTrail(AliyunCompositeResources):
+class VPC(AliyunCompositeResources):
     _children = [
-        (Trails, 'trails')
+        (VPCs, 'vpcs')
     ]
 
     async def fetch_all(self):
