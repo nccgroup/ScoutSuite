@@ -1,7 +1,7 @@
 {
     "dashboard_name": "Security contacts",
-    "description": "No security contact email set",
-    "rationale": "You should set at least one security contact email (CIS 2.16).",
+    "description": "No Security Contact Email Set",
+	"rationale": "<b>Description:</b><br><br>At least one security contact email should be set.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 2.16</li></ul>",
     "path": "securitycenter.security_contacts.id",
     "display_path": "securitycenter.security_contacts",
     "conditions": [ "and",

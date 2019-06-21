@@ -1,7 +1,7 @@
 {
     "dashboard_name": "SQL Databases",
-    "description": "Auditing retention period for some SQL databases is too short",
-    "rationale": "Auditing retention period should be greater than _ARG_0_ days (CIS 4.2.7).",
+    "description": "Short Auditing Retention Period for SQL Databases",
+	"rationale": "<b>Description:</b><br><br>Auditing retention period should be greater than _ARG_0_ days.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 4.2</li></ul>",
     "path": "sqldatabase.servers.id.databases.id",
     "display_path": "sqldatabase.servers.id",
     "conditions": [ "and",

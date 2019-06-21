@@ -44,7 +44,6 @@ nosetests.xml
 
 # In case people do a `git add .` ...
 *.csv
-tests/data/ruleset-test.json
 
 # Data folder and files
 scoutsuite-report*

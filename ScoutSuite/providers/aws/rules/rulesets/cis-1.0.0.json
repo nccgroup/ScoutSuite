@@ -1,0 +1,162 @@
+{
+    "about": "This ruleset attempts to cover as many recommendations from the CIS Amazon Web Services Foundation v1.0.0.",
+    "rules": {
+        "cloudtrail-no-logging.json": [
+            {
+                "comment": "Recommendation2,1 (part 2/2)",
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "cloudtrail-not-configured.json": [
+            {
+                "comment": "Recommendation2.1 (part 1/2)",
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "ec2-default-security-group-with-rules.json": [
+            {
+                "comment": "Recommendation4.4",
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "ec2-security-group-opens-known-port-to-all.json": [
+            {
+                "args": [
+                    "SSH",
+                    "TCP",
+                    "22"
+                ],
+                "comment": "Recommendation4.1",
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "RDP",
+                    "TCP",
+                    "3389"
+                ],
+                "comment": "Recommendation4.2",
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-password-policy-expiration-threshold.json": [
+            {
+                "args": [
+                    "90"
+                ],
+                "comment": "recommendation1.11",
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-password-policy-minimum-length.json": [
+            {
+                "args": [
+                    "14"
+                ],
+                "comment": "recommendation1.9",
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-password-policy-no-lowercase-required.json": [
+            {
+                "comment": "recommendation1.6",
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-password-policy-no-number-required.json": [
+            {
+                "comment": "recommendation1.8",
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-password-policy-no-symbol-required.json": [
+            {
+                "comment": "recommendation1.7",
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-password-policy-no-uppercase-required.json": [
+            {
+                "comment": "recommendation1.5",
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-password-policy-reuse-enabled.json": [
+            {
+                "comment": "recommendation1.10",
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-root-account-no-mfa.json": [
+            {
+                "comment": "recommendation1.13 (partial: no check for hardware vs software)",
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-root-account-used-recently.json": [
+            {
+                "comment": "recommendation1.1",
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-root-account-with-active-keys.json": [
+            {
+                "comment": "recommendation1.12",
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-user-no-key-rotation.json": [
+            {
+                "args": [
+                    "Active",
+                    "90"
+                ],
+                "comment": "recommendation1.4",
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-user-with-policies.json": [
+            {
+                "args": [
+                    "inline",
+                    "inline_policies"
+                ],
+                "comment": "Recommendation1.15 (part 1/2)",
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "managed",
+                    "policies"
+                ],
+                "comment": "Recommendation1.15 (part 2/2)",
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-user-without-mfa.json": [
+            {
+                "comment": "recommendation1.2",
+                "enabled": true,
+                "level": "danger"
+            }
+        ]
+    }
+}

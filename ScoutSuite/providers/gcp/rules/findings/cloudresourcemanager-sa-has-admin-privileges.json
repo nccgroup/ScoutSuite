@@ -1,7 +1,7 @@
 {
   "dashboard_name": "Bindings",
   "description": "Service Account with Admin Privileges",
-  "rationale": "Service accounts represent service-level security of the Resources (application or a VM) which can be determined by the roles assigned to it. Enrolling ServiceAccount with Admin rights gives full access to assigned application or a VM, ServiceAccount Access holder can user, so It's recommended not to have Admin rights. (CIS 1.4)",
+  "rationale": "<b>Description:</b><br><br>Service accounts represent service-level security of the Resources (application or a VM) which can be determined by the roles assigned to it. Enrolling ServiceAccount with Admin rights gives full access to assigned application or a VM, ServiceAccount Access holder can user, so It's recommended not to have Admin rights.<br><br><b>References:</b><ul><li>CIS Google Cloud Platform Foundations v1.0.0 1.4</li></ul>",
   "path": "cloudresourcemanager.projects.id.bindings.id",
   "conditions": [ "and",
     [ "or", 
