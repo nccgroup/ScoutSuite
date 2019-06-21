@@ -1,6 +1,6 @@
 {
     "description": "Subnet without a flow log",
-    "rationale": "Flow logs enable the investigatation of incidents involving unauthorized network traffic, such as an attacker exfiltrating data or pivoting to other hosts (CIS 3.9).",
+	"rationale": "<b>Description:</b><br><br>Flow logs enable the investigatation of incidents involving unauthorized network traffic, such as an attacker exfiltrating data or pivoting to other hosts.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 3.9</li></ul>",
     "path": "vpc.regions.id.vpcs.id.subnets.id",
     "dashboard_name": "Subnets",
     "id_suffix": "NoFlowLog",

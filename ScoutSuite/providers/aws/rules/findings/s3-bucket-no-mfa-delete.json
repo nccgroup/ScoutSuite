@@ -1,7 +1,7 @@
 {
     "dashboard_name": "Buckets",
     "description": "Bucket without MFA delete",
-    "rationale": "Enable MFA delete to help protect objects from accidental or unauthorized deletion. It should be noted that MFA Delete can only be configured on buckets that have versioning enabled.",
+	"rationale": "<b>Description:</b><br><br>Enable MFA delete to help protect objects from accidental or unauthorized deletion. It should be noted that MFA Delete can only be configured on buckets that have versioning enabled.",
     "path": "s3.buckets.id",
     "conditions": [ "and",
         [ "s3.buckets.id.version_mfa_delete_enabled", "false", "" ]
