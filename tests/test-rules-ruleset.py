@@ -95,10 +95,6 @@ class TestScoutRulesRuleset:
         assert (prompt_yes_no.call_count == 0)
         assert (os.path.samefile(target.filename, os.path.join(target.rules_data_path, './rulesets/default.json')))
 
-        target = Ruleset(cloud_provider='aws', environment_name="sample", filename=None)
-        assert (prompt_yes_no.call_count == 1)
-        assert (os.path.samefile(target.filename, os.path.join(target.rules_data_path, './rulesets/default.json')))
-
         prompt_yes_no.reset_mock()
         prompt_yes_no.return_value = True
 
