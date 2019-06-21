@@ -109,11 +109,17 @@ class EC2Facade(AWSBaseFacade):
 
     async def get_snapshots(self, region: str):
         filters = [{'Name': 'owner-id', 'Values': [self.owner_id]}]
-        snapshots = await AWSFacadeUtils.get_all_pages(
-            'ec2', region, self.session, 'describe_snapshots', 'Snapshots', Filters=filters)
-        await get_and_set_concurrently([self._get_and_set_snapshot_attributes], snapshots, region=region)
 
-        return snapshots
+        try:
+            snapshots = await AWSFacadeUtils.get_all_pages(
+                'ec2', region, self.session, 'describe_snapshots', 'Snapshots', Filters=filters)
+        except Exception as e:
+            print_exception('Failed to get snapshots: {}'.format(e))
+            snapshots = []
+        else:
+            await get_and_set_concurrently([self._get_and_set_snapshot_attributes], snapshots, region=region)
+        finally:
+            return snapshots
 
     async def _get_and_set_snapshot_attributes(self, snapshot: {}, region: str):
         ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)

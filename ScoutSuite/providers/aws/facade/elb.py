@@ -14,8 +14,12 @@ class ELBFacade(AWSBaseFacade):
     policies_cache = set()
 
     async def get_load_balancers(self, region: str, vpc: str):
-        await self.cache_load_balancers(region)
-        return [load_balancer for load_balancer in self.load_balancers_cache[region] if load_balancer['VpcId'] == vpc]
+        try:
+            await self.cache_load_balancers(region)
+            return [load_balancer for load_balancer in self.load_balancers_cache[region] if load_balancer['VpcId'] == vpc]
+        except Exception as e:
+            print_exception('Failed to get ELB load balancers: {}'.format(e))
+            return []
 
     async def cache_load_balancers(self, region):
         async with self.regional_load_balancers_cache_locks.setdefault(region, asyncio.Lock()):
@@ -44,19 +48,23 @@ class ELBFacade(AWSBaseFacade):
             print_exception('Failed to describe ELB load balancer attributes: {}'.format(e))
 
     async def get_policies(self, region: str):
-        await self.cache_load_balancers(region)
-        for load_balancer in self.load_balancers_cache[region]:
-            load_balancer['policy_names'] = []
-            for listener_description in load_balancer['ListenerDescriptions']:
-                for policy_name in listener_description['PolicyNames']:
-                    policy_id = get_non_provider_id(policy_name)
-                    if policy_id not in self.policies_cache:
-                        load_balancer['policy_names'].append(policy_name)
-                        self.policies_cache.add(policy_id)
+        try:
+            await self.cache_load_balancers(region)
+            for load_balancer in self.load_balancers_cache[region]:
+                load_balancer['policy_names'] = []
+                for listener_description in load_balancer['ListenerDescriptions']:
+                    for policy_name in listener_description['PolicyNames']:
+                        policy_id = get_non_provider_id(policy_name)
+                        if policy_id not in self.policies_cache:
+                            load_balancer['policy_names'].append(policy_name)
+                            self.policies_cache.add(policy_id)
 
-        policies = await map_concurrently(self._get_policies, self.load_balancers_cache[region], region=region)
-        # Because _get_policies returns a list, policies has to be flatten:
-        return [policy for nested_policy in policies for policy in nested_policy]
+            policies = await map_concurrently(self._get_policies, self.load_balancers_cache[region], region=region)
+            # Because _get_policies returns a list, policies has to be flatten:
+            return [policy for nested_policy in policies for policy in nested_policy]
+        except Exception as e:
+            print_exception('Failed to describe ELB policies: {}'.format(e))
+            return []
 
     async def _get_policies(self, load_balancer: dict, region: str):
             if len(load_balancer['policy_names']) == 0:
@@ -70,4 +78,4 @@ class ELBFacade(AWSBaseFacade):
                 )
             except Exception as e:
                 print_exception('Failed to retrieve load balancer policies: {}'.format(e))
-                raise
+                return []
