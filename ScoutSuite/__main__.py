@@ -24,36 +24,39 @@ def run_from_cli():
     # Get the dictionary to get None instead of a crash
     args = args.__dict__
 
-    return run(provider=args.get('provider'),
-               # AWS
-               profile=args.get('profile'),
-               # Azure
-               user_account=args.get('user_account'), service_account=args.get('service_account'),
-               cli=args.get('cli'), msi=args.get('msi'), service_principal=args.get('service_principal'), file_auth=args.get('file_auth'),
-               tenant_id=args.get('tenant_id'), subscription_id=args.get('subscription_id'),
-               client_id=args.get('client_id'), client_secret=args.get('client_secret'),
-               username=args.get('username'), password=args.get('password'),
-               # GCP
-               project_id=args.get('project_id'), folder_id=args.get('folder_id'), organization_id=args.get('organization_id'), all_projects=args.get('all_projects'),
-               # General
-               report_name=args.get('report_name'), report_dir=args.get('report_dir'),
-               timestamp=args.get('timestamp'),
-               services=args.get('services'), skipped_services=args.get('skipped_services'),
-               result_format=args.get('result_format'),
-               database_name=args.get('database_name'),
-               host_ip=args.get('host_ip'),
-               host_port=args.get('host_port'),
-               max_workers=args.get('max_workers'),
-               regions=args.get('regions'),
-               fetch_local=args.get('fetch_local'), update=args.get('update'),
-               ip_ranges=args.get('ip_ranges'), ip_ranges_name_key=args.get('ip_ranges_name_key'),
-               ruleset=args.get('ruleset'), exceptions=args.get('exceptions'),
-               force_write=args.get('force_write'),
-               debug=args.get('debug'),
-               quiet=args.get('quiet'),
-               log_file=args.get('log_file'),
-               no_browser=args.get('no_browser'),
-               programmatic_execution=False)
+    try:
+        return run(provider=args.get('provider'),
+                   # AWS
+                   profile=args.get('profile'),
+                   # Azure
+                   user_account=args.get('user_account'), service_account=args.get('service_account'),
+                   cli=args.get('cli'), msi=args.get('msi'), service_principal=args.get('service_principal'), file_auth=args.get('file_auth'),
+                   tenant_id=args.get('tenant_id'), subscription_id=args.get('subscription_id'),
+                   client_id=args.get('client_id'), client_secret=args.get('client_secret'),
+                   username=args.get('username'), password=args.get('password'),
+                   # GCP
+                   project_id=args.get('project_id'), folder_id=args.get('folder_id'), organization_id=args.get('organization_id'), all_projects=args.get('all_projects'),
+                   # General
+                   report_name=args.get('report_name'), report_dir=args.get('report_dir'),
+                   timestamp=args.get('timestamp'),
+                   services=args.get('services'), skipped_services=args.get('skipped_services'),
+                   result_format=args.get('result_format'),
+                   database_name=args.get('database_name'),
+                   host_ip=args.get('host_ip'),
+                   host_port=args.get('host_port'),
+                   max_workers=args.get('max_workers'),
+                   regions=args.get('regions'),
+                   fetch_local=args.get('fetch_local'), update=args.get('update'),
+                   ip_ranges=args.get('ip_ranges'), ip_ranges_name_key=args.get('ip_ranges_name_key'),
+                   ruleset=args.get('ruleset'), exceptions=args.get('exceptions'),
+                   force_write=args.get('force_write'),
+                   debug=args.get('debug'),
+                   quiet=args.get('quiet'),
+                   log_file=args.get('log_file'),
+                   no_browser=args.get('no_browser'),
+                   programmatic_execution=False)
+    except (KeyboardInterrupt, SystemExit):
+        print_info('Exiting')
 
 
 def run(provider,
