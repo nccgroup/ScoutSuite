@@ -1,7 +1,7 @@
 {
     "dashboard_name": "SQL Databases",
-    "description": "Transparent Data Encryption is disabled for some SQL databases",
-    "rationale": "You should enable transparent data encryption for all of your SQL databases (CIS 4.2.6).",
+    "description": "Transparent Data Encryption Disabled for SQL Databases",
+    "rationale": "Enable transparent data encryption for all SQL databases (CIS 4.2.6).",
     "path": "sqldatabase.servers.id.databases.id",
     "display_path": "sqldatabase.servers.id",
     "conditions": [ "and",

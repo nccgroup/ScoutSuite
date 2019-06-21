@@ -1,6 +1,6 @@
 {
     "dashboard_name": "Network",
-    "description": "Network watcher not  enabled",
+    "description": "Network Watcher not Enabled",
     "rationale": "Network watchers should be enabled (CIS 6.5).",
     "path": "network.network_watchers",
     "display_path": "network.network_watchers",

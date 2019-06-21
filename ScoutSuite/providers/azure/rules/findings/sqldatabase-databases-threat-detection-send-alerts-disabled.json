@@ -1,7 +1,7 @@
 {
     "dashboard_name": "SQL Databases",
-    "description": "Send threat detection alerts is disabled for some SQL databases",
-    "rationale": "You should specify email addresses and ensure that alerts are sent to them (CIS 4.2.4 and 4.2.5).",
+    "description": "Send Threat Detection Alerts Disabled for SQL Databases",
+    "rationale": "Specify email addresses and ensure that alerts are sent to them (CIS 4.2.4 & 4.2.5).",
     "path": "sqldatabase.servers.id.databases.id",
     "display_path": "sqldatabase.servers.id",
     "conditions": [ "and",

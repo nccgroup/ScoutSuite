@@ -1,7 +1,7 @@
 {
     "dashboard_name": "SQL Servers",
-    "description": "Threat detection is disabled for some SQL servers",
-    "rationale": "You should enable threat detection for all of your SQL servers (CIS 4.1.2).",
+    "description": "Threat Detection Disabled for SQL Servers",
+    "rationale": "Enable threat detection for all SQL servers (CIS 4.1.2).",
     "path": "sqldatabase.servers.id",
     "display_path": "sqldatabase.servers.id",
     "conditions": [ "and",

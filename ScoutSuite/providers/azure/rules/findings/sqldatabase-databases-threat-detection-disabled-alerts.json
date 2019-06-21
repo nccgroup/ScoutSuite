@@ -1,7 +1,7 @@
 {
     "dashboard_name": "SQL Databases",
-    "description": "Some threat detection alerts are disabled for some SQL databases",
-    "rationale": "You should not disable alerts related to threat detections (CIS 4.2.3).",
+    "description": "Threat Detection Alerts Disabled for SQL databases",
+    "rationale": "Enable alerts related to threat detections (CIS 4.2.3).",
     "path": "sqldatabase.servers.id.databases.id",
     "display_path": "sqldatabase.servers.id",
     "conditions": [ "and",

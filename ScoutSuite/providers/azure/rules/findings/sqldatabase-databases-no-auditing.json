@@ -1,7 +1,7 @@
 {
     "dashboard_name": "SQL Databases",
-    "description": "Auditing disabled for SQL databases",
-    "rationale": "You should enable auditing for all of your SQL databases (CIS 4.2.1).",
+    "description": "Auditing Disabled for SQL Databases",
+    "rationale": "Enable auditing for all SQL databases (CIS 4.2.1).",
     "path": "sqldatabase.servers.id.databases.id",
     "display_path": "sqldatabase.servers.id",
     "conditions": [ "and",
