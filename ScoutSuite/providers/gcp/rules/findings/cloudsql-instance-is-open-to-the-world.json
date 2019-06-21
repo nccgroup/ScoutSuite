@@ -1,6 +1,6 @@
 {
   "description": "Instance allowing all incoming connections",
-  "Rationale": "Database instances should accept connections from trusted IPs and networks only (CIS 6.2).",
+  "rationale": "<b>Description:</b><br><br>Database instances should accept connections from trusted IPs and networks only.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 6.2</li></ul>",
   "dashboard_name": "Instances",
   "path": "cloudsql.projects.id.instances.id.authorized_networks.id",
   "display_path": "cloudsql.projects.id.instances.id",

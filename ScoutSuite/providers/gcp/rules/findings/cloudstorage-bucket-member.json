@@ -2,7 +2,7 @@
   "arg_names": [ "Member", "Description"],
   "key": "cloudstorage-bucket-_ARG_0_",
   "description": "Bucket accessible by '_ARG_0_'",
-  "rationale": "Allowing anonymous and/or public access grants permissions to anyone to access bucket content. Such access might not be desired if you are storing any sensitive data. Hence, ensure that anonymous and/or public access to a bucket is not allowed (CIS 5.1).",
+  "rationale": "<b>Description:</b><br><br>Allowing anonymous and/or public access grants permissions to anyone to access bucket content. Such access might not be desired if you are storing any sensitive data. Hence, ensure that anonymous and/or public access to a bucket is not allowed.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 5.1</li></ul>",
   "dashboard_name": "Buckets",
   "display_path": "cloudstorage.projects.id.buckets.id",
   "path": "cloudstorage.projects.id.buckets.id.acl_configuration",
