@@ -6,10 +6,15 @@ from ScoutSuite.providers.utils import map_concurrently, run_concurrently
 
 class EMRFacade(AWSBaseFacade):
     async def get_clusters(self, region):
-        cluster_list = await AWSFacadeUtils.get_all_pages('emr', region, self.session, 'list_clusters', 'Clusters')
-        cluster_ids = [cluster['Id'] for cluster in cluster_list]
 
-        return await map_concurrently(self._get_cluster, cluster_ids, region=region)
+        try:
+            cluster_list = await AWSFacadeUtils.get_all_pages('emr', region, self.session, 'list_clusters', 'Clusters')
+            cluster_ids = [cluster['Id'] for cluster in cluster_list]
+        except Exception as e:
+            print_exception('Failed to get EMR clusterss: {}'.format(e))
+            return []
+        else:
+            return await map_concurrently(self._get_cluster, cluster_ids, region=region)
 
     async def _get_cluster(self, cluster_id: str, region: str):
         client = AWSFacadeUtils.get_client('emr', self.session, region)

@@ -13,8 +13,13 @@ class RedshiftFacade(AWSBaseFacade):
     clusters_cache = {}
 
     async def get_clusters(self, region: str, vpc: str):
-        await self.cache_clusters(region)
-        return [cluster for cluster in self.clusters_cache[region] if cluster['VpcId'] == vpc]
+
+        try:
+            await self.cache_clusters(region)
+            return [cluster for cluster in self.clusters_cache[region] if cluster['VpcId'] == vpc]
+        except Exception as e:
+            print_exception('Failed to get Redshift clusters: {}'.format(e))
+            return []
 
     async def cache_clusters(self, region):
         async with self.regional_cluster_cache_locks.setdefault(region, Lock()):
@@ -29,8 +34,12 @@ class RedshiftFacade(AWSBaseFacade):
                     cluster['VpcId'] if 'VpcId' in cluster and cluster['VpcId'] else ec2_classic
 
     async def get_cluster_parameter_groups(self, region: str):
-        return await AWSFacadeUtils.get_all_pages(
-            'redshift', region, self.session, 'describe_cluster_parameter_groups', 'ParameterGroups')
+        try:
+            return await AWSFacadeUtils.get_all_pages(
+                'redshift', region, self.session, 'describe_cluster_parameter_groups', 'ParameterGroups')
+        except Exception as e:
+            print_exception('Failed to get Redshift parameter groups: {}'.format(e))
+            return []
 
     async def get_cluster_security_groups(self, region: str):
         # For VPC-by-default customers, describe_cluster_parameters will throw an exception. Just try and ignore it:

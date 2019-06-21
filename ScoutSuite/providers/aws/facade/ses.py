@@ -7,10 +7,14 @@ from ScoutSuite.providers.utils import run_concurrently
 
 class SESFacade(AWSBaseFacade):
     async def get_identities(self, region: str):
-        identity_names = await AWSFacadeUtils.get_all_pages(
-            'ses', region, self.session, 'list_identities', 'Identities')
+        try:
+            identity_names = await AWSFacadeUtils.get_all_pages(
+                'ses', region, self.session, 'list_identities', 'Identities')
 
-        return await map_concurrently(self._get_identity_dkim_attributes, identity_names, region=region)
+            return await map_concurrently(self._get_identity_dkim_attributes, identity_names, region=region)
+        except Exception as e:
+            print_exception('Failed to get SES identities: {}'.format(e))
+            return []
 
     async def _get_identity_dkim_attributes(self, identity_name: str, region: str):
         ses_client = AWSFacadeUtils.get_client('ses', self.session, region)
