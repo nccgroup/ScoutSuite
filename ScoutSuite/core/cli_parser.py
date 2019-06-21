@@ -280,7 +280,8 @@ class ScoutSuiteArgumentParser:
             args.force_write = True
 
         # Test conditions
-        if args.tenant_id and not args.service_principal:
+        v = vars(args)
+        if v.get('tenant_id') and not v.get('service_principal'):
             self.parser.error('--tenant can only be set when using --service-principal')
         # TODO add more conditions
 
