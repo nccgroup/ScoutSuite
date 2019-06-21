@@ -102,11 +102,6 @@ class TestScoutRulesRuleset:
         prompt_yes_no.reset_mock()
         prompt_yes_no.return_value = True
 
-        target = Ruleset(cloud_provider='aws', environment_name="sample", filename=None)
-        assert (prompt_yes_no.call_count == 1)
-        assert (os.path.samefile(target.filename,
-                                 os.path.join(target.rules_data_path, './rulesets/ruleset-sample.json')))
-
     def test_find_file(self):
         test101 = Ruleset(cloud_provider='aws').find_file(self.test_ruleset_001)
         test102 = Ruleset(cloud_provider='aws').find_file('default')
