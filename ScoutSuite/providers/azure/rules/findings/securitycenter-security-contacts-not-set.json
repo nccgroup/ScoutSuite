@@ -1,7 +1,7 @@
 {
     "dashboard_name": "Security Center",
     "description": "No Security Contact Set",
-    "rationale": "Set at least one security contact (CIS 2.16 & 2.17).",
+    "rationale": "<b>Description:</b><br><br>Set at least one security contact.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 2.16</li><li>CIS Microsoft Azure Foundations v1.0.0 2.17</li></ul>",
     "path": "securitycenter.security_contacts",
     "display_path": "securitycenter.security_contacts",
     "conditions": [ "and",

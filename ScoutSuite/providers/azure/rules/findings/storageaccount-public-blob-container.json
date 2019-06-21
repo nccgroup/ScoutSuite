@@ -1,7 +1,7 @@
 {
     "dashboard_name": "Storage Accounts",
     "description": "Public Blob Container",
-    "rationale": "Blob containers should be private (CIS 3.7).",
+	"rationale": "<b>Description:</b><br><br>Blob containers should be private.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 3.7</li></ul>",
     "path": "storageaccounts.storage_accounts.id.blob_containers.id",
     "display_path": "storageaccounts.storage_accounts.id",
     "conditions": [ "and",

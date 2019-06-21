@@ -1,7 +1,7 @@
 {
     "dashboard_name": "SQL Databases",
     "description": "Auditing Disabled for SQL Databases",
-    "rationale": "Enable auditing for all SQL databases (CIS 4.2.1).",
+	"rationale": "<b>Description:</b><br><br>Enable auditing for all SQL databases.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 4.2</li></ul>",
     "path": "sqldatabase.servers.id.databases.id",
     "display_path": "sqldatabase.servers.id",
     "conditions": [ "and",
