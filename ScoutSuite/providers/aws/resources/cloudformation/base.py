@@ -48,7 +48,7 @@ class Stacks(AWSResources):
             template = template['Resources']
             for group in template.keys():
                 if 'DeletionPolicy' in template[group]:
-                    if template[group]['DeletionPolicy'] is 'Delete':
+                    if template[group]['DeletionPolicy'] == 'Delete':
                         has_dp = False
                 else:
                     has_dp = False
