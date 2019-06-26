@@ -160,7 +160,7 @@ async def _run(provider,
                                                  username=username,
                                                  password=password,
                                                  access_key_id=access_key_id,
-                                                 access_key_secret=access_key_secret)
+                                                 access_key_secret=access_key_secret,
                                                  programmatic_execution=programmatic_execution)
 
         if not credentials:
