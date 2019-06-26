@@ -1,7 +1,8 @@
-import asyncio
 from google.cloud import storage
+
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
+
 
 class CloudStorageFacade:
     async def get_buckets(self, project_id: str):

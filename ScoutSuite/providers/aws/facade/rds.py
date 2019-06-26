@@ -17,8 +17,12 @@ class RDSFacade(AWSBaseFacade):
     _subnet_groups_cache = {}
 
     async def get_instances(self, region: str, vpc: str):
-        await self._cache_instances(region)
-        return [instance for instance in self._instances_cache[region] if instance['VpcId'] == vpc]
+        try:
+            await self._cache_instances(region)
+            return [instance for instance in self._instances_cache[region] if instance['VpcId'] == vpc]
+        except Exception as e:
+            print_exception('Failed to get RDS instances: {}'.format(e))
+            return []
 
     async def _cache_instances(self, region: str):
         async with self._regional_instances_cache_locks.setdefault(region, Lock()):
@@ -50,8 +54,12 @@ class RDSFacade(AWSBaseFacade):
                 print_exception('Failed to describe RDS clusters: {}'.format(e))
 
     async def get_snapshots(self, region: str, vpc: str):
-        await self._cache_snapshots(region)
-        return [snapshot for snapshot in self._snapshots_cache[region] if snapshot['VpcId'] == vpc]
+        try:
+            await self._cache_snapshots(region)
+            return [snapshot for snapshot in self._snapshots_cache[region] if snapshot['VpcId'] == vpc]
+        except Exception as e:
+            print_exception('Failed to get RDS snapshots: {}'.format(e))
+            return []
 
     async def _cache_snapshots(self, region: str):
         async with self._regional_snapshots_cache_locks.setdefault(region, Lock()):
@@ -79,8 +87,12 @@ class RDSFacade(AWSBaseFacade):
             print_exception('Failed to describe RDS snapshot attributes: {}'.format(e))
 
     async def get_subnet_groups(self, region: str, vpc: str):
-        await self._cache_subnet_groups(region)
-        return [subnet_group for subnet_group in self._subnet_groups_cache[region] if subnet_group['VpcId'] == vpc]
+        try:
+            await self._cache_subnet_groups(region)
+            return [subnet_group for subnet_group in self._subnet_groups_cache[region] if subnet_group['VpcId'] == vpc]
+        except Exception as e:
+            print_exception('Failed to get RDS subnet groups: {}'.format(e))
+            return []
 
     async def _cache_subnet_groups(self, region: str):
         async with self._regional_subnet_groups_cache_locks.setdefault(region, Lock()):
@@ -91,12 +103,16 @@ class RDSFacade(AWSBaseFacade):
                 'rds', region, self.session, 'describe_db_subnet_groups', 'DBSubnetGroups')
                 
     async def get_parameter_groups(self, region: str):
-        parameter_groups = await AWSFacadeUtils.get_all_pages(
-            'rds', region, self.session, 'describe_db_parameter_groups', 'DBParameterGroups')
-        await get_and_set_concurrently(
-            [self._get_and_set_db_parameters], parameter_groups, region=region)
-
-        return parameter_groups
+        try:
+            parameter_groups = await AWSFacadeUtils.get_all_pages(
+                'rds', region, self.session, 'describe_db_parameter_groups', 'DBParameterGroups')
+            await get_and_set_concurrently(
+                [self._get_and_set_db_parameters], parameter_groups, region=region)
+        except Exception as e:
+            print_exception('Failed to get RDS parameter groups: {}'.format(e))
+            parameter_groups = []
+        finally:
+            return parameter_groups
 
     async def _get_and_set_db_parameters(self, parameter_group: {}, region: str):
         name = parameter_group['DBParameterGroupName']
@@ -114,5 +130,9 @@ class RDSFacade(AWSBaseFacade):
             print_exception('Failed fetching DB parameters for %s: %s' % (name, e))
 
     async def get_security_groups(self, region: str) :
-        return await AWSFacadeUtils.get_all_pages(
-            'rds', region, self.session, 'describe_db_security_groups', 'DBSecurityGroups')
+        try:
+            return await AWSFacadeUtils.get_all_pages(
+                'rds', region, self.session, 'describe_db_security_groups', 'DBSecurityGroups')
+        except Exception as e:
+            print_exception('Failed to get RDS security groups: {}'.format(e))
+            return []

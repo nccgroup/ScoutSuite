@@ -1,7 +1,8 @@
 from ScoutSuite.core.console import print_exception
-from ScoutSuite.providers.gcp.facade.base import GCPBaseFacade
+from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently
+
 
 class GCEFacade(GCPBaseFacade):
     def __init__(self):
@@ -93,7 +94,8 @@ class GCEFacade(GCPBaseFacade):
         try:
             gce_client = self._get_client()
             return await run_concurrently(
-                lambda: gce_client.subnetworks().get(project=project_id, region=region, subnetwork=subnetwork_id).execute()
+                lambda: gce_client.subnetworks().get(project=project_id, region=region,
+                                                     subnetwork=subnetwork_id).execute()
             )
         except Exception as e:
             print_exception('Failed to retrieve subnetwork: {}'.format(e))

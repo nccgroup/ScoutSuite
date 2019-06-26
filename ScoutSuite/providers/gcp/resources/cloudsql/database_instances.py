@@ -1,4 +1,5 @@
-from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
+from ScoutSuite.core.console import print_exception
+from ScoutSuite.providers.gcp.facade.base import GCPFacade
 from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
 from ScoutSuite.providers.gcp.resources.cloudsql.backups import Backups
 from ScoutSuite.providers.gcp.resources.cloudsql.users import Users
@@ -28,6 +29,7 @@ class DatabaseInstances(GCPCompositeResources):
 
     def _parse_instance(self, raw_instance):
         instance_dict = {}
+
         instance_dict['id'] = get_non_provider_id(raw_instance['name'])
         instance_dict['name'] = raw_instance['name']
         instance_dict['project_id'] = raw_instance['project']
@@ -36,6 +38,22 @@ class DatabaseInstances(GCPCompositeResources):
         instance_dict['log_enabled'] = self._is_log_enabled(raw_instance)
         instance_dict['ssl_required'] = self._is_ssl_required(raw_instance)
         instance_dict['authorized_networks'] = raw_instance['settings']['ipConfiguration']['authorizedNetworks']
+
+        # check if is or has a failover replica
+        instance_dict['has_failover_replica'] = raw_instance.get('failoverReplica', []) != []
+        instance_dict['is_failover_replica'] = raw_instance.get('masterInstanceName', '') != ''
+
+        # network interfaces
+        instance_dict['public_ip'] = None
+        instance_dict['private_ip'] = None
+        for address in raw_instance.get('ipAddresses', []):
+            if address['type'] == 'PRIMARY':
+                instance_dict['public_ip'] = address['ipAddress']
+            elif address['type'] == 'PRIVATE':
+                instance_dict['private_ip'] = address['ipAddress']
+            else:
+                print_exception('Unknown Cloud SQL instance IP address type: {}'.format(address['type']))
+
         return instance_dict['id'], instance_dict
 
     def _is_log_enabled(self, raw_instance):

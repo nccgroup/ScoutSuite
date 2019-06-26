@@ -118,3 +118,7 @@ span.slider.round {
     color: #fff;
     margin-right: 5px;
 }
+
+.disabled-link a .finding-title {
+    color: rgb(173, 173, 173) !important;
+}

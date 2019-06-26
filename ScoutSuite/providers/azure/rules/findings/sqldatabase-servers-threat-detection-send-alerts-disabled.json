@@ -1,7 +1,7 @@
 {
     "dashboard_name": "SQL Servers",
-    "description": "Send threat detection alerts is disabled for some SQL servers",
-    "rationale": "You should specify email addresses and ensure that alerts are sent to them (CIS 4.1.4 and 4.1.5).",
+    "description": "Send Threat Detection Alerts Disabled for SQL Servers",
+    "rationale": "<b>Description:</b><br><br>Specify email addresses and ensure that alerts are sent to them.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 4.1.4</li><li>CIS Microsoft Azure Foundations v1.0.0 4.1.5</li></ul>",
     "path": "sqldatabase.servers.id",
     "display_path": "sqldatabase.servers.id",
     "conditions": [ "and",

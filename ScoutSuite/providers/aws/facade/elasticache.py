@@ -81,3 +81,4 @@ class ElastiCacheFacade(AWSBaseFacade):
         except ClientError as e:
             if e.response['Error']['Code'] != 'InvalidParameterValue':
                 print_exception('Failed to describe cache parameter groups: {}'.format(e))
+            return []

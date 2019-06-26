@@ -1,5 +1,5 @@
 from ScoutSuite.providers.base.resources.base import Resources
-from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
+from ScoutSuite.providers.gcp.facade.base import GCPFacade
 
 
 class Snapshots(Resources):
@@ -25,5 +25,5 @@ class Snapshots(Resources):
         return snapshot_dict['id'], snapshot_dict
 
     def _get_description(self, raw_snapshot):
-        description = raw_snapshot.get('description')   
+        description = raw_snapshot.get('description')
         return description if description else 'N/A'

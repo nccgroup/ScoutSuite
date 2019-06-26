@@ -1,7 +1,7 @@
 {
     "dashboard_name": "SQL Databases",
-    "description": "Azure Active Directory Admin is not configured for some SQL servers",
-    "rationale": "You should set an Azure Active Directory admin for every SQL server (CIS 4.1.8).",
+    "description": "Azure Active Directory Admin Not Configured for SQL Servers",
+	"rationale": "<b>Description:</b><br><br>Set an Azure Active Directory admin for every SQL server.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 4.1</li></ul>",
     "path": "sqldatabase.servers.id",
     "display_path": "sqldatabase.servers.id",
     "conditions": [ "and",

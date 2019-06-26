@@ -1,5 +1,5 @@
 from ScoutSuite.providers.base.resources.base import Resources
-from ScoutSuite.providers.gcp.facade.gcp import GCPFacade
+from ScoutSuite.providers.gcp.facade.base import GCPFacade
 
 
 class Networks(Resources):
@@ -27,5 +27,5 @@ class Networks(Resources):
         return network_dict['id'], network_dict
 
     def _get_description(self, raw_network):
-        description = raw_network.get('description')   
+        description = raw_network.get('description')
         return description if description else 'N/A'

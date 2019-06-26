@@ -325,6 +325,7 @@ function hideLinks(resourcePath) {
  */
 function updateHash(path) {
     window.location.hash = path;
+    showRowWithItems(path); // this handles the case where the hash is the same as that's being updated, e.g. when clicking "Show All"
 }
 
 /**

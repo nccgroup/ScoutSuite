@@ -10,14 +10,19 @@ from ScoutSuite.providers.utils import run_concurrently
 class CloudFormation(AWSBaseFacade):
 
     async def get_stacks(self, region: str):
-        stacks = await AWSFacadeUtils.get_all_pages(
-            'cloudformation', region, self.session, 'list_stacks', 'StackSummaries')
-        stacks = [stack for stack in stacks if not CloudFormation._is_stack_deleted(stack)]
-        await get_and_set_concurrently(
-            [self._get_and_set_description, self._get_and_set_template, self._get_and_set_policy],
-            stacks, region=region)
-
-        return stacks
+        try:
+            stacks = await AWSFacadeUtils.get_all_pages(
+                'cloudformation', region, self.session, 'list_stacks', 'StackSummaries')
+        except Exception as e:
+            print_exception('Failed to get CloudFormation stack: {}'.format(e))
+            stacks = []
+        else:
+            stacks = [stack for stack in stacks if not CloudFormation._is_stack_deleted(stack)]
+            await get_and_set_concurrently(
+                [self._get_and_set_description, self._get_and_set_template, self._get_and_set_policy],
+                stacks, region=region)
+        finally:
+            return stacks
 
     async def _get_and_set_description(self, stack: {}, region: str):
         client = AWSFacadeUtils.get_client('cloudformation', self.session, region)

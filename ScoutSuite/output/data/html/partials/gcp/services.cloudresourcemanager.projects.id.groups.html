@@ -1,0 +1,35 @@
+
+<!-- Cloud Resources Manager groups' partial -->
+<script id="services.cloudresourcemanager.projects.id.groups.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Group: <span id="cloudresourcemanager.projects.{{@../key}}.groups.{{@key}}.name">{{name}}</span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Bindings:</h4>
+        <div class="accordion-inner">
+            <ul>
+                {{#each roles}}
+                <li><samp>{{this}}</samp></li>
+                {{else}}
+                <li><samp>None</samp></li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.cloudresourcemanager.projects.id.groups", $("#services\\.cloudresourcemanager\\.projects\\.id\\.groups\\.partial").html());
+</script>
+
+<!-- Single cloudresourcemanager group template -->
+<script id="single_cloudresourcemanager_group-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.cloudresourcemanager.projects.id.groups'}}
+</script>
+<script>
+    var single_cloudresourcemanager_group_template = Handlebars.compile($("#single_cloudresourcemanager_group-template").html());
+</script>
