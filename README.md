@@ -16,7 +16,7 @@ environments. Using the APIs exposed by cloud providers, Scout Suite gathers con
 and highlights risk areas. Rather than going through dozens of pages on the web consoles, Scout Suite presents a clear 
 view of the attack surface automatically.
 
-Scout Suite is stable and actively maintained, but a number of features and internals may change. As such, please bare
+Scout Suite is stable and actively maintained, but a number of features and internals may change. As such, please bear
 with us as we find time to work on, and improve, the tool. Feel free to report a bug with details (please provide
 console output using the `--debug` argument), request a new feature, or send a pull request.
 
