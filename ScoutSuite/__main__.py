@@ -24,6 +24,9 @@ def run_from_cli():
     # Get the dictionary to get None instead of a crash
     args = args.__dict__
 
+    # TODO provider-specific arguments should be prepended with the provider's code
+    #  (e.g. aws_profile, azure_user_account)
+
     try:
         return run(provider=args.get('provider'),
                    # AWS
@@ -37,7 +40,7 @@ def run_from_cli():
                    # GCP
                    project_id=args.get('project_id'), folder_id=args.get('folder_id'), organization_id=args.get('organization_id'), all_projects=args.get('all_projects'),
                    # Aliyun
-                   args.get('access_key_id'), args.get('access_key_secret'),
+                   access_key_id=args.get('access_key_id'), access_key_secret=args.get('access_key_secret'),
                    # General
                    report_name=args.get('report_name'), report_dir=args.get('report_dir'),
                    timestamp=args.get('timestamp'),
