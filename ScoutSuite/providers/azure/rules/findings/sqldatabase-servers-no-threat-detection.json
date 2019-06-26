@@ -1,7 +1,7 @@
 {
     "dashboard_name": "SQL Servers",
-    "description": "Threat detection is disabled for some SQL servers",
-    "rationale": "You should enable threat detection for all of your SQL servers (CIS 4.1.2).",
+    "description": "Threat Detection Disabled for SQL Servers",
+	"rationale": "<b>Description:</b><br><br>Enable threat detection for all SQL servers.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 4.1</li></ul>",
     "path": "sqldatabase.servers.id",
     "display_path": "sqldatabase.servers.id",
     "conditions": [ "and",

@@ -1,7 +1,7 @@
 {
     "dashboard_name": "SQL Databases",
-    "description": "Theat detection disabled for SQL databases",
-    "rationale": "You should enable threat detection for all of your SQL databases (CIS 4.2.2).",
+    "description": "Theat Detection Disabled for SQL Databases",
+	"rationale": "<b>Description:</b><br><br>Enable threat detection for all of SQL databases.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 4.2</li></ul>",
     "path": "sqldatabase.servers.id.databases.id",
     "display_path": "sqldatabase.servers.id",
     "conditions": [ "and",

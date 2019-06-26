@@ -7,8 +7,11 @@ from ScoutSuite.providers.utils import run_concurrently
 class ConfigFacade(AWSBaseFacade):
 
     async def get_rules(self, region):
-        return await \
-            AWSFacadeUtils.get_all_pages('config', region, self.session, 'describe_config_rules', 'ConfigRules')
+        try:
+            return await AWSFacadeUtils.get_all_pages('config', region, self.session, 'describe_config_rules', 'ConfigRules')
+        except Exception as e:
+            print_exception('Failed to get Config ruless: {}'.format(e))
+            return []
 
     async def get_recorders(self, region: str):
         client = AWSFacadeUtils.get_client('config', self.session, region)

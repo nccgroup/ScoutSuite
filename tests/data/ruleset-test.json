@@ -1,0 +1,11 @@
+{
+    "rules": {
+        "iam-password-policy-reuse-enabled.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ]
+    },
+    "about": "regression test"
+}

@@ -12,7 +12,7 @@ class CloudTrailFacade(AWSBaseFacade):
             trails = await run_concurrently(
                 lambda: client.describe_trails()['trailList'])
         except Exception as e:
-            print_exception('Failed to describe CloutTrail trail: {}'.format(e))
+            print_exception('Failed to describe CloudTrail trail: {}'.format(e))
             trails = []
         else:
             await get_and_set_concurrently(

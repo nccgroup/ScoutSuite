@@ -1,204 +1,204 @@
 {
-  "about": "This ruleset consists of numerous rules that are considered standard by NCC Group. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of provider-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configured, and some of them being applicable to a limited number of users.",
-  "rules": {
-    "cloudresourcemanager-sa-has-admin-privileges.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "cloudresourcemanager-user-has-sa-user-role.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "cloudresourcemanager-gmail-accounts-used.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "cloudstorage-bucket-no-versioning.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "cloudstorage-bucket-no-logging.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "cloudstorage-bucket-member.json": [
-      {
-        "args": [
-          "allUsers"
+    "about": "This ruleset consists of numerous rules that are considered standard by NCC Group. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of provider-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configured, and some of them being applicable to a limited number of users.",
+    "rules": {
+        "cloudresourcemanager-gmail-accounts-used.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
         ],
-        "enabled": true,
-        "level": "danger"
-      },
-      {
-        "args": [
-          "allAuthenticatedUsers"
+        "cloudresourcemanager-primitive-role-in-use.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
         ],
-        "enabled": true,
-        "level": "danger"
-      }
-    ],
+        "cloudresourcemanager-role-assigned-to-user.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudresourcemanager-sa-has-admin-privileges.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudresourcemanager-user-has-sa-user-role.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "cloudsql-allows-root-login-from-any-host.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "cloudsql-instance-backups-disabled.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "cloudsql-instance-no-binary-logging.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "cloudsql-instance-ssl-not-required.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "cloudsql-instance-with-no-backups.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "cloudsql-instance-is-open-to-the-world.json": [
-      {
-        "enabled": true,
-        "level": "danger"
-      }
-    ],
-    "stackdriverlogging-no-export-sinks.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "computeengine-instance-with-deletion-protection-disabled.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "computeengine-old-disk-snapshot.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "computeengine-instance-disk-with-no-snapshot.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "computeengine-network-with-no-instances.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "computeengine-firewall-rule-allows-port-range.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "computeengine-firewall-default-rule-in-use.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "computeengine-firewall-rule-allows-all-ports.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "computeengine-firewall-rule-allows-public-access.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "computeengine-firewall-rule-opens-all-ports-to-all.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "computeengine-firewall-rule-opens-sensitive-port-to-all.json": [
-      {
-        "enabled": true,
-        "level": "warning",
-        "args": [
-            "INGRESS"
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-instance-backups-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-instance-is-open-to-the-world.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "cloudsql-instance-no-binary-logging.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-instance-ssl-not-required.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudsql-instance-with-no-backups.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudstorage-bucket-member.json": [
+            {
+                "args": [
+                    "allUsers"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "allAuthenticatedUsers"
+                ],
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "cloudstorage-bucket-no-logging.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "cloudstorage-bucket-no-versioning.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-firewall-default-rule-in-use.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-firewall-rule-allows-all-ports.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-firewall-rule-allows-internal-traffic.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-firewall-rule-allows-port-range.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-firewall-rule-allows-public-access.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-firewall-rule-opens-all-ports-to-all.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-firewall-rule-opens-sensitive-port-to-all.json": [
+            {
+                "args": [
+                    "INGRESS"
+                ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-disk-with-no-snapshot.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-instance-with-deletion-protection-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-network-with-no-instances.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "computeengine-old-disk-snapshot.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-lack-of-service-account-key-rotation.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-service-account-user-member.json": [
+            {
+                "args": [
+                    "allUsers",
+                    "Service Account with 'allUsers' Service Account User"
+                ],
+                "enabled": true,
+                "level": "warning"
+            },
+            {
+                "args": [
+                    "allAuthenticatedUsers",
+                    "Service Account with 'allAuthenticatedUsers' Service Account User"
+                ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-service-account-with-user-managed-keys.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "stackdriverlogging-no-export-sinks.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
         ]
-      }
-    ],
-    "computeengine-firewall-rule-allows-internal-traffic.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "cloudresourcemanager-primitive-role-in-use.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "cloudresourcemanager-role-assigned-to-user.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "iam-lack-of-service-account-key-rotation.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "iam-service-account-with-user-managed-keys.json": [
-      {
-        "enabled": true,
-        "level": "warning"
-      }
-    ],
-    "iam-service-account-user-member.json": [
-      {
-        "args": [
-          "allUsers",
-          "Service Account with 'allUsers' Service Account User"
-        ],
-        "enabled": true,
-        "level": "warning"
-      },
-      {
-        "args": [
-          "allAuthenticatedUsers",
-          "Service Account with 'allAuthenticatedUsers' Service Account User"
-        ],
-        "enabled": true,
-        "level": "warning"
-      }
-    ]
-  }
+    }
 }

@@ -1,7 +1,7 @@
 {
     "description": "Use of _ARG_0_ instances",
     "key": "ec2-instance-type-_STRIPDOTS_(_ARG_0_)",
-    "rationale": "Policies dictacte _ARG_0_ EC2 instances should not be used in this environment",
+	"rationale": "<b>Description:</b><br><br>Policies dictacte _ARG_0_ EC2 instances should not be used in this environment",
     "path": "ec2.regions.id.vpcs.id.instances.id",
     "dashboard_name": "Instances",
     "conditions": [ "and",

@@ -1,7 +1,7 @@
 {
     "dashboard_name": "Storage Accounts",
     "description": "Access Keys Not Rotated",
-    "rationale": "The access keys of your storage accounts should be rotated at least every _ARG_0_ days. See CIS 3.3.",
+	"rationale": "<b>Description:</b><br><br>The access keys storage accounts should be rotated at least every _ARG_0_ days..<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 3.3</li></ul>",
     "path": "storageaccounts.storage_accounts.id",
     "conditions": [ "or",
         ["storageaccounts.storage_accounts.id.access_keys_last_rotation_date", "equal", "None"],
