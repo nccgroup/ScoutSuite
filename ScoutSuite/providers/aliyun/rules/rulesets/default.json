@@ -39,6 +39,18 @@
         "enabled": true,
         "level": "warning"
       }
+    ],
+    "actiontrail-not-configured.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "actiontrail-not-enabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }

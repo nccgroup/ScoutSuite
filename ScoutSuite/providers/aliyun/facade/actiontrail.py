@@ -7,6 +7,7 @@ from aliyunsdkactiontrail.request.v20171204 import DescribeTrailsRequest
 class ActiontrailFacade:
     def __init__(self, credentials: AliyunCredentials):
         self._client = credentials.client
+        # self._client.set_region_id('cn-hangzhou')  # FIXME this shouldn't be done here
 
     async def get_trails(self):
         """

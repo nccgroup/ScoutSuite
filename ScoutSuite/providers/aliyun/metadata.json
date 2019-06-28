@@ -65,7 +65,7 @@
     "actiontrail": {
       "resources": {
         "trails": {
-          "cols": 2,
+          "cols": 1,
           "path": "services.actiontrail.trails"
         }
       }
