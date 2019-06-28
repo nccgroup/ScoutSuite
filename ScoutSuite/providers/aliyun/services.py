@@ -5,6 +5,7 @@ from ScoutSuite.providers.aliyun.resources.actiontrail.base import ActionTrail
 from ScoutSuite.providers.aliyun.resources.vpc.base import VPC
 from ScoutSuite.providers.aliyun.resources.ecs.base import ECS
 from ScoutSuite.providers.aliyun.resources.rds.base import RDS
+from ScoutSuite.providers.aliyun.resources.kms.base import KMS
 
 
 
@@ -19,6 +20,7 @@ class AliyunServicesConfig(BaseServicesConfig):
         self.ecs = ECS(facade)
         self.rds = RDS(facade)
         self.vpc = VPC(facade)
+        self.kms = KMS(facade)
 
     def _is_provider(self, provider_name):
         return provider_name == 'aliyun'

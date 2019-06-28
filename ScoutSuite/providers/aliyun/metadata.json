@@ -21,13 +21,21 @@
           "path": "services.ram.security_policy"
         }
       }
+    },
+    "kms": {
+      "resources": {
+        "keys": {
+          "cols": 2,
+          "path": "services.kms.keys"
+        }
+      }
     }
   },
   "compute": {
     "ecs": {
       "resources": {
         "instances": {
-          "cols": 1,
+          "cols": 2,
           "path": "services.ecs.instances"
         }
       }
@@ -37,7 +45,7 @@
     "rds": {
       "resources": {
         "instances": {
-          "cols": 1,
+          "cols": 2,
           "path": "services.ecs.instances"
         }
       }

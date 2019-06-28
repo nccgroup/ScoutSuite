@@ -4,6 +4,7 @@ from ScoutSuite.providers.aliyun.facade.ecs import ECSFacade
 from ScoutSuite.providers.aliyun.facade.rds import RDSFacade
 from ScoutSuite.providers.aliyun.facade.vpc import VPCFacade
 from ScoutSuite.providers.aliyun.facade.actiontrail import ActiontrailFacade
+from ScoutSuite.providers.aliyun.facade.kms import KMSFacade
 
 
 class AliyunFacade():
@@ -13,3 +14,4 @@ class AliyunFacade():
         self.ecs = ECSFacade(credentials)
         self.rds = RDSFacade(credentials)
         self.vpc = VPCFacade(credentials)
+        self.kms = KMSFacade(credentials)
