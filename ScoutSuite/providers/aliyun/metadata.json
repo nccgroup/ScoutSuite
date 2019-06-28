@@ -11,6 +11,10 @@
         "password_policy": {
           "cols": 1,
           "path": "services.ram.password_policy"
+        },
+        "security_policy": {
+          "cols": 1,
+          "path": "services.ram.security_policy"
         }
       }
     }

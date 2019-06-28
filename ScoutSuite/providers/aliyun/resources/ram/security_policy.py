@@ -15,20 +15,21 @@ class SecurityPolicy(AliyunResources):
         security_policy_dict = {
             'login_network_masks':
                 raw_security_policy.get('LoginProfilePreference', {}).get('LoginNetworkMasks'),
-            'login)session_duration':
+            'login_session_duration':
                 raw_security_policy.get('LoginProfilePreference', {}).get('LoginSessionDuration'),
-            'enable)save_mfa_ticket':
+            'enable_save_mfa_ticket':
                 raw_security_policy.get('LoginProfilePreference', {}).get('EnableSaveMFATicket'),
             'allow_user_change_password':
-                raw_security_policy.get('LoginProfilePreference', {}).get(
-                    'AllowUserToChangePassword'),
+                raw_security_policy.get('LoginProfilePreference', {}).get('AllowUserToChangePassword'),
             'allow_user_manage_access_keys':
-                raw_security_policy.get('AccessKeyPreference', {}).
-                    get('AllowUserToManageAccessKeys'),
+                raw_security_policy.get('AccessKeyPreference', {}).get('AllowUserToManageAccessKeys'),
             'allow_user_manage_mfa_devices':
                 raw_security_policy.get('MFAPreference', {}).get('AllowUserToManageMFADevices'),
             'allow_user_manage_public_keys':
-                raw_security_policy.get('PublicKeyPreference', {}).
-                    get('AllowUserToManagePublicKeys'),
+                raw_security_policy.get('PublicKeyPreference', {}).get('AllowUserToManagePublicKeys'),
         }
+
+        if security_policy_dict['login_network_masks'] == '':
+            security_policy_dict['login_network_masks'] = None
+
         return security_policy_dict
