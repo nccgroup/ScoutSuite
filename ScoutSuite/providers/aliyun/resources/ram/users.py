@@ -33,7 +33,7 @@ class Users(AliyunCompositeResources):
         user_details = await self.facade.ram.get_user_details(user['name'])
         user['email'] = user_details.get('Email')
         user['mobile_phone'] = user_details.get('MobilePhone')
-        user['last_login_datetime'] = user_details.get('LastLoginDate')
+        user['last_login_datetime'] = user_details.get('LastLoginDate') if user_details.get('LastLoginDate') != '' else None
 
         # get the MFA status for the user
         mfa_enabled, mfa_serial_number = await self.facade.ram.get_user_mfa_status(user['name'])
