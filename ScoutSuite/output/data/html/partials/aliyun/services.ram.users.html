@@ -13,7 +13,10 @@
         <div class="list-group-item-text item-margin">Last Login Date: <span id="ram.users.{{@key}}.last_login_datetime">{{format_date last_login_datetime}}</span></div>
         <div class="list-group-item-text item-margin">Email: <span id="ram.users.{{@key}}.email"><samp>{{value_or_none email}}</samp></span></div>
         <div class="list-group-item-text item-margin">Mobile Phone: <span id="ram.users.{{@key}}.mobile_phone"><samp>{{value_or_none mobile_phone}}</samp></span></div>
-        <div class="list-group-item-text item-margin">MFA Configured: <span id="ram.users.{{@key}}.mfa_status"><samp>{{mfa_status}}</samp></span></div>
+        <div id="ram.users.{{@key}}.mfa_secure">
+            <div class="list-group-item-text item-margin">Console Access: <span id="ram.users.{{@key}}.console_access"><samp>{{convert_bool_to_enabled console_access}}</samp></span></div>
+            <div class="list-group-item-text item-margin">MFA Configured: <span id="ram.users.{{@key}}.mfa_status"><samp>{{mfa_status}}</samp></span></div>
+        </div>
     </div>
     {{#if api_keys_count }}
     <div class="list-group-item">

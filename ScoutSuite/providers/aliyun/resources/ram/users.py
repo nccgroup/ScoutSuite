@@ -35,6 +35,8 @@ class Users(AliyunCompositeResources):
         user['mobile_phone'] = user_details.get('MobilePhone')
         user['last_login_datetime'] = user_details.get('LastLoginDate') if user_details.get('LastLoginDate') != '' else None
 
+        user['console_access'] = True if user_details.get('LastLoginDate') else False  # TODO this isn't valid
+
         # get the MFA status for the user
         mfa_enabled, mfa_serial_number = await self.facade.ram.get_user_mfa_status(user['name'])
         user['mfa_status'] = mfa_enabled

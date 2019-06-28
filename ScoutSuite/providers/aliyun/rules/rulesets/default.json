@@ -9,7 +9,7 @@
     ],
     "ram-user-lacking-mfa.json": [
       {
-        "enabled": false,
+        "enabled": true,
         "level": "warning"
       }
     ],
