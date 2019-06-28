@@ -4,7 +4,7 @@ from ScoutSuite.providers.aliyun.facade.utils import get_response
 from ScoutSuite.core.console import print_exception
 from aliyunsdkram.request.v20150501 import ListUsersRequest, ListAccessKeysRequest, \
     GetUserMFAInfoRequest, GetUserRequest, GetAccessKeyLastUsedRequest, GetPasswordPolicyRequest, \
-    GetSecurityPreferenceRequest
+    GetSecurityPreferenceRequest, ListGroupsRequest
 
 
 class RAMFacade:
@@ -108,3 +108,13 @@ class RAMFacade:
         response = await get_response(client=self._client,
                                       request=request)
         return response['SecurityPreference']
+
+    async def get_groups(self):
+        """
+        Get all groups
+
+        :return: a list of all groups
+        """
+        response = await get_response(client=self._client,
+                                      request=ListGroupsRequest.ListGroupsRequest())
+        return response['Groups']['Group']

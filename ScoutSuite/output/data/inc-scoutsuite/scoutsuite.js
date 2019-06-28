@@ -1206,6 +1206,8 @@ function makeTitle(title) {
         return 'RAM'
     } else if (title === 'actiontrail') {
         return 'ActionTrail'
+    } else if (title === 'ecs') {
+        return 'ECS'
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).split('_').join(' ')
     }

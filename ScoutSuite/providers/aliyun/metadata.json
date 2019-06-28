@@ -5,6 +5,10 @@
         "users": {
           "cols": 2,
           "path": "services.ram.users"
+        },
+        "groups": {
+          "cols": 2,
+          "path": "services.ram.groups"
         }
       },
       "summaries": {
@@ -15,6 +19,26 @@
         "security_policy": {
           "cols": 1,
           "path": "services.ram.security_policy"
+        }
+      }
+    }
+  },
+  "compute": {
+    "ecs": {
+      "resources": {
+        "instances": {
+          "cols": 1,
+          "path": "services.ecs.instances"
+        }
+      }
+    }
+  },
+  "storage": {
+    "rds": {
+      "resources": {
+        "instances": {
+          "cols": 1,
+          "path": "services.ecs.instances"
         }
       }
     }
