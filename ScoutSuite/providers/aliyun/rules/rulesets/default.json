@@ -30,6 +30,15 @@
         "enabled": false,
         "level": "warning"
       }
+    ],
+    "kms-no-key-rotation.json": [
+      {
+        "args": [
+          "90"
+        ],
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }
