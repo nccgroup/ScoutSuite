@@ -46,6 +46,7 @@ aliyun-python-sdk-sts>=3.0.1
 aliyun-python-sdk-actiontrail>=2.0.0
 aliyun-python-sdk-vpc>=3.0.5
 aliyun-python-sdk-ecs>=4.16.10
+aliyun-python-sdk-rds>=2.3.9
 
 # Oracle Cloud
 oci>=2.2.4
