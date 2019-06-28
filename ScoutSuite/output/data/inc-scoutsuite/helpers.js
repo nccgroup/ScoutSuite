@@ -412,7 +412,7 @@ Handlebars.registerHelper('convert_bool_to_enabled', function (value) {
  * Checks if value is indefined/null and returns 'None', otherwise returns value
  */
 Handlebars.registerHelper('value_or_none', function (value) {
-    if (value === undefined || value === null) return 'None'
+    if (value === undefined || value === null || value === '') return 'None'
     return value
 })
 
