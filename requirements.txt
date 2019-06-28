@@ -38,9 +38,6 @@ azure-mgmt-web>=0.41.0
 azure-cli-core>=2.0.55
 pyyaml>=4.2b1
 
-# Oracle Cloud
-oci>=2.2.4
-
 # Alibaba
 aliyun-python-sdk-core>=2.13.4
 aliyun-python-sdk-ram>=3.0.1
@@ -49,3 +46,6 @@ aliyun-python-sdk-sts>=3.0.1
 aliyun-python-sdk-actiontrail>=2.0.0
 aliyun-python-sdk-vpc>=3.0.5
 aliyun-python-sdk-ecs>=4.16.10
+
+# Oracle Cloud
+oci>=2.2.4
