@@ -14,6 +14,9 @@ class RDSFacade:
 
         :return: a list of all instances
         """
+
+        self._client.set_region_id('eu-west-1')  # FIXME this shouldn't be done here
+
         response = await get_response(client=self._client,
                                       request=DescribeDBInstancesRequest.DescribeDBInstancesRequest())
         return response['Items']['DBInstance']
