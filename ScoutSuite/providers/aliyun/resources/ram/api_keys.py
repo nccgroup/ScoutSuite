@@ -17,7 +17,8 @@ class ApiKeys(AliyunResources):
         api_key['id'] = raw_api_key['AccessKeyId']
         api_key['creation_datetime'] = raw_api_key['CreateDate']
         api_key['status'] = raw_api_key['Status']
-        api_key['last_usage'] = \
-            await self.facade.ram.get_user_api_key_last_usage(self.user['name'], api_key['id'])
+
+        last_usage = await self.facade.ram.get_user_api_key_last_usage(self.user['name'], api_key['id'])
+        api_key['last_usage_datetime'] = last_usage if last_usage != 'N/A' else None
 
         return api_key['id'], api_key

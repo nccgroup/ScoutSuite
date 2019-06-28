@@ -26,7 +26,8 @@
             <li>ID: <code>{{id}}</code></li>
             <ul>
                 <li>Status: <samp>{{status}}</samp></li>
-                <li>Last Used: <samp>{{format_date last_usage}}</samp></li>
+                <li>Creation Date: {{format_date creation_datetime}}</li>
+                <li>Last Used: {{format_date last_usage_datetime}}</li>
             </ul>
             {{/each}}
         </ul>
