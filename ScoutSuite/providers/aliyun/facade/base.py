@@ -8,12 +8,14 @@ from ScoutSuite.providers.aliyun.facade.kms import KMSFacade
 from ScoutSuite.providers.utils import run_concurrently
 
 from collections import Counter
-from aliyunsdkcore.endpoint import EndpointResolver
+from aliyunsdkcore.endpoint.local_config_regional_endpoint_resolver import LocalConfigRegionalEndpointResolver
+
 
 class AliyunFacade:
     def __init__(self, credentials: AliyunCredentials):
         self._credentials = credentials
         self._instantiate_facades()
+        self._resolver = LocalConfigRegionalEndpointResolver()
 
     def _instantiate_facades(self):
         self.actiontrail = ActiontrailFacade(self._credentials)
@@ -33,8 +35,8 @@ class AliyunFacade:
         # if service not in available_services:
         #     raise Exception('Service ' + service + ' is not available.')
 
-        regions = \
-            await run_concurrently(lambda: Session().get_available_regions(service, partition_name))
+        regions = await run_concurrently(
+            lambda: self._resolver.get_valid_region_ids_by_product(product_code=service))
 
         if chosen_regions:
             return list((Counter(regions) & Counter(chosen_regions)).elements())
