@@ -48,7 +48,8 @@ class AWSFacade(AWSBaseFacade):
         if service not in available_services:
             raise Exception('Service ' + service + ' is not available.')
 
-        regions = await run_concurrently(lambda: Session().get_available_regions(service, partition_name))
+        regions = \
+            await run_concurrently(lambda: Session().get_available_regions(service, partition_name))
 
         if chosen_regions:
             return list((Counter(regions) & Counter(chosen_regions)).elements())
@@ -56,7 +57,9 @@ class AWSFacade(AWSBaseFacade):
             return regions
 
     def _set_session(self, credentials: dict):
-        # TODO: This conditional check is ok for now, but eventually, the credentials should always be provided.
+        # TODO:
+        #   This conditional check is ok for now, but eventually,
+        #   the credentials should always be provided.
         if not credentials:
             self.session = None
             return
@@ -91,6 +94,10 @@ class AWSFacade(AWSBaseFacade):
 
         try:
             self.dynamodb = DynamoDBFacade(self.session)
+        except NameError:
+            pass
+
+        try:
             self.kms = KMSFacade(self.session)
         except NameError:
             pass
