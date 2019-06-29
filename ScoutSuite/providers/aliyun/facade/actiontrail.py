@@ -3,11 +3,13 @@ from ScoutSuite.providers.aliyun.facade.utils import get_response
 
 from aliyunsdkactiontrail.request.v20171204 import DescribeTrailsRequest
 
+from ScoutSuite.providers.aliyun.utils import get_client
+
 
 class ActiontrailFacade:
     def __init__(self, credentials: AliyunCredentials):
-        self._client = credentials.client
-        # self._client.set_region_id('cn-hangzhou')  # FIXME this shouldn't be done here
+        self._credentials = credentials
+        self._client = get_client(credential=self._credentials)
 
     async def get_trails(self):
         """

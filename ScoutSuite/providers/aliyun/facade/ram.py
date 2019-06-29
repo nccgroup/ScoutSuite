@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aliyun.authentication_strategy import AliyunCredentials
 from ScoutSuite.providers.aliyun.facade.utils import get_response
+from ScoutSuite.providers.aliyun.utils import get_client
 
 from ScoutSuite.core.console import print_exception
 from aliyunsdkram.request.v20150501 import ListUsersRequest, ListAccessKeysRequest, \
@@ -9,7 +10,8 @@ from aliyunsdkram.request.v20150501 import ListUsersRequest, ListAccessKeysReque
 
 class RAMFacade:
     def __init__(self, credentials: AliyunCredentials):
-        self._client = credentials.client
+        self._credentials = credentials
+        self._client = get_client(credential=self._credentials)
 
     async def get_users(self):
         """

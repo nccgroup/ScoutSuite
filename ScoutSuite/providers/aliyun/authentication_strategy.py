@@ -10,9 +10,8 @@ from ScoutSuite.providers.base.authentication_strategy import AuthenticationStra
 
 class AliyunCredentials:
 
-    def __init__(self, credentials, client, caller_details):
+    def __init__(self, credentials, caller_details):
         self.credentials = credentials
-        self.client = client
         self.caller_details = caller_details
 
 
@@ -30,12 +29,13 @@ class AliyunAuthenticationStrategy(AuthenticationStrategy):
 
             credentials = AccessKeyCredential(access_key_id=access_key_id, access_key_secret=access_key_secret)
 
+            # get caller details
             client = AcsClient(credential=credentials)
-
-            response = client.do_action_with_exception(GetCallerIdentityRequest.GetCallerIdentityRequest())
+            response = client.do_action_with_exception(
+                GetCallerIdentityRequest.GetCallerIdentityRequest())
             response_decoded = json.loads(response)
 
-            return AliyunCredentials(credentials, client, response_decoded)
+            return AliyunCredentials(credentials, response_decoded)
 
         except Exception as e:
             raise AuthenticationException(e)
