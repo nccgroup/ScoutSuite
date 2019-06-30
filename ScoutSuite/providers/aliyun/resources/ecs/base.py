@@ -12,5 +12,4 @@ class ECS(Regions):
         super(ECS, self).__init__('ecs', facade)
 
     async def fetch_all(self, regions):
-        # await self._fetch_children(resource_parent=self, region=region)
         await super(ECS, self).fetch_all(regions)

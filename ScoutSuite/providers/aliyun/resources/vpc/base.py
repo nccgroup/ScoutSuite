@@ -1,11 +1,15 @@
-from ScoutSuite.providers.aliyun.resources.base import AliyunCompositeResources
+from ScoutSuite.providers.aliyun.resources.regions import Regions
 from ScoutSuite.providers.aliyun.resources.vpc.vpcs import VPCs
+from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
 
 
-class VPC(AliyunCompositeResources):
+class VPC(Regions):
     _children = [
         (VPCs, 'vpcs')
     ]
 
-    async def fetch_all(self):
-        await self._fetch_children(resource_parent=self)
+    def __init__(self, facade: AliyunFacade):
+        super(VPC, self).__init__('vpc', facade)
+
+    async def fetch_all(self, regions):
+        await super(VPC, self).fetch_all(regions)
