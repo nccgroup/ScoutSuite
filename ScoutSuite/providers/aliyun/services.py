@@ -1,4 +1,4 @@
-from ScoutSuite.providers.aliyun.facade.facade import AliyunFacade
+from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
 from ScoutSuite.providers.base.services import BaseServicesConfig
 from ScoutSuite.providers.aliyun.resources.ram.base import RAM
 from ScoutSuite.providers.aliyun.resources.actiontrail.base import ActionTrail

@@ -1,5 +1,5 @@
 from ScoutSuite.providers.aliyun.resources.base import AliyunResources
-from ScoutSuite.providers.aliyun.facade.facade import AliyunFacade
+from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
 
 
 class Keys(AliyunResources):
