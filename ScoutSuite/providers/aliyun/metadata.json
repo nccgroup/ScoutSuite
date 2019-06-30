@@ -26,7 +26,7 @@
       "resources": {
         "keys": {
           "cols": 2,
-          "path": "services.kms.keys"
+          "path": "services.kms.regions.id.keys"
         }
       }
     }
@@ -36,7 +36,7 @@
       "resources": {
         "instances": {
           "cols": 2,
-          "path": "services.ecs.instances"
+          "path": "services.ecs.regions.id.instances"
         }
       }
     }
@@ -46,7 +46,7 @@
       "resources": {
         "instances": {
           "cols": 2,
-          "path": "services.ecs.instances"
+          "path": "services.ecs.regions.id.instances"
         }
       }
     }
@@ -56,7 +56,7 @@
       "resources": {
         "vpcs": {
           "cols": 2,
-          "path": "services.vpc.vpcs"
+          "path": "services.vpc.regions.id.vpcs"
         }
       }
     }
