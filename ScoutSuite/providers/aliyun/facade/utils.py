@@ -21,3 +21,5 @@ async def get_response(client, request):
             print_exception(e)
         else:
             raise
+    except Exception as e:
+        print_exception('Unhandled exception {} for request {}'.format(e, request))

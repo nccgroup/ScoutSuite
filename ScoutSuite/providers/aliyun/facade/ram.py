@@ -21,7 +21,10 @@ class RAMFacade:
         """
         response = await get_response(client=self._client,
                                       request=ListUsersRequest.ListUsersRequest())
-        return response['Users']['User']
+        if response:
+            return response['Users']['User']
+        else:
+            return []
 
     async def get_user_details(self, username):
         """
@@ -34,7 +37,10 @@ class RAMFacade:
         request.set_UserName(username)
         response = await get_response(client=self._client,
                                       request=request)
-        return response['User']
+        if response:
+            return response['User']
+        else:
+            return []
 
     async def get_user_api_keys(self, username):
         """
@@ -47,7 +53,10 @@ class RAMFacade:
         request.set_UserName(username)
         response = await get_response(client=self._client,
                                       request=request)
-        return response['AccessKeys']['AccessKey']
+        if response:
+            return response['AccessKeys']['AccessKey']
+        else:
+            return []
 
     async def get_user_api_key_last_usage(self, username, key_id):
         """
@@ -62,7 +71,10 @@ class RAMFacade:
         request.set_UserAccessKeyId(key_id)
         response = await get_response(client=self._client,
                                       request=request)
-        return response['AccessKeyLastUsed']['LastUsedDate']
+        if response:
+            return response['AccessKeyLastUsed']['LastUsedDate']
+        else:
+            return []
 
     async def get_user_mfa_status(self, username):
         """
@@ -98,7 +110,10 @@ class RAMFacade:
         request = GetPasswordPolicyRequest.GetPasswordPolicyRequest()
         response = await get_response(client=self._client,
                                       request=request)
-        return response['PasswordPolicy']
+        if response:
+            return response['PasswordPolicy']
+        else:
+            return []
 
     async def get_security_policy(self):
         """
@@ -109,7 +124,10 @@ class RAMFacade:
         request = GetSecurityPreferenceRequest.GetSecurityPreferenceRequest()
         response = await get_response(client=self._client,
                                       request=request)
-        return response['SecurityPreference']
+        if response:
+            return response['SecurityPreference']
+        else:
+            return []
 
     async def get_groups(self):
         """
@@ -119,4 +137,7 @@ class RAMFacade:
         """
         response = await get_response(client=self._client,
                                       request=ListGroupsRequest.ListGroupsRequest())
-        return response['Groups']['Group']
+        if response:
+            return response['Groups']['Group']
+        else:
+            return []

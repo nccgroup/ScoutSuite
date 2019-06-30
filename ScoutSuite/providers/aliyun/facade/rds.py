@@ -18,4 +18,7 @@ class RDSFacade:
         client = get_client(credentials=self._credentials, region=region)
         response = await get_response(client=client,
                                       request=DescribeDBInstancesRequest.DescribeDBInstancesRequest())
-        return response['Items']['DBInstance']
+        if response:
+            return response['Items']['DBInstance']
+        else:
+            return []
