@@ -14,6 +14,6 @@ class Instances(AliyunResources):
 
     async def _parse_instance(self, raw_instance):
         instance = {}
-        instance['id'] = raw_instance['id']
+        instance['id'] = raw_instance['SerialNumber']
 
         return instance['id'], instance
