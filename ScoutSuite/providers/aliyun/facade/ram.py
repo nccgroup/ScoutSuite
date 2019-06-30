@@ -11,7 +11,7 @@ from aliyunsdkram.request.v20150501 import ListUsersRequest, ListAccessKeysReque
 class RAMFacade:
     def __init__(self, credentials: AliyunCredentials):
         self._credentials = credentials
-        self._client = get_client(credential=self._credentials)
+        self._client = get_client(credentials=self._credentials)
 
     async def get_users(self):
         """
