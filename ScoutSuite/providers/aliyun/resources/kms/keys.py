@@ -3,11 +3,12 @@ from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
 
 
 class Keys(AliyunResources):
-    def __init__(self, facade: AliyunFacade):
+    def __init__(self, facade: AliyunFacade, region: str):
         super(Keys, self).__init__(facade)
+        self.region = region
 
     async def fetch_all(self):
-        for raw_key in await self.facade.kms.get_keys():
+        for raw_key in await self.facade.kms.get_keys(region=self.region):
             id, key = await self._parse_key(raw_key)
             self[id] = key
 
@@ -18,7 +19,7 @@ class Keys(AliyunResources):
         key_dict['arn'] = raw_key.get('KeyArn')
 
         # get additional details for the key
-        raw_key_details = await self.facade.kms.get_key_details(key_dict['id'])
+        raw_key_details = await self.facade.kms.get_key_details(key_dict['id'], region=self.region)
 
         key_dict['creation_date'] = raw_key_details.get('CreationDate')
         key_dict['delete_date'] = raw_key_details.get('DeleteDate')

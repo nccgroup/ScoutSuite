@@ -1,9 +1,14 @@
 from ScoutSuite.providers.aliyun.resources.base import AliyunResources
+from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
 
 
 class VPCs(AliyunResources):
+    def __init__(self, facade: AliyunFacade, region: str):
+        super(VPCs, self).__init__(facade)
+        self.region = region
+
     async def fetch_all(self):
-        for raw_vpc in await self.facade.vpc.get_vpcs():
+        for raw_vpc in await self.facade.vpc.get_vpcs(region=self.region):
             id, vpc = self._parse_vpcs(raw_vpc)
             self[id] = vpc
 
