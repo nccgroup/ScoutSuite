@@ -7,5 +7,5 @@ class ActionTrail(AliyunCompositeResources):
         (Trails, 'trails')
     ]
 
-    async def fetch_all(self):
+    async def fetch_all(self, **kwargs):
         await self._fetch_children(resource_parent=self)

@@ -15,7 +15,7 @@ class RAM(AliyunCompositeResources):
         (SecurityPolicy, 'security_policy')
     ]
 
-    async def fetch_all(self):
+    async def fetch_all(self, **kwargs):
         await self._fetch_children(resource_parent=self)
 
         # We do not want the report to count the password policies as resources,
