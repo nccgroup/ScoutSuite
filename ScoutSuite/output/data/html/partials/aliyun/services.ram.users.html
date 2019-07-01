@@ -1,12 +1,12 @@
 
-<!-- ram user -->
+<!-- RAM users -->
 <script id="services.ram.users.partial" type="text/x-handlebars-template">
     <div id="resource-name" class="list-group-item active">
         <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Information</h4>
-        <div class="list-group-item-text item-margin">ID: <span id="ram.users.{{@key}}.id"><samp>{{id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">ID: <span id="ram.users.{{@key}}.id"><samp>{{identifier}}</samp></span></div>
         <div class="list-group-item-text item-margin">Display Name: <span id="ram.users.{{@key}}.display_name"><samp>{{display_name}}</samp></span></div>
         <div class="list-group-item-text item-margin">Creation Date: <span id="ram.users.{{@key}}.creation_datetime">{{format_date creation_date}}</span></div>
         <div class="list-group-item-text item-margin">Update Date: <span id="ram.users.{{@key}}.update_datetime">{{format_date update_date}}</span></div>

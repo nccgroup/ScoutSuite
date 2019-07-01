@@ -21,8 +21,8 @@ class Users(AliyunCompositeResources):
 
     async def _parse_user(self, raw_user):
         user = {}
-        user['id'] = raw_user['UserId']
-        user['name'] = raw_user['UserName']
+        user['identifier'] = raw_user['UserId']  # this is because groups use the name as an ID
+        user['id'] = user['name'] = raw_user['UserName']
         user['display_name'] = raw_user['DisplayName']
         user['comments'] = raw_user['Comments']
         user['creation_datetime'] = raw_user['CreateDate']
