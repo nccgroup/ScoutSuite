@@ -178,12 +178,13 @@ Handlebars.registerHelper('find_ec2_object_attribute', function (path, id, attri
 })
 
 Handlebars.registerHelper('format_date', function (time) {
-    if (typeof time === 'number') {
+    if (!time || time === null || time === '') {
+        return 'No date available'
+    }
+    else if (typeof time === 'number') {
         return new Date(time * 1000).toString()
     } else if (typeof time === 'string') {
         return new Date(time)
-    } else if (!time || time === null) {
-        return 'No date available'
     } else {
         return 'Invalid date format'
     }
