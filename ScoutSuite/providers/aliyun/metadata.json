@@ -46,7 +46,7 @@
       "resources": {
         "instances": {
           "cols": 2,
-          "path": "services.ecs.regions.id.instances"
+          "path": "services.rds.regions.id.instances"
         }
       }
     }
