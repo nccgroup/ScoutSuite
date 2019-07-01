@@ -1,5 +1,6 @@
 import asyncio
 from hashlib import sha1
+from ScoutSuite.core.console import print_exception
 
 
 def get_non_provider_id(name):
@@ -24,7 +25,20 @@ def run_concurrently(function):
     :return: an asyncio.Future to be awaited.
     """
 
-    return asyncio.get_event_loop().run_in_executor(executor=None, func=function)
+    try:
+        return asyncio.get_event_loop().run_in_executor(executor=None, func=function)
+    # FIXME this is experimental
+    except Exception as e:
+        throttled = (hasattr(e, 'response') and 'Error' in e.response and e.response['Error']['Code']
+                     in ['Throttling',
+                         'RequestLimitExceeded',
+                         'ThrottlingException'])
+        if throttled:
+            print_exception('Hitting API Rate Limiting!')
+            asyncio.sleep(1)
+            return run_concurrently(function)
+        else:
+            raise
 
 
 async def get_and_set_concurrently(get_and_set_funcs: [], entities: [], **kwargs):
