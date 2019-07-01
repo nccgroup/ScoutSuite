@@ -51,6 +51,18 @@
         "enabled": true,
         "level": "warning"
       }
+    ],
+    "ecs-instance-with-public-ip.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "ecs-instance-with-deletion-protection-disabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }
