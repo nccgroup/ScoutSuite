@@ -5,7 +5,7 @@ from ScoutSuite.providers.aliyun.utils import get_client
 from ScoutSuite.core.console import print_exception
 from aliyunsdkram.request.v20150501 import ListUsersRequest, ListAccessKeysRequest, \
     GetUserMFAInfoRequest, GetUserRequest, GetAccessKeyLastUsedRequest, GetPasswordPolicyRequest, \
-    GetSecurityPreferenceRequest, ListGroupsRequest, ListUsersForGroupRequest
+    GetSecurityPreferenceRequest, ListGroupsRequest, ListUsersForGroupRequest, ListRolesRequest
 
 
 class RAMFacade:
@@ -154,5 +154,18 @@ class RAMFacade:
                                       request=request)
         if response:
             return response['Users']['User']
+        else:
+            return []
+
+    async def get_roles(self):
+        """
+        Get all roles
+
+        :return: a list of all roles
+        """
+        response = await get_response(client=self._client,
+                                      request=ListRolesRequest.ListRolesRequest())
+        if response:
+            return response['Roles']['Role']
         else:
             return []

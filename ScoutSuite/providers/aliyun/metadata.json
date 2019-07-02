@@ -9,6 +9,10 @@
         "groups": {
           "cols": 2,
           "path": "services.ram.groups"
+        },
+        "roles": {
+          "cols": 2,
+          "path": "services.ram.roles"
         }
       },
       "summaries": {
