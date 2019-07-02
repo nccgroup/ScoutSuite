@@ -26,6 +26,5 @@ class Groups(AliyunResources):
                 'join_date': raw_user.get('JoinDate')
             })
 
-
         return group_dict['id'], group_dict
 

@@ -18,7 +18,7 @@
         <div class="accordion-inner">
             <ul>
                 {{#each this.users}}
-                <li><a href="javascript:showObject('services.ram.users.{{this.name}}')">FIXME{{getValueAt 'services.ram.users' this 'name'}}</a></li>
+                <li><a href="javascript:showObject('services.ram.users.{{this.name}}')">{{getValueAt 'services.ram.users' this.name 'name'}}</a></li>
                 {{/each}}
             </ul>
         </div>
