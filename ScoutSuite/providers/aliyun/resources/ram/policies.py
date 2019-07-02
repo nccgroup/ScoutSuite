@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aliyun.resources.base import AliyunResources
 from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
+import json
 
 
 class Policies(AliyunResources):
@@ -31,15 +32,25 @@ class Policies(AliyunResources):
             policy_version = await self.facade.ram.get_policy_version(policy_dict['name'],
                                                                       policy_dict['type'],
                                                                       policy_dict['default_version'])
+            policy_version['PolicyDocument'] = json.loads(policy_version['PolicyDocument'])
             # policy_dict['policy_document'] = policy_version['PolicyDocument']
             policy_dict['policy_document'] = policy_version
 
             policy_entities = await self.facade.ram.get_policy_entities(policy_dict['name'],
                                                                       policy_dict['type'])
             policy_dict['entities'] = {}
-            policy_dict['entities']['users'] = policy_entities['Users']['User']
-            policy_dict['entities']['groups'] = policy_entities['Groups']['Group']
-            policy_dict['entities']['roles'] = policy_entities['Roles']['Role']
+            if policy_entities['Users']['User']:
+                policy_dict['entities']['users'] = []
+                for user in policy_entities['Users']['User']:
+                    policy_dict['entities']['users'].append(user['UserName'])
+            if policy_entities['Groups']['Group']:
+                policy_dict['entities']['groups'] = []
+                for group in policy_entities['Groups']['Group']:
+                    policy_dict['entities']['groups'].append(group['GroupName'])
+            if policy_entities['Roles']['Role']:
+                policy_dict['entities']['roles'] = []
+                for role in policy_entities['Roles']['Role']:
+                    policy_dict['entities']['roles'].append(role['RoleName'])
 
             return policy_dict['id'], policy_dict
         else:

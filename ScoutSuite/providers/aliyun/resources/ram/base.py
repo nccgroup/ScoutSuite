@@ -35,6 +35,8 @@ class RAM(AliyunCompositeResources):
 
     async def finalize(self):
         self._match_users_and_groups()
+        self._match_policies_and_entities()
+        return
 
     def _match_users_and_groups(self):
         """
@@ -47,4 +49,25 @@ class RAM(AliyunCompositeResources):
                 if any(u['name'] == user for u in self['groups'][group]['users']):
                     self['users'][user]['groups'].append(group)
 
-        return None
+    def _match_policies_and_entities(self):
+        for policy in self['policies']:
+            for user in self['users']:
+                if not self['users'][user].get('policies'):
+                    self['users'][user]['policies'] = []
+                if self['users'][user]['name'] in self['policies'][policy]['entities'].get('users', []):
+                    self['users'][user]['policies'].append(self['policies'][policy]['id'])
+        for policy in self['policies']:
+            for group in self['groups']:
+                if not self['groups'][group].get('policies'):
+                    self['groups'][group]['policies'] = []
+                if self['groups'][group]['name'] in self['policies'][policy]['entities'].get('groups', []):
+                    self['groups'][group]['policies'].append(self['policies'][policy]['id'])
+        for policy in self['policies']:
+            for role in self['roles']:
+                if not self['roles'][role].get('policies'):
+                    self['roles'][role]['policies'] = []
+                if self['roles'][role]['name'] in self['policies'][policy]['entities'].get('roles', []):
+                    self['roles'][role]['policies'].append(self['policies'][policy]['id'])
+
+
+
