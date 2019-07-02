@@ -2,6 +2,7 @@ from ScoutSuite.providers.aliyun.resources.base import AliyunCompositeResources
 from ScoutSuite.providers.aliyun.resources.ram.users import Users
 from ScoutSuite.providers.aliyun.resources.ram.groups import Groups
 from ScoutSuite.providers.aliyun.resources.ram.roles import Roles
+from ScoutSuite.providers.aliyun.resources.ram.policies import Policies
 from ScoutSuite.providers.aliyun.resources.ram.password_policy import PasswordPolicy
 from ScoutSuite.providers.aliyun.resources.ram.security_policy import SecurityPolicy
 from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
@@ -12,7 +13,7 @@ class RAM(AliyunCompositeResources):
         (Users, 'users'),
         (Groups, 'groups'),
         (Roles, 'roles'),
-        # (Policies, 'policies'),
+        (Policies, 'policies'),
         (PasswordPolicy, 'password_policy'),
         (SecurityPolicy, 'security_policy')
     ]

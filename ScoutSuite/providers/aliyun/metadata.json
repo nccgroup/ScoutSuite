@@ -13,6 +13,10 @@
         "roles": {
           "cols": 2,
           "path": "services.ram.roles"
+        },
+        "policies": {
+          "cols": 2,
+          "path": "services.ram.policies"
         }
       },
       "summaries": {

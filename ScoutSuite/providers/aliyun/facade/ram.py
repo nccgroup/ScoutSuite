@@ -3,9 +3,14 @@ from ScoutSuite.providers.aliyun.facade.utils import get_response
 from ScoutSuite.providers.aliyun.utils import get_client
 
 from ScoutSuite.core.console import print_exception
-from aliyunsdkram.request.v20150501 import ListUsersRequest, ListAccessKeysRequest, \
-    GetUserMFAInfoRequest, GetUserRequest, GetAccessKeyLastUsedRequest, GetPasswordPolicyRequest, \
-    GetSecurityPreferenceRequest, ListGroupsRequest, ListUsersForGroupRequest, ListRolesRequest
+from aliyunsdkram.request.v20150501 import \
+    ListUsersRequest, GetUserRequest, \
+    GetUserMFAInfoRequest, \
+    ListAccessKeysRequest, GetAccessKeyLastUsedRequest, \
+    GetPasswordPolicyRequest, GetSecurityPreferenceRequest, \
+    ListGroupsRequest, ListUsersForGroupRequest, \
+    ListRolesRequest, \
+    ListPoliciesRequest, GetPolicyVersionRequest, ListEntitiesForPolicyRequest
 
 
 class RAMFacade:
@@ -167,5 +172,52 @@ class RAMFacade:
                                       request=ListRolesRequest.ListRolesRequest())
         if response:
             return response['Roles']['Role']
+        else:
+            return []
+
+    async def get_policies(self):
+        """
+        Get all custom policies
+
+        :return: a list of all custom policies
+        """
+        response = await get_response(client=self._client,
+                                      request=ListPoliciesRequest.ListPoliciesRequest())
+        if response:
+            return response['Policies']['Policy']
+        else:
+            return []
+
+    async def get_policy_version(self, name, type, version):
+        """
+        Get all policies
+
+        :return: a list of all policies
+        """
+        request = GetPolicyVersionRequest.GetPolicyVersionRequest()
+        request.set_PolicyName(name)
+        request.set_PolicyType(type)
+        request.set_VersionId(version)
+        response = await get_response(client=self._client,
+                                      request=request)
+        if response:
+            return response['PolicyVersion']
+        else:
+            return []
+
+    async def get_policy_entities(self, name, type):
+        """
+        Get all entities for a policy
+
+        :return: a dict of all policy entities
+        """
+        request = ListEntitiesForPolicyRequest.ListEntitiesForPolicyRequest()
+        request.set_PolicyName(name)
+        request.set_PolicyType(type)
+        response = await get_response(client=self._client,
+                                      request=request)
+        if response:
+            response.pop('RequestId')
+            return response
         else:
             return []
