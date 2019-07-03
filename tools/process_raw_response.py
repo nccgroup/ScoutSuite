@@ -6,6 +6,30 @@ from ast import literal_eval
 first_cap_re = re.compile('(.)([A-Z][a-z]+)')
 all_cap_re = re.compile('([a-z0-9])([A-Z])')
 
+html_boilerplate = \
+"""<!-- {} {}s -->
+<script id="services.{}.{}s.partial" type="text/x-handlebars-template">
+  <div id="resource-name" class="list-group-item active">
+    <h4 class="list-group-item-heading">{{name}}</h4>
+  </div>
+  <div class="list-group-item">
+    <h4 class="list-group-item-heading">Information</h4>{}
+  </div>
+  {{/if}}
+</script>
+
+<script>
+  Handlebars.registerPartial("services.{}.{}s", $("#services\\.{}\\.{}s\\.partial").html());
+</script>
+
+<!-- Single {} {} template -->
+<script id="single_{}_{}-template" type="text/x-handlebars-template">
+  {{> modal-template template='services.{}.{}s'}}
+</script>
+<script>
+  var single_{}_{}_template = Handlebars.compile($("#single_{}_{}-template").html());
+</script>"""
+
 
 def camel_to_snake(name, upper=False):
     s1 = first_cap_re.sub(r'\1_\2', name)
@@ -25,6 +49,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.provider not in ['aliyun', 'oci']:
+        # TODO support more providers
         print('Provider not implemented')
         exit()
 
@@ -33,6 +58,8 @@ if __name__ == "__main__":
     elif args.provider == 'oci':
         object_value_dict = json.loads(args.value)
 
+    # TODO should also support adding region & VPC paths
+
     parsed_html = ''
 
     parsed_string = ''
@@ -40,11 +67,21 @@ if __name__ == "__main__":
 
     for k in object_value_dict.keys():
         parsed_string += '{}_dict[\'{}\'] = raw_{}.get(\'{}\')\n'.format(args.name, camel_to_snake(k), args.name, k)
-        parsed_html += '\n<div class="list-group-item-text item-margin">{}: <span id="{}.{}s.{{{{@key}}}}.{}"><samp>{{{{{}}}}}</samp></span></div>'.format(
+        parsed_html += '\n    <div class="list-group-item-text item-margin">{}: <span id="{}.{}s.{{{{@key}}}}.{}"><samp>{{{{{}}}}}</samp></span></div>'.format(
             camel_to_snake(k, True).replace('_', ' '), args.service, args.name, camel_to_snake(k), camel_to_snake(k))
 
     parsed_string += 'return {}_dict[\'id\'], {}_dict'.format(args.name, args.name)
 
     print(parsed_string)
     print('\n')
-    print(parsed_html)
+    print(html_boilerplate.format(args.service, args.name,
+                                  args.service, args.name,
+                                  parsed_html,
+                                  args.service, args.name,
+                                  args.service, args.name,
+                                  args.service, args.name,
+                                  args.service, args.name,
+                                  args.service, args.name,
+                                  args.service, args.name,
+                                  args.service, args.name
+                                  ))
