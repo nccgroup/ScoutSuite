@@ -38,6 +38,7 @@ formatted_service_name = {
     'actiontrail': 'ActionTrail',
     # OCI
     'identity': 'Identity',
+    'objectstorage': 'Object Storage'
 }
 
 

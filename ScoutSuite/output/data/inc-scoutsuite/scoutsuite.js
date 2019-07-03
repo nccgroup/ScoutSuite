@@ -1208,6 +1208,8 @@ function makeTitle(title) {
         return 'ActionTrail'
     } else if (title === 'ecs') {
         return 'ECS'
+    } else if (title === 'objectstorage') {
+        return 'Object Storage'
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).split('_').join(' ')
     }

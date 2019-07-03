@@ -17,5 +17,15 @@
       },
       "summaries": {}
     }
+  },
+  "storage": {
+    "objectstorage": {
+      "resources": {
+        "buckets": {
+          "cols": 2,
+          "path": "services.objectstorage.buckets"
+        }
+      }
+    }
   }
 }
