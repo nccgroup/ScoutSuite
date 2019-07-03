@@ -19,7 +19,7 @@ class OracleAuthenticationStrategy(AuthenticationStrategy):
 
         try:
 
-            config = from_file(profile_name="test-user")
+            config = from_file(profile_name=profile)
             compartment_id = config["tenancy"]
 
             return OracleCredentials(config, compartment_id)
