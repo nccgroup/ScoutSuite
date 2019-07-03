@@ -6,6 +6,10 @@
           "cols": 2,
           "path": "services.identity.users"
         },
+        "groups": {
+          "cols": 2,
+          "path": "services.identity.groups"
+        },
         "policies": {
           "cols": 2,
           "path": "services.identity.policies"
