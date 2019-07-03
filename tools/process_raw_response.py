@@ -23,7 +23,7 @@ html_boilerplate = \
     
     <!-- Single {} {} template -->
     <script id="single_{}_{}-template" type="text/x-handlebars-template">
-      {{> modal-template template='services.{}.{}s'}}
+      {{{{> modal-template template='services.{}.{}s'}}}}
     </script>
     <script>
       var single_{}_{}_template = Handlebars.compile($("#single_{}_{}-template").html());
