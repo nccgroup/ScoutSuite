@@ -1,11 +1,11 @@
-from ScoutSuite.providers.aliyun.resources.base import AliyunCompositeResources
-from ScoutSuite.providers.aliyun.resources.ram.users import Users
-from ScoutSuite.providers.aliyun.resources.ram.groups import Groups
-from ScoutSuite.providers.aliyun.resources.ram.roles import Roles
-from ScoutSuite.providers.aliyun.resources.ram.policies import Policies
-from ScoutSuite.providers.aliyun.resources.ram.password_policy import PasswordPolicy
-from ScoutSuite.providers.aliyun.resources.ram.security_policy import SecurityPolicy
 from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
+from ScoutSuite.providers.aliyun.resources.base import AliyunCompositeResources
+from ScoutSuite.providers.aliyun.resources.ram.groups import Groups
+from ScoutSuite.providers.aliyun.resources.ram.password_policy import PasswordPolicy
+from ScoutSuite.providers.aliyun.resources.ram.policies import Policies
+from ScoutSuite.providers.aliyun.resources.ram.roles import Roles
+from ScoutSuite.providers.aliyun.resources.ram.security_policy import SecurityPolicy
+from ScoutSuite.providers.aliyun.resources.ram.users import Users
 
 
 class RAM(AliyunCompositeResources):
@@ -32,11 +32,9 @@ class RAM(AliyunCompositeResources):
 
         # TODO for each user check last login & API key usage for "last activity"
 
-
     async def finalize(self):
         self._match_users_and_groups()
         self._match_policies_and_entities()
-        return
 
     def _match_users_and_groups(self):
         """
@@ -68,6 +66,3 @@ class RAM(AliyunCompositeResources):
                     self['roles'][role]['policies'] = []
                 if self['roles'][role]['name'] in self['policies'][policy]['entities'].get('roles', []):
                     self['roles'][role]['policies'].append(self['policies'][policy]['id'])
-
-
-
