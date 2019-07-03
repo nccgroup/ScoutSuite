@@ -25,6 +25,13 @@ class IdentityFacade:
             lambda: list_call_get_all_results(self._client.list_groups, self._credentials.compartment_id))
         return response.data
 
+    async def get_group_users(self, group_id):
+        response = await run_concurrently(
+            lambda: list_call_get_all_results(self._client.list_user_group_memberships,
+                                              self._credentials.compartment_id,
+                                              group_id=group_id))
+        return response.data
+
     async def get_policies(self):
         response = await run_concurrently(
             lambda: list_call_get_all_results(self._client.list_policies, self._credentials.compartment_id))

@@ -22,8 +22,9 @@ class Users(OracleCompositeResources):
 
     async def _parse_user(self, raw_user):
         user = {}
-        user['id'] = get_non_provider_id(raw_user.id)
         user['identifier'] = raw_user.id
+        user['id'] = get_non_provider_id(raw_user.id)
         user['name'] = raw_user.name
+        user['identifier'] = raw_user.id
         user['mfa_activated'] = raw_user.is_mfa_activated
         return user['id'], user

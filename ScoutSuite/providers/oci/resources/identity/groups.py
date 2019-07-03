@@ -14,6 +14,9 @@ class Groups(OracleResources):
 
     async def _parse_group(self, raw_group):
         group_dict = {}
+        group_dict['identifier'] = raw_group.id
+        group_dict['id'] = get_non_provider_id(raw_group.id)
+        group_dict['name'] = raw_group.name
         group_dict['lifecycle_state'] = raw_group.lifecycle_state
         group_dict['inactive_status'] = raw_group.inactive_status
         group_dict['description'] = raw_group.description
@@ -21,8 +24,21 @@ class Groups(OracleResources):
         group_dict['defined_tags'] = raw_group.defined_tags
         group_dict['freeform_tags'] = raw_group.freeform_tags
         group_dict['time_created'] = raw_group.time_created
-        group_dict['id'] = raw_group.id
-        group_dict['name'] = raw_group.name
+
+        members = await self.facade.identity.get_group_users(group_dict['identifier'])
+        group_dict['users'] = []
+        for member in members:
+            member_dict = {}
+            member_dict['user_identifier'] = member.user_id
+            member_dict['user_id'] = get_non_provider_id(member.user_id)
+            member_dict['membership_id'] = member.id
+            member_dict['group_id'] = member.group_id
+            member_dict['lifecycle_state'] = member.lifecycle_state
+            member_dict['inactive_status'] = member.inactive_status
+            member_dict['compartment_id'] = member.compartment_id
+            member_dict['time_created'] = member.time_created
+            group_dict['users'].append(member_dict)
+
         return group_dict['id'], group_dict
 
 
