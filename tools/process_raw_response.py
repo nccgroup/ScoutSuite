@@ -10,16 +10,15 @@ html_boilerplate = \
 """<!-- {} {}s -->
 <script id="services.{}.{}s.partial" type="text/x-handlebars-template">
   <div id="resource-name" class="list-group-item active">
-    <h4 class="list-group-item-heading">{{name}}</h4>
+    <h4 class="list-group-item-heading">{{{{name}}}}</h4>
   </div>
   <div class="list-group-item">
     <h4 class="list-group-item-heading">Information</h4>{}
   </div>
-  {{/if}}
 </script>
 
 <script>
-  Handlebars.registerPartial("services.{}.{}s", $("#services\\.{}\\.{}s\\.partial").html());
+  Handlebars.registerPartial("services.{}.{}s", $("#services\\\\.{}\\\\.{}s\\\\.partial").html());
 </script>
 
 <!-- Single {} {} template -->
@@ -34,7 +33,7 @@ html_boilerplate = \
 def camel_to_snake(name, upper=False):
     s1 = first_cap_re.sub(r'\1_\2', name)
     if upper:
-        return all_cap_re.sub(r'\1_\2', s1)
+        return all_cap_re.sub(r'\1_\2', s1).title()
     else:
         return all_cap_re.sub(r'\1_\2', s1).lower()
 
@@ -54,8 +53,10 @@ if __name__ == "__main__":
         exit()
 
     if args.provider == 'aliyun':
+        object_format = 'raw_{}.get(\'{}\')'
         object_value_dict = literal_eval(args.value)
     elif args.provider == 'oci':
+        object_format = 'raw_{}.{}'
         object_value_dict = json.loads(args.value)
 
     # TODO should also support adding region & VPC paths
@@ -66,7 +67,8 @@ if __name__ == "__main__":
     parsed_string += '{}_dict = {{}}\n'.format(args.name)
 
     for k in object_value_dict.keys():
-        parsed_string += '{}_dict[\'{}\'] = raw_{}.get(\'{}\')\n'.format(args.name, camel_to_snake(k), args.name, k)
+        object_format_value = object_format.format(args.name, k)
+        parsed_string += '{}_dict[\'{}\'] = {}\n'.format(args.name, camel_to_snake(k), object_format_value)
         parsed_html += '\n    <div class="list-group-item-text item-margin">{}: <span id="{}.{}s.{{{{@key}}}}.{}"><samp>{{{{{}}}}}</samp></span></div>'.format(
             camel_to_snake(k, True).replace('_', ' '), args.service, args.name, camel_to_snake(k), camel_to_snake(k))
 
