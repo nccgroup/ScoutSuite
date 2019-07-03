@@ -7,27 +7,27 @@ first_cap_re = re.compile('(.)([A-Z][a-z]+)')
 all_cap_re = re.compile('([a-z0-9])([A-Z])')
 
 html_boilerplate = \
-"""<!-- {} {}s -->
-<script id="services.{}.{}s.partial" type="text/x-handlebars-template">
-  <div id="resource-name" class="list-group-item active">
-    <h4 class="list-group-item-heading">{{{{name}}}}</h4>
-  </div>
-  <div class="list-group-item">
-    <h4 class="list-group-item-heading">Information</h4>{}
-  </div>
-</script>
-
-<script>
-  Handlebars.registerPartial("services.{}.{}s", $("#services\\\\.{}\\\\.{}s\\\\.partial").html());
-</script>
-
-<!-- Single {} {} template -->
-<script id="single_{}_{}-template" type="text/x-handlebars-template">
-  {{> modal-template template='services.{}.{}s'}}
-</script>
-<script>
-  var single_{}_{}_template = Handlebars.compile($("#single_{}_{}-template").html());
-</script>"""
+    """<!-- {} {}s -->
+    <script id="services.{}.{}s.partial" type="text/x-handlebars-template">
+      <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{{{name}}}}</h4>
+      </div>
+      <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>{}
+      </div>
+    </script>
+    
+    <script>
+      Handlebars.registerPartial("services.{}.{}s", $("#services\\\\.{}\\\\.{}s\\\\.partial").html());
+    </script>
+    
+    <!-- Single {} {} template -->
+    <script id="single_{}_{}-template" type="text/x-handlebars-template">
+      {{> modal-template template='services.{}.{}s'}}
+    </script>
+    <script>
+      var single_{}_{}_template = Handlebars.compile($("#single_{}_{}-template").html());
+    </script>"""
 
 
 def camel_to_snake(name, upper=False):
