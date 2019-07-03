@@ -1,4 +1,5 @@
 from oci.config import from_file
+from oci.identity import IdentityClient
 
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
@@ -21,6 +22,10 @@ class OracleAuthenticationStrategy(AuthenticationStrategy):
 
             config = from_file(profile_name=profile)
             compartment_id = config["tenancy"]
+
+            # Get the current user
+            identity = IdentityClient(config)
+            user = identity.get_user(config["user"]).data
 
             return OracleCredentials(config, compartment_id)
 
