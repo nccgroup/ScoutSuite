@@ -24,5 +24,9 @@ class Buckets(OracleResources):
         bucket_dict['created_by'] = raw_bucket.created_by
         bucket_dict['etag'] = raw_bucket.etag
         bucket_dict['time_created'] = raw_bucket.time_created
+
+        objects = await self.facade.objectstorage.get_bucket_objects(bucket_dict['namespace'],
+                                                                     bucket_dict['name'])
+
         return bucket_dict['id'], bucket_dict
 

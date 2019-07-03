@@ -20,3 +20,8 @@ class ObjectStorageFacade:
         response = await run_concurrently(
             lambda: list_call_get_all_results(self._client.list_buckets, namespace, self._credentials.compartment_id))
         return response.data
+
+    async def get_bucket_objects(self, namespace, bucket_name):
+        response = await run_concurrently(
+            lambda: list_call_get_all_results(self._client.list_objects, namespace, bucket_name))
+        return response.data
