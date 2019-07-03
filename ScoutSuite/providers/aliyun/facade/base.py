@@ -1,14 +1,15 @@
+from collections import Counter
+
+from aliyunsdkcore.endpoint.local_config_regional_endpoint_resolver import LocalConfigRegionalEndpointResolver
+
 from ScoutSuite.providers.aliyun.authentication_strategy import AliyunCredentials
-from ScoutSuite.providers.aliyun.facade.ram import RAMFacade
+from ScoutSuite.providers.aliyun.facade.actiontrail import ActiontrailFacade
 from ScoutSuite.providers.aliyun.facade.ecs import ECSFacade
+from ScoutSuite.providers.aliyun.facade.kms import KMSFacade
+from ScoutSuite.providers.aliyun.facade.ram import RAMFacade
 from ScoutSuite.providers.aliyun.facade.rds import RDSFacade
 from ScoutSuite.providers.aliyun.facade.vpc import VPCFacade
-from ScoutSuite.providers.aliyun.facade.actiontrail import ActiontrailFacade
-from ScoutSuite.providers.aliyun.facade.kms import KMSFacade
 from ScoutSuite.providers.utils import run_concurrently
-
-from collections import Counter
-from aliyunsdkcore.endpoint.local_config_regional_endpoint_resolver import LocalConfigRegionalEndpointResolver
 
 
 class AliyunFacade:
