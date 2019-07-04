@@ -16,6 +16,11 @@ class ObjectStorageFacade:
         # for some reason it returns a list of chars instead of a string
         return ''.join(response.data)
 
+    async def get_bucket_details(self, namespace, bucket_name):
+        response = await run_concurrently(
+            lambda: self._client.get_bucket(namespace, bucket_name))
+        return response.data
+
     async def get_buckets(self, namespace):
         response = await run_concurrently(
             lambda: list_call_get_all_results(self._client.list_buckets, namespace, self._credentials.compartment_id))
