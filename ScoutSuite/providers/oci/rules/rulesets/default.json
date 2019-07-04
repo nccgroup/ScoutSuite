@@ -12,6 +12,12 @@
         "enabled": true,
         "level": "warning"
       }
+    ],
+    "objectstorage-public-bucket.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
     ]
   }
 }
