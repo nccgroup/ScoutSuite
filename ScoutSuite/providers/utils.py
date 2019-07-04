@@ -27,16 +27,18 @@ def run_concurrently(function, scale_back=1):
 
     try:
         return asyncio.get_event_loop().run_in_executor(executor=None, func=function)
-    # FIXME this is experimental
     except Exception as e:
-        throttled = (hasattr(e, 'response') and 'Error' in e.response and e.response['Error']['Code']
-                     in ['Throttling',
-                         'RequestLimitExceeded',
-                         'ThrottlingException'])
+        # FIXME this only supports AWS
+        # Determine whether the exception is due to API throttling.
+        throttled = (hasattr(e, 'response') and
+                     'Error' in e.response
+                     and e.response['Error']['Code'] in ['Throttling',
+                                                         'RequestLimitExceeded',
+                                                         'ThrottlingException'])
         if throttled:
             print_exception('Hitting API Rate Limiting, will retry in {}s'.format(scale_back+1))
             asyncio.sleep(scale_back=scale_back+1)
-            return run_concurrently(function)
+            return run_concurrently(function)  # FIXME shouldn't this be awaited?
         else:
             raise
 
