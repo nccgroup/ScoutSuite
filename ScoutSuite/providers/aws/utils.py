@@ -92,18 +92,6 @@ def get_partition_name(credentials):
     caller_identity = get_caller_identity(credentials)
     return caller_identity['Arn'].split(':')[1]
 
-def is_throttled(e):
-    """
-    Determines whether the exception is due to API throttling.
-
-    :param e:                           Exception raised
-    :return:                            True if it's a throttling exception else False
-    """
-    return (hasattr(e, 'response') and 'Error' in e.response
-            and e.response['Error']['Code'] in ['Throttling',
-                                                'RequestLimitExceeded',
-                                                'ThrottlingException'])
-
 
 def no_camel(name):
     """
