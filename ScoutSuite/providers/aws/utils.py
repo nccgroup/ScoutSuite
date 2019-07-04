@@ -1,11 +1,4 @@
 import re
-import time
-from collections import Counter
-
-import boto3
-from botocore.session import Session
-
-from ScoutSuite.core.console import print_exception, print_info
 
 ec2_classic = 'EC2-Classic'
 
@@ -26,6 +19,7 @@ def get_partition_name(session):
     caller_identity = get_caller_identity(session)
     partition_name = caller_identity['Arn'].split(':')[1]
     return partition_name
+
 
 def is_throttled(e):
     """
