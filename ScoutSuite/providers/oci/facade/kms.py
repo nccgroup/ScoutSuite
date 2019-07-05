@@ -9,7 +9,7 @@ class KMSFacade:
     def __init__(self, credentials: OracleCredentials):
         self._credentials = credentials
         # FIXME does this require regional support?
-        self._client = KmsManagementClient(self._credentials.config, "https://iaas.uk-london-1.oraclecloud.com")
+        self._client = KmsManagementClient(self._credentials.config, "https://iaas.{}.oraclecloud.com".format(self._credentials.config['region']))
 
     async def get_keys(self):
         response = await run_concurrently(
