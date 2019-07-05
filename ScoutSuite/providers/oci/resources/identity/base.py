@@ -2,6 +2,7 @@ from ScoutSuite.providers.oci.resources.base import OracleCompositeResources
 from ScoutSuite.providers.oci.resources.identity.users import Users
 from ScoutSuite.providers.oci.resources.identity.groups import Groups
 from ScoutSuite.providers.oci.resources.identity.policies import Policies
+from ScoutSuite.providers.oci.resources.identity.authentication_policy import PasswordPolicy
 from ScoutSuite.providers.oci.facade.base import OracleFacade
 
 
@@ -10,6 +11,7 @@ class Identity(OracleCompositeResources):
         (Users, 'users'),
         (Groups, 'groups'),
         (Policies, 'policies'),
+        (PasswordPolicy, 'password_policy')
     ]
 
     def __init__(self, facade: OracleFacade):
@@ -18,6 +20,10 @@ class Identity(OracleCompositeResources):
 
     async def fetch_all(self, **kwargs):
         await self._fetch_children(resource_parent=self)
+
+        # We do not want the report to count the password policies as resources,
+        # they aren't really resources.
+        self['password_policy_count'] = 0
 
     async def finalize(self):
         self._match_users_and_groups()

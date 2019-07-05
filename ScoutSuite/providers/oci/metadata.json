@@ -15,7 +15,12 @@
           "path": "services.identity.policies"
         }
       },
-      "summaries": {}
+      "summaries": {
+        "password_policy": {
+          "cols": 1,
+          "path": "services.identity.password_policy"
+        }
+      }
     },
     "kms": {
       "resources": {

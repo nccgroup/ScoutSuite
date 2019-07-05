@@ -36,3 +36,8 @@ class IdentityFacade:
         response = await run_concurrently(
             lambda: list_call_get_all_results(self._client.list_policies, self._credentials.compartment_id))
         return response.data
+
+    async def get_authentication_policy(self):
+        response = await run_concurrently(
+            lambda: self._client.get_authentication_policy(self._credentials.compartment_id))
+        return response.data
