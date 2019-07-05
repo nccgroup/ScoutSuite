@@ -260,7 +260,7 @@ class ScoutSuiteArgumentParser:
                             dest='max_workers',
                             type=int,
                             default=10,
-                            help='Maximum number of threads (workers) used by Scout Suite')
+                            help='Maximum number of threads (workers) used by Scout Suite (default is 10)')
         parser.add_argument('--report-dir',
                             dest='report_dir',
                             default=None,
@@ -326,8 +326,10 @@ class ScoutSuiteArgumentParser:
 
         # Test conditions
         v = vars(args)
-        if v.get('tenant_id') and not v.get('service_principal'):
-            self.parser.error('--tenant can only be set when using --service-principal')
+        if v.get('tenant_id') and not (v.get('user_account') or v.get('service_principal') or v.get('msi')):
+            self.parser.error('--tenant can only be set when using --user-account, --service-principal or --msi')
+        if v.get('subscription_id') and not (v.get('user_account') or v.get('service_principal') or v.get('msi')):
+            self.parser.error('--tenant can only be set when using --user-account, --service-principal or --msi')
         # TODO add more conditions
 
         return args
