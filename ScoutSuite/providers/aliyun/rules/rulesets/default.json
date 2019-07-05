@@ -25,6 +25,60 @@
         "level": "warning"
       }
     ],
+    "ram-password-policy-expiration-threshold.json": [
+      {
+        "args": [
+          "90"
+        ],
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "ram-password-policy-minimum-length.json": [
+      {
+        "args": [
+          "8"
+        ],
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "ram-password-policy-no-expiration.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "ram-password-policy-no-lowercase-required.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "ram-password-policy-no-number-required.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "ram-password-policy-no-symbol-required.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "ram-password-policy-no-uppercase-required.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "ram-password-policy-reuse-enabled.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
     "ram-user-unused-api-key.json": [
       {
         "enabled": false,
