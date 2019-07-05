@@ -16,6 +16,14 @@
         }
       },
       "summaries": {}
+    },
+    "kms": {
+      "resources": {
+        "keys": {
+          "cols": 2,
+          "path": "services.kms.keys"
+        }
+      }
     }
   },
   "storage": {
