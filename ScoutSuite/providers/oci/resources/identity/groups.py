@@ -21,9 +21,9 @@ class Groups(OracleResources):
         group_dict['inactive_status'] = raw_group.inactive_status
         group_dict['description'] = raw_group.description
         group_dict['compartment_id'] = raw_group.compartment_id
-        group_dict['defined_tags'] = raw_group.defined_tags
-        group_dict['freeform_tags'] = raw_group.freeform_tags
         group_dict['time_created'] = raw_group.time_created
+        group_dict['defined_tags'] = list(raw_group.defined_tags)
+        group_dict['freeform_tags'] = list(raw_group.freeform_tags)
 
         members = await self.facade.identity.get_group_users(group_dict['identifier'])
         group_dict['users'] = []
