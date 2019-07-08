@@ -24,9 +24,9 @@
     },
     "kms": {
       "resources": {
-        "keys": {
+        "keyvaults": {
           "cols": 2,
-          "path": "services.kms.keys"
+          "path": "services.kms.keyvaults"
         }
       }
     }

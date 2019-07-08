@@ -14,7 +14,7 @@ class OracleServicesConfig(BaseServicesConfig):
 
         self.identity = Identity(facade)
         self.objectstorage = ObjectStorage(facade)
-        # self.kms = KMS(facade)
+        self.kms = KMS(facade)
 
     def _is_provider(self, provider_name):
         return provider_name == 'oci'

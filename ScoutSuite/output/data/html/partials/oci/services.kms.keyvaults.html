@@ -1,0 +1,52 @@
+<!-- kms keyvaults -->
+<script id="services.kms.keyvaults.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">ID: <span id="kms.keyvaults.{{@key}}.id"><samp>{{identifier}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Display Name: <span id="kms.keyvaults.{{@key}}.display_name"><samp>{{display_name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Time Created: <span id="kms.keyvaults.{{@key}}.time_created">{{format_date time_created}}</span></div>
+        <div class="list-group-item-text item-margin">Compartment ID: <span id="kms.keyvaults.{{@key}}.compartment_id"><samp>{{compartment_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Vault Type: <span id="kms.keyvaults.{{@key}}.vault_type"><samp>{{vault_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Lifecycle State: <span id="kms.keyvaults.{{@key}}.lifecycle_state"><samp>{{lifecycle_state}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Management Endpoint: <span id="kms.keyvaults.{{@key}}.management_endpoint"><samp>{{management_endpoint}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Crypto Endpoint: <span id="kms.keyvaults.{{@key}}.crypto_endpoint"><samp>{{crypto_endpoint}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Defined Tags: <span id="kms.keyvaults.{{@key}}.defined_tags"><samp>{{defined_tags}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Freeform Tags: <span id="kms.keyvaults.{{@key}}.freeform_tags"><samp>{{freeform_tags}}</samp></span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading"><span id="kms.keyvaults.{{@key}}.keys">Keys:</span></h5>
+            <div class="accordion-inner">
+                <ul>
+                    {{#each keys}}
+                    <li><span id="kms.keyvaults.{{@../key}}.keys.{{@key}}.id"><samp>{{identifier}}</samp></span></li>
+                    <ul>
+                        <div class="list-group-item-text item-margin">Display Name: <span id="kms.keyvaults.{{@../key}}.keys.{{@key}}.display_name"><samp>{{display_name}}</samp></span></div>
+                        <div class="list-group-item-text item-margin">Time Created: <span id="kms.keyvaults.{{@../key}}.keys.{{@key}}.time_created">{{format_date time_created}}</span></div>
+                        <div class="list-group-item-text item-margin">Compartment ID: <span id="kms.keyvaults.{{@../key}}.keys.{{@key}}.compartment_id"><samp>{{compartment_id}}</samp></span></div>
+                        <div class="list-group-item-text item-margin">Vault ID: <span id="kms.keyvaults.{{@../key}}.keys.{{@key}}.vault_id"><samp>{{vault_id}}</samp></span></div>
+                        <div class="list-group-item-text item-margin">Lifecycle State: <span id="kms.keyvaults.{{@../key}}.keys.{{@key}}.lifecycle_state"><samp>{{lifecycle_state}}</samp></span></div>
+                        <div class="list-group-item-text item-margin">Defined Tags: <span id="kms.keyvaults.{{@../key}}.keys.{{@key}}.defined_tags"><samp>{{defined_tags}}</samp></span></div>
+                        <div class="list-group-item-text item-margin">Freeform Tags: <span id="kms.keyvaults.{{@../key}}.keys.{{@key}}.freeform_tags"><samp>{{freeform_tags}}</samp></span></div>
+                    </ul>
+                    {{else}}
+                    <li><samp>None</samp></li>
+                    {{/each}}
+                </ul>
+            </div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.kms.keyvaults", $("#services\\.kms\\.keyvaults\\.partial").html());
+</script>
+
+<!-- Single kms keyvault template -->
+<script id="single_kms_keyvault-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.kms.keyvaults'}}
+</script>
+<script>
+    var single_kms_keyvault_template = Handlebars.compile($("#single_kms_keyvault-template").html());
+</script>

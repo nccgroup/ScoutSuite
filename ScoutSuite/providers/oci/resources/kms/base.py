@@ -1,11 +1,11 @@
 from ScoutSuite.providers.oci.facade.base import OracleFacade
 from ScoutSuite.providers.oci.resources.base import OracleCompositeResources
-from ScoutSuite.providers.oci.resources.kms.keys import Keys
+from ScoutSuite.providers.oci.resources.kms.keyvaults import KeyVaults
 
 
 class KMS(OracleCompositeResources):
     _children = [
-        (Keys, 'keys')
+        (KeyVaults, 'keyvaults')
     ]
 
     def __init__(self, facade: OracleFacade):

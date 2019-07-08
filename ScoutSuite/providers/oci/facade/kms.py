@@ -1,4 +1,4 @@
-from oci.key_management import KmsManagementClient
+from oci.key_management import KmsManagementClient, KmsVaultClient
 from ScoutSuite.providers.oci.authentication_strategy import OracleCredentials
 from oci.pagination import list_call_get_all_results
 
@@ -9,11 +9,16 @@ class KMSFacade:
     def __init__(self, credentials: OracleCredentials):
         self._credentials = credentials
         # FIXME does this require regional support?
-        self._client = KmsManagementClient(self._credentials.config, "https://iaas.{}.oraclecloud.com".format(self._credentials.config['region']))
+        self._vault_client = KmsVaultClient(self._credentials.config)
 
-    async def get_keys(self):
+    async def get_vaults(self):
         response = await run_concurrently(
-            lambda: list_call_get_all_results(self._client.list_keys, self._credentials.compartment_id))
-        # for some reason it returns a list of chars instead of a string
+            lambda: list_call_get_all_results(self._vault_client.list_vaults, self._credentials.compartment_id))
+        return response.data
+
+    async def get_keys(self, keyvault):
+        key_client = KmsManagementClient(self._credentials.config, keyvault['management_endpoint'])
+        response = await run_concurrently(
+            lambda: list_call_get_all_results(key_client.list_keys, self._credentials.compartment_id))
         return response.data
 
