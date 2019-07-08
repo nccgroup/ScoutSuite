@@ -51,6 +51,21 @@
         "enabled": true,
         "level": "danger"
       }
+    ],
+    "objectstorage-bucket-lacking-kms-encryption.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "kms-no-key-rotation.json": [
+      {
+        "args": [
+          "90"
+        ],
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }
