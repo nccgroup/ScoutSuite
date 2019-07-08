@@ -46,7 +46,7 @@ class BaseServicesConfig(object):
                 if self._is_provider('aws'):
                     method_args['regions'] = regions
                     if service != 'iam':
-                        method_args['partition_name'] = get_partition_name(self.credentials)
+                        method_args['partition_name'] = get_partition_name(self.credentials.session)
 
                 await service_config.fetch_all(**method_args)
                 if hasattr(service_config, 'finalize'):

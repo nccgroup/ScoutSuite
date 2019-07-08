@@ -34,7 +34,8 @@ class AWSProvider(BaseProvider):
         self.result_format = result_format 
 
         self.credentials = kwargs['credentials']
-        self.account_id = get_aws_account_id(self.credentials)
+
+        self.account_id = get_aws_account_id(self.credentials.session)
 
         super(AWSProvider, self).__init__(report_dir, timestamp,
                                           services, skipped_services, result_format)
