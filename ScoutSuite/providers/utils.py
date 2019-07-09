@@ -1,6 +1,7 @@
 import asyncio
 from hashlib import sha1
-from ScoutSuite.core.console import print_exception
+
+from ScoutSuite.core.console import print_info
 
 
 def get_non_provider_id(name):
@@ -16,17 +17,11 @@ def get_non_provider_id(name):
     return name_hash.hexdigest()
 
 
-def run_concurrently(function, scale_back=1):
-    """
-    Schedules the execution of function `function` in the default thread pool (referred as 'executor') that has been
-    associated with the global event loop.
-
-    :param function: function to be executed concurrently, in a dedicated thread.
-    :return: an asyncio.Future to be awaited.
-    """
-
+async def run_concurrently(function, backoff_seconds=1):
     try:
-        return asyncio.get_event_loop().run_in_executor(executor=None, func=function)
+        # for i in range(10000):
+        #     await run_function_concurrently(function)
+        return await run_function_concurrently(function)
     except Exception as e:
         # FIXME this only supports AWS
         # Determine whether the exception is due to API throttling.
@@ -36,11 +31,23 @@ def run_concurrently(function, scale_back=1):
                                                          'RequestLimitExceeded',
                                                          'ThrottlingException'])
         if throttled:
-            print_exception('Hitting API Rate Limiting, will retry in {}s'.format(scale_back+1))
-            asyncio.sleep(scale_back=scale_back+1)
-            return run_concurrently(function)  # FIXME shouldn't this be awaited?
+            print_info('Hitting API Rate Limiting, will retry in {}s'.format(backoff_seconds))
+            asyncio.sleep(backoff_seconds)
+            return await run_concurrently(function, backoff_seconds + 1)
         else:
             raise
+
+
+def run_function_concurrently(function):
+    """
+    Schedules the execution of function `function` in the default thread pool (referred as 'executor') that has been
+    associated with the global event loop.
+
+    :param function: function to be executed concurrently, in a dedicated thread.
+    :return: an asyncio.Future to be awaited.
+    """
+
+    return asyncio.get_event_loop().run_in_executor(executor=None, func=function)
 
 
 async def get_and_set_concurrently(get_and_set_funcs: [], entities: [], **kwargs):
