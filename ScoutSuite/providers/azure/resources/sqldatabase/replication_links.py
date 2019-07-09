@@ -15,6 +15,7 @@ class ReplicationLinks(AzureResources):
         self._parse_links(links)
 
     def _parse_links(self, links):
+        links_count = len(list(links))
         self.update({
-            'replication_configured': len(links) > 0
+            'replication_configured': links_count > 0
         })

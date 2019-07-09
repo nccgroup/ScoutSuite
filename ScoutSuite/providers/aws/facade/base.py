@@ -36,9 +36,8 @@ except ImportError:
 class AWSFacade(AWSBaseFacade):
     def __init__(self, credentials=None):
         super(AWSFacade, self).__init__()
-        self.owner_id = get_aws_account_id(credentials)
-
-        self._set_session(credentials)
+        self.owner_id = get_aws_account_id(credentials.session)
+        self.session = credentials.session
         self._instantiate_facades()
 
     async def build_region_list(self, service: str, chosen_regions=None, partition_name='aws'):
@@ -54,18 +53,6 @@ class AWSFacade(AWSBaseFacade):
             return list((Counter(regions) & Counter(chosen_regions)).elements())
         else:
             return regions
-
-    def _set_session(self, credentials: dict):
-        # TODO: This conditional check is ok for now, but eventually, the credentials should always be provided.
-        if not credentials:
-            self.session = None
-            return
-
-        session_params = {'aws_access_key_id': credentials.get('access_key'),
-                          'aws_secret_access_key': credentials.get('secret_key'),
-                          'aws_session_token': credentials.get('token')}
-
-        self.session = boto3.session.Session(**session_params)
 
     def _instantiate_facades(self):
         self.ec2 = EC2Facade(self.session, self.owner_id)

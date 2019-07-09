@@ -20,9 +20,10 @@ class AzureCredentials:
 class AzureAuthenticationStrategy(AuthenticationStrategy):
 
     def authenticate(self,
-                     cli=None, msi=None, service_principal=None, file_auth=None, user_account=None,
-                     tenant_id=None, subscription_id=None, client_id=None, client_secret=None, username=None,
-                     password=None,
+                     cli=None, user_account=None, service_principal=None, file_auth=None, msi=None,
+                     tenant_id=None, subscription_id=None,
+                     client_id=None, client_secret=None,
+                     username=None, password=None,
                      programmatic_execution=False,
                      **kargs):
         """
@@ -30,41 +31,38 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
         """
         try:
             if cli:
-                credentials, subscription_id = get_azure_cli_credentials()
+                credentials, subscription_id, tenant_id = get_azure_cli_credentials(with_tenant=True)
 
-            elif msi:
-                credentials = MSIAuthentication()
+            elif user_account:
 
-                # Get the subscription ID
-                subscription_client = SubscriptionClient(credentials)
-
-                try:
-                    print_info('No subscription set, inferring ID')
-                    # Tries to read the subscription list
-                    subscription = next(subscription_client.subscriptions.list())
-                    subscription_id = subscription.subscription_id
-                    print_info('Running against the {} subscription'.format(subscription_id))
-                except StopIteration:
-                    # If the VM cannot read subscription list, ask Subscription ID:
+                if not username and password:
                     if not programmatic_execution:
-                        subscription_id = input('Subscription ID: ')
+                        username = username if username else input("Username: ")
+                        password = password if password else getpass("Password: ")
                     else:
-                        AuthenticationException('Unable to infer a Subscription ID')
+                        AuthenticationException('Username and/or password not set')
 
-            elif file_auth:
-                data = json.loads(file_auth.read())
-                subscription_id = data.get('subscriptionId')
-                tenant_id = data.get('tenantId')
-                client_id = data.get('clientId')
-                client_secret = data.get('clientSecret')
+                credentials = UserPassCredentials(username, password)
 
-                credentials = ServicePrincipalCredentials(
-                    client_id=client_id,
-                    secret=client_secret,
-                    tenant=tenant_id
-                )
+                if not subscription_id:
+                    # Get the subscription ID
+                    subscription_client = SubscriptionClient(credentials)
+                    try:
+                        # Tries to read the subscription list
+                        print_info('No subscription set, inferring ID')
+                        subscription = next(subscription_client.subscriptions.list())
+                        subscription_id = subscription.subscription_id
+                        print_info('Running against the {} subscription'.format(subscription_id))
+                    except StopIteration:
+                        print_info('Unable to infer a subscription')
+                        # If the user cannot read subscription list, ask Subscription ID:
+                        if not programmatic_execution:
+                            subscription_id = input('Subscription ID: ')
+                        else:
+                            AuthenticationException('Unable to infer a Subscription ID')
 
             elif service_principal:
+
                 if not subscription_id:
                     if not programmatic_execution:
                         subscription_id = input('Subscription ID: ')
@@ -95,29 +93,35 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     tenant=tenant_id
                 )
 
-            elif user_account:
+            elif file_auth:
 
-                if not username and password:
-                    if not programmatic_execution:
-                        username = username if username else input("Username: ")
-                        password = password if password else getpass("Password: ")
-                    else:
-                        AuthenticationException('Username and/or password not set')
+                data = json.loads(file_auth.read())
+                subscription_id = data.get('subscriptionId')
+                tenant_id = data.get('tenantId')
+                client_id = data.get('clientId')
+                client_secret = data.get('clientSecret')
 
-                credentials = UserPassCredentials(username, password)
+                credentials = ServicePrincipalCredentials(
+                    client_id=client_id,
+                    secret=client_secret,
+                    tenant=tenant_id
+                )
+
+            elif msi:
+
+                credentials = MSIAuthentication()
 
                 if not subscription_id:
-                    # Get the subscription ID
-                    subscription_client = SubscriptionClient(credentials)
                     try:
-                        # Tries to read the subscription list
+                        # Get the subscription ID
+                        subscription_client = SubscriptionClient(credentials)
                         print_info('No subscription set, inferring ID')
+                        # Tries to read the subscription list
                         subscription = next(subscription_client.subscriptions.list())
                         subscription_id = subscription.subscription_id
                         print_info('Running against the {} subscription'.format(subscription_id))
                     except StopIteration:
-                        print_info('Unable to infer a subscription')
-                        # If the user cannot read subscription list, ask Subscription ID:
+                        # If the VM cannot read subscription list, ask Subscription ID:
                         if not programmatic_execution:
                             subscription_id = input('Subscription ID: ')
                         else:
