@@ -1,6 +1,13 @@
 import boto3
 
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
+from ScoutSuite.providers.aws.utils import get_caller_identity
+
+
+class AWSCredentials:
+
+    def __init__(self, session):
+        self.session = session
 
 
 class AWSAuthenticationStrategy(AuthenticationStrategy):
@@ -13,13 +20,11 @@ class AWSAuthenticationStrategy(AuthenticationStrategy):
         try:
 
             session = boto3.Session(profile_name=profile)
-            credentials = session.get_credentials().__dict__
 
-            # Test querying for current user
-            sts_client = session.client('sts')
-            sts_client.get_caller_identity()
+            # # Test querying for current user
+            identity = get_caller_identity(session)
 
-            return credentials
+            return AWSCredentials(session=session)
 
         except Exception as e:
             raise AuthenticationException(e)
