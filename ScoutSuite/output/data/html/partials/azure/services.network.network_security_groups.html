@@ -8,6 +8,8 @@
         <h4 class="list-group-item-heading">Information</h4>
         <div class="list-group-item-text item-margin">Name: <span id="network.network_security_groups.{{@key}}.name">{{name}}</span></div>
         <div class="list-group-item-text item-margin">Location: <span id="network.network_security_groups.{{@key}}.location">{{ location }}</span></div>
+        <div class="list-group-item-text item-margin">State: <span id="network.network_security_groups.{{@key}}.provisioning_state">{{ provisioning_state }}</span></div>
+        <div class="list-group-item-text item-margin">Resource GUID: <span id="network.network_security_groups.{{@key}}.resource_guid">{{ resource_guid }}</span></div>
         {{!--
         <div class="list-group-item-text item-margin">
             <span id="network.network_security_groups.{{@key}}.ExposedPorts">Exposed Ports:</span>
@@ -23,7 +25,7 @@
         <h4 class="list-group-item-heading">Security Rules</h4>
         <div class="list-group-item-text item-margin">
         {{#each security_rules}}
-            {{name}}
+            <span id="network.network_security_groups.{{@../key}}.security_rule.{{@key}}"><samp>{{name}}</samp></span>
             <div class="list-group-item-text item-margin">
                 <div class="list-group-item-text item-margin">Allow: <span id="network.network_security_groups.{{@../key}}.security_rule.{{@key}}.allow">{{ allow }}</span></div>
                 <div class="list-group-item-text item-margin">Priority: <span id="network.network_security_groups.{{@../key}}.security_rule.{{@key}}.priority">{{ priority }}</span></div>
