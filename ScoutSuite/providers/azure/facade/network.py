@@ -24,3 +24,12 @@ class NetworkFacade:
         except Exception as e:
             print_exception('Failed to retrieve network security groups: {}'.format(e))
             return []
+
+    async def get_virtual_networks(self):
+        try:
+            return await run_concurrently(
+                lambda: list(self._client.network_security_groups.list_all())
+            )
+        except Exception as e:
+            print_exception('Failed to retrieve virtual networks: {}'.format(e))
+            return []
