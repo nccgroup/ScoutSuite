@@ -1,7 +1,7 @@
 from ScoutSuite.providers.azure.resources.base import AzureResources
 
 
-class NetworkWatchers(AzureResources):
+class Watchers(AzureResources):
     async def fetch_all(self):
         for raw_watcher in await self.facade.network.get_network_watchers():
             id, network_watcher = self._parse_network_watcher(raw_watcher)

@@ -64,13 +64,17 @@
     },
     "network": {
       "resources": {
-        "network_watchers": {
+        "virtual_networks": {
           "cols": 2,
-          "path": "services.network.network_watchers"
+          "path": "services.network.virtual_networks"
         },
-        "network_security_groups": {
+        "security_groups": {
           "cols": 2,
-          "path": "services.network.network_security_groups"
+          "path": "services.network.security_groups"
+        },
+        "watchers": {
+          "cols": 2,
+          "path": "services.network.watchers"
         }
       }
     },

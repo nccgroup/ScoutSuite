@@ -2,10 +2,10 @@
     "dashboard_name": "Network",
     "description": "Network Watcher not Enabled",
 	"rationale": "<b>Description:</b><br><br>Network watchers should be enabled.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 6.5</li></ul>",
-    "path": "network.network_watchers",
-    "display_path": "network.network_watchers",
+    "path": "network.watchers",
+    "display_path": "network.watchers",
     "conditions": [ "and",
-        ["network.network_watchers", "empty", ""]
+        ["network.watchers", "empty", ""]
     ],
     "id_suffix": "network_watchers_disabled"
 }

@@ -1,7 +1,7 @@
 from ScoutSuite.providers.azure.resources.base import AzureResources
 
 
-class NetworkSecurityGroups(AzureResources):
+class SecurityGroups(AzureResources):
     async def fetch_all(self):
         for raw_group in await self.facade.network.get_network_security_groups():
             id, network_security_group = self._parse_network_security_group(raw_group)
