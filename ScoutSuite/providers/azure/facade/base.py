@@ -3,6 +3,7 @@ from ScoutSuite.providers.azure.facade.network import NetworkFacade
 from ScoutSuite.providers.azure.facade.securitycenter import SecurityCenterFacade
 from ScoutSuite.providers.azure.facade.sqldatabase import SQLDatabaseFacade
 from ScoutSuite.providers.azure.facade.storageaccounts import StorageAccountsFacade
+from ScoutSuite.providers.azure.facade.virtualmachines import VirtualMachineFacade
 from ScoutSuite.providers.azure.authentication_strategy import AzureCredentials
 
 try:
@@ -17,6 +18,7 @@ except ImportError:
 class AzureFacade():
     def __init__(self, credentials: AzureCredentials):
         self.keyvault = KeyVaultFacade(credentials.credentials, credentials.subscription_id)
+        self.virtualmachines = VirtualMachineFacade(credentials.credentials, credentials.subscription_id)
         self.network = NetworkFacade(credentials.credentials, credentials.subscription_id)
         self.securitycenter = SecurityCenterFacade(credentials.credentials, credentials.subscription_id)
         self.sqldatabase = SQLDatabaseFacade(credentials.credentials, credentials.subscription_id)

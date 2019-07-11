@@ -5,6 +5,7 @@ from ScoutSuite.providers.azure.resources.network.base import Networks
 from ScoutSuite.providers.azure.resources.securitycenter.base import SecurityCenter
 from ScoutSuite.providers.azure.resources.sqldatabase.base import Servers
 from ScoutSuite.providers.azure.resources.storageaccounts.base import StorageAccounts
+from ScoutSuite.providers.azure.resources.virtualmachines.base import VirtualMachines
 from ScoutSuite.providers.base.services import BaseServicesConfig
 
 # Try to import proprietary services
@@ -52,6 +53,7 @@ class AzureServicesConfig(BaseServicesConfig):
             self.rediscache = RedisCaches(facade)
         except NameError as _:
             pass
+        self.virtualmachines = VirtualMachines(facade)
         self.securitycenter = SecurityCenter(facade)
         self.sqldatabase = Servers(facade)
         self.storageaccounts = StorageAccounts(facade)

@@ -9,6 +9,16 @@
       }
     }
   },
+  "compute": {
+    "virtualmachines": {
+      "resources": {
+        "instances": {
+          "cols": 2,
+          "path": "services.virtualmachines.instances"
+        }
+      }
+    }
+  },
   "database": {
     "sqldatabase": {
       "resources": {
