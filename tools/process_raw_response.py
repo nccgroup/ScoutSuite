@@ -79,7 +79,7 @@ if __name__ == "__main__":
     for k in object_value_dict.keys():
         object_format_value = object_format.format(args.name, k)
         parsed_string += '{}_dict[\'{}\'] = {}\n'.format(args.name, camel_to_snake(k), object_format_value)
-        parsed_html += '\n        <div class="list-group-item-text item-margin">{}: <span id="{}.{}s.{{{{@key}}}}.{}"><samp>{{{{{}}}}}</samp></span></div>'.format(
+        parsed_html += '\n        <div class="list-group-item-text item-margin">{}: <span id="{}.{}s.{{{{@key}}}}.{}"><samp>{{{{value_or_none {}}}}}</samp></span></div>'.format(
             camel_to_snake(k, True).replace('_', ' '), args.service, args.name, camel_to_snake(k), camel_to_snake(k))
 
     parsed_string += 'return {}_dict[\'id\'], {}_dict'.format(args.name, args.name)
