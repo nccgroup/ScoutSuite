@@ -1,6 +1,7 @@
 from azure.mgmt.network import NetworkManagementClient
-from ScoutSuite.providers.utils import run_concurrently
+
 from ScoutSuite.core.console import print_exception
+from ScoutSuite.providers.utils import run_concurrently
 
 
 class NetworkFacade:
@@ -28,7 +29,7 @@ class NetworkFacade:
     async def get_virtual_networks(self):
         try:
             return await run_concurrently(
-                lambda: list(self._client.network_security_groups.list_all())
+                lambda: list(self._client.virtual_networks.list_all())
             )
         except Exception as e:
             print_exception('Failed to retrieve virtual networks: {}'.format(e))

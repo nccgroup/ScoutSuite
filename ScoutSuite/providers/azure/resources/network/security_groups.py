@@ -1,4 +1,5 @@
 from ScoutSuite.providers.azure.resources.base import AzureResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class SecurityGroups(AzureResources):
@@ -9,14 +10,23 @@ class SecurityGroups(AzureResources):
 
     def _parse_network_security_group(self, network_security_group):
         network_security_group_dict = {}
-        network_security_group_dict['id'] = network_security_group.resource_guid
+        network_security_group_dict['id'] = get_non_provider_id(network_security_group.resource_guid)
         network_security_group_dict['name'] = network_security_group.name
         network_security_group_dict['location'] = network_security_group.location
         network_security_group_dict['provisioning_state'] = network_security_group.provisioning_state
         network_security_group_dict['resource_guid'] = network_security_group.resource_guid
+        network_security_group_dict['type'] = network_security_group.type
         network_security_group_dict['etag'] = network_security_group.etag
+        network_security_group_dict['tags'] = network_security_group.tags
+        network_security_group_dict['additional_properties'] = network_security_group.additional_properties
+        network_security_group_dict['network_interfaces'] = network_security_group.network_interfaces
 
         network_security_group_dict['security_rules'] = self._parse_security_rules(network_security_group)
+
+        network_security_group_dict['subnets'] = []
+        if network_security_group.subnets:
+            for subnet in network_security_group.subnets:
+                network_security_group_dict['subnets'].append(get_non_provider_id(subnet.id))
 
         # FIXME this is broken and badly implemented (not efficient at all)
         # exposed_ports = self._parse_exposed_ports(network_security_group)
@@ -27,40 +37,51 @@ class SecurityGroups(AzureResources):
 
     def _parse_security_rules(self, network_security_group):
         security_rules = {}
+        # custom rules
         for sr in network_security_group.security_rules:
-            security_rule_dict = {}
-            security_rule_dict['id'] = sr.id
-            security_rule_dict['name'] = sr.name
-            security_rule_dict['allow'] = sr.access == "Allow"
-            security_rule_dict['priority'] = sr.priority
-            security_rule_dict['description'] = sr.description
-            security_rule_dict['provisioning_state'] = sr.provisioning_state
-
-            security_rule_dict['protocol'] = sr.protocol
-            security_rule_dict['direction'] = sr.direction
-
-            source_address_prefixes = self._merge_prefixes_or_ports(sr.source_address_prefix,
-                                                                    sr.source_address_prefixes)
-            security_rule_dict['source_address_prefixes'] = source_address_prefixes
-
-            source_port_ranges = self._merge_prefixes_or_ports(sr.source_port_range, sr.source_port_ranges)
-            security_rule_dict['source_port_ranges'] = source_port_ranges
-            security_rule_dict['source_ports'] = self._parse_ports(source_port_ranges)
-
-            destination_address_prefixes = self._merge_prefixes_or_ports(sr.destination_address_prefix,
-                                                                         sr.destination_address_prefixes)
-            security_rule_dict['destination_address_prefixes'] = destination_address_prefixes
-
-            destination_port_ranges = self._merge_prefixes_or_ports(sr.destination_port_range,
-                                                                    sr.destination_port_ranges)
-            security_rule_dict['destination_port_ranges'] = destination_port_ranges
-            security_rule_dict['destination_ports'] = self._parse_ports(destination_port_ranges)
-
-            security_rule_dict['etag'] = sr.etag
-
-            security_rules[security_rule_dict['id']] = security_rule_dict
-
+            security_rule_id, security_rule_dict = self._parse_security_rule(sr)
+            security_rules[security_rule_id] = security_rule_dict
+        # default rules
+        for sr in network_security_group.default_security_rules:
+            security_rule_id, security_rule_dict = self._parse_security_rule(sr, default=True)
+            security_rules[security_rule_id] = security_rule_dict
         return security_rules
+
+    def _parse_security_rule(self, rule, default=False):
+        security_rule_dict = {}
+        security_rule_dict['id'] = rule.id
+        security_rule_dict['name'] = rule.name
+        security_rule_dict['allow'] = rule.access == "Allow"
+        security_rule_dict['priority'] = rule.priority
+        security_rule_dict['description'] = rule.description
+        security_rule_dict['provisioning_state'] = rule.provisioning_state
+
+        security_rule_dict['protocol'] = rule.protocol
+        security_rule_dict['direction'] = rule.direction
+
+        source_address_prefixes = self._merge_prefixes_or_ports(rule.source_address_prefix,
+                                                                rule.source_address_prefixes)
+        security_rule_dict['source_address_prefixes'] = source_address_prefixes
+
+        source_port_ranges = self._merge_prefixes_or_ports(rule.source_port_range, rule.source_port_ranges)
+        security_rule_dict['source_port_ranges'] = source_port_ranges
+        security_rule_dict['source_ports'] = self._parse_ports(source_port_ranges)
+
+        destination_address_prefixes = self._merge_prefixes_or_ports(rule.destination_address_prefix,
+                                                                     rule.destination_address_prefixes)
+        security_rule_dict['destination_address_prefixes'] = destination_address_prefixes
+
+        destination_port_ranges = self._merge_prefixes_or_ports(rule.destination_port_range,
+                                                                rule.destination_port_ranges)
+        security_rule_dict['destination_port_ranges'] = destination_port_ranges
+        security_rule_dict['destination_ports'] = self._parse_ports(destination_port_ranges)
+
+        security_rule_dict['etag'] = rule.etag
+
+        security_rule_dict['default'] = default
+
+        return security_rule_dict['id'], security_rule_dict
+
 
     def _parse_ports(self, port_ranges):
         # FIXME this is inefficient
