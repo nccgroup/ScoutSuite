@@ -11,4 +11,3 @@ class VirtualMachines(AzureCompositeResources):
 
     async def fetch_all(self):
         await self._fetch_children(resource_parent=self)
-

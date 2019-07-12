@@ -33,7 +33,11 @@ class Instances(AzureResources):
         instance_dict['diagnostics_profile'] = raw_instance.diagnostics_profile
         instance_dict['os_profile'] = raw_instance.os_profile
         instance_dict['storage_profile'] = raw_instance.storage_profile
-        instance_dict['network_profile'] = raw_instance.network_profile
+
+        # instance_dict['network_profile'] = raw_instance.network_profile
+        instance_dict['network_interfaces'] = []
+        for interface in raw_instance.network_profile.network_interfaces:
+            instance_dict['network_interfaces'].append(get_non_provider_id(interface.id))
 
         return instance_dict['id'], instance_dict
 
