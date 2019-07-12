@@ -87,6 +87,7 @@ body {
     color: rgb(225, 225, 225);
 }
 
+.finding-good { color: #23af44; }
 .finding-warning { color: #fdbe00; }
 .finding-danger { color:#ee293d; 
                   font-weight: bold;}
