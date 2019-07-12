@@ -456,7 +456,7 @@ input:checked + .slider:before {
     overflow: unset;
 }
 
-.col-sm-9.w-100.pr-0 div .list-group .list-group-item:last-child {
+.col-sm-9.w-100.pr-0 div .list-group .list-group-item {
     overflow: auto;
     max-height: 40rem;
 }
