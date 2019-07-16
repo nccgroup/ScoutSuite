@@ -281,10 +281,11 @@ class ScoutSuiteArgumentParser:
 
         # Test conditions
         v = vars(args)
-        if v.get('tenant_id') and not (v.get('user_account') or v.get('service_principal') or v.get('msi')):
-            self.parser.error('--tenant can only be set when using --user-account, --service-principal or --msi')
-        if v.get('subscription_id') and not (v.get('user_account') or v.get('service_principal') or v.get('msi')):
-            self.parser.error('--tenant can only be set when using --user-account, --service-principal or --msi')
+        if v.get('provider') == 'azure:':
+            if v.get('tenant_id') and not (v.get('user_account') or v.get('service_principal') or v.get('msi')):
+                self.parser.error('--tenant can only be set when using --user-account, --service-principal or --msi')
+            if v.get('subscription_id') and not (v.get('user_account') or v.get('service_principal') or v.get('msi')):
+                self.parser.error('--tenant can only be set when using --user-account, --service-principal or --msi')
         # TODO add more conditions
 
         return args
