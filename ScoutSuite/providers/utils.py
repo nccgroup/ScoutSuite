@@ -17,7 +17,7 @@ def get_non_provider_id(name):
     return name_hash.hexdigest()
 
 
-async def run_concurrently(function, backoff_seconds=1):
+async def run_concurrently(function, backoff_seconds=60):
     try:
         # for i in range(10000):
         #     await run_function_concurrently(function)
@@ -33,7 +33,7 @@ async def run_concurrently(function, backoff_seconds=1):
         if throttled:
             print_info('Hitting API Rate Limiting, will retry in {}s'.format(backoff_seconds))
             asyncio.sleep(backoff_seconds)
-            return await run_concurrently(function, backoff_seconds + 1)
+            return await run_concurrently(function, backoff_seconds + 60)
         else:
             raise
 
