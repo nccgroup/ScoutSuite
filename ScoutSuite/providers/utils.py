@@ -31,9 +31,8 @@ async def run_concurrently(function, backoff_seconds=60):
                                                          'RequestLimitExceeded',
                                                          'ThrottlingException'])
         if throttled:
-            # print_info('Hitting API Rate Limiting, will retry in {}s'.format(backoff_seconds))
-            print_info('Hitting API Rate Limiting for {}, will retry in {}s'.format(function, backoff_seconds))
-            asyncio.sleep(backoff_seconds)
+            print_info('Hitting API Rate Limiting, will retry in {}s'.format(backoff_seconds))
+            await asyncio.sleep(backoff_seconds)
             return await run_concurrently(function, backoff_seconds + 60)
         else:
             raise
