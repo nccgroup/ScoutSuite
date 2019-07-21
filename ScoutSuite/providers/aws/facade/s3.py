@@ -27,7 +27,8 @@ class S3Facade(AWSBaseFacade):
                  self._get_and_set_s3_bucket_webhosting,
                  self._get_and_set_s3_bucket_default_encryption,
                  self._get_and_set_s3_acls,
-                 self._get_and_set_s3_bucket_policy],
+                 self._get_and_set_s3_bucket_policy,
+                 self._get_and_set_s3_bucket_tags],
                 buckets)
 
             # Non-async post-processing:
@@ -149,6 +150,18 @@ class S3Facade(AWSBaseFacade):
         except Exception as e:
             print_exception('Failed to get bucket policy for %s: %s' % (bucket['Name'], e))
             bucket['grantees'] = {}
+
+    async def _get_and_set_s3_bucket_tags(self, bucket):
+        client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
+        try:
+            bucket_tagset = await run_concurrently(lambda: client.get_bucket_tagging(Bucket=bucket['Name']))
+            bucket['tags'] = {x['Key']: x['Value'] for x in bucket_tagset['TagSet']}
+        except ClientError as e:
+            if e.response['Error']['Code'] != 'NoSuchTagSet':
+                print_exception('Failed to get bucket tags for %s: %s' % (bucket['Name'], e))
+        except Exception as e:
+            print_exception('Failed to get bucket tags for %s: %s' % (bucket['Name'], e))
+            bucket['tags'] = {}
 
     def _set_s3_bucket_secure_transport(self, bucket):
         try:
