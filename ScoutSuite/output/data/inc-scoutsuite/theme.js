@@ -90,7 +90,7 @@ function isDarkThemeEnabled() {
   if(isLocalStorageSupported(window.localStorage)){
     return localStorage.getItem('dark_theme_enabled') === 'true'
   }else{
-    return 'false'
+    return false
   }
 }
 
