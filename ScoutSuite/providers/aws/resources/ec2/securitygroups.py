@@ -49,7 +49,7 @@ class SecurityGroups(AWSResources):
                 protocols[ip_protocol], 'ports', {})
 
             # Save the port (single port or range)
-            port_value = 'N/A'
+            port_value = '1-65535'
             if 'FromPort' in rule and 'ToPort' in rule:
                 if ip_protocol == 'ICMP':
                     # FromPort with ICMP is the type of message
