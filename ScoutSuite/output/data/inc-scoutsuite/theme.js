@@ -10,6 +10,18 @@ $(document).ready(() => {
   }
 });
 
+function isLocalStorageSupported(storage) {
+  try {
+    const key = "Kn5hKRN6zUKLQNaT";
+    storage.setItem(key, key);
+    storage.removeItem(key);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+
 /**
  * Load the last theme used by looking into localstorage
  */
@@ -24,7 +36,9 @@ function loadLastTheme() {
  * Toggles between light and dark themes
  */
 function toggleTheme() {
-  localStorage.setItem('dark_theme_enabled', document.getElementById('theme_checkbox').checked)
+  if(isLocalStorageSupported(window.localStorage)){
+    localStorage.setItem('dark_theme_enabled', document.getElementById('theme_checkbox').checked)
+  }
   if (document.getElementById('theme_checkbox').checked) {
     this.setBootstrapTheme(DARK_BOOTSTRAP_THEME)
     this.setScoutTheme(DARK_SCOUT_THEME)
@@ -73,7 +87,11 @@ function setScoutTheme(file) {
  * @returns {boolean}
  */
 function isDarkThemeEnabled() {
-  return localStorage.getItem('dark_theme_enabled') === 'true'
+  if(isLocalStorageSupported(window.localStorage)){
+    return localStorage.getItem('dark_theme_enabled') === 'true'
+  }else{
+    return 'false'
+  }
 }
 
 /**
@@ -81,5 +99,7 @@ function isDarkThemeEnabled() {
  * @param {boolean} isDarkThemeEnabled 
  */
 function saveIsDarkThemeEnabled(isDarkThemeEnabled) {
-  localStorage.setItem('dark_theme_enabled', isDarkThemeEnabled)
+  if(isLocalStorageSupported(window.localStorage)){
+    localStorage.setItem('dark_theme_enabled', isDarkThemeEnabled)
+  }
 }
