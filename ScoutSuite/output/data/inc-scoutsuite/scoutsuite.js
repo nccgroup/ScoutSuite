@@ -50,7 +50,7 @@ function onPageLoad() {
 
         // create array with item values
         var items = [];
-        for (let i in item_indexes) {
+        for (i in item_indexes) {
             // when path ends in '.items' (findings)
             if (typeof item_indexes[i] === 'string') {
                 var idArray = item_indexes[i].split('.')
@@ -67,13 +67,13 @@ function onPageLoad() {
 
             // get a list of unique keys from all items
             var unique_keys = [];
-            for (let i in items) {
+            for (i in items) {
                 unique_keys = arrayUnique(unique_keys.concat(Object.keys(items[i])));
             }
             // first row of csv file
             csvArray.push(unique_keys);
 
-            for (let i in items) {
+            for (i in items) {
 
                 // put each value in array
                 var valuesArray = []
@@ -171,7 +171,7 @@ function loadConfig(scriptId, cols, force) {
     // Build the list based on the path, stopping at the first .id. value
     let list = runResults
     let pathArray = scriptId.split('.id.')[0].split('.')
-    for (let i in pathArray) {
+    for (i in pathArray) {
         // Allows for creation of regions-filter etc...
         if (i.endsWith('-filters')) {
             i = i.replace('-filters', '')
@@ -375,7 +375,7 @@ function showFindings(path, resourcePath) {
     let splitPath = path.split('.')
     let findingService = splitPath[1]
     let findingKey = splitPath[splitPath.length - 2]
-    for (let item in items) {
+    for (item in items) {
         var idArray = items[item].split('.')
         var id = 'services.' + idArray.slice(0, resourcePathArray.length).join('.')
         showSingleItem(id)
@@ -501,7 +501,7 @@ function iterateEC2ObjectsAndCall(data, entities, callback, callbackArgs) {
     if (entities.length > 0) {
         var entity = entities.shift()
         var recurse = entities.length
-        for (let i in data[entity]) {
+        for (i in data[entity]) {
             if (recurse) {
                 iterateEC2ObjectsAndCall(data[entity][i], eval(JSON.stringify(entities)), callback, callbackArgs)
             } else {
@@ -522,7 +522,7 @@ function findEC2Object(ec2Data, entities, id) {
     if (entities.length > 0) {
         var entity = entities.shift()
         var recurse = entities.length
-        for (let i in ec2Data[entity]) {
+        for (i in ec2Data[entity]) {
             if (recurse) {
                 var object = findEC2Object(ec2Data[entity][i], eval(JSON.stringify(entities)), id)
                 if (object) {
@@ -547,7 +547,7 @@ function findEC2ObjectByAttr(ec2Data, entities, attributes) {
     if (entities.length > 0) {
         var entity = entities.shift()
         var recurse = entities.length
-        for (let i in ec2Data[entity]) {
+        for (i in ec2Data[entity]) {
             if (recurse) {
                 var object = findEC2ObjectByAttr(ec2Data[entity][i], eval(JSON.stringify(entities)), attributes)
                 if (object) {
@@ -555,7 +555,7 @@ function findEC2ObjectByAttr(ec2Data, entities, attributes) {
                 }
             } else {
                 var found = true
-                for (let attr in attributes) {
+                for (attr in attributes) {
                     // h4ck :: EC2 security groups in RDS are lowercased...
                     if (ec2Data[entity][i][attr].toLowerCase() != attributes[attr].toLowerCase()) {
                         found = false
@@ -680,7 +680,7 @@ function showObject(path, attrName, attrValue) {
     let data = getResource(path)
 
     // Adds the resource path values to the data context
-    for (let i = 0; i < pathLength - 1; i += 2) {
+    for (i = 0; i < pathLength - 1; i += 2) {
         if (i + 1 >= pathLength) break
 
         const attribute = makeResourceTypeSingular(pathArray[i])
@@ -690,7 +690,7 @@ function showObject(path, attrName, attrValue) {
     // Filter if ...
     let resourceType
     if (attrName && attrValue) {
-        for (const resource in data) {
+        for (resource in data) {
             if (data[resource][attrName] !== attrValue) continue
             data = data[resource]
             break
@@ -712,7 +712,7 @@ function showObject(path, attrName, attrValue) {
  */
 function getResource(path) {
     let data = runResults
-    for (const attribute of path.split('.')) {
+    for (attribute of path.split('.')) {
         data = data[attribute]
     }
     return data
@@ -835,13 +835,13 @@ function loadMetadata() {
     loadConfig('services.id.filters', 0, false) // service-specific filters
     loadConfig('services.id.regions', 0, false) // region filters
 
-    for (let group in runResults['metadata']) {
-        for (let service in runResults['metadata'][group]) {
+    for (group in runResults['metadata']) {
+        for (service in runResults['metadata'][group]) {
             if (service === 'summaries') {
                 continue
             }
-            for (let section in runResults['metadata'][group][service]) {
-                for (let resourceType in runResults['metadata'][group][service][section]) {
+            for (section in runResults['metadata'][group][service]) {
+                for (resourceType in runResults['metadata'][group][service][section]) {
                     addTemplates(group, service, section, resourceType,
                         runResults['metadata'][group][service][section][resourceType]['path'],
                         runResults['metadata'][group][service][section][resourceType]['cols'])
@@ -988,7 +988,7 @@ function getValueAtRecursive(path, source) {
             {
                 let v = [];
                 let w;
-                for(let k in value){
+                for(k in value){
                     // process recursively
                     w = getValueAtRecursive(k + current_path.substr(current_path.indexOf('.'), current_path.length), value);
                     v = v.concat(
@@ -1107,7 +1107,7 @@ function lazyLoadingJson(path) {
     var resourcePathArray = path.split('.')
     var service = resourcePathArray[1]
     var resourceType = resourcePathArray[resourcePathArray.length - 1]
-    for (let group in runResults['metadata']) {
+    for (group in runResults['metadata']) {
         if (service in runResults['metadata'][group]) {
             if (resourceType in runResults['metadata'][group][service]['resources']) {
                 cols = runResults['metadata'][group][service]['resources'][resourceType]['cols']
