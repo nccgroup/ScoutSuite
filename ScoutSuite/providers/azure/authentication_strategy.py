@@ -14,7 +14,7 @@ class AzureCredentials:
     def __init__(self, credentials, subscription_id=None, tenant_id=None):
         self.credentials = credentials
         self.subscription_id = subscription_id
-        self.tenant_id = tenant_id
+        self.tenant_id = tenant_id if tenant_id else credentials.token.get('tenant_id')  # TODO does this work for all types of authentication?
 
 
 class AzureAuthenticationStrategy(AuthenticationStrategy):
