@@ -47,11 +47,11 @@ class VirtualNetworks(AzureResources):
             subnet_dict['ip_configuration_profiles'] = raw_subnet.ip_configuration_profiles
             subnet_dict['ip_configurations'] = raw_subnet.ip_configurations
             subnet_dict['address_prefixes'] = raw_subnet.address_prefixes
-            virtual_network_dict['subnets'][subnet_dict['id']] = subnet_dict
             if raw_subnet.network_security_group:
                 subnet_dict['network_security_group'] = get_non_provider_id(raw_subnet.network_security_group.id)
             else:
                 subnet_dict['network_security_group'] = None
+            virtual_network_dict['subnets'][subnet_dict['id']] = subnet_dict
 
         return virtual_network_dict['id'], virtual_network_dict
 

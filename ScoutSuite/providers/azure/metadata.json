@@ -85,10 +85,6 @@
         "watchers": {
           "cols": 2,
           "path": "services.network.watchers"
-        },
-        "network_interfaces": {
-          "cols": 2,
-          "path": "services.network.network_interfaces"
         }
       }
     },

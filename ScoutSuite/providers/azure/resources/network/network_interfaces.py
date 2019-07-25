@@ -18,17 +18,44 @@ class NetworkInterfaces(AzureResources):
         network_interface_dict['tags'] = raw_network_interface.tags
         network_interface_dict['interface_endpoint'] = raw_network_interface.interface_endpoint
         network_interface_dict['primary'] = raw_network_interface.primary
-        network_interface_dict['tap_configurations'] = raw_network_interface.tap_configurations
         network_interface_dict['etag'] = raw_network_interface.etag
         network_interface_dict['additional_properties'] = raw_network_interface.additional_properties
         network_interface_dict['location'] = raw_network_interface.location
         network_interface_dict['mac_address'] = raw_network_interface.mac_address
         network_interface_dict['provisioning_state'] = raw_network_interface.provisioning_state
         network_interface_dict['resource_guid'] = raw_network_interface.resource_guid
-        network_interface_dict['ip_configurations'] = raw_network_interface.ip_configurations
         network_interface_dict['enable_ip_forwarding'] = raw_network_interface.enable_ip_forwarding
         network_interface_dict['type'] = raw_network_interface.type
-        network_interface_dict['hosted_workloads'] = raw_network_interface.hosted_workloads
         network_interface_dict['network_security_group'] = raw_network_interface.network_security_group
+
+        # TODO process and display the below
+        network_interface_dict['hosted_workloads'] = raw_network_interface.hosted_workloads
+        network_interface_dict['tap_configurations'] = raw_network_interface.tap_configurations
+
+        ip_configuration = raw_network_interface.ip_configurations[0]  # TODO is this always an array of 1?
+        network_interface_dict['ip_configuration'] = {}
+        network_interface_dict['ip_configuration']['id'] = ip_configuration.id
+        network_interface_dict['ip_configuration']['additional_properties'] = ip_configuration.additional_properties
+        network_interface_dict['ip_configuration']['virtual_network_taps'] = ip_configuration.virtual_network_taps
+        network_interface_dict['ip_configuration'][
+            'application_gateway_backend_address_pools'] = ip_configuration.application_gateway_backend_address_pools
+        network_interface_dict['ip_configuration'][
+            'load_balancer_backend_address_pools'] = ip_configuration.load_balancer_backend_address_pools
+        network_interface_dict['ip_configuration'][
+            'load_balancer_inbound_nat_rules'] = ip_configuration.load_balancer_inbound_nat_rules
+        network_interface_dict['ip_configuration']['private_ip_address'] = ip_configuration.private_ip_address
+        network_interface_dict['ip_configuration'][
+            'private_ip_allocation_method'] = ip_configuration.private_ip_allocation_method
+        network_interface_dict['ip_configuration'][
+            'private_ip_address_version'] = ip_configuration.private_ip_address_version
+        network_interface_dict['ip_configuration']['subnet'] = ip_configuration.subnet
+        network_interface_dict['ip_configuration']['primary'] = ip_configuration.primary
+        network_interface_dict['ip_configuration']['public_ip_address'] = ip_configuration.public_ip_address
+        network_interface_dict['ip_configuration'][
+            'application_security_groups'] = ip_configuration.application_security_groups
+        network_interface_dict['ip_configuration']['provisioning_state'] = ip_configuration.provisioning_state
+        network_interface_dict['ip_configuration']['name'] = ip_configuration.name
+        network_interface_dict['ip_configuration']['etag'] = ip_configuration.etag
+
         return network_interface_dict['id'], network_interface_dict
 

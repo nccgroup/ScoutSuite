@@ -22,7 +22,6 @@ class NetworkFacade:
             return await run_concurrently(
                 lambda: list(self._client.network_security_groups.list_all())
             )
-
         except Exception as e:
             print_exception('Failed to retrieve network security groups: {}'.format(e))
             return []
