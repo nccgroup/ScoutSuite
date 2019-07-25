@@ -200,6 +200,12 @@
                 "enabled": true,
                 "level": "danger"
             }
+        ],
+        "storageaccount-default-network-access.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
         ]
     }
 }
