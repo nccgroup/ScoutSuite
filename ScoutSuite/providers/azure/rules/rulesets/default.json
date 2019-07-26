@@ -201,12 +201,6 @@
                 "level": "danger"
             }
         ],
-        "storageaccount-default-network-access.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
         "storageaccount-trusted-microsoft-services.json": [
             {
                 "enabled": true,
