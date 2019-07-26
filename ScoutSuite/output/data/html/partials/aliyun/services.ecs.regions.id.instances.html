@@ -1,0 +1,101 @@
+
+<!-- ECS instances -->
+<script id="services.ecs.regions.id.instances.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">ID: <span id="ecs.regions.{{region}}.instances.{{@key}}.id"><samp>{{id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Status: <span id="ecs.regions.{{region}}.instances.{{@key}}.status"><samp>{{status}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Description: <span id="ecs.regions.{{region}}.instances.{{@key}}.description"><samp>{{description}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Region: <span id="ecs.regions.{{region}}.instances.{{@key}}.region_id"><samp>{{region_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Zone: <span id="ecs.regions.{{region}}.instances.{{@key}}.zone_id"><samp>{{zone_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Creation Date: <span id="ecs.regions.{{region}}.instances.{{@key}}.creation_time">{{format_date creation_time}}</span></div>
+        <div class="list-group-item-text item-margin">Start Date: <span id="ecs.regions.{{region}}.instances.{{@key}}.start_time">{{format_date start_time}}</span></div>
+        <div class="list-group-item-text item-margin">Expiration Date: <span id="ecs.regions.{{region}}.instances.{{@key}}.expired_time">{{format_date expired_time}}</span></div>
+        <div class="list-group-item-text item-margin">Auto Release Date: <span id="ecs.regions.{{region}}.instances.{{@key}}.auto_release_time">{{format_date auto_release_time}}</span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">System Configuration</h4>
+        <div class="list-group-item-text item-margin">Serial Number: <span id="ecs.regions.{{region}}.instances.{{@key}}.serial_number"><samp>{{serial_number}}</samp></span></div>
+        <div class="list-group-item-text item-margin">OS Name: <span id="ecs.regions.{{region}}.instances.{{@key}}.os_name"><samp>{{os_name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">OS Name (english): <span id="ecs.regions.{{region}}.instances.{{@key}}.os_name_en"><samp>{{os_name_en}}</samp></span></div>
+        <div class="list-group-item-text item-margin">OS Type: <span id="ecs.regions.{{region}}.instances.{{@key}}.os_type"><samp>{{os_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Image ID: <span id="ecs.regions.{{region}}.instances.{{@key}}.image_id"><samp>{{image_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Memory: <span id="ecs.regions.{{region}}.instances.{{@key}}.memory"><samp>{{memory}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Instance Type: <span id="ecs.regions.{{region}}.instances.{{@key}}.instance_type"><samp>{{instance_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Instance Type Family: <span id="ecs.regions.{{region}}.instances.{{@key}}.instance_type_family"><samp>{{instance_type_family}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Instance Charge Type: <span id="ecs.regions.{{region}}.instances.{{@key}}.instance_charge_type"><samp>{{instance_charge_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Dedicated Instance Affinity: <span id="ecs.regions.{{region}}.instances.{{@key}}.dedicated_instance_attribute_affinity"><samp>{{dedicated_instance_attribute.Affinity}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Dedicated Instance Tenancy: <span id="ecs.regions.{{region}}.instances.{{@key}}.dedicated_instance_attribute_tenancy"><samp>{{dedicated_instance_attribute.Tenancy}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Resource Group ID: <span id="ecs.regions.{{region}}.instances.{{@key}}.resource_group_id"><samp>{{resource_group_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Credit Specification: <span id="ecs.regions.{{region}}.instances.{{@key}}.credit_specification"><samp>{{credit_specification}}</samp></span></div>
+        <div class="list-group-item-text item-margin">CPU: <span id="ecs.regions.{{region}}.instances.{{@key}}.cpu"><samp>{{cpu}}</samp></span></div>
+        <div class="list-group-item-text item-margin">GPU Amount: <span id="ecs.regions.{{region}}.instances.{{@key}}.gpu_amount"><samp>{{gpu_amount}}</samp></span></div>
+        <div class="list-group-item-text item-margin">GPU Spec: <span id="ecs.regions.{{region}}.instances.{{@key}}.gpu_spec"><samp>{{gpu_spec}}</samp></span></div>
+        <div class="list-group-item-text item-margin">IO Optimized: <span id="ecs.regions.{{region}}.instances.{{@key}}.io_optimized"><samp>{{io_optimized}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Operation Locks: <span id="ecs.regions.{{region}}.instances.{{@key}}.operation_locks"><samp>{{operation_locks.OperationLocks}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Sale Cycle: <span id="ecs.regions.{{region}}.instances.{{@key}}.sale_cycle"><samp>{{sale_cycle}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Spot Strategy: <span id="ecs.regions.{{region}}.instances.{{@key}}.spot_strategy"><samp>{{spot_strategy}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Spot Price Limit: <span id="ecs.regions.{{region}}.instances.{{@key}}.spot_price_limit"><samp>{{spot_price_limit}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Capacity Reservation: <span id="ecs.regions.{{region}}.instances.{{@key}}.ecs_capacity_reservation_attr"><samp>{{ecs_capacity_reservation_attr.CapacityReservationPreference}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Deletion Protection: <span id="ecs.regions.{{region}}.instances.{{@key}}.deletion_protection"><samp>{{deletion_protection}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Stopped Mode: <span id="ecs.regions.{{region}}.instances.{{@key}}.stopped_mode"><samp>{{stopped_mode}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Deployment Set ID: <span id="ecs.regions.{{region}}.instances.{{@key}}.deployment_set_id"><samp>{{deployment_set_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Recyclable: <span id="ecs.regions.{{region}}.instances.{{@key}}.recyclable"><samp>{{recyclable}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Device Available: <span id="ecs.regions.{{region}}.instances.{{@key}}.device_available"><samp>{{device_available}}</samp></span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Network Configuration</h4>
+        <div class="list-group-item-text item-margin">Host Name: <span id="ecs.regions.{{region}}.instances.{{@key}}.host_name"><samp>{{host_name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Dedicated Host Name: <span id="ecs.regions.{{region}}.instances.{{@key}}.dedicated_host_attribute"><samp>{{dedicated_host_attribute.DedicatedHostName}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Instance Network Type: <span id="ecs.regions.{{region}}.instances.{{@key}}.instance_network_type"><samp>{{instance_network_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">EIP Address: <span id="ecs.regions.{{region}}.instances.{{@key}}.eip_address"><samp>{{eip_address.IpAddress}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Public Ip Address: <span id="ecs.regions.{{region}}.instances.{{@key}}.public_ip_address"><samp>{{public_ip_address.IpAddress}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Inner IP Address: <span id="ecs.regions.{{region}}.instances.{{@key}}.inner_ip_address"><samp>{{inner_ip_address.IpAddress}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Internet Charge Type: <span id="ecs.regions.{{region}}.instances.{{@key}}.internet_charge_type"><samp>{{internet_charge_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Internet Max Bandwidth Out: <span id="ecs.regions.{{region}}.instances.{{@key}}.internet_max_bandwidth_out"><samp>{{internet_max_bandwidth_out}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Internet Max Bandwidth In: <span id="ecs.regions.{{region}}.instances.{{@key}}.internet_max_bandwidth_in"><samp>{{internet_max_bandwidth_in}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Cluster ID: <span id="ecs.regions.{{region}}.instances.{{@key}}.cluster_id"><samp>{{cluster_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">VLAN ID: <span id="ecs.regions.{{region}}.instances.{{@key}}.vlan_id"><samp>{{vlan_id}}</samp></span></div>
+
+        <h5 class="list-group-item-heading">VPC</h5>
+        <div class="list-group-item-text item-margin">VPC ID: <span id="ecs.regions.{{region}}.instances.{{@key}}.vpc_attributes_id"><samp>{{vpc_attributes.VpcId}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Switch ID: <span id="ecs.regions.{{region}}.instances.{{@key}}.vpc_attributes_switch"><samp>{{vpc_attributes.VSwitchId}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Private IP Address: <span id="ecs.regions.{{region}}.instances.{{@key}}.vpc_attributes_ip"><samp>{{vpc_attributes.PrivateIpAddress.IpAddress}}</samp></span></div>
+        <div class="list-group-item-text item-margin">NAT IP Address: <span id="ecs.regions.{{region}}.instances.{{@key}}.vpc_attributes_nat"><samp>{{vpc_attributes.NatIpAddress}}</samp></span></div>
+
+        <h5 class="list-group-item-heading">Network Interfaces</h5>
+        <ul>
+            {{#each network_interfaces.NetworkInterface}}
+            <li class="list-group-item-text"><span id="ecs.regions.{{@../../key}}.instances.{{@../key}}.network_interfaces.{{@key}}.network_interface_id"><samp>{{NetworkInterfaceId}}</samp></span>
+                <ul>
+                    <li class="list-group-item-text">IP Address: <span id="ecs.regions.{{@../../key}}.instances.{{@../key}}.network_interfaces.{{@key}}.primary_address"><samp>{{PrimaryIpAddress}}</samp></span></li>
+                    <li class="list-group-item-text">MAC Address: <span id="ecs.regions.{{@../../key}}.instances.{{@../key}}.network_interfaces.{{@key}}.mac_address"><samp>{{MacAddress}}</samp></span></li>
+                </ul>
+            </li>
+            {{/each}}
+        </ul>
+
+        <h5 class="list-group-item-heading">Security Groups</h5>
+        <ul>
+            {{#each security_group_ids}}
+            <li class="list-group-item-text"><span id="ecs.regions.{{@../../key}}.instances.{{@../key}}.security_group_ids.{{this}}"><samp>{{this}}</samp></span></li>
+            {{/each}}
+        </ul>
+    </div>
+
+</script>
+
+<script>
+    Handlebars.registerPartial("services.ecs.regions.id.instances", $("#services\\.ecs\\.regions\\.id\\.instances\\.partial").html());
+</script>
+
+<!-- Single ECS instance template -->
+<script id="single_ecs_instance-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.ecs.regions.id.instance'}}
+</script>
+<script>
+    var single_ecs_instance_template = Handlebars.compile($("#single_ecs_instance-template").html());
+</script>

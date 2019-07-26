@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 formatted_service_name = {
+    # AWS
     'cloudformation': 'CloudFormation',
     'cloudtrail': 'CloudTrail',
     'cloudwatch': 'CloudWatch',
@@ -15,15 +16,7 @@ formatted_service_name = {
     'redshift': 'RedShift',
     'route53': 'Route53',
     'route53domains': 'Route53Domains',
-
-    'cloudstorage': 'Cloud Storage',
-    'cloudsql': 'Cloud SQL',
-    'stackdriverlogging': 'Stackdriver Logging',
-    'stackdrivermonitoring': 'Stackdriver Monitoring',
-    'computeengine': 'Compute Engine',
-    'kubernetesengine': 'Kubernetes Engine',
-    'cloudresourcemanager': 'Cloud Resource Manager',
-
+    # Azure
     'storageaccounts': 'Storage Accounts',
     'sqldatabase': 'SQL Database',
     'securitycenter': 'Security Center',
@@ -34,6 +27,19 @@ formatted_service_name = {
     'appservice': 'App Service',
     'loadbalancer': 'Load Balancer',
     'virtualmachines': 'Virtual Machines'
+    # GCP
+    'cloudstorage': 'Cloud Storage',
+    'cloudsql': 'Cloud SQL',
+    'stackdriverlogging': 'Stackdriver Logging',
+    'stackdrivermonitoring': 'Stackdriver Monitoring',
+    'computeengine': 'Compute Engine',
+    'kubernetesengine': 'Kubernetes Engine',
+    'cloudresourcemanager': 'Cloud Resource Manager',
+    # Aliyun
+    'actiontrail': 'ActionTrail',
+    # OCI
+    'identity': 'Identity',
+    'objectstorage': 'Object Storage'
 }
 
 

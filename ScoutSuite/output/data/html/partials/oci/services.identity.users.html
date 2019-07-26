@@ -1,0 +1,48 @@
+
+<!-- Identity user -->
+<script id="services.identity.users.partial" type="text/x-handlebars-template">
+  <div id="resource-name" class="list-group-item active">
+    <h4 class="list-group-item-heading">{{name}}</h4>
+  </div>
+  <div class="list-group-item">
+    <h4 class="list-group-item-heading">Information</h4>
+    <div class="list-group-item-text item-margin">Name: <span id="identity.users.{{@key}}.name">{{name}}</span></div>
+    <div class="list-group-item-text item-margin">ID: <span id="identity.users.{{@key}}.id"><samp>{{identifier}}</samp></span></div>
+  </div>
+  {{#if api_keys_count }}
+  <div class="list-group-item">
+    <h5 class="list-group-item-heading" id="identity.users.{{@key}}.multiple_api_keys">API Keys</h5>
+    <ul>
+      {{#each api_keys}}
+      <li>Fingerprint: <code>{{fingerprint}}</code></li>
+      <ul>
+        <li>State: <samp>{{state}}</samp></li>
+      </ul>
+      {{/each}}
+    </ul>
+  </div>
+  {{/if}}
+  <div class="list-group-item">
+    <h4 class="list-group-item-heading">Groups
+      {{> count_badge count=groups.length}}
+    </h4>
+    <ul>
+      {{#each groups}}
+      <li class="list-group-item-text"><a href="javascript:showObject('services.identity.groups.{{this.id}}')">{{this.name}}</a></li>
+      {{/each}}
+    </ul>
+  </div>
+</script>
+
+<script>
+  Handlebars.registerPartial("services.identity.users", $("#services\\.identity\\.users\\.partial").html());
+</script>
+
+<!-- Single identity user template -->
+<script id="single_identity_user-template" type="text/x-handlebars-template">
+  {{> modal-template template='services.identity.users'}}
+</script>
+<script>
+  var single_identity_user_template = Handlebars.compile($("#single_identity_user-template").html());
+</script>
+

@@ -1,0 +1,37 @@
+
+<!-- objectstorage buckets -->
+<script id="services.objectstorage.buckets.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="objectstorage.buckets.{{@key}}.name"><samp>{{name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Time Created: <span id="objectstorage.buckets.{{@key}}.time_created">{{format_date time_created}}</span></div>
+        <div class="list-group-item-text item-margin">Created By: <span id="objectstorage.buckets.{{@key}}.created_by"><samp>{{created_by}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Compartment ID: <span id="objectstorage.buckets.{{@key}}.compartment_id"><samp>{{compartment_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Namespace: <span id="objectstorage.buckets.{{@key}}.namespace"><samp>{{namespace}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Public Access Type: <span id="objectstorage.buckets.{{@key}}.public_access_type"><samp>{{public_access_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">KMS Key ID: <span id="objectstorage.buckets.{{@key}}.kms_key_id"><samp>{{value_or_none kms_key_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Storage Tier: <span id="objectstorage.buckets.{{@key}}.storage_tier"><samp>{{storage_tier}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Approximate Count: <span id="objectstorage.buckets.{{@key}}.approximate_count"><samp>{{approximate_count}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Approximate Size: <span id="objectstorage.buckets.{{@key}}.approximate_size"><samp>{{approximate_size}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Metadata: <span id="objectstorage.buckets.{{@key}}.metadata"><samp>{{metadata}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Defined Tags: <span id="objectstorage.buckets.{{@key}}.defined_tags"><samp>{{defined_tags}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Freeform Tags: <span id="objectstorage.buckets.{{@key}}.freeform_tags"><samp>{{freeform_tags}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Etag: <span id="objectstorage.buckets.{{@key}}.etag"><samp>{{etag}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Object Lifecycle Policy Etag: <span id="objectstorage.buckets.{{@key}}.object_lifecycle_policy_etag"><samp>{{object_lifecycle_policy_etag}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.objectstorage.buckets", $("#services\\.objectstorage\\.buckets\\.partial").html());
+</script>
+
+<!-- Single objectstorage bucket template -->
+<script id="single_objectstorage_bucket-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.objectstorage.buckets'}}
+</script>
+<script>
+    var single_objectstorage_bucket_template = Handlebars.compile($("#single_objectstorage_bucket-template").html());
+</script>
