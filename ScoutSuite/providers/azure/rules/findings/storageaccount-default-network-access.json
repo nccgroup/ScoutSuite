@@ -6,5 +6,5 @@
     "conditions": [ "and",
         [ "storageaccounts.storage_accounts.id.public_traffic_allowed", "true", ""]
     ],
-    "id_suffix": "network_access_allowed"
+    "id_suffix": "public_traffic_allowed"
 }
