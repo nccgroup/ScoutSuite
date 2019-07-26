@@ -24,6 +24,9 @@ def run_from_cli():
     # Get the dictionary to get None instead of a crash
     args = args.__dict__
 
+    # TODO provider-specific arguments should be prepended with the provider's code
+    #  (e.g. aws_profile, azure_user_account)
+
     try:
         return run(provider=args.get('provider'),
                    # AWS
@@ -36,6 +39,8 @@ def run_from_cli():
                    username=args.get('username'), password=args.get('password'),
                    # GCP
                    project_id=args.get('project_id'), folder_id=args.get('folder_id'), organization_id=args.get('organization_id'), all_projects=args.get('all_projects'),
+                   # Aliyun
+                   access_key_id=args.get('access_key_id'), access_key_secret=args.get('access_key_secret'),
                    # General
                    report_name=args.get('report_name'), report_dir=args.get('report_dir'),
                    timestamp=args.get('timestamp'),
@@ -70,6 +75,8 @@ def run(provider,
         username=None, password=None,
         # GCP
         project_id=None, folder_id=None, organization_id=None, all_projects=False,
+        # Aliyun
+        access_key_id=None, access_key_secret=None,
         # General
         report_name=None, report_dir=None,
         timestamp=False,
@@ -108,6 +115,8 @@ async def _run(provider,
                username, password,
                # GCP
                project_id, folder_id, organization_id, all_projects,
+               # Aliyun
+               access_key_id, access_key_secret,
                # General
                report_name, report_dir,
                timestamp,
@@ -150,6 +159,8 @@ async def _run(provider,
                                                  client_secret=client_secret,
                                                  username=username,
                                                  password=password,
+                                                 access_key_id=access_key_id,
+                                                 access_key_secret=access_key_secret,
                                                  programmatic_execution=programmatic_execution)
 
         if not credentials:

@@ -1036,7 +1036,7 @@ function updateDOM(anchor) {
     updateNavbar(path)
 
     // FIXME this is not a very good implementation
-    if (!path.endsWith('.findings') && !path.endsWith('.statistics') && !path.endsWith('.password_policy') && !path.endsWith('.permissions') && !path.endsWith('.<root_account>') && !path.endsWith('.external_attack_surface')) {
+    if (!path.endsWith('.findings') && !path.endsWith('.statistics') && !path.endsWith('.password_policy') && !path.endsWith('.security_policy') && !path.endsWith('.permissions') && !path.endsWith('.<root_account>') && !path.endsWith('.external_attack_surface')) {
         $('#findings_download_button').show()
         $('#paging_buttons').show()
     } else {
@@ -1202,6 +1202,14 @@ function makeTitle(title) {
         return 'App Service'
     } else if (title === 'loadbalancer') {
         return 'Load Balancer'
+    } else if (title === 'ram') {
+        return 'RAM'
+    } else if (title === 'actiontrail') {
+        return 'ActionTrail'
+    } else if (title === 'ecs') {
+        return 'ECS'
+    } else if (title === 'objectstorage') {
+        return 'Object Storage'
     } else if (title === 'graphrbac') {
         return 'Graph RBAC'
     } else {
