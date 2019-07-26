@@ -3,6 +3,7 @@ from ScoutSuite.providers.azure.facade.network import NetworkFacade
 from ScoutSuite.providers.azure.facade.securitycenter import SecurityCenterFacade
 from ScoutSuite.providers.azure.facade.sqldatabase import SQLDatabaseFacade
 from ScoutSuite.providers.azure.facade.storageaccounts import StorageAccountsFacade
+from ScoutSuite.providers.azure.facade.graphrbac import GraphRBACFacade
 from ScoutSuite.providers.azure.authentication_strategy import AzureCredentials
 
 try:
@@ -21,6 +22,7 @@ class AzureFacade():
         self.securitycenter = SecurityCenterFacade(credentials.credentials, credentials.subscription_id)
         self.sqldatabase = SQLDatabaseFacade(credentials.credentials, credentials.subscription_id)
         self.storageaccounts = StorageAccountsFacade(credentials.credentials, credentials.subscription_id)
+        self.graphrbac = GraphRBACFacade(credentials.graphrbac_credentials, credentials.tenant_id)
 
         try:
             self.appgateway = AppGatewayFacade(credentials.credentials, credentials.subscription_id)

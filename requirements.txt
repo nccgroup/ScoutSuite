@@ -35,6 +35,7 @@ azure-mgmt-keyvault>=1.1.0
 azure-mgmt-network>=2.5.1
 azure-mgmt-redis>=6.0.0
 azure-mgmt-web>=0.41.0
+azure-graphrbac>=0.61.1
 azure-cli-core>=2.0.55
 pyyaml>=4.2b1
 

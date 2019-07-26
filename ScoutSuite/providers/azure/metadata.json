@@ -28,6 +28,14 @@
     }
   },
   "security": {
+    "graphrbac": {
+      "resources": {
+        "users": {
+          "cols": 2,
+          "path": "services.graphrbac.users"
+        }
+      }
+    },
     "keyvault": {
       "resources": {
         "vaults": {

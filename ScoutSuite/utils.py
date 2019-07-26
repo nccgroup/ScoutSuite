@@ -26,6 +26,7 @@ formatted_service_name = {
     'network': 'Network',
     'appservice': 'App Service',
     'loadbalancer': 'Load Balancer',
+    'graphrbac': 'Graph RBAC',
     # GCP
     'cloudstorage': 'Cloud Storage',
     'cloudsql': 'Cloud SQL',
