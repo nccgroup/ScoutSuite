@@ -12,8 +12,7 @@ class NetworkInterfaces(AzureResources):
         network_interface_dict = {}
         network_interface_dict['id'] = get_non_provider_id(raw_network_interface.id)
         network_interface_dict['enable_accelerated_networking'] = raw_network_interface.enable_accelerated_networking
-        network_interface_dict['dns_settings'] = raw_network_interface.dns_settings
-        network_interface_dict['virtual_machine'] = raw_network_interface.virtual_machine
+        network_interface_dict['virtual_machine'] = get_non_provider_id(raw_network_interface.virtual_machine.id)
         network_interface_dict['name'] = raw_network_interface.name
         network_interface_dict['tags'] = raw_network_interface.tags
         network_interface_dict['interface_endpoint'] = raw_network_interface.interface_endpoint
@@ -31,6 +30,7 @@ class NetworkInterfaces(AzureResources):
         # TODO process and display the below
         network_interface_dict['hosted_workloads'] = raw_network_interface.hosted_workloads
         network_interface_dict['tap_configurations'] = raw_network_interface.tap_configurations
+        network_interface_dict['dns_settings'] = raw_network_interface.dns_settings
 
         ip_configuration = raw_network_interface.ip_configurations[0]  # TODO is this always an array of 1?
         network_interface_dict['ip_configuration'] = {}
@@ -48,7 +48,7 @@ class NetworkInterfaces(AzureResources):
             'private_ip_allocation_method'] = ip_configuration.private_ip_allocation_method
         network_interface_dict['ip_configuration'][
             'private_ip_address_version'] = ip_configuration.private_ip_address_version
-        network_interface_dict['ip_configuration']['subnet'] = ip_configuration.subnet
+        network_interface_dict['ip_configuration']['subnet'] = {'id': get_non_provider_id(ip_configuration.subnet.id)}
         network_interface_dict['ip_configuration']['primary'] = ip_configuration.primary
         network_interface_dict['ip_configuration']['public_ip_address'] = ip_configuration.public_ip_address
         network_interface_dict['ip_configuration'][

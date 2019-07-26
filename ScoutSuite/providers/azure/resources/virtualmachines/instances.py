@@ -10,9 +10,9 @@ class Instances(AzureResources):
 
     def _parse_instance(self, raw_instance):
         instance_dict = {}
+        instance_dict['id'] = get_non_provider_id(raw_instance.id)
         instance_dict['zones'] = raw_instance.zones
         instance_dict['instance_view'] = raw_instance.instance_view
-        instance_dict['id'] = raw_instance.id
         instance_dict['availability_set'] = raw_instance.availability_set
         instance_dict['proximity_placement_group'] = raw_instance.proximity_placement_group
         instance_dict['additional_properties'] = list(raw_instance.additional_properties)

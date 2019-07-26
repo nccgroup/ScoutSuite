@@ -59,6 +59,6 @@ class AzureProvider(BaseProvider):
 
     def _match_instances_and_network_interfaces(self):
         for instance in self.services['virtualmachines']['instances']:
-            for network_interface in self.services['network']['network_interfaces'].keys():
+            for network_interface in self.services['network']['network_interfaces']:
                 pass
 

@@ -23,10 +23,11 @@ class SecurityGroups(AzureResources):
 
         network_security_group_dict['security_rules'] = self._parse_security_rules(network_security_group)
 
-        network_security_group_dict['subnets'] = []
+        network_security_group_dict['subnets'] = {}
         if network_security_group.subnets:
             for subnet in network_security_group.subnets:
-                network_security_group_dict['subnets'].append(get_non_provider_id(subnet.id))
+                identifier = get_non_provider_id(subnet.id)
+                network_security_group_dict['subnets'][identifier] = {'id': identifier}
 
         # FIXME this is broken and badly implemented (not efficient at all)
         # exposed_ports = self._parse_exposed_ports(network_security_group)

@@ -10,7 +10,7 @@ class VirtualNetworks(AzureResources):
 
     def _parse_virtual_network(self, raw_virtual_network):
         virtual_network_dict = {}
-        virtual_network_dict['id'] = raw_virtual_network.id
+        virtual_network_dict['id'] = get_non_provider_id(raw_virtual_network.id)
         virtual_network_dict['name'] = raw_virtual_network.name
 
         virtual_network_dict['enable_vm_protection'] = raw_virtual_network.enable_vm_protection
@@ -28,6 +28,7 @@ class VirtualNetworks(AzureResources):
         virtual_network_dict['dhcp_options'] = raw_virtual_network.dhcp_options
 
         virtual_network_dict['subnets'] = {}
+        virtual_network_dict['subnets_count'] = 0
         for raw_subnet in raw_virtual_network.subnets:
             subnet_dict = {}
             subnet_dict['id'] = get_non_provider_id(raw_subnet.id)
@@ -51,7 +52,9 @@ class VirtualNetworks(AzureResources):
                 subnet_dict['network_security_group'] = get_non_provider_id(raw_subnet.network_security_group.id)
             else:
                 subnet_dict['network_security_group'] = None
+            virtual_network_dict['subnets_count'] += 1
             virtual_network_dict['subnets'][subnet_dict['id']] = subnet_dict
+
 
         return virtual_network_dict['id'], virtual_network_dict
 
