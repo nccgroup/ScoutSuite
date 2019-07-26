@@ -32,7 +32,8 @@ formatted_service_name = {
     'rediscache': 'Redis Cache',
     'network': 'Network',
     'appservice': 'App Service',
-    'loadbalancer': 'Load Balancer'
+    'loadbalancer': 'Load Balancer',
+    'graphrbac': 'Graph RBAC'
 }
 
 
