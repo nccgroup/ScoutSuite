@@ -22,7 +22,7 @@ class AzureFacade():
         self.securitycenter = SecurityCenterFacade(credentials.credentials, credentials.subscription_id)
         self.sqldatabase = SQLDatabaseFacade(credentials.credentials, credentials.subscription_id)
         self.storageaccounts = StorageAccountsFacade(credentials.credentials, credentials.subscription_id)
-        self.graphrbac = GraphRBACFacade(credentials.credentials, credentials.tenant_id)
+        self.graphrbac = GraphRBACFacade(credentials.graphrbac_credentials, credentials.tenant_id)
 
         try:
             self.appgateway = AppGatewayFacade(credentials.credentials, credentials.subscription_id)

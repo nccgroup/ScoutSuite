@@ -1,13 +1,11 @@
 from azure.graphrbac import GraphRbacManagementClient
-from ScoutSuite.providers.utils import run_concurrently
-from ScoutSuite.core.console import print_exception
 
-import copy
+from ScoutSuite.core.console import print_exception
+from ScoutSuite.providers.utils import run_concurrently
 
 
 class GraphRBACFacade:
     def __init__(self, credentials, tenant_id):
-        credentials.resource = 'https://graph.windows.net'  # changing the endpoint is required for some reason
         self._client = GraphRbacManagementClient(credentials, tenant_id=tenant_id)
 
     async def get_users(self):
@@ -16,7 +14,3 @@ class GraphRBACFacade:
         except Exception as e:
             print_exception('Failed to retrieve users: {}'.format(e))
             return []
-
-
-
-
