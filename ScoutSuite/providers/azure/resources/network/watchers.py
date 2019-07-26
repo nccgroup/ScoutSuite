@@ -1,4 +1,5 @@
 from ScoutSuite.providers.azure.resources.base import AzureResources
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Watchers(AzureResources):
@@ -7,12 +8,15 @@ class Watchers(AzureResources):
             id, network_watcher = self._parse_network_watcher(raw_watcher)
             self[id] = network_watcher
 
-    def _parse_network_watcher(self, network_watcher):
-        network_watcher_dict = {}
-        network_watcher_dict['id'] = network_watcher.id
-        network_watcher_dict['name'] = network_watcher.name
-        network_watcher_dict['provisioning_state'] = network_watcher.provisioning_state
-        network_watcher_dict['location'] = network_watcher.location
-        network_watcher_dict['etag'] = network_watcher.etag
+    def _parse_network_watcher(self, raw_watcher):
+        watcher_dict = {}
+        watcher_dict['id'] = get_non_provider_id(raw_watcher.id)
+        watcher_dict['name'] = raw_watcher.name
+        watcher_dict['type'] = raw_watcher.type
+        watcher_dict['location'] = raw_watcher.location
+        watcher_dict['tags'] = raw_watcher.tags
+        watcher_dict['etag'] = raw_watcher.etag
+        watcher_dict['additional_properties'] = raw_watcher.additional_properties
+        watcher_dict['provisioning_state'] = raw_watcher.provisioning_state
+        return watcher_dict['id'], watcher_dict
 
-        return network_watcher_dict['id'], network_watcher_dict
