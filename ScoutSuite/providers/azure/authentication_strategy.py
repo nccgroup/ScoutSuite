@@ -48,6 +48,8 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                         AuthenticationException('Username and/or password not set')
 
                 credentials = UserPassCredentials(username, password)
+                graphrbac_credentials = UserPassCredentials(username, password,
+                                                            resource='https://graph.windows.net')
 
                 if not subscription_id:
                     # Get the subscription ID
