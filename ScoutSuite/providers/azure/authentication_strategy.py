@@ -17,7 +17,7 @@ class AzureCredentials:
         self.credentials = credentials
         self.graphrbac_credentials = graphrbac_credentials
         self.subscription_id = subscription_id
-        self.tenant_id = tenant_id if tenant_id else credentials.token.get('tenant_id')  # TODO does this work for all types of authentication?
+        self.tenant_id = tenant_id if tenant_id else credentials.token.get('tenant_id')  # TODO does this work for MSI
 
 
 class AzureAuthenticationStrategy(AuthenticationStrategy):
@@ -100,6 +100,13 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     tenant=tenant_id
                 )
 
+                graphrbac_credentials = ServicePrincipalCredentials(
+                    client_id=client_id,
+                    secret=client_secret,
+                    tenant=tenant_id,
+                    resource='https://graph.windows.net'
+                )
+
             elif file_auth:
 
                 data = json.loads(file_auth.read())
@@ -114,9 +121,17 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     tenant=tenant_id
                 )
 
+                graphrbac_credentials = ServicePrincipalCredentials(
+                    client_id=client_id,
+                    secret=client_secret,
+                    tenant=tenant_id,
+                    resource='https://graph.windows.net'
+                )
+
             elif msi:
 
                 credentials = MSIAuthentication()
+                graphrbac_credentials = MSIAuthentication(resource='https://graph.windows.net')
 
                 if not subscription_id:
                     try:
