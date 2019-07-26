@@ -1,0 +1,37 @@
+
+<!-- RAM roles -->
+<script id="services.ram.roles.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">ID: <span id="ram.roles.{{@key}}.id"><samp>{{identifier}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Name: <span id="ram.roles.{{@key}}.name"><samp>{{name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Create Date: <span id="ram.roles.{{@key}}.create_date">{{format_date create_date}}</span></div>
+        <div class="list-group-item-text item-margin">Description: <span id="ram.roles.{{@key}}.description"><samp>{{description}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Arn: <span id="ram.roles.{{@key}}.arn"><samp>{{arn}}</samp></span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Policies
+            {{> count_badge count=policies.length}}
+        </h4>
+        <ul>
+            {{#each policies}}
+            <li class="list-group-item-text"><a href="javascript:showObject('services.ram.policies', 'name', '{{this}}')">{{this}}</a></li>
+            {{/each}}
+        </ul>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.ram.roles", $("#services\\.ram\\.roles\\.partial").html());
+</script>
+
+<!-- Single ram role template -->
+<script id="single_ram_role-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.ram.roles'}}
+</script>
+<script>
+    var single_ram_role_template = Handlebars.compile($("#single_ram_role-template").html());
+</script>
