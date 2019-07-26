@@ -11,10 +11,13 @@ from ScoutSuite.providers.base.authentication_strategy import AuthenticationStra
 
 class AzureCredentials:
 
-    def __init__(self, credentials, subscription_id=None, tenant_id=None):
+    def __init__(self,
+                 credentials, graphrbac_credentials,
+                 subscription_id=None, tenant_id=None):
         self.credentials = credentials
+        self.graphrbac_credentials = graphrbac_credentials
         self.subscription_id = subscription_id
-        self.tenant_id = tenant_id
+        self.tenant_id = tenant_id if tenant_id else credentials.token.get('tenant_id')  # TODO does this work for MSI
 
 
 class AzureAuthenticationStrategy(AuthenticationStrategy):
@@ -32,6 +35,8 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
         try:
             if cli:
                 credentials, subscription_id, tenant_id = get_azure_cli_credentials(with_tenant=True)
+                graphrbac_credentials, placeholder_1, placeholder_2 = get_azure_cli_credentials(with_tenant=True,
+                                                                                                resource='https://graph.windows.net')
 
             elif user_account:
 
@@ -43,6 +48,8 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                         AuthenticationException('Username and/or password not set')
 
                 credentials = UserPassCredentials(username, password)
+                graphrbac_credentials = UserPassCredentials(username, password,
+                                                            resource='https://graph.windows.net')
 
                 if not subscription_id:
                     # Get the subscription ID
@@ -93,6 +100,13 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     tenant=tenant_id
                 )
 
+                graphrbac_credentials = ServicePrincipalCredentials(
+                    client_id=client_id,
+                    secret=client_secret,
+                    tenant=tenant_id,
+                    resource='https://graph.windows.net'
+                )
+
             elif file_auth:
 
                 data = json.loads(file_auth.read())
@@ -107,9 +121,17 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     tenant=tenant_id
                 )
 
+                graphrbac_credentials = ServicePrincipalCredentials(
+                    client_id=client_id,
+                    secret=client_secret,
+                    tenant=tenant_id,
+                    resource='https://graph.windows.net'
+                )
+
             elif msi:
 
                 credentials = MSIAuthentication()
+                graphrbac_credentials = MSIAuthentication(resource='https://graph.windows.net')
 
                 if not subscription_id:
                     try:
@@ -127,7 +149,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                         else:
                             AuthenticationException('Unable to infer a Subscription ID')
 
-            return AzureCredentials(credentials, subscription_id, tenant_id)
+            return AzureCredentials(credentials, graphrbac_credentials, subscription_id, tenant_id)
 
         except Exception as e:
             raise AuthenticationException(e)

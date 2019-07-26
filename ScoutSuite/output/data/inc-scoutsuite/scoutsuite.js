@@ -1212,6 +1212,8 @@ function makeTitle(title) {
         return 'ECS'
     } else if (title === 'objectstorage') {
         return 'Object Storage'
+    } else if (title === 'graphrbac') {
+        return 'Graph RBAC'
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).split('_').join(' ')
     }
