@@ -6,7 +6,7 @@ from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
 class Route53Facade(AWSBaseFacade):
     async def get_domains(self):
         try:
-            return await AWSFacadeUtils.get_all_pages('route53domains', None, self.session, 'list_domains', 'Domains')
+            return await AWSFacadeUtils.get_all_pages('route53domains', 'us-east-1', self.session, 'list_domains', 'Domains')
         except Exception as e:
             print_exception('Failed to get Route53 domains: {}'.format(e))
             return []
