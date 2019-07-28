@@ -53,6 +53,7 @@ class AWSServicesConfig(BaseServicesConfig):
     """
 
     def __init__(self, credentials=None, **kwargs):
+
         super(AWSServicesConfig, self).__init__(credentials)
 
         facade = AWSFacade(credentials)
@@ -63,10 +64,6 @@ class AWSServicesConfig(BaseServicesConfig):
         self.cloudwatch = CloudWatch(facade)
         self.config = Config(facade)
         self.directconnect = DirectConnect(facade)
-        try:
-            self.dynamodb = DynamoDB(facade)
-        except NameError as _:
-            pass
         self.ec2 = EC2(facade)
         self.efs = EFS(facade)
         self.elasticache = ElastiCache(facade)
@@ -74,10 +71,6 @@ class AWSServicesConfig(BaseServicesConfig):
         self.elbv2 = ELBv2(facade)
         self.emr = EMR(facade)
         self.iam = IAM(facade)
-        try:
-            self.kms = KMS(facade)
-        except NameError as _:
-            pass
         self.rds = RDS(facade)
         self.redshift = Redshift(facade)
         self.route53 = Route53(facade)
@@ -86,6 +79,16 @@ class AWSServicesConfig(BaseServicesConfig):
         self.sns = SNS(facade)
         self.sqs = SQS(facade)
         self.vpc = VPC(facade)
+
+        # Instantiate proprietary services
+        try:
+            self.dynamodb = DynamoDB(facade)
+        except NameError as _:
+            pass
+        try:
+            self.kms = KMS(facade)
+        except NameError as _:
+            pass
 
     def _is_provider(self, provider_name):
         return provider_name == 'aws'
