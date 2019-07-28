@@ -36,6 +36,8 @@ class GCPFacade(GCPBaseFacade):
         self.iam = IAMFacade()
         self.kms = KMSFacade()
         self.stackdriverlogging = StackdriverLoggingFacade()
+
+        # Instantiate facades for proprietary services
         try:
             self.gke = GKEFacade(self.gce)
         except NameError as _:
