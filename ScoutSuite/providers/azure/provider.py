@@ -58,6 +58,7 @@ class AzureProvider(BaseProvider):
         super(AzureProvider, self).preprocessing()
 
     def _match_instances_and_network_interfaces(self):
+        return
         for instance in self.services['virtualmachines']['instances']:
             for network_interface in self.services['network']['network_interfaces']:
                 pass

@@ -1,12 +1,12 @@
 from ScoutSuite.providers.azure.authentication_strategy import AzureCredentials
 from ScoutSuite.providers.azure.facade.base import AzureFacade
+from ScoutSuite.providers.azure.resources.graphrbac.base import GraphRBAC
 from ScoutSuite.providers.azure.resources.keyvault.base import KeyVaults
 from ScoutSuite.providers.azure.resources.network.base import Networks
 from ScoutSuite.providers.azure.resources.securitycenter.base import SecurityCenter
 from ScoutSuite.providers.azure.resources.sqldatabase.base import Servers
 from ScoutSuite.providers.azure.resources.storageaccounts.base import StorageAccounts
 from ScoutSuite.providers.azure.resources.virtualmachines.base import VirtualMachines
-from ScoutSuite.providers.azure.resources.graphrbac.base import GraphRBAC
 from ScoutSuite.providers.base.services import BaseServicesConfig
 
 # Try to import proprietary services
@@ -36,6 +36,15 @@ class AzureServicesConfig(BaseServicesConfig):
 
         facade = AzureFacade(credentials)
 
+        self.securitycenter = SecurityCenter(facade)
+        self.sqldatabase = Servers(facade)
+        self.storageaccounts = StorageAccounts(facade)
+        self.keyvault = KeyVaults(facade)
+        self.graphrbac = GraphRBAC(facade)
+        self.network = Networks(facade)
+        self.virtualmachines = VirtualMachines(facade)
+
+        # Instantiate proprietary services
         try:
             self.appgateway = ApplicationGateways(facade)
         except NameError as _:
@@ -44,21 +53,14 @@ class AzureServicesConfig(BaseServicesConfig):
             self.appservice = WebApplications(facade)
         except NameError as _:
             pass
-        self.keyvault = KeyVaults(facade)
         try:
             self.loadbalancer = LoadBalancers(facade)
         except NameError as _:
             pass
-        self.network = Networks(facade)
         try:
             self.rediscache = RedisCaches(facade)
         except NameError as _:
             pass
-        self.virtualmachines = VirtualMachines(facade)
-        self.securitycenter = SecurityCenter(facade)
-        self.sqldatabase = Servers(facade)
-        self.storageaccounts = StorageAccounts(facade)
-        self.graphrbac = GraphRBAC(facade)
 
     def _is_provider(self, provider_name):
         return provider_name == 'azure'

@@ -43,7 +43,7 @@ class BaseServicesConfig(object):
             if 'fetch_all' in dir(service_config):
                 method_args = {}
 
-                if regions is not None:
+                if regions:
                     method_args['regions'] = regions
 
                 if self._is_provider('aws'):
