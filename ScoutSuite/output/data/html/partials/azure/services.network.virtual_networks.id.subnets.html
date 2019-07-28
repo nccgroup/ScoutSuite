@@ -26,6 +26,11 @@
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Instances</h4>
+        {{#each instances}}
+        <div class="list-group-item-text item-margin"><a href="javascript:showObject('services.virtualmachines.instances.{{this}}')"><samp>{{getValueAt 'services.virtualmachines.instances' this 'name'}}</samp></a></div>
+        {{else}}
+        <div class="list-group-item-text item-margin"><samp>None</samp></div>
+        {{/each}}
     </div>
 </script>
 

@@ -35,9 +35,15 @@ class Networks(AzureCompositeResources):
                             self['security_groups'][sg]['subnets'][subnet]['virtual_network_id'] = network
 
     async def _match_subnets_and_network_interfaces(self):
+        """
+        Goes through each security groups' subnets and adds the network interfaces and instances that are placed in it.
+        """
         for interface in self['network_interfaces']:
             subnet_id = self['network_interfaces'][interface]['ip_configuration']['subnet']['id']
             for network in self['virtual_networks']:
                 for network_subnet in self['virtual_networks'][network].get('subnets', []):
+                    if not 'instances' in self['virtual_networks'][network]['subnets'][network_subnet]:
+                        self['virtual_networks'][network]['subnets'][network_subnet]['instances'] = []
                     if subnet_id == network_subnet:
                         self['network_interfaces'][interface]['ip_configuration']['subnet']['virtual_network_id'] = network
+                        self['virtual_networks'][network]['subnets'][network_subnet]['instances'].append(self['network_interfaces'][interface]['virtual_machine'])

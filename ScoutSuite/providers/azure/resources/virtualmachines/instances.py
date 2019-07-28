@@ -10,7 +10,8 @@ class Instances(AzureResources):
 
     def _parse_instance(self, raw_instance):
         instance_dict = {}
-        instance_dict['id'] = get_non_provider_id(raw_instance.id)
+        instance_dict['id'] = get_non_provider_id(raw_instance.id.lower())
+        instance_dict['vm_id'] = raw_instance.vm_id
         instance_dict['zones'] = raw_instance.zones
         instance_dict['instance_view'] = raw_instance.instance_view
         instance_dict['availability_set'] = raw_instance.availability_set
@@ -22,7 +23,6 @@ class Instances(AzureResources):
         instance_dict['tags'] = raw_instance.tags
         instance_dict['provisioning_state'] = raw_instance.provisioning_state
         instance_dict['plan'] = raw_instance.plan
-        instance_dict['vm_id'] = raw_instance.vm_id
         instance_dict['identity'] = raw_instance.identity
         instance_dict['name'] = raw_instance.name
         instance_dict['additional_capabilities'] = raw_instance.additional_capabilities

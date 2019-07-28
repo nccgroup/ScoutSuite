@@ -52,14 +52,4 @@ class AzureProvider(BaseProvider):
         """
         ip_ranges = [] if ip_ranges is None else ip_ranges
 
-        if 'virtualmachines' in self.service_list and 'network' in self.service_list:
-            self._match_instances_and_network_interfaces()
-
         super(AzureProvider, self).preprocessing()
-
-    def _match_instances_and_network_interfaces(self):
-        return
-        for instance in self.services['virtualmachines']['instances']:
-            for network_interface in self.services['network']['network_interfaces']:
-                pass
-
