@@ -50,11 +50,6 @@ class GCPFacade(GCPBaseFacade):
     async def get_projects(self):
         try:
 
-            # resourcemanager_client = self._get_client()
-            # request = resourcemanager_client.projects().list()
-            # projects_group = resourcemanager_client.projects()
-            # return await GCPFacadeUtils.get_all('projects', request, projects_group)
-
             # All projects to which the user / Service Account has access to
             if self.all_projects:
                 return await self._get_projects_recursively(
