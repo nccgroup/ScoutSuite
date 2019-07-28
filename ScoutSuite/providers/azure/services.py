@@ -7,7 +7,6 @@ from ScoutSuite.providers.azure.resources.securitycenter.base import SecurityCen
 from ScoutSuite.providers.azure.resources.sqldatabase.base import Servers
 from ScoutSuite.providers.azure.resources.storageaccounts.base import StorageAccounts
 from ScoutSuite.providers.azure.resources.virtualmachines.base import VirtualMachines
-from ScoutSuite.providers.azure.resources.graphrbac.base import GraphRBAC
 from ScoutSuite.providers.base.services import BaseServicesConfig
 
 # Try to import proprietary services
@@ -43,6 +42,7 @@ class AzureServicesConfig(BaseServicesConfig):
         self.keyvault = KeyVaults(facade)
         self.graphrbac = GraphRBAC(facade)
         self.network = Networks(facade)
+        self.virtualmachines = VirtualMachines(facade)
 
         # Instantiate proprietary services
         try:
@@ -61,11 +61,6 @@ class AzureServicesConfig(BaseServicesConfig):
             self.rediscache = RedisCaches(facade)
         except NameError as _:
             pass
-        self.virtualmachines = VirtualMachines(facade)
-        self.securitycenter = SecurityCenter(facade)
-        self.sqldatabase = Servers(facade)
-        self.storageaccounts = StorageAccounts(facade)
-        self.graphrbac = GraphRBAC(facade)
 
     def _is_provider(self, provider_name):
         return provider_name == 'azure'

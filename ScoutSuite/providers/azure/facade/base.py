@@ -6,8 +6,6 @@ from ScoutSuite.providers.azure.facade.securitycenter import SecurityCenterFacad
 from ScoutSuite.providers.azure.facade.sqldatabase import SQLDatabaseFacade
 from ScoutSuite.providers.azure.facade.storageaccounts import StorageAccountsFacade
 from ScoutSuite.providers.azure.facade.virtualmachines import VirtualMachineFacade
-from ScoutSuite.providers.azure.facade.graphrbac import GraphRBACFacade
-from ScoutSuite.providers.azure.authentication_strategy import AzureCredentials
 
 # Try to import proprietary services
 try:
