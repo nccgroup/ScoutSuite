@@ -388,13 +388,23 @@ Handlebars.registerHelper('each_dict_as_sorted_list', function (context, options
     return ret
 })
 
-Handlebars.registerHelper('sorted_each', function (array, key, opts) {
-    let newarray = array.sort(function (a, b) {
-        if (a[key] < b[key]) return -1
-        if (a[key] > b[key]) return 1
-        return 0
-    })
-    return opts.fn(newarray)
+// Sorts a dict by an arbitrary key
+Handlebars.registerHelper('each_dict_sorted', function (dict, key, opts) {
+    // convert dict to an array
+    var array = [];
+    for (var k in dict) {
+        if (dict.hasOwnProperty(k)) {
+            array.push(dict[k]);
+        }
+    }
+    // sort array
+    var output = '';
+    var contextSorted = array.concat().sort( function(a,b) { return a[key] - b[key] } );
+    for(var i=0, j=contextSorted.length; i<j; i++) {
+        output += opts.fn(contextSorted[i]);
+    }
+    // return resolt
+    return output;
 })
 
 Handlebars.registerHelper('escape_dots', function () {
