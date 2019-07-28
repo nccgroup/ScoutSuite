@@ -1,5 +1,6 @@
 from ScoutSuite.providers.azure.authentication_strategy import AzureCredentials
 from ScoutSuite.providers.azure.facade.base import AzureFacade
+from ScoutSuite.providers.azure.resources.graphrbac.base import GraphRBAC
 from ScoutSuite.providers.azure.resources.keyvault.base import KeyVaults
 from ScoutSuite.providers.azure.resources.network.base import Networks
 from ScoutSuite.providers.azure.resources.securitycenter.base import SecurityCenter
@@ -36,6 +37,14 @@ class AzureServicesConfig(BaseServicesConfig):
 
         facade = AzureFacade(credentials)
 
+        self.securitycenter = SecurityCenter(facade)
+        self.sqldatabase = Servers(facade)
+        self.storageaccounts = StorageAccounts(facade)
+        self.keyvault = KeyVaults(facade)
+        self.graphrbac = GraphRBAC(facade)
+        self.network = Networks(facade)
+
+        # Instantiate proprietary services
         try:
             self.appgateway = ApplicationGateways(facade)
         except NameError as _:
@@ -44,12 +53,10 @@ class AzureServicesConfig(BaseServicesConfig):
             self.appservice = WebApplications(facade)
         except NameError as _:
             pass
-        self.keyvault = KeyVaults(facade)
         try:
             self.loadbalancer = LoadBalancers(facade)
         except NameError as _:
             pass
-        self.network = Networks(facade)
         try:
             self.rediscache = RedisCaches(facade)
         except NameError as _:
