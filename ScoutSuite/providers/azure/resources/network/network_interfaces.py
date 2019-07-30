@@ -12,7 +12,7 @@ class NetworkInterfaces(AzureResources):
         network_interface_dict = {}
         network_interface_dict['id'] = get_non_provider_id(raw_network_interface.id)
         network_interface_dict['enable_accelerated_networking'] = raw_network_interface.enable_accelerated_networking
-        network_interface_dict['virtual_machine'] = get_non_provider_id(raw_network_interface.virtual_machine.id)
+        network_interface_dict['virtual_machine'] = get_non_provider_id(raw_network_interface.virtual_machine.id.lower())
         network_interface_dict['name'] = raw_network_interface.name
         network_interface_dict['tags'] = raw_network_interface.tags
         network_interface_dict['interface_endpoint'] = raw_network_interface.interface_endpoint
@@ -25,7 +25,7 @@ class NetworkInterfaces(AzureResources):
         network_interface_dict['resource_guid'] = raw_network_interface.resource_guid
         network_interface_dict['enable_ip_forwarding'] = raw_network_interface.enable_ip_forwarding
         network_interface_dict['type'] = raw_network_interface.type
-        network_interface_dict['network_security_group'] = raw_network_interface.network_security_group
+        network_interface_dict['network_security_group'] = get_non_provider_id(raw_network_interface.network_security_group.id)
 
         # TODO process and display the below
         network_interface_dict['hosted_workloads'] = raw_network_interface.hosted_workloads

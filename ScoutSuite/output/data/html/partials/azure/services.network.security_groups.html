@@ -34,24 +34,24 @@
                     <td width="10%">Destination Filter</td>
                     <td width="10%">Action</td>
                 </tr>
-                {{#each security_rules}}
-                {{#ifEqual direction "Inbound"}}
-                <tr>
-                    <td width="10%" class="text-center">{{priority}}</td>
-                    <td width="40%">{{name}}</td>
-                    <td width="10%" class="text-center">{{protocol}}</td>
-                    <td width="10%" class="text-center">{{source_port_ranges}}</td>
-                    <td width="10%" class="text-center">{{source_address_prefixes}}</td>
-                    <td width="10%" class="text-center">{{destination_port_ranges}}</td>
-                    <td width="10%" class="text-center">{{destination_address_prefixes}}</td>
-                    {{#if allow}}
-                    <td width="10%" class="text-center"><i class="fa fa-check-circle finding-good"></i></td>
-                    {{else}}
-                    <td width="10%" class="text-center"><i class="fa fa-times-circle finding-danger"></i></td>
-                    {{/if}}
-                </tr>
-                {{/ifEqual}}
-                {{/each}}
+                {{#each_dict_sorted security_rules "priority"}}
+                    {{#ifEqual direction "Inbound"}}
+                    <tr>
+                        <td width="10%" class="text-center">{{priority}}</td>
+                        <td width="40%">{{name}}</td>
+                        <td width="10%" class="text-center">{{protocol}}</td>
+                        <td width="10%" class="text-center">{{source_port_ranges}}</td>
+                        <td width="10%" class="text-center">{{source_address_prefixes}}</td>
+                        <td width="10%" class="text-center">{{destination_port_ranges}}</td>
+                        <td width="10%" class="text-center">{{destination_address_prefixes}}</td>
+                        {{#if allow}}
+                        <td width="10%" class="text-center"><i class="fa fa-check-circle finding-good"></i></td>
+                        {{else}}
+                        <td width="10%" class="text-center"><i class="fa fa-times-circle finding-danger"></i></td>
+                        {{/if}}
+                    </tr>
+                    {{/ifEqual}}
+                {{/each_dict_sorted}}
             </table>
         </div>
     </div>
@@ -69,24 +69,24 @@
                     <td width="10%">Destination Filter</td>
                     <td width="10%">Action</td>
                 </tr>
-                {{#each security_rules}}
-                {{#ifEqual direction "Outbound"}}
-                <tr>
-                    <td width="10%" class="text-center">{{priority}}</td>
-                    <td width="40%">{{name}}</td>
-                    <td width="10%" class="text-center">{{protocol}}</td>
-                    <td width="10%" class="text-center">{{source_port_ranges}}</td>
-                    <td width="10%" class="text-center">{{source_address_prefixes}}</td>
-                    <td width="10%" class="text-center">{{destination_port_ranges}}</td>
-                    <td width="10%" class="text-center">{{destination_address_prefixes}}</td>
-                    {{#if allow}}
-                    <td width="10%" class="text-center"><i class="fa fa-check-circle finding-good"></i></td>
-                    {{else}}
-                    <td width="10%" class="text-center"><i class="fa fa-times-circle finding-danger"></i></td>
-                    {{/if}}
-                </tr>
-                {{/ifEqual}}
-                {{/each}}
+                {{#each_dict_sorted security_rules "priority"}}
+                    {{#ifEqual direction "Outbound"}}
+                    <tr>
+                        <td width="10%" class="text-center">{{priority}}</td>
+                        <td width="40%">{{name}}</td>
+                        <td width="10%" class="text-center">{{protocol}}</td>
+                        <td width="10%" class="text-center">{{source_port_ranges}}</td>
+                        <td width="10%" class="text-center">{{source_address_prefixes}}</td>
+                        <td width="10%" class="text-center">{{destination_port_ranges}}</td>
+                        <td width="10%" class="text-center">{{destination_address_prefixes}}</td>
+                        {{#if allow}}
+                        <td width="10%" class="text-center"><i class="fa fa-check-circle finding-good"></i></td>
+                        {{else}}
+                        <td width="10%" class="text-center"><i class="fa fa-times-circle finding-danger"></i></td>
+                        {{/if}}
+                    </tr>
+                    {{/ifEqual}}
+                {{/each_dict_sorted}}
             </table>
         </div>
     </div>
