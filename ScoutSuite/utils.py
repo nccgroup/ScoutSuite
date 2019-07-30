@@ -26,6 +26,7 @@ formatted_service_name = {
     'network': 'Network',
     'appservice': 'App Service',
     'loadbalancer': 'Load Balancer',
+    'virtualmachines': 'Virtual Machines',
     'graphrbac': 'Graph RBAC',
     # GCP
     'cloudstorage': 'Cloud Storage',
@@ -39,7 +40,7 @@ formatted_service_name = {
     'actiontrail': 'ActionTrail',
     # OCI
     'identity': 'Identity',
-    'objectstorage': 'Object Storage'
+    'objectstorage': 'Object Storage',
 }
 
 
