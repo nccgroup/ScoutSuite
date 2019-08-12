@@ -200,6 +200,12 @@
                 "enabled": true,
                 "level": "danger"
             }
+        ],
+        "storageaccount-trusted-microsoft-services.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
         ]
     }
 }
