@@ -1,0 +1,10 @@
+{
+    "description": "User with multiple API keys",
+    "rationale": "It is recommended for users to only have one access key.",
+    "path": "ram.users.id",
+    "dashboard_name": "Users",
+    "conditions": [ "and",
+        [ "ram.users.id.api_keys", "lengthMoreThan", "1" ]
+    ],
+    "id_suffix": "multiple_api_keys"
+}
