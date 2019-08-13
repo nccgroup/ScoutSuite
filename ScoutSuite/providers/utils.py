@@ -17,13 +17,11 @@ def get_non_provider_id(name):
     return name_hash.hexdigest()
 
 
-async def run_concurrently(function, backoff_seconds=60):
+async def run_concurrently(function, backoff_seconds=15):
     try:
-        # for i in range(50000):
-        #     await run_function_concurrently(function)
         return await run_function_concurrently(function)
     except Exception as e:
-        # FIXME this only supports AWS
+        # FIXME - the below only supports AWS
         # Determine whether the exception is due to API throttling.
         throttled = (hasattr(e, 'response') and
                      'Error' in e.response
@@ -33,7 +31,7 @@ async def run_concurrently(function, backoff_seconds=60):
         if throttled:
             print_info('Hitting API Rate Limiting, will retry in {}s'.format(backoff_seconds))
             await asyncio.sleep(backoff_seconds)
-            return await run_concurrently(function, backoff_seconds + 60)
+            return await run_concurrently(function, backoff_seconds + 15)
         else:
             raise
 
