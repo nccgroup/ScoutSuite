@@ -100,7 +100,7 @@ class IAMFacade(AWSBaseFacade):
             [functools.partial(self._get_and_set_inline_policies, iam_resource_type='user'),
              self._get_and_set_user_groups,
              self._get_and_set_user_login_profile,
-             self._get_and_set_user_acces_keys,
+             self._get_and_set_user_access_keys,
              self._get_and_set_user_mfa_devices],
             users)
         return users
@@ -160,7 +160,7 @@ class IAMFacade(AWSBaseFacade):
                 print_exception('Failed to get account password policy: {}'.format(e))
             return None
 
-    async def _get_and_set_user_acces_keys(self, user: {}):
+    async def _get_and_set_user_access_keys(self, user: {}):
         client = AWSFacadeUtils.get_client('iam', self.session)
         try:
             user['AccessKeys'] = await run_concurrently(

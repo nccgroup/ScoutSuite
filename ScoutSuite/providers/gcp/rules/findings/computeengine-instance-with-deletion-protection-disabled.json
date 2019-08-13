@@ -1,6 +1,7 @@
 {
-    "dashboard_name": "Instances",
     "description": "Instance without deletion protection",
+    "rationale": "<b>Description:</b><br><br>It is good practice to enable this feature on production instances, to ensure that they may not be deleted by accident.",
+    "dashboard_name": "Instances",
     "path": "computeengine.projects.id.zones.id.instances.id",
     "conditions": [ "and",
         [ "computeengine.projects.id.zones.id.instances.id.deletion_protection_enabled", "false", "" ]
