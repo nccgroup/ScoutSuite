@@ -32,13 +32,18 @@ class StorageAccounts(AzureCompositeResources):
         storage_account['name'] = raw_storage_account.name
         storage_account['https_traffic_enabled'] = raw_storage_account.enable_https_traffic_only
         storage_account['public_traffic_allowed'] = self._is_public_traffic_allowed(raw_storage_account)
-        storage_account['access_keys_last_rotation_date'] =\
+        storage_account['trusted_microsoft_services_enabled'] = \
+            self._is_trusted_microsoft_services_enabled(raw_storage_account)
+        storage_account['access_keys_last_rotation_date'] = \
             self._parse_access_keys_last_rotation_date(raw_storage_account.activity_logs)
 
         return storage_account['id'], storage_account
 
     def _is_public_traffic_allowed(self, storage_account):
         return storage_account.network_rule_set.default_action == "Allow"
+
+    def _is_trusted_microsoft_services_enabled(self, storage_account):
+        return storage_account.network_rule_set.bypass == "AzureServices"
 
     def _parse_access_keys_last_rotation_date(self, activity_logs):
         last_rotation_date = None
