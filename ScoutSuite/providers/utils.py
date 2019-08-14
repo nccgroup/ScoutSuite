@@ -2,6 +2,7 @@ import asyncio
 from hashlib import sha1
 
 from ScoutSuite.core.console import print_info
+from ScoutSuite.providers.aws.utils import is_throttled as aws_is_throttled
 
 
 def get_non_provider_id(name):
@@ -22,12 +23,7 @@ async def run_concurrently(function, backoff_seconds=15):
         return await run_function_concurrently(function)
     except Exception as e:
         # Determine whether the exception is due to API throttling
-        # FIXME - this only works for AWS
-        throttled = (hasattr(e, 'response') and
-                     'Error' in e.response
-                     and e.response['Error']['Code'] in ['Throttling',
-                                                         'RequestLimitExceeded',
-                                                         'ThrottlingException'])
+        throttled = aws_is_throttled(e)  # FIXME - this only works for AWS
         if throttled:
             print_info('Hitting API rate limiting, will retry in {}s'.format(backoff_seconds))
             await asyncio.sleep(backoff_seconds)
