@@ -5,5 +5,5 @@
     "conditions": [ "and",
         [ "name", "match", [".*\\.io", ".*\\.co.nz"] ]
     ],
-    "id_suffix": "TransferLockNotAuthorized"
+    "id_suffix": "transfer_lock"
 }
