@@ -1,7 +1,7 @@
 {
     "dashboard_name": "Domains",
     "description": "Domain not set to autorenew",
-    "path": "route53.regions.id.domains.id",
+    "path": "route53.domains.id",
     "conditions": [ "and",
         [ "AutoRenew", "false", "" ]
     ],
