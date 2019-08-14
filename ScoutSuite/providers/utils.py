@@ -21,8 +21,8 @@ async def run_concurrently(function, backoff_seconds=15):
     try:
         return await run_function_concurrently(function)
     except Exception as e:
-        # FIXME - the below only supports AWS
         # Determine whether the exception is due to API throttling.
+        # FIXME - this only works for AWS
         throttled = (hasattr(e, 'response') and
                      'Error' in e.response
                      and e.response['Error']['Code'] in ['Throttling',
