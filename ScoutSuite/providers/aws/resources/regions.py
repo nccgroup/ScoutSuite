@@ -9,9 +9,9 @@ class Regions(AWSCompositeResources, metaclass=abc.ABCMeta):
         super(Regions, self).__init__(facade)
         self.service = service
 
-    async def fetch_all(self, regions=None, partition_name='aws'):
+    async def fetch_all(self, regions=None, excluded_regions=None, partition_name='aws'):
         self['regions'] = {}
-        for region in await self.facade.build_region_list(self.service, regions, partition_name):
+        for region in await self.facade.build_region_list(self.service, regions, excluded_regions, partition_name):
             self['regions'][region] = {
                 'id': region,
                 'region': region,
