@@ -53,6 +53,12 @@ class ScoutSuiteArgumentParser:
                                            default=[],
                                            nargs='+',
                                            help='Name of regions to run the tool in, defaults to all')
+        aws_additional_parser.add_argument('-xr',
+                                           '--excluded-regions',
+                                           dest='excluded_regions',
+                                           default=[],
+                                           nargs='+',
+                                           help='Name of regions to excluded from execution')
         aws_additional_parser.add_argument('--ip-ranges',
                                            dest='ip_ranges',
                                            default=[],
@@ -278,7 +284,7 @@ class ScoutSuiteArgumentParser:
                             dest='services',
                             default=[],
                             nargs='+',
-                            help='Name of in-scope services.')
+                            help='Name of in-scope services, defaults to all.')
         parser.add_argument('--skip',
                             dest='skipped_services',
                             default=[],
