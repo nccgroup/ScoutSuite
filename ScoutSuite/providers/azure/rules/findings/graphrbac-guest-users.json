@@ -1,0 +1,11 @@
+{
+    "dashboard_name": "Graph RBAC",
+    "description": "There are guest users",
+	"rationale": "<b>Description:</b><br><br>Avoid creating guest users.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.1.0 1.3</li></ul>",
+    "path": "graphrbac.users.id",
+    "display_path": "graphrbac.users.id",
+    "conditions": [ "and",
+        [ "graphrbac.users.id.user_type", "equal", "Guest" ]
+    ],
+    "id_suffix": "guest_users_exists"
+}
