@@ -1,5 +1,6 @@
 import asyncio
 from hashlib import sha1
+from asyncio_throttle import Throttler
 
 from ScoutSuite.core.console import print_info
 from ScoutSuite.providers.aws.utils import is_throttled as aws_is_throttled
@@ -19,8 +20,10 @@ def get_non_provider_id(name):
 
 
 async def run_concurrently(function, backoff_seconds=15):
+    throttler = Throttler(rate_limit=1000, period=60)  # TODO - this should be configurable
     try:
-        return await run_function_concurrently(function)
+        async with throttler:
+            return await run_function_concurrently(function)
     except Exception as e:
         # Determine whether the exception is due to API throttling
         throttled = aws_is_throttled(e)  # FIXME - this only works for AWS
