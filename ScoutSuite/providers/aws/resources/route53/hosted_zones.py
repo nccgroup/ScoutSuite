@@ -1,7 +1,12 @@
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.aws.facade.base import AWSFacade
 
 
-class Route53HostedZones(AWSResources):
+class HostedZones(AWSResources):
+    def __init__(self, facade: AWSFacade, region: str):
+        super(HostedZones, self).__init__(facade)
+        self.region = region
+
     async def fetch_all(self):
         raw_hosted_zones = await self.facade.route53.get_hosted_zones()
         for raw_hosted_zone in raw_hosted_zones:

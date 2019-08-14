@@ -1,19 +1,15 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
-from ScoutSuite.providers.aws.resources.base import AWSCompositeResources
+from ScoutSuite.providers.aws.resources.regions import Regions
 
-from .domains import Route53Domains
-from .hosted_zones import Route53HostedZones
+from .domains import Domains
+from .hosted_zones import HostedZones
 
 
-class Route53(AWSCompositeResources):
+class Route53(Regions):
     _children = [
-        (Route53Domains, 'domains'),
-        (Route53HostedZones, 'hosted_zones')
+        (Domains, 'domains'),
+        (HostedZones, 'hosted_zones')
     ]
 
     def __init__(self, facade: AWSFacade):
-        super(Route53, self).__init__(facade)
-        self.service = 'route53'
-
-    async def fetch_all(self, regions=None, partition_name='aws'):
-        await self._fetch_children(self)
+        super(Route53, self).__init__('route53', facade)
