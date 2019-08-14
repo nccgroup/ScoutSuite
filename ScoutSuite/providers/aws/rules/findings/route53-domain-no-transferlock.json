@@ -5,5 +5,5 @@
     "conditions": [ "and",
         [ "transfer_lock", "false", "" ]
     ],
-    "id_suffix": "transfer_lock_unauthorized"
+    "id_suffix": "transfer_lock"
 }
