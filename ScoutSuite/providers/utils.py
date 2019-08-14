@@ -20,7 +20,7 @@ def get_non_provider_id(name):
 
 
 async def run_concurrently(function, backoff_seconds=15):
-    throttler = Throttler(rate_limit=1000, period=60)  # TODO - this should be configurable
+    throttler = Throttler(rate_limit=20, period=1)  # TODO - this should be configurable
     try:
         async with throttler:
             return await run_function_concurrently(function)
