@@ -5,6 +5,7 @@ from asyncio_throttle import Throttler
 from ScoutSuite.core.console import print_info
 from ScoutSuite.providers.aws.utils import is_throttled as aws_is_throttled
 
+throttler = Throttler(rate_limit=20, period=1)  # TODO - this should be configurable
 
 def get_non_provider_id(name):
     """
@@ -20,7 +21,6 @@ def get_non_provider_id(name):
 
 
 async def run_concurrently(function, backoff_seconds=15):
-    throttler = Throttler(rate_limit=20, period=1)  # TODO - this should be configurable
     try:
         async with throttler:
             return await run_function_concurrently(function)
