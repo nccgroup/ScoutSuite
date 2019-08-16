@@ -36,6 +36,7 @@ class ScoutSuiteArgumentParser:
                                             help="Run Scout against an Amazon Web Services account")
 
         aws_parser = parser.add_argument_group('Authentication modes')
+        aws_auth_params = parser.add_argument_group('Authentication parameters')
 
         aws_auth_modes = aws_parser.add_mutually_exclusive_group(required=True)
 
@@ -43,7 +44,27 @@ class ScoutSuiteArgumentParser:
                                     '--profile',
                                     dest='profile',
                                     default=None,
-                                    help='Name of the profile')
+                                    help='Run with a named profile')
+
+        aws_auth_modes.add_argument('--access-keys',
+                                    action='store_true',
+                                    dest='aws_access_keys',
+                                    help='Run with access keys')
+        aws_auth_params.add_argument('--access-key-id',
+                                     action='store',
+                                     default=None,
+                                     dest='aws_access_key_id',
+                                     help='AWS Access Key ID')
+        aws_auth_params.add_argument('--secret-access-key',
+                                     action='store',
+                                     default=None,
+                                     dest='aws_secret_access_key',
+                                     help='AWS Secret Access Key')
+        aws_auth_params.add_argument('--session-token',
+                                     action='store',
+                                     default=None,
+                                     dest='aws_session_token',
+                                     help='AWS Session Token')
 
         aws_additional_parser = parser.add_argument_group('Additional arguments')
 
@@ -220,6 +241,11 @@ class ScoutSuiteArgumentParser:
                             default=False,
                             action='store_true',
                             help='Use local data previously fetched and re-run the analysis.')
+        parser.add_argument('--max-rate',
+                            dest='max_rate',
+                            type=int,
+                            default=None,
+                            help='Maximum number of API requests per second')
         parser.add_argument('--debug',
                             dest='debug',
                             default=False,
@@ -326,7 +352,11 @@ class ScoutSuiteArgumentParser:
 
         # Test conditions
         v = vars(args)
-        if v.get('provider') == 'azure:':
+        if v.get('provider') == 'aws':
+            if v.get('aws_access_keys') and not (v.get('aws_access_key_id') or v.get('aws_secret_access_key')):
+                self.parser.error('When running with --access-keys, you must provide an Access Key ID '
+                                  'and Secret Access Key.')
+        elif v.get('provider') == 'azure':
             if v.get('tenant_id') and not (v.get('user_account') or v.get('service_principal') or v.get('msi')):
                 self.parser.error('--tenant can only be set when using --user-account, --service-principal or --msi')
             if v.get('subscription_id') and not (v.get('user_account') or v.get('service_principal') or v.get('msi')):
