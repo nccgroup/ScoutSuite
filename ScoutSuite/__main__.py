@@ -3,6 +3,9 @@ import copy
 import os
 import webbrowser
 
+from asyncio_throttle import Throttler
+import ScoutSuite
+
 from concurrent.futures import ThreadPoolExecutor
 
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
@@ -55,6 +58,7 @@ def run_from_cli():
                    max_workers=args.get('max_workers'),
                    regions=args.get('regions'),
                    fetch_local=args.get('fetch_local'), update=args.get('update'),
+                   max_rate=args.get('max_rate'),
                    ip_ranges=args.get('ip_ranges'), ip_ranges_name_key=args.get('ip_ranges_name_key'),
                    ruleset=args.get('ruleset'), exceptions=args.get('exceptions'),
                    force_write=args.get('force_write'),
@@ -92,6 +96,7 @@ def run(provider,
         max_workers=10,
         regions=[],
         fetch_local=False, update=False,
+        max_rate=None,
         ip_ranges=[], ip_ranges_name_key='name',
         ruleset='default.json', exceptions=None,
         force_write=False,
@@ -105,6 +110,8 @@ def run(provider,
     """
 
     loop = asyncio.get_event_loop()
+    # Set the throttler within the loop so it's accessible later on
+    loop.throttler = Throttler(rate_limit=max_rate if max_rate else 999999, period=1)
     loop.set_default_executor(ThreadPoolExecutor(max_workers=max_workers))
     result = loop.run_until_complete(_run(**locals()))  # pass through all the parameters
     loop.close()

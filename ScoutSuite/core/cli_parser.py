@@ -241,6 +241,11 @@ class ScoutSuiteArgumentParser:
                             default=False,
                             action='store_true',
                             help='Use local data previously fetched and re-run the analysis.')
+        parser.add_argument('--max-rate',
+                            dest='max_rate',
+                            type=int,
+                            default=None,
+                            help='Maximum number of API requests per second')
         parser.add_argument('--debug',
                             dest='debug',
                             default=False,

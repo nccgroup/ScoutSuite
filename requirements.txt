@@ -5,6 +5,7 @@ sqlitedict>=1.6.0
 cherrypy>=18.1.0
 cherrypy-cors>=1.6
 coloredlogs>=10.0
+asyncio-throttle>=0.1.1
 
 # AWS Provider
 botocore==1.12.135  # TODO - change once https://github.com/nccgroup/ScoutSuite/issues/381 is resolved

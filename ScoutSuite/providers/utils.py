@@ -20,7 +20,8 @@ def get_non_provider_id(name):
 
 async def run_concurrently(function, backoff_seconds=15):
     try:
-        return await run_function_concurrently(function)
+        async with asyncio.get_event_loop().throttler:
+            return await run_function_concurrently(function)
     except Exception as e:
         # Determine whether the exception is due to API throttling
         throttled = aws_is_throttled(e)  # FIXME - this only works for AWS
