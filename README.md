@@ -39,7 +39,7 @@ The following cloud providers are currently supported/planned:
 
 ### Installation
 
-Refer to the [wiki]('https://github.com/nccgroup/ScoutSuite/wiki/Setup').
+Refer to the [wiki](https://github.com/nccgroup/ScoutSuite/wiki/Setup).
 
 ## Compliance
 
