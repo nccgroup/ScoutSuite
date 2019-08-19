@@ -57,6 +57,7 @@ def run_from_cli():
                    host_port=args.get('host_port'),
                    max_workers=args.get('max_workers'),
                    regions=args.get('regions'),
+                   excluded_regions=args.get('excluded_regions'),
                    fetch_local=args.get('fetch_local'), update=args.get('update'),
                    max_rate=args.get('max_rate'),
                    ip_ranges=args.get('ip_ranges'), ip_ranges_name_key=args.get('ip_ranges_name_key'),
@@ -95,6 +96,7 @@ def run(provider,
         database_name=None, host_ip='127.0.0.1', host_port=8000,
         max_workers=10,
         regions=[],
+        excluded_regions=[],
         fetch_local=False, update=False,
         max_rate=None,
         ip_ranges=[], ip_ranges_name_key='name',
@@ -140,6 +142,7 @@ async def _run(provider,
                result_format,
                database_name, host_ip, host_port,
                regions,
+               excluded_regions,
                fetch_local, update,
                ip_ranges, ip_ranges_name_key,
                ruleset, exceptions,
@@ -220,7 +223,7 @@ async def _run(provider,
         # Fetch data from provider APIs
         try:
             print_info('Gathering data from APIs')
-            await cloud_provider.fetch(regions=regions)
+            await cloud_provider.fetch(regions=regions, excluded_regions=excluded_regions)
         except KeyboardInterrupt:
             print_info('\nCancelled by user')
             return 130
@@ -282,6 +285,7 @@ async def _run(provider,
         'services': services,
         'skipped_services': skipped_services,
         'regions': regions,
+        'excluded_regions': excluded_regions,
     }
     # Finalize
     cloud_provider.postprocessing(report.current_time, finding_rules, run_parameters)

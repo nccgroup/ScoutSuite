@@ -44,7 +44,7 @@ class AWSFacade(AWSBaseFacade):
         self.session = credentials.session
         self._instantiate_facades()
 
-    async def build_region_list(self, service: str, chosen_regions=None, partition_name='aws'):
+    async def build_region_list(self, service: str, chosen_regions=None, excluded_regions=None, partition_name='aws'):
         service = 'ec2containerservice' if service == 'ecs' else service
         available_services = await run_concurrently(lambda: Session().get_available_services())
 
@@ -53,10 +53,14 @@ class AWSFacade(AWSBaseFacade):
 
         regions = await run_concurrently(lambda: Session().get_available_regions(service, partition_name))
 
+        # include specific regions
         if chosen_regions:
-            return list((Counter(regions) & Counter(chosen_regions)).elements())
-        else:
-            return regions
+            regions = [r for r in regions if r in chosen_regions]
+        # exclude specific regions
+        if excluded_regions:
+            regions = [r for r in regions if r not in excluded_regions]
+
+        return regions
 
     def _instantiate_facades(self):
         self.ec2 = EC2Facade(self.session, self.owner_id)
