@@ -75,7 +75,7 @@ class ScoutSuiteArgumentParser:
                                            nargs='+',
                                            help='Name of regions to run the tool in, defaults to all')
         aws_additional_parser.add_argument('-xr',
-                                           '--excluded-regions',
+                                           '--exclude-regions',
                                            dest='excluded_regions',
                                            default=[],
                                            nargs='+',
