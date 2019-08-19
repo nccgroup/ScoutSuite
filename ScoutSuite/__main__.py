@@ -296,7 +296,7 @@ async def _run(provider,
         url = 'file://%s' % os.path.abspath(html_report_path)
         webbrowser.open(url, new=2)
 
-    if ERRORS_LIST:
+    if ERRORS_LIST:  # errors were handled during execution
         return 200
     else:
         return 0
