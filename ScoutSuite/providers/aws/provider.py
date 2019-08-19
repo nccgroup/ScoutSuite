@@ -366,32 +366,33 @@ class AWSProvider(BaseProvider):
                 s3_info, bucket_name, iam_entity, allowed_iam_entity, policy_info)
 
     def _update_iam_permissions(self, s3_info, bucket_name, iam_entity, allowed_iam_entity, policy_info):
-        if bucket_name != '*' and bucket_name in s3_info['buckets']:
-            bucket = s3_info['buckets'][bucket_name]
-            manage_dictionary(bucket, iam_entity, {})
-            manage_dictionary(bucket, iam_entity + '_count', 0)
-            if allowed_iam_entity not in bucket[iam_entity]:
-                bucket[iam_entity][allowed_iam_entity] = {}
-                bucket[iam_entity + '_count'] = bucket[iam_entity + '_count'] + 1
+        if self.services.get('s3') and self.services.get('iam'):  # validate both services were included in run
+            if bucket_name != '*' and bucket_name in s3_info['buckets']:
+                bucket = s3_info['buckets'][bucket_name]
+                manage_dictionary(bucket, iam_entity, {})
+                manage_dictionary(bucket, iam_entity + '_count', 0)
+                if allowed_iam_entity not in bucket[iam_entity]:
+                    bucket[iam_entity][allowed_iam_entity] = {}
+                    bucket[iam_entity + '_count'] = bucket[iam_entity + '_count'] + 1
 
-            if 'inline_policies' in policy_info:
-                manage_dictionary(
-                    bucket[iam_entity][allowed_iam_entity], 'inline_policies', {})
-                bucket[iam_entity][allowed_iam_entity]['inline_policies'].update(
-                    policy_info['inline_policies'])
-            if 'policies' in policy_info:
-                manage_dictionary(bucket[iam_entity]
-                                  [allowed_iam_entity], 'policies', {})
-                bucket[iam_entity][allowed_iam_entity]['policies'].update(
-                    policy_info['policies'])
-        elif bucket_name == '*':
-            for bucket in s3_info['buckets']:
-                self._update_iam_permissions(
-                    s3_info, bucket, iam_entity, allowed_iam_entity, policy_info)
-            pass
-        else:
-            # Could be an error or cross-account access, ignore
-            pass
+                if 'inline_policies' in policy_info:
+                    manage_dictionary(
+                        bucket[iam_entity][allowed_iam_entity], 'inline_policies', {})
+                    bucket[iam_entity][allowed_iam_entity]['inline_policies'].update(
+                        policy_info['inline_policies'])
+                if 'policies' in policy_info:
+                    manage_dictionary(bucket[iam_entity]
+                                      [allowed_iam_entity], 'policies', {})
+                    bucket[iam_entity][allowed_iam_entity]['policies'].update(
+                        policy_info['policies'])
+            elif bucket_name == '*':
+                for bucket in s3_info['buckets']:
+                    self._update_iam_permissions(
+                        s3_info, bucket, iam_entity, allowed_iam_entity, policy_info)
+                pass
+            else:
+                # Could be an error or cross-account access, ignore
+                pass
 
     def match_network_acls_and_subnets_callback(self, current_config, path, current_path, acl_id, callback_args):
         for association in current_config['Associations']:
