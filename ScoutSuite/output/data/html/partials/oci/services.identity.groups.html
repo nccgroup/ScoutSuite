@@ -1,0 +1,43 @@
+
+<!-- identity groups -->
+<script id="services.identity.groups.partial" type="text/x-handlebars-template">
+  <div id="resource-name" class="list-group-item active">
+    <h4 class="list-group-item-heading">{{name}}</h4>
+  </div>
+  <div class="list-group-item">
+    <h4 class="list-group-item-heading">Information</h4>
+    <div class="list-group-item-text item-margin">Name: <span id="identity.groups.{{@key}}.name"><samp>{{name}}</samp></span></div>
+    <div class="list-group-item-text item-margin">ID: <span id="identity.groups.{{@key}}.id"><samp>{{identifier}}</samp></span></div>
+    <div class="list-group-item-text item-margin">Compartment Id: <span id="identity.groups.{{@key}}.compartment_id"><samp>{{compartment_id}}</samp></span></div>
+    <div class="list-group-item-text item-margin">Description: <span id="identity.groups.{{@key}}.description"><samp>{{description}}</samp></span></div>
+    <div class="list-group-item-text item-margin">Time Created: <span id="identity.groups.{{@key}}.time_created">{{format_date time_created}}</span></div>
+    <div class="list-group-item-text item-margin">Lifecycle State: <span id="identity.groups.{{@key}}.lifecycle_state"><samp>{{lifecycle_state}}</samp></span></div>
+    <div class="list-group-item-text item-margin">Inactive Status: <span id="identity.groups.{{@key}}.inactive_status"><samp>{{inactive_status}}</samp></span></div>
+    <div class="list-group-item-text item-margin">Defined Tags: <span id="identity.groups.{{@key}}.defined_tags"><samp>{{defined_tags}}</samp></span></div>
+    <div class="list-group-item-text item-margin">Freeform Tags: <span id="identity.groups.{{@key}}.freeform_tags"><samp>{{freeform_tags}}</samp></span></div>
+  </div>
+  <div class="list-group-item" style="padding-bottom: 0 !important;">
+    <h4 class="list-group-item-heading">Members
+      {{> count_badge count=users.length target=(concat '#identity.groups' id 'users')}}
+    </h4>
+    <div class="accordion-inner">
+      <ul>
+        {{#each this.users}}
+        <li><a href="javascript:showObject('services.identity.users.{{this.user_id}}')">{{getValueAt 'services.identity.users' this.user_id 'name'}}</a></li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+</script>
+
+<script>
+  Handlebars.registerPartial("services.identity.groups", $("#services\\.identity\\.groups\\.partial").html());
+</script>
+
+<!-- Single identity group template -->
+<script id="single_identity_group-template" type="text/x-handlebars-template">
+  {{> modal-template template='services.identity.groups'}}
+</script>
+<script>
+  var single_identity_group_template = Handlebars.compile($("#single_identity_group-template").html());
+</script>

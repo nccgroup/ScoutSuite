@@ -5,9 +5,9 @@
   "rationale": "<b>Description:</b><br><br>Allowing anonymous and/or public access grants permissions to anyone to access bucket content. Such access might not be desired if you are storing any sensitive data. Hence, ensure that anonymous and/or public access to a bucket is not allowed.<br><br><b>References:</b><ul><li>CIS Google Cloud Platform Foundations v1.0.0 5.1</li></ul>",
   "dashboard_name": "Buckets",
   "display_path": "cloudstorage.projects.id.buckets.id",
-  "path": "cloudstorage.projects.id.buckets.id.acl_configuration",
+  "path": "cloudstorage.projects.id.buckets.id",
   "conditions": [ "and",
     [ "cloudstorage.projects.id.buckets.id.acl_configuration", "withKey", "_ARG_0_"]
   ],
-  "id_suffix": "permissions"
+  "id_suffix": "_ARG_0_"
 }

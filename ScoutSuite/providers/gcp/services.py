@@ -30,11 +30,13 @@ class GCPServicesConfig(BaseServicesConfig):
         self.computeengine = ComputeEngine(facade)
         self.iam = IAM(facade)
         self.kms = KMS(facade)
+        self.stackdriverlogging = StackdriverLogging(facade)
+
+        # Instantiate proprietary services
         try:
             self.kubernetesengine = KubernetesEngine(facade)
         except NameError as _:
             pass
-        self.stackdriverlogging = StackdriverLogging(facade)
 
     def _is_provider(self, provider_name):
         return provider_name == 'gcp'

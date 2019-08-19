@@ -1,7 +1,9 @@
 _strategies = {
     'aws': 'AWSAuthenticationStrategy',
     'gcp': 'GCPAuthenticationStrategy',
-    'azure': 'AzureAuthenticationStrategy'
+    'azure': 'AzureAuthenticationStrategy',
+    'aliyun': 'AliyunAuthenticationStrategy',
+    'oci': 'OracleAuthenticationStrategy'
 }
 
 
