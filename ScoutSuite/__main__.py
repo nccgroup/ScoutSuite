@@ -4,7 +4,7 @@ import os
 import webbrowser
 
 from asyncio_throttle import Throttler
-import ScoutSuite
+from ScoutSuite import ERRORS_LIST
 
 from concurrent.futures import ThreadPoolExecutor
 
@@ -183,10 +183,10 @@ async def _run(provider,
                                                  programmatic_execution=programmatic_execution)
 
         if not credentials:
-            return 401
+            return 101
     except Exception as e:
         print_exception('Authentication failure: {}'.format(e))
-        return 401
+        return 101
 
     # Create a cloud provider object
     cloud_provider = get_provider(provider=provider,
@@ -296,4 +296,7 @@ async def _run(provider,
         url = 'file://%s' % os.path.abspath(html_report_path)
         webbrowser.open(url, new=2)
 
-    return 0
+    if ERRORS_LIST:
+        return 200
+    else:
+        return 0
