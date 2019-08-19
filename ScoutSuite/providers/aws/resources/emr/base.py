@@ -13,7 +13,7 @@ class EMR(Regions):
         super(EMR, self).__init__('emr', facade)
 
     async def fetch_all(self, regions=None, excluded_regions=None, partition_name='aws', **kwargs):
-        await super(EMR, self).fetch_all(regions, partition_name)
+        await super(EMR, self).fetch_all(regions, excluded_regions, partition_name)
 
         for region in self['regions']:
             self['regions'][region]['clusters_count'] = sum(
