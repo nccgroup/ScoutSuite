@@ -3,6 +3,9 @@ import copy
 import os
 import webbrowser
 
+from asyncio_throttle import Throttler
+import ScoutSuite
+
 from concurrent.futures import ThreadPoolExecutor
 
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
@@ -31,6 +34,9 @@ def run_from_cli():
         return run(provider=args.get('provider'),
                    # AWS
                    profile=args.get('profile'),
+                   aws_access_key_id=args.get('aws_access_key_id'),
+                   aws_secret_access_key=args.get('aws_secret_access_key'),
+                   aws_session_token=args.get('aws_session_token'),
                    # Azure
                    user_account=args.get('user_account'), service_account=args.get('service_account'),
                    cli=args.get('cli'), msi=args.get('msi'), service_principal=args.get('service_principal'), file_auth=args.get('file_auth'),
@@ -53,6 +59,7 @@ def run_from_cli():
                    regions=args.get('regions'),
                    excluded_regions=args.get('excluded_regions'),
                    fetch_local=args.get('fetch_local'), update=args.get('update'),
+                   max_rate=args.get('max_rate'),
                    ip_ranges=args.get('ip_ranges'), ip_ranges_name_key=args.get('ip_ranges_name_key'),
                    ruleset=args.get('ruleset'), exceptions=args.get('exceptions'),
                    force_write=args.get('force_write'),
@@ -68,6 +75,9 @@ def run_from_cli():
 def run(provider,
         # AWS
         profile=None,
+        aws_access_key_id=None,
+        aws_secret_access_key=None,
+        aws_session_token=None,
         # Azure
         user_account=False, service_account=None,
         cli=False, msi=False, service_principal=False, file_auth=None,
@@ -88,6 +98,7 @@ def run(provider,
         regions=[],
         excluded_regions=[],
         fetch_local=False, update=False,
+        max_rate=None,
         ip_ranges=[], ip_ranges_name_key='name',
         ruleset='default.json', exceptions=None,
         force_write=False,
@@ -101,6 +112,8 @@ def run(provider,
     """
 
     loop = asyncio.get_event_loop()
+    # Set the throttler within the loop so it's accessible later on
+    loop.throttler = Throttler(rate_limit=max_rate if max_rate else 999999, period=1)
     loop.set_default_executor(ThreadPoolExecutor(max_workers=max_workers))
     result = loop.run_until_complete(_run(**locals()))  # pass through all the parameters
     loop.close()
@@ -110,6 +123,9 @@ def run(provider,
 async def _run(provider,
                # AWS
                profile,
+               aws_access_key_id,
+               aws_secret_access_key,
+               aws_session_token,
                # Azure
                user_account, service_account,
                cli, msi, service_principal, file_auth, tenant_id, subscription_id,
@@ -150,6 +166,9 @@ async def _run(provider,
     auth_strategy = get_authentication_strategy(provider)
     try:
         credentials = auth_strategy.authenticate(profile=profile,
+                                                 aws_access_key_id=aws_access_key_id,
+                                                 aws_secret_access_key=aws_secret_access_key,
+                                                 aws_session_token=aws_session_token,
                                                  user_account=user_account,
                                                  service_account=service_account,
                                                  cli=cli,
