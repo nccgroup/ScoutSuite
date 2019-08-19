@@ -8,8 +8,8 @@ coloredlogs>=10.0
 asyncio-throttle>=0.1.1
 
 # AWS Provider
-botocore==1.12.135  # TODO - change once https://github.com/nccgroup/ScoutSuite/issues/381 is resolved
-boto3==1.9.135  # TODO - change once https://github.com/nccgroup/ScoutSuite/issues/381 is resolved
+botocore>=1.12.210
+boto3>=1.9.210
 iampoliciesgonewild>=1.0.6.2
 
 # GCP Provider
