@@ -70,6 +70,7 @@ def run_from_cli():
                    programmatic_execution=False)
     except (KeyboardInterrupt, SystemExit):
         print_info('Exiting')
+        return 130
 
 
 def run(provider,
