@@ -22,7 +22,7 @@ class IAM(AWSCompositeResources):
         super(IAM, self).__init__(facade)
         self.service = 'iam'
 
-    async def fetch_all(self, regions=None, partition_name='aws', **kwargs):
+    async def fetch_all(self, partition_name='aws', **kwargs):
         await self._fetch_children(self)
 
         # We do not want the report to count the password policies as resources, they aren't really resources.
