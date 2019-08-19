@@ -10,7 +10,3 @@ class KMS(Regions):
 
     def __init__(self, facade: AliyunFacade):
         super(KMS, self).__init__('kms', facade)
-
-    async def fetch_all(self, regions):
-        await super(KMS, self).fetch_all(regions)
-

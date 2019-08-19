@@ -10,6 +10,3 @@ class ECS(Regions):
 
     def __init__(self, facade: AliyunFacade):
         super(ECS, self).__init__('ecs', facade)
-
-    async def fetch_all(self, regions):
-        await super(ECS, self).fetch_all(regions)

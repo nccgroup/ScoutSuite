@@ -11,6 +11,3 @@ class RDS(Regions):
     def __init__(self, facade: AliyunFacade):
         super(RDS, self).__init__('rds', facade)
 
-    async def fetch_all(self, regions):
-        await super(RDS, self).fetch_all(regions)
-
