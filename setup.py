@@ -35,40 +35,13 @@ setup(
             '*.json'
         ],
         'ScoutSuite.output': [
-            'data/html/*.html',
-            'data/html/conditionals/*.html',
-            'data/html/partials/*.html',
-            'data/html/partials/aws/*.html',
-            'data/html/partials/azure/*.html',
-            'data/html/partials/gcp/*.html',
-            'data/html/partials/aliyun/*.html',
-            'data/html/partials/oci/*.html',
-            'data/html/summaries/*.html',
-            'data/includes.zip',
-            'data/inc-scoutsuite/*.js',
-            'data/inc-scoutsuite/*.css'
+            '*.html',
+            '*.js',
+            '*.css',
+            '*.zip'
         ],
         'ScoutSuite.providers': [
-            'aws/rules/conditions/*.json',
-            'aws/rules/filters/*.json',
-            'aws/rules/findings/*.json',
-            'aws/rules/rulesets/*.json'
-            'azure/rules/conditions/*.json',
-            'azure/rules/filters/*.json',
-            'azure/rules/findings/*.json',
-            'azure/rules/rulesets/*.json'
-            'gcp/rules/conditions/*.json',
-            'gcp/rules/filters/*.json',
-            'gcp/rules/findings/*.json',
-            'gcp/rules/rulesets/*.json',
-            'aliyun/rules/conditions/*.json',
-            'aliyun/rules/filters/*.json',
-            'aliyun/rules/findings/*.json',
-            'aliyun/rules/rulesets/*.json',
-            'oci/rules/conditions/*.json',
-            'oci/rules/filters/*.json',
-            'oci/rules/findings/*.json',
-            'oci/rules/rulesets/*.json',
+            '*.json'
         ]
     },
     include_package_data=True,
