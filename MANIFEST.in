@@ -9,4 +9,7 @@ recursive-include ScoutSuite/providers/azure *
 recursive-include ScoutSuite/providers/azure/rules *
 recursive-include ScoutSuite/providers/gcp *
 recursive-include ScoutSuite/providers/gcp/rules *
-
+recursive-include ScoutSuite/providers/aliyun *
+recursive-include ScoutSuite/providers/aliyun/rules *
+recursive-include ScoutSuite/providers/oci *
+recursive-include ScoutSuite/providers/oci/rules *
