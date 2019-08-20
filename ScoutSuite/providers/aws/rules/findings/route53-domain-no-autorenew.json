@@ -3,7 +3,7 @@
     "description": "Domain not set to autorenew",
     "path": "route53.regions.id.domains.id",
     "conditions": [ "and",
-        [ "AutoRenew", "false", "" ]
+        [ "auto_renew", "false", "" ]
     ],
-    "id_suffix": "AutoRenew"
+    "id_suffix": "auto_renew"
 }

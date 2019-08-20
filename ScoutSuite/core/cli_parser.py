@@ -27,45 +27,77 @@ class ScoutSuiteArgumentParser:
         self._init_aws_parser()
         self._init_gcp_parser()
         self._init_azure_parser()
+        self._init_aliyun_parser()
+        self._init_oci_parser()
 
     def _init_aws_parser(self):
-        aws_parser = self.subparsers.add_parser("aws",
-                                                parents=[self.common_providers_args_parser],
-                                                help="Run Scout against an Amazon Web Services account")
+        parser = self.subparsers.add_parser("aws",
+                                            parents=[self.common_providers_args_parser],
+                                            help="Run Scout against an Amazon Web Services account")
 
-        parser = aws_parser.add_argument_group('Authentication parameters')
+        aws_parser = parser.add_argument_group('Authentication modes')
+        aws_auth_params = parser.add_argument_group('Authentication parameters')
 
-        parser.add_argument('-p',
-                            '--profile',
-                            dest='profile',
-                            default=None,
-                            help='Name of the profile')
+        aws_auth_modes = aws_parser.add_mutually_exclusive_group(required=True)
 
-        parser = aws_parser.add_argument_group('Additional arguments')
+        aws_auth_modes.add_argument('-p',
+                                    '--profile',
+                                    dest='profile',
+                                    default=None,
+                                    help='Run with a named profile')
 
-        parser.add_argument('-r',
-                            '--regions',
-                            dest='regions',
-                            default=[],
-                            nargs='+',
-                            help='Name of regions to run the tool in, defaults to all')
-        parser.add_argument('--ip-ranges',
-                            dest='ip_ranges',
-                            default=[],
-                            nargs='+',
-                            help='Config file(s) that contain your known IP ranges')
-        parser.add_argument('--ip-ranges-name-key',
-                            dest='ip_ranges_name_key',
-                            default='name',
-                            help='Name of the key containing the display name of a known CIDR')
+        aws_auth_modes.add_argument('--access-keys',
+                                    action='store_true',
+                                    dest='aws_access_keys',
+                                    help='Run with access keys')
+        aws_auth_params.add_argument('--access-key-id',
+                                     action='store',
+                                     default=None,
+                                     dest='aws_access_key_id',
+                                     help='AWS Access Key ID')
+        aws_auth_params.add_argument('--secret-access-key',
+                                     action='store',
+                                     default=None,
+                                     dest='aws_secret_access_key',
+                                     help='AWS Secret Access Key')
+        aws_auth_params.add_argument('--session-token',
+                                     action='store',
+                                     default=None,
+                                     dest='aws_session_token',
+                                     help='AWS Session Token')
+
+        aws_additional_parser = parser.add_argument_group('Additional arguments')
+
+        aws_additional_parser.add_argument('-r',
+                                           '--regions',
+                                           dest='regions',
+                                           default=[],
+                                           nargs='+',
+                                           help='Name of regions to run the tool in, defaults to all')
+        aws_additional_parser.add_argument('-xr',
+                                           '--exclude-regions',
+                                           dest='excluded_regions',
+                                           default=[],
+                                           nargs='+',
+                                           help='Name of regions to excluded from execution')
+        aws_additional_parser.add_argument('--ip-ranges',
+                                           dest='ip_ranges',
+                                           default=[],
+                                           nargs='+',
+                                           help='Config file(s) that contain your known IP ranges')
+        aws_additional_parser.add_argument('--ip-ranges-name-key',
+                                           dest='ip_ranges_name_key',
+                                           default='name',
+                                           help='Name of the key containing the display name of a known CIDR')
 
     def _init_gcp_parser(self):
-        gcp_parser = self.subparsers.add_parser("gcp",
-                                                parents=[self.common_providers_args_parser],
-                                                help="Run Scout against a Google Cloud Platform account")
+        parser = self.subparsers.add_parser("gcp",
+                                            parents=[self.common_providers_args_parser],
+                                            help="Run Scout against a Google Cloud Platform account")
 
-        parser = gcp_parser.add_argument_group('Authentication modes')
-        gcp_auth_modes = parser.add_mutually_exclusive_group(required=True)
+        gcp_parser = parser.add_argument_group('Authentication modes')
+
+        gcp_auth_modes = gcp_parser.add_mutually_exclusive_group(required=True)
 
         gcp_auth_modes.add_argument('-u',
                                     '--user-account',
@@ -79,7 +111,7 @@ class ScoutSuiteArgumentParser:
                                     help='Run Scout with a Google Service Account with the specified '
                                          'Google Service Account Application Credentials file')
 
-        gcp_scope = gcp_parser.add_argument_group('Additional arguments')
+        gcp_scope = parser.add_argument_group('Additional arguments')
 
         gcp_scope.add_argument('--project-id',
                                action='store',
@@ -161,6 +193,46 @@ class ScoutSuiteArgumentParser:
                                        dest='password',
                                        help='Password of the Azure account')
 
+    def _init_aliyun_parser(self):
+        parser = self.subparsers.add_parser("aliyun",
+                                            parents=[self.common_providers_args_parser],
+                                            help="Run Scout against an Alibaba Cloud account")
+
+        aliyun_parser = parser.add_argument_group('Authentication modes')
+        aliyun_auth_params = parser.add_argument_group('Authentication parameters')
+
+        aliyun_auth_modes = aliyun_parser.add_mutually_exclusive_group(required=True)
+
+        aliyun_auth_modes.add_argument('--access-keys',
+                                       action='store_true',
+                                       help='Run Scout with user credentials')
+        aliyun_auth_params.add_argument('-k',
+                                        '--access-key-id',
+                                        action='store',
+                                        default=None,
+                                        dest='access_key_id',
+                                        help='Access Key Id')
+        aliyun_auth_params.add_argument('-s',
+                                        '--access-key-secret',
+                                        action='store',
+                                        default=None,
+                                        dest='access_key_secret',
+                                        help='Access Key Secret')
+
+    def _init_oci_parser(self):
+        oci_parser = self.subparsers.add_parser("oci",
+                                                parents=[self.common_providers_args_parser],
+                                                help="Run Scout against an Oracle Cloud Infrastructure account")
+
+        parser = oci_parser.add_argument_group('Authentication parameters')
+
+        parser.add_argument('-p',
+                            '--profile',
+                            dest='profile',
+                            default=None,
+                            help='Name of the profile')
+
+
     def _init_common_args_parser(self):
         parser = self.common_providers_args_parser.add_argument_group('Scout Arguments')
 
@@ -175,6 +247,11 @@ class ScoutSuiteArgumentParser:
                             default=False,
                             action='store_true',
                             help='Use local data previously fetched and re-run the analysis.')
+        parser.add_argument('--max-rate',
+                            dest='max_rate',
+                            type=int,
+                            default=None,
+                            help='Maximum number of API requests per second')
         parser.add_argument('--debug',
                             dest='debug',
                             default=False,
@@ -215,7 +292,7 @@ class ScoutSuiteArgumentParser:
                             dest='max_workers',
                             type=int,
                             default=10,
-                            help='Maximum number of threads (workers) used by Scout Suite')
+                            help='Maximum number of threads (workers) used by Scout Suite (default is 10)')
         parser.add_argument('--report-dir',
                             dest='report_dir',
                             default=None,
@@ -233,7 +310,7 @@ class ScoutSuiteArgumentParser:
                             dest='services',
                             default=[],
                             nargs='+',
-                            help='Name of in-scope services.')
+                            help='Name of in-scope services, defaults to all.')
         parser.add_argument('--skip',
                             dest='skipped_services',
                             default=[],
@@ -256,17 +333,17 @@ class ScoutSuiteArgumentParser:
                             default=None,
                             const=True,
                             nargs="?",
-                            help="Serve the specified result database on the server to show the report. "
+                            help="[EXPERIMENTAL FEATURE] Serve the specified result database on the server to show the report. "
                                  "This must be used when the results are exported as an sqlite database.")
         parser.add_argument('--host',
                             dest="host_ip",
                             default="127.0.0.1",
-                            help="Address on which you want the server to listen. Defaults to localhost.")
+                            help="[EXPERIMENTAL FEATURE] Address on which you want the server to listen. Defaults to localhost.")
         parser.add_argument('--port',
                             dest="host_port",
                             type=int,
                             default=8000,
-                            help="Port on which you want the server to listen. Defaults to 8000.")
+                            help="[EXPERIMENTAL FEATURE] Port on which you want the server to listen. Defaults to 8000.")
 
     def parse_args(self, args=None):
         args = self.parser.parse_args(args)
@@ -281,8 +358,15 @@ class ScoutSuiteArgumentParser:
 
         # Test conditions
         v = vars(args)
-        if v.get('tenant_id') and not v.get('service_principal'):
-            self.parser.error('--tenant can only be set when using --service-principal')
+        if v.get('provider') == 'aws':
+            if v.get('aws_access_keys') and not (v.get('aws_access_key_id') or v.get('aws_secret_access_key')):
+                self.parser.error('When running with --access-keys, you must provide an Access Key ID '
+                                  'and Secret Access Key.')
+        elif v.get('provider') == 'azure':
+            if v.get('tenant_id') and not (v.get('user_account') or v.get('service_principal') or v.get('msi')):
+                self.parser.error('--tenant can only be set when using --user-account, --service-principal or --msi')
+            if v.get('subscription_id') and not (v.get('user_account') or v.get('service_principal') or v.get('msi')):
+                self.parser.error('--tenant can only be set when using --user-account, --service-principal or --msi')
         # TODO add more conditions
 
         return args

@@ -133,6 +133,10 @@
                 "domains": {
                     "cols": 2,
                     "path": "services.route53.regions.id.domains"
+                },
+                "hosted_zones": {
+                    "cols": 2,
+                    "path": "services.route53.regions.id.hosted_zones"
                 }
             }
         },

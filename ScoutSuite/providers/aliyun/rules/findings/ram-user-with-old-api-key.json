@@ -1,0 +1,10 @@
+{
+  "description": "User with old API keys",
+  "rationale": "",
+  "path": "ram.users.id",
+  "dashboard_name": "Users",
+  "conditions": [ "and",
+    [ "ram.users.id.api_keys.id.", "lengthMoreThan", "1" ]
+  ],
+  "id_suffix": "multiple_api_keys"
+}

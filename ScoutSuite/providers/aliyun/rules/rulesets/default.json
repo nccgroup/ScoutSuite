@@ -1,0 +1,122 @@
+{
+  "about": "Default ruleset for Alibaba Cloud.",
+  "rules": {
+    "ram-user-with-multiple-api-keys.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "ram-user-lacking-mfa.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "ram-user-with-old-api-key.json": [
+      {
+        "enabled": false,
+        "level": "warning"
+      }
+    ],
+    "ram-user-unused-console-password.json": [
+      {
+        "enabled": false,
+        "level": "warning"
+      }
+    ],
+    "ram-password-policy-expiration-threshold.json": [
+      {
+        "args": [
+          "90"
+        ],
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "ram-password-policy-minimum-length.json": [
+      {
+        "args": [
+          "8"
+        ],
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "ram-password-policy-no-expiration.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "ram-password-policy-no-lowercase-required.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "ram-password-policy-no-number-required.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "ram-password-policy-no-symbol-required.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "ram-password-policy-no-uppercase-required.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "ram-password-policy-reuse-enabled.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "ram-user-unused-api-key.json": [
+      {
+        "enabled": false,
+        "level": "warning"
+      }
+    ],
+    "kms-no-key-rotation.json": [
+      {
+        "args": [
+          "90"
+        ],
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "actiontrail-not-configured.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "actiontrail-not-enabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "ecs-instance-with-public-ip.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "ecs-instance-with-deletion-protection-disabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ]
+  }
+}

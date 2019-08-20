@@ -13,7 +13,7 @@ class BaseServicesConfig(object):
     def _is_provider(self, provider_name):
         return False
 
-    async def fetch(self, services: list, regions: list):
+    async def fetch(self, services: list, regions: list, excluded_regions: list):
 
         if not services:
             print_debug('No services to scan')
@@ -30,12 +30,12 @@ class BaseServicesConfig(object):
             if services:
                 tasks = {
                     asyncio.ensure_future(
-                        self._fetch(service, regions)
+                        self._fetch(service, regions, excluded_regions)
                     ) for service in services
                 }
                 await asyncio.wait(tasks)
 
-    async def _fetch(self, service, regions):
+    async def _fetch(self, service, regions=None, excluded_regions=None):
         try:
             print_info('Fetching resources for the {} service'.format(format_service_name(service)))
             service_config = getattr(self, service)
@@ -43,12 +43,17 @@ class BaseServicesConfig(object):
             if 'fetch_all' in dir(service_config):
                 method_args = {}
 
-                if self._is_provider('aws'):
+                if regions:
                     method_args['regions'] = regions
+                if excluded_regions:
+                    method_args['excluded_regions'] = excluded_regions
+
+                if self._is_provider('aws'):
                     if service != 'iam':
-                        method_args['partition_name'] = get_partition_name(self.credentials)
+                        method_args['partition_name'] = get_partition_name(self.credentials.session)
 
                 await service_config.fetch_all(**method_args)
+
                 if hasattr(service_config, 'finalize'):
                     await service_config.finalize()
             else:

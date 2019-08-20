@@ -5,10 +5,11 @@ sqlitedict>=1.6.0
 cherrypy>=18.1.0
 cherrypy-cors>=1.6
 coloredlogs>=10.0
+asyncio-throttle>=0.1.1
 
 # AWS Provider
-boto3>=1.9.60
-botocore>=1.12.118
+botocore>=1.12.210
+boto3>=1.9.210
 iampoliciesgonewild>=1.0.6.2
 
 # GCP Provider
@@ -35,5 +36,21 @@ azure-mgmt-keyvault>=1.1.0
 azure-mgmt-network>=2.5.1
 azure-mgmt-redis>=6.0.0
 azure-mgmt-web>=0.41.0
+azure-mgmt-compute>=5.0.0
+azure-graphrbac>=0.61.1
 azure-cli-core>=2.0.55
 pyyaml>=4.2b1
+
+# Aliyun / Alibaba Cloud Provider
+aliyun-python-sdk-core>=2.13.4
+aliyun-python-sdk-ram>=3.0.1
+aliyun-python-sdk-ocs>=0.0.4
+aliyun-python-sdk-sts>=3.0.1
+aliyun-python-sdk-actiontrail>=2.0.0
+aliyun-python-sdk-vpc>=3.0.5
+aliyun-python-sdk-ecs>=4.16.10
+aliyun-python-sdk-rds>=2.3.9
+aliyun-python-sdk-kms>=2.6.0
+
+# Oracle Cloud Infrastructure Provider
+oci>=2.2.4
