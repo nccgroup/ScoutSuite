@@ -1,5 +1,5 @@
 __author__ = 'NCC Group'
-__version__ = '5.3.1'
+__version__ = '5.3.2'
 
 ERRORS_LIST = []
 
