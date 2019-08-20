@@ -3,13 +3,17 @@ from ScoutSuite.providers.azure.resources.base import AzureCompositeResources
 from .auto_provisioning_settings import AutoProvisioningSettings
 from .pricings import Pricings
 from .security_contacts import SecurityContacts
+from .information_protection_policies import InformationProtectionPolicies
+from .settings import Settings
 
 
 class SecurityCenter(AzureCompositeResources):
     _children = [
         (AutoProvisioningSettings, 'auto_provisioning_settings'),
         (Pricings, 'pricings'),
-        (SecurityContacts, 'security_contacts')
+        (SecurityContacts, 'security_contacts'),
+        (InformationProtectionPolicies, 'information_protection_policies'),
+        (Settings, 'settings')
     ]
 
     async def fetch_all(self):

@@ -1,7 +1,7 @@
 {
     "dashboard_name": "Security Center",
     "description": "No Automatic Provisioning of Monitoring Agent",
-	"rationale": "<b>Description:</b><br><br>Automatic provisioning of monitoring agent should be set.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 2.2</li></ul>",
+	"rationale": "<b>Description:</b><br><br>Automatic provisioning of monitoring agent should be set.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.1.0 2.2</li></ul>",
     "path": "securitycenter.auto_provisioning_settings.id",
     "display_path": "securitycenter.auto_provisioning_settings",
     "conditions": [ "and",

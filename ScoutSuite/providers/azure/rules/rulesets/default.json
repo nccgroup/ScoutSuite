@@ -207,6 +207,12 @@
                 "level": "warning"
             }
         ],
+        "storageaccount-trusted-microsoft-services-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "graphrbac-guest-users.json": [
             {
                 "enabled": true,
