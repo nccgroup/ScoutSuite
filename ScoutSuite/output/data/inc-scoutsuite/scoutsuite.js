@@ -1266,10 +1266,10 @@ function addTemplate(group, service, section, resourceType, path, suffix) {
     template.id = path + '.' + suffix + '.template'
     if (section === 'resources') {
         if (suffix === 'list') {
-            if (path.indexOf('.regions.id.') > 0) {
-                partialName = 'left_menu_for_region'
-            } else if (path.indexOf('.vpcs.id.') > 0) {
+            if (path.indexOf('.vpcs.id.') > 0) {
                 partialName = 'left_menu_for_vpc'
+            } else if (path.indexOf('.regions.id.') > 0) {
+                partialName = 'left_menu_for_region'
             } else if (path.indexOf('.projects.id.') > 0) {
                 partialName = 'left_menu_for_project'
             } else if (path.indexOf('projects.id.regions.id.') > 0) {
@@ -1280,10 +1280,10 @@ function addTemplate(group, service, section, resourceType, path, suffix) {
                 partialName = 'left_menu'
             }
         } else if (suffix === 'details') {
-            if (path.indexOf('.regions.id.') > 0) {
-                partialName = 'details_for_region'
-            } else if (path.indexOf('.vpcs.id.') > 0) {
+            if (path.indexOf('.vpcs.id.') > 0) {
                 partialName = 'details_for_vpc'
+            } else if (path.indexOf('.regions.id.') > 0) {
+                partialName = 'details_for_region'
             } else if (path.indexOf('.projects.id.') > 0) {
                 partialName = 'details_for_project'
             } else if (path.indexOf('projects.id.regions.id') > 0) {
