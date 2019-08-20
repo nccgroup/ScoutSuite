@@ -1,0 +1,69 @@
+
+<!-- RAM users -->
+<script id="services.ram.users.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">ID: <span id="ram.users.{{@key}}.id"><samp>{{identifier}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Display Name: <span id="ram.users.{{@key}}.display_name"><samp>{{display_name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Creation Date: <span id="ram.users.{{@key}}.creation_datetime">{{format_date creation_date}}</span></div>
+        <div class="list-group-item-text item-margin">Update Date: <span id="ram.users.{{@key}}.update_datetime">{{format_date update_date}}</span></div>
+        <div class="list-group-item-text item-margin">Last Login Date: <span id="ram.users.{{@key}}.last_login_datetime">{{format_date last_login_datetime}}</span></div>
+        <div class="list-group-item-text item-margin">Email: <span id="ram.users.{{@key}}.email"><samp>{{value_or_none email}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Mobile Phone: <span id="ram.users.{{@key}}.mobile_phone"><samp>{{value_or_none mobile_phone}}</samp></span></div>
+        <div id="ram.users.{{@key}}.mfa_secure">
+            <div class="list-group-item-text item-margin">Console Access: <span id="ram.users.{{@key}}.console_access"><samp>{{convert_bool_to_enabled console_access}}</samp></span></div>
+            <div class="list-group-item-text item-margin">MFA Configured: <span id="ram.users.{{@key}}.mfa_status"><samp>{{mfa_status}}</samp></span></div>
+        </div>
+    </div>
+    {{#if api_keys_count }}
+    <div class="list-group-item">
+        <h5 class="list-group-item-heading" id="ram.users.{{@key}}.multiple_api_keys">API Keys</h5>
+        <ul>
+            {{#each api_keys}}
+            <li>ID: <code>{{id}}</code></li>
+            <ul>
+                <li>Status: <samp>{{status}}</samp></li>
+                <li>Creation Date: {{format_date creation_datetime}}</li>
+                <li>Last Used: {{format_date last_usage_datetime}}</li>
+            </ul>
+            {{/each}}
+        </ul>
+    </div>
+    {{/if}}
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Policies
+            {{> count_badge count=policies.length}}
+        </h4>
+        <ul>
+            {{#each policies}}
+            <li class="list-group-item-text"><a href="javascript:showObject('services.ram.policies', 'name', '{{this}}')">{{this}}</a></li>
+            {{/each}}
+        </ul>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Groups
+            {{> count_badge count=groups.length}}
+        </h4>
+        <ul>
+            {{#each groups}}
+            <li class="list-group-item-text"><a href="javascript:showObject('services.ram.groups', 'name', '{{this}}')">{{this}}</a></li>
+            {{/each}}
+        </ul>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.ram.users", $("#services\\.ram\\.users\\.partial").html());
+</script>
+
+<!-- Single ram user template -->
+<script id="single_ram_user-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.ram.users'}}
+</script>
+<script>
+    var single_ram_user_template = Handlebars.compile($("#single_ram_user-template").html());
+</script>
+

@@ -118,6 +118,20 @@ def pass_condition(b, test, a):
     elif test == 'withoutKey':
         result = a not in b
 
+    # String test
+    elif test == 'containString':
+        if not type(b) == str:
+            b = str(b)
+        if not type(a) == str:
+            a = str(a)
+        result = a in b
+    elif test == 'notContainString':
+        if not type(b) == str:
+            b = str(b)
+        if not type(a) == str:
+            a = str(a)
+        result = a not in b
+
     # List tests
     elif test == 'containAtLeastOneOf':
         result = False

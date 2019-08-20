@@ -69,19 +69,19 @@ class BaseProvider(object):
         self._update_metadata()
         self._update_last_run(current_time, ruleset, run_parameters)
 
-    async def fetch(self, regions=None, skipped_regions=None, partition_name=None):
+    async def fetch(self, regions=None, excluded_regions=None, partition_name=None):
         """
         Fetch resources for each service
 
         :param regions:
-        :param skipped_regions:
+        :param excluded_regions:
         :param partition_name:
         :return:
         """
         regions = [] if regions is None else regions
-        skipped_regions = [] if skipped_regions is None else skipped_regions
+        excluded_regions = [] if excluded_regions is None else excluded_regions
         # TODO: determine partition name based on regions and warn if multiple partitions...
-        await self.services.fetch(self.service_list, regions)
+        await self.services.fetch(self.service_list, regions, excluded_regions)
 
         # TODO implement this properly
         """

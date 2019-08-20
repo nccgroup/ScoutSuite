@@ -1,0 +1,18 @@
+<!-- Account security policy -->
+<script id="services.ram.security_policy.details.template" type="text/x-handlebars-template">
+    <div class="list-group" id="services.ram.security_policy.details">
+        <div class="list-group" id="services.ram.security_policy.view">
+            <div class="list-group-item active">
+                <h4 class="list-group-item-heading">Security Policy</h4>
+            </div>
+            <div class="list-group-item">
+                <div class="list-group-item-text item-margin">Save MFA logon status for 7 days: <span id="ram.security_policy.enable_save_mfa_ticket"><samp>{{items.enable_save_mfa_ticket}}</samp></span></div>
+                <div class="list-group-item-text item-margin">Login Session Duration (hours): <span id="ram.security_policy.login_session_duration">{{items.login_session_duration}}</span></div>
+                <div class="list-group-item-text item-margin">Logon Address Mask:<span id="ram.security_policy.login_network_masks"><samp>{{value_or_none items.login_network_masks}}</samp></span></div>
+                <div class="list-group-item-text item-margin">Allow users to change password: <span id="ram.security_policy.allow_user_change_password"><samp>{{items.allow_user_change_password}}</samp></span></div>
+                <div class="list-group-item-text item-margin">Allow users to manage access keys: <span id="ram.security_policy.allow_user_manage_access_keys"><samp>{{items.allow_user_manage_access_keys}}</samp></span></div>
+                <div class="list-group-item-text item-margin">Allow users to manage MFA devices: <span id="ram.security_policy.allow_user_manage_mfa_devices"><samp>{{items.allow_user_manage_mfa_devices}}</samp></span></div>
+                <div class="list-group-item-text item-margin">Allow users to manage public keys: <span id="ram.security_policy.allow_user_manage_public_keys"><samp>{{items.allow_user_manage_public_keys}}</samp></span></div>
+            </div>
+        </div></div>
+</script>

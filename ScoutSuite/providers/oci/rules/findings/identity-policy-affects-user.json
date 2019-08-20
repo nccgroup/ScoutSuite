@@ -1,0 +1,12 @@
+{
+    "description": "Policy affects user",
+    "rationale": "Policies should apply to services and groups, not directly to users.",
+    "path": "identity.policies.id",
+    "display_path": "identity.policies.id",
+    "dashboard_name": "Policies",
+    "conditions": [ "and",
+        [ "identity.policies.id.statements", "containString", "any-user" ]
+
+    ],
+    "id_suffix": "statements"
+}

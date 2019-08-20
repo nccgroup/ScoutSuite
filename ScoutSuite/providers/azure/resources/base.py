@@ -6,14 +6,12 @@ from ScoutSuite.providers.base.resources.base import Resources, CompositeResourc
 
 
 class AzureResources(Resources, metaclass=abc.ABCMeta):
-
     """This is the base class for Azure resources."""
 
     pass
 
 
 class AzureCompositeResources(AzureResources, CompositeResources, metaclass=abc.ABCMeta):
-
     """This class represents a collection of composite Resources (resources that include nested resources referred as
     their children). Classes extending AzureCompositeResources have to define a '_children' attribute which consists of
     a list of tuples describing the children. The tuples are expected to respect the following format:

@@ -26,9 +26,10 @@ class StorageAccountsFacade:
 
     async def get_blob_containers(self, resource_group_name, storage_account_name):
         try:
-            return await run_concurrently(
-                lambda: list(self._client.blob_containers.list(resource_group_name, storage_account_name).value)
-            )
+            containers = await run_concurrently(lambda: self._client.blob_containers.list(resource_group_name, storage_account_name))
+            containers_value = getattr(containers, 'value', [])
+            containers_value_list = list(containers_value)
+            return containers_value_list
         except Exception as e:
             print_exception('Failed to retrieve blob containers: {}'.format(e))
             return []
