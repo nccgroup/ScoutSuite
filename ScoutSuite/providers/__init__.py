@@ -1,5 +1,3 @@
-import sys
-
 providers_dict = {'aws': 'AWSProvider',
                   'gcp': 'GCPProvider',
                   'azure': 'AzureProvider',
