@@ -41,6 +41,9 @@ class StorageAccounts(AzureCompositeResources):
     def _is_public_traffic_allowed(self, storage_account):
         return storage_account.network_rule_set.default_action == "Allow"
 
+    def _is_trusted_microsoft_services_enabled(self, storage_account):
+        return storage_account.network_rule_set.bypass == "AzureServices"
+
     def _parse_access_keys_last_rotation_date(self, activity_logs):
         last_rotation_date = None
         for log in activity_logs:

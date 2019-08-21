@@ -10,7 +10,7 @@ class SecurityCenterFacade:
     async def get_pricings(self):
         try:
             return await run_concurrently(
-                lambda: list(self._client.pricings.list())
+                lambda: self._client.pricings.list().value
             )
         except Exception as e:
             print_exception('Failed to retrieve pricings: {}'.format(e))
