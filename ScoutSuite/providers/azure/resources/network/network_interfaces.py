@@ -12,10 +12,13 @@ class NetworkInterfaces(AzureResources):
         network_interface_dict = {}
         network_interface_dict['id'] = get_non_provider_id(raw_network_interface.id)
         network_interface_dict['enable_accelerated_networking'] = raw_network_interface.enable_accelerated_networking
-        network_interface_dict['virtual_machine'] = get_non_provider_id(raw_network_interface.virtual_machine.id.lower())
+        network_interface_dict['virtual_machine'] = \
+            get_non_provider_id(raw_network_interface.virtual_machine.id.lower()) if \
+                raw_network_interface.virtual_machine else None
         network_interface_dict['name'] = raw_network_interface.name
         network_interface_dict['tags'] = raw_network_interface.tags
-        network_interface_dict['interface_endpoint'] = raw_network_interface.interface_endpoint
+        network_interface_dict['interface_endpoint'] = raw_network_interface.interface_endpoint if \
+            hasattr(raw_network_interface, 'interface_endpoint') else None
         network_interface_dict['primary'] = raw_network_interface.primary
         network_interface_dict['etag'] = raw_network_interface.etag
         network_interface_dict['additional_properties'] = raw_network_interface.additional_properties
