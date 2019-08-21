@@ -7,5 +7,5 @@
     "conditions": [ "and",
         ["securitycenter.auto_provisioning_settings.id.auto_provision", "false", ""]
     ],
-    "id_suffix": "provisionning_off"
+    "id_suffix": "auto_provision"
 }

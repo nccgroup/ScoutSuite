@@ -7,5 +7,5 @@
     "conditions": [ "and",
         ["securitycenter.security_contacts.id.phone", "equal", ""]
     ],
-    "id_suffix": "phone_not_set"
+    "id_suffix": "phone"
 }

@@ -7,5 +7,5 @@
     "conditions": [ "and",
         ["securitycenter.security_contacts.id.alerts_to_admins", "false", ""]
     ],
-    "id_suffix": "no_admin_email_notifications_on_alert"
+    "id_suffix": "alerts_to_admins"
 }
