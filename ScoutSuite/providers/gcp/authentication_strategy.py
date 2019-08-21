@@ -1,7 +1,7 @@
 import os
 import warnings
 
-import google
+from google import auth
 
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
@@ -26,7 +26,7 @@ class GCPAuthenticationStrategy(AuthenticationStrategy):
             else:
                 raise AuthenticationException('Failed to authenticate to GCP - no supported account type')
 
-            credentials, default_project_id = google.auth.default()
+            credentials, default_project_id = auth.default()
 
             if not credentials:
                 raise AuthenticationException('No credentials')
