@@ -38,7 +38,7 @@ class ScoutSuiteArgumentParser:
         aws_parser = parser.add_argument_group('Authentication modes')
         aws_auth_params = parser.add_argument_group('Authentication parameters')
 
-        aws_auth_modes = aws_parser.add_mutually_exclusive_group(required=True)
+        aws_auth_modes = aws_parser.add_mutually_exclusive_group(required=False)
 
         aws_auth_modes.add_argument('-p',
                                     '--profile',
