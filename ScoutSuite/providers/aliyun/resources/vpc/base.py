@@ -10,6 +10,3 @@ class VPC(Regions):
 
     def __init__(self, facade: AliyunFacade):
         super(VPC, self).__init__('vpc', facade)
-
-    async def fetch_all(self, regions):
-        await super(VPC, self).fetch_all(regions)

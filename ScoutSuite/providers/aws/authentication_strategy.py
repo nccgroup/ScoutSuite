@@ -37,7 +37,7 @@ class AWSAuthenticationStrategy(AuthenticationStrategy):
                         aws_secret_access_key=aws_secret_access_key,
                     )
             else:
-                raise AuthenticationException('Insufficient credentials provided')
+                session = boto3.Session()
 
             # Test querying for current user
             identity = get_caller_identity(session)

@@ -38,7 +38,7 @@ class ScoutSuiteArgumentParser:
         aws_parser = parser.add_argument_group('Authentication modes')
         aws_auth_params = parser.add_argument_group('Authentication parameters')
 
-        aws_auth_modes = aws_parser.add_mutually_exclusive_group(required=True)
+        aws_auth_modes = aws_parser.add_mutually_exclusive_group(required=False)
 
         aws_auth_modes.add_argument('-p',
                                     '--profile',
@@ -74,6 +74,12 @@ class ScoutSuiteArgumentParser:
                                            default=[],
                                            nargs='+',
                                            help='Name of regions to run the tool in, defaults to all')
+        aws_additional_parser.add_argument('-xr',
+                                           '--exclude-regions',
+                                           dest='excluded_regions',
+                                           default=[],
+                                           nargs='+',
+                                           help='Name of regions to excluded from execution')
         aws_additional_parser.add_argument('--ip-ranges',
                                            dest='ip_ranges',
                                            default=[],
@@ -304,7 +310,7 @@ class ScoutSuiteArgumentParser:
                             dest='services',
                             default=[],
                             nargs='+',
-                            help='Name of in-scope services.')
+                            help='Name of in-scope services, defaults to all.')
         parser.add_argument('--skip',
                             dest='skipped_services',
                             default=[],

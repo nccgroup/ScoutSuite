@@ -40,7 +40,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
             elif user_account:
 
-                if not username and password:
+                if not (username and password):
                     if not programmatic_execution:
                         username = username if username else input("Username: ")
                         password = password if password else getpass("Password: ")

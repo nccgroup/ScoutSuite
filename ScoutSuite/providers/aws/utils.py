@@ -29,6 +29,7 @@ def is_throttled(e):
     :return:                            True if it's a throttling exception else False
     """
     return (hasattr(e, 'response')
+            and e.response
             and 'Error' in e.response
             and e.response['Error']['Code'] in ['Throttling',
                                                 'RequestLimitExceeded',

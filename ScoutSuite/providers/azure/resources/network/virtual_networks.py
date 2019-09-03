@@ -36,7 +36,8 @@ class VirtualNetworks(AzureResources):
             subnet_dict['service_association_links'] = raw_subnet.service_association_links
             subnet_dict['resource_navigation_links'] = raw_subnet.resource_navigation_links
             subnet_dict['service_endpoint_policies'] = raw_subnet.service_endpoint_policies
-            subnet_dict['interface_endpoints'] = raw_subnet.interface_endpoints
+            subnet_dict['interface_endpoints'] = raw_subnet.interface_endpoints if \
+                hasattr(raw_subnet, 'interface_endpoints') else None
             subnet_dict['purpose'] = raw_subnet.purpose
             subnet_dict['address_prefix'] = raw_subnet.address_prefix
             subnet_dict['provisioning_state'] = raw_subnet.provisioning_state
