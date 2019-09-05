@@ -6,6 +6,7 @@ from ScoutSuite.providers.azure.facade.securitycenter import SecurityCenterFacad
 from ScoutSuite.providers.azure.facade.sqldatabase import SQLDatabaseFacade
 from ScoutSuite.providers.azure.facade.storageaccounts import StorageAccountsFacade
 from ScoutSuite.providers.azure.facade.virtualmachines import VirtualMachineFacade
+from ScoutSuite.providers.azure.facade.policy import PolicyFacade
 
 # Try to import proprietary services
 try:
@@ -35,6 +36,7 @@ class AzureFacade():
         self.sqldatabase = SQLDatabaseFacade(credentials.credentials, credentials.subscription_id)
         self.storageaccounts = StorageAccountsFacade(credentials.credentials, credentials.subscription_id)
         self.graphrbac = GraphRBACFacade(credentials.graphrbac_credentials, credentials.tenant_id)
+        self.policies = PolicyFacade(credentials.credentials, credentials.subscription_id)
 
         # Instantiate facades for proprietary services
         try:

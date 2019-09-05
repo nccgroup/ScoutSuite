@@ -7,6 +7,7 @@ from ScoutSuite.providers.azure.resources.securitycenter.base import SecurityCen
 from ScoutSuite.providers.azure.resources.sqldatabase.base import Servers
 from ScoutSuite.providers.azure.resources.storageaccounts.base import StorageAccounts
 from ScoutSuite.providers.azure.resources.virtualmachines.base import VirtualMachines
+from ScoutSuite.providers.azure.resources.policy.base import Policies
 from ScoutSuite.providers.base.services import BaseServicesConfig
 
 # Try to import proprietary services
@@ -41,6 +42,7 @@ class AzureServicesConfig(BaseServicesConfig):
         self.storageaccounts = StorageAccounts(facade)
         self.keyvault = KeyVaults(facade)
         self.graphrbac = GraphRBAC(facade)
+        self.policy = Policies(facade)
         self.network = Networks(facade)
         self.virtualmachines = VirtualMachines(facade)
 
