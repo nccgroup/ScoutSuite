@@ -42,12 +42,22 @@ def run_from_cli():
                    cli=args.get('cli'), msi=args.get('msi'), service_principal=args.get('service_principal'), file_auth=args.get('file_auth'),
                    tenant_id=args.get('tenant_id'), subscription_id=args.get('subscription_id'),
                    client_id=args.get('client_id'), client_secret=args.get('client_secret'),
-                   username=args.get('username'), password=args.get('password'),
                    # GCP
                    project_id=args.get('project_id'), folder_id=args.get('folder_id'), organization_id=args.get('organization_id'), all_projects=args.get('all_projects'),
                    # Aliyun
                    access_key_id=args.get('access_key_id'), access_key_secret=args.get('access_key_secret'),
+                   # OS
+                   os_config_path=args.get('os_config_path'),
+                   os_cloud_name=args.get('os_cloud_name'),
+                   os_keywords_mode=args.get('os_keywords_mode'),
+                   os_config_mode=args.get('os_config_mode'),
+                   os_auth_url=args.get('auth_url'),
+                   os_user_domain_name=args.get('os_user_domain_name'),
+                   os_region_name=args.get('os_region_name'),
+                   os_project_name=args.get('os_project_name'),
+                   os_project_domain_name=args.get('os_project_domain_name'),
                    # General
+                   username=args.get('username'), password=args.get('password'),
                    report_name=args.get('report_name'), report_dir=args.get('report_dir'),
                    timestamp=args.get('timestamp'),
                    services=args.get('services'), skipped_services=args.get('skipped_services'),
@@ -84,12 +94,22 @@ def run(provider,
         cli=False, msi=False, service_principal=False, file_auth=None,
         tenant_id=None, subscription_id=None,
         client_id=None, client_secret=None,
-        username=None, password=None,
         # GCP
         project_id=None, folder_id=None, organization_id=None, all_projects=False,
         # Aliyun
         access_key_id=None, access_key_secret=None,
+        # OS
+        os_keywords_mode=None,
+        os_config_mode=None,
+        os_config_path=None,
+        os_cloud_name=None,
+        os_auth_url=None,
+        os_user_domain_name='Default',
+        os_region_name=None,
+        os_project_name=None,
+        os_project_domain_name=None,
         # General
+        username=None, password=None,
         report_name=None, report_dir=None,
         timestamp=False,
         services=[], skipped_services=[],
@@ -131,12 +151,22 @@ async def _run(provider,
                user_account, service_account,
                cli, msi, service_principal, file_auth, tenant_id, subscription_id,
                client_id, client_secret,
-               username, password,
                # GCP
                project_id, folder_id, organization_id, all_projects,
                # Aliyun
                access_key_id, access_key_secret,
+               # OS
+               os_keywords_mode,
+               os_config_mode,
+               os_config_path,
+               os_cloud_name,
+               os_auth_url,
+               os_user_domain_name,
+               os_region_name,
+               os_project_name,
+               os_project_domain_name,
                # General
+               username, password,
                report_name, report_dir,
                timestamp,
                services, skipped_services,
@@ -184,7 +214,17 @@ async def _run(provider,
                                                  password=password,
                                                  access_key_id=access_key_id,
                                                  access_key_secret=access_key_secret,
-                                                 programmatic_execution=programmatic_execution)
+                                                 programmatic_execution=programmatic_execution,
+                                                 os_keywords_mode=os_keywords_mode,
+                                                 os_config_mode=os_config_mode,
+                                                 os_config_path=os_config_path,
+                                                 os_cloud_name=os_cloud_name,
+                                                 os_auth_url=os_auth_url,
+                                                 os_user_domain_name=os_user_domain_name,
+                                                 os_region_name=os_region_name,
+                                                 os_project_name=os_project_name,
+                                                 os_project_domain_name=os_project_domain_name,
+                                                 )
 
         if not credentials:
             return 101

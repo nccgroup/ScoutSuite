@@ -1,0 +1,10 @@
+{
+    "arg_names": [ "Token type" ],
+    "description": "Insecure Token type",
+    "rationale": "<b>Description:</b><br><br>Prefer Fernet tokens over UUID tokens.",
+    "path": "keystone.policies.isFernet",
+    "dashboard_name": "Tokens policy",
+    "conditions": [ "and",
+        [ "this", "false", "" ]
+    ]
+}

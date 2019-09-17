@@ -1,0 +1,18 @@
+{
+  "security": {
+      "keystone": {
+        "resources": {
+          "policies": {
+            "cols": 2,
+            "path": "services.keystone.policies"
+          }
+        },
+        "summaries": {
+          "policies": {
+            "cols": 2,
+            "path": "services.keystone.policies"
+          }
+        }
+      }
+  }
+}

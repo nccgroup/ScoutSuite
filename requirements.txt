@@ -54,3 +54,6 @@ aliyun-python-sdk-kms>=2.6.0
 
 # Oracle Cloud Infrastructure Provider
 oci>=2.2.4
+
+# Openstack Provider
+openstacksdk>=0.12.0
