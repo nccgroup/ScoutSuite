@@ -1,5 +1,3 @@
-from collections import Counter
-
 from botocore.session import Session
 
 from ScoutSuite.providers.aws.facade.awslambda import LambdaFacade
