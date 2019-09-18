@@ -226,7 +226,7 @@
         },
         "elbv2": {
             "resources": {
-                "lbs": {
+                "elbs": {
                     "cols": 2,
                     "path": "services.elbv2.regions.id.vpcs.id.lbs",
                     "callbacks": [
