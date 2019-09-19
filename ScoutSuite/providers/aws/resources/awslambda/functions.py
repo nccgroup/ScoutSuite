@@ -14,6 +14,7 @@ class Functions(AWSResources):
             self[name] = resource
 
     def _parse_function(self, raw_function):
+
         function_dict = {}
         function_dict['name'] = raw_function.get('FunctionName')
         function_dict['arn'] = raw_function.get('FunctionArn')
