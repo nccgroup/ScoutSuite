@@ -1,4 +1,3 @@
-# from botocore.session import Session
 from boto3.session import Session
 
 from ScoutSuite.providers.aws.facade.awslambda import LambdaFacade
