@@ -1,4 +1,4 @@
-from botocore.session import Session
+from boto3.session import Session
 
 from ScoutSuite.providers.aws.facade.awslambda import LambdaFacade
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
@@ -45,16 +45,17 @@ class AWSFacade(AWSBaseFacade):
     async def build_region_list(self, service: str, chosen_regions=None, excluded_regions=None, partition_name='aws'):
 
         service = 'ec2containerservice' if service == 'ecs' else service
-        available_services = await run_concurrently(lambda: Session().get_available_services())
+        available_services = await run_concurrently(lambda: Session(region_name='eu-west-1').get_available_services())
         if service not in available_services:
             raise Exception('Service ' + service + ' is not available.')
 
-        regions = await run_concurrently(lambda: Session().get_available_regions(service, partition_name))
+        regions = await run_concurrently(lambda: Session(region_name='eu-west-1').get_available_regions(service,
+                                                                                                        partition_name))
 
         # identify regions that are not opted-in
-        ec2_not_opted_in_regions = self.session.client('ec2').describe_regions(Filters=[{'Name': 'opt-in-status',
-                                                                                         'Values': ['not-opted-in']}],
-                                                                               AllRegions=True)
+        ec2_not_opted_in_regions = self.session.client('ec2', 'eu-west-1')\
+            .describe_regions(AllRegions=True, Filters=[{'Name': 'opt-in-status', 'Values': ['not-opted-in']}])
+
         not_opted_in_regions = []
         if ec2_not_opted_in_regions['Regions']:
             for r in ec2_not_opted_in_regions['Regions']:
