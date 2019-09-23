@@ -203,7 +203,7 @@ class IAMFacade(AWSBaseFacade):
             try:
                 tasks = {
                     asyncio.ensure_future(
-                        run_concurrently(lambda: get_policy_method(**dict(args, PolicyName=policy_name)))
+                        run_concurrently(lambda policy_name=policy_name: get_policy_method(**dict(args, PolicyName=policy_name)))
                     ) for policy_name in policy_names
                 }
             except Exception as e:
