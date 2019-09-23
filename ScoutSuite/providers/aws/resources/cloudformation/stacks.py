@@ -37,7 +37,7 @@ class Stacks(AWSResources):
     def has_deletion_policy(template):
         """
         Return region to be used for global calls such as list bucket and get bucket location
-        :param template:                    The api response containing the stack's template
+        :param template: The api response containing the stack's template
         :return:
         """
         has_dp = True
