@@ -43,8 +43,11 @@ class GCPFacade(GCPBaseFacade):
         except NameError as _:
             pass
 
-        # Set logging level to error for GCP services as otherwise generates a lot of warnings
+        # Set logging level to error for libraries as otherwise generates a lot of warnings
         logging.getLogger('googleapiclient').setLevel(logging.ERROR)
+        logging.getLogger('google.auth').setLevel(logging.ERROR)
+        logging.getLogger('google_auth_httplib2').setLevel(logging.ERROR)
+        logging.getLogger('urllib3').setLevel(logging.ERROR)
 
     async def get_projects(self):
         try:
