@@ -1,3 +1,4 @@
+import logging
 import os
 import warnings
 
@@ -15,6 +16,12 @@ class GCPAuthenticationStrategy(AuthenticationStrategy):
         """
 
         try:
+
+            # Set logging level to error for libraries as otherwise generates a lot of warnings
+            logging.getLogger('googleapiclient').setLevel(logging.ERROR)
+            logging.getLogger('google.auth').setLevel(logging.ERROR)
+            logging.getLogger('google_auth_httplib2').setLevel(logging.ERROR)
+            logging.getLogger('urllib3').setLevel(logging.ERROR)
 
             if user_account:
                 # disable GCP warning about using User Accounts

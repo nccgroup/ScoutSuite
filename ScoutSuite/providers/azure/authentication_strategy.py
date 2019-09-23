@@ -1,4 +1,5 @@
 import json
+import logging
 from getpass import getpass
 
 from azure.common.credentials import ServicePrincipalCredentials, UserPassCredentials, get_azure_cli_credentials
@@ -33,6 +34,12 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
         Implements authentication for the Azure provider
         """
         try:
+
+            # Set logging level to error for libraries as otherwise generates a lot of warnings
+            logging.getLogger('adal-python').setLevel(logging.ERROR)
+            logging.getLogger('msrest').setLevel(logging.ERROR)
+            logging.getLogger('urllib3').setLevel(logging.ERROR)
+
             if cli:
                 credentials, subscription_id, tenant_id = get_azure_cli_credentials(with_tenant=True)
                 graphrbac_credentials, placeholder_1, placeholder_2 = get_azure_cli_credentials(with_tenant=True,

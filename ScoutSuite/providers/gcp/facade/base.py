@@ -1,5 +1,3 @@
-import logging
-
 from ScoutSuite.core.console import print_exception, print_info
 from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.cloudresourcemanager import CloudResourceManagerFacade
@@ -42,12 +40,6 @@ class GCPFacade(GCPBaseFacade):
             self.gke = GKEFacade(self.gce)
         except NameError as _:
             pass
-
-        # Set logging level to error for libraries as otherwise generates a lot of warnings
-        logging.getLogger('googleapiclient').setLevel(logging.ERROR)
-        logging.getLogger('google.auth').setLevel(logging.ERROR)
-        logging.getLogger('google_auth_httplib2').setLevel(logging.ERROR)
-        logging.getLogger('urllib3').setLevel(logging.ERROR)
 
     async def get_projects(self):
         try:
