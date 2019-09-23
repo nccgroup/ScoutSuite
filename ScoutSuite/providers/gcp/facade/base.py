@@ -44,8 +44,7 @@ class GCPFacade(GCPBaseFacade):
             pass
 
         # Set logging level to error for GCP services as otherwise generates a lot of warnings
-        logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.ERROR)
-        logging.getLogger().setLevel(logging.ERROR)
+        logging.getLogger('googleapiclient').setLevel(logging.ERROR)
 
     async def get_projects(self):
         try:
