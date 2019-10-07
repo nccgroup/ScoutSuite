@@ -14,6 +14,8 @@ class GraphRBAC(AzureCompositeResources):
         await self._fetch_children(resource_parent=self)
 
     async def finalize(self):
+
+        # Add group members
         for group in self['groups']:
             for user in self['users']:
                 if group in self['users'][user]['groups']:
