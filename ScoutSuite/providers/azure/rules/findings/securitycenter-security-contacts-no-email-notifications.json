@@ -7,5 +7,5 @@
     "conditions": [ "and",
         ["securitycenter.security_contacts.id.alert_notifications", "false", ""]
     ],
-    "id_suffix": "no_email_notification_on_alert"
+    "id_suffix": "alert_notifications"
 }

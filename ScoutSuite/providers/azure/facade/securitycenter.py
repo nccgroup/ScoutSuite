@@ -33,3 +33,21 @@ class SecurityCenterFacade:
         except Exception as e:
             print_exception('Failed to retrieve auto provisioning settings: {}'.format(e))
             return []
+
+    async def get_information_protection_policies(self):
+        try:
+            return await run_concurrently(
+                lambda: list(self._client.information_protection_policies.list())
+            )
+        except Exception as e:
+            print_exception('Failed to retrieve information protection policies: {}'.format(e))
+            return []
+
+    async def get_settings(self):
+        try:
+            return await run_concurrently(
+                lambda: list(self._client.settings.list())
+            )
+        except Exception as e:
+            print_exception('Failed to retrieve settings: {}'.format(e))
+            return []

@@ -1,0 +1,10 @@
+{
+    "dashboard_name": "Accounts",
+    "description": "Trusted Microsoft Services enabled",
+	"rationale": "<b>Description:</b><br><br>Turn on firewall rules for each storage account.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.1.0 3.8</li></ul>",
+    "path": "storageaccounts.storage_accounts.id",
+    "conditions": [ "and",
+        [ "storageaccounts.storage_accounts.id.bypass", "notEqual", "AzureServices" ]
+    ],
+    "id_suffix": "trusted_microsoft_services_enabled"
+}
