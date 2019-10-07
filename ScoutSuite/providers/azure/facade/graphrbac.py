@@ -31,3 +31,17 @@ class GraphRBACFacade:
         except Exception as e:
             print_exception('Failed to retrieve user\'s groups: {}'.format(e))
             return []
+
+    async def get_service_principals(self):
+        try:
+            return await run_concurrently(lambda: list(self._client.service_principals.list()))
+        except Exception as e:
+            print_exception('Failed to retrieve service principals: {}'.format(e))
+            return []
+
+    async def get_applications(self):
+        try:
+            return await run_concurrently(lambda: list(self._client.applications.list()))
+        except Exception as e:
+            print_exception('Failed to retrieve applications: {}'.format(e))
+            return []

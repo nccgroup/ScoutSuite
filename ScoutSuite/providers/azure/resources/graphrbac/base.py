@@ -2,12 +2,16 @@ from ScoutSuite.providers.azure.resources.base import AzureCompositeResources
 
 from .users import Users
 from .groups import Groups
+from .serviceprincipals import ServicePrincipals
+from .applications import Applications
 
 
 class GraphRBAC(AzureCompositeResources):
     _children = [
         (Users, 'users'),
-        (Groups, 'groups')
+        (Groups, 'groups'),
+        (ServicePrincipals, 'service_principals'),
+        (Applications, 'applications')
     ]
 
     async def fetch_all(self):
