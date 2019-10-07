@@ -24,6 +24,5 @@ class Users(AzureResources):
         user_dict['mail_nickname'] = raw_user.mail_nickname
         user_dict['mail'] = raw_user.mail
         user_dict['sign_in_names'] = raw_user.sign_in_names
+        user_dict['user_type'] = raw_user.user_type
         return user_dict['id'], user_dict
-
-

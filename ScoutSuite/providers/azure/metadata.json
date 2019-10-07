@@ -43,6 +43,10 @@
         "users": {
           "cols": 2,
           "path": "services.graphrbac.users"
+        },
+        "groups": {
+          "cols": 2,
+          "path": "services.graphrbac.groups"
         }
       }
     },

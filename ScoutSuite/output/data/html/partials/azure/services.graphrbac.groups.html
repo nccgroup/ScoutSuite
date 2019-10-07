@@ -1,0 +1,29 @@
+
+<!-- graphrbac groups -->
+<script id="services.graphrbac.groups.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="graphrbac.groups.{{@key}}.name"><samp>{{value_or_none name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Object Type: <span id="graphrbac.groups.{{@key}}.object_type"><samp>{{value_or_none object_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Mail: <span id="graphrbac.groups.{{@key}}.mail"><samp>{{value_or_none mail}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Mail Nickname: <span id="graphrbac.groups.{{@key}}.mail_nickname"><samp>{{value_or_none mail_nickname}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Mail Enabled: <span id="graphrbac.groups.{{@key}}.mail_enabled"><samp>{{value_or_none mail_enabled}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Security Enabled: <span id="graphrbac.groups.{{@key}}.security_enabled"><samp>{{value_or_none security_enabled}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Deletion Timestamp: <span id="graphrbac.groups.{{@key}}.deletion_timestamp"><samp>{{value_or_none deletion_timestamp}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.graphrbac.groups", $("#services\\.graphrbac\\.groups\\.partial").html());
+</script>
+
+<!-- Single graphrbac group template -->
+<script id="single_graphrbac_group-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.graphrbac.groups'}}
+</script>
+<script>
+    var single_graphrbac_group_template = Handlebars.compile($("#single_graphrbac_group-template").html());
+</script>
