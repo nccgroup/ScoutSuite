@@ -26,5 +26,6 @@ class Users(AzureResources):
         user_dict['sign_in_names'] = raw_user.sign_in_names
         user_dict['user_type'] = raw_user.user_type
         user_dict['groups'] = await self.facade.graphrbac.get_user_groups(user_dict['id'])
+        user_dict['roles'] = []  # this will be filled in `finalize()`
 
         return user_dict['id'], user_dict

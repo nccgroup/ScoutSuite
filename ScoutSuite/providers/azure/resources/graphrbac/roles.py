@@ -1,0 +1,20 @@
+from ScoutSuite.providers.azure.resources.base import AzureResources
+
+
+class Roles(AzureResources):
+    async def fetch_all(self):
+        for raw_role in await self.facade.graphrbac.get_roles():
+            id, role = self._parse_role(raw_role)
+            self[id] = role
+
+    def _parse_role(self, raw_role):
+        role_dict = {}
+        role_dict['id'] = raw_role.name
+        role_dict['name'] = raw_role.role_name
+        role_dict['type'] = raw_role.type
+        role_dict['description'] = raw_role.description
+        role_dict['role_type'] = raw_role.role_type
+        role_dict['permissions'] = raw_role.permissions
+        role_dict['assignable_scopes'] = raw_role.assignable_scopes
+        role_dict['additional_properties'] = raw_role.additional_properties
+        return role_dict['id'], role_dict

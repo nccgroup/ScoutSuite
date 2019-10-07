@@ -34,7 +34,8 @@ class AzureFacade():
         self.securitycenter = SecurityCenterFacade(credentials.credentials, credentials.subscription_id)
         self.sqldatabase = SQLDatabaseFacade(credentials.credentials, credentials.subscription_id)
         self.storageaccounts = StorageAccountsFacade(credentials.credentials, credentials.subscription_id)
-        self.graphrbac = GraphRBACFacade(credentials.graphrbac_credentials, credentials.tenant_id)
+        self.graphrbac = GraphRBACFacade(credentials.graphrbac_credentials, credentials.credentials,
+                                         credentials.tenant_id, credentials.subscription_id)
 
         # Instantiate facades for proprietary services
         try:
