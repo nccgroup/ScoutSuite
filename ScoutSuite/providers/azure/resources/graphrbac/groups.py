@@ -18,5 +18,6 @@ class Groups(AzureResources):
         group_dict['mail_nickname'] = raw_group.mail_nickname
         group_dict['security_enabled'] = raw_group.security_enabled
         group_dict['mail'] = raw_group.mail
+        group_dict['users'] = []  # this will be filled in `finalize()`
         return group_dict['id'], group_dict
 

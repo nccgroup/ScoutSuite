@@ -21,3 +21,13 @@ class GraphRBACFacade:
         except Exception as e:
             print_exception('Failed to retrieve groups: {}'.format(e))
             return []
+
+    async def get_user_groups(self, user_id):
+        try:
+            return await run_concurrently(lambda: list(
+                self._client.users.get_member_groups(object_id=user_id,
+                                                     security_enabled_only=False))
+                                          )
+        except Exception as e:
+            print_exception('Failed to retrieve user\'s groups: {}'.format(e))
+            return []

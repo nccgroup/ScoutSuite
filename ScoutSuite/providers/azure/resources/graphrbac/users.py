@@ -4,10 +4,10 @@ from ScoutSuite.providers.azure.resources.base import AzureResources
 class Users(AzureResources):
     async def fetch_all(self):
         for raw_user in await self.facade.graphrbac.get_users():
-            id, user = self._parse_user(raw_user)
+            id, user = await self._parse_user(raw_user)
             self[id] = user
 
-    def _parse_user(self, raw_user):
+    async def _parse_user(self, raw_user):
         user_dict = {}
         user_dict['id'] = raw_user.object_id
         user_dict['additional_properties'] = raw_user.additional_properties
@@ -25,4 +25,6 @@ class Users(AzureResources):
         user_dict['mail'] = raw_user.mail
         user_dict['sign_in_names'] = raw_user.sign_in_names
         user_dict['user_type'] = raw_user.user_type
+        user_dict['groups'] = await self.facade.graphrbac.get_user_groups(user_dict['id'])
+
         return user_dict['id'], user_dict
