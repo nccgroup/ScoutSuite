@@ -5,6 +5,7 @@ from ScoutSuite.core.console import print_exception
 
 class SecurityCenterFacade:
     def __init__(self, credentials, subscription_id):
+        self._subscription_id = subscription_id
         self._client = SecurityCenter(credentials, subscription_id, '')
 
     async def get_pricings(self):
@@ -36,9 +37,8 @@ class SecurityCenterFacade:
 
     async def get_information_protection_policies(self):
         try:
-            return await run_concurrently(
-                lambda: list(self._client.information_protection_policies.list())
-            )
+            scope = '/subscriptions/{}'.format(self._subscription_id)
+            return await run_concurrently(lambda: list(self._client.information_protection_policies.list(scope=scope)))
         except Exception as e:
             print_exception('Failed to retrieve information protection policies: {}'.format(e))
             return []

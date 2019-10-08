@@ -7,6 +7,7 @@ from ScoutSuite.providers.utils import run_concurrently
 
 class GraphRBACFacade:
     def __init__(self, graphrbac_credentials, credentials, tenant_id, subscription_id):
+        self._subscription_id = subscription_id
         self._client = GraphRbacManagementClient(graphrbac_credentials, tenant_id=tenant_id)
         self._authorization_client = AuthorizationManagementClient(credentials, subscription_id=subscription_id)
 
@@ -50,8 +51,8 @@ class GraphRBACFacade:
 
     async def get_roles(self):
         try:
-            return await run_concurrently(lambda: list(self._authorization_client.role_definitions.list(
-                scope='/subscriptions/{}'.format(self._authorization_client.config.subscription_id))))  # FIXME is it always OK to get the subscription ID this way?
+            scope = '/subscriptions/{}'.format(self._subscription_id)
+            return await run_concurrently(lambda: list(self._authorization_client.role_definitions.list(scope=scope)))
         except Exception as e:
             print_exception('Failed to retrieve roles: {}'.format(e))
             return []
