@@ -6,28 +6,33 @@
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Information</h4>
-        <div class="list-group-item-text item-margin">Object ID: <span id="graphrbac.service_principals.{{@key}}.object_id"><samp>{{value_or_none object_id}}</samp></span></div>
-        <div class="list-group-item-text item-margin">App ID: <span id="graphrbac.service_principals.{{@key}}.app_id"><samp>{{value_or_none app_id}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Deletion Timestamp: <span id="graphrbac.service_principals.{{@key}}.deletion_timestamp"><samp>{{value_or_none deletion_timestamp}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Object Type: <span id="graphrbac.service_principals.{{@key}}.object_type"><samp>{{value_or_none object_type}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Account Enabled: <span id="graphrbac.service_principals.{{@key}}.account_enabled"><samp>{{value_or_none account_enabled}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Alternative Names: <span id="graphrbac.service_principals.{{@key}}.alternative_names"><samp>{{value_or_none alternative_names}}</samp></span></div>
-        <div class="list-group-item-text item-margin">App Display Name: <span id="graphrbac.service_principals.{{@key}}.app_name"><samp>{{value_or_none app_name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">ID: <span id="graphrbac.service_principals.{{@key}}.id"><samp>{{value_or_none id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Status: <span id="graphrbac.service_principals.{{@key}}.account_enabled"><samp>{{convert_bool_to_enabled account_enabled}}</samp></span></div>
+        <div class="list-group-item-text item-margin">App: <a href="javascript:showObject('services.graphrbac.applications', 'app_id', '{{app_id}}')">{{value_or_none app_name}}</a></span></div>
         <div class="list-group-item-text item-margin">App Owner Tenant ID: <span id="graphrbac.service_principals.{{@key}}.app_owner_tenant_id"><samp>{{value_or_none app_owner_tenant_id}}</samp></span></div>
         <div class="list-group-item-text item-margin">App Role Assignment Required: <span id="graphrbac.service_principals.{{@key}}.app_role_assignment_required"><samp>{{value_or_none app_role_assignment_required}}</samp></span></div>
-        <div class="list-group-item-text item-margin">App Roles: <span id="graphrbac.service_principals.{{@key}}.app_roles"><samp>{{value_or_none app_roles}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Error Url: <span id="graphrbac.service_principals.{{@key}}.error_url"><samp>{{value_or_none error_url}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Homepage: <span id="graphrbac.service_principals.{{@key}}.homepage"><samp>{{value_or_none homepage}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Key Credentials: <span id="graphrbac.service_principals.{{@key}}.key_credentials"><samp>{{value_or_none key_credentials}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Logout Url: <span id="graphrbac.service_principals.{{@key}}.logout_url"><samp>{{value_or_none logout_url}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Oauth2 Permissions: <span id="graphrbac.service_principals.{{@key}}.oauth2_permissions"><samp>{{value_or_none oauth2_permissions}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Password Credentials: <span id="graphrbac.service_principals.{{@key}}.password_credentials"><samp>{{value_or_none password_credentials}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Preferred Token Signing Key Thumbprint: <span id="graphrbac.service_principals.{{@key}}.preferred_token_signing_key_thumbprint"><samp>{{value_or_none preferred_token_signing_key_thumbprint}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Publisher Name: <span id="graphrbac.service_principals.{{@key}}.publisher_name"><samp>{{value_or_none publisher_name}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Reply Urls: <span id="graphrbac.service_principals.{{@key}}.reply_urls"><samp>{{value_or_none reply_urls}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Saml Metadata Url: <span id="graphrbac.service_principals.{{@key}}.saml_metadata_url"><samp>{{value_or_none saml_metadata_url}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Type: <span id="graphrbac.service_principals.{{@key}}.object_type"><samp>{{value_or_none object_type}}</samp></span></div>
         <div class="list-group-item-text item-margin">Service Principal Type: <span id="graphrbac.service_principals.{{@key}}.service_principal_type"><samp>{{value_or_none service_principal_type}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Tags: <span id="graphrbac.service_principals.{{@key}}.tags"><samp>{{value_or_none tags}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Publisher Name: <span id="graphrbac.service_principals.{{@key}}.publisher_name"><samp>{{value_or_none publisher_name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Deletion Timestamp: <span id="graphrbac.service_principals.{{@key}}.deletion_timestamp"><samp>{{value_or_none deletion_timestamp}}</samp></span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Keys
+            {{> count_badge count=key_credentials.length}}
+        </h4>
+        <div class="accordion-inner">
+            <ul>
+                {{#each key_credentials}}
+                <li class="list-group-item-text">ID: <samp>{{value_or_none this.key_id}}</samp></li>
+                <ul>
+                    <li class="list-group-item-text">Type: <samp>{{value_or_none this.type}}</samp></li>
+                    <li class="list-group-item-text">Usage: <samp>{{value_or_none this.usage}}</samp></li>
+                    <li class="list-group-item-text">Start Date: {{format_date this.start_date}}</li>
+                    <li class="list-group-item-text">End Date: {{format_date this.end_date}}</li>
+                </ul>
+                {{/each}}
+            </ul>
+        </div>
     </div>
 </script>
 

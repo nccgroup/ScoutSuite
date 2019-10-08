@@ -10,11 +10,11 @@ class Applications(AzureResources):
     async def _parse_application(self, raw_application):
         application_dict = {}
         application_dict['id'] = raw_application.object_id
+        application_dict['app_id'] = raw_application.app_id
         application_dict['name'] = raw_application.display_name
         application_dict['additional_properties'] = raw_application.additional_properties
         application_dict['deletion_timestamp'] = raw_application.deletion_timestamp
         application_dict['object_type'] = raw_application.object_type
-        application_dict['app_id'] = raw_application.app_id
         application_dict['allow_guests_sign_in'] = raw_application.allow_guests_sign_in
         application_dict['allow_passthrough_users'] = raw_application.allow_passthrough_users
         application_dict['app_logo_url'] = raw_application.app_logo_url
