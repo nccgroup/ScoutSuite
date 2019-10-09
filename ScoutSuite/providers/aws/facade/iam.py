@@ -244,4 +244,3 @@ class IAMFacade(AWSBaseFacade):
             statement[resource_string] = [statement[resource_string]]
         # Result
         return statement
-
