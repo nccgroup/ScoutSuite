@@ -445,10 +445,12 @@ class AWSProvider(BaseProvider):
         if vpc_id not in self.services['vpc']['regions'][region]['vpcs']:
             region = current_config['AccepterVpcInfo']['Region']
 
-        target = self.services['vpc']['regions'][region]['vpcs'][vpc_id]
-        manage_dictionary(target, 'peering_connections', [])
-        if pc_id not in target['peering_connections']:
-            target['peering_connections'].append(pc_id)
+        # handle edge case where the region wasn't included in the execution
+        if region in self.services['vpc']['regions']:
+            target = self.services['vpc']['regions'][region]['vpcs'][vpc_id]
+            manage_dictionary(target, 'peering_connections', [])
+            if pc_id not in target['peering_connections']:
+                target['peering_connections'].append(pc_id)
 
         # VPC information for the peer'd VPC
         current_config['peer_info'] = copy.deepcopy(
