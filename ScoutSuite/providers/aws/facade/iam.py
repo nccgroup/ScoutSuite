@@ -223,24 +223,14 @@ class IAMFacade(AWSBaseFacade):
                 resource['inline_policies_count'] = len(resource['inline_policies'])
 
     def _normalize_statements(self, policy_document):
-        if policy_document:
-            if type(policy_document['Statement']) == list:
-                for statement in policy_document['Statement']:
-                    statement = self._normalize_single_statement(statement)
-            elif type(policy_document['Statement']) == dict:
-                policy_document['Statement'] = self._normalize_single_statement(policy_document['Statement'])
-            else:
-                print_exception('Failed to normalize policy document')
-        return policy_document
+        for statement in policy_document['Statement']:
+            # Action or NotAction
+            action_string = 'Action' if 'Action' in statement else 'NotAction'
+            if type(statement[action_string]) != list:
+                statement[action_string] = [statement[action_string]]
+            # Resource or NotResource
+            resource_string = 'Resource' if 'Resource' in statement else 'NotResource'
+            if type(statement[resource_string]) != list:
+                statement[resource_string] = [statement[resource_string]]
 
-    def _normalize_single_statement(self, statement):
-        # Action or NotAction
-        action_string = 'Action' if 'Action' in statement else 'NotAction'
-        if type(statement[action_string]) != list:
-            statement[action_string] = [statement[action_string]]
-        # Resource or NotResource
-        resource_string = 'Resource' if 'Resource' in statement else 'NotResource'
-        if type(statement[resource_string]) != list:
-            statement[resource_string] = [statement[resource_string]]
-        # Result
-        return statement
+        return policy_document
