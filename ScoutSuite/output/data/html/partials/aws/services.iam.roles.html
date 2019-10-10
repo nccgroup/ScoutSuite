@@ -6,6 +6,9 @@
         </div>
         <div class="list-group-item">
           <h4 class="list-group-item-heading">Information</h4>
+          {{#if Description}}
+            <div class="list-group-item-text item-margin">Description: <span id="iam.roles.{{@key}}.description">{{Description}}</span></div>
+          {{/if}}
           <div class="list-group-item-text item-margin">Creation date: {{CreateDate}}</div>
           <div class="list-group-item-text item-margin">ARN: {{arn}}</div>
         </div>
