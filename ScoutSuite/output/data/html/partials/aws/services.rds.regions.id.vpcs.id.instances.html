@@ -21,6 +21,7 @@
               <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.EnhancedMonitoringResourceArn">{{#if EnhancedMonitoringResourceArn}} Enabled {{else}} Disabled {{/if}}</span>
             </li>
             <li class="list-group-item-text">Encrypted Storage: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.StorageEncrypted">{{StorageEncrypted}}</span></li>
+            <li class="list-group-item-text">CA Certificate: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.CACertificateIdentifier">{{CACertificateIdentifier}}</span></li>
           </ul>
           <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.pgsslcert" class="finding-hidden item-margin">
            <i class="fa fa-exclamation-triangle"></i> SSL/TLS certificates on PostgreSQL instances created before August 8, 2014, cannot be verified.
