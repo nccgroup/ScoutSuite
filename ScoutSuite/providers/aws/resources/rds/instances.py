@@ -20,7 +20,7 @@ class RDSInstances(AWSResources):
         for key in ['InstanceCreateTime', 'Engine', 'DBInstanceStatus', 'AutoMinorVersionUpgrade',
                     'DBInstanceClass', 'MultiAZ', 'Endpoint', 'BackupRetentionPeriod', 'PubliclyAccessible',
                     'StorageEncrypted', 'VpcSecurityGroups', 'DBSecurityGroups', 'DBParameterGroups',
-                    'EnhancedMonitoringResourceArn', 'StorageEncrypted', 'CACertificateIdentifier']:
+                    'EnhancedMonitoringResourceArn', 'StorageEncrypted']:
             instance[key] = raw_instance[key] if key in raw_instance else None
 
         instance['is_read_replica'] = self._is_read_replica(raw_instance)

@@ -685,12 +685,6 @@
                 "level": "danger"
             }
         ],
-        "rds-instance-ca-certificate-deprecated.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
         "rds-instance-no-minor-upgrade.json": [
             {
                 "enabled": true,
