@@ -5,12 +5,13 @@
           <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
-          <h4 class="list-group-item-heading">Information</h4>
-          {{#if Description}}
-            <div class="list-group-item-text item-margin">Description: <span id="iam.roles.{{@key}}.description">{{Description}}</span></div>
-          {{/if}}
-          <div class="list-group-item-text item-margin">Creation date: {{CreateDate}}</div>
-          <div class="list-group-item-text item-margin">ARN: {{arn}}</div>
+            <h4 class="list-group-item-heading">Information</h4>
+            <div class="list-group-item-text item-margin">ID: <span id="iam.roles.{{@key}}.id"><samp>{{value_or_none id}}</samp></span></div>
+            <div class="list-group-item-text item-margin">Arn: <span id="iam.roles.{{@key}}.arn"><samp>{{value_or_none arn}}</samp></span></div>
+            <div class="list-group-item-text item-margin">Description: <span id="iam.roles.{{@key}}.description"><samp>{{value_or_none description}}</samp></span></div>
+            <div class="list-group-item-text item-margin">Creation Date: <span id="iam.roles.{{@key}}.create_date">{{format_date create_date}}</span></div>
+            <div class="list-group-item-text item-margin">Path: <span id="iam.roles.{{@key}}.path"><samp>{{value_or_none path}}</samp></span></div>
+            <div class="list-group-item-text item-margin">Max Session Duration: <span id="iam.roles.{{@key}}.max_session_duration"><samp>{{value_or_none max_session_duration}}</samp></span></div>
         </div>
         <div class="list-group-item">
             {{> accordion_policy name = 'Role Trust Policy' policy_path = (concat 'iam.roles' @key 'assume_role_policy.PolicyDocument') document = assume_role_policy.PolicyDocument}}
