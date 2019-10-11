@@ -27,12 +27,22 @@ class GraphRBAC(AzureCompositeResources):
                 if group in self['users'][user]['groups']:
                     self['groups'][group]['users'].append(user)
 
+        # Add role assignments
         assignments = await self.facade.graphrbac.get_role_assignments()
         for assignment in assignments:
+            role_id = assignment.role_definition_id.split('/')[-1]
             for group in self['groups']:
                 if group == assignment.principal_id:
-                    self['groups'][group]['roles'].append(assignment.role_definition_id.split('/')[-1])
+                    self['groups'][group]['roles'].append(role_id)
+                    self['roles'][role_id]['assignments']['groups'].append(group)
+                    self['roles'][role_id]['assignments_count'] += 1
             for user in self['users']:
                 if user == assignment.principal_id:
-                    self['users'][user]['roles'].append(assignment.role_definition_id.split('/')[-1])
-
+                    self['users'][user]['roles'].append(role_id)
+                    self['roles'][role_id]['assignments']['users'].append(user)
+                    self['roles'][role_id]['assignments_count'] += 1
+            for service_principal in self['service_principals']:
+                if service_principal == assignment.principal_id:
+                    self['service_principals'][service_principal]['roles'].append(role_id)
+                    self['roles'][role_id]['assignments']['service_principals'].append(service_principal)
+                    self['roles'][role_id]['assignments_count'] += 1

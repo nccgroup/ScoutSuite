@@ -37,5 +37,8 @@ class ServicePrincipals(AzureResources):
         service_principal_dict['service_principal_names'] = raw_service_principal.service_principal_names
         service_principal_dict['service_principal_type'] = raw_service_principal.service_principal_type
         service_principal_dict['tags'] = raw_service_principal.tags
+
+        service_principal_dict['roles'] = []  # this will be filled in `finalize()`
+
         return service_principal_dict['id'], service_principal_dict
 

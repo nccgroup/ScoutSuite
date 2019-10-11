@@ -17,4 +17,8 @@ class Roles(AzureResources):
         role_dict['permissions'] = raw_role.permissions
         role_dict['assignable_scopes'] = raw_role.assignable_scopes
         role_dict['additional_properties'] = raw_role.additional_properties
+        role_dict['assignments_count'] = 0
+        role_dict['assignments'] = {'users': [],
+                                    'groups': [],
+                                    'service_principals': []}  # this will be filled in `finalize()`
         return role_dict['id'], role_dict
