@@ -7,7 +7,7 @@ from ScoutSuite.core.console import print_exception
 
 class SQLDatabaseFacade:
     def __init__(self, credentials, subscription_id):
-        self._client = SqlManagementClient(credentials, subscription_id)
+        self._client = SqlManagementClient(credentials, subscription_id, base_url=credentials.cloud_environment.endpoints.resource_manager)
 
     async def get_database_blob_auditing_policies(self, resource_group_name, server_name, database_name):
         try:

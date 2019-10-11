@@ -8,7 +8,7 @@ from msrestazure.azure_active_directory import MSIAuthentication
 from ScoutSuite.core.console import print_info, print_exception
 
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
-
+from msrestazure.azure_cloud import AZURE_PUBLIC_CLOUD, AZURE_US_GOV_CLOUD, AZURE_CHINA_CLOUD, AZURE_GERMAN_CLOUD
 
 class AzureCredentials:
 
@@ -39,6 +39,13 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             logging.getLogger('adal-python').setLevel(logging.ERROR)
             logging.getLogger('msrest').setLevel(logging.ERROR)
             logging.getLogger('urllib3').setLevel(logging.ERROR)
+
+            cloud_dic = {"AZURE_PUBLIC_CLOUD":AZURE_PUBLIC_CLOUD,
+                         "AZURE_CHINA_CLOUD":AZURE_CHINA_CLOUD,
+                         "AZURE_US_GOV_CLOUD":AZURE_US_GOV_CLOUD,
+                         "AZURE_GERMAN_CLOUD":AZURE_GERMAN_CLOUD}
+
+            cloud_env = cloud_dic.get(kargs.get('azure_env'), AZURE_PUBLIC_CLOUD)
 
             if cli:
                 credentials, subscription_id, tenant_id = get_azure_cli_credentials(with_tenant=True)
@@ -104,12 +111,14 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 credentials = ServicePrincipalCredentials(
                     client_id=client_id,
                     secret=client_secret,
+                    cloud_environment=cloud_env,
                     tenant=tenant_id
                 )
 
                 graphrbac_credentials = ServicePrincipalCredentials(
                     client_id=client_id,
                     secret=client_secret,
+                    cloud_environment=cloud_env,
                     tenant=tenant_id,
                     resource='https://graph.windows.net'
                 )
@@ -125,12 +134,14 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 credentials = ServicePrincipalCredentials(
                     client_id=client_id,
                     secret=client_secret,
+                    cloud_environment=cloud_env,
                     tenant=tenant_id
                 )
 
                 graphrbac_credentials = ServicePrincipalCredentials(
                     client_id=client_id,
                     secret=client_secret,
+                    cloud_environment=cloud_env,
                     tenant=tenant_id,
                     resource='https://graph.windows.net'
                 )

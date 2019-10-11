@@ -5,7 +5,7 @@ from ScoutSuite.core.console import print_exception
 
 class KeyVaultFacade:
     def __init__(self, credentials, subscription_id):
-        self._client = KeyVaultManagementClient(credentials, subscription_id)
+        self._client = KeyVaultManagementClient(credentials, subscription_id, base_url=credentials.cloud_environment.endpoints.resource_manager)
 
     async def get_key_vaults(self):
         try:

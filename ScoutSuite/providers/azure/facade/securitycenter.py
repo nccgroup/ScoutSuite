@@ -6,7 +6,7 @@ from ScoutSuite.core.console import print_exception
 class SecurityCenterFacade:
     def __init__(self, credentials, subscription_id):
         self._subscription_id = subscription_id
-        self._client = SecurityCenter(credentials, subscription_id, '')
+        self._client = SecurityCenter(credentials, subscription_id, '', base_url=credentials.cloud_environment.endpoints.resource_manager)
 
     async def get_pricings(self):
         try:

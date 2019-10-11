@@ -6,7 +6,7 @@ from ScoutSuite.providers.utils import run_concurrently
 
 class NetworkFacade:
     def __init__(self, credentials, subscription_id):
-        self._client = NetworkManagementClient(credentials, subscription_id)
+        self._client = NetworkManagementClient(credentials, subscription_id, base_url=credentials.cloud_environment.endpoints.resource_manager)
 
     async def get_network_watchers(self):
         try:

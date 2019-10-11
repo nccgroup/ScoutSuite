@@ -134,6 +134,12 @@ class ScoutSuiteArgumentParser:
                                             parents=[self.common_providers_args_parser],
                                             help="Run Scout against a Microsoft Azure account")
 
+        parser.add_argument('--azure-env',
+                            action='store',
+                            default='AZURE_PUBLIC_CLOUD',
+                            dest='azure_env',
+                            help='Azure Cloud Environment, AZURE_PUBLIC_CLOUD(default)/AZURE_CHINA_CLOUD/AZURE_US_GOV_CLOUD/AZURE_GERMAN_CLOUD')
+
         azure_parser = parser.add_argument_group('Authentication modes')
         azure_auth_params = parser.add_argument_group('Authentication parameters')
 

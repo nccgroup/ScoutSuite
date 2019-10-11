@@ -10,7 +10,7 @@ class StorageAccountsFacade:
     def __init__(self, credentials, subscription_id):
         self._credentials = credentials
         self._subscription_id = subscription_id
-        self._client = StorageManagementClient(credentials, subscription_id)
+        self._client = StorageManagementClient(credentials, subscription_id, base_url=credentials.cloud_environment.endpoints.resource_manager)
 
     async def get_storage_accounts(self):
         try:

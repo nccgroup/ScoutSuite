@@ -6,7 +6,7 @@ from ScoutSuite.providers.utils import run_concurrently
 
 class VirtualMachineFacade:
     def __init__(self, credentials, subscription_id):
-        self._client = ComputeManagementClient(credentials, subscription_id)
+        self._client = ComputeManagementClient(credentials, subscription_id, base_url=credentials.cloud_environment.endpoints.resource_manager)
 
     async def get_instances(self):
         try:

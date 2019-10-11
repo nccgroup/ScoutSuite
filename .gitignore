@@ -68,3 +68,5 @@ report-*
 # Private folders
 /private*/
 /**/private*/
+/.vs/slnx.sqlite
+/.vs/ScoutSuite/v15/.suo
