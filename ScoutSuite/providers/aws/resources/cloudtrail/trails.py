@@ -52,16 +52,18 @@ class Trails(AWSResources):
     def data_logging_status(self, trail):
         for event_selector in trail['EventSelectors']:
             has_wildcard = \
-                {u'Values': [u'arn:aws:s3:::'], u'Type': u'AWS::S3::Object'} in event_selector['DataResources']
+                {u'Values': ['arn:aws:s3'], 'Type': 'AWS::S3::Object'} in event_selector['DataResources'] or \
+                {u'Values': ['arn:aws:lambda'], 'Type': 'AWS::Lambda::Function'} in event_selector['DataResources']
             is_logging = trail['IsLogging']
-
             if has_wildcard and is_logging and self.is_fresh(trail):
                 return True
-
         return False
 
     @staticmethod
     def is_fresh(trail_details):
-        delivery_time = trail_details.get('LatestCloudWatchLogsDeliveryTime', "9999999").strftime("%s")
-        delivery_age = ((int(time.time()) - int(delivery_time)) / 1440)
-        return delivery_age <= 24
+        if trail_details.get('LatestCloudWatchLogsDeliveryTime'):
+            delivery_time = trail_details.get('LatestCloudWatchLogsDeliveryTime').strftime("%s")
+            delivery_age = ((int(time.time()) - int(delivery_time)) / 1440)
+            return delivery_age <= 24
+        else:
+            return False
