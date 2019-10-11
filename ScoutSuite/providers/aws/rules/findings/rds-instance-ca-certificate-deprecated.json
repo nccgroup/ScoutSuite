@@ -1,5 +1,5 @@
 {
-    "description": "Deprecated certificate authority assigned to RDS instance",
+    "description": "Deprecated Certificate Authority Assigned to RDS Instance",
     "path": "rds.regions.id.vpcs.id.instances.id",
     "dashboard_name": "Instances",
     "conditions": [ "and",
