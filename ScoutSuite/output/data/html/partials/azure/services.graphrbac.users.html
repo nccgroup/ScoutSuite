@@ -6,17 +6,41 @@
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Information</h4>
-        <div class="list-group-item-text item-margin">User Principal Name: <span id="graphrbac.users.{{@key}}.user_principal_name"><samp>{{value_or_none name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Principal Name: <span id="graphrbac.users.{{@key}}.user_principal_name"><samp>{{value_or_none name}}</samp></span></div>
         <div class="list-group-item-text item-margin">Display Name: <span id="graphrbac.users.{{@key}}.display_name"><samp>{{value_or_none display_name}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Mail Nickname: <span id="graphrbac.users.{{@key}}.mail_nickname"><samp>{{value_or_none mail_nickname}}</samp></span></div>
         <div class="list-group-item-text item-margin">Given Name: <span id="graphrbac.users.{{@key}}.given_name"><samp>{{value_or_none given_name}}</samp></span></div>
         <div class="list-group-item-text item-margin">Surname: <span id="graphrbac.users.{{@key}}.surname"><samp>{{value_or_none surname}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Mail Nickname: <span id="graphrbac.users.{{@key}}.mail_nickname"><samp>{{value_or_none mail_nickname}}</samp></span></div>
         <div class="list-group-item-text item-margin">Mail: <span id="graphrbac.users.{{@key}}.mail"><samp>{{value_or_none mail}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Sign In Names: <span id="graphrbac.users.{{@key}}.sign_in_names"><samp>{{value_or_none sign_in_names}}</samp></span></div>
-        <div class="list-group-item-text item-margin">User Type: <span id="graphrbac.users.{{@key}}.user_type"><samp>{{value_or_none user_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Sign-In Names: <span id="graphrbac.users.{{@key}}.sign_in_names"><samp>{{value_or_none sign_in_names}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Type: <span id="graphrbac.users.{{@key}}.user_type"><samp>{{value_or_none user_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Status: <span id="graphrbac.users.{{@key}}.account_enabled"><samp>{{convert_bool_to_enabled account_enabled}}</samp></span></div>
         <div class="list-group-item-text item-margin">Usage Location: <span id="graphrbac.users.{{@key}}.usage_location"><samp>{{value_or_none usage_location}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Account Enabled: <span id="graphrbac.users.{{@key}}.account_enabled"><samp>{{value_or_none account_enabled}}</samp></span></div>
         <div class="list-group-item-text item-margin">Deletion Timestamp: <span id="graphrbac.users.{{@key}}.deletion_timestamp"><samp>{{value_or_none deletion_timestamp}}</samp></span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading" id="graphrbac.users.{{@key}}.roles">Roles
+            {{> count_badge count=roles.length}}
+        </h4>
+        <div class="accordion-inner">
+            <ul>
+                {{#each roles}}
+                <li class="list-group-item-text"><a href="javascript:showObject('services.graphrbac.roles', 'id', '{{this}}')">{{getValueAt 'services.graphrbac.roles' this 'name'}}</a></li></a></li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Groups
+            {{> count_badge count=groups.length}}
+        </h4>
+        <div class="accordion-inner">
+            <ul>
+                {{#each groups}}
+                <li class="list-group-item-text"><a href="javascript:showObject('services.graphrbac.groups', 'id', '{{this}}')">{{getValueAt 'services.graphrbac.groups' this 'name'}}</a></li></a></li>
+                {{/each}}
+            </ul>
+        </div>
     </div>
 </script>
 

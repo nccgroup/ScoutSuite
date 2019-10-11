@@ -28,7 +28,9 @@ class NetworkInterfaces(AzureResources):
         network_interface_dict['resource_guid'] = raw_network_interface.resource_guid
         network_interface_dict['enable_ip_forwarding'] = raw_network_interface.enable_ip_forwarding
         network_interface_dict['type'] = raw_network_interface.type
-        network_interface_dict['network_security_group'] = get_non_provider_id(raw_network_interface.network_security_group.id)
+        network_interface_dict['network_security_group'] = \
+            get_non_provider_id(raw_network_interface.network_security_group.id) if \
+                raw_network_interface.network_security_group else None
 
         # TODO process and display the below
         network_interface_dict['hosted_workloads'] = raw_network_interface.hosted_workloads
