@@ -553,6 +553,8 @@ class AWSProvider(BaseProvider):
         except Exception as e:
             if resource_type == 'elbs' and current_path[5] == ec2_classic:
                 pass
+            elif not self.services['ec2']:  # service not included in run
+                pass
             else:
                 print_exception('Failed to parse %s: %s' % (resource_type, e))
 
