@@ -30,28 +30,25 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                      client_id=None, client_secret=None,
                      username=None, password=None,
                      programmatic_execution=False,
+                     cloud_env='AZURE_PUBLIC_CLOUD',
                      **kargs):
         """
         Implements authentication for the Azure provider
         """
         try:
 
+            credentials = None
+            graphrbac_credentials = None
+
             # Set logging level to error for libraries as otherwise generates a lot of warnings
             logging.getLogger('adal-python').setLevel(logging.ERROR)
             logging.getLogger('msrest').setLevel(logging.ERROR)
             logging.getLogger('urllib3').setLevel(logging.ERROR)
 
-            cloud_dic = {"AZURE_PUBLIC_CLOUD": AZURE_PUBLIC_CLOUD,
-                         "AZURE_CHINA_CLOUD": AZURE_CHINA_CLOUD,
-                         "AZURE_US_GOV_CLOUD": AZURE_US_GOV_CLOUD,
-                         "AZURE_GERMAN_CLOUD": AZURE_GERMAN_CLOUD}
-
-            cloud_env = cloud_dic.get(kargs.get('azure_env'), AZURE_PUBLIC_CLOUD)
-
             if cli:
                 credentials, subscription_id, tenant_id = get_azure_cli_credentials(with_tenant=True)
-                graphrbac_credentials, placeholder_1, placeholder_2 = get_azure_cli_credentials(with_tenant=True,
-                                                                                                resource='https://graph.windows.net')
+                graphrbac_credentials, placeholder_1, placeholder_2 = \
+                    get_azure_cli_credentials(with_tenant=True, resource='https://graph.windows.net')
 
             elif user_account:
 
