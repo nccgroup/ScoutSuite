@@ -5,10 +5,11 @@ from getpass import getpass
 from azure.common.credentials import ServicePrincipalCredentials, UserPassCredentials, get_azure_cli_credentials
 from azure.mgmt.resource import SubscriptionClient
 from msrestazure.azure_active_directory import MSIAuthentication
-from ScoutSuite.core.console import print_info, print_exception
-
-from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 from msrestazure.azure_cloud import AZURE_PUBLIC_CLOUD, AZURE_US_GOV_CLOUD, AZURE_CHINA_CLOUD, AZURE_GERMAN_CLOUD
+
+from ScoutSuite.core.console import print_info
+from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
+
 
 class AzureCredentials:
 
@@ -40,10 +41,10 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             logging.getLogger('msrest').setLevel(logging.ERROR)
             logging.getLogger('urllib3').setLevel(logging.ERROR)
 
-            cloud_dic = {"AZURE_PUBLIC_CLOUD":AZURE_PUBLIC_CLOUD,
-                         "AZURE_CHINA_CLOUD":AZURE_CHINA_CLOUD,
-                         "AZURE_US_GOV_CLOUD":AZURE_US_GOV_CLOUD,
-                         "AZURE_GERMAN_CLOUD":AZURE_GERMAN_CLOUD}
+            cloud_dic = {"AZURE_PUBLIC_CLOUD": AZURE_PUBLIC_CLOUD,
+                         "AZURE_CHINA_CLOUD": AZURE_CHINA_CLOUD,
+                         "AZURE_US_GOV_CLOUD": AZURE_US_GOV_CLOUD,
+                         "AZURE_GERMAN_CLOUD": AZURE_GERMAN_CLOUD}
 
             cloud_env = cloud_dic.get(kargs.get('azure_env'), AZURE_PUBLIC_CLOUD)
 
