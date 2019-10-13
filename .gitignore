@@ -56,6 +56,7 @@ report-*
 
 # Vs Code
 .vscode/
+.vs/
 
 # Mac cruft
 .DS_Store
@@ -68,5 +69,3 @@ report-*
 # Private folders
 /private*/
 /**/private*/
-/.vs/slnx.sqlite
-/.vs/ScoutSuite/v15/.suo
