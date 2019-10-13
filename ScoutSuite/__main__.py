@@ -38,14 +38,21 @@ def run_from_cli():
                    aws_secret_access_key=args.get('aws_secret_access_key'),
                    aws_session_token=args.get('aws_session_token'),
                    # Azure
-				   azure_env=args.get('azure_env'),
-                   user_account=args.get('user_account'), service_account=args.get('service_account'),
-                   cli=args.get('cli'), msi=args.get('msi'), service_principal=args.get('service_principal'), file_auth=args.get('file_auth'),
+                   azure_env=args.get('azure_env'),
+                   user_account=args.get('user_account'),
+                   service_account=args.get('service_account'),
+                   cli=args.get('cli'),
+                   msi=args.get('msi'),
+                   service_principal=args.get('service_principal'),
+                   file_auth=args.get('file_auth'),
                    tenant_id=args.get('tenant_id'), subscription_id=args.get('subscription_id'),
                    client_id=args.get('client_id'), client_secret=args.get('client_secret'),
                    username=args.get('username'), password=args.get('password'),
                    # GCP
-                   project_id=args.get('project_id'), folder_id=args.get('folder_id'), organization_id=args.get('organization_id'), all_projects=args.get('all_projects'),
+                   project_id=args.get('project_id'),
+                   folder_id=args.get('folder_id'),
+                   organization_id=args.get('organization_id'),
+                   all_projects=args.get('all_projects'),
                    # Aliyun
                    access_key_id=args.get('access_key_id'), access_key_secret=args.get('access_key_secret'),
                    # General
