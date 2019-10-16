@@ -62,5 +62,7 @@ class NetworkInterfaces(AzureResources):
         network_interface_dict['ip_configuration']['name'] = ip_configuration.name
         network_interface_dict['ip_configuration']['etag'] = ip_configuration.etag
 
+        network_interface_dict['ip_configuration']['subnet_security_group'] = ip_configuration.subnet.network_security_group
+
         return network_interface_dict['id'], network_interface_dict
 
