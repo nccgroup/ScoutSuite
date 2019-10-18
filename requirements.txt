@@ -52,6 +52,7 @@ aliyun-python-sdk-vpc>=3.0.5
 aliyun-python-sdk-ecs>=4.16.10
 aliyun-python-sdk-rds>=2.3.9
 aliyun-python-sdk-kms>=2.6.0
+oss2>=2.8.0
 
 # Oracle Cloud Infrastructure Provider
 oci>=2.2.4
