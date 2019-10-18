@@ -8,8 +8,14 @@ from ScoutSuite.providers.utils import run_concurrently
 class GraphRBACFacade:
     def __init__(self, graphrbac_credentials, credentials, tenant_id, subscription_id):
         self._subscription_id = subscription_id
-        self._client = GraphRbacManagementClient(graphrbac_credentials, tenant_id=tenant_id, base_url=graphrbac_credentials.cloud_environment.endpoints.resource_manager)
-        self._authorization_client = AuthorizationManagementClient(credentials, subscription_id=subscription_id, base_url=credentials.cloud_environment.endpoints.resource_manager)
+        self._client = \
+            GraphRbacManagementClient(graphrbac_credentials,
+                                      tenant_id=tenant_id)
+                                      # base_url=graphrbac_credentials.cloud_environment.endpoints.resource_manager)
+        self._authorization_client = \
+            AuthorizationManagementClient(credentials,
+                                          subscription_id=subscription_id,
+                                          base_url=credentials.cloud_environment.endpoints.resource_manager)
 
     async def get_users(self):
         try:
