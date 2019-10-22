@@ -1210,6 +1210,8 @@ function makeTitle(title) {
         return 'ActionTrail'
     } else if (title === 'ecs') {
         return 'ECS'
+    } else if (title === 'oss') {
+        return 'OSS'
     } else if (title === 'objectstorage') {
         return 'Object Storage'
     } else if (title === 'graphrbac') {
