@@ -42,8 +42,8 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
             if cli:
                 credentials, subscription_id, tenant_id = get_azure_cli_credentials(with_tenant=True)
-                graphrbac_credentials, placeholder_1, placeholder_2 = get_azure_cli_credentials(with_tenant=True,
-                                                                                                resource='https://graph.windows.net')
+                graphrbac_credentials, placeholder_1, placeholder_2 = \
+                    get_azure_cli_credentials(with_tenant=True, resource='https://graph.windows.net')
 
             elif user_account:
 
@@ -52,7 +52,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                         username = username if username else input("Username: ")
                         password = password if password else getpass("Password: ")
                     else:
-                        AuthenticationException('Username and/or password not set')
+                        raise AuthenticationException('Username and/or password not set')
 
                 credentials = UserPassCredentials(username, password)
                 graphrbac_credentials = UserPassCredentials(username, password,
@@ -73,7 +73,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                         if not programmatic_execution:
                             subscription_id = input('Subscription ID: ')
                         else:
-                            AuthenticationException('Unable to infer a Subscription ID')
+                            raise AuthenticationException('Unable to infer a Subscription ID')
 
             elif service_principal:
 
@@ -81,25 +81,25 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     if not programmatic_execution:
                         subscription_id = input('Subscription ID: ')
                     else:
-                        AuthenticationException('No Subscription ID set')
+                        raise AuthenticationException('No Subscription ID set')
 
                 if not tenant_id:
                     if not programmatic_execution:
                         tenant_id = input("Tenant ID: ")
                     else:
-                        AuthenticationException('No Tenant ID set')
+                        raise AuthenticationException('No Tenant ID set')
 
                 if not client_id:
                     if not programmatic_execution:
                         client_id = input("Client ID: ")
                     else:
-                        AuthenticationException('No Client ID set')
+                        raise AuthenticationException('No Client ID set')
 
                 if not client_secret:
                     if not programmatic_execution:
                         client_secret = getpass("Client secret: ")
                     else:
-                        AuthenticationException('No Client Secret set')
+                        raise AuthenticationException('No Client Secret set')
 
                 credentials = ServicePrincipalCredentials(
                     client_id=client_id,
@@ -154,7 +154,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                         if not programmatic_execution:
                             subscription_id = input('Subscription ID: ')
                         else:
-                            AuthenticationException('Unable to infer a Subscription ID')
+                            raise AuthenticationException('Unable to infer a Subscription ID')
 
             return AzureCredentials(credentials, graphrbac_credentials, subscription_id, tenant_id)
 
