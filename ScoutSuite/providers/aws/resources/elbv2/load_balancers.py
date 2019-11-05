@@ -36,4 +36,8 @@ class LoadBalancers(AWSCompositeResources):
                 load_balancer['security_groups'].append({'GroupId': sg})
             load_balancer.pop('SecurityGroups')
 
+        if 'Tags' in load_balancer and load_balancer['Tags']:
+            load_balancer['tags'] = {x['Key']: x['Value'] for x in load_balancer['Tags']}
+            load_balancer.pop('Tags')
+
         return get_non_provider_id(load_balancer['name']), load_balancer

@@ -37,6 +37,9 @@ class ELBFacade(AWSBaseFacade):
             await get_and_set_concurrently(
                 [self._get_and_set_load_balancer_attributes], self.load_balancers_cache[region], region=region)
 
+            await get_and_set_concurrently(
+                [self._get_and_set_load_balancer_tags], self.load_balancers_cache[region], region=region)
+
     async def _get_and_set_load_balancer_attributes(self, load_balancer: {}, region: str):
         elb_client = AWSFacadeUtils.get_client('elb', self.session, region)
         try:
@@ -46,6 +49,16 @@ class ELBFacade(AWSBaseFacade):
             )
         except Exception as e:
             print_exception('Failed to describe ELB load balancer attributes: {}'.format(e))
+
+    async def _get_and_set_load_balancer_tags(self, load_balancer: {}, region: str):
+        elb_client = AWSFacadeUtils.get_client('elb', self.session, region)
+        try:
+            load_balancer['Tags'] = await run_concurrently(
+                lambda: elb_client.describe_tags(
+                    LoadBalancerNames=[load_balancer['LoadBalancerName']])['TagDescriptions'][0]['Tags']
+            )
+        except Exception as e:
+            print_exception('Failed to describe ELB load balancer tags: {}'.format(e))
 
     async def get_policies(self, region: str):
         try:
