@@ -5,6 +5,7 @@
   "dashboard_name": "Instances",
   "conditions": [ "and",
     [ "cloudsql.projects.id.instances.id.database_version", "match", "MYSQL.*" ],
+    [ "cloudsql.projects.id.instances.id.users.root", "notEmpty", "" ],
     [
         "or",
         [ "cloudsql.projects.id.instances.id.users.root.host", "equal", "%" ],
