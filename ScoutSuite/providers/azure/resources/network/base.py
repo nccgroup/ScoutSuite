@@ -2,6 +2,7 @@ from ScoutSuite.providers.azure.resources.base import AzureCompositeResources
 
 from .virtual_networks import VirtualNetworks
 from .security_groups import SecurityGroups
+from .application_security_groups import ApplicationSecurityGroups
 from .network_interfaces import NetworkInterfaces
 from .watchers import Watchers
 
@@ -10,6 +11,7 @@ class Networks(AzureCompositeResources):
     _children = [
         (VirtualNetworks, 'virtual_networks'),
         (SecurityGroups, 'security_groups'),
+        (ApplicationSecurityGroups, 'application_security_groups'),
         (NetworkInterfaces, 'network_interfaces'),
         (Watchers, 'watchers')
     ]
