@@ -65,8 +65,11 @@ class SecurityGroups(AzureResources):
         security_rule_dict['protocol'] = rule.protocol
         security_rule_dict['direction'] = rule.direction
 
-        source_address_prefixes = self._merge_prefixes_or_ports(rule.source_address_prefix,
-                                                                rule.source_address_prefixes)
+        source_address_prefixes = \
+            self._merge_prefixes_or_ports(rule.source_address_prefix,
+                                          rule.source_address_prefixes if rule.source_address_prefixes else
+                                          (rule.source_application_security_groups if
+                                           rule.source_application_security_groups else None))
         security_rule_dict['source_address_prefixes'] = source_address_prefixes
 
         source_port_ranges = self._merge_prefixes_or_ports(rule.source_port_range, rule.source_port_ranges)
@@ -130,7 +133,7 @@ class SecurityGroups(AzureResources):
         exposed_ports.sort()
         return exposed_ports
 
-    def _merge_prefixes_or_ports(self, port_range, port_ranges):
+    def _merge_prefixes_or_ports(self, port_range, port_ranges, asdf=None):
         port_ranges = port_ranges if port_ranges else []
         if port_range:
             port_ranges.append(port_range)
