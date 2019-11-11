@@ -26,7 +26,8 @@ class Buckets(Resources):
         bucket_dict['versioning_status_enabled'] = raw_bucket.versioning_enabled
         bucket_dict['uniform_bucket_level_access'] = raw_bucket.iam_configuration['bucketPolicyOnly']['enabled']
         bucket_dict['logging_enabled'] = raw_bucket.logging is not None
-        bucket_dict['acl_configuration'] = self._get_cloudstorage_bucket_acl(raw_bucket)
+        bucket_dict['acls'] = list(raw_bucket.acl)
+        bucket_dict['acl_configuration'] = self._get_cloudstorage_bucket_acl(raw_bucket)  # FIXME this should be "IAM"
         return bucket_dict['id'], bucket_dict
 
     def _get_cloudstorage_bucket_acl(self, raw_bucket):
@@ -34,8 +35,8 @@ class Buckets(Resources):
         acl_config = {}
         if bucket_acls:
             for role in bucket_acls._bindings:
-                for member in bucket_acls[role]:
-                    if member.split(':')[0] not in ['projectEditor', 'projectViewer', 'projectOwner']:
+                if 'legacy' not in role:
+                    for member in bucket_acls[role]:
                         if member not in acl_config:
                             acl_config[member] = [role]
                         else:

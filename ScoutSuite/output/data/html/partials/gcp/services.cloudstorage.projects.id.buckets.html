@@ -15,15 +15,30 @@
         <div class="list-group-item-text item-margin">Uniform Bucket-Level Access: <span id="cloudstorage.projects.{{@../key}}.buckets.{{@key}}.uniform_bucket_level_access">{{convert_bool_to_enabled uniform_bucket_level_access}}</span></div>
     </div>
     <div class="list-group-item">
-        <h4 class="list-group-item-heading"><span id="cloudstorage.projects.{{@../key}}.buckets.{{@key}}.permissions">Permissions</span></h4>
+        <h4 class="list-group-item-heading"><span id="cloudstorage.projects.{{@../key}}.buckets.{{@key}}.permissions">IAM Permissions</span></h4>
         <div class="accordion-inner">
             <ul>
                 {{#each acl_configuration}}
-                <li><span id="cloudstorage.projects.{{@../../key}}.buckets.{{@../key}}.{{@key}}">Member <samp>{{@key}}</samp></span></li>
+                <li><span id="cloudstorage.projects.{{@../../key}}.buckets.{{@../key}}.{{@key}}"><samp>{{@key}}</samp></span></li>
                 <ul>
                     {{#each this}}
-                    <li>{{this}}</li>
+                    <li><samp>{{this}}</samp></li>
                     {{/each}}
+                </ul>
+                {{else}}
+                <li><samp>None</samp></li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading"><span id="cloudstorage.projects.{{@../key}}.buckets.{{@key}}.acls">ACL Permissions</span></h4>
+        <div class="accordion-inner">
+            <ul>
+                {{#each acls}}
+                <li><samp>{{entity}}</samp></span></li>
+                <ul>
+                    <li><samp>{{role}}</samp></li>
                 </ul>
                 {{else}}
                 <li><samp>None</samp></li>
