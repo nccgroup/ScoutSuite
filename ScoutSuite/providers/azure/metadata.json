@@ -106,6 +106,10 @@
           "cols": 2,
           "path": "services.network.security_groups"
         },
+        "application_security_groups": {
+          "cols": 2,
+          "path": "services.network.application_security_groups"
+        },
         "watchers": {
           "cols": 2,
           "path": "services.network.watchers"
