@@ -18,5 +18,6 @@ class ApplicationSecurityGroups(AzureResources):
         application_security_group_dict['resource_guid'] = raw_application_security_group.resource_guid
         application_security_group_dict['provisioning_state'] = raw_application_security_group.provisioning_state
         application_security_group_dict['etag'] = raw_application_security_group.etag
+        application_security_group_dict['network_interfaces'] = []  # this is filled in the base class
         return application_security_group_dict['id'], application_security_group_dict
 

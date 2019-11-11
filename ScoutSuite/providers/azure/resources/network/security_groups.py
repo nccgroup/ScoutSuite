@@ -68,9 +68,14 @@ class SecurityGroups(AzureResources):
         source_address_prefixes = \
             self._merge_prefixes_or_ports(rule.source_address_prefix,
                                           rule.source_address_prefixes if rule.source_address_prefixes else
-                                          (rule.source_application_security_groups if
+                                          (get_non_provider_id(rule.source_application_security_groups[0].id) if
                                            rule.source_application_security_groups else None))
         security_rule_dict['source_address_prefixes'] = source_address_prefixes
+        # this is required for the HTML partial to interpret the source as an ASG
+        if rule.source_application_security_groups:
+            security_rule_dict['source_address_prefixes_is_asg'] = True
+        else:
+            security_rule_dict['source_address_prefixes_is_asg'] = False
 
         source_port_ranges = self._merge_prefixes_or_ports(rule.source_port_range, rule.source_port_ranges)
         security_rule_dict['source_port_ranges'] = source_port_ranges
@@ -133,7 +138,7 @@ class SecurityGroups(AzureResources):
         exposed_ports.sort()
         return exposed_ports
 
-    def _merge_prefixes_or_ports(self, port_range, port_ranges, asdf=None):
+    def _merge_prefixes_or_ports(self, port_range, port_ranges):
         port_ranges = port_ranges if port_ranges else []
         if port_range:
             port_ranges.append(port_range)
