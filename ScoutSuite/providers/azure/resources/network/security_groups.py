@@ -19,7 +19,6 @@ class SecurityGroups(AzureResources):
         network_security_group_dict['etag'] = network_security_group.etag
         network_security_group_dict['tags'] = network_security_group.tags
         network_security_group_dict['additional_properties'] = network_security_group.additional_properties
-        network_security_group_dict['network_interfaces'] = network_security_group.network_interfaces
 
         network_security_group_dict['security_rules'] = self._parse_security_rules(network_security_group)
 
@@ -28,6 +27,12 @@ class SecurityGroups(AzureResources):
             for subnet in network_security_group.subnets:
                 identifier = get_non_provider_id(subnet.id)
                 network_security_group_dict['subnets'][identifier] = {'id': identifier}
+
+        network_security_group_dict['network_interfaces'] = {}
+        if network_security_group.network_interfaces:
+            for network_interface in network_security_group.network_interfaces:
+                identifier = get_non_provider_id(network_interface.id)
+                network_security_group_dict['network_interfaces'][identifier] = {'id': identifier}
 
         # FIXME this is broken and badly implemented (not efficient at all)
         # exposed_ports = self._parse_exposed_ports(network_security_group)
