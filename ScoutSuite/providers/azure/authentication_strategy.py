@@ -148,6 +148,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                         # Tries to read the subscription list
                         subscription = next(subscription_client.subscriptions.list())
                         subscription_id = subscription.subscription_id
+                        tenant_id = subscription.tenant_id
                         print_info('Running against the {} subscription'.format(subscription_id))
                     except StopIteration:
                         # If the VM cannot read subscription list, ask Subscription ID:
