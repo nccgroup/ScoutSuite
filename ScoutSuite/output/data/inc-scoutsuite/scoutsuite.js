@@ -1210,6 +1210,8 @@ function makeTitle(title) {
         return 'ActionTrail'
     } else if (title === 'ecs') {
         return 'ECS'
+    } else if (title === 'oss') {
+        return 'OSS'
     } else if (title === 'objectstorage') {
         return 'Object Storage'
     } else if (title === 'graphrbac') {
@@ -1266,30 +1268,30 @@ function addTemplate(group, service, section, resourceType, path, suffix) {
     template.id = path + '.' + suffix + '.template'
     if (section === 'resources') {
         if (suffix === 'list') {
-            if (path.indexOf('.regions.id.') > 0) {
-                partialName = 'left_menu_for_region'
-            } else if (path.indexOf('.vpcs.id.') > 0) {
+            if (path.indexOf('.vpcs.id.') > 0) {
                 partialName = 'left_menu_for_vpc'
-            } else if (path.indexOf('.projects.id.') > 0) {
-                partialName = 'left_menu_for_project'
-            } else if (path.indexOf('projects.id.regions.id.') > 0) {
-                partialName = 'left_menu_for_gcp_region';
             } else if (path.indexOf('projects.id.zones.id.') > 0) {
                 partialName = 'left_menu_for_gcp_zone';
+            } else if (path.indexOf('projects.id.regions.id.') > 0) {
+                partialName = 'left_menu_for_gcp_region';
+            } else if (path.indexOf('.regions.id.') > 0) {
+                partialName = 'left_menu_for_region'
+            } else if (path.indexOf('.projects.id.') > 0) {
+                partialName = 'left_menu_for_project'
             } else {
                 partialName = 'left_menu'
             }
         } else if (suffix === 'details') {
-            if (path.indexOf('.regions.id.') > 0) {
-                partialName = 'details_for_region'
-            } else if (path.indexOf('.vpcs.id.') > 0) {
+            if (path.indexOf('.vpcs.id.') > 0) {
                 partialName = 'details_for_vpc'
-            } else if (path.indexOf('.projects.id.') > 0) {
-                partialName = 'details_for_project'
-            } else if (path.indexOf('projects.id.regions.id') > 0) {
-                partialName = 'details_for_gcp_region';
             } else if (path.indexOf('projects.id.zones.id') > 0) {
                 partialName = 'details_for_gcp_zone';
+            } else if (path.indexOf('projects.id.regions.id') > 0) {
+                partialName = 'details_for_gcp_region';
+            } else if (path.indexOf('.regions.id.') > 0) {
+                partialName = 'details_for_region'
+            } else if (path.indexOf('.projects.id.') > 0) {
+                partialName = 'details_for_project'
             } else {
                 partialName = 'details'
             }

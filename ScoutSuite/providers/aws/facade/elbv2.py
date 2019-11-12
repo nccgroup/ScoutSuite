@@ -35,6 +35,9 @@ class ELBv2Facade(AWSBaseFacade):
             await get_and_set_concurrently(
                 [self._get_and_set_load_balancer_attributes], self.load_balancers_cache[region], region=region)
 
+            await get_and_set_concurrently(
+                [self._get_and_set_load_balancer_tags], self.load_balancers_cache[region], region=region)
+
     async def _get_and_set_load_balancer_attributes(self, load_balancer: dict, region: str):
         elbv2_client = AWSFacadeUtils.get_client('elbv2', self.session, region)
         try:
@@ -44,6 +47,16 @@ class ELBv2Facade(AWSBaseFacade):
             )
         except Exception as e:
             print_exception('Failed to describe ELBv2 attributes: {}'.format(e))
+
+    async def _get_and_set_load_balancer_tags(self, load_balancer: dict, region: str):
+        elbv2_client = AWSFacadeUtils.get_client('elbv2', self.session, region)
+        try:
+            load_balancer['Tags'] = await run_concurrently(
+                lambda: elbv2_client.describe_tags(
+                    ResourceArns=[load_balancer['LoadBalancerArn']])['TagDescriptions'][0]['Tags']
+            )
+        except Exception as e:
+            print_exception('Failed to describe ELBv2 tags: {}'.format(e))
 
     async def get_listeners(self, region: str, load_balancer_arn: str):
         return await AWSFacadeUtils.get_all_pages(

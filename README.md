@@ -32,10 +32,10 @@ The latest (and final) version of Scout2 can be found in <https://github.com/ncc
 The following cloud providers are currently supported/planned:
 
 - Amazon Web Services
-- Microsoft Azure (beta)
+- Microsoft Azure
 - Google Cloud Platform
-- Alibaba Cloud (early alpha)
-- Oracle Cloud Infrastructure (early alpha)
+- Alibaba Cloud (alpha)
+- Oracle Cloud Infrastructure (alpha)
 
 ### Installation
 

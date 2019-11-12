@@ -61,6 +61,16 @@
             {{> services.elb.regions.vpcs.elbs.linked_resources region = region vpc = vpc resources = Subnets resource_type = 'subnets'}}
           </ul>
         </div>
+        {{#if tags}}
+            <div class="list-group-item">
+                <h4>Tags</h4>
+                <ul>
+                    {{#each tags}}
+                        <li class="list-group-item-text"><samp>{{@key}}</samp>: <samp>{{this}}</samp></li>
+                    {{/each}}
+                </ul>
+            </div>
+        {{/if}}
     </script>
     <script>
       Handlebars.registerPartial("services.elb.regions.id.vpcs.id.elbs", $("#services\\.elb\\.regions\\.id\\.vpcs\\.id\\.elbs\\.partial").html());

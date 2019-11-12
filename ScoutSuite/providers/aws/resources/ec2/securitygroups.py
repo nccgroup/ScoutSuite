@@ -25,6 +25,9 @@ class SecurityGroups(AWSResources):
         security_group['description'] = raw_security_group['Description']
         security_group['owner_id'] = raw_security_group['OwnerId']
 
+        if 'Tags' in raw_security_group:
+            security_group['tags'] = {x['Key']: x['Value'] for x in raw_security_group['Tags']}
+
         security_group['rules'] = {'ingress': {}, 'egress': {}}
         ingress_protocols, ingress_rules_count = self._parse_security_group_rules(
             raw_security_group['IpPermissions'])

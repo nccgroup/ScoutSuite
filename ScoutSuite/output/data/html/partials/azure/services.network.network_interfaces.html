@@ -11,7 +11,11 @@
         <div class="list-group-item-text item-margin">IP Configurations: <span id="network.network_interfaces.{{@key}}.ip_configurations"><samp>{{value_or_none ip_configurations}}</samp></span></div>
         <div class="list-group-item-text item-margin">Mac Address: <span id="network.network_interfaces.{{@key}}.mac_address"><samp>{{value_or_none mac_address}}</samp></span></div>
         <div class="list-group-item-text item-margin">Interface Endpoint: <span id="network.network_interfaces.{{@key}}.interface_endpoint"><samp>{{value_or_none interface_endpoint}}</samp></span></div>
+        {{#if network_security_group}}
         <div class="list-group-item-text item-margin">Network Security Group: <a href="javascript:showObject('services.network.security_groups.{{network_security_group}}')"><samp>{{getValueAt 'services.network.security_groups' network_security_group 'name'}}</samp></a></div>
+        {{else}}
+        <div class="list-group-item-text item-margin">Network Security Group: <samp>None</samp></div>
+        {{/if}}
         <div class="list-group-item-text item-margin">Enable IP Forwarding: <span id="network.network_interfaces.{{@key}}.enable_ip_forwarding"><samp>{{value_or_none enable_ip_forwarding}}</samp></span></div>
         <div class="list-group-item-text item-margin">Enable Accelerated Networking: <span id="network.network_interfaces.{{@key}}.enable_accelerated_networking"><samp>{{value_or_none enable_accelerated_networking}}</samp></span></div>
         <div class="list-group-item-text item-margin">Tags: <span id="network.network_interfaces.{{@key}}.tags"><samp>{{value_or_none tags}}</samp></span></div>
@@ -26,8 +30,21 @@
         <div class="list-group-item-text item-margin">Private IP Allocation Method: <span id="network.network_interfaces.{{@key}}.ip_configuration.private_ip_allocation_method"><samp>{{value_or_none ip_configuration.private_ip_allocation_method}}</samp></span></div>
         <div class="list-group-item-text item-margin">Private IP Address Version: <span id="network.network_interfaces.{{@key}}.ip_configuration.private_ip_address_version"><samp>{{value_or_none ip_configuration.private_ip_address_version}}</samp></span></div>
         <div class="list-group-item-text item-margin">Subnet: <a href="javascript:showObject('services.network.virtual_networks.{{ip_configuration.subnet.virtual_network_id}}.subnets.{{ip_configuration.subnet.id}}')"><samp>{{getValueAt 'services.network.virtual_networks' ip_configuration.subnet.virtual_network_id 'subnets' ip_configuration.subnet.id 'name'}}</samp></a></div>
+        {{#if ip_configuration.application_security_groups}}
+        <div class="list-group-item-text item-margin">
+            <span id="network.network_interfaces.{{@key}}.ip_configuration.application_security_groups">Application Security Groups:</span>
+            <ul>
+                {{#each ip_configuration.application_security_groups}}
+                <li>
+                    <a href="javascript:showObject('services.network.application_security_groups.{{this}}')"><samp>{{getValueAt 'services.network.application_security_groups' this 'name'}}</samp></a>
+                </li>
+                {{/each}}
+            </ul>
+        </div>
+        {{else}}
+        <div class="list-group-item-text item-margin">Application Security Groups: <span id="network.network_interfaces.{{@key}}.ip_configuration.application_security_groups"><samp>{{None}}</samp></span></div>
+        {{/if}}
         <div class="list-group-item-text item-margin">Application Gateway Backend Address Pools: <span id="network.network_interfaces.{{@key}}.ip_configuration.application_gateway_backend_address_pools"><samp>{{value_or_none ip_configuration.application_gateway_backend_address_pools}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Application Security Groups: <span id="network.network_interfaces.{{@key}}.ip_configuration.application_security_groups"><samp>{{value_or_none ip_configuration.application_security_groups}}</samp></span></div>
         <div class="list-group-item-text item-margin">Load Balancer Backend Address Pools: <span id="network.network_interfaces.{{@key}}.ip_configuration.load_balancer_backend_address_pools"><samp>{{value_or_none ip_configuration.load_balancer_backend_address_pools}}</samp></span></div>
         <div class="list-group-item-text item-margin">Load Balancer Inbound NAT Rules: <span id="network.network_interfaces.{{@key}}.ip_configuration.load_balancer_inbound_nat_rules"><samp>{{value_or_none ip_configuration.load_balancer_inbound_nat_rules}}</samp></span></div>
         <div class="list-group-item-text item-margin">Virtual Network Taps: <span id="network.network_interfaces.{{@key}}.ip_configuration.virtual_network_taps"><samp>{{value_or_none ip_configuration.virtual_network_taps}}</samp></span></div>

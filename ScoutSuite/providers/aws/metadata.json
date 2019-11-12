@@ -247,7 +247,7 @@
                 "functions": {
                     "path": "services.awslambda.regions.id.functions",
                     "callbacks": [
-                        [ "match_security_groups_and_resources_callback", {"status_path": ["Runtime"], "sg_list_attribute_name": [ "VpcConfig", "SecurityGroupIds" ]} ]
+                        [ "match_security_groups_and_resources_callback", {"status_path": ["runtime"], "sg_list_attribute_name": [ "VpcConfig", "SecurityGroupIds" ]} ]
                     ]
                 }
             }

@@ -403,6 +403,23 @@
         ],
         "iam-inline-policy-allows-non-sts-action.json": [
             {
+                "args": [
+                    "group"
+                ],
+                "enabled": false,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "role"
+                ],
+                "enabled": false,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "user"
+                ],
                 "enabled": false,
                 "level": "danger"
             }
@@ -666,6 +683,12 @@
             {
                 "enabled": true,
                 "level": "danger"
+            }
+        ],
+        "rds-instance-ca-certificate-deprecated.json": [
+            {
+                "enabled": true,
+                "level": "warning"
             }
         ],
         "rds-instance-no-minor-upgrade.json": [
