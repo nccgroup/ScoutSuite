@@ -99,7 +99,7 @@
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Attached Subnets</h4>
         {{#each subnets}}
-            <div class="list-group-item-text item-margin"><a href="javascript:showObject('services.network.virtual_networks.{{this.virtual_network_id}}.subnets.{{this.id}}')"><samp>{{getValueAt 'services.network.virtual_networks' this.virtual_network_id 'subnets' this.id 'name'}}</samp></a></div>
+            <div class="list-group-item-text item-margin"><a href="javascript:showObject('services.network.virtual_networks.{{this.virtual_network_id}}.subnets.{{this.id}}')"><samp>{{getValueAt 'services.network.virtual_networks' this.virtual_network_id 'subnets' this.id 'name'}}</samp></a> ({{getValueAt 'services.network.virtual_networks' this.virtual_network_id 'name'}})</div>
         {{else}}
         <div class="list-group-item-text item-margin"><samp>None</samp></div>
         {{/each}}
