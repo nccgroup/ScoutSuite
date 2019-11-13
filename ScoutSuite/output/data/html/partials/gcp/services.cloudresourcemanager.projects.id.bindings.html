@@ -30,11 +30,13 @@
                 {{/each}}
             </ul>
         </div>
-        <h5 class="list-group-item-heading">Attached Service Accounts:</h5>
-        <div id="cloudresourcemanager.projects.{{@../key}}.bindings.{{@key}}.service_accounts" class="accordion-inner">
+        <h5  id="cloudresourcemanager.projects.{{@../key}}.bindings.{{@key}}.service_accounts" class="list-group-item-heading">Attached Service Accounts:</h5>
+        <div class="accordion-inner">
             <ul>
                 {{#each members.service_accounts}}
-                <li><samp>{{this}}</samp></li>
+                <li>
+                    <span id="cloudresourcemanager.projects.{{@../key}}.bindings.{{@key}}.service_accounts.{{this}}"><samp>{{this}}</samp></span>
+                </li>
                 {{else}}
                 <li><samp>None</samp></li>
                 {{/each}}
