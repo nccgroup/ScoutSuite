@@ -7,6 +7,12 @@
                 "level": "warning"
             }
         ],
+        "network-security-groups-rule-inbound-internet-all.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "network-security-groups-rule-inbound-service.json": [
             {
                 "args": [
