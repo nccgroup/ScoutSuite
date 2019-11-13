@@ -31,6 +31,7 @@
             </ul>
         </div>
     </div>
+    {{#unless uniform_bucket_level_access}}
     <div class="list-group-item">
         <h4 class="list-group-item-heading"><span id="cloudstorage.projects.{{@../key}}.buckets.{{@key}}.acls">ACL Permissions</span></h4>
         <div class="accordion-inner">
@@ -46,6 +47,7 @@
             </ul>
         </div>
     </div>
+    {{/unless}}
 </script>
 
 <script>
