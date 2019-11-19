@@ -67,6 +67,12 @@
                 "level": "warning"
             }
         ],
+        "ec2-ebs-snapshot-not-encrypted.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "ec2-ebs-volume-not-encrypted.json": [
             {
                 "enabled": true,
