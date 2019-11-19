@@ -61,6 +61,12 @@
                 "level": "warning"
             }
         ],
+        "ec2-ebs-snapshot-not-encrypted.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "ec2-default-security-group-with-rules.json": [
             {
                 "enabled": true,
