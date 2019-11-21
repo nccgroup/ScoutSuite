@@ -43,6 +43,22 @@
         "users": {
           "cols": 2,
           "path": "services.graphrbac.users"
+        },
+        "groups": {
+          "cols": 2,
+          "path": "services.graphrbac.groups"
+        },
+        "service_principals": {
+          "cols": 2,
+          "path": "services.graphrbac.service_principals"
+        },
+        "applications": {
+          "cols": 2,
+          "path": "services.graphrbac.applications"
+        },
+        "roles": {
+          "cols": 2,
+          "path": "services.graphrbac.roles"
         }
       }
     },
@@ -89,6 +105,10 @@
         "security_groups": {
           "cols": 2,
           "path": "services.network.security_groups"
+        },
+        "application_security_groups": {
+          "cols": 2,
+          "path": "services.network.application_security_groups"
         },
         "watchers": {
           "cols": 2,

@@ -41,7 +41,13 @@
                         <td width="40%">{{name}}</td>
                         <td width="10%" class="text-center">{{protocol}}</td>
                         <td width="10%" class="text-center">{{source_port_ranges}}</td>
-                        <td width="10%" class="text-center">{{source_address_prefixes}}</td>
+                        {{#if source_address_prefixes_is_asg}}
+                            <td width="10%" class="text-center">
+                                <a href="javascript:showObject('services.network.application_security_groups.{{source_address_prefixes}}')"><samp>{{getValueAt 'services.network.application_security_groups' source_address_prefixes 'name'}}</samp></a>
+                            </td>
+                        {{else}}
+                            <td width="10%" class="text-center">{{source_address_prefixes}}</td>
+                        {{/if}}
                         <td width="10%" class="text-center">{{destination_port_ranges}}</td>
                         <td width="10%" class="text-center">{{destination_address_prefixes}}</td>
                         {{#if allow}}
@@ -91,9 +97,17 @@
         </div>
     </div>
     <div class="list-group-item">
-        <h4 class="list-group-item-heading">Subnets</h4>
+        <h4 class="list-group-item-heading">Attached Subnets</h4>
         {{#each subnets}}
-            <div class="list-group-item-text item-margin"><a href="javascript:showObject('services.network.virtual_networks.{{this.virtual_network_id}}.subnets.{{this.id}}')"><samp>{{getValueAt 'services.network.virtual_networks' this.virtual_network_id 'subnets' this.id 'name'}}</samp></a></div>
+            <div class="list-group-item-text item-margin"><a href="javascript:showObject('services.network.virtual_networks.{{this.virtual_network_id}}.subnets.{{this.id}}')"><samp>{{getValueAt 'services.network.virtual_networks' this.virtual_network_id 'subnets' this.id 'name'}}</samp></a> ({{getValueAt 'services.network.virtual_networks' this.virtual_network_id 'name'}})</div>
+        {{else}}
+        <div class="list-group-item-text item-margin"><samp>None</samp></div>
+        {{/each}}
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Attached Network Interfaces</h4>
+        {{#each network_interfaces}}
+        <div class="list-group-item-text item-margin"><a href="javascript:showObject('services.network.network_interfaces.{{this.id}}')"><samp>{{getValueAt 'services.network.network_interfaces' this.id 'name'}}</samp></a></div>
         {{else}}
         <div class="list-group-item-text item-margin"><samp>None</samp></div>
         {{/each}}

@@ -28,7 +28,7 @@ class Stacks(AWSResources):
         if hasattr(template, 'keys'):
             for group in template.keys():
                 if 'DeletionPolicy' in template[group]:
-                    raw_stack['deletion_policy'] = template[group]['DeletionPolicy']
+                    raw_stack['deletion_policy'] = template[group]
                     break
 
         return raw_stack['name'], raw_stack

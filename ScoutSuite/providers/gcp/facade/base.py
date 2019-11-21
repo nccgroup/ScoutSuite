@@ -113,9 +113,13 @@ class GCPFacade(GCPBaseFacade):
                     projects.extend(await self._get_projects_recursively("folder", folder['name'].strip(u'folders/')))
 
             project_response = await GCPFacadeUtils.get_all('projects', request, projects_group)
-            for project in project_response:
-                if project['lifecycleState'] == "ACTIVE":
-                    projects.append(project)
+            if project_response:
+                for project in project_response:
+                    if project['lifecycleState'] == "ACTIVE":
+                        projects.append(project)
+            else:
+                print_exception('No Projects Found: '
+                                'You may have specified a non-existing organization/folder/project?')
 
         except Exception as e:
             print_exception('Unable to list accessible Projects: {}'.format(e))

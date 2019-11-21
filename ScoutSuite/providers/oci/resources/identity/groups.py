@@ -1,6 +1,6 @@
 from ScoutSuite.providers.oci.resources.base import OracleResources
 from ScoutSuite.providers.oci.facade.base import OracleFacade
-from ScoutSuite.providers.oci.resources.utils import get_non_provider_id
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Groups(OracleResources):

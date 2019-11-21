@@ -28,7 +28,9 @@ class NetworkInterfaces(AzureResources):
         network_interface_dict['resource_guid'] = raw_network_interface.resource_guid
         network_interface_dict['enable_ip_forwarding'] = raw_network_interface.enable_ip_forwarding
         network_interface_dict['type'] = raw_network_interface.type
-        network_interface_dict['network_security_group'] = get_non_provider_id(raw_network_interface.network_security_group.id)
+        network_interface_dict['network_security_group'] = \
+            get_non_provider_id(raw_network_interface.network_security_group.id) if \
+                raw_network_interface.network_security_group else None
 
         # TODO process and display the below
         network_interface_dict['hosted_workloads'] = raw_network_interface.hosted_workloads
@@ -54,11 +56,17 @@ class NetworkInterfaces(AzureResources):
         network_interface_dict['ip_configuration']['subnet'] = {'id': get_non_provider_id(ip_configuration.subnet.id)}
         network_interface_dict['ip_configuration']['primary'] = ip_configuration.primary
         network_interface_dict['ip_configuration']['public_ip_address'] = ip_configuration.public_ip_address
-        network_interface_dict['ip_configuration'][
-            'application_security_groups'] = ip_configuration.application_security_groups
         network_interface_dict['ip_configuration']['provisioning_state'] = ip_configuration.provisioning_state
         network_interface_dict['ip_configuration']['name'] = ip_configuration.name
         network_interface_dict['ip_configuration']['etag'] = ip_configuration.etag
+
+        network_interface_dict['ip_configuration']['application_security_groups'] = []
+        if ip_configuration.application_security_groups:
+            for asg in ip_configuration.application_security_groups:
+                network_interface_dict['ip_configuration']['application_security_groups'].append(get_non_provider_id(asg.id))
+
+        # FIXME this is currently always None, might change in the future?
+        # network_interface_dict['ip_configuration']['subnet_security_group'] = ip_configuration.subnet.network_security_group
 
         return network_interface_dict['id'], network_interface_dict
 
