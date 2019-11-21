@@ -60,9 +60,6 @@ class TestScoutCore:
 
     def test_prompt_overwrite(self):
         assert (prompt_overwrite('', True, None))
-        assert (not prompt_overwrite('data/resources/dummy_resources.json', False, 'n'))
-        assert (prompt_overwrite('data/resources/dummy_resources.json', False, 'y'))
-        assert (prompt_overwrite('data/resources/dummy_resources.json', False, 'wrong') is None)
 
     def test_prompt_value(self):
         assert (prompt_value(question='', max_laps=1, test_input='test', is_question=True, choices=['test']) is None)
