@@ -24,9 +24,15 @@ from ScoutSuite.providers.base.services import BaseServicesConfig
 
 # Try to import proprietary services
 try:
+    from ScoutSuite.providers.aws.resources.private_documentdb.base import DocDB
+except ImportError:
+    pass
+
+try:
     from ScoutSuite.providers.aws.resources.private_dynamodb.base import DynamoDB
 except ImportError:
     pass
+
 try:
     from ScoutSuite.providers.aws.resources.private_kms.base import KMS
 except ImportError:
@@ -63,6 +69,11 @@ class AWSServicesConfig(BaseServicesConfig):
         self.cloudwatch = CloudWatch(facade)
         self.config = Config(facade)
         self.directconnect = DirectConnect(facade)
+        try:
+            self.docdb = DocDB(facade)
+        except NameError as _:
+            pass
+
         try:
             self.dynamodb = DynamoDB(facade)
         except NameError as _:

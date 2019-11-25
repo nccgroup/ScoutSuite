@@ -26,7 +26,6 @@ class KeyRings(GCPCompositeResources):
             scopes={keyring_id: {'project_id': self.project_id, 'keyring_name': keyring['name'], 'location': keyring['location']}
                     for keyring_id, keyring in self.items()})
 
-
     def _parse_keyring(self, raw_keyring, location):
         keyring_dict = {}
         keyring_dict['id'] = raw_keyring.name

@@ -1164,6 +1164,8 @@ function makeTitle(title) {
         return 'Config'
     } else if (title === 'awslambda') {
         return 'Lambda'
+    } else if (title === 'docdb') {
+        return 'DocumentDB'
     } else if (title === 'dynamodb') {
         return 'DynamoDB'
     } else if (title === 'elasticache') {

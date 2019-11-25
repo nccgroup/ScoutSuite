@@ -27,6 +27,7 @@ from ScoutSuite.providers.aws.facade.elb import ELBFacade
 from ScoutSuite.providers.utils import run_concurrently
 
 try:
+    from ScoutSuite.providers.aws.facade.documentdb_private import DocumentDBFacade
     from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
     from ScoutSuite.providers.aws.facade.kms_private import KMSFacade
 except ImportError:
@@ -77,6 +78,7 @@ class AWSFacade(AWSBaseFacade):
         self.sqs = SQSFacade(self.session)
 
         try:
+            self.docdb = DocumentDBFacade(self.session)
             self.dynamodb = DynamoDBFacade(self.session)
             self.kms = KMSFacade(self.session)
         except NameError:
