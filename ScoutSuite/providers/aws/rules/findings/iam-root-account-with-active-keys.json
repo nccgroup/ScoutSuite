@@ -7,8 +7,8 @@
     [ "iam.credential_reports.id.name", "equal", "<root_account>" ],
         [
             "or",
-            [ "iam.credential_reports.<root_account>.access_key_1_active", "true", "" ],
-            [ "iam.credential_reports.<root_account>.access_key_2_active", "true", "" ]
+            [ "iam.credential_reports.id.access_key_1_active", "true", "" ],
+            [ "iam.credential_reports.id.access_key_2_active", "true", "" ]
         ]
     ]
 }
