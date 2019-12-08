@@ -12,8 +12,8 @@ class SecurityCenter(AzureCompositeResources):
         (AutoProvisioningSettings, 'auto_provisioning_settings'),
         (Pricings, 'pricings'),
         (SecurityContacts, 'security_contacts'),
-        (InformationProtectionPolicies, 'information_protection_policies'),
-        (Settings, 'settings')
+        # (InformationProtectionPolicies, 'information_protection_policies'),  # FIXME this isn't properly implemented
+        # (Settings, 'settings')  # FIXME this isn't implemented
     ]
 
     async def fetch_all(self):
