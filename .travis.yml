@@ -29,6 +29,8 @@ before_script:
 # Command to run tests
 script:
   - nosetests --with-coverage tests/test-utils.py
+  - nosetests --with-coverage tests/test-core.py
+  - nosetests --with-coverage tests/test-output.py
   #  - 'nosetests tests/test-listall.py'
   #  - 'nosetests tests/test-rulesgenerator.py'
   #  - 'nosetests tests/test-utils.py'

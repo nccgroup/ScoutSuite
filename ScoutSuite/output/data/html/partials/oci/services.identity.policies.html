@@ -1,0 +1,36 @@
+
+<!-- Identity policy -->
+<script id="services.identity.policies.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">ID: <span id="identity.policies.{{@key}}.id"><samp>{{identifier}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Name: <span id="identity.policies.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Description: <span id="identity.policies.{{@key}}.description">{{description}}</span></div>
+        <div class="list-group-item-text item-margin">State: <span id="identity.policies.{{@key}}.state">{{state}}</span></div>
+    </div>
+    {{#if statements }}
+    <div class="list-group-item">
+        <h5 class="list-group-item-heading" id="identity.policies.{{@key}}.statements">Statements</h5>
+        <ul>
+            {{#each statements}}
+            <li><code>{{this}}</code></li>
+            {{/each}}
+        </ul>
+    </div>
+    {{/if}}
+</script>
+
+<script>
+    Handlebars.registerPartial("services.identity.policies", $("#services\\.identity\\.policies\\.partial").html());
+</script>
+
+<!-- Single identity policy template -->
+<script id="single_identity_policy-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.identity.policies'}}
+</script>
+<script>
+    var single_identity_policy_template = Handlebars.compile($("#single_identity_policy-template").html());
+</script>

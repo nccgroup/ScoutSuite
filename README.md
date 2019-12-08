@@ -20,7 +20,7 @@ Scout Suite is stable and actively maintained, but a number of features and inte
 with us as we find time to work on, and improve, the tool. Feel free to report a bug with details (please provide
 console output using the `--debug` argument), request a new feature, or send a pull request.
 
-The project team can be contacted at <scout@nccgroup.com>.
+The project team can be contacted at <scoutsuite@nccgroup.com>.
 
 **Note:**
 
@@ -31,57 +31,25 @@ The latest (and final) version of Scout2 can be found in <https://github.com/ncc
 
 The following cloud providers are currently supported/planned:
 
--   Amazon Web Services
--   Microsoft Azure
--   Google Cloud Platform
+- Amazon Web Services
+- Microsoft Azure
+- Google Cloud Platform
+- Alibaba Cloud (alpha)
+- Oracle Cloud Infrastructure (alpha)
 
-## Installation
+### Installation
 
-Install via `pip` (we recommend using a virtual environment):
+Refer to the [wiki](https://github.com/nccgroup/ScoutSuite/wiki/Setup).
 
-    $ virtualenv -p python3 venv
-    $ source venv/bin/activate
-    $ pip install scoutsuite
-    $ scout --help
+## Compliance
 
-Or install from source:
-
-    $ git clone https://github.com/nccgroup/ScoutSuite
-    $ cd ScoutSuite
-    $ virtualenv -p python3 venv
-    $ source venv/bin/activate
-    $ pip install -r requirements.txt
-    $ python scout.py --help
-
-## Requirements
-
-### Computing resources
-
-Scout Suite is a multi-threaded tool that fetches and stores your cloud account's configuration settings in memory
-during runtime. It is expected that the tool will run with no issues on any modern laptop or equivalent VM. **Note**
-that running Scout Suite in a VM with limited computing resources such as an AWS t2.micro instance is not intended and
-may result in the process being killed.
-
-### Python
-
-Scout Suite is written in Python and supports the following versions:
-
--   3.5
--   3.6
--   3.7
-
-The required libraries can be found in the
-[requirements.txt](https://github.com/nccgroup/ScoutSuite/blob/master/requirements.txt) file.
-
-### Compliance
-
-#### AWS
+### AWS
 
 Use of Scout Suite does not require AWS users to complete and submit the AWS Vulnerability / Penetration Testing
 Request Form. Scout Suite only performs API calls to fetch configuration data and identify security gaps, which is not
 considered security scanning as it does not impact AWS' network and applications.
 
-#### Azure
+### Azure
 
 Use of Scout Suite does not require Azure users to contact Microsoft to begin testing. The only requirement is that
 users abide by the Microsoft Cloud Unified Penetration Testing Rules of Engagement.
@@ -90,7 +58,7 @@ References:
 - https://docs.microsoft.com/en-us/azure/security/azure-security-pen-testing
 - https://www.microsoft.com/en-us/msrc/pentest-rules-of-engagement
 
-#### Google Cloud Platform
+### Google Cloud Platform
 
 Use of Scout Suite does not require GCP users to contact Google to begin testing. The only requirement is that users
 abide by the Cloud Platform Acceptable Use Policy and the Terms of Service and ensure that tests only affect projects
@@ -100,7 +68,7 @@ References:
 - https://cloud.google.com/terms/aup
 - https://cloud.google.com/terms/
 
-### Usage
+## Usage
 
 The following command will provide the list of available command line options:
 
@@ -119,7 +87,7 @@ example, this will work and use the selected profile:
 
     $ python scout.py aws --profile PROFILE
 
-### Credentials and Utilisation
+### Credentials
 
 Assuming you already have your provider's CLI up and running you should have your credentials already set up and be able to run Scout Suite by using one of the following commands. If that is not the case, please consult the wiki page for the provider desired.
 
@@ -135,4 +103,4 @@ Assuming you already have your provider's CLI up and running you should have you
 
     $ python scout.py gcp --user-account
 
-Additional information can be found in other pages of the [wiki](https://github.com/nccgroup/ScoutSuite/wiki).
+Additional information can be found in the [wiki](https://github.com/nccgroup/ScoutSuite/wiki).

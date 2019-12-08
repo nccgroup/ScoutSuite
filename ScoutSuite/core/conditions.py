@@ -4,7 +4,7 @@ import json
 import netaddr
 import re
 
-from iampoliciesgonewild import get_actions_from_statement, _expand_wildcard_action
+from policyuniverse.expander_minimizer import get_actions_from_statement, _expand_wildcard_action
 
 from ScoutSuite.core.console import print_error, print_exception
 
@@ -116,6 +116,20 @@ def pass_condition(b, test, a):
     elif test == 'withKey':
         result = (a in b)
     elif test == 'withoutKey':
+        result = a not in b
+
+    # String test
+    elif test == 'containString':
+        if not type(b) == str:
+            b = str(b)
+        if not type(a) == str:
+            a = str(a)
+        result = a in b
+    elif test == 'notContainString':
+        if not type(b) == str:
+            b = str(b)
+        if not type(a) == str:
+            a = str(a)
         result = a not in b
 
     # List tests

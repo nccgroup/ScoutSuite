@@ -1,7 +1,7 @@
 import copy
 import os
 
-from ScoutSuite.core.console import print_debug, print_error, print_exception, print_info
+from ScoutSuite.core.console import print_debug, print_error, print_exception
 from ScoutSuite.providers.aws.services import AWSServicesConfig
 from ScoutSuite.providers.aws.resources.vpc.base import put_cidr_name
 from ScoutSuite.providers.aws.utils import ec2_classic, get_aws_account_id
@@ -192,7 +192,6 @@ class AWSProvider(BaseProvider):
 
     @staticmethod
     def _process_cloudtrail_trails(cloudtrail_config):
-        print_info('Processing CloudTrail config')
         global_events_logging = []
         data_logging_trails_count = 0
         for region in cloudtrail_config['regions']:
@@ -367,32 +366,33 @@ class AWSProvider(BaseProvider):
                 s3_info, bucket_name, iam_entity, allowed_iam_entity, policy_info)
 
     def _update_iam_permissions(self, s3_info, bucket_name, iam_entity, allowed_iam_entity, policy_info):
-        if bucket_name != '*' and bucket_name in s3_info['buckets']:
-            bucket = s3_info['buckets'][bucket_name]
-            manage_dictionary(bucket, iam_entity, {})
-            manage_dictionary(bucket, iam_entity + '_count', 0)
-            if allowed_iam_entity not in bucket[iam_entity]:
-                bucket[iam_entity][allowed_iam_entity] = {}
-                bucket[iam_entity + '_count'] = bucket[iam_entity + '_count'] + 1
+        if self.services.get('s3') and self.services.get('iam'):  # validate both services were included in run
+            if bucket_name != '*' and bucket_name in s3_info['buckets']:
+                bucket = s3_info['buckets'][bucket_name]
+                manage_dictionary(bucket, iam_entity, {})
+                manage_dictionary(bucket, iam_entity + '_count', 0)
+                if allowed_iam_entity not in bucket[iam_entity]:
+                    bucket[iam_entity][allowed_iam_entity] = {}
+                    bucket[iam_entity + '_count'] = bucket[iam_entity + '_count'] + 1
 
-            if 'inline_policies' in policy_info:
-                manage_dictionary(
-                    bucket[iam_entity][allowed_iam_entity], 'inline_policies', {})
-                bucket[iam_entity][allowed_iam_entity]['inline_policies'].update(
-                    policy_info['inline_policies'])
-            if 'policies' in policy_info:
-                manage_dictionary(bucket[iam_entity]
-                                  [allowed_iam_entity], 'policies', {})
-                bucket[iam_entity][allowed_iam_entity]['policies'].update(
-                    policy_info['policies'])
-        elif bucket_name == '*':
-            for bucket in s3_info['buckets']:
-                self._update_iam_permissions(
-                    s3_info, bucket, iam_entity, allowed_iam_entity, policy_info)
-            pass
-        else:
-            # Could be an error or cross-account access, ignore
-            pass
+                if 'inline_policies' in policy_info:
+                    manage_dictionary(
+                        bucket[iam_entity][allowed_iam_entity], 'inline_policies', {})
+                    bucket[iam_entity][allowed_iam_entity]['inline_policies'].update(
+                        policy_info['inline_policies'])
+                if 'policies' in policy_info:
+                    manage_dictionary(bucket[iam_entity]
+                                      [allowed_iam_entity], 'policies', {})
+                    bucket[iam_entity][allowed_iam_entity]['policies'].update(
+                        policy_info['policies'])
+            elif bucket_name == '*':
+                for bucket in s3_info['buckets']:
+                    self._update_iam_permissions(
+                        s3_info, bucket, iam_entity, allowed_iam_entity, policy_info)
+                pass
+            else:
+                # Could be an error or cross-account access, ignore
+                pass
 
     def match_network_acls_and_subnets_callback(self, current_config, path, current_path, acl_id, callback_args):
         for association in current_config['Associations']:
@@ -402,38 +402,39 @@ class AWSProvider(BaseProvider):
             subnet['network_acl'] = acl_id
 
     def match_instances_and_subnets_callback(self, current_config, path, current_path, instance_id, callback_args):
-        subnet_id = current_config['SubnetId']
-        if subnet_id:
-            vpc = self.subnet_map[subnet_id]
-            subnet = self.services['vpc']['regions'][vpc['region']
-            ]['vpcs'][vpc['vpc_id']]['subnets'][subnet_id]
-            manage_dictionary(subnet, 'instances', [])
-            if instance_id not in subnet['instances']:
-                subnet['instances'].append(instance_id)
+        if self.services.get('ec2') and self.services.get('vpc'):  # validate both services were included in run
+            subnet_id = current_config['SubnetId']
+            if subnet_id:
+                vpc = self.subnet_map[subnet_id]
+                subnet = self.services['vpc']['regions'][vpc['region']
+                ]['vpcs'][vpc['vpc_id']]['subnets'][subnet_id]
+                manage_dictionary(subnet, 'instances', [])
+                if instance_id not in subnet['instances']:
+                    subnet['instances'].append(instance_id)
 
     def _match_instances_and_roles(self):
-        print_info('Matching EC2 instances and IAM roles')
-        ec2_config = self.services['ec2']
-        iam_config = self.services['iam']
-        role_instances = {}
-        for r in ec2_config['regions']:
-            for v in ec2_config['regions'][r]['vpcs']:
-                if 'instances' in ec2_config['regions'][r]['vpcs'][v]:
-                    for i in ec2_config['regions'][r]['vpcs'][v]['instances']:
-                        instance_profile = ec2_config['regions'][r]['vpcs'][v]['instances'][i]['IamInstanceProfile']
-                        instance_profile_id = instance_profile['Id'] if instance_profile else None
-                        if instance_profile_id:
-                            manage_dictionary(
-                                role_instances, instance_profile_id, [])
-                            role_instances[instance_profile_id].append(i)
-        for role_id in iam_config['roles']:
-            iam_config['roles'][role_id]['instances_count'] = 0
-            for instance_profile_id in iam_config['roles'][role_id]['instance_profiles']:
-                if instance_profile_id in role_instances:
-                    iam_config['roles'][role_id]['instance_profiles'][instance_profile_id]['instances'] = \
-                        role_instances[instance_profile_id]
-                    iam_config['roles'][role_id]['instances_count'] += len(
-                        role_instances[instance_profile_id])
+        if self.services.get('ec2') and self.services.get('iam'):  # validate both services were included in run
+            ec2_config = self.services['ec2']
+            iam_config = self.services['iam']
+            role_instances = {}
+            for r in ec2_config['regions']:
+                for v in ec2_config['regions'][r]['vpcs']:
+                    if 'instances' in ec2_config['regions'][r]['vpcs'][v]:
+                        for i in ec2_config['regions'][r]['vpcs'][v]['instances']:
+                            instance_profile = ec2_config['regions'][r]['vpcs'][v]['instances'][i]['IamInstanceProfile']
+                            instance_profile_id = instance_profile['Id'] if instance_profile else None
+                            if instance_profile_id:
+                                manage_dictionary(
+                                    role_instances, instance_profile_id, [])
+                                role_instances[instance_profile_id].append(i)
+            for role_id in iam_config['roles']:
+                iam_config['roles'][role_id]['instances_count'] = 0
+                for instance_profile_id in iam_config['roles'][role_id]['instance_profiles']:
+                    if instance_profile_id in role_instances:
+                        iam_config['roles'][role_id]['instance_profiles'][instance_profile_id]['instances'] = \
+                            role_instances[instance_profile_id]
+                        iam_config['roles'][role_id]['instances_count'] += len(
+                            role_instances[instance_profile_id])
 
     def process_vpc_peering_connections_callback(self, current_config, path, current_path, pc_id, callback_args):
 
@@ -444,10 +445,12 @@ class AWSProvider(BaseProvider):
         if vpc_id not in self.services['vpc']['regions'][region]['vpcs']:
             region = current_config['AccepterVpcInfo']['Region']
 
-        target = self.services['vpc']['regions'][region]['vpcs'][vpc_id]
-        manage_dictionary(target, 'peering_connections', [])
-        if pc_id not in target['peering_connections']:
-            target['peering_connections'].append(pc_id)
+        # handle edge case where the region wasn't included in the execution
+        if region in self.services['vpc']['regions']:
+            target = self.services['vpc']['regions'][region]['vpcs'][vpc_id]
+            manage_dictionary(target, 'peering_connections', [])
+            if pc_id not in target['peering_connections']:
+                target['peering_connections'].append(pc_id)
 
         # VPC information for the peer'd VPC
         current_config['peer_info'] = copy.deepcopy(
@@ -549,6 +552,8 @@ class AWSProvider(BaseProvider):
                         resource_id)
         except Exception as e:
             if resource_type == 'elbs' and current_path[5] == ec2_classic:
+                pass
+            elif not self.services['ec2']:  # service not included in run
                 pass
             else:
                 print_exception('Failed to parse %s: %s' % (resource_type, e))

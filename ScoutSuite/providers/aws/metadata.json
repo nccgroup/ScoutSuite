@@ -133,6 +133,10 @@
                 "domains": {
                     "cols": 2,
                     "path": "services.route53.regions.id.domains"
+                },
+                "hosted_zones": {
+                    "cols": 2,
+                    "path": "services.route53.regions.id.hosted_zones"
                 }
             }
         },
@@ -243,7 +247,7 @@
                 "functions": {
                     "path": "services.awslambda.regions.id.functions",
                     "callbacks": [
-                        [ "match_security_groups_and_resources_callback", {"status_path": ["Runtime"], "sg_list_attribute_name": [ "VpcConfig", "SecurityGroupIds" ]} ]
+                        [ "match_security_groups_and_resources_callback", {"status_path": ["runtime"], "sg_list_attribute_name": [ "VpcConfig", "SecurityGroupIds" ]} ]
                     ]
                 }
             }

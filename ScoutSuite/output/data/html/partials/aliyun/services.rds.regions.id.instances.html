@@ -1,0 +1,54 @@
+
+<!-- RDS instances -->
+<script id="services.rds.regions.id.instances.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="rds.regions.{{region}}.instances.{{@key}}.name"><samp>{{name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">ID: <span id="rds.regions.{{region}}.instances.{{@key}}.id"><samp>{{id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">State: <span id="rds.regions.{{region}}.instances.{{@key}}.db_instance_status"><samp>{{db_instance_status}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Create Time: <span id="rds.regions.{{region}}.instances.{{@key}}.create_time">{{format_date create_time}}</span></div>
+        <div class="list-group-item-text item-margin">Expire Time: <span id="rds.regions.{{region}}.instances.{{@key}}.expire_time">{{format_date expire_time}}</span></div>
+        <div class="list-group-item-text item-margin">Region: <span id="rds.regions.{{region}}.instances.{{@key}}.region_id"><samp>{{region_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Zone: <span id="rds.regions.{{region}}.instances.{{@key}}.zone_id"><samp>{{zone_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Type: <span id="rds.regions.{{region}}.instances.{{@key}}.db_instance_type"><samp>{{db_instance_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Read Only DB Instance IDs: <span id="rds.regions.{{region}}.instances.{{@key}}.read_only_db_instance_ids"><samp>{{read_only_db_instance_ids.ReadOnlyDBInstanceId}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Multi-Region: <span id="rds.regions.{{region}}.instances.{{@key}}.mutri_o_rsignle"><samp>{{mutri_o_rsignle}}</samp></span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">System Configuration</h4>
+        <div class="list-group-item-text item-margin">Engine: <span id="rds.regions.{{region}}.instances.{{@key}}.engine"><samp>{{engine}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Engine Version: <span id="rds.regions.{{region}}.instances.{{@key}}.engine_version"><samp>{{engine_version}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Class: <span id="rds.regions.{{region}}.instances.{{@key}}.db_instance_class"><samp>{{db_instance_class}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Pay Type: <span id="rds.regions.{{region}}.instances.{{@key}}.pay_type"><samp>{{pay_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Lock Mode: <span id="rds.regions.{{region}}.instances.{{@key}}.lock_mode"><samp>{{lock_mode}}</samp></span></div>
+        {{#if lock_reason}}
+        <div class="list-group-item-text item-margin">Lock Reason: <span id="rds.regions.{{region}}.instances.{{@key}}.lock_reason"><samp>{{lock_reason}}</samp></span></div>
+        {{/if}}
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Network Configuration</h4>
+        <div class="list-group-item-text item-margin">Network Type: <span id="rds.regions.{{region}}.instances.{{@key}}.instance_network_type"><samp>{{instance_network_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Connection Mode: <span id="rds.regions.{{region}}.instances.{{@key}}.connection_mode"><samp>{{connection_mode}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Net Type: <span id="rds.regions.{{region}}.instances.{{@key}}.db_instance_net_type"><samp>{{db_instance_net_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">VPC ID: <span id="rds.regions.{{region}}.instances.{{@key}}.vpc_id"><samp>{{vpc_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">VPC Cloud Instance ID: <span id="rds.regions.{{region}}.instances.{{@key}}.vpc_cloud_instance_id"><samp>{{vpc_cloud_instance_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Resource Group ID: <span id="rds.regions.{{region}}.instances.{{@key}}.resource_group_id"><samp>{{resource_group_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">VSwitch ID: <span id="rds.regions.{{region}}.instances.{{@key}}.v_switch_id"><samp>{{vswitch_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Ins ID: <span id="rds.regions.{{region}}.instances.{{@key}}.ins_id"><samp>{{ins_id}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.rds.regions.id.instances", $("#services\\.rds\\.regions\\.id\\.instances\\.partial").html());
+</script>
+
+<!-- Single RDS instance template -->
+<script id="single_rds_instance-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.rds.regions.id.instance'}}
+</script>
+<script>
+    var single_rds_instance_template = Handlebars.compile($("#single_rds_instance-template").html());
+</script>

@@ -51,4 +51,5 @@ class AzureProvider(BaseProvider):
         :return: None
         """
         ip_ranges = [] if ip_ranges is None else ip_ranges
+
         super(AzureProvider, self).preprocessing()

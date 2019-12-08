@@ -15,12 +15,14 @@
           <div class="list-group-item-text item-margin">Secure transport: <span id="s3.buckets.{{@key}}.secure_transport_enabled">{{convert_bool_to_enabled secure_transport_enabled}}</span></div>
           <div class="list-group-item-text item-margin">Static website hosting: <span id="s3.buckets.{{@key}}.web_hosting_enabled">{{convert_bool_to_enabled web_hosting_enabled}}</span></div>
         </div>
+        <div class="list-group-item">
+            {{#if policy}}
+                {{> accordion_policy name = 'Bucket Policy' document = policy policy_path = (concat 's3.buckets' @key 'policy')}}
+            {{else}}
+                <h4 class="list-group-item-heading accordion-heading text-secondary">Bucket Policy</h4>
+            {{/if}}
+        </div>
         {{> services.s3.acls resource_type = 'bucket' resource_path = (concat 's3.buckets' @key)}}
-        {{#if policy}}
-          <div class="list-group-item">
-            {{> accordion_policy name = 'Bucket policy' document = policy policy_path = (concat 's3.buckets' @key 'policy')}}
-          </div>
-        {{/if}}
         {{> services.s3.bucket_iam_policies resource_type = 'groups' resource_count = groups_count}}
         {{> services.s3.bucket_iam_policies resource_type = 'roles' resource_count = roles_count}}
         {{> services.s3.bucket_iam_policies resource_type = 'users' resource_count = users_count}}

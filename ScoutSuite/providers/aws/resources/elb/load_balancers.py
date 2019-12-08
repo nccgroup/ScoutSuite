@@ -35,4 +35,7 @@ class LoadBalancers(AWSResources):
         for i in raw_load_balancer['Instances']:
             load_balancer['instances'].append(i['InstanceId'])
 
+        if 'Tags' in raw_load_balancer and raw_load_balancer['Tags']:
+            load_balancer['tags'] = {x['Key']: x['Value'] for x in raw_load_balancer['Tags']}
+
         return get_non_provider_id(load_balancer['name']), load_balancer

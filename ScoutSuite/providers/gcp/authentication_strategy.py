@@ -1,7 +1,8 @@
+import logging
 import os
 import warnings
 
-import google
+from google import auth
 
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
@@ -16,6 +17,12 @@ class GCPAuthenticationStrategy(AuthenticationStrategy):
 
         try:
 
+            # Set logging level to error for libraries as otherwise generates a lot of warnings
+            logging.getLogger('googleapiclient').setLevel(logging.ERROR)
+            logging.getLogger('google.auth').setLevel(logging.ERROR)
+            logging.getLogger('google_auth_httplib2').setLevel(logging.ERROR)
+            logging.getLogger('urllib3').setLevel(logging.ERROR)
+
             if user_account:
                 # disable GCP warning about using User Accounts
                 warnings.filterwarnings("ignore", "Your application has authenticated using end user credentials")
@@ -26,7 +33,7 @@ class GCPAuthenticationStrategy(AuthenticationStrategy):
             else:
                 raise AuthenticationException('Failed to authenticate to GCP - no supported account type')
 
-            credentials, default_project_id = google.auth.default()
+            credentials, default_project_id = auth.default()
 
             if not credentials:
                 raise AuthenticationException('No credentials')

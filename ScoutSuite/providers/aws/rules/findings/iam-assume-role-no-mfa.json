@@ -1,6 +1,6 @@
 {
     "description": "AssumeRole policy lacks MFA",
-	"rationale": "<b>Description:</b><br><br>",
+    "rationale": "<b>Description:</b><br><br>When authorizing assumption, MFA should be required.",
     "path": "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id",
     "display_path": "iam.roles.id",
     "dashboard_name": "Roles",

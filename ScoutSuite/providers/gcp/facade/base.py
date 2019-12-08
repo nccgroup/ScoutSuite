@@ -1,5 +1,3 @@
-import logging
-
 from ScoutSuite.core.console import print_exception, print_info
 from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.cloudresourcemanager import CloudResourceManagerFacade
@@ -36,22 +34,15 @@ class GCPFacade(GCPBaseFacade):
         self.iam = IAMFacade()
         self.kms = KMSFacade()
         self.stackdriverlogging = StackdriverLoggingFacade()
+
+        # Instantiate facades for proprietary services
         try:
             self.gke = GKEFacade(self.gce)
         except NameError as _:
             pass
 
-        # Set logging level to error for GCP services as otherwise generates a lot of warnings
-        logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.ERROR)
-        logging.getLogger().setLevel(logging.ERROR)
-
     async def get_projects(self):
         try:
-
-            # resourcemanager_client = self._get_client()
-            # request = resourcemanager_client.projects().list()
-            # projects_group = resourcemanager_client.projects()
-            # return await GCPFacadeUtils.get_all('projects', request, projects_group)
 
             # All projects to which the user / Service Account has access to
             if self.all_projects:
@@ -122,9 +113,13 @@ class GCPFacade(GCPBaseFacade):
                     projects.extend(await self._get_projects_recursively("folder", folder['name'].strip(u'folders/')))
 
             project_response = await GCPFacadeUtils.get_all('projects', request, projects_group)
-            for project in project_response:
-                if project['lifecycleState'] == "ACTIVE":
-                    projects.append(project)
+            if project_response:
+                for project in project_response:
+                    if project['lifecycleState'] == "ACTIVE":
+                        projects.append(project)
+            else:
+                print_exception('No Projects Found: '
+                                'You may have specified a non-existing organization/folder/project?')
 
         except Exception as e:
             print_exception('Unable to list accessible Projects: {}'.format(e))
