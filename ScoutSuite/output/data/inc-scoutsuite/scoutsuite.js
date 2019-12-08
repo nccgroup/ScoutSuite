@@ -147,19 +147,19 @@ var loadAccountId = function () {
 function loadConfig(scriptId, cols, force) {
     if (!force) {
         // Abort if data was previously loaded
-        if (loadedConfigArray.indexOf(scriptId) > 0) {
-            // When the path does not contain .id.
-            return 0
-        }
+        // if (loadedConfigArray.indexOf(scriptId) > 0) {
+        //     // When the path does not contain .id.
+        //     return 0
+        // }
         let pathArray = scriptId.split('.')
         for (let i = 3; i < pathArray.length; i = i + 2) {
             pathArray[i] = 'id'
         }
         let fixedPath = pathArray.join('.')
-        if (loadedConfigArray.indexOf(fixedPath) > 0) {
-            // When the loaded path contains id but browsed-to path contains a specific value
-            return 0
-        }
+        // if (loadedConfigArray.indexOf(fixedPath) > 0) {
+        //     // When the loaded path contains id but browsed-to path contains a specific value
+        //     return 0
+        // }
         pathArray[1] = 'id'
         fixedPath = pathArray.join('.')
         if (loadedConfigArray.indexOf(fixedPath) > 0) {
