@@ -313,6 +313,13 @@
                 }
             }
         },
+        "docdb": {
+            "resources": {
+                "clusters": {
+                    "path": "services.docdb.id.clusters"
+                }
+            }
+        },
         "elasticache": {
             "resources": {
                 "clusters": {
