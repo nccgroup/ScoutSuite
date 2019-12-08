@@ -70,15 +70,6 @@ class AWSServicesConfig(BaseServicesConfig):
         self.cloudwatch = CloudWatch(facade)
         self.config = Config(facade)
         self.directconnect = DirectConnect(facade)
-        try:
-            self.docdb = DocDB(facade)
-        except NameError as _:
-            pass
-
-        try:
-            self.dynamodb = DynamoDB(facade)
-        except NameError as _:
-            pass
         self.ec2 = EC2(facade)
         self.efs = EFS(facade)
         self.elasticache = ElastiCache(facade)
@@ -96,6 +87,10 @@ class AWSServicesConfig(BaseServicesConfig):
         self.vpc = VPC(facade)
 
         # Instantiate proprietary services
+        try:
+            self.docdb = DocDB(facade)
+        except NameError as _:
+            pass
         try:
             self.dynamodb = DynamoDB(facade)
         except NameError as _:
