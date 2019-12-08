@@ -27,6 +27,9 @@ from ScoutSuite.providers.utils import run_concurrently
 # Try to import proprietary facades
 try:
     from ScoutSuite.providers.aws.facade.documentdb_private import DocumentDBFacade
+except ImportError:
+    pass
+try:
     from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
 except ImportError:
     pass
