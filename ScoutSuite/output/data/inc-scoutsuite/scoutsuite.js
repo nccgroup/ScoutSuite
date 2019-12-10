@@ -2,7 +2,7 @@
 const resultFormats = {'invalid': 0, 'json': 1, 'sqlite': 2}
 Object.freeze(resultFormats)
 const $ = window.$
-var loadedConfigArray = []
+let loadedConfigArray = []
 var runResults
 
 /**
@@ -147,19 +147,19 @@ var loadAccountId = function () {
 function loadConfig(scriptId, cols, force) {
     if (!force) {
         // Abort if data was previously loaded
-        // if (loadedConfigArray.indexOf(scriptId) > 0) {
-        //     // When the path does not contain .id.
-        //     return 0
-        // }
+        if (loadedConfigArray.indexOf(scriptId) > -1 ) {
+            // When the path does not contain .id.
+            return 0
+        }
         let pathArray = scriptId.split('.')
         for (let i = 3; i < pathArray.length; i = i + 2) {
             pathArray[i] = 'id'
         }
         let fixedPath = pathArray.join('.')
-        // if (loadedConfigArray.indexOf(fixedPath) > 0) {
-        //     // When the loaded path contains id but browsed-to path contains a specific value
-        //     return 0
-        // }
+        if (loadedConfigArray.indexOf(fixedPath) > -1) {
+            // When the loaded path contains id but browsed-to path contains a specific value
+            return 0
+        }
         pathArray[1] = 'id'
         fixedPath = pathArray.join('.')
         if (loadedConfigArray.indexOf(fixedPath) > 0) {
@@ -169,7 +169,7 @@ function loadConfig(scriptId, cols, force) {
     }
 
     // Build the list based on the path, stopping at the first .id. value
-    let list = runResults
+    let list = runResults;
     let pathArray = scriptId.split('.id.')[0].split('.')
     for (let i in pathArray) {
         // Allows for creation of regions-filter etc...
@@ -189,7 +189,7 @@ function loadConfig(scriptId, cols, force) {
     }
 
     // Update the DOM
-    hideAll()
+    hideAll();
     if (cols === 0) {
         // Metadata
         scriptId = scriptId.replace('services.id.', '')
@@ -204,7 +204,7 @@ function loadConfig(scriptId, cols, force) {
     }
 
     // Update the list of loaded data
-    loadedConfigArray.push(scriptId)
+    loadedConfigArray.push(scriptId);
     return 1
 }
 
