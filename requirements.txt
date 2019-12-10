@@ -1,5 +1,5 @@
 # Core
-python-dateutil>=2.2
+python-dateutil<2.8.1,>=2.1
 netaddr>=0.7.11
 sqlitedict>=1.6.0
 cherrypy>=18.1.0
