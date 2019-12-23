@@ -19,5 +19,8 @@ class TestScoutOutput:
     def test_get_filename(self):
         assert ('scoutsuite-report/report.html' in get_filename("REPORT"))
         assert ('scoutsuite-report/scoutsuite-results/scoutsuite_results.js' in get_filename("RESULTS"))
+        assert ('scoutsuite-results/scoutsuite_results.js' in get_filename("RESULTS", relative_path=True))
         assert ('scoutsuite-report/scoutsuite-results/scoutsuite_exceptions.js' in get_filename("EXCEPTIONS"))
+        assert ('scoutsuite-results/scoutsuite_exceptions.js' in get_filename("EXCEPTIONS", relative_path=True))
         assert ('scoutsuite-report/scoutsuite-results/scoutsuite_errors.json' in get_filename("ERRORS"))
+        assert ('scoutsuite-results/scoutsuite_errors.json' in get_filename("ERRORS", relative_path=True))
