@@ -1,5 +1,6 @@
 from boto3.session import Session
 
+from ScoutSuite.providers.aws.facade.acm import AcmFacade
 from ScoutSuite.providers.aws.facade.awslambda import LambdaFacade
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.cloudformation import CloudFormation
@@ -45,7 +46,8 @@ class AWSFacade(AWSBaseFacade):
     async def build_region_list(self, service: str, chosen_regions=None, excluded_regions=None, partition_name='aws'):
 
         service = 'ec2containerservice' if service == 'ecs' else service
-        available_services = await run_concurrently(lambda: Session(region_name='eu-west-1').get_available_services())
+        available_services = await run_concurrently(lambda: Session(region_name='us-west-2').get_available_services())
+
         if service not in available_services:
             raise Exception('Service ' + service + ' is not available.')
 
@@ -75,6 +77,7 @@ class AWSFacade(AWSBaseFacade):
 
     def _instantiate_facades(self):
         self.ec2 = EC2Facade(self.session, self.owner_id)
+        self.acm = AcmFacade(self.session)
         self.awslambda = LambdaFacade(self.session)
         self.cloudformation = CloudFormation(self.session)
         self.cloudtrail = CloudTrailFacade(self.session)

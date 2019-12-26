@@ -1,27 +1,25 @@
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
+from ScoutSuite.providers.utils import map_concurrently, run_concurrently
 
 
 class AcmFacade(AWSBaseFacade):
-    async def get_certificates(self, region: str):
+    async def get_certificates(self, region):
         try:
-            certificates = await AWSFacadeUtils.get_all_pages('acm', region, self.session, 'list_certificates', 'CertificateSummaryList')
+            cert_list = await AWSFacadeUtils.get_all_pages('acm', region, self.session, 'list_certificates', 'CertificateSummaryList')
+            cert_arns = [cert['CertificateArn'] for cert in cert_list]
         except Exception as e:
-            print_exception('Failed to get ACM certificates: {}'.format(e))
-            certificates= []
+            print_exception('Failed to get acm certificates: {}'.format(e))
+            return []
         else:
-            await get_and_set_concurrently( [self._get_and_set_certificate], certificates, region=region)
-        finally:
-            return certificates
+            return await map_concurrently(self._get_certificate, cert_arns, region=region)
 
-    async def _get_and_set_certificate(self, certificate: {}, region: str):
+    async def _get_certificate(self, cert_arn: str, region: str):
         client = AWSFacadeUtils.get_client('acm', self.session, region)
         try:
-            certificate_description = await run_concurrently(
-                lambda: client.describe_certificate(CertificateArn=stack['CertificateArn'])['Certificate'])
+            return await run_concurrently(lambda: client.describe_certificate(CertificateArn=cert_arn)['Certificate'])
         except Exception as e:
-            print_exception('Failed to describe certificate: {}'.format(e))
-        else:
-            certificate.update(certificate_description)
+            print_exception('Failed to describe acm certificate: {}'.format(e))
+            raise
 
