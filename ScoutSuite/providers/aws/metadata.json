@@ -292,6 +292,7 @@
         "acm": {
             "resources": {
                 "certificates": {
+                    "cols": 2,
                     "path": "services.acm.regions.id.certificates"
                 }
             }
