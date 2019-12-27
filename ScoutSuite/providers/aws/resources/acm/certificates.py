@@ -27,5 +27,5 @@ class Certificates(AWSResources):
         certificate_dict['CertificateAuthorityArn'] = raw_certificate.get('CertificateAuthorityArn')
         certificate_dict['CertificateTransparencyLoggingPreference'] = raw_certificate.get('Options').get('CertificateTransparencyLoggingPreference')
 
-        return certificate_dict['name'], certificate_dict
+        return certificate_dict['CertificateArn'], certificate_dict
 
