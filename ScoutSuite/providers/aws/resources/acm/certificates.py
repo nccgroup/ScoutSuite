@@ -16,6 +16,7 @@ class Certificates(AWSResources):
     def _parse_certificate(self, raw_certificate):
 
         certificate_dict = {}
+        certificate_dict['name'] = raw_certificate.get('CertificateArn')
         certificate_dict['CertificateArn'] = raw_certificate.get('CertificateArn')
         certificate_dict['DomainName'] = raw_certificate.get('DomainName')
         certificate_dict['Subject'] = raw_certificate.get('Subject')
