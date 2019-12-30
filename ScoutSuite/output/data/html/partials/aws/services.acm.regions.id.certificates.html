@@ -1,0 +1,41 @@
+<!-- acm certificates -->
+<script id="services.acm.regions.id.certificates.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+	<div class="list-group-item-text item-margin">Certificate Arn: <span id="acm.regions.{{region}}.certificates.{{@key}}.certificate_arn"><samp>{{value_or_none certificate_arn}}</samp></span></div>
+	<div class="list-group-item-text item-margin">Domain Name: <span id="acm.regions.{{region}}.certificates.{{@key}}.domain_name"><samp>{{value_or_none domain_name}}</samp></span></div>
+	<div class="list-group-item-text item-margin">Subject Alternative Names: <span id="acm.regions.{{region}}.certificates.{{@key}}.subject_alternative_names"><samp>{{value_or_none subject_alternative_names}}</samp></span></div>
+	<div class="list-group-item-text item-margin">Domain Validation Options: <span id="acm.regions.{{region}}.certificates.{{@key}}.domain_validation_options"><samp>{{value_or_none domain_validation_options}}</samp></span></div>
+	<div class="list-group-item-text item-margin">Subject: <span id="acm.regions.{{region}}.certificates.{{@key}}.subject"><samp>{{value_or_none subject}}</samp></span></div>
+	<div class="list-group-item-text item-margin">Issuer: <span id="acm.regions.{{region}}.certificates.{{@key}}.issuer"><samp>{{value_or_none issuer}}</samp></span></div>
+	<div class="list-group-item-text item-margin">Created At: <span id="acm.regions.{{region}}.certificates.{{@key}}.created_at"><samp>{{value_or_none created_at}}</samp></span></div>
+	<div class="list-group-item-text item-margin">Status: <span id="acm.regions.{{region}}.certificates.{{@key}}.status"><samp>{{value_or_none status}}</samp></span></div>
+	<div class="list-group-item-text item-margin">Key Algorithm: <span id="acm.regions.{{region}}.certificates.{{@key}}.key_algorithm"><samp>{{value_or_none key_algorithm}}</samp></span></div>
+	<div class="list-group-item-text item-margin">Signature Algorithm: <span id="acm.regions.{{region}}.certificates.{{@key}}.signature_algorithm"><samp>{{value_or_none signature_algorithm}}</samp></span></div>
+	<div class="list-group-item-text item-margin">In Use By: <span id="acm.regions.{{region}}.certificates.{{@key}}.in_use_by"><samp>{{value_or_none in_use_by}}</samp></span></div>
+	<div class="list-group-item-text item-margin">Type: <span id="acm.regions.{{region}}.certificates.{{@key}}.type"><samp>{{value_or_none type}}</samp></span></div>
+	<div class="list-group-item-text item-margin">Key Usages: <span id="acm.regions.{{region}}.certificates.{{@key}}.key_usages"><samp>{{value_or_none key_usages}}</samp></span></div>
+	<div class="list-group-item-text item-margin">Extended Key Usages: <span id="acm.regions.{{region}}.certificates.{{@key}}.extended_key_usages"><samp>{{value_or_none extended_key_usages}}</samp></span></div>
+	<div class="list-group-item-text item-margin">Renewal Eligibility: <span id="acm.regions.{{region}}.certificates.{{@key}}.renewal_eligibility"><samp>{{value_or_none renewal_eligibility}}</samp></span></div>
+	<div class="list-group-item-text item-margin">Options: <span id="acm.regions.{{region}}.certificates.{{@key}}.options"><samp>{{value_or_none options}}</samp></span></div>
+	<div class="list-group-item-text item-margin">Name: <span id="acm.regions.{{region}}.certificates.{{@key}}.name"><samp>{{value_or_none name}}</samp></span></div>
+	<div class="list-group-item-text item-margin">Arn: <span id="acm.regions.{{region}}.certificates.{{@key}}.arn"><samp>{{value_or_none arn}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.acm.regions.id.certificates", $("#services\\.acm\\.regions\\.id\\.certificates\\.partial").html());
+</script>
+
+<!-- Single acm certificate template -->
+<script id="single_acm_certificate-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.acm.regions.id.certificates'}}
+</script>
+<script>
+    var single_acm_certificate_template = Handlebars.compile($("#single_acm_certificate-template").html());
+</script>
+
+

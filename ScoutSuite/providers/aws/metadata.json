@@ -242,6 +242,7 @@
                 }
             }
         },
+
         "awslambda": {
             "resources": {
                 "functions": {
@@ -288,6 +289,14 @@
                 }
             }
         },        
+        "acm": {
+            "resources": {
+                "certificates": {
+                    "cols": 2,
+                    "path": "services.acm.regions.id.certificates"
+                }
+            }
+	},
         "kms": {
             "resources": {
                 "keys": {
