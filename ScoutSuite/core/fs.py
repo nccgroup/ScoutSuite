@@ -101,6 +101,6 @@ def save_blob_as_json(filename, blob, force_write):
         if prompt_overwrite(filename, force_write):
             with open(filename, 'wt') as f:
                 print_info('%s' % json.dumps(blob, indent=4, separators=(',', ': '), sort_keys=True,
-                                             cls=CustomJSONEncoder), file=f)
+                                             cls=CustomJSONEncoder))
     except Exception as e:
         print_exception(e)
