@@ -1,6 +1,6 @@
 {
     "description": "ACM Certificate Expiring in Less Than _ARG_0_ Days",
-	"rationale": "<b>Description:</b><br><br>Disabling Transparency Logging may result in browsers not trusting your certificate. As of April 30 2018, Google Chrome no longer trusts public SSL/TLS certificates that are not recorded in a certificate transparency log. Transparancy Logging should be enabled as a best practice.",
+    "rationale": "<b>Description:</b><br><br>Ensure that certificates which are in use are not about to expire.",
     "path": "acm.regions.id.certificates.id",
     "dashboard_name": "Certificates",
     "conditions": [ "and",
