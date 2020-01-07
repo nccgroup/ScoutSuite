@@ -60,7 +60,7 @@ class DatabaseInstances(GCPCompositeResources):
         return raw_instance['settings']['backupConfiguration'].get('binaryLogEnabled')
 
     def _is_ssl_required(self, raw_instance):
-        return raw_instance['settings']['ipConfiguration'].get('requireSsl')
+        return raw_instance['settings']['ipConfiguration'].get('requireSsl', False)
 
     def _set_last_backup_timestamps(self, instances):
         for instance_id, _ in instances:
@@ -69,7 +69,7 @@ class DatabaseInstances(GCPCompositeResources):
 
     def _get_last_backup_timestamp(self, backups):
         if not backups:
-            return 'N/A'
+            return None
         last_backup_id = max(backups.keys(), key=(
             lambda k: backups[k]['creation_timestamp']))
         return backups[last_backup_id]['creation_timestamp']
