@@ -3,8 +3,8 @@ from ScoutSuite.providers.azure.resources.base import AzureCompositeResources
 from .auto_provisioning_settings import AutoProvisioningSettings
 from .pricings import Pricings
 from .security_contacts import SecurityContacts
-from .information_protection_policies import InformationProtectionPolicies
-from .settings import Settings
+# from .information_protection_policies import InformationProtectionPolicies
+# from .settings import Settings
 
 
 class SecurityCenter(AzureCompositeResources):
