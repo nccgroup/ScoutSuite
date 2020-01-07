@@ -4,6 +4,7 @@
     "path": "acm.regions.id.certificates.id",
     "dashboard_name": "Certificates",
     "conditions": [ "and",
-	[ "acm.regions.id.certificates.id.Options.CertificateTransparencyLoggingPreference", "equal", "DISABLED" ]
-    ]
+      [ "acm.regions.id.certificates.id.Options.CertificateTransparencyLoggingPreference", "equal", "DISABLED" ]
+    ],
+    "id_suffix": "CertificateTransparencyLoggingPreference"
 }
