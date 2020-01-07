@@ -2,6 +2,7 @@
     "description": "Global services logging disabled",
 	"rationale": "<b>Description:</b><br><br>API activity for global services such as IAM and STS is not logged. Investigation of incidents will be incomplete due to the lack of information.",
     "path": "cloudtrail",
+    "display_path": "cloudtrail.regions.id.trails.id",
     "dashboard_name": "Configuration",
     "conditions": [ "and",
         [ "IncludeGlobalServiceEvents", "false", "" ]
