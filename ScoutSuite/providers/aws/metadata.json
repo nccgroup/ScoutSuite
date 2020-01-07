@@ -288,7 +288,7 @@
                     "path": "services.iam.password_policy"
                 }
             }
-        },        
+        },
         "acm": {
             "resources": {
                 "certificates": {
@@ -296,7 +296,7 @@
                     "path": "services.acm.regions.id.certificates"
                 }
             }
-	},
+        },
         "kms": {
             "resources": {
                 "keys": {
