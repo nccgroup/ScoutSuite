@@ -146,8 +146,8 @@ var loadAccountId = function () {
  */
 function loadConfig(scriptId, cols, force) {
     if (!force && !scriptId.endsWith('.external_attack_surface')) {
-        console.log(scriptId);
-        console.log(loadedConfigArray);
+        console.log('Script ID: ' + scriptId);
+        // console.log(loadedConfigArray);
         // Abort if data was previously loaded
         if (loadedConfigArray.indexOf(scriptId) > -1 ) {
             // When the path does not contain .id.
@@ -1009,7 +1009,7 @@ function getValueAtRecursive(path, source) {
                 value = value[key];
             }
         } catch (err) {
-            console.log(err)
+            console.log('Error: ' + err)
         }
 
         // check if there are more elements to process
@@ -1349,7 +1349,7 @@ function downloadConfiguration(configuration, name, prefix) {
 function downloadExceptions() {
     var url = window.location.pathname
     var profileName = url.substring(url.lastIndexOf('/') + 1).replace('report-', '').replace('.html', '')
-    console.log(exceptions)
+    console.log('Download exceptions: ' + exceptions)
     downloadConfiguration(exceptions, 'exceptions-' + profileName, 'exceptions = \n')
 }
 
