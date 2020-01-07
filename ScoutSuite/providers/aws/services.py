@@ -1,4 +1,5 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
+from ScoutSuite.providers.aws.resources.acm.base import Certificates
 from ScoutSuite.providers.aws.resources.awslambda.base import Lambdas
 from ScoutSuite.providers.aws.resources.cloudformation.base import CloudFormation
 from ScoutSuite.providers.aws.resources.cloudtrail.base import CloudTrail
@@ -58,6 +59,7 @@ class AWSServicesConfig(BaseServicesConfig):
 
         facade = AWSFacade(credentials)
 
+        self.acm = Certificates(facade)
         self.awslambda = Lambdas(facade)
         self.cloudformation = CloudFormation(facade)
         self.cloudtrail = CloudTrail(facade)

@@ -1,0 +1,10 @@
+{
+    "description": "ACM Certificate with Transparency Logging set to Disabled",
+	"rationale": "<b>Description:</b><br><br>Ensure that certificates which are in use are not about to expire.",
+    "path": "acm.regions.id.certificates.id",
+    "dashboard_name": "Certificates",
+    "conditions": [ "and",
+      [ "acm.regions.id.certificates.id.Options.CertificateTransparencyLoggingPreference", "equal", "DISABLED" ]
+    ],
+    "id_suffix": "CertificateTransparencyLoggingPreference"
+}
