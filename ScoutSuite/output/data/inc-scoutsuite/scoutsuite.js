@@ -1194,6 +1194,8 @@ function makeTitle(title) {
         return 'Kubernetes Engine'
     } else if (title === 'cloudresourcemanager') {
         return 'Cloud Resource Manager'
+    } else if (['aad', 'arm'].indexOf(title) !== -1) {
+        return title.toUpperCase()
     } else if (title === 'storageaccounts') {
         return 'Storage Accounts'
     } else if (title === 'sqldatabase') {
@@ -1224,8 +1226,6 @@ function makeTitle(title) {
         return 'OSS'
     } else if (title === 'objectstorage') {
         return 'Object Storage'
-    } else if (title === 'graphrbac') {
-        return 'Graph RBAC'
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).split('_').join(' ')
     }

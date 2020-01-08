@@ -1,15 +1,13 @@
 from azure.graphrbac import GraphRbacManagementClient
-from azure.mgmt.authorization import AuthorizationManagementClient
 
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently
 
 
-class GraphRBACFacade:
-    def __init__(self, graphrbac_credentials, credentials, tenant_id, subscription_id):
+class AADFacade:
+    def __init__(self, graphrbac_credentials, tenant_id, subscription_id):
         self._subscription_id = subscription_id
         self._client = GraphRbacManagementClient(graphrbac_credentials, tenant_id=tenant_id)
-        self._authorization_client = AuthorizationManagementClient(credentials, subscription_id=subscription_id)
 
     async def get_users(self):
         try:
@@ -47,19 +45,4 @@ class GraphRBACFacade:
             return await run_concurrently(lambda: list(self._client.applications.list()))
         except Exception as e:
             print_exception('Failed to retrieve applications: {}'.format(e))
-            return []
-
-    async def get_roles(self):
-        try:
-            scope = '/subscriptions/{}'.format(self._subscription_id)
-            return await run_concurrently(lambda: list(self._authorization_client.role_definitions.list(scope=scope)))
-        except Exception as e:
-            print_exception('Failed to retrieve roles: {}'.format(e))
-            return []
-
-    async def get_role_assignments(self):
-        try:
-            return await run_concurrently(lambda: list(self._authorization_client.role_assignments.list()))
-        except Exception as e:
-            print_exception('Failed to retrieve role assignments: {}'.format(e))
             return []

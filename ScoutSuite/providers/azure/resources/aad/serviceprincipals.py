@@ -3,7 +3,7 @@ from ScoutSuite.providers.azure.resources.base import AzureResources
 
 class ServicePrincipals(AzureResources):
     async def fetch_all(self):
-        for raw_service_principal in await self.facade.graphrbac.get_service_principals():
+        for raw_service_principal in await self.facade.aad.get_service_principals():
             id, service_principal = await self._parse_service_principal(raw_service_principal)
             # exclude built-in service principals
             if service_principal['publisher_name'] != 'Microsoft Services':

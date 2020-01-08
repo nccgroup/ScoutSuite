@@ -27,7 +27,6 @@ formatted_service_name = {
     'appservice': 'App Service',
     'loadbalancer': 'Load Balancer',
     'virtualmachines': 'Virtual Machines',
-    'graphrbac': 'Graph RBAC',
     # GCP
     'cloudstorage': 'Cloud Storage',
     'cloudsql': 'Cloud SQL',

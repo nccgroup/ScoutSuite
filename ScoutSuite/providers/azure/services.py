@@ -1,6 +1,7 @@
 from ScoutSuite.providers.azure.authentication_strategy import AzureCredentials
 from ScoutSuite.providers.azure.facade.base import AzureFacade
-from ScoutSuite.providers.azure.resources.graphrbac.base import GraphRBAC
+from ScoutSuite.providers.azure.resources.aad.base import AAD
+from ScoutSuite.providers.azure.resources.arm.base import ARM
 from ScoutSuite.providers.azure.resources.keyvault.base import KeyVaults
 from ScoutSuite.providers.azure.resources.network.base import Networks
 from ScoutSuite.providers.azure.resources.securitycenter.base import SecurityCenter
@@ -36,11 +37,12 @@ class AzureServicesConfig(BaseServicesConfig):
 
         facade = AzureFacade(credentials)
 
+        self.aad = AAD(facade)
+        self.arm = ARM(facade)
         self.securitycenter = SecurityCenter(facade)
         self.sqldatabase = Servers(facade)
         self.storageaccounts = StorageAccounts(facade)
         self.keyvault = KeyVaults(facade)
-        self.graphrbac = GraphRBAC(facade)
         self.network = Networks(facade)
         self.virtualmachines = VirtualMachines(facade)
 

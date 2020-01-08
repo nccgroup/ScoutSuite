@@ -3,7 +3,7 @@ from ScoutSuite.providers.azure.resources.base import AzureResources
 
 class Applications(AzureResources):
     async def fetch_all(self):
-        for raw_application in await self.facade.graphrbac.get_applications():
+        for raw_application in await self.facade.aad.get_applications():
             id, application = await self._parse_application(raw_application)
             self[id] = application
 

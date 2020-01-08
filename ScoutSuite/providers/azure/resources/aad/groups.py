@@ -3,7 +3,7 @@ from ScoutSuite.providers.azure.resources.base import AzureResources
 
 class Groups(AzureResources):
     async def fetch_all(self):
-        for raw_group in await self.facade.graphrbac.get_groups():
+        for raw_group in await self.facade.aad.get_groups():
             id, group = self._parse_group(raw_group)
             self[id] = group
 

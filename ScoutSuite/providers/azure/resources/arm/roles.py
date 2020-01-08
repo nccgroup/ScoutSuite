@@ -3,7 +3,7 @@ from ScoutSuite.providers.azure.resources.base import AzureResources
 
 class Roles(AzureResources):
     async def fetch_all(self):
-        for raw_role in await self.facade.graphrbac.get_roles():
+        for raw_role in await self.facade.arm.get_roles():
             id, role = self._parse_role(raw_role)
             self[id] = role
 
