@@ -681,8 +681,6 @@ function showObject(path, attrName, attrValue) {
 
     // Adds the resource path values to the data context
     for (let i = 0; i < pathLength - 1; i += 2) {
-        if (i + 1 >= pathLength) break
-
         const attribute = makeResourceTypeSingular(pathArray[i])
         data[attribute] = pathArray[i + 1]
     }
@@ -1002,7 +1000,7 @@ function getValueAtRecursive(path, source) {
                 value = value[key];
             }
         } catch (err) {
-            console.log(err)
+            console.log(err);
         }
 
         // check if there are more elements to process

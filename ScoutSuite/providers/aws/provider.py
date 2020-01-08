@@ -389,7 +389,6 @@ class AWSProvider(BaseProvider):
                 for bucket in s3_info['buckets']:
                     self._update_iam_permissions(
                         s3_info, bucket, iam_entity, allowed_iam_entity, policy_info)
-                pass
             else:
                 # Could be an error or cross-account access, ignore
                 pass
@@ -610,36 +609,36 @@ class AWSProvider(BaseProvider):
         # FIXME it's not clear if the below is still necessary/useful
         return
 
-        attached_resource = current_config['ResourceId']
-        if attached_resource.startswith('vpc-'):
-            vpc_path = combine_paths(
-                current_path[0:4], ['vpcs', attached_resource])
-            try:
-                attached_vpc = get_object_at(self, vpc_path)
-            except Exception:
-                print_debug(
-                    'It appears that the flow log %s is attached to a resource that was previously deleted (%s).' % (
-                        flow_log_id, attached_resource))
-                return
-            manage_dictionary(attached_vpc, 'flow_logs', [])
-            if flow_log_id not in attached_vpc['flow_logs']:
-                attached_vpc['flow_logs'].append(flow_log_id)
-            for subnet_id in attached_vpc['subnets']:
-                manage_dictionary(
-                    attached_vpc['subnets'][subnet_id], 'flow_logs', [])
-                if flow_log_id not in attached_vpc['subnets'][subnet_id]['flow_logs']:
-                    attached_vpc['subnets'][subnet_id]['flow_logs'].append(
-                        flow_log_id)
-        elif attached_resource.startswith('subnet-'):
-            subnet_path = combine_paths(current_path[0:4],
-                                        ['vpcs', self.subnet_map[attached_resource]['vpc_id'], 'subnets',
-                                         attached_resource])
-            subnet = get_object_at(self, subnet_path)
-            manage_dictionary(subnet, 'flow_logs', [])
-            if flow_log_id not in subnet['flow_logs']:
-                subnet['flow_logs'].append(flow_log_id)
-        else:
-            print_exception('Resource %s attached to flow logs is not handled' % attached_resource)
+        # attached_resource = current_config['ResourceId']
+        # if attached_resource.startswith('vpc-'):
+        #     vpc_path = combine_paths(
+        #         current_path[0:4], ['vpcs', attached_resource])
+        #     try:
+        #         attached_vpc = get_object_at(self, vpc_path)
+        #     except Exception:
+        #         print_debug(
+        #             'It appears that the flow log %s is attached to a resource that was previously deleted (%s).' % (
+        #                 flow_log_id, attached_resource))
+        #         return
+        #     manage_dictionary(attached_vpc, 'flow_logs', [])
+        #     if flow_log_id not in attached_vpc['flow_logs']:
+        #         attached_vpc['flow_logs'].append(flow_log_id)
+        #     for subnet_id in attached_vpc['subnets']:
+        #         manage_dictionary(
+        #             attached_vpc['subnets'][subnet_id], 'flow_logs', [])
+        #         if flow_log_id not in attached_vpc['subnets'][subnet_id]['flow_logs']:
+        #             attached_vpc['subnets'][subnet_id]['flow_logs'].append(
+        #                 flow_log_id)
+        # elif attached_resource.startswith('subnet-'):
+        #     subnet_path = combine_paths(current_path[0:4],
+        #                                 ['vpcs', self.subnet_map[attached_resource]['vpc_id'], 'subnets',
+        #                                  attached_resource])
+        #     subnet = get_object_at(self, subnet_path)
+        #     manage_dictionary(subnet, 'flow_logs', [])
+        #     if flow_log_id not in subnet['flow_logs']:
+        #         subnet['flow_logs'].append(flow_log_id)
+        # else:
+        #     print_exception('Resource %s attached to flow logs is not handled' % attached_resource)
 
     def get_db_attack_surface(self, current_config, path, current_path, db_id, callback_args):
         service = current_path[1]
