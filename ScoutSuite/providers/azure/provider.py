@@ -52,6 +52,17 @@ class AzureProvider(BaseProvider):
         """
         ip_ranges = [] if ip_ranges is None else ip_ranges
 
+        self._match_arm_roles_and_principals()
+
+        super(AzureProvider, self).preprocessing()
+
+    def _match_arm_roles_and_principals(self):
+        """
+        Matches ARM roles to AAD service principals
+
+        :return:
+        """
+
         # Add role assignments
         if 'arm' in self.service_list and 'aad' in self.service_list:
             for assignment in self.services['arm']['role_assignments'].values():
@@ -71,5 +82,3 @@ class AzureProvider(BaseProvider):
                         self.services['aad']['service_principals'][service_principal]['roles'].append(role_id)
                         self.services['arm']['roles'][role_id]['assignments']['service_principals'].append(service_principal)
                         self.services['arm']['roles'][role_id]['assignments_count'] += 1
-
-        super(AzureProvider, self).preprocessing()
