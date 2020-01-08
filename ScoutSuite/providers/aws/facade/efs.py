@@ -36,7 +36,6 @@ class EFSFacade(AWSBaseFacade):
                 FileSystemId=file_system['FileSystemId'])
         except Exception as e:
             print_exception('Failed to get and set EFS mount targets: {}'.format(e))
-            file_systems = []
         else:
             if len(mount_targets) == 0:
                 return

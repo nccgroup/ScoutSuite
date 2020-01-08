@@ -204,6 +204,7 @@ class Ruleset:
 class TmpRuleset(Ruleset):
 
     def __init__(self, cloud_provider, rule_dirs=None, rule_filename=None, rule_args=None, rule_level='danger'):
+        super().__init__(cloud_provider)
         rule_dirs = [] if rule_dirs is None else rule_dirs
         rule_args = [] if rule_args is None else rule_args
         self.rule_type = 'findings'

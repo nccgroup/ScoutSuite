@@ -170,7 +170,7 @@ def prompt_value(question, choices=None, default=None, display_choices=True, dis
         if choices and display_indices:
             for c in choices:
                 print_error('%3d. %s' % (choices.index(c), c))
-            print_error('Enter the number corresponding to your choice: ', False)
+            print_error('Enter the number corresponding to your choice: ')
         choice = prompt(test_input)
         # Set the default value if empty choice
         if not choice or choice == '':

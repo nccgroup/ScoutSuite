@@ -46,7 +46,7 @@ class AWSAuthenticationStrategy(AuthenticationStrategy):
                 session = boto3.Session()
 
             # Test querying for current user
-            identity = get_caller_identity(session)
+            get_caller_identity(session)
 
             return AWSCredentials(session=session)
 
