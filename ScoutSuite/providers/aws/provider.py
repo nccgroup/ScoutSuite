@@ -1,7 +1,7 @@
 import copy
 import os
 
-from ScoutSuite.core.console import print_debug, print_error, print_exception
+from ScoutSuite.core.console import print_error, print_exception
 from ScoutSuite.providers.aws.services import AWSServicesConfig
 from ScoutSuite.providers.aws.resources.vpc.base import put_cidr_name
 from ScoutSuite.providers.aws.utils import ec2_classic, get_aws_account_id
@@ -31,7 +31,7 @@ class AWSProvider(BaseProvider):
         self.provider_code = 'aws'
         self.provider_name = 'Amazon Web Services'
         self.environment = self.profile
-        self.result_format = result_format 
+        self.result_format = result_format
 
         self.credentials = kwargs['credentials']
 
@@ -299,8 +299,8 @@ class AWSProvider(BaseProvider):
                     if 'Allow' in iam_info['permissions']['Action'][action][iam_entity]:
                         for allowed_iam_entity in iam_info['permissions']['Action'][action][iam_entity]['Allow']:
                             # For resource statements, we can easily rely on the existing permissions structure
-                            if 'Resource' in iam_info['permissions']['Action'][action][iam_entity]['Allow'][
-                                allowed_iam_entity]:
+                            if 'Resource' in \
+                                    iam_info['permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]:
                                 for full_path in (x for x in
                                                   iam_info['permissions']['Action'][action][iam_entity]['Allow'][
                                                       allowed_iam_entity]['Resource'] if
@@ -438,7 +438,8 @@ class AWSProvider(BaseProvider):
     def process_vpc_peering_connections_callback(self, current_config, path, current_path, pc_id, callback_args):
 
         # Create a list of peering connection IDs in each VPC
-        info = 'AccepterVpcInfo' if current_config['AccepterVpcInfo']['OwnerId'] == self.account_id else 'RequesterVpcInfo'
+        info = 'AccepterVpcInfo' if current_config['AccepterVpcInfo'][
+                                        'OwnerId'] == self.account_id else 'RequesterVpcInfo'
         region = current_path[current_path.index('regions') + 1]
         vpc_id = current_config[info]['VpcId']
         if vpc_id not in self.services['vpc']['regions'][region]['vpcs']:
