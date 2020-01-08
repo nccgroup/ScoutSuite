@@ -15,8 +15,8 @@ class AzureCredentials:
     def __init__(self,
                  credentials, graphrbac_credentials,
                  subscription_id=None, tenant_id=None):
-        self.credentials = credentials
-        self.graphrbac_credentials = graphrbac_credentials
+        self.credentials = credentials  # Azure Resource Manager API credentials
+        self.graphrbac_credentials = graphrbac_credentials  # Azure AD Graph API credentials
         self.subscription_id = subscription_id
         self.tenant_id = tenant_id if tenant_id else credentials.token.get('tenant_id')  # TODO does this work for MSI
 
