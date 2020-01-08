@@ -46,6 +46,15 @@ Handlebars.registerHelper('has_profiles?', function (logins) {
     }
 })
 
+// Required in addition to has_profiles to allow if conditions
+Handlebars.registerHelper('ifHasProfiles', function (logins, options) {
+    if (typeof logins !== 'undefined' && logins !== '') {
+        return options.fn(this)
+    } else {
+        return options.inverse(this)
+    }
+})
+
 Handlebars.registerHelper('has_access_keys?', function (accessKeys) {
     if (typeof accessKeys !== 'undefined' && accessKeys !== '') {
         return accessKeys.length
@@ -287,6 +296,14 @@ Handlebars.registerHelper('getValueAt', function () {
     }
     return getValueAt(path)
 })
+
+Handlebars.registerHelper('greaterLengthThan', function (v1, v2, options) {
+    'use strict';
+    if (v1.length>v2) {
+        return options.fn(this);
+    }
+    return options.inverse(this);
+});
 
 Handlebars.registerHelper('concat', function () {
     var path = arguments[0]
