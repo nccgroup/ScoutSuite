@@ -8,6 +8,8 @@ from ScoutSuite.providers.azure.facade.sqldatabase import SQLDatabaseFacade
 from ScoutSuite.providers.azure.facade.storageaccounts import StorageAccountsFacade
 from ScoutSuite.providers.azure.facade.virtualmachines import VirtualMachineFacade
 
+from azure.mgmt.resource import SubscriptionClient
+
 # Try to import proprietary services
 try:
     from ScoutSuite.providers.azure.facade.appgateway_private import AppGatewayFacade
@@ -29,6 +31,10 @@ except ImportError:
 
 class AzureFacade():
     def __init__(self, credentials: AzureCredentials):
+
+        self.credentials = credentials
+        self.subscriptions = None
+
         self.aad = AADFacade(credentials.graphrbac_credentials, credentials.tenant_id, credentials.subscription_id)
         self.arm = ARMFacade(credentials.credentials, credentials.subscription_id)
         self.keyvault = KeyVaultFacade(credentials.credentials, credentials.subscription_id)
@@ -55,3 +61,10 @@ class AzureFacade():
             self.rediscache = RedisCacheFacade(credentials.credentials, credentials.subscription_id)
         except NameError:
             pass
+
+    async def get_subscriptions(self):
+        # FIXME this is a bogus implementation
+        if not self.subscriptions:
+            subscription_client = SubscriptionClient(self.credentials.credentials)
+            self.subscriptions = list(subscription_client.subscriptions.list())
+        return self.subscriptions

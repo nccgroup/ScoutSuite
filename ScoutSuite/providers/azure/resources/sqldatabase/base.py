@@ -1,4 +1,4 @@
-from ScoutSuite.providers.azure.resources.base import AzureCompositeResources
+from ScoutSuite.providers.azure.resources.subscriptions import Subscriptions
 from ScoutSuite.providers.azure.utils import get_resource_group_name
 from ScoutSuite.providers.utils import get_non_provider_id
 
@@ -8,7 +8,7 @@ from .server_blob_auditing_policies import ServerBlobAuditingPolicies
 from .server_security_alert_policies import ServerSecurityAlertPolicies
 
 
-class Servers(AzureCompositeResources):
+class Servers(Subscriptions):
     _children = [
         (Databases, 'databases'),
         (ServerAzureAdAdministrators, None),
@@ -17,6 +17,7 @@ class Servers(AzureCompositeResources):
     ]
 
     async def fetch_all(self):
+        # TODO servers should be a resource in a separate file
         self['servers'] = {}
         for server in await self.facade.sqldatabase.get_servers():
             id = get_non_provider_id(server.id)
