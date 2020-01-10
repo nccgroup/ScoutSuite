@@ -25,7 +25,7 @@ class OracleAuthenticationStrategy(AuthenticationStrategy):
 
             # Get the current user
             identity = IdentityClient(config)
-            user = identity.get_user(config["user"]).data
+            identity.get_user(config["user"]).data
 
             return OracleCredentials(config, compartment_id)
 

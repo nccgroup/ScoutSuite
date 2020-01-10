@@ -79,8 +79,6 @@ class GCPProvider(BaseProvider):
         :param ip_ranges_name_key:
         :return: None
         """
-        ip_ranges = [] if ip_ranges is None else ip_ranges
-
         self._match_instances_and_snapshots()
         self._match_networks_and_instances()
 

@@ -1,0 +1,94 @@
+
+<!-- acm certificates -->
+<script id="services.acm.regions.id.certificates.partial" type="text/x-handlebars-template">
+	<div id="resource-name" class="list-group-item active">
+		<h4 class="list-group-item-heading">{{name}}</h4>
+	</div>
+	<div class="list-group-item">
+		<h4 class="list-group-item-heading">Information</h4>
+		<div class="list-group-item-text item-margin">ARN: <span id="acm.regions.{{region}}.certificates.{{@key}}.CertificateArn"><samp>{{value_or_none CertificateArn}}</samp></span></div>
+		<div class="list-group-item-text item-margin">Domain Name: <span id="acm.regions.{{region}}.certificates.{{@key}}.DomainName"><samp>{{value_or_none DomainName}}</samp></span></div>
+		<div class="list-group-item-text item-margin">Subject: <span id="acm.regions.{{region}}.certificates.{{@key}}.Subject"><samp>{{value_or_none Subject}}</samp></span></div>
+		<div class="list-group-item-text item-margin">
+			Subject Alternative Names:
+			<span id="acm.regions.{{region}}.certificates.{{@key}}.SubjectAlternativeNames">
+				<ul>
+					{{#each SubjectAlternativeNames}}
+					<li class="list-group-item-text"><samp>{{this}}</samp></li>
+					{{/each}}
+				</ul>
+			</span>
+		</div>
+		<div class="list-group-item-text item-margin">Status: <span id="acm.regions.{{region}}.certificates.{{@key}}.Status"><samp>{{value_or_none Status}}</samp></span></div>
+		<div class="list-group-item-text item-margin">Issuer: <span id="acm.regions.{{region}}.certificates.{{@key}}.Issuer"><samp>{{value_or_none Issuer}}</samp></span></div>
+		<div class="list-group-item-text item-margin">Type: <span id="acm.regions.{{region}}.certificates.{{@key}}.Type"><samp>{{value_or_none Type}}</samp></span></div>
+		<div class="list-group-item-text item-margin">Created: <span id="acm.regions.{{region}}.certificates.{{@key}}.CreatedAt">{{format_date CreatedAt}}</span></div>
+		<div class="list-group-item-text item-margin">Expiration: <span id="acm.regions.{{region}}.certificates.{{@key}}.NotAfter">{{format_date NotAfter}}</span></div>
+		<div class="list-group-item-text item-margin">Renewal Eligibility: <span id="acm.regions.{{region}}.certificates.{{@key}}.RenewalEligibility"><samp>{{value_or_none RenewalEligibility}}</samp></span></div>
+		<div class="list-group-item-text item-margin">Transparency Logging Preference: <span id="acm.regions.{{region}}.certificates.{{@key}}.CertificateTransparencyLoggingPreference"><samp>{{value_or_none Options.CertificateTransparencyLoggingPreference}}</samp></span></div>
+
+		<h4 class="list-group-item-heading">Validation</h4>
+		<div class="list-group-item-text item-margin">Domain Validation Options:
+			<span id="acm.regions.{{region}}.certificates.{{@key}}.DomainValidationOptions">
+				<ul>
+					{{#each DomainValidationOptions}}
+					<li class="list-group-item-text"><samp>{{DomainName}} - {{ValidationDomain}} - {{ValidationMethod}} - {{ValidationStatus}}</samp></li>
+					{{/each}}
+				</ul>
+			</span>
+		</div>
+
+		<h4 class="list-group-item-heading">Keys</h4>
+		<div class="list-group-item-text item-margin">Key Algorithm: <span id="acm.regions.{{region}}.certificates.{{@key}}.KeyAlgorithm"><samp>{{value_or_none KeyAlgorithm}}</samp></span></div>
+		<div class="list-group-item-text item-margin">Signature Algorithm: <span id="acm.regions.{{region}}.certificates.{{@key}}.SignatureAlgorithm"><samp>{{value_or_none SignatureAlgorithm}}</samp></span></div>
+		<div class="list-group-item-text item-margin">
+			Key Usages:
+			<span id="acm.regions.{{region}}.certificates.{{@key}}.KeyUsages">
+				<ul>
+				{{#each KeyUsages}}
+						<li class="list-group-item-text"><samp>{{Name}}</samp></li>
+				{{else}}
+						<li class="list-group-item-text"><samp>None</samp></li>
+				{{/each}}
+				</ul>
+			</span>
+		</div>
+		<div class="list-group-item-text item-margin">Extended Key Usages:
+			<span id="acm.regions.{{region}}.certificates.{{@key}}.ExtendedKeyUsages">
+				<ul>
+				{{#each KeyUsages}}
+						<li class="list-group-item-text"><samp>{{Name}} - {{OID}}</samp></li>
+				{{else}}
+						<li class="list-group-item-text"><samp>None</samp></li>
+				{{/each}}
+				</ul>
+			</span>
+		</div>
+		<div class="list-group-item-text item-margin">In Use By:
+			<span id="acm.regions.{{region}}.certificates.{{@key}}.InUseBy">
+				<ul>
+				{{#each InUseBys}}
+					<li class="list-group-item-text"><samp>{{this}}</samp></li>
+				{{else}}
+					<li class="list-group-item-text"><samp>None</samp></li>
+				{{/each}}
+				</ul>
+			</span>
+		</div>
+
+	</div>
+</script>
+
+<script>
+	Handlebars.registerPartial("services.acm.regions.id.certificates", $("#services\\.acm\\.regions\\.id\\.certificates\\.partial").html());
+</script>
+
+<!-- Single acm certificate template -->
+<script id="single_acm_certificate-template" type="text/x-handlebars-template">
+	{{> modal-template template='services.acm.regions.id.certificates'}}
+</script>
+<script>
+	var single_acm_certificate_template = Handlebars.compile($("#single_acm_certificate-template").html());
+</script>
+
+

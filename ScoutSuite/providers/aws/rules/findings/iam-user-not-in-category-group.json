@@ -6,5 +6,5 @@
     "conditions": [ "and",
         [ "iam.users.id.groups", "containNoneOf", "_ARG_0_" ]
     ],
-    "id_suffix": "member_of_category_group"
+    "id_suffix": "user_groups"
 }

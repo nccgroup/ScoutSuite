@@ -1,4 +1,3 @@
-from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
 from ScoutSuite.providers.gcp.resources.kms.keys import Keys
