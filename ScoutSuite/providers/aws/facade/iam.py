@@ -225,8 +225,9 @@ class IAMFacade(AWSBaseFacade):
     def _normalize_statements(self, policy_document):
         if policy_document:
             if type(policy_document['Statement']) == list:
-                for statement in policy_document['Statement']:
-                    statement = self._normalize_single_statement(statement)
+                pass
+                # for statement in policy_document['Statement']:
+                #     statement = self._normalize_single_statement(statement)
             elif type(policy_document['Statement']) == dict:
                 policy_document['Statement'] = self._normalize_single_statement(policy_document['Statement'])
             else:

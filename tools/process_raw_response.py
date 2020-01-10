@@ -2,8 +2,6 @@ import argparse
 import json
 import re
 from ast import literal_eval
-import datetime
-from dateutil.tz import tzutc
 
 
 first_cap_re = re.compile('(.)([A-Z][a-z]+)')
