@@ -2,7 +2,6 @@ from ScoutSuite.providers.aliyun.authentication_strategy import AliyunCredential
 from ScoutSuite.providers.aliyun.facade.utils import get_response
 from ScoutSuite.providers.aliyun.utils import get_client
 
-from ScoutSuite.core.console import print_exception
 from aliyunsdkvpc.request.v20160428 import DescribeVpcsRequest
 
 

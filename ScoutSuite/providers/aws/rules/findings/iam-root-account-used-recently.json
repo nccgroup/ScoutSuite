@@ -1,10 +1,11 @@
 {
     "description": "Root account used recently",
-    "path": "iam.credential_reports.<root_account>",
+    "path": "iam.credential_reports.id",
     "dashboard_name": "Root account",
     "conditions": [ "and",
-        [ "iam.credential_reports.<root_account>.password_last_used", "notNull", "" ],
-        [ "iam.credential_reports.<root_account>.password_last_used", "newerThan", ["90", "days"] ]
+        [ "iam.credential_reports.id.password_last_used", "notNull", "" ],
+        [ "iam.credential_reports.id.password_last_used", "newerThan", ["90", "days"] ],
+        [ "iam.credential_reports.id.name", "equal", "<root_account>" ]
     ],
     "id_suffix": "password_last_used"
 }

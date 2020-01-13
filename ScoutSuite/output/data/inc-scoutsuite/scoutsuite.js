@@ -2,7 +2,7 @@
 const resultFormats = {'invalid': 0, 'json': 1, 'sqlite': 2}
 Object.freeze(resultFormats)
 const $ = window.$
-var loadedConfigArray = []
+let loadedConfigArray = []
 var runResults
 
 /**
@@ -145,10 +145,13 @@ var loadAccountId = function () {
  * @returns {number}
  */
 function loadConfig(scriptId, cols, force) {
-    if (!force) {
+    if (!force && !scriptId.endsWith('.external_attack_surface')) {
+        console.log('Script ID: ' + scriptId);
+        // console.log(loadedConfigArray);
         // Abort if data was previously loaded
-        if (loadedConfigArray.indexOf(scriptId) > 0) {
+        if (loadedConfigArray.indexOf(scriptId) > -1 ) {
             // When the path does not contain .id.
+            console.log('Data was already loaded');
             return 0
         }
         let pathArray = scriptId.split('.')
@@ -156,8 +159,10 @@ function loadConfig(scriptId, cols, force) {
             pathArray[i] = 'id'
         }
         let fixedPath = pathArray.join('.')
-        if (loadedConfigArray.indexOf(fixedPath) > 0) {
+        if (loadedConfigArray.indexOf(fixedPath) > -1) {
             // When the loaded path contains id but browsed-to path contains a specific value
+            console.log('Fixed path: ' + fixedPath);
+            console.log('ID was already substituted');
             return 0
         }
         pathArray[1] = 'id'
@@ -169,7 +174,7 @@ function loadConfig(scriptId, cols, force) {
     }
 
     // Build the list based on the path, stopping at the first .id. value
-    let list = runResults
+    let list = runResults;
     let pathArray = scriptId.split('.id.')[0].split('.')
     for (let i in pathArray) {
         // Allows for creation of regions-filter etc...
@@ -189,7 +194,7 @@ function loadConfig(scriptId, cols, force) {
     }
 
     // Update the DOM
-    hideAll()
+    hideAll();
     if (cols === 0) {
         // Metadata
         scriptId = scriptId.replace('services.id.', '')
@@ -204,7 +209,9 @@ function loadConfig(scriptId, cols, force) {
     }
 
     // Update the list of loaded data
-    loadedConfigArray.push(scriptId)
+    if (loadedConfigArray.indexOf(scriptId) === -1) {
+        loadedConfigArray.push(scriptId);
+    }
     return 1
 }
 
@@ -247,7 +254,7 @@ function hideAll() {
  * @param path
  */
 function showRow(path) {
-    path = path.replace(/.id./g, '\.[^.]+\.')
+    path = path.replace(/.id./g, '.[^.]+.')
     showList(path)
     showDetails(path)
 }
@@ -287,7 +294,7 @@ function hideList(path) {
  * @param path
  */
 function showItems(path) {
-    path = path.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.'
+    path = path.replace(/.id./g, '.[^.]+.') + '.[^.]+.'
     $('div').filter(function () {
         return this.id.match(path + 'link')
     }).show()
@@ -301,7 +308,7 @@ function showItems(path) {
  * @param resourcePath
  */
 function hideItems(resourcePath) {
-    let path = resourcePath.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.view'
+    let path = resourcePath.replace(/.id./g, '.[^.]+.') + '.[^.]+.view'
     $('div').filter(function () {
         return this.id.match(path)
     }).hide()
@@ -313,7 +320,7 @@ function hideItems(resourcePath) {
  */
 function hideLinks(resourcePath) {
     // TODO: Handle Region and VPC hiding...
-    let path = resourcePath.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.link'
+    let path = resourcePath.replace(/.id./g, '.[^.]+.') + '.[^.]+.link'
     $('div').filter(function () {
         return this.id.match(path)
     }).hide()
@@ -681,8 +688,6 @@ function showObject(path, attrName, attrValue) {
 
     // Adds the resource path values to the data context
     for (let i = 0; i < pathLength - 1; i += 2) {
-        if (i + 1 >= pathLength) break
-
         const attribute = makeResourceTypeSingular(pathArray[i])
         data[attribute] = pathArray[i + 1]
     }
@@ -1002,7 +1007,7 @@ function getValueAtRecursive(path, source) {
                 value = value[key];
             }
         } catch (err) {
-            console.log(err)
+            console.log('Error: ' + err)
         }
 
         // check if there are more elements to process
@@ -1071,24 +1076,27 @@ function updateDOM(anchor) {
         currentResourcePath = resourcePath
         showFilters(resourcePath)
     } else if (lazyLoadingJson(resourcePath) == 0) {
+        console.log(resourcePath + ' has already been loaded');
         // 0 is returned when the data was already loaded, a DOM update is necessary then
         if (path.endsWith('.view')) {
             // Same details, one item
             hideItems(currentResourcePath)
             showSingleItem(path)
-        } else if (currentResourcePath !== '' && resourcePath.match(currentResourcePath.replace(/.id./g, '\.[^.]+\.'))) {
+        } else if (currentResourcePath !== '' && resourcePath.match(currentResourcePath.replace(/.id./g, '.[^.]+.'))) {
             // Same details, multiple items
             hideItems(currentResourcePath)
             showItems(path)
         } else {
             // Switch view for resources
+            console.log('Switching view to ' + resourcePath);
             hideAll()
             showRowWithItems(resourcePath)
-            showFilters(resourcePath)
+            // showFilters(resourcePath)
             currentResourcePath = resourcePath
         }
     } else {
         // The DOM was updated by the lazy loading function, save the current resource path
+        console.log('View was updated via lazyloading');
         showFilters(resourcePath)
         currentResourcePath = resourcePath
     }
@@ -1115,7 +1123,7 @@ function lazyLoadingJson(path) {
             break
         }
     }
-    return loadConfig(path, cols, false)
+    return loadConfig(path, cols, false);
 }
 
 /**
@@ -1152,7 +1160,7 @@ function makeTitle(title) {
         return title.toString()
     }
     title = title.toLowerCase()
-    if (['ec2', 'efs', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) !== -1) {
+    if (['acm', 'ec2', 'efs', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) !== -1) {
         return title.toUpperCase()
     } else if (title === 'cloudtrail') {
         return 'CloudTrail'
@@ -1339,7 +1347,7 @@ function downloadConfiguration(configuration, name, prefix) {
 function downloadExceptions() {
     var url = window.location.pathname
     var profileName = url.substring(url.lastIndexOf('/') + 1).replace('report-', '').replace('.html', '')
-    console.log(exceptions)
+    console.log('Download exceptions: ' + exceptions)
     downloadConfiguration(exceptions, 'exceptions-' + profileName, 'exceptions = \n')
 }
 

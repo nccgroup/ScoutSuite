@@ -10,5 +10,4 @@ class InformationProtectionPolicies(AzureResources):
 
     def _parse_information_protection_policies(self, auto_provisioning_settings):
         information_protection_policies_dict = {}
-
         return information_protection_policies_dict['id'], information_protection_policies_dict
