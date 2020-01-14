@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import os
 
 from ScoutSuite.core.conditions import *
 
@@ -158,7 +159,10 @@ class TestOpinelConditionClass:
         assert pass_condition('192.168.1.1', 'inSubnets', ['192.168.0.0/24']) == False
         assert pass_condition('192.168.1.1', 'notInSubnets', ['192.168.0.0/24']) == True
 
-        with open('./data/policy1.json', 'rt') as f:
+        src_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
+        src_file = os.path.join(src_dir, 'policy1.json')
+
+        with open(src_file) as f:
             testpolicy = json.load(f)
         assert pass_condition(testpolicy['Statement'][0], 'containAction', 'iam:GetUser') == True
         assert pass_condition(testpolicy['Statement'][0], 'containAction', 'iam:CreateUser') == False
@@ -169,7 +173,9 @@ class TestOpinelConditionClass:
         assert pass_condition(testpolicy['Statement'][0], 'containAtLeastOneAction', '') == False
         assert pass_condition(testpolicy['Statement'][0], 'containAtLeastOneAction', 'iam:GetUser') == True
         assert pass_condition(testpolicy['Statement'][0], 'containAtLeastOneAction', ['iam:CreateUser', 'iam:GetUser']) == True
-        with open('./data/statement1.json', 'rt') as f:
+
+        src_file = os.path.join(src_dir, 'statement1.json')
+        with open(src_file) as f:
             stringstatement = f.read()
         assert pass_condition(stringstatement, 'containAction', 'iam:GetUser') == True
         assert pass_condition(stringstatement, 'containAtLeastOneAction', 'iam:GetUser') == True
