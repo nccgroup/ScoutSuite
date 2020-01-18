@@ -1,15 +1,15 @@
 <!-- arm roles -->
-<script id="services.arm.roles.partial" type="text/x-handlebars-template">
+<script id="services.arm.subscriptions.id.roles.partial" type="text/x-handlebars-template">
     <div id="resource-name" class="list-group-item active">
         <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Information</h4>
-        <div class="list-group-item-text item-margin">ID: <span id="arm.roles.{{@key}}.id"><samp>{{value_or_none id}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Description: <span id="arm.roles.{{@key}}.description"><samp>{{value_or_none description}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Type: <span id="arm.roles.{{@key}}.type"><samp>{{value_or_none type}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Role Type: <span id="arm.roles.{{@key}}.role_type"><samp>{{value_or_none role_type}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Assignable Scopes: <span id="arm.roles.{{@key}}.assignable_scopes"><samp>{{value_or_none assignable_scopes}}</samp></span></div>
+        <div class="list-group-item-text item-margin">ID: <span id="arm.subscriptions.{{@../key}}.roles.{{@key}}.id"><samp>{{value_or_none id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Description: <span id="arm.subscriptions.{{@../key}}.roles.{{@key}}.description"><samp>{{value_or_none description}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Type: <span id="arm.subscriptions.{{@../key}}.roles.{{@key}}.type"><samp>{{value_or_none type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Role Type: <span id="arm.subscriptions.{{@../key}}.roles.{{@key}}.role_type"><samp>{{value_or_none role_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Assignable Scopes: <span id="arm.subscriptions.{{@../key}}.roles.{{@key}}.assignable_scopes"><samp>{{value_or_none assignable_scopes}}</samp></span></div>
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Permissions</h4>
@@ -18,7 +18,7 @@
         </div>
     </div>
     <div class="list-group-item">
-        <h4 class="list-group-item-heading" id="arm.roles.{{@key}}.assignments">Assignments
+        <h4 class="list-group-item-heading" id="arm.subscriptions.{{@../key}}.roles.{{@key}}.assignments">Assignments
             {{> count_badge count=assignments_count}}
         </h4>
         <div class="accordion-inner">
@@ -53,12 +53,12 @@
 </script>
 
 <script>
-    Handlebars.registerPartial("services.arm.roles", $("#services\\.arm\\.roles\\.partial").html());
+    Handlebars.registerPartial("services.arm.subscriptions.id.roles", $("#services\\.arm\\.subscriptions\\.id\\.roles\\.partial").html());
 </script>
 
 <!-- Single arm role template -->
 <script id="single_arm_role-template" type="text/x-handlebars-template">
-    {{> modal-template template='services.arm.roles'}}
+    {{> modal-template template='services.arm.subscriptions.id.roles'}}
 </script>
 <script>
     var single_arm_role_template = Handlebars.compile($("#single_arm_role-template").html());

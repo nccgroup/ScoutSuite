@@ -1,7 +1,6 @@
 from ScoutSuite.providers.azure.resources.subscriptions import Subscriptions
-
-from .roles import Roles
 from .role_assignments import RoleAssignments
+from .roles import Roles
 
 
 class ARM(Subscriptions):
@@ -10,5 +9,3 @@ class ARM(Subscriptions):
         (RoleAssignments, 'role_assignments')
 
     ]
-
-

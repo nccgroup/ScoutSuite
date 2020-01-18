@@ -1,7 +1,13 @@
+from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 
 
 class Roles(AzureResources):
+
+    def __init__(self, facade: AzureFacade, subscription_id: str):
+        super(Roles, self).__init__(facade)
+        self.subscription_id = subscription_id
+
     async def fetch_all(self):
         for raw_role in await self.facade.arm.get_roles():
             id, role = self._parse_role(raw_role)

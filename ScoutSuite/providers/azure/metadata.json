@@ -62,7 +62,7 @@
       "resources": {
         "roles": {
           "cols": 2,
-          "path": "services.arm.roles"
+          "path": "services.arm.subscriptions.id.roles"
         }
       }
     },

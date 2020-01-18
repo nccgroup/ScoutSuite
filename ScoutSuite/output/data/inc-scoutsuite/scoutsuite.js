@@ -1280,6 +1280,8 @@ function addTemplate(group, service, section, resourceType, path, suffix) {
         if (suffix === 'list') {
             if (path.indexOf('.vpcs.id.') > 0) {
                 partialName = 'left_menu_for_vpc'
+            } else if (path.indexOf('.subscriptions.id.') > 0) {
+                partialName = 'left_menu_for_subscription'
             } else if (path.indexOf('projects.id.zones.id.') > 0) {
                 partialName = 'left_menu_for_gcp_zone';
             } else if (path.indexOf('projects.id.regions.id.') > 0) {
@@ -1294,6 +1296,8 @@ function addTemplate(group, service, section, resourceType, path, suffix) {
         } else if (suffix === 'details') {
             if (path.indexOf('.vpcs.id.') > 0) {
                 partialName = 'details_for_vpc'
+            } else if (path.indexOf('.subscriptions.id.') > 0) {
+                partialName = 'details_for_subscription'
             } else if (path.indexOf('projects.id.zones.id') > 0) {
                 partialName = 'details_for_gcp_zone';
             } else if (path.indexOf('projects.id.regions.id') > 0) {
