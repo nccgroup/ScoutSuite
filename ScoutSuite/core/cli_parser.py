@@ -193,6 +193,18 @@ class ScoutSuiteArgumentParser:
                                        dest='password',
                                        help='Password of the Azure account')
 
+        azure_scope = parser.add_argument_group('Additional arguments')
+
+        azure_scope.add_argument('--subscription-ids',
+                                 action='store',
+                                 default=[],
+                                 nargs='+',
+                                 help='ID of the Azure subscriptions to scan')
+
+        azure_scope.add_argument('--all-subscriptions',
+                               action='store_true',
+                               help='Scan all of the accessible subscriptions')
+
     def _init_aliyun_parser(self):
         parser = self.subparsers.add_parser("aliyun",
                                             parents=[self.common_providers_args_parser],
@@ -206,12 +218,14 @@ class ScoutSuiteArgumentParser:
         aliyun_auth_modes.add_argument('--access-keys',
                                        action='store_true',
                                        help='Run Scout with user credentials')
+
         aliyun_auth_params.add_argument('-k',
                                         '--access-key-id',
                                         action='store',
                                         default=None,
                                         dest='access_key_id',
                                         help='Access Key Id')
+
         aliyun_auth_params.add_argument('-s',
                                         '--access-key-secret',
                                         action='store',
