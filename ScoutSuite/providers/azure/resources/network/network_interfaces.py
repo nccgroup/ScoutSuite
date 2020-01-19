@@ -1,8 +1,14 @@
+from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class NetworkInterfaces(AzureResources):
+
+    def __init__(self, facade: AzureFacade, subscription_id: str):
+        super(NetworkInterfaces, self).__init__(facade)
+        self.subscription_id = subscription_id
+
     async def fetch_all(self):
         for raw_network_interface in await self.facade.network.get_network_interfaces():
             id, network_interface = self._parse_network_interface(raw_network_interface)
@@ -63,10 +69,10 @@ class NetworkInterfaces(AzureResources):
         network_interface_dict['ip_configuration']['application_security_groups'] = []
         if ip_configuration.application_security_groups:
             for asg in ip_configuration.application_security_groups:
-                network_interface_dict['ip_configuration']['application_security_groups'].append(get_non_provider_id(asg.id))
+                network_interface_dict['ip_configuration']['application_security_groups'].append(
+                    get_non_provider_id(asg.id))
 
         # FIXME this is currently always None, might change in the future?
         # network_interface_dict['ip_configuration']['subnet_security_group'] = ip_configuration.subnet.network_security_group
 
         return network_interface_dict['id'], network_interface_dict
-

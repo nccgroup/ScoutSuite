@@ -1,9 +1,8 @@
 from ScoutSuite.providers.azure.resources.subscriptions import Subscriptions
-
-from .virtual_networks import VirtualNetworks
-from .security_groups import SecurityGroups
 from .application_security_groups import ApplicationSecurityGroups
 from .network_interfaces import NetworkInterfaces
+from .security_groups import SecurityGroups
+from .virtual_networks import VirtualNetworks
 from .watchers import Watchers
 
 
@@ -44,8 +43,10 @@ class Networks(Subscriptions):
                     if not 'instances' in self['virtual_networks'][network]['subnets'][network_subnet]:
                         self['virtual_networks'][network]['subnets'][network_subnet]['instances'] = []
                     if subnet_id == network_subnet:
-                        self['network_interfaces'][interface]['ip_configuration']['subnet']['virtual_network_id'] = network
-                        self['virtual_networks'][network]['subnets'][network_subnet]['instances'].append(self['network_interfaces'][interface]['virtual_machine'])
+                        self['network_interfaces'][interface]['ip_configuration']['subnet'][
+                            'virtual_network_id'] = network
+                        self['virtual_networks'][network]['subnets'][network_subnet]['instances'].append(
+                            self['network_interfaces'][interface]['virtual_machine'])
 
     async def _match_asgs_and_network_interfaces(self):
         """

@@ -1,8 +1,14 @@
+from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Watchers(AzureResources):
+
+    def __init__(self, facade: AzureFacade, subscription_id: str):
+        super(Watchers, self).__init__(facade)
+        self.subscription_id = subscription_id
+
     async def fetch_all(self):
         for raw_watcher in await self.facade.network.get_network_watchers():
             id, network_watcher = self._parse_network_watcher(raw_watcher)
@@ -19,4 +25,3 @@ class Watchers(AzureResources):
         watcher_dict['additional_properties'] = raw_watcher.additional_properties
         watcher_dict['provisioning_state'] = raw_watcher.provisioning_state
         return watcher_dict['id'], watcher_dict
-

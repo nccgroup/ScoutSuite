@@ -7,5 +7,4 @@ class ARM(Subscriptions):
     _children = [
         (Roles, 'roles'),
         (RoleAssignments, 'role_assignments')
-
     ]

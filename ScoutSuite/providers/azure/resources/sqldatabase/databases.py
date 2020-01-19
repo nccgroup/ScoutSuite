@@ -15,10 +15,11 @@ class Databases(AzureCompositeResources):
         (TransparentDataEncryptions, None)
     ]
 
-    def __init__(self, facade: AzureFacade, resource_group_name: str, server_name: str):
+    def __init__(self, facade: AzureFacade, resource_group_name: str, server_name: str, subscription_id: str):
         super(Databases, self).__init__(facade)
         self.resource_group_name = resource_group_name
         self.server_name = server_name
+        self.subscription_id = subscription_id
 
     async def fetch_all(self):
         for db in await self.facade.sqldatabase.get_databases(

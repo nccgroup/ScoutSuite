@@ -1,8 +1,14 @@
+from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Instances(AzureResources):
+
+    def __init__(self, facade: AzureFacade, subscription_id: str):
+        super(Instances, self).__init__(facade)
+        self.subscription_id = subscription_id
+
     async def fetch_all(self):
         for raw_instance in await self.facade.virtualmachines.get_instances():
             id, instance = self._parse_instance(raw_instance)
@@ -41,5 +47,3 @@ class Instances(AzureResources):
             instance_dict['network_interfaces'].append(get_non_provider_id(interface.id))
 
         return instance_dict['id'], instance_dict
-
-
