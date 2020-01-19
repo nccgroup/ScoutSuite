@@ -5,7 +5,7 @@ from getpass import getpass
 from azure.common.credentials import ServicePrincipalCredentials, UserPassCredentials, get_azure_cli_credentials
 from azure.mgmt.resource import SubscriptionClient
 from msrestazure.azure_active_directory import MSIAuthentication
-from ScoutSuite.core.console import print_info, print_exception
+from ScoutSuite.core.console import print_info
 
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 

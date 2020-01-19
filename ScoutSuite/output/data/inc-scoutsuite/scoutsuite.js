@@ -254,7 +254,7 @@ function hideAll() {
  * @param path
  */
 function showRow(path) {
-    path = path.replace(/.id./g, '\.[^.]+\.')
+    path = path.replace(/.id./g, '.[^.]+.')
     showList(path)
     showDetails(path)
 }
@@ -294,7 +294,7 @@ function hideList(path) {
  * @param path
  */
 function showItems(path) {
-    path = path.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.'
+    path = path.replace(/.id./g, '.[^.]+.') + '.[^.]+.'
     $('div').filter(function () {
         return this.id.match(path + 'link')
     }).show()
@@ -308,7 +308,7 @@ function showItems(path) {
  * @param resourcePath
  */
 function hideItems(resourcePath) {
-    let path = resourcePath.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.view'
+    let path = resourcePath.replace(/.id./g, '.[^.]+.') + '.[^.]+.view'
     $('div').filter(function () {
         return this.id.match(path)
     }).hide()
@@ -320,7 +320,7 @@ function hideItems(resourcePath) {
  */
 function hideLinks(resourcePath) {
     // TODO: Handle Region and VPC hiding...
-    let path = resourcePath.replace(/.id./g, '\.[^.]+\.') + '\.[^.]+\.link'
+    let path = resourcePath.replace(/.id./g, '.[^.]+.') + '.[^.]+.link'
     $('div').filter(function () {
         return this.id.match(path)
     }).hide()
@@ -688,8 +688,6 @@ function showObject(path, attrName, attrValue) {
 
     // Adds the resource path values to the data context
     for (let i = 0; i < pathLength - 1; i += 2) {
-        if (i + 1 >= pathLength) break
-
         const attribute = makeResourceTypeSingular(pathArray[i])
         data[attribute] = pathArray[i + 1]
     }
@@ -1084,7 +1082,7 @@ function updateDOM(anchor) {
             // Same details, one item
             hideItems(currentResourcePath)
             showSingleItem(path)
-        } else if (currentResourcePath !== '' && resourcePath.match(currentResourcePath.replace(/.id./g, '\.[^.]+\.'))) {
+        } else if (currentResourcePath !== '' && resourcePath.match(currentResourcePath.replace(/.id./g, '.[^.]+.'))) {
             // Same details, multiple items
             hideItems(currentResourcePath)
             showItems(path)

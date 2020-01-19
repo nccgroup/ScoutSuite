@@ -145,7 +145,7 @@ Handlebars.registerHelper('split_lines', function (text) {
 
 Handlebars.registerHelper('count_vpc_network_acls', function (vpcNetworkAcls) {
     var counter = 0
-    for (let x in vpcNetworkAcls) {
+    for (let _ in vpcNetworkAcls) {
         counter = counter + 1
     }
     return counter
@@ -153,7 +153,7 @@ Handlebars.registerHelper('count_vpc_network_acls', function (vpcNetworkAcls) {
 
 Handlebars.registerHelper('count_vpc_instances', function (vpcInstances) {
     var counter = 0
-    for (let x in vpcInstances) {
+    for (let _ in vpcInstances) {
         counter = counter + 1
     }
     return counter
@@ -162,7 +162,7 @@ Handlebars.registerHelper('count_vpc_instances', function (vpcInstances) {
 Handlebars.registerHelper('count_role_instances', function (instanceProfiles) {
     var counter = 0
     for (let ip in instanceProfiles) {
-        for (let i in instanceProfiles[ip]['instances']) {
+        for (let _ in instanceProfiles[ip]['instances']) {
             counter = counter + 1
         }
     }
@@ -187,7 +187,7 @@ Handlebars.registerHelper('find_ec2_object_attribute', function (path, id, attri
 })
 
 Handlebars.registerHelper('format_date', function (time) {
-    if (!time || time === null || time === '') {
+    if (!time || time === '') {
         return 'No date available'
     }
     else if (typeof time === 'number') {
@@ -425,7 +425,7 @@ Handlebars.registerHelper('each_dict_sorted', function (dict, key, opts) {
 })
 
 Handlebars.registerHelper('escape_dots', function () {
-    return arguments[0].replace(/\./g, '\\.')
+    return arguments[0].replace(/\./g, '\\.') // lgtm [js/incomplete-sanitization]
 })
 
 /**
@@ -454,7 +454,7 @@ Handlebars.registerHelper('get_rule', function (ruleFilename, attribute) {
     } else {
         let rule = runResults['rule_definitions'][ruleFilename]
         // Clean up some ruleset generator artifacts
-        attributeCleanup = ['file_name', 'file_path', 'rule_dirs', 'rule_types', 'rules_data_path', 'string_definition']
+        let attributeCleanup = ['file_name', 'file_path', 'rule_dirs', 'rule_types', 'rules_data_path', 'string_definition']
         for (let ac in attributeCleanup) {
             rule = ruleCleanup(rule, attributeCleanup[ac])
         }
