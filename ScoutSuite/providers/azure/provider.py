@@ -64,22 +64,22 @@ class AzureProvider(BaseProvider):
         """
 
         # Add role assignments
-        # TODO - fix this with subscriptions
-        # if 'arm' in self.service_list and 'aad' in self.service_list:
-        #     for assignment in self.services['arm']['role_assignments'].values():
-        #         role_id = assignment['role_definition_id'].split('/')[-1]
-        #         for group in self.services['aad']['groups']:
-        #             if group == assignment['principal_id']:
-        #                 self.services['aad']['groups'][group]['roles'].append(role_id)
-        #                 self.services['arm']['roles'][role_id]['assignments']['groups'].append(group)
-        #                 self.services['arm']['roles'][role_id]['assignments_count'] += 1
-        #         for user in self.services['aad']['users']:
-        #             if user == assignment['principal_id']:
-        #                 self.services['aad']['users'][user]['roles'].append(role_id)
-        #                 self.services['arm']['roles'][role_id]['assignments']['users'].append(user)
-        #                 self.services['arm']['roles'][role_id]['assignments_count'] += 1
-        #         for service_principal in self.services['aad']['service_principals']:
-        #             if service_principal == assignment['principal_id']:
-        #                 self.services['aad']['service_principals'][service_principal]['roles'].append(role_id)
-        #                 self.services['arm']['roles'][role_id]['assignments']['service_principals'].append(service_principal)
-        #                 self.services['arm']['roles'][role_id]['assignments_count'] += 1
+        if 'arm' in self.service_list and 'aad' in self.service_list:
+            for subscription in self.services['arm']['subscriptions']:
+                for assignment in self.services['arm']['subscriptions'][subscription]['role_assignments'].values():
+                    role_id = assignment['role_definition_id'].split('/')[-1]
+                    for group in self.services['aad']['groups']:
+                        if group == assignment['principal_id']:
+                            self.services['aad']['groups'][group]['roles'].append(role_id)
+                            self.services['arm']['subscriptions'][subscription]['roles'][role_id]['assignments']['groups'].append(group)
+                            self.services['arm']['subscriptions'][subscription]['roles'][role_id]['assignments_count'] += 1
+                    for user in self.services['aad']['users']:
+                        if user == assignment['principal_id']:
+                            self.services['aad']['users'][user]['roles'].append(role_id)
+                            self.services['arm']['subscriptions'][subscription]['roles'][role_id]['assignments']['users'].append(user)
+                            self.services['arm']['subscriptions'][subscription]['roles'][role_id]['assignments_count'] += 1
+                    for service_principal in self.services['aad']['service_principals']:
+                        if service_principal == assignment['principal_id']:
+                            self.services['aad']['service_principals'][service_principal]['roles'].append(role_id)
+                            self.services['arm']['subscriptions'][subscription]['roles'][role_id]['assignments']['service_principals'].append(service_principal)
+                            self.services['arm']['subscriptions'][subscription]['roles'][role_id]['assignments_count'] += 1
