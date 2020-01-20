@@ -6,10 +6,13 @@
     "display_path": "elbv2.regions.id.vpcs.id.lbs.id",
     "conditions": [ "and",
         [ "this", "containNoneOf", [
-            "ELBSecurityPolicy-2016-08", "ELBSecurityPolicy-FS-2018-06",
+            "ELBSecurityPolicy-2016-08", 
             "ELBSecurityPolicy-TLS-1-1-2017-01",
-            "ELBSecurityPolicy-TLS-1-2-2017-01", "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
-            "ELBSecurityPolicy-FS-1-1-2019-08", "ELBSecurityPolicy-FS-1-2-2019-08",
+            "ELBSecurityPolicy-TLS-1-2-2017-01", 
+            "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
+            "ELBSecurityPolicy-FS-2018-06",
+            "ELBSecurityPolicy-FS-1-1-2019-08", 
+            "ELBSecurityPolicy-FS-1-2-2019-08",
             "ELBSecurityPolicy-FS-1-2-Res-2019-08" ] ]
     ]
 }
