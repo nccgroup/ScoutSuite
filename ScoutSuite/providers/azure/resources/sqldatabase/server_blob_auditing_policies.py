@@ -12,7 +12,7 @@ class ServerBlobAuditingPolicies(AzureResources):
 
     async def fetch_all(self):
         policies = await self.facade.sqldatabase.get_server_blob_auditing_policies(
-            self.resource_group_name, self.server_name)
+            self.resource_group_name, self.server_name, self.subscription_id)
         self._parse_policies(policies)
 
     def _parse_policies(self, policies):

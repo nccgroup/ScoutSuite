@@ -10,7 +10,7 @@ class KeyVaults(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
-        for raw_vault in await self.facade.keyvault.get_key_vaults():
+        for raw_vault in await self.facade.keyvault.get_key_vaults(self.subscription_id):
             id, vault = self._parse_key_vault(raw_vault)
             self[id] = vault
 

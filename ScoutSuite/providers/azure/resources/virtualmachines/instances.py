@@ -10,7 +10,7 @@ class Instances(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
-        for raw_instance in await self.facade.virtualmachines.get_instances():
+        for raw_instance in await self.facade.virtualmachines.get_instances(self.subscription_id):
             id, instance = self._parse_instance(raw_instance)
             self[id] = instance
 

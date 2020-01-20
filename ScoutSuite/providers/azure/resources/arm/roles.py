@@ -9,7 +9,7 @@ class Roles(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
-        for raw_role in await self.facade.arm.get_roles():
+        for raw_role in await self.facade.arm.get_roles(self.subscription_id):
             id, role = self._parse_role(raw_role)
             self[id] = role
 

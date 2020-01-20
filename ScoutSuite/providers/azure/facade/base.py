@@ -37,6 +37,7 @@ class AzureFacade:
 
         self.credentials = credentials
 
+        self.subscription_list = []
         self.subscription_ids = subscription_ids
         self.all_subscriptions = all_subscriptions
 
@@ -44,32 +45,40 @@ class AzureFacade:
         self.arm = ARMFacade(credentials.credentials)
         # TODO uncomment
         # self.keyvault = KeyVaultFacade(credentials.credentials)
-        # self.virtualmachines = VirtualMachineFacade(credentials.credentials)
-        # self.network = NetworkFacade(credentials.credentials)
+        self.virtualmachines = VirtualMachineFacade(credentials.credentials)
+        self.network = NetworkFacade(credentials.credentials)
+        # TODO uncomment
         # self.securitycenter = SecurityCenterFacade(credentials.credentials)
         # self.sqldatabase = SQLDatabaseFacade(credentials.credentials)
-        # self.storageaccounts = StorageAccountsFacade(credentials.credentials)
+        self.storageaccounts = StorageAccountsFacade(credentials.credentials)
 
         # Instantiate facades for proprietary services
-        # TODO uncomment
-        # try:
-        #     self.appgateway = AppGatewayFacade(credentials.credentials)
-        # except NameError:
-        #     pass
-        # try:
-        #     self.appservice = AppServiceFacade(credentials.credentials)
-        # except NameError:
-        #     pass
-        # try:
-        #     self.loadbalancer = LoadBalancerFacade(credentials.credentials)
-        # except NameError:
-        #     pass
-        # try:
-        #     self.rediscache = RedisCacheFacade(credentials.credentials)
-        # except NameError:
-        #     pass
+        try:
+            self.appgateway = AppGatewayFacade(credentials.credentials)
+        except NameError:
+            pass
+        try:
+            self.appservice = AppServiceFacade(credentials.credentials)
+        except NameError:
+            pass
+        try:
+            self.loadbalancer = LoadBalancerFacade(credentials.credentials)
+        except NameError:
+            pass
+        try:
+            self.rediscache = RedisCacheFacade(credentials.credentials)
+        except NameError:
+            pass
+
+        self._set_subscriptions()
 
     async def get_subscriptions(self):
+        if self.subscription_list:
+            return self.subscription_list
+        else:
+            await self._set_subcriptions()
+
+    def _set_subscriptions(self):
 
         # Create the client
         subscription_client = SubscriptionClient(self.credentials.credentials)
@@ -96,7 +105,7 @@ class AzureFacade:
                     print_exception('Unable to infer a Subscription ID')
                     raise
             finally:
-                print_info('Running against the {} subscription'.format(s))
+                print_info('Running against the "{}" subscription'.format(s.display_name))
                 subscriptions_list.append(s)
 
         # A specific set of subscriptions
@@ -120,7 +129,7 @@ class AzureFacade:
             raise
 
         if subscriptions_list:
-            return subscriptions_list
+            self.subscription_list = subscriptions_list
         else:
             print_exception('No subscriptions to scan')
             raise

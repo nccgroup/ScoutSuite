@@ -12,7 +12,8 @@ class BlobContainers(AzureResources):
 
     async def fetch_all(self):
         raw_blob_containers = await self.facade.storageaccounts.get_blob_containers(self.resource_group_name,
-                                                                                    self.storage_account_name)
+                                                                                    self.storage_account_name,
+                                                                                    self.subscription_id)
         for raw_blob_container in raw_blob_containers:
             id, blob_container = self._parse_blob_container(raw_blob_container)
             self[id] = blob_container

@@ -14,7 +14,7 @@ class ReplicationLinks(AzureResources):
 
     async def fetch_all(self):
         links = await self.facade.sqldatabase.get_database_replication_links(
-            self.resource_group_name, self.server_name, self.database_name)
+            self.resource_group_name, self.server_name, self.database_name, self.subscription_id)
         self._parse_links(links)
 
     def _parse_links(self, links):

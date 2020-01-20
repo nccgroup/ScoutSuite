@@ -10,7 +10,7 @@ class VirtualNetworks(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
-        for raw_virtual_network in await self.facade.network.get_virtual_networks():
+        for raw_virtual_network in await self.facade.network.get_virtual_networks(self.subscription_id):
             id, virtual_network = self._parse_virtual_network(raw_virtual_network)
             self[id] = virtual_network
 

@@ -4,9 +4,12 @@ from ScoutSuite.core.console import print_exception
 
 
 class SecurityCenterFacade:
-    def __init__(self, credentials, subscription_id):
-        self._subscription_id = subscription_id
-        self._client = SecurityCenter(credentials, subscription_id, '')
+    def __init__(self, credentials):
+    # def __init__(self, credentials, subscription_id):
+
+        # self._subscription_id = subscription_id
+        self._client = SecurityCenter(credentials)
+        # self._client = SecurityCenter(credentials, subscription_id, '')
 
     async def get_pricings(self):
         try:

@@ -10,7 +10,7 @@ class ApplicationSecurityGroups(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
-        for raw_group in await self.facade.network.get_application_security_groups():
+        for raw_group in await self.facade.network.get_application_security_groups(self.subscription_id):
             id, application_security_group = self._parse_application_security_group(raw_group)
             self[id] = application_security_group
 

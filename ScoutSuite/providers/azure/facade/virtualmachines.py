@@ -5,11 +5,15 @@ from ScoutSuite.providers.utils import run_concurrently
 
 
 class VirtualMachineFacade:
-    def __init__(self, credentials, subscription_id):
-        self._client = ComputeManagementClient(credentials, subscription_id)
+    def __init__(self, credentials):
+        self.credentials = credentials
 
-    async def get_instances(self):
+    def get_client(self, subscription_id: str):
+        return ComputeManagementClient(self.credentials, subscription_id=subscription_id)
+
+    async def get_instances(self, subscription_id: str):
         try:
+            client = self.get_client(subscription_id)
             return await run_concurrently(
                 lambda: list(self._client.virtual_machines.list_all())
             )

@@ -42,28 +42,29 @@ class AzureServicesConfig(BaseServicesConfig):
         # TODO uncomment
         # self.securitycenter = SecurityCenter(facade)
         # self.sqldatabase = Servers(facade)
-        # self.storageaccounts = StorageAccounts(facade)
+        self.storageaccounts = StorageAccounts(facade)
+        # TODO uncomment
         # self.keyvault = KeyVaults(facade)
-        # self.network = Networks(facade)
-        # self.virtualmachines = VirtualMachines(facade)
-        #
-        # # Instantiate proprietary services
-        # try:
-        #     self.appgateway = ApplicationGateways(facade)
-        # except NameError as _:
-        #     pass
-        # try:
-        #     self.appservice = WebApplications(facade)
-        # except NameError as _:
-        #     pass
-        # try:
-        #     self.loadbalancer = LoadBalancers(facade)
-        # except NameError as _:
-        #     pass
-        # try:
-        #     self.rediscache = RedisCaches(facade)
-        # except NameError as _:
-        #     pass
+        self.network = Networks(facade)
+        self.virtualmachines = VirtualMachines(facade)
+
+        # Instantiate proprietary services
+        try:
+            self.appgateway = ApplicationGateways(facade)
+        except NameError as _:
+            pass
+        try:
+            self.appservice = WebApplications(facade)
+        except NameError as _:
+            pass
+        try:
+            self.loadbalancer = LoadBalancers(facade)
+        except NameError as _:
+            pass
+        try:
+            self.rediscache = RedisCaches(facade)
+        except NameError as _:
+            pass
 
     def _is_provider(self, provider_name):
         return provider_name == 'azure'

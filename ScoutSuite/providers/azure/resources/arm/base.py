@@ -1,4 +1,5 @@
 from ScoutSuite.providers.azure.resources.subscriptions import Subscriptions
+
 from .role_assignments import RoleAssignments
 from .roles import Roles
 

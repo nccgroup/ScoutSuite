@@ -6,21 +6,24 @@ from ScoutSuite.providers.utils import run_concurrently
 
 class ARMFacade:
     def __init__(self, credentials):
-        # self._subscription_id = subscription_id
-        # self._client = AuthorizationManagementClient(credentials, subscription_id=subscription_id)
-        pass
+        self.credentials = credentials
 
-    async def get_roles(self):
+    def get_client(self, subscription_id: str):
+        return AuthorizationManagementClient(self.credentials, subscription_id=subscription_id)
+
+    async def get_roles(self, subscription_id: str):
         try:
-            scope = '/subscriptions/{}'.format(self._subscription_id)
-            return await run_concurrently(lambda: list(self._client.role_definitions.list(scope=scope)))
+            client = self.get_client(subscription_id)
+            scope = '/subscriptions/{}'.format(subscription_id)
+            return await run_concurrently(lambda: list(client.role_definitions.list(scope=scope)))
         except Exception as e:
             print_exception('Failed to retrieve roles: {}'.format(e))
             return []
 
-    async def get_role_assignments(self):
+    async def get_role_assignments(self, subscription_id: str):
         try:
-            return await run_concurrently(lambda: list(self._client.role_assignments.list()))
+            client = self.get_client(subscription_id)
+            return await run_concurrently(lambda: list(client.role_assignments.list()))
         except Exception as e:
             print_exception('Failed to retrieve role assignments: {}'.format(e))
             return []

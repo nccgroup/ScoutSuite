@@ -14,7 +14,7 @@ class TransparentDataEncryptions(AzureResources):
 
     async def fetch_all(self):
         encryptions = await self.facade.sqldatabase.get_database_transparent_data_encryptions(
-            self.resource_group_name, self.server_name, self.database_name)
+            self.resource_group_name, self.server_name, self.database_name, self.subscription_id)
         self._parse_encryptions(encryptions)
 
     def _parse_encryptions(self, encryptions):

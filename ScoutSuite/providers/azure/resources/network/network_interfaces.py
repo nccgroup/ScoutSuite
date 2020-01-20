@@ -10,7 +10,7 @@ class NetworkInterfaces(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
-        for raw_network_interface in await self.facade.network.get_network_interfaces():
+        for raw_network_interface in await self.facade.network.get_network_interfaces(self.subscription_id):
             id, network_interface = self._parse_network_interface(raw_network_interface)
             self[id] = network_interface
 
