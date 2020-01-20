@@ -105,17 +105,19 @@ class AzureFacade:
                     print_exception('Unable to infer a Subscription ID')
                     raise
             finally:
-                print_info('Running against the "{}" subscription'.format(s.display_name))
+                print_info('Running against the "{}" subscription'.format(s.subscription_id))
                 subscriptions_list.append(s)
 
         # A specific set of subscriptions
         elif self.subscription_ids:
             # Only include accessible subscriptions
-            subscriptions_list = [s for s in self.subscription_ids if s in accessible_subscriptions_list]
+            subscriptions_list = [s for s in accessible_subscriptions_list if
+                                  s.subscription_id in self.subscription_ids]
             # Verbose skip
             for s in self.subscription_ids:
                 if s not in accessible_subscriptions_list:
-                    print_info('Skipping subscription {}: this subscription is not accessible with the provided credentials')
+                    print_info('Skipping subscription "{}": this subscription does not exist or '
+                               'is not accessible with the provided credentials'.format(s))
             print_info('Running against {} subscription(s)'.format(len(subscriptions_list)))
 
         # All subscriptions
