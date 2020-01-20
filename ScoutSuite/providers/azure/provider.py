@@ -24,15 +24,17 @@ class AzureProvider(BaseProvider):
         self.provider_name = 'Microsoft Azure'
         self.environment = 'default'
 
-        self.services_config = AzureServicesConfig
-
         self.subscription_ids = subscription_ids
         self.all_subscriptions = all_subscriptions
 
         self.programmatic_execution = kwargs['programmatic_execution']
-
         self.credentials = kwargs['credentials']
         self.account_id = None # TODO fix this
+
+        self.services = AzureServicesConfig(self.credentials,
+                                                   subscription_ids=self.subscription_ids,
+                                                   all_subscriptions=self.all_subscriptions)
+
         self.result_format = result_format
 
         super(AzureProvider, self).__init__(report_dir, timestamp,

@@ -31,11 +31,13 @@ except ImportError:
 
 class AzureServicesConfig(BaseServicesConfig):
 
-    def __init__(self, credentials: AzureCredentials = None, **kwargs):
+    def __init__(self, credentials: AzureCredentials = None,
+                 subscription_ids=[], all_subscriptions=None,
+                 **kwargs):
 
         super(AzureServicesConfig, self).__init__(credentials)
 
-        facade = AzureFacade(credentials)
+        facade = AzureFacade(credentials, subscription_ids, all_subscriptions)
 
         self.aad = AAD(facade)
         self.arm = ARM(facade)
