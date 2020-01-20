@@ -10,9 +10,11 @@ class AzureProvider(BaseProvider):
     Implements provider for Azure
     """
 
-    def __init__(self, project_id=None, organization_id=None,
+    def __init__(self,
+                 subscription_ids=[], all_subscriptions=None,
                  report_dir=None, timestamp=None, services=None, skipped_services=None,
-                 result_format='json', **kwargs):
+                 result_format='json',
+                 **kwargs):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
@@ -24,8 +26,13 @@ class AzureProvider(BaseProvider):
 
         self.services_config = AzureServicesConfig
 
+        self.subscription_ids = subscription_ids
+        self.all_subscriptions = all_subscriptions
+
+        self.programmatic_execution = kwargs['programmatic_execution']
+
         self.credentials = kwargs['credentials']
-        self.account_id = self.credentials.subscription_id
+        self.account_id = None # TODO fix this
         self.result_format = result_format
 
         super(AzureProvider, self).__init__(report_dir, timestamp,
@@ -35,12 +42,14 @@ class AzureProvider(BaseProvider):
         """
         Returns the name of the report using the provider's configuration
         """
-        if self.credentials.subscription_id:
-            return 'azure-{}'.format(self.credentials.subscription_id)
-        elif self.account_id:
-            return 'azure-{}'.format(self.account_id)
-        else:
-            return 'azure'
+        # TODO fix this
+        return 'azure fix me'
+        # if self.credentials.subscription_id:
+        #     return 'azure-{}'.format(self.credentials.subscription_id)
+        # elif self.account_id:
+        #     return 'azure-{}'.format(self.account_id)
+        # else:
+        #     return 'azure'
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """

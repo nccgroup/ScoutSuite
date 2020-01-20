@@ -10,6 +10,8 @@ from ScoutSuite.providers.azure.facade.virtualmachines import VirtualMachineFaca
 
 from azure.mgmt.resource import SubscriptionClient
 
+from ScoutSuite.core.console import print_info, print_exception
+
 # Try to import proprietary services
 try:
     from ScoutSuite.providers.azure.facade.appgateway_private import AppGatewayFacade
@@ -29,42 +31,96 @@ except ImportError:
     pass
 
 
-class AzureFacade():
-    def __init__(self, credentials: AzureCredentials):
+class AzureFacade:
+    def __init__(self, credentials: AzureCredentials,
+                 subscription_ids=[], all_subscriptions=None):
 
         self.credentials = credentials
-        self.subscriptions = None
 
-        self.aad = AADFacade(credentials.graphrbac_credentials, credentials.tenant_id, credentials.subscription_id)
-        self.arm = ARMFacade(credentials.credentials, credentials.subscription_id)
-        self.keyvault = KeyVaultFacade(credentials.credentials, credentials.subscription_id)
-        self.virtualmachines = VirtualMachineFacade(credentials.credentials, credentials.subscription_id)
-        self.network = NetworkFacade(credentials.credentials, credentials.subscription_id)
-        self.securitycenter = SecurityCenterFacade(credentials.credentials, credentials.subscription_id)
-        self.sqldatabase = SQLDatabaseFacade(credentials.credentials, credentials.subscription_id)
-        self.storageaccounts = StorageAccountsFacade(credentials.credentials, credentials.subscription_id)
+        self.subscription_ids = subscription_ids
+        self.all_subscriptions = all_subscriptions
+
+        self.aad = AADFacade(credentials.graphrbac_credentials)
+        self.arm = ARMFacade(credentials.credentials)
+        # TODO uncomment
+        # self.keyvault = KeyVaultFacade(credentials.credentials)
+        # self.virtualmachines = VirtualMachineFacade(credentials.credentials)
+        # self.network = NetworkFacade(credentials.credentials)
+        # self.securitycenter = SecurityCenterFacade(credentials.credentials)
+        # self.sqldatabase = SQLDatabaseFacade(credentials.credentials)
+        # self.storageaccounts = StorageAccountsFacade(credentials.credentials)
 
         # Instantiate facades for proprietary services
-        try:
-            self.appgateway = AppGatewayFacade(credentials.credentials, credentials.subscription_id)
-        except NameError:
-            pass
-        try:
-            self.appservice = AppServiceFacade(credentials.credentials, credentials.subscription_id)
-        except NameError:
-            pass
-        try:
-            self.loadbalancer = LoadBalancerFacade(credentials.credentials, credentials.subscription_id)
-        except NameError:
-            pass
-        try:
-            self.rediscache = RedisCacheFacade(credentials.credentials, credentials.subscription_id)
-        except NameError:
-            pass
+        # TODO uncomment
+        # try:
+        #     self.appgateway = AppGatewayFacade(credentials.credentials)
+        # except NameError:
+        #     pass
+        # try:
+        #     self.appservice = AppServiceFacade(credentials.credentials)
+        # except NameError:
+        #     pass
+        # try:
+        #     self.loadbalancer = LoadBalancerFacade(credentials.credentials)
+        # except NameError:
+        #     pass
+        # try:
+        #     self.rediscache = RedisCacheFacade(credentials.credentials)
+        # except NameError:
+        #     pass
 
     async def get_subscriptions(self):
-        # FIXME this is a bogus implementation
-        if not self.subscriptions:
-            subscription_client = SubscriptionClient(self.credentials.credentials)
-            self.subscriptions = list(subscription_client.subscriptions.list())
-        return self.subscriptions
+
+        # Create the client
+        subscription_client = SubscriptionClient(self.credentials.credentials)
+        # Get all the accessible subscriptions
+        accessible_subscriptions_list = list(subscription_client.subscriptions.list())
+
+        # Final list, start empty
+        subscriptions_list = []
+
+        # TODO - test all cases
+
+        # No subscription provided, infer
+        if not (self.subscription_ids or self.all_subscriptions):
+            try:
+                # Tries to read the subscription list
+                print_info('No subscription set, inferring ID')
+                s = next(subscription_client.subscriptions.list())
+            except StopIteration:
+                print_info('Unable to infer a subscription')
+                # If the user cannot read subscription list, ask Subscription ID:
+                if not self.programmatic_execution:
+                    s = input('Subscription ID: ')
+                else:
+                    print_exception('Unable to infer a Subscription ID')
+                    raise
+            finally:
+                print_info('Running against the {} subscription'.format(s))
+                subscriptions_list.append(s)
+
+        # A specific set of subscriptions
+        elif self.subscription_ids:
+            # Only include accessible subscriptions
+            subscriptions_list = [s for s in self.subscription_ids if s in accessible_subscriptions_list]
+            # Verbose skip
+            for s in self.subscription_ids:
+                if s not in accessible_subscriptions_list:
+                    print_info('Skipping subscription {}: this subscription is not accessible with the provided credentials')
+            print_info('Running against {} subscription(s)'.format(len(subscriptions_list)))
+
+        # All subscriptions
+        elif self.all_subscriptions:
+            subscriptions_list = accessible_subscriptions_list
+            print_info('Running against {} subscription(s)'.format(len(subscriptions_list)))
+
+        # Other == error
+        else:
+            print_exception('Unknown Azure subscription option')
+            raise
+
+        if subscriptions_list:
+            return subscriptions_list
+        else:
+            print_exception('No subscriptions to scan')
+            raise

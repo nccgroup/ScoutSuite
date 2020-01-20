@@ -5,9 +5,10 @@ from ScoutSuite.providers.utils import run_concurrently
 
 
 class ARMFacade:
-    def __init__(self, credentials, subscription_id):
-        self._subscription_id = subscription_id
-        self._client = AuthorizationManagementClient(credentials, subscription_id=subscription_id)
+    def __init__(self, credentials):
+        # self._subscription_id = subscription_id
+        # self._client = AuthorizationManagementClient(credentials, subscription_id=subscription_id)
+        pass
 
     async def get_roles(self):
         try:

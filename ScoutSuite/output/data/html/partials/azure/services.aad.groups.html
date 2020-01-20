@@ -15,13 +15,13 @@
         <div class="list-group-item-text item-margin">Deletion Timestamp: <span id="aad.groups.{{@key}}.deletion_timestamp"><samp>{{value_or_none deletion_timestamp}}</samp></span></div>
     </div>
     <div class="list-group-item">
-        <h4 class="list-group-item-heading">Roles
+        <h4 class="list-group-item-heading">Role Assignments
             {{> count_badge count=roles.length}}
         </h4>
         <div class="accordion-inner">
             <ul>
                 {{#each roles}}
-                <li class="list-group-item-text"><a href="javascript:showObject('services.arm.roles', 'id', '{{this}}')">{{getValueAt 'services.arm.roles' this 'name'}}</a></li></a></li>
+                <li class="list-group-item-text"><a href="javascript:showObject('services.arm.{{this.subscription_id}}.roles', 'id', '{{this}}')">aaaa{{getValueAt 'services.arm.subscriptions' this 'subscription_id' 'roles' this 'name'}}</a></li></a></li>
                 {{/each}}
             </ul>
         </div>

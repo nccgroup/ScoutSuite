@@ -12,20 +12,16 @@ from ScoutSuite.providers.base.authentication_strategy import AuthenticationStra
 
 class AzureCredentials:
 
-    def __init__(self,
-                 credentials, graphrbac_credentials,
-                 subscription_id=None, tenant_id=None):
+    def __init__(self, credentials, graphrbac_credentials):
         self.credentials = credentials  # Azure Resource Manager API credentials
         self.graphrbac_credentials = graphrbac_credentials  # Azure AD Graph API credentials
-        self.subscription_id = subscription_id
-        self.tenant_id = tenant_id if tenant_id else credentials.token.get('tenant_id')  # TODO does this work for MSI
 
 
 class AzureAuthenticationStrategy(AuthenticationStrategy):
 
     def authenticate(self,
                      cli=None, user_account=None, service_principal=None, file_auth=None, msi=None,
-                     tenant_id=None, subscription_id=None,
+                     tenant_id=None,
                      client_id=None, client_secret=None,
                      username=None, password=None,
                      programmatic_execution=False,
@@ -58,30 +54,8 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 graphrbac_credentials = UserPassCredentials(username, password,
                                                             resource='https://graph.windows.net')
 
-                if not subscription_id:
-                    # Get the subscription ID
-                    subscription_client = SubscriptionClient(credentials)
-                    try:
-                        # Tries to read the subscription list
-                        print_info('No subscription set, inferring ID')
-                        subscription = next(subscription_client.subscriptions.list())
-                        subscription_id = subscription.subscription_id
-                        print_info('Running against the {} subscription'.format(subscription_id))
-                    except StopIteration:
-                        print_info('Unable to infer a subscription')
-                        # If the user cannot read subscription list, ask Subscription ID:
-                        if not programmatic_execution:
-                            subscription_id = input('Subscription ID: ')
-                        else:
-                            raise AuthenticationException('Unable to infer a Subscription ID')
 
             elif service_principal:
-
-                if not subscription_id:
-                    if not programmatic_execution:
-                        subscription_id = input('Subscription ID: ')
-                    else:
-                        raise AuthenticationException('No Subscription ID set')
 
                 if not tenant_id:
                     if not programmatic_execution:
@@ -117,7 +91,6 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             elif file_auth:
 
                 data = json.loads(file_auth.read())
-                subscription_id = data.get('subscriptionId')
                 tenant_id = data.get('tenantId')
                 client_id = data.get('clientId')
                 client_secret = data.get('clientSecret')
@@ -140,24 +113,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 credentials = MSIAuthentication()
                 graphrbac_credentials = MSIAuthentication(resource='https://graph.windows.net')
 
-                if not subscription_id:
-                    try:
-                        # Get the subscription ID
-                        subscription_client = SubscriptionClient(credentials)
-                        print_info('No subscription set, inferring ID')
-                        # Tries to read the subscription list
-                        subscription = next(subscription_client.subscriptions.list())
-                        subscription_id = subscription.subscription_id
-                        tenant_id = subscription.tenant_id
-                        print_info('Running against the {} subscription'.format(subscription_id))
-                    except StopIteration:
-                        # If the VM cannot read subscription list, ask Subscription ID:
-                        if not programmatic_execution:
-                            subscription_id = input('Subscription ID: ')
-                        else:
-                            raise AuthenticationException('Unable to infer a Subscription ID')
-
-            return AzureCredentials(credentials, graphrbac_credentials, subscription_id, tenant_id)
+            return AzureCredentials(credentials, graphrbac_credentials)
 
         except Exception as e:
             raise AuthenticationException(e)

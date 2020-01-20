@@ -139,44 +139,13 @@ class ScoutSuiteArgumentParser:
 
         azure_auth_modes = azure_parser.add_mutually_exclusive_group(required=True)
 
+        # az-cli authentication
         azure_auth_modes.add_argument('-c',
                                       '--cli',
                                       action='store_true',
                                       help='Run Scout using configured azure-cli credentials')
 
-        azure_auth_modes.add_argument('-m',
-                                      '--msi',
-                                      action='store_true',
-                                      help='Run Scout with Managed Service Identity')
-
-        azure_auth_modes.add_argument('-s',
-                                      '--service-principal',
-                                      action='store_true',
-                                      help='Run Scout with an Azure Service Principal')
-        azure_auth_params.add_argument('--tenant',
-                                       action='store',
-                                       dest='tenant_id',
-                                       help='Tenant ID of the service principal')
-        azure_auth_params.add_argument('--subscription',
-                                       action='store',
-                                       dest='subscription_id',
-                                       help='Subscription ID of the service principal')
-        azure_auth_params.add_argument('--client-id',
-                                       action='store',
-                                       dest='client_id',
-                                       help='Client ID of the service principal')
-        azure_auth_params.add_argument('--client-secret',
-                                       action='store',
-                                       dest='client_secret',
-                                       help='Client of the service principal')
-
-        azure_auth_modes.add_argument('--file-auth',
-                                      action='store',
-                                      type=argparse.FileType('r'),
-                                      dest='file_auth',
-                                      metavar="FILE",
-                                      help='Run Scout with the specified credential file')
-
+        # username/password authentication
         azure_auth_modes.add_argument('--user-account',
                                       action='store_true',
                                       help='Run Scout with user credentials')
@@ -193,17 +162,55 @@ class ScoutSuiteArgumentParser:
                                        dest='password',
                                        help='Password of the Azure account')
 
+        # Service Principal authentication
+        azure_auth_modes.add_argument('-s',
+                                      '--service-principal',
+                                      action='store_true',
+                                      help='Run Scout with an Azure Service Principal')
+        azure_auth_params.add_argument('--tenant',
+                                       action='store',
+                                       dest='tenant_id',
+                                       help='Tenant ID to scan (only required for authentication with Service Principals)')
+        # azure_auth_params.add_argument('--subscription',
+        #                                action='store',
+        #                                dest='subscription_id',
+        #                                help='Subscription ID (only required for authentication with Service Principals)')
+        azure_auth_params.add_argument('--client-id',
+                                       action='store',
+                                       dest='client_id',
+                                       help='Client ID of the service principal')
+        azure_auth_params.add_argument('--client-secret',
+                                       action='store',
+                                       dest='client_secret',
+                                       help='Client of the service principal')
+        # Service Principal credentials in an auth file
+        azure_auth_modes.add_argument('--file-auth',
+                                      action='store',
+                                      type=argparse.FileType('r'),
+                                      dest='file_auth',
+                                      metavar="FILE",
+                                      help='Run Scout with the specified credential file')
+
+        # Managed Service Identity (MSI) authentication
+        azure_auth_modes.add_argument('-m',
+                                      '--msi',
+                                      action='store_true',
+                                      help='Run Scout with Managed Service Identity')
+
         azure_scope = parser.add_argument_group('Additional arguments')
 
         azure_scope.add_argument('--subscription-ids',
                                  action='store',
                                  default=[],
                                  nargs='+',
-                                 help='ID of the Azure subscriptions to scan')
+                                 dest='subscription_ids',
+                                 help='IDs (separated by spaces) of the Azure subscription(s) to scan. '
+                                      'By default, only the default subscription will be scanned.')
 
         azure_scope.add_argument('--all-subscriptions',
-                               action='store_true',
-                               help='Scan all of the accessible subscriptions')
+                                 action='store_true',
+                                 dest='all_subscriptions',
+                                 help='Scan all of the accessible subscriptions')
 
     def _init_aliyun_parser(self):
         parser = self.subparsers.add_parser("aliyun",
@@ -372,15 +379,20 @@ class ScoutSuiteArgumentParser:
 
         # Test conditions
         v = vars(args)
+        # AWS
         if v.get('provider') == 'aws':
             if v.get('aws_access_keys') and not (v.get('aws_access_key_id') or v.get('aws_secret_access_key')):
                 self.parser.error('When running with --access-keys, you must provide an Access Key ID '
                                   'and Secret Access Key.')
+        # Azure
         elif v.get('provider') == 'azure':
-            if v.get('tenant_id') and not (v.get('user_account') or v.get('service_principal') or v.get('msi')):
-                self.parser.error('--tenant can only be set when using --user-account, --service-principal or --msi')
-            if v.get('subscription_id') and not (v.get('user_account') or v.get('service_principal') or v.get('msi')):
-                self.parser.error('--tenant can only be set when using --user-account, --service-principal or --msi')
+            if v.get('tenant_id') and not v.get('service_principal'):
+                self.parser.error('--tenant can only be set when using --service-principal authentication')
+            # TODO - is this relevant?
+            # if v.get('subscription_id') and not (v.get('user_account') or v.get('service_principal') or v.get('msi')):
+            #     self.parser.error('--tenant can only be set when using --user-account, --service-principal or --msi')
+            if v.get('subscription_ids') and v.get('all_subscriptions'):
+                self.parser.error('--subscription-ids and --all-subscriptions are mutually exclusive options')
         # TODO add more conditions
 
         return args
