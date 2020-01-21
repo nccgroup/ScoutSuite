@@ -15,7 +15,7 @@ class KeyVaultFacade:
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
-                lambda: list(self._client.vaults.list_by_subscription()))
+                lambda: list(client.vaults.list_by_subscription()))
         except Exception as e:
             print_exception('Failed to retrieve key vaults: {}'.format(e))
             return []

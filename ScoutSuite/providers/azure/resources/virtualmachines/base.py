@@ -1,9 +1,9 @@
-from ScoutSuite.providers.azure.resources.base import AzureCompositeResources
+from ScoutSuite.providers.azure.resources.subscriptions import Subscriptions
 
 from .instances import Instances
 
 
-class VirtualMachines(AzureCompositeResources):
+class VirtualMachines(Subscriptions):
     _children = [
         (Instances, 'instances')
     ]

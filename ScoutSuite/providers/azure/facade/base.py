@@ -43,13 +43,11 @@ class AzureFacade:
 
         self.aad = AADFacade(credentials.graphrbac_credentials)
         self.arm = ARMFacade(credentials.credentials)
-        # TODO uncomment
-        # self.keyvault = KeyVaultFacade(credentials.credentials)
+        self.keyvault = KeyVaultFacade(credentials.credentials)
         self.virtualmachines = VirtualMachineFacade(credentials.credentials)
         self.network = NetworkFacade(credentials.credentials)
-        # TODO uncomment
-        # self.securitycenter = SecurityCenterFacade(credentials.credentials)
-        # self.sqldatabase = SQLDatabaseFacade(credentials.credentials)
+        self.securitycenter = SecurityCenterFacade(credentials.credentials)
+        self.sqldatabase = SQLDatabaseFacade(credentials.credentials)
         self.storageaccounts = StorageAccountsFacade(credentials.credentials)
 
         # Instantiate facades for proprietary services

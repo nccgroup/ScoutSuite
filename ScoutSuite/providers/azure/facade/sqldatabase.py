@@ -16,7 +16,7 @@ class SQLDatabaseFacade:
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
-                lambda: self._client.database_blob_auditing_policies.get(
+                lambda: client.database_blob_auditing_policies.get(
                     resource_group_name, server_name, database_name)
             )
         except Exception as e:
@@ -27,7 +27,7 @@ class SQLDatabaseFacade:
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
-                lambda: self._client.database_threat_detection_policies.get(
+                lambda: client.database_threat_detection_policies.get(
                     resource_group_name, server_name, database_name)
             )
         except Exception as e:
@@ -38,7 +38,7 @@ class SQLDatabaseFacade:
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
-                lambda: list(self._client.databases.list_by_server(resource_group_name, server_name))
+                lambda: list(client.databases.list_by_server(resource_group_name, server_name))
             )
         except Exception as e:
             print_exception('Failed to retrieve databases: {}'.format(e))
@@ -48,7 +48,7 @@ class SQLDatabaseFacade:
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
-                lambda: self._client.replication_links.list_by_database(
+                lambda: client.replication_links.list_by_database(
                     resource_group_name, server_name, database_name)
             )
         except Exception as e:
@@ -59,7 +59,7 @@ class SQLDatabaseFacade:
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
-                lambda: self._client.server_azure_ad_administrators.get(resource_group_name, server_name)
+                lambda: client.server_azure_ad_administrators.get(resource_group_name, server_name)
             )
         except CloudError as e:
             # No ad admin configured returns a 404 error:
@@ -74,7 +74,7 @@ class SQLDatabaseFacade:
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
-                lambda: self._client.server_blob_auditing_policies.get(resource_group_name, server_name)
+                lambda: client.server_blob_auditing_policies.get(resource_group_name, server_name)
             )
         except Exception as e:
             print_exception('Failed to retrieve server blob auditing policies: {}'.format(e))
@@ -84,7 +84,7 @@ class SQLDatabaseFacade:
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
-                lambda: self._client.server_security_alert_policies.get(resource_group_name, server_name)
+                lambda: client.server_security_alert_policies.get(resource_group_name, server_name)
             )
         except Exception as e:
             print_exception('Failed to retrieve server security alert policies: {}'.format(e))
@@ -94,7 +94,7 @@ class SQLDatabaseFacade:
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
-                lambda: list(self._client.servers.list())
+                lambda: list(client.servers.list())
             )
         except Exception as e:
             print_exception('Failed to retrieve servers: {}'.format(e))
@@ -104,7 +104,7 @@ class SQLDatabaseFacade:
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
-                lambda: self._client.transparent_data_encryptions.get(
+                lambda: client.transparent_data_encryptions.get(
                     resource_group_name, server_name, database_name)
             )
         except Exception as e:

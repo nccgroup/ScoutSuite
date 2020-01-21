@@ -3,10 +3,10 @@ from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
 
 
-class KeyVaults(AzureResources):
+class Vaults(AzureResources):
 
     def __init__(self, facade: AzureFacade, subscription_id: str):
-        super(KeyVaults, self).__init__(facade)
+        super(Vaults, self).__init__(facade)
         self.subscription_id = subscription_id
 
     async def fetch_all(self):

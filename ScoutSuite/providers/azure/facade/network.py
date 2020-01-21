@@ -15,7 +15,7 @@ class NetworkFacade:
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
-                lambda: list(self._client.network_watchers.list_all())
+                lambda: list(client.network_watchers.list_all())
             )
         except Exception as e:
             print_exception('Failed to retrieve network watchers: {}'.format(e))
@@ -25,7 +25,7 @@ class NetworkFacade:
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
-                lambda: list(self._client.network_security_groups.list_all())
+                lambda: list(client.network_security_groups.list_all())
             )
         except Exception as e:
             print_exception('Failed to retrieve network security groups: {}'.format(e))
@@ -35,7 +35,7 @@ class NetworkFacade:
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
-                lambda: list(self._client.application_security_groups.list_all())
+                lambda: list(client.application_security_groups.list_all())
             )
         except Exception as e:
             print_exception('Failed to retrieve application security groups: {}'.format(e))
@@ -45,7 +45,7 @@ class NetworkFacade:
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
-                lambda: list(self._client.virtual_networks.list_all())
+                lambda: list(client.virtual_networks.list_all())
             )
         except Exception as e:
             print_exception('Failed to retrieve virtual networks: {}'.format(e))
@@ -55,7 +55,7 @@ class NetworkFacade:
         try:
             client = self.get_client(subscription_id)
             return await run_concurrently(
-                lambda: list(self._client.network_interfaces.list_all())
+                lambda: list(client.network_interfaces.list_all())
             )
         except Exception as e:
             print_exception('Failed to retrieve network interfaces: {}'.format(e))

@@ -41,12 +41,10 @@ class AzureServicesConfig(BaseServicesConfig):
 
         self.aad = AAD(facade)
         self.arm = ARM(facade)
-        # TODO uncomment
-        # self.securitycenter = SecurityCenter(facade)
-        # self.sqldatabase = Servers(facade)
+        self.securitycenter = SecurityCenter(facade)
+        self.sqldatabase = Servers(facade)
         self.storageaccounts = StorageAccounts(facade)
-        # TODO uncomment
-        # self.keyvault = KeyVaults(facade)
+        self.keyvault = KeyVaults(facade)
         self.network = Networks(facade)
         self.virtualmachines = VirtualMachines(facade)
 

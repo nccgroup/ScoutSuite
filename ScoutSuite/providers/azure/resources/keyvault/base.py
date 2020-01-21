@@ -1,9 +1,9 @@
 from ScoutSuite.providers.azure.resources.subscriptions import Subscriptions
 
-from .vaults import KeyVaults
+from .vaults import Vaults
 
 
-class KeyVaut(Subscriptions):
+class KeyVaults(Subscriptions):
     _children = [
-        (KeyVaults, 'vaults')
+        (Vaults, 'vaults')
     ]
