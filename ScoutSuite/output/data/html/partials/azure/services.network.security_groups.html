@@ -6,12 +6,12 @@
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Information</h4>
-        <div class="list-group-item-text item-margin">Name: <span id="network.security_groups.{{@key}}.name">{{name}}</span></div>
-        <div class="list-group-item-text item-margin">Location: <span id="network.security_groups.{{@key}}.location">{{ location }}</span></div>
-        <div class="list-group-item-text item-margin">State: <span id="network.security_groups.{{@key}}.provisioning_state">{{ provisioning_state }}</span></div>
+        <div class="list-group-item-text item-margin">Name: <span id="network.subscriptions.{{../@key}}.security_groups.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Location: <span id="network.subscriptions.{{../@key}}.security_groups.{{@key}}.location">{{ location }}</span></div>
+        <div class="list-group-item-text item-margin">State: <span id="network.subscriptions.{{../@key}}.security_groups.{{@key}}.provisioning_state">{{ provisioning_state }}</span></div>
         {{!--
         <div class="list-group-item-text item-margin">
-            <span id="network.security_groups.{{@key}}.ExposedPorts">Exposed Ports:</span>
+            <span id="network.subscriptions.{{../@key}}.security_groups.{{@key}}.ExposedPorts">Exposed Ports:</span>
             <div class="list-group-item-text item-margin">
                 {{#each exposed_port_ranges}}
                 <li id="network.security_groups.{{@../key}}.exposed_port_ranges.{{@key}}">{{ this }}</li>
