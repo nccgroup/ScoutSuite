@@ -49,7 +49,7 @@ class RDSFacade(AWSBaseFacade):
         account_id = get_aws_account_id(self.session)
         try:
             instance_tagset = await run_concurrently(lambda: client.list_tags_for_resource(
-                ResourceName=f"arn:aws:rds:{region}:{account_id}:db:{instance['DBInstanceIdentifier']}"))
+                ResourceName="arn:aws:rds:"+region+":"+account_id+":db:"+instance['DBInstanceIdentifier']))
             instance['Tags'] = {x['Key']: x['Value'] for x in instance_tagset['TagList']}
         except ClientError as e:
             if e.response['Error']['Code'] != 'NoSuchTagSet':
