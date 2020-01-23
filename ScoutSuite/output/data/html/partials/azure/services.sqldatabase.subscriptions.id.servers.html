@@ -6,14 +6,14 @@
 
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Information</h4>
-        <div class="list-group-item-text item-margin">SQL Server Name: <span id="sqldatabase.subscriptions.{{../@key}}.servers.{{@key}}.name">{{name}}</span></div>
-        <div class="list-group-item-text item-margin">Azure Active Directory admin configured: <span id="sqldatabase.subscriptions.{{../@key}}.servers.{{@key}}.ad_admin_configured">{{ad_admin_configured}}</span></div>
-        <div class="list-group-item-text item-margin">Auditing: <span id="sqldatabase.subscriptions.{{../@key}}.servers.{{@key}}.server_auditing_disabled">{{ convert_bool_to_enabled auditing.auditing_enabled }}</span></div>
-        <div class="list-group-item-text item-margin">Auditing retention period: <span id="sqldatabase.subscriptions.{{../@key}}.servers.{{@key}}.server_low_auditing_retention">{{ auditing.retention_days }}</span></div>
-        <div class="list-group-item-text item-margin">Threat detection: <span id="sqldatabase.subscriptions.{{../@key}}.servers.{{@key}}.server_threat_detection_disabled">{{ convert_bool_to_enabled threat_detection.threat_detection_enabled }}</span></div>
-        <div class="list-group-item-text item-margin">Threat detection alerts: <span id="sqldatabase.subscriptions.{{../@key}}.servers.{{@key}}.server_threat_detection_alerts_disabled">{{ convert_bool_to_enabled threat_detection.alerts_enabled }}</span></div>
-        <div class="list-group-item-text item-margin">Send threat detection alerts: <span id="sqldatabase.subscriptions.{{../@key}}.servers.{{@key}}.server_send_threat_detection_alerts_disabled">{{ convert_bool_to_enabled threat_detection.send_alerts_enabled }}</span></div>
-        <div class="list-group-item-text item-margin">Threat detection retention period: <span id="sqldatabase.subscriptions.{{../@key}}.servers.{{@key}}.server_low_threat_detection_retention">{{ threat_detection.retention_days }}</span></div>
+        <div class="list-group-item-text item-margin">SQL Server Name: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Azure Active Directory admin configured: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.ad_admin_configured">{{ad_admin_configured}}</span></div>
+        <div class="list-group-item-text item-margin">Auditing: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_auditing_disabled">{{ convert_bool_to_enabled auditing.auditing_enabled }}</span></div>
+        <div class="list-group-item-text item-margin">Auditing retention period: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_low_auditing_retention">{{ auditing.retention_days }}</span></div>
+        <div class="list-group-item-text item-margin">Threat detection: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_threat_detection_disabled">{{ convert_bool_to_enabled threat_detection.threat_detection_enabled }}</span></div>
+        <div class="list-group-item-text item-margin">Threat detection alerts: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_threat_detection_alerts_disabled">{{ convert_bool_to_enabled threat_detection.alerts_enabled }}</span></div>
+        <div class="list-group-item-text item-margin">Send threat detection alerts: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_send_threat_detection_alerts_disabled">{{ convert_bool_to_enabled threat_detection.send_alerts_enabled }}</span></div>
+        <div class="list-group-item-text item-margin">Threat detection retention period: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_low_threat_detection_retention">{{ threat_detection.retention_days }}</span></div>
     </div>
 
     <div class="list-group-item">
