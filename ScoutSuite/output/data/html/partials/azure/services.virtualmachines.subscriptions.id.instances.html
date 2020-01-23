@@ -29,12 +29,12 @@
 </script>
 
 <script>
-    Handlebars.registerPartial("services.virtualmachines.instances", $("#services\\.virtualmachines\\.instances\\.partial").html());
+    Handlebars.registerPartial("services.subscriptions.id.virtualmachines.instances", $("#services\\.virtualmachines\\.subscriptions\\.id\\.instances\\.partial").html());
 </script>
 
 <!-- Single virtualmachines instance template -->
 <script id="single_virtualmachines_instance-template" type="text/x-handlebars-template">
-    {{> modal-template template='services.virtualmachines.instances'}}
+    {{> modal-template template='services.virtualmachines.subscriptions.id.subscriptions.id.instances'}}
 </script>
 <script>
     var single_virtualmachines_instance_template = Handlebars.compile($("#single_virtualmachines_instance-template").html());

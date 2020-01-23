@@ -52,12 +52,12 @@
 </script>
 
 <script>
-    Handlebars.registerPartial("services.network.network_interfaces", $("#services\\.network\\.network_interfaces\\.partial").html());
+    Handlebars.registerPartial("services.subscriptions.id.network.network_interfaces", $("#services\\.network\\.subscriptions\\.id\\.network_interfaces\\.partial").html());
 </script>
 
 <!-- Single network network_interface template -->
 <script id="single_network_network_interface-template" type="text/x-handlebars-template">
-    {{> modal-template template='services.network.network_interfaces'}}
+    {{> modal-template template='services.network.subscriptions.id.network_interfaces'}}
 </script>
 <script>
     var single_network_network_interface_template = Handlebars.compile($("#single_network_network_interface-template").html());

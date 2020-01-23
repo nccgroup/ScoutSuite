@@ -15,12 +15,12 @@
 </script>
 
 <script>
-    Handlebars.registerPartial("services.network.watchers", $("#services\\.network\\.watchers\\.partial").html());
+    Handlebars.registerPartial("services.subscriptions.id.network.watchers", $("#services\\.network\\.subscriptions\\.id\\.watchers\\.partial").html());
 </script>
 
 <!-- Single network watcher template -->
 <script id="single_network_watcher-template" type="text/x-handlebars-template">
-    {{> modal-template template='services.network.watchers'}}
+    {{> modal-template template='services.network.subscriptions.id.subscriptions.id.watchers'}}
 </script>
 <script>
     var single_network_watcher_template = Handlebars.compile($("#single_network_watcher-template").html());

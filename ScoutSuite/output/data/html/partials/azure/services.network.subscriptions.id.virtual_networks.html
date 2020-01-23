@@ -31,12 +31,12 @@
 </script>
 
 <script>
-    Handlebars.registerPartial("services.network.virtual_networks", $("#services\\.network\\.virtual_networks\\.partial").html());
+    Handlebars.registerPartial("services.subscriptions.id.network.virtual_networks", $("#services\\.network\\.subscriptions\\.id\\.virtual_networks\\.partial").html());
 </script>
 
 <!-- Single network virtual_network template -->
 <script id="single_network_virtual_network-template" type="text/x-handlebars-template">
-    {{> modal-template template='services.network.virtual_networks'}}
+    {{> modal-template template='services.network.subscriptions.id.virtual_networks'}}
 </script>
 <script>
     var single_network_virtual_network_template = Handlebars.compile($("#single_network_virtual_network-template").html());

@@ -115,12 +115,12 @@
 </script>
 
 <script>
-    Handlebars.registerPartial("services.network.security_groups", $("#services\\.network\\.security_groups\\.partial").html());
+    Handlebars.registerPartial("services.subscriptions.id.network.security_groups", $("#services\\.network\\.subscriptions\\.id\\.security_groups\\.partial").html());
 </script>
 
 <!-- Single security group template -->
 <script id="single_network_security_group-template" type="text/x-handlebars-template">
-    {{> modal-template template='services.network.security_groups'}}
+    {{> modal-template template='services.network.subscriptions.id.security_groups'}}
 </script>
 <script>
     var single_network_security_group_template = Handlebars.compile($("#single_network_security_group-template").html());
