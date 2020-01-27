@@ -28,7 +28,7 @@ class EC2Instances(AWSResources):
 
         get_name(raw_instance, instance, 'InstanceId')
         get_keys(raw_instance, instance,
-                 ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile', 'SubnetId'])
+                 ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile', 'SubnetId', 'TagSet'])
 
         instance['network_interfaces'] = {}
         for eni in raw_instance['NetworkInterfaces']:

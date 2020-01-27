@@ -1,0 +1,6 @@
+{
+    "description": "Required Tags on EC2 Instances",
+    "key": "ec2-instance-required-tag-_ARG_0_",
+    "path": "ec2.regions.id.vpcs.id.instances.id",
+    "conditions": [ "ec2.regions.id.vpcs.id.instances.id.TagSet", "withKey", "_ARG_0_"]
+}
