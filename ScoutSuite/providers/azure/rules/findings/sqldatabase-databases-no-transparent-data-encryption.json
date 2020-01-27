@@ -1,7 +1,7 @@
 {
     "dashboard_name": "SQL Databases",
     "description": "Transparent Data Encryption Disabled for SQL Databases",
-	"rationale": "<b>Description:</b><br><br>Enable transparent data encryption for all SQL databases.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 4.2</li></ul>",
+    "rationale": "<b>Description:</b><br><br>Enable transparent data encryption for all SQL databases.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 4.2</li></ul>",
     "path": "sqldatabase.servers.id.databases.id",
     "display_path": "sqldatabase.servers.id",
     "conditions": [ "and",

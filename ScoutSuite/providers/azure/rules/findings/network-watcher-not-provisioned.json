@@ -1,6 +1,6 @@
 {
     "description": "Network Watchers not Provisioned",
-	"rationale": "<b>Description:</b><br><br>Network watchers should be provisioned to work.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 6.5</li></ul>",
+    "rationale": "<b>Description:</b><br><br>Network watchers should be provisioned to work.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 6.5</li></ul>",
     "dashboard_name": "Network",
     "path": "network.watchers.id",
     "display_path": "network.watchers.id",
