@@ -28,7 +28,7 @@ class EC2Instances(AWSResources):
 
         get_name(raw_instance, instance, 'InstanceId')
         get_keys(raw_instance, instance,
-                 ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile', 'SubnetId'])
+                 ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile', 'SubnetId', 'TagSet'])
 
         instance['network_interfaces'] = {}
         for eni in raw_instance['NetworkInterfaces']:
@@ -36,8 +36,8 @@ class EC2Instances(AWSResources):
             get_keys(eni, nic, ['Association', 'Groups', 'PrivateIpAddresses', 'SubnetId', 'Ipv6Addresses'])
             instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
 
+        instance['tags'] = self.facade.ec2.get_and_set_ec2_instance_tags(raw_instance)
         instance['metadata_options'] = raw_instance['MetadataOptions']
-
         return id, instance
 
     @staticmethod
