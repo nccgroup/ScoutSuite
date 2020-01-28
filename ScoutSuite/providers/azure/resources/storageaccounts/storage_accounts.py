@@ -1,5 +1,5 @@
-from ScoutSuite.providers.azure.resources.base import AzureCompositeResources
 from ScoutSuite.providers.azure.facade.base import AzureFacade
+from ScoutSuite.providers.azure.resources.base import AzureCompositeResources
 from ScoutSuite.providers.azure.utils import get_resource_group_name
 from ScoutSuite.providers.utils import get_non_provider_id
 
@@ -7,7 +7,6 @@ from .blob_containers import BlobContainers
 
 
 class StorageAccounts(AzureCompositeResources):
-
     _children = [
         (BlobContainers, 'blob_containers')
     ]
@@ -28,13 +27,6 @@ class StorageAccounts(AzureCompositeResources):
                                          'subscription_id': self.subscription_id}
                     for (storage_account_id, storage_account) in self.items()}
         )
-
-        # await self._fetch_children_of_all_resources(
-        #     resources=self['storage_accounts'],
-        #     scopes={storage_account_id: {'resource_group_name': storage_account['resource_group_name'],
-        #                                  'storage_account_name': storage_account['name']}
-        #             for (storage_account_id, storage_account) in self['storage_accounts'].items()}
-        # )
 
     def _parse_storage_account(self, raw_storage_account):
         storage_account = {}
