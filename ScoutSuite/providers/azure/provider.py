@@ -1,6 +1,7 @@
 import os
 
-from ScoutSuite.providers.azure.services import AzureServicesConfig
+from ScoutSuite.core.console import print_exception
+
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.providers.azure.services import AzureServicesConfig
 
@@ -29,7 +30,10 @@ class AzureProvider(BaseProvider):
 
         self.programmatic_execution = kwargs['programmatic_execution']
         self.credentials = kwargs['credentials']
-        self.account_id = None # TODO fix this
+        try:
+            self.account_id = self.credentials.graphrbac_credentials.token['tenant_id']
+        except Exception as e:
+            self.account_id = 'undefined'
 
         self.services = AzureServicesConfig(self.credentials,
                                                    subscription_ids=self.subscription_ids,
@@ -44,14 +48,11 @@ class AzureProvider(BaseProvider):
         """
         Returns the name of the report using the provider's configuration
         """
-        # TODO fix this
-        return 'azure fix me'
-        # if self.credentials.subscription_id:
-        #     return 'azure-{}'.format(self.credentials.subscription_id)
-        # elif self.account_id:
-        #     return 'azure-{}'.format(self.account_id)
-        # else:
-        #     return 'azure'
+        try:
+            return 'azure-tenant-{}'.format(self.credentials.graphrbac_credentials.token['tenant_id'])
+        except Exception as e:
+            print_exception('Unable to define report name: {}'.format(e))
+            return 'azure'
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
