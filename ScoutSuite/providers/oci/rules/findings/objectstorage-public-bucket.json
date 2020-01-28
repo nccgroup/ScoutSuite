@@ -1,6 +1,6 @@
 {
     "description": "Public Buckets",
-	"rationale": "<b>Description:</b><br><br>Buckets should be private unless intended.",
+    "rationale": "<b>Description:</b><br><br>Buckets should be private unless intended.",
     "dashboard_name": "Buckets",
     "path": "objectstorage.buckets.id",
     "conditions": [ "and",
