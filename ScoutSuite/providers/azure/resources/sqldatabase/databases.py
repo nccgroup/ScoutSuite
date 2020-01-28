@@ -37,5 +37,7 @@ class Databases(AzureCompositeResources):
             resources=self,
             scopes={db_id: {'resource_group_name': self.resource_group_name,
                             'server_name': self.server_name,
-                            'database_name': db['name']} for (db_id, db) in self.items()}
+                            'database_name': db['name'],
+                            'subscription_id': self.subscription_id}
+                    for (db_id, db) in self.items()}
         )
