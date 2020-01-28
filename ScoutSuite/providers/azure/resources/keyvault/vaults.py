@@ -18,8 +18,12 @@ class Vaults(AzureResources):
         vault = {}
         vault['id'] = get_non_provider_id(raw_vault.id)
         vault['name'] = raw_vault.name
+        vault['type'] = raw_vault.type
+        vault['location'] = raw_vault.location
+        vault['additional_properties'] = raw_vault.additional_properties
+        vault['tags'] = raw_vault.tags
+        vault['properties'] = raw_vault.properties
         vault['public_access_allowed'] = self._is_public_access_allowed(raw_vault)
-
         return vault['id'], vault
 
     def _is_public_access_allowed(self, raw_vault):
