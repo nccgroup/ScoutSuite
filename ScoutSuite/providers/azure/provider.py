@@ -94,3 +94,5 @@ class AzureProvider(BaseProvider):
                             self.services['aad']['service_principals'][service_principal]['roles'].append(role_id)
                             self.services['arm']['subscriptions'][subscription]['roles'][role_id]['assignments']['service_principals'].append(service_principal)
                             self.services['arm']['subscriptions'][subscription]['roles'][role_id]['assignments_count'] += 1
+
+        pass
