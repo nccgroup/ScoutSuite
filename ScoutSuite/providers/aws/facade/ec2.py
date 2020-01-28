@@ -180,6 +180,11 @@ class EC2Facade(AWSBaseFacade):
             [flow_log for flow_log in self.flow_logs_cache[region]
              if flow_log['ResourceId'] == subnet['SubnetId'] or flow_log['ResourceId'] == subnet['VpcId']]
 
+    async def get_and_set_ec2_instance_tags(self, raw_instance):
+        instance = {}
+        instance['tags'] = {x['Key']: x['Value'] for x in raw_instance['TagSet']}
+        return instance
+
     async def get_peering_connections(self, region):
         try:
             peering_connections = await AWSFacadeUtils.get_all_pages('ec2', region, self.session, 'describe_vpc_peering_connections', 'VpcPeeringConnections')
