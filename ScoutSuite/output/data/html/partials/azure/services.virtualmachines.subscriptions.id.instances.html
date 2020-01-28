@@ -22,7 +22,7 @@
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Network Interfaces</h4>
         {{#each network_interfaces}}
-        <div class="list-group-item-text item-margin"><a href="javascript:showObject('services.network.network_interfaces.{{this}}')"><samp>{{getValueAt 'services.network.network_interfaces' this 'name'}}</samp></a></div>
+        <div class="list-group-item-text item-margin"><a href="javascript:showObject('services.network.subscriptions.{{../subscription}}.network_interfaces.{{this}}')"><samp>{{getValueAt 'services.network.subscriptions' ../subscription 'network_interfaces' this 'name'}}</samp></a></div>
         {{/each}}
     </div>
 </script>
