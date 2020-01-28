@@ -32,13 +32,13 @@ class StorageAccountsFacade:
         try:
             client = self.get_client(subscription_id)
             containers = await run_concurrently(
-                lambda: client.blob_containers.list(resource_group_name, storage_account_name))
-            containers_value = getattr(containers, 'value', [])
-            containers_value_list = list(containers_value)
-            return containers_value_list
+                lambda: list(client.blob_containers.list(resource_group_name, storage_account_name))
+            )
         except Exception as e:
             print_exception('Failed to retrieve blob containers: {}'.format(e))
             return []
+        else:
+            return containers
 
     async def _get_and_set_activity_logs(self, storage_account, subscription_id: str):
         client = MonitorManagementClient(self.credentials, subscription_id)
