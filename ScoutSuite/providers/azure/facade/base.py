@@ -113,7 +113,7 @@ class AzureFacade:
                                   s.subscription_id in self.subscription_ids]
             # Verbose skip
             for s in self.subscription_ids:
-                if s not in accessible_subscriptions_list:
+                if not any(subs.subscription_id == s for subs in accessible_subscriptions_list):
                     print_info('Skipping subscription "{}": this subscription does not exist or '
                                'is not accessible with the provided credentials'.format(s))
             print_info('Running against {} subscription(s)'.format(len(subscriptions_list)))
