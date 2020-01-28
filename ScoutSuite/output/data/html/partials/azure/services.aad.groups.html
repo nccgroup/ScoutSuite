@@ -21,7 +21,7 @@
         <div class="accordion-inner">
             <ul>
                 {{#each roles}}
-                <li class="list-group-item-text"><a href="javascript:showObject('services.arm.{{this.subscription_id}}.roles', 'id', '{{this}}')">aaaa{{getValueAt 'services.arm.subscriptions' this '../subscription_id' 'roles' this 'name'}}</a></li></a></li>
+                <li class="list-group-item-text"><a href="javascript:showObject('services.arm.subscriptions.{{this.subscription_id}}.roles', 'id', '{{this.role_id}}')">{{getValueAt 'services.arm.subscriptions' this.subscription_id 'roles' this.role_id 'name'}}</a> (subscription <samp>{{this.subscription_id}}</samp>)</li></a></li>
                 {{/each}}
             </ul>
         </div>
