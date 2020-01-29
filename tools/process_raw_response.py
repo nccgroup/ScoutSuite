@@ -9,7 +9,7 @@ all_cap_re = re.compile('([a-z0-9])([A-Z])')
 
 html_boilerplate = \
 """<!-- {} {}s -->
-<script id="services.{}.{}s.partial" type="text/x-handlebars-template">
+<script id="services.{}{}.{}s.partial" type="text/x-handlebars-template">
     <div id="resource-name" class="list-group-item active">
         <h4 class="list-group-item-heading">{{{{name}}}}</h4>
     </div>
@@ -19,12 +19,12 @@ html_boilerplate = \
 </script>
 
 <script>
-    Handlebars.registerPartial("services.{}.{}s", $("#services\\\\.{}\\\\.{}s\\\\.partial").html());
+    Handlebars.registerPartial("services.{}{}.{}s", $("#services\\\\.{}{}\\\\.{}s\\\\.partial").html());
 </script>
 
 <!-- Single {} {} template -->
 <script id="single_{}_{}-template" type="text/x-handlebars-template">
-    {{{{> modal-template template='services.{}.{}s'}}}}
+    {{{{> modal-template template='services.{}{}.{}s'}}}}
 </script>
 <script>
     var single_{}_{}_template = Handlebars.compile($("#single_{}_{}-template").html());
@@ -45,6 +45,7 @@ if __name__ == "__main__":
     parser.add_argument('-p', '--provider', required=True, help="The cloud provider (e.g. \"aws\")")
     parser.add_argument('-s', '--service', required=True, help="The response's service (e.g. \"iam\")")
     parser.add_argument('-n', '--name', required=True, help="The response object's name (e.g. \"user\")")
+    parser.add_argument('-a', '--additional-path', required=False, help="Additional path values(e.g. \"vpc\", \"subscriptions\')")
     parser.add_argument('-v', '--value', required=True, help="The raw response")
     args = parser.parse_args()
 
@@ -80,21 +81,24 @@ if __name__ == "__main__":
     for k in object_value_dict.keys():
         object_format_value = object_format.format(args.name, k)
         parsed_string += '{}_dict[\'{}\'] = {}\n'.format(args.name, camel_to_snake(k), object_format_value)
-        parsed_html += '\n        <div class="list-group-item-text item-margin">{}: <span id="{}.{}s.{{{{@key}}}}.{}"><samp>{{{{value_or_none {}}}}}</samp></span></div>'.format(
-            camel_to_snake(k, True).replace('_', ' '), args.service, args.name, camel_to_snake(k), camel_to_snake(k))
+        parsed_html += '\n        <div class="list-group-item-text item-margin">{}: <span id="{}{}.{}s.{{{{@key}}}}.{}"><samp>{{{{value_or_none {}}}}}</samp></span></div>'.format(
+            camel_to_snake(k, True).replace('_', ' '), args.service,
+            '.{}.{{{{{}}}}}'.format(args.additional_path, args.additional_path[:-1]),
+            args.name, camel_to_snake(k), camel_to_snake(k))
 
     parsed_string += 'return {}_dict[\'id\'], {}_dict'.format(args.name, args.name)
 
     print(parsed_string)
     print('\n')
-    print(html_boilerplate.format(args.service, args.name,
-                                  args.service, args.name,
-                                  parsed_html,
-                                  args.service, args.name,
-                                  args.service, args.name,
-                                  args.service, args.name,
-                                  args.service, args.name,
-                                  args.service, args.name,
-                                  args.service, args.name,
-                                  args.service, args.name
-                                  ))
+    print(html_boilerplate.format(
+        args.service, args.name,
+        args.service, '.{}.id'.format(args.additional_path), args.name,
+        parsed_html,
+        args.service, '.{}.id'.format(args.additional_path), args.name,
+        args.service, '\\\\.{}\\\\.id'.format(args.additional_path), args.name,
+        args.service, args.name,
+        args.service, args.name,
+        args.service, '.{}.id'.format(args.additional_path), args.name,
+        args.service, args.name,
+        args.service, args.name
+    ))
