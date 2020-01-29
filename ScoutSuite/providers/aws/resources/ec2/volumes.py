@@ -17,4 +17,6 @@ class Volumes(AWSResources):
     def _parse_volume(self, raw_volume):
         raw_volume['id'] = raw_volume.pop('VolumeId')
         raw_volume['name'] = get_name(raw_volume, raw_volume, 'id')
+        if "Tags" in raw_volume:
+            raw_volume['tags'] = {x["Key"]: x["Value"] for x in raw_volume["Tags"]}
         return raw_volume['id'], raw_volume
