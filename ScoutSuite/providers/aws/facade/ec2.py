@@ -94,11 +94,18 @@ class EC2Facade(AWSBaseFacade):
     async def get_volumes(self, region: str):
         try:
             volumes = await AWSFacadeUtils.get_all_pages('ec2', region, self.session, 'describe_volumes', 'Volumes')
-            await get_and_set_concurrently([self._get_and_set_key_manager], volumes, region=region)
+            await get_and_set_concurrently([self._get_and_set_key_manager, self._get_and_set_volume_tags], volumes, region=region)
             return volumes
         except Exception as e:
             print_exception('Failed to get EC2 volumes: {}'.format(e))
             return []
+
+    async def _get_and_set_volume_tags(self, volume: {}, region: str):
+        if "Tags" in volume:
+            volume["tags"] = {x["Key"]: x["Value"] for x in volume["Tags"]}
+        else:
+            volume["tags"] = {}
+        return volume
 
     async def _get_and_set_key_manager(self, volume: {}, region: str):
         kms_client = AWSFacadeUtils.get_client('kms', self.session, region)
