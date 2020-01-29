@@ -48,8 +48,8 @@ class AWSServicesConfig(BaseServicesConfig):
     :ivar rds:                          RDS configuration
     :ivar redshift:                     Redshift configuration
     :ivar s3:                           S3 configuration
-    :ivar ses:                          SES configuration:
-    "ivar sns:                          SNS configuration
+    :ivar ses:                          SES configuration
+    :ivar sns:                          SNS configuration
     :ivar sqs:                          SQS configuration
     """
 
