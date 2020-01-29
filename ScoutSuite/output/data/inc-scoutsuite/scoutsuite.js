@@ -1211,7 +1211,7 @@ function makeTitle(title) {
     } else if (title === 'rediscache') {
         return 'Redis Cache'
     } else if (title === 'appservice') {
-        return 'App Service'
+        return 'App Services'
     } else if (title === 'loadbalancer') {
         return 'Load Balancer'
     } else if (title === 'ram') {
