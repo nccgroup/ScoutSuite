@@ -199,7 +199,7 @@ class ScoutSuiteArgumentParser:
 
         azure_scope = parser.add_argument_group('Additional arguments')
 
-        azure_scope.add_argument('--subscription-ids',
+        azure_scope.add_argument('--subscriptions',
                                  action='store',
                                  default=[],
                                  nargs='+',
