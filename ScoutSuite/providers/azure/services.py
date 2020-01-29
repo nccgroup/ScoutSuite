@@ -20,7 +20,7 @@ try:
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.azure.resources.private_appservice.base import WebApplications
+    from ScoutSuite.providers.azure.resources.private_appservice.base import AppServices
 except ImportError:
     pass
 try:
@@ -54,7 +54,7 @@ class AzureServicesConfig(BaseServicesConfig):
         except NameError as _:
             pass
         try:
-            self.appservice = WebApplications(facade)
+            self.appservice = AppServices(facade)
         except NameError as _:
             pass
         try:
