@@ -62,7 +62,7 @@ if __name__ == "__main__":
     elif args.provider == 'azure':
         object_format = 'raw_{}.{}'
         cleaned_value = args.value.replace('<class \'dict\'>: ', '')
-        cleaned_value = cleaned_value.replace('<azure', '\'<azure').replace('>', '>\'')  # TODO does this always work?
+        cleaned_value = cleaned_value.replace('<azure', '\'<azure').replace('>', '>\'')
         object_value_dict = literal_eval(cleaned_value)
     elif args.provider == 'aliyun':
         object_format = 'raw_{}.get(\'{}\')'
@@ -70,8 +70,6 @@ if __name__ == "__main__":
     elif args.provider == 'oci':
         object_format = 'raw_{}.{}'
         object_value_dict = json.loads(args.value)
-
-    # TODO should also support adding region & VPC paths
 
     parsed_html = ''
 
