@@ -1,3 +1,5 @@
+import logging
+
 from oci.config import from_file
 from oci.identity import IdentityClient
 
@@ -19,6 +21,9 @@ class OracleAuthenticationStrategy(AuthenticationStrategy):
     def authenticate(self, profile=None, **kwargs):
 
         try:
+
+            # Set logging level to error for libraries as otherwise generates a lot of warnings
+            logging.getLogger('oci').setLevel(logging.ERROR)
 
             config = from_file(profile_name=profile)
             compartment_id = config["tenancy"]
