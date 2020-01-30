@@ -162,19 +162,16 @@ class ScoutSuiteArgumentParser:
                                        dest='password',
                                        help='Password of the Azure account')
 
+        # username/password authentication via browser
+        azure_auth_modes.add_argument('--user-account-browser',
+                                      action='store_true',
+                                      help='Run Scout with user credentials, authenticating through a browser (useful when MFA is enforced)')
+
         # Service Principal authentication
         azure_auth_modes.add_argument('-s',
                                       '--service-principal',
                                       action='store_true',
                                       help='Run Scout with an Azure Service Principal')
-        azure_auth_params.add_argument('--tenant',
-                                       action='store',
-                                       dest='tenant_id',
-                                       help='Tenant ID to scan (only required for authentication with Service Principals)')
-        # azure_auth_params.add_argument('--subscription',
-        #                                action='store',
-        #                                dest='subscription_id',
-        #                                help='Subscription ID (only required for authentication with Service Principals)')
         azure_auth_params.add_argument('--client-id',
                                        action='store',
                                        dest='client_id',
@@ -197,8 +194,18 @@ class ScoutSuiteArgumentParser:
                                       action='store_true',
                                       help='Run Scout with Managed Service Identity')
 
+        # Additional arguments
         azure_scope = parser.add_argument_group('Additional arguments')
 
+        azure_scope.add_argument('--tenant',
+                                 action='store',
+                                 dest='tenant_id',
+                                 help='Tenant ID to scan')
+        # TODO is this still required for service principals?
+        # azure_scope.add_argument('--subscription',
+        #                                action='store',
+        #                                dest='subscription_id',
+        #                                help='Subscription ID (only required for authentication with Service Principals)')
         azure_scope.add_argument('--subscriptions',
                                  action='store',
                                  default=[],
@@ -206,7 +213,6 @@ class ScoutSuiteArgumentParser:
                                  dest='subscription_ids',
                                  help='IDs (separated by spaces) of the Azure subscription(s) to scan. '
                                       'By default, only the default subscription will be scanned.')
-
         azure_scope.add_argument('--all-subscriptions',
                                  action='store_true',
                                  dest='all_subscriptions',
@@ -386,8 +392,12 @@ class ScoutSuiteArgumentParser:
                                   'and Secret Access Key.')
         # Azure
         elif v.get('provider') == 'azure':
-            if v.get('tenant_id') and not v.get('service_principal'):
-                self.parser.error('--tenant can only be set when using --service-principal authentication')
+            if v.get('tenant_id') and not (v.get('service_principal') or v.get('user_account_browser')):
+                self.parser.error('--tenant can only be set when using --user-account-browser or --service-principal authentication')
+            if v.get('service_principal') and not v.get('tenant_id'):
+                self.parser.error('You must provide --tenant when using --service-principal authentication')
+            if v.get('user_account_browser') and not v.get('tenant_id'):
+                self.parser.error('You must provide --tenant when using --user-account-browser authentication')
             # TODO - is this relevant?
             # if v.get('subscription_id') and not (v.get('user_account') or v.get('service_principal') or v.get('msi')):
             #     self.parser.error('--tenant can only be set when using --user-account, --service-principal or --msi')

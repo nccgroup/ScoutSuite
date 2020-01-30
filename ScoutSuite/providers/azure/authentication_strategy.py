@@ -3,9 +3,10 @@ import logging
 from getpass import getpass
 
 from azure.common.credentials import ServicePrincipalCredentials, UserPassCredentials, get_azure_cli_credentials
-from azure.mgmt.resource import SubscriptionClient
 from msrestazure.azure_active_directory import MSIAuthentication
 from ScoutSuite.core.console import print_info
+from msrestazure.azure_active_directory import AADTokenCredentials
+import adal
 
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
@@ -20,7 +21,7 @@ class AzureCredentials:
 class AzureAuthenticationStrategy(AuthenticationStrategy):
 
     def authenticate(self,
-                     cli=None, user_account=None, service_principal=None, file_auth=None, msi=None,
+                     cli=None, user_account=None, user_account_browser=None, service_principal=None, file_auth=None, msi=None,
                      tenant_id=None,
                      client_id=None, client_secret=None,
                      username=None, password=None,
@@ -54,6 +55,34 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 graphrbac_credentials = UserPassCredentials(username, password,
                                                             resource='https://graph.windows.net')
 
+            elif user_account_browser:
+
+                # As per https://docs.microsoft.com/en-us/samples/azure-samples/data-lake-analytics-python-auth-options
+                # /authenticating-your-python-application-against-azure-active-directory/
+                # The client id used above is a well known that already exists for all azure services. While it makes
+                # the sample code easy to use, for production code you should use generate your own client ids for
+                # your application.
+                client_id = '04b07795-8ddb-461a-bbee-02f9e1bf7b46'
+                authority_host_uri = 'https://login.microsoftonline.com'
+                authority_uri = authority_host_uri + '/' + tenant_id
+                context = adal.AuthenticationContext(authority_uri, api_version=None)
+
+                # Resource Manager
+                resource_uri = 'https://management.core.windows.net/'
+                code = context.acquire_user_code(resource_uri, client_id)
+                print_info('To authenticate to the Resource Manager API, use a web browser to '
+                           'access {} and enter the {} code.'.format(code['verification_url'],
+                                                                     code['user_code']))
+                mgmt_token = context.acquire_token_with_device_code(resource_uri, code, client_id)
+                credentials = AADTokenCredentials(mgmt_token, client_id)
+                # Graph
+                resource_uri = 'https://graph.windows.net'
+                code = context.acquire_user_code(resource_uri, client_id)
+                print_info('To authenticate to the Azure Graph API, use a web browser to '
+                           'access {} and enter the {} code.'.format(code['verification_url'],
+                                                                     code['user_code']))
+                mgmt_token = context.acquire_token_with_device_code(resource_uri, code, client_id)
+                graphrbac_credentials = AADTokenCredentials(mgmt_token, client_id)
 
             elif service_principal:
 
@@ -112,6 +141,9 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
                 credentials = MSIAuthentication()
                 graphrbac_credentials = MSIAuthentication(resource='https://graph.windows.net')
+
+            else:
+                raise AuthenticationException('Unknown authentication method')
 
             return AzureCredentials(credentials, graphrbac_credentials)
 
