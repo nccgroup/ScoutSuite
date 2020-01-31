@@ -122,6 +122,8 @@ def run(provider,
     """
 
     loop = asyncio.get_event_loop()
+    if loop.is_closed():
+        loop = asyncio.new_event_loop()
     # Set the throttler within the loop so it's accessible later on
     loop.throttler = Throttler(rate_limit=max_rate if max_rate else 999999, period=1)
     loop.set_default_executor(ThreadPoolExecutor(max_workers=max_workers))
