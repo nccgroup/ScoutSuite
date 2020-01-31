@@ -24,10 +24,9 @@ formatted_service_name = {
     'appgateway': 'Application Gateway',
     'rediscache': 'Redis Cache',
     'network': 'Network',
-    'appservice': 'App Service',
+    'appservice': 'App Services',
     'loadbalancer': 'Load Balancer',
     'virtualmachines': 'Virtual Machines',
-    'graphrbac': 'Graph RBAC',
     # GCP
     'cloudstorage': 'Cloud Storage',
     'cloudsql': 'Cloud SQL',

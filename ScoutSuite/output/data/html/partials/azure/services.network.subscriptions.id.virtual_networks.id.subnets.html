@@ -1,0 +1,47 @@
+
+<!-- network virtual_networks subnet -->
+<script id="services.network.subscriptions.id.virtual_networks.id.subnets.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Address Prefix: <span id="network.virtual_networks.{{id}}.subnets.{{@key}}.address_prefix"><samp>{{value_or_none address_prefix}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Address Prefixes: <span id="network.virtual_networks.{{id}}.subnets.{{@key}}.address_prefixes"><samp>{{value_or_none address_prefixes}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Provisioning State: <span id="network.virtual_networks.{{id}}.subnets.{{@key}}.provisioning_state"><samp>{{value_or_none provisioning_state}}</samp></span></div>
+        {{#if network_security_group}}
+        <div class="list-group-item-text item-margin">Network Security Group: <a href="javascript:showObject('services.network.subscriptions.{{../subscription}}.security_groups.{{network_security_group}}')"><samp>{{getValueAt 'services.network.subscriptions' ../subscription 'security_groups' network_security_group 'name'}}</samp></a></div>
+        {{else}}
+        <div class="list-group-item-text item-margin">Network Security Group: <samp>None</samp></div>
+        {{/if}}
+        <div class="list-group-item-text item-margin">Route Table: <span id="network.virtual_networks.{{id}}.subnets.{{@key}}.route_table"><samp>{{value_or_none route_table}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Interface Endpoints: <span id="network.virtual_networks.{{id}}.subnets.{{@key}}.interface_endpoints"><samp>{{value_or_none interface_endpoints}}</samp></span></div>
+        <div class="list-group-item-text item-margin">IP Configuration Profiles: <span id="network.virtual_networks.{{id}}.subnets.{{@key}}.ip_configuration_profiles"><samp>{{value_or_none ip_configuration_profiles}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Service Endpoints: <span id="network.virtual_networks.{{id}}.subnets.{{@key}}.service_endpoints"><samp>{{value_or_none service_endpoints}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Service Endpoint Policies: <span id="network.virtual_networks.{{id}}.subnets.{{@key}}.service_endpoint_policies"><samp>{{value_or_none service_endpoint_policies}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Service Association Links: <span id="network.virtual_networks.{{id}}.subnets.{{@key}}.service_association_links"><samp>{{value_or_none service_association_links}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Resource Navigation Links: <span id="network.virtual_networks.{{id}}.subnets.{{@key}}.resource_navigation_links"><samp>{{value_or_none resource_navigation_links}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Delegations: <span id="network.virtual_networks.{{id}}.subnets.{{@key}}.delegations"><samp>{{value_or_none delegations}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Purpose: <span id="network.virtual_networks.{{id}}.subnets.{{@key}}.purpose"><samp>{{value_or_none purpose}}</samp></span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Instances</h4>
+        {{#each instances}}
+        <div class="list-group-item-text item-margin"><a href="javascript:showObject('services.virtualmachines.subscriptions.{{../subscription}}.instances.{{this}}')"><samp>{{getValueAt 'services.virtualmachines.subscriptions' ../subscription 'instances' this 'name'}}</samp></a></div>
+        {{else}}
+        <div class="list-group-item-text item-margin"><samp>None</samp></div>
+        {{/each}}
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.network.subscriptions.id.virtual_networks.id.subnets", $("#services\\.network\\.subscriptions\\.id\\.virtual_networks\\.id\\.subnets\\.partial").html());
+</script>
+
+<!-- Single network virtual_network subnet template -->
+<script id="single_network_subnet-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.network.subscriptions.id.virtual_networks.id.subnets'}}
+</script>
+<script>
+    var single_network_subnet_template = Handlebars.compile($("#single_network_subnet-template").html());
+</script>
