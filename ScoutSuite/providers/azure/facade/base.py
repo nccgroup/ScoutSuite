@@ -32,39 +32,42 @@ except ImportError:
 
 
 class AzureFacade:
-    def __init__(self, credentials: AzureCredentials,
-                 subscription_ids=[], all_subscriptions=None):
+    def __init__(self,
+                 credentials: AzureCredentials,
+                 subscription_ids=[], all_subscriptions=False,
+                 programmatic_execution=False):
 
         self.credentials = credentials
+        self.programmatic_execution = programmatic_execution
 
         self.subscription_list = []
         self.subscription_ids = subscription_ids
         self.all_subscriptions = all_subscriptions
 
-        self.aad = AADFacade(credentials.graphrbac_credentials)
-        self.arm = ARMFacade(credentials.credentials)
-        self.keyvault = KeyVaultFacade(credentials.credentials)
-        self.virtualmachines = VirtualMachineFacade(credentials.credentials)
-        self.network = NetworkFacade(credentials.credentials)
-        self.securitycenter = SecurityCenterFacade(credentials.credentials)
-        self.sqldatabase = SQLDatabaseFacade(credentials.credentials)
-        self.storageaccounts = StorageAccountsFacade(credentials.credentials)
+        self.aad = AADFacade(credentials)
+        self.arm = ARMFacade(credentials)
+        self.keyvault = KeyVaultFacade(credentials)
+        self.virtualmachines = VirtualMachineFacade(credentials)
+        self.network = NetworkFacade(credentials)
+        self.securitycenter = SecurityCenterFacade(credentials)
+        self.sqldatabase = SQLDatabaseFacade(credentials)
+        self.storageaccounts = StorageAccountsFacade(credentials)
 
         # Instantiate facades for proprietary services
         try:
-            self.appgateway = AppGatewayFacade(credentials.credentials)
+            self.appgateway = AppGatewayFacade(credentials)
         except NameError:
             pass
         try:
-            self.appservice = AppServiceFacade(credentials.credentials)
+            self.appservice = AppServiceFacade(credentials)
         except NameError:
             pass
         try:
-            self.loadbalancer = LoadBalancerFacade(credentials.credentials)
+            self.loadbalancer = LoadBalancerFacade(credentials)
         except NameError:
             pass
         try:
-            self.rediscache = RedisCacheFacade(credentials.credentials)
+            self.rediscache = RedisCacheFacade(credentials)
         except NameError:
             pass
 
@@ -74,19 +77,22 @@ class AzureFacade:
         if self.subscription_list:
             return self.subscription_list
         else:
-            await self._set_subcriptions()
+            self._set_subscriptions()
 
     def _set_subscriptions(self):
 
         # Create the client
-        subscription_client = SubscriptionClient(self.credentials.credentials)
+        subscription_client = SubscriptionClient(self.credentials.arm_credentials)
         # Get all the accessible subscriptions
         accessible_subscriptions_list = list(subscription_client.subscriptions.list())
 
+        if not accessible_subscriptions_list:
+            print_exception('The provided credentials do not have access to any subscriptions')
+            self.subscription_list = []
+            return
+
         # Final list, start empty
         subscriptions_list = []
-
-        # TODO - test all cases
 
         # No subscription provided, infer
         if not (self.subscription_ids or self.all_subscriptions):

@@ -25,19 +25,26 @@ class AzureProvider(BaseProvider):
         self.provider_name = 'Microsoft Azure'
         self.environment = 'default'
 
-        self.subscription_ids = subscription_ids
-        self.all_subscriptions = all_subscriptions
-
         self.programmatic_execution = kwargs['programmatic_execution']
         self.credentials = kwargs['credentials']
+
+        if subscription_ids:
+            self.subscription_ids = subscription_ids
+        elif self.credentials.default_subscription_id:
+            self.subscription_ids = [self.credentials.default_subscription_id]
+        else:
+            self.subscription_ids = []
+        self.all_subscriptions = all_subscriptions
+
         try:
             self.account_id = self.credentials.graphrbac_credentials.token['tenant_id']
         except Exception as e:
             self.account_id = 'undefined'
 
         self.services = AzureServicesConfig(self.credentials,
-                                                   subscription_ids=self.subscription_ids,
-                                                   all_subscriptions=self.all_subscriptions)
+                                            programmatic_execution=self.programmatic_execution,
+                                            subscription_ids=self.subscription_ids,
+                                            all_subscriptions=self.all_subscriptions)
 
         self.result_format = result_format
 
@@ -49,7 +56,7 @@ class AzureProvider(BaseProvider):
         Returns the name of the report using the provider's configuration
         """
         try:
-            return 'azure-tenant-{}'.format(self.credentials.graphrbac_credentials.token['tenant_id'])
+            return 'azure-tenant-{}'.format(self.credentials.get_tenant_id())
         except Exception as e:
             print_exception('Unable to define report name: {}'.format(e))
             return 'azure'

@@ -12,7 +12,7 @@ class StorageAccountsFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        return StorageManagementClient(self.credentials, subscription_id=subscription_id)
+        return StorageManagementClient(self.credentials.arm_credentials, subscription_id=subscription_id)
 
     async def get_storage_accounts(self, subscription_id: str):
         try:

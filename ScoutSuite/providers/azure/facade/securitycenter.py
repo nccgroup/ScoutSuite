@@ -10,7 +10,7 @@ class SecurityCenterFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        return SecurityCenter(self.credentials, subscription_id, '')
+        return SecurityCenter(self.credentials.arm_credentials, subscription_id, '')
 
     async def get_pricings(self, subscription_id: str):
         try:

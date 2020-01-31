@@ -13,16 +13,26 @@ from ScoutSuite.providers.base.authentication_strategy import AuthenticationStra
 
 class AzureCredentials:
 
-    def __init__(self, credentials, graphrbac_credentials):
-        self.credentials = credentials  # Azure Resource Manager API credentials
-        self.graphrbac_credentials = graphrbac_credentials  # Azure AD Graph API credentials
+    def __init__(self, arm_credentials, graph_credentials, tenant_id=None, default_subscription_id=None):
+        self.arm_credentials = arm_credentials  # Azure Resource Manager API credentials
+        self.graph_credentials = graph_credentials  # Azure AD Graph API credentials
+        self.tenant_id = tenant_id
+        self.default_subscription_id = default_subscription_id
+
+    def get_tenant_id(self):
+        if self.tenant_id:
+            return self.tenant_id
+        else:
+            return self.graph_credentials.token['tenant_id']
 
 
 class AzureAuthenticationStrategy(AuthenticationStrategy):
 
     def authenticate(self,
-                     cli=None, user_account=None, user_account_browser=None, service_principal=None, file_auth=None, msi=None,
+                     cli=None, user_account=None, user_account_browser=None,
+                     service_principal=None, file_auth=None, msi=None,
                      tenant_id=None,
+                     subscription_id=None,
                      client_id=None, client_secret=None,
                      username=None, password=None,
                      programmatic_execution=False,
@@ -38,8 +48,8 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             logging.getLogger('urllib3').setLevel(logging.ERROR)
 
             if cli:
-                credentials, subscription_id, tenant_id = get_azure_cli_credentials(with_tenant=True)
-                graphrbac_credentials, placeholder_1, placeholder_2 = \
+                arm_credentials, subscription_id, tenant_id = get_azure_cli_credentials(with_tenant=True)
+                graph_credentials, placeholder_1, placeholder_2 = \
                     get_azure_cli_credentials(with_tenant=True, resource='https://graph.windows.net')
 
             elif user_account:
@@ -51,9 +61,9 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     else:
                         raise AuthenticationException('Username and/or password not set')
 
-                credentials = UserPassCredentials(username, password)
-                graphrbac_credentials = UserPassCredentials(username, password,
-                                                            resource='https://graph.windows.net')
+                arm_credentials = UserPassCredentials(username, password)
+                graph_credentials = UserPassCredentials(username, password,
+                                                        resource='https://graph.windows.net')
 
             elif user_account_browser:
 
@@ -74,7 +84,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                            'access {} and enter the {} code.'.format(code['verification_url'],
                                                                      code['user_code']))
                 mgmt_token = context.acquire_token_with_device_code(resource_uri, code, client_id)
-                credentials = AADTokenCredentials(mgmt_token, client_id)
+                arm_credentials = AADTokenCredentials(mgmt_token, client_id)
                 # Graph
                 resource_uri = 'https://graph.windows.net'
                 code = context.acquire_user_code(resource_uri, client_id)
@@ -82,7 +92,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                            'access {} and enter the {} code.'.format(code['verification_url'],
                                                                      code['user_code']))
                 mgmt_token = context.acquire_token_with_device_code(resource_uri, code, client_id)
-                graphrbac_credentials = AADTokenCredentials(mgmt_token, client_id)
+                graph_credentials = AADTokenCredentials(mgmt_token, client_id)
 
             elif service_principal:
 
@@ -104,13 +114,13 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     else:
                         raise AuthenticationException('No Client Secret set')
 
-                credentials = ServicePrincipalCredentials(
+                arm_credentials = ServicePrincipalCredentials(
                     client_id=client_id,
                     secret=client_secret,
                     tenant=tenant_id
                 )
 
-                graphrbac_credentials = ServicePrincipalCredentials(
+                graph_credentials = ServicePrincipalCredentials(
                     client_id=client_id,
                     secret=client_secret,
                     tenant=tenant_id,
@@ -124,13 +134,13 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 client_id = data.get('clientId')
                 client_secret = data.get('clientSecret')
 
-                credentials = ServicePrincipalCredentials(
+                arm_credentials = ServicePrincipalCredentials(
                     client_id=client_id,
                     secret=client_secret,
                     tenant=tenant_id
                 )
 
-                graphrbac_credentials = ServicePrincipalCredentials(
+                graph_credentials = ServicePrincipalCredentials(
                     client_id=client_id,
                     secret=client_secret,
                     tenant=tenant_id,
@@ -139,13 +149,14 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
             elif msi:
 
-                credentials = MSIAuthentication()
-                graphrbac_credentials = MSIAuthentication(resource='https://graph.windows.net')
+                arm_credentials = MSIAuthentication()
+                graph_credentials = MSIAuthentication(resource='https://graph.windows.net')
 
             else:
                 raise AuthenticationException('Unknown authentication method')
 
-            return AzureCredentials(credentials, graphrbac_credentials)
+            return AzureCredentials(arm_credentials, graph_credentials,
+                                    tenant_id, subscription_id)
 
         except Exception as e:
             raise AuthenticationException(e)

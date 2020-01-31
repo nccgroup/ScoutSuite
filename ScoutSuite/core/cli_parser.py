@@ -200,12 +200,7 @@ class ScoutSuiteArgumentParser:
         azure_scope.add_argument('--tenant',
                                  action='store',
                                  dest='tenant_id',
-                                 help='Tenant ID to scan')
-        # TODO is this still required for service principals?
-        # azure_scope.add_argument('--subscription',
-        #                                action='store',
-        #                                dest='subscription_id',
-        #                                help='Subscription ID (only required for authentication with Service Principals)')
+                                 help='ID of the Tenant (Directory) to scan')
         azure_scope.add_argument('--subscriptions',
                                  action='store',
                                  default=[],
@@ -398,12 +393,8 @@ class ScoutSuiteArgumentParser:
                 self.parser.error('You must provide --tenant when using --service-principal authentication')
             if v.get('user_account_browser') and not v.get('tenant_id'):
                 self.parser.error('You must provide --tenant when using --user-account-browser authentication')
-            # TODO - is this relevant?
-            # if v.get('subscription_id') and not (v.get('user_account') or v.get('service_principal') or v.get('msi')):
-            #     self.parser.error('--tenant can only be set when using --user-account, --service-principal or --msi')
             if v.get('subscription_ids') and v.get('all_subscriptions'):
                 self.parser.error('--subscription-ids and --all-subscriptions are mutually exclusive options')
-        # TODO add more conditions
 
         return args
 

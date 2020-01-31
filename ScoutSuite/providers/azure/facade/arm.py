@@ -9,7 +9,7 @@ class ARMFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        return AuthorizationManagementClient(self.credentials, subscription_id=subscription_id)
+        return AuthorizationManagementClient(self.credentials.arm_credentials, subscription_id=subscription_id)
 
     async def get_roles(self, subscription_id: str):
         try:
