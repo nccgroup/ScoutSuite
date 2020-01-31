@@ -1,7 +1,7 @@
 {
     "dashboard_name": "SQL Servers",
     "description": "Short Threat Detection Retention Period for SQL Servers",
-	"rationale": "<b>Description:</b><br><br>Threat detection retention period should be greater than _ARG_0_ days.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 4.1</li></ul>",
+    "rationale": "<b>Description:</b><br><br>Threat detection retention period should be greater than _ARG_0_ days.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 4.1</li></ul>",
     "path": "sqldatabase.subscriptions.id.servers.id",
     "display_path": "sqldatabase.subscriptions.id.servers.id",
     "conditions": [ "and",
