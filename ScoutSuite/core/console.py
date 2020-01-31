@@ -60,18 +60,26 @@ def print_error(msg):
 
 def print_exception(exception, additional_details=None):
     try:
+        exc = True
         exc_type, exc_obj, exc_tb = sys.exc_info()
-        file_name = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        line_number = exc_tb.tb_lineno
-        traceback_exc = traceback.format_exc()
-        str = '{} L{}: {}'.format(file_name, line_number, exception)
+        if exc_tb and traceback:
+            file_name = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            line_number = exc_tb.tb_lineno
+            traceback_exc = traceback.format_exc()
+            str = '{} L{}: {}'.format(file_name, line_number, exception)
+        else:
+            file_name = None
+            line_number = None
+            traceback_exc = None
+            str = '{}'.format(exception)
+            exc = False  # if there isn't an actual exception then it's pointless
     except Exception as e:
         file_name = None
         line_number = None
         traceback_exc = None
         str = '{}'.format(exception)
 
-    if verbose_exceptions:
+    if verbose_exceptions and exc:
         logger.exception(str)
     else:
         logger.error(str)
