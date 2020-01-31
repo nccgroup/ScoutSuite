@@ -37,7 +37,7 @@ class AzureProvider(BaseProvider):
         self.all_subscriptions = all_subscriptions
 
         try:
-            self.account_id = self.credentials.graphrbac_credentials.token['tenant_id']
+            self.account_id = self.credentials.get_tenant_id()
         except Exception as e:
             self.account_id = 'undefined'
 
