@@ -1192,6 +1192,8 @@ function makeTitle(title) {
         return 'Kubernetes Engine'
     } else if (title === 'cloudresourcemanager') {
         return 'Cloud Resource Manager'
+    } else if (['aad', 'arm'].indexOf(title) !== -1) {
+        return title.toUpperCase()
     } else if (title === 'storageaccounts') {
         return 'Storage Accounts'
     } else if (title === 'sqldatabase') {
@@ -1209,7 +1211,7 @@ function makeTitle(title) {
     } else if (title === 'rediscache') {
         return 'Redis Cache'
     } else if (title === 'appservice') {
-        return 'App Service'
+        return 'App Services'
     } else if (title === 'loadbalancer') {
         return 'Load Balancer'
     } else if (title === 'ram') {
@@ -1222,8 +1224,6 @@ function makeTitle(title) {
         return 'OSS'
     } else if (title === 'objectstorage') {
         return 'Object Storage'
-    } else if (title === 'graphrbac') {
-        return 'Graph RBAC'
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).split('_').join(' ')
     }
@@ -1278,6 +1278,8 @@ function addTemplate(group, service, section, resourceType, path, suffix) {
         if (suffix === 'list') {
             if (path.indexOf('.vpcs.id.') > 0) {
                 partialName = 'left_menu_for_vpc'
+            } else if (path.indexOf('.subscriptions.id.') > 0) {
+                partialName = 'left_menu_for_subscription'
             } else if (path.indexOf('projects.id.zones.id.') > 0) {
                 partialName = 'left_menu_for_gcp_zone';
             } else if (path.indexOf('projects.id.regions.id.') > 0) {
@@ -1292,6 +1294,8 @@ function addTemplate(group, service, section, resourceType, path, suffix) {
         } else if (suffix === 'details') {
             if (path.indexOf('.vpcs.id.') > 0) {
                 partialName = 'details_for_vpc'
+            } else if (path.indexOf('.subscriptions.id.') > 0) {
+                partialName = 'details_for_subscription'
             } else if (path.indexOf('projects.id.zones.id') > 0) {
                 partialName = 'details_for_gcp_zone';
             } else if (path.indexOf('projects.id.regions.id') > 0) {

@@ -1,6 +1,6 @@
 {
     "description": "Unused network ACLs",
-	"rationale": "<b>Description:</b><br><br>Maintaining unused resources increases risks of misconfigurations and increases the difficulty of audits.",
+    "rationale": "<b>Description:</b><br><br>Maintaining unused resources increases risks of misconfigurations and increases the difficulty of audits.",
     "path": "vpc.regions.id.vpcs.id.network_acls.id",
     "dashboard_name": "Network ACLs",
     "id_suffix": "unused",
