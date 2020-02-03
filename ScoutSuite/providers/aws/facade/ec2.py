@@ -188,8 +188,8 @@ class EC2Facade(AWSBaseFacade):
              if flow_log['ResourceId'] == subnet['SubnetId'] or flow_log['ResourceId'] == subnet['VpcId']]
 
     async def get_and_set_ec2_instance_tags(self, raw_instance: {}):
-        if 'TagSet' in raw_instance:
-            instance = {'tags': {x['Key']: x['Value'] for x in raw_instance['TagSet']}}
+        if 'Tags' in raw_instance:
+            instance = {'tags': {x['Key']: x['Value'] for x in raw_instance['Tags']}}
         else:
             instance = {'tags': {}}
         return instance
