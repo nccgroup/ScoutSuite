@@ -1,7 +1,7 @@
 {
     "dashboard_name": "Instances",
     "description": "Instance with automatic backups disabled",
-	"rationale": "<b>Description:</b><br><br>Automatic backups should be configured for Cloud SQL instances in order to ensure backups are created regularly.",
+    "rationale": "<b>Description:</b><br><br>Automatic backups should be configured for Cloud SQL instances in order to ensure backups are created regularly.",
     "path": "cloudsql.projects.id.instances.id",
     "conditions": [ "and",
         [ "cloudsql.projects.id.instances.id.automatic_backup_enabled", "false", "" ],

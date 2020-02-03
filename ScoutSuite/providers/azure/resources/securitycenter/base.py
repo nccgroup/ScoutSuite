@@ -1,4 +1,4 @@
-from ScoutSuite.providers.azure.resources.base import AzureCompositeResources
+from ScoutSuite.providers.azure.resources.subscriptions import Subscriptions
 
 from .auto_provisioning_settings import AutoProvisioningSettings
 from .pricings import Pricings
@@ -7,7 +7,7 @@ from .security_contacts import SecurityContacts
 # from .settings import Settings
 
 
-class SecurityCenter(AzureCompositeResources):
+class SecurityCenter(Subscriptions):
     _children = [
         (AutoProvisioningSettings, 'auto_provisioning_settings'),
         (Pricings, 'pricings'),
@@ -15,6 +15,3 @@ class SecurityCenter(AzureCompositeResources):
         # (InformationProtectionPolicies, 'information_protection_policies'),  # FIXME this isn't properly implemented
         # (Settings, 'settings')  # FIXME this isn't implemented
     ]
-
-    async def fetch_all(self):
-        await self._fetch_children(resource_parent=self)

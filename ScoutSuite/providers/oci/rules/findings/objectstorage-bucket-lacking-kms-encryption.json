@@ -1,6 +1,6 @@
 {
     "description": "Buckets Lacking KMS Encryption",
-	"rationale": "<b>Description:</b><br><br>Buckets should be configured with KMS keys to ensure fine-grained control over data at rest.",
+    "rationale": "<b>Description:</b><br><br>Buckets should be configured with KMS keys to ensure fine-grained control over data at rest.",
     "dashboard_name": "Buckets",
     "path": "objectstorage.buckets.id",
     "conditions": [ "and",

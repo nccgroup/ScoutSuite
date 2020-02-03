@@ -1,10 +1,16 @@
+from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class SecurityGroups(AzureResources):
+
+    def __init__(self, facade: AzureFacade, subscription_id: str):
+        super(SecurityGroups, self).__init__(facade)
+        self.subscription_id = subscription_id
+
     async def fetch_all(self):
-        for raw_group in await self.facade.network.get_network_security_groups():
+        for raw_group in await self.facade.network.get_network_security_groups(self.subscription_id):
             id, network_security_group = self._parse_network_security_group(raw_group)
             self[id] = network_security_group
 
@@ -96,7 +102,6 @@ class SecurityGroups(AzureResources):
 
         return security_rule_dict['id'], security_rule_dict
 
-
     def _parse_ports(self, port_ranges):
         # FIXME this is inefficient
         ports = set()
@@ -126,7 +131,7 @@ class SecurityGroups(AzureResources):
             if sr.direction == "Inbound" and (sr.source_address_prefix == "*"
                                               or sr.source_address_prefix == "Internet"):
                 port_ranges = self._merge_prefixes_or_ports(sr.destination_port_range,
-                                                                     sr.destination_port_ranges)
+                                                            sr.destination_port_ranges)
                 ports = self._parse_ports(port_ranges)
                 if sr.access == "Allow":
                     for p in ports:
@@ -160,4 +165,3 @@ class SecurityGroups(AzureResources):
                         port_ranges.append(str(start) + "-" + str(i - 1))
                     start = None
         return port_ranges
-
