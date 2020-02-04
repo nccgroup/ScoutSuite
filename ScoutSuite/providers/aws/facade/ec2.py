@@ -189,9 +189,9 @@ class EC2Facade(AWSBaseFacade):
 
     async def get_and_set_ec2_instance_tags(self, raw_instance: {}):
         if 'Tags' in raw_instance:
-            instance = {'tags': {x['Key']: x['Value'] for x in raw_instance['Tags']}}
+            instance = {x['Key']: x['Value'] for x in raw_instance['Tags']}
         else:
-            instance = {'tags': {}}
+            instance = {}
         return instance
 
     async def get_peering_connections(self, region):
