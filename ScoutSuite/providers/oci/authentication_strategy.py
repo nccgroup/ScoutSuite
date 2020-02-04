@@ -26,7 +26,10 @@ class OracleAuthenticationStrategy(AuthenticationStrategy):
             logging.getLogger('oci').setLevel(logging.ERROR)
 
             config = from_file(profile_name=profile)
-            compartment_id = config["tenancy"]
+            if 'compartment-id' in config:
+                compartment_id = config['compartment-id']
+            else:
+                compartment_id = config['tenancy']
 
             # Get the current user
             identity = IdentityClient(config)
