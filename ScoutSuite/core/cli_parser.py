@@ -183,7 +183,7 @@ class ScoutSuiteArgumentParser:
         # Service Principal credentials in an auth file
         azure_auth_modes.add_argument('--file-auth',
                                       action='store',
-                                      type=argparse.FileType('r'),
+                                      type=argparse.FileType('rb'),
                                       dest='file_auth',
                                       metavar="FILE",
                                       help='Run Scout with the specified credential file')
