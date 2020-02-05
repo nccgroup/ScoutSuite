@@ -19,16 +19,16 @@ class EC2Instances(AWSResources):
 
     async def _parse_instance(self, raw_instance):
         instance = {}
-        id = raw_instance['InstanceId']
-        instance['id'] = id
+
+        instance['id'] = raw_instance['InstanceId']
         instance['reservation_id'] = raw_instance['ReservationId']
         instance['monitoring_enabled'] = raw_instance['Monitoring']['State'] == 'enabled'
-        instance['user_data'] = await self.facade.ec2.get_instance_user_data(self.region, id)
+        instance['user_data'] = await self.facade.ec2.get_instance_user_data(self.region, instance['id'])
         instance['user_data_secrets'] = self._identify_user_data_secrets(instance['user_data'])
 
         get_name(raw_instance, instance, 'InstanceId')
         get_keys(raw_instance, instance,
-                 ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile', 'SubnetId'])
+                 ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile', 'SubnetId', 'Tags'])
 
         instance['network_interfaces'] = {}
         for eni in raw_instance['NetworkInterfaces']:
@@ -36,7 +36,8 @@ class EC2Instances(AWSResources):
             get_keys(eni, nic, ['Association', 'Groups', 'PrivateIpAddresses', 'SubnetId', 'Ipv6Addresses'])
             instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
 
-        return id, instance
+        instance['tags'] = await self.facade.ec2.get_and_set_ec2_instance_tags(raw_instance)
+        return instance['id'], instance
 
     @staticmethod
     def _identify_user_data_secrets(user_data):

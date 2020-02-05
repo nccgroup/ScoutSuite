@@ -1,5 +1,5 @@
-from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.facade.base import AWSFacade
+from ScoutSuite.providers.aws.resources.base import AWSResources
 
 
 class AmazonMachineImages(AWSResources):
@@ -14,6 +14,10 @@ class AmazonMachineImages(AWSResources):
             self[name] = resource
 
     def _parse_image(self, raw_image):
+
         raw_image['id'] = raw_image.get('ImageId')
         raw_image['name'] = raw_image.get('Name')
+        if 'Tags' in raw_image:
+            raw_image['tags'] = {x["Key"]: x["Value"] for x in raw_image["Tags"]}
+
         return raw_image['id'], raw_image

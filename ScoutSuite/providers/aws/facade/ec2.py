@@ -94,11 +94,18 @@ class EC2Facade(AWSBaseFacade):
     async def get_volumes(self, region: str):
         try:
             volumes = await AWSFacadeUtils.get_all_pages('ec2', region, self.session, 'describe_volumes', 'Volumes')
-            await get_and_set_concurrently([self._get_and_set_key_manager], volumes, region=region)
+            await get_and_set_concurrently([self._get_and_set_key_manager, self._get_and_set_volume_tags], volumes, region=region)
             return volumes
         except Exception as e:
             print_exception('Failed to get EC2 volumes: {}'.format(e))
             return []
+
+    async def _get_and_set_volume_tags(self, volume: {}, region: str):
+        if "Tags" in volume:
+            volume["tags"] = {x["Key"]: x["Value"] for x in volume["Tags"]}
+        else:
+            volume["tags"] = {}
+        return volume
 
     async def _get_and_set_key_manager(self, volume: {}, region: str):
         kms_client = AWSFacadeUtils.get_client('kms', self.session, region)
@@ -179,6 +186,13 @@ class EC2Facade(AWSBaseFacade):
         subnet['flow_logs'] = \
             [flow_log for flow_log in self.flow_logs_cache[region]
              if flow_log['ResourceId'] == subnet['SubnetId'] or flow_log['ResourceId'] == subnet['VpcId']]
+
+    async def get_and_set_ec2_instance_tags(self, raw_instance: {}):
+        if 'Tags' in raw_instance:
+            instance = {x['Key']: x['Value'] for x in raw_instance['Tags']}
+        else:
+            instance = {}
+        return instance
 
     async def get_peering_connections(self, region):
         try:
