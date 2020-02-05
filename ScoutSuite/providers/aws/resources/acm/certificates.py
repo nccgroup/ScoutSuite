@@ -1,6 +1,8 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 
+from ScoutSuite.providers.utils import get_non_provider_id
+
 
 class Certificates(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
@@ -14,8 +16,7 @@ class Certificates(AWSResources):
             self[name] = resource
 
     def _parse_certificate(self, raw_certificate):
-#        lowercase_certificate = dict((k.lower(), v) for k,v in raw_certificate.items())
-
         raw_certificate['name'] = raw_certificate.get('DomainName')
+        raw_certificate['id'] = get_non_provider_id(raw_certificate['name'])
 
-        return raw_certificate['name'], raw_certificate
+        return raw_certificate['id'], raw_certificate

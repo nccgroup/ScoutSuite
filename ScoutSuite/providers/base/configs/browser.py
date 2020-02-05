@@ -91,7 +91,7 @@ def get_value_at(all_info, current_path, key, to_string=False):
                 elif type(target_obj) == list:
                     target_obj = p
                 elif p == '':
-                    target_obj = target_obj
+                    pass
                 else:
                     target_obj = target_obj[p]
             except Exception as e:

@@ -2,7 +2,6 @@ import asyncio
 import base64
 import boto3
 import zlib
-import codecs
 
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade

@@ -1,5 +1,5 @@
 # Core
-python-dateutil>=2.2
+python-dateutil<2.8.1,>=2.1
 netaddr>=0.7.11
 sqlitedict>=1.6.0
 cherrypy>=18.1.0
@@ -28,8 +28,10 @@ google-api-python-client>=1.7.8
 oauth2client>=4.1.3
 
 # Azure Provider
+azure-core>=1.2.1
+adal>=0.4.7
 azure-cli-core>=2.0.55
-azure-mgmt-storage>=3.0.0
+azure-mgmt-storage>=7.1.0
 azure-mgmt-monitor>=0.5.2
 azure-mgmt-sql>=0.11.0
 azure-mgmt-security>=0.1.0

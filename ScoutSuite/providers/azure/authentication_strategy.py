@@ -3,29 +3,36 @@ import logging
 from getpass import getpass
 
 from azure.common.credentials import ServicePrincipalCredentials, UserPassCredentials, get_azure_cli_credentials
-from azure.mgmt.resource import SubscriptionClient
 from msrestazure.azure_active_directory import MSIAuthentication
-from ScoutSuite.core.console import print_info, print_exception
+from ScoutSuite.core.console import print_info
+from msrestazure.azure_active_directory import AADTokenCredentials
+import adal
 
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
 
 class AzureCredentials:
 
-    def __init__(self,
-                 credentials, graphrbac_credentials,
-                 subscription_id=None, tenant_id=None):
-        self.credentials = credentials
-        self.graphrbac_credentials = graphrbac_credentials
-        self.subscription_id = subscription_id
-        self.tenant_id = tenant_id if tenant_id else credentials.token.get('tenant_id')  # TODO does this work for MSI
+    def __init__(self, arm_credentials, graph_credentials, tenant_id=None, default_subscription_id=None):
+        self.arm_credentials = arm_credentials  # Azure Resource Manager API credentials
+        self.graph_credentials = graph_credentials  # Azure AD Graph API credentials
+        self.tenant_id = tenant_id
+        self.default_subscription_id = default_subscription_id
+
+    def get_tenant_id(self):
+        if self.tenant_id:
+            return self.tenant_id
+        else:
+            return self.graph_credentials.token['tenant_id']
 
 
 class AzureAuthenticationStrategy(AuthenticationStrategy):
 
     def authenticate(self,
-                     cli=None, user_account=None, service_principal=None, file_auth=None, msi=None,
-                     tenant_id=None, subscription_id=None,
+                     cli=None, user_account=None, user_account_browser=None,
+                     service_principal=None, file_auth=None, msi=None,
+                     tenant_id=None,
+                     subscription_id=None,
                      client_id=None, client_secret=None,
                      username=None, password=None,
                      programmatic_execution=False,
@@ -41,8 +48,8 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             logging.getLogger('urllib3').setLevel(logging.ERROR)
 
             if cli:
-                credentials, subscription_id, tenant_id = get_azure_cli_credentials(with_tenant=True)
-                graphrbac_credentials, placeholder_1, placeholder_2 = \
+                arm_credentials, subscription_id, tenant_id = get_azure_cli_credentials(with_tenant=True)
+                graph_credentials, placeholder_1, placeholder_2 = \
                     get_azure_cli_credentials(with_tenant=True, resource='https://graph.windows.net')
 
             elif user_account:
@@ -54,34 +61,40 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     else:
                         raise AuthenticationException('Username and/or password not set')
 
-                credentials = UserPassCredentials(username, password)
-                graphrbac_credentials = UserPassCredentials(username, password,
-                                                            resource='https://graph.windows.net')
+                arm_credentials = UserPassCredentials(username, password)
+                graph_credentials = UserPassCredentials(username, password,
+                                                        resource='https://graph.windows.net')
 
-                if not subscription_id:
-                    # Get the subscription ID
-                    subscription_client = SubscriptionClient(credentials)
-                    try:
-                        # Tries to read the subscription list
-                        print_info('No subscription set, inferring ID')
-                        subscription = next(subscription_client.subscriptions.list())
-                        subscription_id = subscription.subscription_id
-                        print_info('Running against the {} subscription'.format(subscription_id))
-                    except StopIteration:
-                        print_info('Unable to infer a subscription')
-                        # If the user cannot read subscription list, ask Subscription ID:
-                        if not programmatic_execution:
-                            subscription_id = input('Subscription ID: ')
-                        else:
-                            raise AuthenticationException('Unable to infer a Subscription ID')
+            elif user_account_browser:
+
+                # As per https://docs.microsoft.com/en-us/samples/azure-samples/data-lake-analytics-python-auth-options
+                # /authenticating-your-python-application-against-azure-active-directory/
+                # The client id used above is a well known that already exists for all azure services. While it makes
+                # the sample code easy to use, for production code you should use generate your own client ids for
+                # your application.
+                client_id = '04b07795-8ddb-461a-bbee-02f9e1bf7b46'
+                authority_host_uri = 'https://login.microsoftonline.com'
+                authority_uri = authority_host_uri + '/' + tenant_id
+                context = adal.AuthenticationContext(authority_uri, api_version=None)
+
+                # Resource Manager
+                resource_uri = 'https://management.core.windows.net/'
+                code = context.acquire_user_code(resource_uri, client_id)
+                print_info('To authenticate to the Resource Manager API, use a web browser to '
+                           'access {} and enter the {} code.'.format(code['verification_url'],
+                                                                     code['user_code']))
+                mgmt_token = context.acquire_token_with_device_code(resource_uri, code, client_id)
+                arm_credentials = AADTokenCredentials(mgmt_token, client_id)
+                # Graph
+                resource_uri = 'https://graph.windows.net'
+                code = context.acquire_user_code(resource_uri, client_id)
+                print_info('To authenticate to the Azure Graph API, use a web browser to '
+                           'access {} and enter the {} code.'.format(code['verification_url'],
+                                                                     code['user_code']))
+                mgmt_token = context.acquire_token_with_device_code(resource_uri, code, client_id)
+                graph_credentials = AADTokenCredentials(mgmt_token, client_id)
 
             elif service_principal:
-
-                if not subscription_id:
-                    if not programmatic_execution:
-                        subscription_id = input('Subscription ID: ')
-                    else:
-                        raise AuthenticationException('No Subscription ID set')
 
                 if not tenant_id:
                     if not programmatic_execution:
@@ -101,13 +114,13 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                     else:
                         raise AuthenticationException('No Client Secret set')
 
-                credentials = ServicePrincipalCredentials(
+                arm_credentials = ServicePrincipalCredentials(
                     client_id=client_id,
                     secret=client_secret,
                     tenant=tenant_id
                 )
 
-                graphrbac_credentials = ServicePrincipalCredentials(
+                graph_credentials = ServicePrincipalCredentials(
                     client_id=client_id,
                     secret=client_secret,
                     tenant=tenant_id,
@@ -117,18 +130,17 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             elif file_auth:
 
                 data = json.loads(file_auth.read())
-                subscription_id = data.get('subscriptionId')
                 tenant_id = data.get('tenantId')
                 client_id = data.get('clientId')
                 client_secret = data.get('clientSecret')
 
-                credentials = ServicePrincipalCredentials(
+                arm_credentials = ServicePrincipalCredentials(
                     client_id=client_id,
                     secret=client_secret,
                     tenant=tenant_id
                 )
 
-                graphrbac_credentials = ServicePrincipalCredentials(
+                graph_credentials = ServicePrincipalCredentials(
                     client_id=client_id,
                     secret=client_secret,
                     tenant=tenant_id,
@@ -137,27 +149,14 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
             elif msi:
 
-                credentials = MSIAuthentication()
-                graphrbac_credentials = MSIAuthentication(resource='https://graph.windows.net')
+                arm_credentials = MSIAuthentication()
+                graph_credentials = MSIAuthentication(resource='https://graph.windows.net')
 
-                if not subscription_id:
-                    try:
-                        # Get the subscription ID
-                        subscription_client = SubscriptionClient(credentials)
-                        print_info('No subscription set, inferring ID')
-                        # Tries to read the subscription list
-                        subscription = next(subscription_client.subscriptions.list())
-                        subscription_id = subscription.subscription_id
-                        tenant_id = subscription.tenant_id
-                        print_info('Running against the {} subscription'.format(subscription_id))
-                    except StopIteration:
-                        # If the VM cannot read subscription list, ask Subscription ID:
-                        if not programmatic_execution:
-                            subscription_id = input('Subscription ID: ')
-                        else:
-                            raise AuthenticationException('Unable to infer a Subscription ID')
+            else:
+                raise AuthenticationException('Unknown authentication method')
 
-            return AzureCredentials(credentials, graphrbac_credentials, subscription_id, tenant_id)
+            return AzureCredentials(arm_credentials, graph_credentials,
+                                    tenant_id, subscription_id)
 
         except Exception as e:
             raise AuthenticationException(e)

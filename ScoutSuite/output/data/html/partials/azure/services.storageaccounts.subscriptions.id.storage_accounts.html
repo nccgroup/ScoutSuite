@@ -1,0 +1,48 @@
+<!-- Storage Accounts partial -->
+<script id="services.storageaccounts.subscriptions.id.storage_accounts.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Storage Account Name: <span id="storageaccounts.subscriptions.{{@../key}}.storage_accounts.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Public Traffic: <span id="storageaccounts.subscriptions.{{@../key}}.storage_accounts.{{@key}}.public_traffic_allowed">{{convert_bool_to_enabled public_traffic_allowed }}</span></div>
+        <div class="list-group-item-text item-margin">HTTPS Required: <span id="storageaccounts.subscriptions.{{@../key}}.storage_accounts.{{@key}}.https_traffic_enabled">{{convert_bool_to_enabled https_traffic_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Microsoft Trusted Services: <span id="storageaccounts.subscriptions.{{@../key}}.storage_accounts.{{@key}}.trusted_microsoft_services_enabled">{{convert_bool_to_enabled trusted_microsoft_services_enabled }}</span></div>
+        <div class="list-group-item-text item-margin">Last Access Key Rotation:
+            <span id="storageaccounts.subscriptions.{{@../key}}.storage_accounts.{{@key}}.access_keys_rotated">
+                {{#if access_keys_last_rotation_date }}
+                    {{ access_keys_last_rotation_date }}
+                {{else}}
+                    Never
+                {{/if}}
+            </span>
+        </div>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Blob Containers</h4>
+        <div class="list-group-item-text item-margin">
+        {{#each blob_containers}}
+            <samp>{{@key}}</samp>
+            <div class="list-group-item-text item-margin">
+                Public Access: <span id="storageaccounts.subscriptions.{{@../../key}}.storage_accounts.{{@key}}.blob_containers.{{@key}}.public_access_allowed">{{ convert_bool_to_enabled public_access_allowed }}</span>
+            </div>
+        {{/each}}
+        </div>
+    </div>
+
+</script>
+
+<script>
+    Handlebars.registerPartial("services.storageaccounts.subscriptions.id.storage_accounts", $("#services\\.storageaccounts\\.subscriptions\\.id\\.storage_accounts\\.partial").html());
+</script>
+
+<!-- Single Storage Accounts template -->
+<script id="single_storageaccounts_storage_accounts-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.storageaccounts.subscriptions.id.storage_accounts' }}
+</script>
+<script>
+    var single_storageaccounts_storage_accounts_template = Handlebars.compile($("#single_storageaccounts_storage_accounts-template").html());
+</script>

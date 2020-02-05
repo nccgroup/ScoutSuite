@@ -1,6 +1,7 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 
+from ScoutSuite.providers.utils import get_non_provider_id
 
 class ParameterGroups(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
@@ -15,4 +16,5 @@ class ParameterGroups(AWSResources):
 
     def _parse_parameter_group(self, raw_parameter_group):
         raw_parameter_group['name'] = raw_parameter_group.pop('CacheParameterGroupName')
-        return raw_parameter_group['name'], raw_parameter_group
+        raw_parameter_group['id'] = get_non_provider_id(raw_parameter_group['name'])
+        return raw_parameter_group['id'], raw_parameter_group

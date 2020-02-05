@@ -24,10 +24,9 @@ formatted_service_name = {
     'appgateway': 'Application Gateway',
     'rediscache': 'Redis Cache',
     'network': 'Network',
-    'appservice': 'App Service',
+    'appservice': 'App Services',
     'loadbalancer': 'Load Balancer',
     'virtualmachines': 'Virtual Machines',
-    'graphrbac': 'Graph RBAC',
     # GCP
     'cloudstorage': 'Cloud Storage',
     'cloudsql': 'Cloud SQL',
@@ -52,6 +51,8 @@ def manage_dictionary(dictionary, key, init, callback=None):
     :param callback:
     :return:
     """
+    if not isinstance(dictionary, dict):
+        raise TypeError()
 
     if str(key) in dictionary:
         return dictionary

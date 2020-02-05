@@ -120,7 +120,7 @@ function getRegionsResourcesFirstPage (region, service, resources) {
  * @returns {number}
  */
 function getLastPageIndex (pathArray, pageSize) {
-  let resourceCount = 1
+  let resourceCount;
   if (pathArray.length === 3) {
     resourceCount = runResults[pathArray[0]][pathArray[1]][pathArray[2] + '_count']
   } else {

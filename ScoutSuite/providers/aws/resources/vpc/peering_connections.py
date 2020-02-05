@@ -4,6 +4,7 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 class PeeringConnections(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
+        super().__init__(facade)
         self.facade = facade
         self.region = region
 
