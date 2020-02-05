@@ -38,13 +38,19 @@ def run_from_cli():
                    aws_secret_access_key=args.get('aws_secret_access_key'),
                    aws_session_token=args.get('aws_session_token'),
                    # Azure
-                   user_account=args.get('user_account'), service_account=args.get('service_account'),
-                   cli=args.get('cli'), msi=args.get('msi'), service_principal=args.get('service_principal'), file_auth=args.get('file_auth'),
-                   tenant_id=args.get('tenant_id'), subscription_id=args.get('subscription_id'),
+                   cli=args.get('cli'),
+                   user_account=args.get('user_account'),
+                   user_account_browser=args.get('user_account_browser'),
+                   service_account=args.get('service_account'),
+                   msi=args.get('msi'),
+                   service_principal=args.get('service_principal'), file_auth=args.get('file_auth'),
                    client_id=args.get('client_id'), client_secret=args.get('client_secret'),
                    username=args.get('username'), password=args.get('password'),
+                   tenant_id=args.get('tenant_id'),
+                   subscription_ids=args.get('subscription_ids'), all_subscriptions=args.get('all_subscriptions'),
                    # GCP
-                   project_id=args.get('project_id'), folder_id=args.get('folder_id'), organization_id=args.get('organization_id'), all_projects=args.get('all_projects'),
+                   project_id=args.get('project_id'), folder_id=args.get('folder_id'),
+                   organization_id=args.get('organization_id'), all_projects=args.get('all_projects'),
                    # Aliyun
                    access_key_id=args.get('access_key_id'), access_key_secret=args.get('access_key_secret'),
                    # General
@@ -80,12 +86,15 @@ def run(provider,
         aws_secret_access_key=None,
         aws_session_token=None,
         # Azure
-        user_account=False, service_account=None,
+        user_account=False,
+        user_account_browser=False,
         cli=False, msi=False, service_principal=False, file_auth=None,
-        tenant_id=None, subscription_id=None,
         client_id=None, client_secret=None,
         username=None, password=None,
+        tenant_id=None,
+        subscription_ids=None, all_subscriptions=None,
         # GCP
+        service_account=None,
         project_id=None, folder_id=None, organization_id=None, all_projects=False,
         # Aliyun
         access_key_id=None, access_key_secret=None,
@@ -130,11 +139,14 @@ async def _run(provider,
                aws_secret_access_key,
                aws_session_token,
                # Azure
-               user_account, service_account,
-               cli, msi, service_principal, file_auth, tenant_id, subscription_id,
+               cli, user_account, user_account_browser,
+               msi, service_principal, file_auth,
+               tenant_id,
+               subscription_ids, all_subscriptions,
                client_id, client_secret,
                username, password,
                # GCP
+               service_account,
                project_id, folder_id, organization_id, all_projects,
                # Aliyun
                access_key_id, access_key_secret,
@@ -173,20 +185,19 @@ async def _run(provider,
                                                  aws_secret_access_key=aws_secret_access_key,
                                                  aws_session_token=aws_session_token,
                                                  user_account=user_account,
+                                                 user_account_browser=user_account_browser,
                                                  service_account=service_account,
                                                  cli=cli,
                                                  msi=msi,
                                                  service_principal=service_principal,
                                                  file_auth=file_auth,
                                                  tenant_id=tenant_id,
-                                                 subscription_id=subscription_id,
                                                  client_id=client_id,
                                                  client_secret=client_secret,
                                                  username=username,
                                                  password=password,
                                                  access_key_id=access_key_id,
-                                                 access_key_secret=access_key_secret,
-                                                 programmatic_execution=programmatic_execution)
+                                                 access_key_secret=access_key_secret)
 
         if not credentials:
             return 101
@@ -196,15 +207,22 @@ async def _run(provider,
 
     # Create a cloud provider object
     cloud_provider = get_provider(provider=provider,
+                                  # AWS
                                   profile=profile,
+                                  # Azure
+                                  subscription_ids=subscription_ids,
+                                  all_subscriptions=all_subscriptions,
+                                  # GCP
                                   project_id=project_id,
                                   folder_id=folder_id,
                                   organization_id=organization_id,
                                   all_projects=all_projects,
+                                  # Other
                                   report_dir=report_dir,
                                   timestamp=timestamp,
                                   services=services,
                                   skipped_services=skipped_services,
+                                  programmatic_execution=programmatic_execution,
                                   credentials=credentials)
 
     # Create a new report

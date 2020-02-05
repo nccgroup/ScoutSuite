@@ -1,0 +1,27 @@
+<!-- Storage Accounts partial -->
+<script id="services.securitycenter.subscriptions.id.security_contacts.partial" type="text/x-handlebars-template">
+    <div id="ressource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="securitycenter.subscriptions.{{@../key}}.security_contacts.{{@key}}.name"><samp>{{ name }}</samp></span></div>
+        <div class="list-group-item-text item-margin">Email: <span id="securitycenter.subscriptions.{{@../key}}.security_contacts.{{@key}}.email"><samp>{{ email }}</samp></span></div>
+        <div class="list-group-item-text item-margin">Phone: <span id="securitycenter.subscriptions.{{@../key}}.security_contacts.{{@key}}.phone"><samp>{{ phone }}</samp></span></div>
+        <div class="list-group-item-text item-margin">Notify on Alert: <span id="securitycenter.subscriptions.{{@../key}}.security_contacts.{{@key}}.alert_notifications">{{ convert_bool_to_enabled alert_notifications }}</span></div>
+        <div class="list-group-item-text item-margin">Notify Administrators on Alert: <span id="securitycenter.subscriptions.{{@../key}}.security_contacts.{{@key}}.alerts_to_admins">{{ convert_bool_to_enabled alerts_to_admins }}</span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.securitycenter.subscriptions.id.security_contacts", $("#services\\.securitycenter\\.subscriptions\\.id\\.security_contacts\\.partial").html());
+</script>
+
+<!-- Single Pricings template -->
+<script id="single_securitycenter_security_contacts-template" type="text/x-handlebars-template">
+    {{> modal_template template='services.securitycenter.subscriptions.id.security_contacts'}}
+</script>
+<script>
+    var single_securitycenter_security_contacts_template = Handlebars.compile($("#single_securitycenter_security_contacts-template").html());
+</script>

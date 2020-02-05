@@ -1,0 +1,64 @@
+
+<!-- network network_interfaces -->
+<script id="services.network.subscriptions.id.network_interfaces.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Provisioning State: <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.provisioning_state"><samp>{{value_or_none provisioning_state}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Primary: <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.primary"><samp>{{value_or_none primary}}</samp></span></div>
+        <div class="list-group-item-text item-margin">IP Configurations: <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.ip_configurations"><samp>{{value_or_none ip_configurations}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Mac Address: <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.mac_address"><samp>{{value_or_none mac_address}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Interface Endpoint: <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.interface_endpoint"><samp>{{value_or_none interface_endpoint}}</samp></span></div>
+        {{#if network_security_group}}
+            <div class="list-group-item-text item-margin">Network Security Group: <a href="javascript:showObject('services.network.subscriptions.{{../subscription}}.security_groups.{{network_security_group}}')"><samp>{{getValueAt 'services.network.subscriptions' ../subscription 'security_groups' network_security_group 'name'}}</samp></a></div>
+        {{else}}
+            <div class="list-group-item-text item-margin">Network Security Group: <samp>None</samp></div>
+        {{/if}}
+        <div class="list-group-item-text item-margin">Enable IP Forwarding: <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.enable_ip_forwarding"><samp>{{value_or_none enable_ip_forwarding}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Enable Accelerated Networking: <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.enable_accelerated_networking"><samp>{{value_or_none enable_accelerated_networking}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Tags: <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.tags"><samp>{{value_or_none tags}}</samp></span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">IP Configuration</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.ip_configuration.name"><samp>{{value_or_none ip_configuration.name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Provisioning State: <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.ip_configuration.provisioning_state"><samp>{{value_or_none ip_configuration.provisioning_state}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Primary: <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.ip_configuration.primary"><samp>{{value_or_none ip_configuration.primary}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Public IP Address: <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.ip_configuration.public_ip_address"><samp>{{value_or_none ip_configuration.public_ip_address.ip_address}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Private IP Address: <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.ip_configuration.private_ip_address"><samp>{{value_or_none ip_configuration.private_ip_address}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Private IP Allocation Method: <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.ip_configuration.private_ip_allocation_method"><samp>{{value_or_none ip_configuration.private_ip_allocation_method}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Private IP Address Version: <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.ip_configuration.private_ip_address_version"><samp>{{value_or_none ip_configuration.private_ip_address_version}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Subnet: <a href="javascript:showObject('services.network.subscriptions.{{subscription}}.virtual_networks.{{ip_configuration.subnet.virtual_network_id}}.subnets.{{ip_configuration.subnet.id}}')"><samp>{{getValueAt 'services.network.subscriptions' subscription 'virtual_networks' ip_configuration.subnet.virtual_network_id 'subnets' ip_configuration.subnet.id 'name'}}</samp></a></div>
+        {{#if ip_configuration.application_security_groups}}
+            <div class="list-group-item-text item-margin">
+                <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.ip_configuration.application_security_groups">Application Security Groups:</span>
+                <ul>
+                    {{#each ip_configuration.application_security_groups}}
+                    <li>
+                        <a href="javascript:showObject('services.network.subscriptions.{{../subscription}}.application_security_groups.{{this}}')"><samp>{{getValueAt 'services.network.subscriptions' ../subscription 'application_security_groups' this 'name'}}</samp></a>
+                    </li>
+                    {{/each}}
+                </ul>
+            </div>
+        {{else}}
+            <div class="list-group-item-text item-margin">Application Security Groups: <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.ip_configuration.application_security_groups"><samp>{{None}}</samp></span></div>
+        {{/if}}
+        <div class="list-group-item-text item-margin">Application Gateway Backend Address Pools: <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.ip_configuration.application_gateway_backend_address_pools"><samp>{{value_or_none ip_configuration.application_gateway_backend_address_pools}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Load Balancer Backend Address Pools: <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.ip_configuration.load_balancer_backend_address_pools"><samp>{{value_or_none ip_configuration.load_balancer_backend_address_pools}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Load Balancer Inbound NAT Rules: <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.ip_configuration.load_balancer_inbound_nat_rules"><samp>{{value_or_none ip_configuration.load_balancer_inbound_nat_rules}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Virtual Network Taps: <span id="network.subscriptions.{{@../key}}.network_interfaces.{{@key}}.ip_configuration.virtual_network_taps"><samp>{{value_or_none ip_configuration.virtual_network_taps}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.network.subscriptions.id.network_interfaces", $("#services\\.network\\.subscriptions\\.id\\.network_interfaces\\.partial").html());
+</script>
+
+<!-- Single network network_interface template -->
+<script id="single_network_network_interface-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.network.subscriptions.id.network_interfaces'}}
+</script>
+<script>
+    var single_network_network_interface_template = Handlebars.compile($("#single_network_network_interface-template").html());
+</script>

@@ -17,8 +17,8 @@ except ImportError:
 
 
 class GCPFacade(GCPBaseFacade):
-    def __init__(self, default_project_id=None, project_id=None, folder_id=None, organization_id=None,
-                 all_projects=None):
+    def __init__(self,
+                 default_project_id=None, project_id=None, folder_id=None, organization_id=None, all_projects=None):
         super(GCPFacade, self).__init__('cloudresourcemanager', 'v1')
 
         self.default_project_id = default_project_id
