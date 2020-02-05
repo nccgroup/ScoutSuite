@@ -1,10 +1,16 @@
+from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class VirtualNetworks(AzureResources):
+
+    def __init__(self, facade: AzureFacade, subscription_id: str):
+        super(VirtualNetworks, self).__init__(facade)
+        self.subscription_id = subscription_id
+
     async def fetch_all(self):
-        for raw_virtual_network in await self.facade.network.get_virtual_networks():
+        for raw_virtual_network in await self.facade.network.get_virtual_networks(self.subscription_id):
             id, virtual_network = self._parse_virtual_network(raw_virtual_network)
             self[id] = virtual_network
 
@@ -56,6 +62,4 @@ class VirtualNetworks(AzureResources):
             virtual_network_dict['subnets_count'] += 1
             virtual_network_dict['subnets'][subnet_dict['id']] = subnet_dict
 
-
         return virtual_network_dict['id'], virtual_network_dict
-

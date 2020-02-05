@@ -1,0 +1,10 @@
+{
+    "description": "Guest Users in Use",
+    "rationale": "<b>Description:</b><br><br>Avoid creating guest users, as they are typically added outside your employee on-boarding/off-boarding process and could potentially be overlooked indefinitely leading to a potential vulnerability.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.1.0 1.3</li></ul>",
+    "dashboard_name": "Users",
+    "path": "aad.users.id",
+    "conditions": [ "and",
+        [ "aad.users.id.user_type", "equal", "Guest" ]
+    ],
+    "id_suffix": "user_type"
+}
