@@ -15,10 +15,10 @@ class AADFacade:
         self._microsoft_graph_session = requests.Session()
         self._microsoft_graph_session.headers.update(
             {'Authorization': 'Bearer {}'.format(credentials.microsoft_graph_credentials.token['access_token']),
-             'User-Agent': 'adal-sample',
+             'User-Agent': 'scout-suite',
              'Accept': 'application/json',
              'Content-Type': 'application/json',
-             'SdkVersion': 'sample-python-adal',
+             'SdkVersion': 'scout-suite',
              'return-client-request-id': 'true'})
 
     async def _get_microsoft_graph_response(self, api_resource, api_version='v1.0'):
@@ -29,10 +29,10 @@ class AADFacade:
             if response.status_code == 200:
                 return response.json()
             else:
-                print_exception('Failed to query Microsoft Graph endpoint {}: status code {}'.
+                print_exception('Failed to query Microsoft Graph endpoint \"{}\": status code {}'.
                                 format(api_resource, response.status_code))
         except Exception as e:
-            print_exception('Failed to query Microsoft Graph endpoint {}: {}'.format(api_resource, e))
+            print_exception('Failed to query Microsoft Graph endpoint \"{}\": {}'.format(api_resource, e))
             return {}
 
     async def get_users(self):
@@ -48,6 +48,10 @@ class AADFacade:
         except Exception as e:
             print_exception('Failed to retrieve groups: {}'.format(e))
             return []
+
+    async def get_group_details(self, group_id):
+        response = await self._get_microsoft_graph_response('groups/{}'.format(group_id))
+        return response
 
     async def get_user_groups(self, user_id):
         try:
