@@ -21,3 +21,33 @@ class VirtualMachineFacade:
         except Exception as e:
             print_exception('Failed to retrieve virtual machines: {}'.format(e))
             return []
+
+    async def get_disks(self, subscription_id: str):
+        try:
+            client = self.get_client(subscription_id)
+            return await run_concurrently(
+                lambda: list(client.disks.list())
+            )
+        except Exception as e:
+            print_exception('Failed to retrieve disks: {}'.format(e))
+            return []
+
+    async def get_snapshots(self, subscription_id: str):
+        try:
+            client = self.get_client(subscription_id)
+            return await run_concurrently(
+                lambda: list(client.snapshots.list())
+            )
+        except Exception as e:
+            print_exception('Failed to retrieve snapshots: {}'.format(e))
+            return []
+
+    async def get_images(self, subscription_id: str):
+        try:
+            client = self.get_client(subscription_id)
+            return await run_concurrently(
+                lambda: list(client.images.list())
+            )
+        except Exception as e:
+            print_exception('Failed to retrieve images: {}'.format(e))
+            return []
