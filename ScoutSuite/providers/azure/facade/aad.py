@@ -1,13 +1,39 @@
 from azure.graphrbac import GraphRbacManagementClient
 
+import requests
+import uuid
+
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently
 
 
 class AADFacade:
     def __init__(self, credentials):
-        self._client = GraphRbacManagementClient(credentials.graph_credentials,
+        self._client = GraphRbacManagementClient(credentials.aad_graph_credentials,
                                                  tenant_id=credentials.get_tenant_id())
+
+        self._microsoft_graph_session = requests.Session()
+        self._microsoft_graph_session.headers.update(
+            {'Authorization': 'Bearer {}'.format(credentials.microsoft_graph_credentials.token['access_token']),
+             'User-Agent': 'adal-sample',
+             'Accept': 'application/json',
+             'Content-Type': 'application/json',
+             'SdkVersion': 'sample-python-adal',
+             'return-client-request-id': 'true'})
+
+    async def _get_microsoft_graph_response(self, api_resource, api_version='v1.0'):
+        endpoint = 'https://graph.microsoft.com/{}/{}'.format(api_version, api_resource)
+        http_headers = {'client-request-id': str(uuid.uuid4())}
+        try:
+            response = self._microsoft_graph_session.get(endpoint, headers=http_headers, stream=False)
+            if response.status_code == 200:
+                return response.json()
+            else:
+                print_exception('Failed to query Microsoft Graph endpoint {}: status code {}'.
+                                format(api_resource, response.status_code))
+        except Exception as e:
+            print_exception('Failed to query Microsoft Graph endpoint {}: {}'.format(api_resource, e))
+            return {}
 
     async def get_users(self):
         try:
