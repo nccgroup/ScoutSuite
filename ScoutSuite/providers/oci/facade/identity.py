@@ -19,7 +19,7 @@ class IdentityFacade:
             return response.data
         except Exception as e:
             print_exception('Failed to retrieve users: {}'.format(e))
-            return None
+            return []
 
     async def get_user_api_keys(self, user_id):
         try:
@@ -28,7 +28,7 @@ class IdentityFacade:
             return response.data
         except Exception as e:
             print_exception('Failed to retrieve user api keys: {}'.format(e))
-            return None
+            return []
 
     async def get_groups(self):
         try:
@@ -37,7 +37,7 @@ class IdentityFacade:
             return response.data
         except Exception as e:
             print_exception('Failed to retrieve groups: {}'.format(e))
-            return None
+            return []
 
     async def get_group_users(self, group_id):
         try:
@@ -48,7 +48,7 @@ class IdentityFacade:
             return response.data
         except Exception as e:
             print_exception('Failed to retrieve group users: {}'.format(e))
-            return None
+            return []
 
     async def get_policies(self):
         try:
@@ -66,4 +66,4 @@ class IdentityFacade:
             return response.data
         except Exception as e:
             print_exception('Failed to retrieve authentication policy: {}'.format(e))
-            return None
+            return []
