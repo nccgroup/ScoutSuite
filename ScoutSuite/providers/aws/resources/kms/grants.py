@@ -3,12 +3,13 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 
 class Grants(AWSResources):
-    def __init__(self, facade: AWSFacade, region: str):
+    def __init__(self, facade: AWSFacade, region: str, key_id: str):
         super(Grants, self).__init__(facade)
         self.region = region
+        self.key_id = key_id
 
     async def fetch_all(self):
-        raw_grants = await self.facade.kms.get_grants(self.region)
+        raw_grants = await self.facade.kms.get_grants(self.region, self.key_id)
         for raw_grant in raw_grants:
             id, grant = self._parse_grant(raw_grant)
             self[id] = grant

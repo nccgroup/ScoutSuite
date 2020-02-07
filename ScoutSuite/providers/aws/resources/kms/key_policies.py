@@ -4,12 +4,13 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class KeyPolicies(AWSResources):
-    def __init__(self, facade: AWSFacade, region: str):
+    def __init__(self, facade: AWSFacade, region: str, key_id: str):
         super(KeyPolicies, self).__init__(facade)
         self.region = region
+        self.key_id = key_id
 
     async def fetch_all(self):
-        raw_key_policies = await self.facade.kms.get_key_policies(self.region)
+        raw_key_policies = await self.facade.kms.get_key_policies(self.region, self.key_id)
         for raw_key_policy in raw_key_policies:
             key_id, policy = self._parse_key_policy(raw_key_policy)
             self[key_id] = policy
