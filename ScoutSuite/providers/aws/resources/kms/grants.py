@@ -1,6 +1,7 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 
+
 class Grants(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
         super(Grants, self).__init__(facade)
