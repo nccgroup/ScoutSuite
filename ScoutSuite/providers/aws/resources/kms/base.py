@@ -1,14 +1,14 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
-from ScoutSuite.providers.aws.resources.base import AWSCompositeResources
+from ScoutSuite.providers.aws.resources.regions import Regions
+from ScoutSuite.providers.aws.resources.kms.aliases import Aliases
 
-class KMS(AWSCompositeResources):
+from .aliases import Aliases
+
+class KMS(Regions):
     _children = [
         (Aliases, 'aliases')
     ]
 
     def __init__(self, facade: AWSFacade):
-        super(KMS, self).__init__(facade)
-        self.service = 'kms'
+        super(KMS, self).__init__('kms', facade)
 
-    async def fetch_all(self, partition_name='aws', **kwargs):
-        await self._fetch_children(self)

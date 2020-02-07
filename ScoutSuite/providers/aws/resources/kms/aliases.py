@@ -8,14 +8,15 @@ class Aliases(AWSResources):
         self.region = region
 
     async def fetch_all(self):
-        raw_aliases = await self.facade.kms.get_aliases()
+        raw_aliases = await self.facade.kms.get_aliases(self.region)
         for raw_alias in raw_aliases:
             id, alias = self._parse_alias(raw_alias)
             self[id] = alias
 
     def _parse_alias(self, raw_alias):
         alias_dict = {
-            'name': raw_alias.get('AliasName'),
+            # all KMS Aliases are prefixed with alias/, so we'll strip that off
+            'name': raw_alias.get('AliasName').lstrip('alias/'),
             'arn': raw_alias.get('AliasArn'),
             'key_id': raw_alias.get('TargetKeyId')}
         return alias_dict['name'], alias_dict
