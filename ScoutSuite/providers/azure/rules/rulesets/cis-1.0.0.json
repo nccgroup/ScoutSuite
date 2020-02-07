@@ -200,6 +200,12 @@
                 "enabled": true,
                 "level": "danger"
             }
+        ],
+        "virtual-machines-disk-encryption.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
         ]
     }
 }
