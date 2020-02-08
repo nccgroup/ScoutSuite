@@ -22,6 +22,20 @@ class VirtualMachineFacade:
             print_exception('Failed to retrieve virtual machines: {}'.format(e))
             return []
 
+    async def get_instance_extensions(self, subscription_id: str,
+                                      instance_name: str,
+                                      resource_group: str):
+        try:
+            client = self.get_client(subscription_id)
+            extensions = await run_concurrently(
+                lambda: client.virtual_machine_extensions.list(resource_group,
+                                                               instance_name)
+            )
+            return list(extensions.value)
+        except Exception as e:
+            print_exception('Failed to retrieve virtual machine extensions: {}'.format(e))
+            return []
+
     async def get_disks(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)

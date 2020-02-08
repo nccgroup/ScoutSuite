@@ -206,6 +206,12 @@
                 "enabled": true,
                 "level": "warning"
             }
+        ],
+        "virtual-machines-extensions-installed.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
         ]
     }
 }
