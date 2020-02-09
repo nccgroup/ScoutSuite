@@ -5,9 +5,7 @@ from .filesystems import FileSystems
 
 
 class EFS(Regions):
-    _children = [
-        (FileSystems, 'filesystems')
-    ]
+    _children = [(FileSystems, "filesystems")]
 
     def __init__(self, facade: AWSFacade):
-        super(EFS, self).__init__('efs', facade)
+        super(EFS, self).__init__("efs", facade)

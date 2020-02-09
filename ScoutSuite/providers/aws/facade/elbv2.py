@@ -14,50 +14,79 @@ class ELBv2Facade(AWSBaseFacade):
     async def get_load_balancers(self, region: str, vpc: str):
         try:
             await self.cache_load_balancers(region)
-            return [load_balancer for load_balancer in self.load_balancers_cache[region] if load_balancer['VpcId'] == vpc]
+            return [
+                load_balancer
+                for load_balancer in self.load_balancers_cache[region]
+                if load_balancer["VpcId"] == vpc
+            ]
         except Exception as e:
-            print_exception('Failed to get ELBv2 load balancers: {}'.format(e))
+            print_exception("Failed to get ELBv2 load balancers: {}".format(e))
             return []
 
     async def cache_load_balancers(self, region):
-        async with self.regional_load_balancers_cache_locks.setdefault(region, asyncio.Lock()):
+        async with self.regional_load_balancers_cache_locks.setdefault(
+            region, asyncio.Lock()
+        ):
             if region in self.load_balancers_cache:
                 return
 
-            self.load_balancers_cache[region] = \
-                await AWSFacadeUtils.get_all_pages('elbv2', region, self.session,
-                                                   'describe_load_balancers', 'LoadBalancers')
+            self.load_balancers_cache[region] = await AWSFacadeUtils.get_all_pages(
+                "elbv2",
+                region,
+                self.session,
+                "describe_load_balancers",
+                "LoadBalancers",
+            )
 
             for load_balancer in self.load_balancers_cache[region]:
-                load_balancer['VpcId'] = \
-                    load_balancer['VpcId'] if 'VpcId' in load_balancer and load_balancer['VpcId'] else ec2_classic
+                load_balancer["VpcId"] = (
+                    load_balancer["VpcId"]
+                    if "VpcId" in load_balancer and load_balancer["VpcId"]
+                    else ec2_classic
+                )
 
             await get_and_set_concurrently(
-                [self._get_and_set_load_balancer_attributes], self.load_balancers_cache[region], region=region)
+                [self._get_and_set_load_balancer_attributes],
+                self.load_balancers_cache[region],
+                region=region,
+            )
 
             await get_and_set_concurrently(
-                [self._get_and_set_load_balancer_tags], self.load_balancers_cache[region], region=region)
+                [self._get_and_set_load_balancer_tags],
+                self.load_balancers_cache[region],
+                region=region,
+            )
 
-    async def _get_and_set_load_balancer_attributes(self, load_balancer: dict, region: str):
-        elbv2_client = AWSFacadeUtils.get_client('elbv2', self.session, region)
+    async def _get_and_set_load_balancer_attributes(
+        self, load_balancer: dict, region: str
+    ):
+        elbv2_client = AWSFacadeUtils.get_client("elbv2", self.session, region)
         try:
-            load_balancer['attributes'] = await run_concurrently(
+            load_balancer["attributes"] = await run_concurrently(
                 lambda: elbv2_client.describe_load_balancer_attributes(
-                    LoadBalancerArn=load_balancer['LoadBalancerArn'])['Attributes']
+                    LoadBalancerArn=load_balancer["LoadBalancerArn"]
+                )["Attributes"]
             )
         except Exception as e:
-            print_exception('Failed to describe ELBv2 attributes: {}'.format(e))
+            print_exception("Failed to describe ELBv2 attributes: {}".format(e))
 
     async def _get_and_set_load_balancer_tags(self, load_balancer: dict, region: str):
-        elbv2_client = AWSFacadeUtils.get_client('elbv2', self.session, region)
+        elbv2_client = AWSFacadeUtils.get_client("elbv2", self.session, region)
         try:
-            load_balancer['Tags'] = await run_concurrently(
+            load_balancer["Tags"] = await run_concurrently(
                 lambda: elbv2_client.describe_tags(
-                    ResourceArns=[load_balancer['LoadBalancerArn']])['TagDescriptions'][0]['Tags']
+                    ResourceArns=[load_balancer["LoadBalancerArn"]]
+                )["TagDescriptions"][0]["Tags"]
             )
         except Exception as e:
-            print_exception('Failed to describe ELBv2 tags: {}'.format(e))
+            print_exception("Failed to describe ELBv2 tags: {}".format(e))
 
     async def get_listeners(self, region: str, load_balancer_arn: str):
         return await AWSFacadeUtils.get_all_pages(
-            'elbv2', region, self.session, 'describe_listeners', 'Listeners', LoadBalancerArn=load_balancer_arn)
+            "elbv2",
+            region,
+            self.session,
+            "describe_listeners",
+            "Listeners",
+            LoadBalancerArn=load_balancer_arn,
+        )

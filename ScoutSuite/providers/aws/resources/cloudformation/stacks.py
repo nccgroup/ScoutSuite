@@ -16,22 +16,23 @@ class Stacks(AWSResources):
             self[name] = stack
 
     def _parse_stack(self, raw_stack):
-        raw_stack['id'] = raw_stack.pop('StackId')
-        raw_stack['name'] = raw_stack.pop('StackName')
-        raw_stack['drifted'] = raw_stack.pop('DriftInformation')[
-                                   'StackDriftStatus'] == 'DRIFTED'
-        raw_stack['termination_protection'] = raw_stack['EnableTerminationProtection']
+        raw_stack["id"] = raw_stack.pop("StackId")
+        raw_stack["name"] = raw_stack.pop("StackName")
+        raw_stack["drifted"] = (
+            raw_stack.pop("DriftInformation")["StackDriftStatus"] == "DRIFTED"
+        )
+        raw_stack["termination_protection"] = raw_stack["EnableTerminationProtection"]
 
-        template = raw_stack.pop('template')
-        raw_stack['deletion_policy'] = self.has_deletion_policy(template)
+        template = raw_stack.pop("template")
+        raw_stack["deletion_policy"] = self.has_deletion_policy(template)
 
-        if hasattr(template, 'keys'):
+        if hasattr(template, "keys"):
             for group in template.keys():
-                if 'DeletionPolicy' in template[group]:
-                    raw_stack['deletion_policy'] = template[group]
+                if "DeletionPolicy" in template[group]:
+                    raw_stack["deletion_policy"] = template[group]
                     break
 
-        return raw_stack['name'], raw_stack
+        return raw_stack["name"], raw_stack
 
     @staticmethod
     def has_deletion_policy(template):
@@ -44,16 +45,16 @@ class Stacks(AWSResources):
         # If a ressource is found to not have a deletion policy or have it to delete, the boolean is switched to
         # false to indicate that the ressource will be deleted once the stack is deleted
         if isinstance(template, dict):
-            template = template['Resources']
+            template = template["Resources"]
             for group in template.keys():
-                if 'DeletionPolicy' in template[group]:
-                    if template[group]['DeletionPolicy'] == 'Delete':
+                if "DeletionPolicy" in template[group]:
+                    if template[group]["DeletionPolicy"] == "Delete":
                         has_dp = False
                 else:
                     has_dp = False
         if isinstance(template, str):
-            if re.match(r'\"DeletionPolicy\"\s*:\s*\"Delete\"', template):
+            if re.match(r"\"DeletionPolicy\"\s*:\s*\"Delete\"", template):
                 has_dp = False
-            elif not re.match(r'\"DeletionPolicy\"', template):
+            elif not re.match(r"\"DeletionPolicy\"", template):
                 has_dp = False
         return has_dp

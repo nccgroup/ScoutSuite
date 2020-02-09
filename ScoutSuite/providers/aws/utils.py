@@ -1,23 +1,23 @@
 import re
 
-ec2_classic = 'EC2-Classic'
+ec2_classic = "EC2-Classic"
 
 
 def get_caller_identity(session):
-    sts_client = session.client('sts')
+    sts_client = session.client("sts")
     identity = sts_client.get_caller_identity()
     return identity
 
 
 def get_aws_account_id(session):
     caller_identity = get_caller_identity(session)
-    account_id = caller_identity['Arn'].split(':')[4]
+    account_id = caller_identity["Arn"].split(":")[4]
     return account_id
 
 
 def get_partition_name(session):
     caller_identity = get_caller_identity(session)
-    partition_name = caller_identity['Arn'].split(':')[1]
+    partition_name = caller_identity["Arn"].split(":")[1]
     return partition_name
 
 
@@ -28,12 +28,13 @@ def is_throttled(e):
     :param e:                           Exception raised
     :return:                            True if it's a throttling exception else False
     """
-    return (hasattr(e, 'response')
-            and e.response
-            and 'Error' in e.response
-            and e.response['Error']['Code'] in ['Throttling',
-                                                'RequestLimitExceeded',
-                                                'ThrottlingException'])
+    return (
+        hasattr(e, "response")
+        and e.response
+        and "Error" in e.response
+        and e.response["Error"]["Code"]
+        in ["Throttling", "RequestLimitExceeded", "ThrottlingException"]
+    )
 
 
 def get_keys(src, dst, keys):
@@ -59,14 +60,14 @@ def get_name(src, dst, default_attribute):
     :return:
     """
     name_found = False
-    if 'Tags' in src:
-        for tag in src['Tags']:
-            if tag['Key'] == 'Name' and tag['Value'] != '':
-                dst['name'] = tag['Value']
+    if "Tags" in src:
+        for tag in src["Tags"]:
+            if tag["Key"] == "Name" and tag["Value"] != "":
+                dst["name"] = tag["Value"]
                 name_found = True
     if not name_found:
-        dst['name'] = src[default_attribute]
-    return dst['name']
+        dst["name"] = src[default_attribute]
+    return dst["name"]
 
 
 def no_camel(name):
@@ -76,5 +77,5 @@ def no_camel(name):
     :param name:                        Name string to convert
     :return:
     """
-    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+    s1 = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)
+    return re.sub("([a-z0-9])([A-Z])", r"\1_\2", s1).lower()

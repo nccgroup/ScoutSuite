@@ -1,21 +1,33 @@
-providers_dict = {'aws': 'AWSProvider',
-                  'gcp': 'GCPProvider',
-                  'azure': 'AzureProvider',
-                  'aliyun': 'AliyunProvider',
-                  'oci': 'OracleProvider'}
+providers_dict = {
+    "aws": "AWSProvider",
+    "gcp": "GCPProvider",
+    "azure": "AzureProvider",
+    "aliyun": "AliyunProvider",
+    "oci": "OracleProvider",
+}
 
 
 def get_provider_object(provider):
     provider_class = providers_dict.get(provider)
-    provider_module = __import__('ScoutSuite.providers.{}.provider'.format(provider), fromlist=[provider_class])
+    provider_module = __import__(
+        "ScoutSuite.providers.{}.provider".format(provider), fromlist=[provider_class]
+    )
     provider_object = getattr(provider_module, provider_class)
     return provider_object
 
 
-def get_provider(provider,
-                 profile=None,
-                 project_id=None, folder_id=None, organization_id=None,
-                 report_dir=None, timestamp=None, services=None, skipped_services=None, **kwargs):
+def get_provider(
+    provider,
+    profile=None,
+    project_id=None,
+    folder_id=None,
+    organization_id=None,
+    report_dir=None,
+    timestamp=None,
+    services=None,
+    skipped_services=None,
+    **kwargs
+):
     """
     Returns an instance of the requested provider.
 
@@ -34,14 +46,16 @@ def get_provider(provider,
     skipped_services = [] if skipped_services is None else skipped_services
 
     provider_object = get_provider_object(provider)
-    provider_instance = provider_object(profile=profile,
-                                        project_id=project_id,
-                                        folder_id=folder_id,
-                                        organization_id=organization_id,
-                                        report_dir=report_dir,
-                                        timestamp=timestamp,
-                                        services=services,
-                                        skipped_services=skipped_services,
-                                        **kwargs)
+    provider_instance = provider_object(
+        profile=profile,
+        project_id=project_id,
+        folder_id=folder_id,
+        organization_id=organization_id,
+        report_dir=report_dir,
+        timestamp=timestamp,
+        services=services,
+        skipped_services=skipped_services,
+        **kwargs
+    )
 
     return provider_instance

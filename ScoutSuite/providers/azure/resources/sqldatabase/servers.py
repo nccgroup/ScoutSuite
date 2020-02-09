@@ -11,10 +11,10 @@ from .server_security_alert_policies import ServerSecurityAlertPolicies
 
 class Servers(AzureCompositeResources):
     _children = [
-        (Databases, 'databases'),
+        (Databases, "databases"),
         (ServerAzureAdAdministrators, None),
-        (ServerBlobAuditingPolicies, 'auditing'),
-        (ServerSecurityAlertPolicies, 'threat_detection')
+        (ServerBlobAuditingPolicies, "auditing"),
+        (ServerSecurityAlertPolicies, "threat_detection"),
     ]
 
     def __init__(self, facade: AzureFacade, subscription_id: str):
@@ -26,15 +26,19 @@ class Servers(AzureCompositeResources):
             id = get_non_provider_id(server.id)
             resource_group_name = get_resource_group_name(server.id)
             self[id] = {
-                'id': id,
-                'name': server.name,
-                'resource_group_name': resource_group_name
+                "id": id,
+                "name": server.name,
+                "resource_group_name": resource_group_name,
             }
 
         await self._fetch_children_of_all_resources(
             resources=self,
-            scopes={server_id: {'resource_group_name': server['resource_group_name'],
-                                'server_name': server['name'],
-                                'subscription_id': self.subscription_id}
-                    for (server_id, server) in self.items()}
+            scopes={
+                server_id: {
+                    "resource_group_name": server["resource_group_name"],
+                    "server_name": server["name"],
+                    "subscription_id": self.subscription_id,
+                }
+                for (server_id, server) in self.items()
+            },
         )

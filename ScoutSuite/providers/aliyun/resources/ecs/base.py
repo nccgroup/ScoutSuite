@@ -4,9 +4,7 @@ from ScoutSuite.providers.aliyun.resources.ecs.instances import Instances
 
 
 class ECS(Regions):
-    _children = [
-        (Instances, 'instances')
-    ]
+    _children = [(Instances, "instances")]
 
     def __init__(self, facade: AliyunFacade):
-        super(ECS, self).__init__('ecs', facade)
+        super(ECS, self).__init__("ecs", facade)

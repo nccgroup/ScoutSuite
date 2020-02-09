@@ -12,7 +12,9 @@ from ScoutSuite.providers.base.services import BaseServicesConfig
 
 # Try to import proprietary services
 try:
-    from ScoutSuite.providers.azure.resources.private_appgateway.base import ApplicationGateways
+    from ScoutSuite.providers.azure.resources.private_appgateway.base import (
+        ApplicationGateways,
+    )
 except ImportError:
     pass
 try:
@@ -24,24 +26,28 @@ try:
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.azure.resources.private_loadbalancer.base import LoadBalancers
+    from ScoutSuite.providers.azure.resources.private_loadbalancer.base import (
+        LoadBalancers,
+    )
 except ImportError:
     pass
 
 
 class AzureServicesConfig(BaseServicesConfig):
-
-    def __init__(self,
-                 credentials: AzureCredentials = None,
-                 subscription_ids=[], all_subscriptions=None,
-                 programmatic_execution=None,
-                 **kwargs):
+    def __init__(
+        self,
+        credentials: AzureCredentials = None,
+        subscription_ids=[],
+        all_subscriptions=None,
+        programmatic_execution=None,
+        **kwargs
+    ):
 
         super(AzureServicesConfig, self).__init__(credentials)
 
-        facade = AzureFacade(credentials,
-                             subscription_ids, all_subscriptions,
-                             programmatic_execution)
+        facade = AzureFacade(
+            credentials, subscription_ids, all_subscriptions, programmatic_execution
+        )
 
         self.aad = AAD(facade)
         self.arm = ARM(facade)
@@ -71,4 +77,4 @@ class AzureServicesConfig(BaseServicesConfig):
             pass
 
     def _is_provider(self, provider_name):
-        return provider_name == 'azure'
+        return provider_name == "azure"

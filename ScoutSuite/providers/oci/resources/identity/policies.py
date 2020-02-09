@@ -14,10 +14,10 @@ class Policies(OracleResources):
 
     async def _parse_policy(self, raw_policy):
         policy = {}
-        policy['id'] = get_non_provider_id(raw_policy.id)
-        policy['identifier'] = raw_policy.id
-        policy['name'] = raw_policy.name
-        policy['description'] = raw_policy.description
-        policy['statements'] = [s.lower() for s in raw_policy.statements]
-        policy['state'] = raw_policy.lifecycle_state
-        return policy['id'], policy
+        policy["id"] = get_non_provider_id(raw_policy.id)
+        policy["identifier"] = raw_policy.id
+        policy["name"] = raw_policy.name
+        policy["description"] = raw_policy.description
+        policy["statements"] = [s.lower() for s in raw_policy.statements]
+        policy["state"] = raw_policy.lifecycle_state
+        return policy["id"], policy

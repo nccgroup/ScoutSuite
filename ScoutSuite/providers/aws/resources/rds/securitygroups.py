@@ -14,6 +14,6 @@ class SecurityGroups(AWSResources):
             self[name] = resource
 
     def _parse_security_group(self, raw_security_group):
-        raw_security_group['arn'] = raw_security_group.pop('DBSecurityGroupArn')
-        raw_security_group['name'] = raw_security_group.pop('DBSecurityGroupName')
-        return raw_security_group['name'], raw_security_group
+        raw_security_group["arn"] = raw_security_group.pop("DBSecurityGroupArn")
+        raw_security_group["name"] = raw_security_group.pop("DBSecurityGroupName")
+        return raw_security_group["name"], raw_security_group

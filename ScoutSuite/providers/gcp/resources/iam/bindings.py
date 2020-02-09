@@ -6,10 +6,12 @@ class Bindings(Resources):
     def __init__(self, facade: GCPFacade, project_id: str, service_account_email: str):
         super(Bindings, self).__init__(facade)
         self.project_id = project_id
-        self.service_account_email = service_account_email 
+        self.service_account_email = service_account_email
 
     async def fetch_all(self):
-        raw_bindings = await self.facade.iam.get_bindings(self.project_id, self.service_account_email)
+        raw_bindings = await self.facade.iam.get_bindings(
+            self.project_id, self.service_account_email
+        )
         for raw_binding in raw_bindings:
             binding_id, binding = self._parse_binding(raw_binding)
             self[binding_id] = binding

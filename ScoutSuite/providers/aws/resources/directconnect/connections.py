@@ -14,6 +14,6 @@ class Connections(AWSResources):
             self[name] = resource
 
     def _parse_connection(self, raw_connection):
-        raw_connection['id'] = raw_connection.pop('connectionId')
-        raw_connection['name'] = raw_connection.pop('connectionName')
-        return raw_connection['id'], raw_connection
+        raw_connection["id"] = raw_connection.pop("connectionId")
+        raw_connection["name"] = raw_connection.pop("connectionName")
+        return raw_connection["id"], raw_connection

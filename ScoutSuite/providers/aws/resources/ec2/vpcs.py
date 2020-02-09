@@ -6,7 +6,7 @@ from ScoutSuite.providers.aws.resources.ec2.networkinterfaces import NetworkInte
 
 class Ec2Vpcs(Vpcs):
     _children = [
-        (EC2Instances, 'instances'),
-        (SecurityGroups, 'security_groups'),
-        (NetworkInterfaces, 'network_interfaces')
+        (EC2Instances, "instances"),
+        (SecurityGroups, "security_groups"),
+        (NetworkInterfaces, "network_interfaces"),
     ]

@@ -8,10 +8,10 @@ from .vpcs import RedshiftVpcs
 
 class Redshift(Regions):
     _children = [
-        (RedshiftVpcs, 'vpcs'),
-        (ClusterParameterGroups, 'parameter_groups'),
-        (ClusterSecurityGroups, 'security_groups')
+        (RedshiftVpcs, "vpcs"),
+        (ClusterParameterGroups, "parameter_groups"),
+        (ClusterSecurityGroups, "security_groups"),
     ]
 
     def __init__(self, facade: AWSFacade):
-        super(Redshift, self).__init__('redshift', facade)
+        super(Redshift, self).__init__("redshift", facade)

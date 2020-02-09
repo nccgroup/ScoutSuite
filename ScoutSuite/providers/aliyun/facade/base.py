@@ -1,6 +1,8 @@
 from collections import Counter
 
-from aliyunsdkcore.endpoint.local_config_regional_endpoint_resolver import LocalConfigRegionalEndpointResolver
+from aliyunsdkcore.endpoint.local_config_regional_endpoint_resolver import (
+    LocalConfigRegionalEndpointResolver,
+)
 
 from ScoutSuite.providers.aliyun.authentication_strategy import AliyunCredentials
 from ScoutSuite.providers.aliyun.facade.actiontrail import ActiontrailFacade
@@ -39,7 +41,8 @@ class AliyunFacade:
         #     raise Exception('Service ' + service + ' is not available.')
 
         regions = await run_concurrently(
-            lambda: self._resolver.get_valid_region_ids_by_product(product_code=service))
+            lambda: self._resolver.get_valid_region_ids_by_product(product_code=service)
+        )
 
         if chosen_regions:
             return list((Counter(regions) & Counter(chosen_regions)).elements())

@@ -6,6 +6,6 @@ from .subnets import Subnets
 
 class RegionalVpcs(Vpcs):
     _children = [
-        (NetworkACLs, 'network_acls'),
-        (Subnets, 'subnets'),
+        (NetworkACLs, "network_acls"),
+        (Subnets, "subnets"),
     ]

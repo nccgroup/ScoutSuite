@@ -15,7 +15,7 @@ class Clusters(AWSResources):
             self[id] = cluster
 
     def _parse_cluster(self, raw_cluster):
-        name = raw_cluster.pop('ClusterIdentifier')
-        raw_cluster['name'] = name
+        name = raw_cluster.pop("ClusterIdentifier")
+        raw_cluster["name"] = name
 
         return name, raw_cluster

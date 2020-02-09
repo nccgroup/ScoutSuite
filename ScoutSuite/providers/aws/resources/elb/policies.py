@@ -15,6 +15,6 @@ class Policies(AWSResources):
             self[id] = policy
 
     def _parse_policy(self, raw_policy):
-        raw_policy['name'] = raw_policy.pop('PolicyName')
-        policy_id = get_non_provider_id(raw_policy['name'])
+        raw_policy["name"] = raw_policy.pop("PolicyName")
+        policy_id = get_non_provider_id(raw_policy["name"])
         return policy_id, raw_policy

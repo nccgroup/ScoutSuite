@@ -6,10 +6,7 @@ from .hosted_zones import HostedZones
 
 
 class Route53(Regions):
-    _children = [
-        (Domains, 'domains'),
-        (HostedZones, 'hosted_zones')
-    ]
+    _children = [(Domains, "domains"), (HostedZones, "hosted_zones")]
 
     def __init__(self, facade: AWSFacade):
-        super(Route53, self).__init__('route53domains', facade)
+        super(Route53, self).__init__("route53domains", facade)

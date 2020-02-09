@@ -5,7 +5,4 @@ from .roles import Roles
 
 
 class ARM(Subscriptions):
-    _children = [
-        (Roles, 'roles'),
-        (RoleAssignments, 'role_assignments')
-    ]
+    _children = [(Roles, "roles"), (RoleAssignments, "role_assignments")]

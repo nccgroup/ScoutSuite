@@ -3,6 +3,4 @@ from ScoutSuite.providers.gcp.resources.cloudstorage.buckets import Buckets
 
 
 class CloudStorage(Projects):
-    _children = [ 
-        (Buckets, 'buckets')
-    ]
+    _children = [(Buckets, "buckets")]

@@ -2,11 +2,13 @@ import boto3
 import logging
 
 from ScoutSuite.providers.aws.utils import get_caller_identity
-from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
+from ScoutSuite.providers.base.authentication_strategy import (
+    AuthenticationStrategy,
+    AuthenticationException,
+)
 
 
 class AWSCredentials:
-
     def __init__(self, session):
         self.session = session
 
@@ -16,17 +18,21 @@ class AWSAuthenticationStrategy(AuthenticationStrategy):
     Implements authentication for the AWS provider
     """
 
-    def authenticate(self,
-                     profile=None,
-                     aws_access_key_id=None, aws_secret_access_key=None, aws_session_token=None,
-                     **kwargs):
+    def authenticate(
+        self,
+        profile=None,
+        aws_access_key_id=None,
+        aws_secret_access_key=None,
+        aws_session_token=None,
+        **kwargs
+    ):
 
         try:
 
             # Set logging level to error for libraries as otherwise generates a lot of warnings
-            logging.getLogger('botocore').setLevel(logging.ERROR)
-            logging.getLogger('botocore.auth').setLevel(logging.ERROR)
-            logging.getLogger('urllib3').setLevel(logging.ERROR)
+            logging.getLogger("botocore").setLevel(logging.ERROR)
+            logging.getLogger("botocore.auth").setLevel(logging.ERROR)
+            logging.getLogger("urllib3").setLevel(logging.ERROR)
 
             if profile:
                 session = boto3.Session(profile_name=profile)

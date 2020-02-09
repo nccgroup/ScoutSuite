@@ -4,6 +4,4 @@ from .instances import Instances
 
 
 class VirtualMachines(Subscriptions):
-    _children = [
-        (Instances, 'instances')
-    ]
+    _children = [(Instances, "instances")]

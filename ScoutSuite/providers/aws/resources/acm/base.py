@@ -5,9 +5,7 @@ from .certificates import Certificates
 
 
 class Certificates(Regions):
-    _children = [
-        (Certificates, 'certificates')
-    ]
+    _children = [(Certificates, "certificates")]
 
     def __init__(self, facade: AWSFacade):
-        super(Certificates, self).__init__('acm', facade)
+        super(Certificates, self).__init__("acm", facade)

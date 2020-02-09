@@ -10,22 +10,24 @@ class PasswordPolicy(AWSResources):
     def _parse_password_policy(self, raw_password_policy):
         if raw_password_policy is None:
             return {
-                    'MinimumPasswordLength': '1',
-                    'RequireUppercaseCharacters': False,
-                    'RequireLowercaseCharacters': False, 
-                    'RequireNumbers': False,
-                    'RequireSymbols': False, 
-                    'PasswordReusePrevention': False,
-                    'ExpirePasswords': False
+                "MinimumPasswordLength": "1",
+                "RequireUppercaseCharacters": False,
+                "RequireLowercaseCharacters": False,
+                "RequireNumbers": False,
+                "RequireSymbols": False,
+                "PasswordReusePrevention": False,
+                "ExpirePasswords": False,
             }
 
-        if 'PasswordReusePrevention' not in raw_password_policy:
-            raw_password_policy['PasswordReusePrevention'] = False
+        if "PasswordReusePrevention" not in raw_password_policy:
+            raw_password_policy["PasswordReusePrevention"] = False
         else:
-            raw_password_policy['PreviousPasswordPrevented'] = raw_password_policy['PasswordReusePrevention']
-            raw_password_policy['PasswordReusePrevention'] = True
+            raw_password_policy["PreviousPasswordPrevented"] = raw_password_policy[
+                "PasswordReusePrevention"
+            ]
+            raw_password_policy["PasswordReusePrevention"] = True
         # There is a bug in the API: ExpirePasswords always returns false
-        if 'MaxPasswordAge' in raw_password_policy:
-            raw_password_policy['ExpirePasswords'] = True
+        if "MaxPasswordAge" in raw_password_policy:
+            raw_password_policy["ExpirePasswords"] = True
 
         return raw_password_policy

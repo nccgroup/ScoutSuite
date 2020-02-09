@@ -4,7 +4,4 @@ from .storage_accounts import StorageAccounts
 
 
 class StorageAccounts(Subscriptions):
-    _children = [
-        (StorageAccounts, 'storage_accounts')
-    ]
-
+    _children = [(StorageAccounts, "storage_accounts")]

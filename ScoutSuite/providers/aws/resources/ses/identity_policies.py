@@ -11,6 +11,8 @@ class IdentityPolicies(AWSResources):
         self.identity_name = identity_name
 
     async def fetch_all(self):
-        raw_policies = await self.facade.ses.get_identity_policies(self.region, self.identity_name)
+        raw_policies = await self.facade.ses.get_identity_policies(
+            self.region, self.identity_name
+        )
         for policy_name, raw_policy in raw_policies.items():
             self[policy_name] = json.loads(raw_policy)

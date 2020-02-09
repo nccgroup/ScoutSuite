@@ -10,28 +10,25 @@ class Regions(AliyunCompositeResources, metaclass=abc.ABCMeta):
         self.service = service
 
     async def fetch_all(self, regions=None):
-        self['regions'] = {}
+        self["regions"] = {}
         for region in await self.facade.build_region_list(self.service, regions):
-            self['regions'][region] = {
-                'id': region,
-                'region': region,
-                'name': region
-            }
+            self["regions"][region] = {"id": region, "region": region, "name": region}
 
         await self._fetch_children_of_all_resources(
-            resources=self['regions'],
-            scopes={region: {'region': region} for region in self['regions']}
+            resources=self["regions"],
+            scopes={region: {"region": region} for region in self["regions"]},
         )
 
         self._set_counts()
 
     def _set_counts(self):
-        self['regions_count'] = len(self['regions'])
+        self["regions_count"] = len(self["regions"])
         for _, key in self._children:
             # VPCs should not be counted as resources. They exist whether you have resources or not,
             # so counting them would make the report confusing.
-            if key == 'vpcs':
+            if key == "vpcs":
                 continue
 
-            self[key + '_count'] = sum([region[key + '_count'] for
-                                        region in self['regions'].values()])
+            self[key + "_count"] = sum(
+                [region[key + "_count"] for region in self["regions"].values()]
+            )

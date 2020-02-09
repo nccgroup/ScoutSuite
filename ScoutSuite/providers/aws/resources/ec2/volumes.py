@@ -15,6 +15,6 @@ class Volumes(AWSResources):
             self[name] = resource
 
     def _parse_volume(self, raw_volume):
-        raw_volume['id'] = raw_volume.pop('VolumeId')
-        raw_volume['name'] = get_name(raw_volume, raw_volume, 'id')
-        return raw_volume['id'], raw_volume
+        raw_volume["id"] = raw_volume.pop("VolumeId")
+        raw_volume["name"] = get_name(raw_volume, raw_volume, "id")
+        return raw_volume["id"], raw_volume

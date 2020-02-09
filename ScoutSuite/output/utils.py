@@ -18,14 +18,16 @@ def prompt_for_yes_no(question):
     """
 
     while True:
-        sys.stdout.write(question + ' (y/n)? ')
+        sys.stdout.write(question + " (y/n)? ")
         choice = input().lower()
-        if choice == 'yes' or choice == 'y':
+        if choice == "yes" or choice == "y":
             return True
-        elif choice == 'no' or choice == 'n':
+        elif choice == "no" or choice == "n":
             return False
         else:
-            print_error('\'%s\' is not a valid answer. Enter \'yes\'(y) or \'no\'(n).' % choice)
+            print_error(
+                "'%s' is not a valid answer. Enter 'yes'(y) or 'no'(n)." % choice
+            )
 
 
 def prompt_for_overwrite(filename, force_write):
@@ -39,44 +41,69 @@ def prompt_for_overwrite(filename, force_write):
     #
     if not os.path.exists(filename) or force_write:
         return True
-    return prompt_for_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename))
+    return prompt_for_yes_no(
+        "File '{}' already exists. Do you want to overwrite it".format(filename)
+    )
 
 
-def get_filename(file_type, file_name=None, file_dir=None, relative_path=False, file_extension=None):
-    if file_type == 'REPORT':
-        name = file_name if file_name else 'report'
+def get_filename(
+    file_type, file_name=None, file_dir=None, relative_path=False, file_extension=None
+):
+    if file_type == "REPORT":
+        name = file_name if file_name else "report"
         directory = file_dir if file_dir else DEFAULT_REPORT_DIRECTORY
-        extension = 'html'
+        extension = "html"
         first_line = None
-    elif file_type == 'RESULTS':
-        name = 'scoutsuite_results_{}'.format(file_name) if file_name else 'scoutsuite_results'
+    elif file_type == "RESULTS":
+        name = (
+            "scoutsuite_results_{}".format(file_name)
+            if file_name
+            else "scoutsuite_results"
+        )
         if not relative_path:
-            directory = os.path.join(file_dir if file_dir else DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY)
+            directory = os.path.join(
+                file_dir if file_dir else DEFAULT_REPORT_DIRECTORY,
+                DEFAULT_REPORT_RESULTS_DIRECTORY,
+            )
         else:
             directory = DEFAULT_REPORT_RESULTS_DIRECTORY
-        extension = 'js'
-        first_line = 'scoutsuite_results ='
-    elif file_type == 'EXCEPTIONS':
-        name = 'scoutsuite_exceptions_{}'.format(file_name) if file_name else 'scoutsuite_exceptions'
+        extension = "js"
+        first_line = "scoutsuite_results ="
+    elif file_type == "EXCEPTIONS":
+        name = (
+            "scoutsuite_exceptions_{}".format(file_name)
+            if file_name
+            else "scoutsuite_exceptions"
+        )
         if not relative_path:
-            directory = os.path.join(file_dir if file_dir else DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY)
+            directory = os.path.join(
+                file_dir if file_dir else DEFAULT_REPORT_DIRECTORY,
+                DEFAULT_REPORT_RESULTS_DIRECTORY,
+            )
         else:
             directory = DEFAULT_REPORT_RESULTS_DIRECTORY
-        extension = 'js'
-        first_line = 'exceptions ='
-    elif file_type == 'ERRORS':
-        name = 'scoutsuite_errors_{}'.format(file_name) if file_name else 'scoutsuite_errors'
+        extension = "js"
+        first_line = "exceptions ="
+    elif file_type == "ERRORS":
+        name = (
+            "scoutsuite_errors_{}".format(file_name)
+            if file_name
+            else "scoutsuite_errors"
+        )
         if not relative_path:
-            directory = os.path.join(file_dir if file_dir else DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY)
+            directory = os.path.join(
+                file_dir if file_dir else DEFAULT_REPORT_DIRECTORY,
+                DEFAULT_REPORT_RESULTS_DIRECTORY,
+            )
         else:
             directory = DEFAULT_REPORT_RESULTS_DIRECTORY
-        extension = 'json'
+        extension = "json"
         first_line = None
     else:
-        raise Exception('Invalid file type provided: {}'.format(file_type))
+        raise Exception("Invalid file type provided: {}".format(file_type))
 
-    full_path = os.path.join(directory,
-                             '{}.{}'.format(name,
-                                            file_extension if file_extension else extension))
+    full_path = os.path.join(
+        directory, "{}.{}".format(name, file_extension if file_extension else extension)
+    )
 
     return full_path, first_line

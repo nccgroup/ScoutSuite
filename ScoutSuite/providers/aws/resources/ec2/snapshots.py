@@ -15,11 +15,16 @@ class Snapshots(AWSResources):
             self[name] = resource
 
     def _parse_snapshot(self, raw_snapshot):
-        raw_snapshot['id'] = raw_snapshot.pop('SnapshotId')
-        raw_snapshot['name'] = get_name(raw_snapshot, raw_snapshot, 'id')
-        raw_snapshot['public'] = self._is_public(raw_snapshot)
-        return raw_snapshot['id'], raw_snapshot
+        raw_snapshot["id"] = raw_snapshot.pop("SnapshotId")
+        raw_snapshot["name"] = get_name(raw_snapshot, raw_snapshot, "id")
+        raw_snapshot["public"] = self._is_public(raw_snapshot)
+        return raw_snapshot["id"], raw_snapshot
 
     @staticmethod
     def _is_public(snapshot):
-        return any([permission.get('Group') == 'all' for permission in snapshot['CreateVolumePermissions']])
+        return any(
+            [
+                permission.get("Group") == "all"
+                for permission in snapshot["CreateVolumePermissions"]
+            ]
+        )

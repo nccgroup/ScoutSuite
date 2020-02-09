@@ -4,9 +4,7 @@ from .stacks import Stacks
 
 
 class CloudFormation(Regions):
-    _children = [
-        (Stacks, 'stacks')
-    ]
+    _children = [(Stacks, "stacks")]
 
     def __init__(self, facade: AWSFacade):
-        super(CloudFormation, self).__init__('cloudformation', facade)
+        super(CloudFormation, self).__init__("cloudformation", facade)

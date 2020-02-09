@@ -1,6 +1,8 @@
 from ScoutSuite.core.console import print_exception, print_info
 from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
-from ScoutSuite.providers.gcp.facade.cloudresourcemanager import CloudResourceManagerFacade
+from ScoutSuite.providers.gcp.facade.cloudresourcemanager import (
+    CloudResourceManagerFacade,
+)
 from ScoutSuite.providers.gcp.facade.cloudsql import CloudSQLFacade
 from ScoutSuite.providers.gcp.facade.cloudstorage import CloudStorageFacade
 from ScoutSuite.providers.gcp.facade.gce import GCEFacade
@@ -17,9 +19,15 @@ except ImportError:
 
 
 class GCPFacade(GCPBaseFacade):
-    def __init__(self,
-                 default_project_id=None, project_id=None, folder_id=None, organization_id=None, all_projects=None):
-        super(GCPFacade, self).__init__('cloudresourcemanager', 'v1')
+    def __init__(
+        self,
+        default_project_id=None,
+        project_id=None,
+        folder_id=None,
+        organization_id=None,
+        all_projects=None,
+    ):
+        super(GCPFacade, self).__init__("cloudresourcemanager", "v1")
 
         self.default_project_id = default_project_id
         self.all_projects = all_projects
@@ -47,31 +55,37 @@ class GCPFacade(GCPBaseFacade):
             # All projects to which the user / Service Account has access to
             if self.all_projects:
                 return await self._get_projects_recursively(
-                    parent_type='all', parent_id=None)
+                    parent_type="all", parent_id=None
+                )
             # Project passed through the CLI
             elif self.project_id:
                 return await self._get_projects_recursively(
-                    parent_type='project', parent_id=self.project_id)
+                    parent_type="project", parent_id=self.project_id
+                )
             # Folder passed through the CLI
             elif self.folder_id:
                 return await self._get_projects_recursively(
-                    parent_type='folder', parent_id=self.folder_id)
+                    parent_type="folder", parent_id=self.folder_id
+                )
             # Organization passed through the CLI
             elif self.organization_id:
                 return await self._get_projects_recursively(
-                    parent_type='organization', parent_id=self.organization_id)
+                    parent_type="organization", parent_id=self.organization_id
+                )
             # Project inferred from default configuration
             elif self.default_project_id:
                 return await self._get_projects_recursively(
-                    parent_type='project', parent_id=self.default_project_id)
+                    parent_type="project", parent_id=self.default_project_id
+                )
             # Raise exception if none of the above
             else:
                 print_info(
-                    "Could not infer the Projects to scan and no default Project ID was found.")
+                    "Could not infer the Projects to scan and no default Project ID was found."
+                )
                 return []
 
         except Exception as e:
-            print_exception('Failed to retrieve projects: {}'.format(e))
+            print_exception("Failed to retrieve projects: {}".format(e))
             return []
 
     async def _get_projects_recursively(self, parent_type, parent_id):
@@ -87,42 +101,60 @@ class GCPFacade(GCPBaseFacade):
                 projects.append(p.project_id)
         """
 
-        if parent_type not in ['project', 'organization', 'folder', 'all']:
+        if parent_type not in ["project", "organization", "folder", "all"]:
             return None
 
         resourcemanager_client = self._get_client()
-        resourcemanager_client_v2 = self._build_arbitrary_client('cloudresourcemanager', 'v2')
+        resourcemanager_client_v2 = self._build_arbitrary_client(
+            "cloudresourcemanager", "v2"
+        )
 
         projects = []
 
         try:
             projects_group = resourcemanager_client.projects()
 
-            if parent_type == 'project':
-                request = resourcemanager_client.projects().list(filter='id:%s' % parent_id)
-            elif parent_type == 'all':
+            if parent_type == "project":
+                request = resourcemanager_client.projects().list(
+                    filter="id:%s" % parent_id
+                )
+            elif parent_type == "all":
                 request = resourcemanager_client.projects().list()
             # get parent children projects
             else:
-                request = resourcemanager_client.projects().list(filter='parent.id:%s' % parent_id)
+                request = resourcemanager_client.projects().list(
+                    filter="parent.id:%s" % parent_id
+                )
 
                 # get parent children projects in children folders recursively
-                folder_request = resourcemanager_client_v2.folders().list(parent='%ss/%s' % (parent_type, parent_id))
-                folder_response = await GCPFacadeUtils.get_all('folders', folder_request, projects_group)
+                folder_request = resourcemanager_client_v2.folders().list(
+                    parent="%ss/%s" % (parent_type, parent_id)
+                )
+                folder_response = await GCPFacadeUtils.get_all(
+                    "folders", folder_request, projects_group
+                )
                 for folder in folder_response:
-                    projects.extend(await self._get_projects_recursively("folder", folder['name'].strip(u'folders/')))
+                    projects.extend(
+                        await self._get_projects_recursively(
+                            "folder", folder["name"].strip(u"folders/")
+                        )
+                    )
 
-            project_response = await GCPFacadeUtils.get_all('projects', request, projects_group)
+            project_response = await GCPFacadeUtils.get_all(
+                "projects", request, projects_group
+            )
             if project_response:
                 for project in project_response:
-                    if project['lifecycleState'] == "ACTIVE":
+                    if project["lifecycleState"] == "ACTIVE":
                         projects.append(project)
             else:
-                print_exception('No Projects Found: '
-                                'You may have specified a non-existing organization/folder/project?')
+                print_exception(
+                    "No Projects Found: "
+                    "You may have specified a non-existing organization/folder/project?"
+                )
 
         except Exception as e:
-            print_exception('Unable to list accessible Projects: {}'.format(e))
+            print_exception("Unable to list accessible Projects: {}".format(e))
 
         finally:
             return projects

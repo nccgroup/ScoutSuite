@@ -9,14 +9,16 @@ class ApiKeys(OracleResources):
         self.user = user
 
     async def fetch_all(self):
-        for raw_user_api_key in await self.facade.identity.get_user_api_keys(user_id=self.user['identifier']):
+        for raw_user_api_key in await self.facade.identity.get_user_api_keys(
+            user_id=self.user["identifier"]
+        ):
             id, api_key = await self._parse_api_key(raw_user_api_key)
             self[id] = api_key
 
     async def _parse_api_key(self, raw_api_key):
         api_key = {}
-        api_key['id'] = get_non_provider_id(raw_api_key.key_id)
-        api_key['identifier'] = raw_api_key.key_id
-        api_key['fingerprint'] = raw_api_key.fingerprint
-        api_key['state'] = raw_api_key.lifecycle_state
-        return api_key['id'], api_key
+        api_key["id"] = get_non_provider_id(raw_api_key.key_id)
+        api_key["identifier"] = raw_api_key.key_id
+        api_key["fingerprint"] = raw_api_key.fingerprint
+        api_key["state"] = raw_api_key.lifecycle_state
+        return api_key["id"], api_key

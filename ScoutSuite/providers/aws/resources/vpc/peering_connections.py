@@ -9,11 +9,15 @@ class PeeringConnections(AWSResources):
         self.region = region
 
     async def fetch_all(self):
-        raw_peering_connections = await self.facade.ec2.get_peering_connections(self.region)
+        raw_peering_connections = await self.facade.ec2.get_peering_connections(
+            self.region
+        )
         for raw_peering_connection in raw_peering_connections:
-            id, peering_connection = self._parse_peering_connections(raw_peering_connection)
+            id, peering_connection = self._parse_peering_connections(
+                raw_peering_connection
+            )
             self[id] = peering_connection
 
     def _parse_peering_connections(self, raw_peering_connection):
-        peering_connection_id = raw_peering_connection['VpcPeeringConnectionId']
+        peering_connection_id = raw_peering_connection["VpcPeeringConnectionId"]
         return peering_connection_id, raw_peering_connection

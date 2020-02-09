@@ -93,4 +93,4 @@ class AWSServicesConfig(BaseServicesConfig):
             pass
 
     def _is_provider(self, provider_name):
-        return provider_name == 'aws'
+        return provider_name == "aws"

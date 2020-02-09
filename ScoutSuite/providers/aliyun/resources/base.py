@@ -11,7 +11,9 @@ class AliyunResources(Resources, metaclass=abc.ABCMeta):
     pass
 
 
-class AliyunCompositeResources(AliyunResources, CompositeResources, metaclass=abc.ABCMeta):
+class AliyunCompositeResources(
+    AliyunResources, CompositeResources, metaclass=abc.ABCMeta
+):
     """This class represents a collection of composite Resources (resources that include nested resources referred as
     their children). Classes extending AliyunCompositeResources have to define a '_children' attribute which consists of
     a list of tuples describing the children. The tuples are expected to respect the following format:

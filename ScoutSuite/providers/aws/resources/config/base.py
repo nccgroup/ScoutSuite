@@ -5,10 +5,7 @@ from ScoutSuite.providers.aws.resources.regions import Regions
 
 
 class Config(Regions):
-    _children = [
-        (Recorders, 'recorders'),
-        (Rules, 'rules')
-    ]
+    _children = [(Recorders, "recorders"), (Rules, "rules")]
 
     def __init__(self, facade: AWSFacade):
-        super(Config, self).__init__('config', facade)
+        super(Config, self).__init__("config", facade)

@@ -4,7 +4,4 @@ from ScoutSuite.providers.aws.resources.elasticache.subnetgroups import SubnetGr
 
 
 class ElastiCacheVpcs(Vpcs):
-    _children = [
-        (Clusters, 'clusters'),
-        (SubnetGroups, 'subnet_groups')
-    ]
+    _children = [(Clusters, "clusters"), (SubnetGroups, "subnet_groups")]

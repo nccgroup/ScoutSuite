@@ -18,14 +18,15 @@ class KMSFacade:
         """
         try:
             client = get_client(credentials=self._credentials, region=region)
-            response = await get_response(client=client,
-                                          request=ListKeysRequest.ListKeysRequest())
+            response = await get_response(
+                client=client, request=ListKeysRequest.ListKeysRequest()
+            )
             if response:
-                return response['Keys']['Key']
+                return response["Keys"]["Key"]
             else:
                 return []
         except Exception as e:
-            print_exception('Failed to get KMS keys: {}'.format(e))
+            print_exception("Failed to get KMS keys: {}".format(e))
             return []
 
     async def get_key_details(self, key_id, region):
@@ -38,12 +39,11 @@ class KMSFacade:
             client = get_client(credentials=self._credentials, region=region)
             request = DescribeKeyRequest.DescribeKeyRequest()
             request.set_KeyId(key_id)
-            response = await get_response(client=client,
-                                          request=request)
+            response = await get_response(client=client, request=request)
             if response:
-                return response['KeyMetadata']
+                return response["KeyMetadata"]
             else:
                 return []
         except Exception as e:
-            print_exception('Failed to get KMS key details: {}'.format(e))
+            print_exception("Failed to get KMS key details: {}".format(e))
             return []

@@ -9,7 +9,9 @@ class NetworkFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        return NetworkManagementClient(self.credentials.arm_credentials, subscription_id=subscription_id)
+        return NetworkManagementClient(
+            self.credentials.arm_credentials, subscription_id=subscription_id
+        )
 
     async def get_network_watchers(self, subscription_id: str):
         try:
@@ -18,7 +20,7 @@ class NetworkFacade:
                 lambda: list(client.network_watchers.list_all())
             )
         except Exception as e:
-            print_exception('Failed to retrieve network watchers: {}'.format(e))
+            print_exception("Failed to retrieve network watchers: {}".format(e))
             return []
 
     async def get_network_security_groups(self, subscription_id: str):
@@ -28,7 +30,7 @@ class NetworkFacade:
                 lambda: list(client.network_security_groups.list_all())
             )
         except Exception as e:
-            print_exception('Failed to retrieve network security groups: {}'.format(e))
+            print_exception("Failed to retrieve network security groups: {}".format(e))
             return []
 
     async def get_application_security_groups(self, subscription_id: str):
@@ -38,7 +40,9 @@ class NetworkFacade:
                 lambda: list(client.application_security_groups.list_all())
             )
         except Exception as e:
-            print_exception('Failed to retrieve application security groups: {}'.format(e))
+            print_exception(
+                "Failed to retrieve application security groups: {}".format(e)
+            )
             return []
 
     async def get_virtual_networks(self, subscription_id: str):
@@ -48,7 +52,7 @@ class NetworkFacade:
                 lambda: list(client.virtual_networks.list_all())
             )
         except Exception as e:
-            print_exception('Failed to retrieve virtual networks: {}'.format(e))
+            print_exception("Failed to retrieve virtual networks: {}".format(e))
             return []
 
     async def get_network_interfaces(self, subscription_id: str):
@@ -58,5 +62,5 @@ class NetworkFacade:
                 lambda: list(client.network_interfaces.list_all())
             )
         except Exception as e:
-            print_exception('Failed to retrieve network interfaces: {}'.format(e))
+            print_exception("Failed to retrieve network interfaces: {}".format(e))
             return []

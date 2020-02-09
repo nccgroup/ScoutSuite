@@ -3,14 +3,21 @@ from ScoutSuite.providers.aliyun.facade.utils import get_response
 from ScoutSuite.providers.aliyun.utils import get_client
 
 from ScoutSuite.core.console import print_exception
-from aliyunsdkram.request.v20150501 import \
-    ListUsersRequest, GetUserRequest, \
-    GetUserMFAInfoRequest, \
-    ListAccessKeysRequest, GetAccessKeyLastUsedRequest, \
-    GetPasswordPolicyRequest, GetSecurityPreferenceRequest, \
-    ListGroupsRequest, ListUsersForGroupRequest, \
-    ListRolesRequest, \
-    ListPoliciesRequest, GetPolicyVersionRequest, ListEntitiesForPolicyRequest
+from aliyunsdkram.request.v20150501 import (
+    ListUsersRequest,
+    GetUserRequest,
+    GetUserMFAInfoRequest,
+    ListAccessKeysRequest,
+    GetAccessKeyLastUsedRequest,
+    GetPasswordPolicyRequest,
+    GetSecurityPreferenceRequest,
+    ListGroupsRequest,
+    ListUsersForGroupRequest,
+    ListRolesRequest,
+    ListPoliciesRequest,
+    GetPolicyVersionRequest,
+    ListEntitiesForPolicyRequest,
+)
 
 
 class RAMFacade:
@@ -24,10 +31,11 @@ class RAMFacade:
 
         :return: a list of all users
         """
-        response = await get_response(client=self._client,
-                                      request=ListUsersRequest.ListUsersRequest())
+        response = await get_response(
+            client=self._client, request=ListUsersRequest.ListUsersRequest()
+        )
         if response:
-            return response['Users']['User']
+            return response["Users"]["User"]
         else:
             return []
 
@@ -40,10 +48,9 @@ class RAMFacade:
         """
         request = GetUserRequest.GetUserRequest()
         request.set_UserName(username)
-        response = await get_response(client=self._client,
-                                      request=request)
+        response = await get_response(client=self._client, request=request)
         if response:
-            return response['User']
+            return response["User"]
         else:
             return []
 
@@ -56,10 +63,9 @@ class RAMFacade:
         """
         request = ListAccessKeysRequest.ListAccessKeysRequest()
         request.set_UserName(username)
-        response = await get_response(client=self._client,
-                                      request=request)
+        response = await get_response(client=self._client, request=request)
         if response:
-            return response['AccessKeys']['AccessKey']
+            return response["AccessKeys"]["AccessKey"]
         else:
             return []
 
@@ -74,10 +80,9 @@ class RAMFacade:
         request = GetAccessKeyLastUsedRequest.GetAccessKeyLastUsedRequest()
         request.set_UserName(username)
         request.set_UserAccessKeyId(key_id)
-        response = await get_response(client=self._client,
-                                      request=request)
+        response = await get_response(client=self._client, request=request)
         if response:
-            return response['AccessKeyLastUsed']['LastUsedDate']
+            return response["AccessKeyLastUsed"]["LastUsedDate"]
         else:
             return []
 
@@ -91,20 +96,20 @@ class RAMFacade:
         request = GetUserMFAInfoRequest.GetUserMFAInfoRequest()
         request.set_UserName(username)
         try:
-            response = await get_response(client=self._client,
-                                          request=request)
+            response = await get_response(client=self._client, request=request)
         except Exception as e:
             # TODO can't seem to differenciate between a user that has MFA disabled
             # and a user that has MFA enabled but not configured
-            if e.error_code == 'EntityNotExist.User.MFADevice':
+            if e.error_code == "EntityNotExist.User.MFADevice":
                 # ignore, MFA is not configured
                 return False, None
             else:
-                print_exception('Unable to get MFA status for user {}: {}'.format(username,
-                                                                                  e))
+                print_exception(
+                    "Unable to get MFA status for user {}: {}".format(username, e)
+                )
                 return False, None
         else:
-            return True, response['MFADevice']['SerialNumber']
+            return True, response["MFADevice"]["SerialNumber"]
 
     async def get_password_policy(self):
         """
@@ -113,10 +118,9 @@ class RAMFacade:
         :return: the password policy
         """
         request = GetPasswordPolicyRequest.GetPasswordPolicyRequest()
-        response = await get_response(client=self._client,
-                                      request=request)
+        response = await get_response(client=self._client, request=request)
         if response:
-            return response['PasswordPolicy']
+            return response["PasswordPolicy"]
         else:
             return []
 
@@ -127,10 +131,9 @@ class RAMFacade:
         :return: the security policy
         """
         request = GetSecurityPreferenceRequest.GetSecurityPreferenceRequest()
-        response = await get_response(client=self._client,
-                                      request=request)
+        response = await get_response(client=self._client, request=request)
         if response:
-            return response['SecurityPreference']
+            return response["SecurityPreference"]
         else:
             return []
 
@@ -140,10 +143,11 @@ class RAMFacade:
 
         :return: a list of all groups
         """
-        response = await get_response(client=self._client,
-                                      request=ListGroupsRequest.ListGroupsRequest())
+        response = await get_response(
+            client=self._client, request=ListGroupsRequest.ListGroupsRequest()
+        )
         if response:
-            return response['Groups']['Group']
+            return response["Groups"]["Group"]
         else:
             return []
 
@@ -155,10 +159,9 @@ class RAMFacade:
         """
         request = ListUsersForGroupRequest.ListUsersForGroupRequest()
         request.set_GroupName(group_name)
-        response = await get_response(client=self._client,
-                                      request=request)
+        response = await get_response(client=self._client, request=request)
         if response:
-            return response['Users']['User']
+            return response["Users"]["User"]
         else:
             return []
 
@@ -168,10 +171,11 @@ class RAMFacade:
 
         :return: a list of all roles
         """
-        response = await get_response(client=self._client,
-                                      request=ListRolesRequest.ListRolesRequest())
+        response = await get_response(
+            client=self._client, request=ListRolesRequest.ListRolesRequest()
+        )
         if response:
-            return response['Roles']['Role']
+            return response["Roles"]["Role"]
         else:
             return []
 
@@ -181,10 +185,11 @@ class RAMFacade:
 
         :return: a list of all custom policies
         """
-        response = await get_response(client=self._client,
-                                      request=ListPoliciesRequest.ListPoliciesRequest())
+        response = await get_response(
+            client=self._client, request=ListPoliciesRequest.ListPoliciesRequest()
+        )
         if response:
-            return response['Policies']['Policy']
+            return response["Policies"]["Policy"]
         else:
             return []
 
@@ -198,10 +203,9 @@ class RAMFacade:
         request.set_PolicyName(name)
         request.set_PolicyType(type)
         request.set_VersionId(version)
-        response = await get_response(client=self._client,
-                                      request=request)
+        response = await get_response(client=self._client, request=request)
         if response:
-            return response['PolicyVersion']
+            return response["PolicyVersion"]
         else:
             return []
 
@@ -214,10 +218,9 @@ class RAMFacade:
         request = ListEntitiesForPolicyRequest.ListEntitiesForPolicyRequest()
         request.set_PolicyName(name)
         request.set_PolicyType(type)
-        response = await get_response(client=self._client,
-                                      request=request)
+        response = await get_response(client=self._client, request=request)
         if response:
-            response.pop('RequestId')
+            response.pop("RequestId")
             return response
         else:
             return []

@@ -16,16 +16,25 @@ class Subscriptions(AzureCompositeResources):
         raw_subscriptions = await self.facade.get_subscriptions()
 
         if raw_subscriptions:
-            self['subscriptions'] = {subscription.subscription_id: {}
-                                     for subscription in raw_subscriptions}
+            self["subscriptions"] = {
+                subscription.subscription_id: {} for subscription in raw_subscriptions
+            }
         else:
-            self['subscriptions'] = {}
+            self["subscriptions"] = {}
         await self._fetch_children_of_all_resources(
-            resources=self['subscriptions'],
-            scopes={subscription_id: {'subscription_id': subscription_id} for subscription_id in self['subscriptions']})
+            resources=self["subscriptions"],
+            scopes={
+                subscription_id: {"subscription_id": subscription_id}
+                for subscription_id in self["subscriptions"]
+            },
+        )
         self._set_counts()
 
     def _set_counts(self):
         for _, child_name in self._children:
-            self[child_name + '_count'] = sum([subscription[child_name + '_count']
-                                               for subscription in self['subscriptions'].values()])
+            self[child_name + "_count"] = sum(
+                [
+                    subscription[child_name + "_count"]
+                    for subscription in self["subscriptions"].values()
+                ]
+            )

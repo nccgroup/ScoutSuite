@@ -16,7 +16,7 @@ class Certificates(AWSResources):
             self[name] = resource
 
     def _parse_certificate(self, raw_certificate):
-        raw_certificate['name'] = raw_certificate.get('DomainName')
-        raw_certificate['id'] = get_non_provider_id(raw_certificate['name'])
+        raw_certificate["name"] = raw_certificate.get("DomainName")
+        raw_certificate["id"] = get_non_provider_id(raw_certificate["name"])
 
-        return raw_certificate['id'], raw_certificate
+        return raw_certificate["id"], raw_certificate

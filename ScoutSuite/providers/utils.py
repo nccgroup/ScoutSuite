@@ -14,7 +14,7 @@ def get_non_provider_id(name):
     :return:                        SHA1(name)
     """
     name_hash = sha1()
-    name_hash.update(name.encode('utf-8'))
+    name_hash.update(name.encode("utf-8"))
     return name_hash.hexdigest()
 
 
@@ -26,7 +26,9 @@ async def run_concurrently(function, backoff_seconds=15):
         # Determine whether the exception is due to API throttling
         throttled = aws_is_throttled(e)  # FIXME - this only works for AWS
         if throttled:
-            print_info('Hitting API rate limiting, will retry in {}s'.format(backoff_seconds))
+            print_info(
+                "Hitting API rate limiting, will retry in {}s".format(backoff_seconds)
+            )
             await asyncio.sleep(backoff_seconds)
             return await run_concurrently(function, backoff_seconds + 15)
         else:
@@ -64,9 +66,9 @@ async def get_and_set_concurrently(get_and_set_funcs: [], entities: [], **kwargs
         return
 
     tasks = {
-        asyncio.ensure_future(
-            get_and_set_func(entity, **kwargs)
-        ) for entity in entities for get_and_set_func in get_and_set_funcs
+        asyncio.ensure_future(get_and_set_func(entity, **kwargs))
+        for entity in entities
+        for get_and_set_func in get_and_set_funcs
     }
     await asyncio.wait(tasks)
 
@@ -90,11 +92,7 @@ async def map_concurrently(coroutine, entities, **kwargs):
 
     results = []
 
-    tasks = {
-        asyncio.ensure_future(
-            coroutine(entity, **kwargs)
-        ) for entity in entities
-    }
+    tasks = {asyncio.ensure_future(coroutine(entity, **kwargs)) for entity in entities}
 
     for task in asyncio.as_completed(tasks):
         try:

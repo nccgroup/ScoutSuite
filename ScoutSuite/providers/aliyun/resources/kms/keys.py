@@ -14,26 +14,27 @@ class Keys(AliyunResources):
 
     async def _parse_key(self, raw_key):
         key_dict = {}
-        key_dict['id'] = raw_key.get('KeyId')
-        key_dict['name'] = raw_key.get('KeyId')
-        key_dict['arn'] = raw_key.get('KeyArn')
+        key_dict["id"] = raw_key.get("KeyId")
+        key_dict["name"] = raw_key.get("KeyId")
+        key_dict["arn"] = raw_key.get("KeyArn")
 
         # get additional details for the key
-        raw_key_details = await self.facade.kms.get_key_details(key_dict['id'], region=self.region)
+        raw_key_details = await self.facade.kms.get_key_details(
+            key_dict["id"], region=self.region
+        )
 
-        key_dict['creation_date'] = raw_key_details.get('CreationDate')
-        key_dict['delete_date'] = raw_key_details.get('DeleteDate')
-        key_dict['origin'] = raw_key_details.get('Origin')
-        key_dict['description'] = raw_key_details.get('Description')
-        key_dict['creator'] = raw_key_details.get('Creator')
-        key_dict['usage'] = raw_key_details.get('KeyUsage')
-        key_dict['material_expire_time'] = raw_key_details.get('MaterialExpireTime')
-        key_dict['state'] = raw_key_details.get('KeyState')
+        key_dict["creation_date"] = raw_key_details.get("CreationDate")
+        key_dict["delete_date"] = raw_key_details.get("DeleteDate")
+        key_dict["origin"] = raw_key_details.get("Origin")
+        key_dict["description"] = raw_key_details.get("Description")
+        key_dict["creator"] = raw_key_details.get("Creator")
+        key_dict["usage"] = raw_key_details.get("KeyUsage")
+        key_dict["material_expire_time"] = raw_key_details.get("MaterialExpireTime")
+        key_dict["state"] = raw_key_details.get("KeyState")
 
-        if key_dict['delete_date'] == '':
-            key_dict['delete_date'] = None
-        if key_dict['material_expire_time'] == '':
-            key_dict['material_expire_time'] = None
+        if key_dict["delete_date"] == "":
+            key_dict["delete_date"] = None
+        if key_dict["material_expire_time"] == "":
+            key_dict["material_expire_time"] = None
 
-        return key_dict['id'], key_dict
-
+        return key_dict["id"], key_dict

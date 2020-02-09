@@ -4,9 +4,7 @@ from ScoutSuite.providers.aliyun.resources.kms.keys import Keys
 
 
 class KMS(Regions):
-    _children = [
-        (Keys, 'keys')
-    ]
+    _children = [(Keys, "keys")]
 
     def __init__(self, facade: AliyunFacade):
-        super(KMS, self).__init__('kms', facade)
+        super(KMS, self).__init__("kms", facade)

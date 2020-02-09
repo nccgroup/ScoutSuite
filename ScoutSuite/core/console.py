@@ -13,7 +13,7 @@ from ScoutSuite import ERRORS_LIST
 ########################################
 
 verbose_exceptions = False
-logger = logging.getLogger('scout')
+logger = logging.getLogger("scout")
 
 
 def set_logger_configuration(is_debug=False, quiet=False, output_file_path=None):
@@ -27,16 +27,18 @@ def set_logger_configuration(is_debug=False, quiet=False, output_file_path=None)
 
     # if "quiet" is set, don't output anything
     if quiet:
-        coloredlogs.install(level='ERROR', logger=logger)
+        coloredlogs.install(level="ERROR", logger=logger)
     else:
-        coloredlogs.install(level='DEBUG' if is_debug else 'INFO', logger=logger)
+        coloredlogs.install(level="DEBUG" if is_debug else "INFO", logger=logger)
 
     if output_file_path:
         # create file handler which logs messages
-        fh = logging.FileHandler(output_file_path, 'w+')
+        fh = logging.FileHandler(output_file_path, "w+")
         # create formatter and add it to the handlers
-        formatter = logging.Formatter(fmt='%(asctime)s %(hostname)s %(name)s[%(process)d] %(levelname)s %(message)s',
-                                      datefmt='%Y-%m-%d %H:%M:%S')
+        formatter = logging.Formatter(
+            fmt="%(asctime)s %(hostname)s %(name)s[%(process)d] %(levelname)s %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
+        )
         fh.setFormatter(formatter)
         # add the handlers to the logger
         logger.addHandler(fh)
@@ -45,6 +47,7 @@ def set_logger_configuration(is_debug=False, quiet=False, output_file_path=None)
 ########################################
 # Output functions
 ########################################
+
 
 def print_generic(msg):
     logger.info(msg)
@@ -66,29 +69,33 @@ def print_exception(exception, additional_details=None):
             file_name = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
             line_number = exc_tb.tb_lineno
             traceback_exc = traceback.format_exc()
-            str = '{} L{}: {}'.format(file_name, line_number, exception)
+            str = "{} L{}: {}".format(file_name, line_number, exception)
         else:
             file_name = None
             line_number = None
             traceback_exc = None
-            str = '{}'.format(exception)
+            str = "{}".format(exception)
             exc = False  # if there isn't an actual exception then it's pointless
     except Exception as e:
         file_name = None
         line_number = None
         traceback_exc = None
-        str = '{}'.format(exception)
+        str = "{}".format(exception)
 
     if verbose_exceptions and exc:
         logger.exception(str)
     else:
         logger.error(str)
 
-    ERRORS_LIST.append({'file': file_name,
-                        'line': line_number,
-                        'exception': '{}'.format(exception),
-                        'traceback': '{}'.format(traceback_exc),
-                        'additional_details': additional_details})
+    ERRORS_LIST.append(
+        {
+            "file": file_name,
+            "line": line_number,
+            "exception": "{}".format(exception),
+            "traceback": "{}".format(traceback_exc),
+            "additional_details": additional_details,
+        }
+    )
 
 
 def print_info(msg):
@@ -98,6 +105,7 @@ def print_info(msg):
 ########################################
 # Prompt functions
 ########################################
+
 
 def prompt(test_input=None):
     """
@@ -111,7 +119,7 @@ def prompt(test_input=None):
         if type(test_input) == list and len(test_input):
             choice = test_input.pop(0)
         elif type(test_input) == list:
-            choice = ''
+            choice = ""
         else:
             choice = test_input
     else:
@@ -131,14 +139,28 @@ def prompt_overwrite(filename, force_write, test_input=None):
     """
     if not os.path.exists(filename) or force_write:
         return True
-    return prompt_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename),
-                         test_input=test_input)
+    return prompt_yes_no(
+        "File '{}' already exists. Do you want to overwrite it".format(filename),
+        test_input=test_input,
+    )
 
 
-def prompt_value(question, choices=None, default=None, display_choices=True, display_indices=False,
-                 authorize_list=False, is_question=False, no_confirm=False, required=True,
-                 regex=None,
-                 regex_format='', max_laps=5, test_input=None, return_index=False):
+def prompt_value(
+    question,
+    choices=None,
+    default=None,
+    display_choices=True,
+    display_indices=False,
+    authorize_list=False,
+    is_question=False,
+    no_confirm=False,
+    required=True,
+    regex=None,
+    regex_format="",
+    max_laps=5,
+    test_input=None,
+    return_index=False,
+):
     """
     Prompt for a value
                                         .                    .
@@ -163,40 +185,43 @@ def prompt_value(question, choices=None, default=None, display_choices=True, dis
     int_choice = 0
 
     if choices and display_choices and not display_indices:
-        question = question + ' (' + '/'.join(choices) + ')'
+        question = question + " (" + "/".join(choices) + ")"
     lap_n = 0
     while True:
         if lap_n >= max_laps:
-            print_error('Automatically aborting prompt loop after 5 failures')
+            print_error("Automatically aborting prompt loop after 5 failures")
             return None
         lap_n += 1
         can_return = False
         # Display the question, choices, and prompt for the answer
         if is_question:
-            question = question + '? '
+            question = question + "? "
         print_error(question)
         if choices and display_indices:
             for c in choices:
-                print_error('%3d. %s' % (choices.index(c), c))
-            print_error('Enter the number corresponding to your choice: ')
+                print_error("%3d. %s" % (choices.index(c), c))
+            print_error("Enter the number corresponding to your choice: ")
         choice = prompt(test_input)
         # Set the default value if empty choice
-        if not choice or choice == '':
+        if not choice or choice == "":
             if default:
-                if no_confirm or prompt_yes_no('Use the default value (' + default + ')'):
+                if no_confirm or prompt_yes_no(
+                    "Use the default value (" + default + ")"
+                ):
                     # return default
                     choice = default
                     can_return = True
             elif not required:
                 can_return = True
             else:
-                print_error('Error: you cannot leave this parameter empty.')
+                print_error("Error: you cannot leave this parameter empty.")
         # Validate the value against a whitelist of choices
         elif choices:
-            user_choices = [item.strip() for item in choice.split(',')]
+            user_choices = [item.strip() for item in choice.split(",")]
             if not authorize_list and len(user_choices) > 1:
                 print_error(
-                    'Error: multiple values are not supported; please enter a single value.')
+                    "Error: multiple values are not supported; please enter a single value."
+                )
             else:
                 choice_valid = True
                 if display_indices and int(choice) < len(choices):
@@ -205,7 +230,7 @@ def prompt_value(question, choices=None, default=None, display_choices=True, dis
                 else:
                     for c in user_choices:
                         if c not in choices:
-                            print_error('Invalid value (%s).' % c)
+                            print_error("Invalid value (%s)." % c)
                             choice_valid = False
                             break
                 if choice_valid:
@@ -216,14 +241,15 @@ def prompt_value(question, choices=None, default=None, display_choices=True, dis
                 # return choice
                 can_return = True
             else:
-                print_error('Error: expected format is: %s' % regex_format)
+                print_error("Error: expected format is: %s" % regex_format)
         else:
             # No automated validation, can attempt to return
             can_return = True
         if can_return:
             # Manually confirm that the entered value is correct if needed
-            if no_confirm or prompt_yes_no('You entered "' + choice + '". Is that correct',
-                                           test_input=test_input):
+            if no_confirm or prompt_yes_no(
+                'You entered "' + choice + '". Is that correct', test_input=test_input
+            ):
                 return int(int_choice) if return_index else choice
 
 
@@ -238,14 +264,16 @@ def prompt_yes_no(question, test_input=None):
     """
     count = 0
     while True:
-        print_error(question + ' (y/n)? ')
+        print_error(question + " (y/n)? ")
         choice = prompt(test_input).lower()
-        if choice == 'yes' or choice == 'y':
+        if choice == "yes" or choice == "y":
             return True
-        elif choice == 'no' or choice == 'n':
+        elif choice == "no" or choice == "n":
             return False
         else:
             count += 1
-            print_error('\'%s\' is not a valid answer. Enter \'yes\'(y) or \'no\'(n).' % choice)
+            print_error(
+                "'%s' is not a valid answer. Enter 'yes'(y) or 'no'(n)." % choice
+            )
             if count > 3:
                 return None

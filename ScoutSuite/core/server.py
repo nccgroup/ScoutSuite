@@ -12,6 +12,7 @@ class Server(object):
     Boots a server that serves the result of the report for the user. This is still a proof of concept,
     but will eventually be used to serve data when it exceeds 400mb.
     """
+
     def __init__(self, filename):
         """
         Constructor of the server object. Should not be called directly outside the class.
@@ -33,16 +34,16 @@ class Server(object):
         :return:                        The summary data of the report.
         """
         data = dict(self.results)
-        services = data.get('services')
+        services = data.get("services")
         stripped_services = {}
         for k1, v1 in services.items():
             service = {}
             for k2, v2 in v1.items():
-                if k2 == 'findings' or k2 == 'filters' or count_re.match(k2):
+                if k2 == "findings" or k2 == "filters" or count_re.match(k2):
                     service[k2] = v2
             stripped_services[k1] = service
-        data['services'] = stripped_services
-        return {'data': data}
+        data["services"] = stripped_services
+        return {"data": data}
 
     @cherrypy.expose()
     @cherrypy.tools.json_out()
@@ -59,10 +60,10 @@ class Server(object):
         result = self.get_item(self.results, key)
         # Returns only indexes or length if it's a complex type
         if isinstance(result, dict) or isinstance(result, SqliteDict):
-            result = {'type': 'dict', 'keys': list(result.keys())}
+            result = {"type": "dict", "keys": list(result.keys())}
         elif isinstance(result, list):
-            result = {'type': 'list', 'length': len(result)}
-        return {'data': result}
+            result = {"type": "list", "length": len(result)}
+        return {"data": result}
 
     @cherrypy.expose()
     @cherrypy.tools.json_out()
@@ -78,8 +79,8 @@ class Server(object):
         """
         result = self.get_item(self.results, key)
         if isinstance(result, str) or isinstance(result, int):
-            return {'data': result}
-        return {'data': dict(result)}
+            return {"data": result}
+        return {"data": dict(result)}
 
     @cherrypy.expose()
     @cherrypy.tools.json_out()
@@ -109,7 +110,7 @@ class Server(object):
         if isinstance(result, list):
             page = result[start:end]
 
-        return {'data': self.strip_nested_data(page)}
+        return {"data": self.strip_nested_data(page)}
 
     @staticmethod
     def init(database_filename, host, port):
@@ -122,17 +123,16 @@ class Server(object):
         """
         cherrypy_cors.install()
         config = {
-            '/': {
-                'cors.expose.on': True,
-                'tools.sessions.on': True,
-                'tools.response_headers.on': True,
-                'tools.response_headers.headers': [('Content-Type', 'text/plain')],
+            "/": {
+                "cors.expose.on": True,
+                "tools.sessions.on": True,
+                "tools.response_headers.on": True,
+                "tools.response_headers.headers": [("Content-Type", "text/plain")],
             },
         }
-        cherrypy.config.update({
-                'server.socket_host': host,
-                'server.socket_port': port,
-        })
+        cherrypy.config.update(
+            {"server.socket_host": host, "server.socket_port": port,}
+        )
         cherrypy.quickstart(Server(database_filename), "/api", config=config)
 
     @staticmethod
@@ -147,7 +147,7 @@ class Server(object):
         if not key:
             return data
 
-        keyparts = key.split('¤')
+        keyparts = key.split("¤")
         for k in keyparts:
             if isinstance(data, dict) or isinstance(data, SqliteDict):
                 data = data.get(k)
@@ -169,8 +169,7 @@ class Server(object):
         result = {}
         for k, v in data.items():
             if isinstance(v, dict):
-                result[k] = {'type': 'dict', 'keys': list(v.keys())}
+                result[k] = {"type": "dict", "keys": list(v.keys())}
             elif isinstance(v, list):
-                result[k] = {'type': 'list', 'length': len(v)}
+                result[k] = {"type": "list", "length": len(v)}
         return result
-

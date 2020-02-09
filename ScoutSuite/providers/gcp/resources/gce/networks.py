@@ -15,17 +15,17 @@ class Networks(Resources):
 
     def _parse_network(self, raw_network):
         network_dict = {}
-        network_dict['id'] = raw_network['id']
-        network_dict['project_id'] = raw_network['selfLink'].split('/')[-4]
-        network_dict['name'] = raw_network['name']
-        network_dict['description'] = self._get_description(raw_network)
-        network_dict['creation_timestamp'] = raw_network['creationTimestamp']
-        network_dict['network_url'] = raw_network['selfLink']
-        network_dict['subnetwork_urls'] = raw_network.get('subnetworks', None)
-        network_dict['auto_subnet'] = raw_network.get('autoCreateSubnetworks', None)
-        network_dict['routing_config'] = raw_network['routingConfig']
-        return network_dict['id'], network_dict
+        network_dict["id"] = raw_network["id"]
+        network_dict["project_id"] = raw_network["selfLink"].split("/")[-4]
+        network_dict["name"] = raw_network["name"]
+        network_dict["description"] = self._get_description(raw_network)
+        network_dict["creation_timestamp"] = raw_network["creationTimestamp"]
+        network_dict["network_url"] = raw_network["selfLink"]
+        network_dict["subnetwork_urls"] = raw_network.get("subnetworks", None)
+        network_dict["auto_subnet"] = raw_network.get("autoCreateSubnetworks", None)
+        network_dict["routing_config"] = raw_network["routingConfig"]
+        return network_dict["id"], network_dict
 
     def _get_description(self, raw_network):
-        description = raw_network.get('description')
-        return description if description else 'N/A'
+        description = raw_network.get("description")
+        return description if description else "N/A"

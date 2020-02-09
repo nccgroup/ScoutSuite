@@ -3,6 +3,4 @@ from ScoutSuite.providers.gcp.resources.iam.service_accounts import ServiceAccou
 
 
 class IAM(Projects):
-    _children = [ 
-        (ServiceAccounts, 'service_accounts') 
-    ]
+    _children = [(ServiceAccounts, "service_accounts")]

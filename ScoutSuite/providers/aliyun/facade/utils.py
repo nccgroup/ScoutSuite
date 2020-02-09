@@ -7,18 +7,24 @@ from ScoutSuite.core.console import print_exception
 
 async def get_response(client, request):
     try:
-        response = await run_concurrently(lambda: client.do_action_with_exception(request))
+        response = await run_concurrently(
+            lambda: client.do_action_with_exception(request)
+        )
         response_decoded = json.loads(response)
 
-        truncated = response_decoded.get('IsTruncated', False)
+        truncated = response_decoded.get("IsTruncated", False)
 
         # handle truncated responses
         while truncated:
-            request.set_Marker(response_decoded['Marker'])
-            response_latest = await run_concurrently(lambda: client.do_action_with_exception(request))
+            request.set_Marker(response_decoded["Marker"])
+            response_latest = await run_concurrently(
+                lambda: client.do_action_with_exception(request)
+            )
             response_latest_decoded = json.loads(response_latest)
-            truncated = response_latest_decoded.get('IsTruncated', False)
-            response_decoded = await merge_responses(response_decoded, response_latest_decoded)
+            truncated = response_latest_decoded.get("IsTruncated", False)
+            response_decoded = await merge_responses(
+                response_decoded, response_latest_decoded
+            )
 
         return response_decoded
     except ServerException as e:
@@ -32,7 +38,8 @@ async def get_response(client, request):
         else:
             raise
     except Exception as e:
-        print_exception('Unhandled exception {} for request {}'.format(e, request))
+        print_exception("Unhandled exception {} for request {}".format(e, request))
+
 
 async def merge_responses(response_1, response_2):
     """
@@ -43,7 +50,7 @@ async def merge_responses(response_1, response_2):
     :param response_2: the second (latest) response
     :return: modified response_2
     """
-    ignored_fields = ['IsTruncated', 'RequestId', 'Marker']
+    ignored_fields = ["IsTruncated", "RequestId", "Marker"]
     for k in response_1:
         if k not in response_2 and k not in ignored_fields:
             response_2[k] = response_1[k]
@@ -55,7 +62,7 @@ async def merge_responses(response_1, response_2):
                 response_2[k] = await merge_responses(response_1[k], response_2[k])
             else:
                 # TODO implement other cases (which ones?)
-                print_exception('Unhandled response merge')
+                print_exception("Unhandled response merge")
         else:
             pass
     return response_2

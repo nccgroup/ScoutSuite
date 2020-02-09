@@ -5,9 +5,7 @@ from .connections import Connections
 
 
 class DirectConnect(Regions):
-    _children = [
-        (Connections, 'connections')
-    ]
+    _children = [(Connections, "connections")]
 
     def __init__(self, facade: AWSFacade):
-        super(DirectConnect, self).__init__('directconnect', facade)
+        super(DirectConnect, self).__init__("directconnect", facade)

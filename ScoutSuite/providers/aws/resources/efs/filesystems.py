@@ -14,8 +14,10 @@ class FileSystems(AWSResources):
             self[name] = resource
 
     def _parse_file_system(self, raw_file_system):
-        fs_id = raw_file_system.pop('FileSystemId')
-        raw_file_system['name'] = raw_file_system.pop('Name') if 'Name' in raw_file_system else None
-        raw_file_system['tags'] = raw_file_system.pop('Tags')
+        fs_id = raw_file_system.pop("FileSystemId")
+        raw_file_system["name"] = (
+            raw_file_system.pop("Name") if "Name" in raw_file_system else None
+        )
+        raw_file_system["tags"] = raw_file_system.pop("Tags")
 
         return fs_id, raw_file_system

@@ -16,9 +16,10 @@ class ECSFacade:
         :return: a list of all instances
         """
         client = get_client(credentials=self._credentials, region=region)
-        response = await get_response(client=client,
-                                      request=DescribeInstancesRequest.DescribeInstancesRequest())
+        response = await get_response(
+            client=client, request=DescribeInstancesRequest.DescribeInstancesRequest()
+        )
         if response:
-            return response['Instances']['Instance']
+            return response["Instances"]["Instance"]
         else:
             return []

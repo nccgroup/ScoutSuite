@@ -17,4 +17,4 @@ class OracleServicesConfig(BaseServicesConfig):
         self.kms = KMS(facade)
 
     def _is_provider(self, provider_name):
-        return provider_name == 'oci'
+        return provider_name == "oci"

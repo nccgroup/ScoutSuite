@@ -4,6 +4,4 @@ from .vaults import Vaults
 
 
 class KeyVaults(Subscriptions):
-    _children = [
-        (Vaults, 'vaults')
-    ]
+    _children = [(Vaults, "vaults")]

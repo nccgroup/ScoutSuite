@@ -15,8 +15,8 @@ class ParameterGroups(AWSResources):
             self[name] = resource
 
     def _parse_parameter_group(self, raw_parameter_group):
-        raw_parameter_group['arn'] = raw_parameter_group.pop('DBParameterGroupArn')
-        raw_parameter_group['name'] = raw_parameter_group.pop('DBParameterGroupName')
-        raw_parameter_group['parameters'] = raw_parameter_group.pop('Parameters')
-        parameter_group_id = get_non_provider_id(raw_parameter_group['name'])
+        raw_parameter_group["arn"] = raw_parameter_group.pop("DBParameterGroupArn")
+        raw_parameter_group["name"] = raw_parameter_group.pop("DBParameterGroupName")
+        raw_parameter_group["parameters"] = raw_parameter_group.pop("Parameters")
+        parameter_group_id = get_non_provider_id(raw_parameter_group["name"])
         return parameter_group_id, raw_parameter_group

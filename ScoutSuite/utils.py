@@ -2,44 +2,44 @@ from __future__ import print_function
 
 formatted_service_name = {
     # AWS
-    'acm': 'ACM',
-    'cloudformation': 'CloudFormation',
-    'cloudtrail': 'CloudTrail',
-    'cloudwatch': 'CloudWatch',
-    'credentials': 'Credentials',
-    'config': 'Config',
-    'directconnect': 'Direct Connect',
-    'dynamodb': 'DynamoDB',
-    'elbv2': 'ELBv2',
-    'elasticache': 'ElastiCache',
-    'lambda': 'Lambda',
-    'awslambda': 'Lambda',
-    'redshift': 'RedShift',
-    'route53': 'Route53',
+    "acm": "ACM",
+    "cloudformation": "CloudFormation",
+    "cloudtrail": "CloudTrail",
+    "cloudwatch": "CloudWatch",
+    "credentials": "Credentials",
+    "config": "Config",
+    "directconnect": "Direct Connect",
+    "dynamodb": "DynamoDB",
+    "elbv2": "ELBv2",
+    "elasticache": "ElastiCache",
+    "lambda": "Lambda",
+    "awslambda": "Lambda",
+    "redshift": "RedShift",
+    "route53": "Route53",
     # Azure
-    'storageaccounts': 'Storage Accounts',
-    'sqldatabase': 'SQL Database',
-    'securitycenter': 'Security Center',
-    'keyvault': 'Key Vault',
-    'appgateway': 'Application Gateway',
-    'rediscache': 'Redis Cache',
-    'network': 'Network',
-    'appservice': 'App Services',
-    'loadbalancer': 'Load Balancer',
-    'virtualmachines': 'Virtual Machines',
+    "storageaccounts": "Storage Accounts",
+    "sqldatabase": "SQL Database",
+    "securitycenter": "Security Center",
+    "keyvault": "Key Vault",
+    "appgateway": "Application Gateway",
+    "rediscache": "Redis Cache",
+    "network": "Network",
+    "appservice": "App Services",
+    "loadbalancer": "Load Balancer",
+    "virtualmachines": "Virtual Machines",
     # GCP
-    'cloudstorage': 'Cloud Storage',
-    'cloudsql': 'Cloud SQL',
-    'stackdriverlogging': 'Stackdriver Logging',
-    'stackdrivermonitoring': 'Stackdriver Monitoring',
-    'computeengine': 'Compute Engine',
-    'kubernetesengine': 'Kubernetes Engine',
-    'cloudresourcemanager': 'Cloud Resource Manager',
+    "cloudstorage": "Cloud Storage",
+    "cloudsql": "Cloud SQL",
+    "stackdriverlogging": "Stackdriver Logging",
+    "stackdrivermonitoring": "Stackdriver Monitoring",
+    "computeengine": "Compute Engine",
+    "kubernetesengine": "Kubernetes Engine",
+    "cloudresourcemanager": "Cloud Resource Manager",
     # Aliyun
-    'actiontrail': 'ActionTrail',
+    "actiontrail": "ActionTrail",
     # OCI
-    'identity': 'Identity',
-    'objectstorage': 'Object Storage',
+    "identity": "Identity",
+    "objectstorage": "Object Storage",
 }
 
 
@@ -70,4 +70,8 @@ def format_service_name(service):
     :param service:
     :return:
     """
-    return formatted_service_name[service] if service in formatted_service_name else service.upper()
+    return (
+        formatted_service_name[service]
+        if service in formatted_service_name
+        else service.upper()
+    )

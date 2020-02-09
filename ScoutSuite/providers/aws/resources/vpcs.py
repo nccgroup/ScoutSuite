@@ -21,14 +21,13 @@ class Vpcs(AWSCompositeResources):
 
         await self._fetch_children_of_all_resources(
             resources=self,
-            scopes={vpc_id: {'region': self.region, 'vpc': vpc_id}
-                    for vpc_id in self}
+            scopes={vpc_id: {"region": self.region, "vpc": vpc_id} for vpc_id in self},
         )
 
     def _parse_vpc(self, raw_vpc):
         vpc = {}
-        vpc['name'] = raw_vpc['VpcId']
-        vpc['cidr_block'] = raw_vpc['CidrBlock']
-        vpc['default'] = raw_vpc['IsDefault']
-        vpc['state'] = raw_vpc['State']
-        return raw_vpc['VpcId'], vpc
+        vpc["name"] = raw_vpc["VpcId"]
+        vpc["cidr_block"] = raw_vpc["CidrBlock"]
+        vpc["default"] = raw_vpc["IsDefault"]
+        vpc["state"] = raw_vpc["State"]
+        return raw_vpc["VpcId"], vpc

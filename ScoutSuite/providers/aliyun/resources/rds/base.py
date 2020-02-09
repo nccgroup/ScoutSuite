@@ -4,10 +4,7 @@ from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
 
 
 class RDS(Regions):
-    _children = [
-        (Instances, 'instances')
-    ]
+    _children = [(Instances, "instances")]
 
     def __init__(self, facade: AliyunFacade):
-        super(RDS, self).__init__('rds', facade)
-
+        super(RDS, self).__init__("rds", facade)

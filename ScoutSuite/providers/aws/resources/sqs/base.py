@@ -5,9 +5,7 @@ from .queues import Queues
 
 
 class SQS(Regions):
-    _children = [
-        (Queues, 'queues')
-    ]
+    _children = [(Queues, "queues")]
 
     def __init__(self, facade: AWSFacade):
-        super(SQS, self).__init__('sqs', facade)
+        super(SQS, self).__init__("sqs", facade)

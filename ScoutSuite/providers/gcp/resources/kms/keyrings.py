@@ -4,9 +4,7 @@ from ScoutSuite.providers.gcp.resources.kms.keys import Keys
 
 
 class KeyRings(GCPCompositeResources):
-    _children = [
-        (Keys, 'keys')
-    ]
+    _children = [(Keys, "keys")]
 
     def __init__(self, facade: GCPFacade, project_id: str):
         super(KeyRings, self).__init__(facade)
@@ -21,13 +19,19 @@ class KeyRings(GCPCompositeResources):
 
         await self._fetch_children_of_all_resources(
             resources=self,
-            scopes={keyring_id: {'project_id': self.project_id, 'keyring_name': keyring['name'],
-                                 'location': keyring['location']}
-                    for keyring_id, keyring in self.items()})
+            scopes={
+                keyring_id: {
+                    "project_id": self.project_id,
+                    "keyring_name": keyring["name"],
+                    "location": keyring["location"],
+                }
+                for keyring_id, keyring in self.items()
+            },
+        )
 
     def _parse_keyring(self, raw_keyring, location):
         keyring_dict = {}
-        keyring_dict['id'] = raw_keyring.name
-        keyring_dict['name'] = raw_keyring.name.split('/')[-1]
-        keyring_dict['location'] = location
-        return keyring_dict['id'], keyring_dict
+        keyring_dict["id"] = raw_keyring.name
+        keyring_dict["name"] = raw_keyring.name.split("/")[-1]
+        keyring_dict["location"] = location
+        return keyring_dict["id"], keyring_dict

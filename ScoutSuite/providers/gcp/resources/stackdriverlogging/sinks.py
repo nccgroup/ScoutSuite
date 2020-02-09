@@ -15,7 +15,7 @@ class Sinks(Resources):
 
     def _parse_sink(self, raw_sink):
         sink_dict = {}
-        sink_dict['name'] = raw_sink.name
-        sink_dict['filter'] = raw_sink.filter_
-        sink_dict['destination'] = raw_sink.destination
-        return sink_dict['name'], sink_dict
+        sink_dict["name"] = raw_sink.name
+        sink_dict["filter"] = raw_sink.filter_
+        sink_dict["destination"] = raw_sink.destination
+        return sink_dict["name"], sink_dict

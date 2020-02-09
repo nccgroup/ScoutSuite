@@ -24,9 +24,9 @@ class Buckets(AWSResources):
         :param params:
         :return:
         """
-        raw_bucket['name'] = raw_bucket.pop('Name')
-        raw_bucket['CreationDate'] = str(raw_bucket['CreationDate'])
+        raw_bucket["name"] = raw_bucket.pop("Name")
+        raw_bucket["CreationDate"] = str(raw_bucket["CreationDate"])
 
         # If requested, get key properties
-        raw_bucket['id'] = get_non_provider_id(raw_bucket['name'])
-        return raw_bucket['id'], raw_bucket
+        raw_bucket["id"] = get_non_provider_id(raw_bucket["name"])
+        return raw_bucket["id"], raw_bucket

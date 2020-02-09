@@ -9,7 +9,6 @@ from ScoutSuite.providers.aliyun.resources.kms.base import KMS
 from ScoutSuite.providers.aliyun.resources.oss.base import OSS
 
 
-
 class AliyunServicesConfig(BaseServicesConfig):
     def __init__(self, credentials, **kwargs):
         super(AliyunServicesConfig, self).__init__(credentials)
@@ -25,4 +24,4 @@ class AliyunServicesConfig(BaseServicesConfig):
         self.oss = OSS(facade)
 
     def _is_provider(self, provider_name):
-        return provider_name == 'aliyun'
+        return provider_name == "aliyun"

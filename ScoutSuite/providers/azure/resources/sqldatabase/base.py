@@ -4,6 +4,4 @@ from .servers import Servers
 
 
 class Servers(Subscriptions):
-    _children = [
-        (Servers, 'servers')
-    ]
+    _children = [(Servers, "servers")]

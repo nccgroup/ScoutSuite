@@ -7,11 +7,12 @@ from ScoutSuite.core.console import print_exception
 # Functions
 ########################################
 
+
 def combine_paths(path1, path2):
     path = path1
     for p in path2:
-        if p == '..':
-            del (path[-1])
+        if p == "..":
+            del path[-1]
         else:
             path.append(p)
     return path
@@ -55,26 +56,26 @@ def get_value_at(all_info, current_path, key, to_string=False):
     :param to_string:       Whether or not the returned value should be casted as a string
     :return:                The value in `all_info` indicated by the `key` in `current_path`
     """
-    keys = key.split('.')
-    if keys[-1] == 'id':
+    keys = key.split(".")
+    if keys[-1] == "id":
         target_obj = current_path[len(keys) - 1]
     else:
-        if key == 'this':
+        if key == "this":
             target_path = current_path
-        elif '.' in key:
+        elif "." in key:
             target_path = []
             for i, key in enumerate(keys):
                 # If 'id', replace by value
-                if key == 'id':
+                if key == "id":
                     target_path.append(current_path[i])
                 # If empty key and value is an index, keep the index
-                elif key == '' and i < len(current_path) and current_path[i].isdigit():
+                elif key == "" and i < len(current_path) and current_path[i].isdigit():
                     target_path.append(int(current_path[i]))
                 # Otherwise, use key
                 else:
                     target_path.append(key)
             if len(keys) > len(current_path):
-                target_path = target_path + keys[len(target_path):]
+                target_path = target_path + keys[len(target_path) :]
         else:
             target_path = copy.deepcopy(current_path)
             target_path.append(key)
@@ -90,12 +91,12 @@ def get_value_at(all_info, current_path, key, to_string=False):
                     target_obj = target_obj[int(p)]
                 elif type(target_obj) == list:
                     target_obj = p
-                elif p == '':
+                elif p == "":
                     pass
                 else:
                     target_obj = target_obj[p]
             except Exception as e:
-                print_exception(e, additional_details={'current_path': current_path})
+                print_exception(e, additional_details={"current_path": current_path})
                 # raise Exception
     if to_string:
         return str(target_obj)

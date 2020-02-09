@@ -5,9 +5,7 @@ from .identities import Identities
 
 
 class SES(Regions):
-    _children = [
-        (Identities, 'identities')
-    ]
+    _children = [(Identities, "identities")]
 
     def __init__(self, facade: AWSFacade):
-        super(SES, self).__init__('ses', facade)
+        super(SES, self).__init__("ses", facade)

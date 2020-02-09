@@ -14,18 +14,26 @@ class KMSFacade:
     async def get_vaults(self):
         try:
             response = await run_concurrently(
-                lambda: list_call_get_all_results(self._vault_client.list_vaults, self._credentials.get_scope()))
+                lambda: list_call_get_all_results(
+                    self._vault_client.list_vaults, self._credentials.get_scope()
+                )
+            )
             return response.data
         except Exception as e:
-            print_exception('Failed to get KMS vaults: {}'.format(e))
+            print_exception("Failed to get KMS vaults: {}".format(e))
             return []
 
     async def get_keys(self, keyvault):
         try:
-            key_client = KmsManagementClient(self._credentials.config, keyvault['management_endpoint'])
+            key_client = KmsManagementClient(
+                self._credentials.config, keyvault["management_endpoint"]
+            )
             response = await run_concurrently(
-                lambda: list_call_get_all_results(key_client.list_keys, self._credentials.get_scope()))
+                lambda: list_call_get_all_results(
+                    key_client.list_keys, self._credentials.get_scope()
+                )
+            )
             return response.data
         except Exception as e:
-            print_exception('Failed to get KMS vaults: {}'.format(e))
+            print_exception("Failed to get KMS vaults: {}".format(e))
             return []

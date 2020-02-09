@@ -5,5 +5,5 @@ from .clusters import Clusters
 
 class RedshiftVpcs(Vpcs):
     _children = [
-        (Clusters, 'clusters'),
+        (Clusters, "clusters"),
     ]

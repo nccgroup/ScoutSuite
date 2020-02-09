@@ -5,8 +5,4 @@ from ScoutSuite.providers.gcp.resources.cloudresourcemanager.groups import Group
 
 
 class CloudResourceManager(Projects):
-    _children = [  
-        (Bindings, 'bindings'),
-        (Users, 'users'),
-        (Groups, 'groups')
-    ]
+    _children = [(Bindings, "bindings"), (Users, "users"), (Groups, "groups")]

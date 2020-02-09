@@ -9,8 +9,14 @@ class AWSFacadeUtils:
     _clients = {}
 
     @staticmethod
-    async def get_all_pages(service: str, region: str, session: boto3.session.Session, paginator_name: str,
-                            entity: str, **paginator_args):
+    async def get_all_pages(
+        service: str,
+        region: str,
+        session: boto3.session.Session,
+        paginator_name: str,
+        entity: str,
+        **paginator_args
+    ):
         """
         Gets all the entities from a paginator given an entity key
 
@@ -25,7 +31,8 @@ class AWSFacadeUtils:
         """
 
         results = await AWSFacadeUtils.get_multiple_entities_from_all_pages(
-            service, region, session, paginator_name, [entity], **paginator_args)
+            service, region, session, paginator_name, [entity], **paginator_args
+        )
 
         if len(results) > 0:
             return results[entity]
@@ -33,8 +40,14 @@ class AWSFacadeUtils:
             return []
 
     @staticmethod
-    async def get_multiple_entities_from_all_pages(service: str, region: str, session: boto3.session.Session,
-                                                   paginator_name: str, entities: list, **paginator_args):
+    async def get_multiple_entities_from_all_pages(
+        service: str,
+        region: str,
+        session: boto3.session.Session,
+        paginator_name: str,
+        entities: list,
+        **paginator_args
+    ):
         """
         Gets all the entities from a paginator given multiple entitiy keys
             :param service:str: Name of the AWS service (ec2, iam, etc.)
@@ -50,18 +63,27 @@ class AWSFacadeUtils:
         client = AWSFacadeUtils.get_client(service, session, region)
 
         # Building a paginator doesn't require any API call so no need to do it concurrently:
-        paginator = client.get_paginator(
-            paginator_name).paginate(**paginator_args)
+        paginator = client.get_paginator(paginator_name).paginate(**paginator_args)
 
         # Getting all pages from a paginator requires API calls so we need to do it concurrently:
         try:
-            return await run_concurrently(lambda: AWSFacadeUtils._get_all_pages_from_paginator(paginator, entities))
+            return await run_concurrently(
+                lambda: AWSFacadeUtils._get_all_pages_from_paginator(
+                    paginator, entities
+                )
+            )
         except ClientError as e:
-            if e.response['Error']['Code'] in ['AccessDenied',
-                                               'AccessDeniedException',
-                                               'UnauthorizedOperation',
-                                               'AuthorizationError']:
-                print_exception('Failed to get all pages from paginator for the {} service: {}'.format(service, e))
+            if e.response["Error"]["Code"] in [
+                "AccessDenied",
+                "AccessDeniedException",
+                "UnauthorizedOperation",
+                "AuthorizationError",
+            ]:
+                print_exception(
+                    "Failed to get all pages from paginator for the {} service: {}".format(
+                        service, e
+                    )
+                )
                 return []
             else:
                 raise
@@ -92,7 +114,12 @@ class AWSFacadeUtils:
         try:
             return AWSFacadeUtils._clients.setdefault(
                 (service, region),
-                session.client(service, region_name=region) if region else session.client(service))
+                session.client(service, region_name=region)
+                if region
+                else session.client(service),
+            )
         except Exception as e:
-            print_exception('Failed to create client for the {} service: {}'.format(service, e))
+            print_exception(
+                "Failed to create client for the {} service: {}".format(service, e)
+            )
             return None

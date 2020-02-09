@@ -8,10 +8,10 @@ from .applications import Applications
 
 class AAD(AzureCompositeResources):
     _children = [
-        (Users, 'users'),
-        (Groups, 'groups'),
-        (ServicePrincipals, 'service_principals'),
-        (Applications, 'applications'),
+        (Users, "users"),
+        (Groups, "groups"),
+        (ServicePrincipals, "service_principals"),
+        (Applications, "applications"),
     ]
 
     async def fetch_all(self):
@@ -20,7 +20,7 @@ class AAD(AzureCompositeResources):
     async def finalize(self):
 
         # Add group members
-        for group in self['groups']:
-            for user in self['users']:
-                if group in self['users'][user]['groups']:
-                    self['groups'][group]['users'].append(user)
+        for group in self["groups"]:
+            for user in self["users"]:
+                if group in self["users"][user]["groups"]:
+                    self["groups"][group]["users"].append(user)

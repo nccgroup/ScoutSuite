@@ -12,7 +12,9 @@ class StorageAccountsFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        return StorageManagementClient(self.credentials.arm_credentials, subscription_id=subscription_id)
+        return StorageManagementClient(
+            self.credentials.arm_credentials, subscription_id=subscription_id
+        )
 
     async def get_storage_accounts(self, subscription_id: str):
         try:
@@ -21,21 +23,30 @@ class StorageAccountsFacade:
                 lambda: list(client.storage_accounts.list())
             )
         except Exception as e:
-            print_exception('Failed to retrieve storage accounts: {}'.format(e))
+            print_exception("Failed to retrieve storage accounts: {}".format(e))
             return []
         else:
-            await get_and_set_concurrently([self._get_and_set_activity_logs], storage_accounts,
-                                           subscription_id=subscription_id)
+            await get_and_set_concurrently(
+                [self._get_and_set_activity_logs],
+                storage_accounts,
+                subscription_id=subscription_id,
+            )
             return storage_accounts
 
-    async def get_blob_containers(self, resource_group_name, storage_account_name, subscription_id: str):
+    async def get_blob_containers(
+        self, resource_group_name, storage_account_name, subscription_id: str
+    ):
         try:
             client = self.get_client(subscription_id)
             containers = await run_concurrently(
-                lambda: list(client.blob_containers.list(resource_group_name, storage_account_name))
+                lambda: list(
+                    client.blob_containers.list(
+                        resource_group_name, storage_account_name
+                    )
+                )
             )
         except Exception as e:
-            print_exception('Failed to retrieve blob containers: {}'.format(e))
+            print_exception("Failed to retrieve blob containers: {}".format(e))
             return []
         else:
             return containers
@@ -51,17 +62,25 @@ class StorageAccountsFacade:
         # with a bad request):
         timespan = datetime.timedelta(90)
 
-        logs_filter = " and ".join([
-            "eventTimestamp ge {}".format((utc_now - timespan).strftime(time_format)),
-            "eventTimestamp le {}".format(utc_now.strftime(time_format)),
-            "resourceId eq {}".format(storage_account.id),
-        ])
+        logs_filter = " and ".join(
+            [
+                "eventTimestamp ge {}".format(
+                    (utc_now - timespan).strftime(time_format)
+                ),
+                "eventTimestamp le {}".format(utc_now.strftime(time_format)),
+                "resourceId eq {}".format(storage_account.id),
+            ]
+        )
         try:
             activity_logs = await run_concurrently(
-                lambda: list(client.activity_logs.list(filter=logs_filter, select="eventTimestamp, operationName"))
+                lambda: list(
+                    client.activity_logs.list(
+                        filter=logs_filter, select="eventTimestamp, operationName"
+                    )
+                )
             )
         except Exception as e:
-            print_exception('Failed to retrieve activity logs: {}'.format(e))
-            setattr(storage_account, 'activity_logs', [])
+            print_exception("Failed to retrieve activity logs: {}".format(e))
+            setattr(storage_account, "activity_logs", [])
         else:
-            setattr(storage_account, 'activity_logs', activity_logs)
+            setattr(storage_account, "activity_logs", activity_logs)

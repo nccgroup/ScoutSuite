@@ -60,8 +60,10 @@ class CompositeResources(Resources, metaclass=abc.ABCMeta):
         tasks = {
             asyncio.ensure_future(
                 self._fetch_children(
-                    resource_parent=resource_parent, scope=scopes[resource_parent_key])
-            ) for (resource_parent_key, resource_parent) in resources.items()
+                    resource_parent=resource_parent, scope=scopes[resource_parent_key]
+                )
+            )
+            for (resource_parent_key, resource_parent) in resources.items()
         }
         await asyncio.wait(tasks)
 
@@ -73,12 +75,13 @@ class CompositeResources(Resources, metaclass=abc.ABCMeta):
         :param resource_parent: The resource in which the children will be stored.
         :param scope: The scope passed to the children constructors.
         """
-        children = [(child_class(self.facade, **scope), child_name)
-                    for (child_class, child_name) in self._children]
+        children = [
+            (child_class(self.facade, **scope), child_name)
+            for (child_class, child_name) in self._children
+        ]
         # Fetch all children concurrently:
         await asyncio.wait(
-            {asyncio.ensure_future(child.fetch_all())
-             for (child, _) in children}
+            {asyncio.ensure_future(child.fetch_all()) for (child, _) in children}
         )
         # Update parent content:
         for child, child_name in children:
@@ -87,7 +90,7 @@ class CompositeResources(Resources, metaclass=abc.ABCMeta):
             else:
                 if resource_parent.get(child_name) is None:
                     resource_parent[child_name] = {}
-                    resource_parent[child_name + '_count'] = 0
+                    resource_parent[child_name + "_count"] = 0
 
                 resource_parent[child_name].update(child)
-                resource_parent[child_name + '_count'] += len(child)
+                resource_parent[child_name + "_count"] += len(child)

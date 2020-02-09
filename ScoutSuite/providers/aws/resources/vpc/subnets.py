@@ -17,13 +17,15 @@ class Subnets(AWSResources):
             self[id] = subnet
 
     def _parse_subnet(self, raw_subnet):
-        raw_subnet['id'] = raw_subnet['SubnetId']
-        get_name(raw_subnet, raw_subnet, 'SubnetId')
-        raw_subnet.pop('SubnetId')
+        raw_subnet["id"] = raw_subnet["SubnetId"]
+        get_name(raw_subnet, raw_subnet, "SubnetId")
+        raw_subnet.pop("SubnetId")
 
-        if raw_subnet['Ipv6CidrBlockAssociationSet']:
-            raw_subnet['CidrBlockv6'] = raw_subnet['Ipv6CidrBlockAssociationSet'][0]['Ipv6CidrBlock']
+        if raw_subnet["Ipv6CidrBlockAssociationSet"]:
+            raw_subnet["CidrBlockv6"] = raw_subnet["Ipv6CidrBlockAssociationSet"][0][
+                "Ipv6CidrBlock"
+            ]
         else:
-            raw_subnet['CidrBlockv6'] = None
+            raw_subnet["CidrBlockv6"] = None
 
-        return raw_subnet['id'], raw_subnet
+        return raw_subnet["id"], raw_subnet

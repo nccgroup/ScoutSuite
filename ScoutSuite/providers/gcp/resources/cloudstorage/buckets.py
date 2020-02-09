@@ -16,26 +16,30 @@ class Buckets(Resources):
 
     def _parse_bucket(self, raw_bucket):
         bucket_dict = {}
-        bucket_dict['id'] = get_non_provider_id(raw_bucket.id)
-        bucket_dict['name'] = raw_bucket.name
-        bucket_dict['project_id'] = self.project_id
-        bucket_dict['project_number'] = raw_bucket.project_number
-        bucket_dict['creation_date'] = raw_bucket.time_created
-        bucket_dict['location'] = raw_bucket.location
-        bucket_dict['storage_class'] = raw_bucket.storage_class.lower()
-        bucket_dict['versioning_status_enabled'] = raw_bucket.versioning_enabled
-        bucket_dict['uniform_bucket_level_access'] = raw_bucket.iam_configuration['bucketPolicyOnly']['enabled']
-        bucket_dict['logging_enabled'] = raw_bucket.logging is not None
-        bucket_dict['acls'] = list(raw_bucket.acl)
-        bucket_dict['acl_configuration'] = self._get_cloudstorage_bucket_acl(raw_bucket)  # FIXME this should be "IAM"
-        return bucket_dict['id'], bucket_dict
+        bucket_dict["id"] = get_non_provider_id(raw_bucket.id)
+        bucket_dict["name"] = raw_bucket.name
+        bucket_dict["project_id"] = self.project_id
+        bucket_dict["project_number"] = raw_bucket.project_number
+        bucket_dict["creation_date"] = raw_bucket.time_created
+        bucket_dict["location"] = raw_bucket.location
+        bucket_dict["storage_class"] = raw_bucket.storage_class.lower()
+        bucket_dict["versioning_status_enabled"] = raw_bucket.versioning_enabled
+        bucket_dict["uniform_bucket_level_access"] = raw_bucket.iam_configuration[
+            "bucketPolicyOnly"
+        ]["enabled"]
+        bucket_dict["logging_enabled"] = raw_bucket.logging is not None
+        bucket_dict["acls"] = list(raw_bucket.acl)
+        bucket_dict["acl_configuration"] = self._get_cloudstorage_bucket_acl(
+            raw_bucket
+        )  # FIXME this should be "IAM"
+        return bucket_dict["id"], bucket_dict
 
     def _get_cloudstorage_bucket_acl(self, raw_bucket):
         bucket_acls = raw_bucket.iam_policy
         acl_config = {}
         if bucket_acls:
             for role in bucket_acls._bindings:
-                if 'legacy' not in role:
+                if "legacy" not in role:
                     for member in bucket_acls[role]:
                         if member not in acl_config:
                             acl_config[member] = [role]

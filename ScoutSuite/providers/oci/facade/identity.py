@@ -15,55 +15,71 @@ class IdentityFacade:
     async def get_users(self):
         try:
             response = await run_concurrently(
-                lambda: list_call_get_all_results(self._client.list_users, self._credentials.get_scope()))
+                lambda: list_call_get_all_results(
+                    self._client.list_users, self._credentials.get_scope()
+                )
+            )
             return response.data
         except Exception as e:
-            print_exception('Failed to retrieve users: {}'.format(e))
+            print_exception("Failed to retrieve users: {}".format(e))
             return []
 
     async def get_user_api_keys(self, user_id):
         try:
             response = await run_concurrently(
-                lambda: list_call_get_all_results(self._client.list_api_keys, user_id))
+                lambda: list_call_get_all_results(self._client.list_api_keys, user_id)
+            )
             return response.data
         except Exception as e:
-            print_exception('Failed to retrieve user api keys: {}'.format(e))
+            print_exception("Failed to retrieve user api keys: {}".format(e))
             return []
 
     async def get_groups(self):
         try:
             response = await run_concurrently(
-                lambda: list_call_get_all_results(self._client.list_groups, self._credentials.get_scope()))
+                lambda: list_call_get_all_results(
+                    self._client.list_groups, self._credentials.get_scope()
+                )
+            )
             return response.data
         except Exception as e:
-            print_exception('Failed to retrieve groups: {}'.format(e))
+            print_exception("Failed to retrieve groups: {}".format(e))
             return []
 
     async def get_group_users(self, group_id):
         try:
             response = await run_concurrently(
-                lambda: list_call_get_all_results(self._client.list_user_group_memberships,
-                                                  self._credentials.get_scope(),
-                                                  group_id=group_id))
+                lambda: list_call_get_all_results(
+                    self._client.list_user_group_memberships,
+                    self._credentials.get_scope(),
+                    group_id=group_id,
+                )
+            )
             return response.data
         except Exception as e:
-            print_exception('Failed to retrieve group users: {}'.format(e))
+            print_exception("Failed to retrieve group users: {}".format(e))
             return []
 
     async def get_policies(self):
         try:
             response = await run_concurrently(
-                lambda: list_call_get_all_results(self._client.list_policies, self._credentials.get_scope()))
+                lambda: list_call_get_all_results(
+                    self._client.list_policies, self._credentials.get_scope()
+                )
+            )
             return response.data
         except Exception as e:
-            print_exception('Failed to retrieve policies: {}'.format(e))
+            print_exception("Failed to retrieve policies: {}".format(e))
             return None
 
     async def get_authentication_policy(self):
         try:
             response = await run_concurrently(
-                lambda: self._client.get_authentication_policy(self._credentials.config['tenancy']))
+                lambda: self._client.get_authentication_policy(
+                    self._credentials.config["tenancy"]
+                )
+            )
             return response.data
         except Exception as e:
-            print_exception('Failed to retrieve authentication policy: {}'.format(e))
+            print_exception("Failed to retrieve authentication policy: {}".format(e))
             return []

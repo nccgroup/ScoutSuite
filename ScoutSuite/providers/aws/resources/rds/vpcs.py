@@ -6,7 +6,7 @@ from ScoutSuite.providers.aws.resources.rds.subnetgroups import SubnetGroups
 
 class RDSVpcs(Vpcs):
     _children = [
-        (RDSInstances, 'instances'),
-        (Snapshots, 'snapshots'),
-        (SubnetGroups, 'subnet_groups'),
+        (RDSInstances, "instances"),
+        (Snapshots, "snapshots"),
+        (SubnetGroups, "subnet_groups"),
     ]

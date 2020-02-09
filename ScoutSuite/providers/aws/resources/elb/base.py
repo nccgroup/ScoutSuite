@@ -6,10 +6,7 @@ from .policies import Policies
 
 
 class ELB(Regions):
-    _children = [
-        (ELBVpcs, 'vpcs'),
-        (Policies, 'elb_policies')
-    ]
+    _children = [(ELBVpcs, "vpcs"), (Policies, "elb_policies")]
 
     def __init__(self, facade: AWSFacade):
-        super(ELB, self).__init__('elb', facade)
+        super(ELB, self).__init__("elb", facade)

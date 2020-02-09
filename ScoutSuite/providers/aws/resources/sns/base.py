@@ -5,9 +5,7 @@ from .topics import Topics
 
 
 class SNS(Regions):
-    _children = [
-        (Topics, 'topics')
-    ]
+    _children = [(Topics, "topics")]
 
     def __init__(self, facade: AWSFacade):
-        super(SNS, self).__init__('sns', facade)
+        super(SNS, self).__init__("sns", facade)

@@ -17,9 +17,10 @@ class ActiontrailFacade:
 
         :return: a list of all users
         """
-        response = await get_response(client=self._client,
-                                      request=DescribeTrailsRequest.DescribeTrailsRequest())
+        response = await get_response(
+            client=self._client, request=DescribeTrailsRequest.DescribeTrailsRequest()
+        )
         if response:
-            return response['TrailList']
+            return response["TrailList"]
         else:
             return []

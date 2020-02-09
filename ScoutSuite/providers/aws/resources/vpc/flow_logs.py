@@ -16,6 +16,6 @@ class FlowLogs(AWSResources):
             self[id] = log
 
     def _parse_log(self, raw_log):
-        get_name(raw_log, raw_log, 'FlowLogId')
-        log_id = raw_log.pop('FlowLogId')
+        get_name(raw_log, raw_log, "FlowLogId")
+        log_id = raw_log.pop("FlowLogId")
         return log_id, raw_log
