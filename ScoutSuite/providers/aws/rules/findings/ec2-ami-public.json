@@ -1,0 +1,9 @@
+{
+    "description": "AMI public",
+    "rationale": "<b>Description:</b><br><br>AMI should never intentionally be public.",
+    "path": "ec2.regions.id.amis.id",
+    "dashboard_name": "Ami",
+    "conditions": [ "and",
+        [ "Public", "true", "" ]
+    ]
+}

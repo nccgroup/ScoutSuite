@@ -61,6 +61,12 @@
                 "level": "warning"
             }
         ],
+        "ec2-ami-public.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "ec2-default-security-group-in-use.json": [
             {
                 "enabled": true,
@@ -74,6 +80,12 @@
             }
         ],
         "ec2-ebs-snapshot-not-encrypted.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "ec2-ebs-snapshot-public.json": [
             {
                 "enabled": true,
                 "level": "danger"
