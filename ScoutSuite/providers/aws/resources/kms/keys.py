@@ -1,5 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSCompositeResources
+from ScoutSuite.providers.utils import get_non_provider_id
 from .grants import Grants
 
 
@@ -44,4 +45,18 @@ class Keys(AWSCompositeResources):
             key_dict['key_manager'] = raw_key['metadata']['KeyMetadata']['KeyManager'] if len(
                 raw_key['metadata']['KeyMetadata']['KeyManager'].strip()) > 0 else None
 
+        key_dict['aliases'] = {}
+        for raw_alias in raw_key.get('aliases', []):
+            alias_id, alias = self._parse_alias(raw_alias)
+            key_dict['aliases'][alias_id] = alias
+
         return key_dict['id'], key_dict
+
+    def _parse_alias(self, raw_alias):
+        alias_dict = {
+            # all KMS Aliases are prefixed with alias/, so we'll strip that off
+            'id': get_non_provider_id(raw_alias.get('AliasArn')),
+            'name': raw_alias.get('AliasName').split('alias/', 1)[-1],
+            'arn': raw_alias.get('AliasArn'),
+            'key_id': raw_alias.get('TargetKeyId')}
+        return alias_dict['id'], alias_dict
