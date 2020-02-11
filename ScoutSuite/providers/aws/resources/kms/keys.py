@@ -22,13 +22,26 @@ class Keys(AWSCompositeResources):
 
         await self._fetch_children_of_all_resources(
             resources=self,
-            scopes={key_id: {'region': self.region, 'key_id': key['key_id']}
+            scopes={key_id: {'region': self.region, 'key_id': key['id']}
                     for (key_id, key) in self.items()}
         )
 
     def _parse_key(self, raw_key):
-        key_dict = {
-            'key_id': raw_key.get('KeyId'),
-            'arn': raw_key.get('KeyArn')
-        }
-        return key_dict['key_id'], key_dict
+        key_dict = {}
+        key_dict['id'] = raw_key.get('KeyId')
+        key_dict['arn'] = raw_key.get('KeyArn')
+        key_dict['rotation_enabled'] = raw_key['rotation_status']['KeyRotationEnabled'] \
+            if 'rotation_status' in raw_key else None
+
+        if 'metadata' in raw_key:
+            key_dict['creation_date'] = raw_key['metadata']['KeyMetadata']['CreationDate'] if \
+                raw_key['metadata']['KeyMetadata']['CreationDate'] else None
+            key_dict['key_enabled'] = False if raw_key['metadata']['KeyMetadata']['KeyState'] == 'Disabled' else True
+            key_dict['description'] = raw_key['metadata']['KeyMetadata']['Description'] if len(
+                raw_key['metadata']['KeyMetadata']['Description'].strip()) > 0 else None
+            key_dict['origin'] = raw_key['metadata']['KeyMetadata']['Origin'] if len(
+                raw_key['metadata']['KeyMetadata']['Origin'].strip()) > 0 else None
+            key_dict['key_manager'] = raw_key['metadata']['KeyMetadata']['KeyManager'] if len(
+                raw_key['metadata']['KeyMetadata']['KeyManager'].strip()) > 0 else None
+
+        return key_dict['id'], key_dict
