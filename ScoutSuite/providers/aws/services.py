@@ -29,10 +29,6 @@ try:
     from ScoutSuite.providers.aws.resources.private_dynamodb.base import DynamoDB
 except ImportError:
     pass
-try:
-    from ScoutSuite.providers.aws.resources.private_kms.base import KMS
-except ImportError:
-    pass
 
 
 class AWSServicesConfig(BaseServicesConfig):
@@ -87,10 +83,6 @@ class AWSServicesConfig(BaseServicesConfig):
         # Instantiate proprietary services
         try:
             self.dynamodb = DynamoDB(facade)
-        except NameError as _:
-            pass
-        try:
-            self.kms = KMS(facade)
         except NameError as _:
             pass
 
