@@ -13,7 +13,10 @@ class KMSFacade(AWSBaseFacade):
         try:
             keys = await AWSFacadeUtils.get_all_pages('kms', region, self.session, 'list_keys', 'Keys')
             await get_and_set_concurrently(
-                [self._get_and_set_key_policy, self._get_and_set_key_metadata, self._get_and_set_key_rotation_status],
+                [self._get_and_set_key_policy,
+                 self._get_and_set_key_metadata,
+                 self._get_and_set_key_rotation_status,
+                 self._get_and_set_key_aliases],
                 keys, region=region)
         except Exception as e:
             print_exception('Failed to get KMS keys: {}'.format(e))
@@ -46,12 +49,15 @@ class KMSFacade(AWSBaseFacade):
         except Exception as e:
             print_exception('Failed to describe KMS key: {}'.format(e))
 
-    async def get_aliases(self, region: str):
+    async def _get_and_set_key_aliases(self, key: {}, region: str):
+        client = AWSFacadeUtils.get_client('kms', self.session, region)
         try:
-            return await AWSFacadeUtils.get_all_pages('kms', region, self.session, 'list_aliases', 'Aliases')
+            response = await run_concurrently(
+                lambda: client.list_aliases(KeyId=key['KeyId'])
+            )
+            key['aliases'] = response.get('Aliases')
         except Exception as e:
-            print_exception('Failed to list KMS Aliases: {}'.format(e))
-            return []
+            print_exception('Failed to get KMS aliases: {}'.format(e))
 
     async def get_grants(self, region: str, key_id: str):
         try:
