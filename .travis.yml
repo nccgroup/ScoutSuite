@@ -6,12 +6,17 @@ sudo: false
 python:
   - "3.5"
   - "3.6"
+  - "3.7"
+  - "3.8"
 
 matrix:
   include:
     - python: "3.7"
       dist: xenial    # required for Python 3.7 (travis-ci/travis-ci#9069)
       sudo: required  # required for Python 3.7 (travis-ci/travis-ci#9069)
+    - python: "3.8"
+      dist: bionic
+      sudo: required
 
 install:
   - pip install -U setuptools
