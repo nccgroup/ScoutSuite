@@ -15,6 +15,7 @@ from ScoutSuite.providers.aws.facade.elb import ELBFacade
 from ScoutSuite.providers.aws.facade.elbv2 import ELBv2Facade
 from ScoutSuite.providers.aws.facade.emr import EMRFacade
 from ScoutSuite.providers.aws.facade.iam import IAMFacade
+from ScoutSuite.providers.aws.facade.kms import KMSFacade
 from ScoutSuite.providers.aws.facade.rds import RDSFacade
 from ScoutSuite.providers.aws.facade.redshift import RedshiftFacade
 from ScoutSuite.providers.aws.facade.route53 import Route53Facade
@@ -91,6 +92,7 @@ class AWSFacade(AWSBaseFacade):
         self.elb = ELBFacade(self.session)
         self.elbv2 = ELBv2Facade(self.session)
         self.iam = IAMFacade(self.session)
+        self.kms = KMSFacade(self.session)
         self.rds = RDSFacade(self.session)
         self.redshift = RedshiftFacade(self.session)
         self.s3 = S3Facade(self.session)
