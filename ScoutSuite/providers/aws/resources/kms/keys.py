@@ -1,13 +1,11 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSCompositeResources
 from .grants import Grants
-from .key_policies import KeyPolicies
 
 
 class Keys(AWSCompositeResources):
     _children = [
         (Grants, 'grants'),
-        (KeyPolicies, 'key_policies')
     ]
 
     def __init__(self, facade: AWSFacade, region: str):
@@ -28,10 +26,12 @@ class Keys(AWSCompositeResources):
 
     def _parse_key(self, raw_key):
         key_dict = {}
-        key_dict['id'] = raw_key.get('KeyId')
+        key_dict['id'] = key_dict['name'] = raw_key.get('KeyId')
         key_dict['arn'] = raw_key.get('KeyArn')
         key_dict['rotation_enabled'] = raw_key['rotation_status']['KeyRotationEnabled'] \
             if 'rotation_status' in raw_key else None
+
+        key_dict['policy'] = raw_key.get('policy')
 
         if 'metadata' in raw_key:
             key_dict['creation_date'] = raw_key['metadata']['KeyMetadata']['CreationDate'] if \
