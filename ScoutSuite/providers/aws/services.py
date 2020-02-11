@@ -13,6 +13,7 @@ from ScoutSuite.providers.aws.resources.elb.base import ELB
 from ScoutSuite.providers.aws.resources.elbv2.base import ELBv2
 from ScoutSuite.providers.aws.resources.emr.base import EMR
 from ScoutSuite.providers.aws.resources.iam.base import IAM
+from ScoutSuite.providers.aws.resources.kms.base import KMS
 from ScoutSuite.providers.aws.resources.rds.base import RDS
 from ScoutSuite.providers.aws.resources.redshift.base import Redshift
 from ScoutSuite.providers.aws.resources.route53.base import Route53
@@ -26,10 +27,6 @@ from ScoutSuite.providers.base.services import BaseServicesConfig
 # Try to import proprietary services
 try:
     from ScoutSuite.providers.aws.resources.private_dynamodb.base import DynamoDB
-except ImportError:
-    pass
-try:
-    from ScoutSuite.providers.aws.resources.private_kms.base import KMS
 except ImportError:
     pass
 
@@ -73,6 +70,7 @@ class AWSServicesConfig(BaseServicesConfig):
         self.elbv2 = ELBv2(facade)
         self.emr = EMR(facade)
         self.iam = IAM(facade)
+        self.kms = KMS(facade)
         self.rds = RDS(facade)
         self.redshift = Redshift(facade)
         self.route53 = Route53(facade)
@@ -85,10 +83,6 @@ class AWSServicesConfig(BaseServicesConfig):
         # Instantiate proprietary services
         try:
             self.dynamodb = DynamoDB(facade)
-        except NameError as _:
-            pass
-        try:
-            self.kms = KMS(facade)
         except NameError as _:
             pass
 

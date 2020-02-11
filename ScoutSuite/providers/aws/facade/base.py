@@ -15,6 +15,7 @@ from ScoutSuite.providers.aws.facade.elb import ELBFacade
 from ScoutSuite.providers.aws.facade.elbv2 import ELBv2Facade
 from ScoutSuite.providers.aws.facade.emr import EMRFacade
 from ScoutSuite.providers.aws.facade.iam import IAMFacade
+from ScoutSuite.providers.aws.facade.kms import KMSFacade
 from ScoutSuite.providers.aws.facade.rds import RDSFacade
 from ScoutSuite.providers.aws.facade.redshift import RedshiftFacade
 from ScoutSuite.providers.aws.facade.route53 import Route53Facade
@@ -28,10 +29,6 @@ from ScoutSuite.providers.utils import run_concurrently
 # Try to import proprietary facades
 try:
     from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
-except ImportError:
-    pass
-try:
-    from ScoutSuite.providers.aws.facade.kms_private import KMSFacade
 except ImportError:
     pass
 
@@ -91,6 +88,7 @@ class AWSFacade(AWSBaseFacade):
         self.elb = ELBFacade(self.session)
         self.elbv2 = ELBv2Facade(self.session)
         self.iam = IAMFacade(self.session)
+        self.kms = KMSFacade(self.session)
         self.rds = RDSFacade(self.session)
         self.redshift = RedshiftFacade(self.session)
         self.s3 = S3Facade(self.session)
@@ -101,9 +99,5 @@ class AWSFacade(AWSBaseFacade):
         # Instantiate facades for proprietary services
         try:
             self.dynamodb = DynamoDBFacade(self.session)
-        except NameError:
-            pass
-        try:
-            self.kms = KMSFacade(self.session)
         except NameError:
             pass
