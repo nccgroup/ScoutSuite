@@ -61,7 +61,7 @@
                 "level": "warning"
             }
         ],
-	"ec2-ami-public.json": [
+        "ec2-ami-public.json": [
             {
                 "enabled": true,
                 "level": "danger"
@@ -85,7 +85,7 @@
                 "level": "danger"
             }
         ],
-	"ec2-ebs-snapshot-public.json": [
+        "ec2-ebs-snapshot-public.json": [
             {
                 "enabled": true,
                 "level": "danger"
