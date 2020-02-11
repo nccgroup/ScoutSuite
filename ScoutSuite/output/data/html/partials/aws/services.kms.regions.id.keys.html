@@ -18,8 +18,20 @@
         <li class="list-group-item-text">Key Manager: <span id="kms.regions.{{region}}.keys.{{@key}}.key_manager"><samp>{{value_or_none key_manager}}</samp></span></li>
       </ul>
     </div>
-    {{#if policy}}
     <div class="list-group-item">
+      {{#if aliases.length}}
+      <h4 class="list-group-item-heading accordion-heading">Aliases</h4>
+      <ul>
+        {{#each this.aliases}}
+        <li><samp>{{name}}</samp></li>
+        {{/each}}
+      </ul>
+      {{else}}
+      <h4 class="list-group-item-heading accordion-heading text-secondary">Aliases</h4>
+      {{/if}}
+    </div>
+    <div class="list-group-item">
+    {{#if policy}}
       {{> accordion_policy name = 'Key Policy' document = policy policy_path = (concat 'kms.regions' region 'keys' @key 'policy')}}
     {{else}}
       <h4 class="list-group-item-heading accordion-heading text-secondary">Key Policy</h4>
