@@ -1,13 +1,11 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.regions import Regions
 
-from .aliases import Aliases
 from .keys import Keys
 
 
 class KMS(Regions):
     _children = [
-        (Aliases, 'aliases'),
         (Keys, 'keys'),
     ]
 
