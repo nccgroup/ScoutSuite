@@ -27,8 +27,8 @@ class Buckets(Resources):
         bucket_dict['logging_enabled'] = raw_bucket.logging is not None
         bucket_dict['uniform_bucket_level_access'] = raw_bucket.iam_configuration['bucketPolicyOnly']['enabled']
         if bucket_dict['uniform_bucket_level_access']:
-            bucket_dict['acls'] = None
-            bucket_dict['default_object_acl'] = None
+            bucket_dict['acls'] = []
+            bucket_dict['default_object_acl'] = []
         else:
             bucket_dict['acls'] = list(raw_bucket.acl)
             bucket_dict['default_object_acl'] = list(raw_bucket.default_object_acl)
