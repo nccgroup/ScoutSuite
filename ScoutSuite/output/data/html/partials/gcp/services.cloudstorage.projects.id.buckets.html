@@ -36,7 +36,7 @@
         <div class="accordion-inner">
             <ul>
                 {{#each acls}}
-                <li><samp>{{entity}}</samp></span></li>
+                <li><samp>{{entity}}</samp></li>
                 <ul>
                     <li><samp>{{role}}</samp></li>
                 </ul>
@@ -47,11 +47,11 @@
         </div>
     </div>
     <div class="list-group-item">
-        <h4 class="list-group-item-heading"><span id="cloudstorage.projects.{{@../key}}.buckets.{{@key}}.object_acls">Default Object ACL Permissions</span></h4>
+        <h4 class="list-group-item-heading"><span id="cloudstorage.projects.{{@../key}}.buckets.{{@key}}.default_object_acls">Default Object ACL Permissions</span></h4>
         <div class="accordion-inner">
             <ul>
                 {{#each default_object_acl}}
-                <li><samp>{{entity}}</samp></span></li>
+                <li><span id="cloudstorage.projects.{{@../../key}}.buckets.{{@../key}}.default_object_acl.{{@key}}.{{entity}}"><samp>{{entity}}</samp></span></li>
                 <ul>
                     <li><samp>{{role}}</samp></li>
                 </ul>
