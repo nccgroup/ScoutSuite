@@ -23,7 +23,7 @@ class Buckets(Resources):
         bucket_dict['creation_date'] = raw_bucket.time_created
         bucket_dict['location'] = raw_bucket.location
         bucket_dict['storage_class'] = raw_bucket.storage_class.lower()
-        bucket_dict['versioning_status_enabled'] = raw_bucket.versioning_enabled
+        bucket_dict['versioning_enabled'] = raw_bucket.versioning_enabled
         bucket_dict['uniform_bucket_level_access'] = raw_bucket.iam_configuration['bucketPolicyOnly']['enabled']
         bucket_dict['logging_enabled'] = raw_bucket.logging is not None
         if bucket_dict['uniform_bucket_level_access']:
