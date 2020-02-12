@@ -46,6 +46,21 @@
             </ul>
         </div>
     </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading"><span id="cloudstorage.projects.{{@../key}}.buckets.{{@key}}.object_acls">Default Object ACL Permissions</span></h4>
+        <div class="accordion-inner">
+            <ul>
+                {{#each default_object_acl}}
+                <li><samp>{{entity}}</samp></span></li>
+                <ul>
+                    <li><samp>{{role}}</samp></li>
+                </ul>
+                {{else}}
+                <li><samp>None</samp></li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
 </script>
 
 <script>
