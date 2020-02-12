@@ -26,7 +26,10 @@ class Buckets(Resources):
         bucket_dict['versioning_status_enabled'] = raw_bucket.versioning_enabled
         bucket_dict['uniform_bucket_level_access'] = raw_bucket.iam_configuration['bucketPolicyOnly']['enabled']
         bucket_dict['logging_enabled'] = raw_bucket.logging is not None
-        bucket_dict['acls'] = list(raw_bucket.acl)
+        if bucket_dict['uniform_bucket_level_access']:
+            bucket_dict['acls'] = None
+        else:
+            bucket_dict['acls'] = list(raw_bucket.acl)
         bucket_dict['acl_configuration'] = self._get_cloudstorage_bucket_acl(raw_bucket)  # FIXME this should be "IAM"
         return bucket_dict['id'], bucket_dict
 
