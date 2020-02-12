@@ -1,9 +1,9 @@
 from google.cloud import kms
 
 from ScoutSuite.core.console import print_exception
-from ScoutSuite.providers.utils import run_concurrently
 from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
+from ScoutSuite.providers.utils import run_concurrently
 
 
 class KMSFacade(GCPBaseFacade):
@@ -31,7 +31,8 @@ class KMSFacade(GCPBaseFacade):
             key_rings = {}
             for l in locations:
                 parent = self.cloud_client.location_path(project_id, l['locationId'])
-                key_rings[l['locationId']] = await run_concurrently(lambda: list(self.cloud_client.list_key_rings(parent)))
+                key_rings[l['locationId']] = await run_concurrently(
+                    lambda: list(self.cloud_client.list_key_rings(parent)))
             return key_rings
         except Exception as e:
             print_exception('Failed to retrieve KMS key rings: {}'.format(e))
@@ -41,14 +42,11 @@ class KMSFacade(GCPBaseFacade):
 
         try:
             parent = self.cloud_client.key_ring_path(project_id, location, keyring_name)
-            # keys = await run_concurrently(lambda: list(self.cloud_client.list_crypto_keys(parent)))
-            # return keys
 
             kms_client = self._get_client()
             cryptokeys = kms_client.projects().locations().keyRings().cryptoKeys()
             request = cryptokeys.list(parent=parent)
             return await GCPFacadeUtils.get_all('cryptoKeys', request, cryptokeys)
-
         except Exception as e:
             print_exception('Failed to retrieve KMS keys for key ring {}: {}'.format(keyring_name, e))
             return []
