@@ -42,7 +42,6 @@ class KMSFacade(GCPBaseFacade):
 
         try:
             parent = self.cloud_client.key_ring_path(project_id, location, keyring_name)
-
             kms_client = self._get_client()
             cryptokeys = kms_client.projects().locations().keyRings().cryptoKeys()
             request = cryptokeys.list(parent=parent)
