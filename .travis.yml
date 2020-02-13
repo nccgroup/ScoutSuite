@@ -29,7 +29,7 @@ install:
 before_script:
   # Stop the build if there are Python syntax errors or undefined names
   - flake8 .
-  - autopep8 --diff --recursive .
+  - autopep8 --diff --recursive --max-line-length 127 .
 
 # Command to run tests
 script:
