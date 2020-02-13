@@ -8,10 +8,7 @@
       [ "cloudresourcemanager.projects.id.bindings.id.name", "containAtLeastOneOf", ["editor", "owner"]],
       [ "cloudresourcemanager.projects.id.bindings.id.name", "match", ".*admin"]
     ],
-    [ "and", 
-      ["cloudresourcemanager.projects.id.bindings.id.members.service_accounts", "notEmpty", ""],
-      ["cloudresourcemanager.projects.id.bindings.id.members.service_accounts", "match", ".+@.+[.]iam[.]gserviceaccount[.]com"]
-    ]
+    ["cloudresourcemanager.projects.id.bindings.id.members.service_accounts", "notEmpty", ""]
   ],
   "id_suffix": "service_accounts"
 }
