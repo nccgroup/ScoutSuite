@@ -6,7 +6,7 @@
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Information</h4>
-        <div class="list-group-item-text item-margin">Role Name: <span id="cloudresourcemanager.projects.{{@../key}}.bindings.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Role Name: <span id="cloudresourcemanager.projects.{{@../key}}.bindings.{{@key}}.name"><samp>{{name}}</samp></span></div>
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Bindings</h4>
@@ -14,7 +14,7 @@
         <div id="cloudresourcemanager.projects.{{@../key}}.bindings.{{@key}}.users" class="accordion-inner">
             <ul>
                 {{#each members.users}}
-                <li><samp>{{this}}</samp></li>
+                <li><samp><samp>{{this}}</samp></samp></li>
                 {{else}}
                 <li><samp>None</samp></li>
                 {{/each}}
