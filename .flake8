@@ -17,3 +17,7 @@ exclude =
     build,
     dist,
     venv
+
+[pycodestyle]
+max_line_length = 127
+ignore = E501
