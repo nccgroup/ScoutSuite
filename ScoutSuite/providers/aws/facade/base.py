@@ -1,5 +1,6 @@
 from boto3.session import Session
 
+from ScoutSuite.providers.aws.facade.acm import AcmFacade
 from ScoutSuite.providers.aws.facade.awslambda import LambdaFacade
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.facade.cloudformation import CloudFormation
@@ -14,6 +15,7 @@ from ScoutSuite.providers.aws.facade.elb import ELBFacade
 from ScoutSuite.providers.aws.facade.elbv2 import ELBv2Facade
 from ScoutSuite.providers.aws.facade.emr import EMRFacade
 from ScoutSuite.providers.aws.facade.iam import IAMFacade
+from ScoutSuite.providers.aws.facade.kms import KMSFacade
 from ScoutSuite.providers.aws.facade.rds import RDSFacade
 from ScoutSuite.providers.aws.facade.redshift import RedshiftFacade
 from ScoutSuite.providers.aws.facade.route53 import Route53Facade
@@ -29,10 +31,6 @@ try:
     from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
 except ImportError:
     pass
-try:
-    from ScoutSuite.providers.aws.facade.kms_private import KMSFacade
-except ImportError:
-    pass
 
 
 class AWSFacade(AWSBaseFacade):
@@ -46,6 +44,7 @@ class AWSFacade(AWSBaseFacade):
 
         service = 'ec2containerservice' if service == 'ecs' else service
         available_services = await run_concurrently(lambda: Session(region_name='eu-west-1').get_available_services())
+
         if service not in available_services:
             raise Exception('Service ' + service + ' is not available.')
 
@@ -75,6 +74,7 @@ class AWSFacade(AWSBaseFacade):
 
     def _instantiate_facades(self):
         self.ec2 = EC2Facade(self.session, self.owner_id)
+        self.acm = AcmFacade(self.session)
         self.awslambda = LambdaFacade(self.session)
         self.cloudformation = CloudFormation(self.session)
         self.cloudtrail = CloudTrailFacade(self.session)
@@ -88,6 +88,7 @@ class AWSFacade(AWSBaseFacade):
         self.elb = ELBFacade(self.session)
         self.elbv2 = ELBv2Facade(self.session)
         self.iam = IAMFacade(self.session)
+        self.kms = KMSFacade(self.session)
         self.rds = RDSFacade(self.session)
         self.redshift = RedshiftFacade(self.session)
         self.s3 = S3Facade(self.session)
@@ -98,9 +99,5 @@ class AWSFacade(AWSBaseFacade):
         # Instantiate facades for proprietary services
         try:
             self.dynamodb = DynamoDBFacade(self.session)
-        except NameError:
-            pass
-        try:
-            self.kms = KMSFacade(self.session)
         except NameError:
             pass

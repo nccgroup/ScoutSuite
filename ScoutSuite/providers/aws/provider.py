@@ -1,7 +1,7 @@
 import copy
 import os
 
-from ScoutSuite.core.console import print_debug, print_error, print_exception
+from ScoutSuite.core.console import print_error, print_exception
 from ScoutSuite.providers.aws.services import AWSServicesConfig
 from ScoutSuite.providers.aws.resources.vpc.base import put_cidr_name
 from ScoutSuite.providers.aws.utils import ec2_classic, get_aws_account_id
@@ -31,7 +31,7 @@ class AWSProvider(BaseProvider):
         self.provider_code = 'aws'
         self.provider_name = 'Amazon Web Services'
         self.environment = self.profile
-        self.result_format = result_format 
+        self.result_format = result_format
 
         self.credentials = kwargs['credentials']
 
@@ -64,8 +64,10 @@ class AWSProvider(BaseProvider):
         # Various data processing calls
         # Note that order of processing can matter
 
+        # TODO - this should be moved to the `finalize` method of the base resource, as it's not cross-service
         self._map_all_subnets()
 
+        # TODO - this should be moved to the `finalize` method of the base resource, as it's not cross-service
         if 'ec2' in self.service_list:
             self._map_all_sgs()
             self._add_security_group_name_to_ec2_grants()
@@ -78,15 +80,13 @@ class AWSProvider(BaseProvider):
         if 'ec2' in self.service_list and 'iam' in self.service_list:
             self._match_instances_and_roles()
 
-        if 'cloudtrail' in self.service_list:
-            self._process_cloudtrail_trails(self.services['cloudtrail'])
-
         if 'elbv2' in self.service_list and 'ec2' in self.service_list:
             self._add_security_group_data_to_elbv2()
 
         if 's3' in self.service_list and 'iam' in self.service_list:
             self._match_iam_policies_and_buckets()
 
+        # TODO - this should be moved to the `finalize` method of the base resource, as it's not cross-service
         if 'elb' in self.services:
             self._parse_elb_policies()
 
@@ -190,28 +190,6 @@ class AWSProvider(BaseProvider):
         else:
             print_exception('Failed to handle EC2 grant: %s' % ec2_grant)
 
-    @staticmethod
-    def _process_cloudtrail_trails(cloudtrail_config):
-        global_events_logging = []
-        data_logging_trails_count = 0
-        for region in cloudtrail_config['regions']:
-            for trail_id in cloudtrail_config['regions'][region]['trails']:
-                trail = cloudtrail_config['regions'][region]['trails'][trail_id]
-                if 'HomeRegion' in trail and trail['HomeRegion'] != region:
-                    # Part of a multi-region trail, skip until we find the whole object
-                    continue
-                if trail['IncludeGlobalServiceEvents'] and trail['IsLogging']:
-                    global_events_logging.append((region, trail_id,))
-                # Any wildcard logging?
-                if trail.get('wildcard_data_logging', False):
-                    data_logging_trails_count += 1
-
-        cloudtrail_config['data_logging_trails_count'] = data_logging_trails_count
-        cloudtrail_config['IncludeGlobalServiceEvents'] = len(
-            global_events_logging) > 0
-        cloudtrail_config['DuplicatedGlobalServiceEvents'] = len(
-            global_events_logging) > 1
-
     def process_network_acls_callback(self, current_config, path, current_path, privateip_id, callback_args):
         # Check if the network ACL allows all traffic from all IP addresses
         self._process_network_acls_check_for_allow_all(
@@ -299,8 +277,8 @@ class AWSProvider(BaseProvider):
                     if 'Allow' in iam_info['permissions']['Action'][action][iam_entity]:
                         for allowed_iam_entity in iam_info['permissions']['Action'][action][iam_entity]['Allow']:
                             # For resource statements, we can easily rely on the existing permissions structure
-                            if 'Resource' in iam_info['permissions']['Action'][action][iam_entity]['Allow'][
-                                allowed_iam_entity]:
+                            if 'Resource' in \
+                                    iam_info['permissions']['Action'][action][iam_entity]['Allow'][allowed_iam_entity]:
                                 for full_path in (x for x in
                                                   iam_info['permissions']['Action'][action][iam_entity]['Allow'][
                                                       allowed_iam_entity]['Resource'] if
@@ -389,7 +367,6 @@ class AWSProvider(BaseProvider):
                 for bucket in s3_info['buckets']:
                     self._update_iam_permissions(
                         s3_info, bucket, iam_entity, allowed_iam_entity, policy_info)
-                pass
             else:
                 # Could be an error or cross-account access, ignore
                 pass
@@ -439,7 +416,8 @@ class AWSProvider(BaseProvider):
     def process_vpc_peering_connections_callback(self, current_config, path, current_path, pc_id, callback_args):
 
         # Create a list of peering connection IDs in each VPC
-        info = 'AccepterVpcInfo' if current_config['AccepterVpcInfo']['OwnerId'] == self.account_id else 'RequesterVpcInfo'
+        info = 'AccepterVpcInfo' if current_config['AccepterVpcInfo'][
+                                        'OwnerId'] == self.account_id else 'RequesterVpcInfo'
         region = current_path[current_path.index('regions') + 1]
         vpc_id = current_config[info]['VpcId']
         if vpc_id not in self.services['vpc']['regions'][region]['vpcs']:
@@ -610,36 +588,36 @@ class AWSProvider(BaseProvider):
         # FIXME it's not clear if the below is still necessary/useful
         return
 
-        attached_resource = current_config['ResourceId']
-        if attached_resource.startswith('vpc-'):
-            vpc_path = combine_paths(
-                current_path[0:4], ['vpcs', attached_resource])
-            try:
-                attached_vpc = get_object_at(self, vpc_path)
-            except Exception:
-                print_debug(
-                    'It appears that the flow log %s is attached to a resource that was previously deleted (%s).' % (
-                        flow_log_id, attached_resource))
-                return
-            manage_dictionary(attached_vpc, 'flow_logs', [])
-            if flow_log_id not in attached_vpc['flow_logs']:
-                attached_vpc['flow_logs'].append(flow_log_id)
-            for subnet_id in attached_vpc['subnets']:
-                manage_dictionary(
-                    attached_vpc['subnets'][subnet_id], 'flow_logs', [])
-                if flow_log_id not in attached_vpc['subnets'][subnet_id]['flow_logs']:
-                    attached_vpc['subnets'][subnet_id]['flow_logs'].append(
-                        flow_log_id)
-        elif attached_resource.startswith('subnet-'):
-            subnet_path = combine_paths(current_path[0:4],
-                                        ['vpcs', self.subnet_map[attached_resource]['vpc_id'], 'subnets',
-                                         attached_resource])
-            subnet = get_object_at(self, subnet_path)
-            manage_dictionary(subnet, 'flow_logs', [])
-            if flow_log_id not in subnet['flow_logs']:
-                subnet['flow_logs'].append(flow_log_id)
-        else:
-            print_exception('Resource %s attached to flow logs is not handled' % attached_resource)
+        # attached_resource = current_config['ResourceId']
+        # if attached_resource.startswith('vpc-'):
+        #     vpc_path = combine_paths(
+        #         current_path[0:4], ['vpcs', attached_resource])
+        #     try:
+        #         attached_vpc = get_object_at(self, vpc_path)
+        #     except Exception:
+        #         print_debug(
+        #             'It appears that the flow log %s is attached to a resource that was previously deleted (%s).' % (
+        #                 flow_log_id, attached_resource))
+        #         return
+        #     manage_dictionary(attached_vpc, 'flow_logs', [])
+        #     if flow_log_id not in attached_vpc['flow_logs']:
+        #         attached_vpc['flow_logs'].append(flow_log_id)
+        #     for subnet_id in attached_vpc['subnets']:
+        #         manage_dictionary(
+        #             attached_vpc['subnets'][subnet_id], 'flow_logs', [])
+        #         if flow_log_id not in attached_vpc['subnets'][subnet_id]['flow_logs']:
+        #             attached_vpc['subnets'][subnet_id]['flow_logs'].append(
+        #                 flow_log_id)
+        # elif attached_resource.startswith('subnet-'):
+        #     subnet_path = combine_paths(current_path[0:4],
+        #                                 ['vpcs', self.subnet_map[attached_resource]['vpc_id'], 'subnets',
+        #                                  attached_resource])
+        #     subnet = get_object_at(self, subnet_path)
+        #     manage_dictionary(subnet, 'flow_logs', [])
+        #     if flow_log_id not in subnet['flow_logs']:
+        #         subnet['flow_logs'].append(flow_log_id)
+        # else:
+        #     print_exception('Resource %s attached to flow logs is not handled' % attached_resource)
 
     def get_db_attack_surface(self, current_config, path, current_path, db_id, callback_args):
         service = current_path[1]

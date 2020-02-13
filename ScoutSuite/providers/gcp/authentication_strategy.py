@@ -9,7 +9,7 @@ from ScoutSuite.providers.base.authentication_strategy import AuthenticationStra
 
 class GCPAuthenticationStrategy(AuthenticationStrategy):
 
-    def authenticate(self, user_account=None, service_account=None, **kargs):
+    def authenticate(self, user_account=None, service_account=None, **kwargs):
         """
         Implements authentication for the GCP provider
         Refer to https://google-auth.readthedocs.io/en/stable/reference/google.auth.html.
@@ -26,7 +26,6 @@ class GCPAuthenticationStrategy(AuthenticationStrategy):
             if user_account:
                 # disable GCP warning about using User Accounts
                 warnings.filterwarnings("ignore", "Your application has authenticated using end user credentials")
-                pass  # Nothing more to do
             elif service_account:
                 client_secrets_path = os.path.abspath(service_account)
                 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = client_secrets_path

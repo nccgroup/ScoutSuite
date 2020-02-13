@@ -1,0 +1,127 @@
+
+<!-- Network Security Groups partial -->
+<script id="services.network.subscriptions.id.security_groups.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="network.subscriptions.{{@../key}}.security_groups.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Location: <span id="network.subscriptions.{{@../key}}.security_groups.{{@key}}.location">{{ location }}</span></div>
+        <div class="list-group-item-text item-margin">State: <span id="network.subscriptions.{{@../key}}.security_groups.{{@key}}.provisioning_state">{{ provisioning_state }}</span></div>
+        {{!--
+        <div class="list-group-item-text item-margin">
+            <span id="network.subscriptions.{{@../key}}.security_groups.{{@key}}.ExposedPorts">Exposed Ports:</span>
+            <div class="list-group-item-text item-margin">
+                {{#each exposed_port_ranges}}
+                <li id="network.security_groups.{{@../key}}.exposed_port_ranges.{{@key}}">{{ this }}</li>
+                {{/each}}
+            </div>
+        </div>
+        --}}
+    </div>
+    <div class="list-group-item">
+        <div class="accordion">
+            <h4 class="list-group-item-heading">Inbound Security Rules</h4>
+            <table class="table-striped" width="100%" >
+                <tr class="table-padding">
+                    <td width="10%">Priority</td>
+                    <td width="40%">Name</td>
+                    <td width="10%">Protocol</td>
+                    <td width="10%">Source Port</td>
+                    <td width="10%">Source Filter</td>
+                    <td width="10%">Destination Port</td>
+                    <td width="10%">Destination Filter</td>
+                    <td width="10%">Action</td>
+                </tr>
+                {{#each_dict_sorted security_rules "priority"}}
+                    {{#ifEqual direction "Inbound"}}
+                    <tr>
+                        <td width="10%" class="text-center">{{priority}}</td>
+                        <td width="40%">{{name}}</td>
+                        <td width="10%" class="text-center">{{protocol}}</td>
+                        <td width="10%" class="text-center">{{source_port_ranges}}</td>
+                        {{#if source_address_prefixes_is_asg}}
+                            <td width="10%" class="text-center">
+                                <a href="javascript:showObject('services.network.application_security_groups.{{source_address_prefixes}}')"><samp>{{getValueAt 'services.network.application_security_groups' source_address_prefixes 'name'}}</samp></a>
+                            </td>
+                        {{else}}
+                            <td width="10%" class="text-center">{{source_address_prefixes}}</td>
+                        {{/if}}
+                        <td width="10%" class="text-center">{{destination_port_ranges}}</td>
+                        <td width="10%" class="text-center">{{destination_address_prefixes}}</td>
+                        {{#if allow}}
+                        <td width="10%" class="text-center"><i class="fa fa-check-circle finding-good"></i></td>
+                        {{else}}
+                        <td width="10%" class="text-center"><i class="fa fa-times-circle finding-danger"></i></td>
+                        {{/if}}
+                    </tr>
+                    {{/ifEqual}}
+                {{/each_dict_sorted}}
+            </table>
+        </div>
+    </div>
+    <div class="list-group-item">
+        <div class="accordion">
+            <h4 class="list-group-item-heading">Outbound Security Rules</h4>
+            <table class="table-striped" width="100%" >
+                <tr class="table-padding">
+                    <td width="10%">Priority</td>
+                    <td width="40%">Name</td>
+                    <td width="10%">Protocol</td>
+                    <td width="10%">Source Port</td>
+                    <td width="10%">Source Filter</td>
+                    <td width="10%">Destination Port</td>
+                    <td width="10%">Destination Filter</td>
+                    <td width="10%">Action</td>
+                </tr>
+                {{#each_dict_sorted security_rules "priority"}}
+                    {{#ifEqual direction "Outbound"}}
+                    <tr>
+                        <td width="10%" class="text-center">{{priority}}</td>
+                        <td width="40%">{{name}}</td>
+                        <td width="10%" class="text-center">{{protocol}}</td>
+                        <td width="10%" class="text-center">{{source_port_ranges}}</td>
+                        <td width="10%" class="text-center">{{source_address_prefixes}}</td>
+                        <td width="10%" class="text-center">{{destination_port_ranges}}</td>
+                        <td width="10%" class="text-center">{{destination_address_prefixes}}</td>
+                        {{#if allow}}
+                        <td width="10%" class="text-center"><i class="fa fa-check-circle finding-good"></i></td>
+                        {{else}}
+                        <td width="10%" class="text-center"><i class="fa fa-times-circle finding-danger"></i></td>
+                        {{/if}}
+                    </tr>
+                    {{/ifEqual}}
+                {{/each_dict_sorted}}
+            </table>
+        </div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Attached Subnets</h4>
+        {{#each subnets}}
+        <div class="list-group-item-text item-margin"><a href="javascript:showObject('services.network.subscriptions.{{../subscription}}.virtual_networks.{{this.virtual_network_id}}.subnets.{{this.id}}')"><samp>{{getValueAt 'services.network.subscriptions' ../subscription 'virtual_networks' this.virtual_network_id 'subnets' this.id 'name'}}</samp></a> (<samp>{{getValueAt 'services.network.subscriptions' ../subscription 'virtual_networks' this.virtual_network_id 'name'}}</samp>)</div>
+        {{else}}
+        <div class="list-group-item-text item-margin"><samp>None</samp></div>
+        {{/each}}
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Attached Network Interfaces</h4>
+        {{#each network_interfaces}}
+        <div class="list-group-item-text item-margin"><a href="javascript:showObject('services.network.subscriptions.{{../subscription}}.network_interfaces.{{this.id}}')"><samp>{{getValueAt 'services.network.subscriptions' ../subscription 'network_interfaces' this.id 'name'}}</samp></a></div>
+        {{else}}
+        <div class="list-group-item-text item-margin"><samp>None</samp></div>
+        {{/each}}
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.network.subscriptions.id.security_groups", $("#services\\.network\\.subscriptions\\.id\\.security_groups\\.partial").html());
+</script>
+
+<!-- Single security group template -->
+<script id="single_network_security_group-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.network.subscriptions.id.security_groups'}}
+</script>
+<script>
+    var single_network_security_group_template = Handlebars.compile($("#single_network_security_group-template").html());
+</script>

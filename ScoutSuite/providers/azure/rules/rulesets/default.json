@@ -1,10 +1,16 @@
 {
     "about": "This ruleset consists of numerous rules that are considered standard by NCC Group. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of provider-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configured, and some of them being applicable to a limited number of users.",
     "rules": {
-        "graphrbac-guest-users.json": [
+        "aad-guest-users.json": [
             {
                 "enabled": true,
                 "level": "warning"
+            }
+        ],
+        "network-security-groups-rule-inbound-internet-all.json": [
+            {
+                "enabled": true,
+                "level": "danger"
             }
         ],
         "network-security-groups-rule-inbound-service.json": [

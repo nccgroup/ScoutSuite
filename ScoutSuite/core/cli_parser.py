@@ -139,44 +139,13 @@ class ScoutSuiteArgumentParser:
 
         azure_auth_modes = azure_parser.add_mutually_exclusive_group(required=True)
 
+        # az-cli authentication
         azure_auth_modes.add_argument('-c',
                                       '--cli',
                                       action='store_true',
                                       help='Run Scout using configured azure-cli credentials')
 
-        azure_auth_modes.add_argument('-m',
-                                      '--msi',
-                                      action='store_true',
-                                      help='Run Scout with Managed Service Identity')
-
-        azure_auth_modes.add_argument('-s',
-                                      '--service-principal',
-                                      action='store_true',
-                                      help='Run Scout with an Azure Service Principal')
-        azure_auth_params.add_argument('--tenant',
-                                       action='store',
-                                       dest='tenant_id',
-                                       help='Tenant ID of the service principal')
-        azure_auth_params.add_argument('--subscription',
-                                       action='store',
-                                       dest='subscription_id',
-                                       help='Subscription ID of the service principal')
-        azure_auth_params.add_argument('--client-id',
-                                       action='store',
-                                       dest='client_id',
-                                       help='Client ID of the service principal')
-        azure_auth_params.add_argument('--client-secret',
-                                       action='store',
-                                       dest='client_secret',
-                                       help='Client of the service principal')
-
-        azure_auth_modes.add_argument('--file-auth',
-                                      action='store',
-                                      type=argparse.FileType('r'),
-                                      dest='file_auth',
-                                      metavar="FILE",
-                                      help='Run Scout with the specified credential file')
-
+        # username/password authentication
         azure_auth_modes.add_argument('--user-account',
                                       action='store_true',
                                       help='Run Scout with user credentials')
@@ -193,6 +162,57 @@ class ScoutSuiteArgumentParser:
                                        dest='password',
                                        help='Password of the Azure account')
 
+        # username/password authentication via browser
+        azure_auth_modes.add_argument('--user-account-browser',
+                                      action='store_true',
+                                      help='Run Scout with user credentials, authenticating through a browser (useful when MFA is enforced)')
+
+        # Service Principal authentication
+        azure_auth_modes.add_argument('-s',
+                                      '--service-principal',
+                                      action='store_true',
+                                      help='Run Scout with an Azure Service Principal')
+        azure_auth_params.add_argument('--client-id',
+                                       action='store',
+                                       dest='client_id',
+                                       help='Client ID of the service principal')
+        azure_auth_params.add_argument('--client-secret',
+                                       action='store',
+                                       dest='client_secret',
+                                       help='Client of the service principal')
+        # Service Principal credentials in an auth file
+        azure_auth_modes.add_argument('--file-auth',
+                                      action='store',
+                                      type=argparse.FileType('rb'),
+                                      dest='file_auth',
+                                      metavar="FILE",
+                                      help='Run Scout with the specified credential file')
+
+        # Managed Service Identity (MSI) authentication
+        azure_auth_modes.add_argument('-m',
+                                      '--msi',
+                                      action='store_true',
+                                      help='Run Scout with Managed Service Identity')
+
+        # Additional arguments
+        azure_scope = parser.add_argument_group('Additional arguments')
+
+        azure_scope.add_argument('--tenant',
+                                 action='store',
+                                 dest='tenant_id',
+                                 help='ID of the Tenant (Directory) to scan')
+        azure_scope.add_argument('--subscriptions',
+                                 action='store',
+                                 default=[],
+                                 nargs='+',
+                                 dest='subscription_ids',
+                                 help='IDs (separated by spaces) of the Azure subscription(s) to scan. '
+                                      'By default, only the default subscription will be scanned.')
+        azure_scope.add_argument('--all-subscriptions',
+                                 action='store_true',
+                                 dest='all_subscriptions',
+                                 help='Scan all of the accessible subscriptions')
+
     def _init_aliyun_parser(self):
         parser = self.subparsers.add_parser("aliyun",
                                             parents=[self.common_providers_args_parser],
@@ -206,12 +226,14 @@ class ScoutSuiteArgumentParser:
         aliyun_auth_modes.add_argument('--access-keys',
                                        action='store_true',
                                        help='Run Scout with user credentials')
+
         aliyun_auth_params.add_argument('-k',
                                         '--access-key-id',
                                         action='store',
                                         default=None,
                                         dest='access_key_id',
                                         help='Access Key Id')
+
         aliyun_auth_params.add_argument('-s',
                                         '--access-key-secret',
                                         action='store',
@@ -358,16 +380,21 @@ class ScoutSuiteArgumentParser:
 
         # Test conditions
         v = vars(args)
+        # AWS
         if v.get('provider') == 'aws':
             if v.get('aws_access_keys') and not (v.get('aws_access_key_id') or v.get('aws_secret_access_key')):
                 self.parser.error('When running with --access-keys, you must provide an Access Key ID '
                                   'and Secret Access Key.')
+        # Azure
         elif v.get('provider') == 'azure':
-            if v.get('tenant_id') and not (v.get('user_account') or v.get('service_principal') or v.get('msi')):
-                self.parser.error('--tenant can only be set when using --user-account, --service-principal or --msi')
-            if v.get('subscription_id') and not (v.get('user_account') or v.get('service_principal') or v.get('msi')):
-                self.parser.error('--tenant can only be set when using --user-account, --service-principal or --msi')
-        # TODO add more conditions
+            if v.get('tenant_id') and not (v.get('service_principal') or v.get('user_account_browser')):
+                self.parser.error('--tenant can only be set when using --user-account-browser or --service-principal authentication')
+            if v.get('service_principal') and not v.get('tenant_id'):
+                self.parser.error('You must provide --tenant when using --service-principal authentication')
+            if v.get('user_account_browser') and not v.get('tenant_id'):
+                self.parser.error('You must provide --tenant when using --user-account-browser authentication')
+            if v.get('subscription_ids') and v.get('all_subscriptions'):
+                self.parser.error('--subscription-ids and --all-subscriptions are mutually exclusive options')
 
         return args
 

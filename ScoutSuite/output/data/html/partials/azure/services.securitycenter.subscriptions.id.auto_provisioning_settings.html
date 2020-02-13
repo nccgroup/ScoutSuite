@@ -1,0 +1,24 @@
+<!-- Storage Accounts partial -->
+<script id="services.securitycenter.subscriptions.id.auto_provisioning_settings.partial" type="text/x-handlebars-template">
+    <div id="ressource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="securitycenter.subscriptions.{{@../key}}.auto_provisioning_settings.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Auto Provisioning: <span id="securitycenter.subscriptions.{{@../key}}.auto_provisioning_settings.{{@key}}.auto_provision">{{ auto_provision }}</span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.securitycenter.subscriptions.id.auto_provisioning_settings", $("#services\\.securitycenter\\.subscriptions\\.id\\.auto_provisioning_settings\\.partial").html());
+</script>
+
+<!-- Single Pricings template -->
+<script id="single_securitycenter_auto_provisioning_settings-template" type="text/x-handlebars-template">
+    {{> modal_template template='services.securitycenter.subscriptions.id.auto_provisioning_settings'}}
+</script>
+<script>
+    var single_securitycenter_auto_provisioning_settings_template = Handlebars.compile($("#single_securitycenter_auto_provisioning_settings-template").html());
+</script>

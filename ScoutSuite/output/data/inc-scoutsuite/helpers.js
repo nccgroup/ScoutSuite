@@ -46,6 +46,15 @@ Handlebars.registerHelper('has_profiles?', function (logins) {
     }
 })
 
+// Required in addition to has_profiles to allow if conditions
+Handlebars.registerHelper('ifHasProfiles', function (logins, options) {
+    if (typeof logins !== 'undefined' && logins !== '') {
+        return options.fn(this)
+    } else {
+        return options.inverse(this)
+    }
+})
+
 Handlebars.registerHelper('has_access_keys?', function (accessKeys) {
     if (typeof accessKeys !== 'undefined' && accessKeys !== '') {
         return accessKeys.length
@@ -136,7 +145,7 @@ Handlebars.registerHelper('split_lines', function (text) {
 
 Handlebars.registerHelper('count_vpc_network_acls', function (vpcNetworkAcls) {
     var counter = 0
-    for (let x in vpcNetworkAcls) {
+    for (let _ in vpcNetworkAcls) {
         counter = counter + 1
     }
     return counter
@@ -144,7 +153,7 @@ Handlebars.registerHelper('count_vpc_network_acls', function (vpcNetworkAcls) {
 
 Handlebars.registerHelper('count_vpc_instances', function (vpcInstances) {
     var counter = 0
-    for (let x in vpcInstances) {
+    for (let _ in vpcInstances) {
         counter = counter + 1
     }
     return counter
@@ -153,7 +162,7 @@ Handlebars.registerHelper('count_vpc_instances', function (vpcInstances) {
 Handlebars.registerHelper('count_role_instances', function (instanceProfiles) {
     var counter = 0
     for (let ip in instanceProfiles) {
-        for (let i in instanceProfiles[ip]['instances']) {
+        for (let _ in instanceProfiles[ip]['instances']) {
             counter = counter + 1
         }
     }
@@ -178,7 +187,7 @@ Handlebars.registerHelper('find_ec2_object_attribute', function (path, id, attri
 })
 
 Handlebars.registerHelper('format_date', function (time) {
-    if (!time || time === null || time === '') {
+    if (!time || time === '') {
         return 'No date available'
     }
     else if (typeof time === 'number') {
@@ -288,6 +297,14 @@ Handlebars.registerHelper('getValueAt', function () {
     return getValueAt(path)
 })
 
+Handlebars.registerHelper('greaterLengthThan', function (v1, v2, options) {
+    'use strict';
+    if (v1.length>v2) {
+        return options.fn(this);
+    }
+    return options.inverse(this);
+});
+
 Handlebars.registerHelper('concat', function () {
     var path = arguments[0]
     for (var i = 1; i < arguments.length - 1; i++) {
@@ -369,7 +386,7 @@ Handlebars.registerHelper('each_dict_as_sorted_list', function (context, options
             } else {
                 if (context[a].level.toLowerCase() === 'danger') return -1
                 if (context[b].level.toLowerCase() === 'danger') return 1
-                if (context[a].level.toLowerCase() === 'warning') return -1
+                if (context[a].level.toLowerCase() === 'warning') return -1 // FIXME - these are duplicated for nothing?
                 if (context[b].level.toLowerCase() === 'warning') return 1
                 if (context[a].level.toLowerCase() === 'warning') return -1
                 if (context[b].level.toLowerCase() === 'warning') return 1
@@ -408,7 +425,7 @@ Handlebars.registerHelper('each_dict_sorted', function (dict, key, opts) {
 })
 
 Handlebars.registerHelper('escape_dots', function () {
-    return arguments[0].replace(/\./g, '\\.')
+    return arguments[0].replace(/\./g, '\\.') // lgtm [js/incomplete-sanitization]
 })
 
 /**
@@ -437,7 +454,7 @@ Handlebars.registerHelper('get_rule', function (ruleFilename, attribute) {
     } else {
         let rule = runResults['rule_definitions'][ruleFilename]
         // Clean up some ruleset generator artifacts
-        attributeCleanup = ['file_name', 'file_path', 'rule_dirs', 'rule_types', 'rules_data_path', 'string_definition']
+        let attributeCleanup = ['file_name', 'file_path', 'rule_dirs', 'rule_types', 'rules_data_path', 'string_definition']
         for (let ac in attributeCleanup) {
             rule = ruleCleanup(rule, attributeCleanup[ac])
         }
