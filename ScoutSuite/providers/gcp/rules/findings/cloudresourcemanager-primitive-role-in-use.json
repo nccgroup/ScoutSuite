@@ -5,5 +5,5 @@
   "conditions": [ "and",
     [ "cloudresourcemanager.projects.id.bindings.id.name", "containAtLeastOneOf", ["owner", "editor", "viewer"] ]
   ],
-  "id_suffix": "this"
+  "id_suffix": "name"
 }
