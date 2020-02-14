@@ -10,23 +10,6 @@
         [ "sns.regions.id.topics.id.Policy.Statement.id.Effect", "equal", "Allow" ],
         [ "sns.regions.id.topics.id.Policy.Statement.id.", "containAction", "SNS:_ARG_0_" ],
         [ "_INCLUDE_(conditions/policy-statement-any-principal.json)", [ "_STATEMENT_" ], [ "sns.regions.id.topics.id.Policy.Statement.id" ] ],
-
-        [ "or",
-            [ "sns.regions.id.topics.id.Policy.Statement.id.", "withoutKey", "Condition" ],
-            [ "sns.regions.id.topics.id.Policy.Statement.id.Condition.", "withoutKey", "StringEquals" ],
-            [ "and",
-                [ "sns.regions.id.topics.id.Policy.Statement.id.Condition.StringEquals.", "withoutKey", "AWS:SourceArn" ],
-                [ "sns.regions.id.topics.id.Policy.Statement.id.Condition.StringEquals.", "withoutKey", "AWS:SourceOwner" ]
-            ]
-        ],
-
-        [ "or",
-            [ "sns.regions.id.topics.id.Policy.Statement.id.", "withoutKey", "Condition" ],
-            [ "sns.regions.id.topics.id.Policy.Statement.id.Condition.", "withoutKey", "ArnLike" ],
-            [ "and",
-                [ "sns.regions.id.topics.id.Policy.Statement.id.Condition.ArnLike.", "withoutKey", "AWS:SourceArn" ],
-                [ "sns.regions.id.topics.id.Policy.Statement.id.Condition.ArnLike.", "withoutKey", "AWS:SourceOwner" ]
-            ]
-        ]
+        [ "_INCLUDE_(conditions/policy-statement-poor-condition.json)", [ "_STATEMENT_" ], [ "sns.regions.id.topics.id.Policy.Statement.id" ] ]
     ]
 }
