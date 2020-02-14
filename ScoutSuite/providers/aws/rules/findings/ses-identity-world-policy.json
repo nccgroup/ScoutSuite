@@ -8,12 +8,7 @@
     "conditions": [ "and",
         [ "ses.regions.id.identities.id.policies.id.Statement.id.Effect", "equal", "Allow" ],
         [ "ses.regions.id.identities.id.policies.id.Statement.id.", "containAction", "ses:_ARG_0_" ],
-        [ "or",
-            [ "ses.regions.id.identities.id.policies.id.Statement.id.Principal", "containAtLeastOneOf", "*" ],
-            [ "and",
-                [ "ses.regions.id.identities.id.policies.id.Statement.id.Principal", "withKey", "AWS" ],
-                [ "ses.regions.id.identities.id.policies.id.Statement.id.Principal.AWS", "containAtLeastOneOf", "*" ]
-            ]
-        ]
+        [ "_INCLUDE_(conditions/policy-statement-any-principal.json)", [ "_STATEMENT_" ], [ "ses.regions.id.identities.id.policies.id.Statement.id" ] ],
+        [ "_INCLUDE_(conditions/policy-statement-poor-condition.json)", [ "_STATEMENT_" ], [ "ses.regions.id.identities.id.policies.id.Statement.id" ] ]
     ]
 }
