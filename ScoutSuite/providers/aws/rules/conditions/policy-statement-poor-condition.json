@@ -5,11 +5,13 @@
             [ "_STATEMENT_.Condition.", "withoutKey", "ArnEquals" ],
             [ "or",
                 [ "_STATEMENT_.Condition.", "withoutKey", "StringEquals" ],
-                [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "aws:SourceOwner" ],
-                [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "aws:SourceArn" ]
+                [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "aws:SourceArn" ],
+                [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "aws:SourceOwner" ]
             ],
             [ "or",
-                [ "_STATEMENT_.Condition.", "withoutKey", "ArnLike" ]
+                [ "_STATEMENT_.Condition.", "withoutKey", "ArnLike" ],
+                [ "_STATEMENT_.Condition.ArnLike.", "withoutKey", "aws:SourceArn" ],
+                [ "_STATEMENT_.Condition.ArnLike.", "withoutKey", "aws:SourceOwner" ]
             ]
         ]
     ]
