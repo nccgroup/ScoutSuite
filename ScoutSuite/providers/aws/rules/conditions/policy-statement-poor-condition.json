@@ -2,8 +2,14 @@
     "conditions": [ "or",
         [ "_STATEMENT_.", "withoutKey", "Condition" ],
         [ "and",
-            [ "_STATEMENT_.Condition.", "withoutKey", "ArnEquals" ],
-            [ "_STATEMENT_.Condition.", "withoutKey", "ArnLike" ],
+            [ "and",
+                [ "_STATEMENT_.Condition.", "withoutKey", "ArnEquals" ],
+                [ "_STATEMENT_.Condition.", "withoutKey", "ForAnyValue:ArnEquals" ]
+            ],
+            [ "and",
+                [ "_STATEMENT_.Condition.", "withoutKey", "ArnLike" ],
+                [ "_STATEMENT_.Condition.", "withoutKey", "ForAnyValue:ArnLike" ]
+            ],
             [ "or",
                 [ "_STATEMENT_.Condition.", "withoutKey", "StringEquals" ],
                 [ "and",
