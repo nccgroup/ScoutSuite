@@ -8,8 +8,13 @@
     "conditions": [ "and",
         [ "sns.regions.id.topics.id.Policy.Statement.id.Effect", "equal", "Allow" ],
         [ "sns.regions.id.topics.id.Policy.Statement.id.", "containAction", "SNS:_ARG_0_" ],
-        [ "sns.regions.id.topics.id.Policy.Statement.id.Principal", "withKey", "AWS" ],
-        [ "sns.regions.id.topics.id.Policy.Statement.id.Principal.AWS", "containAtLeastOneOf", "*" ],
+        [ "or",
+            [ "sns.regions.id.topics.id.Policy.Statement.id.Principal", "equal", "*" ],
+            [ "and",
+                [ "sns.regions.id.topics.id.Policy.Statement.id.Principal", "withKey", "AWS" ],
+                [ "sns.regions.id.topics.id.Policy.Statement.id.Principal.AWS", "containAtLeastOneOf", "*" ]
+            ]
+        ],
         [ "or",
             [ "sns.regions.id.topics.id.Policy.Statement.id.", "withoutKey", "Condition" ],
             [ "sns.regions.id.topics.id.Policy.Statement.id.Condition.", "withoutKey", "StringEquals" ],
