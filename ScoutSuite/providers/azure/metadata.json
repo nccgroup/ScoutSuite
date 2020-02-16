@@ -99,6 +99,10 @@
         "compliance_results": {
           "cols": 2,
           "path": "services.securitycenter.subscriptions.id.compliance_results"
+        },
+        "regulatory_compliance_results": {
+          "cols": 2,
+          "path": "services.securitycenter.subscriptions.id.regulatory_compliance_results"
         }
       }
     }
