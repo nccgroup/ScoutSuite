@@ -10,8 +10,10 @@ class RegulatoryComplianceResults(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
-        for raw_regulatory_compliance_result in await self.facade.securitycenter.get_regulatory_compliance_results(self.subscription_id):
-            id, regulatory_compliance_result = self._parse_regulatory_compliance_result(raw_regulatory_compliance_result)
+        for raw_regulatory_compliance_result in await \
+                self.facade.securitycenter.get_regulatory_compliance_results(self.subscription_id):
+            id, regulatory_compliance_result = \
+                self._parse_regulatory_compliance_result(raw_regulatory_compliance_result)
             self[id] = regulatory_compliance_result
 
     def _parse_regulatory_compliance_result(self, raw_regulatory_compliance_result):
@@ -27,5 +29,6 @@ class RegulatoryComplianceResults(AzureResources):
         regulatory_compliance_result_dict['passed_assessments'] = raw_regulatory_compliance_result.passed_assessments
         regulatory_compliance_result_dict['failed_assessments'] = raw_regulatory_compliance_result.failed_assessments
         regulatory_compliance_result_dict['skipped_assessments'] = raw_regulatory_compliance_result.skipped_assessments
-        regulatory_compliance_result_dict['additional_properties'] = raw_regulatory_compliance_result.additional_properties
+        regulatory_compliance_result_dict['additional_properties'] = \
+            raw_regulatory_compliance_result.additional_properties
         return regulatory_compliance_result_dict['id'], regulatory_compliance_result_dict
