@@ -6,6 +6,7 @@ from .alerts import Alerts
 from .security_contacts import SecurityContacts
 # from .information_protection_policies import InformationProtectionPolicies
 # from .settings import Settings
+from .compliance_results import ComplianceResults
 
 
 class SecurityCenter(Subscriptions):
@@ -16,4 +17,5 @@ class SecurityCenter(Subscriptions):
         (SecurityContacts, 'security_contacts'),
         # (InformationProtectionPolicies, 'information_protection_policies'),  # FIXME this isn't properly implemented
         # (Settings, 'settings')  # FIXME this isn't implemented
+        (ComplianceResults, 'compliance_results')
     ]

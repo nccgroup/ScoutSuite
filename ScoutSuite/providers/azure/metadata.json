@@ -95,6 +95,10 @@
         "auto_provisioning_settings": {
           "cols": 2,
           "path": "services.securitycenter.subscriptions.id.auto_provisioning_settings"
+        },
+        "compliance_results": {
+          "cols": 2,
+          "path": "services.securitycenter.subscriptions.id.compliance_results"
         }
       }
     }

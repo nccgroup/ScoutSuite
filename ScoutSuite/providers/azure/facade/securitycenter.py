@@ -60,3 +60,24 @@ class SecurityCenterFacade:
         except Exception as e:
             print_exception('Failed to retrieve settings: {}'.format(e))
             return []
+
+    async def get_alerts(self, subscription_id: str):
+        try:
+            client = self.get_client(subscription_id)
+            return await run_concurrently(
+                lambda: list(client.alerts.list())
+            )
+        except Exception as e:
+            print_exception('Failed to retrieve alerts: {}'.format(e))
+            return []
+
+    async def get_compliance_results(self, subscription_id: str):
+        try:
+            client = self.get_client(subscription_id)
+            scope = '/subscriptions/{}'.format(subscription_id)
+            return await run_concurrently(
+                lambda: list(client.compliance_results.list(scope=scope))
+            )
+        except Exception as e:
+            print_exception('Failed to retrieve compliance results: {}'.format(e))
+            return []
