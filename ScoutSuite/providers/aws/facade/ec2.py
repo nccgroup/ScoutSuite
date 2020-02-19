@@ -32,7 +32,8 @@ class EC2Facade(AWSBaseFacade):
             if 'Value' not in user_data_response['UserData'].keys():
                 return None
             else:
-                value = base64.b64decode(user_data_response['UserData']['Value'])
+                value = base64.b64decode(user_data_response['UserData']['Value'] + "===")  # Adds extra padding at the
+                # end to the base64 value to avoid decoding errors
                 if value[0:2] == b'\x1f\x8b':  # GZIP magic number
                     return zlib.decompress(value, zlib.MAX_WBITS | 32).decode('utf-8')
                 else:
