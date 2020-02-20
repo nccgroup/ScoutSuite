@@ -16,6 +16,7 @@ formatted_service_name = {
     'awslambda': 'Lambda',
     'redshift': 'RedShift',
     'route53': 'Route53',
+    'secretsmanager': 'Secrets Manager',
     # Azure
     'storageaccounts': 'Storage Accounts',
     'sqldatabase': 'SQL Database',

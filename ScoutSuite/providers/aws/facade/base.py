@@ -23,6 +23,7 @@ from ScoutSuite.providers.aws.facade.s3 import S3Facade
 from ScoutSuite.providers.aws.facade.ses import SESFacade
 from ScoutSuite.providers.aws.facade.sns import SNSFacade
 from ScoutSuite.providers.aws.facade.sqs import SQSFacade
+from ScoutSuite.providers.aws.facade.secretsmanager import SecretsManagerFacade
 from ScoutSuite.providers.aws.utils import get_aws_account_id
 from ScoutSuite.providers.utils import run_concurrently
 
@@ -95,6 +96,7 @@ class AWSFacade(AWSBaseFacade):
         self.ses = SESFacade(self.session)
         self.sns = SNSFacade(self.session)
         self.sqs = SQSFacade(self.session)
+        self.secretsmanager = SecretsManagerFacade(self.session)
 
         # Instantiate facades for proprietary services
         try:
