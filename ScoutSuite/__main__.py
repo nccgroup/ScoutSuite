@@ -177,7 +177,7 @@ async def _run(provider,
 
     print_info('Launching Scout')
 
-    print_info('Authenticating to %s cloud provider' % provider.upper())
+    print_info('Authenticating to cloud provider')
     auth_strategy = get_authentication_strategy(provider)
     try:
         credentials = auth_strategy.authenticate(profile=profile,
