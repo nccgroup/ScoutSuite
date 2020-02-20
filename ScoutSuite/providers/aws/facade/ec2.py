@@ -33,21 +33,18 @@ class EC2Facade(AWSBaseFacade):
                 return None
             else:
                 try:
-                    value = base64.b64decode(user_data_response['UserData']['Value'])
-                    if value[0:2] == b'\x1f\x8b':  # GZIP magic number
-                        return zlib.decompress(value, zlib.MAX_WBITS | 32).decode('utf-8')
-                    else:
-                        return value.decode('utf-8')
+                    return await self._decode_user_data(user_data_response['UserData']['Value'])
                 except base64.binascii.Error as e:
-                    print_exception(
-                        'Encoded UserData in Base64 has an incorrect padding')
-                finally:
-                    value = base64.b64decode(user_data_response['UserData']['Value'] + "===")  # Adds extra padding at
-                    # the end to the base64 value to avoid decoding errors
-                    if value[0:2] == b'\x1f\x8b':  # GZIP magic number
-                        return zlib.decompress(value, zlib.MAX_WBITS | 32).decode('utf-8')
-                    else:
-                        return value.decode('utf-8')
+                    return await self._decode_user_data(base64.b64decode(user_data_response['UserData']['Value'] + "==="))
+                except Exception as e:
+                    print_exception('Unable to decode EC2 instance user data: {}'.format(e))
+
+    async def _decode_user_data(self, user_data):
+        value = base64.b64decode(user_data)
+        if value[0:2] == b'\x1f\x8b':  # GZIP magic number
+            return zlib.decompress(value, zlib.MAX_WBITS | 32).decode('utf-8')
+        else:
+            return value.decode('utf-8')
 
     async def get_instances(self, region: str, vpc: str):
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]
