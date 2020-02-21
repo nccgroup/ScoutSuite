@@ -2,6 +2,7 @@
     "description": "Security group whitelists AWS CIDRs",
     "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
     "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "rationale": "<b>Description:</b><br><br>The AWS IP ranges contain addresses which can be assigned to EC2 instances in any AWS account, as well as services which can be used to interact with any AWS account. Consequently, allowing these ranges potentially exposes your AWS account to external interactions.",
     "dashboard_name": "Rules",
     "conditions": [ "and",
         [ "this", "inSubnets", "_IP_RANGES_FROM_FILE_(aws/ip-ranges/aws.json, [])" ]
