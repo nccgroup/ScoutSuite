@@ -28,8 +28,18 @@ class ClusterParameterGroups(AWSCompositeResources):
         )
 
     def _parse_parameter_group(self, raw_parameter_group):
-        name = raw_parameter_group.pop('ParameterGroupName')
-        id = get_non_provider_id(name)
-        raw_parameter_group['name'] = name
+        parameter_group = {}
+        parameter_group['name'] = raw_parameter_group.get('ParameterGroupName')
+        parameter_group['id'] = get_non_provider_id(parameter_group['name'])
+        parameter_group['family'] = raw_parameter_group.get('ParameterGroupFamily')
+        parameter_group['description'] = raw_parameter_group.get('Description')
+        parameter_group['is_default'] = self._is_default(raw_parameter_group)
+        parameter_group['tags'] = raw_parameter_group.get('Tags')
+        return parameter_group['id'], parameter_group
 
-        return id, raw_parameter_group
+    def _is_default(self, raw_parameter_group):
+        if 'Default parameter group for' in raw_parameter_group.get('Description') and \
+                'default.' in raw_parameter_group.get('ParameterGroupName'):
+            return True
+        else:
+            return False

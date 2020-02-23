@@ -1,0 +1,52 @@
+
+<!-- Key partial -->
+<script id="services.kms.regions.id.keys.partial" type="text/x-handlebars-template">
+  {{#unless scout2_link}}
+    <div id="resource-name" class="list-group-item active">
+      <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+    <h4>Information</h4>
+      <ul>
+        <li class="list-group-item-text">ID: <span id="kms.regions.{{region}}.keys.{{@key}}.id"><samp>{{id}}</samp></span></li>
+        <li class="list-group-item-text">ARN: <span id="kms.regions.{{region}}.keys.{{@key}}.arn"><samp>{{arn}}</samp></span></li>
+        <li class="list-group-item-text">Description: <span id="kms.regions.{{region}}.keys.{{@key}}.description"><samp>{{value_or_none description}}</samp></span></li>
+        <li class="list-group-item-text">Creation Date: <span id="kms.regions.{{region}}.keys.{{@key}}.creation_date">{{format_date creation_date}}</span></li>
+        <li class="list-group-item-text">Status: <span id="kms.regions.{{region}}.keys.{{@key}}.key_enabled">{{convert_bool_to_enabled key_enabled}}</span></li>
+        <li class="list-group-item-text">Rotation: <span id="kms.regions.{{region}}.keys.{{@key}}.rotation_enabled">{{convert_bool_to_enabled rotation_enabled}}</span></li>
+        <li class="list-group-item-text">Origin: <span id="kms.regions.{{region}}.keys.{{@key}}.origin"><samp>{{value_or_none origin}}</samp></span></li>
+        <li class="list-group-item-text">Key Manager: <span id="kms.regions.{{region}}.keys.{{@key}}.key_manager"><samp>{{value_or_none key_manager}}</samp></span></li>
+      </ul>
+    </div>
+    <div class="list-group-item">
+      {{#if aliases.length}}
+      <h4 class="list-group-item-heading accordion-heading">Aliases</h4>
+      <ul>
+        {{#each this.aliases}}
+        <li><samp>{{name}}</samp></li>
+        {{/each}}
+      </ul>
+      {{else}}
+      <h4 class="list-group-item-heading accordion-heading text-secondary">Aliases</h4>
+      {{/if}}
+    </div>
+    <div class="list-group-item">
+    {{#if policy}}
+      {{> accordion_policy name = 'Key Policy' document = policy policy_path = (concat 'kms.regions' region 'keys' @key 'policy')}}
+    {{else}}
+      <h4 class="list-group-item-heading accordion-heading text-secondary">Key Policy</h4>
+    {{/if}}
+    </div>
+  {{/unless}}
+</script>
+<script>
+  Handlebars.registerPartial("services.kms.regions.id.keys", $("#services\\.kms\\.regions\\.id\\.keys\\.partial").html());
+</script>
+
+<!-- Single KMS instance template -->
+<script id="single_kms_key-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.kms.regions.id.keys' }}
+</script>
+<script>
+    var single_kms_key_template = Handlebars.compile($("#single_kms_key-template").html());
+</script>
