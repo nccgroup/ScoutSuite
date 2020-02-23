@@ -7,6 +7,48 @@
                 "level": "warning"
             }
         ],
+        "appservice-authentication-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "appservice-client-certificates-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "appservice-http-2-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "appservice-http-allowed.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "appservice-managed-service-identities-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "appservice-tls-v1-supported.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "appservice-webapp-using-outdated-progamming-language-version.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "network-security-groups-rule-inbound-internet-all.json": [
             {
                 "enabled": true,
