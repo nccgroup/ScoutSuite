@@ -45,7 +45,7 @@
         ],
         "appservice-webapp-using-outdated-progamming-language-version.json": [
             {
-                "enabled": true,
+                "enabled": false,
                 "level": "warning"
             }
         ],
