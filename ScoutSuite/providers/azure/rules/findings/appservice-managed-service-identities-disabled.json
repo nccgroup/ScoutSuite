@@ -1,0 +1,18 @@
+{
+    "description": "Managed Service Identities Disabled",
+    "rationale": "<b>Description:</b><br><br>Managed service identity in App Service makes the app more secure by eliminating secrets from the app, such as credentials in the connection strings. When registering with Azure Active Directory in the app service, the app will connect to other Azure services securely without the need of username and passwords.",
+    "remediation": "Using Console:<ol><li>Login to Azure Portal using https://portal.azure.com</li><li>Go to \"App Services\"</li><li>Click on each App</li><li>Under the \"Setting\" section, Click on \"Identity\"</li><li>Ensure that \"Status\" set to On\"</li></ol>",
+    "compliance": [
+        {"name": "CIS Microsoft Azure Foundations", "version": "1.1.0", "reference": "9.5"}
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-gb/azure/app-service/app-service-web-tutorial-connect-msi"
+    ],
+    "dashboard_name": "Web Apps",
+    "path": "appservice.subscriptions.id.web_apps.id",
+    "conditions": [ "and",
+        [ "appservice.subscriptions.id.web_apps.id.identity", "notNull", "" ],
+        [ "appservice.subscriptions.id.web_apps.id.identity.principal_id", "null", "" ]
+    ],
+    "id_suffix": "identity.managed_principal_id"
+}
