@@ -48,6 +48,15 @@
             {{/if}}
         </div>
         {{/if}}
+        {{#if metadata_options}}
+        <div class="list-group-item">
+            <h4>Metadata Options</h4>
+            <ul id="ec2.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.metadata_options">
+                <li>Endpoint: {{metadata_options.HttpEndpoint}}</li>
+                <li>HTTP Tokens: {{metadata_options.HttpTokens}}</li>
+            </ul>
+        </div>
+        {{/if}}
     </script>
     <script>
       Handlebars.registerPartial("services.ec2.regions.id.vpcs.id.instances", $("#services\\.ec2\\.regions\\.id\\.vpcs\\.id\\.instances\\.partial").html());
