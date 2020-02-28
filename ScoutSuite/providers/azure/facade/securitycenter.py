@@ -15,9 +15,13 @@ class SecurityCenterFacade:
     async def get_pricings(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            return await run_concurrently(
-                lambda: client.pricings.list().value
+            pricings_list = await run_concurrently(
+                lambda: client.pricings.list()
             )
+            if hasattr(pricings_list, 'value'):
+                return pricings_list.value
+            else:
+                return []
         except Exception as e:
             print_exception('Failed to retrieve pricings: {}'.format(e))
             return []
