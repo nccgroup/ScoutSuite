@@ -168,6 +168,9 @@
                         [ "match_instances_and_subnets_callback", {} ]
                     ]
                 },
+                "instance_metadata_options": {
+                    "path": "services.ec2.regions.id.vpcs.id.instance_metadata_options.private"
+                },
                 "security_groups": {
                     "cols": 2,
                     "path": "services.ec2.regions.id.vpcs.id.security_groups"
