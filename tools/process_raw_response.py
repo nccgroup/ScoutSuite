@@ -1,6 +1,5 @@
 import argparse
 import json
-import datetime
 import re
 from ast import literal_eval
 
