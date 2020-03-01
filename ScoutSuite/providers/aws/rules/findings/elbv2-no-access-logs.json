@@ -1,6 +1,6 @@
 {
     "description": "Lack of access logs",
-    "rationale": "<b>Description:</b><br><br>Access logs enable traffic analysis and identification of security issues.<br><br>If should be noted that access logs are created only if the load balancer has a TLS listener and they contain information only about TLS requests.",
+    "rationale": "<b>Description:</b><br><br>Access logs enable traffic analysis and identification of security issues.<br><br>It should be noted that access logs are created only if the load balancer has a TLS listener and they contain information only about TLS requests.",
     "path": "elbv2.regions.id.vpcs.id.lbs.id.attributes.id",
     "dashboard_name": "Load Balancer Attributes",
     "display_path": "elbv2.regions.id.vpcs.id.lbs.id",
