@@ -81,12 +81,7 @@ def get_value_at(all_info, current_path, key, to_string=False):
         target_obj = all_info
         for p in target_path:
             try:
-                if type(target_obj) == list and p.startswith("__mapParam__"):
-                    p_split = p.split("__")
-                    if len(p_split) == 3:
-                        param = p_split[2]
-                        target_obj = [x[param] for x in target_obj]
-                elif type(target_obj) == list and type(target_obj[0]) == dict:
+                if type(target_obj) == list and type(target_obj[0]) == dict:
                     target_obj = target_obj[int(p)]
                 # TODO ensure this additional condition didn't break anything
                 elif type(target_obj) == list and type(p) == int:
@@ -95,8 +90,6 @@ def get_value_at(all_info, current_path, key, to_string=False):
                     target_obj = target_obj[int(p)]
                 elif type(target_obj) == list:
                     target_obj = p
-                elif p == '__values__':
-                    target_obj = list(target_obj.values())
                 elif p == '':
                     pass
                 else:

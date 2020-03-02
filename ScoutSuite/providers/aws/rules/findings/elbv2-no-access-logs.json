@@ -7,6 +7,6 @@
     "conditions": [ "and",
         [ "Key", "equal", "access_logs.s3.enabled" ],
         [ "Value", "equal", "false"],
-        ["elbv2.regions.id.vpcs.id.lbs._GET_VALUE_AT_(elbv2.regions.id.vpcs.id.lbs.id).listeners.__values__.__mapParam__Protocol", "containAtLeastOneOf", ["TLS", "HTTP", "HTTPS"]]
+        ["elbv2.regions.id.vpcs.id.lbs._GET_VALUE_AT_(elbv2.regions.id.vpcs.id.lbs.id).listener_protocols", "containAtLeastOneOf", ["TLS", "HTTP", "HTTPS"]]
     ]
 }

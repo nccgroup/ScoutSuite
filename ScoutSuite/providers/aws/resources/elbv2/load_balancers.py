@@ -17,8 +17,8 @@ class LoadBalancers(AWSCompositeResources):
     async def fetch_all(self):
         raw_load_balancers = await self.facade.elbv2.get_load_balancers(self.region, self.vpc)
         for raw_load_balancer in raw_load_balancers:
-            id, load_balancer = self._parse_load_balancer(raw_load_balancer)
-            self[id] = load_balancer
+            lb_id, load_balancer = self._parse_load_balancer(raw_load_balancer)
+            self[lb_id] = load_balancer
 
         await self._fetch_children_of_all_resources(
             resources=self,
@@ -26,10 +26,17 @@ class LoadBalancers(AWSCompositeResources):
                     for (load_balancer_id, load_balancer) in self.items()}
         )
 
+        for lb_id in self.keys():
+            # After loading the listener information, map the protocols used in a new field for easier usage in rules
+            if lb_id is not None and len(self[lb_id]['listeners']) > 0:
+                protocols = [x['Protocol'] for x in list(self[lb_id]['listeners'].values())]
+                self[lb_id]['listener_protocols'] = protocols
+
     def _parse_load_balancer(self, load_balancer):
         load_balancer['arn'] = load_balancer.pop('LoadBalancerArn')
         load_balancer['name'] = load_balancer.pop('LoadBalancerName')
         load_balancer['security_groups'] = []
+        load_balancer['listener_protocols'] = []
 
         if 'SecurityGroups' in load_balancer:
             for sg in load_balancer['SecurityGroups']:
