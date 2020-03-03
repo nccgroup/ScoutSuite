@@ -235,6 +235,8 @@ def pass_condition(b, test, a):
         if type(b) != list:
             b = [b]
         for c in b:
+            if type(c) == dict and 'AWS' in c:
+                c = c['AWS']
             if c != a and not re.match(r'arn:aws:iam:.*?:%s:.*' % a, c):
                 result = True
                 break
