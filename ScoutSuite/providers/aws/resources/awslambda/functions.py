@@ -10,16 +10,15 @@ class Functions(AWSResources):
     async def fetch_all(self):
         raw_functions = await self.facade.awslambda.get_functions(self.region)
         for raw_function in raw_functions:
-            name, resource = self._parse_function(raw_function)
+            name, resource = await self._parse_function(raw_function)
             self[name] = resource
 
-    def _parse_function(self, raw_function):
+    async def _parse_function(self, raw_function):
 
         function_dict = {}
         function_dict['name'] = raw_function.get('FunctionName')
         function_dict['arn'] = raw_function.get('FunctionArn')
         function_dict['runtime'] = raw_function.get('Runtime')
-        function_dict['role'] = raw_function.get('Role')
         function_dict['handler'] = raw_function.get('Handler')
         function_dict['code_size'] = raw_function.get('CodeSize')
         function_dict['description'] = raw_function.get('Description')
@@ -30,5 +29,18 @@ class Functions(AWSResources):
         function_dict['version'] = raw_function.get('Version')
         function_dict['tracing_config'] = raw_function.get('TracingConfig')
         function_dict['revision_id'] = raw_function.get('RevisionId')
+
+        # Role information
+        function_dict['role_id'] = raw_function.get('Role')
+        role_name = raw_function.get('Role').split("/")[-1]
+        function_dict['execution_role'] = await self.facade.iam.get_role_with_managed_policies(role_name)
+
+        # Make it easier to build rules based on policies attached to execution roles
+        statements = []
+        for policy in function_dict['execution_role']['policies']:
+            if 'Document' in policy and 'Statement' in policy['Document']:
+                statements += policy['Document']['Statement']
+        function_dict['execution_role']['policy_statements'] = statements
+
         return function_dict['name'], function_dict
 

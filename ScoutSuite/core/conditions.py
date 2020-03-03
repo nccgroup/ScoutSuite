@@ -37,7 +37,7 @@ def pass_conditions(all_info, current_path, conditions, unknown_as_pass_conditio
             path_to_value, test_name, test_values = condition
             path_to_value = fix_path_string(all_info, current_path, path_to_value)
             target_obj = get_value_at(all_info, current_path, path_to_value)
-            if type(test_values) != list:
+            if type(test_values) != list and type(test_values) != dict:
                 dynamic_value = re_get_value_at.match(test_values)
                 if dynamic_value:
                     test_values = get_value_at(all_info, current_path, dynamic_value.groups()[0], True)
@@ -140,7 +140,7 @@ def pass_condition(b, test, a):
         if not type(a) == list:
             a = [a]
         for c in b:
-            if type(c):
+            if type(c) != dict:
                 c = str(c)
             if c in a:
                 result = True
