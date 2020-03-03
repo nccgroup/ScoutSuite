@@ -30,11 +30,15 @@ class Functions(AWSResources):
         function_dict['tracing_config'] = raw_function.get('TracingConfig')
         function_dict['revision_id'] = raw_function.get('RevisionId')
 
-        # Role information
-        function_dict['role_id'] = raw_function.get('Role')
-        role_name = raw_function.get('Role').split("/")[-1]
-        function_dict['execution_role'] = await self.facade.iam.get_role_with_managed_policies(role_name)
+        await self._add_role_information(function_dict, raw_function.get('Role'))
+        await self._add_access_policy_information(function_dict)
 
+        return function_dict['name'], function_dict
+
+    async def _add_role_information(self, function_dict, role_id):
+        function_dict['role_id'] = role_id
+        role_name = role_id.split("/")[-1]
+        function_dict['execution_role'] = await self.facade.iam.get_role_with_managed_policies(role_name)
         # Make it easier to build rules based on policies attached to execution roles
         statements = []
         for policy in function_dict['execution_role']['policies']:
@@ -42,5 +46,15 @@ class Functions(AWSResources):
                 statements += policy['Document']['Statement']
         function_dict['execution_role']['policy_statements'] = statements
 
-        return function_dict['name'], function_dict
-
+    async def _add_access_policy_information(self, function_dict):
+        access_policy = await self.facade.awslambda.get_access_policy(function_dict['name'], self.region)
+        if access_policy:
+            # Make it easier to build rules based on allowed principals
+            allowed_principals = []
+            for statement in access_policy['Statement']:
+                if statement['Effect'] == 'Allow':
+                    allowed_principals += [statement['Principal']]
+            access_policy['allowed_principals'] = allowed_principals
+            function_dict["access_policy"] = access_policy
+        else:
+            function_dict["access_policy"] = {"allowed_principals": []}
