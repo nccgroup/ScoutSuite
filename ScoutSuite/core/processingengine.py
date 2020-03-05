@@ -21,7 +21,7 @@ class ProcessingEngine(object):
                     manage_dictionary(self.rules, rule.path, [])
                     self.rules[rule.path].append(rule)
                 except Exception as e:
-                    print_exception('Failed to create rule %s: %s' % (rule.path, e))
+                    print_exception('Failed to create rule %s: %s' % (rule.filename, e))
 
     def run(self, cloud_provider, skip_dashboard=False):
         # Clean up existing findings
