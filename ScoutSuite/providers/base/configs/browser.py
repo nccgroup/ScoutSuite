@@ -95,8 +95,8 @@ def get_value_at(all_info, current_path, key, to_string=False):
                 else:
                     target_obj = target_obj[p]
             except Exception as e:
-                print_exception(e, additional_details={'current_path': current_path})
-                # raise Exception
+                print_exception('Failed to get key \"{}\" from value \"{}\": {}'.format(p, target_obj, e),
+                                additional_details={'current_path': current_path})
     if to_string:
         return str(target_obj)
     else:
