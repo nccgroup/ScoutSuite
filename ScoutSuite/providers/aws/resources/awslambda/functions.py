@@ -48,13 +48,11 @@ class Functions(AWSResources):
 
     async def _add_access_policy_information(self, function_dict):
         access_policy = await self.facade.awslambda.get_access_policy(function_dict['name'], self.region)
+
         if access_policy:
-            # Make it easier to build rules based on allowed principals
-            allowed_principals = []
-            for statement in access_policy['Statement']:
-                if statement['Effect'] == 'Allow':
-                    allowed_principals += [statement['Principal']]
-            access_policy['allowed_principals'] = allowed_principals
-            function_dict["access_policy"] = access_policy
+            function_dict['access_policy'] = access_policy
         else:
-            function_dict["access_policy"] = {"allowed_principals": []}
+            # If there's no policy, set an empty one
+            function_dict['access_policy'] = {'Version': '2012-10-17',
+                                              'Id': 'default',
+                                              'Statement': []}
