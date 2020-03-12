@@ -102,8 +102,7 @@ class AWSProvider(BaseProvider):
             callback_args = {'ip_ranges': ip_ranges,
                              'ip_ranges_name_key': ip_ranges_name_key}
             self._go_to_and_do(self.services['ec2'],
-                               ['regions', 'vpcs', 'security_groups',
-                                'rules', 'protocols', 'ports'],
+                               ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports'],
                                ['services', 'ec2'],
                                put_cidr_name,
                                callback_args)
