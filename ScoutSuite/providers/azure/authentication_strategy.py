@@ -14,11 +14,12 @@ from ScoutSuite.providers.base.authentication_strategy import AuthenticationStra
 class AzureCredentials:
 
     def __init__(self,
-                 arm_credentials, aad_graph_credentials,
+                 arm_credentials, aad_graph_credentials, microsoft_graph_credentials,
                  tenant_id=None, default_subscription_id=None):
 
         self.arm_credentials = arm_credentials  # Azure Resource Manager API credentials
         self.aad_graph_credentials = aad_graph_credentials  # Azure AD Graph API credentials
+        self.microsoft_graph_credentials = microsoft_graph_credentials  # Microsoft Graph API credentials
         self.tenant_id = tenant_id
         self.default_subscription_id = default_subscription_id
 
@@ -66,7 +67,9 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
                 arm_credentials = UserPassCredentials(username, password)
                 aad_graph_credentials = UserPassCredentials(username, password,
-                                                        resource='https://graph.windows.net')
+                                                            resource='https://graph.windows.net')
+                microsoft_graph_credentials = UserPassCredentials(username, password,
+                                                                  resource='https://graph.microsoft.com/')
 
             elif user_account_browser:
 
@@ -158,7 +161,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             else:
                 raise AuthenticationException('Unknown authentication method')
 
-            return AzureCredentials(arm_credentials, aad_graph_credentials,
+            return AzureCredentials(arm_credentials, aad_graph_credentials, microsoft_graph_credentials,
                                     tenant_id, subscription_id)
 
         except Exception as e:
