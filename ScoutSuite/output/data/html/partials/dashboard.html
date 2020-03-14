@@ -26,7 +26,7 @@
                 <div class="card-header row finding-title finding-title-{{dashboard_color level checked_items flagged_items}} plain-link">
                     <div class="col-sm-11">
                         <i class="fa finding-badge finding-badge-{{dashboard_color level checked_items flagged_items}}"></i>
-                        <a href="#services.{{../service_name}}.findings.{{key}}.items">{{description}}</a>
+                        <a href="#services.{{../service_name}}.findings.{{key}}.items">{{title}}</a>
                     </div>
                     <div class="col-sm-1">
                         <button class="finding btn fa collapsed" style="background-color:transparent" data-toggle="collapse" data-target="#item-{{key}}" aria-expanded="false" aria-controls="item-{{key}}"></button>
@@ -35,7 +35,33 @@
                 <div class="collapse" id="item-{{key}}" aria-labelledby="item-{{key}}" data-parent="#list-{{key}}">
                     <div class="card-body row">
                         <div class="col-sm-9">
-                            <p>{{{rationale}}}</p>
+                            <b>Description</b><br>
+                            {{#if rationale}}
+                                <p>{{{rationale}}}</p>
+                            {{else}}
+                                <p>No description available.</p>
+                            {{/if}}
+                            {{#if remediation}}
+                                <b>Remediation</b><br>
+                                <p>{{{remediation}}}</p>
+                            {{/if}}
+                            {{#if compliance}}
+                            <b>Compliance</b><br>
+                            <ul>
+                                {{#each compliance}}
+                                <li>{{this.name}} version {{this.version}}, reference {{this.reference}}</li>
+                                {{/each}}
+                            </ul>
+                            <br>
+                            {{/if}}
+                            {{#if references}}
+                                <b>References</b><br>
+                                <ul>
+                                    {{#each references}}
+                                    <li><a href="{{this}}">{{this}}</a></li>
+                                    {{/each}}
+                                </ul>
+                            {{/if}}
                         </div>
                         <div class="col-sm-3">
                             <ul>
