@@ -1,7 +1,10 @@
 {
     "dashboard_name": "Pricings",
     "description": "Standard Tier not Enabled",
-    "rationale": "<b>Description:</b><br><br>Enable Standard Tier pricing for Security Center.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.1.0 2.1</li></ul>",
+    "rationale": "<b>Description:</b><br><br>Enable Standard Tier pricing for Security Center.",
+    "compliance": [
+        {"name": "CIS Microsoft Azure Foundations", "version": "1.1.0", "reference": "2.1"}
+    ],
     "path": "securitycenter.subscriptions.id.pricings.id",
     "display_path": "securitycenter.subscriptions.id.pricings.id",
     "conditions": [ "and",

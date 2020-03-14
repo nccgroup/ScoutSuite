@@ -1,7 +1,10 @@
 {
   "dashboard_name": "Bindings",
   "description": "Service Account with Admin Privileges",
-  "rationale": "<b>Description:</b><br><br>Service accounts represent service-level security of the Resources (application or a VM) which can be determined by the roles assigned to it. Enrolling Service Accounts with administrative privileges grants full access to assigned application or a VM, Service Account Access holder can user.<br><br><b>Note: </b>This rule may flag Google-Managed Service Accounts. Google services rely on these Service Accounts having access to the project, and recommends not removing or changing the Service Account's role (see https://cloud.google.com/iam/docs/service-accounts#google-managed).<br><br><b>References:</b><ul><li>CIS Google Cloud Platform Foundations v1.0.0 1.4</li></ul>",
+  "rationale": "<b>Description:</b><br><br>Service accounts represent service-level security of the Resources (application or a VM) which can be determined by the roles assigned to it. Enrolling Service Accounts with administrative privileges grants full access to assigned application or a VM, Service Account Access holder can user.<br><br><b>Note: </b>This rule may flag Google-Managed Service Accounts. Google services rely on these Service Accounts having access to the project, and recommends not removing or changing the Service Account's role (see https://cloud.google.com/iam/docs/service-accounts#google-managed).",
+  "compliance": [
+        {"name": "CIS Google Cloud Platform Foundations", "version": "1.0.0", "reference": "1.4"}
+    ],
   "path": "cloudresourcemanager.projects.id.bindings.id",
   "conditions": [ "and",
     [ "or", 

@@ -1,7 +1,10 @@
 {
     "dashboard_name": "Accounts",
     "description": "HTTPS Not Enforced",
-    "rationale": "<b>Description:</b><br><br>Ensure that secure transfer is required to access your storage accounts.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.1.0 3.1</li></ul>",
+    "rationale": "<b>Description:</b><br><br>Ensure that secure transfer is required to access your storage accounts.",
+    "compliance": [
+        {"name": "CIS Microsoft Azure Foundations", "version": "1.1.0", "reference": "3.1"}
+    ],
     "path": "storageaccounts.subscriptions.id.storage_accounts.id",
     "conditions": [ "and",
         [ "storageaccounts.subscriptions.id.storage_accounts.id.https_traffic_enabled", "false", "" ]

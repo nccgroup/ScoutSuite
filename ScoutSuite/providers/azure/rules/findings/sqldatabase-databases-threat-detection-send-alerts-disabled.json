@@ -1,7 +1,11 @@
 {
     "dashboard_name": "SQL Databases",
     "description": "\"Send Threat Detection Alerts\" Disabled for SQL Databases",
-    "rationale": "<b>Description:</b><br><br>Specify email addresses and ensure that alerts are sent to them.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 4.2.4</li><li>CIS Microsoft Azure Foundations v1.0.0 4.2.5</li></ul>",
+    "rationale": "<b>Description:</b><br><br>Specify email addresses and ensure that alerts are sent to them.",
+    "compliance": [
+        {"name": "CIS Microsoft Azure Foundations", "version": "1.0.0", "reference": "4.2.4"},
+        {"name": "CIS Microsoft Azure Foundations", "version": "1.0.0", "reference": "4.2.5"}
+    ],
     "path": "sqldatabase.subscriptions.id.servers.id.databases.id",
     "display_path": "sqldatabase.subscriptions.id.servers.id",
     "conditions": [ "and",

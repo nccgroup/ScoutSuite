@@ -1,7 +1,10 @@
 {
   "dashboard_name": "Instances",
   "description": "Instance not requiring SSL for incoming connections",
-  "rationale": "<b>Description:</b><br><br>All incoming connections to databases should require the use of SSL.<br><br><b>References:</b><ul><li>CIS Google Cloud Platform Foundations v1.0.0 6.1</li></ul>",
+  "rationale": "<b>Description:</b><br><br>All incoming connections to databases should require the use of SSL.",
+  "compliance": [
+    {"name": "CIS Google Cloud Platform Foundations", "version": "1.0.0", "reference": "6.1"}
+  ],
   "path": "cloudsql.projects.id.instances.id",
   "conditions": [ "and",
     [

@@ -1,6 +1,9 @@
 {
     "description": "Network Watchers not Provisioned",
-    "rationale": "<b>Description:</b><br><br>Network watchers should be provisioned to work.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 6.5</li></ul>",
+    "rationale": "<b>Description:</b><br><br>Network watchers should be provisioned to work.",
+    "compliance": [
+        {"name": "CIS Microsoft Azure Foundations", "version": "1.0.0", "reference": "6.5"}
+    ],
     "dashboard_name": "Network",
     "path": "network.subscriptions.id.watchers.id",
     "display_path": "network.subscriptions.id.watchers.id",

@@ -1,7 +1,11 @@
 {
     "dashboard_name": "Security Center",
     "description": "No Security Contact Set",
-    "rationale": "<b>Description:</b><br><br>Set at least one security contact.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 2.16</li><li>CIS Microsoft Azure Foundations v1.0.0 2.17</li></ul>",
+    "rationale": "<b>Description:</b><br><br>Set at least one security contact.",
+    "compliance": [
+        {"name": "CIS Microsoft Azure Foundations", "version": "1.0.0", "reference": "2.16"},
+        {"name": "CIS Microsoft Azure Foundations", "version": "1.0.0", "reference": "2.17"}
+    ],
     "path": "securitycenter.subscriptions.id.security_contacts",
     "display_path": "securitycenter.subscriptions.id.security_contacts",
     "conditions": [ "and",
