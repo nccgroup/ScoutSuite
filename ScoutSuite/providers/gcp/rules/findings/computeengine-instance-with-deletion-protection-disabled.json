@@ -1,5 +1,5 @@
 {
-    "title": "Instance without deletion protection",
+    "title": "Instance without Deletion Protection",
     "rationale": "It is good practice to enable this feature on production instances, to ensure that they may not be deleted by accident.",
     "dashboard_name": "Instances",
     "path": "computeengine.projects.id.zones.id.instances.id",

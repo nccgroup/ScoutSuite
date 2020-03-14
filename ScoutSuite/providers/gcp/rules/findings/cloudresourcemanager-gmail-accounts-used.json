@@ -1,5 +1,5 @@
 {
-    "title": "Gmail accounts in use",
+    "title": "Gmail Account in Use",
     "rationale": "Gmail accounts are personally created and controllable accounts. Organizations seldom have any control over them. Thus, it is recommended that you use fully managed corporate Google accounts for increased visibility, auditing, and control over access to Cloud Platform resources.",
     "compliance": [
         {

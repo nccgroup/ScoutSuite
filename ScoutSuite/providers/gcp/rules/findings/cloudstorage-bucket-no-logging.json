@@ -1,5 +1,5 @@
 {
-    "title": "Bucket without logging enabled",
+    "title": "Bucket with Logging Disabled",
     "rationale": "Enable access and storage logs, in order to capture all events which may affect objects within target buckets.",
     "compliance": [
         {

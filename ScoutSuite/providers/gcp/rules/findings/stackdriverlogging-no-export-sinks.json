@@ -1,5 +1,5 @@
 {
-    "title": "No Export Sinks",
+    "title": "Lack of Export Sinks",
     "dashboard_name": "Logging Configurations",
     "display_path": "stackdriverlogging.projects.id.sinks",
     "path": "stackdriverlogging.projects.id",

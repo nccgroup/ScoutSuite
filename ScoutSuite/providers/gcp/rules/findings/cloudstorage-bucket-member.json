@@ -1,5 +1,5 @@
 {
-    "title": "Bucket accessible by '_ARG_0_'",
+    "title": "Bucket Accessible by \"_ARG_0_\"",
     "rationale": "Allowing anonymous and/or public access grants permissions to anyone to access bucket content. Such access might not be desired if you are storing any sensitive data. Hence, ensure that anonymous and/or public access to a bucket is not allowed.",
     "remediation": "No role should contain \"allUsers\" and/or \"allAuthenticatedUsers\" as a member.",
     "compliance": [

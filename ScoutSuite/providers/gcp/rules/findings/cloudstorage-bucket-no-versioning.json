@@ -1,5 +1,5 @@
 {
-    "title": "Bucket without versioning enabled",
+    "title": "Bucket with Versioning Disabled",
     "rationale": "Enable Object Versioning to protect Cloud Storage data from being overwritten or accidentally deleted.",
     "dashboard_name": "Buckets",
     "path": "cloudstorage.projects.id.buckets.id",

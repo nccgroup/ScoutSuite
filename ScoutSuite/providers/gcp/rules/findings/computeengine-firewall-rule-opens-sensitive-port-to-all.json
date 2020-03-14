@@ -1,5 +1,5 @@
 {
-    "title": "Firewall _ARG_0_ rule allows public access (0.0.0.0/0) to a sensitive port",
+    "title": "Firewall _ARG_0_ Rule Allows Public Access (0.0.0.0/0) to a Sensitive Port",
     "dashboard_name": "Firewall Rule Elements",
     "display_path": "computeengine.projects.id.firewalls.id",
     "path": "computeengine.projects.id.firewalls.id.allowed_traffic.id.ports.id",

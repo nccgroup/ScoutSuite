@@ -1,5 +1,5 @@
 {
-    "title": "Default firewall rule in use",
+    "title": "Default Firewall Rule in Use",
     "dashboard_name": "Firewall Rule",
     "path": "computeengine.projects.id.firewalls.id",
     "conditions": [

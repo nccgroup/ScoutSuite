@@ -1,5 +1,6 @@
 {
-    "title": "Old instance disk snapshot (over 90 days)",
+    "title": "Old Instance Disk Snapshot",
+    "rationale": "Disk snapshots that are over 90 days are likely to be outdated.",
     "dashboard_name": "Snapshots",
     "path": "computeengine.projects.id.snapshots.id",
     "conditions": [

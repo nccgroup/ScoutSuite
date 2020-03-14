@@ -1,5 +1,5 @@
 {
-    "title": "Instance with no backups",
+    "title": "Instance with no Backups",
     "rationale": "Weekly or monthly backups should be created of all databases holding sensitive information.",
     "dashboard_name": "Instances",
     "path": "cloudsql.projects.id.instances.id",

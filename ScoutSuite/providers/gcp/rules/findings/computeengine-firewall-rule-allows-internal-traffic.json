@@ -1,5 +1,5 @@
 {
-    "title": "Firewall rule allows internal traffic",
+    "title": "Firewall Rule Allows Internal Traffic",
     "rationale": "Firewall rule allows ingress connections for all protocols and ports among instances in the network.",
     "dashboard_name": "Firewall Rule Elements",
     "display_path": "computeengine.projects.id.firewalls.id",

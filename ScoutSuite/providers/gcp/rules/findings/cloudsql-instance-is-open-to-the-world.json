@@ -1,6 +1,6 @@
 {
-    "title": "Instance allowing all incoming connections",
-    "rationale": "atabase instances should accept connections from trusted IPs and networks only.",
+    "title": "Instance Allowing All Incoming Connections",
+    "rationale": "Database instances should accept connections from trusted IPs and networks only.",
     "compliance": [
         {
             "name": "CIS Google Cloud Platform Foundations",

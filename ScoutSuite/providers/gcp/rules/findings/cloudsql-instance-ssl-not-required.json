@@ -1,5 +1,5 @@
 {
-    "title": "Instance not requiring SSL for incoming connections",
+    "title": "Instance not Requiring SSL for Incoming Connections",
     "rationale": "All incoming connections to databases should require the use of SSL.",
     "compliance": [
         {

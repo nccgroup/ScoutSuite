@@ -1,5 +1,5 @@
 {
-    "title": "Firewall rule opens all ports (0-65535)",
+    "title": "Firewall Rule Opens All Ports (0-65535)",
     "dashboard_name": "Firewall Rule Elements",
     "display_path": "computeengine.projects.id.firewalls.id",
     "path": "computeengine.projects.id.firewalls.id.allowed_traffic.id.ports.id",

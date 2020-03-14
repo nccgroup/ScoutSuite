@@ -1,5 +1,5 @@
 {
-    "title": "Firewall rule allows public access (0.0.0.0/0)",
+    "title": "Firewall Rule Allows Public Access (0.0.0.0/0)",
     "dashboard_name": "Firewall Rules",
     "path": "computeengine.projects.id.firewalls.id",
     "conditions": [

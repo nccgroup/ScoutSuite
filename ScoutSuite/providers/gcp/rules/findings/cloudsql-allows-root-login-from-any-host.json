@@ -1,5 +1,5 @@
 {
-    "title": "Instance allows root login from any host",
+    "title": "Instance Allows Root Login from Any Host",
     "rationale": "Root access to MySQL Database Instances should be allowed only through trusted IPs.",
     "compliance": [
         {

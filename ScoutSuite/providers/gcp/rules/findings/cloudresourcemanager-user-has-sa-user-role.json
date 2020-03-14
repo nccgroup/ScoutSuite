@@ -1,5 +1,5 @@
 {
-    "title": "User with \"Service Account User\" role at the Project level",
+    "title": "User with \"Service Account User\" Role at the Project level",
     "rationale": "Granting the iam.serviceAccountUser role to a user for a project gives the user access to all service accounts in the project, including service accounts that may be created in the future. This can result into elevation of privileges by using service accounts and corresponding Compute Engine instances.",
     "compliance": [
         {
