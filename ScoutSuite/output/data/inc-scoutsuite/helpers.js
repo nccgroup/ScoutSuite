@@ -319,7 +319,7 @@ Handlebars.registerHelper('concatWith', function (str1, str2, sep) {
 
 Handlebars.registerHelper('jsonStringify', function () {
     let body = arguments[0]
-    delete body['description']
+    delete body['title']
     delete body['args']
     return JSON.stringify(body, null, 4)
 })
@@ -371,8 +371,8 @@ Handlebars.registerHelper('each_dict_as_sorted_list', function (context, options
         if (context[a].flagged_items === 0 && context[b].flagged_items === 0) {
             if (context[a].checked_items === 0 && context[b].checked_items !== 0) return 1
             if (context[a].checked_items !== 0 && context[b].checked_items === 0) return -1
-            if (context[a].description.toLowerCase() < context[b].description.toLowerCase()) return -1
-            if (context[a].description.toLowerCase() > context[b].description.toLowerCase()) return 1
+            if (context[a].title.toLowerCase() < context[b].title.toLowerCase()) return -1
+            if (context[a].title.toLowerCase() > context[b].title.toLowerCase()) return 1
         }
         if ((context[a].flagged_items == 0 && context[b].flagged_items > 0) ||
             (context[a].flagged_items > 0 && context[b].flagged_items === 0)) {
@@ -381,8 +381,8 @@ Handlebars.registerHelper('each_dict_as_sorted_list', function (context, options
         }
         if (context[a].flagged_items > 0 && context[b].flagged_items > 0) {
             if (context[a].level === context[b].level) {
-                if (context[a].description.toLowerCase() < context[b].description.toLowerCase()) return -1
-                if (context[a].description.toLowerCase() > context[b].description.toLowerCase()) return 1
+                if (context[a].title.toLowerCase() < context[b].title.toLowerCase()) return -1
+                if (context[a].title.toLowerCase() > context[b].title.toLowerCase()) return 1
             } else {
                 if (context[a].level.toLowerCase() === 'danger') return -1
                 if (context[b].level.toLowerCase() === 'danger') return 1

@@ -34,7 +34,7 @@
                                                 <li class="dropdown-header">Security risks</li>
                                                 {{#each risks}}
                                                 <li><a class="dropdown-item" href="#services.{{@../../key}}.findings.{{this}}.items" id="{{@key}}_subnavbar">
-                                                    {{getValueAt 'services' @../../key 'findings' this 'description'}}
+                                                    {{getValueAt 'services' @../../key 'findings' this 'title'}}
                                                 </a></li>
                                                 {{/each}}
                                             </ul>
@@ -51,7 +51,7 @@
                                                 <li class="dropdown-header">Security risks</li>
                                                 {{#each risks}}
                                                 <li><a class="dropdown-item" href="#services.{{@../../key}}.findings.{{this}}.items" id="{{@key}}_subnavbar">
-                                                    {{getValueAt 'services' @../../key 'findings' this 'description'}}
+                                                    {{getValueAt 'services' @../../key 'findings' this 'title'}}
                                                 </a></li>
                                                 {{/each}}
                                             </ul>

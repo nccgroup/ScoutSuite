@@ -1051,7 +1051,7 @@ function updateDOM(anchor) {
 
     // Update title
     if (path.endsWith('.items')) {
-        let title = getValueAt(path.replace('items', 'description'))
+        let title = getValueAt(path.replace('items', 'title'))
         updateTitle(title)
     } else {
         let title = makeTitleAcl(resourcePath)
