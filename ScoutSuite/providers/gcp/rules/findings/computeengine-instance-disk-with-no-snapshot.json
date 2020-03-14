@@ -1,11 +1,15 @@
 {
-  "dashboard_name": "Instances",
-  "description": "Instance disk with no snapshot",
-  "path": "computeengine.projects.id.zones.id.instances.id.disks.id",
-  "display_path": "computeengine.projects.id.zones.id.instances.id",
-  "conditions": [ "and",
-    [ "computeengine.projects.id.zones.id.instances.id.disks.id.snapshots", "empty", "" ]
-  ],
-  "id_suffix": "latest_snapshot"
+    "title": "Instance disk with no snapshot",
+    "dashboard_name": "Instances",
+    "display_path": "computeengine.projects.id.zones.id.instances.id",
+    "path": "computeengine.projects.id.zones.id.instances.id.disks.id",
+    "conditions": [
+        "and",
+        [
+            "computeengine.projects.id.zones.id.instances.id.disks.id.snapshots",
+            "empty",
+            ""
+        ]
+    ],
+    "id_suffix": "latest_snapshot"
 }
-

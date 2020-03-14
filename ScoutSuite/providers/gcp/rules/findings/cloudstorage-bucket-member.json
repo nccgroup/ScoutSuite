@@ -1,17 +1,38 @@
 {
-  "arg_names": [ "Member", "Description"],
-  "key": "cloudstorage-bucket-_ARG_0_",
-  "description": "Bucket accessible by '_ARG_0_'",
-  "rationale": "<b>Description:</b><br><br>Allowing anonymous and/or public access grants permissions to anyone to access bucket content. Such access might not be desired if you are storing any sensitive data. Hence, ensure that anonymous and/or public access to a bucket is not allowed.",
-  "compliance": [
-    {"name": "CIS Google Cloud Platform Foundations", "version": "1.0.0", "reference": "5.1"}
-  ],
-  "dashboard_name": "Buckets",
-  "display_path": "cloudstorage.projects.id.buckets.id",
-  "path": "cloudstorage.projects.id.buckets.id",
-  "conditions": [ "or",
-    [ "cloudstorage.projects.id.buckets.id.acl_configuration", "withKey", "_ARG_0_"],
-    [ "cloudstorage.projects.id.buckets.id.acls", "containString", "_ARG_0_"]
-  ],
-  "id_suffix": "_ARG_0_"
+    "title": "Bucket accessible by '_ARG_0_'",
+    "rationale": "Allowing anonymous and/or public access grants permissions to anyone to access bucket content. Such access might not be desired if you are storing any sensitive data. Hence, ensure that anonymous and/or public access to a bucket is not allowed.",
+    "remediation": "No role should contain \"allUsers\" and/or \"allAuthenticatedUsers\" as a member.",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.0.0",
+            "reference": "5.1"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/storage/docs/access-control/iam-reference",
+        "https://cloud.google.com/storage/docs/access-control/making-data-public"
+    ],
+    "dashboard_name": "Buckets",
+    "display_path": "cloudstorage.projects.id.buckets.id",
+    "path": "cloudstorage.projects.id.buckets.id",
+    "conditions": [
+        "or",
+        [
+            "cloudstorage.projects.id.buckets.id.acl_configuration",
+            "withKey",
+            "_ARG_0_"
+        ],
+        [
+            "cloudstorage.projects.id.buckets.id.acls",
+            "containString",
+            "_ARG_0_"
+        ]
+    ],
+    "key": "cloudstorage-bucket-_ARG_0_",
+    "arg_names": [
+        "Member",
+        "Description"
+    ],
+    "id_suffix": "_ARG_0_"
 }

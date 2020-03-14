@@ -1,13 +1,22 @@
 {
-    "dashboard_name": "Buckets",
-    "description": "Bucket without logging enabled",
-    "rationale": "<b>Description:</b><br><br>Enable access and storage logs, in order to capture all events which may affect objects within target buckets.",
+    "title": "Bucket without logging enabled",
+    "rationale": "Enable access and storage logs, in order to capture all events which may affect objects within target buckets.",
     "compliance": [
-        {"name": "CIS Google Cloud Platform Foundations", "version": "1.0.0", "reference": "5.3"}
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.0.0",
+            "reference": "5.3"
+        }
     ],
+    "dashboard_name": "Buckets",
     "path": "cloudstorage.projects.id.buckets.id",
-    "conditions": [ "and",
-        [ "cloudstorage.projects.id.buckets.id.logging_enabled", "false", "" ]
+    "conditions": [
+        "and",
+        [
+            "cloudstorage.projects.id.buckets.id.logging_enabled",
+            "false",
+            ""
+        ]
     ],
     "id_suffix": "logging_enabled"
 }

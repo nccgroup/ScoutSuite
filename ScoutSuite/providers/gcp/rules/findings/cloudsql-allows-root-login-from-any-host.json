@@ -1,19 +1,44 @@
 {
-    "description": "Instance allows root login from any host",
-    "rationale": "<b>Description:</b><br><br>Root access to MySQL Database Instances should be allowed only through trusted IPs.",
+    "title": "Instance allows root login from any host",
+    "rationale": "Root access to MySQL Database Instances should be allowed only through trusted IPs.",
     "compliance": [
-        {"name": "CIS Google Cloud Platform Foundations", "version": "1.0.0", "reference": "6.4"}
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.0.0",
+            "reference": "6.4"
+        }
     ],
-    "path": "cloudsql.projects.id.instances.id",
     "dashboard_name": "Instances",
-    "conditions": [ "and",
-        [ "cloudsql.projects.id.instances.id.database_version", "match", "MYSQL.*" ],
-        [ "cloudsql.projects.id.instances.id.users", "withKey", "root" ],
+    "path": "cloudsql.projects.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "cloudsql.projects.id.instances.id.database_version",
+            "match",
+            "MYSQL.*"
+        ],
+        [
+            "cloudsql.projects.id.instances.id.users",
+            "withKey",
+            "root"
+        ],
         [
             "or",
-            [ "cloudsql.projects.id.instances.id.users.root.host", "equal", "%" ],
-            [ "cloudsql.projects.id.instances.id.users.root.host", "equal", "0.0.0.0" ],
-            [ "cloudsql.projects.id.instances.id.users.root.host", "equal", "/0" ]
+            [
+                "cloudsql.projects.id.instances.id.users.root.host",
+                "equal",
+                "%"
+            ],
+            [
+                "cloudsql.projects.id.instances.id.users.root.host",
+                "equal",
+                "0.0.0.0"
+            ],
+            [
+                "cloudsql.projects.id.instances.id.users.root.host",
+                "equal",
+                "/0"
+            ]
         ]
     ],
     "id_suffix": "root_access_from_any_host"

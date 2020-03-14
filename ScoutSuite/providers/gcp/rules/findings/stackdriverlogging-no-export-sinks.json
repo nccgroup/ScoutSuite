@@ -1,9 +1,14 @@
 {
+    "title": "No Export Sinks",
     "dashboard_name": "Logging Configurations",
-    "description": "No Export Sinks",
-    "path": "stackdriverlogging.projects.id",
     "display_path": "stackdriverlogging.projects.id.sinks",
-    "conditions": [ "and",
-        [ "stackdriverlogging.projects.id.sinks", "empty", "" ]
+    "path": "stackdriverlogging.projects.id",
+    "conditions": [
+        "and",
+        [
+            "stackdriverlogging.projects.id.sinks",
+            "empty",
+            ""
+        ]
     ]
 }

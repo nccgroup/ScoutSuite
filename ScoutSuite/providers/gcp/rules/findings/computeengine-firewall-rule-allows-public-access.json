@@ -1,11 +1,28 @@
 {
-  "dashboard_name": "Firewall Rules",
-  "description": "Firewall rule allows public access (0.0.0.0/0)",
-  "path": "computeengine.projects.id.firewalls.id",
-  "conditions": [ "and",
-    [ "computeengine.projects.id.firewalls.id.action", "equal", "allowed"],
-    [ "computeengine.projects.id.firewalls.id.disabled", "notTrue", "" ],
-    [ "computeengine.projects.id.firewalls.id.direction", "equal", "INGRESS" ],
-    [ "computeengine.projects.id.firewalls.id.source_ranges", "containAtLeastOneOf", "0.0.0.0/0" ]
-  ]
+    "title": "Firewall rule allows public access (0.0.0.0/0)",
+    "dashboard_name": "Firewall Rules",
+    "path": "computeengine.projects.id.firewalls.id",
+    "conditions": [
+        "and",
+        [
+            "computeengine.projects.id.firewalls.id.action",
+            "equal",
+            "allowed"
+        ],
+        [
+            "computeengine.projects.id.firewalls.id.disabled",
+            "notTrue",
+            ""
+        ],
+        [
+            "computeengine.projects.id.firewalls.id.direction",
+            "equal",
+            "INGRESS"
+        ],
+        [
+            "computeengine.projects.id.firewalls.id.source_ranges",
+            "containAtLeastOneOf",
+            "0.0.0.0/0"
+        ]
+    ]
 }

@@ -1,9 +1,21 @@
 {
-  "dashboard_name": "Snapshots",
-  "description": "Old instance disk snapshot (over 90 days)",
-  "path": "computeengine.projects.id.snapshots.id",
-  "conditions": [ "and",
-    [ "computeengine.projects.id.snapshots.id.status", "equal", "READY" ],
-    [ "computeengine.projects.id.snapshots.id.creation_timestamp", "olderThan", ["90", "days"] ]
-  ]
+    "title": "Old instance disk snapshot (over 90 days)",
+    "dashboard_name": "Snapshots",
+    "path": "computeengine.projects.id.snapshots.id",
+    "conditions": [
+        "and",
+        [
+            "computeengine.projects.id.snapshots.id.status",
+            "equal",
+            "READY"
+        ],
+        [
+            "computeengine.projects.id.snapshots.id.creation_timestamp",
+            "olderThan",
+            [
+                "90",
+                "days"
+            ]
+        ]
+    ]
 }

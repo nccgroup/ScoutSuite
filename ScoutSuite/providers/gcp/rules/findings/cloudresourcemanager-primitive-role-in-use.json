@@ -1,13 +1,26 @@
 {
-  "dashboard_name": "Bindings",
-  "description": "Primitive Role In Use",
-  "rationale": "<b>Description:</b><br><br>Primitive roles grant significant privileges. In most cases, usage of these roles is not recommended and does not follow security best practice.<br><br><b>Note: </b>This rule may flag Google-Managed Service Accounts. Google services rely on these Service Accounts having access to the project, and recommends not removing or changing the Service Account's role (see https://cloud.google.com/iam/docs/service-accounts#google-managed).",
-  "compliance": [
-    {"name": "CIS Google Cloud Platform Foundations", "version": "1.0.0", "reference": "1.4"}
-  ],
-  "path": "cloudresourcemanager.projects.id.bindings.id",
-  "conditions": [ "and",
-    [ "cloudresourcemanager.projects.id.bindings.id.name", "containAtLeastOneOf", ["owner", "editor", "viewer"] ]
-  ],
-  "id_suffix": "name"
+    "title": "Primitive Role In Use",
+    "rationale": "Primitive roles grant significant privileges. In most cases, usage of these roles is not recommended and does not follow security best practice.<br><br><b>Note: </b>This rule may flag Google-Managed Service Accounts. Google services rely on these Service Accounts having access to the project, and recommends not removing or changing the Service Account's role (see https://cloud.google.com/iam/docs/service-accounts#google-managed).",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.0.0",
+            "reference": "1.4"
+        }
+    ],
+    "dashboard_name": "Bindings",
+    "path": "cloudresourcemanager.projects.id.bindings.id",
+    "conditions": [
+        "and",
+        [
+            "cloudresourcemanager.projects.id.bindings.id.name",
+            "containAtLeastOneOf",
+            [
+                "owner",
+                "editor",
+                "viewer"
+            ]
+        ]
+    ],
+    "id_suffix": "name"
 }

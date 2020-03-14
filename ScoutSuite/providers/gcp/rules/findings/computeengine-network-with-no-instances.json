@@ -1,8 +1,13 @@
 {
-  "dashboard_name": "Networks",
-  "description": "Network with no instances",
-  "path": "computeengine.projects.id.networks.id",
-  "conditions": [ "and",
-    [ "computeengine.projects.id.networks.id.instances", "empty", "" ]
-  ]
+    "title": "Network with no instances",
+    "dashboard_name": "Networks",
+    "path": "computeengine.projects.id.networks.id",
+    "conditions": [
+        "and",
+        [
+            "computeengine.projects.id.networks.id.instances",
+            "empty",
+            ""
+        ]
+    ]
 }
