@@ -1,10 +1,15 @@
 {
-    "description": "Managed policy not attached to any entity",
-    "rationale": "<b>Description:</b><br><br>Customer Managed policies should be reviewed and deleted if not necessary.",
-    "path": "iam.policies.id",
-    "display_path": "iam.policies.id",
+    "title": "Managed policy not attached to any entity",
+    "rationale": "Customer Managed policies should be reviewed and deleted if not necessary.",
     "dashboard_name": "Policies",
-    "conditions": [ "and",
-        [ "iam.policies.id.attached_to", "empty", "" ]
+    "display_path": "iam.policies.id",
+    "path": "iam.policies.id",
+    "conditions": [
+        "and",
+        [
+            "iam.policies.id.attached_to",
+            "empty",
+            ""
+        ]
     ]
 }

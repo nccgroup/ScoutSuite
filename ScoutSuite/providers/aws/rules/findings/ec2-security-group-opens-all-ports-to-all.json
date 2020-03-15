@@ -1,10 +1,19 @@
 {
-    "description": "All ports open to all",
-    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
-    "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "title": "All ports open to all",
     "dashboard_name": "Rules",
-    "conditions": [ "and",
-        [ "_INCLUDE_(conditions/cidr-is-all.json)", "", ""],
-        [ "_INCLUDE_(conditions/security-group-opens-all-ports.json)", "", ""]
+    "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
+    "conditions": [
+        "and",
+        [
+            "_INCLUDE_(conditions/cidr-is-all.json)",
+            "",
+            ""
+        ],
+        [
+            "_INCLUDE_(conditions/security-group-opens-all-ports.json)",
+            "",
+            ""
+        ]
     ]
 }

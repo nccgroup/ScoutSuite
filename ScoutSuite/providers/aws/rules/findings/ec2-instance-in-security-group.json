@@ -1,6 +1,6 @@
 {
     "arg_names": [ "Security group name or ID" ],
-    "description": "EC2 instance belongs to specific security group",
+    "description": "EC2 Instance Belongs to Specific Security Group",
     "path": "ec2.regions.id.vpcs.id.instances.id",
     "conditions": [ "and",
         [ "ec2.regions.id.vpcs.id.instances.id.security_groups", "match", ".*_ARG_0_.*" ]

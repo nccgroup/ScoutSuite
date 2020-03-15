@@ -1,12 +1,24 @@
 {
-    "arg_names": [ "Type of policy", "Path to policies" ],
-    "key": "iam-user-with-_ARG_0_-policies",
-    "description": "User with _ARG_0_ policies",
-    "path": "iam.users.id",
+    "title": "User with _ARG_0_ policies",
     "dashboard_name": "Users",
-    "conditions": [ "and",
-        [ "iam.users.id.", "withKey", "_ARG_1_" ],
-        [ "iam.users.id._ARG_1_", "notEmpty", "" ]
+    "path": "iam.users.id",
+    "conditions": [
+        "and",
+        [
+            "iam.users.id.",
+            "withKey",
+            "_ARG_1_"
+        ],
+        [
+            "iam.users.id._ARG_1_",
+            "notEmpty",
+            ""
+        ]
+    ],
+    "key": "iam-user-with-_ARG_0_-policies",
+    "arg_names": [
+        "Type of policy",
+        "Path to policies"
     ],
     "id_suffix": "_ARG_1_"
 }

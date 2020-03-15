@@ -1,9 +1,14 @@
 {
-    "description": "DKIM not enabled",
-    "rationale": "<b>Description:</b><br><br>DKIM signing is not enabled for emails sent from the identity.",
-    "path": "ses.regions.id.identities.id",
+    "title": "DKIM not enabled",
+    "rationale": "DKIM signing is not enabled for emails sent from the identity.",
     "dashboard_name": "Identities",
-    "conditions": [ "and",
-        [ "DkimEnabled", "false", "" ]
+    "path": "ses.regions.id.identities.id",
+    "conditions": [
+        "and",
+        [
+            "DkimEnabled",
+            "false",
+            ""
+        ]
     ]
 }

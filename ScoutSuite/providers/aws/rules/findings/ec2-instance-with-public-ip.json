@@ -1,11 +1,20 @@
 {
-    "description": "Instance with a public IP",
-    "rationale": "<b>Description:</b><br><br>It is good practice to maintain a list of known, publicly accessible instances and flag all other instances that meet this criteria.",
-    "path": "ec2.regions.id.vpcs.id.instances.id.network_interfaces.id",
+    "title": "Instance with a public IP",
+    "rationale": "It is good practice to maintain a list of known, publicly accessible instances and flag all other instances that meet this criteria.",
     "dashboard_name": "Network interfaces",
-    "conditions": [ "and",
-        [ "Association", "notNull", "" ],
-        [ "ec2.regions.id.vpcs.id.instances.id.network_interfaces.id.Association.PublicIp", "notNull", "" ]
-    ],
-    "display_path": "ec2.regions.id.vpcs.id.instances.id"
+    "display_path": "ec2.regions.id.vpcs.id.instances.id",
+    "path": "ec2.regions.id.vpcs.id.instances.id.network_interfaces.id",
+    "conditions": [
+        "and",
+        [
+            "Association",
+            "notNull",
+            ""
+        ],
+        [
+            "ec2.regions.id.vpcs.id.instances.id.network_interfaces.id.Association.PublicIp",
+            "notNull",
+            ""
+        ]
+    ]
 }

@@ -1,10 +1,19 @@
 {
-    "description": "Group with inline policies",
-    "path": "iam.groups.id",
+    "title": "Group with inline policies",
     "dashboard_name": "groups",
-    "conditions": [ "and",
-        [ "iam.groups.id.", "withKey", "inline_policies" ],
-        [ "iam.groups.id.inline_policies", "notEmpty", "" ]
+    "path": "iam.groups.id",
+    "conditions": [
+        "and",
+        [
+            "iam.groups.id.",
+            "withKey",
+            "inline_policies"
+        ],
+        [
+            "iam.groups.id.inline_policies",
+            "notEmpty",
+            ""
+        ]
     ],
     "id_suffix": "inline_policies"
 }

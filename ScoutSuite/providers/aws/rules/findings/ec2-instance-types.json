@@ -1,12 +1,17 @@
 {
-    "description": "Use of _ARG_0_ instances",
-    "key": "ec2-instance-type-_STRIPDOTS_(_ARG_0_)",
-    "rationale": "<b>Description:</b><br><br>Policies dictacte _ARG_0_ EC2 instances should not be used in this environment",
-    "path": "ec2.regions.id.vpcs.id.instances.id",
+    "title": "Use of _ARG_0_ instances",
+    "rationale": "Policies dictacte _ARG_0_ EC2 instances should not be used in this environment",
     "dashboard_name": "Instances",
-    "conditions": [ "and",
-        [ "InstanceType", "containAtLeastOneOf", "_ARG_1_" ]
+    "path": "ec2.regions.id.vpcs.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "InstanceType",
+            "containAtLeastOneOf",
+            "_ARG_1_"
+        ]
     ],
+    "key": "ec2-instance-type-_STRIPDOTS_(_ARG_0_)",
     "arg_names": [
         "Display name of types of instances",
         "Type of EC2 instances that may not be used."

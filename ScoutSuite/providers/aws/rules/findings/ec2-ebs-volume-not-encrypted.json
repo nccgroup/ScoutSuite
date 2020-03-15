@@ -1,9 +1,14 @@
 {
-    "description": "EBS volume not encrypted",
-    "rationale": "<b>Description:</b><br><br>Enabling encryption of EBS volumes ensures that data is encrypted both at-rest and in-transit (between an instance and its attached EBS storage).",
-    "path": "ec2.regions.id.volumes.id",
+    "title": "EBS Volume not Encrypted",
+    "rationale": "Enabling encryption of EBS volumes ensures that data is encrypted both at-rest and in-transit (between an instance and its attached EBS storage).",
     "dashboard_name": "Volumes",
-    "conditions": [ "and",
-        [ "Encrypted", "false", "" ]
+    "path": "ec2.regions.id.volumes.id",
+    "conditions": [
+        "and",
+        [
+            "Encrypted",
+            "false",
+            ""
+        ]
     ]
 }

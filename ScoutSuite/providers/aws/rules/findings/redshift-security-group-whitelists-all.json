@@ -1,9 +1,14 @@
 {
-    "description": "Security group allows all",
-    "path": "redshift.regions.id.vpcs.id.security_groups.id.IPRanges.id.CIDRIP",
-    "display_path": "redshift.regions.id.vpcs.id.security_groups.id",
+    "title": "Security group allows all",
     "dashboard_name": "Security Groups",
-    "conditions": [ "and",
-        [ "this", "equal", "0.0.0.0/0" ]
+    "display_path": "redshift.regions.id.vpcs.id.security_groups.id",
+    "path": "redshift.regions.id.vpcs.id.security_groups.id.IPRanges.id.CIDRIP",
+    "conditions": [
+        "and",
+        [
+            "this",
+            "equal",
+            "0.0.0.0/0"
+        ]
     ]
 }

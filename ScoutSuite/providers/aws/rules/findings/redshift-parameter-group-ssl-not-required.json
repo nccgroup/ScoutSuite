@@ -1,10 +1,15 @@
 {
-    "description": "SSL Not Required",
-    "rationale": "<b>Description:</b><br><br>Parameter groups associated with Redshift clusters should have the \"require_ssl\" parameter enabled, to ensure that data in transit is encrypted.<br><br><b>Note</b> that this rule will flag default parameter groups, even though they cannot be changed. It is recommended to use custom groups and configure them according to security best practice.",
-    "path": "redshift.regions.id.parameter_groups.id",
+    "title": "SSL Not Required",
+    "rationale": "Parameter groups associated with Redshift clusters should have the \"require_ssl\" parameter enabled, to ensure that data in transit is encrypted.<br><br><b>Note</b> that this rule will flag default parameter groups, even though they cannot be changed. It is recommended to use custom groups and configure them according to security best practice.",
     "dashboard_name": "Parameter Groups",
-    "conditions": [ "and",
-        [ "redshift.regions.id.parameter_groups.id.parameters.require_ssl.value", "false", "" ]
+    "path": "redshift.regions.id.parameter_groups.id",
+    "conditions": [
+        "and",
+        [
+            "redshift.regions.id.parameter_groups.id.parameters.require_ssl.value",
+            "false",
+            ""
+        ]
     ],
     "id_suffix": "require_ssl"
 }

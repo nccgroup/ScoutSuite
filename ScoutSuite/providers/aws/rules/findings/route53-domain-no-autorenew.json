@@ -1,9 +1,14 @@
 {
+    "title": "Domain not set to autorenew",
     "dashboard_name": "Domains",
-    "description": "Domain not set to autorenew",
     "path": "route53.regions.id.domains.id",
-    "conditions": [ "and",
-        [ "auto_renew", "false", "" ]
+    "conditions": [
+        "and",
+        [
+            "auto_renew",
+            "false",
+            ""
+        ]
     ],
     "id_suffix": "auto_renew"
 }

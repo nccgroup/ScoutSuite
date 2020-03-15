@@ -1,14 +1,41 @@
 {
-    "arg_names": [ "SES action" ],
-    "key": "ses-identity-world-_ARG_0_-policy",
+    "title": "_ARG_0_ authorized to all principals",
     "dashboard_name": "Statements",
-    "description": "_ARG_0_ authorized to all principals",
-    "path": "ses.regions.id.identities.id.policies.id.Statement.id",
     "display_path": "ses.regions.id.identities.id",
-    "conditions": [ "and",
-        [ "ses.regions.id.identities.id.policies.id.Statement.id.Effect", "equal", "Allow" ],
-        [ "ses.regions.id.identities.id.policies.id.Statement.id.", "containAction", "ses:_ARG_0_" ],
-        [ "_INCLUDE_(conditions/policy-statement-any-principal.json)", [ "_STATEMENT_" ], [ "ses.regions.id.identities.id.policies.id.Statement.id" ] ],
-        [ "_INCLUDE_(conditions/policy-statement-poor-condition.json)", [ "_STATEMENT_" ], [ "ses.regions.id.identities.id.policies.id.Statement.id" ] ]
+    "path": "ses.regions.id.identities.id.policies.id.Statement.id",
+    "conditions": [
+        "and",
+        [
+            "ses.regions.id.identities.id.policies.id.Statement.id.Effect",
+            "equal",
+            "Allow"
+        ],
+        [
+            "ses.regions.id.identities.id.policies.id.Statement.id.",
+            "containAction",
+            "ses:_ARG_0_"
+        ],
+        [
+            "_INCLUDE_(conditions/policy-statement-any-principal.json)",
+            [
+                "_STATEMENT_"
+            ],
+            [
+                "ses.regions.id.identities.id.policies.id.Statement.id"
+            ]
+        ],
+        [
+            "_INCLUDE_(conditions/policy-statement-poor-condition.json)",
+            [
+                "_STATEMENT_"
+            ],
+            [
+                "ses.regions.id.identities.id.policies.id.Statement.id"
+            ]
+        ]
+    ],
+    "key": "ses-identity-world-_ARG_0_-policy",
+    "arg_names": [
+        "SES action"
     ]
 }

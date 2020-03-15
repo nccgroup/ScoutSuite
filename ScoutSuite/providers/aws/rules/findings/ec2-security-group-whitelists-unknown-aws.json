@@ -1,10 +1,19 @@
 {
-    "description": "Security group whitelists unknown AWS CIDRs",
-    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
-    "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "title": "Security group whitelists unknown AWS CIDRs",
     "dashboard_name": "Rules",
-    "conditions": [ "and",
-        [ "this", "inSubnets", "_IP_RANGES_FROM_FILE_(aws/ip-ranges/aws.json, [])" ],
-        [ "this", "notInSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges-from-args, [])" ]
+    "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
+    "conditions": [
+        "and",
+        [
+            "this",
+            "inSubnets",
+            "_IP_RANGES_FROM_FILE_(aws/ip-ranges/aws.json, [])"
+        ],
+        [
+            "this",
+            "notInSubnets",
+            "_IP_RANGES_FROM_FILE_(ip-ranges-from-args, [])"
+        ]
     ]
 }

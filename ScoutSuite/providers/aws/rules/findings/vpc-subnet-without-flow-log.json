@@ -1,14 +1,27 @@
 {
-    "description": "Subnet without a flow log",
-    "rationale": "<b>Description:</b><br><br>Flow logs enable the investigation of incidents involving unauthorized network traffic, such as an attacker exfiltrating data or pivoting to other hosts.",
+    "title": "Subnet without a flow log",
+    "rationale": "Flow logs enable the investigation of incidents involving unauthorized network traffic, such as an attacker exfiltrating data or pivoting to other hosts.",
     "compliance": [
-        {"name": "CIS Amazon Web Services Foundations", "version": "1.2.0", "reference": "2.9"}
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.2.0",
+            "reference": "2.9"
+        }
     ],
-    "path": "vpc.regions.id.vpcs.id.subnets.id",
     "dashboard_name": "Subnets",
-    "id_suffix": "NoFlowLog",
-    "conditions": [ "or",
-        [ "this", "withoutKey", "flow_logs"],
-        [ "flow_logs", "empty", "" ]
-    ]
+    "path": "vpc.regions.id.vpcs.id.subnets.id",
+    "conditions": [
+        "or",
+        [
+            "this",
+            "withoutKey",
+            "flow_logs"
+        ],
+        [
+            "flow_logs",
+            "empty",
+            ""
+        ]
+    ],
+    "id_suffix": "NoFlowLog"
 }

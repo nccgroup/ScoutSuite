@@ -1,10 +1,19 @@
 {
-    "description": "Short Backup Retention Period",
-    "path": "rds.regions.id.vpcs.id.instances.id",
+    "title": "Short Backup Retention Period",
     "dashboard_name": "Instances",
-    "conditions": [ "and",
-        [ "rds.regions.id.vpcs.id.instances.id.BackupRetentionPeriod", "moreThan", "0" ],
-        [ "rds.regions.id.vpcs.id.instances.id.BackupRetentionPeriod", "lessThan", "30" ]
+    "path": "rds.regions.id.vpcs.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "rds.regions.id.vpcs.id.instances.id.BackupRetentionPeriod",
+            "moreThan",
+            "0"
+        ],
+        [
+            "rds.regions.id.vpcs.id.instances.id.BackupRetentionPeriod",
+            "lessThan",
+            "30"
+        ]
     ],
     "id_suffix": "BackupRetentionPeriod"
 }

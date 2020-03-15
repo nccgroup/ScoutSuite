@@ -1,10 +1,15 @@
 {
+    "title": "Bucket without versioning",
+    "rationale": "Versioning is a means of keeping multiple variants of an object in the same bucket. With versioning, you can easily recover from both unintended user actions and application failures.",
     "dashboard_name": "Buckets",
-    "description": "Bucket without versioning",
-    "rationale": "<b>Description:</b><br><br>Versioning is a means of keeping multiple variants of an object in the same bucket. With versioning, you can easily recover from both unintended user actions and application failures.",
     "path": "s3.buckets.id",
-    "conditions": [ "and",
-        [ "s3.buckets.id.versioning_status_enabled", "false", "" ]
+    "conditions": [
+        "and",
+        [
+            "s3.buckets.id.versioning_status_enabled",
+            "false",
+            ""
+        ]
     ],
     "id_suffix": "versioning"
 }

@@ -43,12 +43,11 @@ def format_folder(folder_path):
                 # sort keys
                 sort_order = ['title', 'rationale', 'remediation', 'compliance', 'references',
                               'dashboard_name', 'display_path', 'path', 'conditions',
-                              'key', 'arg_names', 'id_suffix']
+                              'key', 'keys', 'arg_names', 'id_suffix']
                 try:
                     ordered_data = OrderedDict(sorted(data.items(), key=lambda i: sort_order.index(i[0])))
                 except Exception as e:
                     print('{}: {}'.format(fn, e))
-                    break
                 # save to file
                 json.dump(ordered_data, json_file, sort_keys=False, indent=4)
 
@@ -65,7 +64,7 @@ if __name__ == "__main__":
         format_folder(args.folder)
     else:
         # provider_odes = ['aliyun', 'aws', 'azure', 'gcp', 'oci']
-        provider_codes = ['gcp']
+        provider_codes = ['aws', 'gcp']
 
         for provider_code in provider_codes:
             current_file_dirname = os.path.dirname(__file__)

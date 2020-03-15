@@ -1,11 +1,16 @@
 {
-    "description": "Global service logging duplicated",
-    "rationale": "<b>Description:</b><br><br>Global service logging is enabled in multiple Trails. While this does not jeopardize the security of the environment, duplicated entries in logs increase the difficulty to investate potential incidents.",
-    "path": "cloudtrail",
+    "title": "Global Service Logging Duplicated",
+    "rationale": "Global service logging is enabled in multiple Trails. While this does not jeopardize the security of the environment, duplicated entries in logs increase the difficulty to investate potential incidents.",
     "dashboard_name": "Configuration",
     "display_path": "cloudtrail.regions.id",
-    "conditions": [ "and",
-        [ "DuplicatedGlobalServiceEvents", "true", ""]
+    "path": "cloudtrail",
+    "conditions": [
+        "and",
+        [
+            "DuplicatedGlobalServiceEvents",
+            "true",
+            ""
+        ]
     ],
     "id_suffix": "IncludeGlobalServiceEvents"
 }

@@ -1,10 +1,19 @@
 {
-    "description": "Role with inline policies",
-    "path": "iam.roles.id",
+    "title": "Role with inline policies",
     "dashboard_name": "Roles",
-    "conditions": [ "and",
-        [ "iam.roles.id.", "withKey", "inline_policies" ],
-        [ "iam.roles.id.inline_policies", "notEmpty", "" ]
+    "path": "iam.roles.id",
+    "conditions": [
+        "and",
+        [
+            "iam.roles.id.",
+            "withKey",
+            "inline_policies"
+        ],
+        [
+            "iam.roles.id.inline_policies",
+            "notEmpty",
+            ""
+        ]
     ],
     "id_suffix": "inline_policies"
 }

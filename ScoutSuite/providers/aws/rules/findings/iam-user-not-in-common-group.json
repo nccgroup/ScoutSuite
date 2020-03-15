@@ -1,10 +1,17 @@
 {
-    "arg_names": [ "Common group" ],
-    "description": "User not in common group",
-    "path": "iam.users.id",
+    "title": "User not in common group",
     "dashboard_name": "Users",
-    "conditions": [ "and",
-        [ "iam.users.id.groups", "containNoneOf", "_ARG_0_" ]
+    "path": "iam.users.id",
+    "conditions": [
+        "and",
+        [
+            "iam.users.id.groups",
+            "containNoneOf",
+            "_ARG_0_"
+        ]
+    ],
+    "arg_names": [
+        "Common group"
     ],
     "id_suffix": "user_groups"
 }

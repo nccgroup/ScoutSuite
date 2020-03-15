@@ -1,34 +1,100 @@
 {
-    "description": "Cross-account AssumeRole policy lacks external ID and MFA",
-    "rationale": "<b>Description:</b><br><br>When authorizing cross-account role assumption, an external ID or MFA should be required.",
-    "path": "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id",
-    "display_path": "iam.roles.id",
+    "title": "Cross-account AssumeRole policy lacks external ID and MFA",
+    "rationale": "When authorizing cross-account role assumption, an external ID or MFA should be required.",
     "dashboard_name": "Roles",
-    "conditions": [ "and",
-        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Effect", "equal", "Allow" ],
-        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.", "containAction", "sts:AssumeRole" ],
-        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Principal", "withKey", "AWS" ],
-        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Principal.AWS", "isCrossAccount", "_ACCOUNT_ID_" ],
-        [ "or",
-            [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.", "withoutKey", "Condition" ],
-            [ "and",
-                [ "or",
-                    [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition", "withoutKey", "Bool" ],
-                    [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.Bool.", "withoutKey", "aws:MultiFactorAuthPresent" ],
-                    [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.Bool.aws:MultiFactorAuthPresent", "notTrue", "" ]
+    "display_path": "iam.roles.id",
+    "path": "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id",
+    "conditions": [
+        "and",
+        [
+            "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Effect",
+            "equal",
+            "Allow"
+        ],
+        [
+            "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.",
+            "containAction",
+            "sts:AssumeRole"
+        ],
+        [
+            "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Principal",
+            "withKey",
+            "AWS"
+        ],
+        [
+            "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Principal.AWS",
+            "isCrossAccount",
+            "_ACCOUNT_ID_"
+        ],
+        [
+            "or",
+            [
+                "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.",
+                "withoutKey",
+                "Condition"
+            ],
+            [
+                "and",
+                [
+                    "or",
+                    [
+                        "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition",
+                        "withoutKey",
+                        "Bool"
+                    ],
+                    [
+                        "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.Bool.",
+                        "withoutKey",
+                        "aws:MultiFactorAuthPresent"
+                    ],
+                    [
+                        "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.Bool.aws:MultiFactorAuthPresent",
+                        "notTrue",
+                        ""
+                    ]
                 ],
-                [ "or",
-                    [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition", "withoutKey", "BoolIfExists" ],
-                    [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.BoolIfExists.", "withoutKey", "aws:MultiFactorAuthPresent" ],
-                    [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.BoolIfExists.aws:MultiFactorAuthPresent", "notTrue", "" ]
+                [
+                    "or",
+                    [
+                        "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition",
+                        "withoutKey",
+                        "BoolIfExists"
+                    ],
+                    [
+                        "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.BoolIfExists.",
+                        "withoutKey",
+                        "aws:MultiFactorAuthPresent"
+                    ],
+                    [
+                        "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.BoolIfExists.aws:MultiFactorAuthPresent",
+                        "notTrue",
+                        ""
+                    ]
                 ]
             ]
         ],
-        [ "or",
-            [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.", "withoutKey", "Condition" ],
-            [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition", "withoutKey", "StringEquals" ],
-            [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.StringEquals.", "withoutKey", "sts:ExternalId" ],
-            [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.StringEquals.sts:ExternalId", "empty", "" ]
+        [
+            "or",
+            [
+                "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.",
+                "withoutKey",
+                "Condition"
+            ],
+            [
+                "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition",
+                "withoutKey",
+                "StringEquals"
+            ],
+            [
+                "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.StringEquals.",
+                "withoutKey",
+                "sts:ExternalId"
+            ],
+            [
+                "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.StringEquals.sts:ExternalId",
+                "empty",
+                ""
+            ]
         ]
     ]
 }

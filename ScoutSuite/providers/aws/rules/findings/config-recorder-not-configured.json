@@ -1,10 +1,15 @@
 {
-    "description": "Not configured",
-    "rationale": "<b>Description:</b><br><br>No Config recorders are configured, which means that changes in AWS resource configuration are not logged.",
-    "path": "config.regions.id",
+    "title": "Config Service not Configured",
+    "rationale": "No Config recorders are configured, which means that changes in AWS resource configuration are not logged.",
     "dashboard_name": "Regions",
-    "conditions": [ "and",
-        [ "recorders_count", "equal", "0" ]
+    "path": "config.regions.id",
+    "conditions": [
+        "and",
+        [
+            "recorders_count",
+            "equal",
+            "0"
+        ]
     ],
     "id_suffix": "NotConfigured"
 }

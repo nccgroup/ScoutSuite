@@ -1,13 +1,34 @@
 {
-    "description": "Security group whitelists unknown CIDRs",
-    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
-    "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "title": "Security group whitelists unknown CIDRs",
     "dashboard_name": "Rules",
-    "conditions": [ "and",
-        [ "this", "notEqual", "0.0.0.0/0" ],
-        [ "this", "notEqual", "::/0" ],
-        [ "this", "notInSubnets", "_IP_RANGES_FROM_FILE_(aws/ip-ranges/aws.json, [])" ],
-        [ "this", "notInSubnets", "_IP_RANGES_FROM_FILE_(ip-ranges-from-args, [])" ],
-        [ "_INCLUDE_(conditions/ip-not-in-private-space.json)", "", "" ]
+    "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
+    "conditions": [
+        "and",
+        [
+            "this",
+            "notEqual",
+            "0.0.0.0/0"
+        ],
+        [
+            "this",
+            "notEqual",
+            "::/0"
+        ],
+        [
+            "this",
+            "notInSubnets",
+            "_IP_RANGES_FROM_FILE_(aws/ip-ranges/aws.json, [])"
+        ],
+        [
+            "this",
+            "notInSubnets",
+            "_IP_RANGES_FROM_FILE_(ip-ranges-from-args, [])"
+        ],
+        [
+            "_INCLUDE_(conditions/ip-not-in-private-space.json)",
+            "",
+            ""
+        ]
     ]
 }

@@ -1,10 +1,15 @@
 {
-    "description": "Not configured",
-    "rationale": "<b>Description:</b><br><br>CloudTrail is not configured, which means that API activity is not logged.",
-    "path": "cloudtrail.regions.id", 
+    "title": "CloudTrail Service not Configured",
+    "rationale": "CloudTrail is not configured, which means that API activity is not logged.",
     "dashboard_name": "Regions",
-    "conditions": [ "and",
-        [ "trails_count", "equal", "0" ]
+    "path": "cloudtrail.regions.id",
+    "conditions": [
+        "and",
+        [
+            "trails_count",
+            "equal",
+            "0"
+        ]
     ],
     "id_suffix": "NotConfigured"
 }

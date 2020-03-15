@@ -1,13 +1,30 @@
 {
-    "arg_names": [ "Name of IAM group", "Type of policy", "Path to policies" ],
-    "key": "iam-human-user-with-_ARG_1_-policies",
-    "description": "Human user with _ARG_1_ policies",
-    "path": "iam.users.id",
+    "title": "Human user with _ARG_1_ policies",
     "dashboard_name": "Users",
-    "conditions": [ "and",
-        [ "iam.users.id.groups", "containAtLeastOneOf", "_ARG_0_" ],
-        [ "iam.users.id.", "withKey", "_ARG_2_" ],
-        [ "iam.users.id._ARG_2_", "notEmpty", "" ]
+    "path": "iam.users.id",
+    "conditions": [
+        "and",
+        [
+            "iam.users.id.groups",
+            "containAtLeastOneOf",
+            "_ARG_0_"
+        ],
+        [
+            "iam.users.id.",
+            "withKey",
+            "_ARG_2_"
+        ],
+        [
+            "iam.users.id._ARG_2_",
+            "notEmpty",
+            ""
+        ]
+    ],
+    "key": "iam-human-user-with-_ARG_1_-policies",
+    "arg_names": [
+        "Name of IAM group",
+        "Type of policy",
+        "Path to policies"
     ],
     "id_suffix": "_ARG_1_"
 }

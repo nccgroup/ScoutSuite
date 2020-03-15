@@ -1,9 +1,14 @@
 {
-  "dashboard_name": "Buckets",
-  "description": "Bucket without default encryption enabled",
-  "path": "s3.buckets.id",
-  "conditions": [ "and",
-    [ "s3.buckets.id.default_encryption_enabled", "false", "" ]
-  ],
-  "id_suffix": "default_encryption_enabled"
+    "title": "Bucket without default encryption enabled",
+    "dashboard_name": "Buckets",
+    "path": "s3.buckets.id",
+    "conditions": [
+        "and",
+        [
+            "s3.buckets.id.default_encryption_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "default_encryption_enabled"
 }

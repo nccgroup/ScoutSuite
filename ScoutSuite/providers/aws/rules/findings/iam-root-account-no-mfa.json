@@ -1,11 +1,22 @@
 {
-    "description": "Lack of MFA (root account)",
-    "path": "iam.credential_reports.id",
+    "title": "Lack of MFA (root account)",
     "dashboard_name": "Root account",
-    "conditions": [ "and",
-        [ "iam.credential_reports.id.mfa_active", "notTrue", "" ],
-        [ "iam.credential_reports.id.name", "equal", "<root_account>" ]
+    "path": "iam.credential_reports.id",
+    "conditions": [
+        "and",
+        [
+            "iam.credential_reports.id.mfa_active",
+            "notTrue",
+            ""
+        ],
+        [
+            "iam.credential_reports.id.name",
+            "equal",
+            "<root_account>"
+        ]
     ],
-    "id_suffix": "mfa_active",
-    "keys": [ "this" ]
+    "keys": [
+        "this"
+    ],
+    "id_suffix": "mfa_active"
 }

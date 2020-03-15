@@ -1,9 +1,14 @@
 {
-    "description": "All ports open",
-    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",
+    "title": "All ports open",
     "dashboard_name": "Rules",
-    "conditions": [ "and",
-        [ "_INCLUDE_(conditions/security-group-opens-all-ports.json)", "", ""]
-    ],
-    "display_path": "ec2.regions.id.vpcs.id.security_groups.id"
+    "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",
+    "conditions": [
+        "and",
+        [
+            "_INCLUDE_(conditions/security-group-opens-all-ports.json)",
+            "",
+            ""
+        ]
+    ]
 }

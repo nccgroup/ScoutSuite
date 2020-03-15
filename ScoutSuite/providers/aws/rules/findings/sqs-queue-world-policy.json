@@ -1,15 +1,46 @@
 {
-    "arg_names": [ "SQS action" ],
-    "key": "sqs-queue-world-_ARG_0_-policy",
+    "title": "_ARG_0_ authorized to all principals",
     "dashboard_name": "Statements",
-    "description": "_ARG_0_ authorized to all principals",
-    "path": "sqs.regions.id.queues.id.Policy.Statement.id",
     "display_path": "sqs.regions.id.queues.id",
-    "conditions": [ "and",
-        [ "sqs.regions.id.queues.id.Policy", "notNull", "" ],
-        [ "sqs.regions.id.queues.id.Policy.Statement.id.Effect", "equal", "Allow" ],
-        [ "sqs.regions.id.queues.id.Policy.Statement.id.", "containAction", "sqs:_ARG_0_" ],
-        [ "_INCLUDE_(conditions/policy-statement-any-principal.json)", [ "_STATEMENT_" ], [ "sqs.regions.id.queues.id.Policy.Statement.id" ] ],
-        [ "_INCLUDE_(conditions/policy-statement-poor-condition.json)", [ "_STATEMENT_" ], [ "sqs.regions.id.queues.id.Policy.Statement.id" ] ]
+    "path": "sqs.regions.id.queues.id.Policy.Statement.id",
+    "conditions": [
+        "and",
+        [
+            "sqs.regions.id.queues.id.Policy",
+            "notNull",
+            ""
+        ],
+        [
+            "sqs.regions.id.queues.id.Policy.Statement.id.Effect",
+            "equal",
+            "Allow"
+        ],
+        [
+            "sqs.regions.id.queues.id.Policy.Statement.id.",
+            "containAction",
+            "sqs:_ARG_0_"
+        ],
+        [
+            "_INCLUDE_(conditions/policy-statement-any-principal.json)",
+            [
+                "_STATEMENT_"
+            ],
+            [
+                "sqs.regions.id.queues.id.Policy.Statement.id"
+            ]
+        ],
+        [
+            "_INCLUDE_(conditions/policy-statement-poor-condition.json)",
+            [
+                "_STATEMENT_"
+            ],
+            [
+                "sqs.regions.id.queues.id.Policy.Statement.id"
+            ]
+        ]
+    ],
+    "key": "sqs-queue-world-_ARG_0_-policy",
+    "arg_names": [
+        "SQS action"
     ]
 }

@@ -1,10 +1,19 @@
 {
-    "description": "Unused Security Groups",
-    "rationale": "<b>Description:</b><br><br> Non-default security groups were defined which were unused and may not be required. This being the case, their existence in the configuration increases the risk that they may be inappropriately assigned. The unused security groups should be reviewed and removed if no longer required.",
-    "path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "title": "Unused Security Groups",
+    "rationale": " Non-default security groups were defined which were unused and may not be required. This being the case, their existence in the configuration increases the risk that they may be inappropriately assigned. The unused security groups should be reviewed and removed if no longer required.",
     "dashboard_name": "Security groups",
-    "conditions": [ "and",
-        [ "ec2.regions.id.vpcs.id.security_groups.id.", "withoutKey", "used_by" ],
-        [ "ec2.regions.id.vpcs.id.security_groups.id.name", "notEqual", "default" ]
+    "path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "conditions": [
+        "and",
+        [
+            "ec2.regions.id.vpcs.id.security_groups.id.",
+            "withoutKey",
+            "used_by"
+        ],
+        [
+            "ec2.regions.id.vpcs.id.security_groups.id.name",
+            "notEqual",
+            "default"
+        ]
     ]
 }
