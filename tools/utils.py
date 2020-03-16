@@ -11,11 +11,12 @@ EXCLUDED_WORDS = [
 ]
 
 SPECIAL_WORDS = [
-    "IPs",
-    "NACLs", "ACLs", "CIDRs",
-    "CloudTrail", "CloudWatch"
     "_ARG_0_", "_ARG_1_", "_ARG_2_", "_ARG_3_", "_ARG_4_", "_ARG_5_", "_ARG_6_", "_ARG_7_", "_ARG_8_", "_ARG_9_"
 ]
+
+
+def is_mixed_case(word):
+    return any(c.islower() for c in word) and any(c.isupper() for c in word)
 
 
 def get_capitalized_title(initial_title: str) -> str:
@@ -50,7 +51,7 @@ def get_capitalized_title(initial_title: str) -> str:
                         frag_string += word + punct + " "  # do nothing
                     elif word.lower() in EXCLUDED_WORDS:
                         frag_string += word.lower() + punct + " "  # make it lowercase
-                    elif word.isupper():
+                    elif word.isupper() or is_mixed_case(word):
                         frag_string += word + punct + " "  # do nothing
                     else:
                         frag_string += word.capitalize() + punct + " "  # capitalize it
