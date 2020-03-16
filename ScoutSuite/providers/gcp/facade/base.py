@@ -96,12 +96,16 @@ class GCPFacade(GCPBaseFacade):
         projects = []
 
         try:
+            print("grabbing projects_group for parent_type " + parent_type)
             projects_group = resourcemanager_client.projects()
 
             if parent_type == 'project':
                 request = resourcemanager_client.projects().list(filter='id:%s' % parent_id)
             elif parent_type == 'all':
+                print("calling for all projects. resourcemanageer_client.projects().list()")
+                
                 request = resourcemanager_client.projects().list()
+                print("successfully got request back")
             # get parent children projects
             else:
                 request = resourcemanager_client.projects().list(filter='parent.id:%s' % parent_id)
@@ -113,6 +117,8 @@ class GCPFacade(GCPBaseFacade):
                     projects.extend(await self._get_projects_recursively("folder", folder['name'].strip(u'folders/')))
 
             project_response = await GCPFacadeUtils.get_all('projects', request, projects_group)
+            print("got project_repsonse back")
+            print(project_response)
             if project_response:
                 for project in project_response:
                     if project['lifecycleState'] == "ACTIVE":

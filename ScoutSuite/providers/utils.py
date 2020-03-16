@@ -1,10 +1,9 @@
 import asyncio
 from hashlib import sha1
-import random
 import uuid
 from ScoutSuite.core.console import print_info
 from ScoutSuite.providers.aws.utils import is_throttled as aws_is_throttled
-
+import random
 
 c = (
     "\033[0m",   # End of color
@@ -54,6 +53,7 @@ def run_function_concurrently(function):
     :param function: function to be executed concurrently, in a dedicated thread.
     :return: an asyncio.Future to be awaited.
     """
+     
     job_uuid = str(uuid.uuid4())
     rand_color = random.randint(1, len(c))
     def logging_wrapper():
@@ -61,10 +61,14 @@ def run_function_concurrently(function):
         result = function()
         print(c[rand_color] + "ending function: " + job_uuid + c[0])
         return result
+    
 
-
-    #return asyncio.get_event_loop().run_in_executor(executor=None, func=logging_wrapper) 
     return asyncio.get_event_loop().run_in_executor(executor=None, func=function)
+    #return asyncio.get_event_loop().run_in_executor(executor=None, func=logging_wrapper)
+
+async def semaWorker(self,semaphore, get_and_set_func, entity, kwargs):
+        async with semaphore:
+            await get_and_sec_func(entity, **kwargs)
 
 
 async def get_and_set_concurrently(get_and_set_funcs: [], entities: [], **kwargs):
@@ -81,15 +85,24 @@ async def get_and_set_concurrently(get_and_set_funcs: [], entities: [], **kwargs
 
     :return:
     """
+    semaphore = asyncio.Semaphore(value=2)
+    
 
     if len(entities) == 0:
         return
-
+    '''
+    tasks = {
+        asyncio.ensure_future(
+            semaWorker(semaphore, get_and_set_func, entity, kwargs)
+        ) for entity in entities for get_and_set_func in get_and_set_funcs
+    }
+    '''
     tasks = {
         asyncio.ensure_future(
             get_and_set_func(entity, **kwargs)
         ) for entity in entities for get_and_set_func in get_and_set_funcs
     }
+
     await asyncio.wait(tasks)
 
 

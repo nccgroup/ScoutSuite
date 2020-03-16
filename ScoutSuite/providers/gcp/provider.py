@@ -45,58 +45,6 @@ class GCPProvider(BaseProvider):
         if self.account_id:
             return 'gcp-{}'.format(self.account_id)
         else:
-            printError('Failed to authenticate to GCP - no supported account type')
-            return False
-
-        try:
-
-            self.credentials, project_id = google.auth.default()
-            if self.credentials:
-
-                # Project passed through the CLI
-                if self.project_id:
-                    self.projects = self._get_projects(parent_type='project',
-                                                       parent_id=self.project_id)
-                    self.aws_account_id = self.project_id  # FIXME this is for AWS
-                    self.profile = self.project_id  # FIXME this is for AWS
-
-                # Folder passed through the CLI
-                elif self.folder_id:
-                    self.projects = self._get_projects(parent_type='folder',
-                                                       parent_id=self.folder_id)
-                    self.aws_account_id = self.folder_id  # FIXME this is for AWS
-                    self.profile = self.folder_id  # FIXME this is for AWS
-
-                # Organization passed through the CLI
-                elif self.organization_id:
-                    self.projects = self._get_projects(parent_type='organization',
-                                                       parent_id=self.organization_id)
-                    self.aws_account_id = self.organization_id  # FIXME this is for AWS
-                    self.profile = self.organization_id  # FIXME this is for AWS
-
-                # Project inferred from default configuration and not a service account
-                if project_id and not service_account:
-                    self.projects = self._get_projects(parent_type='project',
-                                                       parent_id=project_id)
-                    self.aws_account_id = project_id  # FIXME this is for AWS
-                    self.profile = project_id  # FIXME this is for AWS
-
-                # All projects to which the user / Service Account has access to
-                else:
-                    # self.project_id = project_id
-                    self.projects = self._get_projects(parent_type='all',
-                                                       parent_id=None)
-                    if service_account and hasattr(self.credentials, 'service_account_email'):
-                        self.aws_account_id = self.credentials.service_account_email  # FIXME this is for AWS
-                    else:
-                        self.aws_account_id = 'GCP'  # FIXME this is for AWS
-
-                    self.profile = 'GCP'  # FIXME this is for AWS
-
-                # TODO this shouldn't be done here? but it has to in order to init with projects...
-                self.services.set_projects(projects=self.projects)
-
-                return True
             return 'gcp'
 
     def _set_account_id(self):
