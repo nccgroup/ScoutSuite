@@ -5,6 +5,7 @@ import os
 import json
 import argparse
 from collections import OrderedDict
+from utils import get_capitalized_title
 
 
 def get_folder_files(folder_path):
@@ -38,6 +39,8 @@ def format_folder(folder_path):
                     # check for legacy content - TODO remove once there are none left
                     if 'References' in data['rationale'] or 'CIS' in data['rationale']:
                         print('Potentially legacy rationale for {}: {}'.format(fn, data['rationale']))
+                # capitalize titles
+                data['title'] = get_capitalized_title(data['title'])
                 # back to start
                 json_file.seek(0)
                 # sort keys
@@ -64,7 +67,7 @@ if __name__ == "__main__":
         format_folder(args.folder)
     else:
         # provider_odes = ['aliyun', 'aws', 'azure', 'gcp', 'oci']
-        provider_codes = ['aws', 'gcp']
+        provider_codes = ['aws']
 
         for provider_code in provider_codes:
             current_file_dirname = os.path.dirname(__file__)
