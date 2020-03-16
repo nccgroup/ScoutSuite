@@ -333,6 +333,11 @@ class ScoutSuiteArgumentParser:
                             default=[],
                             nargs='+',
                             help='Name of in-scope services, defaults to all.')
+        parser.add_argument('--list_services',
+                            dest='list_services',
+                            default=False,
+                            action='store_true',
+                            help='List available services.')
         parser.add_argument('--skip',
                             dest='skipped_services',
                             default=[],
