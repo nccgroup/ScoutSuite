@@ -1,5 +1,3 @@
-import logging
-
 from ScoutSuite.core.console import print_exception, print_info
 from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.cloudresourcemanager import CloudResourceManagerFacade
@@ -19,8 +17,8 @@ except ImportError:
 
 
 class GCPFacade(GCPBaseFacade):
-    def __init__(self, default_project_id=None, project_id=None, folder_id=None, organization_id=None,
-                 all_projects=None):
+    def __init__(self,
+                 default_project_id=None, project_id=None, folder_id=None, organization_id=None, all_projects=None):
         super(GCPFacade, self).__init__('cloudresourcemanager', 'v1')
 
         self.default_project_id = default_project_id
@@ -42,10 +40,6 @@ class GCPFacade(GCPBaseFacade):
             self.gke = GKEFacade(self.gce)
         except NameError as _:
             pass
-
-        # Set logging level to error for GCP services as otherwise generates a lot of warnings
-        logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.ERROR)
-        logging.getLogger().setLevel(logging.ERROR)
 
     async def get_projects(self):
         try:
@@ -119,9 +113,13 @@ class GCPFacade(GCPBaseFacade):
                     projects.extend(await self._get_projects_recursively("folder", folder['name'].strip(u'folders/')))
 
             project_response = await GCPFacadeUtils.get_all('projects', request, projects_group)
-            for project in project_response:
-                if project['lifecycleState'] == "ACTIVE":
-                    projects.append(project)
+            if project_response:
+                for project in project_response:
+                    if project['lifecycleState'] == "ACTIVE":
+                        projects.append(project)
+            else:
+                print_exception('No Projects Found: '
+                                'You may have specified a non-existing organization/folder/project?')
 
         except Exception as e:
             print_exception('Unable to list accessible Projects: {}'.format(e))

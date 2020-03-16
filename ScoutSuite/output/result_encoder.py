@@ -7,6 +7,7 @@ import os
 import dateutil
 from sqlitedict import SqliteDict
 
+from ScoutSuite import DEFAULT_REPORT_DIRECTORY
 from ScoutSuite.core.console import print_exception, print_info
 from ScoutSuite.output.utils import get_filename, prompt_for_overwrite
 
@@ -40,7 +41,7 @@ class ScoutResultEncoder(object):
         self.report_name = report_name
         if self.report_name:
             self.report_name = report_name.replace('/', '_').replace('\\', '_')  # Issue 111
-        self.report_dir = report_dir
+        self.report_dir = report_dir if report_dir else DEFAULT_REPORT_DIRECTORY
         self.current_time = datetime.datetime.now(dateutil.tz.tzlocal())
         self.timestamp = self.current_time.strftime("%Y-%m-%d_%Hh%M%z") if not timestamp else timestamp
 

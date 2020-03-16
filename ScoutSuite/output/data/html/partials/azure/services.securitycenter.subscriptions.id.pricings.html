@@ -1,0 +1,24 @@
+<!-- Storage Accounts partial -->
+<script id="services.securitycenter.subscriptions.id.pricings.partial" type="text/x-handlebars-template">
+    <div id="ressource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Pricing Name: <span id="securitycenter.subscriptions.{{@../key}}.pricings.{{@key}}.name"><samp>{{ name }}</samp></span></div>
+        <div class="list-group-item-text item-margin">Pricing Tier: <span id="securitycenter.subscriptions.{{@../key}}.pricings.{{@key}}.pricing_tier">{{ pricing_tier }}</span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.securitycenter.subscriptions.id.pricings", $("#services\\.securitycenter\\.subscriptions\\.id\\.pricings\\.partial").html());
+</script>
+
+<!-- Single Pricings template -->
+<script id="single_securitycenter_pricing-template" type="text/x-handlebars-template">
+    {{> modal_template template='services.securitycenter.subscriptions.id.pricings'}}
+</script>
+<script>
+    var single_securitycenter_pricing_template = Handlebars.compile($("#single_securitycenter_pricing-template").html());
+</script>

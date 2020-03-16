@@ -2,7 +2,6 @@
 
 import json
 import os
-import re
 import sys
 
 if len(sys.argv) < 2:

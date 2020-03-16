@@ -1,10 +1,11 @@
+
 <!-- AMIs partial -->
 <script id="services.ec2.regions.id.images.partial" type="text/x-handlebars-template">
-    <div id="resource-name" class="list-group-item active">
+    <div class="list-group-item active">
         <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
     <div class="list-group-item">
-        <h4>Information</h4>
+        <h4 class="list-group-item-heading">Information</h4>
         <ul>
             <li class="list-group-item-text">ID: {{id}}</li>
             <li class="list-group-item-text">Architecture: {{getValueAt 'services.ec2.regions' region 'images' id 'Architecture'}}</li>

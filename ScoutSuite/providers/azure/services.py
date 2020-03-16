@@ -1,6 +1,7 @@
 from ScoutSuite.providers.azure.authentication_strategy import AzureCredentials
 from ScoutSuite.providers.azure.facade.base import AzureFacade
-from ScoutSuite.providers.azure.resources.graphrbac.base import GraphRBAC
+from ScoutSuite.providers.azure.resources.aad.base import AAD
+from ScoutSuite.providers.azure.resources.arm.base import ARM
 from ScoutSuite.providers.azure.resources.keyvault.base import KeyVaults
 from ScoutSuite.providers.azure.resources.network.base import Networks
 from ScoutSuite.providers.azure.resources.securitycenter.base import SecurityCenter
@@ -19,7 +20,7 @@ try:
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.azure.resources.private_appservice.base import WebApplications
+    from ScoutSuite.providers.azure.resources.private_appservice.base import AppServices
 except ImportError:
     pass
 try:
@@ -30,17 +31,24 @@ except ImportError:
 
 class AzureServicesConfig(BaseServicesConfig):
 
-    def __init__(self, credentials: AzureCredentials = None, **kwargs):
+    def __init__(self,
+                 credentials: AzureCredentials = None,
+                 subscription_ids=[], all_subscriptions=None,
+                 programmatic_execution=None,
+                 **kwargs):
 
         super(AzureServicesConfig, self).__init__(credentials)
 
-        facade = AzureFacade(credentials)
+        facade = AzureFacade(credentials,
+                             subscription_ids, all_subscriptions,
+                             programmatic_execution)
 
+        self.aad = AAD(facade)
+        self.arm = ARM(facade)
         self.securitycenter = SecurityCenter(facade)
         self.sqldatabase = Servers(facade)
         self.storageaccounts = StorageAccounts(facade)
         self.keyvault = KeyVaults(facade)
-        self.graphrbac = GraphRBAC(facade)
         self.network = Networks(facade)
         self.virtualmachines = VirtualMachines(facade)
 
@@ -50,7 +58,7 @@ class AzureServicesConfig(BaseServicesConfig):
         except NameError as _:
             pass
         try:
-            self.appservice = WebApplications(facade)
+            self.appservice = AppServices(facade)
         except NameError as _:
             pass
         try:

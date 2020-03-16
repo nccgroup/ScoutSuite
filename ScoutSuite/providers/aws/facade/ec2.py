@@ -1,6 +1,7 @@
 import asyncio
 import base64
 import boto3
+import zlib
 
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
@@ -30,7 +31,12 @@ class EC2Facade(AWSBaseFacade):
         else:
             if 'Value' not in user_data_response['UserData'].keys():
                 return None
-            return base64.b64decode(user_data_response['UserData']['Value']).decode('utf-8')
+            else:
+                value = base64.b64decode(user_data_response['UserData']['Value'])
+                if value[0:2] == b'\x1f\x8b':  # GZIP magic number
+                    return zlib.decompress(value, zlib.MAX_WBITS | 32).decode('utf-8')
+                else:
+                    return value.decode('utf-8')
 
     async def get_instances(self, region: str, vpc: str):
         filters = [{'Name': 'vpc-id', 'Values': [vpc]}]

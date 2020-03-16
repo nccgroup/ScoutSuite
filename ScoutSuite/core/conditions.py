@@ -4,7 +4,7 @@ import json
 import netaddr
 import re
 
-from iampoliciesgonewild import get_actions_from_statement, _expand_wildcard_action
+from policyuniverse.expander_minimizer import get_actions_from_statement, _expand_wildcard_action
 
 from ScoutSuite.core.console import print_error, print_exception
 

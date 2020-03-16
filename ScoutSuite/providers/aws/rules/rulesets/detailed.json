@@ -1,6 +1,12 @@
 {
     "about": "This ruleset consists of numerous rules that are considered standard by NCC Group. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of provider-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configured, and some of them being applicable to a limited number of users.",
     "rules": {
+        "certificate-with-transparancy-logging-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "cloudformation-stack-with-role.json": [
             {
                 "enabled": true,
@@ -65,6 +71,12 @@
             {
                 "enabled": true,
                 "level": "warning"
+            }
+        ],
+        "ec2-ebs-snapshot-not-encrypted.json": [
+            {
+                "enabled": true,
+                "level": "danger"
             }
         ],
         "ec2-ebs-volume-not-encrypted.json": [
@@ -424,7 +436,24 @@
         ],
         "iam-inline-policy-allows-non-sts-action.json": [
             {
-                "enabled": false,
+                "args": [
+                    "group"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "role"
+                ],
+                "enabled": true,
+                "level": "danger"
+            },
+            {
+                "args": [
+                    "user"
+                ],
+                "enabled": true,
                 "level": "danger"
             }
         ],
@@ -492,7 +521,7 @@
         ],
         "iam-managed-policy-allows-non-sts-action.json": [
             {
-                "enabled": false,
+                "enabled": true,
                 "level": "danger"
             }
         ],
@@ -687,6 +716,12 @@
             {
                 "enabled": true,
                 "level": "danger"
+            }
+        ],
+        "rds-instance-ca-certificate-deprecated.json": [
+            {
+                "enabled": true,
+                "level": "warning"
             }
         ],
         "rds-instance-no-minor-upgrade.json": [

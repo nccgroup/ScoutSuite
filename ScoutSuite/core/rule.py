@@ -8,15 +8,15 @@ from ScoutSuite.utils import format_service_name
 
 ip_ranges_from_args = 'ip-ranges-from-args'
 
-re_aws_account_id = re.compile(r'_AWS_ACCOUNT_ID_')
+re_account_id = re.compile(r'_ACCOUNT_ID_')
 re_ip_ranges_from_file = re.compile(r'_IP_RANGES_FROM_FILE_\((.*?)(,.*?)\)')
 re_ip_ranges_from_local_file = re.compile(r'_IP_RANGES_FROM_LOCAL_FILE_\((.*?)(,.*?)\)')
 re_strip_dots = re.compile(r'(_STRIPDOTS_\((.*?)\))')
 
 testcases = [
     {
-        'name': 'aws_account_id',
-        'regex': re_aws_account_id
+        'name': 'account_id',
+        'regex': re_account_id
     },
     {
         'name': 'ip_ranges_from_file',

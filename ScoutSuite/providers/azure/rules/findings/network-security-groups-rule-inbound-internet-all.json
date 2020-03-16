@@ -1,0 +1,11 @@
+{
+    "description": "Security Group Rules Allowing All Inbound Access",
+    "dashboard_name": "NSGs",
+    "path": "network.subscriptions.id.security_groups.id.security_rules.id",
+    "display_path": "network.subscriptions.id.security_groups.id",
+    "conditions": [ "and",
+        ["network.subscriptions.id.security_groups.id.security_rules.id.destination_port_ranges", "containAtLeastOneOf", ["*", "0-65535"] ],
+        ["_INCLUDE_(conditions/exposed-to-the-internet.json)", "", ""],
+        ["_INCLUDE_(conditions/allow-tcp.json)", "", ""]
+    ]
+}

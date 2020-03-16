@@ -1,0 +1,65 @@
+<!-- arm roles -->
+<script id="services.arm.subscriptions.id.roles.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">ID: <span id="arm.subscriptions.{{@../key}}.roles.{{@key}}.id"><samp>{{value_or_none id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Description: <span id="arm.subscriptions.{{@../key}}.roles.{{@key}}.description"><samp>{{value_or_none description}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Type: <span id="arm.subscriptions.{{@../key}}.roles.{{@key}}.type"><samp>{{value_or_none type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Role Type: <span id="arm.subscriptions.{{@../key}}.roles.{{@key}}.role_type"><samp>{{value_or_none role_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Assignable Scopes: <span id="arm.subscriptions.{{@../key}}.roles.{{@key}}.assignable_scopes"><samp>{{value_or_none assignable_scopes}}</samp></span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Permissions</h4>
+        <div class="accordion-inner">
+            {{> accordion_policy name = '' document = permissions policy_path = (concat 'arm' ../resource_type ../resource_id 'inline_policies' @key 'PolicyDocument') heading="h5" samp=false}}
+        </div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading" id="arm.subscriptions.{{@../key}}.roles.{{@key}}.assignments">Assignments
+            {{> count_badge count=assignments_count}}
+        </h4>
+        <div class="accordion-inner">
+            <ul>
+                {{#if assignments.users}}
+                <li>Users</li>
+                <ul>
+                    {{#each assignments.users}}
+                    <li class="list-group-item-text"><a href="javascript:showObject('services.aad.users', 'id', '{{this}}')">{{getValueAt 'services.aad.users' this 'name'}}</a></li></a></li>
+                    {{/each}}
+                </ul>
+                {{/if}}
+                {{#if assignments.groups}}
+                <li>Groups</li>
+                <ul>
+                    {{#each assignments.groups}}
+                    <li class="list-group-item-text"><a href="javascript:showObject('services.aad.groups', 'id', '{{this}}')">{{getValueAt 'services.aad.groups' this 'name'}}</a></li></a></li>
+                    {{/each}}
+                </ul>
+                {{/if}}
+                {{#if assignments.service_principals}}
+                <li>Service Principals</li>
+                <ul>
+                    {{#each assignments.service_principals}}
+                    <li class="list-group-item-text"><a href="javascript:showObject('services.aad.service_principals', 'id', '{{this}}')">{{getValueAt 'services.aad.service_principals' this 'name'}}</a></li></a></li>
+                    {{/each}}
+                </ul>
+                {{/if}}
+            </ul>
+        </div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.arm.subscriptions.id.roles", $("#services\\.arm\\.subscriptions\\.id\\.roles\\.partial").html());
+</script>
+
+<!-- Single arm role template -->
+<script id="single_arm_role-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.arm.subscriptions.id.roles'}}
+</script>
+<script>
+    var single_arm_role_template = Handlebars.compile($("#single_arm_role-template").html());
+</script>
