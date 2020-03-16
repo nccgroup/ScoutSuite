@@ -3,14 +3,12 @@ from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently
 import asyncio
-
 class GCEFacade(GCPBaseFacade):
     def __init__(self):
         super(GCEFacade, self).__init__('compute', 'v1')
         self._semaphore = asyncio.Semaphore(value=10)
 
 
-    # can i make a pool of a limited number of clients?
     async def with_semaphore(self, func):
         async with self._semaphore:
             return await func()
@@ -22,13 +20,10 @@ class GCEFacade(GCPBaseFacade):
             
             request = gce_client.disks().list(project=project_id, zone=zone)
             disks_group = gce_client.disks()
-            print("disks_group")
-            print(disks_group)
             return await GCPFacadeUtils.get_all('items', request, disks_group)
         
         #try:
         #    return await self.with_semaphore(get)
-            #return await self._async_get_disks(project_id, zone)
         except Exception as e:
             print_exception('Failed to retrieve disks: {}'.format(e))
             return []
@@ -47,8 +42,8 @@ class GCEFacade(GCPBaseFacade):
             return []
 
     async def get_instances(self, project_id, zone):
-        #async def get():
-        try:
+        async def get():
+        #try:
             gce_client = self._get_client()
             request = gce_client.instances().list(project=project_id, zone=zone)
             instances_group = gce_client.instances()
@@ -56,8 +51,8 @@ class GCEFacade(GCPBaseFacade):
             await self._add_metadata(project_id, instances)
             return instances
 
-        #try:
-        #    return await self.with_semaphore(get)
+        try:
+            return await self.with_semaphore(get)
         except Exception as e:
             print_exception('Failed to retrieve compute instances: {}'.format(e))
             return []
@@ -97,7 +92,7 @@ class GCEFacade(GCPBaseFacade):
         #try:
         #    return await self.with_semaphore(get)
         except Exception as e:
-            print_exception('Failed to retrieve project: {}'.format(e))
+            print_exception('Failed to retrieve project in GCEFacade: {}'.format(e))
             return None
 
     async def get_regions(self, project_id):

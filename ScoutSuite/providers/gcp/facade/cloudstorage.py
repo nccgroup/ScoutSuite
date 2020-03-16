@@ -1,9 +1,7 @@
 from google.cloud import storage
-
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
 import asyncio
-
 class CloudStorageFacade:
     async def semaWorker(self,semaphore,bucket):
         async with semaphore:
@@ -14,12 +12,14 @@ class CloudStorageFacade:
         try:
             client = storage.Client(project=project_id)
             buckets = await run_concurrently(lambda: list(client.list_buckets()))
-            '''
+            if len(buckets) == 0:
+                print("No buckets were discovered in project: " + project_id)
+                return []
             semaphore = asyncio.Semaphore(value=2)
             await asyncio.wait([self.semaWorker(semaphore, bucket) for bucket in buckets])
-            '''
-            await get_and_set_concurrently([self._get_and_set_bucket_logging, 
-                self._get_and_set_bucket_iam_policy], buckets)
+            
+            #await get_and_set_concurrently([self._get_and_set_bucket_logging, 
+            #   self._get_and_set_bucket_iam_policy], buckets)
             return buckets
         except Exception as e:
             print_exception('Failed to retrieve storage buckets: {}'.format(e))
@@ -52,7 +52,6 @@ class CloudStorageFacade:
     '''
     async def _get_and_set_bucket_logging(self, bucket):
         try:
-            print("about to run get_and_set_bucket_logging concurrently")
             bucket_logging = await run_concurrently(lambda: bucket.get_logging())
             setattr(bucket, 'logging', bucket_logging)
         except Exception as e:
@@ -61,7 +60,6 @@ class CloudStorageFacade:
 
     async def _get_and_set_bucket_iam_policy(self, bucket):
         try:
-            print("about to run get_and_set_bucket_iam_policy concurrently")
             bucket_iam_policy = await run_concurrently(lambda: bucket.get_iam_policy())
             setattr(bucket, 'iam_policy', bucket_iam_policy)
         except Exception as e:
