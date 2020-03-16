@@ -1,8 +1,13 @@
 {
-    "description": "EC2 Instance Belongs to Specific Security Group",
+    "title": "EC2 Instance Belongs to Specific Security Group",
     "path": "ec2.regions.id.vpcs.id.instances.id",
-    "conditions": [ "and",
-        [ "ec2.regions.id.vpcs.id.instances.id.security_groups", "match", ".*_ARG_0_.*" ]
+    "conditions": [
+        "and",
+        [
+            "ec2.regions.id.vpcs.id.instances.id.security_groups",
+            "match",
+            ".*_ARG_0_.*"
+        ]
     ],
     "arg_names": [
         "ID of the security group EC2 instances may not belong to."
