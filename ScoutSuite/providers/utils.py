@@ -55,7 +55,7 @@ def run_function_concurrently(function):
     """
      
     job_uuid = str(uuid.uuid4())
-    rand_color = random.randint(1, len(c))
+    rand_color = random.randint(1, len(c)-1)
     def logging_wrapper():
         print(c[rand_color] + "starting function: " + job_uuid + c[0])
         result = function()
@@ -63,8 +63,8 @@ def run_function_concurrently(function):
         return result
     
 
-    return asyncio.get_event_loop().run_in_executor(executor=None, func=function)
-    #return asyncio.get_event_loop().run_in_executor(executor=None, func=logging_wrapper)
+    #return asyncio.get_event_loop().run_in_executor(executor=None, func=function)
+    return asyncio.get_event_loop().run_in_executor(executor=None, func=logging_wrapper)
 
 async def semaWorker(self,semaphore, get_and_set_func, entity, kwargs):
         async with semaphore:
@@ -97,6 +97,12 @@ async def get_and_set_concurrently(get_and_set_funcs: [], entities: [], **kwargs
         ) for entity in entities for get_and_set_func in get_and_set_funcs
     }
     '''
+    print("len of entities")
+    print(len(entities))
+
+    print("len of get_and_set_funcs")
+    print(len(get_and_set_funcs))
+
     tasks = {
         asyncio.ensure_future(
             get_and_set_func(entity, **kwargs)
