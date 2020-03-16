@@ -7,18 +7,21 @@
 [![Travis](https://travis-ci.org/nccgroup/ScoutSuite.svg?branch=master)](https://travis-ci.org/nccgroup/ScoutSuite)
 [![Coverage Status](https://coveralls.io/repos/github/nccgroup/ScoutSuite/badge.svg?branch=master)](https://coveralls.io/github/nccgroup/ScoutSuite?branch=master)
 [![CodeCov](https://codecov.io/gh/nccgroup/ScoutSuite/branch/master/graph/badge.svg)](https://codecov.io/gh/nccgroup/ScoutSuite)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/nccgroup/ScoutSuite.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/nccgroup/ScoutSuite/alerts/)
 [![PyPI version](https://badge.fury.io/py/ScoutSuite.svg)](https://badge.fury.io/py/ScoutSuite)
 
 ## Description
 
-Scout Suite is a multi-cloud security auditing tool, which enables assessing the security posture of cloud
-environments. Using the APIs exposed by cloud providers, Scout gathers configuration data for manual inspection and
-highlights risk areas. Rather than pouring through dozens of pages on the web consoles, Scout provides a clear view of
-the attack surface automatically.
+Scout Suite is an open source multi-cloud security-auditing tool, which enables security posture assessment of cloud 
+environments. Using the APIs exposed by cloud providers, Scout Suite gathers configuration data for manual inspection 
+and highlights risk areas. Rather than going through dozens of pages on the web consoles, Scout Suite presents a clear 
+view of the attack surface automatically.
 
 Scout Suite is stable and actively maintained, but a number of features and internals may change. As such, please bear
 with us as we find time to work on, and improve, the tool. Feel free to report a bug with details (please provide
 console output using the `--debug` argument), request a new feature, or send a pull request.
+
+The project team can be contacted at <scoutsuite@nccgroup.com>.
 
 **Note:**
 
@@ -29,118 +32,34 @@ The latest (and final) version of Scout2 can be found in <https://github.com/ncc
 
 The following cloud providers are currently supported/planned:
 
--   Amazon Web Services
--   Google Cloud Platform (beta)
--   Azure (alpha)
+- Amazon Web Services
+- Microsoft Azure
+- Google Cloud Platform
+- Alibaba Cloud (alpha)
+- Oracle Cloud Infrastructure (alpha)
 
-## Installation
+### Installation
 
-Install via `pip`:
+Refer to the [wiki](https://github.com/nccgroup/ScoutSuite/wiki/Setup).
 
-    $ pip install scoutsuite
+## Compliance
 
-Install from source:
-
-    $ git clone https://github.com/nccgroup/ScoutSuite
-    $ cd ScoutSuite
-    $ virtualenv -p python3 venv
-    $ source venv/bin/activate
-    $ pip install -r requirements.txt
-    $ python Scout.py --help
-
-## Requirements
-
-### Computing resources
-
-Scout Suite is a multi-threaded tool that fetches and stores your cloud account's configuration settings in memory
-during runtime. It is expected that the tool will run with no issues on any modern laptop or equivalent VM. **Note**
-that running Scout Suite in a VM with limited computing resources such as an AWS t2.micro instance is not intended and
-may result in the process being killed.
-
-### Python
-
-Scout Suite is written in Python and supports the following versions:
-
--   2.7
--   3.4
--   3.5
--   3.6
--   3.7
-
-The required libraries can be found in the
-[requirements.txt](https://github.com/nccgroup/ScoutSuite/blob/master/requirements.txt) file.
-
-### Credentials
-
-#### Amazon Web Services
-
-To run Scout against an AWS account, you will need valid AWS credentials (i.e. Access Key ID and Secret Access Key).
-
-The following AWS Managed Policies can be attached to the principal used to run Scout in order to grant the necessary
-permissions:
-
--   ReadOnlyAccess
--   SecurityAudit
-
-#### Google Cloud Platform
-
-There are two ways to run Scout against a GCP Organization or Project.
-
-1.  User Account
-    1.  Configure the cloud shell to use the appropriate User Account credentials (`gcloud init` command to use a new
-    account or `gcloud config set account <account>` to use an existing account)
-    2.  Obtain access credentials to run Scout with: `gcloud auth application-default login`
-    3.  Run Scout with the `--user-account` flag
-2.  Service Account
-    1.  Generate and download service account keys in JSON format
-    (refer to <https://cloud.google.com/iam/docs/creating-managing-service-account-keys>)
-    2.  Run Scout with the `--service-account` flag while providing the key file path with
-    `--key-file path/to/key_file.json`
-
-The following roles can be attached to the member used to run Scout in order to grant necessary permissions:
-
-- Viewer
-- Security Reviewer
-- Stackdriver Account Viewer
-
-#### Azure
-
-There are five ways to run scout against an Azure organization.
-
-1.  azure-cli
-    1. On most system, you can install azure-cli using `pip install azure-cli`.
-    2. Log into an account. The easiest way to do it it with `az login`(for more authentication method, 
-    you can refer to https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli?view=azure-cli-latest).
-    3. Run Scout with the `--azure-cli` flag.
-2.  Managed Service Identity
-    1. Configure your identity on the Azure portal(you can refer to 
-    https://docs.microsoft.com/en-us/azure/active-directory/managed-identities-azure-resources/)
-    2. Run Scout with the `--azure-msi` flag.
-3.  Service Principal
-    1. Set up a service principal on the Azure portal(you can refer to 
-    https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal)
-    2. Run Scout with the `--azure-service-principal` flag. Scout will prompt you for the 
-    required information.
-4.  File-based Authentication
-    1. Create a Service Principal for azure SDK. You can do this with azure-cli using 
-    `az ad sp create-for-rbac --sdk-auth > mycredentials.json`.
-    2. Run Scout while providing it with the credentials file using 
-    `--azure-file-auth path/to/credentials/file`.
-5.  User Credentials
-    1. Run Scout using `--azure-user-credentials`. The application will prompt you for your credentials.
-
-Scout will require the Reader role over all the resources you want to check. The easiest way is to give 
-it Reader over the Subscription, as it will be inherited on all the resources.
-
-### Compliance
-
-#### AWS Acceptable Use Policy
+### AWS
 
 Use of Scout Suite does not require AWS users to complete and submit the AWS Vulnerability / Penetration Testing
 Request Form. Scout Suite only performs API calls to fetch configuration data and identify security gaps, which is not
 considered security scanning as it does not impact AWS' network and applications.
 
-#### Google Cloud Platform
+### Azure
+
+Use of Scout Suite does not require Azure users to contact Microsoft to begin testing. The only requirement is that
+users abide by the Microsoft Cloud Unified Penetration Testing Rules of Engagement.
+
+References:
+- https://docs.microsoft.com/en-us/azure/security/azure-security-pen-testing
+- https://www.microsoft.com/en-us/msrc/pentest-rules-of-engagement
+
+### Google Cloud Platform
 
 Use of Scout Suite does not require GCP users to contact Google to begin testing. The only requirement is that users
 abide by the Cloud Platform Acceptable Use Policy and the Terms of Service and ensure that tests only affect projects
@@ -150,77 +69,39 @@ References:
 - https://cloud.google.com/terms/aup
 - https://cloud.google.com/terms/
 
-#### Azure
-
-Use of Scout Suite does not require Azure users to contact Microsoft to begin testing. The only requirement is that 
-users abide by the Microsoft Cloud Unified Penetration Testing Rules of Engagement.
-
-References:
-- https://docs.microsoft.com/en-us/azure/security/azure-security-pen-testing
-- https://www.microsoft.com/en-us/msrc/pentest-rules-of-engagement
-
-### Usage
+## Usage
 
 The following command will provide the list of available command line options:
 
-    $ python Scout.py --help
+    $ python scout.py --help
+
+You can also use this to get help on a specific provider:
+
+    $ python scout.py PROVIDER --help
 
 For further details, checkout our Wiki pages at <https://github.com/nccgroup/ScoutSuite/wiki>.
 
 After performing a number of API calls, Scout will create a local HTML report and open it in the default browser.
 
-#### Amazon Web Services
+Also note that the command line will try to infer the argument name if possible when receiving partial switch. For
+example, this will work and use the selected profile:
 
-Using a computer already configured to use the AWS CLI, you may use Scout using the following command:
+    $ python scout.py aws --profile PROFILE
 
-    $ python Scout.py --provider aws
+### Credentials
 
-**Note:** EC2 instances with an IAM role fit in this category.
+Assuming you already have your provider's CLI up and running you should have your credentials already set up and be able to run Scout Suite by using one of the following commands. If that is not the case, please consult the wiki page for the provider desired.
 
-If multiple profiles are configured in your .aws/credentials and .aws/config files, you may specify which credentials
-to use with the following command:
+#### [Amazon Web Services](https://github.com/nccgroup/ScoutSuite/wiki/Amazon-Web-Services)
 
-    $ python Scout.py --profile <PROFILE_NAME>
+    $ python scout.py aws
 
-If you have a CSV file containing the API access key ID and secret, you may run Scout with the following command:
+#### [Azure](https://github.com/nccgroup/ScoutSuite/wiki/Azure)
 
-    $ python Scout.py --csv-credentials <CREDENTIALS.CSV>
+    $ python scout.py azure --cli
 
-#### Google Cloud Platform
+#### [Google Cloud Platform](https://github.com/nccgroup/ScoutSuite/wiki/Google-Cloud-Platform)
 
-Using a computer already configured to use gcloud command-line tool, you may use Scout using the following command:
+    $ python scout.py gcp --user-account
 
-    $ python Scout.py --provider gcp --user-account
-
-To run Scout using Service Account keys, using the following command:
-
-    $ python Scout.py --provider gcp --service-account --key-file </PATH/TO/KEY_FILE.JSON>
-By default, using the `--service-account` argument will audit all the projects that the provided service account has access to. If you only want to scan a single project, include the `--project-id` argument.
-
-To scan a GCP ...
-- Organization, use the `organization-id <ORGANIZATION ID>` argument
-- Folder, use the `folder-id <FOLDER ID>` argument.
-- Project, use the `project-id <PROJECT ID>` argument
-
-#### Azure
-
-Using a computer already configured to use azure-cli, you may use Scout using the following command:
-
-    $ python Scout.py --provider azure --azure-cli
-    
-When using Scout in an Azure virtual machine with the Reader role, you may use 
-Scout using the following command:
-
-    $ python Scout.py --provider azure --azure-msi
-    
-When using Scout with a Service Principal, you may run Scout using the following command:
-
-    $ python Scout.py --provider azure --azure-service-principal
-    
-When using Scout with an authentication file, you may run Scout using the following command:
-
-    $ python Scout.py --provider azure --azure-file-auth path/to/auth/file
-  
-When using Scout against your user account, you may run Scout using the following command:
-
-    $ python Scout.py --provider azure --azure-user-credentials
+Additional information can be found in the [wiki](https://github.com/nccgroup/ScoutSuite/wiki).

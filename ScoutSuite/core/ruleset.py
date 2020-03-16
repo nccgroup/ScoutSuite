@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-
 import json
 import os
 import tempfile
 
-from opinel.utils.console import printDebug, printError, prompt_4_yes_no
+from ScoutSuite.core.console import print_debug, print_error, prompt_yes_no, print_exception
 
 from ScoutSuite.core.rule import Rule
 from ScoutSuite.core.rule_definition import RuleDefinition
@@ -23,14 +21,14 @@ class Ruleset:
     """
 
     def __init__(self,
+                 cloud_provider,
                  environment_name='default',
-                 cloud_provider='aws',
                  filename=None,
                  name=None,
                  rules_dir=None,
                  rule_type='findings',
                  ip_ranges=None,
-                 aws_account_id=None,
+                 account_id=None,
                  ruleset_generator=False):
         rules_dir = [] if rules_dir is None else rules_dir
         ip_ranges = [] if ip_ranges is None else ip_ranges
@@ -41,26 +39,25 @@ class Ruleset:
         self.environment_name = environment_name
         self.rule_type = rule_type
         # Ruleset filename
-        self.filename = self.find_file(filename, provider=cloud_provider)
+        self.filename = self.find_file(filename)
         if not self.filename:
             self.search_ruleset(environment_name)
-        printDebug('Loading ruleset %s' % self.filename)
+        print_debug('Loading ruleset %s' % self.filename)
         self.name = os.path.basename(self.filename).replace('.json', '') if not name else name
         self.load(self.rule_type)
-        self.shared_init(ruleset_generator, rules_dir, aws_account_id, ip_ranges)
+        self.shared_init(ruleset_generator, rules_dir, account_id, ip_ranges)
 
     def to_string(self):
-        return (str(vars(self)))
+        return str(vars(self))
 
-    def shared_init(self, ruleset_generator, rule_dirs, aws_account_id, ip_ranges):
+    def shared_init(self, ruleset_generator, rule_dirs, account_id, ip_ranges):
 
         # Load rule definitions
         if not hasattr(self, 'rule_definitions'):
             self.load_rule_definitions(ruleset_generator, rule_dirs)
 
         # Prepare the rules
-        params = {}
-        params['aws_account_id'] = aws_account_id
+        params = {'account_id': account_id}
         if ruleset_generator:
             self.prepare_rules(attributes=['description', 'key', 'rationale'], params=params)
         else:
@@ -68,9 +65,10 @@ class Ruleset:
 
     def load(self, rule_type, quiet=False):
         """
-        Open a JSON file definiting a ruleset and load it into a Ruleset object
+        Open a JSON file defining a ruleset and load it into a Ruleset object
 
-        :param quiet:
+        :param rule_type:           TODO
+        :param quiet:               TODO
         :return:
         """
         if self.filename and os.path.exists(self.filename):
@@ -84,16 +82,15 @@ class Ruleset:
                         for rule in ruleset['rules'][filename]:
                             self.handle_rule_versions(filename, rule_type, rule)
             except Exception as e:
-                # printException(e)
-                printError('Error: ruleset file %s contains malformed JSON.' % self.filename)
+                print_exception('Ruleset file %s contains malformed JSON: %s' % (self.filename, e))
                 self.rules = []
                 self.about = ''
         else:
             self.rules = []
             if not quiet:
-                printError('Error: the file %s does not exist.' % self.filename)
+                print_error('Error: the file %s does not exist.' % self.filename)
 
-    def load_rules(self, file, rule_type, quiet=False):
+    def load_rules(self, file, rule_type):
         file.seek(0)
         ruleset = json.load(file)
         self.about = ruleset['about']
@@ -140,10 +137,8 @@ class Ruleset:
         """
         Load definition of rules declared in the ruleset
 
-        :param services:
-        :param ip_ranges:
-        :param aws_account_id:
-        :param generator:
+        :param ruleset_generator:
+        :param rule_dirs:
         :return:
         """
         rule_dirs = [] if rule_dirs is None else rule_dirs
@@ -172,6 +167,7 @@ class Ruleset:
         """
 
         :param environment_name:
+        :param no_prompt:
         :return:
         """
         ruleset_found = False
@@ -179,14 +175,15 @@ class Ruleset:
             ruleset_file_name = 'ruleset-%s.json' % environment_name
             ruleset_file_path = os.path.join(self.rules_data_path, 'rulesets/%s' % ruleset_file_name)
             if os.path.exists(ruleset_file_path):
-                if no_prompt or prompt_4_yes_no(
-                        "A ruleset whose name matches your environment name was found in %s. Would you like to use it instead of the default one" % ruleset_file_name):
+                if no_prompt or prompt_yes_no(
+                        "A ruleset whose name matches your environment name was found in %s. "
+                        "Would you like to use it instead of the default one" % ruleset_file_name):
                     ruleset_found = True
                     self.filename = ruleset_file_path
         if not ruleset_found:
             self.filename = os.path.join(self.rules_data_path, 'rulesets/default.json')
 
-    def find_file(self, filename, filetype='rulesets', provider=None):
+    def find_file(self, filename, filetype='rulesets'):
         """
 
         :param filename:
@@ -194,7 +191,7 @@ class Ruleset:
         :return:
         """
         if filename and not os.path.isfile(filename):
-            # Not a valid relative / absolute path, check Scout2's data under findings/ or filters/
+            # Not a valid relative / absolute path, check Scout's data under findings/ or filters/
             if not filename.startswith('findings/') and not filename.startswith('filters/'):
                 filename = '%s/%s' % (filetype, filename)
             if not os.path.isfile(filename):
@@ -206,7 +203,8 @@ class Ruleset:
 
 class TmpRuleset(Ruleset):
 
-    def __init__(self, cloud_provider='aws', rule_dirs=None, rule_filename=None, rule_args=None, rule_level='danger'):
+    def __init__(self, cloud_provider, rule_dirs=None, rule_filename=None, rule_args=None, rule_level='danger'):
+        super().__init__(cloud_provider)
         rule_dirs = [] if rule_dirs is None else rule_dirs
         rule_args = [] if rule_args is None else rule_args
         self.rule_type = 'findings'
@@ -222,8 +220,6 @@ class TmpRuleset(Ruleset):
         self.rules_data_path = os.path.dirname(
             os.path.dirname(os.path.abspath(__file__))) + '/providers/%s/rules' % cloud_provider
 
-        self.load_rules(file=tmp_ruleset_file, rule_type='findings', quiet=False)
+        self.load_rules(file=tmp_ruleset_file, rule_type='findings')
 
         self.shared_init(False, rule_dirs, '', [])
-
-

@@ -1,0 +1,14 @@
+{
+    "arg_names": [ "Protocol (ex: SSH, RDP, etc.)", "Protocol's port", "Associated CIS rule" ],
+    "key": "network-security-groups-rule-inbound-_ARG_0_",
+    "description": "Security Group Rules Allowing Inbound _ARG_0_ Access",
+    "rationale": "<b>Description:</b><br><br>_ARG_0_ (port _ARG_1_) inbound access should not be allowed to a network security group.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 _ARG_2_</li></ul>",
+    "dashboard_name": "NSGs",
+    "path": "network.subscriptions.id.security_groups.id.security_rules.id",
+    "display_path": "network.subscriptions.id.security_groups.id",
+    "conditions": [ "and",
+        ["network.subscriptions.id.security_groups.id.security_rules.id.destination_ports", "containAtLeastOneOf", "_ARG_1_"],
+        ["_INCLUDE_(conditions/exposed-to-the-internet.json)", "", ""],
+        ["_INCLUDE_(conditions/allow-tcp.json)", "", ""]
+    ]
+}

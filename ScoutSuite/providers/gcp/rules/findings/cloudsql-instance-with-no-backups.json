@@ -1,9 +1,11 @@
 {
-  "description": "Instance with no backups",
   "dashboard_name": "Instances",
-  "path": "cloudsql.instances.id",
+  "description": "Instance with no backups",
+  "rationale": "<b>Description:</b><br><br>Weekly or monthly backups should be created of all databases holding sensitive information.",
+  "path": "cloudsql.projects.id.instances.id",
   "conditions": [ "and",
-    [ "cloudsql.instances.id.backups", "empty", "" ]
+    [ "cloudsql.projects.id.instances.id.backups", "empty", "" ],
+    [ "cloudsql.projects.id.instances.id.is_failover_replica", "false", ""]
   ],
   "id_suffix": "last_backup_timestamp"
 }

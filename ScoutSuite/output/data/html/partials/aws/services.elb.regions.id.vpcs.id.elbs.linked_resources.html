@@ -3,12 +3,12 @@
     <script id="services.elb.regions.vpcs.elbs.linked_resources.partial" type="text/x-handlebars-template">
       {{#if resources.length}}
         <div class="accordion">
-          <li><h5 class="list-group-item-heading accordion-heading">{{make_title resource_type}}:
-            <a class="accordion-toggle" data-toggle="collapse" href="#services\.elb\.regions\.{{region}}\.vpcs\.{{vpc}}\.elbs\.{{@key}}\.{{resource_type}}">
-              <span class="badge float-right btn-info">{{resources.length}}</span>
-            </a>
-          </h5></li>
-          <div id="services.elb.regions.{{region}}.vpcs.{{vpc}}.elbs.{{@key}}.{{resource_type}}" class="accordion-body collapse">
+          <li>
+            <h5 class="list-group-item-heading accordion-heading">{{makeTitle resource_type}}:
+              {{> count_badge count=resources.length target=(concat '#services.elb.regions' region 'vpcs' vpc 'elbs' @key resource_type)}}
+            </h5>
+          </li>
+          <div id="services.elb.regions.{{region}}.vpcs.{{vpc}}.elbs.{{@key}}.{{resource_type}}" class="accordion-body">
             <div class="accordion-inner">
               <ul>
               {{#each resources}}
@@ -19,7 +19,7 @@
           </div>
         </div>
       {{else}}
-        <h5 class="list-group-item-heading item-margin accordion-heading">{{make_title resource_type}}:<span class="badge float-right">{{resources.length}}</span></h5>
+        <h5 class="list-group-item-heading item-margin accordion-heading">{{makeTitle resource_type}}:<span class="badge float-right">{{resources.length}}</span></h5>
       {{/if}}
     </script>
     <script>

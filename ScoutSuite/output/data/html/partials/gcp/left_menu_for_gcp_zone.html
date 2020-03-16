@@ -1,0 +1,41 @@
+<!-- Generic left-menu link partial for zone-then-resource -->
+<script id="left_menu_for_gcp_zone.partial" type="text/x-handlebars-template">
+  <div id="services.{{service_name}}.projects.id.zones.id.{{resource_type}}.list">
+  <div class="list-group" >
+    <div class="list-group-item">
+      <a href="javascript:updateHash('services.{{service_name}}.projects.id.zones.id.{{resource_type}}')">Show all <span class="badge float-right btn-info">{{getValueAt 'metadata' service_group service_name 'resources' resource_type 'count'}}</span></a>
+    </div>
+  </div>
+  {{#each items}}
+  <div class="list-group" id="services.{{../service_name}}.projects.{{@key}}.zones.id.{{../resource_type}}.list">
+    <div class="list-group-item active">
+      <a href="javascript:showRowWithItems('services.{{../service_name}}.projects.{{@key}}.zones.id.{{../resource_type}}')">{{@key}}</a>
+      <span class="float-right"><a href="javascript:hideList('services.{{../service_name}}.projects.{{@key}}.zones.id.{{../resource_type}}.list')"><i class="fa fa-times-circle"></i></a></span>
+    </div>
+    <div>
+      {{#each (lookup . "zones")}}
+      {{#if (lookup . (concatWith ../../resource_type "_count" ""))}}
+      <div class="list-group-item" id="services.{{../../../service_name}}.projects.{{@../key}}.zones.{{@key}}.{{../../../resource_type}}.list">
+        {{#if scout2_link}}
+        <a href="#{{scout2_link}}.view">{{@key}}</a>
+        {{else}}
+        <a href="#services.{{../../../../service_name}}.projects.{{@../key}}.zones.{{@key}}.{{../../../../resource_type}}">{{@key}}</a>
+        {{/if}}
+        <span class="float-right"><a href="javascript:hideList('services.{{../../../service_name}}.projects.{{@../key}}.zones.{{@key}}.{{../../../resource_type}}.list')"><i class="fa fa-times-circle"></i></a></span>
+        {{#each (lookup . ../../../resource_type)}}
+        <div class="list-group-item-text list-sub-element">
+            <a href="#services.{{../../../../service_name}}.projects.{{@../../key}}.zones.{{@../key}}.{{../../../../resource_type}}.{{@key}}.view">{{name}}</a>
+        </div>
+        {{/each}} 
+      </div>   
+      {{/if}}
+      {{/each}}     
+    </div>
+  </div>
+  {{/each}}
+  </div>
+</script>
+<script>
+    Handlebars.registerPartial("left_menu_for_gcp_zone", $("#left_menu_for_gcp_zone\\.partial").html());
+</script>
+

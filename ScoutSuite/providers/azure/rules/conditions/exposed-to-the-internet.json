@@ -1,0 +1,12 @@
+{
+    "conditions":[
+      "and",
+      ["network.subscriptions.id.security_groups.id.security_rules.id.allow", "true", ""],
+      ["network.subscriptions.id.security_groups.id.security_rules.id.direction", "equal", "Inbound"],
+      [
+          "or",
+          ["network.subscriptions.id.security_groups.id.security_rules.id.source_address_prefixes", "containAtLeastOneOf", "*"],
+          ["network.subscriptions.id.security_groups.id.security_rules.id.source_address_prefixes", "containAtLeastOneOf", "Internet"]
+      ]
+    ]
+}

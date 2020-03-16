@@ -1,0 +1,124 @@
+.dropdown-item {
+    color: #fff;
+}
+
+.dropdown-item.disabled, .dropdown-item:disabled {
+    color: #647273;
+}
+
+a.nav-link {
+    color: rgb(235, 235, 235) ;
+}
+
+.dropdown-submenu a.nav-link {
+    color: rgb(235, 235, 235) ;
+}
+
+.bg-primary .navbar-nav .active>.nav-link {
+    color: #fff !important;
+    font-weight: bolder;
+    font-size: 15px;
+    transition: font-size 0.4s ease;
+}
+
+.navbar-brand .active {
+    color: #fff !important;
+    font-weight: bolder;
+    font-size: 18px;
+    transition: font-size 0.4s ease;
+}
+
+#double-column-left .list-group {
+    border: 1px solid #444;
+}
+
+.dropdown-header { 
+    background: #7672779c;
+    color: #fff;
+}
+
+.dropdown-submenu:hover, .dropdown-item:hover {
+    background: transparent;
+    color: #fff;
+    border-left: 10px solid #c41230 ;
+    -webkit-transition: border 0.2s ease-in-out; /* Safari */
+    transition: border 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar {
+    background: transparent;
+    padding: 2px;
+ }
+ ::-webkit-scrollbar-corner {
+     background: transparent;
+   }
+ ::-webkit-scrollbar-thumb {
+     background-clip: padding-box;
+     background-color: rgba(168, 168, 168, 0.733);
+     -webkit-box-shadow: inset -1px -1px 0px rgba(0, 0, 0, 0.05), inset 1px 1px 0px rgba(0, 0, 0, 0.05);
+ }
+ ::-webkit-scrollbar-button {
+     width: 0;
+     height: 0;
+     display: none;
+ }
+
+ .show {
+     border-bottom: unset;
+ }
+
+ .card-header {
+    background-color: #626164;
+    color: #fff !important;
+    font-size: 14px;
+}
+
+span.slider.round {
+    background: #c41230 !important;
+}
+
+.btn-light {
+    background-color: #626164;
+}
+
+.btn-light:hover {
+    background-color: #86858a;
+}
+
+.dropdown-menu {
+    background: #414042;
+    
+}
+
+.plain-link a:link,
+.plain-link a:visited,
+.plain-link a:active {
+    color: #fff;
+    text-decoration: none;
+}
+
+.disabled-link a:link,
+.disabled-link a:active,
+.disabled-link a:visited,
+.disabled-link a:hover {
+    color: rgb(173, 173, 173);
+    pointer-events: none;
+    cursor: default;
+}
+
+.plain-link a:hover {
+    text-decoration: underline;
+}
+
+.card-body {
+    color: #fff;
+}
+
+#account_id .fa-cloud {
+    color: #fff;
+    margin-right: 5px;
+}
+
+.disabled-link a .finding-title {
+    color: rgb(173, 173, 173) !important;
+}

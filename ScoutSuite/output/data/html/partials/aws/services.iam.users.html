@@ -18,37 +18,34 @@
         <li class="list-group-item-text"> Serial number: {{SerialNumber}}</li>
       {{/each}}
       </ul>
-      <p class="list-group-item-text item-margin">Access Keys: <span id="iam.users.{{id}}.multiple_api_keys">{{has_access_keys? AccessKeys}}</p><span>
+      <p class="list-group-item-text item-margin">Access Keys: <span id="iam.users.{{id}}.multiple_api_keys">{{has_access_keys? AccessKeys}}</span></p>
       <ul class="item-margin">
       {{#each AccessKeys}}
         <li class="list-group-item-text"><span id="iam.users.{{@../key}}.AccessKeys.{{@key}}">{{AccessKeyId}}, {{Status}}, created on {{CreateDate}}</span></li>
       {{/each}}
       </ul>
+      {{#ifHasProfiles LoginProfile}}
+        {{#greaterLengthThan AccessKeys 0}}
+          <p class="list-group-item-text item-margin">
+            <span id="iam.users.{{id}}.password_and_keys" class="finding-hidden">
+              <i class="fa fa-exclamation-triangle"></i> Review the need for password-based and key-based authentication
+            </span>
+          </p>
+        {{/greaterLengthThan}}
+      {{/ifHasProfiles }}
+      {{#greaterLengthThan AccessKeys 1}}
       <p class="list-group-item-text item-margin">
-        <span id="iam.users.{{id}}.multiple_active_api_keys" class="finding-hidden">
-          <i class="fa fa-exclamation-triangle"></i> Review the need for multiple active access keys
-        </span>
+          <span id="iam.users.{{id}}.multiple_active_api_keys" class="finding-hidden">
+            <i class="fa fa-exclamation-triangle"></i> Review the need for multiple active access keys
+          </span>
       </p>
-      <p class="list-group-item-text item-margin">
-        <span id="iam.users.{{id}}.password_and_keys" class="finding-hidden">
-          <i class="fa fa-exclamation-triangle"></i> Review the need for password-based and key-based authentication
-        </span>
-      </p>
-      <p class="list-group-item-text item-margin">
-        <span id="iam.users.{{id}}.member_of_common_group" class="finding-hidden">
-          <i class="fa fa-exclamation-triangle"></i> User does not belong to the global/mandatory group
-        </span>
-      </p>
-      <p class="list-group-item-text item-margin">
-        <span id="iam.users.{{id}}.member_of_category_group" class="finding-hidden">
-          <i class="fa fa-exclamation-triangle"></i> User does not belong to a category group
-        </span>
-      </p>
-
+      {{/greaterLengthThan}}
     </div>
     <div class="list-group-item">
-      <h4 class="list-group-item-heading">Groups<span class="badge float-right {{#if groups.length}}btn-info{{/if}}">{{groups.length}}</span></h4>
-      <ul class="no-bullet">
+      <h4 id="iam.users.{{id}}.user_groups" class="list-group-item-heading">Groups
+        {{> count_badge count=groups.length}}
+      </h4>
+      <ul>
       {{#each groups}}
         <li class="list-group-item-text"><a href="javascript:showObject('services.iam.groups', 'name', '{{this}}')">{{this}}</a></li>
       {{/each}}

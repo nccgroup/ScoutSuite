@@ -1,0 +1,43 @@
+<script id="resources_details-template" type="text/x-handlebars-template">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Resources Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body m-3">
+                <div>
+                    <table class="table">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Service</th>
+                            <th scope="col">Resource</th>
+                            <th scope="col">#</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{#each metadata}}
+                            {{#each this}}
+                                {{#each this.resources}}
+                                    <tr>
+                                        {{#if this.count}}
+                                            <th>{{makeTitle @../key}}</th>
+                                            <th>{{makeTitle @key}}</th>
+                                            <th>{{this.count}}</th>
+                                        {{/if}}
+                                    </tr>
+                                {{/each}}
+                            {{/each}}
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+</script>
+
+<script>
+    var resources_details_template = Handlebars.compile($("#resources_details-template").html());
+</script>

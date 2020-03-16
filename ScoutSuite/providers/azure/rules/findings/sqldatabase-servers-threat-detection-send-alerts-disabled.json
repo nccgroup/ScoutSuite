@@ -1,0 +1,11 @@
+{
+    "dashboard_name": "SQL Servers",
+    "description": "\"Send Threat Detection Alerts\" Disabled for SQL Servers",
+    "rationale": "<b>Description:</b><br><br>Specify email addresses and ensure that alerts are sent to them.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 4.1.4</li><li>CIS Microsoft Azure Foundations v1.0.0 4.1.5</li></ul>",
+    "path": "sqldatabase.subscriptions.id.servers.id",
+    "display_path": "sqldatabase.subscriptions.id.servers.id",
+    "conditions": [ "and",
+        [ "sqldatabase.subscriptions.id.servers.id.threat_detection.send_alerts_enabled", "false", "" ]
+    ],
+    "id_suffix": "server_send_threat_detection_alerts_disabled"
+}

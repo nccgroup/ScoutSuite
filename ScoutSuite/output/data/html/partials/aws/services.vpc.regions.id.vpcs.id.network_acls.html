@@ -4,9 +4,14 @@
         <div id="resource-name" class="list-group-item active">
             <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
+        <div class="list-group-item">
+            <h4 class="list-group-item-heading">Information</h4>
+            <div class="list-group-item-text item-margin">ID: <samp>{{id}}</samp></div>
+            <div class="list-group-item-text item-margin">Default: <samp>{{IsDefault}}</samp></div>
+        </div>
         {{#each rules}}
             <div class="list-group-item">
-                <h4 class="list-group-item-heading">{{make_title @key}} rules</h4>
+                <h4 class="list-group-item-heading">{{makeTitle @key}} rules</h4>
                 <table class="table-striped" width="100%">
                     <tr>
                         <td width="20%" class="text-center">Rule number</td>
@@ -29,16 +34,21 @@
         {{/each}}
         <div class="list-group-item">
             <h4 class="list-group-item-heading">Associated Subnets</h4>
-            <ul>
-            {{#each Associations}}
-                <li class="list-group-item-text">
-                    {{> resource_link resource_path = (concat 'services.vpc.regions' ../region 'vpcs' ../vpc 'subnets' SubnetId)}}
-                </li>
-            {{/each}}
-            </ul>
-            <span id="vpc.regions.{{region}}.vpcs.{{vpc}}.network_acls.{{@key}}.unused" class="finding-hidden item-margin">
-                <i class="fa fa-exclamation-triangle"></i> This network ACL is not the VPC's default NACL and is not associated with any existing VPC.
-            </span>
+            {{#if Associations}}
+                <ul>
+                {{#each Associations}}
+                    <li class="list-group-item-text">
+                        {{> resource_link resource_path = (concat 'services.vpc.regions' ../region 'vpcs' ../vpc 'subnets' SubnetId)}}
+                    </li>
+                {{/each}}
+                </ul>
+                {{else}}
+                    {{#unless IsDefault}}
+                        <span id="vpc.regions.{{region}}.vpcs.{{vpc}}.network_acls.{{@key}}.unused" class="finding-hidden item-margin">
+                            <i class="fa fa-exclamation-triangle"></i> This network ACL is not the VPC's default NACL and is not associated with any existing VPC.
+                        </span>
+                    {{/unless}}
+            {{/if}}
         </div>
     </script>
     <script>

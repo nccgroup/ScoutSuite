@@ -1,0 +1,72 @@
+
+<!-- Compute Engine instances partial -->
+<script id="services.computeengine.projects.id.zones.id.instances.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Instance Name: <span id="computeengine.projects.{{@../../key}}.zones.{{@../key}}.instances.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Description: <span id="computeengine.projects.{{@../../key}}.zones.{{@../key}}.instances.{{@key}}.description">{{description}}</span></div>
+        <div class="list-group-item-text item-margin">Project ID: <span id="computeengine.projects.{{@../../key}}.zones.{{@../key}}.instances.{{@key}}.project_id">{{project_id}}</span></div>
+        <div class="list-group-item-text item-margin">Creation Date: <span id="computeengine.projects.{{@../../key}}.zones.{{@../key}}.instances.{{@key}}.creation_timestamp">{{creation_timestamp}}</span></div>
+        <div class="list-group-item-text item-margin">Status: <span id="computeengine.projects.{{@../../key}}.zones.{{@../key}}.instances.{{@key}}.status">{{status}}</span></div>
+        <div class="list-group-item-text item-margin">Deletion Protection: <span id="computeengine.projects.{{@../../key}}.zones.{{@../key}}.instances.{{@key}}.deletion_protection_enabled">{{convert_bool_to_enabled deletion_protection_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Block Project SSH Keys: <span id="computeengine.projects.{{@../../key}}.zones.{{@../key}}.instances.{{@key}}.block_project_ssh_keys_disabled">{{convert_bool_to_enabled block_project_ssh_keys_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">IP Forwarding: <span id="computeengine.projects.{{@../../key}}.zones.{{@../key}}.instances.{{@key}}.ip_forwarding_enabled">{{convert_bool_to_enabled ip_forwarding_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">OS Login: <span id="computeengine.projects.{{@../../key}}.zones.{{@../key}}.instances.{{@key}}.oslogin_disabled">{{convert_bool_to_enabled oslogin_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Serial Port Connection: <span id="computeengine.projects.{{@../../key}}.zones.{@{../key}}.instances.{{@key}}.serial_port_enabled">{{convert_bool_to_enabled serial_port_enabled}}</span></div>        
+        {{#if tags}}
+        <div class="list-group-item-text item-margin">Tags:</div>
+        <ul>
+            {{#each tags}}
+            <li><samp>{{@key}}</samp></li>
+            <ul>
+                {{#each this}}
+                <li><samp>{{this}}</samp></li>
+                {{else}}
+                <li><samp>None</samp></li>
+                {{/each}}
+            </ul>
+            {{else}}
+            <li><samp>None</samp></li>
+            {{/each}}
+        </ul>
+        {{/if}}
+    </div>
+    <div class="list-group-item">
+        <h5 class="list-group-item-heading">Disks</h5>
+        {{#if disks}}
+        <ul>
+            {{#each disks}}
+            <li><samp>{{source_device_name}}</samp></li>
+            <ul>
+                <li>Bootable: <samp>{{bootable}}</samp></li> 
+                <li>Type: <samp>{{type}}</samp></li>
+                <li>Mode: <samp>{{mode}}</samp></li>
+                {{#if latest_snapshot}}
+                <li id="latest_snapshot">Latest snapshot: <samp>{{latest_snapshot.creation_timestamp}}</samp></li>
+                {{else}}
+                <li id="latest_snapshot">Latest snapshot: <samp>None</samp></li>
+                {{/if}}
+                <li>Customer Supplied Encryption: <span>{{convert_bool_to_enabled encrypted_with_csek}}</span></li>
+            </ul>
+            {{else}}
+            <li><samp>None</samp></li>
+            {{/each}}
+        </ul>
+        {{/if}}
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.computeengine.projects.id.zones.id.instances", $("#services\\.computeengine\\.projects\\.id\\.zones\\.id\\.instances\\.partial").html());
+</script>
+
+<!-- Single computeengine instance template -->
+<script id="single_computeengine_instance-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.computeengine.projects.id.zones.id.instances'}}
+</script>
+<script>
+    var single_computeengine_instance_template = Handlebars.compile($("#single_computeengine_instance-template").html());
+</script>

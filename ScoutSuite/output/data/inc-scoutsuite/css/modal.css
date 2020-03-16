@@ -1,0 +1,32 @@
+.modal-dialog .list-group-item { 
+    border: none;
+}
+
+.modal-header {
+    background-color: #2C3E50;
+    border-radius: 3px 3px 0 0;
+    color: white;
+}
+
+.modal .close,
+.modal .close:not(:disabled):not(.disabled):hover, 
+.modal .close:not(:disabled):not(.disabled):focus {
+    color: white;
+}
+
+.modal-header {
+    height: 65px;
+    background: #414042;
+}
+
+.modal-body {
+    overflow-y: auto;
+}
+
+.modal-body .list-group-item {
+    background: transparent !important;
+}
+
+.modal-content {
+    max-height: 80vh;
+}

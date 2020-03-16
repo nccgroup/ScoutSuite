@@ -1,9 +1,10 @@
 {
   "dashboard_name": "Bindings",
   "description": "IAM Role Assigned to User",
-  "path": "cloudresourcemanager.bindings.id",
+  "rationale": "<b>Description:</b><br><br>Best practices recommends granting roles to a Google Suite group instead of to individual users when possible. It is easier to add members to and remove members from a group instead of updating a Cloud IAM policy to add or remove users.",
+  "path": "cloudresourcemanager.projects.id.bindings.id",
   "conditions": [ "and",
-    [ "cloudresourcemanager.bindings.id.members.users", "notEmpty", "" ]
+    [ "cloudresourcemanager.projects.id.bindings.id.members.users", "notEmpty", "" ]
   ],
   "id_suffix": "users"
 }

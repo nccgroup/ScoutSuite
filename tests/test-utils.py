@@ -1,11 +1,12 @@
 # Import AWS utils
+from ScoutSuite.providers.aws.utils import get_keys, no_camel
 from ScoutSuite.utils import *
 
 
 #
 # Test methods for ScoutSuite/utils.py
 #
-class TestAWSScout2UtilsClass:
+class TestScoutUtilsClass:
 
     def test_format_service_name(self):
         assert (format_service_name('iAm') == 'IAM')

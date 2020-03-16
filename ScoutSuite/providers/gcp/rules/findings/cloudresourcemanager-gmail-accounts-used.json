@@ -1,0 +1,10 @@
+{
+  "dashboard_name": "Users",
+  "description": "Gmail accounts in use",
+  "rationale": "<b>Description:</b><br><br>Gmail accounts are personally created and controllable accounts. Organizations seldom have any control over them. Thus, it is recommended that you use fully managed corporate Google accounts for increased visibility, auditing, and control over access to Cloud Platform resources.<br><br><b>References:</b><ul><li>CIS Google Cloud Platform Foundations v1.0.0 1.1</li></ul>",
+  "path": "cloudresourcemanager.projects.id.users.id",
+  "conditions": [ "and",
+    [ "cloudresourcemanager.projects.id.users.id.name", "match", ".+@gmail[.]com" ]
+  ],
+  "id_suffix": "name"
+}

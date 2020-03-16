@@ -3,18 +3,20 @@
   <div id="services.{{service_name}}.regions.id.vpcs.id.{{resource_type}}.list">
     <div class="list-group" >
       <div class="list-group-item">
-        <a href="#services.{{service_name}}.regions.id.vpcs.id.{{resource_type}}">Show all <span class="badge float-right">{{get_value_at 'metadata' service_group service_name 'resources' resource_type 'count'}}</span></a>
+        <a href="javascript:updateHash('services.{{service_name}}.regions.id.vpcs.id.{{resource_type}}')">
+            Show all <span class="badge float-right btn-info">{{getValueAt 'metadata' service_group service_name 'resources' resource_type 'count'}}</span>
+        </a>
       </div>
     </div>
     {{#each items}}
     <div class="list-group" id="services.{{../service_name}}.regions.{{@key}}.vpcs.id.{{../resource_type}}.list">
       <div class="list-group-item active">
         <a href="#services.{{../service_name}}.regions.{{@key}}.vpcs.id.{{../resource_type}}">{{@key}}</a>
-        <span class="float-right"><a href="javascript:hideRegion('services.{{../service_name}}.regions.{{@key}}.vpcs.id.{{../resource_type}}.list')"><i class="fa fa-times-circle"></i></a></span>
+        <span class="float-right"><a href="javascript:hideList('services.{{../service_name}}.regions.{{@key}}.vpcs.id.{{../resource_type}}.list')"><i class="fa fa-times-circle"></i></a></span>
       </div>
       {{#each vpcs}}
       <div class="list-group-item list-sub-element" id="services.{{../../service_name}}.regions.{{@../key}}.vpcs.{{@key}}.{{../../resource_type}}.list">
-        <a href="#services.{{../../service_name}}.regions.{{@../key}}.vpcs.{{@key}}.{{../../resource_type}}">{{get_value_at 'services.vpc.regions' @../key 'vpcs' @key 'name'}}</a>
+        <a href="#services.{{../../service_name}}.regions.{{@../key}}.vpcs.{{@key}}.{{../../resource_type}}">{{getValueAt 'services.vpc.regions' @../key 'vpcs' @key 'name'}}</a>
         {{#each (lookup . ../../resource_type)}}
         <div class="list-group-item-text list-sub-element" id="services.{{../../../service_name}}.regions.{{@../../key}}.vpcs.{{@../key}}.{{../../../resource_type}}.{{@key}}.link">
           <a href="#services.{{../../../service_name}}.regions.{{@../../key}}.vpcs.{{@../key}}.{{../../../resource_type}}.{{@key}}.view">{{name}}</a>

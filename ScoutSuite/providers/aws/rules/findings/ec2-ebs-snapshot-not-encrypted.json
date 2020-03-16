@@ -1,0 +1,9 @@
+{
+    "description": "EBS snapshot not encrypted",
+    "rationale": "<b>Description:</b><br><br>Data-at-rest should be encrypted.",
+    "path": "ec2.regions.id.snapshots.id",
+    "dashboard_name": "Snapshots",
+    "conditions": [ "and", 
+        [ "Encrypted", "false", "" ]
+    ]
+}

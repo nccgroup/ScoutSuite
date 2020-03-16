@@ -5,11 +5,11 @@
     </div>
 
     <div class="list-group-item">
-      <h4 class="list-group-item-heading">Information</h4>
-      <div class="list-group-item-text">Description: {{description}}</div>
-      <div class="list-group-item-text">Region: {{region}}</div>
-      <div class="list-group-item-text">VPC: {{get_value_at 'services.vpc.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</div>
-      <div class="list-group-item-text">ID: {{id}}</div>
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text">ID: {{id}}</div>
+        <div class="list-group-item-text">Region: {{region}}</div>
+        <div class="list-group-item-text">VPC: {{getValueAt 'services.vpc.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</div>
+        <div class="list-group-item-text">Description: {{description}}</div>
     </div>
 
     {{#each rules}}
@@ -17,20 +17,20 @@
     {{/each}}
 
     <div class="list-group-item">
-      <h4 class="list-group-item-heading">Usage</h4>
-      <ul>
-        {{#each used_by}}
-          {{#each resource_type}}
-              {{> services.ec2.regions.vpcs.security_groups.resource_list service=@../key resources=this resource_type=@key status=this region=../../region vpc=../../vpc group=../../../id}}
-          {{/each}}
-        {{/each}}
-      </ul>
-      <span id="services.ec2.regions.vpcs.security_groups-unused-{{id}}" class="finding-hidden item-margin">
-        <i class="fa fa-exclamation-triangle"></i> This group is not used by either EC2, RDS, or Redshift.
-      </span>
-      <span id="ec2.regions.{{region}}.vpcs.{{vpc}}.security_groups.{{id}}.default_in_use" class="finding-hidden item-margin">
-        <i class="fa fa-exclamation-triangle"></i> Default security groups should not be used.
-      </span>
+        <h4 class="list-group-item-heading">Usage</h4>
+        {{#if used_by}}
+        <ul>
+            {{#each used_by}}
+                {{#each resource_type}}
+                    {{> services.ec2.regions.vpcs.security_groups.resource_list service=@../key resources=this resource_type=@key status=this region=../../region vpc=../../vpc group=../../../id}}
+                {{/each}}
+            {{/each}}
+        </ul>
+        {{else}}
+        <span id="services.ec2.regions.vpcs.security_groups-unused-{{id}}" class="finding-hidden item-margin">
+            <i class="fa fa-check-circle"></i> This security group is not in use.
+        </span>
+        {{/if}}
     </div>
 </script>
 

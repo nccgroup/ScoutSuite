@@ -3,10 +3,8 @@
       {{#if resources}}
         <div class="accordion">
           <li>
-            <h5 class="list-group-item-heading accordion-heading">{{ make_title service }} {{ make_title resource_type }}
-              <a class="accordion-toggle" data-toggle="collapse" href="#ec2_security_group-{{group}}-{{service}}_{{resource_type}}_list-{{status}}">
-                <span class="badge float-right btn-info">{{resources.length}}</span>
-              </a>
+            <h5 class="list-group-item-heading accordion-heading">{{ makeTitle service }} {{ makeTitle resource_type }}
+                <!--{{> count_badge count=resources.length}}-->
             </h5>
           </li>
           <div id="ec2_security_group-{{group}}-{{service}}_{{resource_type}}_list-{{status}}" class="accordion-body in">
@@ -15,7 +13,7 @@
                 {{#each resources}}
                   <li class="list-group-item-text">
                     <a href="javascript:showObject('services.{{../service}}.regions.{{../region}}.vpcs.{{../vpc}}.{{../resource_type}}.{{this}}')">
-                      {{get_value_at 'services' ../service 'regions' ../region 'vpcs' ../vpc ../resource_type this 'name'}}
+                        {{this}}
                     </a>
                   </li>
                 {{/each}}
@@ -25,7 +23,7 @@
         </div>
       {{else}}
         <h5 class="list-group-item-heading item-margin accordion-heading">{{status}}
-          <span class="badge float-right">{{resources.length}}</span>
+            {{> count_badge count=resources.length}}
         </h5>
       {{/if}}
     </script>

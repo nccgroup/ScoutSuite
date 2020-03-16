@@ -9,24 +9,16 @@
           <div class="list-group-item-text item-margin">Creation date: {{CreateDate}}</div>
         </div>
         <div class="list-group-item" style="padding-bottom: 0 !important;">
-          <div class="accordion">
-            <h4 class="list-group-item-heading accordion-heading">Members
-              {{#if users}}
-                <a class="accordion-toggle" data-toggle="collapse" href="#iam\.groups\.{{id}}\.users"><span class="badge float-right btn-info">{{users.length}}</span></a>
-              {{else}}
-                <span class="badge float-right">{{users.length}}</span>
-              {{/if}}
+            <h4 class="list-group-item-heading">Members
+                {{> count_badge count=users.length target=(concat '#iam.groups' id 'users')}}
             </h4>
-            <div id="iam.groups.{{id}}.users" class="accordion-body collapse">
-              <div class="accordion-inner">
-                <ul class="no-bullet">
-                  {{#each users}}
-                    <li><a href="javascript:showObject('services.iam.users.{{this}}')">{{get_value_at 'services.iam.users' this 'name'}}</a></li>
-                  {{/each}}
+            <div class="accordion-inner">
+                <ul>
+                    {{#each this.users}}
+                    <li><a href="javascript:showObject('services.iam.users.{{this}}')">{{getValueAt 'services.iam.users' this 'name'}}</a></li>
+                    {{/each}}
                 </ul>
-              </div>
             </div>
-          </div>
         </div>
         {{> services.iam.inline_policies resource_type = 'groups' resource_id = @key}}
         {{> services.iam.policies_list}}

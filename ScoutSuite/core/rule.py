@@ -1,26 +1,22 @@
-# -*- coding: utf-8 -*-
-
 import json
-import os
 import re
 
-from opinel.utils.fs import read_ip_ranges
-from opinel.utils.console import printDebug, printError, printException
+from ScoutSuite.core.fs import read_ip_ranges
+from ScoutSuite.core.console import print_exception
 
 from ScoutSuite.utils import format_service_name
 
-
 ip_ranges_from_args = 'ip-ranges-from-args'
 
-re_aws_account_id = re.compile(r'_AWS_ACCOUNT_ID_')
+re_account_id = re.compile(r'_ACCOUNT_ID_')
 re_ip_ranges_from_file = re.compile(r'_IP_RANGES_FROM_FILE_\((.*?)(,.*?)\)')
 re_ip_ranges_from_local_file = re.compile(r'_IP_RANGES_FROM_LOCAL_FILE_\((.*?)(,.*?)\)')
 re_strip_dots = re.compile(r'(_STRIPDOTS_\((.*?)\))')
 
 testcases = [
     {
-        'name': 'aws_account_id',
-        'regex': re_aws_account_id
+        'name': 'account_id',
+        'regex': re_account_id
     },
     {
         'name': 'ip_ranges_from_file',
@@ -32,11 +28,12 @@ testcases = [
     }
 ]
 
+
 class Rule(object):
 
     def to_string(self):
-        return (str(vars(self)))
-    
+        return str(vars(self))
+
     def __init__(self, data_path, filename, rule_type, rule):
         self.data_path = data_path
         self.filename = filename
@@ -47,18 +44,18 @@ class Rule(object):
         self.conditions = self.get_attribute('conditions', rule, [])
         self.key_suffix = self.get_attribute('key_suffix', rule, None)
 
-
-    def get_attribute(self, name, rule, default_value):
+    @staticmethod
+    def get_attribute(name, rule, default_value):
         return rule[name] if name in list(rule.keys()) else default_value
 
-
-    def set_definition(self, rule_definitions, attributes = None, ip_ranges = None, params = None):
+    def set_definition(self, rule_definitions, attributes=None, ip_ranges=None, params=None):
         """
         Update every attribute of the rule by setting the argument values as necessary
 
-        :param parameterized_input:
-        :param arg_values:
-        :param convert:
+        :param rule_definitions:            TODO
+        :param attributes:                  TODO
+        :param ip_ranges:                   TODO
+        :param params:                      TODO
         :return:
         """
         attributes = [] if attributes is None else attributes
@@ -73,7 +70,7 @@ class Rule(object):
             for condition in definition['conditions']:
                 if condition[0].startswith('_INCLUDE_('):
                     include = re.findall(r'_INCLUDE_\((.*?)\)', condition[0])[0]
-                    #new_conditions = load_data(include, key_name = 'conditions')
+                    # new_conditions = load_data(include, key_name = 'conditions')
                     rules_path = '%s/%s' % (self.data_path, include)
                     with open(rules_path, 'rt') as f:
                         new_conditions = f.read()
@@ -107,21 +104,23 @@ class Rule(object):
                     continue
                 for testcase in testcases:
                     result = testcase['regex'].match(condition[2])
-                    if result and (testcase['name'] == 'ip_ranges_from_file' or testcase['name'] == 'ip_ranges_from_local_file'):
+                    if result and (testcase['name'] == 'ip_ranges_from_file'
+                                   or testcase['name'] == 'ip_ranges_from_local_file'):
                         filename = result.groups()[0]
                         conditions = result.groups()[1] if len(result.groups()) > 1 else []
                         # TODO :: handle comma here...
                         if filename == ip_ranges_from_args:
                             prefixes = []
                             for filename in ip_ranges:
-                                prefixes += read_ip_ranges(filename, local_file = True, ip_only = True, conditions = conditions)
+                                prefixes += read_ip_ranges(filename, local_file=True, ip_only=True,
+                                                           conditions=conditions)
                             condition[2] = prefixes
                             break
                         else:
                             local_file = True if testcase['name'] == 'ip_ranges_from_local_file' else False
-                            condition[2] = read_ip_ranges(filename, local_file = local_file, ip_only = True, conditions = conditions)
+                            condition[2] = read_ip_ranges(filename, local_file=local_file, ip_only=True,
+                                                          conditions=conditions)
                             break
-                        break
                     elif result:
                         condition[2] = params[testcase['name']]
                         break
@@ -139,5 +138,4 @@ class Rule(object):
             if self.key_suffix:
                 setattr(self, 'key', '%s-%s' % (self.key, self.key_suffix))
         except Exception as e:
-            # printException(e)
-            printError('Failed to set definition %s: %s' % (self.filename, e))
+            print_exception('Failed to set definition %s: %s' % (self.filename, e))

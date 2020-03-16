@@ -1,0 +1,19 @@
+
+  <!-- Generic partial for zone-then-resource -->
+  <script id="details_for_gcp_zone.partial" type="text/x-handlebars-template">
+    <div id="services.{{service_name}}.projects.id.zones.id.{{resource_type}}.details">
+      {{#each items}}
+        {{#each (lookup . "zones")}}
+          {{#each (lookup . ../../resource_type)}}
+          <div class="list-group" id="services.{{../../../service_name}}.projects.{{@../../key}}.zones.{{@../key}}.{{../../../resource_type}}.{{@key}}.view">
+            {{> (lookup ../../.. 'partial_name') service_name = ../../../service_name project = @../../key zone = @../key resource_type = ../../../resource_type resource_key = @key resource = this}}
+          </div>
+          {{/each}}
+        {{/each}}
+      {{/each}}
+    </div>
+  </script>
+  <script>
+    Handlebars.registerPartial("details_for_gcp_zone", $("#details_for_gcp_zone\\.partial").html());
+  </script>
+

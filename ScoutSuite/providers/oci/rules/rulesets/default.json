@@ -1,0 +1,71 @@
+{
+  "about": "Default ruleset for Oracle Cloud Infrastructure.",
+  "rules": {
+    "identity-policy-affects-user.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "identity-user-with-multiple-api-keys.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "identity-password-policy-minimum-length.json": [
+      {
+        "args": [
+          "8"
+        ],
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "identity-password-policy-no-lowercase-required.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "identity-password-policy-no-number-required.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "identity-password-policy-no-symbol-required.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "identity-password-policy-no-uppercase-required.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "objectstorage-public-bucket.json": [
+      {
+        "enabled": true,
+        "level": "danger"
+      }
+    ],
+    "objectstorage-bucket-lacking-kms-encryption.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "kms-no-key-rotation.json": [
+      {
+        "args": [
+          "90"
+        ],
+        "enabled": true,
+        "level": "warning"
+      }
+    ]
+  }
+}

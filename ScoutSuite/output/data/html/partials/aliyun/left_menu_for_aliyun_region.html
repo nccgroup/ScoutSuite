@@ -1,0 +1,34 @@
+<!-- Generic left-menu link partial for region-then-resource -->
+<script id="left_menu_for_region.partial" type="text/x-handlebars-template">
+  <div id="services.{{service_name}}.regions.id.{{resource_type}}.list">
+    <div class="list-group" >
+      <div class="list-group-item">
+        <a href="javascript:updateHash('services.{{service_name}}.regions.id.{{resource_type}}')">
+          Show all <span class="badge float-right btn-info">{{getValueAt 'metadata' service_group service_name 'resources' resource_type 'count'}}</span>
+        </a>
+      </div>
+    </div>
+    {{#each items}}
+    <div class="list-group" id="services.{{../service_name}}.regions.{{@key}}.{{../resource_type}}.list">
+      <div class="list-group-item active">
+        <a href="#services.{{../service_name}}.regions.{{@key}}.{{../resource_type}}">{{@key}}</a>
+        <span class="float-right"><a href="javascript:hideList('services.{{../service_name}}.regions.{{@key}}.{{../resource_type}}.list')"><i class="fa fa-times-circle"></i></a></span>
+      </div>
+      <div class="list-group-item list-sub-element">
+        {{#each (lookup . ../resource_type)}}
+        <div class="list-group-item-text" id="services.{{../../service_name}}.regions.{{@../key}}.{{../../resource_type}}.{{@key}}.link">
+          {{#if scout_link}}
+          <a href="#{{scout_link}}.view">{{name}}</a>
+          {{else}}
+          <a href="#services.{{../../../service_name}}.regions.{{@../key}}.{{../../../resource_type}}.{{@key}}.view">{{name}}</a>
+          {{/if}}
+        </div>
+        {{/each}}
+      </div>
+    </div>
+    {{/each}}
+  </div>
+</script>
+<script>
+  Handlebars.registerPartial("left_menu_for_region", $("#left_menu_for_region\\.partial").html());
+</script>

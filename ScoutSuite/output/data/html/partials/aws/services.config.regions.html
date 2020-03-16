@@ -1,0 +1,51 @@
+
+<!-- Recorder partial -->
+<script id="services.config.regions.partial" type="text/x-handlebars-template">
+    <div class="list-group-item active">
+      <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+    <h4>Information</h4>
+      <ul>
+        <li class="list-group-item-text">Configured:
+          <span id="config.regions.{{name}}.NotConfigured">
+            {{#ifPositive recorders_count}}true{{else}}false{{/ifPositive}}
+          </span>
+        </li>
+      </ul>
+    </div>
+    <div class="list-group-item">
+      <div class="accordion">
+        <h4 class="list-group-item-heading accordion-heading">Recorders
+            {{> count_badge target=(concat '#config.regions' name 'recorders') count=recorders_count}}
+        </h4>
+        <div id="config.regions.{{name}}.recorders" class="accordion-body">
+          <div class="accordion-inner">
+            <ul class="no-bullet">
+              {{#each this.recorders}}
+                <li><a href="javascript:showObject('services.config.regions.{{../name}}.recorders.{{@key}}')">{{name}}</a></li>
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="accordion">
+        <h4 class="list-group-item-heading accordion-heading">Rules
+            {{> count_badge target=(concat '#config.regions' name 'rules') count=rules_count}}
+        </h4>
+        <div id="config.regions.{{name}}.rules" class="accordion-body">
+          <div class="accordion-inner">
+            <ul class="no-bullet">
+              {{#each this.rules}}
+                <li><a href="javascript:showObject('services.config.regions.{{../name}}.rules.{{@key}}')">{{name}}</a></li>
+              {{/each}}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+</script>
+<script>
+  Handlebars.registerPartial("services.config.regions", $("#services\\.config\\.regions\\.partial").html());
+</script>
+

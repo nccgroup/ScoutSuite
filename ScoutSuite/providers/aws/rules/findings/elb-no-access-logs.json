@@ -1,6 +1,6 @@
 {
     "description": "Lack of access logs",
-    "rationale": "Access logs enable traffic analysis and identification of security issues.",
+    "rationale": "<b>Description:</b><br><br>Access logs enable traffic analysis and identification of security issues.",
     "path": "elb.regions.id.vpcs.id.elbs.id.attributes.AccessLog.Enabled",
     "dashboard_name": "Load Balancer Attributes",
     "display_path": "elb.regions.id.vpcs.id.elbs.id",

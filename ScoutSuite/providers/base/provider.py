@@ -1,18 +1,13 @@
-# -*- coding: utf-8 -*-
-
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import json
-import sys
 import copy
+import json
 
-from opinel.utils.console import printException, printInfo
-from opinel.utils.globals import manage_dictionary
-
-from ScoutSuite import __version__ as scout2_version
+from ScoutSuite import __version__ as scout_version
+from ScoutSuite.core.console import print_exception, print_info, print_error
+from ScoutSuite.output.html import ScoutReport
 from ScoutSuite.providers.base.configs.browser import get_object_at
-from ScoutSuite.output.html import Scout2Report
 
 
 class BaseProvider(object):
@@ -26,10 +21,12 @@ class BaseProvider(object):
     all cloud providers
     """
 
-    def __init__(self, report_dir=None, timestamp=None, services=None, skipped_services=None, thread_config=4, **kwargs):
+    def __init__(self, report_dir=None, timestamp=None,
+                 services=None, skipped_services=None,
+                 result_format='json', **kwargs):
         """
 
-        :aws_account_id     AWS account ID
+        :account_id         account ID
         :last_run           Information about the last run
         :metadata           Metadata used to generate the HTML report
         :ruleset            Ruleset used to perform the analysis
@@ -38,70 +35,58 @@ class BaseProvider(object):
         services = [] if services is None else services
         skipped_services = [] if skipped_services is None else skipped_services
 
-        self.credentials = None
         self.last_run = None
         self.metadata = None
 
         self._load_metadata()
 
-        self.services = self.services_config(self.metadata, thread_config)
+        if not hasattr(self, 'services'):
+            self.services = self.services_config(self.credentials)
         supported_services = vars(self.services).keys()
+
         self.service_list = self._build_services_list(supported_services, services, skipped_services)
 
-    def authenticate(self):
+    def get_report_name(self):
         """
-        Authenticate to the provider using provided credentials
-        :return:
+        Returns the name of the report using the provider's configuration
         """
-        pass
+        return 'base'
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
         """
-        TODO
-
-        :return: None
+        Used for adding cross-services configs.
         """
-        ip_ranges = [] if ip_ranges is None else ip_ranges
-
         # Preprocessing dictated by metadata
         self._process_metadata_callbacks()
 
-    def postprocessing(self, current_time, ruleset):
+    def postprocessing(self, current_time, ruleset, run_parameters):
         """
-        TODO
-
-        :param config:
-        :param current_time:
-        :param ruleset:
-        :return: None
+        Sets post-run information.
         """
         self._update_metadata()
-        self._update_last_run(current_time, ruleset)
+        self._update_last_run(current_time, ruleset, run_parameters)
 
-    def fetch(self, regions=None, skipped_regions=None, partition_name=None):
+    async def fetch(self, regions=None, excluded_regions=None, partition_name=None):
         """
         Fetch resources for each service
 
-        :param services:
-        :param skipped_services:
         :param regions:
-        :param skipped_regions:
+        :param excluded_regions:
         :param partition_name:
         :return:
         """
         regions = [] if regions is None else regions
-        skipped_regions = [] if skipped_regions is None else skipped_regions
+        excluded_regions = [] if excluded_regions is None else excluded_regions
         # TODO: determine partition name based on regions and warn if multiple partitions...
-        self.services.fetch(self.credentials, self.service_list, regions)
+        await self.services.fetch(self.service_list, regions, excluded_regions)
 
         # TODO implement this properly
         """
-        This is quite ugly but the legacy Scout2 expects the configurations to be dictionaries.
-        Eventually this should be moved to objects/attributes, but that will require significan re-write.
+        This is quite ugly but the legacy Scout expects the configurations to be dictionaries.
+        Eventually this should be moved to objects/attributes, but that will require significant re-write.
         """
-        report = Scout2Report(self.provider_code,
-                              self.profile)
-        self.services = report.jsrw.to_dict(self.services)
+        report = ScoutReport(self.provider_code, 'placeholder')
+        self.services = report.encoder.to_dict(self.services)
 
     def _load_metadata(self):
         """
@@ -113,21 +98,38 @@ class BaseProvider(object):
         with open(self.metadata_path, 'rt') as f:
             self.metadata = json.load(f)
 
-    def _build_services_list(self, supported_services, services, skipped_services):
+    @staticmethod
+    def _build_services_list(supported_services, services, skipped_services):
+
+        # Ensure services and skipped services exist, otherwise log exception
+        error = False
+        for service in services + skipped_services:
+            if service not in supported_services:
+                print_error('Service \"{}\" does not exist, skipping'.format(service))
+                error = True
+        if error:
+            print_info('Available services are: {}'.format(str(list(supported_services)).strip('[]')))
+
         return [s for s in supported_services if (services == [] or s in services) and s not in skipped_services]
 
-    def _update_last_run(self, current_time, ruleset):
-        last_run = {}
-        last_run['time'] = current_time.strftime("%Y-%m-%d %H:%M:%S%z")
-        last_run['cmd'] = ' '.join(sys.argv)
-        last_run['version'] = scout2_version
-        last_run['ruleset_name'] = ruleset.name
-        last_run['ruleset_about'] = ruleset.about
-        last_run['summary'] = {}
+    def _update_last_run(self, current_time, ruleset, run_parameters):
+
+        last_run = {
+            'time': current_time.strftime("%Y-%m-%d %H:%M:%S%z"),
+            'run_parameters': run_parameters,
+            'version': scout_version,
+            'ruleset_name': ruleset.name,
+            'ruleset_about': ruleset.about,
+            'summary': {}
+        }
+
         for service in self.services:
-            last_run['summary'][service] = {'checked_items': 0, 'flagged_items': 0, 'max_level': 'warning',
-                                            'rules_count': 0, 'resources_count': 0}
-            if self.services[service] == None:
+            last_run['summary'][service] = {'checked_items': 0,
+                                            'flagged_items': 0,
+                                            'max_level': 'warning',
+                                            'rules_count': 0,
+                                            'resources_count': 0}
+            if self.services[service] is None:
                 # Not supported yet
                 continue
             elif 'findings' in self.services[service]:
@@ -158,42 +160,38 @@ class BaseProvider(object):
                 service_map[service] = service_group
                 for resource in self.metadata[service_group][service]['resources']:
                     # full_path = path if needed
-                    if not 'full_path' in self.metadata[service_group][service]['resources'][resource]:
+                    if 'full_path' not in self.metadata[service_group][service]['resources'][resource]:
                         self.metadata[service_group][service]['resources'][resource]['full_path'] = \
                             self.metadata[service_group][service]['resources'][resource]['path']
                     # Script is the full path minus "id" (TODO: change that)
-                    if not 'script' in self.metadata[service_group][service]['resources'][resource]:
+                    if 'script' not in self.metadata[service_group][service]['resources'][resource]:
                         self.metadata[service_group][service]['resources'][resource]['script'] = '.'.join(
                             [x for x in
                              self.metadata[service_group][service]['resources'][resource]['full_path'].split(
                                  '.') if x != 'id'])
-                    
-                    # Update counts
-                    service_config = self.services[service]
-                    if not service_config :
-                        continue
-                    
-                    count = '%s_count' % resource
-                    if resource != 'regions':
-                        if 'regions' in service_config.keys() and isinstance(service_config['regions'], dict):
-                            self.metadata[service_group][service]['resources'][resource]['count'] = 0
-                            for region in service_config['regions']:
-                                if count in service_config['regions'][region].keys():
-                                    self.metadata[service_group][service]['resources'][resource]['count'] += \
-                                        service_config['regions'][region][count]
-                        else:
-                            try:
-                                self.metadata[service_group][service]['resources'][resource]['count'] = \
-                                    service_config[count]
-                            except Exception as e:
-                                printException(e)
-                    else:
-                        self.metadata[service_group][service]['resources'][resource]['count'] = len(service_config['regions'])
 
+                    # Update counts
+                    self.metadata[service_group][service]['resources'][resource]['count'] = \
+                        self.recursive_get_count(resource,
+                                                 self.services[service])
+
+    def recursive_get_count(self, resource, resources):
+        """
+        Recursively look for counts of a specific resource in a resource tree.
+        """
+        count = 0
+        resource_count = '%s_count' % resource
+        if isinstance(resources, dict):
+            if resource_count in resources.keys():
+                count += resources[resource_count]
+            else:
+                for k in resources.keys():
+                    count += self.recursive_get_count(resource, resources[k])
+        return count
 
     def manage_object(self, object, attr, init, callback=None):
         """
-        This is a quick-fix copy of Opine's manage_dictionary in order to support the new ScoutSuite object which isn't
+        This is a quick-fix copy of Opinel's manage_dictionary in order to support the new ScoutSuite object which isn't
         a dict
         """
         if type(object) == dict:
@@ -220,7 +218,7 @@ class BaseProvider(object):
         # Service-level summaries
         for service_group in self.metadata:
             for service in self.metadata[service_group]:
-                if service == 'summaries':
+                if service == 'summaries' or service not in self.service_list:
                     continue
                 # Reset external attack surface
                 if 'summaries' in self.metadata[service_group][service]:
@@ -263,12 +261,10 @@ class BaseProvider(object):
         for service_group in self.metadata:
             if 'summaries' in self.metadata[service_group]:
                 for summary in self.metadata[service_group]['summaries']:
-                    current_path = ['services', service]
                     for callback in self.metadata[service_group]['summaries'][summary]['callbacks']:
                         callback_name = callback[0]
-                        callback_args = copy.deepcopy(callback[1])
                         target_path = self.metadata[service_group]['summaries'][summary]['path'].split('.')
-                        # quick fix as legacy Scout2 expects "self" to be a dict
+                        # quick fix as legacy Scout expects "self" to be a dict
                         target_object = self
                         for p in target_path:
                             self.manage_object(target_object, p, {})
@@ -284,7 +280,8 @@ class BaseProvider(object):
                                         summary in self.metadata[service_group][service]['summaries']:
                                     try:
                                         source = get_object_at(self,
-                                                               self.metadata[service_group][service]['summaries'][summary]['path'].split('.'))
+                                                               self.metadata[service_group][service]['summaries'][
+                                                                   summary]['path'].split('.'))
                                     except Exception as e:
                                         source = {}
                                     target_object.update(source)
@@ -296,9 +293,8 @@ class BaseProvider(object):
         Recursively go to a target and execute a callback
         """
         try:
-
             key = path.pop(0)
-            if not current_config:
+            if not current_config and hasattr(self, 'config'):
                 current_config = self.config
             if not current_path:
                 current_path = []
@@ -310,10 +306,8 @@ class BaseProvider(object):
                         break
                     current_path.append(key)
                     current_config = current_config[key]
-            # if hasattr(current_config, key):
             if key in current_config:
                 current_path.append(key)
-                # current_config_key = getattr(current_config, key)
                 current_config_key = current_config[key]
                 for (i, value) in enumerate(list(current_config_key)):
                     if len(path) == 0:
@@ -334,18 +328,18 @@ class BaseProvider(object):
                                                callback_args)
 
         except Exception as e:
-            printException(e)
-            printInfo('Path: %s' % str(current_path))
-            printInfo('Key = %s' % str(key) if 'key' in locals() else 'not defined')
-            printInfo('Value = %s' % str(value) if 'value' in locals() else 'not defined')
-            printInfo('Path = %s' % path)
+            print_exception(e, {'current path': '{}'.format(current_path),
+                                'key': '{}'.format(key if 'key' in locals() else 'not defined'),
+                                'value': '{}'.format(value if 'value' in locals() else 'not defined'),
+                                'path': '{}'.format(path),
+                                }
+                            )
 
     def _new_go_to_and_do(self, current_config, path, current_path, callbacks):
         """
         Recursively go to a target and execute a callback
         """
         try:
-
             key = path.pop(0)
             if not current_config:
                 current_config = self.config
@@ -365,19 +359,28 @@ class BaseProvider(object):
                     if len(path) == 0:
                         for callback_info in callbacks:
                             callback_name = callback_info[0]
+                            try:
+                                callback = getattr(self, callback_name)
 
-                            # callback = globals()[callback_name]
-                            callback = getattr(self, callback_name)
-
-                            callback_args = callback_info[1]
-                            if type(current_config[key] == dict) and type(value) != dict and type(value) != list:
-                                callback(current_config[key][value],
-                                         path,
-                                         current_path,
-                                         value,
-                                         callback_args)
-                            else:
-                                callback(current_config, path, current_path, value, callback_args)
+                                callback_args = callback_info[1]
+                                if type(current_config[key] == dict) and type(value) != dict and type(value) != list:
+                                    callback(current_config[key][value],
+                                             path,
+                                             current_path,
+                                             value,
+                                             callback_args)
+                                else:
+                                    callback(current_config, path, current_path, value, callback_args)
+                            except Exception as e:
+                                print_exception(e, {'callback': callback_name,
+                                                    'callback arguments': callback_args,
+                                                    'current path': '{}'.format(current_path),
+                                                    'key': '{}'.format(key if 'key' in locals() else 'not defined'),
+                                                    'value': '{}'.format(
+                                                        value if 'value' in locals() else 'not defined'),
+                                                    'path': '{}'.format(path),
+                                                    }
+                                                )
                     else:
                         tmp = copy.deepcopy(current_path)
                         try:
@@ -389,8 +392,9 @@ class BaseProvider(object):
                             tmp.append(i)
                             self._new_go_to_and_do(current_config[key][i], copy.deepcopy(path), tmp, callbacks)
         except Exception as e:
-            printException(e)
-            printInfo('Path: %s' % str(current_path))
-            printInfo('Key = %s' % str(key) if 'key' in locals() else 'not defined')
-            printInfo('Value = %s' % str(value) if 'value' in locals() else 'not defined')
-            printInfo('Path = %s' % path)
+            print_exception(e, {'current path': '{}'.format(current_path),
+                                'key': '{}'.format(key if 'key' in locals() else 'not defined'),
+                                'value': '{}'.format(value if 'value' in locals() else 'not defined'),
+                                'path': '{}'.format(path),
+                                }
+                            )

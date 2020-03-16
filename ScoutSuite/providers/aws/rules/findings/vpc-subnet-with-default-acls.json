@@ -1,7 +1,7 @@
 {
     "arg_names": [ "Direction of traffic (ingress or egress)", "Corresponding target (source or destination)" ],
     "description": "Subnet with default _ARG_0_ NACLs",
-    "rationale": "Default _ARG_0_ network access control lists allow all network traffic (all protocols, IPs, and _ARG_1_), hence do not provide the secondary layer of security network ACLs are supposed to.",
+    "rationale": "<b>Description:</b><br><br>Default _ARG_0_ network access control lists allow all network traffic (all protocols, IPs, and _ARG_1_), hence do not provide the secondary layer of security network ACLs are supposed to.",
     "key": "vpc-subnet-with-default-_ARG_0_-acls",
     "path": "vpc.regions.id.vpcs.id.subnets.id",
     "dashboard_name": "Subnets",

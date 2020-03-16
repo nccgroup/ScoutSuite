@@ -1,0 +1,11 @@
+{
+    "description": "ICMP open to all",
+    "dashboard_name": "Rules",
+    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
+    "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "conditions": [ "and",
+        [ "_INCLUDE_(conditions/cidr-is-all.json)", "", ""],
+        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id", "equal", "ingress" ],
+        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id", "equal", "ICMP" ]
+    ]
+}

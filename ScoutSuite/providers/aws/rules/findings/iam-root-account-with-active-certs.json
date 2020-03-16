@@ -1,10 +1,14 @@
 {
     "description": "Root account has active X.509 certs",
-    "rationale": "Root account X.509 certificates should be deleted as they may be used to make SOAP-protocol requests in the context of the root account.",
-    "path": "iam.credential_reports.<root_account>",
+    "rationale": "<b>Description:</b><br><br>Root account X.509 certificates should be deleted as they may be used to make SOAP-protocol requests in the context of the root account.",
+    "path": "iam.credential_reports.id",
     "dashboard_name": "Root account",
-    "conditions": [ "or",
-        [ "iam.credential_reports.<root_account>.cert_1_active", "true", "" ],
-        [ "iam.credential_reports.<root_account>.cert_2_active", "true", "" ]
+    "conditions": [ "and",
+        [ "iam.credential_reports.id.name", "equal", "<root_account>" ],
+        [
+            "or",
+            [ "iam.credential_reports.id.cert_1_active", "true", "" ],
+            [ "iam.credential_reports.id.cert_2_active", "true", "" ]
+        ]
     ]
 }

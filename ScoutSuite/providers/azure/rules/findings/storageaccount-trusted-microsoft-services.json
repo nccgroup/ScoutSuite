@@ -1,0 +1,10 @@
+{
+    "dashboard_name": "Storage Accounts",
+    "description": "Trusted Microsoft Services Enabled",
+    "rationale": "<b>Description:</b><br><br><br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 3.8</li></ul>",
+    "path": "storageaccounts.subscriptions.id.storage_accounts.id",
+    "conditions": [ "and",
+        [ "storageaccounts.subscriptions.id.storage_accounts.id.trusted_microsoft_services_enabled", "false", ""]
+    ],
+    "id_suffix": "trusted_microsoft_services_enabled"
+}

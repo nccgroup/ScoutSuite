@@ -1,0 +1,38 @@
+a.nav-link {
+    color: rgb(235, 235, 235) ;
+}
+
+a.nav-link:hover {
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.dropdown-submenu a.nav-link {
+    color: #7b8a8b;
+}
+
+.dropdown-submenu a.nav-link:hover {
+    color: black;
+    border-left: 10px solid #c41230 ;
+    -webkit-transition: border 0.2s ease-in-out; /* Safari */
+    transition: border 0.2s ease-in-out;
+}
+
+.bg-primary .navbar-nav .active>.nav-link, .navbar-brand .active {
+    color: #fff !important;
+    font-weight: bolder;
+    font-size: 15px;
+    transition: font-size 0.4s ease;
+}
+
+.navbar-brand .active {
+    color: #fff !important;
+    font-weight: bolder;
+    font-size: 18px;
+    transition: font-size 0.4s ease;
+}
+
+.finding.btn::before {
+    color: black !important;
+}
+

@@ -8,6 +8,6 @@
         [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Effect", "equal", "Allow" ],
         [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.", "containAction", "sts:AssumeRole" ],
         [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Principal", "withKey", "AWS" ],
-        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Principal.AWS", "_ARG_1_", "_AWS_ACCOUNT_ID_" ]
+        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Principal.AWS", "_ARG_1_", "_ACCOUNT_ID_" ]
     ]
 }

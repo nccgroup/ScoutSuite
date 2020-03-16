@@ -1,38 +1,37 @@
 
 <!-- Trail partial -->
 <script id="services.cloudtrail.regions.id.trails.partial" type="text/x-handlebars-template">
-  {{#unless scout2_link}}
     <div id="resource-name" class="list-group-item active">
       <h4 class="list-group-item-heading">{{name}}</h4>
     </div>
     <div class="list-group-item">
     <h4>Information</h4>
       <ul>
-        <li class="list-group-item-text">Name: {{name}}</li>
-        <li class="list-group-item-text">Region: {{region}}</li>
-        <li class="list-group-item-text">Logging: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.IsLogging">{{IsLogging}}</span></li>
-        <li class="list-group-item-text">Data events: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.cloudtrail-data-events-disabled">{{DataEventsEnabled}}</span></li>
-
-        <li class="list-group-item-text">Management events: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.cloudtrail-management-events-disabled">{{ManagementEventsEnabled}}</span></li>
-        <li class="list-group-item-text">Multi region: {{IsMultiRegionTrail}}</li>
-        {{#ifEqual IsMultiRegionTrail "true"}}
-          <li></li>
-        {{/ifEqual}}
-        <li class="list-group-item-text">Start Logging Time: {{StartLoggingTime}}</li>
-        <li class="list-group-item-text">Stop Logging Time: {{StopLoggingTime}}</li>
-        <li class="list-group-item-text">Include global services:
+        <li class="list-group-item-text">Region: <samp>{{region}}</samp>
+        {{#if scout_link}}
+        <i class="fa fa-exclamation-triangle"></i> multi-region trail
+        {{/if}}
+        </li>
+        {{#unless scout_link}}
+        <li class="list-group-item-text">Logging: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.IsLogging">{{convert_bool_to_enabled IsLogging}}</span></li>
+        <li class="list-group-item-text">Start Logging Time: {{format_date StartLoggingTime}}</li>
+        <li class="list-group-item-text">Stop Logging Time: {{format_date StopLoggingTime}}</li>
+        <li class="list-group-item-text">Multi Region: {{convert_bool_to_enabled IsMultiRegionTrail}}</li>
+        <li class="list-group-item-text">Management Events: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.cloudtrail-management-events-disabled">{{convert_bool_to_enabled ManagementEventsEnabled}}</span></li>
+        <li class="list-group-item-text">Data Events: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.cloudtrail-data-events-disabled">{{convert_bool_to_enabled DataEventsEnabled}}</span></li>
+        <li class="list-group-item-text">Include Global Services:
           <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.GlobalServicesDuplicated">
             <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.IncludeGlobalServiceEvents">
-              {{#if IncludeGlobalServiceEvents}} True {{#unless IsLogging}}(Trail disabled){{/unless}} {{else}} False {{/if}}
+              <samp>{{#if IncludeGlobalServiceEvents}} true {{#unless IsLogging}}(Trail disabled){{/unless}} {{else}} false {{/if}}</samp>
             </span>
           </span>
         </li>
-        <li class="list-group-item-text">Log File Validation Enabled: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.LogFileValidationDisabled">{{LogFileValidationEnabled}}</span></li>
-        <li class="list-group-item-text">Destination S3 bucket name: <a href="javascript:showObject('services.s3.buckets.{{bucket_id}}')">{{get_value_at 'services.s3.buckets' bucket_id 'name'}}</a>/{{S3KeyPrefix}}</li>
-        <li class="list-group-item-text">KMS key: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.cloudtrail-kms-key-unused">{{#if KmsKeyId}} true {{else}} false {{/if}}</span></li>
+        <li class="list-group-item-text">Destination S3 Bucket Name: <samp><a href="javascript:showObject('services.s3.buckets.{{bucket_id}}')">{{getValueAt 'services.s3.buckets' bucket_id 'name'}}</a>/{{S3KeyPrefix}}</samp></li>
+        <li class="list-group-item-text">Log File Validation Enabled: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.LogFileValidationDisabled">{{convert_bool_to_enabled LogFileValidationEnabled}}</span></li>
+        <li class="list-group-item-text">KMS Key: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.cloudtrail-kms-key-unused"><samp>{{#if KmsKeyId}} true {{else}} false {{/if}}</samp></span></li>
+        {{/unless}}
       </ul>
     </div>
-  {{/unless}}
 </script>
 <script>
   Handlebars.registerPartial("services.cloudtrail.regions.id.trails", $("#services\\.cloudtrail\\.regions\\.id\\.trails\\.partial").html());

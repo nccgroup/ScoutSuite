@@ -1,0 +1,46 @@
+
+<!-- Cloud Storage instances partial -->
+<script id="services.cloudsql.projects.id.instances.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Project ID: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.project_id"><samp>{{project_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Instance Name: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.name"><samp>{{name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Automatic Backups: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.automatic_backup_enabled">{{convert_bool_to_enabled automatic_backup_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Last Backup: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.last_backup_timestamp">{{format_date last_backup_timestamp}}</span></div>
+        <div class="list-group-item-text item-margin">Logs: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.log_enabled">{{convert_bool_to_enabled log_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">SSL Required: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.ssl_required">{{convert_bool_to_enabled ssl_required}}</span></div>
+        <div class="list-group-item-text item-margin">Public IP Address: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.public_ip"><samp>{{value_or_none public_ip}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Private IP Address: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.private_ip"><samp>{{value_or_none private_ip}}</samp></span></div>
+        {{#if authorized_networks}}
+        <div class="list-group-item-text item-margin">Authorized Networks:</div>
+        <ul>
+            {{#each authorized_networks }}
+                <li><span id="cloudsql.projects.{{@../../key}}.instances.{{@../key}}.authorized_networks.{{@key}}.open_to_the_world">{{ value }}</span></li>
+            {{/each}}
+        </ul>
+        {{else}}
+        <div class="list-group-item-text item-margin">Authorized Networks: <samp>None</samp></div>
+        {{/if}}
+        <div class="list-group-item-text item-margin">Users:</div>
+        <ul>
+            {{#each users }}
+            <li><span id="cloudsql.projects.{{@../../key}}.instances.{{@../key}}.root_access_from_any_host"><samp>{{ name }}</samp>{{#if host}} (host: <samp>{{host}}</samp>){{/if}}</span></li>
+            {{/each}}
+        </ul>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.cloudsql.projects.id.instances", $("#services\\.cloudsql\\.projects\\.id\\.instances\\.partial").html());
+</script>
+
+<!-- Single cloudsql instance template -->
+<script id="single_cloudsql_instance-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.cloudsql.projects.id.instances'}}
+</script>
+<script>
+    var single_cloudsql_instance_template = Handlebars.compile($("#single_cloudsql_instance-template").html());
+</script>

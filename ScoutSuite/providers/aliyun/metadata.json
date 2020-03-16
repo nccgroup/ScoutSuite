@@ -1,0 +1,92 @@
+{
+  "security": {
+    "ram": {
+      "resources": {
+        "users": {
+          "cols": 2,
+          "path": "services.ram.users"
+        },
+        "groups": {
+          "cols": 2,
+          "path": "services.ram.groups"
+        },
+        "roles": {
+          "cols": 2,
+          "path": "services.ram.roles"
+        },
+        "policies": {
+          "cols": 2,
+          "path": "services.ram.policies"
+        }
+      },
+      "summaries": {
+        "password_policy": {
+          "cols": 1,
+          "path": "services.ram.password_policy"
+        },
+        "security_policy": {
+          "cols": 1,
+          "path": "services.ram.security_policy"
+        }
+      }
+    },
+    "kms": {
+      "resources": {
+        "keys": {
+          "cols": 2,
+          "path": "services.kms.regions.id.keys"
+        }
+      }
+    }
+  },
+  "compute": {
+    "ecs": {
+      "resources": {
+        "instances": {
+          "cols": 2,
+          "path": "services.ecs.regions.id.instances"
+        }
+      }
+    }
+  },
+  "database": {
+    "rds": {
+      "resources": {
+        "instances": {
+          "cols": 2,
+          "path": "services.rds.regions.id.instances"
+        }
+      }
+    }
+  },
+  "storage": {
+    "oss": {
+      "resources": {
+        "buckets": {
+          "cols": 2,
+          "path": "services.oss.buckets"
+        }
+      }
+    }
+  },
+  "network": {
+    "vpc": {
+      "resources": {
+        "vpcs": {
+          "cols": 2,
+          "path": "services.vpc.regions.id.vpcs"
+        }
+      }
+    }
+  },
+  "management": {
+    "actiontrail": {
+      "resources": {
+        "trails": {
+          "cols": 1,
+          "path": "services.actiontrail.trails"
+        }
+      }
+    }
+  }
+}

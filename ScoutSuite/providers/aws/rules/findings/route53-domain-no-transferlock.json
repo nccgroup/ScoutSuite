@@ -1,9 +1,9 @@
 {
     "dashboard_name": "Domains",
     "description": "Domain transfer not locked",
-    "path": "route53.domains.id",
+    "path": "route53.regions.id.domains.id",
     "conditions": [ "and",
-        [ "TransferLock", "false", "" ]
+        [ "transfer_lock", "false", "" ]
     ],
-    "id_suffix": "TransferLock"
+    "id_suffix": "transfer_lock"
 }

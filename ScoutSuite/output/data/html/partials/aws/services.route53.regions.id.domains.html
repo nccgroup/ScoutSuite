@@ -1,0 +1,34 @@
+<!-- route53 domains -->
+<script id="services.route53.regions.id.domains.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Auto Renew: <span
+                id="route53.regions.id.domains.{{@key}}.auto_renew"><samp>{{convert_bool_to_enabled auto_renew}}</samp></span>
+        </div>
+        <div class="list-group-item-text item-margin">Transfer Lock:
+            <span id="route53.regions.id.domains.{{@key}}.transfer_lock"><samp>{{convert_bool_to_enabled transfer_lock}}</samp>
+                <i class="fa fa-exclamation-triangle"></i>
+                <span id="route53.regions.id.domains.{{@key}}.transfer_lock_unauthorized">
+                    This domain's top-level domain (TLD) does not support domain locking.
+                </span>
+            </span>
+        </div>
+        <div class="list-group-item-text item-margin">Expiry:
+            <span id="route53.regions.id.domains.{{@key}}.expiry">{{format_date expiry}}</span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.route53.regions.id.domains", $("#services\\.route53\\.regions\\.id\\.domains\\.partial").html());
+</script>
+
+<!-- Single route53 domain template -->
+<script id="single_route53_domain-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.route53.regions.id.domains'}}
+</script>
+<script>
+    var single_route53_domain_template = Handlebars.compile($("#single_route53_domain-template").html());
+</script>

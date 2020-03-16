@@ -1,0 +1,32 @@
+<!-- ActionTrail trails -->
+<script id="services.actiontrail.trails.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">name: <span id="actiontrail.trails.{{@key}}.name"><samp>{{name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Region: <span id="actiontrail.trails.{{@key}}.region"><samp>{{region}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Status: <span id="actiontrail.trails.{{@key}}.status"><samp>{{status}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Role Name: <span id="actiontrail.trails.{{@key}}.role_name"><samp>{{role_name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">OSS Bucket Name: <span id="actiontrail.trails.{{@key}}.oss_bucket_name"><samp>{{oss_bucket_name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">OSS Key Prefix: <span id="actiontrail.trails.{{@key}}.oss_key_prefix"><samp>{{oss_key_prefix}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Include Global Service Events: <span id="actiontrail.trails.{{@key}}.include_global_service_event"><samp>{{include_global_service_event}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Event Types: <span id="actiontrail.trails.{{@key}}.event_rw"><samp>{{event_rw}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Type: <span id="actiontrail.trails.{{@key}}.type"><samp>{{type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">SLS Write Role ARN: <span id="actiontrail.trails.{{@key}}.sls_write_role_arn"><samp>{{value_or_none sls_write_role_arn}}</samp></span></div>
+        <div class="list-group-item-text item-margin">SLS Project ARN: <span id="actiontrail.trails.{{@key}}.sls_project_arn"><samp>{{value_or_none sls_project_arn}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.actiontrail.trails", $("#services\\.actiontrail\\.trails\\.partial").html());
+</script>
+
+<!-- Single trail template -->
+<script id="single_actiontrail_trail-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.actiontrail.trails'}}
+</script>
+<script>
+    var single_actiontrail_trail_template = Handlebars.compile($("#single_actiontrail_trail-template").html());
+</script>

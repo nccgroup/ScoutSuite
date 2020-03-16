@@ -1,0 +1,45 @@
+
+<!-- RAM policies -->
+<script id="services.ram.policies.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="ram.policies.{{@key}}.name"><samp>{{name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Description: <span id="ram.policies.{{@key}}.description"><samp>{{description}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Create Date: <span id="ram.policies.{{@key}}.create_date">{{format_date create_date}}</span></div>
+        <div class="list-group-item-text item-margin">Update Date: <span id="ram.policies.{{@key}}.update_date">{{format_date update_date}}</span></div>
+        <div class="list-group-item-text item-margin">Attachment Count: <span id="ram.policies.{{@key}}.attachment_count"><samp>{{attachment_count}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Type: <span id="ram.policies.{{@key}}.type"><samp>{{type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Default Version: <span id="ram.policies.{{@key}}.default_version"><samp>{{default_version}}</samp></span></div>
+    </div>
+    <div class="list-group-item">
+        {{> accordion_policy name = 'Policy Document' document = policy_document.PolicyDocument policy_path = (concat 'ram.policies' @key 'policy_document.PolicyDocument') heading = "h5" }}
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Attached Entities</h4>
+        <ul>
+            {{#each entities}}
+            <li>{{makeTitle @key}}</li>
+            <ul>
+                {{#each this}}
+                <li><a href="javascript:showObject('services.ram.{{@../key}}.{{this}}')">{{this}}</a></li>
+                {{/each}}
+            </ul>
+            {{/each}}
+        </ul>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.ram.policies", $("#services\\.ram\\.policies\\.partial").html());
+</script>
+
+<!-- Single ram policy template -->
+<script id="single_ram_policy-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.ram.policies'}}
+</script>
+<script>
+    var single_ram_policy_template = Handlebars.compile($("#single_ram_policy-template").html());
+</script>

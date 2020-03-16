@@ -26,37 +26,22 @@ setup(
     url='https://github.com/nccgroup/ScoutSuite',
     entry_points={
         'console_scripts': [
-            'Scout = ScoutSuite.__main__:main',
-            'Scout2RulesGenerator = ScoutSuite.__rules_generator__:main',
-            'Scout2Listall = ScoutSuite.__listall__:main'
+            'scout = ScoutSuite.__main__:run_from_cli',
         ]
     },
     packages=find_packages(),
     package_data={
+        'ScoutSuite.data': [
+            '*.json'
+        ],
         'ScoutSuite.output': [
-            'data/html/*.html',
-            'data/html/partials/*.html',
-            'data/html/partials/aws/*.html',
-            'data/html/partials/azure/*.html',
-            'data/html/partials/gcp/*.html',
-            'data/html/summaries/*.html',
-            'data/includes.zip',
-            'data/inc-scout2/*.js',
-            'data/inc-scout2/*.css'
+            '*.html',
+            '*.js',
+            '*.css',
+            '*.zip'
         ],
         'ScoutSuite.providers': [
-            'aws/rules/conditions/*.json',
-            'aws/rules/filters/*.json',
-            'aws/rules/findings/*.json',
-            'aws/rules/rulesets/*.json'
-            'azure/rules/conditions/*.json',
-            'azure/rules/filters/*.json',
-            'azure/rules/findings/*.json',
-            'azure/rules/rulesets/*.json'
-            'gcp/rules/conditions/*.json',
-            'gcp/rules/filters/*.json',
-            'gcp/rules/findings/*.json',
-            'gcp/rules/rulesets/*.json'
+            '*.json'
         ]
     },
     include_package_data=True,
@@ -70,10 +55,7 @@ setup(
         'Natural Language :: English',
         'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7'

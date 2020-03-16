@@ -1,6 +1,6 @@
 {
     "description": "Alarm without action",
-    "rationale": "Each alarm should have at least one action",
+    "rationale": "<b>Description:</b><br><br>Each alarm should have at least one action",
     "path": "cloudwatch.regions.id.alarms.id",
     "dashboard_name": "Alarms",
     "conditions": [ "and",

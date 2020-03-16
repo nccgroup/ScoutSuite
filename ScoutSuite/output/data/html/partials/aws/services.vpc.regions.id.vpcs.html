@@ -2,24 +2,22 @@
     <!-- VPC partial -->
     <script id="services.vpc.regions.id.vpcs.partial" type="text/x-handlebars-template">
         <div id="resource-name" class="list-group-item active">
-          <h4 class="list-group-item-heading">{{name}}</h4>
+          <h4 class="list-group-item-heading">{{@key}}</h4>
         </div>
         <div class="list-group-item">
-          <h4>Information</h4>
-          <ul>
-            <li class="list-group-item-text">Region: {{region}}</li>
-            <li class="list-group-item-text">ID: {{@key}}</li>
-            <li class="list-group-item-text">name: {{name}}</li>
-          </ul>
+            <h4 class="list-group-item-heading">Information</h4>
+            <div class="list-group-item-text">ID: {{@key}}</div>
+            <div class="list-group-item-text">Region: {{region}}</div>
+            <div class="list-group-item-text">State: {{state}}</div>
+            <div class="list-group-item-text">CIDR Block: {{cidr_block}}</div>
+            <div class="list-group-item-text">Default: {{default}}</div>
         </div>
         <div class="list-group-item" style="padding-bottom: 0 !important;">
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Network ACLs
-              <a class="accordion-toggle" data-toggle="collapse" href="#services\.vpc\.regions\.{{region}}\.vpcs\.{{@key}}\.network_acls">
-                <span class="badge float-right btn-info">{{count_vpc_network_acls network_acls}}</span>
-              </a>
+              {{> count_badge count=(count_vpc_network_acls network_acls) target=(concat '#services.vpc.regions' region 'vpcs' @key 'network_acls')}}
             </h4>
-            <div id="services.vpc.regions.{{region}}.vpcs.{{@key}}.network_acls" class="accordion-body collapse">
+            <div id="services.vpc.regions.{{region}}.vpcs.{{@key}}.network_acls" class="accordion-body">
               <div class="accordion-inner">
                 <ul class="no-bullet">
                   {{#each network_acls}}
@@ -33,11 +31,9 @@
         <div class="list-group-item" style="padding-bottom: 0 !important;">
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Instances
-              <a class="accordion-toggle" data-toggle="collapse" href="#services\.vpc\.regions\.{{region}}\.vpcs\.{{@key}}\.instances">
-                <span class="badge float-right btn-info">{{count_vpc_instances instances}}</span>
-              </a>
+                {{> count_badge count=(count_vpc_instances instances) target=(concat '#services.vpc.regions' region 'vpcs' @key 'instances')}}
             </h4>
-            <div id="services.vpc.regions.{{region}}.vpcs.{{@key}}.instances" class="accordion-body collapse">
+            <div id="services.vpc.regions.{{region}}.vpcs.{{@key}}.instances" class="accordion-body">
               <div class="accordion-inner">
                 <ul class="no-bullet">
                   {{#each instances}}
@@ -50,7 +46,7 @@
         </div>
         <div class="list-group-item" style="padding-bottom: 0 !important">
             {{> accordion region = region items = peering_connections
-                title = 'Peering connections'
+                title = 'Peering Connections'
                 item_partial = 'services.vpc.regions.vpcs.peering_connections'
                 accordion_id = (concat 'services.vpc.regions' region 'vpcs' @key 'peering_connections')
             }}

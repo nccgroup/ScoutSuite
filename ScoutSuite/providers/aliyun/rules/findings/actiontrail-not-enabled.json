@@ -1,0 +1,10 @@
+{
+    "description": "Not Enabled",
+    "rationale": "<b>Description:</b><br><br>No trail is enabled, which means that API activity is not being logged.",
+    "path": "actiontrail.trails.id",
+    "dashboard_name": "Trails",
+    "conditions": [ "and",
+        [ "actiontrail.trails.id.status", "notEqual", "Enable" ]
+    ],
+    "id_suffix": "status"
+}

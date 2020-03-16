@@ -4,15 +4,31 @@
       "resources": {
         "service_accounts": {
           "cols": 2,
-          "path": "services.iam.service_accounts"
+          "path": "services.iam.projects.id.service_accounts"
+        }
+      }
+    },
+    "kms": {
+      "resources": {
+        "keyrings": {
+          "cols": 2,
+          "path": "services.kms.projects.id.keyrings"
         }
       }
     },
     "cloudresourcemanager": {
       "resources": {
+        "users": {
+          "cols": 2,
+          "path": "services.cloudresourcemanager.projects.id.users"
+        },
+        "groups": {
+          "cols": 2,
+          "path": "services.cloudresourcemanager.projects.id.groups"
+        },
         "bindings": {
           "cols": 2,
-          "path": "services.cloudresourcemanager.bindings"
+          "path": "services.cloudresourcemanager.projects.id.bindings"
         }
       }
     }
@@ -22,23 +38,23 @@
       "resources": {
         "instances": {
           "cols": 2,
-          "path": "services.computeengine.instances"
+          "path": "services.computeengine.projects.id.zones.id.instances"
         },
         "snapshots": {
           "cols": 2,
-          "path": "services.computeengine.snapshots"
+          "path": "services.computeengine.projects.id.snapshots"
         },
         "firewalls": {
           "cols": 2,
-          "path": "services.computeengine.firewalls"
+          "path": "services.computeengine.projects.id.firewalls"
         },
         "networks": {
           "cols": 2,
-          "path": "services.computeengine.networks"
+          "path": "services.computeengine.projects.id.networks"
         },
         "subnetworks": {
           "cols": 2,
-          "path": "services.computeengine.subnetworks"
+          "path": "services.computeengine.projects.id.regions.id.subnetworks"
         }
       }
     },
@@ -46,7 +62,7 @@
       "resources": {
         "clusters": {
           "cols": 2,
-          "path": "services.kubernetesengine.clusters"
+          "path": "services.kubernetesengine.projects.id.zones.id.clusters"
         }
       }
     }
@@ -56,15 +72,17 @@
       "resources": {
         "buckets": {
           "cols": 2,
-          "path": "services.cloudstorage.buckets"
+          "path": "services.cloudstorage.projects.id.buckets"
         }
       }
-    },
+    }
+  },
+  "database": {
     "cloudsql": {
       "resources": {
         "instances": {
           "cols": 2,
-          "path": "services.cloudsql.instances"
+          "path": "services.cloudsql.projects.id.instances"
         }
       }
     }
@@ -74,7 +92,7 @@
       "resources": {
         "sinks": {
           "cols": 2,
-          "path": "services.stackdriverlogging.sinks"
+          "path": "services.stackdriverlogging.projects.id.sinks"
         }
       }
     }

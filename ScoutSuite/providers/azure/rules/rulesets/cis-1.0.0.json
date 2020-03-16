@@ -1,0 +1,205 @@
+{
+    "about": "This ruleset consists of numerous rules that are considered standard by NCC Group. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of provider-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configured, and some of them being applicable to a limited number of users.",
+    "rules": {
+        "network-security-groups-rule-inbound-service.json": [
+            {
+                "args": [
+                    "RDP",
+                    "3389",
+                    "6.1"
+                ],
+                "enabled": true,
+                "level": "warning"
+            },
+            {
+                "args": [
+                    "SSH",
+                    "22",
+                    "6.2"
+                ],
+                "enabled": true,
+                "level": "warning"
+            },
+            {
+                "args": [
+                    "SQL",
+                    "1433",
+                    "6.3"
+                ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "network-watcher-not-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "network-watcher-not-provisioned.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "securitycenter-auto-provisioning-off.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "securitycenter-security-contacts-email-not-set.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "securitycenter-security-contacts-no-admin-email-notifications.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "securitycenter-security-contacts-no-email-notifications.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "securitycenter-security-contacts-not-set.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "securitycenter-security-contacts-phone-not-set.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "securitycenter-standard-tier-not-enabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-databases-auditing-low-retention.json": [
+            {
+                "args": [
+                    "90"
+                ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-databases-no-auditing.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-databases-no-threat-detection.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-databases-no-transparent-data-encryption.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-databases-threat-detection-disabled-alerts.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-databases-threat-detection-low-retention.json": [
+            {
+                "args": [
+                    "90"
+                ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-databases-threat-detection-send-alerts-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-auditing-low-retention.json": [
+            {
+                "args": [
+                    "90"
+                ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-no-ad-admin-configured.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-no-auditing.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-no-threat-detection.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-threat-detection-disabled-alerts.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-threat-detection-low-retention.json": [
+            {
+                "args": [
+                    "90"
+                ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "sqldatabase-servers-threat-detection-send-alerts-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "storageaccount-access-keys-not-rotated.json": [
+            {
+                "args": [
+                    "90"
+                ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "storageaccount-account-allowing-clear-text.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "storageaccount-public-blob-container.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ]
+    }
+}

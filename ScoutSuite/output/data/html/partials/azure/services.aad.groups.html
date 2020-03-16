@@ -1,0 +1,53 @@
+
+<!-- aad groups -->
+<script id="services.aad.groups.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="aad.groups.{{@key}}.name"><samp>{{value_or_none name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Type: <span id="aad.groups.{{@key}}.object_type"><samp>{{value_or_none object_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Mail Nickname: <span id="aad.groups.{{@key}}.mail_nickname"><samp>{{value_or_none mail_nickname}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Mail Status: <span id="aad.groups.{{@key}}.mail_enabled"><samp>{{convert_bool_to_enabled mail_enabled}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Mail: <span id="aad.groups.{{@key}}.mail"><samp>{{value_or_none mail}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Security Status: <span id="aad.groups.{{@key}}.security_enabled"><samp>{{convert_bool_to_enabled security_enabled}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Deletion Timestamp: <span id="aad.groups.{{@key}}.deletion_timestamp"><samp>{{value_or_none deletion_timestamp}}</samp></span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Role Assignments
+            {{> count_badge count=roles.length}}
+        </h4>
+        <div class="accordion-inner">
+            <ul>
+                {{#each roles}}
+                <li class="list-group-item-text"><a href="javascript:showObject('services.arm.subscriptions.{{this.subscription_id}}.roles', 'id', '{{this.role_id}}')">{{getValueAt 'services.arm.subscriptions' this.subscription_id 'roles' this.role_id 'name'}}</a> (subscription <samp>{{this.subscription_id}}</samp>)</li></a></li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Members
+            {{> count_badge count=users.length}}
+        </h4>
+        <div class="accordion-inner">
+            <ul>
+                {{#each users}}
+                <li class="list-group-item-text"><a href="javascript:showObject('services.aad.users', 'id', '{{this}}')">{{getValueAt 'services.aad.users' this 'name'}}</a></li></a></li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.aad.groups", $("#services\\.aad\\.groups\\.partial").html());
+</script>
+
+<!-- Single aad group template -->
+<script id="single_aad_group-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.aad.groups'}}
+</script>
+<script>
+    var single_aad_group_template = Handlebars.compile($("#single_aad_group-template").html());
+</script>

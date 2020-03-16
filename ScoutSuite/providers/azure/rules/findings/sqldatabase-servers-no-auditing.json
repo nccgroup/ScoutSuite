@@ -1,0 +1,11 @@
+{
+    "dashboard_name": "SQL Servers",
+    "description": "Auditing Disabled for SQL Servers",
+    "rationale": "<b>Description:</b><br><br>Enable auditing for all SQL servers.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 4.1</li></ul>",
+    "path": "sqldatabase.subscriptions.id.servers.id",
+    "display_path": "sqldatabase.subscriptions.id.servers.id",
+    "conditions": [ "and",
+        [ "sqldatabase.subscriptions.id.servers.id.auditing.auditing_enabled", "false", "" ]
+    ],
+    "id_suffix": "server_auditing_disabled"
+}

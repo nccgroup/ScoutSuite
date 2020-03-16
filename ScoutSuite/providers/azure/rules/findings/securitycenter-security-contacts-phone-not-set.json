@@ -1,0 +1,11 @@
+{
+    "dashboard_name": "Security contacts",
+    "description": "No Security Contact Phone Set",
+    "rationale": "<b>Description:</b><br><br>Set at least one security contact email.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.1.0 2.17</li></ul>",
+    "path": "securitycenter.subscriptions.id.security_contacts.id",
+    "display_path": "securitycenter.subscriptions.id.security_contacts",
+    "conditions": [ "and",
+        ["securitycenter.subscriptions.id.security_contacts.id.phone", "equal", ""]
+    ],
+    "id_suffix": "phone"
+}

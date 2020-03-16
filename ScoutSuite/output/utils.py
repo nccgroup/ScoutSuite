@@ -1,17 +1,15 @@
-# -*- coding: utf-8 -*-
 from __future__ import print_function
 
 import os
 import sys
 
-from opinel.utils.console import printError
-
 from six.moves import input
 
-from ScoutSuite import AWSCONFIG, EXCEPTIONS, HTMLREPORT, AWSRULESET, AWSCONFIG_FILE, EXCEPTIONS_FILE, HTMLREPORT_FILE, AWSRULESET_FILE
+from ScoutSuite import DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY
+from ScoutSuite.core.console import print_error
 
 
-def prompt_4_yes_no(question):
+def prompt_for_yes_no(question):
     """
     Ask a question and prompt for yes or no
 
@@ -27,10 +25,10 @@ def prompt_4_yes_no(question):
         elif choice == 'no' or choice == 'n':
             return False
         else:
-            printError('\'%s\' is not a valid answer. Enter \'yes\'(y) or \'no\'(n).' % choice)
+            print_error('\'%s\' is not a valid answer. Enter \'yes\'(y) or \'no\'(n).' % choice)
 
 
-def prompt_4_overwrite(filename, force_write):
+def prompt_for_overwrite(filename, force_write):
     """
     Confirm before overwriting existing files. Do not prompt if the file does not exist or force_write is set
 
@@ -41,27 +39,44 @@ def prompt_4_overwrite(filename, force_write):
     #
     if not os.path.exists(filename) or force_write:
         return True
-    return prompt_4_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename))
+    return prompt_for_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename))
 
 
-def get_filename(config_type, profile, report_dir):
-        if config_type == AWSCONFIG:
-            filename = AWSCONFIG_FILE
-            first_line = 'scoutsuite_results ='
-        elif config_type == EXCEPTIONS:
-            filename = EXCEPTIONS_FILE
-            first_line = 'exceptions ='
-        elif config_type == HTMLREPORT:
-            filename = HTMLREPORT_FILE
-            first_line = None
-        elif config_type == AWSRULESET:
-            filename = AWSRULESET_FILE
-            first_line = 'scoutsuite_results ='
+def get_filename(file_type, file_name=None, file_dir=None, relative_path=False, file_extension=None):
+    if file_type == 'REPORT':
+        name = file_name if file_name else 'report'
+        directory = file_dir if file_dir else DEFAULT_REPORT_DIRECTORY
+        extension = 'html'
+        first_line = None
+    elif file_type == 'RESULTS':
+        name = 'scoutsuite_results_{}'.format(file_name) if file_name else 'scoutsuite_results'
+        if not relative_path:
+            directory = os.path.join(file_dir if file_dir else DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY)
         else:
-            printError('invalid config type provided (%s)' % config_type)
-            raise Exception
-        # Append profile name if necessary
-        if profile != 'default' and config_type != AWSRULESET:
-            name, extention = filename.split('.')
-            filename = '%s-%s.%s' % (name, profile, extention)
-        return (os.path.join(report_dir, filename), first_line)
+            directory = DEFAULT_REPORT_RESULTS_DIRECTORY
+        extension = 'js'
+        first_line = 'scoutsuite_results ='
+    elif file_type == 'EXCEPTIONS':
+        name = 'scoutsuite_exceptions_{}'.format(file_name) if file_name else 'scoutsuite_exceptions'
+        if not relative_path:
+            directory = os.path.join(file_dir if file_dir else DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY)
+        else:
+            directory = DEFAULT_REPORT_RESULTS_DIRECTORY
+        extension = 'js'
+        first_line = 'exceptions ='
+    elif file_type == 'ERRORS':
+        name = 'scoutsuite_errors_{}'.format(file_name) if file_name else 'scoutsuite_errors'
+        if not relative_path:
+            directory = os.path.join(file_dir if file_dir else DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY)
+        else:
+            directory = DEFAULT_REPORT_RESULTS_DIRECTORY
+        extension = 'json'
+        first_line = None
+    else:
+        raise Exception('Invalid file type provided: {}'.format(file_type))
+
+    full_path = os.path.join(directory,
+                             '{}.{}'.format(name,
+                                            file_extension if file_extension else extension))
+
+    return full_path, first_line

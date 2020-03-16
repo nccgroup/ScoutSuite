@@ -4,17 +4,137 @@
       "resources": {
         "storage_accounts": {
           "cols": 2,
-          "path": "services.storageaccounts.storage_accounts"
+          "path": "services.storageaccounts.subscriptions.id.storage_accounts"
         }
       }
     }
   },
-  "sql": {
+  "compute": {
+    "virtualmachines": {
+      "resources": {
+        "instances": {
+          "cols": 2,
+          "path": "services.virtualmachines.subscriptions.id.instances"
+        }
+      }
+    }
+  },
+  "database": {
     "sqldatabase": {
       "resources": {
         "servers": {
           "cols": 2,
-          "path": "services.sqldatabase.servers"
+          "path": "services.sqldatabase.subscriptions.id.servers"
+        }
+      }
+    },
+    "rediscache": {
+      "resources": {
+        "caches": {
+          "cols": 2,
+          "path": "services.rediscache.subscriptions.id.caches"
+        }
+      }
+    }
+  },
+  "security": {
+    "aad": {
+      "resources": {
+        "users": {
+          "cols": 2,
+          "path": "services.aad.users"
+        },
+        "groups": {
+          "cols": 2,
+          "path": "services.aad.groups"
+        },
+        "service_principals": {
+          "cols": 2,
+          "path": "services.aad.service_principals"
+        },
+        "applications": {
+          "cols": 2,
+          "path": "services.aad.applications"
+        }
+      }
+    },
+    "arm": {
+      "resources": {
+        "roles": {
+          "cols": 2,
+          "path": "services.arm.subscriptions.id.roles"
+        }
+      }
+    },
+    "keyvault": {
+      "resources": {
+        "vaults": {
+          "cols": 2,
+          "path": "services.keyvault.subscriptions.id.vaults"
+        }
+      }
+    },
+    "securitycenter": {
+      "resources": {
+        "pricings": {
+          "cols": 2,
+          "path": "services.securitycenter.subscriptions.id.pricings"
+        },
+        "security_contacts": {
+          "cols": 2,
+          "path": "services.securitycenter.subscriptions.id.security_contacts"
+        },
+        "auto_provisioning_settings": {
+          "cols": 2,
+          "path": "services.securitycenter.subscriptions.id.auto_provisioning_settings"
+        }
+      }
+    }
+  },
+  "networking": {
+    "appgateway": {
+      "resources": {
+        "app_gateways": {
+          "cols": 2,
+          "path": "services.appgateway.subscriptions.id.app_gateways"
+        }
+      }
+    },
+    "network": {
+      "resources": {
+        "virtual_networks": {
+          "cols": 2,
+          "path": "services.network.subscriptions.id.virtual_networks"
+        },
+        "security_groups": {
+          "cols": 2,
+          "path": "services.network.subscriptions.id.security_groups"
+        },
+        "application_security_groups": {
+          "cols": 2,
+          "path": "services.network.subscriptions.id.application_security_groups"
+        },
+        "watchers": {
+          "cols": 2,
+          "path": "services.network.subscriptions.id.watchers"
+        }
+      }
+    },
+    "loadbalancer": {
+      "resources": {
+        "load_balancers": {
+          "cols": 2,
+          "path": "services.loadbalancer.subscriptions.id.load_balancers"
+        }
+      }
+    }
+  },
+  "applications": {
+    "appservice": {
+      "resources": {
+        "web_apps": {
+          "cols": 2,
+          "path": "services.appservice.subscriptions.id.web_apps"
         }
       }
     }

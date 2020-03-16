@@ -1,18 +1,8 @@
-# -*- coding: utf-8 -*-
-
 __author__ = 'NCC Group'
-__version__ = '4.1.0'
+__version__ = '5.7.0'
 
-AWSCONFIG  = 42
-EXCEPTIONS = 4242
-HTMLREPORT = 424242
-AWSRULESET = 42424242
+ERRORS_LIST = []
 
-DEFAULT_REPORT_DIR = 'scoutsuite-report'
-AWSCONFIG_FILE = 'scoutsuite-results/scoutsuite_results.js'
-AWSRULESET_FILE = 'scoutsuite-results/scoutsuite_ruleset.js'
-EXCEPTIONS_FILE = 'scoutsuite-results/scoutsuite_exceptions.js'
-HTMLREPORT_FILE = 'report.html'
-GENERATOR_FILE = 'ruleset-generator.html'
-
-REPORT_TITLE = 'Scout Suite Report'
+DEFAULT_REPORT_DIRECTORY = 'scoutsuite-report'
+DEFAULT_REPORT_RESULTS_DIRECTORY = 'scoutsuite-results'
+DEFAULT_INCLUDES_DIRECTORY = 'inc-scoutsuite'

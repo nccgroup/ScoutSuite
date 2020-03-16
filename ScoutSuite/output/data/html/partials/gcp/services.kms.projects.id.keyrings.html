@@ -1,0 +1,45 @@
+
+<!-- Cloud KMS keyrings' partial -->
+<script id="services.kms.projects.id.keyrings.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="kms.projects.{{@../key}}.keyrings.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Location: <span id="kms.projects.{{@../key}}.keyrings.{{@key}}.location"><samp>{{location}}</samp></span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading"><span id="kms.projects.{{@../key}}.keyrings.{{@key}}.keys">Keys:</span></h4>
+            <div class="accordion-inner">
+                <ul>
+                    {{#each keys}}
+                    <li><samp>{{@key}}</samp></li>
+                    <ul>
+                        <li id="kms.projects.{{@../../key}}.keyrings.{{@../key}}.keys.{{@key}}.state">state: <samp>{{state}}</samp></li>
+                        <li id="kms.projects.{{@../../key}}.keyrings.{{@../key}}.keys.{{@key}}.protection_level">Protection Level: {{protection_level}}</li>
+                        <li id="kms.projects.{{@../../key}}.keyrings.{{@../key}}.keys.{{@key}}.algorithm">Algorithm: <samp>{{algorithm}}</samp></li>
+                        <li id="kms.projects.{{@../../key}}.keyrings.{{@../key}}.keys.{{@key}}.purpose">Purpose: {{purpose}}</li>
+                        <li id="kms.projects.{{@../../key}}.keyrings.{{@../key}}.keys.{{@key}}.creation_datetime">Creation Date: {{format_date creation_datetime}}</li>
+                        <li id="kms.projects.{{@../../key}}.keyrings.{{@../key}}.keys.{{@key}}.rotation_period">Rotation Period: {{value_or_none rotation_period}}</li>
+                        <li id="kms.projects.{{@../../key}}.keyrings.{{@../key}}.keys.{{@key}}.next_rotation_datetime">Next Rotation Date: {{value_or_none next_rotation_datetime}}</li>
+                    </ul>
+                    {{else}}
+                    <li><samp>None</samp></li>
+                    {{/each}}
+                </ul>
+            </div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.kms.projects.id.keyrings", $("#services\\.kms\\.projects\\.id\\.keyrings\\.partial").html());
+</script>
+
+<!-- Single kms keyring template -->
+<script id="single_kms_keyring-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.kms.projects.id.keyrings'}}
+</script>
+<script>
+    var single_kms_keyring_template = Handlebars.compile($("#single_kms_keyring-template").html());
+</script>

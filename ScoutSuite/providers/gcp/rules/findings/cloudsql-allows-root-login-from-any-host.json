@@ -1,0 +1,17 @@
+{
+  "description": "Instance allows root login from any host",
+  "rationale": "<b>Description:</b><br><br>Root access to MySQL Database Instances should be allowed only through trusted IPs.<br><br><b>References:</b><ul><li>CIS Google Cloud Platform Foundations v1.0.0 6.4</li></ul>",
+  "path": "cloudsql.projects.id.instances.id",
+  "dashboard_name": "Instances",
+  "conditions": [ "and",
+    [ "cloudsql.projects.id.instances.id.database_version", "match", "MYSQL.*" ],
+    [ "cloudsql.projects.id.instances.id.users", "withKey", "root" ],
+    [
+        "or",
+        [ "cloudsql.projects.id.instances.id.users.root.host", "equal", "%" ],
+        [ "cloudsql.projects.id.instances.id.users.root.host", "equal", "0.0.0.0" ],
+        [ "cloudsql.projects.id.instances.id.users.root.host", "equal", "/0" ]
+    ]
+  ],
+  "id_suffix": "root_access_from_any_host"
+}

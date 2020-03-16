@@ -1,0 +1,10 @@
+{
+  "dashboard_name": "Bindings",
+  "description": "User with \"Service Account User\" role at the Project level",
+  "rationale": "<b>Description:</b><br><br>Granting the iam.serviceAccountUser role to a user for a project gives the user access to all service accounts in the project, including service accounts that may be created in the future. This can result into elevation of privileges by using service accounts and corresponding Compute Engine instances.<br><br><b>References:</b><ul><li>CIS Google Cloud Platform Foundations v1.0.0 1.5</li></ul>",
+  "path": "cloudresourcemanager.projects.id.bindings.id",
+  "conditions": [ "and",
+    [ "cloudresourcemanager.projects.id.bindings.id.name", "containAtLeastOneOf", ["iam.serviceAccountUser"]]
+  ],
+  "id_suffix": "user_has_sa_user_role"
+}

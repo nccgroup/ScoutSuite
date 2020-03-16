@@ -1,14 +1,12 @@
-# -*- coding: utf-8 -*-
-
 import json
 import os
 
-from opinel.utils.console import printDebug, printError, printException
+from ScoutSuite.core.console import print_error, print_exception
 
 
 class RuleDefinition(object):
 
-    def __init__(self, data_path, file_name = None, rule_dirs = None, string_definition = None):
+    def __init__(self, data_path, file_name=None, rule_dirs=None, string_definition=None):
         rule_dirs = [] if rule_dirs is None else rule_dirs
         self.rules_data_path = data_path
         self.file_name = file_name
@@ -21,8 +19,7 @@ class RuleDefinition(object):
             self.string_definition = string_definition
             self.load_from_string_definition()
         else:
-            printError('Error')
-
+            print_error('Error')
 
     def __str__(self):
         desription = getattr(self, 'description')
@@ -30,10 +27,10 @@ class RuleDefinition(object):
         padding = (80 - dlen) // 2 if dlen < 80 else 0
         value = '-' * 80 + '\n' + ' ' * padding + ' %s' % getattr(self, 'description') + '\n' + '-' * 80 + '\n'
         quiet_list = ['descriptions', 'rule_dirs', 'rule_types', 'rules_data_path', 'string_definition']
-        value += '\n'.join(('%s: %s') % (attr, str(getattr(self, attr))) for attr in vars(self) if attr not in quiet_list)
+        value += '\n'.join(
+            '%s: %s' % (attr, str(getattr(self, attr))) for attr in vars(self) if attr not in quiet_list)
         value += '\n'
         return value
-
 
     def load(self):
         """
@@ -49,7 +46,7 @@ class RuleDefinition(object):
             try:
                 file_path = os.path.join(rule_dir, self.file_name) if rule_dir else self.file_name
             except Exception as e:
-                printError('Failed to load file %s: %e' % (self.file_name, e))
+                print_exception('Failed to load file %s: %s' % (self.file_name, str(e)))
             if os.path.isfile(file_path):
                 self.file_path = file_path
                 file_name_valid = True
@@ -72,16 +69,14 @@ class RuleDefinition(object):
                 if os.path.isfile(self.file_path):
                     file_name_valid = True
         if not file_name_valid:
-            printError('Error: could not find %s' % self.file_name)
+            print_error('Error: could not find %s' % self.file_name)
         else:
             try:
                 with open(self.file_path, 'rt') as f:
                     self.string_definition = f.read()
                     self.load_from_string_definition()
             except Exception as e:
-                # printException(e)
-                printError('Failed to load rule defined in %s: %s' % (self.file_name, e))
-
+                print_exception('Failed to load rule defined in %s: %s' % (self.file_name, str(e)))
 
     def load_from_string_definition(self):
         try:
@@ -89,4 +84,4 @@ class RuleDefinition(object):
             for attr in definition:
                 setattr(self, attr, definition[attr])
         except Exception as e:
-            printError('Failed to load string definition %s: %e' % (self.string_definition, e))
+            print_exception('Failed to load string definition %s: %s' % (self.string_definition, str(e)))

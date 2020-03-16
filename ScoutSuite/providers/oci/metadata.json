@@ -1,0 +1,44 @@
+{
+  "security": {
+    "identity": {
+      "resources": {
+        "users": {
+          "cols": 2,
+          "path": "services.identity.users"
+        },
+        "groups": {
+          "cols": 2,
+          "path": "services.identity.groups"
+        },
+        "policies": {
+          "cols": 2,
+          "path": "services.identity.policies"
+        }
+      },
+      "summaries": {
+        "password_policy": {
+          "cols": 1,
+          "path": "services.identity.password_policy"
+        }
+      }
+    },
+    "kms": {
+      "resources": {
+        "keyvaults": {
+          "cols": 2,
+          "path": "services.kms.keyvaults"
+        }
+      }
+    }
+  },
+  "storage": {
+    "objectstorage": {
+      "resources": {
+        "buckets": {
+          "cols": 2,
+          "path": "services.objectstorage.buckets"
+        }
+      }
+    }
+  }
+}

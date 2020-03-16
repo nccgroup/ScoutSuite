@@ -1,8 +1,9 @@
 {
-    "description": "Backup disabled",
+    "description": "Backup Disabled",
     "path": "rds.regions.id.vpcs.id.instances.id",
     "dashboard_name": "Instances",
     "conditions": [ "and",
+        [ "rds.regions.id.vpcs.id.instances.id.is_read_replica", "false", ""],
         [ "rds.regions.id.vpcs.id.instances.id.BackupRetentionPeriod", "lessThan", "1" ]
     ],
     "id_suffix": "BackupRetentionPeriod"
