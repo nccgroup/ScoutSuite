@@ -8,7 +8,8 @@ class Disks(Resources):
         disk_dict['id'] = get_non_provider_id(raw_disk['deviceName'])
         disk_dict['type'] = raw_disk['type']
         disk_dict['mode'] = raw_disk['mode']
-        disk_dict['source_url'] = raw_disk['source']
+        disk_dict['source_url'] = raw_disk.get('source', "not-found-placeholder")
+        #disk_dict['source_url'] = raw_disk['source']
         disk_dict['source_device_name'] = raw_disk['deviceName']
         disk_dict['bootable'] = raw_disk['boot']
         disk_dict['encrypted_with_csek'] = self._is_encrypted_with_csek(raw_disk)

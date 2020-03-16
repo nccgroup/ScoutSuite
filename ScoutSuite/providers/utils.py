@@ -1,8 +1,21 @@
 import asyncio
 from hashlib import sha1
-
+import random
+import uuid
 from ScoutSuite.core.console import print_info
 from ScoutSuite.providers.aws.utils import is_throttled as aws_is_throttled
+
+
+c = (
+    "\033[0m",   # End of color
+    "\033[36m",  # Cyan
+    "\033[91m",  # Red
+    "\033[35m",  # Magenta
+    "\u001b[32m", # Green
+    "\u001b[33m", # Yellow
+    "\u001b[34m", # Blue
+    "\u001b[37m", # White
+)
 
 
 def get_non_provider_id(name):
@@ -41,7 +54,16 @@ def run_function_concurrently(function):
     :param function: function to be executed concurrently, in a dedicated thread.
     :return: an asyncio.Future to be awaited.
     """
+    job_uuid = str(uuid.uuid4())
+    rand_color = random.randint(1, len(c))
+    def logging_wrapper():
+        print(c[rand_color] + "starting function: " + job_uuid + c[0])
+        result = function()
+        print(c[rand_color] + "ending function: " + job_uuid + c[0])
+        return result
 
+
+    #return asyncio.get_event_loop().run_in_executor(executor=None, func=logging_wrapper) 
     return asyncio.get_event_loop().run_in_executor(executor=None, func=function)
 
 
