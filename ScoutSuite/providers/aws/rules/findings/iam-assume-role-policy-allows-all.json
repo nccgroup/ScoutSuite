@@ -1,5 +1,5 @@
 {
-    "title": "AssumeRole policy allows all principals",
+    "title": "AssumeRole policy Allows All Principals",
     "rationale": "Setting the AssumeRole policy's principal attribute to \"AWS:*\" means that anyone is authorized to assume the role and access the AWS account.",
     "dashboard_name": "Roles",
     "display_path": "iam.roles.id",

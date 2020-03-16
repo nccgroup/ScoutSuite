@@ -1,5 +1,5 @@
 {
-    "title": "Instance with a public IP",
+    "title": "Instance with a Public IP Address",
     "rationale": "It is good practice to maintain a list of known, publicly accessible instances and flag all other instances that meet this criteria.",
     "dashboard_name": "Network interfaces",
     "display_path": "ec2.regions.id.vpcs.id.instances.id",

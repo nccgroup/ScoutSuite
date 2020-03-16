@@ -1,5 +1,5 @@
 {
-    "title": "Cross-account AssumeRole policy lacks external ID and MFA",
+    "title": "Cross-Account AssumeRole Policy Lacks External ID and MFA",
     "rationale": "When authorizing cross-account role assumption, an external ID or MFA should be required.",
     "dashboard_name": "Roles",
     "display_path": "iam.roles.id",

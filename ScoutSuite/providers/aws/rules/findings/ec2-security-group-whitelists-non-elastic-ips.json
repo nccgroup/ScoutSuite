@@ -1,5 +1,5 @@
 {
-    "title": "Security group whitelists non elastic IP addresses",
+    "title": "Security Group Whitelists Non-Elastic IP Addresses",
     "dashboard_name": "Rules",
     "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id",
     "conditions": [

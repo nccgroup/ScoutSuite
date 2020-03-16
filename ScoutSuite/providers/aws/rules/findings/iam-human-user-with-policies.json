@@ -1,5 +1,5 @@
 {
-    "title": "Human user with _ARG_1_ policies",
+    "title": "Human User with _ARG_1_ Policies",
     "dashboard_name": "Users",
     "path": "iam.users.id",
     "conditions": [

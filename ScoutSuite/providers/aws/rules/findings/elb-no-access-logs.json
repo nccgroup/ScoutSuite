@@ -1,5 +1,5 @@
 {
-    "title": "Lack of access logs",
+    "title": "Lack of ELB Access Logs",
     "rationale": "Access logs enable traffic analysis and identification of security issues.",
     "dashboard_name": "Load Balancer Attributes",
     "display_path": "elb.regions.id.vpcs.id.elbs.id",

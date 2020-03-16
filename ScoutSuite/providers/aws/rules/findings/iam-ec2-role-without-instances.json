@@ -1,5 +1,5 @@
 {
-    "title": "Unused role for EC2",
+    "title": "Unused Role for EC2 Service",
     "dashboard_name": "Roles",
     "display_path": "iam.roles.id",
     "path": "iam.roles.id.assume_role_policy.Statement.id.Principal",

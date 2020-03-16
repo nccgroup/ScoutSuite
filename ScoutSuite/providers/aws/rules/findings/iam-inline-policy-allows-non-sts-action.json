@@ -1,5 +1,5 @@
 {
-    "title": "Inline _ARG_0_ policy allows non STS action",
+    "title": "Inline _ARG_0_ Policy Allows non STS Action",
     "dashboard_name": "Policies",
     "display_path": "iam._ARG_0_s.id",
     "path": "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id",

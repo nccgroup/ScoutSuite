@@ -1,5 +1,5 @@
 {
-    "title": "Group with no users",
+    "title": "Group with No Users",
     "rationale": "Groups with no users should be reviewed and deleted if not necessary.",
     "dashboard_name": "groups",
     "path": "iam.groups.id",

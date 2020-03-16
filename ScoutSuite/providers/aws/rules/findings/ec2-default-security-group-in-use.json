@@ -1,5 +1,5 @@
 {
-    "title": "Default Security Group in use",
+    "title": "Default Security Group in Use",
     "dashboard_name": "Security groups",
     "path": "ec2.regions.id.vpcs.id.security_groups.id",
     "conditions": [

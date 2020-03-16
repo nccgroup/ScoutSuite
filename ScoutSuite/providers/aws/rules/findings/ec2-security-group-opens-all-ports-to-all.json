@@ -1,5 +1,5 @@
 {
-    "title": "All ports open to all",
+    "title": "Security Group Opens All Ports to All",
     "dashboard_name": "Rules",
     "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
     "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",

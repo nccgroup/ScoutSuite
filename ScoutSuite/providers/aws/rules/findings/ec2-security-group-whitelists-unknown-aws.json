@@ -1,5 +1,5 @@
 {
-    "title": "Security group whitelists unknown AWS CIDRs",
+    "title": "Security Group Whitelists Unknown AWS CIDRs",
     "dashboard_name": "Rules",
     "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
     "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
