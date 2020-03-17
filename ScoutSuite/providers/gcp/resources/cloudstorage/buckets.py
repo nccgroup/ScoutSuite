@@ -27,7 +27,7 @@ class Buckets(Resources):
         bucket_dict['logging_enabled'] = raw_bucket.logging is not None
         iam_configuration = raw_bucket.iam_configuration.get('uniformBucketLevelAccess', False) or raw_bucket.iam_configuration.get('bucketPolicyOnly', False)
         if iam_configuration:
-            bucket_dict['uniform_bucket_level_access'] = policy.get("enabled", False)
+            bucket_dict['uniform_bucket_level_access'] = iam_configuration.get("enabled", False)
         else:
             print("raw_bucket.iam_configuration missing both uniformBucketLevelAccess and bucketPolicyOnly")
             raise 
