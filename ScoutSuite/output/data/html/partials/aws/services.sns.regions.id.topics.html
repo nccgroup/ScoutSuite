@@ -12,12 +12,12 @@
         </div>
         {{#if Policy}}
           <div class="list-group-item">
-            {{> accordion_policy name = 'Access control policy' policy_path = (concat 'sns.regions' region 'topics' @key 'Policy') document = Policy}}
+            {{> accordion_policy name = 'Access Control Policy' policy_path = (concat 'sns.regions' region 'topics' @key 'Policy') document = Policy}}
           </div>
         {{/if}}
         {{#if DeliveryPolicy}}
           <div class="list-group-item">
-            {{> accordion_policy name = 'Delivery policy' policy_path = (concat 'sns.regions' region 'topics' @key 'DeliveryPolicy') document = DeliveryPolicy}}
+            {{> accordion_policy name = 'Delivery Policy' policy_path = (concat 'sns.regions' region 'topics' @key 'DeliveryPolicy') document = DeliveryPolicy}}
           </div>
         {{/if}}
         {{#if EffectiveDeliveryPolicy}}

@@ -99,12 +99,12 @@ class GCPFacade(GCPBaseFacade):
             projects_group = resourcemanager_client.projects()
 
             if parent_type == 'project':
-                request = resourcemanager_client.projects().list(filter='id:%s' % parent_id)
+                request = resourcemanager_client.projects().list(filter='id:"%s"' % parent_id)
             elif parent_type == 'all':
                 request = resourcemanager_client.projects().list()
             # get parent children projects
             else:
-                request = resourcemanager_client.projects().list(filter='parent.id:%s' % parent_id)
+                request = resourcemanager_client.projects().list(filter='parent.id:"%s"' % parent_id)
 
                 # get parent children projects in children folders recursively
                 folder_request = resourcemanager_client_v2.folders().list(parent='%ss/%s' % (parent_type, parent_id))

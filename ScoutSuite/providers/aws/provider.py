@@ -64,8 +64,10 @@ class AWSProvider(BaseProvider):
         # Various data processing calls
         # Note that order of processing can matter
 
+        # TODO - this should be moved to the `finalize` method of the base resource, as it's not cross-service
         self._map_all_subnets()
 
+        # TODO - this should be moved to the `finalize` method of the base resource, as it's not cross-service
         if 'ec2' in self.service_list:
             self._map_all_sgs()
             self._add_security_group_name_to_ec2_grants()
@@ -78,15 +80,13 @@ class AWSProvider(BaseProvider):
         if 'ec2' in self.service_list and 'iam' in self.service_list:
             self._match_instances_and_roles()
 
-        if 'cloudtrail' in self.service_list:
-            self._process_cloudtrail_trails(self.services['cloudtrail'])
-
         if 'elbv2' in self.service_list and 'ec2' in self.service_list:
             self._add_security_group_data_to_elbv2()
 
         if 's3' in self.service_list and 'iam' in self.service_list:
             self._match_iam_policies_and_buckets()
 
+        # TODO - this should be moved to the `finalize` method of the base resource, as it's not cross-service
         if 'elb' in self.services:
             self._parse_elb_policies()
 
@@ -102,8 +102,7 @@ class AWSProvider(BaseProvider):
             callback_args = {'ip_ranges': ip_ranges,
                              'ip_ranges_name_key': ip_ranges_name_key}
             self._go_to_and_do(self.services['ec2'],
-                               ['regions', 'vpcs', 'security_groups',
-                                'rules', 'protocols', 'ports'],
+                               ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports'],
                                ['services', 'ec2'],
                                put_cidr_name,
                                callback_args)
@@ -189,28 +188,6 @@ class AWSProvider(BaseProvider):
             pass
         else:
             print_exception('Failed to handle EC2 grant: %s' % ec2_grant)
-
-    @staticmethod
-    def _process_cloudtrail_trails(cloudtrail_config):
-        global_events_logging = []
-        data_logging_trails_count = 0
-        for region in cloudtrail_config['regions']:
-            for trail_id in cloudtrail_config['regions'][region]['trails']:
-                trail = cloudtrail_config['regions'][region]['trails'][trail_id]
-                if 'HomeRegion' in trail and trail['HomeRegion'] != region:
-                    # Part of a multi-region trail, skip until we find the whole object
-                    continue
-                if trail['IncludeGlobalServiceEvents'] and trail['IsLogging']:
-                    global_events_logging.append((region, trail_id,))
-                # Any wildcard logging?
-                if trail.get('wildcard_data_logging', False):
-                    data_logging_trails_count += 1
-
-        cloudtrail_config['data_logging_trails_count'] = data_logging_trails_count
-        cloudtrail_config['IncludeGlobalServiceEvents'] = len(
-            global_events_logging) > 0
-        cloudtrail_config['DuplicatedGlobalServiceEvents'] = len(
-            global_events_logging) > 1
 
     def process_network_acls_callback(self, current_config, path, current_path, privateip_id, callback_args):
         # Check if the network ACL allows all traffic from all IP addresses

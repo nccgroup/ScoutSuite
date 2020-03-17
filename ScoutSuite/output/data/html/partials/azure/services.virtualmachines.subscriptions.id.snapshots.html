@@ -1,0 +1,32 @@
+<!-- virtualmachines snapshots -->
+<script id="services.virtualmachines.subscriptions.id.snapshots.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="virtualmachines.subscriptions.{{subscription}}.snapshots.{{@key}}.name"><samp>{{value_or_none name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Unique ID: <span id="virtualmachines.subscriptions.{{subscription}}.snapshots.{{@key}}.unique_id"><samp>{{value_or_none unique_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Provisioning State: <span id="virtualmachines.subscriptions.{{subscription}}.snapshots.{{@key}}.provisioning_state"><samp>{{value_or_none provisioning_state}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Time Created: <span id="virtualmachines.subscriptions.{{subscription}}.snapshots.{{@key}}.time_created"><samp>{{format_date time_created}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Location: <span id="virtualmachines.subscriptions.{{subscription}}.snapshots.{{@key}}.location"><samp>{{value_or_none location}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Encryption: <span id="virtualmachines.subscriptions.{{subscription}}.snapshots.{{@key}}.encryption_enabled"><samp>{{convert_bool_to_enabled encryption_enabled}}</samp></span></div>
+        <div class="list-group-item-text item-margin">OS Type: <span id="virtualmachines.subscriptions.{{subscription}}.snapshots.{{@key}}.os_type"><samp>{{value_or_none os_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Managed By: <span id="virtualmachines.subscriptions.{{subscription}}.snapshots.{{@key}}.managed_by"><samp>{{value_or_none managed_by}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Hyper V Generation: <span id="virtualmachines.subscriptions.{{subscription}}.snapshots.{{@key}}.hyper_vgeneration"><samp>{{value_or_none hyper_vgeneration}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Disk Size GB: <span id="virtualmachines.subscriptions.{{subscription}}.snapshots.{{@key}}.disk_size_gb"><samp>{{value_or_none disk_size_gb}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Incremental: <span id="virtualmachines.subscriptions.{{subscription}}.snapshots.{{@key}}.incremental"><samp>{{value_or_none incremental}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.virtualmachines.subscriptions.id.snapshots", $("#services\\.virtualmachines\\.subscriptions\\.id\\.snapshots\\.partial").html());
+</script>
+
+<!-- Single virtualmachines snapshot template -->
+<script id="single_virtualmachines_snapshot-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.virtualmachines.subscriptions.id.snapshots'}}
+</script>
+<script>
+    var single_virtualmachines_snapshot_template = Handlebars.compile($("#single_virtualmachines_snapshot-template").html());
+</script>

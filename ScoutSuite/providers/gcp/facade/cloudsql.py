@@ -37,4 +37,3 @@ class CloudSQLFacade(GCPBaseFacade):
         except Exception as e:
             print_exception('Failed to retrieve database instance users: {}'.format(e))
             return []
-        

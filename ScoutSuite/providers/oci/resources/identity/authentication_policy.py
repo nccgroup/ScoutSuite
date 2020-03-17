@@ -8,7 +8,10 @@ class PasswordPolicy(OracleResources):
 
     async def fetch_all(self):
         raw_authentication_policy = await self.facade.identity.get_authentication_policy()
-        password_policy = self._parse_authentication_policy(raw_authentication_policy)
+        if raw_authentication_policy:
+            password_policy = self._parse_authentication_policy(raw_authentication_policy)
+        else:
+            password_policy = {}
         self.update(password_policy)
 
     def _parse_authentication_policy(self, raw_authentication_policy):

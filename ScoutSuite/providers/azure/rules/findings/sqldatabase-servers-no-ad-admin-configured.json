@@ -5,7 +5,7 @@
     "path": "sqldatabase.subscriptions.id.servers.id",
     "display_path": "sqldatabase.subscriptions.id.servers.id",
     "conditions": [ "and",
-        [ "sqldatabase.subscriptions.id.servers.id.ad_admin_configured", "false", "" ]
+        [ "sqldatabase.subscriptions.id.servers.id.ad_admin", "null", "" ]
     ],
-    "id_suffix": "ad_admin_configured"
+    "id_suffix": "ad_admin"
 }

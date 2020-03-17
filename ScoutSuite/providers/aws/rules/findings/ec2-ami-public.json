@@ -1,0 +1,10 @@
+{
+    "description": "Publicly Accessible AMI",
+    "rationale": "<b>Description:</b><br><br>AMIs should never intentionally be made public. If they need to be shared this can be done with specific AWS accounts.",
+    "path": "ec2.regions.id.images.id",
+    "dashboard_name": "Images",
+    "conditions": [ "and",
+        [ "Public", "true", "" ]
+    ],
+    "id_suffix": "image_is_public"
+}

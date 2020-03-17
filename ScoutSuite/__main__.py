@@ -284,6 +284,7 @@ async def _run(provider,
     print_info('Applying display filters')
     filter_rules = Ruleset(cloud_provider=cloud_provider.provider_code,
                            environment_name=cloud_provider.environment,
+                           filename='filters.json',
                            rule_type='filters',
                            account_id=cloud_provider.account_id)
     processing_engine = ProcessingEngine(filter_rules)

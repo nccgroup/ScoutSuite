@@ -15,7 +15,7 @@
         </div>
         {{#if Policy.Statement.length}}
           <div class="list-group-item">
-            {{> accordion_policy name = 'Access control policy' policy_path = (concat 'sqs.regions' region 'queues' @key 'Policy') document = Policy}}
+            {{> accordion_policy name = 'Access Control Policy' policy_path = (concat 'sqs.regions' region 'queues' @key 'Policy') document = Policy}}
           </div>
         {{/if}}
     </script>

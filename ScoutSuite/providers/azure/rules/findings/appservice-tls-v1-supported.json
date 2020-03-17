@@ -1,0 +1,17 @@
+{
+    "description": "Unsafe TLS Version Supported",
+    "rationale": "<b>Description:</b><br><br>The TLS (Transport Layer Security) protocol secures transmission of data over the internet using standard encryption technology. Encryption should be set with the latest version of TLS. App Service allows TLS 1.2 by default, which is the recommended TLS level by industry standards, such as PCI DSS.",
+    "remediation": "App service currently allows the web app to set TLS versions 1.0, 1.1 and 1.2. It is highly recommended to use the latest TLS 1.2 version for web app secure connections.",
+    "compliance": [
+        {"name": "CIS Microsoft Azure Foundations", "version": "1.1.0", "reference": "9.3"}
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-ssl#enforce-tls-versions"
+    ],
+    "dashboard_name": "Web Apps",
+    "path": "appservice.subscriptions.id.web_apps.id",
+    "conditions": [ "and",
+        [ "appservice.subscriptions.id.web_apps.id.https_only", "false", "" ]
+    ],
+    "id_suffix": "minimum_tls_supported"
+}
