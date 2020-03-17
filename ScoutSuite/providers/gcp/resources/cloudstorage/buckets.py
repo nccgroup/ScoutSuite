@@ -25,13 +25,14 @@ class Buckets(Resources):
         bucket_dict['storage_class'] = raw_bucket.storage_class.lower()
         bucket_dict['versioning_enabled'] = raw_bucket.versioning_enabled
         bucket_dict['logging_enabled'] = raw_bucket.logging is not None
-        iam_configuration = raw_bucket.iam_configuration.get('uniformBucketLevelAccess', False) or raw_bucket.iam_configuration.get('bucketPolicyOnly', False)
+
+        iam_configuration = raw_bucket.iam_configuration.get('uniformBucketLevelAccess') or \
+            raw_bucket.iam_configuration.get('bucketPolicyOnly')
         if iam_configuration:
             bucket_dict['uniform_bucket_level_access'] = iam_configuration.get("enabled", False)
         else:
-            print("raw_bucket.iam_configuration missing both uniformBucketLevelAccess and bucketPolicyOnly")
-            raise 
-        
+            bucket_dict['uniform_bucket_level_access'] = None
+
         if bucket_dict['uniform_bucket_level_access']:
             bucket_dict['acls'] = []
             bucket_dict['default_object_acl'] = []
