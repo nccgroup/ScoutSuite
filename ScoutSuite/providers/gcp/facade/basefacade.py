@@ -17,10 +17,19 @@ class GCPBaseFacade:
     def _build_client(self) -> discovery.Resource:
         return self._build_arbitrary_client(self._client_name, self._client_version)
 
-    def _build_arbitrary_client(self, client_name, client_version):
-        if not self._client:
-            self._client = discovery.build(client_name, client_version, cache_discovery=False, cache=MemoryCache())
-        return self._client
+    def _build_arbitrary_client(self, client_name, client_version, force_new=False):
+        """
+        :param client_name: name of the service
+        :param client_version:  version of the client to create
+        :param force_new: whether to create a new client - useful to create arbitrary clients from facades
+        :return:
+        """
+        if force_new:
+            return discovery.build(client_name, client_version, cache_discovery=False, cache=MemoryCache())
+        else:
+            if not self._client:
+                self._client = discovery.build(client_name, client_version, cache_discovery=False, cache=MemoryCache())
+            return self._client
 
     def _get_client(self) -> discovery.Resource:
         return self._build_client()
