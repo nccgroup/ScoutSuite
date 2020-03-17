@@ -1,3 +1,11 @@
+# Since the HTTP library used by the Google API Client library is not
+# thread-safe, we leverage https://github.com/GoogleCloudPlatform/httplib2shim
+# resolves the following:
+#   - https://github.com/nccgroup/ScoutSuite/issues/443
+#   - https://github.com/nccgroup/ScoutSuite/issues/665
+import httplib2shim
+httplib2shim.patch()
+
 from googleapiclient import discovery
 
 class GCPBaseFacade:
@@ -10,10 +18,10 @@ class GCPBaseFacade:
         return self._build_arbitrary_client(self._client_name, self._client_version)
 
     def _build_arbitrary_client(self, client_name, client_version):
-        return discovery.build(client_name, client_version, cache_discovery=False, cache=MemoryCache())
+        if not self._client:
+            self._client = discovery.build(client_name, client_version, cache_discovery=False, cache=MemoryCache())
+        return self._client
 
-    # Since the HTTP library used by the Google API Client library is not 
-    # thread-safe, we need to create a new client for each request.
     def _get_client(self) -> discovery.Resource:
         return self._build_client()
 
