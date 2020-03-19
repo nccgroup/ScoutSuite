@@ -33,7 +33,7 @@ class Vpcs(AWSCompositeResources):
         vpc['state'] = raw_vpc['State']
 
         # pull the name from tags
-        name_tag = next((d for i,d in enumerate(raw_vpc.get('Tags', [])) if d.get('Key') == 'Name'), None)
+        name_tag = next((d for i, d in enumerate(raw_vpc.get('Tags', [])) if d.get('Key') == 'Name'), None)
         if name_tag:
             vpc['name'] = name_tag.get('Value')
         else:
