@@ -6,10 +6,10 @@
 
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Information</h4>
-        <div class="list-group-item-text">ID: {{id}}</div>
-        <div class="list-group-item-text">Region: {{region}}</div>
+        <div class="list-group-item-text">ID: <samp>{{id}}</samp></div>
+        <div class="list-group-item-text">Region: <samp>{{region}}</samp></div>
         <div class="list-group-item-text">VPC: {{getValueAt 'services.vpc.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</div>
-        <div class="list-group-item-text">Description: {{description}}</div>
+        <div class="list-group-item-text">Description: <samp>{{description}}</samp></div>
     </div>
 
     {{#each rules}}
