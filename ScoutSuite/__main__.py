@@ -197,8 +197,7 @@ async def _run(provider,
                                                  username=username,
                                                  password=password,
                                                  access_key_id=access_key_id,
-                                                 access_key_secret=access_key_secret,
-                                                 list_services=list_services)
+                                                 access_key_secret=access_key_secret)
 
         if not credentials:
             return 101
@@ -239,7 +238,10 @@ async def _run(provider,
         return
 
     if list_services:
-        return [x for x in dir(cloud_provider.services) if not x.startswith('_')]
+        available_services = [x for x in dir(cloud_provider.services) if
+                              not (x.startswith('_') or x in ['credentials', 'fetch'])]
+        print_info('The available services are: "{}"'.format('", "'.join(available_services)))
+        return 0
     else:
         # Complete run, including pulling data from provider
         if not fetch_local:
