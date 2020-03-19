@@ -1,7 +1,15 @@
 {
     "description": "User without MFA",
-    "path": "iam.users.id",
+    "rationale": "<b>Description:</b><br><br>All IAM users should have Multi Factor Authentication (MFA) enabled.",
+    "remediation": "Enable MFA for all users in the AWS account",
+    "compliance": [
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.0.0", "reference": "1.2"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.1.0", "reference": "1.2"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.2.0", "reference": "1.2"}
+    ],
+    "references": ["https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#enable-mfa-for-privileged-users"],
     "dashboard_name": "Users",
+    "path": "iam.users.id",
     "conditions": [ "and",
         [ "iam.users.id.", "withKey", "LoginProfile" ],
         [ "iam.users.id.MFADevices", "empty", "" ]

@@ -1,7 +1,15 @@
 {
     "description": "Root account used recently",
-    "path": "iam.credential_reports.id",
+    "rationale": "<b>Description:</b><br><br>The use of the root account should be avoided.",
+    "remediation": "Follow the remediation instructions of the Ensure IAM policies are attached only to groups or roles recommendation",
+    "compliance": [
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.0.0", "reference": "1.1"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.1.0", "reference": "1.1"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.2.0", "reference": "1.1"}
+    ],
+    "references": ["https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#create-iam-users"],
     "dashboard_name": "Root account",
+    "path": "iam.credential_reports.id",
     "conditions": [ "and",
         [ "iam.credential_reports.id.password_last_used", "notNull", "" ],
         [ "iam.credential_reports.id.password_last_used", "newerThan", ["90", "days"] ],
