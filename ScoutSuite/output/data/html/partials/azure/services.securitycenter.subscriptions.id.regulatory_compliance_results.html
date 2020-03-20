@@ -1,0 +1,28 @@
+<!-- securitycenter regulatory_compliance_results -->
+<script id="services.securitycenter.subscriptions.id.regulatory_compliance_results.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Standard: <span id="securitycenter.subscriptions.{{subscription}}.regulatory_compliance_results.{{@key}}.standard_name"><samp>{{value_or_none standard_name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Reference: <span id="securitycenter.subscriptions.{{subscription}}.regulatory_compliance_results.{{@key}}.reference"><samp>{{value_or_none reference}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Description: <span id="securitycenter.subscriptions.{{subscription}}.regulatory_compliance_results.{{@key}}.description"><samp>{{value_or_none description}}</samp></span></div>
+        <div class="list-group-item-text item-margin">State: <span id="securitycenter.subscriptions.{{subscription}}.regulatory_compliance_results.{{@key}}.state"><samp>{{value_or_none state}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Passed Assessments: <span id="securitycenter.subscriptions.{{subscription}}.regulatory_compliance_results.{{@key}}.passed_assessments"><samp>{{value_or_none passed_assessments}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Failed Assessments: <span id="securitycenter.subscriptions.{{subscription}}.regulatory_compliance_results.{{@key}}.failed_assessments"><samp>{{value_or_none failed_assessments}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Skipped Assessments: <span id="securitycenter.subscriptions.{{subscription}}.regulatory_compliance_results.{{@key}}.skipped_assessments"><samp>{{value_or_none skipped_assessments}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.securitycenter.subscriptions.id.regulatory_compliance_results", $("#services\\.securitycenter\\.subscriptions\\.id\\.regulatory_compliance_results\\.partial").html());
+</script>
+
+<!-- Single securitycenter regulatory_compliance_result template -->
+<script id="single_securitycenter_regulatory_compliance_result-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.securitycenter.subscriptions.id.regulatory_compliance_results'}}
+</script>
+<script>
+    var single_securitycenter_regulatory_compliance_result_template = Handlebars.compile($("#single_securitycenter_regulatory_compliance_result-template").html());
+</script>

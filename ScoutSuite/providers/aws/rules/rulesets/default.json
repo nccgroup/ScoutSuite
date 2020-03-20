@@ -850,12 +850,6 @@
                 "level": "warning"
             }
         ],
-        "s3-bucket-website-enabled.json": [
-            {
-                "enabled": false,
-                "level": "warning"
-            }
-        ],
         "s3-bucket-world-acl.json": [
             {
                 "args": [

@@ -74,9 +74,6 @@ class AWSProvider(BaseProvider):
             self._check_ec2_zone_distribution()
             self._add_last_snapshot_date_to_ec2_volumes()
 
-        if 'emr' in self.service_list and 'ec2' in self.service_list and 'vpc' in self.service_list:
-            self._set_emr_vpc_ids()
-
         if 'ec2' in self.service_list and 'iam' in self.service_list:
             self._match_instances_and_roles()
 
@@ -90,7 +87,7 @@ class AWSProvider(BaseProvider):
         if 'elb' in self.services:
             self._parse_elb_policies()
 
-        if 'emr' in self.service_list and 'ec2' in self.service_list:
+        if 'emr' in self.service_list and 'ec2' in self.service_list and 'vpc' in self.service_list:
             self._set_emr_vpc_ids()
 
         self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
@@ -102,8 +99,7 @@ class AWSProvider(BaseProvider):
             callback_args = {'ip_ranges': ip_ranges,
                              'ip_ranges_name_key': ip_ranges_name_key}
             self._go_to_and_do(self.services['ec2'],
-                               ['regions', 'vpcs', 'security_groups',
-                                'rules', 'protocols', 'ports'],
+                               ['regions', 'vpcs', 'security_groups', 'rules', 'protocols', 'ports'],
                                ['services', 'ec2'],
                                put_cidr_name,
                                callback_args)
