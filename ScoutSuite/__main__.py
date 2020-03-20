@@ -237,96 +237,97 @@ async def _run(provider,
         Server.init(database_file, host_ip, host_port)
         return
 
+    # If this command, run and exit
     if list_services:
         available_services = [x for x in dir(cloud_provider.services) if
                               not (x.startswith('_') or x in ['credentials', 'fetch'])]
         print_info('The available services are: "{}"'.format('", "'.join(available_services)))
         return 0
-    else:
-        # Complete run, including pulling data from provider
-        if not fetch_local:
 
-            # Fetch data from provider APIs
-            try:
-                print_info('Gathering data from APIs')
-                await cloud_provider.fetch(regions=regions, excluded_regions=excluded_regions)
-            except KeyboardInterrupt:
-                print_info('\nCancelled by user')
-                return 130
+    # Complete run, including pulling data from provider
+    if not fetch_local:
 
-            # Update means we reload the whole config and overwrite part of it
-            if update:
-                print_info('Updating existing data')
-                current_run_services = copy.deepcopy(cloud_provider.services)
-                last_run_dict = report.encoder.load_from_file('RESULTS')
-                cloud_provider.services = last_run_dict['services']
-                for service in cloud_provider.service_list:
-                    cloud_provider.services[service] = current_run_services[service]
+        # Fetch data from provider APIs
+        try:
+            print_info('Gathering data from APIs')
+            await cloud_provider.fetch(regions=regions, excluded_regions=excluded_regions)
+        except KeyboardInterrupt:
+            print_info('\nCancelled by user')
+            return 130
 
-        # Partial run, using pre-pulled data
-        else:
-            print_info('Using local data')
-            # Reload to flatten everything into a python dictionary
+        # Update means we reload the whole config and overwrite part of it
+        if update:
+            print_info('Updating existing data')
+            current_run_services = copy.deepcopy(cloud_provider.services)
             last_run_dict = report.encoder.load_from_file('RESULTS')
-            for key in last_run_dict:
-                setattr(cloud_provider, key, last_run_dict[key])
+            cloud_provider.services = last_run_dict['services']
+            for service in cloud_provider.service_list:
+                cloud_provider.services[service] = current_run_services[service]
 
-        # Pre processing
-        cloud_provider.preprocessing(
-            ip_ranges, ip_ranges_name_key)
+    # Partial run, using pre-pulled data
+    else:
+        print_info('Using local data')
+        # Reload to flatten everything into a python dictionary
+        last_run_dict = report.encoder.load_from_file('RESULTS')
+        for key in last_run_dict:
+            setattr(cloud_provider, key, last_run_dict[key])
 
-        # Analyze config
-        print_info('Running rule engine')
-        finding_rules = Ruleset(cloud_provider=cloud_provider.provider_code,
-                                environment_name=cloud_provider.environment,
-                                filename=ruleset,
-                                ip_ranges=ip_ranges,
-                                account_id=cloud_provider.account_id)
-        processing_engine = ProcessingEngine(finding_rules)
-        processing_engine.run(cloud_provider)
+    # Pre processing
+    cloud_provider.preprocessing(
+        ip_ranges, ip_ranges_name_key)
 
-        # Create display filters
-        print_info('Applying display filters')
-        filter_rules = Ruleset(cloud_provider=cloud_provider.provider_code,
-                               environment_name=cloud_provider.environment,
-                               rule_type='filters',
-                               account_id=cloud_provider.account_id)
-        processing_engine = ProcessingEngine(filter_rules)
-        processing_engine.run(cloud_provider)
+    # Analyze config
+    print_info('Running rule engine')
+    finding_rules = Ruleset(cloud_provider=cloud_provider.provider_code,
+                            environment_name=cloud_provider.environment,
+                            filename=ruleset,
+                            ip_ranges=ip_ranges,
+                            account_id=cloud_provider.account_id)
+    processing_engine = ProcessingEngine(finding_rules)
+    processing_engine.run(cloud_provider)
 
-        # Handle exceptions
-        if exceptions:
-            print_info('Applying exceptions')
-            try:
-                exceptions = RuleExceptions(exceptions)
-                exceptions.process(cloud_provider)
-                exceptions = exceptions.exceptions
-            except Exception as e:
-                print_exception('Failed to load exceptions: {}'.format(e))
-                exceptions = {}
-        else:
+    # Create display filters
+    print_info('Applying display filters')
+    filter_rules = Ruleset(cloud_provider=cloud_provider.provider_code,
+                           environment_name=cloud_provider.environment,
+                           rule_type='filters',
+                           account_id=cloud_provider.account_id)
+    processing_engine = ProcessingEngine(filter_rules)
+    processing_engine.run(cloud_provider)
+
+    # Handle exceptions
+    if exceptions:
+        print_info('Applying exceptions')
+        try:
+            exceptions = RuleExceptions(exceptions)
+            exceptions.process(cloud_provider)
+            exceptions = exceptions.exceptions
+        except Exception as e:
+            print_exception('Failed to load exceptions: {}'.format(e))
             exceptions = {}
+    else:
+        exceptions = {}
 
-        run_parameters = {
-            'services': services,
-            'skipped_services': skipped_services,
-            'regions': regions,
-            'excluded_regions': excluded_regions,
-        }
-        # Finalize
-        cloud_provider.postprocessing(report.current_time, finding_rules, run_parameters)
+    run_parameters = {
+        'services': services,
+        'skipped_services': skipped_services,
+        'regions': regions,
+        'excluded_regions': excluded_regions,
+    }
+    # Finalize
+    cloud_provider.postprocessing(report.current_time, finding_rules, run_parameters)
 
-        # Save config and create HTML report
-        html_report_path = report.save(
-            cloud_provider, exceptions, force_write, debug)
+    # Save config and create HTML report
+    html_report_path = report.save(
+        cloud_provider, exceptions, force_write, debug)
 
-        # Open the report by default
-        if not no_browser:
-            print_info('Opening the HTML report')
-            url = 'file://%s' % os.path.abspath(html_report_path)
-            webbrowser.open(url, new=2)
+    # Open the report by default
+    if not no_browser:
+        print_info('Opening the HTML report')
+        url = 'file://%s' % os.path.abspath(html_report_path)
+        webbrowser.open(url, new=2)
 
-        if ERRORS_LIST:  # errors were handled during execution
-            return 200
-        else:
-            return 0
+    if ERRORS_LIST:  # errors were handled during execution
+        return 200
+    else:
+        return 0
