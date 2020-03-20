@@ -1,0 +1,15 @@
+{
+    "description": "Root account has no security questions configured",
+    "rationale": "In the event that root account access is not possible, account recovery can be performed through authentication using secret questions and associated answers.",
+    "remediation": "Ensure the root account has the security questions and answers section configured",
+    "compliance": [
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.0.0", "reference": "1.14"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.1.0", "reference": "1.15"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.2.0", "reference": "1.15"}
+    ],
+    "dashboard_name": "Users",
+    "path": "iam.credential_reports.id",
+    "conditions": [ "and",
+        [ "iam.credential_reports.id.name", "equal", "<root_account>" ]
+    ]
+}

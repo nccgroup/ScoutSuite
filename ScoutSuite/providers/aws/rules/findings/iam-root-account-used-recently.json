@@ -1,6 +1,6 @@
 {
     "description": "Root account used recently",
-    "rationale": "<b>Description:</b><br><br>The use of the root account should be avoided.",
+    "rationale": "The use of the root account should be avoided.",
     "remediation": "Follow the remediation instructions of the Ensure IAM policies are attached only to groups or roles recommendation",
     "compliance": [
         {"name": "CIS Amazon Web Services Foundations", "version": "1.0.0", "reference": "1.1"},

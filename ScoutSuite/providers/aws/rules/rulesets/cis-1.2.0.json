@@ -1,5 +1,5 @@
 {
-    "about": "This ruleset attempts to cover as many recommendations from the CIS Amazon Web Services Foundation v1.0.0.",
+    "about": "This ruleset attempts to cover as many recommendations from the CIS Amazon Web Services Foundation v1.2.0.",
     "rules": {
         "iam-root-account-used-recently.json": [
             {
@@ -12,6 +12,137 @@
         "iam-user-without-mfa.json": [
             {
                 "comment": "Recommendation 1.2",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "iam-unused-credentials-not-disabled.json": [
+            {
+                "args": [
+                    "90"
+                ],
+                "comment": "Recommendation 1.3",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "iam-user-no-key-rotation.json": [
+            {
+                "args": [
+                    "Active",
+                    "90"
+                ],
+                "comment": "Recommendation 1.4",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "iam-password-policy-no-uppercase-required.json": [
+            {
+                "comment": "Recommendation 1.5",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "iam-password-policy-no-lowercase-required.json": [
+            {
+                "comment": "Recommendation 1.6",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "iam-password-policy-no-symbol-required.json": [
+            {
+                "comment": "Recommendation 1.7",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "iam-password-policy-no-number-required.json": [
+            {
+                "comment": "Recommendation 1.8",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "iam-password-policy-minimum-length.json": [
+            {
+                "args": [
+                    "14"
+                ],
+                "comment": "Recommendation 1.9",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "iam-password-policy-reuse-enabled.json": [
+            {
+                "comment": "Recommendation 1.10",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "iam-password-policy-expiration-threshold.json": [
+            {
+                "args": [
+                    "90"
+                ],
+                "comment": "Recommendation 1.11",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "iam-root-account-with-active-keys.json": [
+            {
+                "comment": "Recommendation 1.12",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "iam-root-account-no-mfa.json": [
+            {
+                "comment": "Recommendation 1.13 and 1.14 (it is not possible to check if MFA is hardware or software)",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "iam-root-account-no-security-questions.json": [
+            {
+                "comment": "Recommendation 1.15 (no API call to know if root account has security questions set)",
+                "enabled": false,
+                "level": "danger",
+                "scored": false
+            }
+        ],
+        "iam-user-with-policies.json": [
+            {
+                "args": [
+                    "inline",
+                    "inline_policies"
+                ],
+                "comment": "Recommendation 1.16 (Part 1/2)",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            },
+            {
+                "args": [
+                    "managed",
+                    "policies"
+                ],
+                "comment": "Recommendation 1.16 (Part 2/2)",
                 "enabled": true,
                 "level": "danger",
                 "scored": true
@@ -56,106 +187,6 @@
                     "3389"
                 ],
                 "comment": "Recommendation4.2",
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "iam-password-policy-expiration-threshold.json": [
-            {
-                "args": [
-                    "90"
-                ],
-                "comment": "recommendation1.11",
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "iam-password-policy-minimum-length.json": [
-            {
-                "args": [
-                    "14"
-                ],
-                "comment": "recommendation1.9",
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "iam-password-policy-no-lowercase-required.json": [
-            {
-                "comment": "recommendation1.6",
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "iam-password-policy-no-number-required.json": [
-            {
-                "comment": "recommendation1.8",
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "iam-password-policy-no-symbol-required.json": [
-            {
-                "comment": "recommendation1.7",
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "iam-password-policy-no-uppercase-required.json": [
-            {
-                "comment": "recommendation1.5",
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "iam-password-policy-reuse-enabled.json": [
-            {
-                "comment": "recommendation1.10",
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "iam-root-account-no-mfa.json": [
-            {
-                "comment": "recommendation1.13 (partial: no check for hardware vs software)",
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "iam-root-account-with-active-keys.json": [
-            {
-                "comment": "recommendation1.12",
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "iam-user-no-key-rotation.json": [
-            {
-                "args": [
-                    "Active",
-                    "90"
-                ],
-                "comment": "recommendation1.4",
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
-        "iam-user-with-policies.json": [
-            {
-                "args": [
-                    "inline",
-                    "inline_policies"
-                ],
-                "comment": "Recommendation1.15 (part 1/2)",
-                "enabled": true,
-                "level": "danger"
-            },
-            {
-                "args": [
-                    "managed",
-                    "policies"
-                ],
-                "comment": "Recommendation1.15 (part 2/2)",
                 "enabled": true,
                 "level": "danger"
             }

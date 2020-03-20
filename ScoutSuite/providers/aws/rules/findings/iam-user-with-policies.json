@@ -2,8 +2,15 @@
     "arg_names": [ "Type of policy", "Path to policies" ],
     "key": "iam-user-with-_ARG_0_-policies",
     "description": "User with _ARG_0_ policies",
-    "path": "iam.users.id",
+    "rationale": "Assigning privileges at the user level increases the complexity of access management and the opportunity for a user to receive or retain excessive privileges.",
+    "remediation": "Ensure IAM policies are only attached to groups or roles",
+    "compliance": [
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.0.0", "reference": "1.15"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.1.0", "reference": "1.16"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.2.0", "reference": "1.16"}
+    ],
     "dashboard_name": "Users",
+    "path": "iam.users.id",
     "conditions": [ "and",
         [ "iam.users.id.", "withKey", "_ARG_1_" ],
         [ "iam.users.id._ARG_1_", "notEmpty", "" ]

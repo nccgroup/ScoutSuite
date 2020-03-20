@@ -13,11 +13,20 @@ class CredentialReports(AWSResources):
         user_id = raw_credential_report['user']
         raw_credential_report['name'] = user_id
         raw_credential_report['id'] = user_id
+        raw_credential_report['password_enabled'] = raw_credential_report['password_enabled']
         raw_credential_report['password_last_used'] = self._sanitize_date(raw_credential_report['password_last_used'])
+        raw_credential_report['password_last_changed'] =\
+            self._sanitize_date(raw_credential_report['password_last_changed'])
+        raw_credential_report['access_key_1_active'] = raw_credential_report['access_key_1_active']
         raw_credential_report['access_key_1_last_used_date'] =\
             self._sanitize_date(raw_credential_report['access_key_1_last_used_date'])
+        raw_credential_report['access_key_1_last_rotated'] = \
+            self._sanitize_date(raw_credential_report['access_key_1_last_rotated'])
+        raw_credential_report['access_key_2_active'] = raw_credential_report['access_key_2_active']
         raw_credential_report['access_key_2_last_used_date'] =\
             self._sanitize_date(raw_credential_report['access_key_2_last_used_date'])
+        raw_credential_report['access_key_2_last_rotated'] = \
+            self._sanitize_date(raw_credential_report['access_key_2_last_rotated'])
         raw_credential_report['last_used'] = self._compute_last_used(raw_credential_report)
         return get_non_provider_id(user_id), raw_credential_report
 

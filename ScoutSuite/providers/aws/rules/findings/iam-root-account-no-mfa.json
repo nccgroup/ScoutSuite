@@ -1,7 +1,17 @@
 {
-    "description": "Lack of MFA (root account)",
-    "path": "iam.credential_reports.id",
+    "description": "Root account without MFA",
+    "rationale": "The root account should have Multi Factor Authentication (MFA) enabled.",
+    "remediation": "Enable MFA for the root account",
+    "compliance": [
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.0.0", "reference": "1.13"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.1.0", "reference": "1.13"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.1.0", "reference": "1.14"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.2.0", "reference": "1.13"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.2.0", "reference": "1.14"}
+    ],
+    "references": ["https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#lock-away-credentials"],
     "dashboard_name": "Root account",
+    "path": "iam.credential_reports.id",
     "conditions": [ "and",
         [ "iam.credential_reports.id.mfa_active", "notTrue", "" ],
         [ "iam.credential_reports.id.name", "equal", "<root_account>" ]

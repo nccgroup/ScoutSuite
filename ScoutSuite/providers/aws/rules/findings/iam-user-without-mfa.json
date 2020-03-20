@@ -1,6 +1,6 @@
 {
     "description": "User without MFA",
-    "rationale": "<b>Description:</b><br><br>All IAM users should have Multi Factor Authentication (MFA) enabled.",
+    "rationale": "All IAM users should have Multi Factor Authentication (MFA) enabled.",
     "remediation": "Enable MFA for all users in the AWS account",
     "compliance": [
         {"name": "CIS Amazon Web Services Foundations", "version": "1.0.0", "reference": "1.2"},
