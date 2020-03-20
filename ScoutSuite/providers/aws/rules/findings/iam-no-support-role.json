@@ -1,0 +1,14 @@
+{
+    "description": "No authorized user to manage incidents with AWS Support",
+    "rationale": "There should be at least one user authorized to manage incidents with AWS Support.",
+    "remediation": "Attach the AWSSupportAccess to a role or group",
+    "compliance": [
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.1.0", "reference": "1.22"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.2.0", "reference": "1.20"}
+    ],
+    "dashboard_name": "Policies",
+    "path": "iam.policies.AWSSupportAccess",
+    "conditions": [ "and",
+        [ "iam.policies.AWSSupportAccess.attached_to", "notEmpty", "" ]
+    ]
+}

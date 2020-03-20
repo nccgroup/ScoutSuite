@@ -118,11 +118,11 @@
                 "scored": true
             }
         ],
-        "iam-root-account-no-security-questions.json": [
+        "todo-recommendation-1-15.json": [
             {
                 "comment": "Recommendation 1.15 (no API call to know if root account has security questions set)",
                 "enabled": false,
-                "level": "danger",
+                "level": "warning",
                 "scored": false
             }
         ],
@@ -143,6 +143,54 @@
                     "policies"
                 ],
                 "comment": "Recommendation 1.16 (Part 2/2)",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "todo-recommendation-1-17.json": [
+            {
+                "comment": "Recommendation 1.17 (no API call to check contact details)",
+                "enabled": false,
+                "level": "warning",
+                "scored": false
+            }
+        ],
+        "todo-recommendation-1-18.json": [
+            {
+                "comment": "Recommendation 1.18 (no API call to check security contact information)",
+                "enabled": false,
+                "level": "warning",
+                "scored": false
+            }
+        ],
+        "TODO.json": [
+            {
+                "comment": "Recommendation 1.19 (TODO)",
+                "enabled": false,
+                "level": "warning",
+                "scored": false
+            }
+        ],
+        "iam-no-support-role.json": [
+            {
+                "comment": "Recommendation 1.20",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "iam-user-unused-access-key-initial-setup.json": [
+            {
+                "comment": "Recommendation 1.21",
+                "enabled": true,
+                "level": "warning",
+                "scored": false
+            }
+        ],
+        "iam-managed-policy-allows-full-privileges.json": [
+            {
+                "comment": "Recommendation 1.22",
                 "enabled": true,
                 "level": "danger",
                 "scored": true

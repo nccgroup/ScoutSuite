@@ -513,6 +513,12 @@
                 "level": "danger"
             }
         ],
+        "iam-managed-policy-allows-full-privileges.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "iam-managed-policy-allows-NotActions.json": [
             {
                 "enabled": true,
@@ -646,6 +652,15 @@
                 ],
                 "enabled": false,
                 "level": "warning"
+            }
+        ],
+        "iam-unused-credentials-not-disabled.json": [
+            {
+                "args": [
+                    "90"
+                ],
+                "enabled": true,
+                "level": "danger"
             }
         ],
         "iam-user-no-key-rotation.json": [

@@ -28,6 +28,8 @@ class CredentialReports(AWSResources):
         raw_credential_report['access_key_2_last_rotated'] = \
             self._sanitize_date(raw_credential_report['access_key_2_last_rotated'])
         raw_credential_report['last_used'] = self._compute_last_used(raw_credential_report)
+        raw_credential_report['cert_1_active'] = raw_credential_report['cert_1_active']
+        raw_credential_report['cert_2_active'] = raw_credential_report['cert_2_active']
         return get_non_provider_id(user_id), raw_credential_report
 
     @staticmethod
