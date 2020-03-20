@@ -56,7 +56,8 @@ def run_from_cli():
                    # General
                    report_name=args.get('report_name'), report_dir=args.get('report_dir'),
                    timestamp=args.get('timestamp'),
-                   services=args.get('services'), skipped_services=args.get('skipped_services'), list_services=args.get('list_services'),
+                   services=args.get('services'), skipped_services=args.get('skipped_services'),
+                   list_services=args.get('list_services'),
                    result_format=args.get('result_format'),
                    database_name=args.get('database_name'),
                    host_ip=args.get('host_ip'),
@@ -291,6 +292,7 @@ async def _run(provider,
     filter_rules = Ruleset(cloud_provider=cloud_provider.provider_code,
                            environment_name=cloud_provider.environment,
                            rule_type='filters',
+                           filename='filters.json',
                            account_id=cloud_provider.account_id)
     processing_engine = ProcessingEngine(filter_rules)
     processing_engine.run(cloud_provider)
