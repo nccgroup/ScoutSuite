@@ -26,6 +26,8 @@ google-cloud-kms>=1.0.0
 ## API Client Libraries
 google-api-python-client>=1.7.8
 oauth2client>=4.1.3
+## Necessary since API Client Libraries are not thread-safe
+httplib2shim>=0.0.3
 
 # Azure Provider
 requests>=2.22.0
