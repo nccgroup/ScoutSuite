@@ -4,7 +4,7 @@ netaddr>=0.7.11
 sqlitedict>=1.6.0
 cherrypy>=18.1.0
 cherrypy-cors>=1.6
-coloredlogs>=10.0
+coloredlogs<=10.0
 asyncio-throttle>=0.1.1
 
 # AWS Provider
@@ -26,8 +26,11 @@ google-cloud-kms>=1.0.0
 ## API Client Libraries
 google-api-python-client>=1.7.8
 oauth2client>=4.1.3
+## Necessary since API Client Libraries are not thread-safe
+httplib2shim>=0.0.3
 
 # Azure Provider
+requests>=2.22.0
 azure-core>=1.2.1
 adal>=0.4.7
 azure-cli-core>=2.0.55

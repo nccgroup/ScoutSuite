@@ -1,0 +1,17 @@
+{
+    "description": "Client Certificates Disabled",
+    "rationale": "<b>Description:</b><br><br>Client certificates allow for the app to request a certificate for incoming requests. Only clients that have a valid certificate will be able to reach the app. The TLS mutual authentication technique in enterprise environments ensures the authenticity of clients to the server. If incoming client certificates are enabled, then only an authenticated client who has valid certificates can access the app.",
+    "remediation": "Using Console:<ol><li>Login to Azure Portal using https://portal.azure.com</li><li>Go to \"App Services\"</li><li>Click on each App<li>Under \"Setting\", section, Click on \"SSL settings\",</li><li>Set \"Incoming client certificates\", to \"On\", under Protocol \"Settings\" section</li></ol>",
+    "compliance": [
+        {"name": "CIS Microsoft Azure Foundations", "version": "1.1.0", "reference": "9.4"}
+    ],
+    "references": [
+        "https://docs.microsoft.com/bs-latn-ba/azure/app-service/app-service-web-configure-tls-mutual-auth"
+    ],
+    "dashboard_name": "Web Apps",
+    "path": "appservice.subscriptions.id.web_apps.id",
+    "conditions": [ "and",
+        [ "appservice.subscriptions.id.web_apps.id.client_cert_enabled", "false", "" ]
+    ],
+    "id_suffix": "client_cert_enabled"
+}

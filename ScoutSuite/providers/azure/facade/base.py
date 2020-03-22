@@ -7,6 +7,7 @@ from ScoutSuite.providers.azure.facade.securitycenter import SecurityCenterFacad
 from ScoutSuite.providers.azure.facade.sqldatabase import SQLDatabaseFacade
 from ScoutSuite.providers.azure.facade.storageaccounts import StorageAccountsFacade
 from ScoutSuite.providers.azure.facade.virtualmachines import VirtualMachineFacade
+from ScoutSuite.providers.azure.facade.appservice import AppServiceFacade
 
 from azure.mgmt.resource import SubscriptionClient
 
@@ -15,10 +16,6 @@ from ScoutSuite.core.console import print_info, print_exception
 # Try to import proprietary services
 try:
     from ScoutSuite.providers.azure.facade.appgateway_private import AppGatewayFacade
-except ImportError:
-    pass
-try:
-    from ScoutSuite.providers.azure.facade.appservice_private import AppServiceFacade
 except ImportError:
     pass
 try:
@@ -52,14 +49,11 @@ class AzureFacade:
         self.securitycenter = SecurityCenterFacade(credentials)
         self.sqldatabase = SQLDatabaseFacade(credentials)
         self.storageaccounts = StorageAccountsFacade(credentials)
+        self.appservice = AppServiceFacade(credentials)
 
         # Instantiate facades for proprietary services
         try:
             self.appgateway = AppGatewayFacade(credentials)
-        except NameError:
-            pass
-        try:
-            self.appservice = AppServiceFacade(credentials)
         except NameError:
             pass
         try:

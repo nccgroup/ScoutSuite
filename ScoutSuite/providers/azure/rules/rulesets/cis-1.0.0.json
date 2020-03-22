@@ -200,6 +200,18 @@
                 "enabled": true,
                 "level": "danger"
             }
+        ],
+        "virtual-machines-disk-encryption.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "virtual-machines-extensions-installed.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
         ]
     }
 }

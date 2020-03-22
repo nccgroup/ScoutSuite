@@ -1,0 +1,9 @@
+{
+    "description": "Public EBS snapshot",
+	"rationale": "<b>Description:</b><br><br>Snapshots should never be public, as this risks exposing sensitive data.",
+    "path": "ec2.regions.id.snapshots.id",
+    "dashboard_name": "Snapshots",
+    "conditions": [ "and", 
+        [ "public", "true", "" ]
+    ]
+}

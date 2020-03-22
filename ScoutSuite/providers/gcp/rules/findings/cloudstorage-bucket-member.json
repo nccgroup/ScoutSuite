@@ -6,8 +6,9 @@
   "dashboard_name": "Buckets",
   "display_path": "cloudstorage.projects.id.buckets.id",
   "path": "cloudstorage.projects.id.buckets.id",
-  "conditions": [ "and",
-    [ "cloudstorage.projects.id.buckets.id.acl_configuration", "withKey", "_ARG_0_"]
+  "conditions": [ "or",
+    [ "cloudstorage.projects.id.buckets.id.acl_configuration", "withKey", "_ARG_0_"],
+    [ "cloudstorage.projects.id.buckets.id.acls", "containString", "_ARG_0_"]
   ],
   "id_suffix": "_ARG_0_"
 }
