@@ -1,17 +1,17 @@
 {
     "about": "This ruleset consists of numerous rules that are considered standard by NCC Group. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of provider-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configured, and some of them being applicable to a limited number of users.",
     "rules": {
-        "acm-certificate-with-transparency-logging-disabled.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
         "acm-certificate-with-close-expiration-date.json": [
             {
                 "args": [
                     "7"
                 ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "acm-certificate-with-transparency-logging-disabled.json": [
+            {
                 "enabled": true,
                 "level": "warning"
             }
@@ -70,6 +70,12 @@
                 "level": "warning"
             }
         ],
+        "ec2-ami-public.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "ec2-default-security-group-in-use.json": [
             {
                 "enabled": true,
@@ -83,6 +89,12 @@
             }
         ],
         "ec2-ebs-snapshot-not-encrypted.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "ec2-ebs-snapshot-public.json": [
             {
                 "enabled": true,
                 "level": "danger"
@@ -835,12 +847,6 @@
         "s3-bucket-no-versioning.json": [
             {
                 "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "s3-bucket-website-enabled.json": [
-            {
-                "enabled": false,
                 "level": "warning"
             }
         ],

@@ -1,0 +1,23 @@
+{
+    "description": "(WIP) Web App not Using Latest Programming Language Version",
+    "rationale": "<b>Description:</b><br><br>",
+    "remediation": "",
+    "compliance": [
+        {"name": "CIS Microsoft Azure Foundations", "version": "1.1.0", "reference": "9.6"},
+        {"name": "CIS Microsoft Azure Foundations", "version": "1.1.0", "reference": "9.7"},
+        {"name": "CIS Microsoft Azure Foundations", "version": "1.1.0", "reference": "9.8"},
+        {"name": "CIS Microsoft Azure Foundations", "version": "1.1.0", "reference": "9.9"}
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/app-service/web-sites-configure#general-settings"
+    ],
+    "dashboard_name": "Web Apps",
+    "path": "appservice.subscriptions.id.web_apps.id",
+    "conditions": [ "and",
+        [ "or",
+            [ "appservice.subscriptions.id.web_apps.id.programming_language", "equal", "dotnet" ],
+            [ "appservice.subscriptions.id.web_apps.id.programming_language_version", "notEqual", "v4.0" ]
+        ]
+    ],
+    "id_suffix": "programming_language_version"
+}

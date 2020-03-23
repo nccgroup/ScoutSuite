@@ -15,6 +15,7 @@ from ScoutSuite.providers.aws.facade.elb import ELBFacade
 from ScoutSuite.providers.aws.facade.elbv2 import ELBv2Facade
 from ScoutSuite.providers.aws.facade.emr import EMRFacade
 from ScoutSuite.providers.aws.facade.iam import IAMFacade
+from ScoutSuite.providers.aws.facade.kms import KMSFacade
 from ScoutSuite.providers.aws.facade.rds import RDSFacade
 from ScoutSuite.providers.aws.facade.redshift import RedshiftFacade
 from ScoutSuite.providers.aws.facade.route53 import Route53Facade
@@ -22,16 +23,13 @@ from ScoutSuite.providers.aws.facade.s3 import S3Facade
 from ScoutSuite.providers.aws.facade.ses import SESFacade
 from ScoutSuite.providers.aws.facade.sns import SNSFacade
 from ScoutSuite.providers.aws.facade.sqs import SQSFacade
+from ScoutSuite.providers.aws.facade.secretsmanager import SecretsManagerFacade
 from ScoutSuite.providers.aws.utils import get_aws_account_id
 from ScoutSuite.providers.utils import run_concurrently
 
 # Try to import proprietary facades
 try:
     from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
-except ImportError:
-    pass
-try:
-    from ScoutSuite.providers.aws.facade.kms_private import KMSFacade
 except ImportError:
     pass
 
@@ -91,19 +89,17 @@ class AWSFacade(AWSBaseFacade):
         self.elb = ELBFacade(self.session)
         self.elbv2 = ELBv2Facade(self.session)
         self.iam = IAMFacade(self.session)
+        self.kms = KMSFacade(self.session)
         self.rds = RDSFacade(self.session)
         self.redshift = RedshiftFacade(self.session)
         self.s3 = S3Facade(self.session)
         self.ses = SESFacade(self.session)
         self.sns = SNSFacade(self.session)
         self.sqs = SQSFacade(self.session)
+        self.secretsmanager = SecretsManagerFacade(self.session)
 
         # Instantiate facades for proprietary services
         try:
             self.dynamodb = DynamoDBFacade(self.session)
-        except NameError:
-            pass
-        try:
-            self.kms = KMSFacade(self.session)
         except NameError:
             pass

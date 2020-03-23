@@ -15,6 +15,14 @@
         "instances": {
           "cols": 2,
           "path": "services.virtualmachines.subscriptions.id.instances"
+        },
+        "disks": {
+          "cols": 2,
+          "path": "services.virtualmachines.subscriptions.id.disks"
+        },
+        "snapshots": {
+          "cols": 2,
+          "path": "services.virtualmachines.subscriptions.id.snapshots"
         }
       }
     }
@@ -87,6 +95,14 @@
         "auto_provisioning_settings": {
           "cols": 2,
           "path": "services.securitycenter.subscriptions.id.auto_provisioning_settings"
+        },
+        "compliance_results": {
+          "cols": 2,
+          "path": "services.securitycenter.subscriptions.id.compliance_results"
+        },
+        "regulatory_compliance_results": {
+          "cols": 2,
+          "path": "services.securitycenter.subscriptions.id.regulatory_compliance_results"
         }
       }
     }

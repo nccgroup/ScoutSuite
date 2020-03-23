@@ -1,0 +1,17 @@
+{
+    "description": "HTTP Traffic Allowed",
+    "rationale": "<b>Description:</b><br><br>Azure Web Apps allows sites to run under both HTTP and HTTPS by default. Web apps can be accessed by anyone using non-secure HTTP links by default. Non-secure HTTP requests can be restricted and all HTTP requests redirected to the secure HTTPS port.",
+    "remediation": "It is recommended to enforce HTTPS-only traffic.",
+    "compliance": [
+        {"name": "CIS Microsoft Azure Foundations", "version": "1.1.0", "reference": "9.2"}
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/app-service/app-service-web-tutorial-custom-ssl#enforce-https"
+    ],
+    "dashboard_name": "Web Apps",
+    "path": "appservice.subscriptions.id.web_apps.id",
+    "conditions": [ "and",
+        [ "appservice.subscriptions.id.web_apps.id.https_only", "false", "" ]
+    ],
+    "id_suffix": "https_only"
+}
