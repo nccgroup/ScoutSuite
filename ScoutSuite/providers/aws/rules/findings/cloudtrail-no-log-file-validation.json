@@ -1,8 +1,15 @@
 {
-    "description": "Log file validation disabled",
-    "rationale": "<b>Description:</b><br><br>The lack of log file validation prevents from verifying the integrity of the log files.",
-    "path": "cloudtrail.regions.id.trails.id",
+    "description": "Log file validation is disabled",
+    "rationale": "The lack of log file validation prevents from verifying the integrity of CloudTrail log files.",
+    "remediation": "Ensure that each Trail has Enable log file validation set to Yes",
+    "compliance": [
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.0.0", "reference": "2.2"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.1.0", "reference": "2.2"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.2.0", "reference": "2.2"}
+    ],
+    "references": ["https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-log-file-validation-intro.html"],
     "dashboard_name": "Trails",
+    "path": "cloudtrail.regions.id.trails.id",
     "display_path": "cloudtrail.regions.id.trails.id",
     "conditions": [ "and",
         [ "cloudtrail.regions.id.trails.id.", "withKey", "LogFileValidationEnabled" ],

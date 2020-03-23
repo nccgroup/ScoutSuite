@@ -1,0 +1,19 @@
+{
+    "description": "CloudTrail S3 bucket access logging is disabled",
+    "rationale": "The lack of S3 bucket logging prevents log information to be accessed in security and incident response workflows.",
+    "remediation": "Ensure that critical S3 buckets have Logging enabled",
+    "compliance": [
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.0.0", "reference": "2.6"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.1.0", "reference": "2.6"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.2.0", "reference": "2.6"}
+    ],
+    "dashboard_name": "Buckets",
+    "path": "s3.buckets.id",
+    "conditions": [ "and",
+        [ "s3.buckets.id.policy.id.", "withKey", "Statement" ],
+        [ "s3.buckets.id.policy.id.Statement.id.", "withKey", "Principal" ],
+        [ "s3.buckets.id.policy.id.Statement.id.Principal.Service", "containString", "cloudtrail.amazonaws.com" ],
+        [ "s3.buckets.id.logging", "equal", "Disabled" ]
+    ],
+    "id_suffix": "logging"
+}

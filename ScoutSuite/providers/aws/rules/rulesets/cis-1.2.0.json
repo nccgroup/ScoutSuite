@@ -198,16 +198,82 @@
         ],
         "cloudtrail-no-logging.json": [
             {
-                "comment": "Recommendation2,1 (part 2/2)",
+                "comment": "Recommendation 2.1 (Part 1/2)",
                 "enabled": true,
-                "level": "danger"
+                "level": "danger",
+                "scored": true
             }
         ],
         "cloudtrail-not-configured.json": [
             {
-                "comment": "Recommendation2.1 (part 1/2)",
+                "comment": "Recommendation 2.1 (part 2/2)",
                 "enabled": true,
-                "level": "danger"
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "cloudtrail-no-log-file-validation.json": [
+            {
+                "comment": "Recommendation 2.2",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "TODO_2.json": [
+            {
+                "comment": "Recommendation 2.3",
+                "enabled": false,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "cloudtrail-no-cloudwatch-integration.json": [
+            {
+                "comment": "Recommendation 2.4",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "config-recorder-not-configured.json": [
+            {
+                "comment": "Recommendation 2.5",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "s3-bucket-no-logging.json": [
+            {
+                "comment": "Recommendation 2.6",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "cloudtrail-no-encryption-with-kms.json": [
+            {
+                "comment": "Recommendation 2.7",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "kms-key-rotation-disabled.json": [
+            {
+                "comment": "Recommendation 2.8",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "vpc-subnet-without-flow-log.json": [
+            {
+                "comment": "Recommendation 2.9",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
             }
         ],
         "ec2-default-security-group-with-rules.json": [

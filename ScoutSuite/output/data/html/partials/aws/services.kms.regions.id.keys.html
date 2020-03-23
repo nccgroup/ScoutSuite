@@ -13,7 +13,7 @@
         <li class="list-group-item-text">Description: <span id="kms.regions.{{region}}.keys.{{@key}}.description"><samp>{{value_or_none description}}</samp></span></li>
         <li class="list-group-item-text">Creation Date: <span id="kms.regions.{{region}}.keys.{{@key}}.creation_date">{{format_date creation_date}}</span></li>
         <li class="list-group-item-text">Status: <span id="kms.regions.{{region}}.keys.{{@key}}.key_enabled">{{convert_bool_to_enabled key_enabled}}</span></li>
-        <li class="list-group-item-text">Rotation: <span id="kms.regions.{{region}}.keys.{{@key}}.rotation_enabled">{{convert_bool_to_enabled rotation_enabled}}</span></li>
+        <li class="list-group-item-text">Rotation: <span id="kms.regions.{{region}}.keys.{{@key}}.CMKRotationDisabled">{{convert_bool_to_enabled rotation_enabled}}</span></li>
         <li class="list-group-item-text">Origin: <span id="kms.regions.{{region}}.keys.{{@key}}.origin"><samp>{{value_or_none origin}}</samp></span></li>
         <li class="list-group-item-text">Key Manager: <span id="kms.regions.{{region}}.keys.{{@key}}.key_manager"><samp>{{value_or_none key_manager}}</samp></span></li>
       </ul>

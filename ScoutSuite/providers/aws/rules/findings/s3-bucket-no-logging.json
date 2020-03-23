@@ -1,6 +1,8 @@
 {
+    "description": "S3 bucket access logging is disabled",
+    "rationale": "The lack of S3 bucket logging prevents log information to be accessed in security and incident response workflows.",
+    "remediation": "Ensure that S3 buckets have Logging enabled",
     "dashboard_name": "Buckets",
-    "description": "Bucket access logging disabled",
     "path": "s3.buckets.id",
     "conditions": [ "and",
         [ "s3.buckets.id.logging", "equal", "Disabled" ]
