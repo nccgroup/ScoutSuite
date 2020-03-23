@@ -1,0 +1,17 @@
+{
+    "description": "HTTP 2.0 Disabled",
+    "rationale": "<b>Description:</b><br><br>Periodically, newer versions are released for HTTP either due to security flaws or to include additional functionality. Using the latest HTTP version for web apps to take advantage of security fixes, if any, and/or new functionalities of the newer version.<br><br>Newer versions may contain security enhancements and additional functionality. Using the latest version is recommended in order to take advantage of enhancements and new capabilities. With each software installation, organizations need to determine if a given update meets their requirements and also verify the compatibility and support provided for any additional software against the update revision that is selected.<br><br>HTTP 2.0 has additional performance improvements on the head-of-line blocking problem of old HTTP version, header compression, and prioritization of requests. HTTP 2.0 no longer supports HTTP 1.1's chunked transfer encoding mechanism, as it provides its own, more efficient, mechanisms for data streaming.",
+    "remediation": "Using Console:<ol><li>Login to Azure Portal using https://portal.azure.com</li><li>Go to \"App Services\"</li><li>Click on each App</li><li>Under \"Setting\" section, Click on \"Application settings\"</li><li>Ensure that \"HTTP Version\" set to \"2.0\" version under \"General settings\"</li></ol>",
+    "compliance": [
+        {"name": "CIS Microsoft Azure Foundations", "version": "1.1.0", "reference": "9.10"}
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/app-service/web-sites-configure#general-settings"
+    ],
+    "dashboard_name": "Web Apps",
+    "path": "appservice.subscriptions.id.web_apps.id",
+    "conditions": [ "and",
+        [ "appservice.subscriptions.id.web_apps.id.http_2_enabled", "false", "" ]
+    ],
+    "id_suffix": "http_2_enabled"
+}

@@ -1174,6 +1174,8 @@ function makeTitle(title) {
         return 'Lambda'
     } else if (title === 'dynamodb') {
         return 'DynamoDB'
+    } else if (title === 'secretsmanager') {
+        return 'Secrets Manager'
     } else if (title === 'elasticache') {
         return 'ElastiCache'
     } else if (title === 'redshift') {

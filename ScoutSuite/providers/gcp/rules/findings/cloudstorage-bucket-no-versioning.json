@@ -4,7 +4,7 @@
     "rationale": "<b>Description:</b><br><br>Enable Object Versioning to protect Cloud Storage data from being overwritten or accidentally deleted.",
     "path": "cloudstorage.projects.id.buckets.id",
     "conditions": [ "and",
-        [ "cloudstorage.projects.id.buckets.id.versioning_status_enabled", "false", "" ]
+        [ "cloudstorage.projects.id.buckets.id.versioning_enabled", "false", "" ]
     ],
-    "id_suffix": "versioning"
+    "id_suffix": "versioning_enabled"
 }

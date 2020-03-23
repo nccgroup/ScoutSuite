@@ -57,6 +57,7 @@ def run_from_cli():
                    report_name=args.get('report_name'), report_dir=args.get('report_dir'),
                    timestamp=args.get('timestamp'),
                    services=args.get('services'), skipped_services=args.get('skipped_services'),
+                   list_services=args.get('list_services'),
                    result_format=args.get('result_format'),
                    database_name=args.get('database_name'),
                    host_ip=args.get('host_ip'),
@@ -101,7 +102,7 @@ def run(provider,
         # General
         report_name=None, report_dir=None,
         timestamp=False,
-        services=[], skipped_services=[],
+        services=[], skipped_services=[], list_services=None,
         result_format='json',
         database_name=None, host_ip='127.0.0.1', host_port=8000,
         max_workers=10,
@@ -153,7 +154,7 @@ async def _run(provider,
                # General
                report_name, report_dir,
                timestamp,
-               services, skipped_services,
+               services, skipped_services, list_services,
                result_format,
                database_name, host_ip, host_port,
                regions,
@@ -204,7 +205,6 @@ async def _run(provider,
     except Exception as e:
         print_exception('Authentication failure: {}'.format(e))
         return 101
-
     # Create a cloud provider object
     cloud_provider = get_provider(provider=provider,
                                   # AWS
@@ -237,6 +237,13 @@ async def _run(provider,
         database_file, _ = get_filename('RESULTS', report_name, report_dir, file_extension="db")
         Server.init(database_file, host_ip, host_port)
         return
+
+    # If this command, run and exit
+    if list_services:
+        available_services = [x for x in dir(cloud_provider.services) if
+                              not (x.startswith('_') or x in ['credentials', 'fetch'])]
+        print_info('The available services are: "{}"'.format('", "'.join(available_services)))
+        return 0
 
     # Complete run, including pulling data from provider
     if not fetch_local:
@@ -284,6 +291,7 @@ async def _run(provider,
     print_info('Applying display filters')
     filter_rules = Ruleset(cloud_provider=cloud_provider.provider_code,
                            environment_name=cloud_provider.environment,
+                           filename='filters.json',
                            rule_type='filters',
                            account_id=cloud_provider.account_id)
     processing_engine = ProcessingEngine(filter_rules)

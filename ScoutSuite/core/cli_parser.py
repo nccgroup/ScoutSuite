@@ -183,7 +183,7 @@ class ScoutSuiteArgumentParser:
         # Service Principal credentials in an auth file
         azure_auth_modes.add_argument('--file-auth',
                                       action='store',
-                                      type=argparse.FileType('r'),
+                                      type=argparse.FileType('rb'),
                                       dest='file_auth',
                                       metavar="FILE",
                                       help='Run Scout with the specified credential file')
@@ -333,6 +333,11 @@ class ScoutSuiteArgumentParser:
                             default=[],
                             nargs='+',
                             help='Name of in-scope services, defaults to all.')
+        parser.add_argument('--list-services',
+                            dest='list_services',
+                            default=False,
+                            action='store_true',
+                            help='List available services.')
         parser.add_argument('--skip',
                             dest='skipped_services',
                             default=[],

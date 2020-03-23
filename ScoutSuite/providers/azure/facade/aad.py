@@ -1,12 +1,15 @@
 from azure.graphrbac import GraphRbacManagementClient
 
+import requests
+import uuid
+
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently
 
 
 class AADFacade:
     def __init__(self, credentials):
-        self._client = GraphRbacManagementClient(credentials.graph_credentials,
+        self._client = GraphRbacManagementClient(credentials.aad_graph_credentials,
                                                  tenant_id=credentials.get_tenant_id())
 
     async def get_users(self):

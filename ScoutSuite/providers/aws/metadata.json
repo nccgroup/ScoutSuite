@@ -303,6 +303,14 @@
                     "path": "services.kms.regions.id.keys"
                 }
             }
+        },
+        "secretsmanager" : {
+            "resources": {
+                "secrets": {
+                    "cols": 2,
+                    "path": "services.secretsmanager.regions.id.secrets"
+                }
+            }
         }
     },
     "database": {
