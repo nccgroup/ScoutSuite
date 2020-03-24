@@ -195,3 +195,11 @@ class EC2Facade(AWSBaseFacade):
         except Exception as e:
             print_exception('Failed to get peering connections: {}'.format(e))
             return []
+
+    async def get_route_tables(self, region):
+        try:
+            route_tables = await AWSFacadeUtils.get_all_pages('ec2', region, self.session, 'describe_route_tables', 'RouteTables')
+            return route_tables
+        except Exception as e:
+            print_exception('Failed to get route tables: {}'.format(e))
+            return []

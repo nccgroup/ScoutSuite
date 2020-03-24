@@ -7,6 +7,7 @@ from ScoutSuite.providers.aws.resources.regions import Regions
 from .flow_logs import FlowLogs
 from .vpcs import RegionalVpcs
 from .peering_connections import PeeringConnections
+from .route_tables import RouteTables
 
 known_cidrs = {'0.0.0.0/0': 'All'}
 aws_ip_ranges = {}
@@ -16,7 +17,8 @@ class VPC(Regions):
     _children = [
         (RegionalVpcs, 'vpcs'),
         (FlowLogs, 'flow_logs'),
-        (PeeringConnections, 'peering_connections'),
+        (PeeringConnections, 'peering_connections')
+        # (RouteTables, 'route_tables')
     ]
 
     def __init__(self, facade: AWSFacade):

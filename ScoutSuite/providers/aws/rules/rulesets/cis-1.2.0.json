@@ -276,13 +276,6 @@
                 "scored": true
             }
         ],
-        "ec2-default-security-group-with-rules.json": [
-            {
-                "comment": "Recommendation4.4",
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
         "ec2-security-group-opens-known-port-to-all.json": [
             {
                 "args": [
@@ -290,9 +283,10 @@
                     "TCP",
                     "22"
                 ],
-                "comment": "Recommendation4.1",
+                "comment": "Recommendation 4.1",
                 "enabled": true,
-                "level": "danger"
+                "level": "danger",
+                "scored": true
             },
             {
                 "args": [
@@ -300,9 +294,34 @@
                     "TCP",
                     "3389"
                 ],
-                "comment": "Recommendation4.2",
+                "comment": "Recommendation 4.2",
                 "enabled": true,
-                "level": "danger"
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "ec2-default-security-group-with-rules.json": [
+            {
+                "comment": "Recommendation 4.3 (Part 1/2)",
+                "enabled": true,
+                "level": "danger",
+                "scored": "true"
+            }
+        ],
+        "ec2-default-security-group-in-use.json": [
+            {
+                "comment": "Recommendation 4.3 (Part 2/2)",
+                "enabled": true,
+                "level": "danger",
+                "scored": "true"
+            }
+        ],
+        "ec2-route-tables-full-peering.json": [
+            {
+                "comment": "Recommendation 4.4 TODO",
+                "enabled": false,
+                "level": "warning",
+                "scored": "false"
             }
         ]
     }

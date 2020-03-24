@@ -1,12 +1,18 @@
 {
     "description": "Non-empty rulesets for default security groups",
-    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id",
+    "rationale": "Configuring all VPC default security groups to restrict all traffic will encourage least privilege principle.",
+    "remediation": "Ensure the default security group of every VPC restricts all traffic",
+    "compliance": [
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.0.0", "reference": "4.4"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.1.0", "reference": "4.4"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.2.0", "reference": "4.3"}
+    ],
     "dashboard_name": "Rulesets",
+    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id",
+    "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
     "conditions": [ "and",
         [ "ec2.regions.id.vpcs.id.security_groups.id.name", "equal", "default" ],
         [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols", "notEmpty", "" ]
-
     ],
-    "id_suffix": "default_with_rules",
-    "display_path": "ec2.regions.id.vpcs.id.security_groups.id"
+    "id_suffix": "default_with_rules"
 }
