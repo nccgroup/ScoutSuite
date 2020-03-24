@@ -1,7 +1,17 @@
 {
     "arg_names": [ "Network protocol name", "Transport protocol name", "Port number" ],
     "key": "ec2-security-group-opens-_ARG_0_-port-to-all",
-    "description": "_ARG_0_ port open to all",
+    "description": "Port _ARG_0_ open to all",
+    "rationale": "Open ports increase the server's exposure to risk.",
+    "remediation": "Remove the inbound rules that expose open ports",
+    "compliance": [
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.0.0", "reference": "4.1"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.0.0", "reference": "4.2"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.1.0", "reference": "4.1"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.1.0", "reference": "4.2"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.2.0", "reference": "4.1"},
+        {"name": "CIS Amazon Web Services Foundations", "version": "1.2.0", "reference": "4.2"}
+    ],
     "dashboard_name": "Rules",
     "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
     "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
