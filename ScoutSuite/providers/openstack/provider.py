@@ -1,5 +1,5 @@
 import os
-from ScoutSuite.providers.os.services import OpenstackServicesConfig
+from ScoutSuite.providers.openstack.services import OpenstackServicesConfig
 from ScoutSuite.providers.base.provider import BaseProvider
 
 
@@ -15,7 +15,7 @@ class OpenstackProvider(BaseProvider):
 
         self.metadata_path = '%s/metadata.json' % os.path.split(os.path.abspath(__file__))[0]
 
-        self.provider_code = 'os'
+        self.provider_code = 'openstack'
         self.provider_name = 'Openstack'
         self.environment = None
         self.credentials = kwargs['credentials']

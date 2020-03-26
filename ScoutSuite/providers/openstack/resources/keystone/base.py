@@ -1,6 +1,6 @@
-from ScoutSuite.providers.os.facade.base import OpenstackFacade
-from ScoutSuite.providers.os.resources.base import OpenstackCompositeResources
-from ScoutSuite.providers.os.resources.keystone.policies import Policies
+from ScoutSuite.providers.openstack.facade.base import OpenstackFacade
+from ScoutSuite.providers.openstack.resources.base import OpenstackCompositeResources
+from ScoutSuite.providers.openstack.resources.keystone.policies import Policies
 
 
 class Keystone(OpenstackCompositeResources):

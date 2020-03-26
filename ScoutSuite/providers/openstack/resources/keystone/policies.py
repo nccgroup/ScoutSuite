@@ -1,5 +1,5 @@
-from ScoutSuite.providers.os.facade.base import OpenstackFacade
-from ScoutSuite.providers.os.resources.base import OpenstackResources
+from ScoutSuite.providers.openstack.facade.base import OpenstackFacade
+from ScoutSuite.providers.openstack.resources.base import OpenstackResources
 
 
 class Policies(OpenstackResources):

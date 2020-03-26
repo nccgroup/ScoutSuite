@@ -1,5 +1,5 @@
-from ScoutSuite.providers.os.facade.base import OpenstackFacade
-from ScoutSuite.providers.os.resources.keystone.base import Keystone
+from ScoutSuite.providers.openstack.facade.base import OpenstackFacade
+from ScoutSuite.providers.openstack.resources.keystone.base import Keystone
 from ScoutSuite.providers.base.services import BaseServicesConfig
 
 
@@ -14,4 +14,4 @@ class OpenstackServicesConfig(BaseServicesConfig):
         self.keystone = Keystone(facade)
 
     def _is_provider(self, provider_name):
-        return provider_name == 'os'
+        return provider_name == 'openstack'

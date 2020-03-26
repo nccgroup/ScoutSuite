@@ -3,7 +3,7 @@ from ScoutSuite.providers.gcp.authentication_strategy import GCPAuthenticationSt
 from ScoutSuite.providers.azure.authentication_strategy import AzureAuthenticationStrategy
 from ScoutSuite.providers.aliyun.authentication_strategy import AliyunAuthenticationStrategy
 from ScoutSuite.providers.oci.authentication_strategy import OracleAuthenticationStrategy
-from ScoutSuite.providers.os.authentication_strategy import OpenstackAuthenticationStrategy
+from ScoutSuite.providers.openstack.authentication_strategy import OpenstackAuthenticationStrategy
 
 
 _strategies = {
@@ -12,7 +12,7 @@ _strategies = {
     'azure': AzureAuthenticationStrategy,
     'aliyun': AliyunAuthenticationStrategy,
     'oci': OracleAuthenticationStrategy,
-    'os': OpenstackAuthenticationStrategy
+    'openstack': OpenstackAuthenticationStrategy
 }
 
 

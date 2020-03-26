@@ -1,5 +1,5 @@
-from ScoutSuite.providers.os.facade.keystone import KeystoneFacade
-from ScoutSuite.providers.os.authentication_strategy import OpenstackCredentials
+from ScoutSuite.providers.openstack.facade.keystone import KeystoneFacade
+from ScoutSuite.providers.openstack.authentication_strategy import OpenstackCredentials
 
 
 class OpenstackFacade:
