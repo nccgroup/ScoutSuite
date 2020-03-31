@@ -27,6 +27,8 @@ from ScoutSuite.providers.aws.facade.secretsmanager import SecretsManagerFacade
 from ScoutSuite.providers.aws.utils import get_aws_account_id
 from ScoutSuite.providers.utils import run_concurrently
 
+from ScoutSuite.core.conditions import print_error
+
 # Try to import proprietary facades
 try:
     from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
@@ -49,8 +51,13 @@ class AWSFacade(AWSBaseFacade):
         if service not in available_services:
             raise Exception('Service ' + service + ' is not available.')
 
+        service = 'eks'
+
         regions = await run_concurrently(lambda: Session(region_name='eu-west-1').get_available_regions(service,
                                                                                                         partition_name))
+        if not regions:
+            # Could be an instance of https://github.com/boto/boto3/issues/1662
+            print_error('"get_available_regions" returned an empty array for service "{}", something is wrong'.format(service))
 
         # identify regions that are not opted-in
         ec2_not_opted_in_regions = self.session.client('ec2', 'eu-west-1')\
