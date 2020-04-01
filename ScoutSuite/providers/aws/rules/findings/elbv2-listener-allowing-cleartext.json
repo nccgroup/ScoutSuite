@@ -1,0 +1,10 @@
+{
+    "description": "ELBv2 allowing clear text (HTTP) communication",
+    "rationale": "<b>Description:</b><br><br>Use of a secure protocol (HTTPS or SSL) is best practice for encrypted communication. This rule checks for load balancers that are not using recommended security configurations.",
+    "path": "elbv2.regions.id.vpcs.id.lbs.id.listeners.id.Protocol",
+    "dashboard_name": "Load Balancer Listeners",
+    "display_path": "elbv2.regions.id.vpcs.id.lbs.id",
+    "conditions": [ "and",
+        [ "elbv2.regions.id.vpcs.id.lbs.id.listeners.id.Protocol", "equal", "HTTP" ]
+    ]
+}

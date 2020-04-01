@@ -361,10 +361,28 @@
                 "level": "warning"
             }
         ],
+        "elb-listener-allowing-cleartext.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "elb-no-access-logs.json": [
             {
                 "enabled": true,
                 "level": "warning"
+            }
+        ],
+        "elb-older-ssl-policy.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "elbv2-listener-allowing-cleartext.json": [
+            {
+                "enabled": true,
+                "level": "danger"
             }
         ],
         "elbv2-no-access-logs.json": [
