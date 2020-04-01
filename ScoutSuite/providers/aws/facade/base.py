@@ -34,6 +34,11 @@ try:
     from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
 except ImportError:
     pass
+try:
+    from ScoutSuite.providers.aws.facade.eks_private import DynamoDBFacade
+except ImportError:
+    pass
+
 
 
 class AWSFacade(AWSBaseFacade):
@@ -127,5 +132,9 @@ class AWSFacade(AWSBaseFacade):
         # Instantiate facades for proprietary services
         try:
             self.dynamodb = DynamoDBFacade(self.session)
+        except NameError:
+            pass
+        try:
+            self.eks = EKSFacade(self.session)
         except NameError:
             pass

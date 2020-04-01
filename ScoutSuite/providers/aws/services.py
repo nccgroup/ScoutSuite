@@ -30,6 +30,10 @@ try:
     from ScoutSuite.providers.aws.resources.private_dynamodb.base import DynamoDB
 except ImportError:
     pass
+try:
+    from ScoutSuite.providers.aws.resources.private_eks.base import EKS
+except ImportError:
+    pass
 
 
 class AWSServicesConfig(BaseServicesConfig):
@@ -41,6 +45,7 @@ class AWSServicesConfig(BaseServicesConfig):
     :ivar config:                       Config configuration
     :ivar dynamodb:                     DynomaDB configuration
     :ivar ec2:                          EC2 configuration
+    :ivar eks:                          EKS configuration
     :ivar iam:                          IAM configuration
     :ivar kms:                          KMS configuration
     :ivar rds:                          RDS configuration
@@ -87,6 +92,10 @@ class AWSServicesConfig(BaseServicesConfig):
             self.dynamodb = DynamoDB(facade)
         except NameError as _:
             pass
+        try:
+            self.eks = EKS(facade)
+        except NameError as _:
+                pass
 
     def _is_provider(self, provider_name):
         return provider_name == 'aws'
