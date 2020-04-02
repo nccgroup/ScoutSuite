@@ -35,7 +35,7 @@ try:
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.aws.facade.eks_private import DynamoDBFacade
+    from ScoutSuite.providers.aws.facade.eks_private import EKSFacade
 except ImportError:
     pass
 
