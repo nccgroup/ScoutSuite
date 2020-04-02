@@ -11,6 +11,7 @@ formatted_service_name = {
     'directconnect': 'Direct Connect',
     'dynamodb': 'DynamoDB',
     'elbv2': 'ELBv2',
+    'eks': 'EKS',
     'elasticache': 'ElastiCache',
     'lambda': 'Lambda',
     'awslambda': 'Lambda',
