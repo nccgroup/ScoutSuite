@@ -13,6 +13,16 @@
             }
         }
     },
+    "containers": {
+      "eks": {
+        "resources": {
+            "clusters": {
+                "cols": 2,
+                "path": "services.eks.regions.id.clusters"
+            }
+        }
+      }
+    },
     "management": {
         "cloudformation": {
             "resources": {
