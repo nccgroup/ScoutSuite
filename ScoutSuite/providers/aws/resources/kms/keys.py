@@ -45,10 +45,9 @@ class Keys(AWSCompositeResources):
             key_dict['key_manager'] = raw_key['metadata']['KeyMetadata']['KeyManager'] if len(
                 raw_key['metadata']['KeyMetadata']['KeyManager'].strip()) > 0 else None
 
-        key_dict['aliases'] = {}
+        key_dict['aliases'] = []
         for raw_alias in raw_key.get('aliases', []):
-            alias_id, alias = self._parse_alias(raw_alias)
-            key_dict['aliases'][alias_id] = alias
+            key_dict['aliases'].append(self._parse_alias(raw_alias))
 
         return key_dict['id'], key_dict
 
@@ -59,4 +58,4 @@ class Keys(AWSCompositeResources):
             'name': raw_alias.get('AliasName').split('alias/', 1)[-1],
             'arn': raw_alias.get('AliasArn'),
             'key_id': raw_alias.get('TargetKeyId')}
-        return alias_dict['id'], alias_dict
+        return alias_dict
