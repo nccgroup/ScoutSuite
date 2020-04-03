@@ -24,11 +24,6 @@ console output using the `--debug` argument), request a new feature, or send a p
 
 The project team can be contacted at <scoutsuite@nccgroup.com>.
 
-**Note:**
-
-The latest (and final) version of Scout2 can be found in <https://github.com/nccgroup/Scout2/releases> and
-<https://pypi.org/project/AWSScout2>. Further work is not planned for Scout2. Fixes will be implemented in Scout Suite.
-
 ### Support
 
 The following cloud providers are currently supported/planned:
