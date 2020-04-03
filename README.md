@@ -9,6 +9,7 @@
 [![CodeCov](https://codecov.io/gh/nccgroup/ScoutSuite/branch/master/graph/badge.svg)](https://codecov.io/gh/nccgroup/ScoutSuite)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/nccgroup/ScoutSuite.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/nccgroup/ScoutSuite/alerts/)
 [![PyPI version](https://badge.fury.io/py/ScoutSuite.svg)](https://badge.fury.io/py/ScoutSuite)
+[![PyPI version](https://img.shields.io/pypi/dm/scoutsuite)](https://img.shields.io/pypi/dm/scoutsuite)
 
 ## Description
 
