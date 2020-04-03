@@ -13,18 +13,13 @@
 
 ## Description
 
-Scout Suite is an open source multi-cloud security-auditing tool, which enables security posture assessment of cloud 
-environments. Using the APIs exposed by cloud providers, Scout Suite gathers configuration data for manual inspection 
-and highlights risk areas. Rather than going through dozens of pages on the web consoles, Scout Suite presents a clear 
-view of the attack surface automatically.
+Scout Suite is an open source multi-cloud security-auditing tool, which enables security posture assessment of cloud environments. Using the APIs exposed by cloud providers, Scout Suite gathers configuration data for manual inspection and highlights risk areas. Rather than going through dozens of pages on the web consoles, Scout Suite presents a clear view of the attack surface automatically.
 
-Scout Suite is stable and actively maintained, but a number of features and internals may change. As such, please bear
-with us as we find time to work on, and improve, the tool. Feel free to report a bug with details (please provide
-console output using the `--debug` argument), request a new feature, or send a pull request.
+Scout Suite was designed by security consultants/auditors. It is meant to provide a point-in-time security-oriented view of the cloud account it was run in. Once the data has been gathered, all usage may be performed offline.
 
 The project team can be contacted at <scoutsuite@nccgroup.com>.
 
-## Cloud Provider Support
+### Cloud Provider Support
 
 The following cloud providers are currently supported:
 
@@ -40,7 +35,7 @@ Scout Suite is run through the CLI:
 
 ![Running Scout Suite](https://user-images.githubusercontent.com/13310971/77860294-72bdb300-71dc-11ea-9200-c5f55ce7fd59.gif)
 
-Once the run is completed, it will generate an HTML report including findings and Cloud account configuration:
+Once this has completed, it will generate an HTML report including findings and Cloud account configuration:
 
 ![Scout Suite Report](https://user-images.githubusercontent.com/13310971/77861662-342bf680-71e4-11ea-8eed-ccaeb78c5f45.gif)
 
