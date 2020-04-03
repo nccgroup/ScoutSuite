@@ -24,9 +24,9 @@ console output using the `--debug` argument), request a new feature, or send a p
 
 The project team can be contacted at <scoutsuite@nccgroup.com>.
 
-### Support
+### Cloud Provider Support
 
-The following cloud providers are currently supported/planned:
+The following cloud providers are currently supported:
 
 - Amazon Web Services
 - Microsoft Azure
