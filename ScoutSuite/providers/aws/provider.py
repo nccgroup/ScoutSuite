@@ -529,8 +529,10 @@ class AWSProvider(BaseProvider):
                 pass
             elif not self.services['ec2']:  # service not included in run
                 pass
+            elif not str(e):
+                print_exception('Failed to parse {}'.format(resource_type))
             else:
-                print_exception('Failed to parse %s: %s' % (resource_type, e))
+                print_exception('Failed to parse {}: {}'.format(resource_type, e))
 
     def _set_emr_vpc_ids(self):
         clear_list = []
