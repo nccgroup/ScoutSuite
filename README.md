@@ -33,7 +33,7 @@ The following cloud providers are currently supported:
 
 Scout Suite is run through the CLI:
 
-![Running Scout Suite](https://user-images.githubusercontent.com/13310971/77860294-72bdb300-71dc-11ea-9200-c5f55ce7fd59.gif)
+![Running Scout Suite](https://user-images.githubusercontent.com/13310971/78389085-22659d00-75b0-11ea-9f22-ea6fcaa6a1cd.gif)
 
 Once this has completed, it will generate an HTML report including findings and Cloud account configuration:
 
