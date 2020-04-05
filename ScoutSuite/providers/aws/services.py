@@ -31,6 +31,10 @@ try:
 except ImportError:
     pass
 try:
+    from ScoutSuite.providers.aws.resources.private_ecs.base import ECS
+except ImportError:
+    pass
+try:
     from ScoutSuite.providers.aws.resources.private_eks.base import EKS
 except ImportError:
     pass
@@ -45,6 +49,7 @@ class AWSServicesConfig(BaseServicesConfig):
     :ivar config:                       Config configuration
     :ivar dynamodb:                     DynomaDB configuration
     :ivar ec2:                          EC2 configuration
+    :ivar ecs:                          ECS configuration
     :ivar eks:                          EKS configuration
     :ivar iam:                          IAM configuration
     :ivar kms:                          KMS configuration
@@ -92,6 +97,10 @@ class AWSServicesConfig(BaseServicesConfig):
             self.dynamodb = DynamoDB(facade)
         except NameError as _:
             pass
+        try:
+            self.ecs = ECS(facade)
+        except NameError as _:
+                pass
         try:
             self.eks = EKS(facade)
         except NameError as _:
