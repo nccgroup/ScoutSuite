@@ -983,7 +983,7 @@
             {
                 "args": [
                     "Get",
-                    "s3:GetObject*"
+                    "s3:Get*"
                 ],
                 "enabled": true,
                 "level": "danger"
@@ -991,7 +991,7 @@
             {
                 "args": [
                     "List",
-                    "s3:ListBucket*"
+                    "s3:List*"
                 ],
                 "enabled": true,
                 "level": "danger"
@@ -999,14 +999,6 @@
             {
                 "args": [
                     "Put",
-                    "s3:PutObject*"
-                ],
-                "enabled": true,
-                "level": "danger"
-            },
-            {
-                "args": [
-                    "Manage",
                     "s3:Put*"
                 ],
                 "enabled": true,
