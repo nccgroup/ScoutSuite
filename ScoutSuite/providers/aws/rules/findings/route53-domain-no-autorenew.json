@@ -1,5 +1,5 @@
 {
-    "description": "Domain Not Set to Autorenew",
+    "description": "Automatic Renewal Not Set for Domain",
     "dashboard_name": "Domains",
     "path": "route53.regions.id.domains.id",
     "conditions": [
