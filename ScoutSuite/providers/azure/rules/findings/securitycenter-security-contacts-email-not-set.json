@@ -1,14 +1,23 @@
 {
-    "dashboard_name": "Security contacts",
     "description": "No Security Contact Email Set",
-    "rationale": "<b>Description:</b><br><br>At least one security contact email should be set.",
+    "rationale": "At least one security contact email should be set.",
     "compliance": [
-        {"name": "CIS Microsoft Azure Foundations", "version": "1.1.0", "reference": "2.16"}
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.1.0",
+            "reference": "2.16"
+        }
     ],
-    "path": "securitycenter.subscriptions.id.security_contacts.id",
+    "dashboard_name": "Security contacts",
     "display_path": "securitycenter.subscriptions.id.security_contacts",
-    "conditions": [ "and",
-        ["securitycenter.subscriptions.id.security_contacts.id.email", "equal", ""]
+    "path": "securitycenter.subscriptions.id.security_contacts.id",
+    "conditions": [
+        "and",
+        [
+            "securitycenter.subscriptions.id.security_contacts.id.email",
+            "equal",
+            ""
+        ]
     ],
     "id_suffix": "email"
 }

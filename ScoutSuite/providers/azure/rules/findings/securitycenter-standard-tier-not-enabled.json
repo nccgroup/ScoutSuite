@@ -1,14 +1,23 @@
 {
-    "dashboard_name": "Pricings",
-    "description": "Standard Tier not Enabled",
-    "rationale": "<b>Description:</b><br><br>Enable Standard Tier pricing for Security Center.",
+    "description": "Standard Tier Not Enabled",
+    "rationale": "Enable Standard Tier pricing for Security Center.",
     "compliance": [
-        {"name": "CIS Microsoft Azure Foundations", "version": "1.1.0", "reference": "2.1"}
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.1.0",
+            "reference": "2.1"
+        }
     ],
-    "path": "securitycenter.subscriptions.id.pricings.id",
+    "dashboard_name": "Pricings",
     "display_path": "securitycenter.subscriptions.id.pricings.id",
-    "conditions": [ "and",
-        ["securitycenter.subscriptions.id.pricings.id.pricing_tier", "notEqual", "Standard" ]
+    "path": "securitycenter.subscriptions.id.pricings.id",
+    "conditions": [
+        "and",
+        [
+            "securitycenter.subscriptions.id.pricings.id.pricing_tier",
+            "notEqual",
+            "Standard"
+        ]
     ],
     "id_suffix": "pricing_tier"
 }
