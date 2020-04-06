@@ -1,5 +1,5 @@
 {
-    "title": "Bucket access logging disabled",
+    "description": "Bucket Access Logging Disabled",
     "dashboard_name": "Buckets",
     "path": "s3.buckets.id",
     "conditions": [

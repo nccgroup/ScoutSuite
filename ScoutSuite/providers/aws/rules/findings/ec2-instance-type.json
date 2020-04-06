@@ -1,5 +1,5 @@
 {
-    "title": "Use of _ARG_0_ Instances",
+    "description": "Use of _ARG_0_ Instances",
     "rationale": "Policies dictate EC2 instances of type _ARG_0_ should not be used in this environment",
     "dashboard_name": "Instances",
     "path": "ec2.regions.id.vpcs.id.instances.id",

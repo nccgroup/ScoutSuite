@@ -1,5 +1,5 @@
 {
-    "title": "Lack of key rotation (_ARG_0_)",
+    "description": "Lack of Key Rotation (_ARG_0_)",
     "rationale": "In case of access key compromise, the lack of credential rotation increases the period during which an attacker has access to the AWS account",
     "dashboard_name": "Access keys",
     "display_path": "iam.users.id",

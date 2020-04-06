@@ -1,5 +1,5 @@
 {
-    "title": "Instance Storage Not Encrypted",
+    "description": "Instance Storage Not Encrypted",
     "dashboard_name": "Instances",
     "path": "rds.regions.id.vpcs.id.instances.id",
     "conditions": [

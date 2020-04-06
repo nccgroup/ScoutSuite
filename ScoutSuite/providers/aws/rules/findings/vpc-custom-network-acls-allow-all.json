@@ -1,5 +1,5 @@
 {
-    "title": "Network ACLs allow all _ARG_0_ traffic (custom)",
+    "description": "Network ACLs Allow All _ARG_0_ Traffic (custom)",
     "rationale": "Network ACLs are designed to provide a secondary layer of security. Adding a rule that allows all network traffic (all protocols, IPs, and _ARG_1_) prior to any deny rule defeats the purpose of network ACLs.",
     "dashboard_name": "Network ACLs",
     "path": "vpc.regions.id.vpcs.id.network_acls.id",

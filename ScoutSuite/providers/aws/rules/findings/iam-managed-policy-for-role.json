@@ -1,5 +1,5 @@
 {
-    "title": "Managed policy allows _ARG_0_:_ARG_1_ *",
+    "description": "Managed Policy Allows _ARG_0_:_ARG_1_ *",
     "dashboard_name": "Policies",
     "display_path": "iam.policies.id",
     "path": "iam.policies.id.PolicyDocument.Statement.id",

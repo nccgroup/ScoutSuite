@@ -1,5 +1,5 @@
 {
-    "title": "_ARG_2_",
+    "description": "_ARG_2_",
     "dashboard_name": "Bucket ACLs",
     "display_path": "s3.buckets.id",
     "path": "s3.buckets.id.grantees.id",

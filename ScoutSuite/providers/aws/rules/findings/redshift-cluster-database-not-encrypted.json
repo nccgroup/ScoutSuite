@@ -1,5 +1,5 @@
 {
-    "title": "Cluster database encryption disabled",
+    "description": "Cluster Database Encryption Disabled",
     "dashboard_name": "Clusters",
     "path": "redshift.regions.id.vpcs.id.clusters.id",
     "conditions": [

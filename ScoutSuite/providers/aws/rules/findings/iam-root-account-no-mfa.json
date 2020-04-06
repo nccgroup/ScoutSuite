@@ -1,5 +1,5 @@
 {
-    "title": "Lack of MFA (root account)",
+    "description": "Lack of MFA (root Account)",
     "dashboard_name": "Root account",
     "path": "iam.credential_reports.id",
     "conditions": [

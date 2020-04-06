@@ -30,9 +30,9 @@ def format_folder(folder_path):
                 print('exception {} for \"{}\"'.format(e, fn))
             else:
                 # change legacy field name - TODO remove once there are none left
-                if 'description' in data:
-                    data['title'] = data['description']
-                    data.pop('description', None)
+                if 'title' in data:
+                    data['description'] = data['title']
+                    data.pop('title', None)
                 # remove legacy HTML from rationale - TODO remove once there are none left
                 if 'rationale' in data.keys():
                     data['rationale'] = data['rationale'].replace('<b>Description:</b><br><br>', '')
@@ -40,11 +40,11 @@ def format_folder(folder_path):
                     if 'References' in data['rationale'] or 'CIS' in data['rationale']:
                         print('Potentially legacy rationale for {}: {}'.format(fn, data['rationale']))
                 # capitalize titles
-                data['title'] = get_capitalized_title(data['title'])
+                data['description'] = get_capitalized_title(data['description'])
                 # back to start
                 json_file.seek(0)
                 # sort keys
-                sort_order = ['title', 'rationale', 'remediation', 'compliance', 'references',
+                sort_order = ['description', 'rationale', 'remediation', 'compliance', 'references',
                               'dashboard_name', 'display_path', 'path', 'conditions',
                               'key', 'keys', 'arg_names', 'id_suffix']
                 try:

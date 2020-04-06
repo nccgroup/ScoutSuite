@@ -1,5 +1,5 @@
 {
-    "title": "Version upgrade disabled",
+    "description": "Version Upgrade Disabled",
     "dashboard_name": "Clusters",
     "path": "redshift.regions.id.vpcs.id.clusters.id",
     "conditions": [

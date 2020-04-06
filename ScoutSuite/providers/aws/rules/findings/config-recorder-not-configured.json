@@ -1,5 +1,5 @@
 {
-    "title": "Config Service not Configured",
+    "description": "Config Service Not Configured",
     "rationale": "No Config recorders are configured, which means that changes in AWS resource configuration are not logged.",
     "dashboard_name": "Regions",
     "path": "config.regions.id",

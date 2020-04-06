@@ -1,5 +1,5 @@
 {
-    "title": "CloudTrail Service not Configured",
+    "description": "CloudTrail Service Not Configured",
     "rationale": "CloudTrail is not configured, which means that API activity is not logged.",
     "dashboard_name": "Regions",
     "path": "cloudtrail.regions.id",

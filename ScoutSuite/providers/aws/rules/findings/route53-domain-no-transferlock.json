@@ -1,5 +1,5 @@
 {
-    "title": "Domain transfer not locked",
+    "description": "Domain Transfer Not Locked",
     "dashboard_name": "Domains",
     "path": "route53.regions.id.domains.id",
     "conditions": [

@@ -1,5 +1,5 @@
 {
-    "title": "Subnet without a flow log",
+    "description": "Subnet without a Flow Log",
     "rationale": "Flow logs enable the investigation of incidents involving unauthorized network traffic, such as an attacker exfiltrating data or pivoting to other hosts.",
     "compliance": [
         {

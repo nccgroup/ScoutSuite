@@ -1,5 +1,5 @@
 {
-    "title": "_ARG_0_ authorized to all principals",
+    "description": "_ARG_0_ Authorized to All Principals",
     "dashboard_name": "Statements",
     "display_path": "ses.regions.id.identities.id",
     "path": "ses.regions.id.identities.id.policies.id.Statement.id",

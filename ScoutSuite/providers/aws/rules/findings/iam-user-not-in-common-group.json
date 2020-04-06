@@ -1,5 +1,5 @@
 {
-    "title": "User not in common group",
+    "description": "User Not in Common Group",
     "dashboard_name": "Users",
     "path": "iam.users.id",
     "conditions": [

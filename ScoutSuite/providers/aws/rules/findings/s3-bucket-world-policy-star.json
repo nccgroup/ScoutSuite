@@ -1,5 +1,5 @@
 {
-    "title": "All actions authorized to all principals",
+    "description": "All Actions Authorized to All Principals",
     "dashboard_name": "Buckets",
     "display_path": "s3.buckets.id",
     "path": "s3.buckets.id.policy.Statement.id",

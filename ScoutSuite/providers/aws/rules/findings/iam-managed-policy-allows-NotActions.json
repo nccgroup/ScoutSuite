@@ -1,5 +1,5 @@
 {
-    "title": "Managed policy allows NotActions",
+    "description": "Managed Policy Allows NotActions",
     "rationale": "The combination of \"effect = allow\" and \"NotAction\" results in the policy allowing every action except those listed in the statement. The target policy does not follow the principle of least privilege because thousands of actions exist in AWS and because this policy automatically authorizes users to perform new actions created, regardless of their nature.",
     "dashboard_name": "Policies",
     "display_path": "iam.policies.id",

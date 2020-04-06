@@ -1,5 +1,5 @@
 {
-    "title": "DKIM not enabled",
+    "description": "DKIM Not Enabled",
     "rationale": "DKIM signing is not enabled for emails sent from the identity.",
     "dashboard_name": "Identities",
     "path": "ses.regions.id.identities.id",

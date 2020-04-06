@@ -1,5 +1,5 @@
 {
-    "title": "Subnet with default _ARG_0_ NACLs",
+    "description": "Subnet with Default _ARG_0_ NACLs",
     "rationale": "Default _ARG_0_ network access control lists allow all network traffic (all protocols, IPs, and _ARG_1_), hence do not provide the secondary layer of security network ACLs are supposed to.",
     "dashboard_name": "Subnets",
     "path": "vpc.regions.id.vpcs.id.subnets.id",

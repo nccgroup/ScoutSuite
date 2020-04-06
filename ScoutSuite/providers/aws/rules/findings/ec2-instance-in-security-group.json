@@ -1,5 +1,5 @@
 {
-    "title": "EC2 Instance Belongs to Specific Security Group",
+    "description": "EC2 Instance Belongs to Specific Security Group",
     "path": "ec2.regions.id.vpcs.id.instances.id",
     "conditions": [
         "and",

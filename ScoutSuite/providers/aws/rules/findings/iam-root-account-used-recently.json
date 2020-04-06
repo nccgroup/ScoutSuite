@@ -1,5 +1,5 @@
 {
-    "title": "Root account used recently",
+    "description": "Root Account Used Recently",
     "dashboard_name": "Root account",
     "path": "iam.credential_reports.id",
     "conditions": [

@@ -1,5 +1,5 @@
 {
-    "title": "DKIM not verified",
+    "description": "DKIM Not Verified",
     "rationale": "Amazon SES has not verified the DKIM DNS records (tokens) published in the domain name's DNS.",
     "dashboard_name": "Identities",
     "path": "ses.regions.id.identities.id",

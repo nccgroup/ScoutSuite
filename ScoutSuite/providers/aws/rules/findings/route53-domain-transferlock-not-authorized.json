@@ -1,5 +1,5 @@
 {
-    "title": "Domain transfer lock not supported by TLD",
+    "description": "Domain Transfer Lock Not Supported by TLD",
     "dashboard_name": "Domains",
     "path": "route53.regions.id.domains.id",
     "conditions": [

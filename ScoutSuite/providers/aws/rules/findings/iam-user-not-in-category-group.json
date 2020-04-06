@@ -1,5 +1,5 @@
 {
-    "title": "User not in category group",
+    "description": "User Not in Category Group",
     "dashboard_name": "Users",
     "path": "iam.users.id",
     "conditions": [

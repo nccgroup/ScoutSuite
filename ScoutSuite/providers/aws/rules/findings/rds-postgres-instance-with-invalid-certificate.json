@@ -1,5 +1,5 @@
 {
-    "title": "Invalid SSL Certificate (PostgreSQL)",
+    "description": "Invalid SSL Certificate (PostgreSQL)",
     "dashboard_name": "Instances",
     "path": "rds.regions.id.vpcs.id.instances.id",
     "conditions": [

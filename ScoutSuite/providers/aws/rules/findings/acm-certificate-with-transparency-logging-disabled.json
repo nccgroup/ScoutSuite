@@ -1,5 +1,5 @@
 {
-    "title": "ACM Certificate with Transparency Logging set to Disabled",
+    "description": "ACM Certificate with Transparency Logging Set to Disabled",
     "rationale": "Disabling Transparency Logging may result in browsers not trusting your certificate. As of April 30 2018, Google Chrome no longer trusts public SSL/TLS certificates that are not recorded in a certificate transparency log. Transparancy Logging should be enabled as a best practice.",
     "dashboard_name": "Certificates",
     "path": "acm.regions.id.certificates.id",

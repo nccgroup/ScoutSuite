@@ -1,5 +1,5 @@
 {
-    "title": "Auto Minor Version Upgrade Disabled",
+    "description": "Auto Minor Version Upgrade Disabled",
     "dashboard_name": "Instances",
     "path": "rds.regions.id.vpcs.id.instances.id",
     "conditions": [

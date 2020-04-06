@@ -1,5 +1,5 @@
 {
-    "title": "EBS Snapshot not Encrypted",
+    "description": "EBS Snapshot Not Encrypted",
     "rationale": "Data-at-rest should be encrypted.",
     "dashboard_name": "Snapshots",
     "path": "ec2.regions.id.snapshots.id",

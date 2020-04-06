@@ -1,5 +1,5 @@
 {
-    "title": "Cluster publicly accessible",
+    "description": "Cluster Publicly Accessible",
     "dashboard_name": "Clusters",
     "path": "redshift.regions.id.vpcs.id.clusters.id",
     "conditions": [

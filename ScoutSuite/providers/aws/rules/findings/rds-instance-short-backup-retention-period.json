@@ -1,5 +1,5 @@
 {
-    "title": "Short Backup Retention Period",
+    "description": "Short Backup Retention Period",
     "dashboard_name": "Instances",
     "path": "rds.regions.id.vpcs.id.instances.id",
     "conditions": [

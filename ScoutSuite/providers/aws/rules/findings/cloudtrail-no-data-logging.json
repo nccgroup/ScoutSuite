@@ -1,5 +1,5 @@
 {
-    "title": "Data Logging not Configured",
+    "description": "Data Logging Not Configured",
     "rationale": "CloudTrail data logging is not configured, which means that S3 access is not logged.",
     "dashboard_name": "Configuration",
     "display_path": "cloudtrail.regions.id.trails.id",

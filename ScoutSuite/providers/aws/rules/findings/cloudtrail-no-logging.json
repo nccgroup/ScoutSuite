@@ -1,5 +1,5 @@
 {
-    "title": "Logging Disabled",
+    "description": "Logging Disabled",
     "rationale": "Logging is disabled for a given Trail. Depending on the configuration, logs for important API activity may be missing.",
     "dashboard_name": "Trails",
     "path": "cloudtrail.regions.id.trails.id",

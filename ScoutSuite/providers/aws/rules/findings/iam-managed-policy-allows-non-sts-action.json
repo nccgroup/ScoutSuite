@@ -1,5 +1,5 @@
 {
-    "title": "Managed policy allows non STS action",
+    "description": "Managed Policy Allows Non STS Action",
     "dashboard_name": "Policies",
     "display_path": "iam.policies.id",
     "path": "iam.policies.id.PolicyDocument.Statement.id",

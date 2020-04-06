@@ -1,5 +1,5 @@
 {
-    "title": "Single AZ RDS Instance",
+    "description": "Single AZ RDS Instance",
     "rationale": "In case of failure, with a single-AZ deployment configuration, should an availability zone specific database failure occur, Amazon RDS can not automatically fail over to the standby availability zone.",
     "dashboard_name": "Instances",
     "path": "rds.regions.id.vpcs.id.instances.id",

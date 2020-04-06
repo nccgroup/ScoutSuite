@@ -1,5 +1,5 @@
 {
-    "title": "User without MFA",
+    "description": "User without MFA",
     "dashboard_name": "Users",
     "path": "iam.users.id",
     "conditions": [

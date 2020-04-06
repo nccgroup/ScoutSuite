@@ -1,5 +1,5 @@
 {
-    "title": "Security Group Allows All IP Addresses",
+    "description": "Security Group Allows All IP Addresses",
     "dashboard_name": "Security Groups",
     "display_path": "rds.regions.id.vpcs.id.security_groups.id",
     "path": "rds.regions.id.vpcs.id.security_groups.id.ip_ranges",

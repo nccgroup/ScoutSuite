@@ -1,5 +1,5 @@
 {
-    "title": "Security group allows all",
+    "description": "Security Group Allows All",
     "dashboard_name": "Security Groups",
     "display_path": "redshift.regions.id.vpcs.id.security_groups.id",
     "path": "redshift.regions.id.vpcs.id.security_groups.id.IPRanges.id.CIDRIP",

@@ -1,5 +1,5 @@
 {
-    "title": "Subnet with \"allow all\" _ARG_0_ NACLs",
+    "description": "Subnet with \"Allow All\" _ARG_0_ NACLs",
     "rationale": "Network ACLs associated with subnets and VPCs should not allow all _ARG_0_ traffic.",
     "dashboard_name": "Subnets",
     "path": "vpc.regions.id.vpcs.id.subnets.id",

@@ -1,5 +1,5 @@
 {
-    "title": "Publicly Accessible RDS Snapshot",
+    "description": "Publicly Accessible RDS Snapshot",
     "dashboard_name": "Snapshots",
     "display_path": "rds.regions.id.vpcs.id.snapshots.id",
     "path": "rds.regions.id.vpcs.id.snapshots.id.attributes.id",

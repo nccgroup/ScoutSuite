@@ -1,5 +1,5 @@
 {
-    "title": "Public EBS Snapshot",
+    "description": "Public EBS Snapshot",
     "rationale": "Snapshots should never be public, as this risks exposing sensitive data.",
     "dashboard_name": "Snapshots",
     "path": "ec2.regions.id.snapshots.id",

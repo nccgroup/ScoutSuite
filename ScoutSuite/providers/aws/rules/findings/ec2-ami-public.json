@@ -1,5 +1,5 @@
 {
-    "title": "Publicly Accessible AMI",
+    "description": "Publicly Accessible AMI",
     "rationale": "AMIs should never intentionally be made public. If they need to be shared this can be done with specific AWS accounts.",
     "dashboard_name": "Images",
     "path": "ec2.regions.id.images.id",

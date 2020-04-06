@@ -1,5 +1,5 @@
 {
-    "title": "User with multiple API keys",
+    "description": "User with Multiple API Keys",
     "dashboard_name": "Users",
     "path": "iam.users.id",
     "conditions": [

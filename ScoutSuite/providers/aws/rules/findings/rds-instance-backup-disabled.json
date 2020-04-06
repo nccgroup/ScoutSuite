@@ -1,5 +1,5 @@
 {
-    "title": "Backup Disabled",
+    "description": "Backup Disabled",
     "dashboard_name": "Instances",
     "path": "rds.regions.id.vpcs.id.instances.id",
     "conditions": [

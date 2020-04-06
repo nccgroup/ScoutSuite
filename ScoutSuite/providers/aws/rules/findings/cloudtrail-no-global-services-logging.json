@@ -1,5 +1,5 @@
 {
-    "title": "Global Services Logging Disabled",
+    "description": "Global Services Logging Disabled",
     "rationale": "API activity for global services such as IAM and STS is not logged. Investigation of incidents will be incomplete due to the lack of information.",
     "dashboard_name": "Trails",
     "path": "cloudtrail.regions.id.trails.id",

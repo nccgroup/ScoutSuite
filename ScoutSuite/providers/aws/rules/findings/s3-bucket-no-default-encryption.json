@@ -1,5 +1,5 @@
 {
-    "title": "Bucket without default encryption enabled",
+    "description": "Bucket without Default Encryption Enabled",
     "dashboard_name": "Buckets",
     "path": "s3.buckets.id",
     "conditions": [
