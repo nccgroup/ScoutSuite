@@ -259,6 +259,18 @@
                     "path": "services.eks.regions.id.clusters"
                 }
             }
+        },
+        "ecr": {
+            "resources": {
+                "repositories": {
+                    "cols": 2,
+                    "path": "services.ecr.regions.id.repositories"
+                },
+                "images": {
+                    "cols": 2,
+                    "path": "services.ecr.regions.id.images"
+                }
+            }
         }
     },
     "security": {

@@ -10,6 +10,7 @@ formatted_service_name = {
     'config': 'Config',
     'directconnect': 'Direct Connect',
     'dynamodb': 'DynamoDB',
+    'ecr': 'ECR',
     'elbv2': 'ELBv2',
     'eks': 'EKS',
     'elasticache': 'ElastiCache',
