@@ -1,11 +1,23 @@
 {
-    "dashboard_name": "Storage Accounts",
     "description": "Public Blob Containers",
-    "rationale": "<b>Description:</b><br><br>Blob containers should be private.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.1.0 3.6</li></ul>",
-    "path": "storageaccounts.subscriptions.id.storage_accounts.id.blob_containers.id",
+    "rationale": "Blob containers should be private.",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.1.0",
+            "reference": "3.6"
+        }
+    ],
+    "dashboard_name": "Storage Accounts",
     "display_path": "storageaccounts.subscriptions.id.storage_accounts.id",
-    "conditions": [ "and",
-        [ "storageaccounts.subscriptions.id.storage_accounts.id.blob_containers.id.public_access_allowed", "true", "" ]
+    "path": "storageaccounts.subscriptions.id.storage_accounts.id.blob_containers.id",
+    "conditions": [
+        "and",
+        [
+            "storageaccounts.subscriptions.id.storage_accounts.id.blob_containers.id.public_access_allowed",
+            "true",
+            ""
+        ]
     ],
     "id_suffix": "public_access_allowed"
 }
