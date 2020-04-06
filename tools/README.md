@@ -2,6 +2,12 @@
 
 This folder holds a number of useful tools for development and advanced usage of Scout Suite.
 
+## [format_findings.py](https://github.com/nccgroup/ScoutSuite/blob/master/tools/format_findings.py)
+
+Formats all findings to ensure they follow standard format.
+
+Refer to https://github.com/nccgroup/ScoutSuite/wiki/HowTo:-Create-a-new-rule for related information.
+
 ## [gen-tests.py](https://github.com/nccgroup/ScoutSuite/blob/master/tools/gen-tests.py)
 
 TBD 
