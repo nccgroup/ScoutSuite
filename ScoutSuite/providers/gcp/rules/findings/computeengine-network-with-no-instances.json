@@ -1,5 +1,5 @@
 {
-    "title": "Network without Instances",
+    "description": "Network without Instances",
     "dashboard_name": "Networks",
     "path": "computeengine.projects.id.networks.id",
     "conditions": [

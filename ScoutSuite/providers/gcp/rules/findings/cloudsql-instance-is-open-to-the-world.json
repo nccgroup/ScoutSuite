@@ -1,5 +1,5 @@
 {
-    "title": "Instance Allowing All Incoming Connections",
+    "description": "Instance Allowing All Incoming Connections",
     "rationale": "Database instances should accept connections from trusted IPs and networks only.",
     "compliance": [
         {

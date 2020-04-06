@@ -1,5 +1,5 @@
 {
-    "title": "Instance Disk without Snapshots",
+    "description": "Instance Disk without Snapshots",
     "dashboard_name": "Instances",
     "display_path": "computeengine.projects.id.zones.id.instances.id",
     "path": "computeengine.projects.id.zones.id.instances.id.disks.id",
