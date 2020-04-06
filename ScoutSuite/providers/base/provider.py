@@ -284,7 +284,11 @@ class BaseProvider(object):
                                                                    summary]['path'].split('.'))
                                     except Exception as e:
                                         source = {}
-                                    target_object.update(source)
+                                    try:
+                                        target_object.update(source)
+                                    except Exception as e:
+                                        if target_object:
+                                            raise e
 
         return None
 

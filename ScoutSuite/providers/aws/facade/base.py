@@ -27,11 +27,18 @@ from ScoutSuite.providers.aws.facade.secretsmanager import SecretsManagerFacade
 from ScoutSuite.providers.aws.utils import get_aws_account_id
 from ScoutSuite.providers.utils import run_concurrently
 
+from ScoutSuite.core.conditions import print_error
+
 # Try to import proprietary facades
 try:
     from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
 except ImportError:
     pass
+try:
+    from ScoutSuite.providers.aws.facade.eks_private import EKSFacade
+except ImportError:
+    pass
+
 
 
 class AWSFacade(AWSBaseFacade):
@@ -43,14 +50,38 @@ class AWSFacade(AWSBaseFacade):
 
     async def build_region_list(self, service: str, chosen_regions=None, excluded_regions=None, partition_name='aws'):
 
-        service = 'ec2containerservice' if service == 'ecs' else service
-        available_services = await run_concurrently(lambda: Session(region_name='eu-west-1').get_available_services())
+        # service = 'ec2containerservice' if service == 'ecs' else service  # FIXME why is this here?
 
+        available_services = await run_concurrently(lambda: Session(region_name='eu-west-1').get_available_services())
         if service not in available_services:
             raise Exception('Service ' + service + ' is not available.')
 
         regions = await run_concurrently(lambda: Session(region_name='eu-west-1').get_available_regions(service,
                                                                                                         partition_name))
+
+        if not regions:
+            # Could be an instance of https://github.com/boto/boto3/issues/1662
+            if service == 'eks':  # TODO fix when the issue is resolved
+                regions = ['ap-east-1',
+                           'ap-northeast-1',
+                           'ap-northeast-2',
+                           'ap-south-1',
+                           'ap-southeast-1',
+                           'ap-southeast-2',
+                           'ca-central-1',
+                           'eu-central-1',
+                           'eu-north-1',
+                           'eu-west-1',
+                           'eu-west-2',
+                           'eu-west-3',
+                           'me-south-1',
+                           'sa-east-1',
+                           'us-east-1',
+                           'us-east-2',
+                           # 'us-west-1',
+                           'us-west-2']
+            else:
+                print_error('"get_available_regions" returned an empty array for service "{}", something is wrong'.format(service))
 
         # identify regions that are not opted-in
         ec2_not_opted_in_regions = self.session.client('ec2', 'eu-west-1')\
@@ -101,5 +132,9 @@ class AWSFacade(AWSBaseFacade):
         # Instantiate facades for proprietary services
         try:
             self.dynamodb = DynamoDBFacade(self.session)
+        except NameError:
+            pass
+        try:
+            self.eks = EKSFacade(self.session)
         except NameError:
             pass

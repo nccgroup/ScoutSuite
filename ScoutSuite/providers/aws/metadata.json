@@ -242,7 +242,6 @@
                 }
             }
         },
-
         "awslambda": {
             "resources": {
                 "functions": {
@@ -250,6 +249,14 @@
                     "callbacks": [
                         [ "match_security_groups_and_resources_callback", {"status_path": ["runtime"], "sg_list_attribute_name": [ "VpcConfig", "SecurityGroupIds" ]} ]
                     ]
+                }
+            }
+        },
+        "eks": {
+            "resources": {
+                "clusters": {
+                    "cols": 2,
+                    "path": "services.eks.regions.id.clusters"
                 }
             }
         }

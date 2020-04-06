@@ -74,9 +74,6 @@ class AWSProvider(BaseProvider):
             self._check_ec2_zone_distribution()
             self._add_last_snapshot_date_to_ec2_volumes()
 
-        if 'emr' in self.service_list and 'ec2' in self.service_list and 'vpc' in self.service_list:
-            self._set_emr_vpc_ids()
-
         if 'ec2' in self.service_list and 'iam' in self.service_list:
             self._match_instances_and_roles()
 
@@ -90,7 +87,7 @@ class AWSProvider(BaseProvider):
         if 'elb' in self.services:
             self._parse_elb_policies()
 
-        if 'emr' in self.service_list and 'ec2' in self.service_list:
+        if 'emr' in self.service_list and 'ec2' in self.service_list and 'vpc' in self.service_list:
             self._set_emr_vpc_ids()
 
         self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
@@ -532,8 +529,10 @@ class AWSProvider(BaseProvider):
                 pass
             elif not self.services['ec2']:  # service not included in run
                 pass
+            elif not str(e):
+                print_exception('Failed to parse {}'.format(resource_type))
             else:
-                print_exception('Failed to parse %s: %s' % (resource_type, e))
+                print_exception('Failed to parse {}: {}'.format(resource_type, e))
 
     def _set_emr_vpc_ids(self):
         clear_list = []
@@ -684,46 +683,47 @@ class AWSProvider(BaseProvider):
                                           security_groups, listeners=None):
         listeners = [] if listeners is None else listeners
         manage_dictionary(attack_surface_config, public_ip, {'protocols': {}})
-        for sg_id in security_groups:
-            sg_path = copy.deepcopy(current_path[0:6])
-            sg_path[1] = 'ec2'
-            sg_path.append('security_groups')
-            sg_path.append(sg_id)
-            sg_path.append('rules')
-            sg_path.append('ingress')
-            ingress_rules = get_object_at(self, sg_path)
-            for p in ingress_rules['protocols']:
-                for port in ingress_rules['protocols'][p]['ports']:
-                    if len(listeners) == 0 and 'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
-                        manage_dictionary(
-                            attack_surface_config[public_ip]['protocols'], p, {'ports': {}})
-                        manage_dictionary(attack_surface_config[public_ip]['protocols'][p]['ports'], port,
-                                          {'cidrs': []})
-                        attack_surface_config[public_ip]['protocols'][p]['ports'][port]['cidrs'] += \
-                            ingress_rules['protocols'][p]['ports'][port]['cidrs']
-                    else:
-                        ports = port.split('-')
-                        if len(ports) > 1:
-                            port_min = int(ports[0])
-                            port_max = int(ports[1])
-                        elif port == 'N/A':
-                            port_min = port_max = None
-                        elif port == 'ALL':
-                            port_min = 0
-                            port_max = 65535
-                        elif p == 'ICMP':
-                            port_min = port_max = None
+        if self.services.get('ec2'):  # validate that the service was included in run
+            for sg_id in security_groups:
+                sg_path = copy.deepcopy(current_path[0:6])
+                sg_path[1] = 'ec2'
+                sg_path.append('security_groups')
+                sg_path.append(sg_id)
+                sg_path.append('rules')
+                sg_path.append('ingress')
+                ingress_rules = get_object_at(self, sg_path)
+                for p in ingress_rules['protocols']:
+                    for port in ingress_rules['protocols'][p]['ports']:
+                        if len(listeners) == 0 and 'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
+                            manage_dictionary(
+                                attack_surface_config[public_ip]['protocols'], p, {'ports': {}})
+                            manage_dictionary(attack_surface_config[public_ip]['protocols'][p]['ports'], port,
+                                              {'cidrs': []})
+                            attack_surface_config[public_ip]['protocols'][p]['ports'][port]['cidrs'] += \
+                                ingress_rules['protocols'][p]['ports'][port]['cidrs']
                         else:
-                            port_min = port_max = int(port)
-                        for listener in listeners:
-                            if (port_min and port_max) and port_min < int(listener) < port_max and \
-                                    'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
-                                manage_dictionary(
-                                    attack_surface_config[public_ip]['protocols'], p, {'ports': {}})
-                                manage_dictionary(attack_surface_config[public_ip]['protocols'][p]['ports'],
-                                                  str(listener), {'cidrs': []})
-                                attack_surface_config[public_ip]['protocols'][p]['ports'][str(listener)]['cidrs'] += \
-                                    ingress_rules['protocols'][p]['ports'][port]['cidrs']
+                            ports = port.split('-')
+                            if len(ports) > 1:
+                                port_min = int(ports[0])
+                                port_max = int(ports[1])
+                            elif port == 'N/A':
+                                port_min = port_max = None
+                            elif port == 'ALL':
+                                port_min = 0
+                                port_max = 65535
+                            elif p == 'ICMP':
+                                port_min = port_max = None
+                            else:
+                                port_min = port_max = int(port)
+                            for listener in listeners:
+                                if (port_min and port_max) and port_min < int(listener) < port_max and \
+                                        'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
+                                    manage_dictionary(
+                                        attack_surface_config[public_ip]['protocols'], p, {'ports': {}})
+                                    manage_dictionary(attack_surface_config[public_ip]['protocols'][p]['ports'],
+                                                      str(listener), {'cidrs': []})
+                                    attack_surface_config[public_ip]['protocols'][p]['ports'][str(listener)]['cidrs'] += \
+                                        ingress_rules['protocols'][p]['ports'][port]['cidrs']
 
     def _parse_elb_policies(self):
         self._go_to_and_do(self.services['elb'],

@@ -340,10 +340,28 @@
                 "level": "warning"
             }
         ],
+        "elb-listener-allowing-cleartext.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "elb-no-access-logs.json": [
             {
                 "enabled": true,
                 "level": "warning"
+            }
+        ],
+        "elb-older-ssl-policy.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "elbv2-listener-allowing-cleartext.json": [
+            {
+                "enabled": true,
+                "level": "danger"
             }
         ],
         "elbv2-no-access-logs.json": [
@@ -944,7 +962,7 @@
             {
                 "args": [
                     "Get",
-                    "s3:GetObject*"
+                    "s3:Get*"
                 ],
                 "enabled": true,
                 "level": "danger"
@@ -952,7 +970,7 @@
             {
                 "args": [
                     "List",
-                    "s3:ListBucket*"
+                    "s3:List*"
                 ],
                 "enabled": true,
                 "level": "danger"
@@ -960,14 +978,6 @@
             {
                 "args": [
                     "Put",
-                    "s3:PutObject*"
-                ],
-                "enabled": true,
-                "level": "danger"
-            },
-            {
-                "args": [
-                    "Manage",
                     "s3:Put*"
                 ],
                 "enabled": true,
