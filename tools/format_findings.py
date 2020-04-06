@@ -17,7 +17,10 @@ def get_folder_files(folder_path):
 
 
 def format_folder(folder_path):
+    print('Formatting findings in {}'.format(folder_path))
+
     files = get_folder_files(folder_path)
+    finding_with_no_rationale = 0
 
     for fn in files:
 
@@ -39,6 +42,8 @@ def format_folder(folder_path):
                     # check for legacy content - TODO remove once there are none left
                     if 'References' in data['rationale'] or 'CIS' in data['rationale']:
                         print('Potentially legacy rationale for {}: {}'.format(fn, data['rationale']))
+                else:
+                    finding_with_no_rationale += 1
                 # capitalize titles
                 data['description'] = get_capitalized_title(data['description'])
                 # back to start
@@ -54,6 +59,8 @@ def format_folder(folder_path):
                 # save to file
                 json.dump(ordered_data, json_file, sort_keys=False, indent=4)
 
+    print('Found {}/{} findings with no rationale'.format(finding_with_no_rationale, len(files)))
+
 
 if __name__ == "__main__":
 
@@ -67,11 +74,10 @@ if __name__ == "__main__":
         format_folder(args.folder)
     else:
         # provider_odes = ['aliyun', 'aws', 'azure', 'gcp', 'oci']
-        provider_codes = ['gcp']
+        provider_codes = ['aws', 'azure', 'gcp']
 
         for provider_code in provider_codes:
             current_file_dirname = os.path.dirname(__file__)
             findings_path = os.path.abspath(
                 os.path.join(current_file_dirname, "../ScoutSuite/providers/{}/rules/findings/".format(provider_code)))
-            print('Formatting findings in {}'.format(findings_path))
             format_folder(findings_path)
