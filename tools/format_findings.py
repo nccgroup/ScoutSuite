@@ -73,8 +73,7 @@ if __name__ == "__main__":
     if args.folder:
         format_folder(args.folder)
     else:
-        # provider_odes = ['aliyun', 'aws', 'azure', 'gcp', 'oci']
-        provider_codes = ['aws', 'azure', 'gcp']
+        provider_codes = ['aliyun', 'aws', 'azure', 'gcp', 'oci']
 
         for provider_code in provider_codes:
             current_file_dirname = os.path.dirname(__file__)
