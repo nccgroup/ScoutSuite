@@ -35,13 +35,13 @@ class ProcessingEngine(object):
                 if not rule.enabled:  # or rule.service not in []: # TODO: handle this...
                     continue
 
-                print_debug('Processing %s rule[%s]: "%s"' % (rule.service, rule.filename, rule.title))
+                print_debug('Processing %s rule[%s]: "%s"' % (rule.service, rule.filename, rule.description))
                 finding_path = rule.path
                 path = finding_path.split('.')
                 service = path[0]
                 manage_dictionary(cloud_provider.services[service], self.ruleset.rule_type, {})
                 cloud_provider.services[service][self.ruleset.rule_type][rule.key] = {}
-                cloud_provider.services[service][self.ruleset.rule_type][rule.key]['title'] = rule.title
+                cloud_provider.services[service][self.ruleset.rule_type][rule.key]['description'] = rule.description
                 cloud_provider.services[service][self.ruleset.rule_type][rule.key]['path'] = rule.path
                 for attr in ['level', 'id_suffix', 'display_path']:
                     if hasattr(rule, attr):
