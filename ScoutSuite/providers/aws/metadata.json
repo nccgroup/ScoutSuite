@@ -259,6 +259,14 @@
                     "path": "services.eks.regions.id.clusters"
                 }
             }
+        },
+        "ecs": {
+            "resources": {
+                "clusters": {
+                    "cols": 2,
+                    "path": "services.ecs.regions.id.clusters"
+                }
+            }
         }
     },
     "security": {
