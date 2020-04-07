@@ -320,6 +320,10 @@
                 "images": {
                     "cols": 2,
                     "path": "services.ecr.regions.id.images"
+                },
+                "repositories": {
+                    "cols": 2,
+                    "path": "services.ecr.regions.id.repositories"
                 }
             }
         },
