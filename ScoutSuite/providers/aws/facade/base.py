@@ -58,14 +58,63 @@ class AWSFacade(AWSBaseFacade):
 
     async def build_region_list(self, service: str, chosen_regions=None, excluded_regions=None, partition_name='aws'):
 
-        # service = 'ec2containerservice' if service == 'ecs' else service  # FIXME why is this here?
+        available_services = None
+        try:
+            available_services = await run_concurrently(lambda: Session(region_name='us-east-1').get_available_services())
+        except Exception as e:
+            # see https://github.com/nccgroup/ScoutSuite/issues/548
+            # If failed with the us-east-1 region, we'll try to use the region from the profile
+            try:
+                available_services = await run_concurrently(
+                    lambda: Session(region_name=self.session.region_name).get_available_services())
+            except Exception as e:
+                # see https://github.com/nccgroup/ScoutSuite/issues/685
+                # If above failed, and regions were explicitly specified, will try with those until
+                # one works
+                if chosen_regions:
+                    for region in chosen_regions:
+                        try:
+                            available_services = await run_concurrently(
+                                lambda: Session(region_name=region).get_available_services())
+                            break
+                        except Exception as e:
+                            exception = e
+                    if not available_services:
+                        raise exception
+                else:
+                    raise e
 
-        available_services = await run_concurrently(lambda: Session(region_name='eu-west-1').get_available_services())
         if service not in available_services:
             raise Exception('Service ' + service + ' is not available.')
 
-        regions = await run_concurrently(lambda: Session(region_name='eu-west-1').get_available_regions(service,
-                                                                                                        partition_name))
+        regions = None
+        try:
+            regions = await run_concurrently(lambda: Session(region_name='us-east-1').get_available_regions(service,
+                                                                                                            partition_name))
+        except Exception as e:
+            # see https://github.com/nccgroup/ScoutSuite/issues/548
+            # If failed with the us-east-1 region, we'll try to use the region from the profile
+            try:
+                regions = await run_concurrently(
+                    lambda: Session(region_name=self.session.region_name).get_available_regions(service,
+                                                                                                partition_name))
+            except Exception as e:
+                # see https://github.com/nccgroup/ScoutSuite/issues/685
+                # If above failed, and regions were explicitly specified, will try with those until
+                # one works
+                if chosen_regions:
+                    for region in chosen_regions:
+                        try:
+                            regions = await run_concurrently(
+                                lambda: Session(region_name=region).get_available_regions(service,
+                                                                                          partition_name))
+                            break
+                        except Exception as e:
+                            exception = e
+                    if not regions:
+                        raise exception
+                else:
+                    raise e
 
         if not regions:
             # Could be an instance of https://github.com/boto/boto3/issues/1662
@@ -92,8 +141,37 @@ class AWSFacade(AWSBaseFacade):
                 print_error('"get_available_regions" returned an empty array for service "{}", something is wrong'.format(service))
 
         # identify regions that are not opted-in
-        ec2_not_opted_in_regions = self.session.client('ec2', 'eu-west-1')\
-            .describe_regions(AllRegions=True, Filters=[{'Name': 'opt-in-status', 'Values': ['not-opted-in']}])
+        ec2_not_opted_in_regions = None
+        try:
+            ec2_not_opted_in_regions = self.session.client('ec2', 'us-east-1') \
+                .describe_regions(AllRegions=True, Filters=[{'Name': 'opt-in-status', 'Values': ['not-opted-in']}])
+        except Exception as e:
+            # see https://github.com/nccgroup/ScoutSuite/issues/548
+            # If failed with the us-east-1 region, we'll try to use the region from the profile
+            try:
+                ec2_not_opted_in_regions = \
+                    self.session.client('ec2', self.session.region_name). \
+                        describe_regions(AllRegions=True,
+                                         Filters=[{'Name': 'opt-in-status',
+                                                   'Values': ['not-opted-in']}])
+            except Exception as e:
+                # see https://github.com/nccgroup/ScoutSuite/issues/685
+                # If above failed, and regions were explicitly specified, will try with those until
+                # one works
+                if chosen_regions:
+                    for region in chosen_regions:
+                        try:
+                            ec2_not_opted_in_regions = \
+                                self.session.client('ec2', region).describe_regions(AllRegions=True,
+                                                                                    Filters=[{'Name': 'opt-in-status',
+                                                                                              'Values': ['not-opted-in']}])
+                            break
+                        except Exception as e:
+                            exception = e
+                    if not ec2_not_opted_in_regions:
+                        raise exception
+                else:
+                    raise e
 
         not_opted_in_regions = []
         if ec2_not_opted_in_regions['Regions']:
