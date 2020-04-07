@@ -39,6 +39,10 @@ try:
 except ImportError:
     pass
 try:
+    from ScoutSuite.providers.aws.facade.ecr_private import ECRFacade
+except ImportError:
+    pass
+try:
     from ScoutSuite.providers.aws.facade.eks_private import EKSFacade
 except ImportError:
     pass
@@ -140,6 +144,10 @@ class AWSFacade(AWSBaseFacade):
             pass
         try:
             self.ecs = ECSFacade(self.session)
+        except NameError:
+            pass
+        try:
+            self.ecr = ECRFacade(self.session)
         except NameError:
             pass
         try:
