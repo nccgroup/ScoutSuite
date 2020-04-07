@@ -38,8 +38,7 @@
                     "elbv2.regions.id.vpcs.id.lbs._GET_VALUE_AT_(elbv2.regions.id.vpcs.id.lbs.id).listener_protocols",
                     "containAtLeastOneOf",
                     [
-                        "TLS",
-                        "HTTPS"
+                        "TLS"
                     ]
                 ]
             ]
