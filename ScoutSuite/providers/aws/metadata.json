@@ -262,6 +262,10 @@
         },
         "ecs": {
             "resources": {
+                "regions": {
+                    "cols": 2,
+                    "path": "services.ecs.regions"
+                },
                 "clusters": {
                     "cols": 2,
                     "path": "services.ecs.regions.id.clusters"
