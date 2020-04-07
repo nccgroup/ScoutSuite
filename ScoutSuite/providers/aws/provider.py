@@ -8,6 +8,7 @@ from ScoutSuite.providers.aws.utils import ec2_classic, get_aws_account_id
 from ScoutSuite.providers.base.configs.browser import combine_paths, get_object_at, get_value_at
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.utils import manage_dictionary
+from ScoutSuite.providers.aws.utils import get_partition_name
 
 
 class AWSProvider(BaseProvider):
@@ -34,6 +35,8 @@ class AWSProvider(BaseProvider):
         self.result_format = result_format
 
         self.credentials = kwargs['credentials']
+
+        self.partition = get_partition_name(self.credentials.session)
 
         self.account_id = get_aws_account_id(self.credentials.session)
 
