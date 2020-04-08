@@ -10,9 +10,8 @@ class CredentialReports(AWSResources):
             self[name] = resource
 
     def _parse_credential_reports(self, raw_credential_report):
-        user_id = raw_credential_report['user']
-        raw_credential_report['name'] = user_id
-        raw_credential_report['id'] = user_id
+        raw_credential_report['id'] = get_non_provider_id(raw_credential_report['user'])
+        raw_credential_report['name'] = raw_credential_report['user']
         raw_credential_report['password_enabled'] = raw_credential_report['password_enabled']
         raw_credential_report['password_last_used'] = self._sanitize_date(raw_credential_report['password_last_used'])
         raw_credential_report['password_last_changed'] =\
@@ -30,7 +29,7 @@ class CredentialReports(AWSResources):
         raw_credential_report['last_used'] = self._compute_last_used(raw_credential_report)
         raw_credential_report['cert_1_active'] = raw_credential_report['cert_1_active']
         raw_credential_report['cert_2_active'] = raw_credential_report['cert_2_active']
-        return get_non_provider_id(user_id), raw_credential_report
+        return raw_credential_report['id'], raw_credential_report
 
     @staticmethod
     def _sanitize_date(date):
