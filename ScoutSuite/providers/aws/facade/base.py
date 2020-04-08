@@ -222,6 +222,9 @@ class AWSFacade(AWSBaseFacade):
         # Instantiate facades for proprietary services
         try:
             self.docdb = DocumentDBFacade(self.session)
+        except NameError:
+            pass
+        try:
             self.dynamodb = DynamoDBFacade(self.session)
         except NameError:
             pass

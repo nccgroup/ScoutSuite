@@ -27,15 +27,13 @@ from ScoutSuite.providers.base.services import BaseServicesConfig
 
 # Try to import proprietary services
 try:
-    from ScoutSuite.providers.aws.resources.private_documentdb.base import DocDB
+    from ScoutSuite.providers.aws.resources.private_documentdb.base import DocumentDB
 except ImportError:
     pass
-
 try:
     from ScoutSuite.providers.aws.resources.private_dynamodb.base import DynamoDB
 except ImportError:
     pass
-
 try:
     from ScoutSuite.providers.aws.resources.private_ecr.base import ECR
 except ImportError:
@@ -105,7 +103,7 @@ class AWSServicesConfig(BaseServicesConfig):
 
         # Instantiate proprietary services
         try:
-            self.docdb = DocDB(facade)
+            self.docdb = DocumentDB(facade)
         except NameError as _:
             pass
         try:
