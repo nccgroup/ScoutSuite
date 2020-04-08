@@ -27,7 +27,7 @@ from ScoutSuite.providers.base.services import BaseServicesConfig
 
 # Try to import proprietary services
 try:
-    from ScoutSuite.providers.aws.resources.private_documentdb.base import DocumentDB
+    from ScoutSuite.providers.aws.resources.private_docdb.base import DocDB
 except ImportError:
     pass
 try:
@@ -103,7 +103,7 @@ class AWSServicesConfig(BaseServicesConfig):
 
         # Instantiate proprietary services
         try:
-            self.docdb = DocumentDB(facade)
+            self.docdb = DocDB(facade)
         except NameError as _:
             pass
         try:

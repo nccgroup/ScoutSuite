@@ -427,7 +427,7 @@
         "docdb": {
             "resources": {
                 "clusters": {
-                    "path": "services.docdb.id.clusters"
+                    "path": "services.docdb.regions.id.clusters"
                 }
             }
         },

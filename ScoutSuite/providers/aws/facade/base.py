@@ -31,7 +31,7 @@ from ScoutSuite.core.conditions import print_error
 
 # Try to import proprietary facades
 try:
-    from ScoutSuite.providers.aws.facade.documentdb_private import DocumentDBFacade
+    from ScoutSuite.providers.aws.facade.docdb_private import DocDBFacade
 except ImportError:
     pass
 try:
@@ -221,7 +221,7 @@ class AWSFacade(AWSBaseFacade):
 
         # Instantiate facades for proprietary services
         try:
-            self.docdb = DocumentDBFacade(self.session)
+            self.docdb = DocDBFacade(self.session)
         except NameError:
             pass
         try:
