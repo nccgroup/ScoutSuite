@@ -43,7 +43,7 @@ TBD
 
 Helps parse an object returned by the cloud provider's APIs and generate a boilerplate partial.
 
-Refer to https://github.com/nccgroup/ScoutSuite/wiki/HowTo:-Create-a-custom-partial-for-new-resources for usage information.
+Refer to https://github.com/nccgroup/ScoutSuite/wiki/Tools & https://github.com/nccgroup/ScoutSuite/wiki/HowTo:-Create-a-custom-partial-for-new-resources for usage information.
 
 ## [sort-ruleset.py](https://github.com/nccgroup/ScoutSuite/blob/master/tools/sort-ruleset.py)
 
