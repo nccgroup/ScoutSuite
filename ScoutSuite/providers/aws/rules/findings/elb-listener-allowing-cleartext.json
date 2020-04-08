@@ -1,0 +1,17 @@
+{
+    "description": "Load Balancer Allowing Clear Text (HTTP) Communication",
+    "rationale": "Use of a secure protocol (HTTPS or SSL) is best practice for encrypted communication. A load balancer without a listener using an encrypted protocol can be vulnerable to eavesdropping and man-in-the-middle attacks.",
+    "dashboard_name": "Load Balancer Listeners",
+    "path": "elb.regions.id.vpcs.id.elbs.id.listeners.id",
+    "conditions": [
+        "and",
+        [
+            "elb.regions.id.vpcs.id.elbs.id.listeners.id.Protocol",
+            "containNoneOf",
+            [
+                "HTTPS",
+                "SSL"
+            ]
+        ]
+    ]
+}

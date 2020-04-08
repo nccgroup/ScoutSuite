@@ -1,11 +1,47 @@
 {
-    "description": "Lack of access logs",
-    "rationale": "<b>Description:</b><br><br>Access logs enable traffic analysis and identification of security issues.",
-    "path": "elbv2.regions.id.vpcs.id.lbs.id.attributes.id",
+    "description": "Lack of ELBv2 Access Logs",
+    "rationale": "Elastic Load Balancing provides access logs that capture detailed information about requests sent to your load balancer. Each log contains information such as the time the request was received, the client's IP address, latencies, request paths, and server responses. You can use these access logs to analyze traffic patterns and identify security issues.<br><br>Note that for Network Load Balancers, access logs are created only if the load balancer has a TLS listener.",
+    "references": [
+        "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html",
+        "https://docs.aws.amazon.com/elasticloadbalancing/latest/network/load-balancer-access-logs.html"
+    ],
     "dashboard_name": "Load Balancer Attributes",
     "display_path": "elbv2.regions.id.vpcs.id.lbs.id",
-    "conditions": [ "and",
-        [ "Key", "equal", "access_logs.s3.enabled" ],
-        [ "Value", "equal", "false"]
+    "path": "elbv2.regions.id.vpcs.id.lbs.id.attributes.id",
+    "conditions": [
+        "and",
+        [
+            "Key",
+            "equal",
+            "access_logs.s3.enabled"
+        ],
+        [
+            "Value",
+            "equal",
+            "false"
+        ],
+        [
+            "or",
+            [
+                "elbv2.regions.id.vpcs.id.lbs.id.Type",
+                "equal",
+                "application"
+            ],
+            [
+                "and",
+                [
+                    "elbv2.regions.id.vpcs.id.lbs.id.Type",
+                    "equal",
+                    "network"
+                ],
+                [
+                    "elbv2.regions.id.vpcs.id.lbs._GET_VALUE_AT_(elbv2.regions.id.vpcs.id.lbs.id).listener_protocols",
+                    "containAtLeastOneOf",
+                    [
+                        "TLS"
+                    ]
+                ]
+            ]
+        ]
     ]
 }

@@ -23,7 +23,5 @@ class Groups(AzureResources):
         group_dict['users'] = []  # this will be filled in `finalize()`
         group_dict['roles'] = []  # this will be filled in `finalize()`
 
-        additional_details = await self.facade.aad.get_group_details(group_dict['id'])
-
         return group_dict['id'], group_dict
 

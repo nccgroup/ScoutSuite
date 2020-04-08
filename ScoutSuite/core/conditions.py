@@ -256,7 +256,7 @@ def pass_condition(b, test, a):
 
 
 def fix_path_string(all_info, current_path, path_to_value):
-    # Fixes circulare dependency
+    # Fixes circular dependency
     from ScoutSuite.providers.base.configs.browser import get_value_at
     # handle nested _GET_VALUE_AT_...
     while True:

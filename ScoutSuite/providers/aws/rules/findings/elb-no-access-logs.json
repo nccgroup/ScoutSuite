@@ -1,10 +1,17 @@
 {
-    "description": "Lack of access logs",
-    "rationale": "<b>Description:</b><br><br>Access logs enable traffic analysis and identification of security issues.",
-    "path": "elb.regions.id.vpcs.id.elbs.id.attributes.AccessLog.Enabled",
-    "dashboard_name": "Load Balancer Attributes",
-    "display_path": "elb.regions.id.vpcs.id.elbs.id",
-    "conditions": [ "and",
-        [ "this", "false", "" ]
+    "description": "Lack of ELB Access Logs",
+    "rationale": "Elastic Load Balancing provides access logs that capture detailed information about requests sent to your load balancer. Each log contains information such as the time the request was received, the client's IP address, latencies, request paths, and server responses. You can use these access logs to analyze traffic patterns and identify security issues.",
+    "references": [
+        "https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/access-log-collection.html"
+    ],
+    "dashboard_name": "Load Balancers",
+    "path": "elb.regions.id.vpcs.id.elbs.id",
+    "conditions": [
+        "and",
+        [
+            "elb.regions.id.vpcs.id.elbs.id.attributes.AccessLog.Enabled",
+            "false",
+            ""
+        ]
     ]
 }

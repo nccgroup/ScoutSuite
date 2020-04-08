@@ -1,10 +1,21 @@
 {
-    "dashboard_name": "Storage Accounts",
     "description": "Trusted Microsoft Services Enabled",
-    "rationale": "<b>Description:</b><br><br><br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 3.8</li></ul>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.0.0",
+            "reference": "3.8"
+        }
+    ],
+    "dashboard_name": "Storage Accounts",
     "path": "storageaccounts.subscriptions.id.storage_accounts.id",
-    "conditions": [ "and",
-        [ "storageaccounts.subscriptions.id.storage_accounts.id.trusted_microsoft_services_enabled", "false", ""]
+    "conditions": [
+        "and",
+        [
+            "storageaccounts.subscriptions.id.storage_accounts.id.trusted_microsoft_services_enabled",
+            "false",
+            ""
+        ]
     ],
     "id_suffix": "trusted_microsoft_services_enabled"
 }
