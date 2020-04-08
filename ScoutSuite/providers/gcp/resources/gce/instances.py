@@ -10,7 +10,7 @@ class Instances(GCPCompositeResources):
     ]
 
     def __init__(self, facade: GCPFacade, project_id: str, zone: str):
-        super(GCPCompositeResources, self).__init__(facade)
+        super().__init__(facade)
         self.project_id = project_id
         self.zone = zone
 

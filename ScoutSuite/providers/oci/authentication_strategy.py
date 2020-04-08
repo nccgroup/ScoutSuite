@@ -1,3 +1,5 @@
+import logging
+
 from oci.config import from_file
 from oci.identity import IdentityClient
 
@@ -6,9 +8,14 @@ from ScoutSuite.providers.base.authentication_strategy import AuthenticationStra
 
 class OracleCredentials:
 
-    def __init__(self, config, compartment_id):
+    def __init__(self, config):
         self.config = config
-        self.compartment_id = compartment_id
+
+    def get_scope(self):
+        if 'compartment-id' in self.config:
+            return self.config['compartment-id']
+        else:
+            return self.config['tenancy']
 
 
 class OracleAuthenticationStrategy(AuthenticationStrategy):
@@ -20,14 +27,16 @@ class OracleAuthenticationStrategy(AuthenticationStrategy):
 
         try:
 
+            # Set logging level to error for libraries as otherwise generates a lot of warnings
+            logging.getLogger('oci').setLevel(logging.ERROR)
+
             config = from_file(profile_name=profile)
-            compartment_id = config["tenancy"]
 
             # Get the current user
             identity = IdentityClient(config)
-            user = identity.get_user(config["user"]).data
+            identity.get_user(config["user"]).data
 
-            return OracleCredentials(config, compartment_id)
+            return OracleCredentials(config)
 
         except Exception as e:
             raise AuthenticationException(e)

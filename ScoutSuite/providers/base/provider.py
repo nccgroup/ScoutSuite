@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 import copy
 import json
-import sys
 
 from ScoutSuite import __version__ as scout_version
 from ScoutSuite.core.console import print_exception, print_info, print_error
@@ -57,8 +56,6 @@ class BaseProvider(object):
         """
         Used for adding cross-services configs.
         """
-        ip_ranges = [] if ip_ranges is None else ip_ranges
-
         # Preprocessing dictated by metadata
         self._process_metadata_callbacks()
 
@@ -264,10 +261,8 @@ class BaseProvider(object):
         for service_group in self.metadata:
             if 'summaries' in self.metadata[service_group]:
                 for summary in self.metadata[service_group]['summaries']:
-                    current_path = ['services', service]
                     for callback in self.metadata[service_group]['summaries'][summary]['callbacks']:
                         callback_name = callback[0]
-                        callback_args = copy.deepcopy(callback[1])
                         target_path = self.metadata[service_group]['summaries'][summary]['path'].split('.')
                         # quick fix as legacy Scout expects "self" to be a dict
                         target_object = self
@@ -289,7 +284,11 @@ class BaseProvider(object):
                                                                    summary]['path'].split('.'))
                                     except Exception as e:
                                         source = {}
-                                    target_object.update(source)
+                                    try:
+                                        target_object.update(source)
+                                    except Exception as e:
+                                        if target_object:
+                                            raise e
 
         return None
 

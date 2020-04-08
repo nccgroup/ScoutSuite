@@ -2,6 +2,7 @@ from __future__ import print_function
 
 formatted_service_name = {
     # AWS
+    'acm': 'ACM',
     'cloudformation': 'CloudFormation',
     'cloudtrail': 'CloudTrail',
     'cloudwatch': 'CloudWatch',
@@ -9,12 +10,16 @@ formatted_service_name = {
     'config': 'Config',
     'directconnect': 'Direct Connect',
     'dynamodb': 'DynamoDB',
+    'ecr': 'ECR',
+    'ecs': 'ECS',
     'elbv2': 'ELBv2',
+    'eks': 'EKS',
     'elasticache': 'ElastiCache',
     'lambda': 'Lambda',
     'awslambda': 'Lambda',
     'redshift': 'RedShift',
     'route53': 'Route53',
+    'secretsmanager': 'Secrets Manager',
     'docdb': 'DocumentDB',
     # Azure
     'storageaccounts': 'Storage Accounts',
@@ -24,10 +29,9 @@ formatted_service_name = {
     'appgateway': 'Application Gateway',
     'rediscache': 'Redis Cache',
     'network': 'Network',
-    'appservice': 'App Service',
+    'appservice': 'App Services',
     'loadbalancer': 'Load Balancer',
     'virtualmachines': 'Virtual Machines',
-    'graphrbac': 'Graph RBAC',
     # GCP
     'cloudstorage': 'Cloud Storage',
     'cloudsql': 'Cloud SQL',
@@ -52,6 +56,8 @@ def manage_dictionary(dictionary, key, init, callback=None):
     :param callback:
     :return:
     """
+    if not isinstance(dictionary, dict):
+        raise TypeError()
 
     if str(key) in dictionary:
         return dictionary

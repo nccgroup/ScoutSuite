@@ -1,8 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import json
 import os
-import re
 import sys
 
 if len(sys.argv) < 2:

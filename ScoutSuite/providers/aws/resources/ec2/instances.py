@@ -36,6 +36,8 @@ class EC2Instances(AWSResources):
             get_keys(eni, nic, ['Association', 'Groups', 'PrivateIpAddresses', 'SubnetId', 'Ipv6Addresses'])
             instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
 
+        instance['metadata_options'] = raw_instance['MetadataOptions']
+
         return id, instance
 
     @staticmethod
