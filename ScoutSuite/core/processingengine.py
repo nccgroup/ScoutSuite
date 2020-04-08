@@ -43,7 +43,7 @@ class ProcessingEngine(object):
                 cloud_provider.services[service][self.ruleset.rule_type][rule.key] = {}
                 cloud_provider.services[service][self.ruleset.rule_type][rule.key]['description'] = rule.description
                 cloud_provider.services[service][self.ruleset.rule_type][rule.key]['path'] = rule.path
-                for attr in ['level', 'id_suffix', 'display_path']:
+                for attr in ['level', 'id_suffix', 'class_suffix', 'display_path']:
                     if hasattr(rule, attr):
                         cloud_provider.services[service][self.ruleset.rule_type][rule.key][attr] = getattr(rule, attr)
                 try:

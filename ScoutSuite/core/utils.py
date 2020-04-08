@@ -37,8 +37,13 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
         setattr(config, 'checked_items', getattr(config, 'checked_items') + 1)
         # Test for conditions...
         if pass_conditions(all_info, current_path, copy.deepcopy(config.conditions)):
+            # id_suffix
             if add_suffix and hasattr(config, 'id_suffix'):
                 suffix = fix_path_string(all_info, current_path, config.id_suffix)
+                current_path.append(suffix)
+            # class_suffix
+            if add_suffix and hasattr(config, 'class_suffix'):
+                suffix = fix_path_string(all_info, current_path, config.class_suffix)
                 current_path.append(suffix)
             results.append('.'.join(current_path))
         # Return the flagged items...
