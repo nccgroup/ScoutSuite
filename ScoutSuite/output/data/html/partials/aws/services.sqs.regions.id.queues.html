@@ -13,11 +13,13 @@
             </span></div>
           <div class="list-group-item-text item-margin">Created on: {{CreatedTimestamp}}</div>
         </div>
-        {{#if Policy.Statement.length}}
-          <div class="list-group-item">
-            {{> accordion_policy name = 'Access Control Policy' policy_path = (concat 'sqs.regions' region 'queues' @key 'Policy') document = Policy}}
-          </div>
-        {{/if}}
+        <div class="list-group-item">
+            {{#if Policy.Statement.length}}
+                {{> accordion_policy name = 'Access Control Policy' policy_path = (concat 'sqs.regions' region 'queues' @key 'Policy') document = Policy}}
+            {{else}}
+                <h4 class="list-group-item-heading accordion-heading text-secondary">Access Control Policy</h4>
+            {{/if}}
+        </div>
     </script>
     <script>
       Handlebars.registerPartial("services.sqs.regions.id.queues", $("#services\\.sqs\\.regions\\.id\\.queues\\.partial").html());
