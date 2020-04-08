@@ -20,6 +20,7 @@ formatted_service_name = {
     'redshift': 'RedShift',
     'route53': 'Route53',
     'secretsmanager': 'Secrets Manager',
+    'docdb': 'DocumentDB',
     # Azure
     'storageaccounts': 'Storage Accounts',
     'sqldatabase': 'SQL Database',

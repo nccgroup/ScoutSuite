@@ -62,6 +62,7 @@ if __name__ == "__main__":
         cleaned_value = args.value.replace('<class \'dict\'>: ', '')
         cleaned_value = args.value.replace('\}', '}')
         cleaned_value = cleaned_value.replace(", tzinfo=tzlocal()", "")
+        cleaned_value = cleaned_value.replace(", tzinfo=tzutc()", "")
         object_value_dict = eval(cleaned_value)
     elif args.provider == 'azure':
         object_format = 'raw_{}.{}'

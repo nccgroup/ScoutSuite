@@ -424,6 +424,13 @@
                 }
             }
         },
+        "docdb": {
+            "resources": {
+                "clusters": {
+                    "path": "services.docdb.regions.id.clusters"
+                }
+            }
+        },
         "elasticache": {
             "resources": {
                 "clusters": {
