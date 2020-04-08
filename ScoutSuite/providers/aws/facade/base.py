@@ -31,6 +31,10 @@ from ScoutSuite.core.conditions import print_error
 
 # Try to import proprietary facades
 try:
+    from ScoutSuite.providers.aws.facade.docdb_private import DocDBFacade
+except ImportError:
+    pass
+try:
     from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
 except ImportError:
     pass
@@ -216,6 +220,10 @@ class AWSFacade(AWSBaseFacade):
         self.secretsmanager = SecretsManagerFacade(self.session)
 
         # Instantiate facades for proprietary services
+        try:
+            self.docdb = DocDBFacade(self.session)
+        except NameError:
+            pass
         try:
             self.dynamodb = DynamoDBFacade(self.session)
         except NameError:

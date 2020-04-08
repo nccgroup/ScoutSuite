@@ -27,6 +27,10 @@ from ScoutSuite.providers.base.services import BaseServicesConfig
 
 # Try to import proprietary services
 try:
+    from ScoutSuite.providers.aws.resources.private_docdb.base import DocDB
+except ImportError:
+    pass
+try:
     from ScoutSuite.providers.aws.resources.private_dynamodb.base import DynamoDB
 except ImportError:
     pass
@@ -98,6 +102,10 @@ class AWSServicesConfig(BaseServicesConfig):
         self.secretsmanager = SecretsManager(facade)
 
         # Instantiate proprietary services
+        try:
+            self.docdb = DocDB(facade)
+        except NameError as _:
+            pass
         try:
             self.dynamodb = DynamoDB(facade)
         except NameError as _:
