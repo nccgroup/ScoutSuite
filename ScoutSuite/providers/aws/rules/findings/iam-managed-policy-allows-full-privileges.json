@@ -15,7 +15,8 @@
         }
     ],
     "dashboard_name": "Policies",
-    "path": "iam.policies.id",
+    "display_path": "iam.policies.id",
+    "path": "iam.policies.id.PolicyDocument.Statement.id",
     "conditions": [
         "and",
         [
@@ -24,7 +25,7 @@
             "Allow"
         ],
         [
-            "iam.policies.id.PolicyDocument.Statement.id.Action",
+            "iam.policies.id.PolicyDocument.Statement.id.",
             "containAction",
             "*"
         ],
