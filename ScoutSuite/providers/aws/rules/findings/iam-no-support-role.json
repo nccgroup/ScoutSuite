@@ -1,6 +1,6 @@
 {
     "description": "No Authorized User to Manage Incidents with AWS Support",
-    "rationale": "There should be at least one user authorized to manage incidents with AWS Support.",
+    "rationale": "The <samp>arn:aws:iam::aws:policy/AWSSupportAccess</samp> AWS Managed Policy was not found to be attached to any principal. There should be at least one user authorized to manage incidents with AWS Support.",
     "remediation": "Attach the AWSSupportAccess to a role or group",
     "compliance": [
         {
@@ -15,13 +15,14 @@
         }
     ],
     "dashboard_name": "Policies",
-    "path": "iam.policies.AWSSupportAccess",
+    "display_path": "iam.policies.id",
+    "path": "iam.policies.id.arn",
     "conditions": [
         "and",
         [
-            "iam.policies.AWSSupportAccess.attached_to",
-            "notEmpty",
-            ""
+            "this",
+            "notEqual",
+            "arn:aws:iam::aws:policy/AWSSupportAccess"
         ]
     ]
 }
