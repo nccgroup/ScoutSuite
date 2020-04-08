@@ -390,6 +390,7 @@ function showFindings(path, resourcePath) {
             $('[id="' + items[item] + '"]').addClass('finding-title-' + level)
         } else {
             $('[id="' + items[item] + '"]').addClass('finding-' + level)
+            $('[class="' + items[item] + '"]').addClass('finding-' + level)
         }
         $('[id="' + items[item] + '"]').removeClass('finding-hidden')
         $('[id="' + items[item] + '"]').attr('data-finding-service', findingService)
