@@ -1,16 +1,33 @@
 {
-    "description": "AWS Config not enabled",
+    "description": "AWS Config Not Enabled",
     "rationale": "No AWS Config recorders are configured, which means that changes in AWS resource configuration are not logged. This hinders security analysis, resource change tracking and compliance auditing.",
     "remediation": "Enable AWS Config in all regions, define the resources you want to record in each region and include global resources (IAM resources)",
     "compliance": [
-        {"name": "CIS Amazon Web Services Foundations", "version": "1.0.0", "reference": "2.5"},
-        {"name": "CIS Amazon Web Services Foundations", "version": "1.1.0", "reference": "2.5"},
-        {"name": "CIS Amazon Web Services Foundations", "version": "1.2.0", "reference": "2.5"}
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.0.0",
+            "reference": "2.5"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.1.0",
+            "reference": "2.5"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.2.0",
+            "reference": "2.5"
+        }
     ],
     "dashboard_name": "Regions",
     "path": "config.regions.id",
-    "conditions": [ "and",
-        [ "recorders_count", "equal", "0" ]
+    "conditions": [
+        "and",
+        [
+            "recorders_count",
+            "equal",
+            "0"
+        ]
     ],
     "id_suffix": "NotConfigured"
 }

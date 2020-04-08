@@ -1,21 +1,48 @@
 {
-    "description": "Root account has active keys",
+    "description": "Root Account Has Active Keys",
     "rationale": "AWS root account access keys should be deleted as they provide unrestricted access to the AWS Account.",
     "remediation": "Delete or disable active root account access keys",
     "compliance": [
-        {"name": "CIS Amazon Web Services Foundations", "version": "1.0.0", "reference": "1.12"},
-        {"name": "CIS Amazon Web Services Foundations", "version": "1.1.0", "reference": "1.12"},
-        {"name": "CIS Amazon Web Services Foundations", "version": "1.2.0", "reference": "1.12"}
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.0.0",
+            "reference": "1.12"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.1.0",
+            "reference": "1.12"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.2.0",
+            "reference": "1.12"
+        }
     ],
-    "references": ["https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#lock-away-credentials"],
+    "references": [
+        "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#lock-away-credentials"
+    ],
     "dashboard_name": "Root account",
     "path": "iam.credential_reports.id",
-    "conditions": [ "and",
-    [ "iam.credential_reports.id.name", "equal", "<root_account>" ],
+    "conditions": [
+        "and",
+        [
+            "iam.credential_reports.id.name",
+            "equal",
+            "<root_account>"
+        ],
         [
             "or",
-            [ "iam.credential_reports.id.access_key_1_active", "true", "" ],
-            [ "iam.credential_reports.id.access_key_2_active", "true", "" ]
+            [
+                "iam.credential_reports.id.access_key_1_active",
+                "true",
+                ""
+            ],
+            [
+                "iam.credential_reports.id.access_key_2_active",
+                "true",
+                ""
+            ]
         ]
     ]
 }
