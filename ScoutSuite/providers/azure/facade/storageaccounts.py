@@ -65,3 +65,20 @@ class StorageAccountsFacade:
             setattr(storage_account, 'activity_logs', [])
         else:
             setattr(storage_account, 'activity_logs', activity_logs)
+
+    # FIXME - not implemented by SDK
+    # async def get_queues(self, resource_group_name, storage_account_name, subscription_id: str):
+    #     try:
+    #         client = QueueServiceClient(account_url="https://{}.queue.core.windows.net".format(storage_account_name),
+    #                                      credential=self.credentials.aad_graph_credentials)
+    #
+    #         # queues = await run_concurrently(
+    #         #     lambda: list(client.queues.list(resource_group_name, storage_account_name))
+    #         # )
+    #     except Exception as e:
+    #         print_exception('Failed to retrieve queues: {}'.format(e))
+    #         return []
+    #     else:
+    #         return None
+    #         # return queues
+
