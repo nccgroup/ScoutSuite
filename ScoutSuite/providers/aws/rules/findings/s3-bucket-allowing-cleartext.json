@@ -1,6 +1,9 @@
 {
     "description": "Bucket Allowing Clear Text (HTTP) Communication",
     "rationale": "If HTTPS is not enforced on the bucket policy, communication between clients and S3 buckets can use unencrypted HTTP. As a result, sensitive information could be transmitted in clear text over the network|Internet.",
+    "references": [
+        "https://docs.aws.amazon.com/AmazonS3/latest/dev/security-best-practices.html"
+    ],
     "dashboard_name": "Buckets",
     "path": "s3.buckets.id",
     "conditions": [

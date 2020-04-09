@@ -1,6 +1,9 @@
 {
     "description": "Lack of Key Rotation (_ARG_0_)",
     "rationale": "In case of access key compromise, the lack of credential rotation increases the period during which an attacker has access to the AWS account",
+    "references": [
+        "https://aws.amazon.com/blogs/security/how-to-rotate-access-keys-for-iam-users/"
+    ],
     "dashboard_name": "Access keys",
     "display_path": "iam.users.id",
     "path": "iam.users.id.AccessKeys.id",

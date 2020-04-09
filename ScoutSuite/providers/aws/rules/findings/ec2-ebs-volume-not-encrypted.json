@@ -1,6 +1,9 @@
 {
     "description": "EBS Volume Not Encrypted",
     "rationale": "Enabling encryption of EBS volumes ensures that data is encrypted both at-rest and in-transit (between an instance and its attached EBS storage).",
+    "references": [
+        "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html"
+    ],
     "dashboard_name": "Volumes",
     "path": "ec2.regions.id.volumes.id",
     "conditions": [

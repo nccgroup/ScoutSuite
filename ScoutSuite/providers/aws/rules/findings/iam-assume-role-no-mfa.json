@@ -1,6 +1,9 @@
 {
     "description": "AssumeRole Policy Lacks MFA",
     "rationale": "When authorizing assumption, MFA should be required.",
+    "references": [
+        "https://research.nccgroup.com/2019/12/18/demystifying-aws-assumerole-and-stsexternalid/"
+    ],
     "dashboard_name": "Roles",
     "display_path": "iam.roles.id",
     "path": "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id",
