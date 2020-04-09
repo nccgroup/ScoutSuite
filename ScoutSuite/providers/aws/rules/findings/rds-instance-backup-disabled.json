@@ -1,5 +1,9 @@
 {
     "description": "Backup Disabled",
+    "rationale": "Backups should be enabled to enable disaster recovery.",
+    "references": [
+        "https://aws.amazon.com/rds/details/backup/"
+    ],
     "dashboard_name": "Instances",
     "path": "rds.regions.id.vpcs.id.instances.id",
     "conditions": [
