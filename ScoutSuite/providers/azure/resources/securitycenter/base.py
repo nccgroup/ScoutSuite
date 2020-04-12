@@ -2,7 +2,7 @@ from ScoutSuite.providers.azure.resources.subscriptions import Subscriptions
 
 from .auto_provisioning_settings import AutoProvisioningSettings
 from .pricings import Pricings
-from .alerts import Alerts
+# from .alerts import Alerts
 from .security_contacts import SecurityContacts
 # from .information_protection_policies import InformationProtectionPolicies
 # from .settings import Settings
