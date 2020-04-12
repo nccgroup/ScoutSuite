@@ -1171,6 +1171,8 @@ function makeTitle(title) {
         return 'CloudFormation'
     } else if (title === 'config') {
         return 'Config'
+    } else if (title === 'cognito') {
+        return 'Cognito'
     } else if (title === 'awslambda') {
         return 'Lambda'
     } else if (title === 'docdb') {

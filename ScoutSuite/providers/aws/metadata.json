@@ -383,6 +383,18 @@
                 }
             }
         },
+        "cognito": {
+            "resources": {
+                "identity_pools": {
+                    "cols": 2,
+                    "path": "services.cognito.regions.id.identity_pools"
+                },
+                "user_pools": {
+                    "cols": 2,
+                    "path": "services.cognito.regions.id.user_pools"
+                }
+            }
+        },
         "acm": {
             "resources": {
                 "certificates": {
