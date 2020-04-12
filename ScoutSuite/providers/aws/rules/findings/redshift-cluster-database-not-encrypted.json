@@ -1,5 +1,9 @@
 {
     "description": "Cluster Database Encryption Disabled",
+    "rationale": "Data-at-rest should be encrypted.",
+    "references": [
+        "https://docs.aws.amazon.com/redshift/latest/mgmt/working-with-db-encryption.html"
+    ],
     "dashboard_name": "Clusters",
     "path": "redshift.regions.id.vpcs.id.clusters.id",
     "conditions": [

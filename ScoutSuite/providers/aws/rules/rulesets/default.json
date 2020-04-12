@@ -358,6 +358,12 @@
                 "level": "danger"
             }
         ],
+         "elbv2-http-request-smuggling.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "elbv2-listener-allowing-cleartext.json": [
             {
                 "enabled": true,

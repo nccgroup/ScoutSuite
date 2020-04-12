@@ -1,6 +1,9 @@
 {
     "description": "Managed Policy Not Attached to Any Entity",
     "rationale": "Customer Managed policies should be reviewed and deleted if not necessary.",
+    "references": [
+        "https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html#customer-managed-policies"
+    ],
     "dashboard_name": "Policies",
     "display_path": "iam.policies.id",
     "path": "iam.policies.id",

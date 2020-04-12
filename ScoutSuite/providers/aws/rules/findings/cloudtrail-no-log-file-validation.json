@@ -1,6 +1,9 @@
 {
     "description": "Log File Validation Disabled",
     "rationale": "The lack of log file validation prevents from verifying the integrity of the log files.",
+    "references": [
+        "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-log-file-validation-intro.html"
+    ],
     "dashboard_name": "Trails",
     "display_path": "cloudtrail.regions.id.trails.id",
     "path": "cloudtrail.regions.id.trails.id",

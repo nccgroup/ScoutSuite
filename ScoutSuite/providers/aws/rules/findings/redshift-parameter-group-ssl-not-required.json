@@ -1,6 +1,9 @@
 {
     "description": "SSL Not Required",
     "rationale": "Parameter groups associated with Redshift clusters should have the \"require_ssl\" parameter enabled, to ensure that data in transit is encrypted.<br><br><b>Note</b> that this rule will flag default parameter groups, even though they cannot be changed. It is recommended to use custom groups and configure them according to security best practice.",
+    "references": [
+        "https://docs.aws.amazon.com/redshift/latest/mgmt/connecting-ssl-support.html"
+    ],
     "dashboard_name": "Parameter Groups",
     "path": "redshift.regions.id.parameter_groups.id",
     "conditions": [

@@ -1,12 +1,16 @@
 {
     "description": "Access Keys Not Rotated",
-    "rationale": "The access keys storage accounts should be rotated at least every _ARG_0_ days.",
+    "rationale": "When a storage account is created, Azure generates two 512-bit storage access keys, which are used for authentication when the storage account is accessed. Rotating these keys periodically ensures that any inadvertent access or exposure does not result in these keys being compromised.<br><br>The access keys storage accounts should be rotated at least every _ARG_0_ days.",
+    "remediation": "Follow Microsoft Azure documentation for regenerating storage account access keys.",
     "compliance": [
         {
             "name": "CIS Microsoft Azure Foundations",
             "version": "1.1.0",
             "reference": "3.2"
         }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/storage/common/storage-create-storage-account"
     ],
     "dashboard_name": "Storage Accounts",
     "path": "storageaccounts.subscriptions.id.storage_accounts.id",

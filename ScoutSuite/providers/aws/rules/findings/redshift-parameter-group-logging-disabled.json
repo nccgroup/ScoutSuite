@@ -1,5 +1,9 @@
 {
     "description": "User Activity Logging Disabled",
+    "rationale": "Audit logging is not enabled by default in Amazon Redshift. A lack of user activity logging could impede the ability to investigate issues involving misuse, malicious access or performance.",
+    "references": [
+        "https://docs.aws.amazon.com/redshift/latest/mgmt/db-auditing.html"
+    ],
     "dashboard_name": "Parameter Groups",
     "path": "redshift.regions.id.parameter_groups.id",
     "conditions": [

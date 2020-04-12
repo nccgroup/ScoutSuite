@@ -1,5 +1,9 @@
 {
     "description": "Unused Role for EC2 Service",
+    "rationale": "An EC2 role is defined which is unused and may not be required. This being the case, its existence in the configuration increases the risk that it may be inappropriately assigned. The unused role should be reviewed and removed if no longer required.",
+    "references": [
+        "https://aws.amazon.com/about-aws/whats-new/2019/11/identify-unused-iam-roles-easily-and-remove-them-confidently-by-using-the-last-used-timestamp/"
+    ],
     "dashboard_name": "Roles",
     "display_path": "iam.roles.id",
     "path": "iam.roles.id.assume_role_policy.Statement.id.Principal",

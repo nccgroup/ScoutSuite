@@ -1,6 +1,9 @@
 {
     "description": "Cross-Account AssumeRole Policy Lacks External ID and MFA",
     "rationale": "When authorizing cross-account role assumption, an external ID or MFA should be required.",
+    "references": [
+        "https://research.nccgroup.com/2019/12/18/demystifying-aws-assumerole-and-stsexternalid/"
+    ],
     "dashboard_name": "Roles",
     "display_path": "iam.roles.id",
     "path": "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id",
