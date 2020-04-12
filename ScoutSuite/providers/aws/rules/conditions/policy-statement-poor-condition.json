@@ -16,6 +16,13 @@
                     [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "AWS:SourceArn" ],
                     [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "AWS:SourceOwner" ]
                 ]
+            ],
+            [ "or",
+                [ "_STATEMENT_.Condition.", "withoutKey", "StringLike" ],
+                [ "and",
+                    [ "_STATEMENT_.Condition.StringLike.", "withoutKey", "AWS:SourceArn" ],
+                    [ "_STATEMENT_.Condition.StringLike.", "withoutKey", "AWS:SourceOwner" ]
+                ]
             ]
         ]
     ]

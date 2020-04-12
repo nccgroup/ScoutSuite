@@ -83,20 +83,41 @@
                 "withoutKey",
                 "Condition"
             ],
-            [
-                "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition",
-                "withoutKey",
-                "StringEquals"
-            ],
-            [
-                "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.StringEquals.",
-                "withoutKey",
-                "sts:ExternalId"
-            ],
-            [
-                "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.StringEquals.sts:ExternalId",
-                "empty",
-                ""
+            [ "and",
+                [ "or",
+                    [
+                        "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition",
+                        "withoutKey",
+                        "StringEquals"
+                    ],
+                    [
+                        "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.StringEquals.",
+                        "withoutKey",
+                        "sts:ExternalId"
+                    ],
+                    [
+                        "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.StringEquals.sts:ExternalId",
+                        "empty",
+                        ""
+                    ]
+                ],
+                [ "or",
+                    [
+                        "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition",
+                        "withoutKey",
+                        "StringLike"
+                    ],
+                    [
+                        "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.StringLike.",
+                        "withoutKey",
+                        "sts:ExternalId"
+                    ],
+                    [
+                        "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition.StringLike.sts:ExternalId",
+                        "empty",
+                        ""
+                    ]
+                ]
             ]
         ]
     ]
