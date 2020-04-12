@@ -59,10 +59,7 @@ if __name__ == "__main__":
 
     if args.provider == 'aws':
         object_format = 'raw_{}.get(\'{}\')'
-        cleaned_value = args.value.replace('<class \'dict\'>: ', '')
-        cleaned_value = args.value.replace('\}', '}')
-        cleaned_value = cleaned_value.replace(", tzinfo=tzlocal()", "")
-        cleaned_value = cleaned_value.replace(", tzinfo=tzutc()", "")
+        cleaned_value = args.value.replace('<class \'dict\'>: ', '').replace('\}', '}').replace(", tzinfo=tzlocal()", "").replace(", tzinfo=tzutc()", "")
         object_value_dict = eval(cleaned_value)
     elif args.provider == 'azure':
         object_format = 'raw_{}.{}'
