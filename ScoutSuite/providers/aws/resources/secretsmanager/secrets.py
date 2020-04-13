@@ -1,5 +1,3 @@
-import json
-
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
 
@@ -23,4 +21,3 @@ class Secrets(AWSResources):
         secret_dict['tags'] = raw_secret.get('Tags')
         secret_dict['secret_versions_to_stages'] = raw_secret.get('SecretVersionsToStages')
         return secret_dict['id'], secret_dict
-

@@ -4,7 +4,7 @@ from ScoutSuite.providers.azure.utils import get_resource_group_name
 from ScoutSuite.providers.utils import get_non_provider_id
 
 from .blob_containers import BlobContainers
-from .queues import Queues
+# from .queues import Queues
 
 
 class StorageAccounts(AzureCompositeResources):

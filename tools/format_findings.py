@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from os import walk
 import os
 import json
 import argparse
@@ -10,7 +9,7 @@ from utils import get_capitalized_title
 
 def get_folder_files(folder_path):
     files = []
-    for (dirpath, dirnames, filenames) in walk(folder_path):
+    for (dirpath, dirnames, filenames) in os.walk(folder_path):
         files.extend(filenames)
         break
     return files
