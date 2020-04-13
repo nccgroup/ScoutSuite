@@ -31,6 +31,10 @@ from ScoutSuite.core.conditions import print_error
 
 # Try to import proprietary facades
 try:
+    from ScoutSuite.providers.aws.facade.cognito_private import CognitoFacade
+except ImportError:
+    pass
+try:
     from ScoutSuite.providers.aws.facade.docdb_private import DocDBFacade
 except ImportError:
     pass
@@ -52,7 +56,6 @@ except ImportError:
     pass
 
 
-
 class AWSFacade(AWSBaseFacade):
     def __init__(self, credentials=None):
         super(AWSFacade, self).__init__()
@@ -64,7 +67,8 @@ class AWSFacade(AWSBaseFacade):
 
         available_services = None
         try:
-            available_services = await run_concurrently(lambda: Session(region_name='us-east-1').get_available_services())
+            available_services = await run_concurrently(
+                lambda: Session(region_name='us-east-1').get_available_services())
         except Exception as e:
             # see https://github.com/nccgroup/ScoutSuite/issues/548
             # If failed with the us-east-1 region, we'll try to use the region from the profile
@@ -73,8 +77,7 @@ class AWSFacade(AWSBaseFacade):
                     lambda: Session(region_name=self.session.region_name).get_available_services())
             except Exception as e:
                 # see https://github.com/nccgroup/ScoutSuite/issues/685
-                # If above failed, and regions were explicitly specified, will try with those until
-                # one works
+                # If above failed, and regions were explicitly specified, will try with those until one works
                 if chosen_regions:
                     for region in chosen_regions:
                         try:
@@ -89,29 +92,68 @@ class AWSFacade(AWSBaseFacade):
                     raise e
 
         if service not in available_services:
-            raise Exception('Service ' + service + ' is not available.')
+            # the cognito service is a composition of two boto3 services
+            if service == "cognito":
+                if "cognito-idp" not in available_services:
+                    raise Exception('Service cognito-idp is not available.')
+                elif "cognito-identity" not in available_services:
+                    raise Exception('Service cognito-identity is not available.')
+            else:
+                raise Exception('Service ' + service + ' is not available.')
 
         regions = None
         try:
-            regions = await run_concurrently(lambda: Session(region_name='us-east-1').get_available_regions(service,
-                                                                                                            partition_name))
+            # the cognito service is a composition of two boto3 services
+            if service != "cognito":
+                regions = await run_concurrently(
+                    lambda: Session(region_name='us-east-1').get_available_regions(service,
+                                                                                   partition_name))
+            else:
+                idp_regions = await run_concurrently(
+                    lambda: Session(region_name='us-east-1').get_available_regions("cognito-idp",
+                                                                                   partition_name))
+                identity_regions = await run_concurrently(
+                    lambda: Session(region_name='us-east-1').get_available_regions("cognito-identity",
+                                                                                   partition_name))
+                regions = [value for value in idp_regions if value in identity_regions]
         except Exception as e:
             # see https://github.com/nccgroup/ScoutSuite/issues/548
             # If failed with the us-east-1 region, we'll try to use the region from the profile
             try:
-                regions = await run_concurrently(
-                    lambda: Session(region_name=self.session.region_name).get_available_regions(service,
-                                                                                                partition_name))
+                # the cognito service is a composition of two boto3 services
+                if service != "cognito":
+                    regions = await run_concurrently(
+                        lambda: Session(region_name=self.session.region_name).get_available_regions(service,
+                                                                                                    partition_name))
+                else:
+                    idp_regions = await run_concurrently(
+                        lambda: Session(region_name=self.session.region_name).get_available_regions("cognito-idp",
+                                                                                                    partition_name))
+                    identity_regions = await run_concurrently(
+                        lambda: Session(region_name=self.session.region_name).get_available_regions("cognito-identity",
+                                                                                                    partition_name))
+                    regions = [value for value in idp_regions if value in identity_regions]
             except Exception as e:
                 # see https://github.com/nccgroup/ScoutSuite/issues/685
-                # If above failed, and regions were explicitly specified, will try with those until
-                # one works
+                # If above failed, and regions were explicitly specified, will try with those until one works
                 if chosen_regions:
                     for region in chosen_regions:
                         try:
-                            regions = await run_concurrently(
-                                lambda: Session(region_name=region).get_available_regions(service,
-                                                                                          partition_name))
+                            # the cognito service is a composition of two boto3 services
+                            if service != "cognito":
+                                regions = await run_concurrently(
+                                    lambda: Session(region_name=region).get_available_regions(service,
+                                                                                              partition_name))
+                            else:
+                                idp_regions = await run_concurrently(
+                                    lambda: Session(region_name=region).get_available_regions(
+                                        "cognito-idp",
+                                        partition_name))
+                                identity_regions = await run_concurrently(
+                                    lambda: Session(region_name=region).get_available_regions(
+                                        "cognito-identity",
+                                        partition_name))
+                                regions = [value for value in idp_regions if value in identity_regions]
                             break
                         except Exception as e:
                             exception = e
@@ -142,7 +184,8 @@ class AWSFacade(AWSBaseFacade):
                            # 'us-west-1',
                            'us-west-2']
             else:
-                print_error('"get_available_regions" returned an empty array for service "{}", something is wrong'.format(service))
+                print_error('"get_available_regions" returned an empty array for service "{}", '
+                            'something is wrong'.format(service))
 
         # identify regions that are not opted-in
         ec2_not_opted_in_regions = None
@@ -165,10 +208,10 @@ class AWSFacade(AWSBaseFacade):
                 if chosen_regions:
                     for region in chosen_regions:
                         try:
-                            ec2_not_opted_in_regions = \
-                                self.session.client('ec2', region).describe_regions(AllRegions=True,
-                                                                                    Filters=[{'Name': 'opt-in-status',
-                                                                                              'Values': ['not-opted-in']}])
+                            ec2_not_opted_in_regions = self.session.client('ec2', region).describe_regions(
+                                AllRegions=True,
+                                Filters=[{'Name': 'opt-in-status',
+                                          'Values': ['not-opted-in']}])
                             break
                         except Exception as e:
                             exception = e
@@ -220,6 +263,10 @@ class AWSFacade(AWSBaseFacade):
         self.secretsmanager = SecretsManagerFacade(self.session)
 
         # Instantiate facades for proprietary services
+        try:
+            self.cognito = CognitoFacade(self.session)
+        except NameError:
+            pass
         try:
             self.docdb = DocDBFacade(self.session)
         except NameError:
