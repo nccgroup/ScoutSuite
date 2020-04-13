@@ -147,6 +147,14 @@
                     "path": "services.directconnect.connections"
                 }
             }
+        },
+        "apigatewayv2": {
+            "resources": {
+                "stages": {
+                    "cols": 2,
+                    "path": "services.apigatewayv2.regions.id.stages"
+                }
+            }
         }
     },
     "compute": {

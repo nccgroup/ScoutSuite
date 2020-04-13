@@ -3,6 +3,7 @@ from __future__ import print_function
 formatted_service_name = {
     # AWS
     'acm': 'ACM',
+    'apigatewayv2': 'API Gateway V2',
     'cloudformation': 'CloudFormation',
     'cloudtrail': 'CloudTrail',
     'cloudwatch': 'CloudWatch',

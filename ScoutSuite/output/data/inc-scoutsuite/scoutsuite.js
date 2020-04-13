@@ -1163,6 +1163,8 @@ function makeTitle(title) {
     title = title.toLowerCase()
     if (['acm', 'ec2', 'ecr', 'ecs', 'efs', 'eks', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) !== -1) {
         return title.toUpperCase()
+    } else if (title === 'apigatewayv2') {
+          return 'API Gateway V2'
     } else if (title === 'cloudtrail') {
         return 'CloudTrail'
     } else if (title === 'cloudwatch') {

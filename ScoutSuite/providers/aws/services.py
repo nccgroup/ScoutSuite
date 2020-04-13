@@ -27,6 +27,10 @@ from ScoutSuite.providers.base.services import BaseServicesConfig
 
 # Try to import proprietary services
 try:
+    from ScoutSuite.providers.aws.resources.private_apigatewayv2.base import APIGatewayV2
+except ImportError:
+    pass
+try:
     from ScoutSuite.providers.aws.resources.private_cognito.base import Cognito
 except ImportError:
     pass
@@ -106,6 +110,10 @@ class AWSServicesConfig(BaseServicesConfig):
         self.secretsmanager = SecretsManager(facade)
 
         # Instantiate proprietary services
+        try:
+            self.apigatewayv2 = APIGatewayV2(facade)
+        except NameError as _:
+            pass
         try:
             self.cognito = Cognito(facade)
         except NameError as _:

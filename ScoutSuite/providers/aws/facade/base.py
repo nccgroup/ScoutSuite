@@ -31,6 +31,10 @@ from ScoutSuite.core.conditions import print_error
 
 # Try to import proprietary facades
 try:
+    from ScoutSuite.providers.aws.facade.apigatewayv2_private import APIGatewayV2Facade
+except ImportError:
+    pass
+try:
     from ScoutSuite.providers.aws.facade.cognito_private import CognitoFacade
 except ImportError:
     pass
@@ -263,6 +267,10 @@ class AWSFacade(AWSBaseFacade):
         self.secretsmanager = SecretsManagerFacade(self.session)
 
         # Instantiate facades for proprietary services
+        try:
+            self.apigatewayv2 = APIGatewayV2Facade(self.session)
+        except NameError:
+            pass
         try:
             self.cognito = CognitoFacade(self.session)
         except NameError:
