@@ -8,6 +8,9 @@
             "reference": "6.1"
         }
     ],
+    "references": [
+        "https://cloud.google.com/sql/docs/mysql/authorize-ssl"
+    ],
     "dashboard_name": "Instances",
     "path": "cloudsql.projects.id.instances.id",
     "conditions": [
