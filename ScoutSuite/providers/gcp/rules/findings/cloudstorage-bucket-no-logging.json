@@ -8,6 +8,9 @@
             "reference": "5.3"
         }
     ],
+    "references": [
+        "https://cloud.google.com/storage/docs/access-logs"
+    ],
     "dashboard_name": "Buckets",
     "path": "cloudstorage.projects.id.buckets.id",
     "conditions": [
