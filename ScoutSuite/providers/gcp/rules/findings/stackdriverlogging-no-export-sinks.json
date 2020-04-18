@@ -1,5 +1,9 @@
 {
     "description": "Lack of Export Sinks",
+    "references": [
+        "https://cloud.google.com/logging",
+        "https://cloud.google.com/logging/docs/export"
+    ],
     "dashboard_name": "Logging Configurations",
     "display_path": "stackdriverlogging.projects.id.sinks",
     "path": "stackdriverlogging.projects.id",

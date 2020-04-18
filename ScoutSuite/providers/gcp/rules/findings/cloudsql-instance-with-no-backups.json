@@ -1,6 +1,9 @@
 {
     "description": "Instance with No Backups",
     "rationale": "Weekly or monthly backups should be created of all databases holding sensitive information.",
+    "references": [
+        "https://cloud.google.com/sql/docs/mysql/backup-recovery/backups"
+    ],
     "dashboard_name": "Instances",
     "path": "cloudsql.projects.id.instances.id",
     "conditions": [
