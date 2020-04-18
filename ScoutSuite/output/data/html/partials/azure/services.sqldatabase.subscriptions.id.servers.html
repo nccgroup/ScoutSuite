@@ -1,0 +1,50 @@
+<!-- SQL Database partial -->
+<script id="services.sqldatabase.subscriptions.id.servers.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">SQL Server Name: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Azure Active Directory Admin: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.ad_admin"><samp>{{value_or_none ad_admin.login}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Auditing: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_auditing_disabled">{{ convert_bool_to_enabled auditing.auditing_enabled }}</span></div>
+        <div class="list-group-item-text item-margin">Auditing retention period: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_low_auditing_retention">{{ auditing.retention_days }}</span></div>
+        <div class="list-group-item-text item-margin">Threat detection: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_threat_detection_disabled">{{ convert_bool_to_enabled threat_detection.threat_detection_enabled }}</span></div>
+        <div class="list-group-item-text item-margin">Threat detection alerts: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_threat_detection_alerts_disabled">{{ convert_bool_to_enabled threat_detection.alerts_enabled }}</span></div>
+        <div class="list-group-item-text item-margin">Send threat detection alerts: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_send_threat_detection_alerts_disabled">{{ convert_bool_to_enabled threat_detection.send_alerts_enabled }}</span></div>
+        <div class="list-group-item-text item-margin">Threat detection retention period: <span id="sqldatabase.subscriptions.{{@../key}}.servers.{{@key}}.server_low_threat_detection_retention">{{ threat_detection.retention_days }}</span></div>
+    </div>
+
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">SQL Databases</h4>
+        <div class="list-group-item-text item-margin">
+        {{#each databases}}
+            {{@key}}
+            <div class="list-group-item-text item-margin">
+                <div class="list-group-item-text item-margin">Auditing: <span id="sqldatabase.servers.{{@../key}}.databases.{{@key}}.db_auditing_disabled">{{ convert_bool_to_enabled auditing.auditing_enabled }}</span></div>
+                <div class="list-group-item-text item-margin">Auditing retention period: <span id="sqldatabase.servers.{{@../key}}.databases.{{@key}}.db_low_auditing_retention">{{ auditing.retention_days }}</span></div>
+                <div class="list-group-item-text item-margin">Threat detection: <span id="sqldatabase.servers.{{@../key}}.databases.{{@key}}.db_threat_detection_disabled">{{ convert_bool_to_enabled threat_detection.threat_detection_enabled }}</span></div>
+                <div class="list-group-item-text item-margin">Threat detection alerts: <span id="sqldatabase.servers.{{@../key}}.databases.{{@key}}.db_threat_detection_alerts_disabled">{{ convert_bool_to_enabled threat_detection.alerts_enabled }}</span></div>
+                <div class="list-group-item-text item-margin">Send threat detection alerts: <span id="sqldatabase.servers.{{@../key}}.databases.{{@key}}.db_send_threat_detection_alerts_disabled">{{ convert_bool_to_enabled threat_detection.send_alerts_enabled }}</span></div>
+                <div class="list-group-item-text item-margin">Threat detection retention period: <span id="sqldatabase.servers.{{@../key}}.databases.{{@key}}.db_low_threat_detection_retention">{{ threat_detection.retention_days }}</span></div>
+                <div class="list-group-item-text item-margin">Transparent data encryption: <span id="sqldatabase.servers.{{@../key}}.databases.{{@key}}.transparent_data_encryption_enabled">{{ convert_bool_to_enabled transparent_data_encryption_enabled }}</span></div>
+                <div class="list-group-item-text item-margin">Geo-replication configured: <span id="sqldatabase.servers.{{@../key}}.databases.{{@key}}.replication_configured"><samp>{{ replication_configured }}</samp></span></div>
+            </div>
+        {{/each}}
+        </div>
+    </div>
+
+</script>
+
+<script>
+    Handlebars.registerPartial("services.sqldatabase.subscriptions.id.servers", $("#services\\.sqldatabase\\.subscriptions\\.id\\.servers\\.partial").html());
+</script>
+
+<!-- Single SQL Database template -->
+<script id="single_sqldatabase_servers-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.sqldatabase.servers' }}
+</script>
+<script>
+    var single_sqldatabase_servers_template = Handlebars.compile($("#single_sqldatabase_servers-template").html());
+</script>

@@ -16,7 +16,6 @@ class Keys(Resources):
             self[key_id] = key
 
     def _parse_key(self, raw_key):
-
         key_dict = {}
 
         key_dict['id'] = raw_key['name'].split('/')[-1]

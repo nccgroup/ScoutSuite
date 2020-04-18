@@ -13,6 +13,7 @@ from ScoutSuite.providers.aws.resources.elb.base import ELB
 from ScoutSuite.providers.aws.resources.elbv2.base import ELBv2
 from ScoutSuite.providers.aws.resources.emr.base import EMR
 from ScoutSuite.providers.aws.resources.iam.base import IAM
+from ScoutSuite.providers.aws.resources.kms.base import KMS
 from ScoutSuite.providers.aws.resources.rds.base import RDS
 from ScoutSuite.providers.aws.resources.redshift.base import Redshift
 from ScoutSuite.providers.aws.resources.route53.base import Route53
@@ -21,15 +22,32 @@ from ScoutSuite.providers.aws.resources.ses.base import SES
 from ScoutSuite.providers.aws.resources.sns.base import SNS
 from ScoutSuite.providers.aws.resources.sqs.base import SQS
 from ScoutSuite.providers.aws.resources.vpc.base import VPC
+from ScoutSuite.providers.aws.resources.secretsmanager.base import SecretsManager
 from ScoutSuite.providers.base.services import BaseServicesConfig
 
 # Try to import proprietary services
+try:
+    from ScoutSuite.providers.aws.resources.private_cognito.base import Cognito
+except ImportError:
+    pass
+try:
+    from ScoutSuite.providers.aws.resources.private_docdb.base import DocDB
+except ImportError:
+    pass
 try:
     from ScoutSuite.providers.aws.resources.private_dynamodb.base import DynamoDB
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.aws.resources.private_kms.base import KMS
+    from ScoutSuite.providers.aws.resources.private_ecr.base import ECR
+except ImportError:
+    pass
+try:
+    from ScoutSuite.providers.aws.resources.private_ecs.base import ECS
+except ImportError:
+    pass
+try:
+    from ScoutSuite.providers.aws.resources.private_eks.base import EKS
 except ImportError:
     pass
 
@@ -43,6 +61,9 @@ class AWSServicesConfig(BaseServicesConfig):
     :ivar config:                       Config configuration
     :ivar dynamodb:                     DynomaDB configuration
     :ivar ec2:                          EC2 configuration
+    :ivar ecs:                          ECS configuration
+    :ivar ecr:                          ECR configuration
+    :ivar eks:                          EKS configuration
     :ivar iam:                          IAM configuration
     :ivar kms:                          KMS configuration
     :ivar rds:                          RDS configuration
@@ -73,6 +94,7 @@ class AWSServicesConfig(BaseServicesConfig):
         self.elbv2 = ELBv2(facade)
         self.emr = EMR(facade)
         self.iam = IAM(facade)
+        self.kms = KMS(facade)
         self.rds = RDS(facade)
         self.redshift = Redshift(facade)
         self.route53 = Route53(facade)
@@ -81,14 +103,31 @@ class AWSServicesConfig(BaseServicesConfig):
         self.sns = SNS(facade)
         self.sqs = SQS(facade)
         self.vpc = VPC(facade)
+        self.secretsmanager = SecretsManager(facade)
 
         # Instantiate proprietary services
+        try:
+            self.cognito = Cognito(facade)
+        except NameError as _:
+            pass
+        try:
+            self.docdb = DocDB(facade)
+        except NameError as _:
+            pass
         try:
             self.dynamodb = DynamoDB(facade)
         except NameError as _:
             pass
         try:
-            self.kms = KMS(facade)
+            self.ecr = ECR(facade)
+        except NameError as _:
+            pass
+        try:
+            self.ecs = ECS(facade)
+        except NameError as _:
+            pass
+        try:
+            self.eks = EKS(facade)
         except NameError as _:
             pass
 

@@ -1,7 +1,9 @@
 from asyncio import Lock
 
+from botocore.exceptions import ClientError
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
+from ScoutSuite.providers.aws.utils import get_aws_account_id
 from ScoutSuite.providers.aws.facade.basefacade import AWSBaseFacade
 from ScoutSuite.providers.aws.utils import ec2_classic
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
@@ -39,7 +41,22 @@ class RDSFacade(AWSBaseFacade):
                     else ec2_classic
 
             await get_and_set_concurrently(
-                [self._get_and_set_instance_clusters], self._instances_cache[region], region=region)
+                [self._get_and_set_instance_clusters, self._get_and_set_instance_tags], self._instances_cache[region], region=region)
+
+
+    async def _get_and_set_instance_tags(self, instance: {}, region: str):
+        client = AWSFacadeUtils.get_client('rds', self.session, region)
+        account_id = get_aws_account_id(self.session)
+        try:
+            instance_tagset = await run_concurrently(lambda: client.list_tags_for_resource(
+                ResourceName="arn:aws:rds:"+region+":"+account_id+":db:"+instance['DBInstanceIdentifier']))
+            instance['Tags'] = {x['Key']: x['Value'] for x in instance_tagset['TagList']}
+        except ClientError as e:
+            if e.response['Error']['Code'] != 'NoSuchTagSet':
+                print_exception('Failed to get db instance tags for %s: %s' % (instance['DBInstanceIdentifier'], e))
+        except Exception as e:
+            print_exception('Failed to get db instance tags for %s: %s' % (instance['DBInstanceIdentifier'], e))
+            instance['Tags'] = {}
 
     async def _get_and_set_instance_clusters(self, instance: {}, region: str):
         client = AWSFacadeUtils.get_client('rds', self.session, region)

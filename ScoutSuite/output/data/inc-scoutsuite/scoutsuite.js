@@ -390,6 +390,7 @@ function showFindings(path, resourcePath) {
             $('[id="' + items[item] + '"]').addClass('finding-title-' + level)
         } else {
             $('[id="' + items[item] + '"]').addClass('finding-' + level)
+            $('[class="' + items[item] + '"]').addClass('finding-' + level)
         }
         $('[id="' + items[item] + '"]').removeClass('finding-hidden')
         $('[id="' + items[item] + '"]').attr('data-finding-service', findingService)
@@ -1160,7 +1161,7 @@ function makeTitle(title) {
         return title.toString()
     }
     title = title.toLowerCase()
-    if (['acm', 'ec2', 'efs', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) !== -1) {
+    if (['acm', 'ec2', 'ecr', 'ecs', 'efs', 'eks', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) !== -1) {
         return title.toUpperCase()
     } else if (title === 'cloudtrail') {
         return 'CloudTrail'
@@ -1170,10 +1171,16 @@ function makeTitle(title) {
         return 'CloudFormation'
     } else if (title === 'config') {
         return 'Config'
+    } else if (title === 'cognito') {
+        return 'Cognito'
     } else if (title === 'awslambda') {
         return 'Lambda'
+    } else if (title === 'docdb') {
+        return 'DocumentDB'
     } else if (title === 'dynamodb') {
         return 'DynamoDB'
+    } else if (title === 'secretsmanager') {
+        return 'Secrets Manager'
     } else if (title === 'elasticache') {
         return 'ElastiCache'
     } else if (title === 'redshift') {
@@ -1192,6 +1199,8 @@ function makeTitle(title) {
         return 'Kubernetes Engine'
     } else if (title === 'cloudresourcemanager') {
         return 'Cloud Resource Manager'
+    } else if (['aad', 'arm'].indexOf(title) !== -1) {
+        return title.toUpperCase()
     } else if (title === 'storageaccounts') {
         return 'Storage Accounts'
     } else if (title === 'sqldatabase') {
@@ -1209,7 +1218,7 @@ function makeTitle(title) {
     } else if (title === 'rediscache') {
         return 'Redis Cache'
     } else if (title === 'appservice') {
-        return 'App Service'
+        return 'App Services'
     } else if (title === 'loadbalancer') {
         return 'Load Balancer'
     } else if (title === 'ram') {
@@ -1222,8 +1231,6 @@ function makeTitle(title) {
         return 'OSS'
     } else if (title === 'objectstorage') {
         return 'Object Storage'
-    } else if (title === 'graphrbac') {
-        return 'Graph RBAC'
     } else {
         return (title.charAt(0).toUpperCase() + title.substr(1).toLowerCase()).split('_').join(' ')
     }
@@ -1278,6 +1285,8 @@ function addTemplate(group, service, section, resourceType, path, suffix) {
         if (suffix === 'list') {
             if (path.indexOf('.vpcs.id.') > 0) {
                 partialName = 'left_menu_for_vpc'
+            } else if (path.indexOf('.subscriptions.id.') > 0) {
+                partialName = 'left_menu_for_subscription'
             } else if (path.indexOf('projects.id.zones.id.') > 0) {
                 partialName = 'left_menu_for_gcp_zone';
             } else if (path.indexOf('projects.id.regions.id.') > 0) {
@@ -1292,6 +1301,8 @@ function addTemplate(group, service, section, resourceType, path, suffix) {
         } else if (suffix === 'details') {
             if (path.indexOf('.vpcs.id.') > 0) {
                 partialName = 'details_for_vpc'
+            } else if (path.indexOf('.subscriptions.id.') > 0) {
+                partialName = 'details_for_subscription'
             } else if (path.indexOf('projects.id.zones.id') > 0) {
                 partialName = 'details_for_gcp_zone';
             } else if (path.indexOf('projects.id.regions.id') > 0) {
@@ -1466,4 +1477,3 @@ function downloadAsJson(filename, dict) {
         }
     }
 }
-

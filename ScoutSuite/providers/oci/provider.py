@@ -24,7 +24,7 @@ class OracleProvider(BaseProvider):
         self.services_config = OracleServicesConfig
 
         self.credentials = kwargs['credentials']
-        self.account_id = self.credentials.compartment_id
+        self.account_id = self.credentials.get_scope()
 
         super(OracleProvider, self).__init__(report_dir, timestamp, services, skipped_services)
 

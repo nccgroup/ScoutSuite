@@ -25,7 +25,7 @@ class Server(object):
     @cherrypy.tools.json_out()
     def summary(self):
         """
-        Returns the stripped down data of the results that doesn't scale up when using a lot of ressources,
+        Returns the stripped down data of the results that doesn't scale up when using a lot of resources,
         used to render the summary.
         Should be the first call from the server.
         Can be found at GET /api/summary
@@ -48,8 +48,8 @@ class Server(object):
     @cherrypy.tools.json_out()
     def data(self, key=None):
         """
-        Return the data at the requested key. Doesn't returns nested dictionnaries and lists.
-        If one of the value is a dictionnary, it will return {'type': 'dict', 'keys': <Array of all the keys>}
+        Return the data at the requested key. Doesn't returns nested dictionaries and lists.
+        If one of the value is a dictionary, it will return {'type': 'dict', 'keys': <Array of all the keys>}
         If one of the value is a list, it will return {'type': 'list', 'count': <number of elements in the list>}
 
         Can be found at GET /api/data?key=<KEY>
@@ -85,9 +85,9 @@ class Server(object):
     @cherrypy.tools.json_out()
     def page(self, key=None, page=None, pagesize=None):
         """
-        Return a page of the data at the requested key. Doesn't returns nested dictionnaries and lists.
+        Return a page of the data at the requested key. Doesn't returns nested dictionaries and lists.
         For example, if you set pagesize=10 and page=2, it should return element 10-19
-        If one of the value is a dictionnary, it will return {'type': 'dict', 'keys': <Array of all the keys>}
+        If one of the value is a dictionary, it will return {'type': 'dict', 'keys': <Array of all the keys>}
         If one of the value is a list, it will return {'type': 'list', 'count': <number of elements in the list>}
 
         Can be found at GET /api/page?key=<KEY>&page=<PAGE>&pagesize=<PAGESIZE>
@@ -138,9 +138,9 @@ class Server(object):
     @staticmethod
     def get_item(data, key):
         """
-        Get a specific informations from its key.
+        Get a specific information from its key.
 
-        :param data:                    The dictionnary in which the information is stored.
+        :param data:                    The dictionary in which the information is stored.
         :param host:                    The key where the information is located.
         :return:                        The nested data at the requested location.
         """
@@ -158,10 +158,10 @@ class Server(object):
     @staticmethod
     def strip_nested_data(data):
         """
-        Strip nested lists and dictionnaries from the provided object to reduce its size.
+        Strip nested lists and dictionaries from the provided object to reduce its size.
 
         :param data:                    The object to strip.
-        :return:                        The input data stripped of its nested lists and dictionnaries.
+        :return:                        The input data stripped of its nested lists and dictionaries.
         """
         if not isinstance(data, dict):
             return data

@@ -1,0 +1,57 @@
+<!-- appservice web_apps -->
+<script id="services.appservice.subscriptions.id.web_apps.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.name"><samp>{{value_or_none name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Location: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.location"><samp>{{value_or_none location}}</samp></span></div>
+        <div class="list-group-item-text item-margin">State: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.state"><samp>{{value_or_none state}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Usage State: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.usage_state"><samp>{{value_or_none usage_state}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Availability State: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.availability_state"><samp>{{value_or_none availability_state}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Last Modified Time:<span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.last_modified_time_utc">{{format_date last_modified_time_utc}}</span></div>
+        <div class="list-group-item-text item-margin">HTTPS-Only Traffic: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.https_only">{{convert_bool_to_enabled https_only}}</span></div>
+        <div class="list-group-item-text item-margin">HTTPS 2.0 Support: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.http_2_enabled">{{convert_bool_to_enabled http_2_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Minimum TLS Version Supported: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.minimum_tls_supported"><samp>{{value_or_none minimum_tls_version_supported}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Authentication: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.authentication_enabled"><samp>{{convert_bool_to_enabled authentication_enabled}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Resource Group: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.resource_group"><samp>{{value_or_none resource_group}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Kind: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.kind"><samp>{{value_or_none kind}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Outbound IP Addresses: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.outbound_ip_addresses"><samp>{{value_or_none outbound_ip_addresses}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Possible Outbound IP Addresses: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.possible_outbound_ip_addresses"><samp>{{value_or_none possible_outbound_ip_addresses}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Client Certificates: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.client_cert_enabled"><samp>{{convert_bool_to_enabled client_cert_enabled}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Default Host Name: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.default_host_name"><samp>{{value_or_none default_host_name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Host Names: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.host_names"><samp>{{value_or_none host_names}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Host Names: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.enabled_host_names"><samp>{{convert_bool_to_enabled enabled_host_names}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Repository Site Name: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.repository_site_name"><samp>{{value_or_none repository_site_name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Traffic Manager Host Names: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.traffic_manager_host_names"><samp>{{value_or_none traffic_manager_host_names}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Programming Language: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.programming_language"><samp>{{value_or_none programming_language}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Programming Language Version: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.programming_language_version"><samp>{{value_or_none programming_language_version}}</samp></span></div>
+        <h4 class="list-group-item-heading accordion-heading">
+        <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.identity">Identities</span>
+        </h4>
+        <div class="list-group-item-text item-margin">System Assigned Identity: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.identity.managed_principal_id"><samp>{{value_or_none identity.principal_id}}</samp></span></div>
+        {{#if identity.user_assigned_identities}}
+        <div class="list-group-item-text item-margin">
+            User Assigned Identities:
+            {{#each identity.user_assigned_identities}}
+            <ul>
+                <li><samp>{{this.principal_id}}</samp></li>
+            </ul>
+            {{/each}}
+        </div>
+        {{/if}}
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.appservice.subscriptions.id.web_apps", $("#services\\.appservice\\.subscriptions\\.id\\.web_apps\\.partial").html());
+</script>
+
+<!-- Single appservice web_app template -->
+<script id="single_appservice_web_app-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.appservice.subscriptions.id.web_apps'}}
+</script>
+<script>
+    var single_appservice_web_app_template = Handlebars.compile($("#single_appservice_web_app-template").html());
+</script>

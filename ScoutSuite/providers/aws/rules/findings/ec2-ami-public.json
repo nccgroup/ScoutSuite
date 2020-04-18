@@ -1,0 +1,18 @@
+{
+    "description": "Publicly Accessible AMI",
+    "rationale": "AMIs should never intentionally be made public. If they need to be shared this can be done with specific AWS accounts.",
+    "references": [
+        "https://aws.amazon.com/security/security-bulletins/reminder-about-safely-sharing-and-using-public-amis/"
+    ],
+    "dashboard_name": "Images",
+    "path": "ec2.regions.id.images.id",
+    "conditions": [
+        "and",
+        [
+            "Public",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "image_is_public"
+}

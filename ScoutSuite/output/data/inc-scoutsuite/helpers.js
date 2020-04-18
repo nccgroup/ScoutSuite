@@ -277,6 +277,14 @@ Handlebars.registerHelper('greaterThan', function (v1, v2, options) {
     return options.inverse(this);
 });
 
+Handlebars.registerHelper('hasKeys', function (obj, options) {
+    if (Object.keys(obj).length > 0) {
+        return options.fn(this);
+    } else {
+        return options.inverse(this);
+    }
+});
+
 Handlebars.registerHelper('has_condition', function (policyInfo) {
     if (('condition' in policyInfo) && (policyInfo['condition'] != null)) {
         return true
@@ -386,7 +394,7 @@ Handlebars.registerHelper('each_dict_as_sorted_list', function (context, options
             } else {
                 if (context[a].level.toLowerCase() === 'danger') return -1
                 if (context[b].level.toLowerCase() === 'danger') return 1
-                if (context[a].level.toLowerCase() === 'warning') return -1
+                if (context[a].level.toLowerCase() === 'warning') return -1 // FIXME - these are duplicated for nothing?
                 if (context[b].level.toLowerCase() === 'warning') return 1
                 if (context[a].level.toLowerCase() === 'warning') return -1
                 if (context[b].level.toLowerCase() === 'warning') return 1
