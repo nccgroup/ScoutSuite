@@ -1,143 +1,128 @@
-import json
+#!/usr/bin/env python3
 
-def parse_resource_security_hub(resource, json_file):
-    json_aws_finding = {"AwsAccountId": json_file["account_id"]}
-    json_aws_finding["CreatedAt"] = json_file["last_run"]["time"]
-    json_aws_finding["Description"] = json_file["services"]["config"]["findings"]["config-recorder-not-configured"][
-        "description"]
-    json_aws_finding["GeneratorId"] = "PLACEHOLDER"
-    json_aws_finding["Id"] = "PLACEHOLDER"
-    json_aws_finding["ProductArn"] = "PLACEHOLDER"
+from utils import results_file_to_dict
+import datetime
+from ScoutSuite.providers.aws.utils import get_caller_identity
+import argparse
+from ScoutSuite.core.conditions import print_exception
+import boto3
 
-    json_aws_resources = {"test": "PLACEHOLDER"}
 
-    json_aws_finding["Resources"] = json_aws_resources
+def upload_findigs_to_securityhub(session, formatted_findings_list):
+    try:
+        if formatted_findings_list:
+            securityhub = session.client('securityhub')
+            response = securityhub.batch_import_findings(Findings=formatted_findings_list)
+            return response
+    except Exception as e:
+        print_exception('Unable to upload findings to Security Hub: {}'.format(e))
 
-    json_aws_finding["SchemaVersion"] = "PLACEHOLDER"
-    json_aws_finding["Severity"] = "PLACEHOLDER"
-    json_aws_finding["Title"] = "PLACEHOLDER"
-    json_aws_finding["Types"] = "PLACEHOLDER"
-    json_aws_finding["UpdatedAt"] = "PLACEHOLDER"
 
-    return json_aws_finding
+def format_finding_to_securityhub_format(aws_account_id,
+                                         region,
+                                         creation_date,
+                                         finding_key,
+                                         finding_value):
+    try:
 
-# TODO Open the correct json file
-with open('scoutsuite-report/scoutsuite-results/scoutsuite_results_aws-635327450130.js') as f:
-    json_payload = f.readlines()
-    json_payload.pop(0)
-    json_payload = ''.join(json_payload)
-    json_file = json.loads(json_payload)
+        if finding_value.get('level') == 'danger':
+            label = 'HIGH'
+        elif finding_value.get('level') == 'warning':
+            label = 'MEDIUM'
+        else:
+            label = 'INFORMATIONAL'
 
-    json_aws_security_hub = {"Resources": []}
+        format_time = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc).isoformat()
 
-    # ACM findings
-    for finding in json_file["services"]["acm"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["acm"]["findings"][finding], json_file))
+        formatted_finding = {
+            'SchemaVersion': '2018-10-08',
+            'Id': finding_key,
+            'ProductArn':
+                'arn:aws:securityhub:' + region + ':' + aws_account_id + ':product/' + aws_account_id + '/default',
+            'GeneratorId': 'scoutsuite-{}'.format(aws_account_id),
+            'AwsAccountId': aws_account_id,
+            'Types': ['Software and Configuration Checks/AWS Security Best Practices'],
+            'FirstObservedAt': creation_date,
+            'CreatedAt': format_time,
+            'UpdatedAt': format_time,
+            'Severity': {
+                'Label': label
+            },
+            'Title': finding_value.get('description'),
+            'Description': finding_value.get('rationale') if finding_value.get('rationale') else 'None',
+            'Remediation': {
+                'Recommendation': {
+                    'Text': finding_value.get('remediation', 'None') if finding_value.get('remediation') else 'None'
+                }
+            },
+            'ProductFields': {'Product Name': 'Scout Suite'},
+            'Resources': [  # TODO this lacks affected resources
+                {
+                    'Type': 'AwsAccount',
+                    'Id': 'AWS::::Account:' + creation_date,
+                    'Partition': 'aws',
+                    'Region': region
+                }
+            ],
+            'Compliance': {
+                'Status': 'FAILED'
+            },
+            'RecordState': 'ACTIVE'
+        }
+        return formatted_finding
+    except Exception as e:
+        print_exception('Unable to process finding: {}'.format(e))
 
-    # AWSLambda findings
-    for finding in json_file["services"]["awslambda"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["awslambda"]["findings"][finding], json_file))
 
-    # Cloudformation findings
-    for finding in json_file["services"]["cloudformation"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["cloudformation"]["findings"][finding], json_file))
+def process_results_file(f,
+                         region):
+    try:
+        formatted_findings_list = []
+        results = results_file_to_dict(f)
 
-    # Cloudtrail findings
-    for finding in json_file["services"]["cloudtrail"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["cloudtrail"]["findings"][finding], json_file))
+        aws_account_id = results["account_id"]
+        creation_date = datetime.datetime.strptime(results["last_run"]["time"], '%Y-%m-%d %H:%M:%S%z').isoformat()
 
-    # Cloudwatch findings
-    for finding in json_file["services"]["cloudwatch"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["cloudwatch"]["findings"][finding], json_file))
+        for service in results.get('service_list'):
+            for finding_key, finding_value in results.get('services', {}).get(service).get('findings').items():
+                if finding_value.get('items'):
+                    formatted_finding = format_finding_to_securityhub_format(aws_account_id,
+                                                                             region,
+                                                                             creation_date,
+                                                                             finding_key,
+                                                                             finding_value)
+                    formatted_findings_list.append(formatted_finding)
 
-    # Config findings
-    for finding in json_file["services"]["config"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["config"]["findings"][finding], json_file))
+        return formatted_findings_list
+    except Exception as e:
+        print_exception('Unable to process results file: {}'.format(e))
 
-    # DirectConnect findings
-    for finding in json_file["services"]["directconnect"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["directconnect"]["findings"][finding], json_file))
 
-    # EC2 findings
-    for finding in json_file["services"]["ec2"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["ec2"]["findings"][finding], json_file))
+if __name__ == "__main__":
 
-    # EFS findings
-    for finding in json_file["services"]["efs"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["efs"]["findings"][finding], json_file))
+    parser = argparse.ArgumentParser(description='Tool to upload a JSON report to AWS Security Hub')
+    parser.add_argument('-p', '--profile',
+                        required=False,
+                        default="default",
+                        help="The named profile to use to authenticate to AWS. Defaults to \"default\".")
+    parser.add_argument('-f', '--file',
+                        required=True,
+                        help="The path of the JSON results file to process, e.g. "
+                             "\"scoutsuite-report/scoutsuite-results/scoutsuite_results_aws-<account ID>.js\".")
+    args = parser.parse_args()
 
-    # Elasticache findings
-    for finding in json_file["services"]["elasticache"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["elasticache"]["findings"][finding], json_file))
+    try:
+        session = boto3.Session(profile_name=args.profile)
+        # Test querying for current user
+        get_caller_identity(session)
 
-    # ELB findings
-    for finding in json_file["services"]["elb"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["elb"]["findings"][finding], json_file))
+        try:
+            with open(args.file) as f:
+                formatted_findings_list = process_results_file(f,
+                                                               session.region_name)
+        except Exception as e:
+            print_exception('Unable to open file {}: {}'.format(args.file, e))
 
-    # ELBv2 findings
-    for finding in json_file["services"]["elbv2"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["elbv2"]["findings"][finding], json_file))
-
-    # EMR findings
-    for finding in json_file["services"]["emr"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["emr"]["findings"][finding], json_file))
-
-    # IAM findings
-    for finding in json_file["services"]["iam"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["iam"]["findings"][finding], json_file))
-
-    # RDS findings
-    for finding in json_file["services"]["rds"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["rds"]["findings"][finding], json_file))
-
-    # Redshift findings
-    for finding in json_file["services"]["redshift"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["redshift"]["findings"][finding], json_file))
-
-    # Route53 findings
-    for finding in json_file["services"]["route53"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["route53"]["findings"][finding], json_file))
-
-    # S3 findings
-    for finding in json_file["services"]["s3"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["s3"]["findings"][finding], json_file))
-
-    # SES findings
-    for finding in json_file["services"]["ses"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["ses"]["findings"][finding], json_file))
-
-    # SNS findings
-    for finding in json_file["services"]["sns"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["sns"]["findings"][finding], json_file))
-
-    # SQS findings
-    for finding in json_file["services"]["sqs"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["sqs"]["findings"][finding], json_file))
-
-    # VPC findings
-    for finding in json_file["services"]["vpc"]["findings"]:
-        json_aws_security_hub["Resources"].append(
-            parse_resource_security_hub(json_file["services"]["vpc"]["findings"][finding], json_file))
-
-    print(json_aws_security_hub)
+        upload_findigs_to_securityhub(session, formatted_findings_list)
+    except Exception as e:
+        print_exception('Unable to complete: {}'.format(e))
