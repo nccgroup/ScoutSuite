@@ -83,8 +83,10 @@
                 "withoutKey",
                 "Condition"
             ],
-            [ "and",
-                [ "or",
+            [
+                "and",
+                [
+                    "or",
                     [
                         "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition",
                         "withoutKey",
@@ -101,7 +103,8 @@
                         ""
                     ]
                 ],
-                [ "or",
+                [
+                    "or",
                     [
                         "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Condition",
                         "withoutKey",
