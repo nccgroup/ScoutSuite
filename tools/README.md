@@ -23,7 +23,7 @@ optional arguments:
                         "scoutsuite-report/scoutsuite-
                         results/scoutsuite_results_aws-<profile>.js".
 
-$ python tools/aws_security_hub_export.py --profile scout-integration-xavier --file scoutsuite-report/scoutsuite-results/scoutsuite_results_aws-<profile>.js
+$ python tools/aws_security_hub_export.py --profile <profile> --file scoutsuite-report/scoutsuite-results/scoutsuite_results_aws-<profile>.js
 2020-04-19 10:09:06 wrkbx2 scout[7121] INFO Authenticated with profile <profile>
 2020-04-19 10:09:06 wrkbx2 scout[7121] INFO Batch uploading 14 findings
 2020-04-19 10:09:07 wrkbx2 scout[7121] INFO Upload completed, 14 succeeded, 0 failed
