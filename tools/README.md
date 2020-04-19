@@ -8,7 +8,7 @@ Allows exporting results from at report to AWS Security Hub.
 
 CLI Usage:
 
-```shell script
+```shell
 $ python tools/aws_security_hub_export.py -h
 usage: aws_security_hub_export.py [-h] [-p PROFILE] -f FILE
 
@@ -32,7 +32,6 @@ $ python tools/aws_security_hub_export.py --profile scout-integration-xavier --f
 Programatic Usage:
 
 ```python
-$ python                                    
 Python 3.7.3 (default, Dec 20 2019, 18:57:59) 
 [GCC 8.3.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
