@@ -71,7 +71,9 @@ class AzureProvider(BaseProvider):
         """
         ip_ranges = [] if ip_ranges is None else ip_ranges
 
-        self._match_rbac_roles_and_principals()
+        # Don't do this if we're running a local execution
+        if not self.last_run:
+            self._match_rbac_roles_and_principals()
 
         super(AzureProvider, self).preprocessing()
 
