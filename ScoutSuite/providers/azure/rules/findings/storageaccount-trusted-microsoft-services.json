@@ -1,10 +1,26 @@
 {
-    "dashboard_name": "Storage Accounts",
     "description": "Trusted Microsoft Services Enabled",
-    "rationale": "<b>Description:</b><br><br><br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 3.8</li></ul>",
+    "rationale": "Some Microsoft services that interact with storage accounts operate from networks that can't be granted access through network rules. To help this type of service work as intended allow the set of trusted Microsoft services to bypass the network rules. These services will then use strong authentication to access the storage account.<br><br>If the <samp>Allow trusted Microsoft services</samp> exception is enabled the following services are granted access to the storage account:<br> <ul> <li>Azure Backup</li> <li>Azure Site Recovery</li> <li>Azure DevTest Labs</li> <li>Azure Event Grid</li> <li>Azure Event Hubs</li> <li>Azure Networking</li> <li>Azure Monitor</li> <li>Azure SQL Data Warehouse (when registered in the subscription)</li> </ul>",
+    "remediation": "In the Azure console: <ol> <li>Go to <samp>Storage Accounts</samp></li> <li>For each storage account, click on the settings menu called <samp>Firewalls and virtual networks</samp>.</li> <li>Ensure that you have elected to allow access from <samp>Selected networks</samp>.</li> <li>Enable check box for <samp>Allow trusted Microsoft services to access this storage account</samp>.</li> <li>Click <samp>Save</samp> to apply your changes.</li> </ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.1.0",
+            "reference": "3.8"
+        }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security"
+    ],
+    "dashboard_name": "Storage Accounts",
     "path": "storageaccounts.subscriptions.id.storage_accounts.id",
-    "conditions": [ "and",
-        [ "storageaccounts.subscriptions.id.storage_accounts.id.trusted_microsoft_services_enabled", "false", ""]
+    "conditions": [
+        "and",
+        [
+            "storageaccounts.subscriptions.id.storage_accounts.id.trusted_microsoft_services_enabled",
+            "false",
+            ""
+        ]
     ],
     "id_suffix": "trusted_microsoft_services_enabled"
 }

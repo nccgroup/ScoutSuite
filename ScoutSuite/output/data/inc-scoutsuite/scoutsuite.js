@@ -390,6 +390,7 @@ function showFindings(path, resourcePath) {
             $('[id="' + items[item] + '"]').addClass('finding-title-' + level)
         } else {
             $('[id="' + items[item] + '"]').addClass('finding-' + level)
+            $('[class="' + items[item] + '"]').addClass('finding-' + level)
         }
         $('[id="' + items[item] + '"]').removeClass('finding-hidden')
         $('[id="' + items[item] + '"]').attr('data-finding-service', findingService)
@@ -1160,7 +1161,7 @@ function makeTitle(title) {
         return title.toString()
     }
     title = title.toLowerCase()
-    if (['acm', 'ec2', 'efs', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) !== -1) {
+    if (['acm', 'ec2', 'ecr', 'ecs', 'efs', 'eks', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) !== -1) {
         return title.toUpperCase()
     } else if (title === 'cloudtrail') {
         return 'CloudTrail'
@@ -1170,8 +1171,12 @@ function makeTitle(title) {
         return 'CloudFormation'
     } else if (title === 'config') {
         return 'Config'
+    } else if (title === 'cognito') {
+        return 'Cognito'
     } else if (title === 'awslambda') {
         return 'Lambda'
+    } else if (title === 'docdb') {
+        return 'DocumentDB'
     } else if (title === 'dynamodb') {
         return 'DynamoDB'
     } else if (title === 'secretsmanager') {
@@ -1194,8 +1199,10 @@ function makeTitle(title) {
         return 'Kubernetes Engine'
     } else if (title === 'cloudresourcemanager') {
         return 'Cloud Resource Manager'
-    } else if (['aad', 'arm'].indexOf(title) !== -1) {
-        return title.toUpperCase()
+    } else if (title === 'aad') {
+        return 'Azure Active Directory'
+    } else if (title === 'rbac') {
+        return 'Azure RBAC'
     } else if (title === 'storageaccounts') {
         return 'Storage Accounts'
     } else if (title === 'sqldatabase') {
@@ -1472,4 +1479,3 @@ function downloadAsJson(filename, dict) {
         }
     }
 }
-

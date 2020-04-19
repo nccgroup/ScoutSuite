@@ -91,7 +91,7 @@ class GCPFacade(GCPBaseFacade):
             return None
 
         resourcemanager_client = self._get_client()
-        resourcemanager_client_v2 = self._build_arbitrary_client('cloudresourcemanager', 'v2')
+        resourcemanager_client_v2 = self._build_arbitrary_client('cloudresourcemanager', 'v2', force_new=True)
 
         projects = []
 

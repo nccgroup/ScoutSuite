@@ -1,4 +1,5 @@
 import re
+from ScoutSuite.core.console import print_exception
 
 ec2_classic = 'EC2-Classic'
 
@@ -28,12 +29,16 @@ def is_throttled(e):
     :param e:                           Exception raised
     :return:                            True if it's a throttling exception else False
     """
-    return (hasattr(e, 'response')
-            and e.response
-            and 'Error' in e.response
-            and e.response['Error']['Code'] in ['Throttling',
-                                                'RequestLimitExceeded',
-                                                'ThrottlingException'])
+    try:
+        return (hasattr(e, 'response')
+                and e.response
+                and 'Error' in e.response
+                and e.response['Error']['Code'] in ['Throttling',
+                                                    'RequestLimitExceeded',
+                                                    'ThrottlingException'])
+    except Exception as e:
+        print_exception('Unable to validate exception for throttling: {}'.format(e))
+        return False
 
 
 def get_keys(src, dst, keys):
