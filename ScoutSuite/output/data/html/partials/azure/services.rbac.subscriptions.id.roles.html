@@ -24,7 +24,7 @@
         <div class="accordion-inner">
             <ul>
                 {{#if assignments.users}}
-                <li>Users</li>
+                <li><span id="rbac.subscriptions.{{@../key}}.roles.{{@key}}.users">Users</span></li>
                 <ul>
                     {{#each assignments.users}}
                     <li class="list-group-item-text"><a href="javascript:showObject('services.aad.users', 'id', '{{this}}')">{{getValueAt 'services.aad.users' this 'name'}}</a></li></a></li>
@@ -32,7 +32,7 @@
                 </ul>
                 {{/if}}
                 {{#if assignments.groups}}
-                <li>Groups</li>
+                <li><span id="rbac.subscriptions.{{@../key}}.roles.{{@key}}.groups">Groups</span></li>
                 <ul>
                     {{#each assignments.groups}}
                     <li class="list-group-item-text"><a href="javascript:showObject('services.aad.groups', 'id', '{{this}}')">{{getValueAt 'services.aad.groups' this 'name'}}</a></li></a></li>
@@ -40,7 +40,7 @@
                 </ul>
                 {{/if}}
                 {{#if assignments.service_principals}}
-                <li>Service Principals</li>
+                <li><span id="rbac.subscriptions.{{@../key}}.roles.{{@key}}.serviceprincipals">Service Principals</span></li>
                 <ul>
                     {{#each assignments.service_principals}}
                     <li class="list-group-item-text"><a href="javascript:showObject('services.aad.service_principals', 'id', '{{this}}')">{{getValueAt 'services.aad.service_principals' this 'name'}}</a></li></a></li>
