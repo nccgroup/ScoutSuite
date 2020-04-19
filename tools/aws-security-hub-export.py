@@ -4,15 +4,17 @@ from utils import results_file_to_dict
 import datetime
 from ScoutSuite.providers.aws.utils import get_caller_identity
 import argparse
-from ScoutSuite.core.conditions import print_exception
+from ScoutSuite.core.console import set_logger_configuration, print_info, print_exception
 import boto3
 
 
 def upload_findigs_to_securityhub(session, formatted_findings_list):
     try:
         if formatted_findings_list:
+            print_info('Batch uploading {} findings'.format(len(formatted_findings_list)))
             securityhub = session.client('securityhub')
             response = securityhub.batch_import_findings(Findings=formatted_findings_list)
+            print_info('Upload completed, {} succeeded, {} failed'.format(response.get('SuccessCount'), response.get('FailedCount')))
             return response
     except Exception as e:
         print_exception('Unable to upload findings to Security Hub: {}'.format(e))
@@ -98,7 +100,26 @@ def process_results_file(f,
         print_exception('Unable to process results file: {}'.format(e))
 
 
+def run(profile, file):
+    session = boto3.Session(profile_name=profile)
+    # Test querying for current user
+    get_caller_identity(session)
+    print_info('Authenticated with profile {}'.format(profile))
+
+    try:
+        with open(file) as f:
+            formatted_findings_list = process_results_file(f,
+                                                           session.region_name)
+    except Exception as e:
+        print_exception('Unable to open file {}: {}'.format(file, e))
+
+    upload_findigs_to_securityhub(session, formatted_findings_list)
+
+
 if __name__ == "__main__":
+
+    # Configure the debug level
+    set_logger_configuration()
 
     parser = argparse.ArgumentParser(description='Tool to upload a JSON report to AWS Security Hub')
     parser.add_argument('-p', '--profile',
@@ -112,17 +133,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     try:
-        session = boto3.Session(profile_name=args.profile)
-        # Test querying for current user
-        get_caller_identity(session)
-
-        try:
-            with open(args.file) as f:
-                formatted_findings_list = process_results_file(f,
-                                                               session.region_name)
-        except Exception as e:
-            print_exception('Unable to open file {}: {}'.format(args.file, e))
-
-        upload_findigs_to_securityhub(session, formatted_findings_list)
+        run(args.profile, args.file)
     except Exception as e:
         print_exception('Unable to complete: {}'.format(e))
