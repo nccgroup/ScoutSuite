@@ -129,7 +129,7 @@ if __name__ == "__main__":
     parser.add_argument('-f', '--file',
                         required=True,
                         help="The path of the JSON results file to process, e.g. "
-                             "\"scoutsuite-report/scoutsuite-results/scoutsuite_results_aws-<account ID>.js\".")
+                             "\"scoutsuite-report/scoutsuite-results/scoutsuite_results_aws-<profile>.js\".")
     args = parser.parse_args()
 
     try:
