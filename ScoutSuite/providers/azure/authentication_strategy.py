@@ -14,7 +14,9 @@ from ScoutSuite.providers.base.authentication_strategy import AuthenticationStra
 class AzureCredentials:
 
     def __init__(self,
-                 arm_credentials, aad_graph_credentials, microsoft_graph_credentials,
+                 arm_credentials,
+                 aad_graph_credentials,
+                 microsoft_graph_credentials,
                  tenant_id=None, default_subscription_id=None):
 
         self.arm_credentials = arm_credentials  # Azure Resource Manager API credentials
