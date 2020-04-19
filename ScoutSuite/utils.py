@@ -23,6 +23,8 @@ formatted_service_name = {
     'secretsmanager': 'Secrets Manager',
     'docdb': 'DocumentDB',
     # Azure
+    'aad': 'Azure Active Directory',
+    'rbac': 'Azure RBAC',
     'storageaccounts': 'Storage Accounts',
     'sqldatabase': 'SQL Database',
     'securitycenter': 'Security Center',

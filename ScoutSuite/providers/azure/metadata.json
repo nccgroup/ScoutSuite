@@ -66,11 +66,11 @@
         }
       }
     },
-    "arm": {
+    "rbac": {
       "resources": {
         "roles": {
           "cols": 2,
-          "path": "services.arm.subscriptions.id.roles"
+          "path": "services.rbac.subscriptions.id.roles"
         }
       }
     },

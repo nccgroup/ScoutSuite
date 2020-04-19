@@ -1199,8 +1199,10 @@ function makeTitle(title) {
         return 'Kubernetes Engine'
     } else if (title === 'cloudresourcemanager') {
         return 'Cloud Resource Manager'
-    } else if (['aad', 'arm'].indexOf(title) !== -1) {
-        return title.toUpperCase()
+    } else if (title === 'aad') {
+        return 'Azure Active Directory'
+    } else if (title === 'rbac') {
+        return 'Azure RBAC'
     } else if (title === 'storageaccounts') {
         return 'Storage Accounts'
     } else if (title === 'sqldatabase') {
