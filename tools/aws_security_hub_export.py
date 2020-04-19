@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from utils import results_file_to_dict
+from .utils import results_file_to_dict
 import datetime
 from ScoutSuite.providers.aws.utils import get_caller_identity
 import argparse
