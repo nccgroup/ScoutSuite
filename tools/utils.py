@@ -1,4 +1,5 @@
 import re  # Import the regular expression library
+import json
 
 EXCLUDED_WORDS = [
     "a", "an", "the",  # Articles
@@ -63,3 +64,17 @@ def get_capitalized_title(initial_title: str) -> str:
                 out_string += (frag_string[:cap].upper() + frag_string[cap:]).strip() + " "
 
     return (out_string[:1].upper() + out_string[1:]).strip()  # Capitalize first letter and strip trailing space
+
+def results_file_to_dict(f):
+    """
+    Takes a file pointer to a JS/JSON results file and returns a dict
+
+    :param f: file pointer
+    :return: dict()
+    """
+
+    json_payload = f.readlines()
+    json_payload.pop(0)
+    json_payload = ''.join(json_payload)
+    json_file = json.loads(json_payload)
+    return json_file
