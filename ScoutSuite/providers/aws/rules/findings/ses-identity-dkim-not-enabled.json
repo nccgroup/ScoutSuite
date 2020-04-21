@@ -1,9 +1,17 @@
 {
-    "description": "DKIM not enabled",
-    "rationale": "<b>Description:</b><br><br>DKIM signing is not enabled for emails sent from the identity.",
-    "path": "ses.regions.id.identities.id",
+    "description": "DKIM Not Enabled",
+    "rationale": "DKIM signing is not enabled for emails sent from the identity.",
+    "references": [
+        "https://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-email-authentication-dkim.html"
+    ],
     "dashboard_name": "Identities",
-    "conditions": [ "and",
-        [ "DkimEnabled", "false", "" ]
+    "path": "ses.regions.id.identities.id",
+    "conditions": [
+        "and",
+        [
+            "DkimEnabled",
+            "false",
+            ""
+        ]
     ]
 }

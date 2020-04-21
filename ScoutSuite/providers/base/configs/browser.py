@@ -42,7 +42,11 @@ def get_object_at(object, path, attribute_name=None):
         else:
             return o
     except Exception as e:
-        raise Exception
+        # print_exception("Failed to get object at path \"{}\"".format(path),
+        #                 additional_details={'object': object,
+        #                                     'path': path,
+        #                                     'attribute_name': attribute_name})
+        raise e
 
 
 def get_value_at(all_info, current_path, key, to_string=False):
@@ -94,8 +98,11 @@ def get_value_at(all_info, current_path, key, to_string=False):
                 else:
                     target_obj = target_obj[p]
             except Exception as e:
-                print_exception('Failed to get key \"{}\" from value \"{}\": {}'.format(p, target_obj, e),
-                                additional_details={'current_path': current_path})
+                print_exception('Unable to get \"{}\" from target object {}: {}'.format(p, target_obj, e),
+                                additional_details={'current_path': current_path,
+                                                    'target_obj': target_obj,
+                                                    'p': p})
+                return None
     if to_string:
         return str(target_obj)
     else:

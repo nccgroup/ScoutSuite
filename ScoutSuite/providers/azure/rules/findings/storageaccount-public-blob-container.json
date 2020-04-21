@@ -1,11 +1,27 @@
 {
+    "description": "Blob Containers Allowing Public Access",
+    "rationale": "Anonymous, public read access to a container and its blobs can be enabled in Azure Blob storage. It grants read-only access to these resources without sharing the account key, and without requiring a shared access signature.<br><br>It is recommended not to provide anonymous access to blob containers until, and unless, it is strongly desired. A shared access signature token should be used for providing controlled and timed access to blob containers.",
+    "remediation": "First, follow Microsoft documentation and created shared access signature tokens for your blob containers.<br><br>Then, in the Azure console:<ol><li>Go to <samp>Storage Accounts</samp></li> <li>For each storage account, go to <samp>Containers</samp> under <samp>Blob Service</samp></li> <li>For each container, click <samp>Access policy</samp></li> <li>Set <samp>Public access level</samp> to <samp>Private (no anonymous access)</samp></li></ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.1.0",
+            "reference": "3.6"
+        }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/storage/blobs/storage-manage-access-to-resources"
+    ],
     "dashboard_name": "Storage Accounts",
-    "description": "Public Blob Containers",
-    "rationale": "<b>Description:</b><br><br>Blob containers should be private.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.1.0 3.6</li></ul>",
-    "path": "storageaccounts.subscriptions.id.storage_accounts.id.blob_containers.id",
     "display_path": "storageaccounts.subscriptions.id.storage_accounts.id",
-    "conditions": [ "and",
-        [ "storageaccounts.subscriptions.id.storage_accounts.id.blob_containers.id.public_access_allowed", "true", "" ]
+    "path": "storageaccounts.subscriptions.id.storage_accounts.id.blob_containers.id",
+    "conditions": [
+        "and",
+        [
+            "storageaccounts.subscriptions.id.storage_accounts.id.blob_containers.id.public_access_allowed",
+            "true",
+            ""
+        ]
     ],
     "id_suffix": "public_access_allowed"
 }

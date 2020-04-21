@@ -1,0 +1,20 @@
+{
+    "description": "Load Balancer Allowing Clear Text (HTTP) Communication",
+    "rationale": "Use of a secure protocol (HTTPS or SSL) is best practice for encrypted communication. A load balancer without a listener using an encrypted protocol can be vulnerable to eavesdropping and man-in-the-middle attacks.",
+    "references": [
+        "https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-https-load-balancers.html",
+        "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html",
+        "https://docs.aws.amazon.com/elasticloadbalancing/latest/network/create-tls-listener.html"
+    ],
+    "dashboard_name": "Load Balancer Listeners",
+    "display_path": "elbv2.regions.id.vpcs.id.lbs.id",
+    "path": "elbv2.regions.id.vpcs.id.lbs.id.listeners.id.Protocol",
+    "conditions": [
+        "and",
+        [
+            "elbv2.regions.id.vpcs.id.lbs.id.listeners.id.Protocol",
+            "equal",
+            "HTTP"
+        ]
+    ]
+}

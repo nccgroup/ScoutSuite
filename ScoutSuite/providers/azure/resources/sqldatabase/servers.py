@@ -22,14 +22,9 @@ class Servers(AzureCompositeResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
-        for server in await self.facade.sqldatabase.get_servers(self.subscription_id):
-            id = get_non_provider_id(server.id)
-            resource_group_name = get_resource_group_name(server.id)
-            self[id] = {
-                'id': id,
-                'name': server.name,
-                'resource_group_name': resource_group_name
-            }
+        for raw_server in await self.facade.sqldatabase.get_servers(self.subscription_id):
+            id, server = self._parse_server(raw_server)
+            self[id] = server
 
         await self._fetch_children_of_all_resources(
             resources=self,
@@ -38,3 +33,10 @@ class Servers(AzureCompositeResources):
                                 'subscription_id': self.subscription_id}
                     for (server_id, server) in self.items()}
         )
+
+    def _parse_server(self, raw_server):
+        server = {}
+        server['id'] = get_non_provider_id(raw_server.id)
+        server['name'] = raw_server.name
+        server['resource_group_name'] = get_resource_group_name(raw_server.id)
+        return server['id'], server

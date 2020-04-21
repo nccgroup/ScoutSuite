@@ -1,11 +1,29 @@
 {
-    "description": "Invalid SSL Certificate (PostgreSQL)",
-    "path": "rds.regions.id.vpcs.id.instances.id",
+    "description": "Legacy SSL Certificate (PostgreSQL)",
+    "rationale": "This instance was created prior to August 5, 2014. Consequently, it uses the DB instance endpoint in the Common Name (CN) field of the SSL certificate. Prior to August 5, 2014, SSL certificate verification was not available for VPC-based SQL Server instances. If you have a VPC-based SQL Server DB instance that was created before August 5, 2014, and you want to use SSL certificate verification and ensure that the instance endpoint is included as the CN for the SSL certificate for that DB instance, then rename the instance. When you rename a DB instance, a new certificate is deployed and the instance is rebooted to enable the new certificate.",
+    "references": [
+        "https://aws.amazon.com/about-aws/whats-new/2017/02/amazon-rds-for-sql-server-supports-forced-ssl/",
+        "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/SQLServer.Concepts.General.SSL.Using.html"
+    ],
     "dashboard_name": "Instances",
-    "conditions": [ "and",
-        [ "rds.regions.id.vpcs.id.instances.id.Engine", "equal", "postgres" ],
-        [ "rds.regions.id.vpcs.id.instances.id.DBInstanceStatus", "notEqual", "creating" ],
-        [ "rds.regions.id.vpcs.id.instances.id.InstanceCreateTime", "priorToDate", "08/05/2014" ]
+    "path": "rds.regions.id.vpcs.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "rds.regions.id.vpcs.id.instances.id.Engine",
+            "equal",
+            "postgres"
+        ],
+        [
+            "rds.regions.id.vpcs.id.instances.id.DBInstanceStatus",
+            "notEqual",
+            "creating"
+        ],
+        [
+            "rds.regions.id.vpcs.id.instances.id.InstanceCreateTime",
+            "priorToDate",
+            "08/05/2014"
+        ]
     ],
     "id_suffix": "pgsslcert"
 }

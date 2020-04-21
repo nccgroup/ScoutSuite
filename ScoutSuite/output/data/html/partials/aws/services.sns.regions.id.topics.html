@@ -20,11 +20,13 @@
             {{> accordion_policy name = 'Delivery Policy' policy_path = (concat 'sns.regions' region 'topics' @key 'DeliveryPolicy') document = DeliveryPolicy}}
           </div>
         {{/if}}
-        {{#if EffectiveDeliveryPolicy}}
-          <div class="list-group-item">
-            {{> accordion_policy name = 'Effective delivery policy' policy_path = (concat 'sns.regions' region 'topics' @key 'EffectiveDeliveryPolicy') document = EffectiveDeliveryPolicy}}
-          </div>
-        {{/if}}
+        <div class="list-group-item">
+            {{#if EffectiveDeliveryPolicy}}
+                {{> accordion_policy name = 'Effective Delivery Policy' policy_path = (concat 'sns.regions' region 'topics' @key 'EffectiveDeliveryPolicy') document = EffectiveDeliveryPolicy}}
+            {{else}}
+                <h4 class="list-group-item-heading accordion-heading text-secondary">Effective Delivery Policy</h4>
+            {{/if}}
+        </div>
         <div class="list-group-item">
           <div class="accordion">
             <h4 class="list-group-item-heading accordion-heading">Subscriptions

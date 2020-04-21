@@ -27,7 +27,7 @@ class VPC(Regions):
 # TODO: move these helpers elsewhere:
 
 
-def put_cidr_name(aws_config, current_config, path, current_path, resource_id, callback_args):
+def put_cidr_name(current_config, path, current_path, resource_id, callback_args):
     """Add a display name for all known CIDRs."""
 
     if 'cidrs' in current_config:
