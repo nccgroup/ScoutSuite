@@ -5,12 +5,26 @@
         "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-concepts.html#cloudtrail-concepts-global-service-events"
     ],
     "dashboard_name": "Configuration",
-    "display_path": "cloudtrail.regions.id",
-    "path": "cloudtrail",
+    "path": "cloudtrail.regions.id.trails.id",
     "conditions": [
         "and",
         [
-            "DuplicatedGlobalServiceEvents",
+            "cloudtrail.DuplicatedGlobalServiceEvents",
+            "true",
+            ""
+        ],
+        [
+            "this",
+            "withKey",
+            "IncludeGlobalServiceEvents"
+        ],
+        [
+            "IncludeGlobalServiceEvents",
+            "true",
+            ""
+        ],
+        [
+            "IsLogging",
             "true",
             ""
         ]

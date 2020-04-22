@@ -6,14 +6,24 @@
     ],
     "dashboard_name": "Configuration",
     "display_path": "cloudtrail.regions.id.trails.id",
-    "path": "cloudtrail",
+    "path": "cloudtrail.regions.id.trails.id",
     "conditions": [
         "and",
         [
-            "data_logging_trails_count",
+            "cloudtrail.data_logging_trails_count",
             "equal",
             "0"
+        ],
+        [
+            "this",
+            "withKey",
+            "wildcard_data_logging"
+        ],
+        [
+            "wildcard_data_logging",
+            "false",
+            ""
         ]
     ],
-    "id_suffix": "DataLoggingNotConfigured"
+    "id_suffix": "cloudtrail-data-events-disabled"
 }
