@@ -1,0 +1,26 @@
+{
+    "description": "Storage Accounts Allowing Public Traffic",
+    "rationale": "Restricting default network access helps to provide a new layer of security, since storage accounts accept connections from clients on any network. To limit access to selected networks, the default action must be changed.",
+    "remediation": "In the Azure console: <ol> <li>Go to <samp>Storage Accounts</samp></li> <li>For each storage account, click on the settings menu called <samp>Firewalls and virtual networks</samp>.</li> <li>Ensure that you have elected to allow access from <samp>Selected networks</samp>.</li> <li>Add rules to allow traffic from specific network.</li> <li>Click <samp>Save</samp> to apply your changes.</li> </ol>",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.1.0",
+            "reference": "3.7"
+        }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/storage/common/storage-network-security"
+    ],
+    "dashboard_name": "Storage Accounts",
+    "path": "storageaccounts.subscriptions.id.storage_accounts.id",
+    "conditions": [
+        "and",
+        [
+            "storageaccounts.subscriptions.id.storage_accounts.id.public_traffic_allowed",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "public_traffic_allowed"
+}

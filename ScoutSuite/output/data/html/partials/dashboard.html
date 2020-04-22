@@ -35,7 +35,33 @@
                 <div class="collapse" id="item-{{key}}" aria-labelledby="item-{{key}}" data-parent="#list-{{key}}">
                     <div class="card-body row">
                         <div class="col-sm-9">
-                            <p>{{{rationale}}}</p>
+                            <b>Description</b><br>
+                            {{#if rationale}}
+                                <p>{{{rationale}}}</p>
+                            {{else}}
+                                <p>No description available.</p>
+                            {{/if}}
+                            {{#if remediation}}
+                                <b>Remediation</b><br>
+                                <p>{{{remediation}}}</p>
+                            {{/if}}
+                            {{#if compliance}}
+                            <b>Compliance</b><br>
+                            <ul>
+                                {{#each compliance}}
+                                <li>{{this.name}} version {{this.version}}, reference {{this.reference}}</li>
+                                {{/each}}
+                            </ul>
+                            <br>
+                            {{/if}}
+                            {{#if references}}
+                                <b>References</b><br>
+                                <ul>
+                                    {{#each references}}
+                                    <li><a href="{{this}}">{{this}}</a></li>
+                                    {{/each}}
+                                </ul>
+                            {{/if}}
                         </div>
                         <div class="col-sm-3">
                             <ul>

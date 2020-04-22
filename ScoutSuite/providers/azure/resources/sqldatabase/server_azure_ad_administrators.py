@@ -11,9 +11,5 @@ class ServerAzureAdAdministrators(AzureResources):
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
-        raw_ad_admins = await self.facade.sqldatabase.get_server_azure_ad_administrators(
+        self['ad_admin'] = await self.facade.sqldatabase.get_server_azure_ad_administrators(
             self.resource_group_name, self.server_name, self.subscription_id)
-        if len(raw_ad_admins) > 0:
-            self['ad_admin_configured'] = True
-        else:
-            self['ad_admin_configured'] = False

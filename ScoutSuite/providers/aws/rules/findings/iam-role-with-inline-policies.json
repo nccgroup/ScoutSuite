@@ -1,10 +1,24 @@
 {
-    "description": "Role with inline policies",
-    "path": "iam.roles.id",
+    "description": "Role with Inline Policies",
+    "rationale": "An inline policy is a policy that's embedded in an IAM identity (a user, group, or role). These policies are harder to audit and manage, and should be deprecated in favor of managed policies.",
+    "references": [
+        "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#best-practice-managed-vs-inline",
+        "https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_managed-vs-inline.html"
+    ],
     "dashboard_name": "Roles",
-    "conditions": [ "and",
-        [ "iam.roles.id.", "withKey", "inline_policies" ],
-        [ "iam.roles.id.inline_policies", "notEmpty", "" ]
+    "path": "iam.roles.id",
+    "conditions": [
+        "and",
+        [
+            "iam.roles.id.",
+            "withKey",
+            "inline_policies"
+        ],
+        [
+            "iam.roles.id.inline_policies",
+            "notEmpty",
+            ""
+        ]
     ],
     "id_suffix": "inline_policies"
 }

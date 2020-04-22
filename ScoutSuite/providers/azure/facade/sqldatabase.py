@@ -62,13 +62,13 @@ class SQLDatabaseFacade:
                 lambda: client.server_azure_ad_administrators.get(resource_group_name, server_name)
             )
         except CloudError as e:
-            # No ad admin configured returns a 404 error:
+            # No AD admin configured returns a 404 error:
             if e.status_code != 404:
                 print_exception('Failed to retrieve server azure ad administrators: {}'.format(e))
+            return None
         except Exception as e:
             print_exception('Failed to retrieve server azure ad administrators: {}'.format(e))
-        finally:
-            return []
+            return None
 
     async def get_server_blob_auditing_policies(self, resource_group_name, server_name, subscription_id: str):
         try:
