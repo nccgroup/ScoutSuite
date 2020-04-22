@@ -2,6 +2,44 @@
 
 This folder holds a number of useful tools for development and advanced usage of Scout Suite.
 
+## [aws_security_hub_export.py](https://github.com/nccgroup/ScoutSuite/blob/master/tools/aws_securtiy_hub_export.py)
+
+Allows exporting results from at report to AWS Security Hub.
+
+CLI Usage:
+
+```shell
+$ python tools/aws_security_hub_export.py -h
+usage: aws_security_hub_export.py [-h] [-p PROFILE] -f FILE
+
+Tool to upload a JSON report to AWS Security Hub
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -p PROFILE, --profile PROFILE
+                        The named profile to use to authenticate to AWS.
+                        Defaults to "default".
+  -f FILE, --file FILE  The path of the JSON results file to process, e.g.
+                        "scoutsuite-report/scoutsuite-
+                        results/scoutsuite_results_aws-<profile>.js".
+
+$ python tools/aws_security_hub_export.py --profile <profile> --file scoutsuite-report/scoutsuite-results/scoutsuite_results_aws-<profile>.js
+2020-04-19 10:09:06 wrkbx2 scout[7121] INFO Authenticated with profile <profile>
+2020-04-19 10:09:06 wrkbx2 scout[7121] INFO Batch uploading 14 findings
+2020-04-19 10:09:07 wrkbx2 scout[7121] INFO Upload completed, 14 succeeded, 0 failed
+```
+
+Programatic Usage:
+
+```python
+Python 3.7.3 (default, Dec 20 2019, 18:57:59) 
+[GCC 8.3.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+
+>>> from tools.aws_security_hub_export import run
+>>> run('<profile>', 'scoutsuite-report/scoutsuite-results/scoutsuite_results_aws-<profile>.js')
+```
+
 ## [format_findings.py](https://github.com/nccgroup/ScoutSuite/blob/master/tools/format_findings.py)
 
 Formats all findings to ensure they follow standard format.

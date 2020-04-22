@@ -6,7 +6,6 @@
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Information</h4>
         <div class="list-group-item-text item-margin">Description: <span id="awslambda.regions.{{region}}.functions.{{@key}}.description"><samp>{{value_or_none description}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Role: <span id="awslambda.regions.{{region}}.functions.{{@key}}.role"><samp>{{value_or_none role_arn}}</samp></span></div>
         <div class="list-group-item-text item-margin">Last Modified: <span id="awslambda.regions.{{region}}.functions.{{@key}}.last_modified"><samp>{{format_date last_modified}}</samp></span></div>
         <div class="list-group-item-text item-margin">Runtime: <span id="awslambda.regions.{{region}}.functions.{{@key}}.runtime"><samp>{{value_or_none runtime}}</samp></span></div>
         <div class="list-group-item-text item-margin">Version: <span id="awslambda.regions.{{region}}.functions.{{@key}}.version"><samp>{{value_or_none version}}</samp></span></div>
@@ -16,6 +15,16 @@
         <div class="list-group-item-text item-margin">Code Size: <span id="awslambda.regions.{{region}}.functions.{{@key}}.code_size"><samp>{{value_or_none code_size}}</samp></span></div>
         <div class="list-group-item-text item-margin">Memory Size: <span id="awslambda.regions.{{region}}.functions.{{@key}}.memory_size"><samp>{{value_or_none memory_size}}</samp></span></div>
         <div class="list-group-item-text item-margin">Timeout: <span id="awslambda.regions.{{region}}.functions.{{@key}}.timeout"><samp>{{value_or_none timeout}}</samp></span></div>
+        <div class="list-group-item" style="padding-bottom: 0 !important;">
+            <h4 class="list-group-item-heading">Role</h4>
+            <div class="accordion-inner">
+                <ul>
+                    <li>
+                    <a href="javascript:showObject('services.iam.roles.{{value_or_none execution_role.RoleId}}')">{{value_or_none execution_role.RoleName}}</a>
+                    </li>
+                </ul>
+            </div>
+        </span></div>
     </div>
     {{#if access_policy}}
     <div class="list-group-item">
