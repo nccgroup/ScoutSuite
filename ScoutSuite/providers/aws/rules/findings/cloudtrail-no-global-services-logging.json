@@ -7,32 +7,16 @@
     "dashboard_name": "Trails",
     "path": "cloudtrail.regions.id.trails.id",
     "conditions": [
-        "or",
+        "and",
         [
-            "and",
-            [
-                "cloudtrail.regions.id.trails.id.",
-                "withKey",
-                "IncludeGlobalServiceEvents"
-            ],
-            [
-                "cloudtrail.regions.id.trails.id.IncludeGlobalServiceEvents",
+                "cloudtrail.IncludeGlobalServiceEvents",
                 "false",
                 ""
-            ]
         ],
         [
-            "and",
-            [
-                "cloudtrail.regions.id.trails.id.",
+                "this",
                 "withKey",
-                "IsLogging"
-            ],
-            [
-                "cloudtrail.regions.id.trails.id.IsLogging",
-                "false",
-                ""
-            ]
+                "IncludeGlobalServiceEvents"
         ]
     ],
     "id_suffix": "IncludeGlobalServiceEvents"
