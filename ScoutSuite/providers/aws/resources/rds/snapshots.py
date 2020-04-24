@@ -15,13 +15,18 @@ class Snapshots(AWSResources):
             self[name] = resource
 
     def _parse_snapshot(self, raw_snapshot):
-        snapshot_id = raw_snapshot.pop('DBSnapshotIdentifier')
+        is_cluster = 'DBClusterIdentifier' in raw_snapshot
+
+        snapshot_id = raw_snapshot.pop('DBClusterSnapshotIdentifier') if is_cluster \
+            else raw_snapshot.pop('DBSnapshotIdentifier')
+
         snapshot = {}
-        snapshot['arn'] = raw_snapshot.pop('DBSnapshotArn')
+        snapshot['arn'] = raw_snapshot.pop('DBClusterSnapshotArn') if is_cluster else raw_snapshot.pop('DBSnapshotArn')
         snapshot['id'] = snapshot_id,
         snapshot['name'] = snapshot_id,
         snapshot['vpc_id'] = raw_snapshot['VpcId']
         snapshot['attributes'] = raw_snapshot['Attributes']
+        snapshot['is_cluster'] = is_cluster
 
         attributes = [
             'DBInstanceIdentifier',
@@ -31,5 +36,8 @@ class Snapshots(AWSResources):
         ]
         for attribute in attributes:
             snapshot[attribute] = raw_snapshot[attribute] if attribute in raw_snapshot else None
+
+        if snapshot['is_cluster']:  # Map some fields to do more generic and simple rules
+            snapshot['Encrypted'] = raw_snapshot['StorageEncrypted']
 
         return snapshot_id, snapshot
