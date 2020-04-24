@@ -38,6 +38,7 @@ class Snapshots(AWSResources):
             snapshot[attribute] = raw_snapshot[attribute] if attribute in raw_snapshot else None
 
         if snapshot['is_cluster']:  # Map some fields to do more generic and simple rules
+            snapshot['DBClusterIdentifier'] = raw_snapshot['DBClusterIdentifier']
             snapshot['Encrypted'] = raw_snapshot['StorageEncrypted']
 
         return snapshot_id, snapshot
