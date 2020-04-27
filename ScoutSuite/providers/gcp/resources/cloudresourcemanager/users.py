@@ -9,7 +9,7 @@ class Users(Resources):
         self.project_id = project_id
 
     async def fetch_all(self):
-        raw_bindings = await self.facade.cloudresourcemanager.get_bindings(self.project_id)
+        raw_bindings = await self.facade.cloudresourcemanager.get_member_bindings(self.project_id)
         parsed_users = self._parse_binding(raw_bindings)
         for user_id in parsed_users.keys():
             self[parsed_users[user_id]['id']] = parsed_users[user_id]

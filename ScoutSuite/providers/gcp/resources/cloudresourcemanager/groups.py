@@ -9,7 +9,7 @@ class Groups(Resources):
         self.project_id = project_id
 
     async def fetch_all(self):
-        raw_bindings = await self.facade.cloudresourcemanager.get_bindings(self.project_id)
+        raw_bindings = await self.facade.cloudresourcemanager.get_member_bindings(self.project_id)
         parsed_groups = self._parse_binding(raw_bindings)
         for group_id in parsed_groups.keys():
             self[parsed_groups[group_id]['id']] = parsed_groups[group_id]
