@@ -42,7 +42,6 @@ formatted_service_name = {
     'stackdrivermonitoring': 'Stackdriver Monitoring',
     'computeengine': 'Compute Engine',
     'kubernetesengine': 'Kubernetes Engine',
-    'cloudresourcemanager': 'Cloud Resource Manager',
     # Aliyun
     'actiontrail': 'ActionTrail',
     # OCI

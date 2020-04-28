@@ -9,11 +9,11 @@
         }
     ],
     "dashboard_name": "Users",
-    "path": "cloudresourcemanager.projects.id.users.id",
+    "path": "iam.projects.id.users.id",
     "conditions": [
         "and",
         [
-            "cloudresourcemanager.projects.id.users.id.name",
+            "iam.projects.id.users.id.name",
             "match",
             ".+@gmail[.]com"
         ]
