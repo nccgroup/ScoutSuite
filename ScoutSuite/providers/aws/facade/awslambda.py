@@ -38,7 +38,6 @@ class LambdaFacade(AWSBaseFacade):
             role['policies'] = managed_policies
             return role
         except Exception:
-            # Policy not found for this function
             return None
 
 
