@@ -36,15 +36,16 @@ class Functions(AWSResources):
         return function_dict['name'], function_dict
 
     async def _add_role_information(self, function_dict, role_id):
+        # Make it easier to build rules based on policies attached to execution roles
         function_dict['role_arn'] = role_id
         role_name = role_id.split("/")[-1]
         function_dict['execution_role'] = await self.facade.awslambda.get_role_with_managed_policies(role_name)
-        # Make it easier to build rules based on policies attached to execution roles
-        statements = []
-        for policy in function_dict['execution_role']['policies']:
-            if 'Document' in policy and 'Statement' in policy['Document']:
-                statements += policy['Document']['Statement']
-        function_dict['execution_role']['policy_statements'] = statements
+        if function_dict.get('execution_role'):
+            statements = []
+            for policy in function_dict['execution_role'].get('policies'):
+                if 'Document' in policy and 'Statement' in policy['Document']:
+                    statements += policy['Document']['Statement']
+            function_dict['execution_role']['policy_statements'] = statements
 
     async def _add_access_policy_information(self, function_dict):
         access_policy = await self.facade.awslambda.get_access_policy(function_dict['name'], self.region)

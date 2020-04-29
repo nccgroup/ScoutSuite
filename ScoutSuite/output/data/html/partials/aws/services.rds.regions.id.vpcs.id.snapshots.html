@@ -7,17 +7,26 @@
         <div class="list-group-item">
           <h4>Information</h4>
           <ul>
-            <li class="list-group-item-text">RDS Instance: <a href="javascript:showObject('services.rds.regions.{{region}}.vpcs.{{vpc_id}}.instances.{{DBInstanceIdentifier}}')">{{DBInstanceIdentifier}}</a></li>
-            <li class="list-group-item-text">Created on: {{SnapshotCreateTime}}</li>
-            <li class="list-group-item-text">Encrypted: <span id="rds.regions.{{region}}.vpcs.{{vpc_id}}.snapshots.{{@key}}.snapshot-not-encrypted">{{Encrypted}}</span></li>
-            <li class="list-group-item-text">Option group: {{OptionGroupName}}</li>
+              {{#if is_cluster}}
+              <li class="list-group-item-text">DB Cluster: <samp>{{DBClusterIdentifier}}</samp></a></li>
+              {{else}}
+              <li class="list-group-item-text">RDS Instance: <samp><a href="javascript:showObject('services.rds.regions.{{region}}.vpcs.{{vpc_id}}.instances.{{DBInstanceIdentifier}}')">{{DBInstanceIdentifier}}</a></samp></li>
+              {{/if}}
+              {{#if is_cluster}}
+              <li class="list-group-item-text">Cluster Snapshot: <samp>{{is_cluster}}</samp></li>
+              {{/if}}
+            <li class="list-group-item-text">Created: {{format_date SnapshotCreateTime}}</li>
+            <li class="list-group-item-text">Encryption: <span id="rds.regions.{{region}}.vpcs.{{vpc_id}}.snapshots.{{@key}}.snapshot-not-encrypted">{{convert_bool_to_enabled Encrypted}}</span></li>
+            {{#unless is_cluster}}
+              <li class="list-group-item-text">Option group: <samp>{{OptionGroupName}}</samp></li>
+              {{/unless}}
           </ul>
         </div>
         <div class="list-group-item">
           <h4>Attributes</h4>
           <ul>
             {{#each attributes}}
-              <li class="list-group-item-text">{{AttributeName}}: <span id="rds.regions.{{../region}}.vpcs.{{../vpc_id}}.snapshots.{{@../key}}.attributes.{{@index}}">{{AttributeValues}}</span></li>
+              <li class="list-group-item-text"><samp>{{AttributeName}}</samp>: <samp><span id="rds.regions.{{../region}}.vpcs.{{../vpc_id}}.snapshots.{{@../key}}.attributes.{{@index}}">{{value_or_none AttributeValues}}</span></samp></li>
             {{/each}}
           </ul>
         </div>

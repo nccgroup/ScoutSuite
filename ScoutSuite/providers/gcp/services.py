@@ -1,6 +1,5 @@
 from ScoutSuite.providers.base.services import BaseServicesConfig
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
-from ScoutSuite.providers.gcp.resources.cloudresourcemanager.base import CloudResourceManager
 from ScoutSuite.providers.gcp.resources.cloudsql.base import CloudSQL
 from ScoutSuite.providers.gcp.resources.cloudstorage.base import CloudStorage
 from ScoutSuite.providers.gcp.resources.gce.base import ComputeEngine
@@ -25,7 +24,6 @@ class GCPServicesConfig(BaseServicesConfig):
 
         facade = GCPFacade(default_project_id, project_id, folder_id, organization_id, all_projects)
 
-        self.cloudresourcemanager = CloudResourceManager(facade)
         self.cloudsql = CloudSQL(facade)
         self.cloudstorage = CloudStorage(facade)
         self.computeengine = ComputeEngine(facade)
