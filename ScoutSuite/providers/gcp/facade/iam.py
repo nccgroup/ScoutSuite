@@ -55,13 +55,18 @@ class IAMFacade(GCPBaseFacade):
             print_exception('Failed to retrieve service account keys: {}'.format(e))
             return []
 
-    async def get_role_definition(self, project_id: str, role: str):
+    async def get_role_definition(self, role: str):
         try:
             iam_client = self._get_client()
-            response = await run_concurrently(
-                lambda: iam_client.roles().get(name='roles/{}'.format(role)).execute()
-            )
+            if 'projects/' in role:
+                response = await run_concurrently(
+                    lambda: iam_client.projects().roles().get(name=role).execute()
+                )
+            else:
+                response = await run_concurrently(
+                    lambda: iam_client.roles().get(name=role).execute()
+                )
             return response
         except Exception as e:
             print_exception('Failed to retrieve IAM role definition: {}'.format(e))
-            return []
+            return {}

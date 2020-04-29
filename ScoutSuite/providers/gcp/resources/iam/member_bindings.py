@@ -20,10 +20,11 @@ class Bindings(Resources):
         binding_dict['id'] = get_non_provider_id(raw_binding['role'])
         binding_dict['name'] = raw_binding['role'].split('/')[-1]
         binding_dict['members'] = self._parse_members(raw_binding)
+        binding_dict['custom_role'] = 'projects/' in raw_binding['role']
 
-        role_definition = await self.facade.iam.get_role_definition(self.project_id, binding_dict['name'])
+        role_definition = await self.facade.iam.get_role_definition(raw_binding['role'])
 
-        binding_dict['title'] = role_definition['title']
+        binding_dict['title'] = role_definition.get('title')
         binding_dict['description'] = role_definition.get('description')
         binding_dict['permissions'] = role_definition.get('includedPermissions')
 
