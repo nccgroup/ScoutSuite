@@ -12,14 +12,21 @@ class Bindings(Resources):
     async def fetch_all(self):
         raw_bindings = await self.facade.cloudresourcemanager.get_member_bindings(self.project_id)
         for raw_binding in raw_bindings:
-            binding_id, binding = self._parse_binding(raw_binding)
+            binding_id, binding = await self._parse_binding(raw_binding)
             self[binding_id] = binding
 
-    def _parse_binding(self, raw_binding):
+    async def _parse_binding(self, raw_binding):
         binding_dict = {}
         binding_dict['id'] = get_non_provider_id(raw_binding['role'])
         binding_dict['name'] = raw_binding['role'].split('/')[-1]
         binding_dict['members'] = self._parse_members(raw_binding)
+
+        role_definition = await self.facade.iam.get_role_definition(self.project_id, binding_dict['name'])
+
+        binding_dict['title'] = role_definition['title']
+        binding_dict['description'] = role_definition.get('description')
+        binding_dict['permissions'] = role_definition.get('includedPermissions')
+
         return binding_dict['id'], binding_dict
 
     def _parse_members(self, raw_binding):
