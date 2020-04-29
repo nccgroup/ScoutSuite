@@ -35,7 +35,7 @@ class ProcessingEngine(object):
                 if not rule.enabled:  # or rule.service not in []: # TODO: handle this...
                     continue
 
-                print_debug('Processing %s rule[%s]: "%s"' % (rule.service, rule.filename, rule.description))
+                print_debug('Processing %s rule "%s" (%s)' % (rule.service, rule.description, rule.filename))
                 finding_path = rule.path
                 path = finding_path.split('.')
                 service = path[0]
