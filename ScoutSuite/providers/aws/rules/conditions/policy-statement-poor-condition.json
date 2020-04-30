@@ -14,14 +14,18 @@
                 [ "_STATEMENT_.Condition.", "withoutKey", "StringEquals" ],
                 [ "and",
                     [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "AWS:SourceArn" ],
-                    [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "AWS:SourceOwner" ]
+                    [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "AWS:SourceOwner" ],
+                    [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "kms:ViaService" ],
+                    [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "kms:CallerAccount" ]
                 ]
             ],
             [ "or",
                 [ "_STATEMENT_.Condition.", "withoutKey", "StringLike" ],
                 [ "and",
                     [ "_STATEMENT_.Condition.StringLike.", "withoutKey", "AWS:SourceArn" ],
-                    [ "_STATEMENT_.Condition.StringLike.", "withoutKey", "AWS:SourceOwner" ]
+                    [ "_STATEMENT_.Condition.StringLike.", "withoutKey", "AWS:SourceOwner" ],
+                    [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "kms:ViaService" ],
+                    [ "_STATEMENT_.Condition.StringEquals.", "withoutKey", "kms:CallerAccount" ]
                 ]
             ]
         ]
