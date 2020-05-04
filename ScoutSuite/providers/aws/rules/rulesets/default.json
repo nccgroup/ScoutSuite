@@ -1,17 +1,17 @@
 {
     "about": "This ruleset consists of numerous rules that are considered standard by NCC Group. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of provider-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configured, and some of them being applicable to a limited number of users.",
     "rules": {
-        "acm-certificate-with-transparency-logging-disabled.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
         "acm-certificate-with-close-expiration-date.json": [
             {
                 "args": [
                     "7"
                 ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "acm-certificate-with-transparency-logging-disabled.json": [
+            {
                 "enabled": true,
                 "level": "warning"
             }
@@ -70,6 +70,12 @@
                 "level": "warning"
             }
         ],
+        "ec2-ami-public.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "ec2-default-security-group-in-use.json": [
             {
                 "enabled": true,
@@ -83,6 +89,12 @@
             }
         ],
         "ec2-ebs-snapshot-not-encrypted.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "ec2-ebs-snapshot-public.json": [
             {
                 "enabled": true,
                 "level": "danger"
@@ -328,10 +340,34 @@
                 "level": "warning"
             }
         ],
+        "elb-listener-allowing-cleartext.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "elb-no-access-logs.json": [
             {
                 "enabled": true,
                 "level": "warning"
+            }
+        ],
+        "elb-older-ssl-policy.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+         "elbv2-http-request-smuggling.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "elbv2-listener-allowing-cleartext.json": [
+            {
+                "enabled": true,
+                "level": "danger"
             }
         ],
         "elbv2-no-access-logs.json": [
@@ -838,12 +874,6 @@
                 "level": "warning"
             }
         ],
-        "s3-bucket-website-enabled.json": [
-            {
-                "enabled": false,
-                "level": "warning"
-            }
-        ],
         "s3-bucket-world-acl.json": [
             {
                 "args": [
@@ -938,7 +968,7 @@
             {
                 "args": [
                     "Get",
-                    "s3:GetObject*"
+                    "s3:Get*"
                 ],
                 "enabled": true,
                 "level": "danger"
@@ -946,7 +976,7 @@
             {
                 "args": [
                     "List",
-                    "s3:ListBucket*"
+                    "s3:List*"
                 ],
                 "enabled": true,
                 "level": "danger"
@@ -954,14 +984,6 @@
             {
                 "args": [
                     "Put",
-                    "s3:PutObject*"
-                ],
-                "enabled": true,
-                "level": "danger"
-            },
-            {
-                "args": [
-                    "Manage",
                     "s3:Put*"
                 ],
                 "enabled": true,

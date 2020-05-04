@@ -6,17 +6,17 @@
         <div class="list-group-item">
             <h4>Information</h4>
             <ul>
-                <li class="list-group-item-text">Region: {{region}}</li>
-                <li class="list-group-item-text">VPC: {{getValueAt 'services.ec2.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</li>
-                <li class="list-group-item-text">ID: {{id}}</li>
-                <li class="list-group-item-text">Reservation ID: {{reservation_id}}</li>
+                <li class="list-group-item-text">ID: <samp>{{id}}</samp></li>
+                <li class="list-group-item-text">Region: <samp>{{region}}</samp></li>
+                <li class="list-group-item-text">VPC: <samp>{{getValueAt 'services.ec2.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</samp></li>
+                <li class="list-group-item-text">Reservation ID: <samp>{{reservation_id}}</samp></li>
                 <li class="list-group-item-text">Monitoring: <span id="ec2.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.monitoring_disabled">{{convert_bool_to_enabled monitoring_enabled}}</span></li>
-                <li class="list-group-item-text">Access Key name: {{KeyName}}</li>
-                <li class="list-group-item-text">State: {{makeTitle State.Name}}</li>
+                <li class="list-group-item-text">Access Key Name: <samp>{{KeyName}}</samp></li>
+                <li class="list-group-item-text">State: <samp>{{makeTitle State.Name}}</samp></li>
                 <li class="list-group-item-text">Instance Type:
-                    <span id="services.ec2.regions.vpcs.instances-unscannable-instance-types-{{id}}"> {{InstanceType}}<span>
+                    <span id="services.ec2.regions.vpcs.instances-unscannable-instance-types-{{id}}"> <samp>{{InstanceType}}</samp></span>
                 </li>
-                <li class="list-group-item-text">Up since: {{LaunchTime}}</li>
+                <li class="list-group-item-text">Up Since: {{format_date LaunchTime}}</li>
             </ul>
         </div>
         <div class="list-group-item" style="padding-bottom: 0 !important;">
@@ -25,6 +25,15 @@
                 {{> network_interface region = ../region vpc = ../vpc network_interface = @../key}}
             {{/each}}
         </div>
+        {{#if metadata_options}}
+        <div class="list-group-item">
+            <h4>Metadata Options</h4>
+            <ul id="ec2.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.metadata_options">
+                <li>Endpoint: <samp>{{metadata_options.HttpEndpoint}}</samp></li>
+                <li>HTTP Tokens: <samp>{{metadata_options.HttpTokens}}</samp></li>
+            </ul>
+        </div>
+        {{/if}}
         {{#if user_data}}
         <div class="list-group-item" style="padding-bottom: 0 !important;">
             <h4>User data</h4>
@@ -32,6 +41,7 @@
                 <code>{{#each (split_lines user_data)}}   {{this}}<br>{{/each}}</code>
             </div>
             {{#if user_data_secrets}}
+            <br>
             <h5 id="ec2.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.potential_secrets">Potential Secrets</h5>
             <ul>
                 {{#each user_data_secrets}}

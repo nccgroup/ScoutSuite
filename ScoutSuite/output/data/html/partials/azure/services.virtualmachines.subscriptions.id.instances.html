@@ -1,0 +1,48 @@
+<!-- virtualmachines instances -->
+<script id="services.virtualmachines.subscriptions.id.instances.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="virtualmachines.subscriptions.{{@../key}}.instances.{{@key}}.name"><samp>{{value_or_none name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">VM ID: <span id="virtualmachines.subscriptions.{{@../key}}.instances.{{@key}}.vm_id"><samp>{{value_or_none vm_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Location: <span id="virtualmachines.subscriptions.{{@../key}}.instances.{{@key}}.location"><samp>{{value_or_none location}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Provisioning State: <span id="virtualmachines.subscriptions.{{@../key}}.instances.{{@key}}.provisioning_state"><samp>{{value_or_none provisioning_state}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Identity Principal ID: <span id="virtualmachines.subscriptions.{{@../key}}.instances.{{@key}}.identity"><samp>{{value_or_none identity.principal_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">License Type: <span id="virtualmachines.subscriptions.{{@../key}}.instances.{{@key}}.license_type"><samp>{{value_or_none license_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Plan: <span id="virtualmachines.subscriptions.{{@../key}}.instances.{{@key}}.plan"><samp>{{value_or_none plan}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Zones: <span id="virtualmachines.subscriptions.{{@../key}}.instances.{{@key}}.zones"><samp>{{value_or_none zones}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Instance View: <span id="virtualmachines.subscriptions.{{@../key}}.instances.{{@key}}.instance_view"><samp>{{value_or_none instance_view}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Proximity Placement Group: <span id="virtualmachines.subscriptions.{{@../key}}.instances.{{@key}}.proximity_placement_group"><samp>{{value_or_none proximity_placement_group}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Tags: <span id="virtualmachines.subscriptions.{{@../key}}.instances.{{@key}}.tags"><samp>{{value_or_none tags}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Availability Set: <span id="virtualmachines.subscriptions.{{@../key}}.instances.{{@key}}.availability_set"><samp>{{value_or_none availability_set}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Additional Capabilities: <span id="virtualmachines.subscriptions.{{@../key}}.instances.{{@key}}.additional_capabilities"><samp>{{value_or_none additional_capabilities}}</samp></span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Network Interfaces</h4>
+        {{#each network_interfaces}}
+        <div class="list-group-item-text item-margin"><a href="javascript:showObject('services.network.subscriptions.{{../subscription}}.network_interfaces.{{this}}')"><samp>{{getValueAt 'services.network.subscriptions' ../subscription 'network_interfaces' this 'name'}}</samp></a></div>
+        {{/each}}
+    </div>
+    <div class="list-group-item">
+        <h4 id="virtualmachines.subscriptions.{{@../key}}.instances.{{@key}}.extensions" class="list-group-item-heading">Extensions</h4>
+        {{#each extensions}}
+        <ul>
+            <li><samp>{{this.name}}</samp></li>
+        </ul>
+        {{/each}}
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.virtualmachines.subscriptions.id.instances", $("#services\\.virtualmachines\\.subscriptions\\.id\\.instances\\.partial").html());
+</script>
+
+<!-- Single virtualmachines instance template -->
+<script id="single_virtualmachines_instance-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.virtualmachines.subscriptions.id.instances'}}
+</script>
+<script>
+    var single_virtualmachines_instance_template = Handlebars.compile($("#single_virtualmachines_instance-template").html());
+</script>

@@ -1,9 +1,17 @@
 {
-    "description": "Group with no users",
-    "rationale": "<b>Description:</b><br><br>Groups with no users should be reviewed and deleted if not necessary.",
-    "path": "iam.groups.id",
+    "description": "Group with No Users",
+    "rationale": "Groups with no users should be reviewed and deleted if not necessary.",
+    "references": [
+        "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#use-groups-for-permissions"
+    ],
     "dashboard_name": "groups",
-    "conditions": [ "and",
-        [ "iam.groups.id.users", "empty", "" ]
+    "path": "iam.groups.id",
+    "conditions": [
+        "and",
+        [
+            "iam.groups.id.users",
+            "empty",
+            ""
+        ]
     ]
 }

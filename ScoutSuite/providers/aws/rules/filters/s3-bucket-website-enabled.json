@@ -1,0 +1,11 @@
+{
+    "dashboard_name": "Buckets",
+    "description": "Bucket with static website enabled",
+    "path": "s3.buckets.id",
+    "display_path": "s3.buckets.id",
+    "conditions": [ "and",
+        [ "s3.buckets.id", "withKey", "web_hosting_enabled" ],
+        [ "s3.buckets.id.web_hosting_enabled", "true", "" ]
+    ],
+    "id_suffix": "web_hosting_enabled"
+}

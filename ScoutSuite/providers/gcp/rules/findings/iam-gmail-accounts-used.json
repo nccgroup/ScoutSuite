@@ -1,0 +1,22 @@
+{
+    "description": "Gmail Account in Use",
+    "rationale": "Gmail accounts are personally created and controllable accounts. Organizations seldom have any control over them. Thus, it is recommended that you use fully managed corporate Google accounts for increased visibility, auditing, and control over access to Cloud Platform resources.",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.0.0",
+            "reference": "1.1"
+        }
+    ],
+    "dashboard_name": "Users",
+    "path": "iam.projects.id.users.id",
+    "conditions": [
+        "and",
+        [
+            "iam.projects.id.users.id.name",
+            "match",
+            ".+@gmail[.]com"
+        ]
+    ],
+    "id_suffix": "name"
+}

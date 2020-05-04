@@ -1,5 +1,5 @@
-from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.facade.base import AWSFacade
+from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.utils import get_non_provider_id
 
 
@@ -22,4 +22,3 @@ class Domains(AWSResources):
         domain_dict['transfer_lock'] = raw_domain.get('TransferLock')
         domain_dict['expiry'] = raw_domain.get('Expiry')
         return domain_dict['id'], domain_dict
-

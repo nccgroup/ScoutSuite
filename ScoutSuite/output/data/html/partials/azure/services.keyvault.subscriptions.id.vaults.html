@@ -1,0 +1,24 @@
+<!-- Key Vault partial -->
+<script id="services.keyvault.subscriptions.id.vaults.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">ID: <span id="keyvault.subscriptions.{{@../key}}.vaults.{{@key}}.id"><samp>{{ id }}</samp></span></div>
+        <div class="list-group-item-text item-margin">Location: <span id="keyvault.subscriptions.{{@../key}}.vaults.{{@key}}.location"><samp>{{value_or_none location}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Public Access: <span id="keyvault.subscriptions.{{@../key}}.vaults.{{@key}}.public_access_allowed">{{ convert_bool_to_enabled public_access_allowed }}</span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.keyvault.subscriptions.id.vaults", $("#services\\.keyvault\\.subscriptions\\.id\\.vaults\\.partial").html());
+</script>
+
+<!-- Single Key Vault template -->
+<script id="single_keyvault_vaults-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.keyvault.vaults' }}
+</script>
+<script>
+    var single_keyvault_vaults_template = Handlebars.compile($("#single_keyvault_vaults-template").html());
+</script>

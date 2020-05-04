@@ -1,10 +1,18 @@
 {
     "description": "Single AZ RDS Instance",
-    "path": "rds.regions.id.vpcs.id.instances.id",
-    "rationale": "<b>Description:</b><br><br>In case of failure, with a single-AZ deployment configuration, should an availability zone specific database failure occur, Amazon RDS can not automatically fail over to the standby availability zone.",
+    "rationale": "In case of failure, with a single-AZ deployment configuration, should an availability zone specific database failure occur, Amazon RDS can not automatically fail over to the standby availability zone.",
+    "references": [
+        "https://aws.amazon.com/rds/features/multi-az/"
+    ],
     "dashboard_name": "Instances",
-    "conditions": [ "and",
-        [ "rds.regions.id.vpcs.id.instances.id.MultiAZ", "false", "" ]
+    "path": "rds.regions.id.vpcs.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "rds.regions.id.vpcs.id.instances.id.MultiAZ",
+            "false",
+            ""
+        ]
     ],
     "id_suffix": "MultiAZ"
 }

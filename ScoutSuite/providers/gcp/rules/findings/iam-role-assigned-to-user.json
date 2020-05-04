@@ -1,0 +1,19 @@
+{
+    "description": "IAM Role Assigned to User",
+    "rationale": "Best practices recommends granting roles to a Google Suite group instead of to individual users when possible. It is easier to add members to and remove members from a group instead of updating a Cloud IAM policy to add or remove users.",
+    "references": [
+        "https://cloud.google.com/iam/docs/understanding-roles",
+        "https://cloud.google.com/iam/docs/using-iam-securely"
+    ],
+    "dashboard_name": "Bindings",
+    "path": "iam.projects.id.bindings.id",
+    "conditions": [
+        "and",
+        [
+            "iam.projects.id.bindings.id.members.users",
+            "notEmpty",
+            ""
+        ]
+    ],
+    "id_suffix": "users"
+}

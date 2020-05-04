@@ -1,9 +1,15 @@
+from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 
 
 class SecurityContacts(AzureResources):
+
+    def __init__(self, facade: AzureFacade, subscription_id: str):
+        super(SecurityContacts, self).__init__(facade)
+        self.subscription_id = subscription_id
+
     async def fetch_all(self):
-        for raw_contact in await self.facade.securitycenter.get_security_contacts():
+        for raw_contact in await self.facade.securitycenter.get_security_contacts(self.subscription_id):
             id, security_contact = self._parse_security_contact(raw_contact)
             self[id] = security_contact
 

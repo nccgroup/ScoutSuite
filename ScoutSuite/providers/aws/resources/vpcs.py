@@ -27,8 +27,16 @@ class Vpcs(AWSCompositeResources):
 
     def _parse_vpc(self, raw_vpc):
         vpc = {}
-        vpc['name'] = raw_vpc['VpcId']
+        vpc['id'] = raw_vpc['VpcId']
         vpc['cidr_block'] = raw_vpc['CidrBlock']
         vpc['default'] = raw_vpc['IsDefault']
         vpc['state'] = raw_vpc['State']
-        return raw_vpc['VpcId'], vpc
+
+        # pull the name from tags
+        name_tag = next((d for i, d in enumerate(raw_vpc.get('Tags', [])) if d.get('Key') == 'Name'), None)
+        if name_tag:
+            vpc['name'] = name_tag.get('Value')
+        else:
+            vpc['name'] = raw_vpc['VpcId']
+
+        return vpc['id'], vpc

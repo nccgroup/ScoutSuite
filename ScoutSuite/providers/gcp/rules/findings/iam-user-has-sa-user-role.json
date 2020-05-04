@@ -1,0 +1,29 @@
+{
+    "description": "User with \"Service Account User\" Role at the Project Level",
+    "rationale": "Granting the iam.serviceAccountUser role to a user for a project gives the user access to all service accounts in the project, including service accounts that may be created in the future. This can result into elevation of privileges by using service accounts and corresponding Compute Engine instances.",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.0.0",
+            "reference": "1.5"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/iam/docs/service-accounts#google-managed",
+        "https://cloud.google.com/iam/docs/understanding-roles",
+        "https://cloud.google.com/iam/docs/using-iam-securely"
+    ],
+    "dashboard_name": "Bindings",
+    "path": "iam.projects.id.bindings.id",
+    "conditions": [
+        "and",
+        [
+            "iam.projects.id.bindings.id.name",
+            "containAtLeastOneOf",
+            [
+                "iam.serviceAccountUser"
+            ]
+        ]
+    ],
+    "id_suffix": "user_has_sa_user_role"
+}
