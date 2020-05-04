@@ -10,17 +10,36 @@ from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrentl
 
 class S3Facade(AWSBaseFacade):
     async def get_buckets(self):
-        client = AWSFacadeUtils.get_client('s3', self.session)
         try:
-            buckets = await run_concurrently(lambda: client.list_buckets()['Buckets'])
+            # If there are regions specified, try for each of them until one works.
+            # This is required in case there's an IAM policy that denies access to APIs on a regional basis,
+            # as per https://github.com/nccgroup/ScoutSuite/issues/727
+            if self.regions:
+                buckets = []
+                exception = ''
+                for region in self.regions:
+                    try:
+                        client = AWSFacadeUtils.get_client('s3', self.session, region)
+                        buckets = await run_concurrently(lambda: client.list_buckets()['Buckets'])
+                    except Exception as e:
+                        exception = e
+                    else:
+                        break
+                if not buckets:
+                    if exception:
+                        print_exception('Failed to list buckets: {}'.format(exception))
+                    return []
+            else:
+                client = AWSFacadeUtils.get_client('s3', self.session)
+                buckets = await run_concurrently(lambda: client.list_buckets()['Buckets'])
         except Exception as e:
             print_exception('Failed to list buckets: {}'.format(e))
             return []
         else:
-            # We need first to retrieve bucket locations before retrieving bucket details:
-            await get_and_set_concurrently([self._get_and_set_s3_bucket_location], buckets)
+            # We need first to retrieve bucket locations before retrieving bucket details
+            await get_and_set_concurrently([self._get_and_set_s3_bucket_location], buckets, region=region)
 
-            # Then we can retrieve bucket details concurrently:
+            # Then we can retrieve bucket details concurrently
             await get_and_set_concurrently(
                 [self._get_and_set_s3_bucket_logging,
                  self._get_and_set_s3_bucket_versioning,
@@ -31,14 +50,14 @@ class S3Facade(AWSBaseFacade):
                  self._get_and_set_s3_bucket_tags],
                 buckets)
 
-            # Non-async post-processing:
+            # Non-async post-processing
             for bucket in buckets:
                 self._set_s3_bucket_secure_transport(bucket)
 
             return buckets
 
-    async def _get_and_set_s3_bucket_location(self, bucket: {}):
-        client = AWSFacadeUtils.get_client('s3', self.session)
+    async def _get_and_set_s3_bucket_location(self, bucket: {}, region=None):
+        client = AWSFacadeUtils.get_client('s3', self.session, region)
         try:
             location = await run_concurrently(lambda: client.get_bucket_location(Bucket=bucket['Name']))
         except Exception as e:
@@ -56,7 +75,7 @@ class S3Facade(AWSBaseFacade):
 
         bucket['region'] = region
 
-    async def _get_and_set_s3_bucket_logging(self, bucket):
+    async def _get_and_set_s3_bucket_logging(self, bucket: {}):
         client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'], )
         try:
             logging = await run_concurrently(lambda: client.get_bucket_logging(Bucket=bucket['Name']))
@@ -70,7 +89,7 @@ class S3Facade(AWSBaseFacade):
             else:
                 bucket['logging'] = 'Disabled'
 
-    async def _get_and_set_s3_bucket_versioning(self, bucket):
+    async def _get_and_set_s3_bucket_versioning(self, bucket: {}):
         client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
         try:
             versioning = await run_concurrently(lambda: client.get_bucket_versioning(Bucket=bucket['Name']))
@@ -81,7 +100,7 @@ class S3Facade(AWSBaseFacade):
             bucket['versioning_status_enabled'] = None
             bucket['version_mfa_delete_enabled'] = None
 
-    async def _get_and_set_s3_bucket_webhosting(self, bucket):
+    async def _get_and_set_s3_bucket_webhosting(self, bucket: {}):
         client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
         try:
             result = await run_concurrently(lambda: client.get_bucket_website(Bucket=bucket['Name']))
@@ -92,7 +111,7 @@ class S3Facade(AWSBaseFacade):
             else:
                 print_exception('Failed to get web hosting configuration for %s: %s' % (bucket['Name'], e))
 
-    async def _get_and_set_s3_bucket_default_encryption(self, bucket):
+    async def _get_and_set_s3_bucket_default_encryption(self, bucket: {}):
         bucket_name = bucket['Name']
         client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
         try:
@@ -108,7 +127,7 @@ class S3Facade(AWSBaseFacade):
             print_exception('Failed to get encryption configuration for %s: %s' % (bucket_name, e))
             bucket['default_encryption'] = 'Unknown'
 
-    async def _get_and_set_s3_acls(self, bucket, key_name=None):
+    async def _get_and_set_s3_acls(self, bucket: {}, key_name=None):
         bucket_name = bucket['Name']
         client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
         try:
@@ -139,7 +158,7 @@ class S3Facade(AWSBaseFacade):
             print_exception('Failed to get ACL configuration for %s: %s' % (bucket_name, e))
             bucket['grantees'] = {}
 
-    async def _get_and_set_s3_bucket_policy(self, bucket):
+    async def _get_and_set_s3_bucket_policy(self, bucket: {}):
         client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
         try:
             bucket_policy = await run_concurrently(lambda: client.get_bucket_policy(Bucket=bucket['Name']))
@@ -151,7 +170,7 @@ class S3Facade(AWSBaseFacade):
             print_exception('Failed to get bucket policy for %s: %s' % (bucket['Name'], e))
             bucket['grantees'] = {}
 
-    async def _get_and_set_s3_bucket_tags(self, bucket):
+    async def _get_and_set_s3_bucket_tags(self, bucket: {}):
         client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
         try:
             bucket_tagset = await run_concurrently(lambda: client.get_bucket_tagging(Bucket=bucket['Name']))
@@ -163,7 +182,7 @@ class S3Facade(AWSBaseFacade):
             print_exception('Failed to get bucket tags for %s: %s' % (bucket['Name'], e))
             bucket['tags'] = {}
 
-    def _set_s3_bucket_secure_transport(self, bucket):
+    def _set_s3_bucket_secure_transport(self, bucket: {}):
         try:
             if 'policy' in bucket:
                 bucket['secure_transport_enabled'] = False
@@ -190,7 +209,7 @@ class S3Facade(AWSBaseFacade):
         return permissions
 
     @staticmethod
-    def _set_s3_permissions(permissions, name):
+    def _set_s3_permissions(permissions: str, name: str):
         if name == 'READ' or name == 'FULL_CONTROL':
             permissions['read'] = True
         if name == 'WRITE' or name == 'FULL_CONTROL':
@@ -201,7 +220,7 @@ class S3Facade(AWSBaseFacade):
             permissions['write_acp'] = True
 
     @staticmethod
-    def _s3_group_to_string(uri):
+    def _s3_group_to_string(uri: str):
         if uri == 'http://acs.amazonaws.com/groups/global/AuthenticatedUsers':
             return 'Authenticated users'
         elif uri == 'http://acs.amazonaws.com/groups/global/AllUsers':
@@ -212,6 +231,6 @@ class S3Facade(AWSBaseFacade):
             return uri
 
     @staticmethod
-    def _status_to_bool(value):
+    def _status_to_bool(value: str):
         """ Converts a string to True if it is equal to 'Enabled' or to False otherwise. """
         return value == 'Enabled'

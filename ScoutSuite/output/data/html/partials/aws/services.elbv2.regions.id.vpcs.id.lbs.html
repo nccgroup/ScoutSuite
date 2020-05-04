@@ -22,13 +22,11 @@
         <div class="list-group-item">
             <h4>Listeners</h4>
             <ul>
-                <span id="elbv2.regions.{{region}}.vpcs.{{vpc}}.lbs.{{@key}}.has_secure_protocol">
                 {{#each listeners}}
                     <li class="list-group-item-text">
                         {{@key}} ({{Protocol}}{{#if SslPolicy}}, {{SslPolicy}}{{/if}})
                     </li>
                 {{/each}}
-                </span>
             </ul>
         </div>
         <div class="list-group-item">
@@ -41,7 +39,7 @@
         </div>
         <div class="list-group-item" style="padding-bottom: 0 !important;">
             <div class="accordion">
-                <h4 class="list-group-item-heading accordion-heading">Security groups
+                <h4 class="list-group-item-heading accordion-heading">Security Groups
                   {{> count_badge count=security_groups.length target=(concat '#services.elbv2.regions' region 'vpcs' vpc 'lbs' @key 'security_groups')}}
                 </h4>
                 <div id="services.elbv2.regions.{{region}}.vpcs.{{vpc}}.lbs.{{@key}}.security_groups" class="accordion-body">

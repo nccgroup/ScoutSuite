@@ -1,11 +1,21 @@
 {
-  "dashboard_name": "Instances",
-  "description": "Instance disk with no snapshot",
-  "path": "computeengine.projects.id.zones.id.instances.id.disks.id",
-  "display_path": "computeengine.projects.id.zones.id.instances.id",
-  "conditions": [ "and",
-    [ "computeengine.projects.id.zones.id.instances.id.disks.id.snapshots", "empty", "" ]
-  ],
-  "id_suffix": "latest_snapshot"
+    "description": "Instance Disk without Snapshots",
+    "rationale": "You should have snapshots of your in-use or available disks taken on a regular basis to enable disaster recovery efforts.",
+    "references": [
+        "https://cloud.google.com/compute/docs/disks/create-snapshots",
+        "https://cloud.google.com/compute/docs/disks/scheduled-snapshots",
+        "https://cloud.google.com/compute/docs/disks/snapshot-best-practices"
+    ],
+    "dashboard_name": "Instances",
+    "display_path": "computeengine.projects.id.zones.id.instances.id",
+    "path": "computeengine.projects.id.zones.id.instances.id.disks.id",
+    "conditions": [
+        "and",
+        [
+            "computeengine.projects.id.zones.id.instances.id.disks.id.snapshots",
+            "empty",
+            ""
+        ]
+    ],
+    "id_suffix": "latest_snapshot"
 }
-

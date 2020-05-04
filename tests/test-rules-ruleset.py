@@ -32,7 +32,7 @@ class TestScoutRulesRuleset:
             print_debug(test001.rules[rule][0].to_string())
 
         assert (test_file_key in test001.rule_definitions)
-        assert (test001.rule_definitions[test_file_key].description == "Password expiration disabled")
+        assert (test001.rule_definitions[test_file_key].description == "Password Expiration Disabled")
         for rule_def in test001.rule_definitions:
             print_debug(str(test001.rule_definitions[rule_def]))
         assert (printError.call_count == 0)
