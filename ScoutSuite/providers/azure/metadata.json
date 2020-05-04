@@ -23,6 +23,10 @@
         "snapshots": {
           "cols": 2,
           "path": "services.virtualmachines.subscriptions.id.snapshots"
+        },
+        "images": {
+          "cols": 2,
+          "path": "services.virtualmachines.subscriptions.id.images"
         }
       }
     }
