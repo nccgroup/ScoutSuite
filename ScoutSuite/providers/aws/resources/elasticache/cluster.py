@@ -16,4 +16,7 @@ class Clusters(AWSResources):
 
     def _parse_cluster(self, raw_cluster):
         raw_cluster['name'] = raw_cluster.pop('CacheClusterId')
+        raw_cluster['arn'] = 'arn:aws:elasticache:{}:{}:cluster/{}'.format(self.region,
+                                                                             raw_cluster.get('OwnerId'),
+                                                                             raw_cluster.get('GroupId'))
         return raw_cluster['name'], raw_cluster

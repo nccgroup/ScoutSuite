@@ -24,6 +24,9 @@ class RDSInstances(AWSResources):
             instance[key] = raw_instance[key] if key in raw_instance else None
 
         instance['is_read_replica'] = self._is_read_replica(raw_instance)
+        instance['arn'] = 'arn:aws:rds:{}:{}:instance/{}'.format(self.region,
+                                                                           raw_instance.get('OwnerId'),
+                                                                           raw_instance.get('GroupId'))
         return instance['name'], instance
 
     @staticmethod

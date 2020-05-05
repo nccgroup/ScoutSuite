@@ -22,6 +22,9 @@ class LoadBalancers(AWSResources):
                  ['DNSName', 'CreatedTime', 'AvailabilityZones', 'Subnets', 'Scheme', 'attributes'])
 
         load_balancer['security_groups'] = []
+        load_balancer['arn'] = 'arn:aws:elb:{}:{}:load-balancer/{}'.format(self.region,
+                                                                           raw_load_balancer.get('OwnerId'),
+                                                                           raw_load_balancer.get('GroupId'))
         for sg in raw_load_balancer['SecurityGroups']:
             load_balancer['security_groups'].append({'GroupId': sg})
 
