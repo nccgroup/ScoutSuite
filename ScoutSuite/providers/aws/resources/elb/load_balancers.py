@@ -23,8 +23,8 @@ class LoadBalancers(AWSResources):
 
         load_balancer['security_groups'] = []
         load_balancer['arn'] = 'arn:aws:elb:{}:{}:load-balancer/{}'.format(self.region,
-                                                                           raw_load_balancer.get('OwnerId'),
-                                                                           raw_load_balancer.get('GroupId'))
+                                                                           self.facade.owner_id,
+                                                                           raw_load_balancer.get('LoadBalancerName'))
         for sg in raw_load_balancer['SecurityGroups']:
             load_balancer['security_groups'].append({'GroupId': sg})
 

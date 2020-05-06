@@ -22,6 +22,6 @@ class Domains(AWSResources):
         domain_dict['transfer_lock'] = raw_domain.get('TransferLock')
         domain_dict['expiry'] = raw_domain.get('Expiry')
         domain_dict['arn'] = 'arn:aws:route53:{}:{}:domain/{}'.format(self.region,
-                                                                 raw_domain.get('OwnerId'),
+                                                                 self.facade.owner_id,
                                                                  domain_dict.get('id'))
         return domain_dict['id'], domain_dict
