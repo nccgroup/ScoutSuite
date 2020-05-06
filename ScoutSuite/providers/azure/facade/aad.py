@@ -4,10 +4,9 @@ from ScoutSuite.providers.utils import run_concurrently
 
 
 class AADFacade:
-    def __init__(self, credentials, subscriptions_list):
+    def __init__(self, credentials):
         self._client = GraphRbacManagementClient(credentials.aad_graph_credentials,
                                                  tenant_id=credentials.get_tenant_id())
-        self._subscriptions_list = subscriptions_list
 
     async def get_users(self):
         try:
