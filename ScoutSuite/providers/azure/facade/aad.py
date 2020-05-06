@@ -4,15 +4,29 @@ from ScoutSuite.providers.utils import run_concurrently
 
 
 class AADFacade:
-    def __init__(self, credentials):
+    def __init__(self, credentials, subscriptions_list):
         self._client = GraphRbacManagementClient(credentials.aad_graph_credentials,
                                                  tenant_id=credentials.get_tenant_id())
+        self._subscriptions_list = subscriptions_list
 
     async def get_users(self):
         try:
-            return await run_concurrently(lambda: list(self._client.users.list()))
+            # This filters down the users which are pulled from the directory, otherwise for large tenants this
+            # gets out of hands.
+            # See https://github.com/nccgroup/ScoutSuite/issues/698
+            user_filter = " and ".join([
+                'userType eq \'Guest\''
+            ])
+            return await run_concurrently(lambda: list(self._client.users.list(filter=user_filter)))
         except Exception as e:
             print_exception('Failed to retrieve users: {}'.format(e))
+            return []
+
+    async def get_user(self, user_id):
+        try:
+            return await run_concurrently(lambda: self._client.users.get(user_id))
+        except Exception as e:
+            print_exception('Failed to retrieve user {}: {}'.format(user_id, e))
             return []
 
     async def get_groups(self):
