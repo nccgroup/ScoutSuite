@@ -1,6 +1,11 @@
 {
     "description": "Old Instance Disk Snapshot",
     "rationale": "Disk snapshots that are over 90 days are likely to be outdated.",
+    "references": [
+        "https://cloud.google.com/compute/docs/disks/create-snapshots",
+        "https://cloud.google.com/compute/docs/disks/scheduled-snapshots",
+        "https://cloud.google.com/compute/docs/disks/snapshot-best-practices"
+    ],
     "dashboard_name": "Snapshots",
     "path": "computeengine.projects.id.snapshots.id",
     "conditions": [

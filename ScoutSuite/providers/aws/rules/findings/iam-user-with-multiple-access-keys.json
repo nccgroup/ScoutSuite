@@ -1,5 +1,8 @@
 {
     "description": "User with Multiple API Keys",
+    "references": [
+        "https://docs.aws.amazon.com/general/latest/gr/aws-access-keys-best-practices.html"
+    ],
     "dashboard_name": "Users",
     "path": "iam.users.id",
     "conditions": [

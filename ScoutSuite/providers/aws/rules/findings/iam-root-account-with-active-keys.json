@@ -20,7 +20,7 @@
         }
     ],
     "references": [
-        "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#lock-away-credentials"
+        "https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cis-controls.html#securityhub-standards-cis-controls-1.1"
     ],
     "dashboard_name": "Root account",
     "path": "iam.credential_reports.id",

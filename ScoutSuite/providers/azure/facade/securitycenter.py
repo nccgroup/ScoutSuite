@@ -101,18 +101,16 @@ class SecurityCenterFacade:
                 for standard in compliance_standards:
                     try:
                         compliance_controls = await run_concurrently(
-                            lambda: list(client.regulatory_compliance_controls.list(regulatory_compliance_standard_name=standard.name))
+                            lambda: list(client.regulatory_compliance_controls.list(
+                                regulatory_compliance_standard_name=standard.name))
                         )
                         for control in compliance_controls:
                             control.standard_name = standard.name
                             results.append(control)
                     except Exception as e:
                         print_exception('Failed to retrieve compliance controls: {}'.format(e))
-                        pass
             finally:
                 return results
         except Exception as e:
             print_exception('Failed to retrieve regulatory compliance results: {}'.format(e))
             return []
-
-

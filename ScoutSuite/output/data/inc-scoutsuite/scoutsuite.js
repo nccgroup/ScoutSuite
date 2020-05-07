@@ -1171,8 +1171,12 @@ function makeTitle(title) {
         return 'CloudFormation'
     } else if (title === 'config') {
         return 'Config'
+    } else if (title === 'cognito') {
+        return 'Cognito'
     } else if (title === 'awslambda') {
         return 'Lambda'
+    } else if (title === 'docdb') {
+        return 'DocumentDB'
     } else if (title === 'dynamodb') {
         return 'DynamoDB'
     } else if (title === 'secretsmanager') {
@@ -1193,10 +1197,10 @@ function makeTitle(title) {
         return 'Compute Engine'
     } else if (title === 'kubernetesengine') {
         return 'Kubernetes Engine'
-    } else if (title === 'cloudresourcemanager') {
-        return 'Cloud Resource Manager'
-    } else if (['aad', 'arm'].indexOf(title) !== -1) {
-        return title.toUpperCase()
+    } else if (title === 'aad') {
+        return 'Azure Active Directory'
+    } else if (title === 'rbac') {
+        return 'Azure RBAC'
     } else if (title === 'storageaccounts') {
         return 'Storage Accounts'
     } else if (title === 'sqldatabase') {

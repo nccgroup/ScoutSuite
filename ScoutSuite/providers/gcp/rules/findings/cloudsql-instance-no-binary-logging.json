@@ -1,6 +1,10 @@
 {
     "description": "Instance with Binary Logging Disabled",
     "rationale": "The benefits of enabling binary logs (replication, scalability, auditability, point-in-time data recovery, etc.) can improve the security posture of the Cloud SQL instance.",
+    "references": [
+        "https://cloud.google.com/sql/docs/mysql/instance-settings",
+        "https://cloud.google.com/sql/docs/mysql/replication/tips"
+    ],
     "dashboard_name": "Instances",
     "path": "cloudsql.projects.id.instances.id",
     "conditions": [

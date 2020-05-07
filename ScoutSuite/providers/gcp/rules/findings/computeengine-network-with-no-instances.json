@@ -1,5 +1,6 @@
 {
     "description": "Network without Instances",
+    "rationale": "Maintaining unused resources increases risks of misconfigurations and increases the difficulty of audits.",
     "dashboard_name": "Networks",
     "path": "computeengine.projects.id.networks.id",
     "conditions": [

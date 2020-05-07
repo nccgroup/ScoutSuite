@@ -277,6 +277,14 @@ Handlebars.registerHelper('greaterThan', function (v1, v2, options) {
     return options.inverse(this);
 });
 
+Handlebars.registerHelper('hasKeys', function (obj, options) {
+    if (Object.keys(obj).length > 0) {
+        return options.fn(this);
+    } else {
+        return options.inverse(this);
+    }
+});
+
 Handlebars.registerHelper('has_condition', function (policyInfo) {
     if (('condition' in policyInfo) && (policyInfo['condition'] != null)) {
         return true

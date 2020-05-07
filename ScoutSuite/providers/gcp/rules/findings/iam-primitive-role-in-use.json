@@ -8,12 +8,16 @@
             "reference": "1.4"
         }
     ],
+    "references": [
+        "https://cloud.google.com/iam/docs/understanding-roles",
+        "https://cloud.google.com/iam/docs/using-iam-securely"
+    ],
     "dashboard_name": "Bindings",
-    "path": "cloudresourcemanager.projects.id.bindings.id",
+    "path": "iam.projects.id.bindings.id",
     "conditions": [
         "and",
         [
-            "cloudresourcemanager.projects.id.bindings.id.name",
+            "iam.projects.id.bindings.id.name",
             "containAtLeastOneOf",
             [
                 "owner",

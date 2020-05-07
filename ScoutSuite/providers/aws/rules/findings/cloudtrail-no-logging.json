@@ -1,5 +1,5 @@
 {
-    "description": "Logging Disabled",
+    "description": "Disabled Trails",
     "rationale": "Logging is disabled for a given Trail. Depending on the configuration, logs for important API activity may be missing.",
     "remediation": "Configure all Trails to enable Logging, set Apply trail to all regions and ensure that Read/Write Events are set to ALL",
     "compliance": [
@@ -20,7 +20,7 @@
         }
     ],
     "references": [
-        "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html"
+        "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/best-practices-security.html"
     ],
     "dashboard_name": "Trails",
     "path": "cloudtrail.regions.id.trails.id",

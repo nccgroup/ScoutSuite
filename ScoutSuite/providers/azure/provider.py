@@ -71,11 +71,13 @@ class AzureProvider(BaseProvider):
         """
         ip_ranges = [] if ip_ranges is None else ip_ranges
 
-        self._match_arm_roles_and_principals()
+        # Don't do this if we're running a local execution
+        if not self.last_run:
+            self._match_rbac_roles_and_principals()
 
         super(AzureProvider, self).preprocessing()
 
-    def _match_arm_roles_and_principals(self):
+    def _match_rbac_roles_and_principals(self):
         """
         Matches ARM roles to AAD service principals
 
@@ -83,25 +85,25 @@ class AzureProvider(BaseProvider):
         """
 
         # Add role assignments
-        if 'arm' in self.service_list and 'aad' in self.service_list:
-            for subscription in self.services['arm']['subscriptions']:
-                for assignment in self.services['arm']['subscriptions'][subscription]['role_assignments'].values():
+        if 'rbac' in self.service_list and 'aad' in self.service_list:
+            for subscription in self.services['rbac']['subscriptions']:
+                for assignment in self.services['rbac']['subscriptions'][subscription]['role_assignments'].values():
                     role_id = assignment['role_definition_id'].split('/')[-1]
                     for group in self.services['aad']['groups']:
                         if group == assignment['principal_id']:
                             self.services['aad']['groups'][group]['roles'].append({'subscription_id': subscription,
                                                                                  'role_id': role_id})
-                            self.services['arm']['subscriptions'][subscription]['roles'][role_id]['assignments']['groups'].append(group)
-                            self.services['arm']['subscriptions'][subscription]['roles'][role_id]['assignments_count'] += 1
+                            self.services['rbac']['subscriptions'][subscription]['roles'][role_id]['assignments']['groups'].append(group)
+                            self.services['rbac']['subscriptions'][subscription]['roles'][role_id]['assignments_count'] += 1
                     for user in self.services['aad']['users']:
                         if user == assignment['principal_id']:
                             self.services['aad']['users'][user]['roles'].append({'subscription_id': subscription,
                                                                                  'role_id': role_id})
-                            self.services['arm']['subscriptions'][subscription]['roles'][role_id]['assignments']['users'].append(user)
-                            self.services['arm']['subscriptions'][subscription]['roles'][role_id]['assignments_count'] += 1
+                            self.services['rbac']['subscriptions'][subscription]['roles'][role_id]['assignments']['users'].append(user)
+                            self.services['rbac']['subscriptions'][subscription]['roles'][role_id]['assignments_count'] += 1
                     for service_principal in self.services['aad']['service_principals']:
                         if service_principal == assignment['principal_id']:
                             self.services['aad']['service_principals'][service_principal]['roles'].append({'subscription_id': subscription,
                                                                                                            'role_id': role_id})
-                            self.services['arm']['subscriptions'][subscription]['roles'][role_id]['assignments']['service_principals'].append(service_principal)
-                            self.services['arm']['subscriptions'][subscription]['roles'][role_id]['assignments_count'] += 1
+                            self.services['rbac']['subscriptions'][subscription]['roles'][role_id]['assignments']['service_principals'].append(service_principal)
+                            self.services['rbac']['subscriptions'][subscription]['roles'][role_id]['assignments_count'] += 1
