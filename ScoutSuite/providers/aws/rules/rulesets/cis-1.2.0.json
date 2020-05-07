@@ -276,6 +276,118 @@
                 "scored": true
             }
         ],
+        "logs-no-alarm-unauthorized-api-calls.json": [
+            {
+                "comment": "Recommendation 3.1",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "logs-no-alarm-signin-without-mfa.json": [
+            {
+                "comment": "Recommendation 3.2",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "logs-no-alarm-root-usage.json": [
+            {
+                "comment": "Recommendation 3.3",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "logs-no-alarm-IAM-policy-changes.json": [
+            {
+                "comment": "Recommendation 3.4",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "logs-no-alarm-cloudtrail-configuration-changes.json": [
+            {
+                "comment": "Recommendation 3.5",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "logs-no-alarm-console-authentication-failures.json": [
+            {
+                "comment": "Recommendation 3.6",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "logs-no-alarm-cmk-deletion.json": [
+            {
+                "comment": "Recommendation 3.7",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "logs-no-alarm-s3-policy-changes.json": [
+            {
+                "comment": "Recommendation 3.8",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "logs-no-alarm-aws-configuration-changes.json": [
+            {
+                "comment": "Recommendation 3.9",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "logs-no-alarm-security-group-changes.json": [
+            {
+                "comment": "Recommendation 3.10",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "logs-no-alarm-nacl-changes.json": [
+            {
+                "comment": "Recommendation 3.11",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "logs-no-alarm-network-gateways-changes.json": [
+            {
+                "comment": "Recommendation 3.12",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "logs-no-alarm-route-table-changes.json": [
+            {
+                "comment": "Recommendation 3.13",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "logs-no-alarm-vpc-changes.json": [
+            {
+                "comment": "Recommendation 3.14",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
         "ec2-security-group-opens-known-port-to-all.json": [
             {
                 "args": [
