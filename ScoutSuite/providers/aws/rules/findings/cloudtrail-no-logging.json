@@ -43,6 +43,10 @@
                 "false",
                 ""
             ]
+        ],
+        "and",
+        [
+            "cloudtrail.regions.id.trails.id."
         ]
     ],
     "class_suffix": "IsLogging"

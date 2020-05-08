@@ -16,13 +16,18 @@
     ],
     "dashboard_name": "Policies",
     "display_path": "iam.policies.id",
-    "path": "iam.policies.id.arn",
+    "path": "iam.policies.id",
     "conditions": [
         "and",
         [
-            "this",
-            "notEqual",
+            "iam.policies.id.arn",
+            "equal",
             "arn:aws:iam::aws:policy/AWSSupportAccess"
+        ],
+        [
+            "iam.policies.id.attached_to",
+            "empty",
+            ""
         ]
     ]
 }
