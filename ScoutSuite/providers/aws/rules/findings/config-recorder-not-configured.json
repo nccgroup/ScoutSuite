@@ -18,6 +18,7 @@
             "version": "1.2.0",
             "reference": "2.5"
         }
+    ],
     "references": [
         "https://aws.amazon.com/blogs/mt/aws-config-best-practices/"
     ],
