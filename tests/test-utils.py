@@ -1,8 +1,15 @@
 # Import AWS utils
-from ScoutSuite.providers.aws.utils import get_keys, no_camel
+from ScoutSuite.providers.aws.utils import (
+    get_keys,
+    no_camel,
+    get_name,
+    is_throttled,
+    get_aws_account_id,
+    get_partition_name,
+)
 from ScoutSuite.utils import *
-
-
+import collections
+import mock
 #
 # Test methods for ScoutSuite/utils.py
 #
