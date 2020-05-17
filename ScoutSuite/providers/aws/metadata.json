@@ -44,6 +44,12 @@
                     "path": "services.cloudwatch.regions.id.alarms"
                 }
             },
+            "resources": {
+                "metric_filters": {
+                    "cols": 2,
+                    "path": "services.cloudwatch.regions.id.metric_filters"
+                }
+            },
             "summaries": {
                 "statistics": {
                     "cols": 1,
