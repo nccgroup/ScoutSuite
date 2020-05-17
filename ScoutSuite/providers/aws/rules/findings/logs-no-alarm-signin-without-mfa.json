@@ -1,5 +1,5 @@
 {
-    "description": "No CloudWatch alarm for console log ins without MFA",
+    "description": "No CloudWatch Alarm for \"Console Logins without MFA\"",
     "rationale": "There was no CloudWatch alarm for console log ins without MFA. Monitoring for console log ins without MFA will provide visibility into the use of accounts not protected by Multi Factor Authentication (MFA).",
     "remediation": "Enable a CloudWatch alarm to monitor console log ins without MFA.",
     "compliance": [
@@ -19,13 +19,14 @@
             "reference": "3.2"
         }
     ],
-    "dashboard_name": "Logs",
-    "path": "cloudwatch.regions.id.alarms.id",
+    "dashboard_name": "Regions",
+    "path": "cloudwatch.regions.id.metric_filters_pattern_checks.console_login_mfa",
+    "display_path": "cloudwatch.regions.id.metric_filters.id",
     "conditions": [
         "and",
         [
-            "cloudwatch.regions.id.alarms.id.AlarmActions",
-            "empty",
+            "cloudwatch.regions.id.metric_filters_pattern_checks.console_login_mfa",
+            "false",
             ""
         ]
     ]
