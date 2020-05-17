@@ -1,8 +1,4 @@
 from azure.graphrbac import GraphRbacManagementClient
-
-import requests
-import uuid
-
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently
 

@@ -1,6 +1,9 @@
 {
     "description": "Instance with a Public IP Address",
     "rationale": "It is good practice to maintain a list of known, publicly accessible instances and flag all other instances that meet this criteria.",
+    "references": [
+        "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html"
+    ],
     "dashboard_name": "Network interfaces",
     "display_path": "ec2.regions.id.vpcs.id.instances.id",
     "path": "ec2.regions.id.vpcs.id.instances.id.network_interfaces.id",

@@ -1,6 +1,6 @@
 {
     "description": "Root Account Used Recently",
-    "rationale": "The use of the root account should be avoided.",
+    "rationale": "The root account is the most privileged user in an account. As a best practice, the root account should only be used when required for root-only tasks.",
     "remediation": "Follow the remediation instructions of the Ensure IAM policies are attached only to groups or roles recommendation",
     "compliance": [
         {
@@ -20,7 +20,8 @@
         }
     ],
     "references": [
-        "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#create-iam-users"
+        "https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cis-controls.html#securityhub-standards-cis-controls-1.1",
+        "https://docs.aws.amazon.com/general/latest/gr/aws_tasks-that-require-root.html"
     ],
     "dashboard_name": "Root account",
     "path": "iam.credential_reports.id",

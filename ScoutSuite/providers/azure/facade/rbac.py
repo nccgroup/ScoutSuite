@@ -4,7 +4,7 @@ from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently
 
 
-class ARMFacade:
+class RBACFacade:
     def __init__(self, credentials):
         self.credentials = credentials
 

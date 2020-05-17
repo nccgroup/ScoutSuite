@@ -7,6 +7,7 @@ formatted_service_name = {
     'cloudtrail': 'CloudTrail',
     'cloudwatch': 'CloudWatch',
     'credentials': 'Credentials',
+    'cognito': 'Cognito',
     'config': 'Config',
     'directconnect': 'Direct Connect',
     'dynamodb': 'DynamoDB',
@@ -20,7 +21,10 @@ formatted_service_name = {
     'redshift': 'RedShift',
     'route53': 'Route53',
     'secretsmanager': 'Secrets Manager',
+    'docdb': 'DocumentDB',
     # Azure
+    'aad': 'Azure Active Directory',
+    'rbac': 'Azure RBAC',
     'storageaccounts': 'Storage Accounts',
     'sqldatabase': 'SQL Database',
     'securitycenter': 'Security Center',
@@ -38,7 +42,6 @@ formatted_service_name = {
     'stackdrivermonitoring': 'Stackdriver Monitoring',
     'computeengine': 'Compute Engine',
     'kubernetesengine': 'Kubernetes Engine',
-    'cloudresourcemanager': 'Cloud Resource Manager',
     # Aliyun
     'actiontrail': 'ActionTrail',
     # OCI

@@ -13,4 +13,7 @@ class S3(AWSCompositeResources):
         self.service = 's3'
 
     async def fetch_all(self, partition_name='aws', **kwargs):
+        # Keep track of regions as S3 is both a global and regional service
+        self.facade.s3.regions = kwargs.get('regions')
+
         await self._fetch_children(self)

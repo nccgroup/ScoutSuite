@@ -1,5 +1,8 @@
 {
-    "description": "Inline _ARG_0_ Policy Allows _ARG_1_:_ARG_2_ *",
+    "description": "Inline _ARG_0_ Policy Allows \"_ARG_1_:_ARG_2_\" For All Resources",
+    "references": [
+        "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
+    ],
     "dashboard_name": "Policies",
     "display_path": "iam._ARG_0_s.id",
     "path": "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id",

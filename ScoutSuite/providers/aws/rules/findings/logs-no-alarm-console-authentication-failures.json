@@ -1,0 +1,32 @@
+{
+    "description": "No CloudWatch alarm for failed console authentications",
+    "rationale": "There was no CloudWatch alarm for failed console authentication requests. Monitoring for failed console authentications can decrease the lead time to detect brute force attacks.",
+    "remediation": "Enable a CloudWatch alarm to monitor failed authentication attempts.",
+    "compliance": [
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.0.0",
+            "reference": "3.6"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.1.0",
+            "reference": "3.6"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.2.0",
+            "reference": "3.6"
+        }
+    ],
+    "dashboard_name": "Cloudwatch",
+    "path": "cloudwatch.regions.id.alarms.id",
+    "conditions": [
+        "and",
+        [
+            "cloudwatch.regions.id.alarms.id.AlarmActions",
+            "empty",
+            ""
+        ]
+    ]
+}

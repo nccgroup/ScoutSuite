@@ -1,0 +1,32 @@
+{
+    "description": "No CloudWatch alarm for network gateways changes",
+    "rationale": "There was no CloudWatch alarm to monitor changes in network gateways. Monitoring for network gateways changes will help ensure that all traffic traverses the VPC border via a controlled path.",
+    "remediation": "Enable a CloudWatch alarm to detect network gateways changes.",
+    "compliance": [
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.0.0",
+            "reference": "3.12"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.1.0",
+            "reference": "3.12"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.2.0",
+            "reference": "3.12"
+        }
+    ],
+    "dashboard_name": "Cloudwatch",
+    "path": "cloudwatch.regions.id.alarms.id",
+    "conditions": [
+        "and",
+        [
+            "cloudwatch.regions.id.alarms.id.AlarmActions",
+            "empty",
+            ""
+        ]
+    ]
+}

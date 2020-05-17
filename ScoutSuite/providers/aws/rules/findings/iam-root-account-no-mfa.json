@@ -1,6 +1,6 @@
 {
     "description": "Root Account without MFA",
-    "rationale": "The root account should have Multi Factor Authentication (MFA) enabled.",
+    "rationale": "The root account is the most privileged user in an account. MFA adds an extra layer of protection on top of a user name and password. With MFA enabled, when a user signs in to an AWS website, they're prompted for their user name and password and for an authentication code from their AWS MFA device.",
     "remediation": "Enable MFA for the root account",
     "compliance": [
         {
@@ -30,7 +30,7 @@
         }
     ],
     "references": [
-        "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#lock-away-credentials"
+        "https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cis-controls.html#securityhub-cis-controls-1.13"
     ],
     "dashboard_name": "Root account",
     "path": "iam.credential_reports.id",

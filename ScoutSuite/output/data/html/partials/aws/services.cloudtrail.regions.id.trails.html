@@ -22,13 +22,13 @@
         <li class="list-group-item-text">Include Global Services:
           <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.GlobalServicesDuplicated">
             <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.IncludeGlobalServiceEvents">
-              <samp>{{#if IncludeGlobalServiceEvents}} true {{#unless IsLogging}}(Trail disabled){{/unless}} {{else}} false {{/if}}</samp>
+              <samp>{{#if IncludeGlobalServiceEvents}}Enabled {{#unless IsLogging}}(Trail disabled){{/unless}} {{else}}Disabled {{/if}}</samp>
             </span>
           </span>
         </li>
         <li class="list-group-item-text">Destination S3 Bucket Name: <samp><a href="javascript:showObject('services.s3.buckets.{{bucket_id}}')">{{getValueAt 'services.s3.buckets' bucket_id 'name'}}</a>/{{S3KeyPrefix}}</samp></li>
         <li class="list-group-item-text">Log File Validation Enabled: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.LogFileValidationDisabled">{{convert_bool_to_enabled LogFileValidationEnabled}}</span></li>
-        <li class="list-group-item-text">KMS Key: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.NoKMSEncryption"><samp>{{#if KmsKeyId}} true {{else}} false {{/if}}</samp></span></li>
+        <li class="list-group-item-text">KMS Key: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.cloudtrail-kms-key-unused"><samp>{{value_or_none KmsKeyId}}</samp></span></li>
         <li class="list-group-item-text">Latest CloudWatch Logs Delivery Time: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.TrailCloudwatchNoIntegration">{{format_date LatestCloudWatchLogsDeliveryTime}}</span></li>
         {{/unless}}
       </ul>
