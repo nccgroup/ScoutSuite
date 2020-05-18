@@ -66,7 +66,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
                 arm_credentials = UserPassCredentials(username, password)
                 aad_graph_credentials = UserPassCredentials(username, password,
-                                                        resource='https://graph.windows.net')
+                                                            resource='https://graph.windows.net')
 
             elif user_account_browser:
 
@@ -162,4 +162,10 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                                     tenant_id, subscription_id)
 
         except Exception as e:
+            if ', AdalError: Unsupported wstrust endpoint version. ' \
+               'Current support version is wstrust2005 or wstrust13.' in e.args:
+                raise AuthenticationException(
+                    'You are likely authenticating with a Microsoft Account. '
+                    'This authentication mode only support Azure Active Directory principal authentication.')
+
             raise AuthenticationException(e)
