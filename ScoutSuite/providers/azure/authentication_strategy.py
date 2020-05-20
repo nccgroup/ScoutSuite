@@ -28,6 +28,13 @@ class AzureCredentials:
         else:
             return self.aad_graph_credentials.token['tenant_id']
 
+    def get_or_refresh_credentials(self, resource):
+        if resource == 'arm':
+            return self.arm_credentials
+        elif resource == 'aad_graph':
+            return self.aad_graph_credentials
+        else:
+            raise AuthenticationException('Invalid credential type')
 
 class AzureAuthenticationStrategy(AuthenticationStrategy):
 

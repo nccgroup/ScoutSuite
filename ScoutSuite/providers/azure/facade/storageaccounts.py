@@ -8,6 +8,7 @@ from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrentl
 
 
 class StorageAccountsFacade:
+
     def __init__(self, credentials):
         self.credentials = credentials
 

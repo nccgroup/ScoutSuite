@@ -6,6 +6,7 @@ from ScoutSuite.core.console import print_exception
 
 
 class SQLDatabaseFacade:
+
     def __init__(self, credentials):
         self.credentials = credentials
 

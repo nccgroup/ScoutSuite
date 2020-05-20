@@ -5,6 +5,7 @@ from ScoutSuite.providers.utils import run_concurrently
 
 
 class NetworkFacade:
+
     def __init__(self, credentials):
         self.credentials = credentials
 
