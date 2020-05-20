@@ -106,6 +106,11 @@ class AzureFacade:
                 print_info('Running against the "{}" subscription'.format(s.subscription_id))
                 subscriptions_list.append(s)
 
+        # All subscriptions
+        elif self.all_subscriptions:
+            subscriptions_list = accessible_subscriptions_list
+            print_info('Running against {} subscription(s)'.format(len(subscriptions_list)))
+
         # A specific set of subscriptions
         elif self.subscription_ids:
             # Only include accessible subscriptions
@@ -116,11 +121,6 @@ class AzureFacade:
                 if not any(subs.subscription_id == s for subs in accessible_subscriptions_list):
                     print_info('Skipping subscription "{}": this subscription does not exist or '
                                'is not accessible with the provided credentials'.format(s))
-            print_info('Running against {} subscription(s)'.format(len(subscriptions_list)))
-
-        # All subscriptions
-        elif self.all_subscriptions:
-            subscriptions_list = accessible_subscriptions_list
             print_info('Running against {} subscription(s)'.format(len(subscriptions_list)))
 
         # Other == error

@@ -14,13 +14,13 @@
         "https://cloud.google.com/iam/docs/using-iam-securely"
     ],
     "dashboard_name": "Bindings",
-    "path": "cloudresourcemanager.projects.id.bindings.id",
+    "path": "iam.projects.id.bindings.id",
     "conditions": [
         "and",
         [
             "or",
             [
-                "cloudresourcemanager.projects.id.bindings.id.name",
+                "iam.projects.id.bindings.id.name",
                 "containAtLeastOneOf",
                 [
                     "editor",
@@ -28,13 +28,13 @@
                 ]
             ],
             [
-                "cloudresourcemanager.projects.id.bindings.id.name",
+                "iam.projects.id.bindings.id.name",
                 "match",
                 ".*admin"
             ]
         ],
         [
-            "cloudresourcemanager.projects.id.bindings.id.members.service_accounts",
+            "iam.projects.id.bindings.id.members.service_accounts",
             "notEmpty",
             ""
         ]

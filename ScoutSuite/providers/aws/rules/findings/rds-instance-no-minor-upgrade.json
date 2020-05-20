@@ -20,7 +20,8 @@
             [
                 "mariadb",
                 "mysql",
-                "postgres"
+                "postgres",
+                "aurora"
             ]
         ]
     ],

@@ -1,5 +1,8 @@
 {
-    "description": "Managed Policy Allows _ARG_0_:_ARG_1_ *",
+    "description": "Managed Policy Allows \"_ARG_0_:_ARG_1_\" For All Resources",
+    "references": [
+        "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
+    ],
     "dashboard_name": "Policies",
     "display_path": "iam.policies.id",
     "path": "iam.policies.id.PolicyDocument.Statement.id",

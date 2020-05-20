@@ -52,6 +52,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             logging.getLogger('adal-python').setLevel(logging.ERROR)
             logging.getLogger('msrest').setLevel(logging.ERROR)
             logging.getLogger('urllib3').setLevel(logging.ERROR)
+            logging.getLogger('cli.azure.cli.core').setLevel(logging.ERROR)
 
             if cli:
                 arm_credentials, subscription_id, tenant_id = get_azure_cli_credentials(with_tenant=True)
@@ -167,4 +168,10 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                                     tenant_id, subscription_id)
 
         except Exception as e:
+            if ', AdalError: Unsupported wstrust endpoint version. ' \
+               'Current support version is wstrust2005 or wstrust13.' in e.args:
+                raise AuthenticationException(
+                    'You are likely authenticating with a Microsoft Account. '
+                    'This authentication mode only support Azure Active Directory principal authentication.')
+
             raise AuthenticationException(e)

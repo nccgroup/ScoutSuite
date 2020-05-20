@@ -1,13 +1,13 @@
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
 from ScoutSuite.providers.gcp.resources.base import GCPCompositeResources
-from ScoutSuite.providers.gcp.resources.iam.bindings import Bindings
+from ScoutSuite.providers.gcp.resources.iam.service_account_bindings import ServiceAccountBindings
 from ScoutSuite.providers.gcp.resources.iam.keys import Keys
 import re
 
 
 class ServiceAccounts(GCPCompositeResources):
     _children = [
-        (Bindings, 'bindings'),
+        (ServiceAccountBindings, 'bindings'),
         (Keys, 'keys')
     ]
 

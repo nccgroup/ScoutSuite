@@ -1,5 +1,5 @@
 {
-    "description": "Logging Disabled",
+    "description": "Disabled Trails",
     "rationale": "Logging is disabled for a given Trail. Depending on the configuration, logs for important API activity may be missing.",
     "references": [
         "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/best-practices-security.html"

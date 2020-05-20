@@ -1,7 +1,8 @@
 {
-    "description": "Inline _ARG_0_ Policy Allows NotActions",
+    "description": "Inline _ARG_0_ Policy Allows \"NotActions\"",
     "rationale": "The combination of \"effect = allow\" and \"NotAction\" results in the policy allowing every action except those listed in the statement. The target policy does not follow the principle of least privilege because thousands of actions exist in AWS and because this policy automatically authorizes users to perform new actions created, regardless of their nature.",
     "references": [
+        "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html",
         "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_notaction.html",
         "https://aws.amazon.com/blogs/security/back-to-school-understanding-the-iam-policy-grammar/"
     ],
