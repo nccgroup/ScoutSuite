@@ -87,16 +87,17 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 print_info('To authenticate to the Resource Manager API, use a web browser to '
                            'access {} and enter the {} code.'.format(code['verification_url'],
                                                                      code['user_code']))
-                mgmt_token = context.acquire_token_with_device_code(resource_uri, code, client_id)
-                arm_credentials = AADTokenCredentials(mgmt_token, client_id)
-                # Graph
+                arm_token = context.acquire_token_with_device_code(resource_uri, code, client_id)
+                arm_credentials = AADTokenCredentials(arm_token, client_id)
+
+                # AAD Graph
                 resource_uri = 'https://graph.windows.net'
                 code = context.acquire_user_code(resource_uri, client_id)
                 print_info('To authenticate to the Azure Graph API, use a web browser to '
                            'access {} and enter the {} code.'.format(code['verification_url'],
                                                                      code['user_code']))
-                mgmt_token = context.acquire_token_with_device_code(resource_uri, code, client_id)
-                aad_graph_credentials = AADTokenCredentials(mgmt_token, client_id)
+                aad_graph_token = context.acquire_token_with_device_code(resource_uri, code, client_id)
+                aad_graph_credentials = AADTokenCredentials(aad_graph_token, client_id)
 
             elif service_principal:
 
@@ -159,7 +160,8 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             else:
                 raise AuthenticationException('Unknown authentication method')
 
-            return AzureCredentials(arm_credentials, aad_graph_credentials,
+            return AzureCredentials(arm_credentials,
+                                    aad_graph_credentials,
                                     tenant_id, subscription_id)
 
         except Exception as e:
