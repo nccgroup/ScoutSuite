@@ -49,6 +49,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             logging.getLogger('adal-python').setLevel(logging.ERROR)
             logging.getLogger('msrest').setLevel(logging.ERROR)
             logging.getLogger('urllib3').setLevel(logging.ERROR)
+            logging.getLogger('cli.azure.cli.core').setLevel(logging.ERROR)
 
             if cli:
                 arm_credentials, subscription_id, tenant_id = get_azure_cli_credentials(with_tenant=True)
