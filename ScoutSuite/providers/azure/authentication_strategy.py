@@ -78,9 +78,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
                 # As per https://docs.microsoft.com/en-us/samples/azure-samples/data-lake-analytics-python-auth-options
                 # /authenticating-your-python-application-against-azure-active-directory/
-                # The client id used above is a well known that already exists for all azure services. While it makes
-                # the sample code easy to use, for production code you should use generate your own client ids for
-                # your application.
+                # The client id used above is a well known that already exists for all azure services.
                 client_id = '04b07795-8ddb-461a-bbee-02f9e1bf7b46'
                 authority_host_uri = 'https://login.microsoftonline.com'
                 authority_uri = authority_host_uri + '/' + tenant_id
@@ -94,7 +92,8 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                                                                      code['user_code']))
                 mgmt_token = context.acquire_token_with_device_code(resource_uri, code, client_id)
                 arm_credentials = AADTokenCredentials(mgmt_token, client_id)
-                # Graph
+
+                # AAD Graph
                 resource_uri = 'https://graph.windows.net'
                 code = context.acquire_user_code(resource_uri, client_id)
                 print_info('To authenticate to the Azure Graph API, use a web browser to '
