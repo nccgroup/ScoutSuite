@@ -39,7 +39,7 @@ class AzureCredentials:
             self.arm_credentials = self.get_fresh_credentials(self.arm_credentials)
             return self.arm_credentials
         elif resource == 'aad_graph':
-            self.aad_graph_credentials =  self.get_fresh_credentials(self.aad_graph_credentials)
+            self.aad_graph_credentials = self.get_fresh_credentials(self.aad_graph_credentials)
             return self.aad_graph_credentials
         else:
             raise AuthenticationException('Invalid credentials resource type')
@@ -60,7 +60,7 @@ class AzureCredentials:
         """
         Refresh credentials
         """
-        print_debug('Refreshing azure credentials')
+        print_debug('Refreshing credentials')
         authority_uri = AUTHORITY_HOST_URI + '/' + self.get_tenant_id()
         existing_cache = self.context.cache
         context = adal.AuthenticationContext(authority_uri, cache=existing_cache)
