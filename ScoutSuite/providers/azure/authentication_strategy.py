@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 from azure.common.credentials import ServicePrincipalCredentials, UserPassCredentials, get_azure_cli_credentials
 from msrestazure.azure_active_directory import MSIAuthentication
-from ScoutSuite.core.console import print_info
+from ScoutSuite.core.console import print_info, print_debug
 from msrestazure.azure_active_directory import AADTokenCredentials
 import adal
 
@@ -36,7 +36,7 @@ class AzureCredentials:
 
     def get_credentials(self, resource):
         if resource == 'arm':
-            self.arm_credentials =  self.get_fresh_credentials(self.arm_credentials)
+            self.arm_credentials = self.get_fresh_credentials(self.arm_credentials)
             return self.arm_credentials
         elif resource == 'aad_graph':
             self.aad_graph_credentials =  self.get_fresh_credentials(self.aad_graph_credentials)
@@ -49,7 +49,7 @@ class AzureCredentials:
         Check if credentials are outdated and if so refresh them.
         """
         if self.context and hasattr(credentials, 'token'):
-            expiration_datetime = datetime.fromtimestamp(credentials.token['expires_in'])
+            expiration_datetime = datetime.fromtimestamp(credentials.token['expires_on'])
             current_datetime = datetime.now()
             expiration_delta = expiration_datetime - current_datetime
             if expiration_delta < timedelta(minutes=5):
@@ -60,6 +60,7 @@ class AzureCredentials:
         """
         Refresh credentials
         """
+        print_debug('Refreshing azure credentials')
         authority_uri = AUTHORITY_HOST_URI + '/' + self.get_tenant_id()
         existing_cache = self.context.cache
         context = adal.AuthenticationContext(authority_uri, cache=existing_cache)
