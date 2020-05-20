@@ -1,6 +1,6 @@
 from azure.mgmt.security import SecurityCenter
 
-from ScoutSuite.core.console import print_exception
+from ScoutSuite.core.console import print_exception, print_debug
 from ScoutSuite.providers.utils import run_concurrently
 
 
@@ -95,7 +95,10 @@ class SecurityCenterFacade:
                     lambda: list(client.regulatory_compliance_standards.list())
                 )
             except Exception as e:
-                print_exception('Failed to retrieve regulatory compliance standards: {}'.format(e))
+                if 'as it has no standard pricing bundle' in str(e):
+                    print_debug('Failed to retrieve regulatory compliance standards: {}'.format(e))
+                else:
+                    print_exception('Failed to retrieve regulatory compliance standards: {}'.format(e))
                 return {}
             else:
                 for standard in compliance_standards:
