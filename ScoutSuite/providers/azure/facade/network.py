@@ -10,7 +10,8 @@ class NetworkFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        return NetworkManagementClient(self.credentials.arm_credentials, subscription_id=subscription_id)
+        return NetworkManagementClient(self.credentials.get_credentials('arm'),
+                                       subscription_id=subscription_id)
 
     async def get_network_watchers(self, subscription_id: str):
         try:

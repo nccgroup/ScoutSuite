@@ -9,7 +9,7 @@ class AADFacade:
         self.credentials = credentials
 
     def get_client(self):
-        return GraphRbacManagementClient(self.credentials.aad_graph_credentials,
+        return GraphRbacManagementClient(self.credentials.get_credentials('aad_graph'),
                                          tenant_id=self.credentials.get_tenant_id())
 
     async def get_users(self):

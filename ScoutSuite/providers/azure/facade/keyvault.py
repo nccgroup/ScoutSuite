@@ -10,7 +10,8 @@ class KeyVaultFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        return KeyVaultManagementClient(self.credentials.arm_credentials, subscription_id=subscription_id)
+        return KeyVaultManagementClient(self.credentials.get_credentials('arm'),
+                                        subscription_id=subscription_id)
 
     async def get_key_vaults(self, subscription_id: str):
         try:

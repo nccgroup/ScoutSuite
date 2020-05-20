@@ -11,7 +11,8 @@ class SQLDatabaseFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        return SqlManagementClient(self.credentials.arm_credentials, subscription_id=subscription_id)
+        return SqlManagementClient(self.credentials.get_credentials('arm'),
+                                   subscription_id=subscription_id)
 
     async def get_database_blob_auditing_policies(self, resource_group_name, server_name, database_name, subscription_id: str):
         try:
