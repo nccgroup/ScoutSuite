@@ -1,5 +1,6 @@
 {
     "description": "Security Group Opens All Ports to All",
+    "rationale": "It was detected that all ports in the security group are open, and any source IP address could send traffic to these ports, which creates a wider attack surface for resources assigned to it. Open ports should be reduced to the minimum needed to correctly operate and, when possible, source address restrictions should be implemented.",
     "dashboard_name": "Rules",
     "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
     "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
