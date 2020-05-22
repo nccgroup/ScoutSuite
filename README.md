@@ -29,6 +29,10 @@ The following cloud providers are currently supported:
 - Alibaba Cloud (alpha)
 - Oracle Cloud Infrastructure (alpha)
 
+## Installation
+
+Refer to the [wiki](https://github.com/nccgroup/ScoutSuite/wiki/Setup).
+
 ## Usage
 
 Scout Suite is run through the CLI:
