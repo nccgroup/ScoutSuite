@@ -165,6 +165,12 @@ def pass_condition(b, test, a):
             if c in a:
                 result = False
                 break
+    elif test == 'containAtLeastOneMatching':
+        result = False
+        for item in b:
+            if re.match(a, item):
+                result = True
+                break
 
     # Regex tests
     elif test == 'match':
