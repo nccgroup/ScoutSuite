@@ -79,12 +79,8 @@ class AzureProvider(BaseProvider):
 
     def _match_rbac_roles_and_principals(self):
         """
-        Matches ARM roles to AAD service principals
-
-        :return:
+        Matches ARM role assignments to AAD service principals
         """
-
-        # Add role assignments
         if 'rbac' in self.service_list and 'aad' in self.service_list:
             for subscription in self.services['rbac']['subscriptions']:
                 for assignment in self.services['rbac']['subscriptions'][subscription]['role_assignments'].values():
