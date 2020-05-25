@@ -8,11 +8,13 @@ from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrentl
 
 
 class StorageAccountsFacade:
+
     def __init__(self, credentials):
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        return StorageManagementClient(self.credentials.arm_credentials, subscription_id=subscription_id)
+        return StorageManagementClient(self.credentials.get_credentials('arm'),
+                                       subscription_id=subscription_id)
 
     async def get_storage_accounts(self, subscription_id: str):
         try:

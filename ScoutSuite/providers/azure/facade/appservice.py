@@ -11,7 +11,8 @@ class AppServiceFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        return WebSiteManagementClient(self.credentials.arm_credentials, subscription_id=subscription_id)
+        return WebSiteManagementClient(self.credentials.get_credentials('arm'),
+                                       subscription_id=subscription_id)
 
     async def get_web_apps(self, subscription_id: str):
         try:
