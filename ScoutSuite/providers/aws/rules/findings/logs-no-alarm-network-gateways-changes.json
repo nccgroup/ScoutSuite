@@ -1,5 +1,5 @@
 {
-    "description": "No CloudWatch alarm for network gateways changes",
+    "description": "No CloudWatch alarm for \"Network Gateways Changes\"",
     "rationale": "There was no CloudWatch alarm to monitor changes in network gateways. Monitoring for network gateways changes will help ensure that all traffic traverses the VPC border via a controlled path.",
     "remediation": "Enable a CloudWatch alarm to detect network gateways changes.",
     "compliance": [
@@ -19,13 +19,13 @@
             "reference": "3.12"
         }
     ],
-    "dashboard_name": "Cloudwatch",
-    "path": "cloudwatch.regions.id.alarms.id",
+    "dashboard_name": "Regions",
+    "path": "cloudwatch.regions.id.metric_filters.id",
     "conditions": [
-        "and",
+        "or",
         [
-            "cloudwatch.regions.id.alarms.id.AlarmActions",
-            "empty",
+            "cloudwatch.regions.id.metric_filters_pattern_checks.network_gateways_changes",
+            "false",
             ""
         ]
     ]

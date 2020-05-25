@@ -1,5 +1,5 @@
 {
-    "description": "No CloudWatch alarm for Network Access Control Lists changes",
+    "description": "No CloudWatch alarm for \"Network Access Control Lists Changes\"",
     "rationale": "There was no CloudWatch alarm to detect changes to NACL. Monitoring for NACL changes will help ensure that no service or resource is unintentionally exposed.",
     "remediation": "Enable a CloudWatch alarm to detect NACL changes.",
     "compliance": [
@@ -19,13 +19,13 @@
             "reference": "3.11"
         }
     ],
-    "dashboard_name": "Cloudwatch",
-    "path": "cloudwatch.regions.id.alarms.id",
+    "dashboard_name": "Regions",
+    "path": "cloudwatch.regions.id.metric_filters.id",
     "conditions": [
-        "and",
+        "or",
         [
-            "cloudwatch.regions.id.alarms.id.AlarmActions",
-            "empty",
+            "cloudwatch.regions.id.metric_filters_pattern_checks.nacl_changes",
+            "false",
             ""
         ]
     ]

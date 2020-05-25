@@ -300,7 +300,7 @@
                 "scored": true
             }
         ],
-        "logs-no-alarm-IAM-policy-changes.json": [
+        "logs-no-alarm-iam-policy-changes.json": [
             {
                 "comment": "Recommendation 3.4",
                 "enabled": true,

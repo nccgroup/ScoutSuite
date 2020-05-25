@@ -1,5 +1,5 @@
 {
-    "description": "No CloudWatch alarm for root account usage",
+    "description": "No CloudWatch alarm for \"Root Account Usage\"",
     "rationale": "There was no CloudWatch alarm for the usage of the root account. Monitoring for root account log ins will provide visibility into the use of a fully privileged account.",
     "remediation": "Enable a CloudWatch alarm to monitor the usage of the root account.",
     "compliance": [
@@ -19,13 +19,13 @@
             "reference": "3.3"
         }
     ],
-    "dashboard_name": "Cloudwatch",
-    "path": "cloudwatch.regions.id.alarms.id",
+    "dashboard_name": "Regions",
+    "path": "cloudwatch.regions.id.metric_filters.id",
     "conditions": [
-        "and",
+        "or",
         [
-            "cloudwatch.regions.id.alarms.id.AlarmActions",
-            "empty",
+            "cloudwatch.regions.id.metric_filters_pattern_checks.root_usage",
+            "false",
             ""
         ]
     ]

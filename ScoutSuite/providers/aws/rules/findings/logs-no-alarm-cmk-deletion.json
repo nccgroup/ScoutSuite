@@ -1,5 +1,5 @@
 {
-    "description": "No CloudWatch alarm for disabled or deleted master keys",
+    "description": "No CloudWatch alarm for \"Disabled or Deleted Master Keys\"",
     "rationale": "There was no CloudWatch alarm to alert about disabled or deleted master keys. Monitoring for disabled or deleted master keys can prevent permanent loss of data encrypted with such keys.",
     "remediation": "Enable a CloudWatch alarm to detect recently disabled or deleted master keys.",
     "compliance": [
@@ -19,13 +19,13 @@
             "reference": "3.7"
         }
     ],
-    "dashboard_name": "Cloudwatch",
-    "path": "cloudwatch.regions.id.alarms.id",
+    "dashboard_name": "Regions",
+    "path": "cloudwatch.regions.id.metric_filters.id",
     "conditions": [
-        "and",
+        "or",
         [
-            "cloudwatch.regions.id.alarms.id.AlarmActions",
-            "empty",
+            "cloudwatch.regions.id.metric_filters_pattern_checks.cmk_deletion",
+            "false",
             ""
         ]
     ]
