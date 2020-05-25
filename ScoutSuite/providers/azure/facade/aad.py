@@ -20,14 +20,14 @@ class AADFacade:
             user_filter = " and ".join([
                 'userType eq \'Guest\''
             ])
-            return await run_concurrently(lambda: list(self._client.users.list(filter=user_filter)))
+            return await run_concurrently(lambda: list(self.get_client().users.list(filter=user_filter)))
         except Exception as e:
             print_exception('Failed to retrieve users: {}'.format(e))
             return []
 
     async def get_user(self, user_id):
         try:
-            return await run_concurrently(lambda: self._client.users.get(user_id))
+            return await run_concurrently(lambda: self.get_client().users.get(user_id))
         except Exception as e:
             print_exception('Failed to retrieve user {}: {}'.format(user_id, e))
             return []
