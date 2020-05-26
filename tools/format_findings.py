@@ -37,7 +37,7 @@ def format_folder(folder_path):
                         data['description'] = data['title']
                         data.pop('title', None)
                     # remove legacy HTML from rationale - TODO remove once there are none left
-                    if 'rationale' in data.keys():
+                    if 'rationale' in data.keys() and data.get('rationale'):
                         data['rationale'] = data['rationale'].replace('<b>Description:</b><br><br>', '')
                         # check for legacy content - TODO remove once there are none left
                         if 'References' in data['rationale'] or 'CIS' in data['rationale']:
