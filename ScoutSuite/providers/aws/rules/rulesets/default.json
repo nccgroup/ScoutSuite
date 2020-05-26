@@ -582,12 +582,6 @@
                 "level": "danger"
             }
         ],
-        "iam-password-policy-lowercase-required.json": [
-            {
-                "enabled": false,
-                "level": "danger"
-            }
-        ],
         "iam-password-policy-minimum-length.json": [
             {
                 "args": [

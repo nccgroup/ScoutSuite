@@ -1,5 +1,6 @@
 {
     "description": "Managed Policy Allows Non STS Action",
+    "rationale": "This configuration goes against organizational policies.",
     "references": [
         "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
     ],
