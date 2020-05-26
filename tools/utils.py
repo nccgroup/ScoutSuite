@@ -55,7 +55,7 @@ def get_capitalized_title(initial_title: str) -> str:
                         frag_string += word.lower() + punct + " "  # make it lowercase
                     elif word.isupper() or is_mixed_case(word):
                         frag_string += word + punct + " "  # do nothing
-                    elif word[0] == '"' and word[-1] == '"':  # Check for quoted words
+                    elif word and word[0] == '"' and word[-1] == '"':  # Check for quoted words
                         frag_string += word + punct + " "  # do nothing
                     else:
                         frag_string += word.capitalize() + punct + " "  # capitalize it
