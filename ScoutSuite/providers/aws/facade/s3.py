@@ -14,6 +14,7 @@ class S3Facade(AWSBaseFacade):
             # If there are regions specified, try for each of them until one works.
             # This is required in case there's an IAM policy that denies access to APIs on a regional basis,
             # as per https://github.com/nccgroup/ScoutSuite/issues/727
+            region = None
             if self.regions:
                 buckets = []
                 exception = ''
