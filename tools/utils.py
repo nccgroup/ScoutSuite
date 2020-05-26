@@ -64,7 +64,7 @@ def get_capitalized_title(initial_title: str) -> str:
                 if not frag_string[0].isalpha():
                     cap = 2
 
-                if word[0] == '"' and word[-1] == '"':  # Check for quoted words
+                if frag_string[0] == '"' and frag_string[-2] == '"':  # Check for quoted words
                     out_string += frag_string.strip() + " "
                 else:
                     out_string += (frag_string[:cap].upper() + frag_string[cap:]).strip() + " "
