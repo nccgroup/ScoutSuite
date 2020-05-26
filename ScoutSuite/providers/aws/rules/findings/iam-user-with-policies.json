@@ -1,5 +1,6 @@
 {
     "description": "User with _ARG_0_ Policies",
+    "rationale": "The user was found to be attached to inline policies. This can increase the complexity in user and policy management, and increase the risk of the user being assigned or retaining excessive permissions.",
     "dashboard_name": "Users",
     "path": "iam.users.id",
     "conditions": [

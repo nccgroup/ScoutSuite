@@ -1,32 +1,75 @@
 import json
 import logging
 from getpass import getpass
+from datetime import datetime, timedelta
 
 from azure.common.credentials import ServicePrincipalCredentials, UserPassCredentials, get_azure_cli_credentials
 from msrestazure.azure_active_directory import MSIAuthentication
-from ScoutSuite.core.console import print_info
+from ScoutSuite.core.console import print_info, print_debug
 from msrestazure.azure_active_directory import AADTokenCredentials
 import adal
 
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
 
+AUTHORITY_HOST_URI = 'https://login.microsoftonline.com'
+
+
 class AzureCredentials:
 
     def __init__(self,
                  arm_credentials, aad_graph_credentials,
-                 tenant_id=None, default_subscription_id=None):
+                 tenant_id=None, default_subscription_id=None,
+                 context=None):
 
         self.arm_credentials = arm_credentials  # Azure Resource Manager API credentials
         self.aad_graph_credentials = aad_graph_credentials  # Azure AD Graph API credentials
         self.tenant_id = tenant_id
         self.default_subscription_id = default_subscription_id
+        self.context = context
 
     def get_tenant_id(self):
         if self.tenant_id:
             return self.tenant_id
         else:
             return self.aad_graph_credentials.token['tenant_id']
+
+    def get_credentials(self, resource):
+        if resource == 'arm':
+            self.arm_credentials = self.get_fresh_credentials(self.arm_credentials)
+            return self.arm_credentials
+        elif resource == 'aad_graph':
+            self.aad_graph_credentials = self.get_fresh_credentials(self.aad_graph_credentials)
+            return self.aad_graph_credentials
+        else:
+            raise AuthenticationException('Invalid credentials resource type')
+
+    def get_fresh_credentials(self, credentials):
+        """
+        Check if credentials are outdated and if so refresh them.
+        """
+        if self.context and hasattr(credentials, 'token'):
+            expiration_datetime = datetime.fromtimestamp(credentials.token['expires_on'])
+            current_datetime = datetime.now()
+            expiration_delta = expiration_datetime - current_datetime
+            if expiration_delta < timedelta(minutes=5):
+                return self.refresh_credential(credentials)
+        return credentials
+
+    def refresh_credential(self, credentials):
+        """
+        Refresh credentials
+        """
+        print_debug('Refreshing credentials')
+        authority_uri = AUTHORITY_HOST_URI + '/' + self.get_tenant_id()
+        existing_cache = self.context.cache
+        context = adal.AuthenticationContext(authority_uri, cache=existing_cache)
+        new_token = context.acquire_token(credentials.token['resource'],
+                                          credentials.token['user_id'],
+                                          credentials.token['_client_id'])
+
+        new_credentials = AADTokenCredentials(new_token, credentials.token.get('_client_id'))
+        return new_credentials
 
 
 class AzureAuthenticationStrategy(AuthenticationStrategy):
@@ -50,6 +93,8 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             logging.getLogger('msrest').setLevel(logging.ERROR)
             logging.getLogger('urllib3').setLevel(logging.ERROR)
             logging.getLogger('cli.azure.cli.core').setLevel(logging.ERROR)
+
+            context = None
 
             if cli:
                 arm_credentials, subscription_id, tenant_id = get_azure_cli_credentials(with_tenant=True)
@@ -77,8 +122,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 # the sample code easy to use, for production code you should use generate your own client ids for
                 # your application.
                 client_id = '04b07795-8ddb-461a-bbee-02f9e1bf7b46'
-                authority_host_uri = 'https://login.microsoftonline.com'
-                authority_uri = authority_host_uri + '/' + tenant_id
+                authority_uri = AUTHORITY_HOST_URI + '/' + tenant_id
                 context = adal.AuthenticationContext(authority_uri, api_version=None)
 
                 # Resource Manager
@@ -87,16 +131,17 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 print_info('To authenticate to the Resource Manager API, use a web browser to '
                            'access {} and enter the {} code.'.format(code['verification_url'],
                                                                      code['user_code']))
-                mgmt_token = context.acquire_token_with_device_code(resource_uri, code, client_id)
-                arm_credentials = AADTokenCredentials(mgmt_token, client_id)
-                # Graph
+                arm_token = context.acquire_token_with_device_code(resource_uri, code, client_id)
+                arm_credentials = AADTokenCredentials(arm_token, client_id)
+
+                # AAD Graph
                 resource_uri = 'https://graph.windows.net'
                 code = context.acquire_user_code(resource_uri, client_id)
-                print_info('To authenticate to the Azure Graph API, use a web browser to '
+                print_info('To authenticate to the Azure AD Graph API, use a web browser to '
                            'access {} and enter the {} code.'.format(code['verification_url'],
                                                                      code['user_code']))
-                mgmt_token = context.acquire_token_with_device_code(resource_uri, code, client_id)
-                aad_graph_credentials = AADTokenCredentials(mgmt_token, client_id)
+                aad_graph_token = context.acquire_token_with_device_code(resource_uri, code, client_id)
+                aad_graph_credentials = AADTokenCredentials(aad_graph_token, client_id)
 
             elif service_principal:
 
@@ -159,8 +204,10 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             else:
                 raise AuthenticationException('Unknown authentication method')
 
-            return AzureCredentials(arm_credentials, aad_graph_credentials,
-                                    tenant_id, subscription_id)
+            return AzureCredentials(arm_credentials,
+                                    aad_graph_credentials,
+                                    tenant_id, subscription_id,
+                                    context)
 
         except Exception as e:
             if ', AdalError: Unsupported wstrust endpoint version. ' \

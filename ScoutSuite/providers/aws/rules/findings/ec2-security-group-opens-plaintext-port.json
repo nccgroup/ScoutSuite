@@ -1,5 +1,6 @@
 {
     "description": "Security Group Opens _ARG_0_ Port",
+    "rationale": "Ports associated with plaintext protocols have been found to be open in this security group. Plaintext protocols should be replaced with more secure alternatives, as the data in transit may be monitored and could, potentially, be subject to tampering.",
     "dashboard_name": "Rules",
     "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
     "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",
