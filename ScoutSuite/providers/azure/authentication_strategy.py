@@ -97,7 +97,8 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             context = None
 
             if cli:
-                arm_credentials, subscription_id, tenant_id = get_azure_cli_credentials(with_tenant=True)
+                arm_credentials, subscription_id, tenant_id = \
+                    get_azure_cli_credentials(with_tenant=True)
                 aad_graph_credentials, placeholder_1, placeholder_2 = \
                     get_azure_cli_credentials(with_tenant=True, resource='https://graph.windows.net')
 
