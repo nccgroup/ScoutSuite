@@ -1,24 +1,6 @@
 {
     "description": "_ARG_2_",
-    "rationale": "Allowing public access to any S3 bucket may disclose sensitive information stored in them or allow unauthenticated users to upload any type of files.",
-    "remediation": "Remove any public access that has been granted to the affected buckets via an ACL",
-    "compliance": [
-        {
-            "name": "CIS Amazon Web Services Foundations",
-            "version": "1.0.0",
-            "reference": "2.3"
-        },
-        {
-            "name": "CIS Amazon Web Services Foundations",
-            "version": "1.1.0",
-            "reference": "2.3"
-        },
-        {
-            "name": "CIS Amazon Web Services Foundations",
-            "version": "1.2.0",
-            "reference": "2.3"
-        }
-    ],
+    "rationale": "An S3 bucket has bee found that was accessible for _ARG_0_. If sensitive information is stored in this bucket, it could be at risk of being accessed by potential attackers.",
     "dashboard_name": "Bucket ACLs",
     "display_path": "s3.buckets.id",
     "path": "s3.buckets.id.grantees.id",

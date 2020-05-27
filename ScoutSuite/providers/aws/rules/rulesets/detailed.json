@@ -603,12 +603,6 @@
                 "level": "danger"
             }
         ],
-        "iam-password-policy-lowercase-required.json": [
-            {
-                "enabled": true,
-                "level": "danger"
-            }
-        ],
         "iam-password-policy-minimum-length.json": [
             {
                 "args": [
