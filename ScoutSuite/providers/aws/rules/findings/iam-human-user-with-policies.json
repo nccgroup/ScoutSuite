@@ -1,5 +1,6 @@
 {
     "description": "Human User with _ARG_1_ Policies",
+    "rationale": "This configuration goes against organizational policies.",
     "dashboard_name": "Users",
     "path": "iam.users.id",
     "conditions": [

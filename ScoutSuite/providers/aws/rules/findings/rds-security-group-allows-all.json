@@ -1,5 +1,6 @@
 {
     "description": "Security Group Allows All IP Addresses",
+    "rationale": "The security group allows access to RDS instances from any source address, which creates a wider attack surface for resources assigned to it. Source address restrictions should be implemented",
     "dashboard_name": "Security Groups",
     "display_path": "rds.regions.id.vpcs.id.security_groups.id",
     "path": "rds.regions.id.vpcs.id.security_groups.id.ip_ranges",

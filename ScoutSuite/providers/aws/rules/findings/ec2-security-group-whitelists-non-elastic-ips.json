@@ -1,5 +1,6 @@
 {
     "description": "Security Group Whitelists Non-Elastic IP Addresses",
+    "rationale": "This configuration goes against organizational policies.",
     "dashboard_name": "Rules",
     "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id",
     "conditions": [
