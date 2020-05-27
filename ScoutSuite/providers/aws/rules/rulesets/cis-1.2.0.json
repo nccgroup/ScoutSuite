@@ -206,7 +206,7 @@
         ],
         "cloudtrail-not-configured.json": [
             {
-                "comment": "Recommendation 2.1 (part 2/2)",
+                "comment": "Recommendation 2.1 (Part 2/2)",
                 "enabled": true,
                 "level": "danger",
                 "scored": true
@@ -220,12 +220,110 @@
                 "scored": true
             }
         ],
-        "TODO_2.json": [
+        "s3-bucket-world-acl.json": [
             {
-                "comment": "Recommendation 2.3",
-                "enabled": false,
+                "args": [
+                    "AllUsers",
+                    "read",
+                    "Bucket world-listable (anonymous)",
+                    "warning"
+                ],
+                "comment": "Recommendation 2.3 (Part 1/2)",
+                "enabled": true,
                 "level": "danger",
-                "scored": true
+                "score": true
+            },
+            {
+                "args": [
+                    "AllUsers",
+                    "read_acp",
+                    "Bucket's permissions world-readable (anonymous)",
+                    "warning"
+                ],
+                "comment": "Recommendation 2.3 (Part 1/2)",
+                "enabled": true,
+                "level": "danger",
+                "score": true
+            },
+            {
+                "args": [
+                    "AllUsers",
+                    "write",
+                    "Bucket world-writable (anonymous)",
+                    "danger"
+                ],
+                "comment": "Recommendation 2.3 (Part 1/2)",
+                "enabled": true,
+                "level": "danger",
+                "score": true
+            },
+            {
+                "args": [
+                    "AllUsers",
+                    "write_acp",
+                    "Bucket's permissions world-writable (anonymous)",
+                    "danger"
+                ],
+                "comment": "Recommendation 2.3 (Part 1/2)",
+                "enabled": true,
+                "level": "danger",
+                "score": true
+            },
+            {
+                "args": [
+                    "AuthenticatedUsers",
+                    "read",
+                    "Bucket world-listable",
+                    "danger"
+                ],
+                "comment": "Recommendation 2.3 (Part 1/2)",
+                "enabled": true,
+                "level": "danger",
+                "score": true
+            },
+            {
+                "args": [
+                    "AuthenticatedUsers",
+                    "read_acp",
+                    "Bucket's permissions world-readable",
+                    "warning"
+                ],
+                "comment": "Recommendation 2.3 (Part 1/2)",
+                "enabled": true,
+                "level": "danger",
+                "score": true
+            },
+            {
+                "args": [
+                    "AuthenticatedUsers",
+                    "write",
+                    "Bucket world-writable",
+                    "danger"
+                ],
+                "comment": "Recommendation 2.3 (Part 1/2)",
+                "enabled": true,
+                "level": "danger",
+                "score": true
+            },
+            {
+                "args": [
+                    "AuthenticatedUsers",
+                    "write_acp",
+                    "Bucket's permissions world-writable",
+                    "danger"
+                ],
+                "comment": "Recommendation 2.3 (Part 1/2)",
+                "enabled": true,
+                "level": "danger",
+                "score": true
+            }
+        ],
+        "s3-bucket-world-policy-star.json": [
+            {
+                "comment": "Recommendation 2.3 (Part 2/2)",
+                "enabled": true,
+                "level": "danger",
+                "score": true
             }
         ],
         "cloudtrail-no-cloudwatch-integration.json": [
