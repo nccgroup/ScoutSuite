@@ -55,9 +55,12 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             logging.getLogger('cli.azure.cli.core').setLevel(logging.ERROR)
 
             if cli:
-                arm_credentials, subscription_id, tenant_id = get_azure_cli_credentials(with_tenant=True)
+                arm_credentials, subscription_id, tenant_id = \
+                    get_azure_cli_credentials(with_tenant=True)
                 aad_graph_credentials, placeholder_1, placeholder_2 = \
                     get_azure_cli_credentials(with_tenant=True, resource='https://graph.windows.net')
+                microsoft_graph_credentials, placeholder_1, placeholder_2 = \
+                    get_azure_cli_credentials(with_tenant=True, resource='https://graph.microsoft.com')
 
             elif user_account:
 
@@ -72,7 +75,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
                 aad_graph_credentials = UserPassCredentials(username, password,
                                                             resource='https://graph.windows.net')
                 microsoft_graph_credentials = UserPassCredentials(username, password,
-                                                                  resource='https://graph.microsoft.com/')
+                                                                  resource='https://graph.microsoft.com')
 
             elif user_account_browser:
 

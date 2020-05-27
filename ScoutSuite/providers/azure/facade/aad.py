@@ -36,11 +36,12 @@ class AADFacade:
     async def get_users(self):
         try:
 
-            # test = await self._get_microsoft_graph_response('users')
-            # test_beta = await self._get_microsoft_graph_response('users', 'beta')
-            r = await self._get_microsoft_graph_response('reports/getCredentialUserRegistrationCount', 'beta')
+            test = await self._get_microsoft_graph_response('users')
+            test_beta = await self._get_microsoft_graph_response('users', 'beta')
+            # r = await self._get_microsoft_graph_response('reports/getCredentialUserRegistrationCount', 'beta')
 
-            return await run_concurrently(lambda: list(self._client.users.list()))
+            users =  await run_concurrently(lambda: list(self._client.users.list()))
+            return users
         except Exception as e:
             print_exception('Failed to retrieve users: {}'.format(e))
             return []
