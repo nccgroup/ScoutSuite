@@ -10,7 +10,8 @@ class VirtualMachineFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        return ComputeManagementClient(self.credentials.arm_credentials, subscription_id=subscription_id)
+        return ComputeManagementClient(self.credentials.get_credentials('arm'),
+                                       subscription_id=subscription_id)
 
     async def get_instances(self, subscription_id: str):
         try:
