@@ -214,7 +214,9 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             else:
                 raise AuthenticationException('Unknown authentication method')
 
-            return AzureCredentials(arm_credentials, aad_graph_credentials, microsoft_graph_credentials,
+            return AzureCredentials(arm_credentials,
+                                    aad_graph_credentials,
+                                    microsoft_graph_credentials,
                                     tenant_id, subscription_id,
                                     context)
 
