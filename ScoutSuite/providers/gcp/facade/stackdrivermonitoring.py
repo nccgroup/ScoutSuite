@@ -5,6 +5,7 @@ from ScoutSuite.providers.utils import run_concurrently
 
 
 class StackdriverMonitoringFacade:
+
     async def get_sinks(self, project_id: str):
         try:
             client = stackdrivermonitoring.MetricServiceClient(project=project_id)

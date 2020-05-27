@@ -89,6 +89,10 @@
         "sinks": {
           "cols": 2,
           "path": "services.stackdriverlogging.projects.id.sinks"
+        },
+        "metrics": {
+          "cols": 2,
+          "path": "services.stackdriverlogging.projects.id.metrics"
         }
       }
     }
