@@ -52,10 +52,8 @@
             ],
             [
                 "iam.policies.id.PolicyDocument.Statement.id.Resource",
-                "containAtLeastOneOf",
-                [
-                    "*"
-                ]
+                "containAtLeastOneMatching",
+                ".*[*].*"
             ]
         ]
     ],
