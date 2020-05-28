@@ -95,6 +95,14 @@
           "path": "services.stackdriverlogging.projects.id.metrics"
         }
       }
+    },
+    "stackdrivermonitoring": {
+      "resources": {
+        "monitored_resources": {
+          "cols": 2,
+          "path": "services.stackdrivermonitoring.projects.id.monitored_resources"
+        }
+      }
     }
   }
 }
