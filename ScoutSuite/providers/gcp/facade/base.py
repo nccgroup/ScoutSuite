@@ -7,8 +7,7 @@ from ScoutSuite.providers.gcp.facade.gce import GCEFacade
 from ScoutSuite.providers.gcp.facade.iam import IAMFacade
 from ScoutSuite.providers.gcp.facade.kms import KMSFacade
 from ScoutSuite.providers.gcp.facade.stackdriverlogging import StackdriverLoggingFacade
-from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
-from ScoutSuite.providers.utils import run_concurrently
+from ScoutSuite.providers.gcp.facade.stackdrivermonitoring import StackdriverMonitoringFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 from ScoutSuite.utils import format_service_name
 
@@ -37,6 +36,7 @@ class GCPFacade(GCPBaseFacade):
         self.iam = IAMFacade()
         self.kms = KMSFacade()
         self.stackdriverlogging = StackdriverLoggingFacade()
+        self.stackdrivermonitoring = StackdriverMonitoringFacade()
 
         # Instantiate facades for proprietary services
         try:
