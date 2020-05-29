@@ -98,9 +98,13 @@
     },
     "stackdrivermonitoring": {
       "resources": {
-        "monitored_resources": {
+        "uptime_checks": {
           "cols": 2,
-          "path": "services.stackdrivermonitoring.projects.id.monitored_resources"
+          "path": "services.stackdrivermonitoring.projects.id.uptime_checks"
+        },
+        "alert_policies": {
+          "cols": 2,
+          "path": "services.stackdrivermonitoring.projects.id.alert_policies"
         }
       }
     }

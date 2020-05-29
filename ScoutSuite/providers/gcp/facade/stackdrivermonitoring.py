@@ -6,15 +6,6 @@ from ScoutSuite.providers.utils import run_concurrently
 
 class StackdriverMonitoringFacade:
 
-    async def get_monitored_resources(self, project_id: str):
-        try:
-            client = stackdrivermonitoring.ServiceMonitoringServiceClient()
-            name = client.project_path(project_id)
-            return await run_concurrently(lambda: [r for r in client.list_services(name)])
-        except Exception as e:
-            print_exception('Failed to retrieve monitored resources: {}'.format(e))
-            return []
-
     async def get_uptime_checks(self, project_id: str):
         try:
             client = stackdrivermonitoring.UptimeCheckServiceClient()

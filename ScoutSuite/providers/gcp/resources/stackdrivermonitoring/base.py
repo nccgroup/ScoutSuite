@@ -1,8 +1,10 @@
 from ScoutSuite.providers.gcp.resources.projects import Projects
-from ScoutSuite.providers.gcp.resources.stackdrivermonitoring.monitored_resources import MonitoredResources
+from ScoutSuite.providers.gcp.resources.stackdrivermonitoring.uptime_checks import UptimeChecks
+from ScoutSuite.providers.gcp.resources.stackdrivermonitoring.alert_policies import AlertPolicies
 
 
 class StackdriverMonitoring(Projects):
     _children = [ 
-        (MonitoredResources, 'monitored_resources'),
+        (UptimeChecks, 'uptime_checks'),
+        (AlertPolicies, 'alert_policies')
     ]
