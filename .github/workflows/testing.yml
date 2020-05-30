@@ -67,9 +67,13 @@ jobs:
         # Not sure what the secret for this will be, but could be set in GitHub Secrets and replaced
         nosetests --with-coverage --nocapture tests/test-scoutsuite.py -a "!credential"
 
-    - name: run coverage
-      run: |
-        codecov
+    - uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+        file: ./coverage.xml # optional
+        flags: unittests # optional
+        name: codecov-umbrella # optional
+        fail_ci_if_error: true # optional (default = false)
     - name: Coveralls
       uses: coverallsapp/github-action@master
       with:
