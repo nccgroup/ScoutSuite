@@ -10,7 +10,7 @@ class Backups(AWSResources):
         self.region = region
 
 
-    async def fetch_all(self, **kwargs):
+    async def fetch_all(self):
         raw_backups = await self.facade.dynamodb.get_backups(self.region)
         for raw_backup in raw_backups:
             name, resource = await self._parse_backup(raw_backup)

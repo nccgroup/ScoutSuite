@@ -2,10 +2,11 @@ from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.regions import Regions
 
 from .backups import Backups
+from .tables import Tables
 
 
 class DynamoDB(Regions):
-    _children = [(Backups, "backups")]
+    _children = [(Tables, "tables")]
 
     def __init__(self, facade: AWSFacade):
-        super(Backups, self).__init__("backups", facade)
+        super(DynamoDB, self).__init__("dynamodb", facade)
