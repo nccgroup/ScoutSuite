@@ -68,6 +68,9 @@ jobs:
         nosetests --with-coverage --nocapture tests/test-scoutsuite.py -a "!credential"
 
     - uses: codecov/codecov-action@v1
+      with:
+        file: ./.coverage
+
     - name: Coveralls
       uses: coverallsapp/github-action@master
       with:
