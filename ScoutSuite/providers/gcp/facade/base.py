@@ -21,7 +21,7 @@ except ImportError:
 class GCPFacade(GCPBaseFacade):
     def __init__(self,
                  default_project_id=None, project_id=None, folder_id=None, organization_id=None, all_projects=None):
-        super(GCPFacade, self).__init__('cloudresourcemanager', 'v1')
+        super().__init__('cloudresourcemanager', 'v1')
 
         self.default_project_id = default_project_id
         self.all_projects = all_projects
@@ -110,10 +110,10 @@ class GCPFacade(GCPBaseFacade):
                 request = resourcemanager_client.projects().list(filter='parent.id:"%s"' % parent_id)
 
                 # get parent children projects in children folders recursively
-                folder_request = resourcemanager_client_v2.folders().list(parent='%ss/%s' % (parent_type, parent_id))
+                folder_request = resourcemanager_client_v2.folders().list(parent='{}s/{}'.format(parent_type, parent_id))
                 folder_response = await GCPFacadeUtils.get_all('folders', folder_request, projects_group)
                 for folder in folder_response:
-                    projects.extend(await self._get_projects_recursively("folder", folder['name'].strip(u'folders/')))
+                    projects.extend(await self._get_projects_recursively("folder", folder['name'].strip('folders/')))
 
             project_response = await GCPFacadeUtils.get_all('projects', request, projects_group)
             if project_response:

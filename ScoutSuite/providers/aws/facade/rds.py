@@ -53,9 +53,9 @@ class RDSFacade(AWSBaseFacade):
             instance['Tags'] = {x['Key']: x['Value'] for x in instance_tagset['TagList']}
         except ClientError as e:
             if e.response['Error']['Code'] != 'NoSuchTagSet':
-                print_exception('Failed to get db instance tags for %s: %s' % (instance['DBInstanceIdentifier'], e))
+                print_exception('Failed to get db instance tags for {}: {}'.format(instance['DBInstanceIdentifier'], e))
         except Exception as e:
-            print_exception('Failed to get db instance tags for %s: %s' % (instance['DBInstanceIdentifier'], e))
+            print_exception('Failed to get db instance tags for {}: {}'.format(instance['DBInstanceIdentifier'], e))
             instance['Tags'] = {}
 
     async def _get_and_set_instance_clusters(self, instance: {}, region: str):
@@ -170,7 +170,7 @@ class RDSFacade(AWSBaseFacade):
                 parameter_name = parameter.pop('ParameterName')
                 parameter_group['Parameters'][parameter_name] = parameter
         except Exception as e:
-            print_exception('Failed fetching DB parameters for %s: %s' % (name, e))
+            print_exception('Failed fetching DB parameters for {}: {}'.format(name, e))
 
     async def get_security_groups(self, region: str) :
         try:

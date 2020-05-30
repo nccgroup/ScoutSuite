@@ -1,9 +1,6 @@
-from __future__ import print_function
-
 import os
 import sys
 
-from six.moves import input
 
 from ScoutSuite import DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY
 from ScoutSuite.core.console import print_error

@@ -26,7 +26,7 @@ class AliyunProvider(BaseProvider):
         self.credentials = kwargs['credentials']
         self.account_id = self.credentials.caller_details['AccountId']
 
-        super(AliyunProvider, self).__init__(report_dir, timestamp, services, skipped_services)
+        super().__init__(report_dir, timestamp, services, skipped_services)
 
     def get_report_name(self):
         """
@@ -39,5 +39,5 @@ class AliyunProvider(BaseProvider):
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
 
-        super(AliyunProvider, self).preprocessing()
+        super().preprocessing()
 

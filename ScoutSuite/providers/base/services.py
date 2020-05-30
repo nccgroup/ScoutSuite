@@ -5,7 +5,7 @@ from ScoutSuite.providers.aws.utils import get_partition_name
 from ScoutSuite.utils import format_service_name
 
 
-class BaseServicesConfig(object):
+class BaseServicesConfig:
 
     def __init__(self, credentials):
         self.credentials = credentials

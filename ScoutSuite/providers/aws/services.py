@@ -76,7 +76,7 @@ class AWSServicesConfig(BaseServicesConfig):
 
     def __init__(self, credentials=None, **kwargs):
 
-        super(AWSServicesConfig, self).__init__(credentials)
+        super().__init__(credentials)
 
         facade = AWSFacade(credentials)
 

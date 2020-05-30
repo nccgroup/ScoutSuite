@@ -6,7 +6,7 @@ from ScoutSuite.providers.utils import run_concurrently
 
 class GCEFacade(GCPBaseFacade):
     def __init__(self):
-        super(GCEFacade, self).__init__('compute', 'v1')
+        super().__init__('compute', 'v1')
 
     async def get_disks(self, project_id, zone):
         try:
@@ -48,7 +48,7 @@ class GCEFacade(GCPBaseFacade):
             instance['commonInstanceMetadata'] = common_instance_metadata
 
     def metadata_to_dict(self, metadata):
-        return dict((item['key'], item['value']) for item in metadata['items']) if 'items' in metadata else {}
+        return {item['key']: item['value'] for item in metadata['items']} if 'items' in metadata else {}
 
     async def get_networks(self, project_id):
         try:

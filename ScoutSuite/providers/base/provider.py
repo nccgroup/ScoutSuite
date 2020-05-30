@@ -1,6 +1,3 @@
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import copy
 import json
 
@@ -10,7 +7,7 @@ from ScoutSuite.output.html import ScoutReport
 from ScoutSuite.providers.base.configs.browser import get_object_at
 
 
-class BaseProvider(object):
+class BaseProvider:
     """
     Base class for the different providers.
 
@@ -95,7 +92,7 @@ class BaseProvider(object):
         :return: None
         """
         # Load metadata
-        with open(self.metadata_path, 'rt') as f:
+        with open(self.metadata_path) as f:
             self.metadata = json.load(f)
 
     @staticmethod

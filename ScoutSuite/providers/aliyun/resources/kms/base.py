@@ -9,4 +9,4 @@ class KMS(Regions):
     ]
 
     def __init__(self, facade: AliyunFacade):
-        super(KMS, self).__init__('kms', facade)
+        super().__init__('kms', facade)

@@ -4,7 +4,6 @@ import sys
 import traceback
 
 import coloredlogs
-from six.moves import input
 
 from ScoutSuite import ERRORS_LIST
 

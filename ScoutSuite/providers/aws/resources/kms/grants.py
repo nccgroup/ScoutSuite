@@ -4,7 +4,7 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 class Grants(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, key_id: str):
-        super(Grants, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
         self.key_id = key_id
 

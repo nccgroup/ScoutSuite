@@ -40,7 +40,7 @@ class AWSProvider(BaseProvider):
 
         self.account_id = get_aws_account_id(self.credentials.session)
 
-        super(AWSProvider, self).__init__(report_dir, timestamp,
+        super().__init__(report_dir, timestamp,
                                           services, skipped_services, result_format)
 
     def get_report_name(self):
@@ -95,7 +95,7 @@ class AWSProvider(BaseProvider):
 
         self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
 
-        super(AWSProvider, self).preprocessing()
+        super().preprocessing()
 
     def _add_cidr_display_name(self, ip_ranges, ip_ranges_name_key):
         if len(ip_ranges):

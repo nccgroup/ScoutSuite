@@ -9,7 +9,7 @@ class S3(AWSCompositeResources):
     ]
 
     def __init__(self, facade: AWSFacade):
-        super(S3, self).__init__(facade)
+        super().__init__(facade)
         self.service = 's3'
 
     async def fetch_all(self, partition_name='aws', **kwargs):

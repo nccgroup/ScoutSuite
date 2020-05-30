@@ -7,7 +7,7 @@ import re
 
 class EC2Instances(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
-        super(EC2Instances, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
         self.vpc = vpc
 

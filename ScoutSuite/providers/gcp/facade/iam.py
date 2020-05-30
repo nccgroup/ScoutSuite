@@ -5,7 +5,7 @@ from ScoutSuite.providers.utils import run_concurrently
 
 class IAMFacade(GCPBaseFacade):
     def __init__(self):
-        super(IAMFacade, self).__init__('iam', 'v1')
+        super().__init__('iam', 'v1')
 
     async def get_service_accounts(self, project_id: str):
         try:

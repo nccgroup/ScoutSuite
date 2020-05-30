@@ -10,7 +10,7 @@ class KMSFacade(GCPBaseFacade):
     def __init__(self):
         # This facade is currently using both libraries as the Cloud Client library doesn't support locations
         self.cloud_client = kms.KeyManagementServiceClient()  # Cloud Client
-        super(KMSFacade, self).__init__('cloudkms', 'v1')  # API Client
+        super().__init__('cloudkms', 'v1')  # API Client
 
     async def get_locations(self, project_id: str):
 

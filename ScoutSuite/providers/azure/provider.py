@@ -48,7 +48,7 @@ class AzureProvider(BaseProvider):
 
         self.result_format = result_format
 
-        super(AzureProvider, self).__init__(report_dir, timestamp,
+        super().__init__(report_dir, timestamp,
                                             services, skipped_services, result_format)
 
     def get_report_name(self):
@@ -75,7 +75,7 @@ class AzureProvider(BaseProvider):
         if not self.last_run:
             self._match_rbac_roles_and_principals()
 
-        super(AzureProvider, self).preprocessing()
+        super().preprocessing()
 
     def _match_rbac_roles_and_principals(self):
         """

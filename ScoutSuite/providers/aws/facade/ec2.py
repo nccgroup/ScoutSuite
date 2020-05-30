@@ -17,7 +17,7 @@ class EC2Facade(AWSBaseFacade):
     def __init__(self, session: boto3.session.Session, owner_id: str):
         self.owner_id = owner_id
 
-        super(EC2Facade, self).__init__(session)
+        super().__init__(session)
 
     async def get_instance_user_data(self, region: str, instance_id: str):
         ec2_client = AWSFacadeUtils.get_client('ec2', self.session, region)

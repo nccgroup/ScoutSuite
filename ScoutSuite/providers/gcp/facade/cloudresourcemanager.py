@@ -4,7 +4,7 @@ from ScoutSuite.providers.utils import run_concurrently
 
 class CloudResourceManagerFacade(GCPBaseFacade):
     def __init__(self):
-        super(CloudResourceManagerFacade, self).__init__('cloudresourcemanager', 'v1')
+        super().__init__('cloudresourcemanager', 'v1')
 
     async def get_member_bindings(self, project_id: str):
         try:

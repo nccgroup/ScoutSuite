@@ -35,7 +35,7 @@ class GCPProvider(BaseProvider):
 
         self.result_format = result_format
 
-        super(GCPProvider, self).__init__(report_dir, timestamp,
+        super().__init__(report_dir, timestamp,
                                           services, skipped_services, result_format)
 
     def get_report_name(self):
@@ -82,7 +82,7 @@ class GCPProvider(BaseProvider):
         self._match_instances_and_snapshots()
         self._match_networks_and_instances()
 
-        super(GCPProvider, self).preprocessing()
+        super().preprocessing()
 
     def _match_instances_and_snapshots(self):
         """
