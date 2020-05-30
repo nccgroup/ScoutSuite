@@ -83,3 +83,26 @@ def no_camel(name):
     """
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
+
+def snake_keys(d: dict) -> dict:
+    """
+    Converts a dictionary with CamelCase keys to camel_case
+
+    :param name:                        d Dictionary to iterate over
+    :return:
+    """
+
+    new_table = {}
+    for k in d.keys():
+        new_key = no_camel(k)
+        if type(d[k]) is dict:
+            new_table[new_key] = snake_keys(d[k])
+        elif type(d[k]) is list:
+            if len(d[k]) > 0 and type(d[k][0]) is dict:
+                new_ary = []
+                for val in d[k]:
+                    new_ary.append(no_camel(val))
+                new_table[new_key] = new_ary
+        else:
+            new_table[new_key] = d[k]
+    return new_table
