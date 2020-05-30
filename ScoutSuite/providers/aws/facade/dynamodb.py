@@ -1,6 +1,3 @@
-# import debugpy
-
-
 from ScoutSuite.providers.utils import run_concurrently
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.aws.facade.utils import AWSFacadeUtils
@@ -46,10 +43,6 @@ class DynamoDBFacade(AWSBaseFacade):
             return []
 
     async def get_table(self, region, table_name):
-        # debugpy.listen(5678)
-        # print("Waiting for debugger attach")
-        # debugpy.wait_for_client()
-
         client = AWSFacadeUtils.get_client("dynamodb", self.session, region)
         try:
             raw_table = await run_concurrently(
@@ -58,18 +51,4 @@ class DynamoDBFacade(AWSBaseFacade):
         except Exception as e:
             print_exception(f"Failed to get table {table_name}: {e}")
             raw_table = None
-
-        # debugpy.breakpoint()
-        if raw_table["Table"]:
-            table = {}
-            raw = raw_table["Table"]
-            if "SSEDescription" in raw:
-                table["sse_description"] = raw["SSEDescription"]
-                table["sse_enabled"] = True
-            else:
-                table["sse_enabled"] = False
-
-            if "ArchivalSummary" in raw:
-                table["archival_summary"] = raw["ArchivalSummary"]
-            return raw["TableName"], table
-        return "", []
+        return raw_table
