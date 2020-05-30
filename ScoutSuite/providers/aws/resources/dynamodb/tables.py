@@ -1,6 +1,6 @@
-from debugpy.common.log import debug
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
+from ScoutSuite.providers.aws.utils import no_camel
 
 
 class Tables(AWSResources):
@@ -20,10 +20,20 @@ class Tables(AWSResources):
         if raw_table["Table"]:
             raw = raw_table["Table"]
             if "SSEDescription" in raw:
-                table["sse_description"] = raw["SSEDescription"]
                 table["sse_enabled"] = True
             else:
                 table["sse_enabled"] = False
-            if "ArchivalSummary" in raw:
-                table["archival_summary"] = raw["ArchivalSummary"]
+            new_dict = await self.camel_keys(raw)
+            table.update(new_dict)
+
         return table
+
+    async def camel_keys(self, d: dict) -> dict:
+        new_table = {}
+        for k in d.keys():
+            new_key = no_camel(k)
+            if type(d[k]) is dict:
+                new_table[new_key] = await self.camel_keys(d[k])
+            else:
+                new_table[new_key] = d[k]
+        return new_table
