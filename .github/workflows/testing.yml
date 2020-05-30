@@ -66,3 +66,8 @@ jobs:
 
         # Not sure what the secret for this will be, but could be set in GitHub Secrets and replaced
         nosetests --with-coverage --nocapture tests/test-scoutsuite.py -a "!credential"
+
+    - name: run coverage
+      run: |
+        coveralls
+        codecov
