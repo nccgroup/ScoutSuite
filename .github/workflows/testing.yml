@@ -37,7 +37,6 @@ jobs:
         pip install autopep8
         pip install pytest
         pip install mock
-        pip install unittest
         pip install nose
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
