@@ -197,6 +197,11 @@ class TestOpinelConditionClass:
             '123456789013'
         )
 
+        assert pass_condition(["a", "b", "arn:aws:iam::111111111111:role/*"], "containAtLeastOneMatching", ".*[*].*")
+        assert pass_condition(["*"], "containAtLeastOneMatching", ".*[*].*")
+        assert not pass_condition(["a", "b"], "containAtLeastOneMatching", ".*[*].*")
+        assert not pass_condition([], "containAtLeastOneMatching", ".*[*].*")
+
         try:
             pass_condition('foo', 'bar', 'baz')
         except:

@@ -1,5 +1,6 @@
 {
     "description": "Firewall Rule Allows Public Access (0.0.0.0/0)",
+    "rationale": "The firewall rule was found to be exposing potentially open ports to all source addresses. Ports are commonly probed by automated scanning tools, and could be an indicator of sensitive services exposed to Internet. If such services need to be exposed, a restriction on the source address could help to reduce the attack surface of the infrastructure.",
     "dashboard_name": "Firewall Rules",
     "path": "computeengine.projects.id.firewalls.id",
     "conditions": [

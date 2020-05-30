@@ -1,5 +1,6 @@
 {
     "description": "User Not in Category Group",
+    "rationale": "This configuration goes against organizational policies.",
     "dashboard_name": "Users",
     "path": "iam.users.id",
     "conditions": [

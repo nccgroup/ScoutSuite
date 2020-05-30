@@ -1,0 +1,26 @@
+
+<!-- Stackdriver Logging metrics partial -->
+<script id="services.stackdriverlogging.projects.id.metrics.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="stackdriverlogging.projects.{{@../key}}.metrics.{{@key}}.name">{{name}}</span></div>
+        <div class="list-group-item-text item-margin">Project ID: <span id="stackdriverlogging.projects.{{project}}.keyrings.{{@key}}.project_id"><samp>{{project}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Description: <span id="stackdriverlogging.projects.{{@../key}}.metrics.{{@key}}.description"><samp>{{value_or_none description}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Filter: <span id="stackdriverlogging.projects.{{@../key}}.metrics.{{@key}}.filter"><code>{{filter}}</code></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.stackdriverlogging.projects.id.metrics", $("#services\\.stackdriverlogging\\.projects\\.id\\.metrics\\.partial").html());
+</script>
+
+<!-- Single stackdriverlogging metric template -->
+<script id="single_stackdriverlogging_metric-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.stackdriverlogging.projects.id.metrics'}}
+</script>
+<script>
+    var single_stackdriverlogging_metric_template = Handlebars.compile($("#single_stackdriverlogging_metric-template").html());
+</script>
