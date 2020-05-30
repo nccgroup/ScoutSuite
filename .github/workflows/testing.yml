@@ -69,5 +69,8 @@ jobs:
 
     - name: run coverage
       run: |
-        coveralls
         codecov
+    - name: Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
