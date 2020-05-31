@@ -16,7 +16,7 @@ class DynamoDBFacade(AWSBaseFacade):
                 TableName=table_name,
             )
         except Exception as e:
-            print_exception(f"Failed to get DynamoDB Backups for {table_name}")
+            print_exception("Failed to get DynamoDB Backups for {}".format(table_name))
             return []
 
     async def get_tables(self, region):
@@ -25,7 +25,7 @@ class DynamoDBFacade(AWSBaseFacade):
                 "dynamodb", region, self.session, "list_tables", "TableNames"
             )
         except Exception as e:
-            print_exception(f"Failed to get DynamoDB tables")
+            print_exception("Failed to get DynamoDB tables")
             return []
 
     async def get_tags_for_resource(self, region, resource_arn):
@@ -39,7 +39,9 @@ class DynamoDBFacade(AWSBaseFacade):
                 ResourceArn=resource_arn,
             )
         except Exception as e:
-            print_exception(f"Failed to get DynamoDB tags for resource {resource_arn}")
+            print_exception(
+                "Failed to get DynamoDB tags for resource {}".format(resource_arn)
+            )
             return []
 
     async def get_table(self, region, table_name):
@@ -49,6 +51,6 @@ class DynamoDBFacade(AWSBaseFacade):
                 lambda: client.describe_table(TableName=table_name)
             )
         except Exception as e:
-            print_exception(f"Failed to get table {table_name}: {e}")
+            print_exception("Failed to get table {}: {}".format(table_name, e))
             raw_table = None
         return raw_table
