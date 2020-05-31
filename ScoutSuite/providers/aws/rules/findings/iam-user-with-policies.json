@@ -1,12 +1,25 @@
 {
-    "arg_names": [ "Type of policy", "Path to policies" ],
-    "key": "iam-user-with-_ARG_0_-policies",
-    "description": "User with _ARG_0_ policies",
-    "path": "iam.users.id",
+    "description": "User with _ARG_0_ Policies",
+    "rationale": "The user was found to be attached to inline policies. This can increase the complexity in user and policy management, and increase the risk of the user being assigned or retaining excessive permissions.",
     "dashboard_name": "Users",
-    "conditions": [ "and",
-        [ "iam.users.id.", "withKey", "_ARG_1_" ],
-        [ "iam.users.id._ARG_1_", "notEmpty", "" ]
+    "path": "iam.users.id",
+    "conditions": [
+        "and",
+        [
+            "iam.users.id.",
+            "withKey",
+            "_ARG_1_"
+        ],
+        [
+            "iam.users.id._ARG_1_",
+            "notEmpty",
+            ""
+        ]
+    ],
+    "key": "iam-user-with-_ARG_0_-policies",
+    "arg_names": [
+        "Type of policy",
+        "Path to policies"
     ],
     "id_suffix": "_ARG_1_"
 }

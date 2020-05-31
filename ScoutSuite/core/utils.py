@@ -5,7 +5,7 @@ Single-service rule processing functions
 from six import string_types
 import copy
 
-from ScoutSuite.core.console import print_error
+from ScoutSuite.core.console import print_exception
 from ScoutSuite.core.conditions import pass_conditions, fix_path_string
 
 
@@ -37,8 +37,13 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
         setattr(config, 'checked_items', getattr(config, 'checked_items') + 1)
         # Test for conditions...
         if pass_conditions(all_info, current_path, copy.deepcopy(config.conditions)):
+            # id_suffix
             if add_suffix and hasattr(config, 'id_suffix'):
                 suffix = fix_path_string(all_info, current_path, config.id_suffix)
+                current_path.append(suffix)
+            # class_suffix
+            if add_suffix and hasattr(config, 'class_suffix'):
+                suffix = fix_path_string(all_info, current_path, config.class_suffix)
                 current_path.append(suffix)
             results.append('.'.join(current_path))
         # Return the flagged items...
@@ -74,9 +79,9 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
         results = results + recurse(all_info, current_info, [], split_current_path,
                                     config, add_suffix)
     else:
-        print_error('Error: unhandled case, typeof(current_info) = %s' % type(current_info))
-        print_error('Path: %s' % current_path)
-        print_error('Object: %s' % str(current_info))
-        print_error('Entry target path: %s' % str(dbg_target_path))
-        raise Exception
+        print_exception('Unable to recursively test condition for a path: unhandled case typeof(current_info) = {}'.format(type(current_info)),
+                        additional_details={'current_path': current_path,
+                                            'current_info': current_info,
+                                            'dbg_target_path': dbg_target_path})
+        # raise Exception
     return results

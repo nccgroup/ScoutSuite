@@ -1,6 +1,7 @@
 from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.core.console import print_exception
 
 
 class Buckets(Resources):
@@ -23,10 +24,31 @@ class Buckets(Resources):
         bucket_dict['creation_date'] = raw_bucket.time_created
         bucket_dict['location'] = raw_bucket.location
         bucket_dict['storage_class'] = raw_bucket.storage_class.lower()
-        bucket_dict['versioning_status_enabled'] = raw_bucket.versioning_enabled
-        bucket_dict['uniform_bucket_level_access'] = raw_bucket.iam_configuration['bucketPolicyOnly']['enabled']
+        bucket_dict['versioning_enabled'] = raw_bucket.versioning_enabled
         bucket_dict['logging_enabled'] = raw_bucket.logging is not None
-        bucket_dict['acls'] = list(raw_bucket.acl)
+
+        iam_configuration = raw_bucket.iam_configuration.get('uniformBucketLevelAccess') or \
+            raw_bucket.iam_configuration.get('bucketPolicyOnly')
+        if iam_configuration:
+            bucket_dict['uniform_bucket_level_access'] = iam_configuration.get("enabled", False)
+        else:
+            bucket_dict['uniform_bucket_level_access'] = None
+
+        if bucket_dict['uniform_bucket_level_access']:
+            bucket_dict['acls'] = []
+            bucket_dict['default_object_acl'] = []
+        else:
+            try:
+                bucket_dict['acls'] = list(raw_bucket.acl)
+            except Exception as e:
+                print_exception('Failed to retrieve storage bucket ACLs: {}'.format(e))
+                bucket_dict['acls'] = []
+            try:
+                bucket_dict['default_object_acl'] = list(raw_bucket.default_object_acl)
+            except Exception as e:
+                print_exception('Failed to retrieve storage bucket object ACLs: {}'.format(e))
+                bucket_dict['default_object_acl'] = []
+
         bucket_dict['acl_configuration'] = self._get_cloudstorage_bucket_acl(raw_bucket)  # FIXME this should be "IAM"
         return bucket_dict['id'], bucket_dict
 

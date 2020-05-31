@@ -1,0 +1,17 @@
+{
+    "description": "Public EBS Snapshot",
+    "rationale": "Snapshots should never be public, as this risks exposing sensitive data.",
+    "references": [
+        "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ebs-modifying-snapshot-permissions.html"
+    ],
+    "dashboard_name": "Snapshots",
+    "path": "ec2.regions.id.snapshots.id",
+    "conditions": [
+        "and",
+        [
+            "public",
+            "true",
+            ""
+        ]
+    ]
+}
