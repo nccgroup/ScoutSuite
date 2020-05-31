@@ -1,7 +1,6 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.regions import Regions
 
-from .backups import Backups
 from .tables import Tables
 
 
