@@ -2,7 +2,6 @@
 Single-service rule processing functions
 """
 
-from six import string_types
 import copy
 
 from ScoutSuite.core.console import print_exception
