@@ -105,7 +105,7 @@ class SecurityCenterFacade:
                 for standard in compliance_standards:
                     try:
                         compliance_controls = await run_concurrently(
-                            lambda: list(client.regulatory_compliance_controls.list(
+                            lambda standard=standard: list(client.regulatory_compliance_controls.list(
                                 regulatory_compliance_standard_name=standard.name))
                         )
                         for control in compliance_controls:
