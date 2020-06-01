@@ -95,15 +95,14 @@ def snake_keys(d):
     """
 
     new_table = {}
-    for k in d.keys():
-        new_key = no_camel(k)
-        if isinstance(d[k], dict):
-            new_table[new_key] = snake_keys(d[k])
-        elif isinstance(d[k], list):
-            new_ary = []
-            for v in d[k]:
-                new_ary.append(snake_keys(v))
-            new_table[new_key] = new_ary
-        else:
-            new_table[new_key] = d[k]
+    if isinstance(d, dict):
+        for k in d.keys():
+            new_key = no_camel(k)
+            if isinstance(d[k], dict):
+                new_table[new_key] = snake_keys(d[k])
+            elif isinstance(d[k], list):
+                new_ary = [snake_keys(v) for v in d[k]]
+                new_table[new_key] = new_ary
+            else:
+                new_table[new_key] = d[k]
     return new_table
