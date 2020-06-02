@@ -112,7 +112,15 @@
         ],
         "iam-root-account-no-mfa.json": [
             {
-                "comment": "Recommendation 1.13 and 1.14 (it is not possible to check if MFA is hardware or software)",
+                "comment": "Recommendation 1.13",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "iam-root-account-no-hardware-mfa.json": [
+            {
+                "comment": "Recommendation 1.14",
                 "enabled": true,
                 "level": "danger",
                 "scored": true
@@ -164,7 +172,7 @@
                 "scored": false
             }
         ],
-        "TODO.json": [
+        "todo-recommendation-1-19.json": [
             {
                 "comment": "Recommendation 1.19 (TODO)",
                 "enabled": false,
@@ -526,10 +534,10 @@
                 "scored": "true"
             }
         ],
-        "ec2-route-tables-full-peering.json": [
+        "vpc-routing-tables-with-peering.json": [
             {
-                "comment": "Recommendation 4.4 TODO",
-                "enabled": false,
+                "comment": "Recommendation 4.4",
+                "enabled": true,
                 "level": "warning",
                 "scored": "false"
             }
