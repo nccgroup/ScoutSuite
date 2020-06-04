@@ -11,7 +11,7 @@ on:
 jobs:
   build:
 
-    runs-on: zendesk-stable
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8]
