@@ -101,6 +101,11 @@ class TestScoutUtilsClass(unittest.TestCase):
                 "WriteCapacityUnits": 123,
             },
             "TableSizeBytes": 123,
+            "AnotherArray": [
+                "One",
+                "Two",
+                "AnotherThing",
+            ]
         }
         dest = {
             "attribute_definitions": [
@@ -122,6 +127,7 @@ class TestScoutUtilsClass(unittest.TestCase):
                 "write_capacity_units": 123,
             },
             "table_size_bytes": 123,
+            "another_array": ["One", "Two", "AnotherThing"]
         }
         d = snake_keys(src)
         self.maxDiff = None
