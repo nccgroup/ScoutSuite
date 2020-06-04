@@ -219,7 +219,7 @@ class S3Facade(AWSBaseFacade):
     def get_s3_public_access_block(self, account_id):
         # We need a region to generate the client
         # However, the settings are global, so they are not region-dependent
-        region = 'eu-west-1'
+        region = 'us-east-1'
         client = AWSFacadeUtils.get_client('s3control', self.session, region)
         try:
             s3_public_access_block = client.get_public_access_block(AccountId=account_id)
