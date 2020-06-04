@@ -101,7 +101,12 @@ def snake_keys(d):
             if isinstance(d[k], dict):
                 new_table[new_key] = snake_keys(d[k])
             elif isinstance(d[k], list):
-                new_ary = [snake_keys(v) for v in d[k]]
+                new_ary = []
+                for v in d[k]:
+                    if isinstance(v, dict):
+                        new_ary.append(snake_keys(v))
+                    else:
+                        new_ary.append(v)
                 new_table[new_key] = new_ary
             else:
                 new_table[new_key] = d[k]

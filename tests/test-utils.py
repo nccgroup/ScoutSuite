@@ -103,8 +103,8 @@ class TestScoutUtilsClass(unittest.TestCase):
             "TableSizeBytes": 123,
             "AnotherArray": [
                 "One",
-                "Two"
-                "AnotherThing"
+                "Two",
+                "AnotherThing",
             ]
         }
         dest = {
