@@ -25,6 +25,9 @@ class EC2Instances(AWSResources):
         instance['monitoring_enabled'] = raw_instance['Monitoring']['State'] == 'enabled'
         instance['user_data'] = await self.facade.ec2.get_instance_user_data(self.region, id)
         instance['user_data_secrets'] = self._identify_user_data_secrets(instance['user_data'])
+        instance['iam_instance_profile_id'] = raw_instance['IamInstanceProfile']['Id']
+        if "IamInstanceProfile" in raw_instance:
+            instance['iam_instance_profile_arn'] = raw_instance['IamInstanceProfile']['Arn']
 
         get_name(raw_instance, instance, 'InstanceId')
         get_keys(raw_instance, instance,
