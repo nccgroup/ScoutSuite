@@ -21,6 +21,11 @@
         {{> accordion_policy name = 'Resource-Based Policy' policy_path = (concat 'awslambda.regions' region 'functions' @key 'access_policy') document = access_policy}}
     </div>
     {{/if}}
+    {{#if env_variables}}
+    <div class="list-group-item">
+        {{> accordion_policy name = 'Environment Variables' policy_path = (concat 'awslambda.regions' region 'functions' @key 'env_variables') document = env_variables}}
+    </div>
+    {{/if}}
 </script>
 
 <script>
