@@ -875,11 +875,11 @@ function exportSummary() {
     // create array with item values
         var items = [];
         var index = 0;
-        items[index] = ["Service", "Description", "Affected resources"]
+        items[index] = ["Service", "Description", "Affected resources", "Risk level"]
         Object.entries(item_indexes.services).forEach((service) =>{
             Object.entries(service[1].findings).forEach((finding) => {
                 index++;
-                items[index] = [finding[1].service, finding[1].description, finding[1].flagged_items];
+                items[index] = [finding[1].service, finding[1].description, finding[1].flagged_items, finding[1].level];
             })
         });
 
