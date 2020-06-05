@@ -174,7 +174,7 @@
         ],
         "todo-recommendation-1-19.json": [
             {
-                "comment": "Recommendation 1.19 (TODO)",
+                "comment": "Recommendation 1.19 (no API call to check embedded credentials)",
                 "enabled": false,
                 "level": "warning",
                 "scored": false
