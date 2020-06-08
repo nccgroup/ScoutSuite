@@ -1,5 +1,13 @@
 from __future__ import print_function
 
+formatted_provider_name = {
+    'aliyun': 'Aliyun',
+    'aws': 'AWS',
+    'azure': 'Azure',
+    'gcp': 'GCP',
+    'oci': 'OCI'
+}
+
 formatted_service_name = {
     # AWS
     'acm': 'ACM',
@@ -71,9 +79,16 @@ def manage_dictionary(dictionary, key, init, callback=None):
     return dictionary
 
 
+def format_provider_code(provider_code):
+    """
+    :param provider_code:
+    :return:
+    """
+    return formatted_provider_name[provider_code] if provider_code in formatted_provider_name else provider_code.upper()
+
+
 def format_service_name(service):
     """
-
     :param service:
     :return:
     """

@@ -48,7 +48,8 @@ class S3Facade(AWSBaseFacade):
                  self._get_and_set_s3_bucket_default_encryption,
                  self._get_and_set_s3_acls,
                  self._get_and_set_s3_bucket_policy,
-                 self._get_and_set_s3_bucket_tags],
+                 self._get_and_set_s3_bucket_tags,
+                 self._get_and_set_s3_bucket_block_public_access],
                 buckets)
 
             # Non-async post-processing
@@ -183,6 +184,17 @@ class S3Facade(AWSBaseFacade):
             print_exception('Failed to get bucket tags for %s: %s' % (bucket['Name'], e))
             bucket['tags'] = {}
 
+    async def _get_and_set_s3_bucket_block_public_access(self, bucket: {}):
+        client = AWSFacadeUtils.get_client('s3', self.session, bucket['region'])
+        try:
+            bucket_public_access_block_conf = await run_concurrently(lambda: client.get_public_access_block(Bucket=bucket['Name']))
+            bucket['public_access_block_configuration'] = bucket_public_access_block_conf['PublicAccessBlockConfiguration']
+        except ClientError as e:
+            # No such configuration found for the bucket, nothing to be done
+            pass
+        except Exception as e:
+            print_exception('Failed to get the public access block configuration for %s: %s' % (bucket['Name'], e))
+
     def _set_s3_bucket_secure_transport(self, bucket: {}):
         try:
             if 'policy' in bucket:
@@ -203,6 +215,27 @@ class S3Facade(AWSBaseFacade):
         except Exception as e:
             print_exception('Failed to evaluate bucket policy for %s: %s' % (bucket['Name'], e))
             bucket['secure_transport'] = None
+
+    def get_s3_public_access_block(self, account_id):
+        # We need a region to generate the client
+        # However, the settings are global, so they are not region-dependent
+        region = 'us-east-1'
+        client = AWSFacadeUtils.get_client('s3control', self.session, region)
+        try:
+            s3_public_access_block = client.get_public_access_block(AccountId=account_id)
+            return s3_public_access_block['PublicAccessBlockConfiguration']
+        except ClientError:
+            # No public access block configuration at the S3 level, returning the default
+            return {
+                "BlockPublicAcls": False,
+                "IgnorePublicAcls": False,
+                "BlockPublicPolicy": False,
+                "RestrictPublicBuckets": False
+            }
+        except Exception as e:
+            print_exception(
+                'Failed to get the public access block configuration for the account %s: %s' % (account_id, e))
+            return None
 
     @staticmethod
     def _init_s3_permissions():
