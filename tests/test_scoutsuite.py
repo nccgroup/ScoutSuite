@@ -14,6 +14,7 @@ class TestScoutSuiteClass(unittest.TestCase):
         set_logger_configuration(is_debug=True)
         cls.has_run_scout_suite = False
 
+    @pytest.mark.profiles
     @staticmethod
     def call_scout_suite(args):
         args = ['./scout.py'] + args
@@ -51,12 +52,4 @@ class TestScoutSuiteClass(unittest.TestCase):
     @pytest.mark.credential
     def test_scout_suite_default_run(self):
         rc = self.call_scout_suite([])
-        assert (rc == 0)
-
-    #
-    # Make sure that ScoutSuite's CIS ruleset run does not crash
-    #
-    @pytest.mark.credential
-    def test_scout_suite_cis_ruleset_run(self):
-        rc = self.call_scout_suite(['--ruleset', 'cis-02-29-2016.json'])
         assert (rc == 0)
