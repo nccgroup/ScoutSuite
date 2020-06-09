@@ -1,6 +1,6 @@
 import subprocess
-import mock
 import unittest
+from unittest import mock
 
 import pytest
 from ScoutSuite.__main__ import run_from_cli
