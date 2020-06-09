@@ -1,6 +1,7 @@
 import json
 import os
 import tempfile
+import unittest
 
 from ScoutSuite.core.console import set_logger_configuration, print_error
 from ScoutSuite.core.processingengine import ProcessingEngine
@@ -11,7 +12,7 @@ class DummyObject(object):
     pass
 
 
-class TestScoutRulesProcessingEngine:
+class TestScoutRulesProcessingEngine(unittest.TestCase):
 
     def setup(self):
         set_logger_configuration(is_debug=True)

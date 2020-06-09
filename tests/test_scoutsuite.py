@@ -1,12 +1,13 @@
 import subprocess
 import mock
+import unittest
 
 import pytest
 from ScoutSuite.__main__ import run_from_cli
 from ScoutSuite.core.console import set_logger_configuration
 
 
-class TestScoutSuiteClass:
+class TestScoutSuiteClass(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):

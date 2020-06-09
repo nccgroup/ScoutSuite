@@ -1,12 +1,13 @@
 import os
 
 from unittest import mock
+import unittest
 from ScoutSuite.core.console import set_logger_configuration, print_debug
 from ScoutSuite.core.rule import Rule
 from ScoutSuite.core.ruleset import Ruleset
 
 
-class TestScoutRulesRuleset:
+class TestScoutRulesRuleset(unittest.TestCase):
 
     def setup(self):
         set_logger_configuration(is_debug=True)

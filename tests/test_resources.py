@@ -1,4 +1,4 @@
-from unittest import TestCase
+import unittest
 from ScoutSuite.providers.base.resources.base import (
     Resources, CompositeResources)
 import asyncio
@@ -38,7 +38,7 @@ class DummyComposite(CompositeResources):
             })
 
 
-class TestResources(TestCase):
+class TestResources(unittest.TestCase):
     test_dir = os.path.dirname(os.path.realpath(__file__))
 
     def test_composite_resource(self):
