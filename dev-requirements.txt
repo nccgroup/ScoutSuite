@@ -1,4 +1,8 @@
 -c requirements.txt
+flake8
+codecov
+coveralls
+autopep8
 pytest-cov
 pytest
 mypy
