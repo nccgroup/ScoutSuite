@@ -86,5 +86,3 @@ class TestScoutRulesProcessingEngine(unittest.TestCase):
             f.write(json.dumps(test_ruleset, indent=4))
 
         return Ruleset(cloud_provider='aws', filename=f.name)
-
-        return None
