@@ -1,6 +1,6 @@
 
 import unittest
-from mock import MagicMock, patch
+from unittest.mock import MagicMock, patch
 
 from ScoutSuite.__main__ import run_from_cli
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
