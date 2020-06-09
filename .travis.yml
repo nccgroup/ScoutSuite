@@ -19,8 +19,8 @@ matrix:
       sudo: required
 
 install:
-  - pip install -U setuptools
-  - pip install -r dev-requirements.txt
+  - python -m pip install -U setuptools
+  - python -m pip install -r dev-requirements.txt
 
 before_script:
   # Stop the build if there are Python syntax errors or undefined names
