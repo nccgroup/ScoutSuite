@@ -9,8 +9,8 @@ from ScoutSuite.providers.aws.utils import (
 )
 from ScoutSuite.utils import *
 import collections
-import mock
 import unittest
+from unittest import mock
 #
 # Test methods for ScoutSuite/utils.py
 #

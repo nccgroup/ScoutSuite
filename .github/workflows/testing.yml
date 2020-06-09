@@ -46,7 +46,7 @@ jobs:
     - name: Autopep 8
       run: |
         autopep8 --diff --recursive --max-line-length=127 .
-    - name: Test with nosetests
+    - name: Test with pytest
       run: |
         python -m pytest --cov=./
 
