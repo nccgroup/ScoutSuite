@@ -1,4 +1,4 @@
-from nose.tools import *
+
 from ScoutSuite.core.conditions import pass_condition
 from ScoutSuite.core.cli_parser import *
 from ScoutSuite.core.console import prompt, prompt_overwrite, prompt_value
