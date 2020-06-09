@@ -1,0 +1,4 @@
+-c requirements.txt
+pytest-cov
+pytest
+mypy
