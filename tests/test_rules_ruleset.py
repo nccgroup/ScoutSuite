@@ -1,6 +1,6 @@
 import os
 
-from mock import patch
+from unittest import mock
 from ScoutSuite.core.console import set_logger_configuration, print_debug
 from ScoutSuite.core.rule import Rule
 from ScoutSuite.core.ruleset import Ruleset
@@ -15,7 +15,7 @@ class TestScoutRulesRuleset:
         self.test_ruleset_001 = os.path.join(self.test_dir, 'data/test-ruleset.json')
         self.test_ruleset_002 = os.path.join(self.test_dir, 'data/test-ruleset-absolute-path.json')
 
-    @patch("ScoutSuite.core.ruleset.print_error")
+    @mock.patch("ScoutSuite.core.ruleset.print_error")
     def test_ruleset_class(self, printError):
         test001 = Ruleset(cloud_provider='aws', filename=self.test_ruleset_001)
         assert (os.path.isdir(test001.rules_data_path))
@@ -45,14 +45,14 @@ class TestScoutRulesRuleset:
 
         test005 = Ruleset(cloud_provider='aws', filename=self.test_ruleset_001, ruleset_generator=True)
 
-    @patch("ScoutSuite.core.ruleset.print_error")
+    @mock.patch("ScoutSuite.core.ruleset.print_error")
     def test_ruleset_file_not_exist(self, printError):
         test003 = Ruleset(cloud_provider='aws', filename='tests/data/no-such-file.json')
         assert (test003.rules == [])
         assert (printError.call_count == 1)
         assert ("no-such-file.json does not exist" in printError.call_args_list[0][0][0])
 
-    @patch("ScoutSuite.core.ruleset.print_exception")
+    @mock.patch("ScoutSuite.core.ruleset.print_exception")
     def test_ruleset_invalid(self, printException):
         test004 = Ruleset(cloud_provider='aws', filename='tests/data/invalid-file.json')
         assert (test004.rules == [])
@@ -83,7 +83,7 @@ class TestScoutRulesRuleset:
         target = Ruleset(cloud_provider='aws', filename='filters')
         assert (os.path.samefile(target.filename, rpath + 'rulesets/filters.json'))
 
-    @patch("ScoutSuite.core.ruleset.prompt_yes_no")
+    @mock.patch("ScoutSuite.core.ruleset.prompt_yes_no")
     def test_file_search(self, prompt_yes_no):
         prompt_yes_no.return_value = False
 

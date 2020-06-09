@@ -59,7 +59,7 @@ class TestScoutRulesProcessingEngine:
         pe.run(dummy_provider)
         findings = dummy_provider.services[service]['findings']
         findings = findings[list(findings.keys())[0]]['items']
-        
+
         test_result_file_name = os.path.join(self.test_dir, 'data/rule-results/%s' % rule_file_name)
         if not os.path.isfile(test_result_file_name):
             print_error('Expected findings:: ')
@@ -69,7 +69,7 @@ class TestScoutRulesProcessingEngine:
         self.rule_counters['verified'] += 1
         with open(test_result_file_name, 'rt') as f:
             items = json.load(f)
-        
+
         try:
             assert (set(sorted(findings)) == set(sorted(items)))
         except Exception:
