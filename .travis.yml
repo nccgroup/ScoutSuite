@@ -30,15 +30,6 @@ before_script:
 # Command to run tests
 script:
   - python -m pytest --cov=./
-  # - nosetests --with-coverage tests/test-utils.py
-  # - nosetests --with-coverage tests/test-core.py
-  # - nosetests --with-coverage tests/test-output.py
-  # - nosetests --with-coverage tests/test-utils-conditions.py
-  # - nosetests --with-coverage tests/test-main.py
-  # - nosetests --with-coverage tests/test-resources.py
-  # - nosetests --with-coverage tests/test-rules-ruleset.py
-  # - nosetests --with-coverage tests/test-rules-processingengine.py
-  # - nosetests --with-coverage --nocapture tests/test-scoutsuite.py -a "!credential"
 
 # Update test coverage
 after_success:
