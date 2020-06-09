@@ -31,4 +31,7 @@ class Vpcs(AWSCompositeResources):
         vpc['cidr_block'] = raw_vpc['CidrBlock']
         vpc['default'] = raw_vpc['IsDefault']
         vpc['state'] = raw_vpc['State']
+        vpc['arn'] = 'arn:aws:vpc:{}:{}:virtual-private-cloud/{}'.format(self.region,
+                                                                             raw_vpc.get('OwnerId'),
+                                                                             raw_vpc.get('VpcId'))
         return raw_vpc['VpcId'], vpc

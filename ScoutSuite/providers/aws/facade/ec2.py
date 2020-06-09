@@ -57,6 +57,7 @@ class EC2Facade(AWSBaseFacade):
             for reservation in reservations:
                 for instance in reservation['Instances']:
                     instance['ReservationId'] = reservation['ReservationId']
+                    instance['OwnerId'] = reservation['OwnerId']
                     instances.append(instance)
 
             return instances
