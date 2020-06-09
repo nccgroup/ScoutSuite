@@ -29,7 +29,7 @@ before_script:
 
 # Command to run tests
 script:
-  - pytest --cov=./
+  - python -m pytest --cov=./
   # - nosetests --with-coverage tests/test-utils.py
   # - nosetests --with-coverage tests/test-core.py
   # - nosetests --with-coverage tests/test-output.py
