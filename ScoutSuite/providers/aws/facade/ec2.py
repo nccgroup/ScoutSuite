@@ -198,6 +198,7 @@ class EC2Facade(AWSBaseFacade):
     async def get_and_set_ec2_instance_tags(self, raw_instance: {}):
         if 'Tags' in raw_instance:
             instance = {x['Key']: x['Value'] for x in raw_instance['Tags']}
+            print("working on tags")
         else:
             instance = {}
         return instance
