@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
-from .utils import results_file_to_dict
-import datetime
 from ScoutSuite.providers.aws.utils import get_caller_identity
-import argparse
 from ScoutSuite.core.console import set_logger_configuration, print_info, print_exception
+from tools.utils import results_file_to_dict
+
+import datetime
+import argparse
 import boto3
 
 
@@ -14,7 +15,8 @@ def upload_findigs_to_securityhub(session, formatted_findings_list):
             print_info('Batch uploading {} findings'.format(len(formatted_findings_list)))
             securityhub = session.client('securityhub')
             response = securityhub.batch_import_findings(Findings=formatted_findings_list)
-            print_info('Upload completed, {} succeeded, {} failed'.format(response.get('SuccessCount'), response.get('FailedCount')))
+            print_info('Upload completed, {} succeeded, {} failed'.format(response.get('SuccessCount'),
+                                                                          response.get('FailedCount')))
             return response
     except Exception as e:
         print_exception('Unable to upload findings to Security Hub: {}'.format(e))
