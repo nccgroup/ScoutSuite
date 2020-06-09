@@ -14,7 +14,7 @@ class TestScoutSuiteClass(unittest.TestCase):
         set_logger_configuration(is_debug=True)
         cls.has_run_scout_suite = False
 
-    @pytest.mark.profiles
+    @pytest.mark.xfail("only runs with AWS, cannot be used dynamically")
     @staticmethod
     def call_scout_suite(args):
         args = ['./scout.py'] + args
@@ -37,19 +37,15 @@ class TestScoutSuiteClass(unittest.TestCase):
         with mock.patch.object(sys, 'argv', args):
             return run_from_cli()
 
-    #
-    # Make sure that ScoutSuite does not crash with --help
-    #
     def test_scout_suite_help(self):
+        """Make sure that ScoutSuite does not crash with --help"""
         command = './scout.py --help'
         process = subprocess.Popen(command, shell=True, stdout=None)
         process.wait()
         assert process.returncode == 0
 
-    #
-    # Make sure that ScoutSuite's default run does not crash
-    #
-    @pytest.mark.credential
+    @pytest.mark.xfail
     def test_scout_suite_default_run(self):
+        """Make sure that ScoutSuite's default run does not crash"""
         rc = self.call_scout_suite([])
         assert (rc == 0)
