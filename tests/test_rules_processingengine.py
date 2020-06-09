@@ -14,7 +14,7 @@ class DummyObject(object):
 
 class TestScoutRulesProcessingEngine(unittest.TestCase):
 
-    def setup(self):
+    def setUp(self):
         set_logger_configuration(is_debug=True)
         self.rule_counters = {'found': 0, 'tested': 0, 'verified': 0}
         self.test_dir = os.path.dirname(os.path.realpath(__file__))

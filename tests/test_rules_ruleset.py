@@ -9,7 +9,7 @@ from ScoutSuite.core.ruleset import Ruleset
 
 class TestScoutRulesRuleset(unittest.TestCase):
 
-    def setup(self):
+    def setUp(self):
         set_logger_configuration(is_debug=True)
         self.test_dir = os.path.dirname(os.path.realpath(__file__))
 
