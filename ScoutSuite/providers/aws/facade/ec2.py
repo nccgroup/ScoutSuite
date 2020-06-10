@@ -58,7 +58,6 @@ class EC2Facade(AWSBaseFacade):
                 for instance in reservation['Instances']:
                     instance['ReservationId'] = reservation['ReservationId']
                     instances.append(instance)
-
             return instances
         except Exception as e:
             print_exception('Failed to describe EC2 instances: {}'.format(e))

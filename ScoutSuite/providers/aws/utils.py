@@ -74,7 +74,13 @@ def get_name(src, dst, default_attribute):
         dst["name"] = src[default_attribute]
     return dst["name"]
 
-
+async def set_tags(raw_instance: {}):
+    if 'Tags' in raw_instance:
+        instance = {x['Key']: x['Value'] for x in raw_instance['Tags']}
+    else:
+        instance = {}
+    return instance
+    
 def no_camel(name):
     """
     Converts CamelCase to camel_case
