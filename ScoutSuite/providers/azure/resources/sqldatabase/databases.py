@@ -30,7 +30,8 @@ class Databases(AzureCompositeResources):
 
             self[db.name] = {
                 'id': db.name,
-                'name': db.name
+                'name': db.name,
+                'tags': ["{}:{}".format(key, value) for key, value in  db.tags.items()]
             }
 
         await self._fetch_children_of_all_resources(

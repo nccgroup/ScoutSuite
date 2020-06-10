@@ -26,7 +26,7 @@ class Instances(AzureResources):
         instance_dict['location'] = raw_instance.location
         instance_dict['type'] = raw_instance.type
         instance_dict['resources'] = raw_instance.resources
-        instance_dict['tags'] = raw_instance.tags
+        instance_dict['tags'] = ["{}:{}".format(key, value) for key, value in  raw_instance.tags.items()]
         instance_dict['provisioning_state'] = raw_instance.provisioning_state
         instance_dict['plan'] = raw_instance.plan
         instance_dict['identity'] = raw_instance.identity

@@ -39,4 +39,5 @@ class Servers(AzureCompositeResources):
         server['id'] = get_non_provider_id(raw_server.id)
         server['name'] = raw_server.name
         server['resource_group_name'] = get_resource_group_name(raw_server.id)
+        server['tags'] = ["{}:{}".format(key, value) for key, value in  raw_server.tags.items()]
         return server['id'], server
