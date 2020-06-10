@@ -226,7 +226,7 @@ async def _run(provider,
                                       programmatic_execution=programmatic_execution,
                                       credentials=credentials)
     except Exception as e:
-        print_exception('Initialization failure: {}'.format(e))
+        print_exception(f'Initialization failure: {e}')
         return 102
 
     # Create a new report
