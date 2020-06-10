@@ -79,9 +79,10 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
         results = results + recurse(all_info, current_info, [], split_current_path,
                                     config, add_suffix)
     else:
-        print_exception('Unable to recursively test condition for a path: unhandled case typeof(current_info) = {}'.format(type(current_info)),
+        print_exception('Unable to recursively test condition for path {}: '
+                        'unhandled case for \"{}\" type'.format(current_path,
+                                                                type(current_info)),
                         additional_details={'current_path': current_path,
                                             'current_info': current_info,
                                             'dbg_target_path': dbg_target_path})
-        # raise Exception
     return results
