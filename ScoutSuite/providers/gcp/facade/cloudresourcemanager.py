@@ -14,7 +14,7 @@ class CloudResourceManagerFacade(GCPBaseFacade):
             )
             return response.get('bindings', [])
         except Exception as e:
-            print_exception('Failed to retrieve project IAM policy bindings: {}'.format(e))
+            print_exception(f'Failed to retrieve project IAM policy bindings: {e}')
             return []
         
 

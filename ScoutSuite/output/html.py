@@ -47,7 +47,7 @@ class HTMLReport:
                 with open('%s' % filename) as f:
                     contents = contents + f.read()
             except Exception as e:
-                print_exception('Error reading filename {}: {}'.format(filename, e))
+                print_exception(f'Error reading filename {filename}: {e}')
         return contents
 
     def get_content_from_file(self, filename):
@@ -58,7 +58,7 @@ class HTMLReport:
             with open('%s' % filename) as f:
                 contents = contents + f.read()
         except Exception as e:
-            print_exception('Error reading filename {}: {}'.format(filename, e))
+            print_exception(f'Error reading filename {filename}: {e}')
         return contents
 
     def prepare_html_report_dir(self):
@@ -132,6 +132,6 @@ class ScoutReport(HTMLReport):
                                                                self.report_dir,
                                                                relative_path=True)[0])
                         newline = newline.replace('<!-- SQLITE JS PLACEHOLDER -->',
-                                                  '{}/sqlite.js'.format(DEFAULT_INCLUDES_DIRECTORY))
+                                                  f'{DEFAULT_INCLUDES_DIRECTORY}/sqlite.js')
                         nf.write(newline)
         return new_file

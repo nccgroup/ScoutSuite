@@ -98,7 +98,7 @@ def get_value_at(all_info, current_path, key, to_string=False):
                 else:
                     target_obj = target_obj[p]
             except Exception as e:
-                print_exception('Unable to get \"{}\" from target object {}: {}'.format(p, target_obj, e),
+                print_exception(f'Unable to get \"{p}\" from target object {target_obj}: {e}',
                                 additional_details={'current_path': current_path,
                                                     'target_obj': target_obj,
                                                     'p': p})

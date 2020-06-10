@@ -13,7 +13,7 @@ class CloudStorageFacade:
                 self._get_and_set_bucket_iam_policy], buckets)
             return buckets
         except Exception as e:
-            print_exception('Failed to retrieve storage buckets: {}'.format(e))
+            print_exception(f'Failed to retrieve storage buckets: {e}')
             return []
 
     async def _get_and_set_bucket_logging(self, bucket):
@@ -21,7 +21,7 @@ class CloudStorageFacade:
             bucket_logging = await run_concurrently(lambda: bucket.get_logging())
             setattr(bucket, 'logging', bucket_logging)
         except Exception as e:
-            print_exception('Failed to retrieve bucket logging: {}'.format(e))
+            print_exception(f'Failed to retrieve bucket logging: {e}')
             setattr(bucket, 'logging', None)
 
     async def _get_and_set_bucket_iam_policy(self, bucket):
@@ -29,5 +29,5 @@ class CloudStorageFacade:
             bucket_iam_policy = await run_concurrently(lambda: bucket.get_iam_policy())
             setattr(bucket, 'iam_policy', bucket_iam_policy)
         except Exception as e:
-            print_exception('Failed to retrieve bucket IAM policy: {}'.format(e))
+            print_exception(f'Failed to retrieve bucket IAM policy: {e}')
             setattr(bucket, 'iam_policy',  None)

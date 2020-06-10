@@ -59,4 +59,4 @@ class BaseServicesConfig:
             else:
                 print_debug('No method to fetch service %s.' % service)
         except Exception as e:
-            print_exception('Could not fetch {} configuration: {}'.format(service, e))
+            print_exception(f'Could not fetch {service} configuration: {e}')

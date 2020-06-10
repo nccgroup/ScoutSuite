@@ -56,9 +56,9 @@ class AzureProvider(BaseProvider):
         Returns the name of the report using the provider's configuration
         """
         try:
-            return 'azure-tenant-{}'.format(self.credentials.get_tenant_id())
+            return f'azure-tenant-{self.credentials.get_tenant_id()}'
         except Exception as e:
-            print_exception('Unable to define report name: {}'.format(e))
+            print_exception(f'Unable to define report name: {e}')
             return 'azure'
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):

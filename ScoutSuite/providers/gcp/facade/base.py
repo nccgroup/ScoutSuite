@@ -74,7 +74,7 @@ class GCPFacade(GCPBaseFacade):
                 return []
 
         except Exception as e:
-            print_exception('Failed to retrieve projects: {}'.format(e))
+            print_exception(f'Failed to retrieve projects: {e}')
             return []
 
     async def _get_projects_recursively(self, parent_type, parent_id):
@@ -110,7 +110,7 @@ class GCPFacade(GCPBaseFacade):
                 request = resourcemanager_client.projects().list(filter='parent.id:"%s"' % parent_id)
 
                 # get parent children projects in children folders recursively
-                folder_request = resourcemanager_client_v2.folders().list(parent='{}s/{}'.format(parent_type, parent_id))
+                folder_request = resourcemanager_client_v2.folders().list(parent=f'{parent_type}s/{parent_id}')
                 folder_response = await GCPFacadeUtils.get_all('folders', folder_request, projects_group)
                 for folder in folder_response:
                     projects.extend(await self._get_projects_recursively("folder", folder['name'].strip('folders/')))
@@ -125,7 +125,7 @@ class GCPFacade(GCPBaseFacade):
                                 'You may have specified a non-existing organization/folder/project?')
 
         except Exception as e:
-            print_exception('Unable to list accessible Projects: {}'.format(e))
+            print_exception(f'Unable to list accessible Projects: {e}')
 
         finally:
             return projects
@@ -137,7 +137,7 @@ class GCPFacade(GCPBaseFacade):
 
         serviceusage_client = self._build_arbitrary_client('serviceusage', 'v1', force_new=True)
         services = serviceusage_client.services()
-        request = services.list(parent='projects/{}'.format(project_id))
+        request = services.list(parent=f'projects/{project_id}')
         services_response = await GCPFacadeUtils.get_all('services', request, services)
 
         # These are hardcoded endpoint correspondences as there's no easy way to do this.

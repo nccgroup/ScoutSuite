@@ -43,7 +43,7 @@ class GCPProvider(BaseProvider):
         Returns the name of the report using the provider's configuration
         """
         if self.account_id:
-            return 'gcp-{}'.format(self.account_id)
+            return f'gcp-{self.account_id}'
         else:
             return 'gcp'
 

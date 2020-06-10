@@ -103,7 +103,7 @@ class AzureFacade:
                     print_exception('Unable to infer a Subscription ID')
                     raise
             finally:
-                print_info('Running against the "{}" subscription'.format(s.subscription_id))
+                print_info(f'Running against the "{s.subscription_id}" subscription')
                 subscriptions_list.append(s)
 
         # All subscriptions

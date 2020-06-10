@@ -16,12 +16,12 @@ class KMSFacade(GCPBaseFacade):
 
         try:
             kms_client = self._get_client()
-            parent = 'projects/{}'.format(project_id)
+            parent = f'projects/{project_id}'
             locations = kms_client.projects().locations()
             request = locations.list(name=parent)
             return await GCPFacadeUtils.get_all('locations', request, locations)
         except Exception as e:
-            print_exception('Failed to retrieve KMS locations: {}'.format(e))
+            print_exception(f'Failed to retrieve KMS locations: {e}')
             return []
 
     async def list_key_rings(self, project_id: str):
@@ -35,7 +35,7 @@ class KMSFacade(GCPBaseFacade):
                     lambda: list(self.cloud_client.list_key_rings(parent)))
             return key_rings
         except Exception as e:
-            print_exception('Failed to retrieve KMS key rings: {}'.format(e))
+            print_exception(f'Failed to retrieve KMS key rings: {e}')
             return {}
 
     async def list_keys(self, project_id: str, location: str, keyring_name: str):
@@ -47,5 +47,5 @@ class KMSFacade(GCPBaseFacade):
             request = cryptokeys.list(parent=parent)
             return await GCPFacadeUtils.get_all('cryptoKeys', request, cryptokeys)
         except Exception as e:
-            print_exception('Failed to retrieve KMS keys for key ring {}: {}'.format(keyring_name, e))
+            print_exception(f'Failed to retrieve KMS keys for key ring {keyring_name}: {e}')
             return []

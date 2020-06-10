@@ -25,7 +25,7 @@ class KMSFacade:
             else:
                 return []
         except Exception as e:
-            print_exception('Failed to get KMS keys: {}'.format(e))
+            print_exception(f'Failed to get KMS keys: {e}')
             return []
 
     async def get_key_details(self, key_id, region):
@@ -45,5 +45,5 @@ class KMSFacade:
             else:
                 return []
         except Exception as e:
-            print_exception('Failed to get KMS key details: {}'.format(e))
+            print_exception(f'Failed to get KMS key details: {e}')
             return []

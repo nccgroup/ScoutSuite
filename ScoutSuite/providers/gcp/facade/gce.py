@@ -15,7 +15,7 @@ class GCEFacade(GCPBaseFacade):
             disks_group = gce_client.disks()
             return await GCPFacadeUtils.get_all('items', request, disks_group)
         except Exception as e:
-            print_exception('Failed to retrieve disks: {}'.format(e))
+            print_exception(f'Failed to retrieve disks: {e}')
             return []
 
     async def get_firewalls(self, project_id):
@@ -25,7 +25,7 @@ class GCEFacade(GCPBaseFacade):
             firewalls_group = gce_client.firewalls()
             return await GCPFacadeUtils.get_all('items', request, firewalls_group)
         except Exception as e:
-            print_exception('Failed to retrieve firewalls: {}'.format(e))
+            print_exception(f'Failed to retrieve firewalls: {e}')
             return []
 
     async def get_instances(self, project_id, zone):
@@ -37,7 +37,7 @@ class GCEFacade(GCPBaseFacade):
             await self._add_metadata(project_id, instances)
             return instances
         except Exception as e:
-            print_exception('Failed to retrieve compute instances: {}'.format(e))
+            print_exception(f'Failed to retrieve compute instances: {e}')
             return []
 
     async def _add_metadata(self, project_id, instances):
@@ -57,7 +57,7 @@ class GCEFacade(GCPBaseFacade):
             networks_group = gce_client.networks()
             return await GCPFacadeUtils.get_all('items', request, networks_group)
         except Exception as e:
-            print_exception('Failed to retrieve networks: {}'.format(e))
+            print_exception(f'Failed to retrieve networks: {e}')
             return []
 
     async def get_project(self, project_id):
@@ -67,7 +67,7 @@ class GCEFacade(GCPBaseFacade):
                 lambda: gce_client.projects().get(project=project_id).execute()
             )
         except Exception as e:
-            print_exception('Failed to retrieve project: {}'.format(e))
+            print_exception(f'Failed to retrieve project: {e}')
             return None
 
     async def get_regions(self, project_id):
@@ -77,7 +77,7 @@ class GCEFacade(GCPBaseFacade):
             regions_group = gce_client.regions()
             return await GCPFacadeUtils.get_all('items', request, regions_group)
         except Exception as e:
-            print_exception('Failed to retrieve regions: {}'.format(e))
+            print_exception(f'Failed to retrieve regions: {e}')
             return []
 
     async def get_snapshots(self, project_id):
@@ -87,7 +87,7 @@ class GCEFacade(GCPBaseFacade):
             snapshots_group = gce_client.snapshots()
             return await GCPFacadeUtils.get_all('items', request, snapshots_group)
         except Exception as e:
-            print_exception('Failed to retrieve snapshots: {}'.format(e))
+            print_exception(f'Failed to retrieve snapshots: {e}')
             return []
 
     async def get_subnetwork(self, project_id, region, subnetwork_id):
@@ -98,7 +98,7 @@ class GCEFacade(GCPBaseFacade):
                                                      subnetwork=subnetwork_id).execute()
             )
         except Exception as e:
-            print_exception('Failed to retrieve subnetwork: {}'.format(e))
+            print_exception(f'Failed to retrieve subnetwork: {e}')
             return None
 
     async def get_subnetworks(self, project_id, region):
@@ -108,7 +108,7 @@ class GCEFacade(GCPBaseFacade):
             subnetworks_group = gce_client.subnetworks()
             return await GCPFacadeUtils.get_all('items', request, subnetworks_group)
         except Exception as e:
-            print_exception('Failed to retrieve subnetworks: {}'.format(e))
+            print_exception(f'Failed to retrieve subnetworks: {e}')
             return []
 
     async def get_zones(self, project_id):
@@ -118,5 +118,5 @@ class GCEFacade(GCPBaseFacade):
             zones_group = gce_client.zones()
             return await GCPFacadeUtils.get_all('items', request, zones_group)
         except Exception as e:
-            print_exception('Failed to retrieve zones: {}'.format(e))
+            print_exception(f'Failed to retrieve zones: {e}')
             return []

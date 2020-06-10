@@ -33,7 +33,7 @@ class AliyunProvider(BaseProvider):
         Returns the name of the report using the provider's configuration
         """
         if self.account_id:
-            return 'aliyun-{}'.format(self.account_id)
+            return f'aliyun-{self.account_id}'
         else:
             return 'aliyun'
 

@@ -33,7 +33,7 @@ class OracleProvider(BaseProvider):
         Returns the name of the report using the provider's configuration
         """
         if self.account_id:
-            return 'oracle-{}'.format(self.account_id)
+            return f'oracle-{self.account_id}'
         else:
             return 'oracle'
 

@@ -19,5 +19,5 @@ class KeyVaultFacade:
             return await run_concurrently(
                 lambda: list(client.vaults.list_by_subscription()))
         except Exception as e:
-            print_exception('Failed to retrieve key vaults: {}'.format(e))
+            print_exception(f'Failed to retrieve key vaults: {e}')
             return []

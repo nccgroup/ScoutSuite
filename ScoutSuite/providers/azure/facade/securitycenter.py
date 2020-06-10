@@ -24,7 +24,7 @@ class SecurityCenterFacade:
             else:
                 return []
         except Exception as e:
-            print_exception('Failed to retrieve pricings: {}'.format(e))
+            print_exception(f'Failed to retrieve pricings: {e}')
             return []
 
     async def get_security_contacts(self, subscription_id: str):
@@ -34,7 +34,7 @@ class SecurityCenterFacade:
                 lambda: list(client.security_contacts.list())
             )
         except Exception as e:
-            print_exception('Failed to retrieve security contacts: {}'.format(e))
+            print_exception(f'Failed to retrieve security contacts: {e}')
             return []
 
     async def get_auto_provisioning_settings(self, subscription_id: str):
@@ -44,16 +44,16 @@ class SecurityCenterFacade:
                 lambda: list(client.auto_provisioning_settings.list())
             )
         except Exception as e:
-            print_exception('Failed to retrieve auto provisioning settings: {}'.format(e))
+            print_exception(f'Failed to retrieve auto provisioning settings: {e}')
             return []
 
     async def get_information_protection_policies(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            scope = '/subscriptions/{}'.format(self._subscription_id)
+            scope = f'/subscriptions/{self._subscription_id}'
             return await run_concurrently(lambda: list(client.information_protection_policies.list(scope=scope)))
         except Exception as e:
-            print_exception('Failed to retrieve information protection policies: {}'.format(e))
+            print_exception(f'Failed to retrieve information protection policies: {e}')
             return []
 
     async def get_settings(self, subscription_id: str):
@@ -63,7 +63,7 @@ class SecurityCenterFacade:
                 lambda: list(client.settings.list())
             )
         except Exception as e:
-            print_exception('Failed to retrieve settings: {}'.format(e))
+            print_exception(f'Failed to retrieve settings: {e}')
             return []
 
     async def get_alerts(self, subscription_id: str):
@@ -73,18 +73,18 @@ class SecurityCenterFacade:
                 lambda: list(client.alerts.list())
             )
         except Exception as e:
-            print_exception('Failed to retrieve alerts: {}'.format(e))
+            print_exception(f'Failed to retrieve alerts: {e}')
             return []
 
     async def get_compliance_results(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            scope = '/subscriptions/{}'.format(subscription_id)
+            scope = f'/subscriptions/{subscription_id}'
             return await run_concurrently(
                 lambda: list(client.compliance_results.list(scope=scope))
             )
         except Exception as e:
-            print_exception('Failed to retrieve compliance results: {}'.format(e))
+            print_exception(f'Failed to retrieve compliance results: {e}')
             return []
 
     async def get_regulatory_compliance_results(self, subscription_id: str):
@@ -97,9 +97,9 @@ class SecurityCenterFacade:
                 )
             except Exception as e:
                 if 'as it has no standard pricing bundle' in str(e):
-                    print_debug('Failed to retrieve regulatory compliance standards: {}'.format(e))
+                    print_debug(f'Failed to retrieve regulatory compliance standards: {e}')
                 else:
-                    print_exception('Failed to retrieve regulatory compliance standards: {}'.format(e))
+                    print_exception(f'Failed to retrieve regulatory compliance standards: {e}')
                 return {}
             else:
                 for standard in compliance_standards:
@@ -112,9 +112,9 @@ class SecurityCenterFacade:
                             control.standard_name = standard.name
                             results.append(control)
                     except Exception as e:
-                        print_exception('Failed to retrieve compliance controls: {}'.format(e))
+                        print_exception(f'Failed to retrieve compliance controls: {e}')
             finally:
                 return results
         except Exception as e:
-            print_exception('Failed to retrieve regulatory compliance results: {}'.format(e))
+            print_exception(f'Failed to retrieve regulatory compliance results: {e}')
             return []

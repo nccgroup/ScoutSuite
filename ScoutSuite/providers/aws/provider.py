@@ -48,9 +48,9 @@ class AWSProvider(BaseProvider):
         Returns the name of the report using the provider's configuration
         """
         if self.profile:
-            return 'aws-{}'.format(self.profile)
+            return f'aws-{self.profile}'
         elif self.account_id:
-            return 'aws-{}'.format(self.account_id)
+            return f'aws-{self.account_id}'
         else:
             return 'aws'
 
@@ -534,9 +534,9 @@ class AWSProvider(BaseProvider):
                 elif not self.services['ec2']:  # service not included in run
                     pass
                 elif not str(e):
-                    print_exception('Failed to parse {}'.format(resource_type))
+                    print_exception(f'Failed to parse {resource_type}')
                 else:
-                    print_exception('Failed to parse {}: {}'.format(resource_type, e))
+                    print_exception(f'Failed to parse {resource_type}: {e}')
 
     def _set_emr_vpc_ids(self):
         clear_list = []

@@ -82,7 +82,7 @@ class Ruleset:
                         for rule in ruleset['rules'][filename]:
                             self.handle_rule_versions(filename, rule_type, rule)
             except Exception as e:
-                print_exception('Ruleset file {} contains malformed JSON: {}'.format(self.filename, e))
+                print_exception(f'Ruleset file {self.filename} contains malformed JSON: {e}')
                 self.rules = []
                 self.about = ''
         else:
@@ -193,7 +193,7 @@ class Ruleset:
         if filename and not os.path.isfile(filename):
             # Not a valid relative / absolute path, check Scout's data under findings/ or filters/
             if not filename.startswith('findings/') and not filename.startswith('filters/'):
-                filename = '{}/{}'.format(filetype, filename)
+                filename = f'{filetype}/{filename}'
             if not os.path.isfile(filename):
                 filename = os.path.join(self.rules_data_path, filename)
             if not os.path.isfile(filename) and not filename.endswith('.json'):

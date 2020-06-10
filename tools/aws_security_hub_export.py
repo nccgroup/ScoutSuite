@@ -17,7 +17,7 @@ def upload_findigs_to_securityhub(session, formatted_findings_list):
             print_info('Upload completed, {} succeeded, {} failed'.format(response.get('SuccessCount'), response.get('FailedCount')))
             return response
     except Exception as e:
-        print_exception('Unable to upload findings to Security Hub: {}'.format(e))
+        print_exception(f'Unable to upload findings to Security Hub: {e}')
 
 
 def format_finding_to_securityhub_format(aws_account_id,
@@ -41,7 +41,7 @@ def format_finding_to_securityhub_format(aws_account_id,
             'Id': finding_key,
             'ProductArn':
                 'arn:aws:securityhub:' + region + ':' + aws_account_id + ':product/' + aws_account_id + '/default',
-            'GeneratorId': 'scoutsuite-{}'.format(aws_account_id),
+            'GeneratorId': f'scoutsuite-{aws_account_id}',
             'AwsAccountId': aws_account_id,
             'Types': ['Software and Configuration Checks/AWS Security Best Practices'],
             'FirstObservedAt': creation_date,
@@ -73,7 +73,7 @@ def format_finding_to_securityhub_format(aws_account_id,
         }
         return formatted_finding
     except Exception as e:
-        print_exception('Unable to process finding: {}'.format(e))
+        print_exception(f'Unable to process finding: {e}')
 
 
 def process_results_file(f,
@@ -97,21 +97,21 @@ def process_results_file(f,
 
         return formatted_findings_list
     except Exception as e:
-        print_exception('Unable to process results file: {}'.format(e))
+        print_exception(f'Unable to process results file: {e}')
 
 
 def run(profile, file):
     session = boto3.Session(profile_name=profile)
     # Test querying for current user
     get_caller_identity(session)
-    print_info('Authenticated with profile {}'.format(profile))
+    print_info(f'Authenticated with profile {profile}')
 
     try:
         with open(file) as f:
             formatted_findings_list = process_results_file(f,
                                                            session.region_name)
     except Exception as e:
-        print_exception('Unable to open file {}: {}'.format(file, e))
+        print_exception(f'Unable to open file {file}: {e}')
 
     upload_findigs_to_securityhub(session, formatted_findings_list)
 
@@ -135,4 +135,4 @@ if __name__ == "__main__":
     try:
         run(args.profile, args.file)
     except Exception as e:
-        print_exception('Unable to complete: {}'.format(e))
+        print_exception(f'Unable to complete: {e}')

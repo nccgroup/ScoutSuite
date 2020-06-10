@@ -102,7 +102,7 @@ class BaseProvider:
         error = False
         for service in services + skipped_services:
             if service not in supported_services:
-                print_error('Service \"{}\" does not exist, skipping'.format(service))
+                print_error(f'Service \"{service}\" does not exist, skipping')
                 error = True
         if error:
             print_info('Available services are: {}'.format(str(list(supported_services)).strip('[]')))
@@ -329,10 +329,10 @@ class BaseProvider:
                                                callback_args)
 
         except Exception as e:
-            print_exception(e, {'current path': '{}'.format(current_path),
+            print_exception(e, {'current path': f'{current_path}',
                                 'key': '{}'.format(key if 'key' in locals() else 'not defined'),
                                 'value': '{}'.format(value if 'value' in locals() else 'not defined'),
-                                'path': '{}'.format(path),
+                                'path': f'{path}',
                                 }
                             )
 
@@ -375,11 +375,11 @@ class BaseProvider:
                             except Exception as e:
                                 print_exception(e, {'callback': callback_name,
                                                     'callback arguments': callback_args,
-                                                    'current path': '{}'.format(current_path),
+                                                    'current path': f'{current_path}',
                                                     'key': '{}'.format(key if 'key' in locals() else 'not defined'),
                                                     'value': '{}'.format(
                                                         value if 'value' in locals() else 'not defined'),
-                                                    'path': '{}'.format(path),
+                                                    'path': f'{path}',
                                                     }
                                                 )
                     else:
@@ -393,9 +393,9 @@ class BaseProvider:
                             tmp.append(i)
                             self._new_go_to_and_do(current_config[key][i], copy.deepcopy(path), tmp, callbacks)
         except Exception as e:
-            print_exception(e, {'current path': '{}'.format(current_path),
+            print_exception(e, {'current path': f'{current_path}',
                                 'key': '{}'.format(key if 'key' in locals() else 'not defined'),
                                 'value': '{}'.format(value if 'value' in locals() else 'not defined'),
-                                'path': '{}'.format(path),
+                                'path': f'{path}',
                                 }
                             )

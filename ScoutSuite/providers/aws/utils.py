@@ -37,7 +37,7 @@ def is_throttled(e):
                                                     'RequestLimitExceeded',
                                                     'ThrottlingException'])
     except Exception as e:
-        print_exception('Unable to validate exception for throttling: {}'.format(e))
+        print_exception(f'Unable to validate exception for throttling: {e}')
         return False
 
 

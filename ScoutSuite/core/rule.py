@@ -71,7 +71,7 @@ class Rule:
                 if condition[0].startswith('_INCLUDE_('):
                     include = re.findall(r'_INCLUDE_\((.*?)\)', condition[0])[0]
                     # new_conditions = load_data(include, key_name = 'conditions')
-                    rules_path = '{}/{}'.format(self.data_path, include)
+                    rules_path = f'{self.data_path}/{include}'
                     with open(rules_path) as f:
                         new_conditions = f.read()
                         for (i, value) in enumerate(condition[1]):
@@ -139,6 +139,6 @@ class Rule:
                 setattr(self, 'key', self.filename)
             setattr(self, 'key', self.key.replace('.json', ''))
             if self.key_suffix:
-                setattr(self, 'key', '{}-{}'.format(self.key, self.key_suffix))
+                setattr(self, 'key', f'{self.key}-{self.key_suffix}')
         except Exception as e:
-            print_exception('Failed to set definition {}: {}'.format(self.filename, e))
+            print_exception(f'Failed to set definition {self.filename}: {e}')
