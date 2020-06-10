@@ -10,6 +10,7 @@ from ScoutSuite.providers.azure.facade.virtualmachines import VirtualMachineFaca
 from ScoutSuite.providers.azure.facade.appservice import AppServiceFacade
 
 from azure.mgmt.resource import SubscriptionClient
+from ScoutSuite.providers.base.authentication_strategy import AuthenticationException
 
 from ScoutSuite.core.console import print_info, print_exception
 
@@ -81,9 +82,7 @@ class AzureFacade:
         accessible_subscriptions_list = list(subscription_client.subscriptions.list())
 
         if not accessible_subscriptions_list:
-            print_exception('The provided credentials do not have access to any subscriptions')
-            self.subscription_list = []
-            return
+            raise AuthenticationException('The provided credentials do not have access to any subscriptions')
 
         # Final list, start empty
         subscriptions_list = []
@@ -92,7 +91,7 @@ class AzureFacade:
         if not (self.subscription_ids or self.all_subscriptions):
             try:
                 # Tries to read the subscription list
-                print_info('No subscription set, inferring ID')
+                print_info('No subscription set, inferring')
                 s = next(subscription_client.subscriptions.list())
             except StopIteration:
                 print_info('Unable to infer a subscription')
@@ -101,15 +100,13 @@ class AzureFacade:
                     s = input('Subscription ID: ')
                 else:
                     print_exception('Unable to infer a Subscription ID')
-                    raise
+                    # raise
             finally:
-                print_info('Running against the "{}" subscription'.format(s.subscription_id))
                 subscriptions_list.append(s)
 
         # All subscriptions
         elif self.all_subscriptions:
             subscriptions_list = accessible_subscriptions_list
-            print_info('Running against {} subscription(s)'.format(len(subscriptions_list)))
 
         # A specific set of subscriptions
         elif self.subscription_ids:
@@ -119,9 +116,8 @@ class AzureFacade:
             # Verbose skip
             for s in self.subscription_ids:
                 if not any(subs.subscription_id == s for subs in accessible_subscriptions_list):
-                    print_info('Skipping subscription "{}": this subscription does not exist or '
-                               'is not accessible with the provided credentials'.format(s))
-            print_info('Running against {} subscription(s)'.format(len(subscriptions_list)))
+                    raise AuthenticationException('Subscription {} does not exist or is not accessible '
+                                                  'with the provided credentials'.format(s))
 
         # Other == error
         else:
@@ -129,9 +125,11 @@ class AzureFacade:
             self.subscription_list = []
             raise
 
-        if subscriptions_list:
+        if subscriptions_list and len(subscriptions_list) > 0:
             self.subscription_list = subscriptions_list
+            if len(subscriptions_list) == 1:
+                print_info('Running against subscription {}'.format(subscriptions_list[0].subscription_id))
+            else:
+                print_info('Running against {} subscriptions'.format(len(subscriptions_list)))
         else:
-            print_exception('No subscriptions to scan')
-            self.subscription_list = []
-            raise
+            raise AuthenticationException('No subscriptions to scan')
