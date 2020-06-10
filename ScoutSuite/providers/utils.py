@@ -112,7 +112,10 @@ def is_throttled(e):
     TODO - this implementation is incomplete
     """
 
-    if hasattr(e, 'message') and 'Google Cloud' in e.message:
+    if hasattr(e, 'message') and \
+            ('Google Cloud' in e.message or
+             '404' in e.message or
+             'projects/' in e.message):
         return False
     else:
         return aws_is_throttled(e)

@@ -42,9 +42,12 @@ class Keys(AWSCompositeResources):
             key_dict['key_manager'] = raw_key['metadata']['KeyMetadata']['KeyManager'] if len(
                 raw_key['metadata']['KeyMetadata']['KeyManager'].strip()) > 0 else None
 
+        # Handle keys who don't have these keys - seen in the wild, unsure why
+        if 'origin' not in key_dict.keys() or 'key_manager' not in key_dict.keys():
+            key_dict['rotation_enabled'] = None
         # Only call this on customer managed CMKs, otherwise the AWS set policies might disallow access and it's always
         # enabled anyway
-        if key_dict['origin'] == 'AWS_KMS' and key_dict['key_manager'] == 'CUSTOMER':
+        elif key_dict['origin'] == 'AWS_KMS' and key_dict['key_manager'] == 'CUSTOMER':
             rotation_status = await self.facade.kms.get_key_rotation_status(self.region, key_dict['id'])
             key_dict['rotation_enabled'] = rotation_status.get('KeyRotationEnabled', None)
         else:
