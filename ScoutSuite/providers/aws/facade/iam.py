@@ -131,7 +131,6 @@ class IAMFacade(AWSBaseFacade):
         try:
             user_tagset = await run_concurrently(lambda: client.list_user_tags(UserName=user['UserName']))
             user['tags'] = {x['Key']: x['Value'] for x in user_tagset['Tags']}
-            print(user['tags'])
         except ClientError as e:
             if e.response["Error"]["Code"] == "NoSuchEntity":
                 #  If the user has not been assigned tags, the operation returns a 404 (NoSuchEntity ) error.
@@ -151,9 +150,24 @@ class IAMFacade(AWSBaseFacade):
                 'AssumeRolePolicyDocument')
         await get_and_set_concurrently(
             [functools.partial(self._get_and_set_inline_policies, iam_resource_type='role'),
-             self._get_and_set_role_profiles], roles)
+             self._get_and_set_role_profiles, self._get_and_set_role_tags], roles)
 
         return roles
+
+    async def _get_and_set_role_tags(self, role: {}):
+        client = AWSFacadeUtils.get_client('iam', self.session)
+        try:
+            role_tagset = await run_concurrently(lambda: client.list_role_tags(RoleName=role['RoleName']))
+            role['tags'] = {x['Key']: x['Value'] for x in role_tagset['Tags']}
+        except ClientError as e:
+            if e.response["Error"]["Code"] == "NoSuchEntity":
+                #  If the user has not been assigned tags, the operation returns a 404 (NoSuchEntity ) error.
+                pass
+            else:
+                print_exception('Failed to get role tags: {}'.format(e))
+        except Exception as e:
+            print_exception('Failed to get role tags: {}'.format(e))
+
 
     async def _get_and_set_role_profiles(self, role: {}):
         profiles = await AWSFacadeUtils.get_all_pages(
