@@ -101,8 +101,10 @@ class IAMFacade(AWSBaseFacade):
              self._get_and_set_user_groups,
              self._get_and_set_user_login_profile,
              self._get_and_set_user_access_keys,
-             self._get_and_set_user_mfa_devices],
+             self._get_and_set_user_mfa_devices,
+             self._get_and_set_user_tags],
             users)
+        
         return users
 
     async def _get_and_set_user_login_profile(self, user: {}):
@@ -124,6 +126,21 @@ class IAMFacade(AWSBaseFacade):
             'iam', None, self.session, 'list_groups_for_user', 'Groups', UserName=user['UserName'])
         user['groups'] = [group['GroupName'] for group in groups]
 
+    async def _get_and_set_user_tags(self, user: {}):
+        client = AWSFacadeUtils.get_client('iam', self.session)
+        try:
+            user_tagset = await run_concurrently(lambda: client.list_user_tags(UserName=user['UserName']))
+            user['tags'] = {x['Key']: x['Value'] for x in user_tagset['Tags']}
+            print(user['tags'])
+        except ClientError as e:
+            if e.response["Error"]["Code"] == "NoSuchEntity":
+                #  If the user has not been assigned tags, the operation returns a 404 (NoSuchEntity ) error.
+                pass
+            else:
+                print_exception('Failed to get user tags: {}'.format(e))
+        except Exception as e:
+            print_exception('Failed to get user tags: {}'.format(e))
+        
     async def get_roles(self):
         roles = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_roles', 'Roles')
         for role in roles:

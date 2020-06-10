@@ -39,7 +39,7 @@ class EC2Instances(AWSResources):
 
         instance['metadata_options'] = raw_instance['MetadataOptions']
         instance['tags'] = await set_tags(raw_instance)
-        print(instance['tags'])
+        
         return id, instance
 
     @staticmethod

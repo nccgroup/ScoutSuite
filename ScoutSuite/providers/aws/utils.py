@@ -79,7 +79,6 @@ async def set_tags(raw_instance: {}):
         instance = {x['Key']: x['Value'] for x in raw_instance['Tags']}
     else:
         instance = {}
-    print(instance)
     return instance
     
 def no_camel(name):
