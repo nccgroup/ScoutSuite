@@ -9,3 +9,15 @@ class RBAC(Subscriptions):
         (Roles, 'roles'),
         (RoleAssignments, 'role_assignments')
     ]
+
+    def get_user_id_list(self):
+        """
+        Generates and returns a unique list of user IDs which have a role assigned.
+        """
+        user_set = set()
+        for subscription in self['subscriptions'].values():
+            for role_assignment in subscription['role_assignments'].values():
+                if role_assignment['principal_type'] == 'User':
+                    user_set.add(role_assignment['principal_id'])
+        return list(user_set)
+
