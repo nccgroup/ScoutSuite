@@ -20,7 +20,10 @@ class Watchers(AzureResources):
         watcher_dict['name'] = raw_watcher.name
         watcher_dict['type'] = raw_watcher.type
         watcher_dict['location'] = raw_watcher.location
-        watcher_dict['tags'] = raw_watcher.tags
+        if raw_watcher.tags is not None:
+            watcher_dict['tags'] = ["{}:{}".format(key, value) for key, value in raw_watcher.tags.items()]
+        else:
+            watcher_dict['tags'] = []
         watcher_dict['etag'] = raw_watcher.etag
         watcher_dict['additional_properties'] = raw_watcher.additional_properties
         watcher_dict['provisioning_state'] = raw_watcher.provisioning_state

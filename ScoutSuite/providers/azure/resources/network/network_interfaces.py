@@ -22,7 +22,10 @@ class NetworkInterfaces(AzureResources):
             get_non_provider_id(raw_network_interface.virtual_machine.id.lower()) if \
                 raw_network_interface.virtual_machine else None
         network_interface_dict['name'] = raw_network_interface.name
-        network_interface_dict['tags'] = raw_network_interface.tags
+        if raw_network_interface.tags is not None:
+            network_interface_dict['tags'] = ["{}:{}".format(key, value) for key, value in  raw_network_interface.tags.items()]
+        else:
+            network_interface_dict['tags'] = []
         network_interface_dict['interface_endpoint'] = raw_network_interface.interface_endpoint if \
             hasattr(raw_network_interface, 'interface_endpoint') else None
         network_interface_dict['primary'] = raw_network_interface.primary

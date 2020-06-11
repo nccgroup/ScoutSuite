@@ -23,7 +23,10 @@ class SecurityGroups(AzureResources):
         network_security_group_dict['resource_guid'] = network_security_group.resource_guid
         network_security_group_dict['type'] = network_security_group.type
         network_security_group_dict['etag'] = network_security_group.etag
-        network_security_group_dict['tags'] = network_security_group.tags
+        if network_security_group.tags is not None:
+            network_security_group_dict['tags'] = ["{}:{}".format(key, value) for key, value in  network_security_group.tags.items()]
+        else:
+            network_security_group_dict['tags'] = []
         network_security_group_dict['additional_properties'] = network_security_group.additional_properties
 
         network_security_group_dict['security_rules'] = self._parse_security_rules(network_security_group)

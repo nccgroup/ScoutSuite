@@ -21,7 +21,10 @@ class Vaults(AzureResources):
         vault['type'] = raw_vault.type
         vault['location'] = raw_vault.location
         vault['additional_properties'] = raw_vault.additional_properties
-        vault['tags'] = raw_vault.tags
+        if raw_vault.tags is not None:
+            vault['tags'] = ["{}:{}".format(key, value) for key, value in  raw_vault.tags.items()]
+        else:
+            vault['tags'] = []
         vault['properties'] = raw_vault.properties
         vault['public_access_allowed'] = self._is_public_access_allowed(raw_vault)
         return vault['id'], vault

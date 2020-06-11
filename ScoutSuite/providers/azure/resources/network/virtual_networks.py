@@ -21,7 +21,10 @@ class VirtualNetworks(AzureResources):
 
         virtual_network_dict['enable_vm_protection'] = raw_virtual_network.enable_vm_protection
         virtual_network_dict['etag'] = str(raw_virtual_network.etag)
-        virtual_network_dict['tags'] = raw_virtual_network.tags
+        if raw_virtual_network.tags is not None:
+            virtual_network_dict['tags'] = ["{}:{}".format(key, value) for key, value in  raw_virtual_network.tags.items()]
+        else:
+            virtual_network_dict['tags'] = []
         virtual_network_dict['virtual_network_peerings'] = raw_virtual_network.virtual_network_peerings
         virtual_network_dict['enable_ddos_protection'] = raw_virtual_network.enable_ddos_protection
         virtual_network_dict['resource_guid'] = raw_virtual_network.resource_guid

@@ -22,7 +22,10 @@ class WebApplication(AzureResources):
         web_app_dict['kind'] = raw_web_app.kind
         web_app_dict['location'] = raw_web_app.location
         web_app_dict['type'] = raw_web_app.type
-        web_app_dict['tags'] = raw_web_app.tags
+        if raw_web_app.tags is not None:
+            web_app_dict['tags'] = ["{}:{}".format(key, value) for key, value in  raw_web_app.tags.items()]
+        else:
+            web_app_dict['tags'] = []
         web_app_dict['state'] = raw_web_app.state
         web_app_dict['host_names'] = raw_web_app.host_names
         web_app_dict['repository_site_name'] = raw_web_app.repository_site_name
