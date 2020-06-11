@@ -1,6 +1,7 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.providers.azure.utils import get_resource_group_name
 
 
 class Vaults(AzureResources):
@@ -25,6 +26,7 @@ class Vaults(AzureResources):
             vault['tags'] = ["{}:{}".format(key, value) for key, value in  raw_vault.tags.items()]
         else:
             vault['tags'] = []
+        vault['resource_group_name'] = get_resource_group_name(raw_vault.id)
         vault['properties'] = raw_vault.properties
         vault['public_access_allowed'] = self._is_public_access_allowed(raw_vault)
         return vault['id'], vault

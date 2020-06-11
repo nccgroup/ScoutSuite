@@ -1,6 +1,7 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.providers.azure.utils import get_resource_group_name
 
 
 class SecurityGroups(AzureResources):
@@ -27,6 +28,7 @@ class SecurityGroups(AzureResources):
             network_security_group_dict['tags'] = ["{}:{}".format(key, value) for key, value in  network_security_group.tags.items()]
         else:
             network_security_group_dict['tags'] = []
+        network_security_group_dict['resource_group_name'] = get_resource_group_name(network_security_group.id)
         network_security_group_dict['additional_properties'] = network_security_group.additional_properties
 
         network_security_group_dict['security_rules'] = self._parse_security_rules(network_security_group)
