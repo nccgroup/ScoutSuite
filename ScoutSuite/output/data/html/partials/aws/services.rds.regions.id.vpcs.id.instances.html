@@ -2,7 +2,7 @@
     <!-- RDS instance partial -->
     <script id="services.rds.regions.id.vpcs.id.instances.partial" type="text/x-handlebars-template">
         <div id="resource-name" class="list-group-item active">
-          <h4 class="list-group-item-heading">{{name}}</h4>
+            <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
           <h4>Information</h4>
@@ -26,11 +26,11 @@
           </ul>
         </div>
         <div class="list-group-item">
-          <h4>Network</h4>
-          <ul>
-            <li class="list-group-item-text">Endpoint: {{Endpoint.Address}}:{{Endpoint.Port}}</li>
-            <li class="list-group-item-text">Publicly accessible: {{PubliclyAccessible}}</li>
-          </ul>
+            <h4>Network</h4>
+            <ul>
+                <li class="list-group-item-text">Endpoint: <samp>{{Endpoint.Address}}:{{Endpoint.Port}}</samp></li>
+                <li class="list-group-item-text">Publicly Accessible: <span id="rds.regions.{{region}}.vpcs.{{vpc}}.instances.{{@key}}.instance_publicly_accessible">{{convert_bool_to_enabled PubliclyAccessible}}</span>
+            </ul>
         </div>
     </script>
     <script>

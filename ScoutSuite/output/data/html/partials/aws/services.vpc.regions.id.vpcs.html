@@ -2,12 +2,12 @@
     <!-- VPC partial -->
     <script id="services.vpc.regions.id.vpcs.partial" type="text/x-handlebars-template">
         <div id="resource-name" class="list-group-item active">
-          <h4 class="list-group-item-heading">{{@key}}</h4>
+          <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
             <h4 class="list-group-item-heading">Information</h4>
-            <div class="list-group-item-text">ARN: {{arn}}</div>
             <div class="list-group-item-text">ID: {{@key}}</div>
+            <div class="list-group-item-text">ARN: {{arn}}</div>
             <div class="list-group-item-text">Region: {{region}}</div>
             <div class="list-group-item-text">State: {{state}}</div>
             <div class="list-group-item-text">CIDR Block: {{cidr_block}}</div>

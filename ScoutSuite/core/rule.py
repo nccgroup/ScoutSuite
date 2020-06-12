@@ -100,7 +100,10 @@ class Rule(object):
             definition = json.loads(string_definition)
             # Set special values (IP ranges, AWS account ID, ...)
             for condition in definition['conditions']:
-                if type(condition) != list or len(condition) == 1 or type(condition[2]) == list:
+                if type(condition) != list \
+                        or len(condition) == 1 \
+                        or type(condition[2]) == list \
+                        or type(condition[2]) == dict:
                     continue
                 for testcase in testcases:
                     result = testcase['regex'].match(condition[2])

@@ -7,7 +7,6 @@
     <div class="list-group-item">
         <h4 class="list-group-item-heading">Information</h4>
         <div class="list-group-item-text item-margin">Project ID: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.project_id"><samp>{{project_id}}</samp></span></div>
-        <div class="list-group-item-text item-margin">Instance Name: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.name"><samp>{{name}}</samp></span></div>
         <div class="list-group-item-text item-margin">Automatic Backups: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.automatic_backup_enabled">{{convert_bool_to_enabled automatic_backup_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Last Backup: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.last_backup_timestamp">{{format_date last_backup_timestamp}}</span></div>
         <div class="list-group-item-text item-margin">Logs: <span id="cloudsql.projects.{{@../key}}.instances.{{@key}}.log_enabled">{{convert_bool_to_enabled log_enabled}}</span></div>

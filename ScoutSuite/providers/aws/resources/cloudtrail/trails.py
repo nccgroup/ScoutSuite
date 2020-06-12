@@ -35,7 +35,7 @@ class Trails(AWSResources):
             if key not in trail:
                 trail[key] = False
 
-        for key in ['KMSKeyId', 'IsLogging', 'LatestDeliveryTime', 'LatestDeliveryError', 'StartLoggingTime',
+        for key in ['KmsKeyId', 'IsLogging', 'LatestDeliveryTime', 'LatestDeliveryError', 'StartLoggingTime',
                     'StopLoggingTime', 'LatestNotificationTime', 'LatestNotificationError',
                     'LatestCloudWatchLogsDeliveryError', 'LatestCloudWatchLogsDeliveryTime']:
             trail[key] = trail[key] if key in trail else None

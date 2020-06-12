@@ -1,14 +1,30 @@
 {
-    "description": "Root account has active X.509 certs",
-    "rationale": "<b>Description:</b><br><br>Root account X.509 certificates should be deleted as they may be used to make SOAP-protocol requests in the context of the root account.",
-    "path": "iam.credential_reports.id",
+    "description": "Root Account Has Active X.509 Certs",
+    "rationale": "Root account X.509 certificates should be deleted as they may be used to make SOAP-protocol requests in the context of the root account.",
+    "references": [
+        "https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cis-controls.html#securityhub-standards-cis-controls-1.1"
+    ],
     "dashboard_name": "Root account",
-    "conditions": [ "and",
-        [ "iam.credential_reports.id.name", "equal", "<root_account>" ],
+    "path": "iam.credential_reports.id",
+    "conditions": [
+        "and",
+        [
+            "iam.credential_reports.id.name",
+            "equal",
+            "<root_account>"
+        ],
         [
             "or",
-            [ "iam.credential_reports.id.cert_1_active", "true", "" ],
-            [ "iam.credential_reports.id.cert_2_active", "true", "" ]
+            [
+                "iam.credential_reports.id.cert_1_active",
+                "true",
+                ""
+            ],
+            [
+                "iam.credential_reports.id.cert_2_active",
+                "true",
+                ""
+            ]
         ]
     ]
 }

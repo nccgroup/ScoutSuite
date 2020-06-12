@@ -10,7 +10,7 @@
         <div class="list-group-item-text">ARN: {{arn}}</div>
         <div class="list-group-item-text">Region: {{region}}</div>
         <div class="list-group-item-text">VPC: {{getValueAt 'services.vpc.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</div>
-        <div class="list-group-item-text">Description: {{description}}</div>
+        <div class="list-group-item-text">Description: <samp>{{description}}</samp></div>
     </div>
 
     {{#each rules}}

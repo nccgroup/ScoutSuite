@@ -1,0 +1,43 @@
+{
+    "description": "Service Account with Admin Privileges",
+    "rationale": "Service accounts represent service-level security of the Resources (application or a VM) which can be determined by the roles assigned to it. Enrolling Service Accounts with administrative privileges grants full access to assigned application or a VM, Service Account Access holder can user.<br><br><b>Note: </b>This rule may flag Google-Managed Service Accounts. Google services rely on these Service Accounts having access to the project, and recommends not removing or changing the Service Account's role",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.0.0",
+            "reference": "1.4"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/iam/docs/service-accounts#google-managed",
+        "https://cloud.google.com/iam/docs/understanding-roles",
+        "https://cloud.google.com/iam/docs/using-iam-securely"
+    ],
+    "dashboard_name": "Bindings",
+    "path": "iam.projects.id.bindings.id",
+    "conditions": [
+        "and",
+        [
+            "or",
+            [
+                "iam.projects.id.bindings.id.name",
+                "containAtLeastOneOf",
+                [
+                    "editor",
+                    "owner"
+                ]
+            ],
+            [
+                "iam.projects.id.bindings.id.name",
+                "match",
+                ".*admin"
+            ]
+        ],
+        [
+            "iam.projects.id.bindings.id.members.service_accounts",
+            "notEmpty",
+            ""
+        ]
+    ],
+    "id_suffix": "service_accounts"
+}

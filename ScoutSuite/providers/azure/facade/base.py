@@ -1,6 +1,6 @@
 from ScoutSuite.providers.azure.authentication_strategy import AzureCredentials
 from ScoutSuite.providers.azure.facade.aad import AADFacade
-from ScoutSuite.providers.azure.facade.arm import ARMFacade
+from ScoutSuite.providers.azure.facade.rbac import RBACFacade
 from ScoutSuite.providers.azure.facade.keyvault import KeyVaultFacade
 from ScoutSuite.providers.azure.facade.network import NetworkFacade
 from ScoutSuite.providers.azure.facade.securitycenter import SecurityCenterFacade
@@ -42,7 +42,7 @@ class AzureFacade:
         self.all_subscriptions = all_subscriptions
 
         self.aad = AADFacade(credentials)
-        self.arm = ARMFacade(credentials)
+        self.rbac = RBACFacade(credentials)
         self.keyvault = KeyVaultFacade(credentials)
         self.virtualmachines = VirtualMachineFacade(credentials)
         self.network = NetworkFacade(credentials)
@@ -106,6 +106,11 @@ class AzureFacade:
                 print_info('Running against the "{}" subscription'.format(s.subscription_id))
                 subscriptions_list.append(s)
 
+        # All subscriptions
+        elif self.all_subscriptions:
+            subscriptions_list = accessible_subscriptions_list
+            print_info('Running against {} subscription(s)'.format(len(subscriptions_list)))
+
         # A specific set of subscriptions
         elif self.subscription_ids:
             # Only include accessible subscriptions
@@ -116,11 +121,6 @@ class AzureFacade:
                 if not any(subs.subscription_id == s for subs in accessible_subscriptions_list):
                     print_info('Skipping subscription "{}": this subscription does not exist or '
                                'is not accessible with the provided credentials'.format(s))
-            print_info('Running against {} subscription(s)'.format(len(subscriptions_list)))
-
-        # All subscriptions
-        elif self.all_subscriptions:
-            subscriptions_list = accessible_subscriptions_list
             print_info('Running against {} subscription(s)'.format(len(subscriptions_list)))
 
         # Other == error
