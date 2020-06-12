@@ -34,6 +34,7 @@ async def get_response(client, request):
     except Exception as e:
         print_exception('Unhandled exception {} for request {}'.format(e, request))
 
+
 async def merge_responses(response_1, response_2):
     """
     Compares two responses and adds to the second one the content of the first one, unless they are specific fields

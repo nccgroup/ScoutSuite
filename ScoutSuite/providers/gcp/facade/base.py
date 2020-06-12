@@ -1,4 +1,4 @@
-from ScoutSuite.core.console import print_exception, print_info
+from ScoutSuite.core.console import print_exception, print_info, print_debug, print_error
 from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.cloudresourcemanager import CloudResourceManagerFacade
 from ScoutSuite.providers.gcp.facade.cloudsql import CloudSQLFacade
@@ -7,7 +7,9 @@ from ScoutSuite.providers.gcp.facade.gce import GCEFacade
 from ScoutSuite.providers.gcp.facade.iam import IAMFacade
 from ScoutSuite.providers.gcp.facade.kms import KMSFacade
 from ScoutSuite.providers.gcp.facade.stackdriverlogging import StackdriverLoggingFacade
+from ScoutSuite.providers.gcp.facade.stackdrivermonitoring import StackdriverMonitoringFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
+from ScoutSuite.utils import format_service_name
 
 # Try to import proprietary facades
 try:
@@ -34,6 +36,7 @@ class GCPFacade(GCPBaseFacade):
         self.iam = IAMFacade()
         self.kms = KMSFacade()
         self.stackdriverlogging = StackdriverLoggingFacade()
+        self.stackdrivermonitoring = StackdriverMonitoringFacade()
 
         # Instantiate facades for proprietary services
         try:
@@ -91,7 +94,7 @@ class GCPFacade(GCPBaseFacade):
             return None
 
         resourcemanager_client = self._get_client()
-        resourcemanager_client_v2 = self._build_arbitrary_client('cloudresourcemanager', 'v2')
+        resourcemanager_client_v2 = self._build_arbitrary_client('cloudresourcemanager', 'v2', force_new=True)
 
         projects = []
 
@@ -126,3 +129,46 @@ class GCPFacade(GCPBaseFacade):
 
         finally:
             return projects
+
+    async def is_api_enabled(self, project_id, service):
+        """
+        Given a project ID and service name, this method tries to determine if the service's API is enabled
+        """
+
+        serviceusage_client = self._build_arbitrary_client('serviceusage', 'v1', force_new=True)
+        services = serviceusage_client.services()
+        request = services.list(parent='projects/{}'.format(project_id))
+        services_response = await GCPFacadeUtils.get_all('services', request, services)
+
+        # These are hardcoded endpoint correspondences as there's no easy way to do this.
+        if service == 'IAM':
+            endpoint = 'iam'
+        elif service == 'KMS':
+            endpoint = 'cloudkms'
+        elif service == 'CloudStorage':
+            endpoint = 'storage-component'
+        elif service == 'CloudSQL':
+            endpoint = 'sql-component'
+        elif service == 'ComputeEngine':
+            endpoint = 'compute'
+        elif service == 'KubernetesEngine':
+            endpoint = 'container'
+        elif service == 'StackdriverLogging':
+            endpoint = 'logging'
+        else:
+            print_debug('Could not validate the state of the {} API for project \"{}\", including'.format(
+                format_service_name(service.lower()), project_id))
+            return True
+
+        for s in services_response:
+            if endpoint in s.get('name'):
+                if s.get('state') == 'ENABLED':
+                    return True
+                else:
+                    print_info('{} API not enabled for project \"{}\", skipping'.format(format_service_name(service.lower()),
+                                                                                        project_id))
+                    return False
+
+        print_error('Could not validate the state of the {} API for project \"{}\", including'.format(
+            format_service_name(service.lower()), project_id))
+        return True

@@ -1,19 +1,19 @@
 {
     "about": "This ruleset attempts to cover as many recommendations from the CIS Google Cloud Platform Foundation v1.0.0.",
     "rules": {
-        "cloudresourcemanager-gmail-accounts-used.json": [
+        "iam-gmail-accounts-used.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "cloudresourcemanager-sa-has-admin-privileges.json": [
+        "iam-sa-has-admin-privileges.json": [
             {
                 "enabled": true,
                 "level": "warning"
             }
         ],
-        "cloudresourcemanager-user-has-sa-user-role.json": [
+        "iam-user-has-sa-user-role.json": [
             {
                 "enabled": true,
                 "level": "warning"

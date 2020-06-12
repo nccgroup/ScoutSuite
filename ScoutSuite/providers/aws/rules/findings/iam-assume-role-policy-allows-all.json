@@ -1,12 +1,32 @@
 {
-    "description": "AssumeRole policy allows all principals",
-    "rationale": "<b>Description:</b><br><br>Setting the AssumeRole policy's principal attribute to \"AWS:*\" means that anyone is authorized to assume the role and access the AWS account.",
-    "path": "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id",
-    "display_path": "iam.roles.id",
+    "description": "AssumeRole Policy Allows All Principals",
+    "rationale": "Setting the AssumeRole policy's principal attribute to \"AWS:*\" means that anyone is authorized to assume the role and access the AWS account.",
+    "references": [
+        "https://research.nccgroup.com/2019/12/18/demystifying-aws-assumerole-and-stsexternalid/"
+    ],
     "dashboard_name": "Roles",
-    "conditions": [ "and",
-        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Effect", "equal", "Allow" ],
-        [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.", "containAction", "sts:AssumeRole" ],
-        [ "_INCLUDE_(conditions/policy-statement-any-principal.json)", [ "_STATEMENT_" ], [ "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id" ] ]
+    "display_path": "iam.roles.id",
+    "path": "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id",
+    "conditions": [
+        "and",
+        [
+            "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.Effect",
+            "equal",
+            "Allow"
+        ],
+        [
+            "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id.",
+            "containAction",
+            "sts:AssumeRole"
+        ],
+        [
+            "_INCLUDE_(conditions/policy-statement-any-principal.json)",
+            [
+                "_STATEMENT_"
+            ],
+            [
+                "iam.roles.id.assume_role_policy.PolicyDocument.Statement.id"
+            ]
+        ]
     ]
 }

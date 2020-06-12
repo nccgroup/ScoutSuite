@@ -1,15 +1,32 @@
 {
-  "dashboard_name": "Instances",
-  "description": "Instance with binary logging disabled",
-  "rationale": "<b>Description:</b><br><br>The benefits of enabling binary logs (replication, scalability, auditability, point-in-time data recovery, etc.) can improve the security posture of the Cloud SQL instance.",
-  "path": "cloudsql.projects.id.instances.id",
-  "conditions": [ "and",
-    [
-      "or",
-      [ "cloudsql.projects.id.instances.id.log_enabled", "false", "" ],
-      [ "cloudsql.projects.id.instances.id.log_enabled", "null", ""]
+    "description": "Instance with Binary Logging Disabled",
+    "rationale": "The benefits of enabling binary logs (replication, scalability, auditability, point-in-time data recovery, etc.) can improve the security posture of the Cloud SQL instance.",
+    "references": [
+        "https://cloud.google.com/sql/docs/mysql/instance-settings",
+        "https://cloud.google.com/sql/docs/mysql/replication/tips"
     ],
-    [ "cloudsql.projects.id.instances.id.is_failover_replica", "false", ""]
-  ],
-  "id_suffix": "log_enabled"
+    "dashboard_name": "Instances",
+    "path": "cloudsql.projects.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "or",
+            [
+                "cloudsql.projects.id.instances.id.log_enabled",
+                "false",
+                ""
+            ],
+            [
+                "cloudsql.projects.id.instances.id.log_enabled",
+                "null",
+                ""
+            ]
+        ],
+        [
+            "cloudsql.projects.id.instances.id.is_failover_replica",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "log_enabled"
 }

@@ -1,15 +1,32 @@
 {
-    "description": "User with multiple API keys",
-    "path": "iam.users.id",
-    "dashboard_name": "Users",
-    "conditions": [ "and",
-        [ "iam.users.id.AccessKeys", "lengthMoreThan", "1" ],
-        [ "iam.users.id.AccessKeys.0.Status", "equal", "Active" ],
-        [ "iam.users.id.AccessKeys.1.Status", "equal", "Active" ]
+    "description": "User with Multiple API Keys",
+    "rationale": "The user was configured to have more than one active API keys associated with the account. Redundant or unused API keys should be removed.",
+    "references": [
+        "https://docs.aws.amazon.com/general/latest/gr/aws-access-keys-best-practices.html"
     ],
-    "id_suffix": "multiple_api_keys",
+    "dashboard_name": "Users",
+    "path": "iam.users.id",
+    "conditions": [
+        "and",
+        [
+            "iam.users.id.AccessKeys",
+            "lengthMoreThan",
+            "1"
+        ],
+        [
+            "iam.users.id.AccessKeys.0.Status",
+            "equal",
+            "Active"
+        ],
+        [
+            "iam.users.id.AccessKeys.1.Status",
+            "equal",
+            "Active"
+        ]
+    ],
     "keys": [
         "iam.users.id.name",
         "iam.users.id.AccessKeys"
-    ]
+    ],
+    "id_suffix": "multiple_api_keys"
 }

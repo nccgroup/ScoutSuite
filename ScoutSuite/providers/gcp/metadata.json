@@ -2,9 +2,21 @@
   "security": {
     "iam": {
       "resources": {
+        "users": {
+          "cols": 2,
+          "path": "services.iam.projects.id.users"
+        },
+        "groups": {
+          "cols": 2,
+          "path": "services.iam.projects.id.groups"
+        },
         "service_accounts": {
           "cols": 2,
           "path": "services.iam.projects.id.service_accounts"
+        },
+        "bindings": {
+          "cols": 2,
+          "path": "services.iam.projects.id.bindings"
         }
       }
     },
@@ -13,22 +25,6 @@
         "keyrings": {
           "cols": 2,
           "path": "services.kms.projects.id.keyrings"
-        }
-      }
-    },
-    "cloudresourcemanager": {
-      "resources": {
-        "users": {
-          "cols": 2,
-          "path": "services.cloudresourcemanager.projects.id.users"
-        },
-        "groups": {
-          "cols": 2,
-          "path": "services.cloudresourcemanager.projects.id.groups"
-        },
-        "bindings": {
-          "cols": 2,
-          "path": "services.cloudresourcemanager.projects.id.bindings"
         }
       }
     }
@@ -93,8 +89,25 @@
         "sinks": {
           "cols": 2,
           "path": "services.stackdriverlogging.projects.id.sinks"
+        },
+        "metrics": {
+          "cols": 2,
+          "path": "services.stackdriverlogging.projects.id.metrics"
+        }
+      }
+    },
+    "stackdrivermonitoring": {
+      "resources": {
+        "uptime_checks": {
+          "cols": 2,
+          "path": "services.stackdrivermonitoring.projects.id.uptime_checks"
+        },
+        "alert_policies": {
+          "cols": 2,
+          "path": "services.stackdrivermonitoring.projects.id.alert_policies"
         }
       }
     }
   }
 }
+

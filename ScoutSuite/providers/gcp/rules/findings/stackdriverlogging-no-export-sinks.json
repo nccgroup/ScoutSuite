@@ -1,9 +1,19 @@
 {
+    "description": "Lack of Export Sinks",
+    "rationale": "Export sinks for Stackdriver logging were not found. As a result, logs would be deleted after the configured retention period, and would not be backed up.",
+    "references": [
+        "https://cloud.google.com/logging",
+        "https://cloud.google.com/logging/docs/export"
+    ],
     "dashboard_name": "Logging Configurations",
-    "description": "No Export Sinks",
-    "path": "stackdriverlogging.projects.id",
     "display_path": "stackdriverlogging.projects.id.sinks",
-    "conditions": [ "and",
-        [ "stackdriverlogging.projects.id.sinks", "empty", "" ]
+    "path": "stackdriverlogging.projects.id",
+    "conditions": [
+        "and",
+        [
+            "stackdriverlogging.projects.id.sinks",
+            "empty",
+            ""
+        ]
     ]
 }

@@ -15,6 +15,18 @@
         "instances": {
           "cols": 2,
           "path": "services.virtualmachines.subscriptions.id.instances"
+        },
+        "disks": {
+          "cols": 2,
+          "path": "services.virtualmachines.subscriptions.id.disks"
+        },
+        "snapshots": {
+          "cols": 2,
+          "path": "services.virtualmachines.subscriptions.id.snapshots"
+        },
+        "images": {
+          "cols": 2,
+          "path": "services.virtualmachines.subscriptions.id.images"
         }
       }
     }
@@ -58,11 +70,11 @@
         }
       }
     },
-    "arm": {
+    "rbac": {
       "resources": {
         "roles": {
           "cols": 2,
-          "path": "services.arm.subscriptions.id.roles"
+          "path": "services.rbac.subscriptions.id.roles"
         }
       }
     },
@@ -87,6 +99,14 @@
         "auto_provisioning_settings": {
           "cols": 2,
           "path": "services.securitycenter.subscriptions.id.auto_provisioning_settings"
+        },
+        "compliance_results": {
+          "cols": 2,
+          "path": "services.securitycenter.subscriptions.id.compliance_results"
+        },
+        "regulatory_compliance_results": {
+          "cols": 2,
+          "path": "services.securitycenter.subscriptions.id.regulatory_compliance_results"
         }
       }
     }

@@ -1,11 +1,23 @@
 {
-    "description": "Default security groups in use",
-    "path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "description": "Default Security Group in Use",
+    "rationale": "The use of default security groups can indicate a lack of intentional enforcement of the principle of least privilege. Use custom security groups to ensure you are properly minimizing privilege and access.",
+    "references": [
+        "https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cis-controls.html#securityhub-cis-controls-4.3"
+    ],
     "dashboard_name": "Security groups",
-    "conditions": [ "and",
-        [ "ec2.regions.id.vpcs.id.security_groups.id.name", "equal", "default" ],
-        [ "ec2.regions.id.vpcs.id.security_groups.id.", "withKey", "used_by" ]
-
+    "path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "conditions": [
+        "and",
+        [
+            "ec2.regions.id.vpcs.id.security_groups.id.name",
+            "equal",
+            "default"
+        ],
+        [
+            "ec2.regions.id.vpcs.id.security_groups.id.",
+            "withKey",
+            "used_by"
+        ]
     ],
     "id_suffix": "default_in_use"
 }
