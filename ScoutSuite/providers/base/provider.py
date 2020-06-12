@@ -195,7 +195,7 @@ class BaseProvider(object):
         a dict
         """
         if type(object) == dict:
-            if not str(attr) in object:
+            if str(attr) not in object:
                 object[str(attr)] = init
                 self.manage_object(object, attr, init)
         else:

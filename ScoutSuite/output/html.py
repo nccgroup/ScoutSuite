@@ -47,7 +47,7 @@ class HTMLReport(object):
         for filename in template_files:
             try:
                 with open('%s' % filename, 'rt') as f:
-                    contents = contents + f.read()
+                    contents += f.read()
             except Exception as e:
                 print_exception('Error reading filename %s: %s' % (filename, e))
         return contents
@@ -58,7 +58,7 @@ class HTMLReport(object):
         filename = template_dir + filename
         try:
             with open('%s' % filename, 'rt') as f:
-                contents = contents + f.read()
+                contents += f.read()
         except Exception as e:
             print_exception('Error reading filename %s: %s' % (filename, e))
         return contents

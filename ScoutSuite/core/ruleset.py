@@ -147,7 +147,7 @@ class Ruleset:
         self.rule_definitions = {}
         for rule_filename in self.rules:
             for rule in self.rules[rule_filename]:
-                if not rule.enabled and not ruleset_generator:
+                if not (rule.enabled or ruleset_generator):
                     continue
             self.rule_definitions[os.path.basename(rule_filename)] = RuleDefinition(self.rules_data_path,
                                                                                     rule_filename,
@@ -174,12 +174,16 @@ class Ruleset:
         if environment_name != 'default':
             ruleset_file_name = 'ruleset-%s.json' % environment_name
             ruleset_file_path = os.path.join(self.rules_data_path, 'rulesets/%s' % ruleset_file_name)
-            if os.path.exists(ruleset_file_path):
-                if no_prompt or prompt_yes_no(
-                        "A ruleset whose name matches your environment name was found in %s. "
-                        "Would you like to use it instead of the default one" % ruleset_file_name):
-                    ruleset_found = True
-                    self.filename = ruleset_file_path
+            if os.path.exists(ruleset_file_path) and (
+                no_prompt
+                or prompt_yes_no(
+                    "A ruleset whose name matches your environment name was found in %s. "
+                    "Would you like to use it instead of the default one"
+                    % ruleset_file_name
+                )
+            ):
+                ruleset_found = True
+                self.filename = ruleset_file_path
         if not ruleset_found:
             self.filename = os.path.join(self.rules_data_path, 'rulesets/default.json')
 
@@ -192,11 +196,13 @@ class Ruleset:
         """
         if filename and not os.path.isfile(filename):
             # Not a valid relative / absolute path, check Scout's data under findings/ or filters/
-            if not filename.startswith('findings/') and not filename.startswith('filters/'):
+            if not (
+                filename.startswith('findings/') or filename.startswith('filters/')
+            ):
                 filename = '%s/%s' % (filetype, filename)
             if not os.path.isfile(filename):
                 filename = os.path.join(self.rules_data_path, filename)
-            if not os.path.isfile(filename) and not filename.endswith('.json'):
+            if not (os.path.isfile(filename) or filename.endswith('.json')):
                 filename = self.find_file('%s.json' % filename, filetype)
         return filename
 

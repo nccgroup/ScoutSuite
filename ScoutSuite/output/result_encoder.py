@@ -77,18 +77,17 @@ class SqlLiteEncoder(ScoutResultEncoder):
         :param quiet:
         :return:
         """
-        if prompt_for_overwrite(config_filename, force_write):
-            try:
-                config_dirname = os.path.dirname(config_filename)
-                if not os.path.isdir(config_dirname):
-                    os.makedirs(config_dirname)
-                if os.path.exists(config_filename):
-                    os.remove(config_filename)
-                return SqliteDict(config_filename)
-            except Exception as e:
-                print_exception(e)
-        else:
+        if not prompt_for_overwrite(config_filename, force_write):
             return None
+        try:
+            config_dirname = os.path.dirname(config_filename)
+            if not os.path.isdir(config_dirname):
+                os.makedirs(config_dirname)
+            if os.path.exists(config_filename):
+                os.remove(config_filename)
+            return SqliteDict(config_filename)
+        except Exception as e:
+            print_exception(e)
 
 
 class JavaScriptEncoder(ScoutResultEncoder):
