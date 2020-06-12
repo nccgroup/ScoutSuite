@@ -1,9 +1,6 @@
 from ScoutSuite.core.console import print_debug, print_exception
 from ScoutSuite.utils import manage_dictionary
 
-from ScoutSuite.core.utils import recurse
-
-
 class ProcessingEngine(object):
     """
 
