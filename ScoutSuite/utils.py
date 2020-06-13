@@ -5,7 +5,8 @@ formatted_provider_name = {
     'aws': 'AWS',
     'azure': 'Azure',
     'gcp': 'GCP',
-    'oci': 'OCI'
+    'oci': 'OCI',
+    'salesfoece': 'Salesforce'
 }
 
 formatted_service_name = {
