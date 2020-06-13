@@ -57,7 +57,8 @@ class SalesforceAuthenticationStrategy(AuthenticationStrategy):
 
             else:
 
-                # TODO "The xml.etree.ElementTree module is not secure against maliciously constructed data.
+                # TODO
+                #  "The xml.etree.ElementTree module is not secure against maliciously constructed data.
                 #  If you need to parse untrusted or unauthenticated data see XML vulnerabilities."
                 try:
                     root = ElementTree.fromstring(response.text)
