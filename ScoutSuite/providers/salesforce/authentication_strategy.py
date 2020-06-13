@@ -1,5 +1,7 @@
 import requests
+import logging
 from xml.etree import ElementTree
+
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationStrategy, AuthenticationException
 
 
@@ -27,6 +29,8 @@ class SalesforceAuthenticationStrategy(AuthenticationStrategy):
                      sf_password,
                      sf_endpoint,
                      **kwargs):
+
+        logging.getLogger('urllib3').setLevel(logging.ERROR)
 
         try:
 
