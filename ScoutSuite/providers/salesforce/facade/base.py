@@ -1,4 +1,5 @@
 from ScoutSuite.providers.salesforce.authentication_strategy import SalesforceCredentials
+from ScoutSuite.providers.salesforce.facade.profiles import ProfileFacade
 
 
 class SalesforceFacade:
@@ -8,3 +9,4 @@ class SalesforceFacade:
 
     def _instantiate_facades(self):
         pass
+        self.profiles = ProfileFacade(self._credentials)
