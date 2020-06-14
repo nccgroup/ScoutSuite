@@ -1,0 +1,17 @@
+{
+    "description": "Public Login Ranges",
+    "rationale": "This profile is accessible from the Internet...",
+    "dashboard_name": "Profiles",
+    "path": "profiles.profiles.id",
+    "conditions": [
+        "and",
+        [
+            "profiles.profiles.id.login_ip_ranges",
+            "containAtLeastOneOf",
+            [
+                "0.0.0.0-255.255.255.255"
+            ]
+        ]
+    ],
+    "id_suffix": "login_ip_ranges"
+}

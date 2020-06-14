@@ -12,6 +12,12 @@
         "enabled": true,
         "level": "warning"
       }
+    ],
+    "profiles-public-login-ranges.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
     ]
   }
 }
