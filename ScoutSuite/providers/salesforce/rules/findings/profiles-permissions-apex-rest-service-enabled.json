@@ -1,0 +1,15 @@
+{
+    "description": "Permissions API Enabled",
+    "rationale": "This API should not be enabled because...",
+    "dashboard_name": "Profiles",
+    "path": "profiles.profiles.id",
+    "conditions": [
+        "and",
+        [
+            "profiles.profiles.id.permissions_api_enabled",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "permissions_api_enabled"
+}

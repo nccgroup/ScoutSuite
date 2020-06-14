@@ -1,5 +1,17 @@
 {
   "about": "Default ruleset for Salesforce.",
   "rules": {
+    "profiles-permissions-api-enabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ],
+    "profiles-permissions-apex-rest-service-enabled.json": [
+      {
+        "enabled": true,
+        "level": "warning"
+      }
+    ]
   }
 }

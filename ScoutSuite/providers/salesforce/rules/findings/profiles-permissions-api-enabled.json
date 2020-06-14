@@ -1,0 +1,15 @@
+{
+    "description": "Permissions Apex REST Service Enabled",
+    "rationale": "This API should not be enabled because...",
+    "dashboard_name": "Profiles",
+    "path": "profiles.profiles.id",
+    "conditions": [
+        "and",
+        [
+            "profiles.profiles.id.permissions_apex_rest_services",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "permissions_apex_rest_services"
+}
