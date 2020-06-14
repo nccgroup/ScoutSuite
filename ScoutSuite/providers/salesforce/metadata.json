@@ -1,3 +1,12 @@
 {
-
+    "security": {
+        "profiles": {
+            "resources": {
+                "profiles": {
+                    "cols": 2,
+                    "path": "services.profiles.profiles"
+                }
+            }
+        }
+    }
 }
