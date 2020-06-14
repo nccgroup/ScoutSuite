@@ -19,6 +19,10 @@ class Profiles(SalesforceResources):
         profile_dict['full_name'] = await self.facade.profiles.get_profile_full_name(profile_dict['id'])
         profile_dict['permissions_api_enabled'] = raw_profile.get('PermissionsApiEnabled')
         profile_dict['permissions_apex_rest_services'] = raw_profile.get('PermissionsApexRestServices')
+
+        profile_dict['login_ip_ranges'] = \
+            await self.facade.profiles.get_profile_login_restrictions(profile_dict['full_name'])
+
         return profile_dict['id'], profile_dict
 
 
