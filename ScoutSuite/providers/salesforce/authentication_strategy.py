@@ -21,7 +21,7 @@ class SalesforceCredentials:
 
 class SalesforceAuthenticationStrategy(AuthenticationStrategy):
     """
-    Implements authentication for the Openstack provider
+    Implements authentication for the Salesforce provider
     """
 
     def authenticate(self,
