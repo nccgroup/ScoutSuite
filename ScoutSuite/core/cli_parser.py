@@ -257,11 +257,11 @@ class ScoutSuiteArgumentParser:
 
 
     def _init_salesforce_parser(self):
-        oci_parser = self.subparsers.add_parser("salesforce",
+        salesforce_parser = self.subparsers.add_parser("salesforce",
                                                 parents=[self.common_providers_args_parser],
                                                 help="Run Scout against a Salesforce instance")
 
-        parser = oci_parser.add_argument_group('Authentication parameters')
+        parser = salesforce_parser.add_argument_group('Authentication parameters')
 
         parser.add_argument('-u',
                             '--username',
