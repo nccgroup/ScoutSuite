@@ -52,7 +52,7 @@ class StorageAccounts(AzureCompositeResources):
     def _is_trusted_microsoft_services_enabled(self, storage_account):
         if storage_account.network_rule_set.bypass:
             return "AzureServices" in storage_account.network_rule_set.bypass
-        return false
+        return False
 
     def _parse_access_keys_last_rotation_date(self, activity_logs):
         last_rotation_date = None
