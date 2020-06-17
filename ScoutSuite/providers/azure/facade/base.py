@@ -121,9 +121,7 @@ class AzureFacade:
 
         # Other == error
         else:
-            print_exception('Unknown Azure subscription option')
-            self.subscription_list = []
-            raise
+            raise AuthenticationException('Unknown Azure subscription option')
 
         if subscriptions_list and len(subscriptions_list) > 0:
             self.subscription_list = subscriptions_list
