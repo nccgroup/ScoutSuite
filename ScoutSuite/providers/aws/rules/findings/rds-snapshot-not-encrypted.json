@@ -1,0 +1,19 @@
+{
+    "description": "Snapshot Not Encrypted",
+    "rationale": "Snapshots should be encrypted.",
+    "references": [
+        "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html"
+    ],
+    "dashboard_name": "Snapshots",
+    "display_path": "rds.regions.id.vpcs.id.snapshots.id",
+    "path": "rds.regions.id.vpcs.id.snapshots.id.attributes.id",
+    "conditions": [
+        "and",
+        [
+            "rds.regions.id.vpcs.id.snapshots.id.Encrypted",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "Encrypted"
+}
