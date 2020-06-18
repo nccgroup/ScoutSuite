@@ -766,6 +766,12 @@
                 "level": "warning"
             }
         ],
+        "rds-snapshot-not-encrypted.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "rds-postgres-instance-with-invalid-certificate.json": [
             {
                 "enabled": false,
