@@ -57,8 +57,8 @@
         <div class="list-group-item">
           <h4>Destination</h4>
           <ul>
-            {{> services.elb.regions.vpcs.elbs.linked_resources region = region vpc = vpc resources = instances resource_type = 'instances'}}
-            {{> services.elb.regions.vpcs.elbs.linked_resources region = region vpc = vpc resources = Subnets resource_type = 'subnets'}}
+            {{> services.elb.regions.vpcs.elbs.linked_resources service='ec2' region = region vpc = vpc resources = instances resource_type = 'instances'}}
+            {{> services.elb.regions.vpcs.elbs.linked_resources service='vpc' region = region vpc = vpc resources = Subnets resource_type = 'subnets'}}
           </ul>
         </div>
         {{#if tags}}
