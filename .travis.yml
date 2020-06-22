@@ -45,6 +45,7 @@ script:
   - nosetests --with-coverage tests/test-resources.py
   - nosetests --with-coverage tests/test-rules-ruleset.py
   - nosetests --with-coverage tests/test-rules-processingengine.py
+  - nosetests --with-coverage tests/test-aws-provider.py
   - nosetests --with-coverage --nocapture tests/test-scoutsuite.py -a "!credential"
 
 # Update test coverage
