@@ -80,10 +80,17 @@ class TestAWSProviderClass:
     # mock two separate places from which get_aws_account_id is called
     @mock.patch("ScoutSuite.providers.aws.facade.base.get_aws_account_id")
     @mock.patch("ScoutSuite.providers.aws.provider.get_aws_account_id")
-    def test_get_report_name(self, mock_get_aws_account_id, mock_facade_aws_account_id):
+    @mock.patch("ScoutSuite.providers.aws.provider.get_partition_name")
+    def test_get_report_name(
+        self,
+        mock_get_partiton_name,
+        mock_get_aws_account_id,
+        mock_facade_aws_account_id,
+    ):
 
         # no account_id, no profile
         mock_get_aws_account_id.return_value = None
+        mock_get_partiton_name.return_value = None
         aws_provider = get_provider(
             provider="aws", credentials=mock.MagicMock(session="123"),
         )
