@@ -9,6 +9,11 @@
     "conditions": [
         "and",
         [
+            "redshift.regions.id.parameter_groups.id.is_default",
+            "false",
+            ""
+        ],
+        [
             "redshift.regions.id.parameter_groups.id.parameters.enable_user_activity_logging.value",
             "false",
             ""
