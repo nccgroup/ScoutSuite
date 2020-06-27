@@ -12,7 +12,7 @@ class CloudTrailFacade(AWSBaseFacade):
             trails = await run_concurrently(
                 lambda: client.describe_trails()['trailList'])
         except Exception as e:
-            print_exception('Failed to describe CloudTrail trail: {}'.format(e))
+            print_exception(f'Failed to describe CloudTrail trail: {e}')
             trails = []
         else:
             await get_and_set_concurrently(
@@ -27,7 +27,7 @@ class CloudTrailFacade(AWSBaseFacade):
                 lambda: client.get_trail_status(Name=trail['TrailARN']))
             trail.update(trail_status)
         except Exception as e:
-            print_exception('Failed to get CloudTrail trail status: {}'.format(e))
+            print_exception(f'Failed to get CloudTrail trail status: {e}')
 
     async def _get_and_set_selectors(self, trail: {}, region: str):
         client = AWSFacadeUtils.get_client('cloudtrail', self.session, region)
@@ -35,4 +35,4 @@ class CloudTrailFacade(AWSBaseFacade):
             trail['EventSelectors'] = await run_concurrently(
                 lambda: client.get_event_selectors(TrailName=trail['TrailARN'])['EventSelectors'])
         except Exception as e:
-            print_exception('Failed to get CloudTrail event selectors: {}'.format(e))
+            print_exception(f'Failed to get CloudTrail event selectors: {e}')

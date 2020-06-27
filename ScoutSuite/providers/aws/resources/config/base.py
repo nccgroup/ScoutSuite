@@ -11,4 +11,4 @@ class Config(Regions):
     ]
 
     def __init__(self, facade: AWSFacade):
-        super(Config, self).__init__('config', facade)
+        super().__init__('config', facade)

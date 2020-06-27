@@ -5,7 +5,7 @@ from ScoutSuite.providers.aws.utils import get_name
 
 class Snapshots(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
-        super(Snapshots, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
 
     async def fetch_all(self):

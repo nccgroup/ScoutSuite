@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 import datetime
 import os
 import shutil
@@ -15,7 +13,7 @@ from ScoutSuite.output.result_encoder import JavaScriptEncoder, SqlLiteEncoder
 from ScoutSuite.output.utils import get_filename, prompt_for_overwrite
 
 
-class HTMLReport(object):
+class HTMLReport:
     """
     Base HTML report
     """
@@ -46,10 +44,10 @@ class HTMLReport(object):
                           os.path.isfile(os.path.join(template_dir, f))]
         for filename in template_files:
             try:
-                with open('%s' % filename, 'rt') as f:
+                with open('%s' % filename) as f:
                     contents = contents + f.read()
             except Exception as e:
-                print_exception('Error reading filename %s: %s' % (filename, e))
+                print_exception(f'Error reading filename {filename}: {e}')
         return contents
 
     def get_content_from_file(self, filename):
@@ -57,10 +55,10 @@ class HTMLReport(object):
         template_dir = os.path.join(self.html_data_path, 'conditionals')
         filename = template_dir + filename
         try:
-            with open('%s' % filename, 'rt') as f:
+            with open('%s' % filename) as f:
                 contents = contents + f.read()
         except Exception as e:
-            print_exception('Error reading filename %s: %s' % (filename, e))
+            print_exception(f'Error reading filename {filename}: {e}')
         return contents
 
     def prepare_html_report_dir(self):
@@ -93,7 +91,7 @@ class ScoutReport(HTMLReport):
         self.provider = provider
         self.result_format = result_format
 
-        super(ScoutReport, self).__init__(report_name, report_dir, timestamp, exceptions, result_format)
+        super().__init__(report_name, report_dir, timestamp, exceptions, result_format)
 
     def save(self, config, exceptions, force_write=False, debug=False):
         self.prepare_html_report_dir()
@@ -134,6 +132,6 @@ class ScoutReport(HTMLReport):
                                                                self.report_dir,
                                                                relative_path=True)[0])
                         newline = newline.replace('<!-- SQLITE JS PLACEHOLDER -->',
-                                                  '{}/sqlite.js'.format(DEFAULT_INCLUDES_DIRECTORY))
+                                                  f'{DEFAULT_INCLUDES_DIRECTORY}/sqlite.js')
                         nf.write(newline)
         return new_file

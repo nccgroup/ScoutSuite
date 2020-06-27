@@ -1,9 +1,6 @@
-from __future__ import print_function
-
 import os
 import sys
 
-from six.moves import input
 
 from ScoutSuite import DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY
 from ScoutSuite.core.console import print_error
@@ -39,7 +36,7 @@ def prompt_for_overwrite(filename, force_write):
     #
     if not os.path.exists(filename) or force_write:
         return True
-    return prompt_for_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename))
+    return prompt_for_yes_no(f'File \'{filename}\' already exists. Do you want to overwrite it')
 
 
 def get_filename(file_type, file_name=None, file_dir=None, relative_path=False, file_extension=None):
@@ -49,7 +46,7 @@ def get_filename(file_type, file_name=None, file_dir=None, relative_path=False, 
         extension = 'html'
         first_line = None
     elif file_type == 'RESULTS':
-        name = 'scoutsuite_results_{}'.format(file_name) if file_name else 'scoutsuite_results'
+        name = f'scoutsuite_results_{file_name}' if file_name else 'scoutsuite_results'
         if not relative_path:
             directory = os.path.join(file_dir if file_dir else DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY)
         else:
@@ -57,7 +54,7 @@ def get_filename(file_type, file_name=None, file_dir=None, relative_path=False, 
         extension = 'js'
         first_line = 'scoutsuite_results ='
     elif file_type == 'EXCEPTIONS':
-        name = 'scoutsuite_exceptions_{}'.format(file_name) if file_name else 'scoutsuite_exceptions'
+        name = f'scoutsuite_exceptions_{file_name}' if file_name else 'scoutsuite_exceptions'
         if not relative_path:
             directory = os.path.join(file_dir if file_dir else DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY)
         else:
@@ -65,7 +62,7 @@ def get_filename(file_type, file_name=None, file_dir=None, relative_path=False, 
         extension = 'js'
         first_line = 'exceptions ='
     elif file_type == 'ERRORS':
-        name = 'scoutsuite_errors_{}'.format(file_name) if file_name else 'scoutsuite_errors'
+        name = f'scoutsuite_errors_{file_name}' if file_name else 'scoutsuite_errors'
         if not relative_path:
             directory = os.path.join(file_dir if file_dir else DEFAULT_REPORT_DIRECTORY, DEFAULT_REPORT_RESULTS_DIRECTORY)
         else:
@@ -73,7 +70,7 @@ def get_filename(file_type, file_name=None, file_dir=None, relative_path=False, 
         extension = 'json'
         first_line = None
     else:
-        raise Exception('Invalid file type provided: {}'.format(file_type))
+        raise Exception(f'Invalid file type provided: {file_type}')
 
     full_path = os.path.join(directory,
                              '{}.{}'.format(name,

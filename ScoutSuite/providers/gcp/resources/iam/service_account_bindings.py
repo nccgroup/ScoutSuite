@@ -4,7 +4,7 @@ from ScoutSuite.providers.base.resources.base import Resources
 
 class ServiceAccountBindings(Resources):
     def __init__(self, facade: GCPFacade, project_id: str, service_account_email: str):
-        super(ServiceAccountBindings, self).__init__(facade)
+        super().__init__(facade)
         self.project_id = project_id
         self.service_account_email = service_account_email 
 
