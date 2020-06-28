@@ -37,6 +37,7 @@ class LoadBalancers(AWSCompositeResources):
         load_balancer['name'] = load_balancer.pop('LoadBalancerName')
         load_balancer['security_groups'] = []
         load_balancer['listener_protocols'] = []
+        load_balancer['isNetwork'] = load_balancer["Type"] == "network"
 
         if 'SecurityGroups' in load_balancer:
             for sg in load_balancer['SecurityGroups']:
