@@ -16,4 +16,7 @@ class NetworkInterfaces(AWSResources):
 
     def _parse_network_interface(self, raw_network_interface):
         raw_network_interface['name'] = raw_network_interface['NetworkInterfaceId']
+        raw_network_interface['arn'] = 'arn:aws:ec2:{}:{}:network-interface/{}'.format(self.region,
+                                                                             raw_network_interface.get('OwnerId'),
+                                                                             raw_network_interface.get('NetworkInterfaceId'))
         return raw_network_interface['NetworkInterfaceId'], raw_network_interface

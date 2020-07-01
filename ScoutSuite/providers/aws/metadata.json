@@ -263,7 +263,7 @@
             "resources": {
                 "lbs": {
                     "cols": 2,
-                    "path": "services.elbv2.regions.id.vpcs.id.lbs",
+                    "path": "services.elbv2.regions.id.vpcs.id.elbs",
                     "callbacks": [
                         [
                             "match_security_groups_and_resources_callback",
