@@ -40,7 +40,7 @@ class TestOpinelUtilsConsoleClass(unittest.TestCase):
 
 
     def test_printGeneric(self):
-        print_generic(sys.stderr, 'hello')
+        print_generic('hello')
 
 
     def test_prompt(self):
