@@ -69,14 +69,14 @@ class AWSServicesConfig(BaseServicesConfig):
     :ivar rds:                          RDS configuration
     :ivar redshift:                     Redshift configuration
     :ivar s3:                           S3 configuration
-    :ivar ses:                          SES configuration:
-    "ivar sns:                          SNS configuration
+    :ivar ses:                          SES configuration
+    :ivar sns:                          SNS configuration
     :ivar sqs:                          SQS configuration
     """
 
     def __init__(self, credentials=None, **kwargs):
 
-        super(AWSServicesConfig, self).__init__(credentials)
+        super().__init__(credentials)
 
         facade = AWSFacade(credentials)
 

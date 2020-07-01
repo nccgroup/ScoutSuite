@@ -7,7 +7,7 @@ import re
 
 class EC2Instances(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
-        super(EC2Instances, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
         self.vpc = vpc
 
@@ -31,7 +31,7 @@ class EC2Instances(AWSResources):
 
         get_name(raw_instance, instance, 'InstanceId')
         get_keys(raw_instance, instance,
-                 ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile', 'SubnetId'])
+                 ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile', 'SubnetId', 'Tags'])
 
         instance['network_interfaces'] = {}
         for eni in raw_instance['NetworkInterfaces']:

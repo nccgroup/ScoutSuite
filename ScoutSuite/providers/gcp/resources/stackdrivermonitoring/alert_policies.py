@@ -5,7 +5,7 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 class AlertPolicies(Resources):
     def __init__(self, facade: GCPFacade, project_id: str):
-        super(AlertPolicies, self).__init__(facade)
+        super().__init__(facade)
         self.project_id = project_id
 
     async def fetch_all(self):

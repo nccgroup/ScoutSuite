@@ -10,5 +10,5 @@ class DirectConnectFacade(AWSBaseFacade):
         try:
             return await run_concurrently(lambda: client.describe_connections()['connections'])
         except Exception as e:
-            print_exception('Failed to describe Direct Connect connections: {}'.format(e))
+            print_exception(f'Failed to describe Direct Connect connections: {e}')
             return []

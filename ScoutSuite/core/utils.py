@@ -2,7 +2,6 @@
 Single-service rule processing functions
 """
 
-from six import string_types
 import copy
 
 from ScoutSuite.core.console import print_exception
@@ -74,14 +73,15 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
             results = results + recurse(all_info, split_current_info, copy.deepcopy(target_path), split_current_path,
                                         config, add_suffix)
     # Python 2-3 compatible way to check for string type
-    elif isinstance(current_info, string_types):
+    elif isinstance(current_info, str):
         split_current_path = copy.deepcopy(current_path)
         results = results + recurse(all_info, current_info, [], split_current_path,
                                     config, add_suffix)
     else:
-        print_exception('Unable to recursively test condition for a path: unhandled case typeof(current_info) = {}'.format(type(current_info)),
+        print_exception('Unable to recursively test condition for path {}: '
+                        'unhandled case for \"{}\" type'.format(current_path,
+                                                                type(current_info)),
                         additional_details={'current_path': current_path,
                                             'current_info': current_info,
                                             'dbg_target_path': dbg_target_path})
-        # raise Exception
     return results

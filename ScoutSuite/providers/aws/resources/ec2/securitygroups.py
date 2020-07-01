@@ -8,7 +8,7 @@ class SecurityGroups(AWSResources):
     icmp_message_types_dict = load_data('icmp_message_types.json', 'icmp_message_types')
 
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
-        super(SecurityGroups, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
         self.vpc = vpc
 
@@ -64,7 +64,7 @@ class SecurityGroups(AWSResources):
                 elif rule['FromPort'] == rule['ToPort']:
                     port_value = str(rule['FromPort'])
                 else:
-                    port_value = '%s-%s' % (rule['FromPort'], rule['ToPort'])
+                    port_value = '{}-{}'.format(rule['FromPort'], rule['ToPort'])
             manage_dictionary(protocols[ip_protocol]['ports'], port_value, {})
 
             # Save grants, values are either a CIDR or an EC2 security group

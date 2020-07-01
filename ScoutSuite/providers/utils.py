@@ -25,7 +25,7 @@ async def run_concurrently(function, backoff_seconds=15):
     except Exception as e:
         # Determine whether the exception is due to API throttling
         if is_throttled(e):
-            print_info('Hitting API rate limiting, will retry in {}s'.format(backoff_seconds))
+            print_info(f'Hitting API rate limiting, will retry in {backoff_seconds}s')
             await asyncio.sleep(backoff_seconds)
             return await run_concurrently(function, backoff_seconds + 15)
         else:
@@ -112,7 +112,10 @@ def is_throttled(e):
     TODO - this implementation is incomplete
     """
 
-    if hasattr(e, 'message') and 'Google Cloud' in e.message:
+    if hasattr(e, 'message') and \
+            ('Google Cloud' in e.message or
+             '404' in e.message or
+             'projects/' in e.message):
         return False
     else:
         return aws_is_throttled(e)

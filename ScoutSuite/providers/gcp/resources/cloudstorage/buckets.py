@@ -6,7 +6,7 @@ from ScoutSuite.core.console import print_exception
 
 class Buckets(Resources):
     def __init__(self, facade: GCPFacade, project_id: str):
-        super(Buckets, self).__init__(facade)
+        super().__init__(facade)
         self.project_id = project_id
 
     async def fetch_all(self):
@@ -41,12 +41,12 @@ class Buckets(Resources):
             try:
                 bucket_dict['acls'] = list(raw_bucket.acl)
             except Exception as e:
-                print_exception('Failed to retrieve storage bucket ACLs: {}'.format(e))
+                print_exception(f'Failed to retrieve storage bucket ACLs: {e}')
                 bucket_dict['acls'] = []
             try:
                 bucket_dict['default_object_acl'] = list(raw_bucket.default_object_acl)
             except Exception as e:
-                print_exception('Failed to retrieve storage bucket object ACLs: {}'.format(e))
+                print_exception(f'Failed to retrieve storage bucket object ACLs: {e}')
                 bucket_dict['default_object_acl'] = []
 
         bucket_dict['acl_configuration'] = self._get_cloudstorage_bucket_acl(raw_bucket)  # FIXME this should be "IAM"

@@ -4,7 +4,7 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 class RDSInstances(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
-        super(RDSInstances, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
         self.vpc = vpc
 
