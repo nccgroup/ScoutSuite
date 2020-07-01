@@ -15,7 +15,7 @@ class SNSFacade(AWSBaseFacade):
             topics = await AWSFacadeUtils.get_all_pages('sns', region, self.session, 'list_topics', 'Topics')
             await get_and_set_concurrently([self._get_and_set_topic_attributes], topics, region=region)
         except Exception as e:
-            print_exception('Failed to get CloudWatch alarms: {}'.format(e))
+            print_exception(f'Failed to get CloudWatch alarms: {e}')
             topics = []
         finally:
             return topics
@@ -27,7 +27,7 @@ class SNSFacade(AWSBaseFacade):
                 lambda: sns_client.get_topic_attributes(TopicArn=topic['TopicArn'])['Attributes']
             )
         except Exception as e:
-            print_exception('Failed to get SNS topic attributes: {}'.format(e))
+            print_exception(f'Failed to get SNS topic attributes: {e}')
 
     async def get_subscriptions(self, region: str, topic_name: str):
         await self.cache_subscriptions(region)

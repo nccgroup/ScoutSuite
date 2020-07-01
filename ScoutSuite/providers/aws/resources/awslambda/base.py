@@ -10,4 +10,4 @@ class Lambdas(Regions):
     ]
 
     def __init__(self, facade: AWSFacade):
-        super(Lambdas, self).__init__('lambda', facade)
+        super().__init__('lambda', facade)

@@ -6,7 +6,7 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 class LoadBalancers(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
-        super(LoadBalancers, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
         self.vpc = vpc
 

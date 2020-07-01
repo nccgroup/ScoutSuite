@@ -7,7 +7,7 @@ from ScoutSuite.providers.azure.utils import get_resource_group_name
 class VirtualNetworks(AzureResources):
 
     def __init__(self, facade: AzureFacade, subscription_id: str):
-        super(VirtualNetworks, self).__init__(facade)
+        super().__init__(facade)
         self.subscription_id = subscription_id
 
     async def fetch_all(self):

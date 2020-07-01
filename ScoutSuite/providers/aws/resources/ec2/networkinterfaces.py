@@ -4,7 +4,7 @@ from ScoutSuite.providers.aws.facade.base import AWSFacade
 
 class NetworkInterfaces(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
-        super(NetworkInterfaces, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
         self.vpc = vpc
 

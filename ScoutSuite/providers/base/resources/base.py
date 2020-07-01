@@ -19,7 +19,7 @@ class Resources(dict, metaclass=abc.ABCMeta):
     def __init__(self, service_facade):
         self.facade = service_facade
 
-        super(Resources, self).__init__()
+        super().__init__()
 
     @abc.abstractmethod
     async def fetch_all(self, **kwargs):
@@ -34,7 +34,7 @@ class Resources(dict, metaclass=abc.ABCMeta):
 class CompositeResources(Resources, metaclass=abc.ABCMeta):
 
     """This class represents a node in the hierarchical structure. As inherited from `Resources`, it still \
-    stores instances of a given type of resources internally but also stores some kind of nested resources \ 
+    stores instances of a given type of resources internally but also stores some kind of nested resources \\ 
     referred to as its 'children'.
     """
 

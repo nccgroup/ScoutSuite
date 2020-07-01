@@ -12,7 +12,7 @@ class ServiceAccounts(GCPCompositeResources):
     ]
 
     def __init__(self, facade: GCPFacade, project_id: str):
-        super(ServiceAccounts, self).__init__(facade)
+        super().__init__(facade)
         self.project_id = project_id
 
     async def fetch_all(self):
@@ -34,7 +34,7 @@ class ServiceAccounts(GCPCompositeResources):
         service_account_dict['email'] = raw_service_account['email']
         service_account_dict['project_id'] = raw_service_account['projectId']
 
-        pattern = re.compile('.+@{}\.iam\.gserviceaccount\.com'.format(service_account_dict['project_id']))
+        pattern = re.compile(r'.+@{}\.iam\.gserviceaccount\.com'.format(service_account_dict['project_id']))
         if pattern.match(service_account_dict['email']):
             service_account_dict['default_service_account'] = False
         else:

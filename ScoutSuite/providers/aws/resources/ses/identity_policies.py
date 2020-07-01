@@ -7,7 +7,7 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 class IdentityPolicies(AWSResources):
 
     def __init__(self, facade: AWSFacade, region: str, identity_name: str):
-        super(IdentityPolicies, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
         self.identity_name = identity_name
 

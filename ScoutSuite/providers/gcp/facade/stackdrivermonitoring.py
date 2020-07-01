@@ -12,7 +12,7 @@ class StackdriverMonitoringFacade:
             name = client.project_path(project_id)
             return await run_concurrently(lambda: [r for r in client.list_uptime_check_configs(name)])
         except Exception as e:
-            print_exception('Failed to retrieve uptime checks: {}'.format(e))
+            print_exception(f'Failed to retrieve uptime checks: {e}')
             return []
 
     async def get_alert_policies(self, project_id: str):
@@ -21,5 +21,5 @@ class StackdriverMonitoringFacade:
             name = client.project_path(project_id)
             return await run_concurrently(lambda: [r for r in client.list_alert_policies(name)])
         except Exception as e:
-            print_exception('Failed to retrieve alert policies: {}'.format(e))
+            print_exception(f'Failed to retrieve alert policies: {e}')
             return []

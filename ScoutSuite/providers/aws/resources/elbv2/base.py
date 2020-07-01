@@ -10,4 +10,4 @@ class ELBv2(Regions):
     ]
 
     def __init__(self, facade: AWSFacade):
-        super(ELBv2, self).__init__('elbv2', facade)
+        super().__init__('elbv2', facade)
