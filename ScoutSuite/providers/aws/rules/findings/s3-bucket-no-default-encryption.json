@@ -1,9 +1,19 @@
 {
-  "dashboard_name": "Buckets",
-  "description": "Bucket without default encryption enabled",
-  "path": "s3.buckets.id",
-  "conditions": [ "and",
-    [ "s3.buckets.id.default_encryption_enabled", "false", "" ]
-  ],
-  "id_suffix": "default_encryption_enabled"
+    "description": "Bucket without Default Encryption Enabled",
+    "rationale": "Amazon S3 default encryption provides a way to set the default encryption behavior for an S3 bucket. This will ensure data-at-rest is encrypted",
+    "references": [
+        "https://docs.aws.amazon.com/AmazonS3/latest/dev/security-best-practices.html",
+        "https://docs.aws.amazon.com/AmazonS3/latest/dev/bucket-encryption.html"
+    ],
+    "dashboard_name": "Buckets",
+    "path": "s3.buckets.id",
+    "conditions": [
+        "and",
+        [
+            "s3.buckets.id.default_encryption_enabled",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "default_encryption_enabled"
 }

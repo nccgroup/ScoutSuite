@@ -23,6 +23,10 @@
         "snapshots": {
           "cols": 2,
           "path": "services.virtualmachines.subscriptions.id.snapshots"
+        },
+        "images": {
+          "cols": 2,
+          "path": "services.virtualmachines.subscriptions.id.images"
         }
       }
     }
@@ -66,11 +70,11 @@
         }
       }
     },
-    "arm": {
+    "rbac": {
       "resources": {
         "roles": {
           "cols": 2,
-          "path": "services.arm.subscriptions.id.roles"
+          "path": "services.rbac.subscriptions.id.roles"
         }
       }
     },

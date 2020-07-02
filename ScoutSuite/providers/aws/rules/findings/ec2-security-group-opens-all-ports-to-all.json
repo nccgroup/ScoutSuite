@@ -1,10 +1,20 @@
 {
-    "description": "All ports open to all",
-    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
-    "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "description": "Security Group Opens All Ports to All",
+    "rationale": "It was detected that all ports in the security group are open, and any source IP address could send traffic to these ports, which creates a wider attack surface for resources assigned to it. Open ports should be reduced to the minimum needed to correctly operate and, when possible, source address restrictions should be implemented.",
     "dashboard_name": "Rules",
-    "conditions": [ "and",
-        [ "_INCLUDE_(conditions/cidr-is-all.json)", "", ""],
-        [ "_INCLUDE_(conditions/security-group-opens-all-ports.json)", "", ""]
+    "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
+    "conditions": [
+        "and",
+        [
+            "_INCLUDE_(conditions/cidr-is-all.json)",
+            "",
+            ""
+        ],
+        [
+            "_INCLUDE_(conditions/security-group-opens-all-ports.json)",
+            "",
+            ""
+        ]
     ]
 }

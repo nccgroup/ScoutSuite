@@ -206,24 +206,28 @@ async def _run(provider,
         print_exception('Authentication failure: {}'.format(e))
         return 101
     # Create a cloud provider object
-    cloud_provider = get_provider(provider=provider,
-                                  # AWS
-                                  profile=profile,
-                                  # Azure
-                                  subscription_ids=subscription_ids,
-                                  all_subscriptions=all_subscriptions,
-                                  # GCP
-                                  project_id=project_id,
-                                  folder_id=folder_id,
-                                  organization_id=organization_id,
-                                  all_projects=all_projects,
-                                  # Other
-                                  report_dir=report_dir,
-                                  timestamp=timestamp,
-                                  services=services,
-                                  skipped_services=skipped_services,
-                                  programmatic_execution=programmatic_execution,
-                                  credentials=credentials)
+    try:
+        cloud_provider = get_provider(provider=provider,
+                                      # AWS
+                                      profile=profile,
+                                      # Azure
+                                      subscription_ids=subscription_ids,
+                                      all_subscriptions=all_subscriptions,
+                                      # GCP
+                                      project_id=project_id,
+                                      folder_id=folder_id,
+                                      organization_id=organization_id,
+                                      all_projects=all_projects,
+                                      # Other
+                                      report_dir=report_dir,
+                                      timestamp=timestamp,
+                                      services=services,
+                                      skipped_services=skipped_services,
+                                      programmatic_execution=programmatic_execution,
+                                      credentials=credentials)
+    except Exception as e:
+        print_exception('Initialization failure: {}'.format(e))
+        return 102
 
     # Create a new report
     report_name = report_name if report_name else cloud_provider.get_report_name()

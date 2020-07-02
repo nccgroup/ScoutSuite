@@ -8,6 +8,7 @@ from ScoutSuite.providers.aws.utils import ec2_classic, get_aws_account_id
 from ScoutSuite.providers.base.configs.browser import combine_paths, get_object_at, get_value_at
 from ScoutSuite.providers.base.provider import BaseProvider
 from ScoutSuite.utils import manage_dictionary
+from ScoutSuite.providers.aws.utils import get_partition_name
 
 
 class AWSProvider(BaseProvider):
@@ -34,6 +35,8 @@ class AWSProvider(BaseProvider):
         self.result_format = result_format
 
         self.credentials = kwargs['credentials']
+
+        self.partition = get_partition_name(self.credentials.session)
 
         self.account_id = get_aws_account_id(self.credentials.session)
 
@@ -462,75 +465,78 @@ class AWSProvider(BaseProvider):
 
     def match_security_groups_and_resources_callback(self, current_config, path, current_path, resource_id,
                                                      callback_args):
-        service = current_path[1]
-        original_resource_path = combine_paths(
-            copy.deepcopy(current_path), [resource_id])
-        resource = get_object_at(self, original_resource_path)
-        if 'resource_id_path' not in callback_args:
-            resource_type = current_path[-1]
-            resource_path = copy.deepcopy(current_path)
-            resource_path.append(resource_id)
-        else:
-            resource_path = combine_paths(copy.deepcopy(
-                current_path), callback_args['resource_id_path'])
-            resource_id = resource_path[-1]
-            resource_type = resource_path[-2]
-        if 'status_path' in callback_args:
-            status_path = combine_paths(copy.deepcopy(
-                original_resource_path), callback_args['status_path'])
-            resource_status = get_object_at(self, status_path).replace('.', '_')
-        else:
-            resource_status = None
-        unknown_vpc_id = True if current_path[4] != 'vpcs' else False
-        # Issue 89 & 91 : can instances have no security group?
-        try:
-            try:
-                sg_attribute = get_object_at(
-                    resource, callback_args['sg_list_attribute_name'])
-            except Exception as e:
-                return
-            if type(sg_attribute) != list:
-                sg_attribute = [sg_attribute]
-            for resource_sg in sg_attribute:
-                if type(resource_sg) == dict:
-                    sg_id = resource_sg[callback_args['sg_id_attribute_name']]
-                else:
-                    sg_id = resource_sg
-                if unknown_vpc_id:
-                    vpc_id = self.sg_map[sg_id]['vpc_id']
-                    sg_base_path = copy.deepcopy(current_path[0:4])
-                    sg_base_path[1] = 'ec2'
-                    sg_base_path = sg_base_path + \
-                                   ['vpcs', vpc_id, 'security_groups']
-                else:
-                    sg_base_path = copy.deepcopy(current_path[0:6])
-                    sg_base_path[1] = 'ec2'
-                    sg_base_path.append('security_groups')
-                sg_path = copy.deepcopy(sg_base_path)
-                sg_path.append(sg_id)
-                sg = get_object_at(self, sg_path)
-                # Add usage information
-                manage_dictionary(sg, 'used_by', {})
-                manage_dictionary(sg['used_by'], service, {})
-                manage_dictionary(sg['used_by'][service], 'resource_type', {})
-                manage_dictionary(sg['used_by'][service]['resource_type'], resource_type, {
-                } if resource_status else [])
-                if resource_status:
-                    manage_dictionary(
-                        sg['used_by'][service]['resource_type'][resource_type], resource_status, [])
-                    if resource_id not in sg['used_by'][service]['resource_type'][resource_type][resource_status]:
-                        sg['used_by'][service]['resource_type'][resource_type][resource_status].append(
-                            resource_id)
-                else:
-                    sg['used_by'][service]['resource_type'][resource_type].append(
-                        resource_id)
-        except Exception as e:
-            if resource_type == 'elbs' and current_path[5] == ec2_classic:
-                pass
-            elif not self.services['ec2']:  # service not included in run
-                pass
+        if 'ec2' in self.service_list:  # validate that the service was included in run
+            service = current_path[1]
+            original_resource_path = combine_paths(
+                copy.deepcopy(current_path), [resource_id])
+            resource = get_object_at(self, original_resource_path)
+            if 'resource_id_path' not in callback_args:
+                resource_type = current_path[-1]
+                resource_path = copy.deepcopy(current_path)
+                resource_path.append(resource_id)
             else:
-                print_exception('Failed to parse %s: %s' % (resource_type, e))
+                resource_path = combine_paths(copy.deepcopy(
+                    current_path), callback_args['resource_id_path'])
+                resource_id = resource_path[-1]
+                resource_type = resource_path[-2]
+            if 'status_path' in callback_args:
+                status_path = combine_paths(copy.deepcopy(
+                    original_resource_path), callback_args['status_path'])
+                resource_status = get_object_at(self, status_path).replace('.', '_')
+            else:
+                resource_status = None
+            unknown_vpc_id = True if current_path[4] != 'vpcs' else False
+            # Issue 89 & 91 : can instances have no security group?
+            try:
+                try:
+                    sg_attribute = get_object_at(
+                        resource, callback_args['sg_list_attribute_name'])
+                except Exception as e:
+                    return
+                if type(sg_attribute) != list:
+                    sg_attribute = [sg_attribute]
+                for resource_sg in sg_attribute:
+                    if type(resource_sg) == dict:
+                        sg_id = resource_sg[callback_args['sg_id_attribute_name']]
+                    else:
+                        sg_id = resource_sg
+                    if unknown_vpc_id:
+                        vpc_id = self.sg_map[sg_id]['vpc_id']
+                        sg_base_path = copy.deepcopy(current_path[0:4])
+                        sg_base_path[1] = 'ec2'
+                        sg_base_path = sg_base_path + \
+                                       ['vpcs', vpc_id, 'security_groups']
+                    else:
+                        sg_base_path = copy.deepcopy(current_path[0:6])
+                        sg_base_path[1] = 'ec2'
+                        sg_base_path.append('security_groups')
+                    sg_path = copy.deepcopy(sg_base_path)
+                    sg_path.append(sg_id)
+                    sg = get_object_at(self, sg_path)
+                    # Add usage information
+                    manage_dictionary(sg, 'used_by', {})
+                    manage_dictionary(sg['used_by'], service, {})
+                    manage_dictionary(sg['used_by'][service], 'resource_type', {})
+                    manage_dictionary(sg['used_by'][service]['resource_type'], resource_type, {
+                    } if resource_status else [])
+                    if resource_status:
+                        manage_dictionary(
+                            sg['used_by'][service]['resource_type'][resource_type], resource_status, [])
+                        if resource_id not in sg['used_by'][service]['resource_type'][resource_type][resource_status]:
+                            sg['used_by'][service]['resource_type'][resource_type][resource_status].append(
+                                resource_id)
+                    else:
+                        sg['used_by'][service]['resource_type'][resource_type].append(
+                            resource_id)
+            except Exception as e:
+                if resource_type == 'elbs' and current_path[5] == ec2_classic:
+                    pass
+                elif not self.services['ec2']:  # service not included in run
+                    pass
+                elif not str(e):
+                    print_exception('Failed to parse {}'.format(resource_type))
+                else:
+                    print_exception('Failed to parse {}: {}'.format(resource_type, e))
 
     def _set_emr_vpc_ids(self):
         clear_list = []
@@ -681,46 +687,47 @@ class AWSProvider(BaseProvider):
                                           security_groups, listeners=None):
         listeners = [] if listeners is None else listeners
         manage_dictionary(attack_surface_config, public_ip, {'protocols': {}})
-        for sg_id in security_groups:
-            sg_path = copy.deepcopy(current_path[0:6])
-            sg_path[1] = 'ec2'
-            sg_path.append('security_groups')
-            sg_path.append(sg_id)
-            sg_path.append('rules')
-            sg_path.append('ingress')
-            ingress_rules = get_object_at(self, sg_path)
-            for p in ingress_rules['protocols']:
-                for port in ingress_rules['protocols'][p]['ports']:
-                    if len(listeners) == 0 and 'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
-                        manage_dictionary(
-                            attack_surface_config[public_ip]['protocols'], p, {'ports': {}})
-                        manage_dictionary(attack_surface_config[public_ip]['protocols'][p]['ports'], port,
-                                          {'cidrs': []})
-                        attack_surface_config[public_ip]['protocols'][p]['ports'][port]['cidrs'] += \
-                            ingress_rules['protocols'][p]['ports'][port]['cidrs']
-                    else:
-                        ports = port.split('-')
-                        if len(ports) > 1:
-                            port_min = int(ports[0])
-                            port_max = int(ports[1])
-                        elif port == 'N/A':
-                            port_min = port_max = None
-                        elif port == 'ALL':
-                            port_min = 0
-                            port_max = 65535
-                        elif p == 'ICMP':
-                            port_min = port_max = None
+        if 'ec2' in self.service_list:  # validate that the service was included in run
+            for sg_id in security_groups:
+                sg_path = copy.deepcopy(current_path[0:6])
+                sg_path[1] = 'ec2'
+                sg_path.append('security_groups')
+                sg_path.append(sg_id)
+                sg_path.append('rules')
+                sg_path.append('ingress')
+                ingress_rules = get_object_at(self, sg_path)
+                for p in ingress_rules['protocols']:
+                    for port in ingress_rules['protocols'][p]['ports']:
+                        if len(listeners) == 0 and 'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
+                            manage_dictionary(
+                                attack_surface_config[public_ip]['protocols'], p, {'ports': {}})
+                            manage_dictionary(attack_surface_config[public_ip]['protocols'][p]['ports'], port,
+                                              {'cidrs': []})
+                            attack_surface_config[public_ip]['protocols'][p]['ports'][port]['cidrs'] += \
+                                ingress_rules['protocols'][p]['ports'][port]['cidrs']
                         else:
-                            port_min = port_max = int(port)
-                        for listener in listeners:
-                            if (port_min and port_max) and port_min < int(listener) < port_max and \
-                                    'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
-                                manage_dictionary(
-                                    attack_surface_config[public_ip]['protocols'], p, {'ports': {}})
-                                manage_dictionary(attack_surface_config[public_ip]['protocols'][p]['ports'],
-                                                  str(listener), {'cidrs': []})
-                                attack_surface_config[public_ip]['protocols'][p]['ports'][str(listener)]['cidrs'] += \
-                                    ingress_rules['protocols'][p]['ports'][port]['cidrs']
+                            ports = port.split('-')
+                            if len(ports) > 1:
+                                port_min = int(ports[0])
+                                port_max = int(ports[1])
+                            elif port == 'N/A':
+                                port_min = port_max = None
+                            elif port == 'ALL':
+                                port_min = 0
+                                port_max = 65535
+                            elif p == 'ICMP':
+                                port_min = port_max = None
+                            else:
+                                port_min = port_max = int(port)
+                            for listener in listeners:
+                                if (port_min and port_max) and port_min < int(listener) < port_max and \
+                                        'cidrs' in ingress_rules['protocols'][p]['ports'][port]:
+                                    manage_dictionary(
+                                        attack_surface_config[public_ip]['protocols'], p, {'ports': {}})
+                                    manage_dictionary(attack_surface_config[public_ip]['protocols'][p]['ports'],
+                                                      str(listener), {'cidrs': []})
+                                    attack_surface_config[public_ip]['protocols'][p]['ports'][str(listener)]['cidrs'] += \
+                                        ingress_rules['protocols'][p]['ports'][port]['cidrs']
 
     def _parse_elb_policies(self):
         self._go_to_and_do(self.services['elb'],

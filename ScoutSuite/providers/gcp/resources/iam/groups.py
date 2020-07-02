@@ -3,16 +3,16 @@ from ScoutSuite.providers.gcp.facade.base import GCPFacade
 from ScoutSuite.providers.utils import get_non_provider_id
 
 
-class Users(Resources):
+class Groups(Resources):
     def __init__(self, facade: GCPFacade, project_id: str):
-        super(Users, self).__init__(facade)
+        super(Groups, self).__init__(facade)
         self.project_id = project_id
 
     async def fetch_all(self):
-        raw_bindings = await self.facade.cloudresourcemanager.get_bindings(self.project_id)
-        parsed_users = self._parse_binding(raw_bindings)
-        for user_id in parsed_users.keys():
-            self[parsed_users[user_id]['id']] = parsed_users[user_id]
+        raw_bindings = await self.facade.cloudresourcemanager.get_member_bindings(self.project_id)
+        parsed_groups = self._parse_binding(raw_bindings)
+        for group_id in parsed_groups.keys():
+            self[parsed_groups[group_id]['id']] = parsed_groups[group_id]
 
     def _parse_binding(self, raw_bindings):
 
@@ -22,7 +22,7 @@ class Users(Resources):
             if 'members' in binding:
                 for member in binding['members']:
                     member_type, entity = member.split(':')[:2]
-                    if member_type == 'user':
+                    if member_type == 'group':
                         if entity not in parsed_users.keys():
                             parsed_users[entity] = {'id': get_non_provider_id(entity),
                                                     'name': entity,

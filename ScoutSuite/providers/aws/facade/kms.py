@@ -15,7 +15,6 @@ class KMSFacade(AWSBaseFacade):
             await get_and_set_concurrently(
                 [self._get_and_set_key_policy,
                  self._get_and_set_key_metadata,
-                 self._get_and_set_key_rotation_status,
                  self._get_and_set_key_aliases],
                 keys, region=region)
         except Exception as e:
@@ -33,14 +32,6 @@ class KMSFacade(AWSBaseFacade):
             key['policy'] = json.loads(response.get('Policy'))
         except Exception as e:
             print_exception('Failed to get KMS key policy: {}'.format(e))
-
-    async def _get_and_set_key_rotation_status(self, key: {}, region: str):
-        client = AWSFacadeUtils.get_client('kms', self.session, region)
-        try:
-            key['rotation_status'] = await run_concurrently(
-                lambda: client.get_key_rotation_status(KeyId=key['KeyId']))
-        except Exception as e:
-            print_exception('Failed to get KMS key rotation: {}'.format(e))
 
     async def _get_and_set_key_metadata(self, key: {}, region: str):
         client = AWSFacadeUtils.get_client('kms', self.session, region)
@@ -66,3 +57,11 @@ class KMSFacade(AWSBaseFacade):
         except Exception as e:
             print_exception('Failed to list KMS Grants: {}'.format(e))
             return []
+
+    async def get_key_rotation_status(self, region: str, key_id: str):
+        client = AWSFacadeUtils.get_client('kms', self.session, region)
+        try:
+            return await run_concurrently(
+                lambda: client.get_key_rotation_status(KeyId=key_id))
+        except Exception as e:
+            print_exception('Failed to get KMS key rotation: {}'.format(e))

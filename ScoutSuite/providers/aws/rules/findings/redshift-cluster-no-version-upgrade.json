@@ -1,9 +1,18 @@
 {
-    "description": "Version upgrade disabled",
-    "path": "redshift.regions.id.vpcs.id.clusters.id",
+    "description": "Version Upgrade Disabled",
+    "rationale": "Version upgrade is necessary to ensure major verson upgrades will be applied automatically to the cluster within the maintenance window.",
+    "references": [
+        "https://docs.aws.amazon.com/redshift/latest/APIReference/API_ModifyCluster.html"
+    ],
     "dashboard_name": "Clusters",
-    "conditions": [ "and",
-        [ "redshift.regions.id.vpcs.id.clusters.id.AllowVersionUpgrade", "false", "" ]
+    "path": "redshift.regions.id.vpcs.id.clusters.id",
+    "conditions": [
+        "and",
+        [
+            "redshift.regions.id.vpcs.id.clusters.id.AllowVersionUpgrade",
+            "false",
+            ""
+        ]
     ],
     "id_suffix": "AllowVersionUpgrade"
 }

@@ -1,8 +1,10 @@
 from ScoutSuite.providers.gcp.resources.projects import Projects
 from ScoutSuite.providers.gcp.resources.stackdriverlogging.sinks import Sinks
+from ScoutSuite.providers.gcp.resources.stackdriverlogging.metrics import Metrics
 
 
 class StackdriverLogging(Projects):
     _children = [ 
-        (Sinks, 'sinks') 
+        (Sinks, 'sinks'),
+        (Metrics, 'metrics')
     ]

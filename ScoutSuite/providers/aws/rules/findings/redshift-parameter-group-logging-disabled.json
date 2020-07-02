@@ -1,9 +1,23 @@
 {
-    "description": "User activity logging disabled",
-    "path": "redshift.regions.id.parameter_groups.id",
+    "description": "User Activity Logging Disabled",
+    "rationale": "Audit logging is not enabled by default in Amazon Redshift. A lack of user activity logging could impede the ability to investigate issues involving misuse, malicious access or performance.<br><br><b>Note</b> that this rule will only flag non-default parameter groups, as default parameter groups cannot be modified. It is recommended to use custom groups and configure them according to security best practice.",
+    "references": [
+        "https://docs.aws.amazon.com/redshift/latest/mgmt/db-auditing.html"
+    ],
     "dashboard_name": "Parameter Groups",
-    "conditions": [ "and",
-        [ "redshift.regions.id.parameter_groups.id.parameters.enable_user_activity_logging.value", "false", "" ]
+    "path": "redshift.regions.id.parameter_groups.id",
+    "conditions": [
+        "and",
+        [
+            "redshift.regions.id.parameter_groups.id.is_default",
+            "false",
+            ""
+        ],
+        [
+            "redshift.regions.id.parameter_groups.id.parameters.enable_user_activity_logging.value",
+            "false",
+            ""
+        ]
     ],
     "id_suffix": "enable_user_activity_logging"
 }

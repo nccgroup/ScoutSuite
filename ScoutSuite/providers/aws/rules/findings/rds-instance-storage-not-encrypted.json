@@ -1,9 +1,18 @@
 {
     "description": "Instance Storage Not Encrypted",
-    "path": "rds.regions.id.vpcs.id.instances.id",
+    "rationale": "Data-at-rest should be encrypted.",
+    "references": [
+        "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.html"
+    ],
     "dashboard_name": "Instances",
-    "conditions": [ "and",
-        [ "rds.regions.id.vpcs.id.instances.id.StorageEncrypted", "false", "" ]
+    "path": "rds.regions.id.vpcs.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "rds.regions.id.vpcs.id.instances.id.StorageEncrypted",
+            "false",
+            ""
+        ]
     ],
     "id_suffix": "StorageEncrypted"
 }

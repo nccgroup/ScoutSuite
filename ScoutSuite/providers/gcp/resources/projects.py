@@ -14,8 +14,14 @@ class Projects(GCPCompositeResources):
         """
 
         raw_projects = await self.facade.get_projects()
-        self['projects'] = {raw_project['projectId']: {}
-                            for raw_project in raw_projects}
+
+        self['projects'] = {}
+        # For each project, validate that the corresponding service API is enabled before including it in the execution.
+        for p in raw_projects:
+            enabled = await self.facade.is_api_enabled(p['projectId'], self.__class__.__name__)
+            if enabled:
+                self['projects'][p['projectId']] = {}
+
         await self._fetch_children_of_all_resources(
             resources=self['projects'],
             scopes={project_id: {'project_id': project_id} for project_id in self['projects']})

@@ -1,10 +1,22 @@
 {
-    "description": "DKIM not verified",
-    "rationale": "<b>Description:</b><br><br>Amazon SES has not verified the DKIM DNS records (tokens) published in the domain name's DNS.",
-    "path": "ses.regions.id.identities.id",
+    "description": "DKIM Not Verified",
+    "rationale": "Amazon SES has not verified the DKIM DNS records (tokens) published in the domain name's DNS.",
+    "references": [
+        "https://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-email-authentication-dkim.html"
+    ],
     "dashboard_name": "Identities",
-    "conditions": [ "and",
-        [ "DkimEnabled", "true", "" ],
-        [ "DkimVerificationStatus", "notEqual", "Success" ]
+    "path": "ses.regions.id.identities.id",
+    "conditions": [
+        "and",
+        [
+            "DkimEnabled",
+            "true",
+            ""
+        ],
+        [
+            "DkimVerificationStatus",
+            "notEqual",
+            "Success"
+        ]
     ]
 }

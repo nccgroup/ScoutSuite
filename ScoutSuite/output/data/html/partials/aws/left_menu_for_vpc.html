@@ -16,7 +16,13 @@
       </div>
       {{#each vpcs}}
       <div class="list-group-item list-sub-element" id="services.{{../../service_name}}.regions.{{@../key}}.vpcs.{{@key}}.{{../../resource_type}}.list">
-        <a href="#services.{{../../service_name}}.regions.{{@../key}}.vpcs.{{@key}}.{{../../resource_type}}">{{getValueAt 'services.vpc.regions' @../key 'vpcs' @key 'name'}}</a>
+        <a href="#services.{{../../service_name}}.regions.{{@../key}}.vpcs.{{@key}}.{{../../resource_type}}">
+          {{#if (getValueAt 'services.vpc.regions' @../key 'vpcs' @key 'name')}}
+            {{getValueAt 'services.vpc.regions' @../key 'vpcs' @key 'name'}}
+          {{else}}
+            {{@key}}
+          {{/if}}
+        </a>
         {{#each (lookup . ../../resource_type)}}
         <div class="list-group-item-text list-sub-element" id="services.{{../../../service_name}}.regions.{{@../../key}}.vpcs.{{@../key}}.{{../../../resource_type}}.{{@key}}.link">
           <a href="#services.{{../../../service_name}}.regions.{{@../../key}}.vpcs.{{@../key}}.{{../../../resource_type}}.{{@key}}.view">{{name}}</a>
