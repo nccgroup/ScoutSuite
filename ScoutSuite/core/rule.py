@@ -29,7 +29,7 @@ testcases = [
 ]
 
 
-class Rule(object):
+class Rule:
 
     def to_string(self):
         return str(vars(self))
@@ -71,8 +71,8 @@ class Rule(object):
                 if condition[0].startswith('_INCLUDE_('):
                     include = re.findall(r'_INCLUDE_\((.*?)\)', condition[0])[0]
                     # new_conditions = load_data(include, key_name = 'conditions')
-                    rules_path = '%s/%s' % (self.data_path, include)
-                    with open(rules_path, 'rt') as f:
+                    rules_path = f'{self.data_path}/{include}'
+                    with open(rules_path) as f:
                         new_conditions = f.read()
                         for (i, value) in enumerate(condition[1]):
                             new_conditions = re.sub(condition[1][i], condition[2][i], new_conditions)
@@ -139,6 +139,6 @@ class Rule(object):
                 setattr(self, 'key', self.filename)
             setattr(self, 'key', self.key.replace('.json', ''))
             if self.key_suffix:
-                setattr(self, 'key', '%s-%s' % (self.key, self.key_suffix))
+                setattr(self, 'key', f'{self.key}-{self.key_suffix}')
         except Exception as e:
-            print_exception('Failed to set definition %s: %s' % (self.filename, e))
+            print_exception(f'Failed to set definition {self.filename}: {e}')

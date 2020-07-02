@@ -5,7 +5,7 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 class ParameterGroups(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
-        super(ParameterGroups, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
 
     async def fetch_all(self):

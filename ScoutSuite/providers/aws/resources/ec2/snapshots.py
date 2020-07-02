@@ -5,7 +5,7 @@ from ScoutSuite.providers.aws.utils import get_name
 
 class Snapshots(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
-        super(Snapshots, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
 
     async def fetch_all(self):
@@ -18,6 +18,9 @@ class Snapshots(AWSResources):
         raw_snapshot['id'] = raw_snapshot.pop('SnapshotId')
         raw_snapshot['name'] = get_name(raw_snapshot, raw_snapshot, 'id')
         raw_snapshot['public'] = self._is_public(raw_snapshot)
+        raw_snapshot['arn'] = 'arn:aws:ec2:{}:{}:snapshot/{}'.format(self.get('region'),
+                                                                     raw_snapshot.get('OwnerId'),
+                                                                     raw_snapshot.get('name'))
         return raw_snapshot['id'], raw_snapshot
 
     @staticmethod

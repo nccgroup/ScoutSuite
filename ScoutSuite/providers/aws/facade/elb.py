@@ -18,7 +18,7 @@ class ELBFacade(AWSBaseFacade):
             await self.cache_load_balancers(region)
             return [load_balancer for load_balancer in self.load_balancers_cache[region] if load_balancer['VpcId'] == vpc]
         except Exception as e:
-            print_exception('Failed to get ELB load balancers: {}'.format(e))
+            print_exception(f'Failed to get ELB load balancers: {e}')
             return []
 
     async def cache_load_balancers(self, region):
@@ -48,7 +48,7 @@ class ELBFacade(AWSBaseFacade):
                     LoadBalancerName=load_balancer['LoadBalancerName'])['LoadBalancerAttributes']
             )
         except Exception as e:
-            print_exception('Failed to describe ELB load balancer attributes: {}'.format(e))
+            print_exception(f'Failed to describe ELB load balancer attributes: {e}')
 
     async def _get_and_set_load_balancer_tags(self, load_balancer: {}, region: str):
         elb_client = AWSFacadeUtils.get_client('elb', self.session, region)
@@ -58,7 +58,7 @@ class ELBFacade(AWSBaseFacade):
                     LoadBalancerNames=[load_balancer['LoadBalancerName']])['TagDescriptions'][0]['Tags']
             )
         except Exception as e:
-            print_exception('Failed to describe ELB load balancer tags: {}'.format(e))
+            print_exception(f'Failed to describe ELB load balancer tags: {e}')
 
     async def get_policies(self, region: str):
         try:
@@ -76,7 +76,7 @@ class ELBFacade(AWSBaseFacade):
             # Because _get_policies returns a list, policies has to be flatten:
             return [policy for nested_policy in policies for policy in nested_policy]
         except Exception as e:
-            print_exception('Failed to describe ELB policies: {}'.format(e))
+            print_exception(f'Failed to describe ELB policies: {e}')
             return []
 
     async def _get_policies(self, load_balancer: dict, region: str):
@@ -90,5 +90,5 @@ class ELBFacade(AWSBaseFacade):
                     PolicyNames=load_balancer['policy_names'])['PolicyDescriptions']
                 )
             except Exception as e:
-                print_exception('Failed to retrieve load balancer policies: {}'.format(e))
+                print_exception(f'Failed to retrieve load balancer policies: {e}')
                 return []

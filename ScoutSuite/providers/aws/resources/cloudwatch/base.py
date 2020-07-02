@@ -10,4 +10,4 @@ class CloudWatch(Regions):
     ]
 
     def __init__(self, facade: AWSFacade):
-        super(CloudWatch, self).__init__('cloudwatch', facade)
+        super().__init__('cloudwatch', facade)

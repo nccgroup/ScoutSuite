@@ -12,4 +12,4 @@ class Route53(Regions):
     ]
 
     def __init__(self, facade: AWSFacade):
-        super(Route53, self).__init__('route53domains', facade)
+        super().__init__('route53domains', facade)

@@ -3,7 +3,7 @@ from ScoutSuite.providers.gcp.resources.gce.disks import Disks
 
 class InstanceDisks(Disks):
     def __init__(self, facade, instance):
-        super(InstanceDisks, self).__init__(facade)
+        super().__init__(facade)
         self.instance = instance
 
     def fetch_all(self):

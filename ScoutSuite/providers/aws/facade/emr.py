@@ -11,7 +11,7 @@ class EMRFacade(AWSBaseFacade):
             cluster_list = await AWSFacadeUtils.get_all_pages('emr', region, self.session, 'list_clusters', 'Clusters')
             cluster_ids = [cluster['Id'] for cluster in cluster_list]
         except Exception as e:
-            print_exception('Failed to get EMR clusterss: {}'.format(e))
+            print_exception(f'Failed to get EMR clusterss: {e}')
             return []
         else:
             return await map_concurrently(self._get_cluster, cluster_ids, region=region)
@@ -21,5 +21,5 @@ class EMRFacade(AWSBaseFacade):
         try:
             return await run_concurrently(lambda: client.describe_cluster(ClusterId=cluster_id)['Cluster'])
         except Exception as e:
-            print_exception('Failed to describe EMR cluster: {}'.format(e))
+            print_exception(f'Failed to describe EMR cluster: {e}')
             raise

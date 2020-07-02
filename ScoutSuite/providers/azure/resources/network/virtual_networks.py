@@ -1,12 +1,13 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.providers.azure.utils import get_resource_group_name
 
 
 class VirtualNetworks(AzureResources):
 
     def __init__(self, facade: AzureFacade, subscription_id: str):
-        super(VirtualNetworks, self).__init__(facade)
+        super().__init__(facade)
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
@@ -21,7 +22,11 @@ class VirtualNetworks(AzureResources):
 
         virtual_network_dict['enable_vm_protection'] = raw_virtual_network.enable_vm_protection
         virtual_network_dict['etag'] = str(raw_virtual_network.etag)
-        virtual_network_dict['tags'] = raw_virtual_network.tags
+        if raw_virtual_network.tags is not None:
+            virtual_network_dict['tags'] = ["{}:{}".format(key, value) for key, value in  raw_virtual_network.tags.items()]
+        else:
+            virtual_network_dict['tags'] = []
+        virtual_network_dict['resource_group_name'] = get_resource_group_name(raw_virtual_network.id)
         virtual_network_dict['virtual_network_peerings'] = raw_virtual_network.virtual_network_peerings
         virtual_network_dict['enable_ddos_protection'] = raw_virtual_network.enable_ddos_protection
         virtual_network_dict['resource_guid'] = raw_virtual_network.resource_guid
