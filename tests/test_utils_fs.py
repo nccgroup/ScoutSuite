@@ -28,11 +28,11 @@ class TestOpinelFsClass(unittest.TestCase):
         load_data(test, 'protocols', local_file=True)
         load_data('protocols.json', 'protocols')
         load_data('aws/ip-ranges/aws.json', 'prefixes')
-        load_data('data/protocols.json', 'protocols', local_file=True)
+        load_data('tests/data/protocols.json', 'protocols', local_file=True)
         test = load_data('protocols.json', 'protocols')
         assert type(test) == dict
         assert test['1'] == 'ICMP'
-        test = load_data('data/protocols.json', 'protocols', True)
+        test = load_data('tests/data/protocols.json', 'protocols', True)
         assert type(test) == dict
         assert test['-2'] == 'TEST'
 
@@ -44,41 +44,41 @@ class TestOpinelFsClass(unittest.TestCase):
         successful_read_ip_ranges_runs = True
         test_cases = [
             {
-                'filename': 'data/ip-ranges-1.json',
+                'filename': 'tests/data/ip-ranges-1.json',
                 'local_file': True,
                 'conditions': [],'ip_only': False,
-                'results': 'results/read_ip_ranges/ip-ranges-1a.json'
+                'results': 'tests/results/read_ip_ranges/ip-ranges-1a.json'
             },
             {
-                'filename': 'data/ip-ranges-1.json',
+                'filename': 'tests/data/ip-ranges-1.json',
                 'local_file': True,
                 'conditions': [],'ip_only': True,
-                'results': 'results/read_ip_ranges/ip-ranges-1b.json'
+                'results': 'tests/results/read_ip_ranges/ip-ranges-1b.json'
             },
             {
-                'filename': 'data/ip-ranges-1.json',
+                'filename': 'tests/data/ip-ranges-1.json',
                 'local_file': True,
                 'conditions': [
                          [
                           'field_a', 'equal', 'a1']],
                 'ip_only': True,
-                'results': 'results/read_ip_ranges/ip-ranges-1c.json'
+                'results': 'tests/results/read_ip_ranges/ip-ranges-1c.json'
             },
             {
-                'filename': 'aws/ip-ranges/aws.json',
+                'filename': 'tests/aws/ip-ranges/aws.json',
                 'local_file': False,
                 'conditions': [
                     [ 'ip_prefix', 'equal', '23.20.0.0/14' ]
                 ],
                 'ip_only': False,
-                'results': 'results/read_ip_ranges/ip-ranges-a.json'
+                'results': 'tests/results/read_ip_ranges/ip-ranges-a.json'
             },
             {
-                "filename": 'data/ip-ranges-3.json',
+                "filename": 'tests/data/ip-ranges-3.json',
                 "local_file": True,
                 'results': None,
                 "ip_only": True,
-                "results": "results/read_ip_ranges/ip-ranges-3.json"
+                "results": "tests/results/read_ip_ranges/ip-ranges-3.json"
             },
             {
                 "filename": 'data/ip-ranges-3.json',
