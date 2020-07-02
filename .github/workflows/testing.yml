@@ -53,9 +53,3 @@ jobs:
     - uses: codecov/codecov-action@v1
       with:
         file: ./.coverage
-
-    # disabling because it can't find the .lcov coverage file
-    # - name: Coveralls
-    #   uses: coverallsapp/github-action@master
-    #   with:
-    #     github-token: ${{ secrets.GITHUB_TOKEN }}
