@@ -9,11 +9,12 @@ from ScoutSuite.providers.aws.utils import (
 )
 from ScoutSuite.utils import *
 import collections
-import mock
+import unittest
+from unittest import mock
 #
 # Test methods for ScoutSuite/utils.py
 #
-class TestScoutUtilsClass:
+class TestScoutUtilsClass(unittest.TestCase):
 
     def test_format_service_name(self):
         assert (format_service_name('iAm') == 'IAM')
