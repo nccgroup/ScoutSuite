@@ -39,8 +39,8 @@ class TestOpinelFsClass(unittest.TestCase):
 
     def test_read_ip_ranges(self):
         read_ip_ranges('aws/ip-ranges/aws.json', local_file=False)
-        read_ip_ranges('data/ip-ranges-1.json', local_file=True)
-        read_ip_ranges('data/ip-ranges-1.json', local_file=True, ip_only=True)
+        read_ip_ranges('tests/data/ip-ranges-1.json', local_file=True)
+        read_ip_ranges('tests/data/ip-ranges-1.json', local_file=True, ip_only=True)
         successful_read_ip_ranges_runs = True
         test_cases = [
             {
