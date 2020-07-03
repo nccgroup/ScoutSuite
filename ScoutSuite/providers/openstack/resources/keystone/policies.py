@@ -1,10 +1,18 @@
-from ScoutSuite.providers.openstack.facade.base import OpenstackFacade
 from ScoutSuite.providers.openstack.resources.base import OpenstackResources
 
 
 class Policies(OpenstackResources):
-    def __init__(self, facade: OpenstackFacade):
-        super(Policies, self).__init__(facade)
-
     async def fetch_all(self):
-        self['isFernet'] = self.facade.keystone.is_fernet()
+        raw_policies = await self.facade.keystone.get_policies()
+        for raw_policy in raw_policies:
+            id, policy = self._parse_policy(raw_policy)
+            if id in self:
+                continue
+
+            self[id] = policy
+
+    def _parse_policy(self, raw_policy):
+        policy_dict = {}
+        policy_dict['id'] = raw_policy.id
+        policy_dict['rules'] = raw_policy.blob
+        return policy_dict['id'], policy_dict

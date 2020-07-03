@@ -427,6 +427,17 @@ Handlebars.registerHelper('value_or_none', function (value) {
     return value
 })
 
+/**
+ * Substitute new line chars with html breaklines <br>
+ */
+Handlebars.registerHelper('format_breaklines', function(value) {
+    if (value === undefined || value === null || value === '' || value === [] || value === {}) return 'None'
+    value = Handlebars.Utils.escapeExpression(value);
+    value = value.replace(/(\r\n|\n|\r)/gm, '<br>');
+    value = new Handlebars.SafeString(value);
+    return value;
+})
+
 /*********************
  * Ruleset generator *
  *********************/
@@ -463,4 +474,4 @@ Handlebars.registerHelper('get_arg_name', function (ruleFilename, argIndex) {
         return ''
     }
 })
-  
+

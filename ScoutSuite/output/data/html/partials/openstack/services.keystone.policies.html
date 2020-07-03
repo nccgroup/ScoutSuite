@@ -1,0 +1,23 @@
+<!-- keystone policies -->
+<script id="services.keystone.policies.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Id: <span id="keystone.policies.{{@key}}.id"><samp>{{value_or_none id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Rules: <span id="keystone.policies.{{@key}}.rules"><samp>{{{format_breaklines rules}}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.keystone.policies", $("#services\\.keystone\\.policies\\.partial").html());
+</script>
+
+<!-- Single keystone policy template -->
+<script id="single_keystone_policy-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.keystone.policies'}}
+</script>
+<script>
+    var single_keystone_policy_template = Handlebars.compile($("#single_keystone_policy-template").html());
+</script>
