@@ -524,10 +524,10 @@ class AWSProvider(BaseProvider):
                             sg['used_by'][service]['resource_type'][resource_type], resource_status, [])
                         if resource_id not in sg['used_by'][service]['resource_type'][resource_type][resource_status]:
                             sg['used_by'][service]['resource_type'][resource_type][resource_status].append(
-                                resource_id)
+                                {'id': resource_id, 'name': resource['name']})
                     else:
                         sg['used_by'][service]['resource_type'][resource_type].append(
-                            resource_id)
+                            {'id': resource_id, 'name': resource['name']})
             except Exception as e:
                 if resource_type == 'elbs' and current_path[5] == ec2_classic:
                     pass
