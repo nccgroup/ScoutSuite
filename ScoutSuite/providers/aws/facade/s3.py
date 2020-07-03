@@ -28,13 +28,13 @@ class S3Facade(AWSBaseFacade):
                         break
                 if not buckets:
                     if exception:
-                        print_exception('Failed to list buckets: {}'.format(exception))
+                        print_exception(f'Failed to list buckets: {exception}')
                     return []
             else:
                 client = AWSFacadeUtils.get_client('s3', self.session)
                 buckets = await run_concurrently(lambda: client.list_buckets()['Buckets'])
         except Exception as e:
-            print_exception('Failed to list buckets: {}'.format(e))
+            print_exception(f'Failed to list buckets: {e}')
             return []
         else:
             # We need first to retrieve bucket locations before retrieving bucket details
@@ -82,7 +82,7 @@ class S3Facade(AWSBaseFacade):
         try:
             logging = await run_concurrently(lambda: client.get_bucket_logging(Bucket=bucket['Name']))
         except Exception as e:
-            print_exception('Failed to get logging configuration for %s: %s' % (bucket['Name'], e))
+            print_exception('Failed to get logging configuration for {}: {}'.format(bucket['Name'], e))
             bucket['logging'] = 'Unknown'
         else:
             if 'LoggingEnabled' in logging:
@@ -98,7 +98,7 @@ class S3Facade(AWSBaseFacade):
             bucket['versioning_status_enabled'] = self._status_to_bool(versioning.get('Status'))
             bucket['version_mfa_delete_enabled'] = self._status_to_bool(versioning.get('MFADelete'))
         except Exception as e:
-            print_exception('Failed to get versioning configuration for %s: %s' % (bucket['Name'], e))
+            print_exception('Failed to get versioning configuration for {}: {}'.format(bucket['Name'], e))
             bucket['versioning_status_enabled'] = None
             bucket['version_mfa_delete_enabled'] = None
 
@@ -111,7 +111,7 @@ class S3Facade(AWSBaseFacade):
             if "NoSuchWebsiteConfiguration" in str(e):
                 bucket['web_hosting_enabled'] = False
             else:
-                print_exception('Failed to get web hosting configuration for %s: %s' % (bucket['Name'], e))
+                print_exception('Failed to get web hosting configuration for {}: {}'.format(bucket['Name'], e))
 
     async def _get_and_set_s3_bucket_default_encryption(self, bucket: {}):
         bucket_name = bucket['Name']
@@ -124,9 +124,9 @@ class S3Facade(AWSBaseFacade):
                 bucket['default_encryption_enabled'] = False
             else:
                 bucket['default_encryption_enabled'] = None
-                print_exception('Failed to get encryption configuration for %s: %s' % (bucket_name, e))
+                print_exception(f'Failed to get encryption configuration for {bucket_name}: {e}')
         except Exception as e:
-            print_exception('Failed to get encryption configuration for %s: %s' % (bucket_name, e))
+            print_exception(f'Failed to get encryption configuration for {bucket_name}: {e}')
             bucket['default_encryption'] = 'Unknown'
 
     async def _get_and_set_s3_acls(self, bucket: {}, key_name=None):
@@ -157,7 +157,7 @@ class S3Facade(AWSBaseFacade):
                 self._set_s3_permissions(grantees[grantee]['permissions'], permission)
             bucket['grantees'] = grantees
         except Exception as e:
-            print_exception('Failed to get ACL configuration for %s: %s' % (bucket_name, e))
+            print_exception(f'Failed to get ACL configuration for {bucket_name}: {e}')
             bucket['grantees'] = {}
 
     async def _get_and_set_s3_bucket_policy(self, bucket: {}):
@@ -167,9 +167,9 @@ class S3Facade(AWSBaseFacade):
             bucket['policy'] = json.loads(bucket_policy['Policy'])
         except ClientError as e:
             if e.response['Error']['Code'] != 'NoSuchBucketPolicy':
-                print_exception('Failed to get bucket policy for %s: %s' % (bucket['Name'], e))
+                print_exception('Failed to get bucket policy for {}: {}'.format(bucket['Name'], e))
         except Exception as e:
-            print_exception('Failed to get bucket policy for %s: %s' % (bucket['Name'], e))
+            print_exception('Failed to get bucket policy for {}: {}'.format(bucket['Name'], e))
             bucket['grantees'] = {}
 
     async def _get_and_set_s3_bucket_tags(self, bucket: {}):
@@ -179,9 +179,9 @@ class S3Facade(AWSBaseFacade):
             bucket['tags'] = {x['Key']: x['Value'] for x in bucket_tagset['TagSet']}
         except ClientError as e:
             if e.response['Error']['Code'] != 'NoSuchTagSet':
-                print_exception('Failed to get bucket tags for %s: %s' % (bucket['Name'], e))
+                print_exception('Failed to get bucket tags for {}: {}'.format(bucket['Name'], e))
         except Exception as e:
-            print_exception('Failed to get bucket tags for %s: %s' % (bucket['Name'], e))
+            print_exception('Failed to get bucket tags for {}: {}'.format(bucket['Name'], e))
             bucket['tags'] = {}
 
     async def _get_and_set_s3_bucket_block_public_access(self, bucket: {}):
@@ -193,7 +193,7 @@ class S3Facade(AWSBaseFacade):
             # No such configuration found for the bucket, nothing to be done
             pass
         except Exception as e:
-            print_exception('Failed to get the public access block configuration for %s: %s' % (bucket['Name'], e))
+            print_exception('Failed to get the public access block configuration for {}: {}'.format(bucket['Name'], e))
 
     def _set_s3_bucket_secure_transport(self, bucket: {}):
         try:
@@ -213,7 +213,7 @@ class S3Facade(AWSBaseFacade):
             else:
                 bucket['secure_transport_enabled'] = False
         except Exception as e:
-            print_exception('Failed to evaluate bucket policy for %s: %s' % (bucket['Name'], e))
+            print_exception('Failed to evaluate bucket policy for {}: {}'.format(bucket['Name'], e))
             bucket['secure_transport'] = None
 
     def get_s3_public_access_block(self, account_id):
@@ -234,7 +234,7 @@ class S3Facade(AWSBaseFacade):
             }
         except Exception as e:
             print_exception(
-                'Failed to get the public access block configuration for the account %s: %s' % (account_id, e))
+                f'Failed to get the public access block configuration for the account {account_id}: {e}')
             return None
 
     @staticmethod

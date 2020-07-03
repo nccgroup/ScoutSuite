@@ -18,7 +18,7 @@ class Servers(AzureCompositeResources):
     ]
 
     def __init__(self, facade: AzureFacade, subscription_id: str):
-        super(Servers, self).__init__(facade)
+        super().__init__(facade)
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
@@ -39,4 +39,8 @@ class Servers(AzureCompositeResources):
         server['id'] = get_non_provider_id(raw_server.id)
         server['name'] = raw_server.name
         server['resource_group_name'] = get_resource_group_name(raw_server.id)
+        if raw_server.tags is not None:
+            server['tags'] = ["{}:{}".format(key, value) for key, value in  raw_server.tags.items()]
+        else:
+            server['tags'] = []
         return server['id'], server

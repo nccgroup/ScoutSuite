@@ -18,7 +18,7 @@ class ObjectStorageFacade:
             # for some reason it returns a list of chars instead of a string
             return ''.join(response.data)
         except Exception as e:
-            print_exception('Failed to get Object Storage namespace: {}'.format(e))
+            print_exception(f'Failed to get Object Storage namespace: {e}')
             return None
 
     async def get_bucket_details(self, namespace, bucket_name):
@@ -28,7 +28,7 @@ class ObjectStorageFacade:
             )
             return response.data
         except Exception as e:
-            print_exception('Failed to get Object Storage bucket details: {}'.format(e))
+            print_exception(f'Failed to get Object Storage bucket details: {e}')
             return None
 
     async def get_buckets(self, namespace):
@@ -37,7 +37,7 @@ class ObjectStorageFacade:
                 lambda: list_call_get_all_results(self._client.list_buckets, namespace, self._credentials.get_scope()))
             return response.data
         except Exception as e:
-            print_exception('Failed to get Object Storage buckets: {}'.format(e))
+            print_exception(f'Failed to get Object Storage buckets: {e}')
             return []
 
     async def get_bucket_objects(self, namespace, bucket_name):
@@ -46,5 +46,5 @@ class ObjectStorageFacade:
                 lambda: list_call_get_all_results(self._client.list_objects, namespace, bucket_name))
             return response.data
         except Exception as e:
-            print_exception('Failed to get Object Storage bucket objects: {}'.format(e))
+            print_exception(f'Failed to get Object Storage bucket objects: {e}')
             return []

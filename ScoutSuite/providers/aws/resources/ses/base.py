@@ -10,4 +10,4 @@ class SES(Regions):
     ]
 
     def __init__(self, facade: AWSFacade):
-        super(SES, self).__init__('ses', facade)
+        super().__init__('ses', facade)

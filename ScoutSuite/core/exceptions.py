@@ -3,7 +3,7 @@ from ScoutSuite.core.console import print_debug
 from ScoutSuite.output.result_encoder import JavaScriptEncoder
 
 
-class RuleExceptions(object):
+class RuleExceptions:
     """
     Exceptions handling
     """

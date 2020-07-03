@@ -2,7 +2,6 @@
 Single-service rule processing functions
 """
 
-from six import string_types
 import copy
 
 from ScoutSuite.core.console import print_exception
@@ -74,7 +73,7 @@ def recurse(all_info, current_info, target_path, current_path, config, add_suffi
             results = results + recurse(all_info, split_current_info, copy.deepcopy(target_path), split_current_path,
                                         config, add_suffix)
     # Python 2-3 compatible way to check for string type
-    elif isinstance(current_info, string_types):
+    elif isinstance(current_info, str):
         split_current_path = copy.deepcopy(current_path)
         results = results + recurse(all_info, current_info, [], split_current_path,
                                     config, add_suffix)

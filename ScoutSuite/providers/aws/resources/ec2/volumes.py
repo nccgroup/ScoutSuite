@@ -5,7 +5,7 @@ from ScoutSuite.providers.aws.utils import get_name
 
 class Volumes(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
-        super(Volumes, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
 
     async def fetch_all(self):
@@ -17,4 +17,7 @@ class Volumes(AWSResources):
     def _parse_volume(self, raw_volume):
         raw_volume['id'] = raw_volume.pop('VolumeId')
         raw_volume['name'] = get_name(raw_volume, raw_volume, 'id')
+        raw_volume['arn'] = 'arn:aws:ec2:{}:{}:volume/{}'.format(self.region,
+                                                                             self.facade.owner_id,
+                                                                             raw_volume.get('name'))
         return raw_volume['id'], raw_volume

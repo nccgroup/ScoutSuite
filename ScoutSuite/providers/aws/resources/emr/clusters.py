@@ -4,7 +4,7 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 class EMRClusters(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
-        super(EMRClusters, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
 
     async def fetch_all(self):

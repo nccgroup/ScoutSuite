@@ -10,4 +10,4 @@ class EFS(Regions):
     ]
 
     def __init__(self, facade: AWSFacade):
-        super(EFS, self).__init__('efs', facade)
+        super().__init__('efs', facade)

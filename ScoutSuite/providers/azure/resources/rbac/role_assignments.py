@@ -5,7 +5,7 @@ from ScoutSuite.providers.azure.resources.base import AzureResources
 class RoleAssignments(AzureResources):
 
     def __init__(self, facade: AzureFacade, subscription_id: str):
-        super(RoleAssignments, self).__init__(facade)
+        super().__init__(facade)
         self.subscription_id = subscription_id
 
     async def fetch_all(self):

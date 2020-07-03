@@ -4,7 +4,7 @@ from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
 
 class Groups(AliyunResources):
     def __init__(self, facade: AliyunFacade):
-        super(Groups, self).__init__(facade)
+        super().__init__(facade)
 
     async def fetch_all(self):
         for raw_group in await self.facade.ram.get_groups():
