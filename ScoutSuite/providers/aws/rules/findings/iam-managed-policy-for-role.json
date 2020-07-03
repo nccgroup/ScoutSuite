@@ -44,24 +44,12 @@
             "_ARG_0_:_ARG_1_"
         ],
         [
-            "and",
+            "_INCLUDE_(conditions/policy-statement-any-resource.json)",
             [
-                "iam.policies.id.PolicyDocument.Statement.id.",
-                "withKey",
-                "Resource"
+                "_STATEMENT_"
             ],
             [
-                "or",
-                [
-                    "iam.policies.id.PolicyDocument.Statement.id.Resource",
-                    "containAtLeastOneOf",
-                    "*"
-                ],
-                [
-                    "iam.policies.id.PolicyDocument.Statement.id.Resource",
-                    "containAtLeastOneMatching",
-                    ".*/[*]$"
-                ]
+                "iam.policies.id.PolicyDocument.Statement.id"
             ]
         ]
     ],
