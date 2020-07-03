@@ -51,9 +51,17 @@
                 "Resource"
             ],
             [
-                "iam.policies.id.PolicyDocument.Statement.id.Resource",
-                "containAtLeastOneMatching",
-                ".*[*].*"
+                "or",
+                [
+                    "iam.policies.id.PolicyDocument.Statement.id.Resource",
+                    "containAtLeastOneOf",
+                    "*"
+                ],
+                [
+                    "iam.policies.id.PolicyDocument.Statement.id.Resource",
+                    "containAtLeastOneMatching",
+                    ".*/[*]$"
+                ]
             ]
         ]
     ],
