@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 import os
+import unittest
+
 
 from ScoutSuite.core.conditions import *
 
-class TestOpinelConditionClass:
+class TestOpinelConditionClass(unittest.TestCase):
     """
     Test opinel.condition
     """

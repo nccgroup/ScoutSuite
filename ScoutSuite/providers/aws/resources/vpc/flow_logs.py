@@ -7,7 +7,7 @@ class FlowLogs(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
         self.region = region
 
-        super(FlowLogs, self).__init__(facade)
+        super().__init__(facade)
 
     async def fetch_all(self):
         raw_logs = await self.facade.ec2.get_flow_logs(self.region)

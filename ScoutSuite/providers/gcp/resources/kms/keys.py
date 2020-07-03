@@ -4,7 +4,7 @@ from ScoutSuite.providers.gcp.facade.base import GCPFacade
 
 class Keys(Resources):
     def __init__(self, facade: GCPFacade, project_id: str, keyring_name: str, location: str):
-        super(Keys, self).__init__(facade)
+        super().__init__(facade)
         self.project_id = project_id
         self.keyring_name = keyring_name
         self.location = location

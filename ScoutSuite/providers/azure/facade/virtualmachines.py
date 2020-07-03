@@ -20,7 +20,7 @@ class VirtualMachineFacade:
                 lambda: list(client.virtual_machines.list_all())
             )
         except Exception as e:
-            print_exception('Failed to retrieve virtual machines: {}'.format(e))
+            print_exception(f'Failed to retrieve virtual machines: {e}')
             return []
 
     async def get_instance_extensions(self, subscription_id: str,
@@ -34,7 +34,7 @@ class VirtualMachineFacade:
             )
             return list(extensions.value)
         except Exception as e:
-            print_exception('Failed to retrieve virtual machine extensions: {}'.format(e))
+            print_exception(f'Failed to retrieve virtual machine extensions: {e}')
             return []
 
     async def get_disks(self, subscription_id: str):
@@ -44,7 +44,7 @@ class VirtualMachineFacade:
                 lambda: list(client.disks.list())
             )
         except Exception as e:
-            print_exception('Failed to retrieve disks: {}'.format(e))
+            print_exception(f'Failed to retrieve disks: {e}')
             return []
 
     async def get_snapshots(self, subscription_id: str):
@@ -54,7 +54,7 @@ class VirtualMachineFacade:
                 lambda: list(client.snapshots.list())
             )
         except Exception as e:
-            print_exception('Failed to retrieve snapshots: {}'.format(e))
+            print_exception(f'Failed to retrieve snapshots: {e}')
             return []
 
     async def get_images(self, subscription_id: str):
@@ -64,5 +64,5 @@ class VirtualMachineFacade:
                 lambda: list(client.images.list())
             )
         except Exception as e:
-            print_exception('Failed to retrieve images: {}'.format(e))
+            print_exception(f'Failed to retrieve images: {e}')
             return []

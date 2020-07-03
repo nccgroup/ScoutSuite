@@ -1,4 +1,5 @@
-from nose.tools import *
+
+import unittest
 from ScoutSuite.core.conditions import pass_condition
 from ScoutSuite.core.cli_parser import *
 from ScoutSuite.core.console import prompt, prompt_overwrite, prompt_value
@@ -6,7 +7,7 @@ from ScoutSuite.core.console import prompt, prompt_overwrite, prompt_value
 #
 # Test methods for ScoutSuite/core
 #
-class TestScoutCore:
+class TestScoutCore(unittest.TestCase):
 
     ########################################
     # cli_parser.py

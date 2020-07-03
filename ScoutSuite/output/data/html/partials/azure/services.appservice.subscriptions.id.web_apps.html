@@ -27,6 +27,17 @@
         <div class="list-group-item-text item-margin">Traffic Manager Host Names: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.traffic_manager_host_names"><samp>{{value_or_none traffic_manager_host_names}}</samp></span></div>
         <div class="list-group-item-text item-margin">Programming Language: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.programming_language"><samp>{{value_or_none programming_language}}</samp></span></div>
         <div class="list-group-item-text item-margin">Programming Language Version: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.programming_language_version"><samp>{{value_or_none programming_language_version}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Tags:
+            {{#each tags}}
+                <div
+                    style="border-radius: 5px; -webkit-border-radius: 5px; float: center; background-color: #c2c2d6; padding: 0.1px; text-align: center; display: inline-flex;">
+                    <samp>{{value_or_none this}}</samp>
+                </div>&nbsp;&nbsp;
+            {{else}}
+                <div style="display: inline-flex;"><samp>None</samp></div>
+            {{/each}}
+        </div>
+        <div class="list-group-item-text item-margin">Resource group: <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.resource_group_name"><samp>{{value_or_none resource_group_name}}</samp></span></div>
         <h4 class="list-group-item-heading accordion-heading">
         <span id="appservice.subscriptions.{{subscription}}.web_apps.{{@key}}.identity">Identities</span>
         </h4>

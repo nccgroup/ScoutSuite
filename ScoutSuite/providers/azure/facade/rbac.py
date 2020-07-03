@@ -16,10 +16,10 @@ class RBACFacade:
     async def get_roles(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            scope = '/subscriptions/{}'.format(subscription_id)
+            scope = f'/subscriptions/{subscription_id}'
             return await run_concurrently(lambda: list(client.role_definitions.list(scope=scope)))
         except Exception as e:
-            print_exception('Failed to retrieve roles: {}'.format(e))
+            print_exception(f'Failed to retrieve roles: {e}')
             return []
 
     async def get_role_assignments(self, subscription_id: str):
@@ -27,5 +27,5 @@ class RBACFacade:
             client = self.get_client(subscription_id)
             return await run_concurrently(lambda: list(client.role_assignments.list()))
         except Exception as e:
-            print_exception('Failed to retrieve role assignments: {}'.format(e))
+            print_exception(f'Failed to retrieve role assignments: {e}')
             return []

@@ -40,7 +40,7 @@ class AWSProvider(BaseProvider):
 
         self.account_id = get_aws_account_id(self.credentials.session)
 
-        super(AWSProvider, self).__init__(report_dir, timestamp,
+        super().__init__(report_dir, timestamp,
                                           services, skipped_services, result_format)
 
     def get_report_name(self):
@@ -48,9 +48,9 @@ class AWSProvider(BaseProvider):
         Returns the name of the report using the provider's configuration
         """
         if self.profile:
-            return 'aws-{}'.format(self.profile)
+            return f'aws-{self.profile}'
         elif self.account_id:
-            return 'aws-{}'.format(self.account_id)
+            return f'aws-{self.account_id}'
         else:
             return 'aws'
 
@@ -95,7 +95,7 @@ class AWSProvider(BaseProvider):
 
         self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
 
-        super(AWSProvider, self).preprocessing()
+        super().preprocessing()
 
     def _add_cidr_display_name(self, ip_ranges, ip_ranges_name_key):
         if len(ip_ranges):
@@ -534,9 +534,9 @@ class AWSProvider(BaseProvider):
                 elif not self.services['ec2']:  # service not included in run
                     pass
                 elif not str(e):
-                    print_exception('Failed to parse {}'.format(resource_type))
+                    print_exception(f'Failed to parse {resource_type}')
                 else:
-                    print_exception('Failed to parse {}: {}'.format(resource_type, e))
+                    print_exception(f'Failed to parse {resource_type}: {e}')
 
     def _set_emr_vpc_ids(self):
         clear_list = []
