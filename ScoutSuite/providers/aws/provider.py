@@ -388,7 +388,7 @@ class AWSProvider(BaseProvider):
                     subnet['instances'].append(instance_id)
 
     def _match_instances_and_roles(self):
-        if 'ec2' in self.service_list and 'ian' in self.service_list:  # validate both services were included in run
+        if 'ec2' in self.service_list and 'iam' in self.service_list:  # validate both services were included in run
             ec2_config = self.services['ec2']
             iam_config = self.services['iam']
             role_instances = {}
