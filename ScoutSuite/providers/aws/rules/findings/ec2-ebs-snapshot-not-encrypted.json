@@ -1,0 +1,17 @@
+{
+    "description": "EBS Snapshot Not Encrypted",
+    "rationale": "Data-at-rest should be encrypted.",
+    "references": [
+        "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSEncryption.html"
+    ],
+    "dashboard_name": "Snapshots",
+    "path": "ec2.regions.id.snapshots.id",
+    "conditions": [
+        "and",
+        [
+            "Encrypted",
+            "false",
+            ""
+        ]
+    ]
+}

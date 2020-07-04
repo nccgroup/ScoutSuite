@@ -1,6 +1,7 @@
 from ScoutSuite.providers.azure.authentication_strategy import AzureCredentials
 from ScoutSuite.providers.azure.facade.base import AzureFacade
-from ScoutSuite.providers.azure.resources.graphrbac.base import GraphRBAC
+from ScoutSuite.providers.azure.resources.aad.base import AAD
+from ScoutSuite.providers.azure.resources.rbac.base import RBAC
 from ScoutSuite.providers.azure.resources.keyvault.base import KeyVaults
 from ScoutSuite.providers.azure.resources.network.base import Networks
 from ScoutSuite.providers.azure.resources.securitycenter.base import SecurityCenter
@@ -8,6 +9,7 @@ from ScoutSuite.providers.azure.resources.sqldatabase.base import Servers
 from ScoutSuite.providers.azure.resources.storageaccounts.base import StorageAccounts
 from ScoutSuite.providers.azure.resources.virtualmachines.base import VirtualMachines
 from ScoutSuite.providers.base.services import BaseServicesConfig
+from ScoutSuite.providers.azure.resources.appservice.base import AppServices
 
 # Try to import proprietary services
 try:
@@ -19,10 +21,6 @@ try:
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.azure.resources.private_appservice.base import WebApplications
-except ImportError:
-    pass
-try:
     from ScoutSuite.providers.azure.resources.private_loadbalancer.base import LoadBalancers
 except ImportError:
     pass
@@ -30,27 +28,31 @@ except ImportError:
 
 class AzureServicesConfig(BaseServicesConfig):
 
-    def __init__(self, credentials: AzureCredentials = None, **kwargs):
+    def __init__(self,
+                 credentials: AzureCredentials = None,
+                 subscription_ids=[], all_subscriptions=None,
+                 programmatic_execution=None,
+                 **kwargs):
 
-        super(AzureServicesConfig, self).__init__(credentials)
+        super().__init__(credentials)
 
-        facade = AzureFacade(credentials)
+        facade = AzureFacade(credentials,
+                             subscription_ids, all_subscriptions,
+                             programmatic_execution)
 
+        self.aad = AAD(facade)
+        self.rbac = RBAC(facade)
         self.securitycenter = SecurityCenter(facade)
         self.sqldatabase = Servers(facade)
         self.storageaccounts = StorageAccounts(facade)
         self.keyvault = KeyVaults(facade)
-        self.graphrbac = GraphRBAC(facade)
         self.network = Networks(facade)
         self.virtualmachines = VirtualMachines(facade)
+        self.appservice = AppServices(facade)
 
         # Instantiate proprietary services
         try:
             self.appgateway = ApplicationGateways(facade)
-        except NameError as _:
-            pass
-        try:
-            self.appservice = WebApplications(facade)
         except NameError as _:
             pass
         try:
@@ -64,3 +66,13 @@ class AzureServicesConfig(BaseServicesConfig):
 
     def _is_provider(self, provider_name):
         return provider_name == 'azure'
+
+    async def fetch(self, services: list, regions: list, excluded_regions: list):
+        await super().fetch(services, regions, excluded_regions)
+
+        # This is a unique case where we'll want to fetch additional resources (in the AAD service) in the
+        # event the RBAC service was included. There's no existing cross-service fetching logic (only cross-service
+        # processing), hence why we needed to add this.
+        if 'rbac' in services and 'aad' in services:
+            user_list = self.rbac.get_user_id_list()
+            await self.aad.fetch_additional_users(user_list)

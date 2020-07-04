@@ -1,0 +1,50 @@
+
+<!-- aad applications -->
+<script id="services.aad.applications.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">ID: <span id="aad.applications.{{@key}}.id"><samp>{{value_or_none id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">App ID: <span id="aad.applications.{{@key}}.app_id"><samp>{{value_or_none app_id}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Type: <span id="aad.applications.{{@key}}.object_type"><samp>{{value_or_none object_type}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Sign In Audience: <span id="aad.applications.{{@key}}.sign_in_audience"><samp>{{value_or_none sign_in_audience}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Publisher Domain: <span id="aad.applications.{{@key}}.publisher_domain"><samp>{{value_or_none publisher_domain}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Available To Other Tenants: <span id="aad.applications.{{@key}}.available_to_other_tenants"><samp>{{value_or_none available_to_other_tenants}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Allow Guests Sign-In: <span id="aad.applications.{{@key}}.allow_guests_sign_in"><samp>{{value_or_none allow_guests_sign_in}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Allow Passthrough Users: <span id="aad.applications.{{@key}}.allow_passthrough_users"><samp>{{value_or_none allow_passthrough_users}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Public Client: <span id="aad.applications.{{@key}}.public_client"><samp>{{value_or_none public_client}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Device-Only Auth Supported: <span id="aad.applications.{{@key}}.is_device_only_auth_supported"><samp>{{value_or_none is_device_only_auth_supported}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Pre-Authorized Applications: <span id="aad.applications.{{@key}}.pre_authorized_applications"><samp>{{value_or_none pre_authorized_applications}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Deletion Timestamp: <span id="aad.applications.{{@key}}.deletion_timestamp"><samp>{{value_or_none deletion_timestamp}}</samp></span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Password Credentials
+            {{> count_badge count=password_credentials.length}}
+        </h4>
+        <div class="accordion-inner">
+            <ul>
+                {{#each password_credentials}}
+                <li class="list-group-item-text">ID: <samp>{{value_or_none this.key_id}}</samp></li>
+                <ul>
+                    <li class="list-group-item-text">Start Date: {{format_date this.start_date}}</li>
+                    <li class="list-group-item-text">End Date: {{format_date this.end_date}}</li>
+                </ul>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.aad.applications", $("#services\\.aad\\.applications\\.partial").html());
+</script>
+
+<!-- Single aad application template -->
+<script id="single_aad_application-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.aad.applications'}}
+</script>
+<script>
+    var single_aad_application_template = Handlebars.compile($("#single_aad_application-template").html());
+</script>

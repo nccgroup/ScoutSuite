@@ -1,10 +1,23 @@
 {
-    "description": "Publicly accessible snapshot",
-    "path": "rds.regions.id.vpcs.id.snapshots.id.attributes.id",
+    "description": "Publicly Accessible RDS Snapshot",
+    "rationale": "Snapshots should never be public, as this risks exposing sensitive data.",
+    "references": [
+        "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ShareSnapshot.html"
+    ],
     "dashboard_name": "Snapshots",
     "display_path": "rds.regions.id.vpcs.id.snapshots.id",
-    "conditions": [ "and",
-        [ "rds.regions.id.vpcs.id.snapshots.id.attributes.id.AttributeName", "equal", "restore" ],
-        [ "rds.regions.id.vpcs.id.snapshots.id.attributes.id.AttributeValues", "containAtLeastOneOf", "all" ]
+    "path": "rds.regions.id.vpcs.id.snapshots.id.attributes.id",
+    "conditions": [
+        "and",
+        [
+            "rds.regions.id.vpcs.id.snapshots.id.attributes.id.AttributeName",
+            "equal",
+            "restore"
+        ],
+        [
+            "rds.regions.id.vpcs.id.snapshots.id.attributes.id.AttributeValues",
+            "containAtLeastOneOf",
+            "all"
+        ]
     ]
 }

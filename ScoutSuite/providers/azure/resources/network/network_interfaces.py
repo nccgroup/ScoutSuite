@@ -1,10 +1,17 @@
+from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.providers.azure.utils import get_resource_group_name
 
 
 class NetworkInterfaces(AzureResources):
+
+    def __init__(self, facade: AzureFacade, subscription_id: str):
+        super().__init__(facade)
+        self.subscription_id = subscription_id
+
     async def fetch_all(self):
-        for raw_network_interface in await self.facade.network.get_network_interfaces():
+        for raw_network_interface in await self.facade.network.get_network_interfaces(self.subscription_id):
             id, network_interface = self._parse_network_interface(raw_network_interface)
             self[id] = network_interface
 
@@ -16,7 +23,11 @@ class NetworkInterfaces(AzureResources):
             get_non_provider_id(raw_network_interface.virtual_machine.id.lower()) if \
                 raw_network_interface.virtual_machine else None
         network_interface_dict['name'] = raw_network_interface.name
-        network_interface_dict['tags'] = raw_network_interface.tags
+        if raw_network_interface.tags is not None:
+            network_interface_dict['tags'] = ["{}:{}".format(key, value) for key, value in  raw_network_interface.tags.items()]
+        else:
+            network_interface_dict['tags'] = []
+        network_interface_dict['resource_group_name'] = get_resource_group_name(raw_network_interface.id)
         network_interface_dict['interface_endpoint'] = raw_network_interface.interface_endpoint if \
             hasattr(raw_network_interface, 'interface_endpoint') else None
         network_interface_dict['primary'] = raw_network_interface.primary
@@ -28,7 +39,9 @@ class NetworkInterfaces(AzureResources):
         network_interface_dict['resource_guid'] = raw_network_interface.resource_guid
         network_interface_dict['enable_ip_forwarding'] = raw_network_interface.enable_ip_forwarding
         network_interface_dict['type'] = raw_network_interface.type
-        network_interface_dict['network_security_group'] = get_non_provider_id(raw_network_interface.network_security_group.id)
+        network_interface_dict['network_security_group'] = \
+            get_non_provider_id(raw_network_interface.network_security_group.id) if \
+                raw_network_interface.network_security_group else None
 
         # TODO process and display the below
         network_interface_dict['hosted_workloads'] = raw_network_interface.hosted_workloads
@@ -54,11 +67,17 @@ class NetworkInterfaces(AzureResources):
         network_interface_dict['ip_configuration']['subnet'] = {'id': get_non_provider_id(ip_configuration.subnet.id)}
         network_interface_dict['ip_configuration']['primary'] = ip_configuration.primary
         network_interface_dict['ip_configuration']['public_ip_address'] = ip_configuration.public_ip_address
-        network_interface_dict['ip_configuration'][
-            'application_security_groups'] = ip_configuration.application_security_groups
         network_interface_dict['ip_configuration']['provisioning_state'] = ip_configuration.provisioning_state
         network_interface_dict['ip_configuration']['name'] = ip_configuration.name
         network_interface_dict['ip_configuration']['etag'] = ip_configuration.etag
 
-        return network_interface_dict['id'], network_interface_dict
+        network_interface_dict['ip_configuration']['application_security_groups'] = []
+        if ip_configuration.application_security_groups:
+            for asg in ip_configuration.application_security_groups:
+                network_interface_dict['ip_configuration']['application_security_groups'].append(
+                    get_non_provider_id(asg.id))
 
+        # FIXME this is currently always None, might change in the future?
+        # network_interface_dict['ip_configuration']['subnet_security_group'] = ip_configuration.subnet.network_security_group
+
+        return network_interface_dict['id'], network_interface_dict

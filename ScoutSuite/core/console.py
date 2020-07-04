@@ -4,7 +4,6 @@ import sys
 import traceback
 
 import coloredlogs
-from six.moves import input
 
 from ScoutSuite import ERRORS_LIST
 
@@ -60,26 +59,34 @@ def print_error(msg):
 
 def print_exception(exception, additional_details=None):
     try:
+        exc = True
         exc_type, exc_obj, exc_tb = sys.exc_info()
-        file_name = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        line_number = exc_tb.tb_lineno
-        traceback_exc = traceback.format_exc()
-        str = '{} L{}: {}'.format(file_name, line_number, exception)
+        if exc_tb and traceback:
+            file_name = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+            line_number = exc_tb.tb_lineno
+            traceback_exc = traceback.format_exc()
+            str = f'{file_name} L{line_number}: {exception}'
+        else:
+            file_name = None
+            line_number = None
+            traceback_exc = None
+            str = f'{exception}'
+            exc = False  # if there isn't an actual exception then it's pointless
     except Exception as e:
         file_name = None
         line_number = None
         traceback_exc = None
-        str = '{}'.format(exception)
+        str = f'{exception}'
 
-    if verbose_exceptions:
+    if verbose_exceptions and exc:
         logger.exception(str)
     else:
         logger.error(str)
 
     ERRORS_LIST.append({'file': file_name,
                         'line': line_number,
-                        'exception': '{}'.format(exception),
-                        'traceback': '{}'.format(traceback_exc),
+                        'exception': f'{exception}',
+                        'traceback': f'{traceback_exc}',
                         'additional_details': additional_details})
 
 
@@ -123,7 +130,7 @@ def prompt_overwrite(filename, force_write, test_input=None):
     """
     if not os.path.exists(filename) or force_write:
         return True
-    return prompt_yes_no('File \'{}\' already exists. Do you want to overwrite it'.format(filename),
+    return prompt_yes_no(f'File \'{filename}\' already exists. Do you want to overwrite it',
                          test_input=test_input)
 
 
@@ -170,7 +177,7 @@ def prompt_value(question, choices=None, default=None, display_choices=True, dis
         if choices and display_indices:
             for c in choices:
                 print_error('%3d. %s' % (choices.index(c), c))
-            print_error('Enter the number corresponding to your choice: ', False)
+            print_error('Enter the number corresponding to your choice: ')
         choice = prompt(test_input)
         # Set the default value if empty choice
         if not choice or choice == '':

@@ -15,6 +15,13 @@ providers_dict = {'aws': 'AWSProvider',
                   'openstack': 'OpenstackProvider'}
 
 
+def get_provider_object(provider):
+    provider_class = providers_dict.get(provider)
+    provider_module = __import__(f'ScoutSuite.providers.{provider}.provider', fromlist=[provider_class])
+    provider_object = getattr(provider_module, provider_class)
+    return provider_object
+
+
 def get_provider(provider,
                  profile=None,
                  project_id=None, folder_id=None, organization_id=None,
@@ -36,8 +43,7 @@ def get_provider(provider,
     services = [] if services is None else services
     skipped_services = [] if skipped_services is None else skipped_services
 
-    provider_class = providers_dict.get(provider)
-    provider_object = getattr(sys.modules[__name__], provider_class)
+    provider_object = get_provider_object(provider)
     provider_instance = provider_object(profile=profile,
                                         project_id=project_id,
                                         folder_id=folder_id,

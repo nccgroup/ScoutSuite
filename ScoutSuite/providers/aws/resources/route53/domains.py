@@ -1,11 +1,11 @@
-from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.aws.facade.base import AWSFacade
+from ScoutSuite.providers.aws.resources.base import AWSResources
 from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Domains(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
-        super(Domains, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
 
     async def fetch_all(self):
@@ -21,5 +21,7 @@ class Domains(AWSResources):
         domain_dict['auto_renew'] = raw_domain.get('AutoRenew')
         domain_dict['transfer_lock'] = raw_domain.get('TransferLock')
         domain_dict['expiry'] = raw_domain.get('Expiry')
+        domain_dict['arn'] = 'arn:aws:route53:{}:{}:domain/{}'.format(self.region,
+                                                                 self.facade.owner_id,
+                                                                 domain_dict.get('id'))
         return domain_dict['id'], domain_dict
-

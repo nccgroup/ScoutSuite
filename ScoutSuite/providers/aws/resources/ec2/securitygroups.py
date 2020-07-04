@@ -8,7 +8,7 @@ class SecurityGroups(AWSResources):
     icmp_message_types_dict = load_data('icmp_message_types.json', 'icmp_message_types')
 
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
-        super(SecurityGroups, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
         self.vpc = vpc
 
@@ -22,8 +22,14 @@ class SecurityGroups(AWSResources):
         security_group = {}
         security_group['name'] = raw_security_group['GroupName']
         security_group['id'] = raw_security_group['GroupId']
+        security_group['arn'] = 'arn:aws:ec2:{}:{}:security-group/{}'.format(self.region,
+                                                     raw_security_group.get('OwnerId'),
+                                                     raw_security_group.get('GroupId'))
         security_group['description'] = raw_security_group['Description']
         security_group['owner_id'] = raw_security_group['OwnerId']
+
+        if 'Tags' in raw_security_group:
+            security_group['tags'] = {x['Key']: x['Value'] for x in raw_security_group['Tags']}
 
         security_group['rules'] = {'ingress': {}, 'egress': {}}
         ingress_protocols, ingress_rules_count = self._parse_security_group_rules(
@@ -58,7 +64,7 @@ class SecurityGroups(AWSResources):
                 elif rule['FromPort'] == rule['ToPort']:
                     port_value = str(rule['FromPort'])
                 else:
-                    port_value = '%s-%s' % (rule['FromPort'], rule['ToPort'])
+                    port_value = '{}-{}'.format(rule['FromPort'], rule['ToPort'])
             manage_dictionary(protocols[ip_protocol]['ports'], port_value, {})
 
             # Save grants, values are either a CIDR or an EC2 security group

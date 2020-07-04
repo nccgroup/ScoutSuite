@@ -9,6 +9,7 @@ from ScoutSuite.providers.aliyun.facade.kms import KMSFacade
 from ScoutSuite.providers.aliyun.facade.ram import RAMFacade
 from ScoutSuite.providers.aliyun.facade.rds import RDSFacade
 from ScoutSuite.providers.aliyun.facade.vpc import VPCFacade
+from ScoutSuite.providers.aliyun.facade.oss import OSSFacade
 from ScoutSuite.providers.utils import run_concurrently
 
 
@@ -25,6 +26,7 @@ class AliyunFacade:
         self.rds = RDSFacade(self._credentials)
         self.vpc = VPCFacade(self._credentials)
         self.kms = KMSFacade(self._credentials)
+        self.oss = OSSFacade(self._credentials)
 
     async def build_region_list(self, service: str, chosen_regions=None):
 

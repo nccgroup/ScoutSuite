@@ -1,11 +1,11 @@
 from ScoutSuite.providers.oci.resources.base import OracleResources
 from ScoutSuite.providers.oci.facade.base import OracleFacade
-from ScoutSuite.providers.oci.resources.utils import get_non_provider_id
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Keys(OracleResources):
     def __init__(self, facade: OracleFacade, keyvault):
-        super(Keys, self).__init__(facade)
+        super().__init__(facade)
         self.key_vault = keyvault
 
     async def fetch_all(self):

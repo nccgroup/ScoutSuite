@@ -1,0 +1,35 @@
+{
+  "Statement": [
+    {
+      "Action": [
+        "cloudwatch:Describe*",
+        "iam:GetUser",
+        "iam:List*",
+        "s3:GetBucket*",
+        "s3:GetObjectAcl",
+        "s3:ListAllMyBuckets",
+        "sqs:ListQueues"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Action": [
+        "iam:*"
+      ],
+      "Effect": "Allow",
+      "Resource": [
+        "*"
+      ]
+    },
+    {
+      "Action": "*",
+      "Effect": "Allow",
+      "Resource": "*"
+    }
+
+  ],
+  "Version": "2012-10-17"
+}

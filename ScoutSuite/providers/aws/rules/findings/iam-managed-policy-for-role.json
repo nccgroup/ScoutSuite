@@ -1,26 +1,64 @@
 {
-    "arg_names": [ "Service", "Action" ],
-    "description": "Managed policy allows _ARG_0_:_ARG_1_ *",
-    "key": "iam-managed-policy-allows-_ARG_0_-_ARG_1_",
-    "path": "iam.policies.id.PolicyDocument.Statement.id",
-    "display_path": "iam.policies.id",
+    "description": "Managed Policy Allows \"_ARG_0_:_ARG_1_\" For All Resources",
+    "rationale": "Using \"*\" for the resource field might grant permissions to more resources than necessary, potentially introducing privilege escalation scenarios.",
+    "references": [
+        "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
+    ],
     "dashboard_name": "Policies",
-    "conditions": [ "and",
-        [ "iam.policies.id.PolicyDocument.Statement.id.Effect", "equal", "Allow" ],
-        [ "or",
-            [ "and",
-                [ "iam.policies.id.PolicyDocument.Statement.id.", "withKey", "Action" ],
-                [ "iam.policies.id.PolicyDocument.Statement.id.Action", "containNoneOf", [ "*", "*:*" ] ]
-            ],
-            [ "iam.policies.id.PolicyDocument.Statement.id.", "withKey", "NotAction" ]
+    "display_path": "iam.policies.id",
+    "path": "iam.policies.id.PolicyDocument.Statement.id",
+    "conditions": [
+        "and",
+        [
+            "iam.policies.id.PolicyDocument.Statement.id.Effect",
+            "equal",
+            "Allow"
         ],
-        [ "iam.policies.id.PolicyDocument.Statement.id.", "containAction", "_ARG_0_:_ARG_1_" ],
-        [ "and",
-            [ "iam.policies.id.PolicyDocument.Statement.id.", "withKey", "Resource" ],
-            [ "iam.policies.id.PolicyDocument.Statement.id.Resource", "containAtLeastOneOf", [ "*" ] ]
+        [
+            "or",
+            [
+                "and",
+                [
+                    "iam.policies.id.PolicyDocument.Statement.id.",
+                    "withKey",
+                    "Action"
+                ],
+                [
+                    "iam.policies.id.PolicyDocument.Statement.id.Action",
+                    "containNoneOf",
+                    [
+                        "*",
+                        "*:*"
+                    ]
+                ]
+            ],
+            [
+                "iam.policies.id.PolicyDocument.Statement.id.",
+                "withKey",
+                "NotAction"
+            ]
+        ],
+        [
+            "iam.policies.id.PolicyDocument.Statement.id.",
+            "containAction",
+            "_ARG_0_:_ARG_1_"
+        ],
+        [
+            "_INCLUDE_(conditions/policy-statement-any-resource.json)",
+            [
+                "_STATEMENT_"
+            ],
+            [
+                "iam.policies.id.PolicyDocument.Statement.id"
+            ]
         ]
     ],
+    "key": "iam-managed-policy-allows-_ARG_0_-_ARG_1_",
     "keys": [
         "iam.policies.id.name"
+    ],
+    "arg_names": [
+        "Service",
+        "Action"
     ]
 }

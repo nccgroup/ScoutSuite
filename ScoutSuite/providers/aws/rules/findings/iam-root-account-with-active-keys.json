@@ -1,10 +1,30 @@
 {
-    "description": "Root account has active keys",
-	"rationale": "<b>Description:</b><br><br>AWS root account access keys should be deleted as they provide unrestricted access to the AWS Account.",
-    "path": "iam.credential_reports.<root_account>",
+    "description": "Root Account Has Active Keys",
+    "rationale": "AWS root account access keys should be deleted as they provide unrestricted access to the AWS Account.",
+    "references": [
+        "https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cis-controls.html#securityhub-standards-cis-controls-1.1"
+    ],
     "dashboard_name": "Root account",
-    "conditions": [ "or",
-        [ "iam.credential_reports.<root_account>.access_key_1_active", "true", "" ],
-        [ "iam.credential_reports.<root_account>.access_key_2_active", "true", "" ]
+    "path": "iam.credential_reports.id",
+    "conditions": [
+        "and",
+        [
+            "iam.credential_reports.id.name",
+            "equal",
+            "<root_account>"
+        ],
+        [
+            "or",
+            [
+                "iam.credential_reports.id.access_key_1_active",
+                "true",
+                ""
+            ],
+            [
+                "iam.credential_reports.id.access_key_2_active",
+                "true",
+                ""
+            ]
+        ]
     ]
 }

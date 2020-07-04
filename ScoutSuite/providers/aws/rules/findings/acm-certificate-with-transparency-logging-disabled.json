@@ -1,0 +1,18 @@
+{
+    "description": "ACM Certificate with Transparency Logging Set to Disabled",
+    "rationale": "Disabling Transparency Logging may result in browsers not trusting your certificate. As of April 30 2018, Google Chrome no longer trusts public SSL/TLS certificates that are not recorded in a certificate transparency log. Transparency Logging should be enabled as a best practice.",
+    "references": [
+        "https://aws.amazon.com/blogs/security/how-to-get-ready-for-certificate-transparency/"
+    ],
+    "dashboard_name": "Certificates",
+    "path": "acm.regions.id.certificates.id",
+    "conditions": [
+        "and",
+        [
+            "acm.regions.id.certificates.id.Options.CertificateTransparencyLoggingPreference",
+            "equal",
+            "DISABLED"
+        ]
+    ],
+    "id_suffix": "CertificateTransparencyLoggingPreference"
+}

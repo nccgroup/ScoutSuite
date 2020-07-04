@@ -1,7 +1,7 @@
 from ScoutSuite.providers.oci.facade.base import OracleFacade
 from ScoutSuite.providers.oci.resources.base import OracleCompositeResources
 from ScoutSuite.providers.oci.resources.kms.keys import Keys
-from ScoutSuite.providers.oci.resources.utils import get_non_provider_id
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class KeyVaults(OracleCompositeResources):
@@ -11,7 +11,7 @@ class KeyVaults(OracleCompositeResources):
     ]
 
     def __init__(self, facade: OracleFacade):
-        super(KeyVaults, self).__init__(facade)
+        super().__init__(facade)
 
     async def fetch_all(self):
         raw_keyvaults = await self.facade.kms.get_vaults()

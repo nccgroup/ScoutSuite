@@ -49,12 +49,22 @@
       }
     }
   },
-  "storage": {
+  "database": {
     "rds": {
       "resources": {
         "instances": {
           "cols": 2,
           "path": "services.rds.regions.id.instances"
+        }
+      }
+    }
+  },
+  "storage": {
+    "oss": {
+      "resources": {
+        "buckets": {
+          "cols": 2,
+          "path": "services.oss.buckets"
         }
       }
     }

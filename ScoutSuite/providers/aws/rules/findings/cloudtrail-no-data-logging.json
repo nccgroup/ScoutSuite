@@ -1,10 +1,29 @@
 {
-    "description": "Data logging not configured",
-	"rationale": "<b>Description:</b><br><br>CloudTrail data logging is not configured, which means that S3 access is not logged.",
-    "path": "cloudtrail",
-    "dashboard_name": "Configuration",
-    "conditions": [ "and",
-        [ "data_logging_trails_count", "equal", "0" ]
+    "description": "Data Logging Not Configured",
+    "rationale": "CloudTrail Data Logging is not configured, which means that S3 access and Lambda invocations are not logged. <br><br>Note: S3 bucket logging can be used in place of Cloudtrail data events for S3. If that is the case, logs for Lambda invocations may still be missing.",
+    "references": [
+        "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-data-events-with-cloudtrail.html"
     ],
-    "id_suffix": "DataLoggingNotConfigured"
+    "dashboard_name": "Configuration",
+    "display_path": "cloudtrail.regions.id.trails.id",
+    "path": "cloudtrail.regions.id.trails.id",
+    "conditions": [
+        "and",
+        [
+            "cloudtrail.data_logging_trails_count",
+            "equal",
+            "0"
+        ],
+        [
+            "this",
+            "withKey",
+            "wildcard_data_logging"
+        ],
+        [
+            "wildcard_data_logging",
+            "false",
+            ""
+        ]
+    ],
+    "id_suffix": "cloudtrail-data-events-disabled"
 }

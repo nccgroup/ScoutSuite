@@ -1,11 +1,11 @@
 from ScoutSuite.providers.oci.resources.base import OracleResources
 from ScoutSuite.providers.oci.facade.base import OracleFacade
-from ScoutSuite.providers.oci.resources.utils import get_non_provider_id
+from ScoutSuite.providers.utils import get_non_provider_id
 
 
 class Groups(OracleResources):
     def __init__(self, facade: OracleFacade):
-        super(Groups, self).__init__(facade)
+        super().__init__(facade)
 
     async def fetch_all(self):
         for raw_group in await self.facade.identity.get_groups():

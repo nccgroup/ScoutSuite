@@ -10,13 +10,25 @@
           <div id="ec2_security_group-{{group}}-{{service}}_{{resource_type}}_list-{{status}}" class="accordion-body in">
             <div class="accordion-inner">
               <ul>
-                {{#each resources}}
+                {{#if active}}
+                  {{#each active}}
+                    <li class="list-group-item-text">
+                      <a
+                        href="javascript:showObject('services.{{../service}}.regions.{{../region}}.vpcs.{{../vpc}}.{{../resource_type}}.{{this.id}}')">
+                        {{this.name}}
+                      </a>
+                    </li>
+                  {{/each}}
+                {{else}}
+                  {{#each resources}}
                   <li class="list-group-item-text">
-                    <a href="javascript:showObject('services.{{../service}}.regions.{{../region}}.vpcs.{{../vpc}}.{{../resource_type}}.{{this}}')">
-                        {{this}}
+                    <a
+                      href="javascript:showObject('services.{{../service}}.regions.{{../region}}.vpcs.{{../vpc}}.{{../resource_type}}.{{this.id}}')">
+                      {{this.name}}
                     </a>
                   </li>
-                {{/each}}
+                  {{/each}}
+                {{/if}}
               </ul>
             </div>
           </div>

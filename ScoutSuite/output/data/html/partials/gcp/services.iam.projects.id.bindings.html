@@ -1,0 +1,65 @@
+
+<!-- Cloud Resources Manager bindings' partial -->
+<script id="services.iam.projects.id.bindings.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Title: <span id="iam.projects.{{@../key}}.bindings.{{@key}}.title"><samp>{{title}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Description: <span id="iam.projects.{{@../key}}.bindings.{{@key}}.description"><samp>{{value_or_none description}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Project ID: <span id="iam.projects.{{project}}.users.{{@key}}.project_id"><samp>{{project}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Custom Role: <span id="iam.projects.{{project}}.users.{{@key}}.custom_role">{{custom_role}}</span></div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Permissions</h4>
+        <div class="accordion-inner">
+            {{> accordion_policy name = '' document = permissions policy_path = (concat 'iam' ../resource_type ../resource_id 'permissions' @key 'PolicyDocument') heading="h5" samp=false}}
+        </div>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Bindings</h4>
+        <h5  id="iam.projects.{{@../key}}.bindings.{{@key}}.users" class="list-group-item-heading">Attached Users:</h5>
+        <div class="accordion-inner">
+            <ul>
+                {{#each members.users}}
+                <li><samp><samp>{{this}}</samp></samp></li>
+                {{else}}
+                <li><samp>None</samp></li>
+                {{/each}}
+            </ul>
+        </div>
+        <h5  id="iam.projects.{{@../key}}.bindings.{{@key}}.groups" class="list-group-item-heading">Attached Groups:</h5>
+        <div class="accordion-inner">
+            <ul>
+                {{#each members.groups}}
+                <li><samp>{{this}}</samp></li>
+                {{else}}
+                <li><samp>None</samp></li>
+                {{/each}}
+            </ul>
+        </div>
+        <h5  id="iam.projects.{{@../key}}.bindings.{{@key}}.service_accounts" class="list-group-item-heading">Attached Service Accounts:</h5>
+        <div class="accordion-inner">
+            <ul>
+                {{#each members.service_accounts}}
+                <li><samp>{{this}}</samp></li>
+                {{else}}
+                <li><samp>None</samp></li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.iam.projects.id.bindings", $("#services\\.iam\\.projects\\.id\\.bindings\\.partial").html());
+</script>
+
+<!-- Single iam binding template -->
+<script id="single_iam_binding-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.iam.projects.id.bindings'}}
+</script>
+<script>
+    var single_iam_binding_template = Handlebars.compile($("#single_iam_binding-template").html());
+</script>

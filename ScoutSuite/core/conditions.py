@@ -4,7 +4,7 @@ import json
 import netaddr
 import re
 
-from iampoliciesgonewild import get_actions_from_statement, _expand_wildcard_action
+from policyuniverse.expander_minimizer import get_actions_from_statement, _expand_wildcard_action
 
 from ScoutSuite.core.console import print_error, print_exception
 
@@ -37,7 +37,7 @@ def pass_conditions(all_info, current_path, conditions, unknown_as_pass_conditio
             path_to_value, test_name, test_values = condition
             path_to_value = fix_path_string(all_info, current_path, path_to_value)
             target_obj = get_value_at(all_info, current_path, path_to_value)
-            if type(test_values) != list:
+            if type(test_values) != list and type(test_values) != dict:
                 dynamic_value = re_get_value_at.match(test_values)
                 if dynamic_value:
                     test_values = get_value_at(all_info, current_path, dynamic_value.groups()[0], True)
@@ -140,7 +140,7 @@ def pass_condition(b, test, a):
         if not type(a) == list:
             a = [a]
         for c in b:
-            if type(c):
+            if type(c) != dict:
                 c = str(c)
             if c in a:
                 result = True
@@ -164,6 +164,12 @@ def pass_condition(b, test, a):
         for c in b:
             if c in a:
                 result = False
+                break
+    elif test == 'containAtLeastOneMatching':
+        result = False
+        for item in b:
+            if re.match(a, item):
+                result = True
                 break
 
     # Regex tests
@@ -235,6 +241,8 @@ def pass_condition(b, test, a):
         if type(b) != list:
             b = [b]
         for c in b:
+            if type(c) == dict and 'AWS' in c:
+                c = c['AWS']
             if c != a and not re.match(r'arn:aws:iam:.*?:%s:.*' % a, c):
                 result = True
                 break
@@ -256,7 +264,7 @@ def pass_condition(b, test, a):
 
 
 def fix_path_string(all_info, current_path, path_to_value):
-    # Fixes circulare dependency
+    # Fixes circular dependency
     from ScoutSuite.providers.base.configs.browser import get_value_at
     # handle nested _GET_VALUE_AT_...
     while True:

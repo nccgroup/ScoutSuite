@@ -1,0 +1,23 @@
+{
+    "description": "ACM Certificate Expiring in Less Than _ARG_0_ Days",
+    "rationale": "Ensure that certificates which are in use are not about to expire.",
+    "dashboard_name": "Certificates",
+    "path": "acm.regions.id.certificates.id",
+    "conditions": [
+        "and",
+        [
+            "acm.regions.id.certificates.id",
+            "withKey",
+            "NotAfter"
+        ],
+        [
+            "acm.regions.id.certificates.id.NotAfter",
+            "newerThan",
+            [
+                "_ARG_0_",
+                "days"
+            ]
+        ]
+    ],
+    "id_suffix": "NotAfter"
+}

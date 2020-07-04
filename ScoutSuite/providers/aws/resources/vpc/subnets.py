@@ -8,7 +8,7 @@ class Subnets(AWSResources):
         self.region = region
         self.vpc = vpc
 
-        super(Subnets, self).__init__(facade)
+        super().__init__(facade)
 
     async def fetch_all(self):
         raw_subnets = await self.facade.ec2.get_subnets(self.region, self.vpc)
@@ -20,5 +20,10 @@ class Subnets(AWSResources):
         raw_subnet['id'] = raw_subnet['SubnetId']
         get_name(raw_subnet, raw_subnet, 'SubnetId')
         raw_subnet.pop('SubnetId')
+
+        if raw_subnet['Ipv6CidrBlockAssociationSet']:
+            raw_subnet['CidrBlockv6'] = raw_subnet['Ipv6CidrBlockAssociationSet'][0]['Ipv6CidrBlock']
+        else:
+            raw_subnet['CidrBlockv6'] = None
 
         return raw_subnet['id'], raw_subnet

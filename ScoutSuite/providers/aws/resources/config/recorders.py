@@ -4,7 +4,7 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 class Recorders(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
-        super(Recorders, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
 
     async def fetch_all(self):
@@ -20,7 +20,7 @@ class Recorders(AWSResources):
         recorder['role_ARN'] = raw_recorder['roleARN']
         recorder['recording_group'] = raw_recorder['recordingGroup']
         recorder['enabled'] = raw_recorder['ConfigurationRecordersStatus']['recording']
-        recorder['last_status'] = raw_recorder['ConfigurationRecordersStatus']['lastStatus']
-        recorder['last_start_time'] = raw_recorder['ConfigurationRecordersStatus']['lastStartTime']
-        recorder['last_status_change_time'] = raw_recorder['ConfigurationRecordersStatus']['lastStatusChangeTime']
+        recorder['last_status'] = raw_recorder['ConfigurationRecordersStatus'].get('lastStatus')
+        recorder['last_start_time'] = raw_recorder['ConfigurationRecordersStatus'].get('lastStartTime')
+        recorder['last_status_change_time'] = raw_recorder['ConfigurationRecordersStatus'].get('lastStatusChangeTime')
         return recorder['name'], recorder

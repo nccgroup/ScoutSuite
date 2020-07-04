@@ -1,0 +1,20 @@
+{
+    "description": "Deprecated Certificate Authority Assigned to RDS Instance",
+    "rationale": "Amazon Web Services is deprecating the RDS Certificate Authority created in 2015 (rds-ca-2015). Any endpoints using TLS to protect RDS communications will fail after March 5th, 2020.",
+    "references": [
+        "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL-certificate-rotation.html"
+    ],
+    "dashboard_name": "Instances",
+    "path": "rds.regions.id.vpcs.id.instances.id",
+    "conditions": [
+        "and",
+        [
+            "rds.regions.id.vpcs.id.instances.id.CACertificateIdentifier",
+            "containAtLeastOneOf",
+            [
+                "rds-ca-2015"
+            ]
+        ]
+    ],
+    "id_suffix": "CACertificateIdentifier"
+}

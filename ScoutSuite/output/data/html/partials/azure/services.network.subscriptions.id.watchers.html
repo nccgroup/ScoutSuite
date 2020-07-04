@@ -1,0 +1,36 @@
+
+<!-- network watchers -->
+<script id="services.network.subscriptions.id.watchers.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="network.subscriptions.{{@../key}}.watchers.{{@key}}.name"><samp>{{value_or_none name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Provisioning State: <span id="network.subscriptions.{{@../key}}.watchers.{{@key}}.provisioning_state"><samp>{{value_or_none provisioning_state}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Location: <span id="network.subscriptions.{{@../key}}.watchers.{{@key}}.location"><samp>{{value_or_none location}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Tags: 
+            {{#each tags}}
+                <div
+                    style="border-radius: 5px; -webkit-border-radius: 5px; float: center; background-color: #c2c2d6; padding: 0.1px; text-align: center; display: inline-flex;">
+                    <samp>{{value_or_none this}}</samp>
+                </div>&nbsp;&nbsp;
+            {{else}}
+                <div style="display: inline-flex;"><samp>None</samp></div>
+            {{/each}}
+        </div>
+        <div class="list-group-item-text item-margin">Resource group: <span id="network.subscriptions.{{@../key}}.watchers.{{@key}}.resource_group_name"><samp>{{value_or_none resource_group_name}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.network.subscriptions.id.watchers", $("#services\\.network\\.subscriptions\\.id\\.watchers\\.partial").html());
+</script>
+
+<!-- Single network watcher template -->
+<script id="single_network_watcher-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.network.subscriptions.id.watchers'}}
+</script>
+<script>
+    var single_network_watcher_template = Handlebars.compile($("#single_network_watcher-template").html());
+</script>

@@ -4,7 +4,7 @@ from ScoutSuite.utils import manage_dictionary
 from ScoutSuite.core.utils import recurse
 
 
-class ProcessingEngine(object):
+class ProcessingEngine:
     """
 
     """
@@ -21,7 +21,7 @@ class ProcessingEngine(object):
                     manage_dictionary(self.rules, rule.path, [])
                     self.rules[rule.path].append(rule)
                 except Exception as e:
-                    print_exception('Failed to create rule %s: %s' % (rule.path, e))
+                    print_exception(f'Failed to create rule {rule.filename}: {e}')
 
     def run(self, cloud_provider, skip_dashboard=False):
         # Clean up existing findings
@@ -35,7 +35,7 @@ class ProcessingEngine(object):
                 if not rule.enabled:  # or rule.service not in []: # TODO: handle this...
                     continue
 
-                print_debug('Processing %s rule[%s]: "%s"' % (rule.service, rule.filename, rule.description))
+                print_debug(f'Processing {rule.service} rule "{rule.description}" ({rule.filename})')
                 finding_path = rule.path
                 path = finding_path.split('.')
                 service = path[0]
@@ -43,7 +43,7 @@ class ProcessingEngine(object):
                 cloud_provider.services[service][self.ruleset.rule_type][rule.key] = {}
                 cloud_provider.services[service][self.ruleset.rule_type][rule.key]['description'] = rule.description
                 cloud_provider.services[service][self.ruleset.rule_type][rule.key]['path'] = rule.path
-                for attr in ['level', 'id_suffix', 'display_path']:
+                for attr in ['level', 'id_suffix', 'class_suffix', 'display_path']:
                     if hasattr(rule, attr):
                         cloud_provider.services[service][self.ruleset.rule_type][rule.key][attr] = getattr(rule, attr)
                 try:
@@ -52,17 +52,23 @@ class ProcessingEngine(object):
                         cloud_provider.services, cloud_provider.services, path, [], rule, True)
                     if skip_dashboard:
                         continue
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key][
-                        'dashboard_name'] = rule.dashboard_name
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key][
-                        'checked_items'] = rule.checked_items
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['flagged_items'] = len(
-                        cloud_provider.services[service][self.ruleset.rule_type][rule.key]['items'])
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['dashboard_name'] = \
+                        rule.dashboard_name
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['checked_items'] = \
+                        rule.checked_items
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['flagged_items'] = \
+                        len(cloud_provider.services[service][self.ruleset.rule_type][rule.key]['items'])
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['service'] = rule.service
-                    cloud_provider.services[service][self.ruleset.rule_type][rule.key][
-                        'rationale'] = rule.rationale if hasattr(rule, 'rationale') else 'No description available.'
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['rationale'] = \
+                        rule.rationale if hasattr(rule, 'rationale') else None
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['remediation'] = \
+                        rule.remediation if hasattr(rule, 'remediation') else None
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['compliance'] = \
+                        rule.compliance if hasattr(rule, 'compliance') else None
+                    cloud_provider.services[service][self.ruleset.rule_type][rule.key]['references'] = \
+                        rule.references if hasattr(rule, 'references') else None
                 except Exception as e:
-                    print_exception('Failed to process rule defined in %s: %s' % (rule.filename, e))
+                    print_exception(f'Failed to process rule defined in {rule.filename}: {e}')
                     # Fallback if process rule failed to ensure report creation and data dump still happen
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['checked_items'] = 0
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['flagged_items'] = 0

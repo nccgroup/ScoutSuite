@@ -24,11 +24,11 @@ class IAMFacade(AWSBaseFacade):
                     n_attempts -= 1
                     await asyncio.sleep(0.1)  # Wait for 100ms before doing a new attempt.
         except Exception as e:
-            print_exception('Failed to generate credential report: {}'.format(e))
+            print_exception(f'Failed to generate credential report: {e}')
             return []
         finally:
             if not report_generated and n_attempts == 0:
-                print_exception('Failed to complete credential report generation in {} attempts'.format(n_attempts))
+                print_exception(f'Failed to complete credential report generation in {n_attempts} attempts')
                 return []
 
         try:
@@ -50,7 +50,7 @@ class IAMFacade(AWSBaseFacade):
 
             return credential_reports
         except Exception as e:
-            print_exception('Failed to download credential report: {}'.format(e))
+            print_exception(f'Failed to download credential report: {e}')
             return []
 
     async def get_groups(self):
@@ -73,7 +73,7 @@ class IAMFacade(AWSBaseFacade):
                 lambda: client.get_policy_version(PolicyArn=policy['Arn'], VersionId=policy['DefaultVersionId']))
             policy['PolicyDocument'] = policy_version['PolicyVersion']['Document']
         except Exception as e:
-            print_exception('Failed to get policy version: {}'.format(e))
+            print_exception(f'Failed to get policy version: {e}')
         else:
             policy['attached_to'] = {}
             attached_entities = await AWSFacadeUtils.get_multiple_entities_from_all_pages(
@@ -115,9 +115,9 @@ class IAMFacade(AWSBaseFacade):
                 #  If the user has not been assigned a password, the operation returns a 404 (NoSuchEntity ) error.
                 pass
             else:
-                print_exception('Failed to get login profile: {}'.format(e))
+                print_exception(f'Failed to get login profile: {e}')
         except Exception as e:
-            print_exception('Failed to get login profile: {}'.format(e))
+            print_exception(f'Failed to get login profile: {e}')
 
     async def _get_and_set_user_groups(self, user: {}):
         groups = await AWSFacadeUtils.get_all_pages(
@@ -157,7 +157,7 @@ class IAMFacade(AWSBaseFacade):
             return (await run_concurrently(client.get_account_password_policy))['PasswordPolicy']
         except ClientError as e:
             if e.response['Error']['Code'] != 'NoSuchEntity':
-                print_exception('Failed to get account password policy: {}'.format(e))
+                print_exception(f'Failed to get account password policy: {e}')
             return None
 
     async def _get_and_set_user_access_keys(self, user: {}):
@@ -166,7 +166,7 @@ class IAMFacade(AWSBaseFacade):
             user['AccessKeys'] = await run_concurrently(
                 lambda: client.list_access_keys(UserName=user['UserName'])['AccessKeyMetadata'])
         except Exception as e:
-            print_exception('Failed to list access keys: {}'.format(e))
+            print_exception(f'Failed to list access keys: {e}')
 
     async def _get_and_set_user_mfa_devices(self, user: {}):
         client = AWSFacadeUtils.get_client('iam', self.session)
@@ -174,7 +174,7 @@ class IAMFacade(AWSBaseFacade):
             user['MFADevices'] = await run_concurrently(
                 lambda: client.list_mfa_devices(UserName=user['UserName'])['MFADevices'])
         except Exception as e:
-            print_exception('Failed to list MFA devices: {}'.format(e))
+            print_exception(f'Failed to list MFA devices: {e}')
 
     async def _get_and_set_group_users(self, group: {}):
         client = AWSFacadeUtils.get_client('iam', self.session)
@@ -197,17 +197,18 @@ class IAMFacade(AWSBaseFacade):
             if len(policy_names) == 0:
                 resource['inline_policies_count'] = 0
         except Exception as e:
-            print_exception('Failed to list IAM policy: {}'.format(e))
+            print_exception(f'Failed to list IAM policy: {e}')
         else:
             get_policy_method = getattr(client, 'get_' + iam_resource_type + '_policy')
             try:
                 tasks = {
                     asyncio.ensure_future(
-                        run_concurrently(lambda: get_policy_method(**dict(args, PolicyName=policy_name)))
+                        run_concurrently(lambda policy_name=policy_name:
+                                         get_policy_method(**dict(args, PolicyName=policy_name)))
                     ) for policy_name in policy_names
                 }
             except Exception as e:
-                print_exception('Failed to get policy methods: {}'.format(e))
+                print_exception(f'Failed to get policy methods: {e}')
             else:
                 for task in asyncio.as_completed(tasks):
                     policy = await task
@@ -222,14 +223,26 @@ class IAMFacade(AWSBaseFacade):
                 resource['inline_policies_count'] = len(resource['inline_policies'])
 
     def _normalize_statements(self, policy_document):
-        for statement in policy_document['Statement']:
-            # Action or NotAction
-            action_string = 'Action' if 'Action' in statement else 'NotAction'
-            if type(statement[action_string]) != list:
-                statement[action_string] = [statement[action_string]]
-            # Resource or NotResource
-            resource_string = 'Resource' if 'Resource' in statement else 'NotResource'
-            if type(statement[resource_string]) != list:
-                statement[resource_string] = [statement[resource_string]]
-
+        if policy_document:
+            if type(policy_document['Statement']) == list:
+                pass
+                # for statement in policy_document['Statement']:
+                #     statement = self._normalize_single_statement(statement)
+            elif type(policy_document['Statement']) == dict:
+                policy_document['Statement'] = self._normalize_single_statement(policy_document['Statement'])
+            else:
+                print_exception('Failed to normalize policy document')
         return policy_document
+
+    def _normalize_single_statement(self, statement):
+        # Action or NotAction
+        action_string = 'Action' if 'Action' in statement else 'NotAction'
+        if type(statement[action_string]) != list:
+            statement[action_string] = [statement[action_string]]
+        # Resource or NotResource
+        resource_string = 'Resource' if 'Resource' in statement else 'NotResource'
+        if type(statement[resource_string]) != list:
+            statement[resource_string] = [statement[resource_string]]
+        # Result
+        return statement
+

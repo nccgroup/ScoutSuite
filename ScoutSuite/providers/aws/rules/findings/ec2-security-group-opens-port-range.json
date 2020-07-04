@@ -1,12 +1,34 @@
 {
-    "description": "Use of port ranges",
-    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",
+    "description": "Security Group Uses Port Range",
+    "rationale": "It was found that the security group was using port ranges. Sometimes, ranges could include unintended ports that should not be exposed. As a result, when possible, explicit port lists should be used instead",
     "dashboard_name": "Rules",
-    "conditions": [ "and",
-        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id", "equal", "ingress" ],
-        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id", "containAtLeastOneOf", ["ALL", "UDP", "TCP"] ],
-        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id", "match", "[0-9]+-[0-9]+" ],
-        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id", "notEqual", "0-65535" ]
-    ],
-    "display_path": "ec2.regions.id.vpcs.id.security_groups.id"
+    "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",
+    "conditions": [
+        "and",
+        [
+            "ec2.regions.id.vpcs.id.security_groups.id.rules.id",
+            "equal",
+            "ingress"
+        ],
+        [
+            "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id",
+            "containAtLeastOneOf",
+            [
+                "ALL",
+                "UDP",
+                "TCP"
+            ]
+        ],
+        [
+            "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",
+            "match",
+            "[0-9]+-[0-9]+"
+        ],
+        [
+            "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",
+            "notEqual",
+            "0-65535"
+        ]
+    ]
 }

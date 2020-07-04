@@ -1,5 +1,5 @@
 from ScoutSuite.providers.oci.resources.base import OracleCompositeResources
-from ScoutSuite.providers.oci.resources.utils import get_non_provider_id
+from ScoutSuite.providers.utils import get_non_provider_id
 
 from .api_keys import ApiKeys
 

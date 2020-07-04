@@ -1,0 +1,15 @@
+{
+  "Action": [
+    "cloudwatch:Describe*",
+    "iam:GetUser",
+    "iam:List*",
+    "s3:GetBucket*",
+    "s3:GetObjectAcl",
+    "s3:ListAllMyBuckets",
+    "sqs:ListQueues"
+  ],
+  "Effect": "Allow",
+  "Resource": [
+    "*"
+  ]
+}

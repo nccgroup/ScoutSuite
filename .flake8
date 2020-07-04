@@ -1,0 +1,23 @@
+[flake8]
+select =
+    E901,
+    E999,
+    F821,
+    F822,
+    F823
+statistics = True
+show-source = True
+max-line-length = 127
+max-complexity = 10
+exclude =
+    .git,
+    __pycache__,
+    docs/source/conf.py,
+    old,
+    build,
+    dist,
+    venv
+
+[pycodestyle]
+max_line_length = 127
+ignore = E501

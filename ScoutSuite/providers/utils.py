@@ -24,9 +24,8 @@ async def run_concurrently(function, backoff_seconds=15):
             return await run_function_concurrently(function)
     except Exception as e:
         # Determine whether the exception is due to API throttling
-        throttled = aws_is_throttled(e)  # FIXME - this only works for AWS
-        if throttled:
-            print_info('Hitting API rate limiting, will retry in {}s'.format(backoff_seconds))
+        if is_throttled(e):
+            print_info(f'Hitting API rate limiting, will retry in {backoff_seconds}s')
             await asyncio.sleep(backoff_seconds)
             return await run_concurrently(function, backoff_seconds + 15)
         else:
@@ -105,3 +104,18 @@ async def map_concurrently(coroutine, entities, **kwargs):
             results.append(result)
 
     return results
+
+
+def is_throttled(e):
+    """
+    Function that tries to determine if an exception was caused by throttling
+    TODO - this implementation is incomplete
+    """
+
+    if hasattr(e, 'message') and \
+            ('Google Cloud' in e.message or
+             '404' in e.message or
+             'projects/' in e.message):
+        return False
+    else:
+        return aws_is_throttled(e)

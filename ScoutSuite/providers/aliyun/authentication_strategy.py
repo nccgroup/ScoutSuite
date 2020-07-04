@@ -20,7 +20,7 @@ class AliyunAuthenticationStrategy(AuthenticationStrategy):
     Implements authentication for the AWS provider
     """
 
-    def authenticate(self, access_key_id, access_key_secret, **kwargs):
+    def authenticate(self, access_key_id=None, access_key_secret=None, **kwargs):
 
         try:
 

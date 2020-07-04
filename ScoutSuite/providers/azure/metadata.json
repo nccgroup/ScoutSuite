@@ -4,7 +4,7 @@
       "resources": {
         "storage_accounts": {
           "cols": 2,
-          "path": "services.storageaccounts.storage_accounts"
+          "path": "services.storageaccounts.subscriptions.id.storage_accounts"
         }
       }
     }
@@ -14,7 +14,19 @@
       "resources": {
         "instances": {
           "cols": 2,
-          "path": "services.virtualmachines.instances"
+          "path": "services.virtualmachines.subscriptions.id.instances"
+        },
+        "disks": {
+          "cols": 2,
+          "path": "services.virtualmachines.subscriptions.id.disks"
+        },
+        "snapshots": {
+          "cols": 2,
+          "path": "services.virtualmachines.subscriptions.id.snapshots"
+        },
+        "images": {
+          "cols": 2,
+          "path": "services.virtualmachines.subscriptions.id.images"
         }
       }
     }
@@ -24,7 +36,7 @@
       "resources": {
         "servers": {
           "cols": 2,
-          "path": "services.sqldatabase.servers"
+          "path": "services.sqldatabase.subscriptions.id.servers"
         }
       }
     },
@@ -32,17 +44,37 @@
       "resources": {
         "caches": {
           "cols": 2,
-          "path": "services.rediscache.caches"
+          "path": "services.rediscache.subscriptions.id.caches"
         }
       }
     }
   },
   "security": {
-    "graphrbac": {
+    "aad": {
       "resources": {
         "users": {
           "cols": 2,
-          "path": "services.graphrbac.users"
+          "path": "services.aad.users"
+        },
+        "groups": {
+          "cols": 2,
+          "path": "services.aad.groups"
+        },
+        "service_principals": {
+          "cols": 2,
+          "path": "services.aad.service_principals"
+        },
+        "applications": {
+          "cols": 2,
+          "path": "services.aad.applications"
+        }
+      }
+    },
+    "rbac": {
+      "resources": {
+        "roles": {
+          "cols": 2,
+          "path": "services.rbac.subscriptions.id.roles"
         }
       }
     },
@@ -50,7 +82,7 @@
       "resources": {
         "vaults": {
           "cols": 2,
-          "path": "services.keyvault.vaults"
+          "path": "services.keyvault.subscriptions.id.vaults"
         }
       }
     },
@@ -58,15 +90,23 @@
       "resources": {
         "pricings": {
           "cols": 2,
-          "path": "services.securitycenter.pricings"
+          "path": "services.securitycenter.subscriptions.id.pricings"
         },
         "security_contacts": {
           "cols": 2,
-          "path": "services.securitycenter.security_contacts"
+          "path": "services.securitycenter.subscriptions.id.security_contacts"
         },
         "auto_provisioning_settings": {
           "cols": 2,
-          "path": "services.securitycenter.auto_provisioning_settings"
+          "path": "services.securitycenter.subscriptions.id.auto_provisioning_settings"
+        },
+        "compliance_results": {
+          "cols": 2,
+          "path": "services.securitycenter.subscriptions.id.compliance_results"
+        },
+        "regulatory_compliance_results": {
+          "cols": 2,
+          "path": "services.securitycenter.subscriptions.id.regulatory_compliance_results"
         }
       }
     }
@@ -76,7 +116,7 @@
       "resources": {
         "app_gateways": {
           "cols": 2,
-          "path": "services.appgateway.app_gateways"
+          "path": "services.appgateway.subscriptions.id.app_gateways"
         }
       }
     },
@@ -84,15 +124,19 @@
       "resources": {
         "virtual_networks": {
           "cols": 2,
-          "path": "services.network.virtual_networks"
+          "path": "services.network.subscriptions.id.virtual_networks"
         },
         "security_groups": {
           "cols": 2,
-          "path": "services.network.security_groups"
+          "path": "services.network.subscriptions.id.security_groups"
+        },
+        "application_security_groups": {
+          "cols": 2,
+          "path": "services.network.subscriptions.id.application_security_groups"
         },
         "watchers": {
           "cols": 2,
-          "path": "services.network.watchers"
+          "path": "services.network.subscriptions.id.watchers"
         }
       }
     },
@@ -100,7 +144,7 @@
       "resources": {
         "load_balancers": {
           "cols": 2,
-          "path": "services.loadbalancer.load_balancers"
+          "path": "services.loadbalancer.subscriptions.id.load_balancers"
         }
       }
     }
@@ -110,7 +154,7 @@
       "resources": {
         "web_apps": {
           "cols": 2,
-          "path": "services.appservice.web_apps"
+          "path": "services.appservice.subscriptions.id.web_apps"
         }
       }
     }
