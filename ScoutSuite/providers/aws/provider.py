@@ -382,8 +382,7 @@ class AWSProvider(BaseProvider):
             subnet_id = current_config['SubnetId']
             if subnet_id:
                 vpc = self.subnet_map[subnet_id]
-                subnet = self.services['vpc']['regions'][vpc['region']
-                ]['vpcs'][vpc['vpc_id']]['subnets'][subnet_id]
+                subnet = self.services['vpc']['regions'][vpc['region']]['vpcs'][vpc['vpc_id']]['subnets'][subnet_id]
                 manage_dictionary(subnet, 'instances', [])
                 if instance_id not in subnet['instances']:
                     subnet['instances'].append(instance_id)
