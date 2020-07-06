@@ -14,6 +14,9 @@
                   <li class="list-group-item-text no-margin">Public IP: {{Association.PublicIp}}</li>
                   {{#if Association.PublicDnsName}}<li class="list-group-item-text no-margin">Public DNS: {{Association.PublicDnsName}}</li>{{/if}}
                   {{/if}}
+                  {{#if Attachment}}
+                  <li class="list-group-item-text no-margin">Attached to instance: {{Attachment.InstanceId}}</li>
+                  {{/if}}
                   {{#if Ipv6Addresses}}
                   <li class="list-group-item-text no-margin">IPv6 addresses:</li>
                   <ul>
