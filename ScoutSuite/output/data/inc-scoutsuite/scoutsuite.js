@@ -919,6 +919,27 @@ function showLastRunDetails() {
 function showResourcesDetails() {
     $('#modal-container').html(resources_details_template(runResults));
     $('#modal-container').modal()
+
+    $('#resources_details_download_csv_button').click(function(){
+       var anchor = window.location.hash.substr(1)
+        // Strip the # sign
+        var path = decodeURIComponent(anchor.replace('#', ''))
+        // Get resource path based on browsed-to path
+        var item_indexes = getValueAt(path);
+
+        // create array with item values
+            var items = [];
+            var index = 0;
+            items[index] = ["Service", "Description", "Affected resources", "Risk level"]
+            Object.entries(item_indexes.services).forEach((service) =>{
+                Object.entries(service[1].findings).forEach((finding) => {
+                    index++;
+                    items[index] = [finding[1].service, finding[1].description, finding[1].flagged_items, finding[1].level];
+                })
+            });
+
+        downloadAsCsv('summary.csv', items)
+    });
 }
 
 /**
