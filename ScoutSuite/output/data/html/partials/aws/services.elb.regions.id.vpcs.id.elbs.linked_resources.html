@@ -4,13 +4,13 @@
         <div class="accordion">
           {{#if resources.length}}
           <h5 class="list-group-item-heading accordion-heading">{{makeTitle resource_type}}:
-            {{> count_badge count=resources.length target=(concat '#services.elb.regions' region 'vpcs' vpc 'elbs' @key resource_type)}}
+            {{> count_badge count=resources.length target=(concat '#services' service 'regions' region 'vpcs' vpc 'elbs' @key resource_type)}}
           </h5>
-          <div id="services.elb.regions.{{region}}.vpcs.{{vpc}}.elbs.{{@key}}.{{resource_type}}" class="accordion-body">
+          <div id="services.{{service}}.regions.{{region}}.vpcs.{{vpc}}.elbs.{{@key}}.{{resource_type}}" class="accordion-body">
             <div class="accordion-inner">
               <ul>
               {{#each resources}}
-                <li class="list-group-item-text"><a href="javascript:showObject('services.elb.regions.{{../region}}.vpcs.{{../vpc}}.{{../resource_type}}.{{this}}')">{{this}}</a></li>
+                <li class="list-group-item-text"><a href="javascript:showObject('services.{{../service}}.regions.{{../region}}.vpcs.{{../vpc}}.{{../resource_type}}.{{this}}')">{{this}}</a></li>
               {{/each}}
               </ul>
             </div>

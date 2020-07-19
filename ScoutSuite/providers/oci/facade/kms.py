@@ -17,7 +17,7 @@ class KMSFacade:
                 lambda: list_call_get_all_results(self._vault_client.list_vaults, self._credentials.get_scope()))
             return response.data
         except Exception as e:
-            print_exception('Failed to get KMS vaults: {}'.format(e))
+            print_exception(f'Failed to get KMS vaults: {e}')
             return []
 
     async def get_keys(self, keyvault):
@@ -27,5 +27,5 @@ class KMSFacade:
                 lambda: list_call_get_all_results(key_client.list_keys, self._credentials.get_scope()))
             return response.data
         except Exception as e:
-            print_exception('Failed to get KMS vaults: {}'.format(e))
+            print_exception(f'Failed to get KMS vaults: {e}')
             return []

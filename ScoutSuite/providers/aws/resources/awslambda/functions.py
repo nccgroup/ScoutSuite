@@ -4,7 +4,7 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 class Functions(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
-        super(Functions, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
 
     async def fetch_all(self):
@@ -32,6 +32,7 @@ class Functions(AWSResources):
 
         await self._add_role_information(function_dict, raw_function.get('Role'))
         await self._add_access_policy_information(function_dict)
+        await self._add_env_variables(function_dict)
 
         return function_dict['name'], function_dict
 
@@ -57,3 +58,14 @@ class Functions(AWSResources):
             function_dict['access_policy'] = {'Version': '2012-10-17',
                                               'Id': 'default',
                                               'Statement': []}
+
+    async def _add_env_variables(self, function_dict):
+        env_variables = await self.facade.awslambda.get_env_variables(function_dict['name'], self.region)
+        function_dict["env_variables"] = env_variables
+        # The following properties are for easier rule creation
+        if env_variables:
+            function_dict["env_variable_names"] = list(env_variables.keys())
+            function_dict["env_variable_values"] = list(env_variables.values())
+        else:
+            function_dict["env_variable_names"] = []
+            function_dict["env_variable_values"] = []

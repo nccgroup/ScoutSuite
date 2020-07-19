@@ -9,7 +9,7 @@ class KeyRings(GCPCompositeResources):
     ]
 
     def __init__(self, facade: GCPFacade, project_id: str):
-        super(KeyRings, self).__init__(facade)
+        super().__init__(facade)
         self.project_id = project_id
 
     async def fetch_all(self):

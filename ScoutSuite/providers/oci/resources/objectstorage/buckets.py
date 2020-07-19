@@ -4,7 +4,7 @@ from ScoutSuite.providers.oci.facade.base import OracleFacade
 
 class Buckets(OracleResources):
     def __init__(self, facade: OracleFacade):
-        super(Buckets, self).__init__(facade)
+        super().__init__(facade)
 
     async def fetch_all(self):
 

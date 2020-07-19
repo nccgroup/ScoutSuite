@@ -7,7 +7,7 @@ providers_dict = {'aws': 'AWSProvider',
 
 def get_provider_object(provider):
     provider_class = providers_dict.get(provider)
-    provider_module = __import__('ScoutSuite.providers.{}.provider'.format(provider), fromlist=[provider_class])
+    provider_module = __import__(f'ScoutSuite.providers.{provider}.provider', fromlist=[provider_class])
     provider_object = getattr(provider_module, provider_class)
     return provider_object
 

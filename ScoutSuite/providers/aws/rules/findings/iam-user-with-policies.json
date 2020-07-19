@@ -1,6 +1,6 @@
 {
     "description": "User with _ARG_0_ Policies",
-    "rationale": "Assigning privileges at the user level increases the complexity of access management and the opportunity for a user to receive or retain excessive privileges.",
+    "rationale": "The user was found to be attached to inline policies. This can increase the complexity in user and policy management, and increase the risk of the user being assigned or retaining excessive permissions.",
     "remediation": "Ensure IAM policies are only attached to groups or roles",
     "compliance": [
         {

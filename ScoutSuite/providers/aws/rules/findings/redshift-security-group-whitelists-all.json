@@ -1,5 +1,6 @@
 {
     "description": "Security Group Allows All Traffic",
+    "rationale": "The security group allows access to Redshift instances from any source address, which creates a wider attack surface for resources assigned to it. Source address restrictions should be implemented",
     "dashboard_name": "Security Groups",
     "display_path": "redshift.regions.id.vpcs.id.security_groups.id",
     "path": "redshift.regions.id.vpcs.id.security_groups.id.IPRanges.id.CIDRIP",

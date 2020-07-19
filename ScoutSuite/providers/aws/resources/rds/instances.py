@@ -4,7 +4,7 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 class RDSInstances(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
-        super(RDSInstances, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
         self.vpc = vpc
 
@@ -24,6 +24,9 @@ class RDSInstances(AWSResources):
             instance[key] = raw_instance[key] if key in raw_instance else None
 
         instance['is_read_replica'] = self._is_read_replica(raw_instance)
+        instance['arn'] = 'arn:aws:rds:{}:{}:instance/{}'.format(self.region,
+                                                                           self.facade.owner_id,
+                                                                           raw_instance.get('DbiResourceId'))
         return instance['name'], instance
 
     @staticmethod

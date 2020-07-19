@@ -10,7 +10,7 @@ class CloudWatch(AWSBaseFacade):
             return await AWSFacadeUtils.get_all_pages('cloudwatch', region, self.session, 'describe_alarms',
                                                       'MetricAlarms')
         except Exception as e:
-            print_exception('Failed to get CloudWatch alarms: {}'.format(e))
+            print_exception(f'Failed to get CloudWatch alarms: {e}')
             return []
 
     async def get_metric_filters(self, region):

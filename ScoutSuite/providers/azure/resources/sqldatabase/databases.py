@@ -1,5 +1,6 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureCompositeResources
+from ScoutSuite.providers.azure.utils import get_resource_group_name
 
 from .database_blob_auditing_policies import DatabaseBlobAuditingPolicies
 from .database_threat_detection_policies import DatabaseThreatDetectionPolicies
@@ -16,7 +17,7 @@ class Databases(AzureCompositeResources):
     ]
 
     def __init__(self, facade: AzureFacade, resource_group_name: str, server_name: str, subscription_id: str):
-        super(Databases, self).__init__(facade)
+        super().__init__(facade)
         self.resource_group_name = resource_group_name
         self.server_name = server_name
         self.subscription_id = subscription_id
@@ -30,7 +31,9 @@ class Databases(AzureCompositeResources):
 
             self[db.name] = {
                 'id': db.name,
-                'name': db.name
+                'name': db.name,
+                'tags': ["{}:{}".format(key, value) for key, value in  db.tags.items()] if db.tags is not None else [],
+                'resource_group_name': get_resource_group_name(db.id)
             }
 
         await self._fetch_children_of_all_resources(

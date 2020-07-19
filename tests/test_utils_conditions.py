@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 import os
+import unittest
+
 
 from ScoutSuite.core.conditions import *
 
-class TestOpinelConditionClass:
+class TestOpinelConditionClass(unittest.TestCase):
     """
     Test opinel.condition
     """
@@ -196,6 +198,11 @@ class TestOpinelConditionClass:
             'isCrossAccount',
             '123456789013'
         )
+
+        assert pass_condition(["a", "b", "arn:aws:iam::111111111111:role/*"], "containAtLeastOneMatching", ".*[*].*")
+        assert pass_condition(["*"], "containAtLeastOneMatching", ".*[*].*")
+        assert not pass_condition(["a", "b"], "containAtLeastOneMatching", ".*[*].*")
+        assert not pass_condition([], "containAtLeastOneMatching", ".*[*].*")
 
         try:
             pass_condition('foo', 'bar', 'baz')

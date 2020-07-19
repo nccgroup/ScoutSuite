@@ -89,6 +89,22 @@
         "sinks": {
           "cols": 2,
           "path": "services.stackdriverlogging.projects.id.sinks"
+        },
+        "metrics": {
+          "cols": 2,
+          "path": "services.stackdriverlogging.projects.id.metrics"
+        }
+      }
+    },
+    "stackdrivermonitoring": {
+      "resources": {
+        "uptime_checks": {
+          "cols": 2,
+          "path": "services.stackdrivermonitoring.projects.id.uptime_checks"
+        },
+        "alert_policies": {
+          "cols": 2,
+          "path": "services.stackdrivermonitoring.projects.id.alert_policies"
         }
       }
     }

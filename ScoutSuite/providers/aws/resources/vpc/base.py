@@ -23,7 +23,7 @@ class VPC(Regions):
 
     def __init__(self, facade: AWSFacade):
         # VPC is not a real service but a subset of ec2:
-        super(VPC, self).__init__('ec2', facade)
+        super().__init__('ec2', facade)
 
 
 # TODO: move these helpers elsewhere:
@@ -61,5 +61,5 @@ def get_cidr_name(cidr, ip_ranges_files, ip_ranges_name_key):
         ip_prefix = netaddr.IPNetwork(ip_range['ip_prefix'])
         cidr = netaddr.IPNetwork(cidr)
         if cidr in ip_prefix:
-            return 'Unknown CIDR in %s %s' % (ip_range['service'], ip_range['region'])
+            return 'Unknown CIDR in {} {}'.format(ip_range['service'], ip_range['region'])
     return 'Unknown CIDR'

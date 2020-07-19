@@ -37,6 +37,7 @@ def get_capitalized_title(initial_title: str) -> str:
             tokens = fragment.split()  # Break string into individual words
 
             if tokens:
+
                 for word in tokens:  # Check each word
 
                     if word not in SPECIAL_WORDS:
@@ -54,6 +55,8 @@ def get_capitalized_title(initial_title: str) -> str:
                         frag_string += word.lower() + punct + " "  # make it lowercase
                     elif word.isupper() or is_mixed_case(word):
                         frag_string += word + punct + " "  # do nothing
+                    elif word and word[0] == '"' and word[-1] == '"':  # Check for quoted words
+                        frag_string += word + punct + " "  # do nothing
                     else:
                         frag_string += word.capitalize() + punct + " "  # capitalize it
 
@@ -61,7 +64,10 @@ def get_capitalized_title(initial_title: str) -> str:
                 if not frag_string[0].isalpha():
                     cap = 2
 
-                out_string += (frag_string[:cap].upper() + frag_string[cap:]).strip() + " "
+                if frag_string[0] == '"' and frag_string[-2] == '"':  # Check for quoted words
+                    out_string += frag_string.strip() + " "
+                else:
+                    out_string += (frag_string[:cap].upper() + frag_string[cap:]).strip() + " "
 
     return (out_string[:1].upper() + out_string[1:]).strip()  # Capitalize first letter and strip trailing space
 
