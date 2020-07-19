@@ -9,4 +9,4 @@ class CloudFormation(Regions):
     ]
 
     def __init__(self, facade: AWSFacade):
-        super(CloudFormation, self).__init__('cloudformation', facade)
+        super().__init__('cloudformation', facade)

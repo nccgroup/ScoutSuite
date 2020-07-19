@@ -12,7 +12,7 @@ from ScoutSuite.providers.aliyun.resources.oss.base import OSS
 
 class AliyunServicesConfig(BaseServicesConfig):
     def __init__(self, credentials, **kwargs):
-        super(AliyunServicesConfig, self).__init__(credentials)
+        super().__init__(credentials)
 
         facade = AliyunFacade(credentials)
 

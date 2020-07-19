@@ -5,7 +5,7 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 class UptimeChecks(Resources):
     def __init__(self, facade: GCPFacade, project_id: str):
-        super(UptimeChecks, self).__init__(facade)
+        super().__init__(facade)
         self.project_id = project_id
 
     async def fetch_all(self):

@@ -6,7 +6,7 @@ from ScoutSuite.providers.utils import get_non_provider_id
 class RegulatoryComplianceResults(AzureResources):
 
     def __init__(self, facade: AzureFacade, subscription_id: str):
-        super(RegulatoryComplianceResults, self).__init__(facade)
+        super().__init__(facade)
         self.subscription_id = subscription_id
 
     async def fetch_all(self):

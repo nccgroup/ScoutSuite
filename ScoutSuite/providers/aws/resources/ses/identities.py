@@ -11,7 +11,7 @@ class Identities(AWSCompositeResources):
     ]
 
     def __init__(self, facade: AWSFacade, region: str):
-        super(Identities, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
 
     async def fetch_all(self):
@@ -32,5 +32,8 @@ class Identities(AWSCompositeResources):
         identity['name'] = identity_name
         identity['DkimEnabled'] = dkim_attributes['DkimEnabled']
         identity['DkimVerificationStatus'] = dkim_attributes['DkimVerificationStatus']
+        identity['arn'] = 'arn:aws:ses:{}:{}:identity/{}'.format(self.region,
+                                                                             self.facade.owner_id,
+                                                                             identity_name)
 
         return get_non_provider_id(identity_name), identity

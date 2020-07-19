@@ -22,7 +22,7 @@ class SQLDatabaseFacade:
                     resource_group_name, server_name, database_name)
             )
         except Exception as e:
-            print_exception('Failed to retrieve database blob auditing policies: {}'.format(e))
+            print_exception(f'Failed to retrieve database blob auditing policies: {e}')
             return []
 
     async def get_database_threat_detection_policies(self, resource_group_name, server_name, database_name, subscription_id: str):
@@ -33,7 +33,7 @@ class SQLDatabaseFacade:
                     resource_group_name, server_name, database_name)
             )
         except Exception as e:
-            print_exception('Failed to retrieve database threat detection policies: {}'.format(e))
+            print_exception(f'Failed to retrieve database threat detection policies: {e}')
             return []
 
     async def get_databases(self, resource_group_name, server_name, subscription_id: str):
@@ -43,7 +43,7 @@ class SQLDatabaseFacade:
                 lambda: list(client.databases.list_by_server(resource_group_name, server_name))
             )
         except Exception as e:
-            print_exception('Failed to retrieve databases: {}'.format(e))
+            print_exception(f'Failed to retrieve databases: {e}')
             return []
 
     async def get_database_replication_links(self, resource_group_name, server_name, database_name, subscription_id: str):
@@ -54,7 +54,7 @@ class SQLDatabaseFacade:
                     resource_group_name, server_name, database_name)
             )
         except Exception as e:
-            print_exception('Failed to retrieve database replication links: {}'.format(e))
+            print_exception(f'Failed to retrieve database replication links: {e}')
             return []
 
     async def get_server_azure_ad_administrators(self, resource_group_name, server_name, subscription_id: str):
@@ -66,10 +66,10 @@ class SQLDatabaseFacade:
         except CloudError as e:
             # No AD admin configured returns a 404 error:
             if e.status_code != 404:
-                print_exception('Failed to retrieve server azure ad administrators: {}'.format(e))
+                print_exception(f'Failed to retrieve server azure ad administrators: {e}')
             return None
         except Exception as e:
-            print_exception('Failed to retrieve server azure ad administrators: {}'.format(e))
+            print_exception(f'Failed to retrieve server azure ad administrators: {e}')
             return None
 
     async def get_server_blob_auditing_policies(self, resource_group_name, server_name, subscription_id: str):
@@ -79,7 +79,7 @@ class SQLDatabaseFacade:
                 lambda: client.server_blob_auditing_policies.get(resource_group_name, server_name)
             )
         except Exception as e:
-            print_exception('Failed to retrieve server blob auditing policies: {}'.format(e))
+            print_exception(f'Failed to retrieve server blob auditing policies: {e}')
             return []
 
     async def get_server_security_alert_policies(self, resource_group_name, server_name, subscription_id: str):
@@ -89,7 +89,7 @@ class SQLDatabaseFacade:
                 lambda: client.server_security_alert_policies.get(resource_group_name, server_name)
             )
         except Exception as e:
-            print_exception('Failed to retrieve server security alert policies: {}'.format(e))
+            print_exception(f'Failed to retrieve server security alert policies: {e}')
             return []
 
     async def get_servers(self, subscription_id: str):
@@ -99,7 +99,7 @@ class SQLDatabaseFacade:
                 lambda: list(client.servers.list())
             )
         except Exception as e:
-            print_exception('Failed to retrieve servers: {}'.format(e))
+            print_exception(f'Failed to retrieve servers: {e}')
             return []
 
     async def get_database_transparent_data_encryptions(self, resource_group_name, server_name, database_name, subscription_id: str):
@@ -110,5 +110,5 @@ class SQLDatabaseFacade:
                     resource_group_name, server_name, database_name)
             )
         except Exception as e:
-            print_exception('Failed to retrieve database transparent data encryptions: {}'.format(e))
+            print_exception(f'Failed to retrieve database transparent data encryptions: {e}')
             return []

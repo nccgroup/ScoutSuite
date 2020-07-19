@@ -1,0 +1,23 @@
+{
+    "conditions": [
+        "and",
+        [
+            "_STATEMENT_.",
+            "withKey",
+            "Resource"
+        ],
+        [
+            "or",
+            [
+                "_STATEMENT_.Resource",
+                "containAtLeastOneOf",
+                "*"
+            ],
+            [
+                "_STATEMENT_.Resource",
+                "containAtLeastOneMatching",
+                ".*\/[*]$"
+            ]
+        ]
+    ]
+}

@@ -15,7 +15,7 @@ class ScoutSuiteArgumentParser:
 
         self.parser.add_argument('-v', '--version',
                                  action='version',
-                                 version='Scout Suite {}'.format(__version__))
+                                 version=f'Scout Suite {__version__}')
 
         self.common_providers_args_parser = argparse.ArgumentParser(add_help=False)
 

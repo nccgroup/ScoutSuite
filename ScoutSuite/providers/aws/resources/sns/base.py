@@ -10,4 +10,4 @@ class SNS(Regions):
     ]
 
     def __init__(self, facade: AWSFacade):
-        super(SNS, self).__init__('sns', facade)
+        super().__init__('sns', facade)

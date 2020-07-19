@@ -102,6 +102,7 @@ class AzureFacade:
                     print_exception('Unable to infer a Subscription ID')
                     # raise
             finally:
+                print_info(f'Running against the "{s.subscription_id}" subscription')
                 subscriptions_list.append(s)
 
         # All subscriptions
@@ -121,9 +122,7 @@ class AzureFacade:
 
         # Other == error
         else:
-            print_exception('Unknown Azure subscription option')
-            self.subscription_list = []
-            raise
+            raise AuthenticationException('Unknown Azure subscription option')
 
         if subscriptions_list and len(subscriptions_list) > 0:
             self.subscription_list = subscriptions_list

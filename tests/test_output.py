@@ -1,10 +1,11 @@
+import unittest
 from ScoutSuite.output.html import *
 from ScoutSuite.output.utils import *
 
 #
 # Test methods for ScoutSuite/output
 #
-class TestScoutOutput:
+class TestScoutOutput(unittest.TestCase):
 
     ########################################
     # html.py

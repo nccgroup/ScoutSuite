@@ -5,7 +5,7 @@ from ScoutSuite.providers.aws.utils import get_partition_name
 from ScoutSuite.utils import format_service_name
 
 
-class BaseServicesConfig(object):
+class BaseServicesConfig:
 
     def __init__(self, credentials):
         self.credentials = credentials
@@ -59,4 +59,4 @@ class BaseServicesConfig(object):
             else:
                 print_debug('No method to fetch service %s.' % service)
         except Exception as e:
-            print_exception('Could not fetch {} configuration: {}'.format(service, e))
+            print_exception(f'Could not fetch {service} configuration: {e}')

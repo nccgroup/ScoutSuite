@@ -9,4 +9,4 @@ class VPC(Regions):
     ]
 
     def __init__(self, facade: AliyunFacade):
-        super(VPC, self).__init__('vpc', facade)
+        super().__init__('vpc', facade)

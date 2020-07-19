@@ -26,18 +26,18 @@ class OracleProvider(BaseProvider):
         self.credentials = kwargs['credentials']
         self.account_id = self.credentials.get_scope()
 
-        super(OracleProvider, self).__init__(report_dir, timestamp, services, skipped_services)
+        super().__init__(report_dir, timestamp, services, skipped_services)
 
     def get_report_name(self):
         """
         Returns the name of the report using the provider's configuration
         """
         if self.account_id:
-            return 'oracle-{}'.format(self.account_id)
+            return f'oracle-{self.account_id}'
         else:
             return 'oracle'
 
     def preprocessing(self, ip_ranges=None, ip_ranges_name_key=None):
 
-        super(OracleProvider, self).preprocessing()
+        super().preprocessing()
 

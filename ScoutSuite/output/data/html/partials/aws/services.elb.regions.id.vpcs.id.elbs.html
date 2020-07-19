@@ -5,8 +5,9 @@
             <h4 class="list-group-item-heading">{{name}}</h4>
         </div>
         <div class="list-group-item">
-            <h4>Network</h4>
+            <h4>Information</h4>
             <ul>
+                <li class="list-group-item-text">ARN: <samp>{{arn}}</samp></li>
                 <li class="list-group-item-text">VPC: {{getValueAt 'services.elb.regions' region 'vpcs' vpc 'name'}} ({{vpc}})</li>
                 <li class="list-group-item-text">DNS: {{DNSName}}</li>
                 <li class="list-group-item-text">Scheme: {{Scheme}}</li>
@@ -43,11 +44,11 @@
             <h4 class="list-group-item-heading accordion-heading">Security Groups
               {{> count_badge count=security_groups.length target=(concat '#services.elb.regions' region 'vpcs' vpc 'elbs' @key 'security_groups')}}
             </h4>
-            <div id="services.elb.regions.{{region}}.vpcs.{{vpc}}.elbs.{{@key}}.security_groups" class="accordion-body">
+            <div id="services.ec2.regions.{{region}}.vpcs.{{vpc}}.elbs.{{@key}}.security_groups" class="accordion-body">
               <div class="accordion-inner">
                 <ul class="no-bullet">
                   {{#each security_groups}}
-                    <li><a href="javascript:showObject('services.elb.regions.{{../region}}.vpcs.{{../vpc}}.security_groups.{{GroupId}}')">{{GroupId}}</a></li>
+                    <li><a href="javascript:showObject('services.ec2.regions.{{../region}}.vpcs.{{../vpc}}.security_groups.{{GroupId}}')">{{GroupId}}</a></li>
                   {{/each}}
                 </ul>
               </div>
@@ -57,8 +58,8 @@
         <div class="list-group-item">
           <h4>Destination</h4>
           <ul>
-            {{> services.elb.regions.vpcs.elbs.linked_resources region = region vpc = vpc resources = instances resource_type = 'instances'}}
-            {{> services.elb.regions.vpcs.elbs.linked_resources region = region vpc = vpc resources = Subnets resource_type = 'subnets'}}
+            {{> services.elb.regions.vpcs.elbs.linked_resources service='ec2' region = region vpc = vpc resources = instances resource_type = 'instances'}}
+            {{> services.elb.regions.vpcs.elbs.linked_resources service='vpc' region = region vpc = vpc resources = Subnets resource_type = 'subnets'}}
           </ul>
         </div>
         {{#if tags}}
@@ -84,4 +85,3 @@
     <script>
         var single_elb_elb_template = Handlebars.compile($("#single_elb_elb-template").html());
     </script>
-

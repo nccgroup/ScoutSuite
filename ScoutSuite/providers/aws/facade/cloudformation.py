@@ -14,7 +14,7 @@ class CloudFormation(AWSBaseFacade):
             stacks = await AWSFacadeUtils.get_all_pages(
                 'cloudformation', region, self.session, 'list_stacks', 'StackSummaries')
         except Exception as e:
-            print_exception('Failed to get CloudFormation stack: {}'.format(e))
+            print_exception(f'Failed to get CloudFormation stack: {e}')
             stacks = []
         else:
             stacks = [stack for stack in stacks if not CloudFormation._is_stack_deleted(stack)]
@@ -30,7 +30,7 @@ class CloudFormation(AWSBaseFacade):
             stack_description = await run_concurrently(
                 lambda: client.describe_stacks(StackName=stack['StackName'])['Stacks'][0])
         except Exception as e:
-            print_exception('Failed to describe CloudFormation stack: {}'.format(e))
+            print_exception(f'Failed to describe CloudFormation stack: {e}')
         else:
             stack.update(stack_description)
 
@@ -40,7 +40,7 @@ class CloudFormation(AWSBaseFacade):
             stack['template'] = await run_concurrently(
                 lambda: client.get_template(StackName=stack['StackName'])['TemplateBody'])
         except Exception as e:
-            print_exception('Failed to get CloudFormation template: {}'.format(e))
+            print_exception(f'Failed to get CloudFormation template: {e}')
             stack['template'] = None
 
     async def _get_and_set_policy(self, stack: {}, region: str):
@@ -49,7 +49,7 @@ class CloudFormation(AWSBaseFacade):
             stack_policy = await run_concurrently(
                 lambda: client.get_stack_policy(StackName=stack['StackName']))
         except Exception as e:
-            print_exception('Failed to get CloudFormation stack policy: {}'.format(e))
+            print_exception(f'Failed to get CloudFormation stack policy: {e}')
         else:
             if 'StackPolicyBody' in stack_policy:
                 stack['policy'] = json.loads(stack_policy['StackPolicyBody'])

@@ -7,7 +7,7 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 class Trails(AWSResources):
     def __init__(self, facade: AWSFacade, region: str):
-        super(Trails, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
 
     async def fetch_all(self):
@@ -25,7 +25,7 @@ class Trails(AWSResources):
                 raw_trail['HomeRegion'] != self.region:
             for key in ['HomeRegion', 'TrailARN']:
                 trail[key] = raw_trail[key]
-            trail['scout_link'] = 'services.cloudtrail.regions.%s.trails.%s' % (raw_trail['HomeRegion'], trail_id)
+            trail['scout_link'] = 'services.cloudtrail.regions.{}.trails.{}'.format(raw_trail['HomeRegion'], trail_id)
             return trail_id, trail
 
         for key in raw_trail:
@@ -52,8 +52,8 @@ class Trails(AWSResources):
     def data_logging_status(self, trail):
         for event_selector in trail['EventSelectors']:
             has_wildcard = \
-                {u'Values': ['arn:aws:s3'], 'Type': 'AWS::S3::Object'} in event_selector['DataResources'] or \
-                {u'Values': ['arn:aws:lambda'], 'Type': 'AWS::Lambda::Function'} in event_selector['DataResources']
+                {'Values': ['arn:aws:s3'], 'Type': 'AWS::S3::Object'} in event_selector['DataResources'] or \
+                {'Values': ['arn:aws:lambda'], 'Type': 'AWS::Lambda::Function'} in event_selector['DataResources']
             is_logging = trail['IsLogging']
             if has_wildcard and is_logging and self.is_fresh(trail):
                 return True

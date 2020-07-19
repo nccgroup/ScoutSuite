@@ -1,12 +1,12 @@
-from unittest import TestCase
 
-from mock import MagicMock, patch
+import unittest
+from unittest.mock import MagicMock, patch
 
 from ScoutSuite.__main__ import run_from_cli
 from ScoutSuite.core.cli_parser import ScoutSuiteArgumentParser
 
 
-class TestMainClass(TestCase):
+class TestMainClass(unittest.TestCase):
 
     def setUp(self):
         self.constructor = {}
