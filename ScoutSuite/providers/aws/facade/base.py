@@ -40,10 +40,6 @@ try:
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
-except ImportError:
-    pass
-try:
     from ScoutSuite.providers.aws.facade.ecs_private import ECSFacade
 except ImportError:
     pass
@@ -271,10 +267,6 @@ class AWSFacade(AWSBaseFacade):
             pass
         try:
             self.docdb = DocDBFacade(self.session)
-        except NameError:
-            pass
-        try:
-            self.dynamodb = DynamoDBFacade(self.session)
         except NameError:
             pass
         try:

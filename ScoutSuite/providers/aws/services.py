@@ -36,10 +36,6 @@ try:
 except ImportError:
     pass
 try:
-    from ScoutSuite.providers.aws.resources.private_dynamodb.base import DynamoDB
-except ImportError:
-    pass
-try:
     from ScoutSuite.providers.aws.resources.private_ecr.base import ECR
 except ImportError:
     pass
