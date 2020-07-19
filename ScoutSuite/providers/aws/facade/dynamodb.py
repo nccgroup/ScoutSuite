@@ -26,7 +26,9 @@ class DynamoDBFacade(AWSBaseFacade):
             raise
         else:
             await get_and_set_concurrently(
-                [self._get_and_set_backup, self._get_and_set_continuous_backups], [table], region=region)
+                [self._get_and_set_backup, self._get_and_set_continuous_backups, self._get_and_set_tags],
+                [table],
+                region=region)
 
         return table
 
@@ -48,3 +50,14 @@ class DynamoDBFacade(AWSBaseFacade):
             table['ContinuousBackups'] = description.get('ContinuousBackupsDescription')
         except Exception as e:
             print_exception('Failed to describe DynamoDB table continuous backups: {}'.format(e))
+
+    async def _get_and_set_tags(self, table: {}, region: str):
+        client = AWSFacadeUtils.get_client('dynamodb', self.session, region)
+
+        try:
+            tags = await run_concurrently(
+                lambda: client.list_tags_of_resource(ResourceArn=table['TableArn']))
+            table['tags'] = tags.get('Tags')
+        except Exception as e:
+            print_exception('Failed to describe DynamoDB table tags: {}'.format(e))
+

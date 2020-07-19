@@ -27,6 +27,7 @@ class Tables(AWSResources):
         table_dict['item_count'] = raw_table.get('ItemCount')
         table_dict['backup_summaries'] = raw_table.get('BackupSummaries')
         table_dict['continuous_backups'] = raw_table.get('ContinuousBackups')
+        table_dict['tags'] = raw_table.get('tags')
 
         table_dict['automatic_backups_enabled'] = \
             raw_table['ContinuousBackups']['PointInTimeRecoveryDescription']['PointInTimeRecoveryStatus'] == 'ENABLED' \
