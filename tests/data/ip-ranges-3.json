@@ -1,0 +1,7 @@
+{
+    "source": "tests/data/ip-ranges-2.json",
+    "local_file": "True",
+    "conditions": [ "and",
+        [ "region", "match", [ "us-.*" ] ]
+    ]
+}
