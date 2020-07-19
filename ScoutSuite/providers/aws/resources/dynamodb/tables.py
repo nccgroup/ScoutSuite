@@ -1,29 +1,35 @@
 from ScoutSuite.providers.aws.facade.base import AWSFacade
 from ScoutSuite.providers.aws.resources.base import AWSResources
-from ScoutSuite.providers.aws.utils import snake_keys
 
 
 class Tables(AWSResources):
-    def __init__(self, facade: AWSFacade, region: str) -> None:
+    def __init__(self, facade: AWSFacade, region: str):
         super(Tables, self).__init__(facade)
         self.region = region
 
     async def fetch_all(self):
-        tables = await self.facade.dynamodb.get_tables(self.region)
-        for table_name in tables:
-            raw_table = await self.facade.dynamodb.get_table(self.region, table_name)
-            table = await self._parse_table(raw_table)
-            self[table_name] = table
+        raw_tables = await self.facade.dynamodb.get_tables(self.region)
+        for raw_table in raw_tables:
+            name, resource = self._parse_table(raw_table)
+            self[name] = resource
 
-    async def _parse_table(self, raw_table):
-        table = {}
-        if raw_table["Table"]:
-            raw = raw_table["Table"]
-            if "SSEDescription" in raw:
-                table["sse_enabled"] = True
-            else:
-                table["sse_enabled"] = False
-            new_dict = snake_keys(raw)
-            table.update(new_dict)
+    def _parse_table(self, raw_table):
+        table_dict = {}
+        table_dict['name'] = raw_table.get('TableName')
+        table_dict['id'] = raw_table.get('TableId')
+        table_dict['arn'] = raw_table.get('TableArn')
+        table_dict['attribute_definitions'] = raw_table.get('AttributeDefinitions')
+        table_dict['key_schema'] = raw_table.get('KeySchema')
+        table_dict['table_status'] = raw_table.get('TableStatus')
+        table_dict['creation_date_time'] = raw_table.get('CreationDateTime')
+        table_dict['provisioned_throughput'] = raw_table.get('ProvisionedThroughput')
+        table_dict['table_size_bytes'] = raw_table.get('TableSizeBytes')
+        table_dict['item_count'] = raw_table.get('ItemCount')
+        table_dict['backup_summaries'] = raw_table.get('BackupSummaries')
+        table_dict['continuous_backups'] = raw_table.get('ContinuousBackups')
 
-        return table
+        table_dict['automatic_backups_enabled'] = \
+            raw_table['ContinuousBackups']['PointInTimeRecoveryDescription']['PointInTimeRecoveryStatus'] == 'ENABLED' \
+                if 'ContinuousBackups' in raw_table else None
+
+        return table_dict['id'], table_dict
