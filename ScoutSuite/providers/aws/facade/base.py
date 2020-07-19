@@ -8,6 +8,7 @@ from ScoutSuite.providers.aws.facade.cloudtrail import CloudTrailFacade
 from ScoutSuite.providers.aws.facade.cloudwatch import CloudWatch
 from ScoutSuite.providers.aws.facade.config import ConfigFacade
 from ScoutSuite.providers.aws.facade.directconnect import DirectConnectFacade
+from ScoutSuite.providers.aws.facade.dynamodb import DynamoDBFacade
 from ScoutSuite.providers.aws.facade.ec2 import EC2Facade
 from ScoutSuite.providers.aws.facade.efs import EFSFacade
 from ScoutSuite.providers.aws.facade.elasticache import ElastiCacheFacade
@@ -36,10 +37,6 @@ except ImportError:
     pass
 try:
     from ScoutSuite.providers.aws.facade.docdb_private import DocDBFacade
-except ImportError:
-    pass
-try:
-    from ScoutSuite.providers.aws.facade.dynamodb_private import DynamoDBFacade
 except ImportError:
     pass
 try:
@@ -246,6 +243,7 @@ class AWSFacade(AWSBaseFacade):
         self.cloudwatch = CloudWatch(self.session)
         self.config = ConfigFacade(self.session)
         self.directconnect = DirectConnectFacade(self.session)
+        self.dynamodb = DynamoDBFacade(self.session)
         self.efs = EFSFacade(self.session)
         self.elasticache = ElastiCacheFacade(self.session)
         self.emr = EMRFacade(self.session)
@@ -269,10 +267,6 @@ class AWSFacade(AWSBaseFacade):
             pass
         try:
             self.docdb = DocDBFacade(self.session)
-        except NameError:
-            pass
-        try:
-            self.dynamodb = DynamoDBFacade(self.session)
         except NameError:
             pass
         try:

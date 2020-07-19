@@ -233,6 +233,8 @@ class AWSProvider(BaseProvider):
                                                    [g['GroupId']
                                                     for g in current_config['Groups']],
                                                    [])
+            self._complete_information_on_ec2_attack_surface(current_config, current_path, public_ip)
+
         # IPv6
         if 'Ipv6Addresses' in current_config and len(current_config['Ipv6Addresses']) > 0:
             for ipv6 in current_config['Ipv6Addresses']:
@@ -240,6 +242,18 @@ class AWSProvider(BaseProvider):
                 self._security_group_to_attack_surface(self.services['ec2']['external_attack_surface'],
                                                        ip, current_path,
                                                        [g['GroupId'] for g in current_config['Groups']], [])
+                self._complete_information_on_ec2_attack_surface(current_config, current_path, ip)
+
+    def _complete_information_on_ec2_attack_surface(self, current_config, current_path, public_ip):
+        # Get the EC2 instance info
+        ec2_info = self.services
+        for p in current_path[1:-3]:
+            ec2_info = ec2_info[p]
+        # Fill the rest of the attack surface details on that IP
+        self.services['ec2']['external_attack_surface'][public_ip]['InstanceName'] = ec2_info['name']
+        if 'PublicDnsName' in current_config['Association']:
+            self.services['ec2']['external_attack_surface'][public_ip]['PublicDnsName'] = \
+                current_config['Association']['PublicDnsName']
 
     def _map_all_sgs(self):
         sg_map = dict()
@@ -343,7 +357,7 @@ class AWSProvider(BaseProvider):
                 s3_info, bucket_name, iam_entity, allowed_iam_entity, policy_info)
 
     def _update_iam_permissions(self, s3_info, bucket_name, iam_entity, allowed_iam_entity, policy_info):
-        if self.services.get('s3') and self.services.get('iam'):  # validate both services were included in run
+        if 's3' in self.service_list and 'iam' in self.service_list:  # validate both services were included in run
             if bucket_name != '*' and bucket_name in s3_info['buckets']:
                 bucket = s3_info['buckets'][bucket_name]
                 manage_dictionary(bucket, iam_entity, {})
@@ -378,18 +392,17 @@ class AWSProvider(BaseProvider):
             subnet['network_acl'] = acl_id
 
     def match_instances_and_subnets_callback(self, current_config, path, current_path, instance_id, callback_args):
-        if self.services.get('ec2') and self.services.get('vpc'):  # validate both services were included in run
+        if 'ec2' in self.service_list and 'vpc' in self.service_list:  # validate both services were included in run
             subnet_id = current_config['SubnetId']
             if subnet_id:
                 vpc = self.subnet_map[subnet_id]
-                subnet = self.services['vpc']['regions'][vpc['region']
-                ]['vpcs'][vpc['vpc_id']]['subnets'][subnet_id]
+                subnet = self.services['vpc']['regions'][vpc['region']]['vpcs'][vpc['vpc_id']]['subnets'][subnet_id]
                 manage_dictionary(subnet, 'instances', [])
                 if instance_id not in subnet['instances']:
                     subnet['instances'].append(instance_id)
 
     def _match_instances_and_roles(self):
-        if self.services.get('ec2') and self.services.get('iam'):  # validate both services were included in run
+        if 'ec2' in self.service_list and 'iam' in self.service_list:  # validate both services were included in run
             ec2_config = self.services['ec2']
             iam_config = self.services['iam']
             role_instances = {}
@@ -687,6 +700,7 @@ class AWSProvider(BaseProvider):
                                           security_groups, listeners=None):
         listeners = [] if listeners is None else listeners
         manage_dictionary(attack_surface_config, public_ip, {'protocols': {}})
+        instance_path = current_path[:-3]
         if 'ec2' in self.service_list:  # validate that the service was included in run
             for sg_id in security_groups:
                 sg_path = copy.deepcopy(current_path[0:6])
