@@ -124,7 +124,7 @@
                     "path": "services.vpc.regions.id.vpcs.id.subnets"
                 },
                 "peering_connections": {
-                    "hidden": true,
+                    "hidden": false,
                     "path": "services.vpc.regions.id.peering_connections",
                     "callbacks": [
                         [ "process_vpc_peering_connections_callback", {} ]

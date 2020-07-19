@@ -5,9 +5,24 @@ from ScoutSuite.providers.utils import get_non_provider_id
 class CredentialReports(AWSResources):
     async def fetch_all(self):
         raw_credential_reports = await self.facade.iam.get_credential_reports()
+        # raw_user_mfa_devices = await self.facade.iam._get_and_set_user_mfa_devices()
         for raw_credential_report in raw_credential_reports:
             name, resource = self._parse_credential_reports(raw_credential_report)
             self[name] = resource
+
+        '''
+        for raw_user_mfa_device in raw_user_mfa_devices:
+            name, resource = self._parse_user_mfa_devices(raw_user_mfa_device)
+            self[name] = resource
+        '''
+
+    # Parse the "Virtual MFA Devices" API call for each user and get the MFA serial number and a boolean whether the
+    # MFA is hardware based or not.
+    '''
+    def _parse_user_mfa_devices(self, raw_user_mfa_device):
+        raw_user_mfa_device['serial'] = raw_user_mfa_device['SerialNumber']
+        raw_user_mfa_device['is_hardware'] = 
+    '''
 
     def _parse_credential_reports(self, raw_credential_report):
         raw_credential_report['id'] = get_non_provider_id(raw_credential_report['user'])

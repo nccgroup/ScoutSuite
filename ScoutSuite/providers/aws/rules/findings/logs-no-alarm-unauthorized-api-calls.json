@@ -1,5 +1,5 @@
 {
-    "description": "No CloudWatch alarm for unauthorized API calls",
+    "description": "No CloudWatch Alarm for \"Unauthorized API Calls\"",
     "rationale": "There was no CloudWatch alarm for unauthorized API calls. Monitoring for unauthorized API calls helps reveal application errors and detect malicious activity.",
     "remediation": "Enable a CloudWatch alarm to monitor unauthorized API calls.",
     "compliance": [
@@ -19,13 +19,13 @@
             "reference": "3.1"
         }
     ],
-    "dashboard_name": "Cloudwatch",
-    "path": "cloudwatch.regions.id.alarms.id",
+    "dashboard_name": "Regions",
+    "path": "cloudwatch.regions.id.metric_filters.id",
     "conditions": [
-        "and",
+        "or",
         [
-            "cloudwatch.regions.id.alarms.id.AlarmActions",
-            "empty",
+            "cloudwatch.regions.id.metric_filters_pattern_checks.unauthorized_api_calls",
+            "false",
             ""
         ]
     ]

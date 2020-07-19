@@ -1,5 +1,5 @@
 {
-    "description": "No CloudWatch alarm for route table changes",
+    "description": "No CloudWatch alarm for \"Route Table Changes\"",
     "rationale": "There was no CloudWatch alarm to monitor changes in route tables. Monitoring for route table changes will help ensure that all VPC traffic flows thorough an expected path.",
     "remediation": "Enable a CloudWatch alarm to detect route table changes.",
     "compliance": [
@@ -19,13 +19,13 @@
             "reference": "3.13"
         }
     ],
-    "dashboard_name": "Cloudwatch",
-    "path": "cloudwatch.regions.id.alarms.id",
+    "dashboard_name": "Regions",
+    "path": "cloudwatch.regions.id.metric_filters.id",
     "conditions": [
-        "and",
+        "or",
         [
-            "cloudwatch.regions.id.alarms.id.AlarmActions",
-            "empty",
+            "cloudwatch.regions.id.metric_filters_pattern_checks.route_table_changes",
+            "false",
             ""
         ]
     ]

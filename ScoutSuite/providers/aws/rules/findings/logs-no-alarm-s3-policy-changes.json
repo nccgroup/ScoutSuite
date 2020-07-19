@@ -1,5 +1,5 @@
 {
-    "description": "No CloudWatch alarm for S3 bucket policy changes",
+    "description": "No CloudWatch alarm for \"S3 Bucket Policy Changes\"",
     "rationale": "There was no CloudWatch alarm to detect changes in S3 bucket policy changes. Monitoring for changes in S3 bucket policy changes may reduce the time to detect and fix permissive policies on sensitive S3 buckets.",
     "remediation": "Enable a CloudWatch alarm to detect policy changes in S3 buckets.",
     "compliance": [
@@ -19,13 +19,13 @@
             "reference": "3.8"
         }
     ],
-    "dashboard_name": "Cloudwatch",
-    "path": "cloudwatch.regions.id.alarms.id",
+    "dashboard_name": "Regions",
+    "path": "cloudwatch.regions.id.metric_filters.id",
     "conditions": [
-        "and",
+        "or",
         [
-            "cloudwatch.regions.id.alarms.id.AlarmActions",
-            "empty",
+            "cloudwatch.regions.id.metric_filters_pattern_checks.s3_policy_changes",
+            "false",
             ""
         ]
     ]

@@ -28,10 +28,22 @@
                 "level": "warning"
             }
         ],
+        "cloudtrail-no-cloudwatch-integration.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "cloudtrail-no-data-logging.json": [
             {
                 "enabled": true,
                 "level": "warning"
+            }
+        ],
+        "cloudtrail-no-encryption-with-kms.json": [
+            {
+                "enabled": true,
+                "level": "danger"
             }
         ],
         "cloudtrail-no-global-services-logging.json": [
@@ -558,6 +570,12 @@
                 "level": "danger"
             }
         ],
+        "iam-managed-policy-allows-full-privileges.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "iam-managed-policy-allows-NotActions.json": [
             {
                 "enabled": true,
@@ -592,6 +610,12 @@
             {
                 "enabled": true,
                 "level": "warning"
+            }
+        ],
+        "iam-no-support-role.json": [
+            {
+                "enabled": true,
+                "level": "danger"
             }
         ],
         "iam-password-policy-expiration-threshold.json": [
@@ -660,6 +684,12 @@
                 "level": "danger"
             }
         ],
+        "iam-root-account-no-hardware-mfa.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
         "iam-root-account-used-recently.json": [
             {
                 "enabled": true,
@@ -685,6 +715,15 @@
                 ],
                 "enabled": false,
                 "level": "warning"
+            }
+        ],
+        "iam-unused-credentials-not-disabled.json": [
+            {
+                "args": [
+                    "90"
+                ],
+                "enabled": true,
+                "level": "danger"
             }
         ],
         "iam-user-no-key-rotation.json": [
@@ -746,6 +785,102 @@
             }
         ],
         "iam-user-without-mfa.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "iam-user-unused-access-key-initial-setup.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "logs-no-alarm-unauthorized-api-calls.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "logs-no-alarm-signin-without-mfa.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "logs-no-alarm-root-usage.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "logs-no-alarm-iam-policy-changes.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "logs-no-alarm-cloudtrail-configuration-changes.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "logs-no-alarm-console-authentication-failures.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "logs-no-alarm-cmk-deletion.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "logs-no-alarm-s3-policy-changes.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "logs-no-alarm-aws-configuration-changes.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "logs-no-alarm-security-group-changes.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "logs-no-alarm-nacl-changes.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "logs-no-alarm-network-gateways-changes.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "logs-no-alarm-route-table-changes.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "logs-no-alarm-vpc-changes.json": [
+            {
+                "enabled": true,
+                "level": "danger"
+            }
+        ],
+        "kms-key-rotation-disabled.json": [
             {
                 "enabled": true,
                 "level": "danger"
@@ -1215,6 +1350,12 @@
                     "egress",
                     "destination"
                 ],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "vpc-routing-tables-with-peering.json": [
+            {
                 "enabled": true,
                 "level": "warning"
             }

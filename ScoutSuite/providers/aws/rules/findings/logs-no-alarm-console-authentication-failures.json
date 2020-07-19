@@ -1,5 +1,5 @@
 {
-    "description": "No CloudWatch alarm for failed console authentications",
+    "description": "No CloudWatch alarm for \"Failed Console Authentications\"",
     "rationale": "There was no CloudWatch alarm for failed console authentication requests. Monitoring for failed console authentications can decrease the lead time to detect brute force attacks.",
     "remediation": "Enable a CloudWatch alarm to monitor failed authentication attempts.",
     "compliance": [
@@ -19,13 +19,13 @@
             "reference": "3.6"
         }
     ],
-    "dashboard_name": "Cloudwatch",
-    "path": "cloudwatch.regions.id.alarms.id",
+    "dashboard_name": "Regions",
+    "path": "cloudwatch.regions.id.metric_filters.id",
     "conditions": [
-        "and",
+        "or",
         [
-            "cloudwatch.regions.id.alarms.id.AlarmActions",
-            "empty",
+            "cloudwatch.regions.id.metric_filters_pattern_checks.console_authentication_failures",
+            "false",
             ""
         ]
     ]

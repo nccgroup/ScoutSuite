@@ -20,10 +20,9 @@
         }
     ],
     "dashboard_name": "Regions",
-    "path": "cloudwatch.regions.id.metric_filters_pattern_checks.console_login_mfa",
-    "display_path": "cloudwatch.regions.id.metric_filters.id",
+    "path": "cloudwatch.regions.id.metric_filters.id",
     "conditions": [
-        "and",
+        "or",
         [
             "cloudwatch.regions.id.metric_filters_pattern_checks.console_login_mfa",
             "false",

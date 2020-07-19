@@ -1,5 +1,5 @@
 {
-    "description": "No CloudWatch alarm for AWS configuration changes",
+    "description": "No CloudWatch alarm for \"AWS Configuration Changes\"",
     "rationale": "There was no CloudWatch alarm to monitor AWS configuration changes. Monitoring for AWS configuration changes will help ensure sustained visibility to changes performed in the AWS account.",
     "remediation": "Enable a CloudWatch alarm to detect AWS configuration changes.",
     "compliance": [
@@ -19,13 +19,13 @@
             "reference": "3.9"
         }
     ],
-    "dashboard_name": "Cloudwatch",
-    "path": "cloudwatch.regions.id.alarms.id",
+    "dashboard_name": "Regions",
+    "path": "cloudwatch.regions.id.metric_filters.id",
     "conditions": [
-        "and",
+        "or",
         [
-            "cloudwatch.regions.id.alarms.id.AlarmActions",
-            "empty",
+            "cloudwatch.regions.id.metric_filters_pattern_checks.aws_configuration_changes",
+            "false",
             ""
         ]
     ]

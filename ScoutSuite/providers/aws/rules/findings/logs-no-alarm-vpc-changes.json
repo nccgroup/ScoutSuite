@@ -1,5 +1,5 @@
 {
-    "description": "No CloudWatch alarm for VPC changes",
+    "description": "No CloudWatch alarm for \"VPC Changes\"",
     "rationale": "There was no CloudWatch alarm to monitor VPC changes. Monitoring for VPC changes will help ensure authentication and authorization controls remain intact.",
     "remediation": "Enable a CloudWatch alarm to detect VPC changes.",
     "compliance": [
@@ -19,13 +19,13 @@
             "reference": "3.14"
         }
     ],
-    "dashboard_name": "Cloudwatch",
-    "path": "cloudwatch.regions.id.alarms.id",
+    "dashboard_name": "Regions",
+    "path": "cloudwatch.regions.id.metric_filters.id",
     "conditions": [
-        "and",
+        "or",
         [
-            "cloudwatch.regions.id.alarms.id.AlarmActions",
-            "empty",
+            "cloudwatch.regions.id.metric_filters_pattern_checks.vpc_changes",
+            "false",
             ""
         ]
     ]

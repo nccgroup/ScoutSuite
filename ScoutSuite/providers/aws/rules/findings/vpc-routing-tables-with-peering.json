@@ -15,13 +15,12 @@
         }
     ],
     "dashboard_name": "Rulesets",
-    "display_path": "vpc.regions.id.peering_connections.peering_connections.id",
     "path": "vpc.regions.id.peering_connections.id",
     "conditions": [
         "and",
         [
             "vpc.regions.id.peering_connections.peering_connection_id",
-            "notNull",
+            "null",
             ""
         ]
     ],

@@ -112,7 +112,15 @@
         ],
         "iam-root-account-no-mfa.json": [
             {
-                "comment": "Recommendation 1.13 and 1.14 (it is not possible to check if MFA is hardware or software)",
+                "comment": "Recommendation 1.13",
+                "enabled": true,
+                "level": "danger",
+                "scored": true
+            }
+        ],
+        "iam-root-account-no-hardware-mfa.json": [
+            {
+                "comment": "Recommendation 1.14",
                 "enabled": true,
                 "level": "danger",
                 "scored": true
@@ -164,9 +172,9 @@
                 "scored": false
             }
         ],
-        "TODO.json": [
+        "todo-recommendation-1-19.json": [
             {
-                "comment": "Recommendation 1.19 (TODO)",
+                "comment": "Recommendation 1.19 (no API call to check embedded credentials)",
                 "enabled": false,
                 "level": "warning",
                 "scored": false
@@ -206,7 +214,7 @@
         ],
         "cloudtrail-not-configured.json": [
             {
-                "comment": "Recommendation 2.1 (part 2/2)",
+                "comment": "Recommendation 2.1 (Part 2/2)",
                 "enabled": true,
                 "level": "danger",
                 "scored": true
@@ -220,12 +228,110 @@
                 "scored": true
             }
         ],
-        "TODO_2.json": [
+        "s3-bucket-world-acl.json": [
             {
-                "comment": "Recommendation 2.3",
-                "enabled": false,
+                "args": [
+                    "AllUsers",
+                    "read",
+                    "Bucket world-listable (anonymous)",
+                    "warning"
+                ],
+                "comment": "Recommendation 2.3 (Part 1/2)",
+                "enabled": true,
                 "level": "danger",
-                "scored": true
+                "score": true
+            },
+            {
+                "args": [
+                    "AllUsers",
+                    "read_acp",
+                    "Bucket's permissions world-readable (anonymous)",
+                    "warning"
+                ],
+                "comment": "Recommendation 2.3 (Part 1/2)",
+                "enabled": true,
+                "level": "danger",
+                "score": true
+            },
+            {
+                "args": [
+                    "AllUsers",
+                    "write",
+                    "Bucket world-writable (anonymous)",
+                    "danger"
+                ],
+                "comment": "Recommendation 2.3 (Part 1/2)",
+                "enabled": true,
+                "level": "danger",
+                "score": true
+            },
+            {
+                "args": [
+                    "AllUsers",
+                    "write_acp",
+                    "Bucket's permissions world-writable (anonymous)",
+                    "danger"
+                ],
+                "comment": "Recommendation 2.3 (Part 1/2)",
+                "enabled": true,
+                "level": "danger",
+                "score": true
+            },
+            {
+                "args": [
+                    "AuthenticatedUsers",
+                    "read",
+                    "Bucket world-listable",
+                    "danger"
+                ],
+                "comment": "Recommendation 2.3 (Part 1/2)",
+                "enabled": true,
+                "level": "danger",
+                "score": true
+            },
+            {
+                "args": [
+                    "AuthenticatedUsers",
+                    "read_acp",
+                    "Bucket's permissions world-readable",
+                    "warning"
+                ],
+                "comment": "Recommendation 2.3 (Part 1/2)",
+                "enabled": true,
+                "level": "danger",
+                "score": true
+            },
+            {
+                "args": [
+                    "AuthenticatedUsers",
+                    "write",
+                    "Bucket world-writable",
+                    "danger"
+                ],
+                "comment": "Recommendation 2.3 (Part 1/2)",
+                "enabled": true,
+                "level": "danger",
+                "score": true
+            },
+            {
+                "args": [
+                    "AuthenticatedUsers",
+                    "write_acp",
+                    "Bucket's permissions world-writable",
+                    "danger"
+                ],
+                "comment": "Recommendation 2.3 (Part 1/2)",
+                "enabled": true,
+                "level": "danger",
+                "score": true
+            }
+        ],
+        "s3-bucket-world-policy-star.json": [
+            {
+                "comment": "Recommendation 2.3 (Part 2/2)",
+                "enabled": true,
+                "level": "danger",
+                "score": true
             }
         ],
         "cloudtrail-no-cloudwatch-integration.json": [
@@ -300,7 +406,7 @@
                 "scored": true
             }
         ],
-        "logs-no-alarm-IAM-policy-changes.json": [
+        "logs-no-alarm-iam-policy-changes.json": [
             {
                 "comment": "Recommendation 3.4",
                 "enabled": true,
@@ -428,10 +534,10 @@
                 "scored": "true"
             }
         ],
-        "ec2-route-tables-full-peering.json": [
+        "vpc-routing-tables-with-peering.json": [
             {
-                "comment": "Recommendation 4.4 TODO",
-                "enabled": false,
+                "comment": "Recommendation 4.4",
+                "enabled": true,
                 "level": "warning",
                 "scored": "false"
             }
