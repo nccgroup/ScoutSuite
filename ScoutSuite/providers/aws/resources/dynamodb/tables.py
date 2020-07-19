@@ -33,4 +33,9 @@ class Tables(AWSResources):
             raw_table['ContinuousBackups']['PointInTimeRecoveryDescription']['PointInTimeRecoveryStatus'] == 'ENABLED' \
                 if 'ContinuousBackups' in raw_table else None
 
+        if "SSEDescription" in raw_table:
+            table_dict["sse_enabled"] = True
+        else:
+            table_dict["sse_enabled"] = False
+
         return table_dict['id'], table_dict
