@@ -16,13 +16,8 @@
         ],
         [
             "rds.regions.id.vpcs.id.instances.id.Engine",
-            "containAtLeastOneOf",
-            [
-                "mariadb",
-                "mysql",
-                "postgres",
-                "aurora"
-            ]
+            "notEqual",
+            "sqlserver-se"
         ]
     ],
     "id_suffix": "AutoMinorVersionUpgrade"

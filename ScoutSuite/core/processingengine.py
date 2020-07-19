@@ -4,7 +4,7 @@ from ScoutSuite.utils import manage_dictionary
 from ScoutSuite.core.utils import recurse
 
 
-class ProcessingEngine(object):
+class ProcessingEngine:
     """
 
     """
@@ -21,7 +21,7 @@ class ProcessingEngine(object):
                     manage_dictionary(self.rules, rule.path, [])
                     self.rules[rule.path].append(rule)
                 except Exception as e:
-                    print_exception('Failed to create rule %s: %s' % (rule.filename, e))
+                    print_exception(f'Failed to create rule {rule.filename}: {e}')
 
     def run(self, cloud_provider, skip_dashboard=False):
         # Clean up existing findings
@@ -35,7 +35,7 @@ class ProcessingEngine(object):
                 if not rule.enabled:  # or rule.service not in []: # TODO: handle this...
                     continue
 
-                print_debug('Processing %s rule "%s" (%s)' % (rule.service, rule.description, rule.filename))
+                print_debug(f'Processing {rule.service} rule "{rule.description}" ({rule.filename})')
                 finding_path = rule.path
                 path = finding_path.split('.')
                 service = path[0]
@@ -68,7 +68,7 @@ class ProcessingEngine(object):
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['references'] = \
                         rule.references if hasattr(rule, 'references') else None
                 except Exception as e:
-                    print_exception('Failed to process rule defined in %s: %s' % (rule.filename, e))
+                    print_exception(f'Failed to process rule defined in {rule.filename}: {e}')
                     # Fallback if process rule failed to ensure report creation and data dump still happen
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['checked_items'] = 0
                     cloud_provider.services[service][self.ruleset.rule_type][rule.key]['flagged_items'] = 0

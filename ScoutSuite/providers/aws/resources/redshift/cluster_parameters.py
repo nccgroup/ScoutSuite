@@ -4,7 +4,7 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 class ClusterParameters(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, parameter_group_name: str):
-        super(ClusterParameters, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
         self.parameter_group_name = parameter_group_name
 

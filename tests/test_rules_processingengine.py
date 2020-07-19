@@ -1,6 +1,7 @@
 import json
 import os
 import tempfile
+import unittest
 
 from ScoutSuite.core.console import set_logger_configuration, print_error
 from ScoutSuite.core.processingengine import ProcessingEngine
@@ -11,9 +12,9 @@ class DummyObject(object):
     pass
 
 
-class TestScoutRulesProcessingEngine:
+class TestScoutRulesProcessingEngine(unittest.TestCase):
 
-    def setup(self):
+    def setUp(self):
         set_logger_configuration(is_debug=True)
         self.rule_counters = {'found': 0, 'tested': 0, 'verified': 0}
         self.test_dir = os.path.dirname(os.path.realpath(__file__))
@@ -59,7 +60,7 @@ class TestScoutRulesProcessingEngine:
         pe.run(dummy_provider)
         findings = dummy_provider.services[service]['findings']
         findings = findings[list(findings.keys())[0]]['items']
-        
+
         test_result_file_name = os.path.join(self.test_dir, 'data/rule-results/%s' % rule_file_name)
         if not os.path.isfile(test_result_file_name):
             print_error('Expected findings:: ')
@@ -69,7 +70,7 @@ class TestScoutRulesProcessingEngine:
         self.rule_counters['verified'] += 1
         with open(test_result_file_name, 'rt') as f:
             items = json.load(f)
-        
+
         try:
             assert (set(sorted(findings)) == set(sorted(items)))
         except Exception:
@@ -85,5 +86,3 @@ class TestScoutRulesProcessingEngine:
             f.write(json.dumps(test_ruleset, indent=4))
 
         return Ruleset(cloud_provider='aws', filename=f.name)
-
-        return None

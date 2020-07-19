@@ -4,7 +4,7 @@ from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
 
 class Instances(AliyunResources):
     def __init__(self, facade: AliyunFacade, region: str):
-        super(Instances, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
 
     async def fetch_all(self):

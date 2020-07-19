@@ -40,7 +40,7 @@ class AWSProvider(BaseProvider):
 
         self.account_id = get_aws_account_id(self.credentials.session)
 
-        super(AWSProvider, self).__init__(report_dir, timestamp,
+        super().__init__(report_dir, timestamp,
                                           services, skipped_services, result_format)
 
     def get_report_name(self):
@@ -48,9 +48,9 @@ class AWSProvider(BaseProvider):
         Returns the name of the report using the provider's configuration
         """
         if self.profile:
-            return 'aws-{}'.format(self.profile)
+            return f'aws-{self.profile}'
         elif self.account_id:
-            return 'aws-{}'.format(self.account_id)
+            return f'aws-{self.account_id}'
         else:
             return 'aws'
 
@@ -95,7 +95,7 @@ class AWSProvider(BaseProvider):
 
         self._add_cidr_display_name(ip_ranges, ip_ranges_name_key)
 
-        super(AWSProvider, self).preprocessing()
+        super().preprocessing()
 
     def _add_cidr_display_name(self, ip_ranges, ip_ranges_name_key):
         if len(ip_ranges):
@@ -343,7 +343,7 @@ class AWSProvider(BaseProvider):
                 s3_info, bucket_name, iam_entity, allowed_iam_entity, policy_info)
 
     def _update_iam_permissions(self, s3_info, bucket_name, iam_entity, allowed_iam_entity, policy_info):
-        if self.services.get('s3') and self.services.get('iam'):  # validate both services were included in run
+        if 's3' in self.service_list and 'iam' in self.service_list:  # validate both services were included in run
             if bucket_name != '*' and bucket_name in s3_info['buckets']:
                 bucket = s3_info['buckets'][bucket_name]
                 manage_dictionary(bucket, iam_entity, {})
@@ -378,18 +378,17 @@ class AWSProvider(BaseProvider):
             subnet['network_acl'] = acl_id
 
     def match_instances_and_subnets_callback(self, current_config, path, current_path, instance_id, callback_args):
-        if self.services.get('ec2') and self.services.get('vpc'):  # validate both services were included in run
+        if 'ec2' in self.service_list and 'vpc' in self.service_list:  # validate both services were included in run
             subnet_id = current_config['SubnetId']
             if subnet_id:
                 vpc = self.subnet_map[subnet_id]
-                subnet = self.services['vpc']['regions'][vpc['region']
-                ]['vpcs'][vpc['vpc_id']]['subnets'][subnet_id]
+                subnet = self.services['vpc']['regions'][vpc['region']]['vpcs'][vpc['vpc_id']]['subnets'][subnet_id]
                 manage_dictionary(subnet, 'instances', [])
                 if instance_id not in subnet['instances']:
                     subnet['instances'].append(instance_id)
 
     def _match_instances_and_roles(self):
-        if self.services.get('ec2') and self.services.get('iam'):  # validate both services were included in run
+        if 'ec2' in self.service_list and 'iam' in self.service_list:  # validate both services were included in run
             ec2_config = self.services['ec2']
             iam_config = self.services['iam']
             role_instances = {}
@@ -524,19 +523,19 @@ class AWSProvider(BaseProvider):
                             sg['used_by'][service]['resource_type'][resource_type], resource_status, [])
                         if resource_id not in sg['used_by'][service]['resource_type'][resource_type][resource_status]:
                             sg['used_by'][service]['resource_type'][resource_type][resource_status].append(
-                                resource_id)
+                                {'id': resource_id, 'name': resource['name']})
                     else:
                         sg['used_by'][service]['resource_type'][resource_type].append(
-                            resource_id)
+                            {'id': resource_id, 'name': resource['name']})
             except Exception as e:
                 if resource_type == 'elbs' and current_path[5] == ec2_classic:
                     pass
                 elif not self.services['ec2']:  # service not included in run
                     pass
                 elif not str(e):
-                    print_exception('Failed to parse {}'.format(resource_type))
+                    print_exception(f'Failed to parse {resource_type}')
                 else:
-                    print_exception('Failed to parse {}: {}'.format(resource_type, e))
+                    print_exception(f'Failed to parse {resource_type}: {e}')
 
     def _set_emr_vpc_ids(self):
         clear_list = []

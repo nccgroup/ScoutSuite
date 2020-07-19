@@ -10,7 +10,7 @@ class CloudTrail(Regions):
     ]
 
     def __init__(self, facade: AWSFacade):
-        super(CloudTrail, self).__init__('cloudtrail', facade)
+        super().__init__('cloudtrail', facade)
 
     async def finalize(self):
         global_events_logging = []

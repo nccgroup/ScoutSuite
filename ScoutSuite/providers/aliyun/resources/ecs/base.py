@@ -9,4 +9,4 @@ class ECS(Regions):
     ]
 
     def __init__(self, facade: AliyunFacade):
-        super(ECS, self).__init__('ecs', facade)
+        super().__init__('ecs', facade)

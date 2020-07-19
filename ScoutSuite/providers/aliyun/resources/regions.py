@@ -6,7 +6,7 @@ from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
 
 class Regions(AliyunCompositeResources, metaclass=abc.ABCMeta):
     def __init__(self, service: str, facade: AliyunFacade):
-        super(Regions, self).__init__(facade)
+        super().__init__(facade)
         self.service = service
 
     async def fetch_all(self, regions=None):

@@ -77,7 +77,7 @@ class AWSServicesConfig(BaseServicesConfig):
 
     def __init__(self, credentials=None, **kwargs):
 
-        super(AWSServicesConfig, self).__init__(credentials)
+        super().__init__(credentials)
 
         facade = AWSFacade(credentials)
 
@@ -114,10 +114,6 @@ class AWSServicesConfig(BaseServicesConfig):
             pass
         try:
             self.docdb = DocDB(facade)
-        except NameError as _:
-            pass
-        try:
-            self.dynamodb = DynamoDB(facade)
         except NameError as _:
             pass
         try:

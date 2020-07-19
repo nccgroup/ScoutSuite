@@ -8,5 +8,5 @@ class SecretsManagerFacade(AWSBaseFacade):
         try:
             return await AWSFacadeUtils.get_all_pages('secretsmanager', region, self.session, 'list_secrets', 'SecretList')
         except Exception as e:
-            print_exception('Failed to get Secrets Manager secrets: {}'.format(e))
+            print_exception(f'Failed to get Secrets Manager secrets: {e}')
             return []

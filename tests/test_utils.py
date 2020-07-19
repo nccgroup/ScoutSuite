@@ -1,5 +1,3 @@
-import unittest
-
 # Import AWS utils
 from ScoutSuite.providers.aws.utils import (
     get_keys,
@@ -12,7 +10,8 @@ from ScoutSuite.providers.aws.utils import (
 )
 from ScoutSuite.utils import *
 import collections
-import mock
+import unittest
+from unittest import mock
 import datetime
 
 #
