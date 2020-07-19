@@ -5,7 +5,7 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 class Policies(OracleResources):
     def __init__(self, facade: OracleFacade):
-        super(Policies, self).__init__(facade)
+        super().__init__(facade)
 
     async def fetch_all(self):
         for raw_policy in await self.facade.identity.get_policies():

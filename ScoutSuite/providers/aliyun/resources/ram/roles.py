@@ -4,7 +4,7 @@ from ScoutSuite.providers.aliyun.facade.base import AliyunFacade
 
 class Roles(AliyunResources):
     def __init__(self, facade: AliyunFacade):
-        super(Roles, self).__init__(facade)
+        super().__init__(facade)
 
     async def fetch_all(self):
         for raw_role in await self.facade.ram.get_roles():

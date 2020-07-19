@@ -11,7 +11,7 @@ class KeyVaults(OracleCompositeResources):
     ]
 
     def __init__(self, facade: OracleFacade):
-        super(KeyVaults, self).__init__(facade)
+        super().__init__(facade)
 
     async def fetch_all(self):
         raw_keyvaults = await self.facade.kms.get_vaults()

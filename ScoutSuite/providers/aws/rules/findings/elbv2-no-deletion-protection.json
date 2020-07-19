@@ -1,11 +1,23 @@
 {
-    "description": "Lack of deletion protection",
-    "rationale": "<b>Description:</b><br><br>Enabling deletion protection on load balancers mitigates risks of accidental deletion.",
-    "path": "elbv2.regions.id.vpcs.id.lbs.id.attributes.id",
+    "description": "Lack of Deletion Protection",
+    "rationale": "Enabling deletion protection on load balancers mitigates risks of accidental deletion.",
+    "references": [
+        "https://docs.aws.amazon.com/elasticloadbalancing/latest/application/application-load-balancers.html#deletion-protection"
+    ],
     "dashboard_name": "Load Balancer Attributes",
     "display_path": "elbv2.regions.id.vpcs.id.lbs.id",
-    "conditions": [ "and",
-        [ "Key", "equal", "deletion_protection.enabled" ],
-        [ "Value", "equal", "false"]
+    "path": "elbv2.regions.id.vpcs.id.lbs.id.attributes.id",
+    "conditions": [
+        "and",
+        [
+            "Key",
+            "equal",
+            "deletion_protection.enabled"
+        ],
+        [
+            "Value",
+            "equal",
+            "false"
+        ]
     ]
 }

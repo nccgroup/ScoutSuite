@@ -8,7 +8,7 @@ class Subnets(AWSResources):
         self.region = region
         self.vpc = vpc
 
-        super(Subnets, self).__init__(facade)
+        super().__init__(facade)
 
     async def fetch_all(self):
         raw_subnets = await self.facade.ec2.get_subnets(self.region, self.vpc)

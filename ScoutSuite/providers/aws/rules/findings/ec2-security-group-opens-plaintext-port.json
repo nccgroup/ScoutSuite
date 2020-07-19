@@ -1,13 +1,31 @@
 {
-    "arg_names": [ "Network protocol name", "Transport protocol name", "Port number" ],
-    "key": "ec2-security-group-opens-plaintext-port-_ARG_0_",
-    "description": "_ARG_0_ port open",
-    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",
+    "description": "Security Group Opens _ARG_0_ Port",
+    "rationale": "Ports associated with plaintext protocols have been found to be open in this security group. Plaintext protocols should be replaced with more secure alternatives, as the data in transit may be monitored and could, potentially, be subject to tampering.",
     "dashboard_name": "Rules",
-    "conditions": [ "and",
-        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id", "equal", "ingress" ],
-        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id", "equal", "_ARG_1_" ],
-        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id", "equal", "_ARG_2_" ]
+    "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
+    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",
+    "conditions": [
+        "and",
+        [
+            "ec2.regions.id.vpcs.id.security_groups.id.rules.id",
+            "equal",
+            "ingress"
+        ],
+        [
+            "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id",
+            "equal",
+            "_ARG_1_"
+        ],
+        [
+            "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id",
+            "equal",
+            "_ARG_2_"
+        ]
     ],
-    "display_path": "ec2.regions.id.vpcs.id.security_groups.id"
+    "key": "ec2-security-group-opens-plaintext-port-_ARG_0_",
+    "arg_names": [
+        "Network protocol name",
+        "Transport protocol name",
+        "Port number"
+    ]
 }

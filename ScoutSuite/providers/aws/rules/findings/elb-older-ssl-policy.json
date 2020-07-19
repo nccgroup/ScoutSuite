@@ -1,0 +1,27 @@
+{
+    "description": "Older SSL/TLS Policy",
+    "rationale": "Use of the latest TLS policies is best practice. The recommended predefined security policies are:<ul><li>ELBSecurityPolicy-2016-08</li><li>ELBSecurityPolicy-FS-2018-06</li><li>ELBSecurityPolicy-TLS-1-1-2017-01</li><li>ELBSecurityPolicy-TLS-1-2-2017-01</li><li>ELBSecurityPolicy-TLS-1-2-Ext-2018-06</li><li>ELBSecurityPolicy-FS-1-1-2019-08</li><li>ELBSecurityPolicy-FS-1-2-2019-08</li><li>ELBSecurityPolicy-FS-1-2-Res-2019-08</li></ul>",
+    "references": [
+        "https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-security-policy-table.html"
+    ],
+    "dashboard_name": "Load Balancer Listeners Security Policy",
+    "display_path": "elb.regions.id.elb_policies.id.reference_security_policy",
+    "path": "elb.regions.id.elb_policies.id.reference_security_policy",
+    "conditions": [
+        "and",
+        [
+            "this",
+            "containNoneOf",
+            [
+                "ELBSecurityPolicy-2016-08",
+                "ELBSecurityPolicy-TLS-1-1-2017-01",
+                "ELBSecurityPolicy-TLS-1-2-2017-01",
+                "ELBSecurityPolicy-TLS-1-2-Ext-2018-06",
+                "ELBSecurityPolicy-FS-2018-06",
+                "ELBSecurityPolicy-FS-1-1-2019-08",
+                "ELBSecurityPolicy-FS-1-2-2019-08",
+                "ELBSecurityPolicy-FS-1-2-Res-2019-08"
+            ]
+        ]
+    ]
+}

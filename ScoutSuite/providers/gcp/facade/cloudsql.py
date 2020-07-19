@@ -5,7 +5,7 @@ from ScoutSuite.providers.utils import run_concurrently
 
 class CloudSQLFacade(GCPBaseFacade):
     def __init__(self):
-        super(CloudSQLFacade, self).__init__('sqladmin', 'v1beta4')
+        super().__init__('sqladmin', 'v1beta4')
 
     async def get_backups(self, project_id: str, instance_name: str):
         try:
@@ -14,7 +14,7 @@ class CloudSQLFacade(GCPBaseFacade):
             request = backups_group.list(project=project_id, instance=instance_name)
             return await GCPFacadeUtils.get_all('items', request, backups_group)
         except Exception as e:
-            print_exception('Failed to retrieve database instance backups: {}'.format(e))
+            print_exception(f'Failed to retrieve database instance backups: {e}')
             return []
 
     async def get_database_instances(self, project_id: str):
@@ -24,7 +24,7 @@ class CloudSQLFacade(GCPBaseFacade):
             request = instances_group.list(project=project_id)
             return await GCPFacadeUtils.get_all('items', request, instances_group)
         except Exception as e:
-            print_exception('Failed to retrieve database instances: {}'.format(e))
+            print_exception(f'Failed to retrieve database instances: {e}')
             return []
 
     async def get_users(self, project_id: str, instance_name: str):
@@ -35,5 +35,5 @@ class CloudSQLFacade(GCPBaseFacade):
             )
             return response.get('items', [])
         except Exception as e:
-            print_exception('Failed to retrieve database instance users: {}'.format(e))
+            print_exception(f'Failed to retrieve database instance users: {e}')
             return []

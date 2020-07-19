@@ -261,6 +261,12 @@
                 "level": "warning"
             }
         ],
+        "storageaccount-public-traffic-allowed.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "virtual-machines-disk-encryption.json": [
             {
                 "enabled": true,

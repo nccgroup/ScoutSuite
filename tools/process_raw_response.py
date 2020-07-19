@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import argparse
 import json
 import datetime
@@ -50,7 +52,7 @@ if __name__ == "__main__":
     parser.add_argument('-v', '--value', required=True, help="The raw response")
     args = parser.parse_args()
 
-    if args.provider not in ['aws', 'azure', 'aliyun', 'oci']:
+    if args.provider not in ['aws', 'azure', 'aliyun', 'gcp', 'oci']:
         # TODO support more providers
         print('Provider not implemented')
         exit()
@@ -58,7 +60,9 @@ if __name__ == "__main__":
     if args.provider == 'aws':
         object_format = 'raw_{}.get(\'{}\')'
         cleaned_value = args.value.replace('<class \'dict\'>: ', '')
+        cleaned_value = args.value.replace('\}', '}')
         cleaned_value = cleaned_value.replace(", tzinfo=tzlocal()", "")
+        cleaned_value = cleaned_value.replace(", tzinfo=tzutc()", "")
         object_value_dict = eval(cleaned_value)
     elif args.provider == 'azure':
         object_format = 'raw_{}.{}'
@@ -69,6 +73,9 @@ if __name__ == "__main__":
     elif args.provider == 'aliyun':
         object_format = 'raw_{}.get(\'{}\')'
         object_value_dict = literal_eval(args.value)
+    elif args.provider == 'gcp':
+        object_format = 'raw_{}.{}'
+        object_value_dict = json.loads(args.value)
     elif args.provider == 'oci':
         object_format = 'raw_{}.{}'
         object_value_dict = json.loads(args.value)
@@ -76,7 +83,7 @@ if __name__ == "__main__":
     parsed_html = ''
 
     parsed_string = ''
-    parsed_string += '{}_dict = {{}}\n'.format(args.name)
+    parsed_string += f'{args.name}_dict = {{}}\n'
 
     for k in object_value_dict.keys():
         object_format_value = object_format.format(args.name, k)
@@ -86,19 +93,19 @@ if __name__ == "__main__":
             '.{}.{{{{{}}}}}'.format(args.additional_path, args.additional_path[:-1]) if args.additional_path else '',
             args.name, camel_to_snake(k), camel_to_snake(k))
 
-    parsed_string += 'return {}_dict[\'id\'], {}_dict'.format(args.name, args.name)
+    parsed_string += f'return {args.name}_dict[\'id\'], {args.name}_dict'
 
     print(parsed_string)
     print('\n')
     print(html_boilerplate.format(
         args.service, args.name,
-        args.service, '.{}.id'.format(args.additional_path) if args.additional_path else '', args.name,
+        args.service, f'.{args.additional_path}.id' if args.additional_path else '', args.name,
         parsed_html,
-        args.service, '.{}.id'.format(args.additional_path) if args.additional_path else '', args.name,
-        args.service, '\\\\.{}\\\\.id'.format(args.additional_path) if args.additional_path else '', args.name,
+        args.service, f'.{args.additional_path}.id' if args.additional_path else '', args.name,
+        args.service, f'\\\\.{args.additional_path}\\\\.id' if args.additional_path else '', args.name,
         args.service, args.name,
         args.service, args.name,
-        args.service, '.{}.id'.format(args.additional_path) if args.additional_path else '', args.name,
+        args.service, f'.{args.additional_path}.id' if args.additional_path else '', args.name,
         args.service, args.name,
         args.service, args.name
     ))

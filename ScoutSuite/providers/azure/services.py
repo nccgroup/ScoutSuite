@@ -1,7 +1,7 @@
 from ScoutSuite.providers.azure.authentication_strategy import AzureCredentials
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.aad.base import AAD
-from ScoutSuite.providers.azure.resources.arm.base import ARM
+from ScoutSuite.providers.azure.resources.rbac.base import RBAC
 from ScoutSuite.providers.azure.resources.keyvault.base import KeyVaults
 from ScoutSuite.providers.azure.resources.network.base import Networks
 from ScoutSuite.providers.azure.resources.securitycenter.base import SecurityCenter
@@ -34,14 +34,14 @@ class AzureServicesConfig(BaseServicesConfig):
                  programmatic_execution=None,
                  **kwargs):
 
-        super(AzureServicesConfig, self).__init__(credentials)
+        super().__init__(credentials)
 
         facade = AzureFacade(credentials,
                              subscription_ids, all_subscriptions,
                              programmatic_execution)
 
         self.aad = AAD(facade)
-        self.arm = ARM(facade)
+        self.rbac = RBAC(facade)
         self.securitycenter = SecurityCenter(facade)
         self.sqldatabase = Servers(facade)
         self.storageaccounts = StorageAccounts(facade)
@@ -66,3 +66,13 @@ class AzureServicesConfig(BaseServicesConfig):
 
     def _is_provider(self, provider_name):
         return provider_name == 'azure'
+
+    async def fetch(self, services: list, regions: list, excluded_regions: list):
+        await super().fetch(services, regions, excluded_regions)
+
+        # This is a unique case where we'll want to fetch additional resources (in the AAD service) in the
+        # event the RBAC service was included. There's no existing cross-service fetching logic (only cross-service
+        # processing), hence why we needed to add this.
+        if 'rbac' in services and 'aad' in services:
+            user_list = self.rbac.get_user_id_list()
+            await self.aad.fetch_additional_users(user_list)

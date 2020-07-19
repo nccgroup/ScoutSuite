@@ -1,0 +1,26 @@
+{
+    "description": "Drop Invalid Header Fields Disabled",
+    "rationale": "Dropping invalid header fields should be enabled in order to mitigate the risk of request smuggling attacks.",
+    "references": [
+        "https://docs.aws.amazon.com/elasticloadbalancing/latest/APIReference/API_LoadBalancerAttribute.html",
+        "https://medium.com/@emilefugulin/http-desync-attacks-with-python-and-aws-1ba07d2c860f",
+        "https://99designs.com/blog/engineering/request-smuggling/",
+        "https://portswigger.net/web-security/request-smuggling"
+    ],
+    "dashboard_name": "Load Balancer Attributes",
+    "display_path": "elbv2.regions.id.vpcs.id.lbs.id",
+    "path": "elbv2.regions.id.vpcs.id.lbs.id.attributes.id",
+    "conditions": [
+        "and",
+        [
+            "Key",
+            "equal",
+            "routing.http.drop_invalid_header_fields.enabled"
+        ],
+        [
+            "Value",
+            "equal",
+            "false"
+        ]
+    ]
+}

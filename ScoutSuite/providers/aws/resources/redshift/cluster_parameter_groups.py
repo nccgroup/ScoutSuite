@@ -11,7 +11,7 @@ class ClusterParameterGroups(AWSCompositeResources):
     ]
 
     def __init__(self, facade: AWSFacade, region: str):
-        super(ClusterParameterGroups, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
 
     async def fetch_all(self):
@@ -31,6 +31,9 @@ class ClusterParameterGroups(AWSCompositeResources):
         parameter_group = {}
         parameter_group['name'] = raw_parameter_group.get('ParameterGroupName')
         parameter_group['id'] = get_non_provider_id(parameter_group['name'])
+        parameter_group['arn'] = 'arn:aws:redshift:{}:{}:parametergroup:{}'.format(self.region,
+                                                                                    self.facade.owner_id,
+                                                                                    raw_parameter_group.get('ParameterGroupName'))
         parameter_group['family'] = raw_parameter_group.get('ParameterGroupFamily')
         parameter_group['description'] = raw_parameter_group.get('Description')
         parameter_group['is_default'] = self._is_default(raw_parameter_group)

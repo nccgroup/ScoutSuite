@@ -18,7 +18,7 @@ class IdentityFacade:
                 lambda: list_call_get_all_results(self._client.list_users, self._credentials.get_scope()))
             return response.data
         except Exception as e:
-            print_exception('Failed to retrieve users: {}'.format(e))
+            print_exception(f'Failed to retrieve users: {e}')
             return []
 
     async def get_user_api_keys(self, user_id):
@@ -27,7 +27,7 @@ class IdentityFacade:
                 lambda: list_call_get_all_results(self._client.list_api_keys, user_id))
             return response.data
         except Exception as e:
-            print_exception('Failed to retrieve user api keys: {}'.format(e))
+            print_exception(f'Failed to retrieve user api keys: {e}')
             return []
 
     async def get_groups(self):
@@ -36,7 +36,7 @@ class IdentityFacade:
                 lambda: list_call_get_all_results(self._client.list_groups, self._credentials.get_scope()))
             return response.data
         except Exception as e:
-            print_exception('Failed to retrieve groups: {}'.format(e))
+            print_exception(f'Failed to retrieve groups: {e}')
             return []
 
     async def get_group_users(self, group_id):
@@ -47,7 +47,7 @@ class IdentityFacade:
                                                   group_id=group_id))
             return response.data
         except Exception as e:
-            print_exception('Failed to retrieve group users: {}'.format(e))
+            print_exception(f'Failed to retrieve group users: {e}')
             return []
 
     async def get_policies(self):
@@ -56,7 +56,7 @@ class IdentityFacade:
                 lambda: list_call_get_all_results(self._client.list_policies, self._credentials.get_scope()))
             return response.data
         except Exception as e:
-            print_exception('Failed to retrieve policies: {}'.format(e))
+            print_exception(f'Failed to retrieve policies: {e}')
             return None
 
     async def get_authentication_policy(self):
@@ -65,5 +65,5 @@ class IdentityFacade:
                 lambda: self._client.get_authentication_policy(self._credentials.config['tenancy']))
             return response.data
         except Exception as e:
-            print_exception('Failed to retrieve authentication policy: {}'.format(e))
+            print_exception(f'Failed to retrieve authentication policy: {e}')
             return []

@@ -6,7 +6,7 @@ from ScoutSuite.providers.utils import get_non_provider_id
 
 class LoadBalancers(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
-        super(LoadBalancers, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
         self.vpc = vpc
 
@@ -22,6 +22,9 @@ class LoadBalancers(AWSResources):
                  ['DNSName', 'CreatedTime', 'AvailabilityZones', 'Subnets', 'Scheme', 'attributes'])
 
         load_balancer['security_groups'] = []
+        load_balancer['arn'] = 'arn:aws:elb:{}:{}:load-balancer/{}'.format(self.region,
+                                                                           self.facade.owner_id,
+                                                                           raw_load_balancer.get('LoadBalancerName'))
         for sg in raw_load_balancer['SecurityGroups']:
             load_balancer['security_groups'].append({'GroupId': sg})
 

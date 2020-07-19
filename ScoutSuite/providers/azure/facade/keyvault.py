@@ -5,11 +5,13 @@ from ScoutSuite.providers.utils import run_concurrently
 
 
 class KeyVaultFacade:
+
     def __init__(self, credentials):
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        return KeyVaultManagementClient(self.credentials.arm_credentials, subscription_id=subscription_id)
+        return KeyVaultManagementClient(self.credentials.get_credentials('arm'),
+                                        subscription_id=subscription_id)
 
     async def get_key_vaults(self, subscription_id: str):
         try:
@@ -17,5 +19,5 @@ class KeyVaultFacade:
             return await run_concurrently(
                 lambda: list(client.vaults.list_by_subscription()))
         except Exception as e:
-            print_exception('Failed to retrieve key vaults: {}'.format(e))
+            print_exception(f'Failed to retrieve key vaults: {e}')
             return []

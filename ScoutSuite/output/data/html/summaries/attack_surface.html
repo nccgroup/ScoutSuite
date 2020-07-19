@@ -9,7 +9,13 @@
          </div>
          {{#each items}}
            <div class="row list-group-item">
-             <div class="col-sm-6">{{@key}}</div>
+             <div class="col-sm-6">Public Address: <samp>{{@key}}</samp></div>
+             {{#if this.InstanceName}}
+             <div class="col-sm-6">Instance Name: <samp>{{this.InstanceName}}</samp></div>
+             {{/if}}
+             {{#if this.PublicDnsName}}
+             <div class="col-sm-8">Public DNS Name: <samp>{{this.PublicDnsName}}</samp></div>
+             {{/if}}
              <div class="col-sm-6">
                <ul>
                {{#each protocols ip = @key}}

@@ -1,6 +1,3 @@
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import copy
 import json
 
@@ -10,7 +7,7 @@ from ScoutSuite.output.html import ScoutReport
 from ScoutSuite.providers.base.configs.browser import get_object_at
 
 
-class BaseProvider(object):
+class BaseProvider:
     """
     Base class for the different providers.
 
@@ -95,7 +92,7 @@ class BaseProvider(object):
         :return: None
         """
         # Load metadata
-        with open(self.metadata_path, 'rt') as f:
+        with open(self.metadata_path) as f:
             self.metadata = json.load(f)
 
     @staticmethod
@@ -105,7 +102,7 @@ class BaseProvider(object):
         error = False
         for service in services + skipped_services:
             if service not in supported_services:
-                print_error('Service \"{}\" does not exist, skipping'.format(service))
+                print_error(f'Service \"{service}\" does not exist, skipping')
                 error = True
         if error:
             print_info('Available services are: {}'.format(str(list(supported_services)).strip('[]')))
@@ -284,7 +281,11 @@ class BaseProvider(object):
                                                                    summary]['path'].split('.'))
                                     except Exception as e:
                                         source = {}
-                                    target_object.update(source)
+                                    try:
+                                        target_object.update(source)
+                                    except Exception as e:
+                                        if target_object:
+                                            raise e
 
         return None
 
@@ -328,10 +329,10 @@ class BaseProvider(object):
                                                callback_args)
 
         except Exception as e:
-            print_exception(e, {'current path': '{}'.format(current_path),
+            print_exception(e, {'current path': f'{current_path}',
                                 'key': '{}'.format(key if 'key' in locals() else 'not defined'),
                                 'value': '{}'.format(value if 'value' in locals() else 'not defined'),
-                                'path': '{}'.format(path),
+                                'path': f'{path}',
                                 }
                             )
 
@@ -374,11 +375,11 @@ class BaseProvider(object):
                             except Exception as e:
                                 print_exception(e, {'callback': callback_name,
                                                     'callback arguments': callback_args,
-                                                    'current path': '{}'.format(current_path),
+                                                    'current path': f'{current_path}',
                                                     'key': '{}'.format(key if 'key' in locals() else 'not defined'),
                                                     'value': '{}'.format(
                                                         value if 'value' in locals() else 'not defined'),
-                                                    'path': '{}'.format(path),
+                                                    'path': f'{path}',
                                                     }
                                                 )
                     else:
@@ -392,9 +393,9 @@ class BaseProvider(object):
                             tmp.append(i)
                             self._new_go_to_and_do(current_config[key][i], copy.deepcopy(path), tmp, callbacks)
         except Exception as e:
-            print_exception(e, {'current path': '{}'.format(current_path),
+            print_exception(e, {'current path': f'{current_path}',
                                 'key': '{}'.format(key if 'key' in locals() else 'not defined'),
                                 'value': '{}'.format(value if 'value' in locals() else 'not defined'),
-                                'path': '{}'.format(path),
+                                'path': f'{path}',
                                 }
                             )

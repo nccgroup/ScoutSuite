@@ -4,15 +4,17 @@ from ScoutSuite.providers.azure.utils import get_resource_group_name
 from ScoutSuite.providers.utils import get_non_provider_id
 
 from .blob_containers import BlobContainers
+# from .queues import Queues
 
 
 class StorageAccounts(AzureCompositeResources):
     _children = [
-        (BlobContainers, 'blob_containers')
+        (BlobContainers, 'blob_containers'),
+        # (Queues, 'queues')  # FIXME - not implemented by SDK
     ]
 
     def __init__(self, facade: AzureFacade, subscription_id: str):
-        super(StorageAccounts, self).__init__(facade)
+        super().__init__(facade)
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
@@ -41,6 +43,10 @@ class StorageAccounts(AzureCompositeResources):
         storage_account['bypass'] = raw_storage_account.network_rule_set.bypass
         storage_account['access_keys_last_rotation_date'] = \
             self._parse_access_keys_last_rotation_date(raw_storage_account.activity_logs)
+        if raw_storage_account.tags is not None:
+            storage_account['tags'] = ["{}:{}".format(key, value) for key, value in  raw_storage_account.tags.items()]
+        else:
+            storage_account['tags'] = []
 
         return storage_account['id'], storage_account
 
@@ -48,7 +54,9 @@ class StorageAccounts(AzureCompositeResources):
         return storage_account.network_rule_set.default_action == "Allow"
 
     def _is_trusted_microsoft_services_enabled(self, storage_account):
-        return storage_account.network_rule_set.bypass == "AzureServices"
+        if storage_account.network_rule_set.bypass:
+            return "AzureServices" in storage_account.network_rule_set.bypass
+        return False
 
     def _parse_access_keys_last_rotation_date(self, activity_logs):
         last_rotation_date = None

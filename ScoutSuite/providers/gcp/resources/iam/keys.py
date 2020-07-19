@@ -4,18 +4,18 @@ from ScoutSuite.providers.base.resources.base import Resources
 
 class Keys(Resources):
     def __init__(self, facade: GCPFacade, project_id: str, service_account_email: str):
-        super(Keys, self).__init__(facade)
+        super().__init__(facade)
         self.project_id = project_id
         self.service_account_email = service_account_email 
 
     async def fetch_all(self):
         # fetch system managed keys
-        raw_keys = await self.facade.iam.get_keys(self.project_id, self.service_account_email, ['SYSTEM_MANAGED'])
+        raw_keys = await self.facade.iam.get_service_account_keys(self.project_id, self.service_account_email, ['SYSTEM_MANAGED'])
         for raw_key in raw_keys:
             key_id, key = await self._parse_key(raw_key, 'SYSTEM_MANAGED')
             self[key_id] = key
         # fetch user managed keys
-        raw_keys = await self.facade.iam.get_keys(self.project_id, self.service_account_email, ['USER_MANAGED'])
+        raw_keys = await self.facade.iam.get_service_account_keys(self.project_id, self.service_account_email, ['USER_MANAGED'])
         for raw_key in raw_keys:
             key_id, key = await self._parse_key(raw_key, 'USER_MANAGED')
             self[key_id] = key

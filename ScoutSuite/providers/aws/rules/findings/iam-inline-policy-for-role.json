@@ -1,26 +1,65 @@
 {
-    "arg_names": [ "IAM entity type", "Service", "Action" ],
-    "description": "Inline _ARG_0_ policy allows _ARG_1_:_ARG_2_ *",
-    "key": "iam-inline-_ARG_0_-policy-allows-_ARG_1_-_ARG_2_",
-    "path": "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id",
-    "display_path": "iam._ARG_0_s.id",
-    "dashboard_name": "Policies",
-    "conditions": [ "and",
-        [ "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id.Effect", "equal", "Allow" ],
-        [ "or",
-            [ "and",
-                [ "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id.", "withKey", "Action" ],
-                [ "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id.Action", "containNoneOf", [ "*", "*:*" ] ]
-            ],
-            [ "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id.", "withKey", "NotAction" ]
-        ],
-        [ "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id.", "containAction", "_ARG_1_:_ARG_2_" ],
-       [ "and",
-           [ "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id.", "withKey", "Resource" ],
-           [ "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id.Resource", "containAtLeastOneOf", [ "*" ] ]
-       ]
+    "description": "Inline _ARG_0_ Policy Allows \"_ARG_1_:_ARG_2_\" For All Resources",
+    "rationale": "Using \"*\" for the resource field might grant permissions to more resources than necessary, potentially introducing privilege escalation scenarios.",
+    "references": [
+        "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html"
     ],
+    "dashboard_name": "Policies",
+    "display_path": "iam._ARG_0_s.id",
+    "path": "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id",
+    "conditions": [
+        "and",
+        [
+            "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id.Effect",
+            "equal",
+            "Allow"
+        ],
+        [
+            "or",
+            [
+                "and",
+                [
+                    "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id.",
+                    "withKey",
+                    "Action"
+                ],
+                [
+                    "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id.Action",
+                    "containNoneOf",
+                    [
+                        "*",
+                        "*:*"
+                    ]
+                ]
+            ],
+            [
+                "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id.",
+                "withKey",
+                "NotAction"
+            ]
+        ],
+        [
+            "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id.",
+            "containAction",
+            "_ARG_1_:_ARG_2_"
+        ],
+        [
+            "_INCLUDE_(conditions/policy-statement-any-resource.json)",
+            [
+                "_STATEMENT_"
+            ],
+            [
+                "iam._ARG_0_s.id.inline_policies.id.PolicyDocument.Statement.id"
+            ]
+        ]
+    ],
+    "key": "iam-inline-_ARG_0_-policy-allows-_ARG_1_-_ARG_2_",
     "keys": [
         "iam._ARG_0_s.id.inline_policies.id.name"
+    ],
+    "arg_names": [
+        "IAM entity type",
+        "Service",
+        "Action"
     ]
 }

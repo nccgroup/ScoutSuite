@@ -1,13 +1,46 @@
 {
-  "dashboard_name": "Firewall Rule Elements",
-  "description": "Firewall _ARG_0_ rule allows public access (0.0.0.0/0) to a sensitive port",
-  "path": "computeengine.projects.id.firewalls.id.allowed_traffic.id.ports.id",
-  "display_path": "computeengine.projects.id.firewalls.id",
-  "conditions": [ "and",
-    [ "computeengine.projects.id.firewalls.id.action", "equal", "allowed"],
-    [ "computeengine.projects.id.firewalls.id.disabled", "notTrue", "" ],
-    [ "computeengine.projects.id.firewalls.id.direction", "equal", "_ARG_0_" ],
-    [ "computeengine.projects.id.firewalls.id.source_ranges", "containAtLeastOneOf", "0.0.0.0/0" ],
-    [ "computeengine.projects.id.firewalls.id.allowed_traffic.id.", "containAtLeastOneOf", ["21", "22", "23", "53", "1433", "1521", "3306", "3389", "27017", "54322"] ]
-  ]
+    "description": "Firewall _ARG_0_ Rule Allows Public Access (0.0.0.0/0) to a Sensitive Port",
+    "rationale": "The firewall rule was found to be exposing a well-known port to all source addresses. Well-known ports are commonly probed by automated scanning tools, and could be an indicator of sensitive services exposed to Internet. If such services need to be exposed, a restriction on the source address could help to reduce the attack surface of the infrastructure.",
+    "dashboard_name": "Firewall Rule Elements",
+    "display_path": "computeengine.projects.id.firewalls.id",
+    "path": "computeengine.projects.id.firewalls.id.allowed_traffic.id.ports.id",
+    "conditions": [
+        "and",
+        [
+            "computeengine.projects.id.firewalls.id.action",
+            "equal",
+            "allowed"
+        ],
+        [
+            "computeengine.projects.id.firewalls.id.disabled",
+            "notTrue",
+            ""
+        ],
+        [
+            "computeengine.projects.id.firewalls.id.direction",
+            "equal",
+            "_ARG_0_"
+        ],
+        [
+            "computeengine.projects.id.firewalls.id.source_ranges",
+            "containAtLeastOneOf",
+            "0.0.0.0/0"
+        ],
+        [
+            "computeengine.projects.id.firewalls.id.allowed_traffic.id.",
+            "containAtLeastOneOf",
+            [
+                "21",
+                "22",
+                "23",
+                "53",
+                "1433",
+                "1521",
+                "3306",
+                "3389",
+                "27017",
+                "54322"
+            ]
+        ]
+    ]
 }

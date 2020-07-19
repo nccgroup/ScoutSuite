@@ -42,7 +42,11 @@ def get_object_at(object, path, attribute_name=None):
         else:
             return o
     except Exception as e:
-        raise Exception
+        # print_exception("Failed to get object at path \"{}\"".format(path),
+        #                 additional_details={'object': object,
+        #                                     'path': path,
+        #                                     'attribute_name': attribute_name})
+        raise e
 
 
 def get_value_at(all_info, current_path, key, to_string=False):
@@ -64,15 +68,23 @@ def get_value_at(all_info, current_path, key, to_string=False):
         elif '.' in key:
             target_path = []
             for i, key in enumerate(keys):
-                # If 'id', replace by value
-                if key == 'id':
-                    target_path.append(current_path[i])
-                # If empty key and value is an index, keep the index
-                elif key == '' and i < len(current_path) and current_path[i].isdigit():
-                    target_path.append(int(current_path[i]))
-                # Otherwise, use key
-                else:
-                    target_path.append(key)
+                try:
+                    # If 'id', replace by value
+                    if key == 'id':
+                        target_path.append(current_path[i])
+                    # If empty key and value is an index, keep the index
+                    elif key == '' and i < len(current_path) and current_path[i].isdigit():
+                        target_path.append(int(current_path[i]))
+                    # Otherwise, use key
+                    else:
+                        target_path.append(key)
+                except Exception as e:
+                    print_exception(f'Unable to get index \"{i}\" from path {current_path}: {e}',
+                                    additional_details={'current_path': current_path,
+                                                        'target_path': target_path,
+                                                        'key': key,
+                                                        'i': i})
+                    return None
             if len(keys) > len(current_path):
                 target_path = target_path + keys[len(target_path):]
         else:
@@ -83,7 +95,6 @@ def get_value_at(all_info, current_path, key, to_string=False):
             try:
                 if type(target_obj) == list and type(target_obj[0]) == dict:
                     target_obj = target_obj[int(p)]
-                # TODO ensure this additional condition didn't break anything
                 elif type(target_obj) == list and type(p) == int:
                     target_obj = target_obj[p]
                 elif type(target_obj) == list and p.isdigit():
@@ -95,8 +106,11 @@ def get_value_at(all_info, current_path, key, to_string=False):
                 else:
                     target_obj = target_obj[p]
             except Exception as e:
-                print_exception(e, additional_details={'current_path': current_path})
-                # raise Exception
+                print_exception(f'Unable to get \"{p}\" from target object {target_obj}: {e}',
+                                additional_details={'current_path': current_path,
+                                                    'target_obj': target_obj,
+                                                    'p': p})
+                return None
     if to_string:
         return str(target_obj)
     else:
