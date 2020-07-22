@@ -49,7 +49,7 @@ jobs:
     - name: Test with pytest
       run: |
         python -m pytest --cov=./
-
-    - uses: codecov/codecov-action@v1
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
       with:
-        file: ./.coverage
+        file: ./coverage.xml, ./.coverage
