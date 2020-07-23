@@ -390,6 +390,7 @@ function showFindings(path, resourcePath) {
             $('[id="' + items[item] + '"]').addClass('finding-title-' + level)
         } else {
             $('[id="' + items[item] + '"]').addClass('finding-' + level)
+            $('[class="' + items[item] + '"]').addClass('finding-' + level)
         }
         $('[id="' + items[item] + '"]').removeClass('finding-hidden')
         $('[id="' + items[item] + '"]').attr('data-finding-service', findingService)
@@ -862,6 +863,31 @@ function loadMetadata() {
  **********************/
 
 /**
+ * Summary
+ */
+function exportSummary() {
+    var anchor = window.location.hash.substr(1)
+    // Strip the # sign
+    var path = decodeURIComponent(anchor.replace('#', ''))
+    // Get resource path based on browsed-to path
+    var item_indexes = getValueAt(path);
+
+    // create array with item values
+        var items = [];
+        var index = 0;
+        items[index] = ["Service", "Description", "Affected resources", "Risk level"]
+        Object.entries(item_indexes.services).forEach((service) =>{
+            Object.entries(service[1].findings).forEach((finding) => {
+                index++;
+                items[index] = [finding[1].service, finding[1].description, finding[1].flagged_items, finding[1].level];
+            })
+        });
+
+    downloadAsCsv('summary.csv', items)
+}
+
+
+/**
  * Show About Scout Suite modal
  */
 function showAbout() {
@@ -874,6 +900,8 @@ function showAbout() {
  */
 function hidePleaseWait () {
     $('#please-wait-modal').fadeOut(500, () => { })
+
+
     $('#please-wait-backdrop').fadeOut(500, () => { })
 }
 
@@ -1160,7 +1188,7 @@ function makeTitle(title) {
         return title.toString()
     }
     title = title.toLowerCase()
-    if (['acm', 'ec2', 'efs', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) !== -1) {
+    if (['acm', 'ec2', 'ecr', 'ecs', 'efs', 'eks', 'iam', 'kms', 'rds', 'sns', 'ses', 'sqs', 'vpc', 'elb', 'elbv2', 'emr'].indexOf(title) !== -1) {
         return title.toUpperCase()
     } else if (title === 'cloudtrail') {
         return 'CloudTrail'
@@ -1170,8 +1198,12 @@ function makeTitle(title) {
         return 'CloudFormation'
     } else if (title === 'config') {
         return 'Config'
+    } else if (title === 'cognito') {
+        return 'Cognito'
     } else if (title === 'awslambda') {
         return 'Lambda'
+    } else if (title === 'docdb') {
+        return 'DocumentDB'
     } else if (title === 'dynamodb') {
         return 'DynamoDB'
     } else if (title === 'secretsmanager') {
@@ -1192,10 +1224,10 @@ function makeTitle(title) {
         return 'Compute Engine'
     } else if (title === 'kubernetesengine') {
         return 'Kubernetes Engine'
-    } else if (title === 'cloudresourcemanager') {
-        return 'Cloud Resource Manager'
-    } else if (['aad', 'arm'].indexOf(title) !== -1) {
-        return title.toUpperCase()
+    } else if (title === 'aad') {
+        return 'Azure Active Directory'
+    } else if (title === 'rbac') {
+        return 'Azure RBAC'
     } else if (title === 'storageaccounts') {
         return 'Storage Accounts'
     } else if (title === 'sqldatabase') {
@@ -1472,4 +1504,3 @@ function downloadAsJson(filename, dict) {
         }
     }
 }
-

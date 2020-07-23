@@ -27,7 +27,27 @@ from ScoutSuite.providers.base.services import BaseServicesConfig
 
 # Try to import proprietary services
 try:
+    from ScoutSuite.providers.aws.resources.private_cognito.base import Cognito
+except ImportError:
+    pass
+try:
+    from ScoutSuite.providers.aws.resources.private_docdb.base import DocDB
+except ImportError:
+    pass
+try:
     from ScoutSuite.providers.aws.resources.private_dynamodb.base import DynamoDB
+except ImportError:
+    pass
+try:
+    from ScoutSuite.providers.aws.resources.private_ecr.base import ECR
+except ImportError:
+    pass
+try:
+    from ScoutSuite.providers.aws.resources.private_ecs.base import ECS
+except ImportError:
+    pass
+try:
+    from ScoutSuite.providers.aws.resources.private_eks.base import EKS
 except ImportError:
     pass
 
@@ -41,6 +61,9 @@ class AWSServicesConfig(BaseServicesConfig):
     :ivar config:                       Config configuration
     :ivar dynamodb:                     DynomaDB configuration
     :ivar ec2:                          EC2 configuration
+    :ivar ecs:                          ECS configuration
+    :ivar ecr:                          ECR configuration
+    :ivar eks:                          EKS configuration
     :ivar iam:                          IAM configuration
     :ivar kms:                          KMS configuration
     :ivar rds:                          RDS configuration
@@ -84,7 +107,27 @@ class AWSServicesConfig(BaseServicesConfig):
 
         # Instantiate proprietary services
         try:
+            self.cognito = Cognito(facade)
+        except NameError as _:
+            pass
+        try:
+            self.docdb = DocDB(facade)
+        except NameError as _:
+            pass
+        try:
             self.dynamodb = DynamoDB(facade)
+        except NameError as _:
+            pass
+        try:
+            self.ecr = ECR(facade)
+        except NameError as _:
+            pass
+        try:
+            self.ecs = ECS(facade)
+        except NameError as _:
+            pass
+        try:
+            self.eks = EKS(facade)
         except NameError as _:
             pass
 

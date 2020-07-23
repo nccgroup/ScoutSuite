@@ -3,11 +3,31 @@
     "rationale": "Encrypting disks ensures that their entire content is fully unrecoverable without a key and thus protects the volume from unwarranted reads.",
     "remediation": "Ensure that disks are encrypted, where possible.",
     "compliance": [
-        {"name": "CIS Microsoft Azure Foundations", "version": "1.0.0", "reference": "7.2"},
-        {"name": "CIS Microsoft Azure Foundations", "version": "1.0.0", "reference": "7.3"},
-        {"name": "CIS Microsoft Azure Foundations", "version": "1.1.0", "reference": "7.1"},
-        {"name": "CIS Microsoft Azure Foundations", "version": "1.1.0", "reference": "7.2"},
-        {"name": "CIS Microsoft Azure Foundations", "version": "1.1.0", "reference": "7.3"}
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.0.0",
+            "reference": "7.2"
+        },
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.0.0",
+            "reference": "7.3"
+        },
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.1.0",
+            "reference": "7.1"
+        },
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.1.0",
+            "reference": "7.2"
+        },
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.1.0",
+            "reference": "7.3"
+        }
     ],
     "references": [
         "https://docs.microsoft.com/en-us/azure/security/azure-security-disk-encryption-overview",
@@ -15,8 +35,13 @@
     ],
     "dashboard_name": "Disks",
     "path": "virtualmachines.subscriptions.id.disks.id",
-    "conditions": [ "and",
-        ["virtualmachines.subscriptions.id.disks.id.encryption_enabled", "false", ""]
+    "conditions": [
+        "and",
+        [
+            "virtualmachines.subscriptions.id.disks.id.encryption_enabled",
+            "false",
+            ""
+        ]
     ],
     "id_suffix": "encryption_enabled"
 }

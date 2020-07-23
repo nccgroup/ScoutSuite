@@ -1,5 +1,13 @@
 from __future__ import print_function
 
+formatted_provider_name = {
+    'aliyun': 'Aliyun',
+    'aws': 'AWS',
+    'azure': 'Azure',
+    'gcp': 'GCP',
+    'oci': 'OCI'
+}
+
 formatted_service_name = {
     # AWS
     'acm': 'ACM',
@@ -7,17 +15,24 @@ formatted_service_name = {
     'cloudtrail': 'CloudTrail',
     'cloudwatch': 'CloudWatch',
     'credentials': 'Credentials',
+    'cognito': 'Cognito',
     'config': 'Config',
     'directconnect': 'Direct Connect',
     'dynamodb': 'DynamoDB',
+    'ecr': 'ECR',
+    'ecs': 'ECS',
     'elbv2': 'ELBv2',
+    'eks': 'EKS',
     'elasticache': 'ElastiCache',
     'lambda': 'Lambda',
     'awslambda': 'Lambda',
     'redshift': 'RedShift',
     'route53': 'Route53',
     'secretsmanager': 'Secrets Manager',
+    'docdb': 'DocumentDB',
     # Azure
+    'aad': 'Azure Active Directory',
+    'rbac': 'Azure RBAC',
     'storageaccounts': 'Storage Accounts',
     'sqldatabase': 'SQL Database',
     'securitycenter': 'Security Center',
@@ -35,7 +50,6 @@ formatted_service_name = {
     'stackdrivermonitoring': 'Stackdriver Monitoring',
     'computeengine': 'Compute Engine',
     'kubernetesengine': 'Kubernetes Engine',
-    'cloudresourcemanager': 'Cloud Resource Manager',
     # Aliyun
     'actiontrail': 'ActionTrail',
     # OCI
@@ -65,9 +79,16 @@ def manage_dictionary(dictionary, key, init, callback=None):
     return dictionary
 
 
+def format_provider_code(provider_code):
+    """
+    :param provider_code:
+    :return:
+    """
+    return formatted_provider_name[provider_code] if provider_code in formatted_provider_name else provider_code.upper()
+
+
 def format_service_name(service):
     """
-
     :param service:
     :return:
     """

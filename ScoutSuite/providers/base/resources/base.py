@@ -67,7 +67,7 @@ class CompositeResources(Resources, metaclass=abc.ABCMeta):
 
     async def _fetch_children(self, resource_parent: object, scope: dict = {}):
         """This method fetches all children of a given resource (the so called 'resource_parent') by calling fetch_all
-        method on each child defined in '_children' and then sto.res the fetched resources in `resource_parent` under
+        method on each child defined in '_children' and then stores the fetched resources in `resource_parent` under
         the key associated with the child. It also creates a "<child_name>_count" entry for each child.
 
         :param resource_parent: The resource in which the children will be stored.

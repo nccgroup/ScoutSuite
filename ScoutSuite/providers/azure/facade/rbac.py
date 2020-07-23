@@ -4,12 +4,14 @@ from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently
 
 
-class ARMFacade:
+class RBACFacade:
+
     def __init__(self, credentials):
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        return AuthorizationManagementClient(self.credentials.arm_credentials, subscription_id=subscription_id)
+        return AuthorizationManagementClient(self.credentials.get_credentials('arm'),
+                                             subscription_id=subscription_id)
 
     async def get_roles(self, subscription_id: str):
         try:

@@ -1,10 +1,18 @@
 {
+    "description": "Bucket with Versioning Disabled",
+    "rationale": "Enable Object Versioning to protect Cloud Storage data from being overwritten or accidentally deleted.",
+    "references": [
+        "https://cloud.google.com/storage/docs/using-object-versioning"
+    ],
     "dashboard_name": "Buckets",
-    "description": "Bucket without versioning enabled",
-    "rationale": "<b>Description:</b><br><br>Enable Object Versioning to protect Cloud Storage data from being overwritten or accidentally deleted.",
     "path": "cloudstorage.projects.id.buckets.id",
-    "conditions": [ "and",
-        [ "cloudstorage.projects.id.buckets.id.versioning_enabled", "false", "" ]
+    "conditions": [
+        "and",
+        [
+            "cloudstorage.projects.id.buckets.id.versioning_enabled",
+            "false",
+            ""
+        ]
     ],
     "id_suffix": "versioning_enabled"
 }

@@ -1,10 +1,18 @@
 {
-    "arg_names": [ "Category groups" ],
-    "description": "User not in category group",
-    "path": "iam.users.id",
+    "description": "User Not in Category Group",
+    "rationale": "This configuration goes against organizational policies.",
     "dashboard_name": "Users",
-    "conditions": [ "and",
-        [ "iam.users.id.groups", "containNoneOf", "_ARG_0_" ]
+    "path": "iam.users.id",
+    "conditions": [
+        "and",
+        [
+            "iam.users.id.groups",
+            "containNoneOf",
+            "_ARG_0_"
+        ]
+    ],
+    "arg_names": [
+        "Category groups"
     ],
     "id_suffix": "user_groups"
 }

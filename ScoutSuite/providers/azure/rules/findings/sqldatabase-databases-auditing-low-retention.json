@@ -1,12 +1,28 @@
 {
-    "dashboard_name": "SQL Databases",
     "description": "Short Auditing Retention Period for SQL Databases",
-    "rationale": "<b>Description:</b><br><br>Auditing retention period should be greater than _ARG_0_ days.<br><br><b>References:</b><ul><li>CIS Microsoft Azure Foundations v1.0.0 4.2</li></ul>",
-    "path": "sqldatabase.subscriptions.id.servers.id.databases.id",
+    "rationale": "Auditing retention period should be greater than _ARG_0_ days.",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.0.0",
+            "reference": "4.2"
+        }
+    ],
+    "dashboard_name": "SQL Databases",
     "display_path": "sqldatabase.subscriptions.id.servers.id",
-    "conditions": [ "and",
-        [ "sqldatabase.subscriptions.id.servers.id.databases.id.auditing.retention_days", "notEqual", "0" ],
-        [ "sqldatabase.subscriptions.id.servers.id.databases.id.auditing.retention_days", "lessThan", "_ARG_0_" ]
+    "path": "sqldatabase.subscriptions.id.servers.id.databases.id",
+    "conditions": [
+        "and",
+        [
+            "sqldatabase.subscriptions.id.servers.id.databases.id.auditing.retention_days",
+            "notEqual",
+            "0"
+        ],
+        [
+            "sqldatabase.subscriptions.id.servers.id.databases.id.auditing.retention_days",
+            "lessThan",
+            "_ARG_0_"
+        ]
     ],
     "id_suffix": "db_low_auditing_retention"
 }

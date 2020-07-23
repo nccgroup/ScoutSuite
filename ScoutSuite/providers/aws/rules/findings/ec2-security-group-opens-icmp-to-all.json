@@ -1,11 +1,25 @@
 {
-    "description": "ICMP open to all",
+    "description": "Security Group Allows ICMP Traffic to All",
+    "rationale": "ICMP traffic was allowed to the resources assigned to this security group without restriction of the source address. This could potentially be leveraged by an attacker trying to perform an attack or gather information about the deployed infrastructure.",
     "dashboard_name": "Rules",
-    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
     "display_path": "ec2.regions.id.vpcs.id.security_groups.id",
-    "conditions": [ "and",
-        [ "_INCLUDE_(conditions/cidr-is-all.json)", "", ""],
-        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id", "equal", "ingress" ],
-        [ "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id", "equal", "ICMP" ]
+    "path": "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id.ports.id.cidrs.id.CIDR",
+    "conditions": [
+        "and",
+        [
+            "_INCLUDE_(conditions/cidr-is-all.json)",
+            "",
+            ""
+        ],
+        [
+            "ec2.regions.id.vpcs.id.security_groups.id.rules.id",
+            "equal",
+            "ingress"
+        ],
+        [
+            "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols.id",
+            "equal",
+            "ICMP"
+        ]
     ]
 }

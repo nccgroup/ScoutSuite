@@ -1,0 +1,30 @@
+{
+    "description": "Primitive Role in Use",
+    "rationale": "Primitive roles grant significant privileges. In most cases, usage of these roles is not recommended and does not follow security best practice.<br><br><b>Note: </b>This rule may flag Google-Managed Service Accounts. Google services rely on these Service Accounts having access to the project, and recommends not removing or changing the Service Account's role (see https://cloud.google.com/iam/docs/service-accounts#google-managed).",
+    "compliance": [
+        {
+            "name": "CIS Google Cloud Platform Foundations",
+            "version": "1.0.0",
+            "reference": "1.4"
+        }
+    ],
+    "references": [
+        "https://cloud.google.com/iam/docs/understanding-roles",
+        "https://cloud.google.com/iam/docs/using-iam-securely"
+    ],
+    "dashboard_name": "Bindings",
+    "path": "iam.projects.id.bindings.id",
+    "conditions": [
+        "and",
+        [
+            "iam.projects.id.bindings.id.name",
+            "containAtLeastOneOf",
+            [
+                "owner",
+                "editor",
+                "viewer"
+            ]
+        ]
+    ],
+    "id_suffix": "name"
+}
