@@ -29,6 +29,7 @@ class ScoutSuiteArgumentParser:
         self._init_azure_parser()
         self._init_aliyun_parser()
         self._init_oci_parser()
+        self._init_bamboohr_parser()
 
     def _init_aws_parser(self):
         parser = self.subparsers.add_parser("aws",
@@ -372,6 +373,10 @@ class ScoutSuiteArgumentParser:
                             default=8000,
                             help="[EXPERIMENTAL FEATURE] Port on which you want the server to listen. Defaults to 8000.")
 
+    def _init_bamboohr_parser(self):
+        self.subparsers.add_parser("bamboohr",
+                                    parents=[self.common_providers_args_parser],
+                                    help="Run Scout against a BambooHR account")
     def parse_args(self, args=None):
         args = self.parser.parse_args(args)
 

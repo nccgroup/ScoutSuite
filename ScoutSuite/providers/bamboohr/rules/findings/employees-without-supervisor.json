@@ -1,0 +1,17 @@
+{
+    "description": "Employees without a supervisor",
+    "rationale": "",
+    "remediation": "",
+    "compliance": [
+        {
+            "name": "SOC2",
+            "version": "",
+            "reference": ""
+        }
+    ],
+    "dashboard_name": "Employees",
+    "path": "employees.directory.id",
+    "conditions": [ "and",
+      [ "supervisor", "equal", "" ]
+  ]
+}

@@ -4,7 +4,6 @@ from ScoutSuite.core.console import print_exception, print_debug, print_info
 from ScoutSuite.providers.aws.utils import get_partition_name
 from ScoutSuite.utils import format_service_name
 
-
 class BaseServicesConfig(object):
 
     def __init__(self, credentials):

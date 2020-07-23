@@ -1,0 +1,19 @@
+{
+    "about": "This is a ruleset for BambooHR",
+    "rules": {
+        "employees-without-title.json": [
+            {
+                "args": [],
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "employees-without-supervisor.json": [
+            {
+                "args": [],
+                "enabled": true,
+                "level": "warning"
+            }
+        ]
+    }
+}
