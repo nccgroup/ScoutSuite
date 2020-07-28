@@ -267,6 +267,7 @@ async def _run(provider,
             return 130
         except Exception as e:
             print_exception('Unhandled exception thrown while gathering data: {}'.format(e))
+            return 104
 
         # Update means we reload the whole config and overwrite part of it
         if update:
@@ -311,7 +312,7 @@ async def _run(provider,
         processing_engine.run(cloud_provider)
     except Exception as e:
         print_exception('Failure while running rule engine: {}'.format(e))
-        return 105
+        return 106
 
     # Create display filters
     try:
@@ -325,7 +326,7 @@ async def _run(provider,
         processing_engine.run(cloud_provider)
     except Exception as e:
         print_exception('Failure while applying display filters: {}'.format(e))
-        return 106
+        return 107
 
     # Handle exceptions
     if exceptions:
@@ -352,14 +353,14 @@ async def _run(provider,
         cloud_provider.postprocessing(report.current_time, finding_rules, run_parameters)
     except Exception as e:
         print_exception('Failure while running post-processing engine: {}'.format(e))
-        return 107
+        return 108
 
     # Save config and create HTML report
     try:
         html_report_path = report.save(cloud_provider, exceptions, force_write, debug)
     except Exception as e:
         print_exception('Failure while generating HTML report: {}'.format(e))
-        return 108
+        return 109
 
     # Open the report by default
     if not no_browser:
