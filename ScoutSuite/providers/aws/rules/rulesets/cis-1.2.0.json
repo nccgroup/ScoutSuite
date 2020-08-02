@@ -1,5 +1,5 @@
 {
-    "about": "This ruleset attempts to cover as many recommendations from the CIS Amazon Web Services Foundation v1.2.0.",
+    "about": "This ruleset covers most of the recommendations from the CIS Amazon Web Services Foundation v1.2.0.",
     "rules": {
         "iam-root-account-used-recently.json": [
             {
