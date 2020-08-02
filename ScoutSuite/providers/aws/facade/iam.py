@@ -173,12 +173,23 @@ class IAMFacade(AWSBaseFacade):
             print_exception(f'Failed to list access keys: {e}')
 
     async def _get_and_set_user_mfa_devices(self, user: {}):
+        user['MFADevices'] = await self.get_user_mfa_devices(user['UserName'])
+
+    async def get_user_mfa_devices(self, username: str):
         client = AWSFacadeUtils.get_client('iam', self.session)
         try:
-            user['MFADevices'] = await run_concurrently(
-                lambda: client.list_mfa_devices(UserName=user['UserName'])['MFADevices'])
+            return await run_concurrently(
+                lambda: client.list_mfa_devices(UserName=username)['MFADevices'])
         except Exception as e:
-            print_exception(f'Failed to list MFA devices: {e}')
+            print_exception(f'Failed to list MFA devices for user: {e}')
+
+    async def get_virtual_mfa_devices(self):
+        client = AWSFacadeUtils.get_client('iam', self.session)
+        try:
+            return await run_concurrently(
+                lambda: client.list_virtual_mfa_devices()['VirtualMFADevices'])
+        except Exception as e:
+            print_exception(f'Failed to list virtual MFA devices: {e}')
 
     async def _get_and_set_group_users(self, group: {}):
         client = AWSFacadeUtils.get_client('iam', self.session)

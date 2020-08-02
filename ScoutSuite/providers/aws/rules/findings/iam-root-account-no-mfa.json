@@ -17,19 +17,19 @@
     "references": [
         "https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-cis-controls.html#securityhub-cis-controls-1.13"
     ],
-    "dashboard_name": "Root account",
+    "dashboard_name": "Accounts",
     "path": "iam.credential_reports.id",
     "conditions": [
         "and",
         [
-            "iam.credential_reports.id.mfa_active",
-            "notTrue",
-            ""
-        ],
-        [
             "iam.credential_reports.id.name",
             "equal",
             "<root_account>"
+        ],
+        [
+            "iam.credential_reports.id.mfa_active",
+            "notTrue",
+            ""
         ]
     ],
     "keys": [
