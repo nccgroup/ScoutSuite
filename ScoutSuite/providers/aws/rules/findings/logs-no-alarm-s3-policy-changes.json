@@ -19,7 +19,7 @@
             "reference": "3.8"
         }
     ],
-    "dashboard_name": "Regions",
+    "dashboard_name": "Alarms",
     "path": "cloudwatch.regions.id.metric_filters.id",
     "conditions": [
         "or",
