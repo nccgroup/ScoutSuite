@@ -349,10 +349,10 @@ function showRowWithItems(path) {
  */
 function showFilters(resourcePath) {
     hideFilters()
-    let service = resourcePath.split('.')[1]
     // Show service filters
     $('[id="' + resourcePath + '.id.filters"]').show()
     // show region filters
+    let service = resourcePath.split('.')[1]
     $('[id*="regionfilters.' + service + '.regions"]').show()
 }
 
