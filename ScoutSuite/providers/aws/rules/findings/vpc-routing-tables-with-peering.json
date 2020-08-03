@@ -19,7 +19,7 @@
     "conditions": [
         "and",
         [
-            "vpc.regions.id.peering_connections.peering_connection_id",
+            "vpc.regions.id.peering_connections.id.VpcPeeringConnectionId",
             "null",
             ""
         ]
