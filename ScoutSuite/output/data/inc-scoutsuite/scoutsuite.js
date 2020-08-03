@@ -147,7 +147,6 @@ var loadAccountId = function () {
 function loadConfig(scriptId, cols, force) {
     if (!force && !scriptId.endsWith('.external_attack_surface')) {
         console.log('Script ID: ' + scriptId);
-        // console.log(loadedConfigArray);
         // Abort if data was previously loaded
         if (loadedConfigArray.indexOf(scriptId) > -1 ) {
             // When the path does not contain .id.
