@@ -60,10 +60,6 @@ class IAMFacade(AWSBaseFacade):
              functools.partial(self._get_and_set_inline_policies, iam_resource_type='group')], groups)
         return groups
 
-    # async def get_virtual_mfa_devices(self):
-        # Virtual MFA Devices - AWS Python SDK
-        # https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/iam.html#virtualmfadevice
-
     async def get_policies(self):
         policies = await AWSFacadeUtils.get_all_pages(
             'iam', None, self.session, 'list_policies', 'Policies', OnlyAttached=True)
