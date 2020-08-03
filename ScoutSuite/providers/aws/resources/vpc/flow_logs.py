@@ -18,7 +18,7 @@ class FlowLogs(AWSResources):
 
     def _parse_log(self, raw_flow_log):
         flow_log_dict = {}
-        flow_log_dict['name'] = flow_log_dict['id'] = raw_flow_log.get('ResourceId')
+        flow_log_dict['name'] = flow_log_dict['id'] = raw_flow_log.get('FlowLogId')
         flow_log_dict['creation_time'] = raw_flow_log.get('CreationTime')
         flow_log_dict['deliver_logs_error_message'] = raw_flow_log.get('DeliverLogsErrorMessage')
         flow_log_dict['deliver_logs_status'] = raw_flow_log.get('DeliverLogsStatus')
