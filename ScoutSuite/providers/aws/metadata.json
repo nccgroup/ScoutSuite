@@ -47,13 +47,6 @@
                     "cols": 2,
                     "path": "services.cloudwatch.regions.id.metric_filters"
                 }
-            },
-            "summaries": {
-                "statistics": {
-                    "hidden": true,
-                    "cols": 1,
-                    "path": "services.cloudwatch.statistics"
-                }
             }
         },
         "config": {
