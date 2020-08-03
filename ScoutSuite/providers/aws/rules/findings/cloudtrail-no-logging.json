@@ -32,21 +32,9 @@
             "IsLogging"
         ],
         [
-            "or",
-            [
-                "cloudtrail.regions.id.trails.id.IsLogging",
-                "false",
-                ""
-            ],
-            [
-                "cloudtrail.regions.id.trails.id.IsMultiRegionTrail",
-                "false",
-                ""
-            ]
-        ],
-        "and",
-        [
-            "cloudtrail.regions.id.trails.id."
+            "cloudtrail.regions.id.trails.id.IsLogging",
+            "false",
+            ""
         ]
     ],
     "class_suffix": "IsLogging"
