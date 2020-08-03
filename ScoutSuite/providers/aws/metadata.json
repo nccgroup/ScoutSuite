@@ -50,6 +50,7 @@
             },
             "summaries": {
                 "statistics": {
+                    "hidden": true,
                     "cols": 1,
                     "path": "services.cloudwatch.statistics"
                 }
