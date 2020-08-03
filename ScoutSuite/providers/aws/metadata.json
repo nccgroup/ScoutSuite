@@ -112,7 +112,6 @@
                     "path": "services.vpc.regions.id.vpcs"
                 },
                 "flow_logs": {
-                    "hidden": true,
                     "path": "services.vpc.regions.id.flow_logs",
                     "callbacks": [
                         [ "sort_vpc_flow_logs_callback", {} ],
@@ -124,7 +123,6 @@
                     "path": "services.vpc.regions.id.vpcs.id.subnets"
                 },
                 "peering_connections": {
-                    "hidden": false,
                     "path": "services.vpc.regions.id.peering_connections",
                     "callbacks": [
                         [ "process_vpc_peering_connections_callback", {} ]
