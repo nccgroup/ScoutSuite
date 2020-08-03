@@ -1,5 +1,5 @@
 {
-    "description": "No CloudWatch alarm for \"CloudTrail Configuration Changes\"",
+    "description": "No CloudWatch Alarm for \"CloudTrail Configuration Changes\"",
     "rationale": "There was no CloudWatch alarm to monitor CloudTrail configuration changes. Monitoring for CloudTrail policy changes will help ensure sustained visibility to activities performed in the AWS account.",
     "remediation": "Enable a CloudWatch alarm to monitor CloudTrail configuration changes.",
     "compliance": [

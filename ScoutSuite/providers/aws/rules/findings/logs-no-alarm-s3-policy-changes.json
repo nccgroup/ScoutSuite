@@ -1,5 +1,5 @@
 {
-    "description": "No CloudWatch alarm for \"S3 Bucket Policy Changes\"",
+    "description": "No CloudWatch Alarm for \"S3 Bucket Policy Changes\"",
     "rationale": "There was no CloudWatch alarm to detect changes in S3 bucket policy changes. Monitoring for changes in S3 bucket policy changes may reduce the time to detect and fix permissive policies on sensitive S3 buckets.",
     "remediation": "Enable a CloudWatch alarm to detect policy changes in S3 buckets.",
     "compliance": [

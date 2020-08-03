@@ -1,5 +1,5 @@
 {
-    "description": "No CloudWatch alarm for \"Failed Console Authentications\"",
+    "description": "No CloudWatch Alarm for \"Failed Console Authentications\"",
     "rationale": "There was no CloudWatch alarm for failed console authentication requests. Monitoring for failed console authentications can decrease the lead time to detect brute force attacks.",
     "remediation": "Enable a CloudWatch alarm to monitor failed authentication attempts.",
     "compliance": [

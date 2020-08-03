@@ -1,5 +1,5 @@
 {
-    "description": "No CloudWatch alarm for \"Disabled or Deleted Master Keys\"",
+    "description": "No CloudWatch Alarm for \"Disabled or Deleted Master Keys\"",
     "rationale": "There was no CloudWatch alarm to alert about disabled or deleted master keys. Monitoring for disabled or deleted master keys can prevent permanent loss of data encrypted with such keys.",
     "remediation": "Enable a CloudWatch alarm to detect recently disabled or deleted master keys.",
     "compliance": [

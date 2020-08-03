@@ -1,5 +1,5 @@
 {
-    "description": "No CloudWatch alarm for \"Network Gateways Changes\"",
+    "description": "No CloudWatch Alarm for \"Network Gateways Changes\"",
     "rationale": "There was no CloudWatch alarm to monitor changes in network gateways. Monitoring for network gateways changes will help ensure that all traffic traverses the VPC border via a controlled path.",
     "remediation": "Enable a CloudWatch alarm to detect network gateways changes.",
     "compliance": [

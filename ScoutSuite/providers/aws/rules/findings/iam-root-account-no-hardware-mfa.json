@@ -31,7 +31,8 @@
             "equal",
             "<root_account>"
         ],
-        [ "or",
+        [
+            "or",
             [
                 "iam.credential_reports.id.mfa_active",
                 "notTrue",

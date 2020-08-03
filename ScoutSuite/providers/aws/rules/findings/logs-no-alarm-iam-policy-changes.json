@@ -1,5 +1,5 @@
 {
-    "description": "No CloudWatch alarm for \"IAM Policy Changes\"",
+    "description": "No CloudWatch Alarm for \"IAM Policy Changes\"",
     "rationale": "There was no CloudWatch alarm to monitor IAM policy changes. Monitoring for IAM policy changes will help ensure authentication and authorization control remain intact.",
     "remediation": "Enable a CloudWatch alarm to monitor the usage of the root account.",
     "compliance": [

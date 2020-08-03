@@ -1,5 +1,5 @@
 {
-    "description": "No CloudWatch alarm for \"Security Group Changes\"",
+    "description": "No CloudWatch Alarm for \"Security Group Changes\"",
     "rationale": "There was no CloudWatch alarm to monitor changes to security groups. Monitoring for security group changes will help ensure that no service or resource is unintentionally exposed.",
     "remediation": "Enable a CloudWatch alarm to monitor security group changes.",
     "compliance": [

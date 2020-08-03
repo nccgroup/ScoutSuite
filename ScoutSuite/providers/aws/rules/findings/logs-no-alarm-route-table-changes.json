@@ -1,5 +1,5 @@
 {
-    "description": "No CloudWatch alarm for \"Route Table Changes\"",
+    "description": "No CloudWatch Alarm for \"Route Table Changes\"",
     "rationale": "There was no CloudWatch alarm to monitor changes in route tables. Monitoring for route table changes will help ensure that all VPC traffic flows thorough an expected path.",
     "remediation": "Enable a CloudWatch alarm to detect route table changes.",
     "compliance": [
