@@ -1,8 +1,11 @@
+import logging
+
 providers_dict = {'aws': 'AWSProvider',
                   'gcp': 'GCPProvider',
                   'azure': 'AzureProvider',
                   'aliyun': 'AliyunProvider',
-                  'oci': 'OracleProvider'}
+                  'oci': 'OracleProvider',
+                  'osc': 'OutscaleProvider'}
 
 
 def get_provider_object(provider):

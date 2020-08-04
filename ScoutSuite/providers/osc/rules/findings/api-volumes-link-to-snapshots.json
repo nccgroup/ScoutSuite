@@ -1,0 +1,15 @@
+{
+    "description": "Volumes not link to snapshot",
+    "rationale": "It was detected that no snapshot is link to that Volume",
+    "dashboard_name": "Rules",
+    "display_path": "api.regions.id.snapshots.id",
+    "path": "api.regions.id.snapshots.id.rules.id.volumes.id",
+    "conditions": [
+        "and",
+        [
+            "_INCLUDE_(conditions/security-groups-with-no-users.json)",
+            "",
+            ""
+        ]
+    ]
+}

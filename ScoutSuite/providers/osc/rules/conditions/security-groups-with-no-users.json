@@ -1,0 +1,10 @@
+{
+    "conditions": [ "and",
+        [ "or",
+            [ "api.regions.id.security_groups.id.rules.id.protocols.id.users.id", "equal", "NO USERS" ],
+            [ "api.regions.id.security_groups.id.rules.id.protocols.id", "equal", "EMPTY" ]
+
+        ],
+        [ "api.regions.id.volumes.id.rules.id", "equal", "ingress"]
+    ]
+}

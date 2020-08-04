@@ -1,0 +1,15 @@
+{
+    "description": "Security Groups With No User",
+    "rationale": "It was detected that no user is using this security group, making it useless.",
+    "dashboard_name": "Rules",
+    "display_path": "api.regions.id.security_groups.id",
+    "path": "api.regions.id.security_groups.id.rules.id.protocols.id.users.id",
+    "conditions": [
+        "and",
+        [
+            "_INCLUDE_(conditions/security-groups-with-no-users.json)",
+            "",
+            ""
+        ]
+    ]
+}

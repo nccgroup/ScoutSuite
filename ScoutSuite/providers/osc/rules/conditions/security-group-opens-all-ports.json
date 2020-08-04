@@ -1,0 +1,9 @@
+{
+    "conditions": [ "and",
+        [ "or",
+            [ "api.regions.id.security_groups.id.rules.id.protocols.id.ports.id", "equal", "1-65535" ],
+            [ "api.regions.id.security_groups.id.rules.id.protocols.id", "equal", "ALL" ]
+        ],
+        [ "api.regions.id.security_groups.id.rules.id", "equal", "ingress"]
+    ]
+}

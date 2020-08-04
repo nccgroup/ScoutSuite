@@ -62,3 +62,6 @@ oss2>=2.8.0
 
 # Oracle Cloud Infrastructure Provider
 oci>=2.2.4
+
+# Outscale API
+https://github.com/outscale/osc-sdk-python/releases/download/0.9.15/osc_sdk_python-0.9.15-py3-none-any.whl

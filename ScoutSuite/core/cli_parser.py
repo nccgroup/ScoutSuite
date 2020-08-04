@@ -23,12 +23,12 @@ class ScoutSuiteArgumentParser:
                                                      dest="provider")
 
         self._init_common_args_parser()
-
         self._init_aws_parser()
         self._init_gcp_parser()
         self._init_azure_parser()
         self._init_aliyun_parser()
         self._init_oci_parser()
+        self._init_osc_parser()
 
     def _init_aws_parser(self):
         parser = self.subparsers.add_parser("aws",
@@ -371,6 +371,26 @@ class ScoutSuiteArgumentParser:
                             type=int,
                             default=8000,
                             help="[EXPERIMENTAL FEATURE] Port on which you want the server to listen. Defaults to 8000.")
+
+    def _init_osc_parser(self):
+        parser = self.subparsers.add_parser("osc",
+                                            parents=[self.common_providers_args_parser],
+                                            help="Run Scout against an Outsccale account")
+
+        osc_parser = parser.add_argument_group('Authentication modes')
+
+        osc_parser.add_argument('-p',
+                                    '--profile',
+                                    dest='profile',
+                                    default=None,
+                                    help='Run with a named profile')
+
+        osc_parser.add_argument('--access',
+                                dest='access',
+                                nargs='+',
+                                default=None,
+                                help='Run with access keys')
+
 
     def parse_args(self, args=None):
         args = self.parser.parse_args(args)

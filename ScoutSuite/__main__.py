@@ -53,6 +53,8 @@ def run_from_cli():
                    organization_id=args.get('organization_id'), all_projects=args.get('all_projects'),
                    # Aliyun
                    access_key_id=args.get('access_key_id'), access_key_secret=args.get('access_key_secret'),
+                   # Outscale
+                   access=args.get('access'),
                    # General
                    report_name=args.get('report_name'), report_dir=args.get('report_dir'),
                    timestamp=args.get('timestamp'),
@@ -99,6 +101,8 @@ def run(provider,
         project_id=None, folder_id=None, organization_id=None, all_projects=False,
         # Aliyun
         access_key_id=None, access_key_secret=None,
+        # Outscale
+        access=None,
         # General
         report_name=None, report_dir=None,
         timestamp=False,
@@ -151,6 +155,8 @@ async def _run(provider,
                project_id, folder_id, organization_id, all_projects,
                # Aliyun
                access_key_id, access_key_secret,
+               # Outscale
+               access,
                # General
                report_name, report_dir,
                timestamp,
@@ -198,6 +204,7 @@ async def _run(provider,
                                                  client_secret=client_secret,
                                                  username=username,
                                                  password=password,
+                                                 access=access,
                                                  access_key_id=access_key_id,
                                                  access_key_secret=access_key_secret)
 

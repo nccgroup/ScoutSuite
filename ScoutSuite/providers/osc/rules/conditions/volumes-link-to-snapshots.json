@@ -1,0 +1,10 @@
+{
+    "conditions": [ "and",
+        [ "or",
+            [ "api.regions.id.snapshots.id.rules.id.volumes.id.volume.id", "equal", "NO VOLUME" ],
+            [ "api.regions.id.snapshots.id.rules.id.volumes.id", "equal", "EMPTY" ]
+
+        ],
+        [ "api.regions.id.snapshots.id.rules.id", "equal", "ingress"]
+    ]
+}
