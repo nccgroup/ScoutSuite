@@ -358,7 +358,7 @@
                 "level": "danger"
             }
         ],
-         "elbv2-http-request-smuggling.json": [
+        "elbv2-http-request-smuggling.json": [
             {
                 "enabled": true,
                 "level": "danger"
@@ -537,13 +537,13 @@
                 "level": "danger"
             }
         ],
-        "iam-managed-policy-allows-full-privileges.json": [
+        "iam-managed-policy-allows-NotActions.json": [
             {
                 "enabled": true,
                 "level": "danger"
             }
         ],
-        "iam-managed-policy-allows-NotActions.json": [
+        "iam-managed-policy-allows-full-privileges.json": [
             {
                 "enabled": true,
                 "level": "danger"
