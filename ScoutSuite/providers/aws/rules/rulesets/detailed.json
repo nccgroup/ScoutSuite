@@ -31,7 +31,7 @@
         "cloudtrail-no-cloudwatch-integration.json": [
             {
                 "enabled": true,
-                "level": "danger"
+                "level": "warning"
             }
         ],
         "cloudtrail-no-data-logging.json": [
@@ -630,7 +630,7 @@
         "iam-password-policy-minimum-length.json": [
             {
                 "args": [
-                    "8"
+                    "14"
                 ],
                 "enabled": true,
                 "level": "danger"
@@ -788,6 +788,14 @@
                 ],
                 "enabled": true,
                 "level": "warning"
+            },
+            {
+                "args": [
+                    "managed",
+                    "policies"
+                ],
+                "enabled": true,
+                "level": "danger",
             }
         ],
         "iam-user-without-mfa.json": [
