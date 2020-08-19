@@ -147,7 +147,6 @@ var loadAccountId = function () {
 function loadConfig(scriptId, cols, force) {
     if (!force && !scriptId.endsWith('.external_attack_surface')) {
         console.log('Script ID: ' + scriptId);
-        // console.log(loadedConfigArray);
         // Abort if data was previously loaded
         if (loadedConfigArray.indexOf(scriptId) > -1 ) {
             // When the path does not contain .id.
@@ -241,6 +240,9 @@ function processTemplate(id1, containerId, list, replace) {
  */
 function hideAll() {
     $("[id*='.list']").not("[id*='metadata.list']").not("[id='regions.list']").not("[id*='filters.list']").hide()
+    // Add special case excluded by above selector
+    $("[id*='metric_filters.list']").hide()
+
     $("[id*='.details']").hide()
     var element = document.getElementById('scout_display_account_id_on_all_pages')
     if ((element !== undefined) && (element.checked === true)) {
@@ -350,10 +352,10 @@ function showRowWithItems(path) {
  */
 function showFilters(resourcePath) {
     hideFilters()
-    let service = resourcePath.split('.')[1]
     // Show service filters
     $('[id="' + resourcePath + '.id.filters"]').show()
     // show region filters
+    let service = resourcePath.split('.')[1]
     $('[id*="regionfilters.' + service + '.regions"]').show()
 }
 
