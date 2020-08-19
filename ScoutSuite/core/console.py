@@ -1,4 +1,5 @@
 import logging
+import platform
 import os
 import sys
 import traceback
@@ -31,8 +32,18 @@ def set_logger_configuration(is_debug=False, quiet=False, output_file_path=None)
         coloredlogs.install(level='DEBUG' if is_debug else 'INFO', logger=logger)
 
     if output_file_path:
+        # For some reason, hostname information is not passed to the FileHandler
+        # Add it using a filter
+        class HostnameFilter(logging.Filter):
+            hostname = platform.node()
+
+            def filter(self, record):
+                record.hostname = HostnameFilter.hostname
+                return True
         # create file handler which logs messages
         fh = logging.FileHandler(output_file_path, 'w+')
+        # Add filter to add hostname information
+        fh.addFilter(HostnameFilter())
         # create formatter and add it to the handlers
         formatter = logging.Formatter(fmt='%(asctime)s %(hostname)s %(name)s[%(process)d] %(levelname)s %(message)s',
                                       datefmt='%Y-%m-%d %H:%M:%S')
