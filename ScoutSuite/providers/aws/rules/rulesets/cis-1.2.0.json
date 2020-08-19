@@ -260,12 +260,10 @@
                 "scored": true
             }
         ],
-        "kms-key-rotation-disabled.json": [
+        "kms-cmk-rotation-disabled.json": [
             {
-                "comment": "Recommendation 2.8",
                 "enabled": true,
-                "level": "danger",
-                "scored": true
+                "level": "warning"
             }
         ],
         "logs-no-alarm-aws-configuration-changes.json": [

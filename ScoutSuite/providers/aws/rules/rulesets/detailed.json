@@ -804,10 +804,10 @@
                 "level": "danger"
             }
         ],
-        "kms-key-rotation-disabled.json": [
+        "kms-cmk-rotation-disabled.json": [
             {
                 "enabled": true,
-                "level": "danger"
+                "level": "warning"
             }
         ],
         "logs-no-alarm-aws-configuration-changes.json": [
