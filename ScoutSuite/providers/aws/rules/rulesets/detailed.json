@@ -795,7 +795,7 @@
                     "policies"
                 ],
                 "enabled": true,
-                "level": "danger",
+                "level": "danger"
             }
         ],
         "iam-user-without-mfa.json": [
