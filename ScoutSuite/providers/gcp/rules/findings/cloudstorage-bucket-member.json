@@ -19,7 +19,7 @@
     "conditions": [
         "or",
         [
-            "cloudstorage.projects.id.buckets.id.acl_configuration",
+            "cloudstorage.projects.id.buckets.id.member_bindings",
             "withKey",
             "_ARG_0_"
         ],
