@@ -38,4 +38,9 @@ echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ ${CLI_REP
 # install the software
 apt-get update && apt-get install -y azure-cli
 
-echo -e "\n\nAzure CLI Installation Complete!\n\n"
+# curl -sL https://aka.ms/InstallAzureCLIDeb | bash
+
+echo -e "\n"
+az --version
+
+echo -e "Azure CLI Installation Complete!\n\n"

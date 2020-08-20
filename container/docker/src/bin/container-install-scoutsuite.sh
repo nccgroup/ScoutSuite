@@ -15,8 +15,9 @@ TMPDIR=/tmp
 # install ScoutSuite
 # =====================================
 cd ${WORKDIR}
-virtualenv -p python3 scoutsuite
-source ${WORKDIR}/scoutsuite/bin/activate
 pip install scoutsuite
 
-echo -e "\n\nScoutsuite Installation Complete!\n\n"
+echo -e "\n"
+scout --version
+
+echo -e "Scoutsuite Installation Complete!\n\n"

@@ -24,4 +24,7 @@ curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /
 apt-get update && apt-get install -y google-cloud-sdk google-cloud-sdk-app-engine-python google-cloud-sdk-app-engine-python-extras
 
 # let folks know the install is done
-echo -e "\n\ngCloud SDK Installation Complete!\n\n"
+echo -e "\n"
+gcloud --version
+
+echo -e "gCloud SDK Installation Complete!\n\n"

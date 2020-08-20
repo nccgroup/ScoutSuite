@@ -6,8 +6,6 @@
 # AUTHOR: jason.ross@nccgroup.com
 # VERSION: 0.1.0
 # =====================================
-export DEBIAN_FRONTEND=noninteractive
-
 WORKDIR=/root
 TMPDIR=/tmp
 AWSDIR=/root/.aws
@@ -18,8 +16,8 @@ echo -e "\n\nAWS2 CLI Installation Starting...\n\n"
 # install AWS CLI v2
 # =====================================
 cd ${TMPDIR}
-curl "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip -q awscliv2.zip
 ./aws/install --update
 
 # =====================================
@@ -47,4 +45,8 @@ if [ ! -d ${AWSDIR} ]; then
 EOF
 fi
 
-echo -e "\n\nAWS2 CLI Installation Complete!\n\n"
+# check that aws was installed successfully
+echo -e "\n"
+aws --version
+
+echo -e "AWS2 CLI Installation Complete!\n\n"
