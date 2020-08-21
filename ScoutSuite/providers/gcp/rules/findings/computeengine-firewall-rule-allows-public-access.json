@@ -25,5 +25,6 @@
             "containAtLeastOneOf",
             "0.0.0.0/0"
         ]
-    ]
+    ],
+    "id_suffix": "source_ranges"
 }

@@ -31,5 +31,6 @@
             "notEqual",
             "0-65535"
         ]
-    ]
+    ],
+    "id_suffix": "permissive_ports"
 }
