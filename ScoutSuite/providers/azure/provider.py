@@ -39,8 +39,6 @@ class AzureProvider(BaseProvider):
         try:
             self.account_id = self.credentials.get_tenant_id()
         except Exception as e:
-            print_exception('CANT FIND TENANT ID')
-            print(self.credentials)
             self.account_id = 'undefined'
 
         self.services = AzureServicesConfig(self.credentials,
