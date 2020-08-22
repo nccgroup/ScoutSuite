@@ -92,6 +92,7 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             # Set logging level to error for libraries as otherwise generates a lot of warnings
             logging.getLogger('adal-python').setLevel(logging.ERROR)
             logging.getLogger('msrest').setLevel(logging.ERROR)
+            logging.getLogger('msrestazure.azure_active_directory').setLevel(logging.ERROR)
             logging.getLogger('urllib3').setLevel(logging.ERROR)
             logging.getLogger('cli.azure.cli.core').setLevel(logging.ERROR)
 
