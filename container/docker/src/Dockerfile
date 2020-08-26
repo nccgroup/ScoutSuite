@@ -1,4 +1,4 @@
-FROM python:latest
+FROM python:3.8
 
 LABEL maintainer="Jason Ross <jason.ross@nccgroup.com>"
 
@@ -24,6 +24,9 @@ LABEL \
 # Copy helper scripts to container
 COPY ./bin /root/bin
 
+# Install any additional software
+RUN ["/bin/bash", "-c", "/root/bin/container-install-additional.sh"]
+
 # Set a nice message
 RUN ["/bin/bash", "-c", "/root/bin/container-set-motd.sh"]
 
@@ -39,5 +42,8 @@ RUN ["/bin/bash", "-c", "/root/bin/container-install-gcp.sh"]
 # Install ScoutSuite
 RUN ["/bin/bash", "-c", "/root/bin/container-install-scoutsuite.sh"]
 
-# Entrypoint
+# Remove scripts
+RUN ["rm", "-rf", "/root/bin"]
+
+# Command
 CMD ["/bin/bash"]
