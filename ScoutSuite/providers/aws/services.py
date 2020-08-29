@@ -47,6 +47,10 @@ try:
     from ScoutSuite.providers.aws.resources.private_eks.base import EKS
 except ImportError:
     pass
+try:
+    from ScoutSuite.providers.aws.resources.private_guardduty.base import GuardDuty
+except ImportError:
+    pass
 
 
 class AWSServicesConfig(BaseServicesConfig):
@@ -61,6 +65,7 @@ class AWSServicesConfig(BaseServicesConfig):
     :ivar ecs:                          ECS configuration
     :ivar ecr:                          ECR configuration
     :ivar eks:                          EKS configuration
+    :ivar guarduty:                     GuardDuty configuration
     :ivar iam:                          IAM configuration
     :ivar kms:                          KMS configuration
     :ivar rds:                          RDS configuration
@@ -122,6 +127,10 @@ class AWSServicesConfig(BaseServicesConfig):
             pass
         try:
             self.eks = EKS(facade)
+        except NameError as _:
+            pass
+        try:
+            self.guardduty = GuardDuty(facade)
         except NameError as _:
             pass
 

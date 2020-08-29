@@ -24,6 +24,7 @@ formatted_service_name = {
     'elbv2': 'ELBv2',
     'eks': 'EKS',
     'elasticache': 'ElastiCache',
+    'guardduty': 'GuardDuty',
     'lambda': 'Lambda',
     'awslambda': 'Lambda',
     'redshift': 'RedShift',

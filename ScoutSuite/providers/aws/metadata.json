@@ -399,6 +399,13 @@
                 }
             }
         },
+        "guardduty": {
+            "resources": {
+                "detectors": {
+                    "path": "services.guardduty.regions.id.detectors"
+                }
+            }
+        },
         "kms": {
             "resources": {
                 "keys": {
