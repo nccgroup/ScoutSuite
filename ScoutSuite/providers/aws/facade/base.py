@@ -286,6 +286,6 @@ class AWSFacade(AWSBaseFacade):
         except NameError:
             pass
         try:
-            self.guardduty = GuardDuty(self.session)
+            self.guardduty = GuardDutyFacade(self.session)
         except NameError:
             pass
