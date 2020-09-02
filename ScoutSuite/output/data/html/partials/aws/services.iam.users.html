@@ -7,6 +7,12 @@
     <div class="list-group-item">
       <h4 class="list-group-item-heading">Information</h4>
       <div class="list-group-item-text item-margin">Creation date: {{CreateDate}}</div>
+      <p class="list-group-item-text item-margin">Tags: </p>
+      <ul class="item-margin">
+        {{#each Tags}}
+        <li class="list-group-item-text">{{Key}} - {{Value}}</span></li>
+        {{/each}}
+      </ul>
     </div>
     <div class="list-group-item">
       <h4 class="list-group-item-heading">Authentication methods</h4>
