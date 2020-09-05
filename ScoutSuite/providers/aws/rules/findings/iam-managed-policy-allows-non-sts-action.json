@@ -31,6 +31,5 @@
     "arg_names": [
         "Service",
         "Action"
-    ],
-    "id_suffix": "managed_non_sts"
+    ]
 }

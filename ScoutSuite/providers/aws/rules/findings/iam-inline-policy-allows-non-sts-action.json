@@ -33,6 +33,5 @@
         "IAM entity type",
         "Service",
         "Action"
-    ],
-    "id_suffix": "inline_non_sts"
+    ]
 }
