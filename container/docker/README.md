@@ -1,11 +1,4 @@
-# NCC-ScoutSuite
-
-[![Docker build status](https://img.shields.io/docker/cloud/build/rossja/ncc-scoutsuite)]( https://img.shields.io/docker/cloud/build/rossja/ncc-scoutsuite)
-[![](https://images.microbadger.com/badges/image/rossja/ncc-scoutsuite.svg)](https://microbadger.com/images/rossja/ncc-scoutsuite) 
-[![](https://images.microbadger.com/badges/version/rossja/ncc-scoutsuite.svg)](https://microbadger.com/images/rossja/ncc-scoutsuite) 
-[![Docker Pulls](https://img.shields.io/docker/pulls/rossja/ncc-scoutsuite.svg?style=flat-square)](https://hub.docker.com/r/rossja/ncc-scoutsuite/)
-[![Docker Hub](https://img.shields.io/badge/Docker%20Hub-rossja%2Fncc--scoutsuite-blue)](https://hub.docker.com/r/rossja/ncc-scoutsuite/)
-
+# Docker Image
 
 ## Quick Links
 
@@ -20,7 +13,7 @@
 
 ## Overview
 
-This image is an Ubuntu based container that comes with all pre-requisite software required to run ScoutSuite. It's based on the Ubuntu 20.04 docker base. The current version of ScoutSuite installed in the [DockerHub image](https://hub.docker.com/r/rossja/ncc-scoutsuite) is: `Scout Suite 5.8.1`
+This image is an Ubuntu based container that comes with all pre-requisite software required to run ScoutSuite. It's based on the Ubuntu 20.04 docker base. 
 
 The following CLI tools are also installed:
 
@@ -61,7 +54,6 @@ gsutil 4.50
 kubectl 2020.05.01
 ~~~
 
-
 ----
 
 <a name="running-thecontainer" href="#"></a>
@@ -72,10 +64,10 @@ There are two ways to run the ScoutSuite Docker image:
 
 1. Grab the image from DockerHub and run it: `docker run -it rossja/ncc-scoutsuite bash`
 1. Build the container from this source:
-  1. Clone the [ScoutSuite GitHub Repo](https://github.com/nccgroup/ScoutSuite)
-  1. Change to the `ScoutSuite/container/docker` directory
-  1. Run `docker-compose up --build` to create the container
-  1. Run ScoutSuite in the container using `docker run -it scoutsuite bash`.
+   1. Clone the [ScoutSuite GitHub Repo](https://github.com/nccgroup/ScoutSuite)
+   1. Change to the `ScoutSuite/container/docker` directory
+   1. Run `docker-compose up --build` to create the container
+   1. Run ScoutSuite in the container using `docker run -it scoutsuite bash`.
 
 ----
 
@@ -98,7 +90,6 @@ root@1350ede02c47:~# source scoutsuite/bin/activate
 
 * Since this is a container, there's no GUI, and no browser, so passing the `--no-browser` probably makes sense. 
 * Likewise, setting a specific report directory using something like `--report-dir /root/scout-report` is a good idea. *(The default location is `$HOME/scoutsuite-report`)*
-
 
 ----
 
@@ -140,7 +131,6 @@ scout aws --profile scout-user01 --no-browser --report-dir /root/scout-report
 2020-01-03 17:46:16 460837197ae9 scout[7087] INFO Saving data to /root/scout-report/scoutsuite-results/scoutsuite_exceptions_aws-scout-user01.js
 2020-01-03 17:46:16 460837197ae9 scout[7087] INFO Creating /root/scout-report/aws-scout-user01.html
 ~~~
-
 
 ----
 
@@ -188,16 +178,17 @@ You can shortcut this process by simply combining the `docker ps` command with t
 docker cp $(docker ps -f ancestor=rossja/ncc-scoutsuite --format "{{.ID}}"):/root/scout-report ./
 ~~~
 
-
 ----
 
 
 ## Viewing the Output File
 
 The report itself can be viewed using a web browser, by opening the file `./scout-report/aws-<profile>.html`. 
+
 For example, if you ran the scout tool against AWS using the profile `scout-user01`, the report HTML file is at `./scout-report/aws-scout-01.html`. 
 
 **NOTES**: 
 
 **AWS**: If you used the default AWS profile credentials, the profile name is the numerical ID portion of the ARN for the user, rather than a specific profile or user name.
+
 **GCP**: The scout report will be named using the project ID that was passed in.
