@@ -99,6 +99,7 @@ class IAMFacade(AWSBaseFacade):
         await get_and_set_concurrently(
             [functools.partial(self._get_and_set_inline_policies, iam_resource_type='user'),
              self._get_and_set_user_groups,
+             self._get_and_set_user_tags,
              self._get_and_set_user_login_profile,
              self._get_and_set_user_access_keys,
              self._get_and_set_user_mfa_devices],
@@ -123,6 +124,10 @@ class IAMFacade(AWSBaseFacade):
         groups = await AWSFacadeUtils.get_all_pages(
             'iam', None, self.session, 'list_groups_for_user', 'Groups', UserName=user['UserName'])
         user['groups'] = [group['GroupName'] for group in groups]
+
+    async def _get_and_set_user_tags(self, user: {}):
+        client = AWSFacadeUtils.get_client('iam', self.session)
+        user['tags'] = client.list_user_tags(UserName=user['UserName'])
 
     async def get_roles(self):
         roles = await AWSFacadeUtils.get_all_pages('iam', None, self.session, 'list_roles', 'Roles')
