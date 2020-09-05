@@ -19,7 +19,7 @@ class CloudFormation(AWSBaseFacade):
         else:
             stacks = [stack for stack in stacks if not CloudFormation._is_stack_deleted(stack)]
             await get_and_set_concurrently(
-                [self._get_and_set_description, self._get_and_set_template, self._get_and_set_policy],
+                [self._get_and_set_description, self._get_and_set_template, self._get_and_set_policy, self._get_stack_notifications],
                 stacks, region=region)
         finally:
             return stacks
@@ -53,6 +53,17 @@ class CloudFormation(AWSBaseFacade):
         else:
             if 'StackPolicyBody' in stack_policy:
                 stack['policy'] = json.loads(stack_policy['StackPolicyBody'])
+
+    async def _get_stack_notifications(self, stack: {}, region: str):
+        client = AWSFacadeUtils.get_client('cloudformation', self.session, region)
+        try:
+            stack_notifications = await run_concurrently(
+                lambda: client.describe_stacks(StackName=stack['StackName'])['Stacks'])
+        except Exception as e:
+            print_exception(f'Failed to describe CloudFormation stack: {e}')
+        else:
+            if 'NotificationARNs' in stack_notifications:
+                stack['NotificationARNs'] = stack_notifications['NotificationARNs']
 
     @staticmethod
     def _is_stack_deleted(stack):

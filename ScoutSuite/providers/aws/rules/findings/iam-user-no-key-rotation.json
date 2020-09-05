@@ -1,8 +1,26 @@
 {
-    "description": "Lack of Key Rotation (_ARG_0_)",
-    "rationale": "In case of access key compromise, the lack of credential rotation increases the period during which an attacker has access to the AWS account",
+    "description": "Lack of Key Rotation for (_ARG_0_) Days",
+    "rationale": "In case of access key compromise, the lack of credential rotation increases the period during which an attacker has access to the AWS account.",
+    "remediation": "Rotate access keys that have not been changed recently",
+    "compliance": [
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.0.0",
+            "reference": "1.4"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.1.0",
+            "reference": "1.4"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.2.0",
+            "reference": "1.4"
+        }
+    ],
     "references": [
-        "https://aws.amazon.com/blogs/security/how-to-rotate-access-keys-for-iam-users/"
+        "https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#rotate-credentials"
     ],
     "dashboard_name": "Access keys",
     "display_path": "iam.users.id",

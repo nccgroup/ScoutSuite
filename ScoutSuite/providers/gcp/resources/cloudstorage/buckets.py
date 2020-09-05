@@ -49,18 +49,19 @@ class Buckets(Resources):
                 print_exception(f'Failed to retrieve storage bucket object ACLs: {e}')
                 bucket_dict['default_object_acl'] = []
 
-        bucket_dict['acl_configuration'] = self._get_cloudstorage_bucket_acl(raw_bucket)  # FIXME this should be "IAM"
+        bucket_dict['member_bindings'] = self._get_cloudstorage_bucket_iam_member_bindings(raw_bucket)
+
         return bucket_dict['id'], bucket_dict
 
-    def _get_cloudstorage_bucket_acl(self, raw_bucket):
-        bucket_acls = raw_bucket.iam_policy
-        acl_config = {}
-        if bucket_acls:
-            for role in bucket_acls._bindings:
-                if 'legacy' not in role:
-                    for member in bucket_acls[role]:
-                        if member not in acl_config:
-                            acl_config[member] = [role]
+    def _get_cloudstorage_bucket_iam_member_bindings(self, raw_bucket):
+        bucket_iam_policy = raw_bucket.iam_policy
+        member_bindings = {}
+        if bucket_iam_policy:
+            for binding in bucket_iam_policy._bindings:
+                if 'legacy' not in binding['role']:
+                    for member in binding['members']:
+                        if member not in member_bindings:
+                            member_bindings[member] = [binding['role']]
                         else:
-                            acl_config[member].append(role)
-        return acl_config
+                            member_bindings[member].append(binding['role'])
+        return member_bindings

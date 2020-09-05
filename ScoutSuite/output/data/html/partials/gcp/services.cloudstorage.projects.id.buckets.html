@@ -18,7 +18,7 @@
         <h4 class="list-group-item-heading"><span id="cloudstorage.projects.{{@../key}}.buckets.{{@key}}.permissions">IAM Permissions</span></h4>
         <div class="accordion-inner">
             <ul>
-                {{#each acl_configuration}}
+                {{#each member_bindings}}
                 <li><span id="cloudstorage.projects.{{@../../key}}.buckets.{{@../key}}.{{@key}}"><samp>{{@key}}</samp></span></li>
                 <ul>
                     {{#each this}}

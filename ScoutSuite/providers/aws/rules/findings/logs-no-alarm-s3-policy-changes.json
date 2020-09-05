@@ -1,0 +1,32 @@
+{
+    "description": "No CloudWatch Alarm for \"S3 Bucket Policy Changes\"",
+    "rationale": "There was no CloudWatch alarm to detect changes in S3 bucket policy changes. Monitoring for changes in S3 bucket policy changes may reduce the time to detect and fix permissive policies on sensitive S3 buckets.",
+    "remediation": "Enable a CloudWatch alarm to detect policy changes in S3 buckets.",
+    "compliance": [
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.0.0",
+            "reference": "3.8"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.1.0",
+            "reference": "3.8"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.2.0",
+            "reference": "3.8"
+        }
+    ],
+    "dashboard_name": "Alarms",
+    "path": "cloudwatch.regions.id.metric_filters.id",
+    "conditions": [
+        "or",
+        [
+            "cloudwatch.regions.id.metric_filters_pattern_checks.s3_policy_changes",
+            "false",
+            ""
+        ]
+    ]
+}

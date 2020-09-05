@@ -15,5 +15,6 @@
                 "default-allow-ssh"
             ]
         ]
-    ]
+    ],
+    "id_suffix": "name"
 }
