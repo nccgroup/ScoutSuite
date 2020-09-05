@@ -1,4 +1,4 @@
-FROM ubuntu:20.04 AS builder
+FROM python:3.8
 
 LABEL maintainer="Jason Ross <jason.ross@nccgroup.com>"
 
@@ -21,37 +21,29 @@ LABEL \
     org.label-schema.vendor=$VENDOR \
     org.label-schema.version=$VERSION
 
+# Copy helper scripts to container
 COPY ./bin /root/bin
 
-# install the software pre-reqs
-RUN ["/bin/bash", "-c","/root/bin/container-install-prereqs.sh"]
+# Install any additional software
+RUN ["/bin/bash", "-c", "/root/bin/container-install-additional.sh"]
 
-# install AWS2
-FROM builder AS aws2
-RUN ["/bin/bash", "-c", "/root/bin/container-install-aws2.sh"]
-
-# install Azure CLI
-FROM aws2 AS azure
-RUN ["/bin/bash", "-c", "/root/bin/container-install-azure.sh"]
-
-# install gCloud SDK
-FROM azure AS gcloud
-RUN ["/bin/bash", "-c", "/root/bin/container-install-gcp.sh"]
-
-# install ScoutsuiteA
-FROM gcloud AS scoutsuite
-RUN ["/bin/bash", "-c", "/root/bin/container-install-scoutsuite.sh"]
-
-# Add container security checks to make sure we're solid
-# This currently fails in the autobuild, so leaving it out for now
-# FROM scoutsuite as secscan
-# ADD https://get.aquasec.com/microscanner .
-# RUN chmod +x microscanner
-# RUN ["./microscanner NTM2NTEzM2RkYjU2"]
-
-# set up the venv and leave users with a helpful login message
-FROM scoutsuite AS final
+# Set a nice message
 RUN ["/bin/bash", "-c", "/root/bin/container-set-motd.sh"]
 
-# entrypoint
+# Install AWS CLI
+RUN ["/bin/bash", "-c", "/root/bin/container-install-aws2.sh"]
+
+# Install Azure CLI
+RUN ["/bin/bash", "-c", "/root/bin/container-install-azure.sh"]
+
+# Install gCloud SDK
+RUN ["/bin/bash", "-c", "/root/bin/container-install-gcp.sh"]
+
+# Install ScoutSuite
+RUN ["/bin/bash", "-c", "/root/bin/container-install-scoutsuite.sh"]
+
+# Remove scripts
+RUN ["rm", "-rf", "/root/bin"]
+
+# Command
 CMD ["/bin/bash"]

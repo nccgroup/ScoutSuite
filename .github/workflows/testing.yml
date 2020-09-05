@@ -46,10 +46,10 @@ jobs:
     - name: Autopep 8
       run: |
         autopep8 --diff --recursive --max-line-length=127 .
-    - name: Test with pytest and generate coverage report
+    - name: Test with pytest
       run: |
-        python -m pytest --cov=./ --cov-report=xml
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
+        python -m pytest --cov=./
+
+    - uses: codecov/codecov-action@v1
       with:
-        file: ./coverage.xml
+        file: ./.coverage
