@@ -30,7 +30,7 @@ class AADFacade:
             return await run_concurrently(lambda: self.get_client().users.get(user_id))
         except Exception as e:
             print_exception(f'Failed to retrieve user {user_id}: {e}')
-            return []
+            return None
 
     async def get_groups(self):
         try:
