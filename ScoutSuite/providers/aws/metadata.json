@@ -401,6 +401,10 @@
         },
         "guardduty": {
             "resources": {
+                "regions": {
+                    "cols": 2,
+                    "path": "services.guardduty.regions"
+                },
                 "detectors": {
                     "path": "services.guardduty.regions.id.detectors"
                 }
