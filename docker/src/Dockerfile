@@ -22,7 +22,7 @@ LABEL \
     org.label-schema.version=$VERSION
 
 # Copy helper scripts to container
-COPY ./bin /root/bin
+COPY bin /root/bin
 
 # Install any additional software
 RUN ["/bin/bash", "-c", "/root/bin/container-install-additional.sh"]

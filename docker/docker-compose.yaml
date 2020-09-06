@@ -5,10 +5,10 @@ services:
     volumes:
       - ./bin:/root/bin
     env_file:
-      - ./config/build.env
+      - config/build.env
     build:
-      context: ./src
-      dockerfile: Dockerfile
+      context: src
+      dockerfile: src/Dockerfile
       args:
         - VCS_REF
         - VCS_URL
