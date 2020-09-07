@@ -36,6 +36,16 @@
         </div>
         {{> services.iam.inline_policies resource_type = 'roles' resource_id = id}}
         {{> services.iam.policies_list resource_type = 'roles' resource_id = id}}
+        {{#if Tags}}
+        <div class="list-group-item">
+          <h4>Tags</h4>
+          <ul>
+            {{#each Tags}}
+            <li class="list-group-item-text"><samp>{{Key}}</samp>: <samp>{{Value}}</samp></li>
+            {{/each}}
+          </ul>
+        </div>
+        {{/if}}
     </script>
     <script>
       Handlebars.registerPartial("services.iam.roles", $("#services\\.iam\\.roles\\.partial").html());
