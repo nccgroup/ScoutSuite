@@ -79,6 +79,9 @@ class AWSProvider(BaseProvider):
 
         if 'ec2' in self.service_list and 'iam' in self.service_list:
             self._match_instances_and_roles()
+        
+        if 'awslambda' in self.service_list and 'iam' in self.service_list:
+            self._match_lambdas_and_roles()
 
         if 'elbv2' in self.service_list and 'ec2' in self.service_list:
             self._add_security_group_data_to_elbv2()
@@ -411,6 +414,25 @@ class AWSProvider(BaseProvider):
                             role_instances[instance_profile_id]
                         iam_config['roles'][role_id]['instances_count'] += len(
                             role_instances[instance_profile_id])
+
+    def _match_lambdas_and_roles(self):
+        if self.services.get('awslambda') and self.services.get('iam'):
+            awslambda_config = self.services['awslambda']
+            iam_config = self.services['iam']
+            awslambda_funtions = {}
+            for r in awslambda_config['regions']:
+                for lambda_function in awslambda_config['regions'][r]['functions']:
+                    awslambda_function = awslambda_config['regions'][r]['functions'][lambda_function]
+                    awslambda_function['region'] = r
+                    if awslambda_function['role_arn'] in awslambda_funtions:
+                        awslambda_funtions[awslambda_function['role_arn']][awslambda_function['name']] = awslambda_function
+                    else:
+                        awslambda_funtions[awslambda_function['role_arn']] = {awslambda_function['name']: awslambda_function}
+            for role_id in iam_config['roles']:
+                iam_config['roles'][role_id]['awslambdas_count'] = 0
+                if iam_config['roles'][role_id]['arn'] in awslambda_funtions:
+                    iam_config['roles'][role_id]['awslambdas'] = awslambda_funtions[iam_config['roles'][role_id]['arn']]
+                    iam_config['roles'][role_id]['awslambdas_count'] = len(awslambda_funtions[iam_config['roles'][role_id]['arn']])
 
     def process_vpc_peering_connections_callback(self, current_config, path, current_path, pc_id, callback_args):
 
