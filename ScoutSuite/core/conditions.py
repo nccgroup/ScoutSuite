@@ -212,6 +212,7 @@ def pass_condition(b, test, a):
 
     # Port/port ranges tests
     elif test == 'portsInPortList':
+        result = False
         if not type(b) == list:
             b = [b]
         if not type(a) == list:
@@ -224,12 +225,13 @@ def pass_condition(b, test, a):
                     if type(port) != int:
                         port = int(port)
                     if bottom_limit_port <= port <= upper_limit_port:
-                        return True
+                        result = True
+                        break
             else: #A single port
                 for port in a:
                     if port == port_range:
-                        return True
-        return False
+                        result = True
+                        break
 
     # Policy statement tests
     elif test == 'containAction':
