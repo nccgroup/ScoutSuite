@@ -36,6 +36,11 @@
             "ec2.regions.id.vpcs.id.security_groups.id.rules.id.protocols",
             "notEmpty",
             ""
+        ],
+        [
+            "ec2.regions.id.vpcs.id.security_groups.id.is_default_configuration",
+            "true",
+            ""
         ]
     ],
     "id_suffix": "default_with_rules"
