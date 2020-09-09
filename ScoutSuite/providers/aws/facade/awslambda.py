@@ -19,8 +19,10 @@ class LambdaFacade(AWSBaseFacade):
             policy = client.get_policy(FunctionName=function_name)
             if policy is not None and 'Policy' in policy:
                 return json.loads(policy['Policy'])
-        except Exception:
-            # Policy not found for this function
+        except Exception as e:
+            # If there's no policy, it will return this exception. Hence why we ignore.
+            if "ResourceNotFoundException" not in str(e):
+                print_exception('Failed to get Lambda access policy: {}'.format(e))
             return None
 
     async def get_role_with_managed_policies(self, role_name):
@@ -37,7 +39,8 @@ class LambdaFacade(AWSBaseFacade):
                         policy['Document'] = document['PolicyVersion']['Document']
             role['policies'] = managed_policies
             return role
-        except Exception:
+        except Exception as e:
+            print_exception('Failed to get role from managed policies: {}'.format(e))
             return None
 
 
