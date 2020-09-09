@@ -45,6 +45,12 @@ class EC2Instances(AWSResources):
 
         instance['metadata_options'] = raw_instance['MetadataOptions']
 
+
+        if 'IamInstanceProfile' in raw_instance:
+            instance['iam_role'] = raw_instance['IamInstanceProfile']['Arn'].split('/')[-1]
+        else:
+            instance['iam_role'] = None
+
         return id, instance
 
     @staticmethod
