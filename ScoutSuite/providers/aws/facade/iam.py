@@ -139,9 +139,14 @@ class IAMFacade(AWSBaseFacade):
                 'AssumeRolePolicyDocument')
         await get_and_set_concurrently(
             [functools.partial(self._get_and_set_inline_policies, iam_resource_type='role'),
-             self._get_and_set_role_profiles], roles)
+             self._get_and_set_role_profiles,
+             self._get_and_set_role_tags], roles)
 
         return roles
+
+    async def _get_and_set_role_tags(self, role: {}):
+        client = AWSFacadeUtils.get_client('iam', self.session)
+        role['tags'] = client.list_role_tags(RoleName=role['RoleName'])
 
     async def _get_and_set_role_profiles(self, role: {}):
         profiles = await AWSFacadeUtils.get_all_pages(
