@@ -19,7 +19,7 @@
             "reference": "2.3"
         }
     ],
-    "dashboard_name": "Buckets",
+    "dashboard_name": "Bucket Policy Statements",
     "display_path": "s3.buckets.id",
     "path": "s3.buckets.id.policy.Statement.id",
     "conditions": [
