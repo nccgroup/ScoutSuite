@@ -1208,6 +1208,8 @@ function makeTitle(title) {
         return 'DocumentDB'
     } else if (title === 'dynamodb') {
         return 'DynamoDB'
+    } else if (title === 'guardduty') {
+        return 'GuardDuty'
     } else if (title === 'secretsmanager') {
         return 'Secrets Manager'
     } else if (title === 'elasticache') {

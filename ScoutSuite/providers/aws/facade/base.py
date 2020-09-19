@@ -51,6 +51,10 @@ try:
     from ScoutSuite.providers.aws.facade.eks_private import EKSFacade
 except ImportError:
     pass
+try:
+    from ScoutSuite.providers.aws.facade.guardduty_private import GuardDutyFacade
+except ImportError:
+    pass
 
 
 class AWSFacade(AWSBaseFacade):
@@ -279,5 +283,9 @@ class AWSFacade(AWSBaseFacade):
             pass
         try:
             self.eks = EKSFacade(self.session)
+        except NameError:
+            pass
+        try:
+            self.guardduty = GuardDutyFacade(self.session)
         except NameError:
             pass
