@@ -35,6 +35,11 @@
             "ec2.regions.id.vpcs.id.security_groups.id.",
             "withKey",
             "used_by"
+        ],
+        [
+            "ec2.regions.id.vpcs.id.security_groups.id.is_default_configuration",
+            "true",
+            ""
         ]
     ],
     "id_suffix": "default_in_use"
