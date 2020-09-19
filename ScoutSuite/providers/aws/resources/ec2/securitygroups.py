@@ -42,10 +42,9 @@ class SecurityGroups(AWSResources):
         security_group['rules']['egress']['protocols'] = egress_protocols
         security_group['rules']['egress']['count'] = egress_rules_count
 
-        if self._has_default_egress_rule(raw_security_group['IpPermissionsEgress']) and self._has_default_ingress_rule(raw_security_group['IpPermissions'], raw_security_group['GroupId']):
-            security_group['is_default_configuration'] = True
-        else:
-            security_group['is_default_configuration'] = False
+        security_group['is_default_configuration'] = \
+            self._has_default_egress_rule(raw_security_group['IpPermissionsEgress']) and \
+            self._has_default_ingress_rule(raw_security_group['IpPermissions'], raw_security_group['GroupId'])
 
         return security_group['id'], security_group
 
