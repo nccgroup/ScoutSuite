@@ -43,7 +43,7 @@ azure-mgmt-security==0.4.1
 azure-mgmt-keyvault==1.1.0
 azure-mgmt-network==2.5.1
 azure-mgmt-redis==6.0.0
-azure-mgmt-web==0.41.0
+azure-mgmt-web==0.47.0
 azure-mgmt-compute==5.0.0
 azure-mgmt-authorization==0.60.0
 
