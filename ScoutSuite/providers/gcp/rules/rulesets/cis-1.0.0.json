@@ -145,6 +145,12 @@
                 "level": "warning"
             }
         ],
+        "kubernetesengine-cluster-pod-security-policy-config-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "kubernetesengine-node-auto-upgrade-disabled.json": [
             {
                 "enabled": true,
