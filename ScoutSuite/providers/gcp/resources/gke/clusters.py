@@ -40,15 +40,23 @@ class Clusters(Resources):
         cluster_dict['private_ip_google_access_enabled'] = raw_cluster.get('privateIpGoogleAccess', False)
         cluster_dict['scopes'] = self._get_scopes(raw_cluster)
         cluster_dict['service_account'] = raw_cluster.get('nodeConfig', {}).get('serviceAccount', None)
-        cluster_dict['master_authorized_networks_config'] = self._get_master_authorized_netowrks_config(raw_cluster)
+        cluster_dict['master_authorized_networks_config'] = self._get_master_authorized_networks_config(raw_cluster)
         return cluster_dict['id'], cluster_dict
 
 
-    def _get_master_authorized_netowrks_config(self, raw_cluster):
+    def _get_master_authorized_networks_config(self, raw_cluster):
         if raw_cluster.get('masterAuthorizedNetworksConfig'):
-            return raw_cluster.get('masterAuthorizedNetworksConfig')
+            config = raw_cluster.get('masterAuthorizedNetworksConfig')
+            config['includes_public_cidr'] = False
+            for block in config['cidrBlocks']:
+                if block['cidrBlock'] == '0.0.0.0/0':
+                    config['includes_public_cidr'] = True
+            return config
         else:
-            return {'enabled': False, 'cidrBlocks': []}
+            return {'enabled': False,
+                    'cidrBlocks': [],
+                    'includes_public_cidr': False
+                    }
 
     def _is_pod_security_policy_enabled(self, raw_cluster):
         if 'podSecurityPolicyConfig' in raw_cluster:

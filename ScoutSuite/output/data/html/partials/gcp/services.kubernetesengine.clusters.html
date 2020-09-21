@@ -17,7 +17,7 @@
         <div class="list-group-item-text item-margin">Master Authorized Networks: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.master_authorized_networks_disabled">{{convert_bool_to_enabled master_authorized_networks_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Pod Security Policy: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.pod_security_policy_enabled">{{convert_bool_to_enabled pod_security_policy_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Network Policy: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.network_policy_disabled">{{convert_bool_to_enabled network_policy_enabled}}</span></div>
-        <div class="list-group-item-text item-margin">Private Cluster: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.private_cluster_disabled">{{convert_bool_to_enabled private_cluster_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Private Cluster: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.private_cluster_disabled" class="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.accessible_cluster">{{convert_bool_to_enabled private_cluster_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Private Google Access: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.private_ip_google_access_disabled">{{convert_bool_to_enabled private_ip_google_access_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Service Account: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.default_service_account_used">{{service_account}}</span></div>
         <div class="list-group-item-text item-margin">Stackdriver Logging: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.logging_disabled">{{convert_bool_to_enabled logging_enabled}}</span></div>
@@ -39,7 +39,7 @@
     </div>
 
     <div class="list-group-item">
-        <h4 class="list-group-item-heading">Master Authorized Networks</h4>
+        <h4 class="list-group-item-heading"><span class="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.accessible_cluster">Master Authorized Networks</span></h4>
         <div class="list-group-item-text item-margin">Status: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.authorized_networks_status">{{convert_bool_to_enabled master_authorized_networks_config.enabled}}</span></div>
         <div class="list-group-item-text item-margin"><span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.authorized_networks_cidr_blocks">CIDR Blocks</span>:
             {{#if master_authorized_networks_config.cidrBlocks}}
