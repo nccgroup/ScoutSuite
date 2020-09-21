@@ -1,6 +1,6 @@
 from ScoutSuite.providers.base.resources.base import Resources
 from ScoutSuite.providers.gcp.facade.base import GCPFacade
-from ScoutSuite.providers.gcp.resources.private_gke.node_pools import NodePools
+from ScoutSuite.providers.gcp.resources.gke.node_pools import NodePools
 from ScoutSuite.providers.utils import get_non_provider_id
 
 

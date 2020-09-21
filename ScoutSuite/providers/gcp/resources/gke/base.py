@@ -1,4 +1,4 @@
-from ScoutSuite.providers.gcp.resources.private_gke.zones import GKEZones
+from ScoutSuite.providers.gcp.resources.gke.zones import GKEZones
 from ScoutSuite.providers.gcp.resources.projects import Projects
 
 
