@@ -1,6 +1,6 @@
 import datetime
 
-from azure.mgmt.monitor import MonitorManagementClient
+from azure.mgmt.monitor import MonitorClient
 from azure.mgmt.storage import StorageManagementClient
 
 from ScoutSuite.core.console import print_exception
@@ -43,7 +43,7 @@ class StorageAccountsFacade:
             return containers
 
     async def _get_and_set_activity_logs(self, storage_account, subscription_id: str):
-        client = MonitorManagementClient(self.credentials.arm_credentials, subscription_id)
+        client = MonitorClient(self.credentials.arm_credentials, subscription_id)
 
         # Time format used by Azure API:
         time_format = "%Y-%m-%dT%H:%M:%S.%f"
