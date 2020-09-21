@@ -26,14 +26,16 @@
             {{#if scopes}}
                 <ul>
                     {{#each scopes}}
-                    <li>{{this}}</li>
+                    <li><samp>{{this}}</samp></li>
                     {{/each}}
                 </ul>
             {{else}}
                 <span>None</span>
             {{/if}}
         </div>
+        {{#if labels}}
         <div class="list-group-item-text item-margin">Labels: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.has_no_labels">{{labels}}</span></div>
+        {{/if}}
     </div>
 
     <div class="list-group-item">
