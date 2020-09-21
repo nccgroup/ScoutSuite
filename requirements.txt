@@ -31,21 +31,21 @@ httplib2shim>=0.0.3
 
 # Azure Provider
 ## core requirements
-azure-cli-core>=2.0.55
+azure-cli-core==2.0.55
 ## for RBAC in AAD
-azure-graphrbac>=0.61.1
-adal>=0.4.7
+azure-graphrbac==0.61.1
+adal==1.2.4
 ## for resources
-azure-mgmt-storage>=7.1.0
-azure-mgmt-monitor>=0.5.2
-azure-mgmt-sql>=0.11.0
-azure-mgmt-security>=0.1.0
-azure-mgmt-keyvault>=1.1.0
-azure-mgmt-network>=2.5.1
-azure-mgmt-redis>=6.0.0
-azure-mgmt-web>=0.41.0
-azure-mgmt-compute>=5.0.0
-azure-mgmt-authorization>=0.60.0
+azure-mgmt-storage==7.1.0
+azure-mgmt-monitor==0.5.2
+azure-mgmt-sql==0.11.0
+azure-mgmt-security==0.4.1
+azure-mgmt-keyvault==1.1.0
+azure-mgmt-network==2.5.1
+azure-mgmt-redis==6.0.0
+azure-mgmt-web==0.41.0
+azure-mgmt-compute==5.0.0
+azure-mgmt-authorization==0.60.0
 
 # Aliyun / Alibaba Cloud Provider
 aliyun-python-sdk-core>=2.13.4
