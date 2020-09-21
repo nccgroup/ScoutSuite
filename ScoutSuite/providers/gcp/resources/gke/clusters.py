@@ -44,10 +44,10 @@ class Clusters(Resources):
         return cluster_dict['id'], cluster_dict
 
     def _is_basic_authentication_enabled(self, raw_cluster):
-        return raw_cluster['masterAuth'].get('username', None) != ''
+        return raw_cluster['masterAuth'].get('username', '') != ''
 
     def _is_client_certificate_enabled(self, raw_cluster):
-        return raw_cluster['masterAuth'].get('clientCertificate', None) != ''
+        return raw_cluster['masterAuth'].get('clientCertificate', '') != ''
 
     def _is_logging_enabled(self, raw_cluster):
         return raw_cluster['loggingService'] != 'none'
