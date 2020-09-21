@@ -51,8 +51,6 @@ class WebApplication(AzureResources):
         web_app_dict['client_cert_enabled'] = raw_web_app.client_cert_enabled
         web_app_dict['client_cert_exclusion_paths'] = raw_web_app.client_cert_exclusion_paths
         web_app_dict['host_names_disabled'] = raw_web_app.host_names_disabled
-        web_app_dict['outbound_ip_addresses'] = raw_web_app.outbound_ip_addresses
-        web_app_dict['possible_outbound_ip_addresses'] = raw_web_app.possible_outbound_ip_addresses
         web_app_dict['container_size'] = raw_web_app.container_size
         web_app_dict['daily_memory_time_quota'] = raw_web_app.daily_memory_time_quota
         web_app_dict['suspended_till'] = raw_web_app.suspended_till
@@ -66,6 +64,9 @@ class WebApplication(AzureResources):
         web_app_dict['in_progress_operation_id'] = raw_web_app.in_progress_operation_id
         web_app_dict['identity'] = raw_web_app.identity
         web_app_dict['additional_properties'] = raw_web_app.additional_properties
+
+        web_app_dict['outbound_ip_addresses'] = raw_web_app.outbound_ip_addresses.split(',')
+        web_app_dict['possible_outbound_ip_addresses'] = raw_web_app.possible_outbound_ip_addresses.split(',')
 
         if raw_web_app.config is not None:
             web_app_dict['minimum_tls_version_supported'] = raw_web_app.config.min_tls_version
