@@ -7,7 +7,7 @@ from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrentl
 
 class GKEFacade(GCPBaseFacade):
     def __init__(self, gce_facade):
-        super(GKEFacade, self).__init__('container', 'v1')
+        super(GKEFacade, self).__init__('container', 'v1beta1')
         self._gce_facade = gce_facade
 
     async def get_clusters(self, project_id, zone):
