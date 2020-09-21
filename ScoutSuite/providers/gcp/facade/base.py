@@ -8,14 +8,9 @@ from ScoutSuite.providers.gcp.facade.iam import IAMFacade
 from ScoutSuite.providers.gcp.facade.kms import KMSFacade
 from ScoutSuite.providers.gcp.facade.stackdriverlogging import StackdriverLoggingFacade
 from ScoutSuite.providers.gcp.facade.stackdrivermonitoring import StackdriverMonitoringFacade
+from ScoutSuite.providers.gcp.facade.gke import GKEFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 from ScoutSuite.utils import format_service_name
-
-# Try to import proprietary facades
-try:
-    from ScoutSuite.providers.gcp.facade.gke_private import GKEFacade
-except ImportError:
-    pass
 
 
 class GCPFacade(GCPBaseFacade):
