@@ -13,9 +13,9 @@
         <div class="list-group-item-text item-margin">Basic authentication: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.basic_authentication_enabled">{{convert_bool_to_enabled basic_authentication_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Client certificate authentication: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.client_certificate_enabled">{{convert_bool_to_enabled client_certificate_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Image type: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.container_optimized_os_not_used">{{image_type}}</span></div>
-        <div class="list-group-item-text item-margin">Labels: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.has_no_labels">{{labels}}</span></div>
         <div class="list-group-item-text item-margin">Legacy authorization: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.legacy_abac_enabled">{{convert_bool_to_enabled legacy_abac_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Master authorized networks: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.master_authorized_networks_disabled">{{convert_bool_to_enabled master_authorized_networks_enabled}}</span></div>
+        <div class="list-group-item-text item-margin">Pod Security Policy: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.pod_security_policy_enabled">{{convert_bool_to_enabled pod_security_policy_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Network policy: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.network_policy_disabled">{{convert_bool_to_enabled network_policy_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Private cluster: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.private_cluster_disabled">{{convert_bool_to_enabled private_cluster_enabled}}</span></div>
         <div class="list-group-item-text item-margin">Private Google access: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.private_ip_google_access_disabled">{{convert_bool_to_enabled private_ip_google_access_enabled}}</span></div>
@@ -33,6 +33,7 @@
             <span>None</span>
             {{/if}}
         </div>
+        <div class="list-group-item-text item-margin">Labels: <span id="kubernetesengine.projects.{{@../../key}}.zones.{{@../key}}.clusters.{{@key}}.has_no_labels">{{labels}}</span></div>
     </div>
 
     <div class="list-group-item">

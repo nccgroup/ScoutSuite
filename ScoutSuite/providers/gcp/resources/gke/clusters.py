@@ -24,6 +24,7 @@ class Clusters(Resources):
         cluster_dict['alias_ip_enabled'] = raw_cluster.get('ipAllocationPolicy', {}).get('useIpAliases', False)
         cluster_dict['basic_authentication_enabled'] = self._is_basic_authentication_enabled(raw_cluster)
         cluster_dict['client_certificate_enabled'] = self._is_client_certificate_enabled(raw_cluster)
+        cluster_dict['pod_security_policy_enabled'] = self._is_pod_security_policy_enabled(raw_cluster)
         cluster_dict['dashboard_status'] = self._get_dashboard_status(raw_cluster)
         cluster_dict['has_limited_scopes'] = self._has_limited_scopes(raw_cluster)
         cluster_dict['image_type'] = raw_cluster.get('nodeConfig', {}).get('imageType', None)
@@ -31,17 +32,22 @@ class Clusters(Resources):
         cluster_dict['has_labels'] = len(cluster_dict['labels']) > 0
         cluster_dict['legacy_abac_enabled'] = raw_cluster.get('legacyAbac', {}).get('enabled', False)
         cluster_dict['logging_enabled'] = self._is_logging_enabled(raw_cluster)
-        cluster_dict['master_authorized_networks_enabled'] = raw_cluster.get(
-            'masterAuthorizedNetworksConfig', {}).get('enabled', False)
+        cluster_dict['master_authorized_networks_enabled'] = raw_cluster.get('masterAuthorizedNetworksConfig', {}).get('enabled', False)
         cluster_dict['monitoring_enabled'] = self._is_monitoring_enabled(raw_cluster)
         cluster_dict['network_policy_enabled'] = raw_cluster.get('networkPolicy', {}).get('enabled', False)
         cluster_dict['node_pools'] = NodePools(raw_cluster)
-        cluster_dict['private_cluster_enabled'] = raw_cluster.get(
-            'privateClusterConfig', {}).get('enablePrivateNodes', False)
+        cluster_dict['private_cluster_enabled'] = raw_cluster.get('privateClusterConfig', {}).get('enablePrivateNodes', False)
         cluster_dict['private_ip_google_access_enabled'] = raw_cluster.get('privateIpGoogleAccess', False)
         cluster_dict['scopes'] = self._get_scopes(raw_cluster)
         cluster_dict['service_account'] = raw_cluster.get('nodeConfig', {}).get('serviceAccount', None)
         return cluster_dict['id'], cluster_dict
+
+    def _is_pod_security_policy_enabled(self, raw_cluster):
+        if 'podSecurityPolicyConfig' in raw_cluster:
+            return raw_cluster['podSecurityPolicyConfig'].get('enabled', False)
+        return False
+
+        return raw_cluster['masterAuth'].get('username', '') != ''
 
     def _is_basic_authentication_enabled(self, raw_cluster):
         return raw_cluster['masterAuth'].get('username', '') != ''
