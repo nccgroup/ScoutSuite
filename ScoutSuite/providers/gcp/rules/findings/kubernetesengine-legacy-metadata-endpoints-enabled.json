@@ -1,0 +1,28 @@
+{
+    "description": "Legacy Metadata Endpoints Enabled",
+    "rationale": "Unless your app uses the legacy metadata endpoints, you should disable them.",
+    "compliance": [
+        {
+            "name": "CIS GKE Benchmark",
+            "version": "1.0.0",
+            "reference": "6.4.1"
+        }
+    ],
+    "references": [
+        "https://www.cisecurity.org/benchmark/kubernetes/",
+        "https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#protect_node_metadata_default_for_112",
+        "https://cloud.google.com/kubernetes-engine/docs/concepts/cis-benchmarks#default_values_on"
+    ],
+    "dashboard_name": "Clusters",
+    "display_path": "kubernetesengine.projects.id.zones.id.clusters.id",
+    "path": "kubernetesengine.projects.id.zones.id.clusters.id.node_pools.id",
+    "conditions": [
+        "and",
+        [
+            "kubernetesengine.projects.id.zones.id.clusters.id.node_pools.id.legacy_metadata_endpoints_enabled",
+            "true",
+            ""
+        ]
+    ],
+    "id_suffix": "legacy_metadata_endpoints_enabled"
+}
