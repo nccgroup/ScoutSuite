@@ -37,6 +37,36 @@
                 "level": "warning"
             }
         ],
+        "appservice-outdated-http-version.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "appservice-outdated-version-dotnet.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "appservice-outdated-version-java.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "appservice-outdated-version-php.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "appservice-outdated-version-python.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "appservice-tls-v1-supported.json": [
             {
                 "enabled": true,

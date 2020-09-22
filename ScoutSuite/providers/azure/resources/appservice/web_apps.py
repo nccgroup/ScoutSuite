@@ -51,8 +51,6 @@ class WebApplication(AzureResources):
         web_app_dict['client_cert_enabled'] = raw_web_app.client_cert_enabled
         web_app_dict['client_cert_exclusion_paths'] = raw_web_app.client_cert_exclusion_paths
         web_app_dict['host_names_disabled'] = raw_web_app.host_names_disabled
-        web_app_dict['outbound_ip_addresses'] = raw_web_app.outbound_ip_addresses
-        web_app_dict['possible_outbound_ip_addresses'] = raw_web_app.possible_outbound_ip_addresses
         web_app_dict['container_size'] = raw_web_app.container_size
         web_app_dict['daily_memory_time_quota'] = raw_web_app.daily_memory_time_quota
         web_app_dict['suspended_till'] = raw_web_app.suspended_till
@@ -67,12 +65,21 @@ class WebApplication(AzureResources):
         web_app_dict['identity'] = raw_web_app.identity
         web_app_dict['additional_properties'] = raw_web_app.additional_properties
 
+        web_app_dict['outbound_ip_addresses'] = raw_web_app.outbound_ip_addresses.split(',')
+        web_app_dict['possible_outbound_ip_addresses'] = raw_web_app.possible_outbound_ip_addresses.split(',')
+
         if raw_web_app.config is not None:
             web_app_dict['minimum_tls_version_supported'] = raw_web_app.config.min_tls_version
             web_app_dict['http_2_enabled'] = raw_web_app.config.http20_enabled
+            web_app_dict['http_logging_enabled'] = raw_web_app.config.http_logging_enabled
 
-            # TODO handle this
-            if raw_web_app.config.net_framework_version:
+            if raw_web_app.config.linux_fx_version:
+                web_app_dict['programming_language'] = raw_web_app.config.linux_fx_version.split('|')[0].lower()
+                web_app_dict['programming_language_version'] = raw_web_app.config.linux_fx_version.split('|')[1]
+            elif raw_web_app.config.windows_fx_version:
+                web_app_dict['programming_language'] = raw_web_app.config.windows_fx_version.split('|')[0].lower()
+                web_app_dict['programming_language_version'] = raw_web_app.config.windows_fx_version.split('|')[1]
+            elif raw_web_app.config.net_framework_version:
                 web_app_dict['programming_language'] = 'dotnet'
                 web_app_dict['programming_language_version'] = raw_web_app.config.net_framework_version
             elif raw_web_app.config.php_version:
@@ -91,14 +98,11 @@ class WebApplication(AzureResources):
                 web_app_dict['programming_language'] = None
                 web_app_dict['programming_language_version'] = None
 
-            # TODO - write rules for this values
-            # web_app_dict[''] = raw_web_app.config.cors
-            # web_app_dict[''] = raw_web_app.config.http_logging_enabled
-            # web_app_dict[''] = raw_web_app.config.ftps_state
-            # also look at network configuration / IP security restrictions
         else:
             web_app_dict['minimum_tls_version_supported'] = None
             web_app_dict['http_2_enabled'] = None
+            web_app_dict['http_logging_enabled'] = False
+
             web_app_dict['programming_language'] = None
             web_app_dict['programming_language_version'] = None
 
