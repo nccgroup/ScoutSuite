@@ -24,7 +24,13 @@
         [
             "appservice.subscriptions.id.web_apps.id.programming_language_version",
             "containNoneOf",
-            ["8-jre8", "11-java11", "1.8", "11", "8u232"]
+            [
+                "8-jre8",
+                "11-java11",
+                "1.8",
+                "11",
+                "8u232"
+            ]
         ]
     ],
     "id_suffix": "programming_language_version"

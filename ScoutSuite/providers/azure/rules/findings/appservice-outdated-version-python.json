@@ -24,7 +24,12 @@
         [
             "appservice.subscriptions.id.web_apps.id.programming_language_version",
             "containNoneOf",
-            ["3.6", "3.7", "3.8", "3.9"]
+            [
+                "3.6",
+                "3.7",
+                "3.8",
+                "3.9"
+            ]
         ]
     ],
     "id_suffix": "programming_language_version"
