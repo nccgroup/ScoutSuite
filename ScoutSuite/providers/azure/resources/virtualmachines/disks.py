@@ -37,14 +37,6 @@ class Disks(AzureResources):
         disk_dict['disk_state'] = raw_disk.disk_state
         disk_dict['additional_properties'] = raw_disk.additional_properties
 
-        # TODO this can be removed
-        # disk_dict['encryption'] = raw_disk.encryption
-        # disk_dict['encryption_settings_collection'] = raw_disk.encryption_settings_collection
-        # if raw_disk.encryption_settings_collection and raw_disk.encryption_settings_collection.enabled:
-        #     disk_dict['encryption_enabled'] = True
-        # else:
-        #     disk_dict['encryption_enabled'] = False
-
         if raw_disk.encryption and raw_disk.encryption.type:
             disk_dict['encryption_type'] = raw_disk.encryption.type
         else:
