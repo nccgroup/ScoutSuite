@@ -1,7 +1,31 @@
 {
     "about": "This ruleset consists of numerous rules that are considered standard by NCC Group. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of provider-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configured, and some of them being applicable to a limited number of users.",
     "rules": {
+        "appservice-outdated-version-dotnet.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "aad-guest-users.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "appservice-outdated-version-python.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "appservice-outdated-version-php.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "appservice-outdated-version-java.json": [
             {
                 "enabled": true,
                 "level": "warning"

@@ -71,9 +71,18 @@ class WebApplication(AzureResources):
         if raw_web_app.config is not None:
             web_app_dict['minimum_tls_version_supported'] = raw_web_app.config.min_tls_version
             web_app_dict['http_2_enabled'] = raw_web_app.config.http20_enabled
+            # TODO - write rules for this values
+            web_app_dict['cors'] = raw_web_app.config.cors
+            web_app_dict['http_logging_enabled'] = raw_web_app.config.http_logging_enabled
+            web_app_dict['ftps_state'] = raw_web_app.config.ftps_state
 
-            # TODO handle this
-            if raw_web_app.config.net_framework_version:
+            if raw_web_app.config.linux_fx_version:
+                web_app_dict['programming_language'] = raw_web_app.config.linux_fx_version.split('|')[0].lower()
+                web_app_dict['programming_language_version'] = raw_web_app.config.linux_fx_version.split('|')[1]
+            elif raw_web_app.config.windows_fx_version:
+                web_app_dict['programming_language'] = raw_web_app.config.windows_fx_version.split('|')[0].lower()
+                web_app_dict['programming_language_version'] = raw_web_app.config.windows_fx_version.split('|')[1]
+            elif raw_web_app.config.net_framework_version:
                 web_app_dict['programming_language'] = 'dotnet'
                 web_app_dict['programming_language_version'] = raw_web_app.config.net_framework_version
             elif raw_web_app.config.php_version:
@@ -92,14 +101,10 @@ class WebApplication(AzureResources):
                 web_app_dict['programming_language'] = None
                 web_app_dict['programming_language_version'] = None
 
-            # TODO - write rules for this values
-            # web_app_dict[''] = raw_web_app.config.cors
-            # web_app_dict[''] = raw_web_app.config.http_logging_enabled
-            # web_app_dict[''] = raw_web_app.config.ftps_state
-            # also look at network configuration / IP security restrictions
         else:
             web_app_dict['minimum_tls_version_supported'] = None
             web_app_dict['http_2_enabled'] = None
+
             web_app_dict['programming_language'] = None
             web_app_dict['programming_language_version'] = None
 
