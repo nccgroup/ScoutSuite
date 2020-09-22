@@ -24,6 +24,12 @@
                 "enabled": true,
                 "level": "warning"
             }
+        ],
+        "appservice-outdated-http-version.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
         ]
     }
 }
