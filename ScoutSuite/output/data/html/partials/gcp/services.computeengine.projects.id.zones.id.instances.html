@@ -35,6 +35,23 @@
         {{/if}}
     </div>
     <div class="list-group-item">
+        <h5 class="list-group-item-heading">Network Interfaces</h5>
+        {{#if network_interfaces}}
+        <ul>
+            {{#each network_interfaces}}
+            <li><samp>{{name}}</samp></li>
+            <ul>
+                <li>IP: <samp>{{networkIP}}</samp></li>
+                <li>Network: <a href="javascript:showObject('services.computeengine.projects.{{@../../../key}}.networks.{{network_id}}')">{{getValueAt 'services.computeengine.projects' @../../../key 'networks' network_id 'name'}}</a></li>
+                <li>Subnetwork: <a href="javascript:showObject('services.computeengine.projects.{{@../../../key}}.regions.{{subnetwork_region}}.subnetworks.{{subnetwork_id}}')">{{getValueAt 'services.computeengine.projects' @../../../key 'regions' subnetwork_region 'subnetworks' subnetwork_id 'name'}}</a></li>
+            </ul>
+            {{else}}
+            <li><samp>None</samp></li>
+            {{/each}}
+        </ul>
+        {{/if}}
+    </div>
+    <div class="list-group-item">
         <h5 class="list-group-item-heading"><span id="computeengine.projects.{{@../../key}}.zones.{{@../key}}.instances.{{@key}}.identity">Identity & API Access</span></h5>
         <div class="list-group-item-text item-margin">Service Account: <span id="computeengine.projects.{{@../../key}}.zones.{{@../key}}.instances.{{@key}}.service_account"><samp>{{value_or_none service_account}}</samp></span></div>
         <div class="list-group-item-text item-margin">Access Scopes: <span id="computeengine.projects.{{@../../key}}.zones.{{@../key}}.instances.{{@key}}.access_scopes">:

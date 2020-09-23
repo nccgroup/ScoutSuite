@@ -20,9 +20,12 @@ class Subnetworks(Resources):
         subnetwork_dict['project_id'] = raw_subnetwork['selfLink'].split('/')[-5]
         subnetwork_dict['region'] = raw_subnetwork['region'].split('/')[-1]
         subnetwork_dict['name'] = "{}-{}".format(raw_subnetwork['name'], subnetwork_dict['region'])
-        subnetwork_dict['subnetwork'] = raw_subnetwork['network'].split('/')[-1]
         subnetwork_dict['gateway_address'] = raw_subnetwork['gatewayAddress']
         subnetwork_dict['ip_range'] = raw_subnetwork['ipCidrRange']
         subnetwork_dict['creation_timestamp'] = raw_subnetwork['creationTimestamp']
         subnetwork_dict['private_ip_google_access'] = raw_subnetwork['privateIpGoogleAccess']
+
+        subnetwork_dict['subnetwork_url'] = raw_subnetwork['selfLink']
+        subnetwork_dict['network_url'] = raw_subnetwork['network']
+
         return subnetwork_dict['id'], subnetwork_dict

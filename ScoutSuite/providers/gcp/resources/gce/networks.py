@@ -20,10 +20,12 @@ class Networks(Resources):
         network_dict['name'] = raw_network['name']
         network_dict['description'] = self._get_description(raw_network)
         network_dict['creation_timestamp'] = raw_network['creationTimestamp']
-        network_dict['network_url'] = raw_network['selfLink']
-        network_dict['subnetwork_urls'] = raw_network.get('subnetworks', None)
         network_dict['auto_subnet'] = raw_network.get('autoCreateSubnetworks', None)
         network_dict['routing_config'] = raw_network['routingConfig']
+
+        network_dict['network_url'] = raw_network['selfLink']
+        network_dict['subnetwork_urls'] = raw_network.get('subnetworks', None)
+
         return network_dict['id'], network_dict
 
     def _get_description(self, raw_network):
