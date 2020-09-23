@@ -83,6 +83,8 @@ class GCPProvider(BaseProvider):
 
         self._match_instances_and_snapshots()
         self._match_networks_and_instances()
+        self._match_networks_and_firewalls()
+        self._match_subnetworks_and_instances()
 
         super().preprocessing()
 
@@ -128,8 +130,59 @@ class GCPProvider(BaseProvider):
                             if zone is int:
                                 continue
                             for instance in zone['instances'].values():
+                                instance['network_id'] = None
                                 for network_interface in instance['network_interfaces']:
                                     if network_interface['network'] == network['network_url']:
-                                        network['instances'].append(instance['id'])
+                                        network['instances'].append({'instance_id': instance['id'],
+                                                                     'instance_zone': instance['zone']})
+                                        network_interface['network_id'] = network['id']
         except Exception as e:
             print_exception('Unable to match instances and networks: {}'.format(e))
+
+    def _match_networks_and_firewalls(self):
+        """
+        For each network, math firewall rules in that network
+
+        :return:
+        """
+
+        try:
+            if 'computeengine' in self.service_list:
+                for project in self.services['computeengine']['projects'].values():
+                    for network in project['networks'].values():
+                        network['firewalls'] = []
+                        for firewall in project['firewalls'].values():
+                            firewall['network_id'] = None
+                            if firewall['network_url'] == network['network_url']:
+                                network['firewalls'].append(firewall['id'])
+                                firewall['network_id'] = network['id']
+        except Exception as e:
+            print_exception('Unable to match firewalls and networks: {}'.format(e))
+
+    def _match_subnetworks_and_instances(self):
+        """
+        For each subnetwork, math instances in that subnetwork
+
+        :return:
+        """
+
+        try:
+            if 'computeengine' in self.service_list:
+                for project in self.services['computeengine']['projects'].values():
+                    for region in project['regions'].values():
+                        for subnetwork in region['subnetworks'].values():
+                            subnetwork['instances'] = []
+                            for zone in project['zones'].values():
+                                # Skip the counts contained in the zones dictionary
+                                if zone is int:
+                                    continue
+                                for instance in zone['instances'].values():
+                                    instance['subnetwork_id'] = None
+                                    for network_interface in instance['network_interfaces']:
+                                        if network_interface['subnetwork'] == subnetwork['subnetwork_url']:
+                                            subnetwork['instances'].append({'instance_id': instance['id'],
+                                                                         'instance_zone': instance['zone']})
+                                            network_interface['subnetwork_id'] = subnetwork['id']
+                                            network_interface['subnetwork_region'] = subnetwork['region']
+        except Exception as e:
+            print_exception('Unable to match instances and subnetworks: {}'.format(e))
