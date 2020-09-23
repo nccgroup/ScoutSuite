@@ -1,5 +1,4 @@
 import boto3
-from botocore.config import Config
 import logging
 
 from ScoutSuite import __version__
