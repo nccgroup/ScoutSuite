@@ -83,6 +83,7 @@ class GCPProvider(BaseProvider):
 
         self._match_instances_and_snapshots()
         self._match_networks_and_instances()
+        self._match_networks_and_firewalls()
         self._match_subnetworks_and_instances()
 
         super().preprocessing()
@@ -137,6 +138,26 @@ class GCPProvider(BaseProvider):
                                         network_interface['network_id'] = network['id']
         except Exception as e:
             print_exception('Unable to match instances and networks: {}'.format(e))
+
+    def _match_networks_and_firewalls(self):
+        """
+        For each network, math firewall rules in that network
+
+        :return:
+        """
+
+        try:
+            if 'computeengine' in self.service_list:
+                for project in self.services['computeengine']['projects'].values():
+                    for network in project['networks'].values():
+                        network['firewalls'] = []
+                        for firewall in project['firewalls'].values():
+                            firewall['network_id'] = None
+                            if firewall['network_url'] == network['network_url']:
+                                network['firewalls'].append(firewall['id'])
+                                firewall['network_id'] = network['id']
+        except Exception as e:
+            print_exception('Unable to match firewalls and networks: {}'.format(e))
 
     def _match_subnetworks_and_instances(self):
         """
