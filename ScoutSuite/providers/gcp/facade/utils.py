@@ -3,6 +3,7 @@ from ScoutSuite.utils import get_user_agent
 
 from googleapiclient import http
 
+
 class GCPFacadeUtils:
     @staticmethod
     def _get_all(resources, resource_key: str, request, resources_group):
