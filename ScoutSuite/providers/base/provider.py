@@ -41,6 +41,10 @@ class BaseProvider:
             self.services = self.services_config(self.credentials)
         supported_services = vars(self.services).keys()
 
+        # Ensures "credentials" is not included
+        supported_services = list(supported_services)
+        supported_services.remove('credentials')
+
         self.service_list = self._build_services_list(supported_services, services, skipped_services)
 
     def get_report_name(self):
