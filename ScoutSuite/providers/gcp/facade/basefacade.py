@@ -6,7 +6,11 @@
 import httplib2shim
 httplib2shim.patch()
 
+from googleapiclient import http
 from googleapiclient import discovery
+
+from ScoutSuite.utils import get_user_agent
+
 
 class GCPBaseFacade:
     def __init__(self, client_name: str, client_version: str):
@@ -24,11 +28,16 @@ class GCPBaseFacade:
         :param force_new: whether to create a new client - useful to create arbitrary clients from facades
         :return:
         """
+
         if force_new:
-            return discovery.build(client_name, client_version, cache_discovery=False, cache=MemoryCache())
+            client = discovery.build(client_name, client_version, cache_discovery=False, cache=MemoryCache())
+            http.set_user_agent(client._http, get_user_agent())  # force set custom user agent
+            return client
         else:
             if not self._client:
-                self._client = discovery.build(client_name, client_version, cache_discovery=False, cache=MemoryCache())
+                client = discovery.build(client_name, client_version, cache_discovery=False, cache=MemoryCache())
+                http.set_user_agent(client._http, get_user_agent())  # force set custom user agent
+                self._client = client
             return self._client
 
     def _get_client(self) -> discovery.Resource:
