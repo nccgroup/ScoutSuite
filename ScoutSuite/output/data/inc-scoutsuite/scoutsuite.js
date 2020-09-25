@@ -926,42 +926,24 @@ function showResourcesDetails() {
             var anchor = window.location.hash.substr(1)
             var path = decodeURIComponent(anchor.replace('#', ""))
             var item_indexes = getValueAt(path)
-
             var items = []
             var index = 0
-            //items[index] = ["Service", "Description", "Affected resources", "Risk level"]
-            //Object.entries(item_indexes.services).forEach((service) => {
-            //    Object.entries(service[1].findings).forEach((finding) => {
-            //        index++;
-            //        items[index] = [finding[1].service, finding[1].description, finding[1].flagged_items, finding[1].level];
-            //    })
-            //})
-
             items[index] = ["Service", "Resource", "#"]
             var serviceName = ""
             Object.entries(item_indexes.services).forEach((service) => {
-                // for (const [key, value] of Object.entries(service)) {
-                //     // Este valor va a la primera columna
-                //   console.log(`${value}`);
-                //   }
                 serviceName = service[0]
                 Object.entries(service[1]).forEach((attr) => {
-                        // Key a la tercera columna
-                        // Value sin el _count del final a la segunda
-                        // Solo cuando value acaba en _count y no es regions
-
-                        // if (attr[0].split("_")[1] == "count" && attr[1] != 0 && attr[0].split("_")[0] != "regions"){
                         if ((attr[0].split("_")[1] == "count" || attr[0].split("_")[2] == "count") && attr[1] != 0 && attr[0].split("_")[0] != "regions"){
                                 index++;
                                 items[index] = [serviceName, attr[0].split("_")[0], attr[1].toString()];
                             }
                 })
-
             })
-
             downloadAsCsv('findings_summary.csv', items)
         }
-    )}
+    )
+}
+
 
 /**
  * Show main dashboard
