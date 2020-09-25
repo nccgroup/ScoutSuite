@@ -4,7 +4,7 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 class Listeners(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, load_balancer_arn: str):
-        super(Listeners, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
         self.load_balancer_arn = load_balancer_arn
 

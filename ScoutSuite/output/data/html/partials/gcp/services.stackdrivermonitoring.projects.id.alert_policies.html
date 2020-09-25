@@ -1,0 +1,26 @@
+<!-- stackdrivermonitoring uptime_checks -->
+<script id="services.stackdrivermonitoring.projects.id.uptime_checks.partial" type="text/x-handlebars-template">
+    <div id="resource-name" class="list-group-item active">
+        <h4 class="list-group-item-heading">{{name}}</h4>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">Information</h4>
+        <div class="list-group-item-text item-margin">Name: <span id="stackdrivermonitoring.projects.{{project}}.uptime_checks.{{@key}}.name"><samp>{{value_or_none display_name}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Monitored Resource: <span id="stackdrivermonitoring.projects.{{project}}.uptime_checks.{{@key}}.monitored_resource"><code>{{value_or_none monitored_resource}}</code></span></div>
+        <div class="list-group-item-text item-margin">HTTP Check: <span id="stackdrivermonitoring.projects.{{project}}.uptime_checks.{{@key}}.http_check"><code>{{value_or_none http_check}}</code></span></div>
+        <div class="list-group-item-text item-margin">Period: <span id="stackdrivermonitoring.projects.{{project}}.uptime_checks.{{@key}}.period"><samp>{{value_or_none period}}</samp></span></div>
+        <div class="list-group-item-text item-margin">Timeout: <span id="stackdrivermonitoring.projects.{{project}}.uptime_checks.{{@key}}.timeout"><samp>{{value_or_none timeout}}</samp></span></div>
+    </div>
+</script>
+
+<script>
+    Handlebars.registerPartial("services.stackdrivermonitoring.projects.id.uptime_checks", $("#services\\.stackdrivermonitoring\\.projects\\.id\\.uptime_checks\\.partial").html());
+</script>
+
+<!-- Single stackdrivermonitoring uptime_check template -->
+<script id="single_stackdrivermonitoring_uptime_check-template" type="text/x-handlebars-template">
+    {{> modal-template template='services.stackdrivermonitoring.projects.id.uptime_checks'}}
+</script>
+<script>
+    var single_stackdrivermonitoring_uptime_check_template = Handlebars.compile($("#single_stackdrivermonitoring_uptime_check-template").html());
+</script>

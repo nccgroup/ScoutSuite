@@ -7,7 +7,7 @@ import re
 
 class EC2Instances(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
-        super(EC2Instances, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
         self.vpc = vpc
 
@@ -21,6 +21,9 @@ class EC2Instances(AWSResources):
         instance = {}
         id = raw_instance['InstanceId']
         instance['id'] = id
+        instance['arn'] = 'arn:aws:ec2:{}.{}.instance/{}'.format(self.region,
+                                                                raw_instance['OwnerId'],
+                                                                raw_instance['InstanceId'])
         instance['reservation_id'] = raw_instance['ReservationId']
         instance['monitoring_enabled'] = raw_instance['Monitoring']['State'] == 'enabled'
         instance['user_data'] = await self.facade.ec2.get_instance_user_data(self.region, id)
@@ -28,8 +31,12 @@ class EC2Instances(AWSResources):
 
         get_name(raw_instance, instance, 'InstanceId')
         get_keys(raw_instance, instance,
-                 ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile', 'SubnetId'])
+                 ['KeyName', 'LaunchTime', 'InstanceType', 'State', 'IamInstanceProfile', 'SubnetId', 'Tags'])
 
+        if "IamInstanceProfile" in raw_instance:
+            instance['iam_instance_profile_id'] = raw_instance['IamInstanceProfile']['Id']
+            instance['iam_instance_profile_arn'] = raw_instance['IamInstanceProfile']['Arn']
+        
         instance['network_interfaces'] = {}
         for eni in raw_instance['NetworkInterfaces']:
             nic = {}
@@ -37,6 +44,12 @@ class EC2Instances(AWSResources):
             instance['network_interfaces'][eni['NetworkInterfaceId']] = nic
 
         instance['metadata_options'] = raw_instance['MetadataOptions']
+
+
+        if 'IamInstanceProfile' in raw_instance:
+            instance['iam_role'] = raw_instance['IamInstanceProfile']['Arn'].split('/')[-1]
+        else:
+            instance['iam_role'] = None
 
         return id, instance
 

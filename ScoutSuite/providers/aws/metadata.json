@@ -42,12 +42,10 @@
                 "alarms": {
                     "cols": 2,
                     "path": "services.cloudwatch.regions.id.alarms"
-                }
-            },
-            "summaries": {
-                "statistics": {
-                    "cols": 1,
-                    "path": "services.cloudwatch.statistics"
+                },
+                "metric_filters": {
+                    "cols": 2,
+                    "path": "services.cloudwatch.regions.id.metric_filters"
                 }
             }
         },
@@ -108,7 +106,6 @@
                     "path": "services.vpc.regions.id.vpcs"
                 },
                 "flow_logs": {
-                    "hidden": true,
                     "path": "services.vpc.regions.id.flow_logs",
                     "callbacks": [
                         [ "sort_vpc_flow_logs_callback", {} ],
@@ -120,7 +117,6 @@
                     "path": "services.vpc.regions.id.vpcs.id.subnets"
                 },
                 "peering_connections": {
-                    "hidden": true,
                     "path": "services.vpc.regions.id.peering_connections",
                     "callbacks": [
                         [ "process_vpc_peering_connections_callback", {} ]
@@ -400,6 +396,17 @@
                 "certificates": {
                     "cols": 2,
                     "path": "services.acm.regions.id.certificates"
+                }
+            }
+        },
+        "guardduty": {
+            "resources": {
+                "regions": {
+                    "cols": 2,
+                    "path": "services.guardduty.regions"
+                },
+                "detectors": {
+                    "path": "services.guardduty.regions.id.detectors"
                 }
             }
         },

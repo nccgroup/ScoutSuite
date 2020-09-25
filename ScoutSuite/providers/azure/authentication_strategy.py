@@ -1,11 +1,12 @@
 import json
 import logging
+import requests
 from getpass import getpass
 from datetime import datetime, timedelta
 
 from azure.common.credentials import ServicePrincipalCredentials, UserPassCredentials, get_azure_cli_credentials
 from msrestazure.azure_active_directory import MSIAuthentication
-from ScoutSuite.core.console import print_info, print_debug
+from ScoutSuite.core.console import print_info, print_debug, print_exception
 from msrestazure.azure_active_directory import AADTokenCredentials
 import adal
 
@@ -13,6 +14,7 @@ from ScoutSuite.providers.base.authentication_strategy import AuthenticationStra
 
 
 AUTHORITY_HOST_URI = 'https://login.microsoftonline.com'
+AZURE_CLI_CLIENT_ID = "04b07795-8ddb-461a-bbee-02f9e1bf7b46"
 
 
 class AzureCredentials:
@@ -31,8 +33,18 @@ class AzureCredentials:
     def get_tenant_id(self):
         if self.tenant_id:
             return self.tenant_id
-        else:
+        elif 'tenant_id' in self.aad_graph_credentials.token:
             return self.aad_graph_credentials.token['tenant_id']
+        else:
+            # This is a last resort, e.g. for MSI authentication
+            try:
+                h = {'Authorization': 'Bearer {}'.format(self.arm_credentials.token['access_token'])}
+                r = requests.get('https://management.azure.com/tenants?api-version=2020-01-01', headers=h)
+                r2 = r.json()
+                return r2.get('value')[0].get('tenantId')
+            except Exception as e:
+                print_exception('Unable to infer tenant ID: {}'.format(e))
+                return None
 
     def get_credentials(self, resource):
         if resource == 'arm':
@@ -91,13 +103,15 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
             # Set logging level to error for libraries as otherwise generates a lot of warnings
             logging.getLogger('adal-python').setLevel(logging.ERROR)
             logging.getLogger('msrest').setLevel(logging.ERROR)
+            logging.getLogger('msrestazure.azure_active_directory').setLevel(logging.ERROR)
             logging.getLogger('urllib3').setLevel(logging.ERROR)
             logging.getLogger('cli.azure.cli.core').setLevel(logging.ERROR)
 
             context = None
 
             if cli:
-                arm_credentials, subscription_id, tenant_id = get_azure_cli_credentials(with_tenant=True)
+                arm_credentials, subscription_id, tenant_id = \
+                    get_azure_cli_credentials(with_tenant=True)
                 aad_graph_credentials, placeholder_1, placeholder_2 = \
                     get_azure_cli_credentials(with_tenant=True, resource='https://graph.windows.net')
 
@@ -116,32 +130,26 @@ class AzureAuthenticationStrategy(AuthenticationStrategy):
 
             elif user_account_browser:
 
-                # As per https://docs.microsoft.com/en-us/samples/azure-samples/data-lake-analytics-python-auth-options
-                # /authenticating-your-python-application-against-azure-active-directory/
-                # The client id used above is a well known that already exists for all azure services. While it makes
-                # the sample code easy to use, for production code you should use generate your own client ids for
-                # your application.
-                client_id = '04b07795-8ddb-461a-bbee-02f9e1bf7b46'
                 authority_uri = AUTHORITY_HOST_URI + '/' + tenant_id
                 context = adal.AuthenticationContext(authority_uri, api_version=None)
 
                 # Resource Manager
                 resource_uri = 'https://management.core.windows.net/'
-                code = context.acquire_user_code(resource_uri, client_id)
+                code = context.acquire_user_code(resource_uri, AZURE_CLI_CLIENT_ID)
                 print_info('To authenticate to the Resource Manager API, use a web browser to '
                            'access {} and enter the {} code.'.format(code['verification_url'],
                                                                      code['user_code']))
-                arm_token = context.acquire_token_with_device_code(resource_uri, code, client_id)
-                arm_credentials = AADTokenCredentials(arm_token, client_id)
+                arm_token = context.acquire_token_with_device_code(resource_uri, code, AZURE_CLI_CLIENT_ID)
+                arm_credentials = AADTokenCredentials(arm_token, AZURE_CLI_CLIENT_ID)
 
                 # AAD Graph
                 resource_uri = 'https://graph.windows.net'
-                code = context.acquire_user_code(resource_uri, client_id)
+                code = context.acquire_user_code(resource_uri, AZURE_CLI_CLIENT_ID)
                 print_info('To authenticate to the Azure AD Graph API, use a web browser to '
                            'access {} and enter the {} code.'.format(code['verification_url'],
                                                                      code['user_code']))
-                aad_graph_token = context.acquire_token_with_device_code(resource_uri, code, client_id)
-                aad_graph_credentials = AADTokenCredentials(aad_graph_token, client_id)
+                aad_graph_token = context.acquire_token_with_device_code(resource_uri, code, AZURE_CLI_CLIENT_ID)
+                aad_graph_credentials = AADTokenCredentials(aad_graph_token, AZURE_CLI_CLIENT_ID)
 
             elif service_principal:
 

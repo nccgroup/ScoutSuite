@@ -8,7 +8,7 @@ class Vpcs(AWSCompositeResources):
     """
 
     def __init__(self, facade, region: str, add_ec2_classic=False):
-        super(Vpcs, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
         self.add_ec2_classic = add_ec2_classic
 
@@ -31,7 +31,9 @@ class Vpcs(AWSCompositeResources):
         vpc['cidr_block'] = raw_vpc['CidrBlock']
         vpc['default'] = raw_vpc['IsDefault']
         vpc['state'] = raw_vpc['State']
-
+        vpc['arn'] = 'arn:aws:vpc:{}:{}:virtual-private-cloud/{}'.format(self.region,
+                                                                             raw_vpc.get('OwnerId'),
+                                                                             raw_vpc.get('VpcId'))
         # pull the name from tags
         name_tag = next((d for i, d in enumerate(raw_vpc.get('Tags', [])) if d.get('Key') == 'Name'), None)
         if name_tag:

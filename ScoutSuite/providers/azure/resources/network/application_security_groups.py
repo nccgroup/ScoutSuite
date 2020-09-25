@@ -1,12 +1,13 @@
 from ScoutSuite.providers.azure.facade.base import AzureFacade
 from ScoutSuite.providers.azure.resources.base import AzureResources
 from ScoutSuite.providers.utils import get_non_provider_id
+from ScoutSuite.providers.azure.utils import get_resource_group_name
 
 
 class ApplicationSecurityGroups(AzureResources):
 
     def __init__(self, facade: AzureFacade, subscription_id: str):
-        super(ApplicationSecurityGroups, self).__init__(facade)
+        super().__init__(facade)
         self.subscription_id = subscription_id
 
     async def fetch_all(self):
@@ -20,7 +21,11 @@ class ApplicationSecurityGroups(AzureResources):
         application_security_group_dict['name'] = raw_application_security_group.name
         application_security_group_dict['type'] = raw_application_security_group.type
         application_security_group_dict['location'] = raw_application_security_group.location
-        application_security_group_dict['tags'] = raw_application_security_group.tags
+        if raw_application_security_group.tags is not None:
+            application_security_group_dict['tags'] = ["{}:{}".format(key, value) for key, value in  raw_application_security_group.tags.items()]
+        else:
+            application_security_group_dict['tags'] = []
+        application_security_group_dict['resource_group_name'] = get_resource_group_name(raw_application_security_group.id)
         application_security_group_dict['resource_guid'] = raw_application_security_group.resource_guid
         application_security_group_dict['provisioning_state'] = raw_application_security_group.provisioning_state
         application_security_group_dict['etag'] = raw_application_security_group.etag

@@ -13,10 +13,10 @@
         {{/if}}
         </li>
         {{#unless scout_link}}
-        <li class="list-group-item-text">Logging: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.IsLogging">{{convert_bool_to_enabled IsLogging}}</span></li>
+        <li class="list-group-item-text">Logging: <span class="cloudtrail.regions.{{region}}.trails.{{@key}}.IsLogging">{{convert_bool_to_enabled IsLogging}}</span></li>
         <li class="list-group-item-text">Start Logging Time: {{format_date StartLoggingTime}}</li>
         <li class="list-group-item-text">Stop Logging Time: {{format_date StopLoggingTime}}</li>
-        <li class="list-group-item-text">Multi Region: {{convert_bool_to_enabled IsMultiRegionTrail}}</li>
+        <li class="list-group-item-text">Multi Region: <span class="cloudtrail.regions.{{region}}.trails.{{@key}}.IsLogging">{{convert_bool_to_enabled IsMultiRegionTrail}}</span></li>
         <li class="list-group-item-text">Management Events: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.cloudtrail-management-events-disabled">{{convert_bool_to_enabled ManagementEventsEnabled}}</span></li>
         <li class="list-group-item-text">Data Events: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.cloudtrail-data-events-disabled">{{convert_bool_to_enabled DataEventsEnabled}}</span></li>
         <li class="list-group-item-text">Include Global Services:
@@ -29,6 +29,7 @@
         <li class="list-group-item-text">Destination S3 Bucket Name: <samp><a href="javascript:showObject('services.s3.buckets.{{bucket_id}}')">{{getValueAt 'services.s3.buckets' bucket_id 'name'}}</a>/{{S3KeyPrefix}}</samp></li>
         <li class="list-group-item-text">Log File Validation Enabled: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.LogFileValidationDisabled">{{convert_bool_to_enabled LogFileValidationEnabled}}</span></li>
         <li class="list-group-item-text">KMS Key: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.cloudtrail-kms-key-unused"><samp>{{value_or_none KmsKeyId}}</samp></span></li>
+        <li class="list-group-item-text">Latest CloudWatch Logs Delivery Time: <span id="cloudtrail.regions.{{region}}.trails.{{@key}}.TrailCloudwatchNoIntegration">{{format_date LatestCloudWatchLogsDeliveryTime}}</span></li>
         {{/unless}}
       </ul>
     </div>

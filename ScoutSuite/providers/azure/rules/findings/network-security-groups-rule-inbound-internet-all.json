@@ -1,5 +1,6 @@
 {
     "description": "Security Group Rules Allowing All Inbound Access",
+    "rationale": "It was detected that all ports in the security group are open, and accessible from the Internet, which creates a wider attack surface for resources assigned to it. Open ports should be reduced to the minimum needed to correctly operate and, when possible, source address restrictions should be implemented.",
     "dashboard_name": "NSGs",
     "display_path": "network.subscriptions.id.security_groups.id",
     "path": "network.subscriptions.id.security_groups.id.security_rules.id",

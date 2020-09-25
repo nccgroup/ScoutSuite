@@ -1,0 +1,35 @@
+{
+    "description": "Web App Running an Outdated PHP Version",
+    "rationale": "Periodically newer versions are released for PHP software either due to security flaws or to include additional functionality. Using the latest PHP version for web apps is recommended in order to take advantage of security fixes, if any, and/or additional functionalities of the newer version.",
+    "remediation": "Set <samp>PHP version</samp> to latest version available under <samp>General settings</samp> of the management console",
+    "compliance": [
+        {
+            "name": "CIS Microsoft Azure Foundations",
+            "version": "1.1.0",
+            "reference": "9.7"
+        }
+    ],
+    "references": [
+        "https://docs.microsoft.com/en-us/azure/app-service/web-sites-configure#general-settings"
+    ],
+    "dashboard_name": "Web Apps",
+    "path": "appservice.subscriptions.id.web_apps.id",
+    "conditions": [
+        "and",
+        [
+            "appservice.subscriptions.id.web_apps.id.programming_language",
+            "equal",
+            "php"
+        ],
+        [
+            "appservice.subscriptions.id.web_apps.id.programming_language_version",
+            "containNoneOf",
+            [
+                "7.2",
+                "7.3",
+                "7.4"
+            ]
+        ]
+    ],
+    "id_suffix": "programming_language_version"
+}

@@ -4,7 +4,7 @@ from ScoutSuite.providers.aws.resources.base import AWSResources
 
 class Subscriptions(AWSResources):
     def __init__(self, facade: AWSFacade, region: str, topic_name: str):
-        super(Subscriptions, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
         self.topic_name = topic_name
 

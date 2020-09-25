@@ -16,20 +16,20 @@ def get_folder_files(folder_path):
 
 
 def format_folder(folder_path):
-    print('Formatting findings in {}'.format(folder_path))
+    print(f'Formatting findings in {folder_path}')
 
     files = get_folder_files(folder_path)
     finding_with_no_rationale = 0
 
     for fn in files:
 
-        loc = '{}/{}'.format(folder_path, fn)
+        loc = f'{folder_path}/{fn}'
 
         with open(loc, 'r+') as json_file:
             try:
                 data = json.load(json_file)
             except Exception as e:
-                print('exception {} for \"{}\"'.format(e, fn))
+                print(f'exception {e} for \"{fn}\"')
             else:
                 try:
                     # change legacy field name - TODO remove once there are none left
@@ -37,7 +37,7 @@ def format_folder(folder_path):
                         data['description'] = data['title']
                         data.pop('title', None)
                     # remove legacy HTML from rationale - TODO remove once there are none left
-                    if 'rationale' in data.keys():
+                    if 'rationale' in data.keys() and data.get('rationale'):
                         data['rationale'] = data['rationale'].replace('<b>Description:</b><br><br>', '')
                         # check for legacy content - TODO remove once there are none left
                         if 'References' in data['rationale'] or 'CIS' in data['rationale']:
@@ -55,11 +55,11 @@ def format_folder(folder_path):
                     try:
                         ordered_data = OrderedDict(sorted(data.items(), key=lambda i: sort_order.index(i[0])))
                     except Exception as e:
-                        print('{}: {}'.format(fn, e))
+                        print(f'{fn}: {e}')
                     # save to file
                     json.dump(ordered_data, json_file, sort_keys=False, indent=4)
                 except Exception as e:
-                    print('Failed to process {}: {}'.format(fn, e))
+                    print(f'Failed to process {fn}: {e}')
 
     print('Found {}/{} findings with no rationale'.format(finding_with_no_rationale, len(files)))
 
@@ -80,5 +80,5 @@ if __name__ == "__main__":
         for provider_code in provider_codes:
             current_file_dirname = os.path.dirname(__file__)
             findings_path = os.path.abspath(
-                os.path.join(current_file_dirname, "../ScoutSuite/providers/{}/rules/findings/".format(provider_code)))
+                os.path.join(current_file_dirname, f"../ScoutSuite/providers/{provider_code}/rules/findings/"))
             format_folder(findings_path)

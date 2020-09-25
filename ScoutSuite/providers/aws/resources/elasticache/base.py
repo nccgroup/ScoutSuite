@@ -13,10 +13,10 @@ class ElastiCache(Regions):
     ]
 
     def __init__(self, facade: AWSFacade):
-        super(ElastiCache, self).__init__('elasticache', facade)
+        super().__init__('elasticache', facade)
 
     async def fetch_all(self, regions=None, excluded_regions=None, partition_name='aws', **kwargs):
-        await super(ElastiCache, self).fetch_all(regions, excluded_regions, partition_name)
+        await super().fetch_all(regions, excluded_regions, partition_name)
 
         for region in self['regions']:
             self['regions'][region]['clusters_count'] = \

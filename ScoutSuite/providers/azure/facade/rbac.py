@@ -2,6 +2,7 @@ from azure.mgmt.authorization import AuthorizationManagementClient
 
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently
+from ScoutSuite.utils import get_user_agent
 
 
 class RBACFacade:
@@ -10,16 +11,18 @@ class RBACFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        return AuthorizationManagementClient(self.credentials.get_credentials('arm'),
+        client = AuthorizationManagementClient(self.credentials.get_credentials('arm'),
                                              subscription_id=subscription_id)
+        client._client.config.add_user_agent(get_user_agent())
+        return client
 
     async def get_roles(self, subscription_id: str):
         try:
             client = self.get_client(subscription_id)
-            scope = '/subscriptions/{}'.format(subscription_id)
+            scope = f'/subscriptions/{subscription_id}'
             return await run_concurrently(lambda: list(client.role_definitions.list(scope=scope)))
         except Exception as e:
-            print_exception('Failed to retrieve roles: {}'.format(e))
+            print_exception(f'Failed to retrieve roles: {e}')
             return []
 
     async def get_role_assignments(self, subscription_id: str):
@@ -27,5 +30,5 @@ class RBACFacade:
             client = self.get_client(subscription_id)
             return await run_concurrently(lambda: list(client.role_assignments.list()))
         except Exception as e:
-            print_exception('Failed to retrieve role assignments: {}'.format(e))
+            print_exception(f'Failed to retrieve role assignments: {e}')
             return []

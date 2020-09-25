@@ -9,14 +9,14 @@
     "conditions": [
         "and",
         [
-                "cloudtrail.IncludeGlobalServiceEvents",
-                "false",
-                ""
+            "cloudtrail.IncludeGlobalServiceEvents",
+            "false",
+            ""
         ],
         [
-                "this",
-                "withKey",
-                "IncludeGlobalServiceEvents"
+            "this",
+            "withKey",
+            "IncludeGlobalServiceEvents"
         ]
     ],
     "id_suffix": "IncludeGlobalServiceEvents"

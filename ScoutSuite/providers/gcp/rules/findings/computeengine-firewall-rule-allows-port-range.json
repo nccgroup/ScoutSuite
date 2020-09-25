@@ -1,5 +1,6 @@
 {
     "description": "Firewall Rule Allows Port Range(s)",
+    "rationale": "It was found that the firewall rule was using port ranges. Sometimes, ranges could include unintended ports that should not be exposed. As a result, when possible, explicit port lists should be used instead.",
     "dashboard_name": "Firewall Rule Elements",
     "display_path": "computeengine.projects.id.firewalls.id",
     "path": "computeengine.projects.id.firewalls.id.allowed_traffic.id.ports.id",
@@ -30,5 +31,6 @@
             "notEqual",
             "0-65535"
         ]
-    ]
+    ],
+    "id_suffix": "permissive_ports"
 }

@@ -1,5 +1,6 @@
 {
     "description": "Firewall Rule Opens All Ports (0-65535)",
+    "rationale": "The firewall rule allows access to all ports. This widens the attack surface of the infrastructure and makes it easier for an attacker to reach potentially sensitive services over the network.",
     "dashboard_name": "Firewall Rule Elements",
     "display_path": "computeengine.projects.id.firewalls.id",
     "path": "computeengine.projects.id.firewalls.id.allowed_traffic.id.ports.id",
@@ -25,5 +26,6 @@
             "equal",
             "0-65535"
         ]
-    ]
+    ],
+    "id_suffix": "permissive_ports"
 }

@@ -8,7 +8,7 @@ class SecurityGroups(AWSResources):
     icmp_message_types_dict = load_data('icmp_message_types.json', 'icmp_message_types')
 
     def __init__(self, facade: AWSFacade, region: str, vpc: str):
-        super(SecurityGroups, self).__init__(facade)
+        super().__init__(facade)
         self.region = region
         self.vpc = vpc
 
@@ -22,6 +22,9 @@ class SecurityGroups(AWSResources):
         security_group = {}
         security_group['name'] = raw_security_group['GroupName']
         security_group['id'] = raw_security_group['GroupId']
+        security_group['arn'] = 'arn:aws:ec2:{}:{}:security-group/{}'.format(self.region,
+                                                     raw_security_group.get('OwnerId'),
+                                                     raw_security_group.get('GroupId'))
         security_group['description'] = raw_security_group['Description']
         security_group['owner_id'] = raw_security_group['OwnerId']
 
@@ -38,7 +41,28 @@ class SecurityGroups(AWSResources):
             raw_security_group['IpPermissionsEgress'])
         security_group['rules']['egress']['protocols'] = egress_protocols
         security_group['rules']['egress']['count'] = egress_rules_count
+
+        security_group['is_default_configuration'] = \
+            self._has_default_egress_rule(raw_security_group['IpPermissionsEgress']) and \
+            self._has_default_ingress_rule(raw_security_group['IpPermissions'], raw_security_group['GroupId'])
+
         return security_group['id'], security_group
+
+    def _has_default_egress_rule(self, rule_list):
+        for rule in rule_list:
+            if rule['IpProtocol'] == '-1':
+                for ip_range in rule['IpRanges']:
+                    if ip_range['CidrIp'] == '0.0.0.0/0':
+                        return True
+        return False
+
+    def _has_default_ingress_rule(self, rule_list, group_id):
+        for rule in rule_list:
+            if rule['IpProtocol'] == '-1':
+                for source_group in rule['UserIdGroupPairs']:
+                    if source_group['GroupId'] == group_id:
+                        return True
+        return False
 
     def _parse_security_group_rules(self, rules):
         protocols = {}
@@ -61,7 +85,7 @@ class SecurityGroups(AWSResources):
                 elif rule['FromPort'] == rule['ToPort']:
                     port_value = str(rule['FromPort'])
                 else:
-                    port_value = '%s-%s' % (rule['FromPort'], rule['ToPort'])
+                    port_value = '{}-{}'.format(rule['FromPort'], rule['ToPort'])
             manage_dictionary(protocols[ip_protocol]['ports'], port_value, {})
 
             # Save grants, values are either a CIDR or an EC2 security group

@@ -1,0 +1,40 @@
+{
+    "description": "Managed Policy Allows Full Administrative Privileges",
+    "rationale": "Providing full administrative privileges instead of restricting to the minimum set of permissions that the user is required to do exposes the resources to potentially unwanted actions.",
+    "remediation": "Ensure no managed policies are configured with Effect:Allow, Action:* and Resource:*",
+    "compliance": [
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.1.0",
+            "reference": "1.24"
+        },
+        {
+            "name": "CIS Amazon Web Services Foundations",
+            "version": "1.2.0",
+            "reference": "1.22"
+        }
+    ],
+    "dashboard_name": "Policies",
+    "display_path": "iam.policies.id",
+    "path": "iam.policies.id.PolicyDocument.Statement.id",
+    "conditions": [
+        "and",
+        [
+            "iam.policies.id.PolicyDocument.Statement.id.Effect",
+            "equal",
+            "Allow"
+        ],
+        [
+            "iam.policies.id.PolicyDocument.Statement.id.",
+            "containAction",
+            "*"
+        ],
+        [
+            "iam.policies.id.PolicyDocument.Statement.id.Resource",
+            "containAtLeastOneOf",
+            [
+                "*"
+            ]
+        ]
+    ]
+}

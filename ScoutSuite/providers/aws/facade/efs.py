@@ -11,7 +11,7 @@ class EFSFacade(AWSBaseFacade):
             file_systems = await AWSFacadeUtils.get_all_pages(
                 'efs', region, self.session, 'describe_file_systems', 'FileSystems')
         except Exception as e:
-            print_exception('Failed to get EFS file systems: {}'.format(e))
+            print_exception(f'Failed to get EFS file systems: {e}')
             file_systems = []
         else:
             await get_and_set_concurrently(
@@ -25,7 +25,7 @@ class EFSFacade(AWSBaseFacade):
             file_system['Tags'] = await run_concurrently(
                 lambda: client.describe_tags(FileSystemId=file_system['FileSystemId'])['Tags'])
         except Exception as e:
-            print_exception('Failed to describe EFS tags: {}'.format(e))
+            print_exception(f'Failed to describe EFS tags: {e}')
 
     async def _get_and_set_mount_targets(self, file_system: {}, region: str):
 
@@ -35,7 +35,7 @@ class EFSFacade(AWSBaseFacade):
                 'efs', region, self.session, 'describe_mount_targets', 'MountTargets',
                 FileSystemId=file_system['FileSystemId'])
         except Exception as e:
-            print_exception('Failed to get and set EFS mount targets: {}'.format(e))
+            print_exception(f'Failed to get and set EFS mount targets: {e}')
         else:
             if len(mount_targets) == 0:
                 return
@@ -54,4 +54,4 @@ class EFSFacade(AWSBaseFacade):
                 await run_concurrently(lambda: client.describe_mount_target_security_groups(
                     MountTargetId=mount_target['MountTargetId'])['SecurityGroups'])
         except Exception as e:
-            print_exception('Failed to describe EFS mount target security groups: {}'.format(e))
+            print_exception(f'Failed to describe EFS mount target security groups: {e}')

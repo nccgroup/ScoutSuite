@@ -1,5 +1,6 @@
 {
     "description": "Default Firewall Rule in Use",
+    "rationale": "Some default firewall rules were in use. This could potentially expose sensitive services or protocols to other networks.",
     "dashboard_name": "Firewall Rule",
     "path": "computeengine.projects.id.firewalls.id",
     "conditions": [
@@ -13,6 +14,12 @@
                 "default-allow-rdp",
                 "default-allow-ssh"
             ]
+        ],
+        [
+            "computeengine.projects.id.firewalls.id.disabled",
+            "false",
+            ""
         ]
-    ]
+    ],
+    "id_suffix": "name"
 }
