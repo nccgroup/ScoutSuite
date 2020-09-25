@@ -3,6 +3,7 @@ from hashlib import sha1
 
 from ScoutSuite.core.console import print_info
 from ScoutSuite.providers.aws.utils import is_throttled as aws_is_throttled
+from ScoutSuite.providers.gcp.utils import is_throttled as gcp_is_throttled
 
 
 def get_non_provider_id(name):
@@ -118,4 +119,4 @@ def is_throttled(e):
              'projects/' in e.message):
         return False
     else:
-        return aws_is_throttled(e)
+        return aws_is_throttled(e) or gcp_is_throttled(e)
