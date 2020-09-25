@@ -921,7 +921,29 @@ function showLastRunDetails() {
 function showResourcesDetails() {
     $('#modal-container').html(resources_details_template(runResults));
     $('#modal-container').modal()
+
+    $('#resources_details_download_csv_button').click(function(){
+            var anchor = window.location.hash.substr(1)
+            var path = decodeURIComponent(anchor.replace('#', ""))
+            var item_indexes = getValueAt(path)
+            var items = []
+            var index = 0
+            items[index] = ["Service", "Resource", "#"]
+            var serviceName = ""
+            Object.entries(item_indexes.services).forEach((service) => {
+                serviceName = service[0]
+                Object.entries(service[1]).forEach((attr) => {
+                        if ((attr[0].split("_")[1] == "count" || attr[0].split("_")[2] == "count") && attr[1] != 0 && attr[0].split("_")[0] != "regions"){
+                                index++;
+                                items[index] = [serviceName, attr[0].split("_")[0], attr[1].toString()];
+                            }
+                })
+            })
+            downloadAsCsv('findings_summary.csv', items)
+        }
+    )
 }
+
 
 /**
  * Show main dashboard
