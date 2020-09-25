@@ -1,15 +1,22 @@
 from google.cloud import kms
+from google.api_core.gapic_v1.client_info import ClientInfo
 
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.gcp.facade.basefacade import GCPBaseFacade
 from ScoutSuite.providers.gcp.facade.utils import GCPFacadeUtils
 from ScoutSuite.providers.utils import run_concurrently
+from ScoutSuite.utils import get_user_agent
 
 
 class KMSFacade(GCPBaseFacade):
     def __init__(self):
         # This facade is currently using both libraries as the Cloud Client library doesn't support locations
-        self.cloud_client = kms.KeyManagementServiceClient()  # Cloud Client
+
+        # Cloud Client
+        client_info = ClientInfo(user_agent=get_user_agent())
+        self.cloud_client = kms.KeyManagementServiceClient(client_info=client_info)
+        # self.cloud_client = kms.KeyManagementServiceClient()
+
         super().__init__('cloudkms', 'v1')  # API Client
 
     async def get_locations(self, project_id: str):

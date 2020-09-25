@@ -2,6 +2,7 @@ from azure.mgmt.compute import ComputeManagementClient
 
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently
+from ScoutSuite.utils import get_user_agent
 
 
 class VirtualMachineFacade:
@@ -10,8 +11,10 @@ class VirtualMachineFacade:
         self.credentials = credentials
 
     def get_client(self, subscription_id: str):
-        return ComputeManagementClient(self.credentials.get_credentials('arm'),
+        client = ComputeManagementClient(self.credentials.get_credentials('arm'),
                                        subscription_id=subscription_id)
+        client._client.config.add_user_agent(get_user_agent())
+        return client
 
     async def get_instances(self, subscription_id: str):
         try:

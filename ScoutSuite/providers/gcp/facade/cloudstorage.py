@@ -1,13 +1,22 @@
 from google.cloud import storage
+from google.api_core.gapic_v1.client_info import ClientInfo
 
 from ScoutSuite.core.console import print_exception
 from ScoutSuite.providers.utils import run_concurrently, get_and_set_concurrently
+from ScoutSuite.utils import get_user_agent
 
 
 class CloudStorageFacade:
+
+    def get_client(self, project_id: str):
+        client_info = ClientInfo(user_agent=get_user_agent())
+        client = storage.Client(project=project_id,
+                                client_info=client_info)
+        return client
+
     async def get_buckets(self, project_id: str):
         try:
-            client = storage.Client(project=project_id)
+            client = self.get_client(project_id)
             buckets = await run_concurrently(lambda: list(client.list_buckets()))
             await get_and_set_concurrently([self._get_and_set_bucket_logging, 
                 self._get_and_set_bucket_iam_policy], buckets)
