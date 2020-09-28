@@ -19,13 +19,13 @@ class Object(object):
 class TestAWSProviderClass(unittest.TestCase):
     @mock.patch("ScoutSuite.providers.aws.authentication_strategy.boto3")
     @mock.patch("ScoutSuite.providers.aws.authentication_strategy.get_caller_identity")
-    def test_authenticate(self, mock_get_caller_identity, mock_session):
+    def test_authenticate(self, mock_get_caller_identity, mock_boto3):
 
         aws_authentication_strategy = get_authentication_strategy("aws")
 
         boto3_session = Object()
         boto3_session._session = Object()
-        mock_session.Session.return_value = boto3_session
+        mock_boto3.Session.return_value = boto3_session
 
         test_cases = [
             # no params
@@ -76,13 +76,13 @@ class TestAWSProviderClass(unittest.TestCase):
                 test_case["aws_secret_access_key"],
                 test_case["aws_session_token"],
             )
-            mock_session.Session.assert_called_with(**test_case["call_dict"])
+            mock_boto3.Session.assert_called_with(**test_case["call_dict"])
             mock_get_caller_identity.assert_called_with(boto3_session)
             assert isinstance(result, AWSCredentials)
             assert result.session == boto3_session
 
         # exception test
-        mock_session.Session.side_effect = Exception("an exception")
+        mock_boto3.Session.side_effect = Exception("an exception")
         with pytest.raises(AuthenticationException):
             result = aws_authentication_strategy.authenticate(None, None, None, None)
 
