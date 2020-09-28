@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
-import sys
-import os
-import json
 import argparse
+import json
+import os
+import sys
 from collections import OrderedDict
+
 from utils import get_capitalized_title
 
 

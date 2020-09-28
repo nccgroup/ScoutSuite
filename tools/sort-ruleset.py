@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
 
-import os
-import json
 import argparse
-from collections import OrderedDict
 import json
 import os
 import sys
-
 
 
 def get_folder_files(folder_path):
@@ -16,6 +12,7 @@ def get_folder_files(folder_path):
         files.extend(filenames)
         break
     return files
+
 
 def format_folder(folder_path):
     print(f'Formatting rulesets in {folder_path}')
