@@ -1,6 +1,7 @@
 {
     "description": "Pod Security Policy Disabled",
     "rationale": "A Pod Security Policy is a cluster-level resource that controls security sensitive aspects of the pod specification. The PodSecurityPolicy objects define a set of conditions that a pod must run with in order to be accepted into the system, as well as defaults for the related fields.",
+    "remediation": "Enable the Pod Security Policy. By default, Pod Security Policy is disabled when you create a new cluster.",
     "compliance": [
         {
             "name": "CIS Google Cloud Platform Foundations",
@@ -19,7 +20,6 @@
         "https://kubernetes.io/docs/concepts/policy/pod-security-policy",
         "https://cloud.google.com/kubernetes-engine/docs/concepts/cis-benchmarks#default_values_on"
     ],
-    "remediation": "Enable the Pod Security Policy. By default, Pod Security Policy is disabled when you create a new cluster.",
     "dashboard_name": "Clusters",
     "path": "kubernetesengine.projects.id.zones.id.clusters.id",
     "conditions": [
