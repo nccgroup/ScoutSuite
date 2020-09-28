@@ -6,9 +6,7 @@ import pytest
 from ScoutSuite.providers import get_provider
 from ScoutSuite.providers.aws.authentication_strategy import AWSCredentials
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationException
-from ScoutSuite.providers.base.authentication_strategy_factory import (
-    get_authentication_strategy,
-)
+from ScoutSuite.providers.base.authentication_strategy_factory import get_authentication_strategy
 
 
 class Object(object):
