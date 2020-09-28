@@ -19,7 +19,7 @@ class TestAWSProviderClass(unittest.TestCase):
     @mock.patch("ScoutSuite.providers.aws.authentication_strategy.boto3")
     @mock.patch("ScoutSuite.providers.aws.authentication_strategy.get_caller_identity")
     def test_authenticate(self, mock_get_caller_identity, mock_session):
-        auth_strat = get_authentication_strategy("aws")
+        aws_authentication_strategy = get_authentication_strategy("aws")
 
         boto3_session = Object()
         boto3_session._session = Object()
@@ -68,7 +68,7 @@ class TestAWSProviderClass(unittest.TestCase):
         ]
 
         for test_case in test_cases:
-            result = auth_strat.authenticate(
+            result = aws_authentication_strategy.authenticate(
                 test_case["profile"],
                 test_case["aws_access_key_id"],
                 test_case["aws_secret_access_key"],
@@ -82,7 +82,7 @@ class TestAWSProviderClass(unittest.TestCase):
         # exception test
         mock_session.Session.side_effect = Exception("an exception")
         with pytest.raises(AuthenticationException):
-            result = auth_strat.authenticate(None, None, None, None)
+            result = aws_authentication_strategy.authenticate(None, None, None, None)
 
     # mock two separate places from which get_aws_account_id is called
     @mock.patch("ScoutSuite.providers.aws.facade.base.get_aws_account_id")
