@@ -1,42 +1,6 @@
 {
+    "about": "Default set of filters for Scout",
     "rules": {
-        "iam-role-for-service.json": [
-            {
-                "args": [
-                    "EC2", 
-                    "ec2.amazonaws.com"
-                ], 
-                "enabled": true
-            }, 
-            {
-                "args": [
-                    "Lambda", 
-                    "lambda.amazonaws.com"
-                ], 
-                "enabled": true
-            }
-        ], 
-        "iam-role-for-aws-account.json": [
-            {
-                "args": [
-                    "same", 
-                    "isSameAccount"
-                ], 
-                "enabled": true
-            }, 
-            {
-                "args": [
-                    "cross", 
-                    "isCrossAccount"
-                ], 
-                "enabled": true
-            }
-        ],
-        "s3-bucket-website-enabled.json": [
-            {
-                "enabled": true
-            }
-        ],
         "ec2-instance-with-open-nacls.json": [
             {
                 "enabled": true
@@ -46,7 +10,43 @@
             {
                 "enabled": true
             }
+        ],
+        "iam-role-for-aws-account.json": [
+            {
+                "args": [
+                    "same",
+                    "isSameAccount"
+                ],
+                "enabled": true
+            },
+            {
+                "args": [
+                    "cross",
+                    "isCrossAccount"
+                ],
+                "enabled": true
+            }
+        ],
+        "iam-role-for-service.json": [
+            {
+                "args": [
+                    "EC2",
+                    "ec2.amazonaws.com"
+                ],
+                "enabled": true
+            },
+            {
+                "args": [
+                    "Lambda",
+                    "lambda.amazonaws.com"
+                ],
+                "enabled": true
+            }
+        ],
+        "s3-bucket-website-enabled.json": [
+            {
+                "enabled": true
+            }
         ]
-    }, 
-    "about": "Default set of filters for Scout"
+    }
 }

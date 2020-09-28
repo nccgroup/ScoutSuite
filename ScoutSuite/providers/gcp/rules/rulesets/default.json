@@ -1,36 +1,6 @@
 {
     "about": "This ruleset consists of numerous rules that are considered standard by NCC Group. The rules enabled range from violations of well-known security best practices to gaps resulting from less-known security implications of provider-specific mechanisms. Additional rules exist, some of them requiring extra-parameters to be configured, and some of them being applicable to a limited number of users.",
     "rules": {
-        "iam-gmail-accounts-used.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "iam-primitive-role-in-use.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "iam-role-assigned-to-user.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "iam-sa-has-admin-privileges.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "iam-user-has-sa-user-role.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
         "cloudsql-allows-root-login-from-any-host.json": [
             {
                 "enabled": true,
@@ -164,7 +134,31 @@
                 "level": "warning"
             }
         ],
+        "iam-gmail-accounts-used.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "iam-lack-of-service-account-key-rotation.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-primitive-role-in-use.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-role-assigned-to-user.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "iam-sa-has-admin-privileges.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -194,7 +188,13 @@
                 "level": "warning"
             }
         ],
-                "kubernetesengine-basic-authentication-enabled.json": [
+        "iam-user-has-sa-user-role.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
+        "kubernetesengine-basic-authentication-enabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
@@ -242,6 +242,12 @@
                 "level": "warning"
             }
         ],
+        "kubernetesengine-cluster-pod-security-policy-config-disabled.json": [
+            {
+                "enabled": true,
+                "level": "warning"
+            }
+        ],
         "kubernetesengine-cluster-private-google-access-disabled.json": [
             {
                 "enabled": true,
@@ -267,12 +273,6 @@
             }
         ],
         "kubernetesengine-legacy-metadata-endpoints-enabled.json": [
-            {
-                "enabled": true,
-                "level": "warning"
-            }
-        ],
-        "kubernetesengine-cluster-pod-security-policy-config-disabled.json": [
             {
                 "enabled": true,
                 "level": "warning"
