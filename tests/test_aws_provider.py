@@ -1,13 +1,14 @@
+import unittest
+from unittest import mock
+
+import pytest
+
+from ScoutSuite.providers import get_provider
 from ScoutSuite.providers.aws.authentication_strategy import AWSCredentials
 from ScoutSuite.providers.base.authentication_strategy import AuthenticationException
 from ScoutSuite.providers.base.authentication_strategy_factory import (
     get_authentication_strategy,
 )
-from ScoutSuite.providers import get_provider
-from ScoutSuite.providers.aws.provider import AWSProvider
-import pytest
-import unittest
-from unittest import mock
 
 
 class Object(object):
@@ -19,6 +20,7 @@ class TestAWSProviderClass(unittest.TestCase):
     @mock.patch("ScoutSuite.providers.aws.authentication_strategy.boto3")
     @mock.patch("ScoutSuite.providers.aws.authentication_strategy.get_caller_identity")
     def test_authenticate(self, mock_get_caller_identity, mock_session):
+
         aws_authentication_strategy = get_authentication_strategy("aws")
 
         boto3_session = Object()
