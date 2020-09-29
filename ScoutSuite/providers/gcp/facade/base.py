@@ -150,8 +150,10 @@ class GCPFacade(GCPBaseFacade):
             endpoint = 'container'
         elif service == 'StackdriverLogging':
             endpoint = 'logging'
+        elif service == 'StackdriverMonitoring':
+            endpoint = 'monitoring'
         else:
-            print_debug('Could not validate the state of the {} API for project \"{}\", including'.format(
+            print_debug('Could not validate the state of the {} API for project \"{}\", including it in the execution'.format(
                 format_service_name(service.lower()), project_id))
             return True
 
@@ -164,6 +166,6 @@ class GCPFacade(GCPBaseFacade):
                                                                                         project_id))
                     return False
 
-        print_error('Could not validate the state of the {} API for project \"{}\", including'.format(
+        print_error('Could not validate the state of the {} API for project \"{}\", including it in the execution'.format(
             format_service_name(service.lower()), project_id))
         return True
