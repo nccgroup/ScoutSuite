@@ -24,7 +24,7 @@ class BaseServicesConfig:
 
             # Print services that are going to get skipped:
             for service in vars(self):
-                if service not in services:
+                if service not in services and service != 'credentials':
                     print_debug('Skipping the {} service'.format(format_service_name(service)))
 
             # Then, fetch concurrently all services:
