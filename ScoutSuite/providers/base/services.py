@@ -18,13 +18,14 @@ class BaseServicesConfig:
         if not services:
             print_debug('No services to scan')
         else:
+            # Remove "credentials" as it isn't a service
+            if 'credentials' in services:
+                services.remove('credentials')
+
             # Print services that are going to get skipped:
             for service in vars(self):
                 if service not in services:
                     print_debug('Skipping the {} service'.format(format_service_name(service)))
-
-            # Remove "credentials" as it isn't a service
-            if 'credentials' in services: services.remove('credentials')
 
             # Then, fetch concurrently all services:
             if services:
