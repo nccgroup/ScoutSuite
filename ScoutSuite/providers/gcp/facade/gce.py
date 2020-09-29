@@ -30,15 +30,17 @@ class GCEFacade(GCPBaseFacade):
 
     async def get_instances(self, project_id, zone):
         try:
+            instances = []
             gce_client = self._get_client()
             request = gce_client.instances().list(project=project_id, zone=zone)
             instances_group = gce_client.instances()
             instances = await GCPFacadeUtils.get_all('items', request, instances_group)
-            await self._add_metadata(project_id, instances)
-            return instances
         except Exception as e:
             print_exception(f'Failed to retrieve compute instances: {e}')
-            return []
+        else:
+            await self._add_metadata(project_id, instances)
+        finally:
+            return instances
 
     async def _add_metadata(self, project_id, instances):
         project = await self.get_project(project_id)
